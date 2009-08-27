@@ -155,6 +155,19 @@ function drupal_build_form($form_id, &$form_state) {
       $form_build_id = 'form-' . md5(uniqid(mt_rand(), TRUE));
       $form['#build_id'] = $form_build_id;
 
+      // Record the filepath of the include file containing the original form,
+      // so the form builder callbacks can be loaded when the form is being
+      // rebuilt on a different path (such as 'system/ajax').
+      // @see form_get_cache()
+      // @see drupal_retrieve_form()
+      // menu_get_item() is not available at installation time.
+      if (!defined('MAINTENANCE_MODE')) {
+        $item = menu_get_item();
+        if (!empty($item['file'])) {
+          $form['#include_file'] = $item['file'];
+        }
+      }
+
       // Fix the form method, if it is 'get' in $form_state, but not in $form.
       if ($form_state['method'] == 'get' && !isset($form['#method'])) {
         $form['#method'] = 'get';
@@ -299,6 +312,15 @@ function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
 function form_get_cache($form_build_id, &$form_state) {
   if ($cached = cache_get('form_' . $form_build_id, 'cache_form')) {
     $form = $cached->data;
+    // If the original form is contained in an optional include file, load the
+    // file and re-populate $form_state for subsequent rebuilds.
+    // @see drupal_build_form()
+    // @see drupal_retrieve_form()
+    if (!empty($form['#include_file']) && file_exists($form['#include_file'])) {
+      require_once DRUPAL_ROOT . '/' . $form['#include_file'];
+      $form_state['include_file'] = $form['#include_file'];
+    }
+
     global $user;
     if ((isset($form['#cache_token']) && drupal_valid_token($form['#cache_token'])) || (!isset($form['#cache_token']) && !$user->uid)) {
       if ($cached = cache_get('storage_' . $form_build_id, 'cache_form')) {
@@ -452,6 +474,15 @@ function drupal_retrieve_form($form_id, &$form_state) {
   $form = call_user_func_array(isset($callback) ? $callback : $form_id, $args);
   $form['#form_id'] = $form_id;
   $form['#args'] = $form_state['args'];
+
+  // Whenever this form is (re)built, restore the include file property from
+  // $form_state, if existent.
+  // @see drupal_build_form()
+  // @see form_get_cache()
+  if (!empty($form_state['include_file'])) {
+    $form['#include_file'] = $form_state['include_file'];
+  }
+
   return $form;
 }
 

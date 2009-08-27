@@ -149,7 +149,7 @@ function ajax_render($commands = array(), $header = TRUE) {
  */
 function ajax_render_error($error = '') {
   $commands = array();
-  $commands[] = ajax_command_error(empty($error) ? t('An error occurred while handling the request: The server received invalid input.') : $error);
+  $commands[] = ajax_command_alert(empty($error) ? t('An error occurred while handling the request: The server received invalid input.') : $error);
   ajax_render($commands);
 }
 
@@ -301,7 +301,7 @@ function ajax_process_form($element) {
       'wrapper'  => empty($element['#ajax']['wrapper']) ? NULL : $element['#ajax']['wrapper'],
       'selector' => empty($element['#ajax']['selector']) ? '#' . $element['#id'] : $element['#ajax']['selector'],
       'effect'   => empty($element['#ajax']['effect']) ? 'none' : $element['#ajax']['effect'],
-      'speed '   => empty($element['#ajax']['effect']) ? 'none' : $element['#ajax']['effect'],
+      'speed'    => empty($element['#ajax']['effect']) ? 'none' : $element['#ajax']['effect'],
       'method'   => empty($element['#ajax']['method']) ? 'replace' : $element['#ajax']['method'],
       'progress' => empty($element['#ajax']['progress']) ? array('type' => 'throbber') : $element['#ajax']['progress'],
       'button'   => isset($element['#executes_submit_callback']) ? array($element['#name'] => $element['#value']) : FALSE,

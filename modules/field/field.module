@@ -156,23 +156,6 @@ function field_init() {
 }
 
 /**
- * Implement hook_menu().
- */
-function field_menu() {
-  $items = array();
-
-  // Callback for AHAH add more buttons.
-  $items['field/js_add_more'] = array(
-    'page callback' => 'field_add_more_js',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'field.form.inc',
-  );
-
-  return $items;
-}
-
-/**
  * Implement hook_theme().
  */
 function field_theme() {

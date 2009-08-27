@@ -1375,8 +1375,7 @@ class FieldFormTestCase extends FieldTestCase {
       $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
     }
     // Press 'add more' button through AHAH.
-    $path = 'field/js_add_more/' . str_replace('_', '-', $this->instance['bundle']) . '/' . str_replace('_', '-', $this->instance['field_name']);
-    $this->_fieldPostAhah($path, $edit, t('Add another item'));
+    $this->_fieldPostAhah($edit, t('Add another item'));
 
     ksort($values);
     $values = array_values($values);
@@ -1401,11 +1400,8 @@ class FieldFormTestCase extends FieldTestCase {
    * Since the result is generally not a full-fledged form, this cannot be
    * called iteratively.
    */
-  function _fieldPostAhah($path, $edit, $submit, array $options = array(), array $headers = array()) {
-    // @TODO: the framework should make it possible to submit a form to a
-    // different URL than its action or the current. For now, we can just force
-    // it.
-    $this->additionalCurlOptions[CURLOPT_URL] = url($path, array('absolute' => TRUE));
+  function _fieldPostAhah($edit, $submit, array $options = array(), array $headers = array()) {
+    $this->additionalCurlOptions[CURLOPT_URL] = url('system/ajax', array('absolute' => TRUE));
     $this->drupalPost(NULL, $edit, $submit);
     unset($this->additionalCurlOptions[CURLOPT_URL]);
 

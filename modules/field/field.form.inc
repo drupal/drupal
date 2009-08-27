@@ -141,8 +141,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
   $title = check_plain(t($instance['label']));
   $description = field_filter_xss(t($instance['description']));
 
-  $bundle_name_url_css = str_replace('_', '-', $instance['bundle']);
-  $field_name_url_css = str_replace('_', '-', $field_name);
+  $wrapper_id = str_replace('_', '-', $field_name) . '-wrapper';
 
   $form_element = array(
     '#theme' => 'field_multiple_value_form',
@@ -150,8 +149,9 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
     '#title' => $title,
     '#required' => $instance['required'],
     '#description' => $description,
-    '#prefix' => '<div id="' . $field_name_url_css . '-wrapper">',
+    '#prefix' => '<div id="' . $wrapper_id . '">',
     '#suffix' => '</div>',
+    '#max_delta' => $max,
   );
 
   $function = $instance['widget']['module'] . '_field_widget';
@@ -188,28 +188,25 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
       }
     }
 
-    // Add AHAH add more button, if not working with a programmed form.
+    // Add 'add more' button, if not working with a programmed form.
     if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
-      $bundle_name_url_str = str_replace('_', '-', $instance['bundle']);
-      $field_name_url_str = str_replace('_', '-', $field_name);
 
       $form_element[$field_name . '_add_more'] = array(
         '#type' => 'submit',
         '#name' => $field_name . '_add_more',
         '#value' => t('Add another item'),
+        '#attributes' => array('class' => array('field-add-more-submit')),
         // Submit callback for disabled JavaScript.
         '#submit' => array('field_add_more_submit'),
         '#ajax' => array(
-          'path' => 'field/js_add_more/' . $bundle_name_url_css . '/' . $field_name_url_css,
-          'wrapper' => $field_name_url_css . '-wrapper',
+          'callback' => 'field_add_more_js',
+          'wrapper' => $wrapper_id,
           'method' => 'replace',
           'effect' => 'fade',
         ),
-        // When JS is disabled, the field_add_more_submit handler will find
-        // the relevant field using these entries.
+        // The field_add_more_submit() and field_add_more_js() handlers will
+        // find the relevant field using those entries.
         '#field_name' => $field_name,
-        '#bundle' => $instance['bundle'],
-        '#attributes' => array('class' => array('field-add-more-submit')),
         '#language' => $langcode,
       );
     }
@@ -343,114 +340,27 @@ function field_add_more_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback for AHAH addition of new empty widgets.
+ * Ajax callback for addition of new empty widgets.
  */
-function field_add_more_js($bundle_name, $field_name) {
-  // Arguments are coming from the url, so we translate back dashes.
-  $field_name = str_replace('-', '_', $field_name);
-
-  $invalid = FALSE;
-  if (empty($_POST['form_build_id'])) {
-    // Invalid request.
-    $invalid = TRUE;
-  }
-
-  // Retrieve the cached form.
-  $form_state = form_state_defaults();
-  $form_build_id = $_POST['form_build_id'];
-  $form = form_get_cache($form_build_id, $form_state);
-  if (!$form) {
-    // Invalid form_build_id.
-    $invalid = TRUE;
-  }
-
+function field_add_more_js($form, $form_state) {
   // Retrieve field information.
+  $field_name = $form_state['clicked_button']['#field_name'];
   $field = $form['#fields'][$field_name]['field'];
-  $instance = $form['#fields'][$field_name]['instance'];
-  $form_path = $form['#fields'][$field_name]['form_path'];
   if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
-    // Ivnalid
-    $invalid = TRUE;
-  }
-
-  if ($invalid) {
     ajax_render(array());
   }
-
-  // We don't simply return a new empty widget row to append to existing ones,
-  // because:
-  // - ahah.js won't simply let us add a new row to a table
-  //   @todo ajax.js lets you. :)
-  // - attaching the 'draggable' behavior won't be easy
-  // So we resort to rebuilding the whole table of widgets including the
-  // existing ones, which makes us jump through a few hoops.
-
-  // The form that we get from the cache is unbuilt. We need to build it so
-  // that _value callbacks can be executed and $form_state['values'] populated.
-  // We only want to affect $form_state['values'], not the $form itself
-  // (built forms aren't supposed to enter the cache) nor the rest of
-  // $form_state, so we use copies of $form and $form_state.
-  $form_copy = $form;
-  $form_state_copy = $form_state;
-  $form_state_copy['input'] = array();
-  form_builder($_POST['form_id'], $form_copy, $form_state_copy);
-  // Just grab the data we need.
-  $form_state['values'] = $form_state_copy['values'];
-  // Reset cached ids, so that they don't affect the actual form we output.
-  drupal_static_reset('form_clean_id');
-
-  // Ensure that a valid language is provided.
-  $langcode = key($_POST[$field_name]);
-  if ($langcode != FIELD_LANGUAGE_NONE) { 
-    $langcode = field_multilingual_valid_language($langcode);
-  }
-
-  // Sort the $form_state['values'] we just built *and* the incoming $_POST data
-  // according to d-n-d reordering.
-  unset($form_state['values'][$field_name][$langcode][$field['field_name'] . '_add_more']);
-  foreach ($_POST[$field_name][$langcode] as $delta => $item) {
-    $form_state['values'][$field_name][$langcode][$delta]['_weight'] = $item['_weight'];
-  }
-  $form_state['values'][$field_name][$langcode] = _field_sort_items($field, $form_state['values'][$field_name][$langcode]);
-  $_POST[$field_name][$langcode] = _field_sort_items($field, $_POST[$field_name][$langcode]);
-
-  // Build our new form element for the whole field, asking for one more element.
-  $form_state['field_item_count'] = array($field_name => count($_POST[$field_name][$langcode]) + 1);
-  $items = $form_state['values'][$field_name][$langcode];
-  $form_element = field_default_form(NULL, NULL, $field, $instance, $langcode, $items, $form, $form_state);
-  // Let other modules alter it.
-  drupal_alter('form', $form_element, array(), 'field_add_more_js');
-
-  // Add the new element at the right location in the (original, unbuilt) form.
-  $target = &$form;
-  foreach ($form_path as $key) {
-    $target = &$target[$key];
-  }
-  $target = $form_element[$field_name];
-
-  // Save the new definition of the form.
-  $form_state['values'] = array();
-  form_set_cache($form_build_id, $form, $form_state);
-
-  // Build the new form against the incoming $_POST values so that we can
-  // render the new element.
-  $delta = max(array_keys($_POST[$field_name][$langcode])) + 1;
-  $_POST[$field_name][$langcode][$delta]['_weight'] = $delta;
-  $form_state = form_state_defaults();
-  $form_state['input'] = $_POST;
-  $form = form_builder($_POST['form_id'], $form, $form_state);
-
-  // Render the new output.
-  // We fetch the form element from the built $form.
+  // Navigate to the right part of the form.
+  $form_path = $form['#fields'][$field_name]['form_path'];
   $field_form = $form;
   foreach ($form_path as $key) {
     $field_form = $field_form[$key];
   }
+
   // Add a DIV around the new field to receive the AJAX effect.
-  $field_form[$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($field_form[$delta]['#prefix']) ? $field_form[$delta]['#prefix'] : '');
-  $field_form[$delta]['#suffix'] = (isset($field_form[$delta]['#suffix']) ? $field_form[$delta]['#suffix'] : '') . '</div>';
-  // Prevent duplicate wrapper.
-  unset($field_form['#prefix'], $field_form['#suffix']);
+  $langcode = $field_form['#language'];
+  $delta = $field_form[$langcode]['#max_delta'];
+  $field_form[$langcode][$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($field_form[$langcode][$delta]['#prefix']) ? $field_form[$langcode][$delta]['#prefix'] : '');
+  $field_form[$langcode][$delta]['#suffix'] = (isset($field_form[$langcode][$delta]['#suffix']) ? $field_form[$langcode][$delta]['#suffix'] : '') . '</div>';
 
   $output = theme('status_messages') . drupal_render($field_form);
 
