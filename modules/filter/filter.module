@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.282 2009/08/26 10:28:45 dries Exp $
+// $Id: filter.module,v 1.283 2009/08/27 20:25:28 dries Exp $
 
 /**
  * @file
@@ -963,3 +963,15 @@ function _filter_autop($text) {
 /**
  * @} End of "Standard filters".
  */
+
+/**
+ * Implement hook_user_role_delete().
+ * 
+ * Remove deleted role from formats that use it. 
+ */
+function filter_user_role_delete($role) {
+  db_update('filter_format')
+    ->expression('roles', 'REPLACE(roles, :rid, :replacement)', array(':rid' => ',' . $role->rid, ':replacement' => ''))
+    ->condition('roles', '%,' . $role->rid . '%', 'LIKE')
+    ->execute();
+}
