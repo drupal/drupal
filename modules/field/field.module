@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.28 2009/08/24 00:14:20 webchick Exp $
+// $Id: field.module,v 1.29 2009/08/27 04:40:12 webchick Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -153,23 +153,6 @@ function field_help($path, $arg) {
  */
 function field_init() {
   drupal_add_css(drupal_get_path('module', 'field') . '/theme/field.css');
-}
-
-/**
- * Implement hook_menu().
- */
-function field_menu() {
-  $items = array();
-
-  // Callback for AHAH add more buttons.
-  $items['field/js_add_more'] = array(
-    'page callback' => 'field_add_more_js',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'field.form.inc',
-  );
-
-  return $items;
 }
 
 /**
