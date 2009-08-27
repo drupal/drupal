@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.19 2009/08/26 10:17:54 dries Exp $
+// $Id: php.module,v 1.20 2009/08/27 21:18:19 dries Exp $
 
 /**
  * @file
@@ -79,7 +79,7 @@ function php_eval($code) {
 /**
  * Tips callback for php filter.
  */
-function _php_filter_tips($format, $long = FALSE) {
+function _php_filter_tips($filter, $format, $long = FALSE) {
   global $base_url;
   if ($long) {
     $output = '<h4>' . t('Using custom PHP code') . '</h4>';
