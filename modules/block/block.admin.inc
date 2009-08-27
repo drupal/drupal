@@ -221,7 +221,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
   $theme_default = variable_get('theme_default', 'garland');
 
   // Create a select list for each theme
-  foreach (system_get_theme_data() as $theme_key => $theme) {
+  foreach (list_themes() as $theme_key => $theme) {
     // Only display enabled themes
     if ($theme->status) {
       $region = db_query("SELECT region FROM {block} WHERE module = :module AND delta = :delta AND theme = :theme", array(
@@ -492,6 +492,18 @@ function block_add_block_form_submit($form, &$form_state) {
     ));
   }
   $query->execute();
+  
+  // Store regions per theme for this block
+  foreach ($form_state['values']['regions'] as $theme => $region) {
+    db_merge('block')
+      ->key(array('theme' => $theme, 'delta' => $delta, 'module' => $form_state['values']['module']))
+      ->fields(array(
+        'region' => $region,
+        'pages' => trim($form_state['values']['pages']),
+        'status' => (int) ($region != BLOCK_REGION_NONE),
+      ))
+      ->execute();
+  }
 
   drupal_set_message(t('The block has been created.'));
   cache_clear_all();
