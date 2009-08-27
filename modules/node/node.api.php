@@ -570,40 +570,43 @@ function hook_node_build_alter($node, $build_mode) {
 }
 
 /**
- * Define module-provided node types.
+ * Defines module-provided node types.
  *
- * This is a hook used by node modules. This hook is required for modules to
- * define one or more node types. It is called to determine the names and the
- * attributes of a module's node types.
- *
+ * This hook allows a module to define one or more of its own node types. For
+ * example, the blog module uses it to define a blog node-type named "Blog
+ * entry." The name and attributes of each desired node type are specified in
+ * an array returned by the hook.
+ * 
  * Only module-provided node types should be defined through this hook. User-
  * provided (or 'custom') node types should be defined only in the 'node_type'
  * database table, and should be maintained by using the node_type_save() and
  * node_type_delete() functions.
  *
  * @return
- *   An array of information on the module's node types. The array contains a
- *   sub-array for each node type, with the machine-readable type name as the
- *   key. Each sub-array has up to 10 attributes. Possible attributes:
+ *   An array of information defining the module's node types. The array
+ *   contains a sub-array for each node type, with the machine-readable type
+ *   name as the key. Each sub-array has up to 10 attributes. Possible
+ *   attributes:
  *   - "name": the human-readable name of the node type. Required.
- *   - "module": a string telling Drupal how a module's functions map to hooks
- *      (i.e. if module is defined as example_foo, then example_foo_insert will
+ *   - "base": the base string used to construct callbacks corresponding to
+ *      this node type.
+ *      (i.e. if base is defined as example_foo, then example_foo_insert will
  *      be called when inserting a node of that type). This string is usually
- *      the name of the module in question, but not always. Required.
+ *      the name of the module, but not always. Required.
  *   - "description": a brief description of the node type. Required.
- *   - "help": text that will be displayed at the top of the submission form for
- *      this content type. Optional (defaults to '').
+ *   - "help": help information shown to the user when creating a node of
+ *      this type.. Optional (defaults to '').
  *   - "has_title": boolean indicating whether or not this node type has a title
  *      field. Optional (defaults to TRUE).
  *   - "title_label": the label for the title field of this content type.
  *      Optional (defaults to 'Title').
- *   - "has_body": boolean indicating whether or not this node type has a  body
+ *   - "has_body": boolean indicating whether or not this node type has a body
  *      field. Optional (defaults to TRUE).
  *   - "body_label": the label for the body field of this content type. Optional
  *      (defaults to 'Body').
- *   - "locked": boolean indicating whether the machine-readable name of this
- *      content type can (FALSE) or cannot (TRUE) be edited by a site
- *      administrator. Optional (defaults to TRUE).
+ *   - "locked": boolean indicating whether the administrator can change the
+ *      machine name of this type. FALSE = changable (not locked),
+ *      TRUE = unchangable (locked). Optional (defaults to TRUE).
  *
  * The machine-readable name of a node type should contain only letters,
  * numbers, and underscores. Underscores will be converted into hyphens for the
@@ -617,10 +620,10 @@ function hook_node_build_alter($node, $build_mode) {
  */
 function hook_node_info() {
   return array(
-    'book' => array(
-      'name' => t('book page'),
-      'module' => 'book',
-      'description' => t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written. So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it."),
+    'blog' => array(
+      'name' => t('Blog entry'),
+      'base' => 'blog',
+      'description' => t('Use for multi-user blogs. Every user gets a personal blog.'),
     )
   );
 }
