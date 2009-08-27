@@ -256,6 +256,7 @@ function taxonomy_menu() {
     'page callback' => 'taxonomy_autocomplete_legacy',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+    'file' => 'taxonomy.pages.inc',
   );
 
   $items['admin/structure/taxonomy/%taxonomy_vocabulary'] = array(
