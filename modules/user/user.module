@@ -2207,6 +2207,114 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
 }
 
 /**
+ * Fetch a user role from database.
+ *
+ * @param $role
+ *   A string with the role name, or an integer with the role ID.
+ * @return
+ *   A fully-loaded role object if a role with the given name or ID 
+ *   exists, FALSE otherwise.
+ */
+function user_role_load($role) {
+  $field = is_int($role) ? 'rid' : 'name';
+  return db_select('role', 'r')
+    ->fields('r')
+    ->condition($field, $role)
+    ->execute()
+    ->fetchObject();
+}
+/**
+ * Save a user role to the database.
+ *
+ * @param $role
+ *   A role object to modify or add. If $role->rid is not specified, a new
+ *   role will be created.
+ * @return
+ *   Status constant indicating if role was created or updated.
+ *   Failure to write the user role record will return FALSE. Otherwise.
+ *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation 
+ *   performed.
+ */
+function user_role_save($role) {
+  if ($role->name) {
+    // Prevent leading and trailing spaces in role names.
+    $role->name = trim($role->name);
+  }
+  if (!empty($role->rid) && $role->name) {
+    $status = drupal_write_record('role', $role, 'rid');
+    module_invoke_all('user_role_update', $role);
+  }
+  else {
+    $status = drupal_write_record('role', $role);
+    module_invoke_all('user_role_insert', $role);
+  }
+  
+  return $status;
+}
+
+/**
+ * Delete a user role from database.
+ *
+ * @param $role
+ *   A string with the role name, or an integer with the role ID.
+ */
+function user_role_delete($role) {
+  $role = user_role_load($role);
+
+  db_delete('role')
+    ->condition('rid', $role->rid)
+    ->execute();
+  db_delete('role_permission')
+    ->condition('rid', $role->rid)
+    ->execute();
+  // Update the users who have this role set:
+  db_delete('users_roles')
+    ->condition('rid', $role->rid)
+    ->execute();
+    
+  // Clear the user access cache.
+  user_access(NULL, NULL, TRUE);
+    
+  module_invoke_all('user_role_delete', $role);
+}
+
+/**
+ * Assign permissions to a user role.
+ *
+ * @param $role
+ *   A string with the role name, or an integer with the role ID.
+ * @param $permissions
+ *   An array of permissions strings.
+ * @param $merge
+ *   A boolean indicating whether to add permissions or to merge 
+ *   with all existing permissions.
+ */
+function user_role_set_permissions($role, array $permissions = array(), $merge = FALSE) {
+  $role = user_role_load($role);
+  if (!$merge) {
+    // Delete existing permissions for the role.
+    db_delete('role_permission')
+      ->condition('rid', $role->rid)
+      ->execute();
+  }
+
+  // Assign the new permissions for the role.
+  foreach ($permissions as $permission_string) {
+    db_merge('role_permission')
+      ->key(array(
+        'rid' => $role->rid,
+        'permission' => $permission_string,
+      ))
+      ->execute();
+  }
+
+  // Clear the user access cache.
+  user_access(NULL, NULL, TRUE);
+
+  return TRUE;
+}
+
+/**
  * Implement hook_user_operations().
  */
 function user_user_operations($form_state = array()) {

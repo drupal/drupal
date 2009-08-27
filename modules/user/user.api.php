@@ -423,5 +423,65 @@ function hook_user_view($account) {
 }
 
 /**
+ * Inform other modules that a user role has been added.
+ *
+ * Modules implementing this hook can act on the user role object when saved to
+ * the database. It's recommended that you implement this hook if your module
+ * adds additional data to user roles object. The module should save its custom
+ * additions to the database.
+ *
+ * @param $role
+ *   A user role object.
+ */
+function hook_user_role_insert($role) {
+  // Save extra fields provided by the module to user roles.
+  db_insert('my_module_table')
+    ->fields(array(
+      'rid' => $role->rid,
+      'role_description' => $role->description,
+    ))
+    ->execute();
+}
+
+/**
+ * Inform other modules that a user role has been updated.
+ *
+ * Modules implementing this hook can act on the user role object when updated.
+ * It's recommended that you implement this hook if your module adds additional
+ * data to user roles object. The module should save its custom additions to
+ * the database.
+ *
+ * @param $role
+ *   A user role object.
+ */
+function hook_user_role_update($role) {
+  // Save extra fields provided by the module to user roles.
+  db_merge('my_module_table')
+    ->key(array('rid' => $role->rid))
+    ->fields(array(
+      'role_description' => $role->description
+    ))
+    ->execute();
+}
+
+/**
+ * Inform other modules that a user role has been deleted.
+ *
+ * This hook allows you act when a user role has been deleted.
+ * If your module stores references to roles, it's recommended that you 
+ * implement this hook and delete existing instances of the deleted role
+ * in your module database tables.
+ *
+ * @param $role
+ *   The $role object being deleted.
+ */
+function hook_user_role_delete($role) {
+  // Delete existing instances of the deleted role.
+  db_delete('my_module_table')
+    ->condition('rid', $role->rid)
+    ->execute();
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

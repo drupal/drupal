@@ -963,3 +963,15 @@ function _filter_autop($text) {
 /**
  * @} End of "Standard filters".
  */
+
+/**
+ * Implement hook_user_role_delete().
+ * 
+ * Remove deleted role from formats that use it. 
+ */
+function filter_user_role_delete($role) {
+  db_update('filter_format')
+    ->expression('roles', 'REPLACE(roles, :rid, :replacement)', array(':rid' => ',' . $role->rid, ':replacement' => ''))
+    ->condition('roles', '%,' . $role->rid . '%', 'LIKE')
+    ->execute();
+}

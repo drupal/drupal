@@ -854,6 +854,17 @@ function template_preprocess_block(&$variables) {
 }
 
 /**
+ * Implement hook_user_role_delete().
+ *
+ * Remove deleted role from blocks that use it. 
+ */
+function block_user_role_delete($role) {
+  db_delete('block_role')
+    ->condition('rid', $role->rid)
+    ->execute();
+}
+
+/**
  * Implement hook_filter_format_delete().
  */
 function block_filter_format_delete($format, $default) {

@@ -385,21 +385,6 @@ function system_install() {
       ->execute();
   }
 
-  $query = db_insert('role_permission')->fields(array('rid', 'permission'));
-  // Anonymous role permissions.
-  $query->values(array(
-    'rid' => DRUPAL_ANONYMOUS_RID,
-    'permission' => 'access content',
-  ));
-
-  // Authenticated role permissions.
-  foreach (array('access comments', 'access content', 'post comments', 'post comments without approval', 'view own unpublished content') as $permission) {
-    $query->values(array(
-      'rid' => DRUPAL_AUTHENTICATED_RID,
-      'permission' => $permission,
-    ));
-  }
-  $query->execute();
 
   variable_set('theme_default', 'garland');
 

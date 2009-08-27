@@ -892,26 +892,19 @@ class DrupalWebTestCase extends DrupalTestCase {
       $name = $this->randomName();
     }
 
+    // Check the all the permissions strings are valid.
     if (!$this->checkPermissions($permissions)) {
       return FALSE;
     }
 
     // Create new role.
-    db_insert('role')
-      ->fields(array('name' => $name))
-      ->execute();
-    $role = db_query('SELECT * FROM {role} WHERE name = :name', array(':name' => $name))->fetchObject();
-    $this->assertTrue($role, t('Created role of name: @name, id: @rid', array('@name' => $name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
+    $role = new stdClass();
+    $role->name = $name;
+    user_role_save($role);
+    user_role_set_permissions($role->name, $permissions);
+    
+    $this->assertTrue(isset($role->rid), t('Created role of name: @name, id: @rid', array('@name' => $name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
     if ($role && !empty($role->rid)) {
-      // Assign permissions to role and mark it for clean-up.
-      $query = db_insert('role_permission')->fields(array('rid', 'permission'));
-      foreach ($permissions as $permission_string) {
-        $query->values(array(
-          'rid' => $role->rid,
-          'permission' => $permission_string,
-        ));
-      }
-      $query->execute();
       $count = db_query('SELECT COUNT(*) FROM {role_permission} WHERE rid = :rid', array(':rid' => $role->rid))->fetchField();
       $this->assertTrue($count == count($permissions), t('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), t('Role'));
       return $role->rid;

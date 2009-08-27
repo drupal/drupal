@@ -663,19 +663,8 @@ function user_admin_permissions($form_state, $rid = NULL) {
  */
 function user_admin_permissions_submit($form, &$form_state) {
   foreach ($form_state['values']['role_names'] as $rid => $name) {
-    $checked = array_filter($form_state['values'][$rid]);
-    // Delete existing permissions for the role. This handles "unchecking" checkboxes.
-    db_delete('role_permission')
-      ->condition('rid', $rid)
-      ->execute();
-    $query = db_insert('role_permission')->fields(array('rid', 'permission'));
-    foreach ($checked as $permission) {
-      $query->values(array(
-        'rid' => $rid,
-        'permission' => $permission,
-      ));
-    }
-    $query->execute();
+    $permissions = array_filter($form_state['values'][$rid]);
+    user_role_set_permissions($rid, $permissions);
   }
 
   drupal_set_message(t('The changes have been saved.'));
@@ -776,13 +765,13 @@ function user_admin_role() {
 function user_admin_role_validate($form, &$form_state) {
   if ($form_state['values']['name']) {
     if ($form_state['values']['op'] == t('Save role')) {
-      $existing_role = (bool) db_query_range("SELECT 1 FROM {role} WHERE name = :name AND rid <> :rid", array(':name' => $form_state['values']['name'], ':rid' => $form_state['values']['rid']), 0, 1)->fetchField();
-      if ($existing_role) {
+      $role = user_role_load($form_state['values']['name']);
+      if ($role && $role->rid != $form_state['values']['rid']) {    
         form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_state['values']['name'])));
       }
     }
     elseif ($form_state['values']['op'] == t('Add role')) {
-      if ((bool) db_query_range('SELECT 1 FROM {role} WHERE name = :name', array(':name' => $form_state['values']['name']), 0, 1)->fetchField()) {
+      if (user_role_load($form_state['values']['name'])) {
         form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_state['values']['name'])));
       }
     }
@@ -793,31 +782,17 @@ function user_admin_role_validate($form, &$form_state) {
 }
 
 function user_admin_role_submit($form, &$form_state) {
+  $role = (object)$form_state['values'];
   if ($form_state['values']['op'] == t('Save role')) {
-    db_update('role')
-      ->fields(array('name' => $form_state['values']['name']))
-      ->condition('rid', $form_state['values']['rid'])
-      ->execute();
+    user_role_save($role);
     drupal_set_message(t('The role has been renamed.'));
   }
   elseif ($form_state['values']['op'] == t('Delete role')) {
-    db_delete('role')
-      ->condition('rid', $form_state['values']['rid'])
-      ->execute();
-    db_delete('role_permission')
-      ->condition('rid', $form_state['values']['rid'])
-      ->execute();
-    // Update the users who have this role set:
-    db_delete('users_roles')
-      ->condition('rid', $form_state['values']['rid'])
-      ->execute();
-
+    user_role_delete($form_state['values']['rid']);
     drupal_set_message(t('The role has been deleted.'));
   }
   elseif ($form_state['values']['op'] == t('Add role')) {
-    db_insert('role')
-      ->fields(array('name' => $form_state['values']['name']))
-      ->execute();
+    user_role_save($role);
     drupal_set_message(t('The role has been added.'));
   }
   $form_state['redirect'] = 'admin/config/people/roles';
