@@ -425,13 +425,14 @@ function system_install() {
 
   // Filtered HTML:
   db_insert('filter')
-    ->fields(array('format', 'module', 'name', 'weight'))
+    ->fields(array('format', 'module', 'name', 'weight', 'status'))
     // URL filter.
     ->values(array(
       'format' => $filtered_html_format,
       'module' => 'filter',
       'name' => 'filter_url',
       'weight' => 0,
+      'status' => 1,
     ))
     // HTML filter.
     ->values(array(
@@ -439,6 +440,7 @@ function system_install() {
       'module' => 'filter',
       'name' => 'filter_html',
       'weight' => 1,
+      'status' => 1,
     ))
     // Line break filter.
     ->values(array(
@@ -446,6 +448,7 @@ function system_install() {
       'module' => 'filter',
       'name' => 'filter_autop',
       'weight' => 2,
+      'status' => 1,
     ))
     // HTML corrector filter.
     ->values(array(
@@ -453,6 +456,7 @@ function system_install() {
       'module' => 'filter',
       'name' => 'filter_htmlcorrector',
       'weight' => 10,
+      'status' => 1,
     ))
   // Full HTML:
     // URL filter.
@@ -460,7 +464,8 @@ function system_install() {
       'format' => $full_html_format,
       'module' => 'filter',
       'name' => 'filter_url',
-       'weight' => 0,
+      'weight' => 0,
+      'status' => 1,
     ))
     // Line break filter.
     ->values(array(
@@ -468,6 +473,7 @@ function system_install() {
       'module' => 'filter',
       'name' => 'filter_autop',
       'weight' => 1,
+      'status' => 1,
     ))
     // HTML corrector filter.
     ->values(array(
@@ -475,6 +481,7 @@ function system_install() {
       'module' => 'filter',
       'name' => 'filter_htmlcorrector',
       'weight' => 10,
+      'status' => 1,
     ))
     ->execute();
 

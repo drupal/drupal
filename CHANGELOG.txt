@@ -79,6 +79,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       contributed date or event modules installed, user time zone settings will
       fallback to the system time zone and will have to be reconfigured by each user.
 - Filter system:
+    * Revamped the filter API and text format storage.
     * Refactored the HTML corrector to take advantage of PHP 5 features.
 - Removed ping module:
     * Contributed modules with similar functionality are available.

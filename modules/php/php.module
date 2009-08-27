@@ -79,7 +79,7 @@ function php_eval($code) {
 /**
  * Tips callback for php filter.
  */
-function _php_filter_tips($format, $long = FALSE) {
+function _php_filter_tips($filter, $format, $long = FALSE) {
   global $base_url;
   if ($long) {
     $output = '<h4>' . t('Using custom PHP code') . '</h4>';

@@ -13,11 +13,6 @@ function filter_schema() {
   $schema['filter'] = array(
     'description' => 'Table that maps filters (HTML corrector) to text formats (Filtered HTML).',
     'fields' => array(
-      'fid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Auto-incrementing filter ID.',
-      ),
       'format' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -44,9 +39,22 @@ function filter_schema() {
         'default' => 0,
         'size' => 'tiny',
         'description' => 'Weight of filter within format.',
-      )
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Filter enabled status. (1 = enabled, 0 = disabled)',
+      ),
+      'settings' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        'description' => 'A serialized array of name value pairs that store the filter settings for the specific format.',
+      ),
     ),
-    'primary key' => array('fid'),
+    'primary key' => array('format', 'name'),
     'unique keys' => array(
       'fmn' => array('format', 'module', 'name'),
     ),
@@ -184,6 +192,71 @@ function filter_update_7003() {
       $ret[] = update_sql("UPDATE {filter} SET name = '" . $new_delta . "' WHERE module = '" . $module . "' AND name = '" . $old_delta . "'");
     }
   }
+  return $ret;
+}
+
+/**
+ * Move filter settings storage into {filter} table.
+ *
+ * - Remove {filter}.fid.
+ * - Add (format, name) as primary key for {filter}.
+ * - Add {filter}.status.
+ * - Add {filter}.settings.
+ */
+function filter_update_7004() {
+  $ret = array();
+  db_drop_field($ret, 'filter', 'fid');
+  db_add_primary_key($ret, 'filter', array('format', 'name'));
+  db_add_field($ret, 'filter', 'status',
+    array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'Filter enabled status. (1 = enabled, 0 = disabled)',
+    )
+  );
+  db_add_field($ret, 'filter', 'settings',
+    array(
+      'type' => 'text',
+      'not null' => FALSE,
+      'size' => 'big',
+      'serialize' => TRUE,
+      'description' => 'A serialized array of name value pairs that store the filter settings for the specific format.',
+    )
+  );
+
+  // Enable all existing filters ({filter} contained only enabled previously).
+  $ret[] = update_sql("UPDATE {filter} SET status = 1");
+
+  // Move filter settings from system variables into {filter}.settings.
+  $filters = db_query("SELECT * FROM {filter} WHERE module = :name", array(':name' => 'filter'));
+  foreach ($filters as $filter) {
+    $settings = array();
+    if ($filter->name == 'filter_html') {
+      if ($setting = variable_get("allowed_html_{$filter->format}", NULL)) {
+        $settings['allowed_html'] = $setting;
+        variable_del("allowed_html_{$filter->format}");
+      }
+      if ($setting = variable_get("filter_html_help_{$filter->format}", NULL)) {
+        $settings['filter_html_help'] = $setting;
+        variable_del("filter_html_help_{$filter->format}");
+      }
+      if ($setting = variable_get("filter_html_nofollow_{$filter->format}", NULL)) {
+        $settings['filter_html_nofollow'] = $setting;
+        variable_del("filter_html_nofollow_{$filter->format}");
+      }
+    }
+    elseif ($filter->name == 'filter_url') {
+      if ($setting = variable_get("filter_url_length_{$filter->format}", NULL)) {
+        $settings['filter_url_length'] = $setting;
+        variable_del("filter_url_length_{$filter->format}");
+      }
+    }
+    if (!empty($settings)) {
+      $ret[] = update_sql("UPDATE {filter} SET settings = '" . serialize($settings) . "' WHERE format = {$filter->format} AND name = '{$filter->name}'");
+    }
+  }
+
   return $ret;
 }
 

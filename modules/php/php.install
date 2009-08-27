@@ -31,6 +31,7 @@ function php_install() {
         'module' => 'php',
         'name' => 'php_code',
         'weight' => 0,
+        'status' => 1,
       ))
       ->execute();
 

@@ -140,8 +140,17 @@ function filter_menu() {
   return $items;
 }
 
-function filter_format_load($arg) {
-  return filter_formats($arg);
+/**
+ * Load a text format object from the database.
+ *
+ * @param $format
+ *   The format ID.
+ *
+ * @return
+ *   A fully-populated text format object.
+ */
+function filter_format_load($format) {
+  return filter_formats($format);
 }
 
 /**
@@ -155,45 +164,47 @@ function filter_format_save($format) {
   // We should always set all roles to TRUE when saving the default format.
   // We use leading and trailing comma's to allow easy substring matching.
   $roles = array_filter($format->roles);
-  if ($format->format == variable_get('filter_default_format', 1)) {
+  if (!empty($format->format) && $format->format == variable_get('filter_default_format', 1)) {
     $roles = ',' . implode(',', array_keys(user_roles())) . ',';
   }
   else {
-    $roles = ',' . implode(',',array_keys($roles)) . ',';
+    $roles = ',' . implode(',', array_keys($roles)) . ',';
   }
   $format->roles = $roles;
   $format->name = trim($format->name);
 
   // Add a new text format.
   if (empty($format->format)) {
-    $status = drupal_write_record('filter_format', $format);
+    $return = drupal_write_record('filter_format', $format);
   }
   else {
-    $status = drupal_write_record('filter_format', $format, 'format');
+    $return = drupal_write_record('filter_format', $format, 'format');
   }
-
-  db_delete('filter')
-    ->condition('format', $format->format)
-    ->execute();
 
   // Get the filters currently active in the format, to add new filters
   // to the bottom.
   $current = filter_list_format($format->format);
-  $query = db_insert('filter')->fields(array('format', 'name', 'weight'));
   $filters = $format->filters;
 
-  foreach (array_keys(array_filter($filters)) as $name) {
+  foreach ($filters as $name => $status) {
+    $fields = array();
     // Add new filters to the bottom.
-    $weight = isset($current[$name]->weight) ? $current[$name]->weight : 10;
-    $query->values(array(
-      'format' => $format->format,
-      'name'  => $name,
-      'weight' => $weight,
-    ));
+    $fields['weight'] = isset($current[$name]->weight) ? $current[$name]->weight : 10;
+    $fields['status'] = $status;
+    // Only update settings if there are any.
+    if (!empty($format->settings[$name])) {
+      $fields['settings'] = serialize($format->settings[$name]);
+    }
+    db_merge('filter')
+      ->key(array(
+        'format' => $format->format,
+        'name' => $name,
+      ))
+      ->fields($fields)
+      ->execute();
   }
-  $query->execute();
 
-  if ($status == SAVED_NEW) {
+  if ($return == SAVED_NEW) {
     module_invoke_all('filter_format_insert', $format);
   }
   else {
@@ -202,7 +213,7 @@ function filter_format_save($format) {
 
   cache_clear_all($format->format . ':', 'cache_filter', TRUE);
 
-  return $status;
+  return $return;
 }
 
 /**
@@ -259,12 +270,12 @@ function filter_cron() {
  * @{
  * Filters implemented by the filter.module.
  */
-function _filter_html_tips($format, $long = FALSE) {
+function _filter_html_tips($filter, $format, $long = FALSE) {
   global $base_url;
-  if ($allowed_html = variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>')) {
+  if ($allowed_html = $filter->settings['allowed_html']) {
     if ($long) {
       $output = '<p>' . t('Allowed HTML tags: @tags', array('@tags' => $allowed_html)) . '</p>';
-      if (!variable_get("filter_html_help_$format", 1)) {
+      if (!$filter->settings['filter_html_help']) {
         return $output;
       }
 
@@ -355,7 +366,7 @@ function _filter_html_tips($format, $long = FALSE) {
   }
 }
 
-function _filter_autop_tips($format, $long = FALSE) {
+function _filter_autop_tips($filter, $format, $long = FALSE) {
   if ($long) {
     return t('Lines and paragraphs are automatically recognized. The &lt;br /&gt; line break, &lt;p&gt; paragraph and &lt;/p&gt; close paragraph tags are inserted automatically. If paragraphs are not recognized simply add a couple blank lines.');
   }
@@ -364,11 +375,11 @@ function _filter_autop_tips($format, $long = FALSE) {
   }
 }
 
-function _filter_url_tips() {
+function _filter_url_tips($filter, $format, $long = FALSE) {
   return t('Web page addresses and e-mail addresses turn into links automatically.');
 }
 
-function _filter_html_escape_tips() {
+function _filter_html_escape_tips($filter, $format, $long = FALSE) {
   return t('No HTML tags allowed.');
 }
 
@@ -462,6 +473,11 @@ function filter_format_allowcache($format) {
 
 /**
  * Retrieve a list of filters for a certain format.
+ *
+ * @param $format
+ *   The format ID.
+ * @return
+ *   An array of filter objects assosiated to the given format.
  */
 function filter_list_format($format) {
   static $filters = array();
@@ -469,10 +485,28 @@ function filter_list_format($format) {
 
   if (!isset($filters[$format])) {
     $filters[$format] = array();
-    $result = db_query("SELECT * FROM {filter} WHERE format = :format ORDER BY weight, module, name", array(':format' => (int) $format));
+    $result = db_select('filter', 'filter')
+      ->fields('filter')
+      ->condition('format', $format)
+      ->condition('status', 1)
+      ->orderBy('weight')
+      ->orderBy('module')
+      ->orderBy('name')
+      ->execute();
     foreach ($result as $filter) {
       if (isset($filter_info[$filter->name])) {
         $filter->title = $filter_info[$filter->name]['title'];
+        // Unpack stored filter settings.
+        if (isset($filter->settings)) {
+          $filter->settings = unserialize($filter->settings);
+        }
+        else {
+          $filter->settings = array();
+        }
+        // Apply default filter settings.
+        if (isset($filter_info[$filter->name]['default settings'])) {
+          $filter->settings = array_merge($filter_info[$filter->name]['default settings'], $filter->settings);
+        }
         $filters[$format][$filter->name] = $filter;
       }
     }
@@ -533,14 +567,14 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
   // Give filters the chance to escape HTML-like data such as code or formulas.
   foreach ($filters as $name => $filter) {
     if (isset($filter_info[$name]['prepare callback']) && function_exists($filter_info[$name]['prepare callback'])) {
-      $text = call_user_func($filter_info[$name]['prepare callback'], $text, $format, $langcode, $cache_id);
+      $text = $filter_info[$name]['prepare callback']($text, $filter, $format, $langcode, $cache, $cache_id);
     }
   }
 
   // Perform filtering.
   foreach ($filters as $name => $filter) {
     if (isset($filter_info[$name]['process callback']) && function_exists($filter_info[$name]['process callback'])) {
-      $text = call_user_func($filter_info[$name]['process callback'], $text, $format, $langcode, $cache_id);
+      $text = $filter_info[$name]['process callback']($text, $filter, $format, $langcode, $cache, $cache_id);
     }
   }
 
@@ -647,8 +681,8 @@ function _filter_tips($format, $long = FALSE) {
     $tips[$format->name] = array();
     foreach ($filters as $name => $filter) {
       if (isset($filter_info[$name]['tips callback']) && function_exists($filter_info[$name]['tips callback'])) {
-        $tip = call_user_func($filter_info[$name]['tips callback'],$format->format, $long);
-        $tips[$format->name][] = array('tip' => $tip, 'id' => $name);
+        $tip = $filter_info[$name]['tips callback']($filter, $format, $long);
+        $tips[$format->name][$name] = array('tip' => $tip, 'id' => $name);
       }
     }
   }
@@ -735,6 +769,11 @@ function filter_filter_info() {
     'description' => t('Allows you to restrict the HTML tags the user can use. It will also remove harmful content such as JavaScript events, JavaScript URLs and CSS styles from those tags that are not removed.'),
     'process callback' => '_filter_html',
     'settings callback' => '_filter_html_settings',
+    'default settings' => array(
+      'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>',
+      'filter_html_help' => 1,
+      'filter_html_nofollow' => 0,
+    ),
     'tips callback' => '_filter_html_tips',
   );
   $filters['filter_autop'] = array(
@@ -748,6 +787,9 @@ function filter_filter_info() {
     'description' => t('Turns web and e-mail addresses into clickable links.'),
     'process callback' => '_filter_url',
     'settings callback' => '_filter_url_settings',
+    'default settings' => array(
+      'filter_url_length' => 72,
+    ),
     'tips callback' => '_filter_url_tips',
   );
   $filters['filter_htmlcorrector'] = array(
@@ -767,30 +809,25 @@ function filter_filter_info() {
 /**
  * Settings callback for the HTML filter.
  */
-function _filter_html_settings($format) {
-  $form['filter_html'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('HTML filter'),
-    '#collapsible' => TRUE,
-  );
-  $form['filter_html']["allowed_html_$format"] = array(
+function _filter_html_settings(&$form_state, $filter, $defaults) {
+  $form['allowed_html'] = array(
     '#type' => 'textfield',
     '#title' => t('Allowed HTML tags'),
-    '#default_value' => variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>'),
+    '#default_value' => isset($filter->settings['allowed_html']) ? $filter->settings['allowed_html'] : $defaults['allowed_html'],
     '#size' => 64,
     '#maxlength' => 1024,
     '#description' => t('Specify a list of tags which should not be stripped. (Note that JavaScript event attributes are always stripped.)'),
   );
-  $form['filter_html']["filter_html_help_$format"] = array(
+  $form['filter_html_help'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display HTML help'),
-    '#default_value' => variable_get("filter_html_help_$format", 1),
+    '#default_value' => isset($filter->settings['filter_html_help']) ? $filter->settings['filter_html_help'] : $defaults['filter_html_help'],
     '#description' => t('If enabled, Drupal will display some basic HTML help in the long filter tips.'),
   );
-  $form['filter_html']["filter_html_nofollow_$format"] = array(
+  $form['filter_html_nofollow'] = array(
     '#type' => 'checkbox',
     '#title' => t('Spam link deterrent'),
-    '#default_value' => variable_get("filter_html_nofollow_$format", FALSE),
+    '#default_value' => isset($filter->settings['filter_html_nofollow']) ? $filter->settings['filter_html_nofollow'] : $defaults['filter_html_nofollow'],
     '#description' => t('If enabled, Drupal will add rel="nofollow" to all links, as a measure to reduce the effectiveness of spam links. Note: this will also prevent valid links from being followed by search engines, therefore it is likely most effective when enabled for anonymous users.'),
   );
   return $form;
@@ -799,11 +836,11 @@ function _filter_html_settings($format) {
 /**
  * HTML filter. Provides filtering of input into accepted HTML.
  */
-function _filter_html($text, $format) {
-  $allowed_tags = preg_split('/\s+|<|>/', variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>'), -1, PREG_SPLIT_NO_EMPTY);
+function _filter_html($text, $filter) {
+  $allowed_tags = preg_split('/\s+|<|>/', $filter->settings['allowed_html'], -1, PREG_SPLIT_NO_EMPTY);
   $text = filter_xss($text, $allowed_tags);
 
-  if (variable_get("filter_html_nofollow_$format", FALSE)) {
+  if ($filter->settings['filter_html_nofollow']) {
     $html_dom = filter_dom_load($text);
     $links = $html_dom->getElementsByTagName('a');
     foreach($links as $link) {
@@ -818,16 +855,11 @@ function _filter_html($text, $format) {
 /**
  * Settings callback for URL filter.
  */
-function _filter_url_settings($format) {
-  $form['filter_urlfilter'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('URL filter'),
-    '#collapsible' => TRUE,
-  );
-  $form['filter_urlfilter']['filter_url_length_' . $format] = array(
+function _filter_url_settings(&$form_state, $filter, $defaults) {
+  $form['filter_url_length'] = array(
     '#type' => 'textfield',
     '#title' => t('Maximum link text length'),
-    '#default_value' => variable_get('filter_url_length_' . $format, 72),
+    '#default_value' => isset($filter->settings['filter_url_length']) ? $filter->settings['filter_url_length'] : $defaults['filter_url_length'],
     '#maxlength' => 4,
     '#description' => t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained; just the text portion of the link will be truncated.'),
   );
@@ -838,9 +870,9 @@ function _filter_url_settings($format) {
  * URL filter. Automatically converts text web addresses (URLs, e-mail addresses,
  * ftp links, etc.) into hyperlinks.
  */
-function _filter_url($text, $format) {
+function _filter_url($text, $filter) {
   // Pass length to regexp callback
-  _filter_url_trim(NULL, variable_get('filter_url_length_' . $format, 72));
+  _filter_url_trim(NULL, $filter->settings['filter_url_length']);
 
   $text = ' ' . $text . ' ';
 
