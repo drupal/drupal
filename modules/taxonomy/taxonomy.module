@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.506 2009/08/27 00:33:52 webchick Exp $
+// $Id: taxonomy.module,v 1.507 2009/08/27 20:48:31 dries Exp $
 
 /**
  * @file
@@ -256,6 +256,7 @@ function taxonomy_menu() {
     'page callback' => 'taxonomy_autocomplete_legacy',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+    'file' => 'taxonomy.pages.inc',
   );
 
   $items['admin/structure/taxonomy/%taxonomy_vocabulary'] = array(
