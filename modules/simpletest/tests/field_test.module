@@ -495,7 +495,7 @@ function field_test_field_widget_info() {
  * @return
  *   the form item for a single element for this field
  */
-function field_test_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = 0) {
+function field_test_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = 0) {
   $element = array(
     'value' => array(
       '#title' => $instance['label'],

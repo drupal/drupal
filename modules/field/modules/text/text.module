@@ -594,6 +594,8 @@ function text_elements() {
  *   The field structure.
  * @param $instance
  *   the field instance array
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
  *   array of default values for this field
  * @param $delta
@@ -602,7 +604,7 @@ function text_elements() {
  * @return
  *   the form item for a single element for this field
  */
-function text_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = 0) {
+function text_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = 0) {
   $element = array(
     '#type' => $instance['widget']['type'],
     '#default_value' => isset($items[$delta]) ? $items[$delta] : '',

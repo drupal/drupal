@@ -330,13 +330,15 @@ function number_elements() {
  *   The field structure.
  * @param $instance
  *   the field instance array
+ * @param $langcode
+ *   The language associated to $items.
  * @param $delta
  *   the order of this item in the array of subelements (0, 1, 2, etc)
  *
  * @return
  *   the form item for a single element for this field
  */
-function number_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = 0) {
+function number_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = 0) {
   $element = array(
     '#type' => $instance['widget']['type'],
     '#default_value' => isset($items[$delta]) ? $items[$delta] : NULL,

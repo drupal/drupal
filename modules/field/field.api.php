@@ -620,6 +620,8 @@ function hook_field_widget_info_alter(&$info) {
  *   The field structure.
  * @param $instance
  *   The field instance.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
  *   Array of default values for this field.
  * @param $delta
@@ -627,7 +629,7 @@ function hook_field_widget_info_alter(&$info) {
  * @return
  *   The form item for a single element for this field.
  */
-function hook_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = 0) {
+function hook_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = 0) {
   $element = array(
     '#type' => $instance['widget']['type'],
     '#default_value' => isset($items[$delta]) ? $items[$delta] : '',

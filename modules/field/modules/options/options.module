@@ -98,7 +98,7 @@ function options_elements() {
 /**
  * Implement hook_field_widget().
  */
-function options_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = NULL) {
+function options_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = NULL) {
   $element = array(
     '#type' => $instance['widget']['type'],
     '#default_value' => !empty($items) ? $items : array(),
