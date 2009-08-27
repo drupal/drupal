@@ -83,14 +83,17 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Refactored the HTML corrector to take advantage of PHP 5 features.
 - Removed ping module:
     * Contributed modules with similar functionality are available.
-- Removed per-user themes:
-    * Contributed modules with similar functionality are available.
-- Refactored the "access rules" component of user module:
-    * The user module now provides a simple interface for blocking single
-      IP addresses. The previous functionality in the user module for restricting
-      certain e-mail addresses and usernames is now available as a contributed module.
-      Further, IP address range blocking is no longer supported and should be
-      implemented at the operating system level.
+- User system:
+    * Added clean API functions for creating, loading, updating, and deleting
+      user roles and permissions.
+    * Refactored the "access rules" component of user module: The user module
+      now provides a simple interface for blocking single IP addresses. The
+      previous functionality in the user module for restricting certain e-mail
+      addresses and usernames is now available as a contributed module. Further,
+      IP address range blocking is no longer supported and should be implemented
+      at the operating system level.
+    * Removed per-user themes: Contributed modules with similar functionality
+      are available.
 - Removed throttle module:
     * Alternative methods for improving performance are available in other core and
       contributed modules.
