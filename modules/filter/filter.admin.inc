@@ -32,8 +32,8 @@ function filter_admin_overview() {
     $options[$id] = '';
     $form[$id]['name'] = array('#markup' => $format->name);
     $form[$id]['roles'] = array('#markup' => $default ? t('All roles may use the default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
-    $form[$id]['configure'] = array('#markup' => l(t('configure'), 'admin/settings/formats/' . $id));
-    $form[$id]['delete'] = array('#markup' => $default ? '' : l(t('delete'), 'admin/settings/formats/delete/' . $id));
+    $form[$id]['configure'] = array('#markup' => l(t('configure'), 'admin/config/content/formats/' . $id));
+    $form[$id]['delete'] = array('#markup' => $default ? '' : l(t('delete'), 'admin/config/content/formats/delete/' . $id));
     $form[$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
@@ -225,7 +225,7 @@ function filter_admin_delete(&$form_state, $format) {
 
       return confirm_form($form,
         t('Are you sure you want to delete the text format %format?', array('%format' => $format->name)),
-        'admin/settings/formats',
+        'admin/config/content/formats',
         t('If you have any content left in this text format, it will be switched to the default text format. This action cannot be undone.'),
         t('Delete'),
         t('Cancel')
@@ -233,7 +233,7 @@ function filter_admin_delete(&$form_state, $format) {
     }
     else {
       drupal_set_message(t('The default format cannot be deleted.'));
-      drupal_goto('admin/settings/formats');
+      drupal_goto('admin/config/content/formats');
     }
   }
   else {
@@ -249,7 +249,7 @@ function filter_admin_delete_submit($form, &$form_state) {
   filter_format_delete($format);
   drupal_set_message(t('Deleted text format %format.', array('%format' => $format->name)));
 
-  $form_state['redirect'] = 'admin/settings/formats';
+  $form_state['redirect'] = 'admin/config/content/formats';
 }
 
 /**

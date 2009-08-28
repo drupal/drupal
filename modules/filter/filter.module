@@ -25,15 +25,15 @@ function filter_help($path, $arg) {
       $output .= '<p>' . t('Users with access to more than one text format can use the <em>Text format</em> fieldset to choose between available text formats when creating or editing multi-line content. Administrators determine the text formats available to each user role, select a default text format, and control the order of formats listed in the <em>Text format</em> fieldset.') . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@filter">Filter module</a>.', array('@filter' => 'http://drupal.org/handbook/modules/filter/')) . '</p>';
       return $output;
-    case 'admin/settings/formats':
+    case 'admin/config/content/formats':
       $output = '<p>' . t('Use the list below to review the text formats available to each user role, to select a default text format, and to control the order of formats listed in the <em>Text format</em> fieldset. (The <em>Text format</em> fieldset is displayed below textareas when users with access to more than one text format create multi-line content.) The text format selected as <em>Default</em> is available to all users and, unless another format is selected, is applied to all content. All text formats are available to users in roles with the "administer filters" permission.') . '</p>';
       $output .= '<p>' . t('Since text formats, if available, are presented in the same order as the list below, it may be helpful to arrange the formats in descending order of your preference for their use. Remember that your changes will not be saved until you click the <em>Save changes</em> button at the bottom of the page.') . '</p>';
       return $output;
-    case 'admin/settings/formats/%':
-      return '<p>' . t('Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this format. If you notice some filters are causing conflicts in the output, you can <a href="@rearrange">rearrange them</a>.', array('@rearrange' => url('admin/settings/formats/' . $arg[3] . '/order'))) . '</p>';
-    case 'admin/settings/formats/%/configure':
-      return '<p>' . t('If you cannot find the settings for a certain filter, make sure you have enabled it on the <a href="@url">edit tab</a> first.', array('@url' => url('admin/settings/formats/' . $arg[3]))) . '</p>';
-    case 'admin/settings/formats/%/order':
+    case 'admin/config/content/formats/%':
+      return '<p>' . t('Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this format. If you notice some filters are causing conflicts in the output, you can <a href="@rearrange">rearrange them</a>.', array('@rearrange' => url('admin/config/content/formats/' . $arg[4] . '/order'))) . '</p>';
+    case 'admin/config/content/formats/%/configure':
+      return '<p>' . t('If you cannot find the settings for a certain filter, make sure you have enabled it on the <a href="@url">edit tab</a> first.', array('@url' => url('admin/config/content/formats/' . $arg[4]))) . '</p>';
+    case 'admin/config/content/formats/%/order':
       $output = '<p>' . t('Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted to a clickable link. When this happens, rearrange the order of the filters.') . '</p>';
       $output .= '<p>' . t("Filters are executed from top-to-bottom. To change the order of the filters, modify the values in the <em>Weight</em> column or grab a drag-and-drop handle under the <em>Name</em> column and drag filters to new locations in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") . '</p>';
       return $output;
@@ -70,7 +70,7 @@ function filter_theme() {
  * Implement hook_menu().
  */
 function filter_menu() {
-  $items['admin/settings/formats'] = array(
+  $items['admin/config/content/formats'] = array(
     'title' => 'Text formats',
     'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
     'page callback' => 'drupal_get_form',
@@ -78,11 +78,11 @@ function filter_menu() {
     'access arguments' => array('administer filters'),
     'file' => 'filter.admin.inc',
   );
-  $items['admin/settings/formats/list'] = array(
+  $items['admin/config/content/formats/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/settings/formats/add'] = array(
+  $items['admin/config/content/formats/add'] = array(
     'title' => 'Add text format',
     'page callback' => 'filter_admin_format_page',
     'access arguments' => array('administer filters'),
@@ -97,42 +97,42 @@ function filter_menu() {
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'filter.pages.inc',
   );
-  $items['admin/settings/formats/%filter_format'] = array(
+  $items['admin/config/content/formats/%filter_format'] = array(
     'type' => MENU_CALLBACK,
     'title callback' => 'filter_admin_format_title',
-    'title arguments' => array(3),
+    'title arguments' => array(4),
     'page callback' => 'filter_admin_format_page',
-    'page arguments' => array(3),
+    'page arguments' => array(4),
     'access arguments' => array('administer filters'),
     'file' => 'filter.admin.inc',
   );
-  $items['admin/settings/formats/%filter_format/edit'] = array(
+  $items['admin/config/content/formats/%filter_format/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
   );
-  $items['admin/settings/formats/%filter_format/configure'] = array(
+  $items['admin/config/content/formats/%filter_format/configure'] = array(
     'title' => 'Configure',
     'page callback' => 'filter_admin_configure_page',
-    'page arguments' => array(3),
+    'page arguments' => array(4),
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
     'file' => 'filter.admin.inc',
   );
-  $items['admin/settings/formats/%filter_format/order'] = array(
+  $items['admin/config/content/formats/%filter_format/order'] = array(
     'title' => 'Rearrange',
     'page callback' => 'filter_admin_order_page',
-    'page arguments' => array(3),
+    'page arguments' => array(4),
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
     'file' => 'filter.admin.inc',
   );
-  $items['admin/settings/formats/%filter_format/delete'] = array(
+  $items['admin/config/content/formats/%filter_format/delete'] = array(
     'title' => 'Delete text format',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('filter_admin_delete', 3),
+    'page arguments' => array('filter_admin_delete', 4),
     'access arguments' => array('administer filters'),
     'type' => MENU_CALLBACK,
     'file' => 'filter.admin.inc',

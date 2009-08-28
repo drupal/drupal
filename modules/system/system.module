@@ -857,6 +857,15 @@ function system_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
+  $items['admin/config/content'] = array(
+    'title' => 'Content authoring',
+    'description' => 'Settings related to formatting and authoring content.',
+    'position' => 'right',
+    'weight' => 5,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+  );
 
   // Settings.
   $items['admin/settings/site-information'] = array(

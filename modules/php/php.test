@@ -13,7 +13,7 @@ class PHPTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Confirm that the PHP filter is #3.
-    $this->drupalGet('admin/settings/formats/3');
+    $this->drupalGet('admin/config/content/formats/3');
     $this->assertText('PHP code', t('On PHP code filter page.'));
   }
 

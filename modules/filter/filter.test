@@ -29,15 +29,15 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Change default filter.
     $edit = array();
     $edit['default'] = $full;
-    $this->drupalPost('admin/settings/formats', $edit, t('Save changes'));
+    $this->drupalPost('admin/config/content/formats', $edit, t('Save changes'));
     $this->assertText(t('Default format updated.'), t('Default filter updated successfully.'));
 
-    $this->assertNoRaw('admin/settings/formats/' . $full . '/delete', t('Delete link not found.'));
+    $this->assertNoRaw('admin/config/content/formats/' . $full . '/delete', t('Delete link not found.'));
 
     // Add an additional tag.
     $edit = array();
     $edit['settings[filter_html][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
-    $this->drupalPost('admin/settings/formats/' . $filtered . '/configure', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $filtered . '/configure', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Allowed HTML tag added.'));
 
     $this->assertRaw(htmlentities($edit['settings[filter_html][allowed_html]']), t('Tag displayed.'));
@@ -49,7 +49,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['weights[' . $second_filter . ']'] = 1;
     $edit['weights[' . $first_filter . ']'] = 2;
-    $this->drupalPost('admin/settings/formats/' . $filtered . '/order', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $filtered . '/order', $edit, t('Save configuration'));
     $this->assertText(t('The filter ordering has been saved.'), t('Order saved successfully.'));
 
     $result = db_query('SELECT * FROM {filter} WHERE format = :format ORDER BY weight ASC', array(':format' => $filtered));
@@ -67,7 +67,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit['roles[2]'] = 1;
     $edit['filters[' . $second_filter . ']'] = TRUE;
     $edit['filters[' . $first_filter . ']'] = TRUE;
-    $this->drupalPost('admin/settings/formats/add', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), t('New filter created.'));
 
     $format = $this->getFilter($edit['name']);
@@ -79,23 +79,23 @@ class FilterAdminTestCase extends DrupalWebTestCase {
       $this->assertFieldByName('filters[' . $first_filter . ']', '', t('Url filter found.'));
 
       // Delete new filter.
-      $this->drupalPost('admin/settings/formats/' . $format->format . '/delete', array(), t('Delete'));
+      $this->drupalPost('admin/config/content/formats/' . $format->format . '/delete', array(), t('Delete'));
       $this->assertRaw(t('Deleted text format %format.', array('%format' => $edit['name'])), t('Format successfully deleted.'));
     }
 
     // Change default filter back.
     $edit = array();
     $edit['default'] = $filtered;
-    $this->drupalPost('admin/settings/formats', $edit, t('Save changes'));
+    $this->drupalPost('admin/config/content/formats', $edit, t('Save changes'));
     $this->assertText(t('Default format updated.'), t('Default filter updated successfully.'));
 
-    $this->assertNoRaw('admin/settings/formats/' . $filtered . '/delete', t('Delete link not found.'));
+    $this->assertNoRaw('admin/config/content/formats/' . $filtered . '/delete', t('Delete link not found.'));
 
     // Allow authenticated users on full HTML.
     $edit = array();
     $edit['roles[1]'] = 0;
     $edit['roles[2]'] = 1;
-    $this->drupalPost('admin/settings/formats/' . $full, $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $full, $edit, t('Save configuration'));
     $this->assertText(t('The text format settings have been updated.'), t('Full HTML format successfully updated.'));
 
     // Switch user.
@@ -131,20 +131,20 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Allowed tags.
     $edit = array();
     $edit['settings[filter_html][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
-    $this->drupalPost('admin/settings/formats/' . $filtered . '/configure', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $filtered . '/configure', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Changes reverted.'));
 
     // Full HTML.
     $edit = array();
     $edit['roles[2]'] = FALSE;
-    $this->drupalPost('admin/settings/formats/' . $full, $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $full, $edit, t('Save configuration'));
     $this->assertText(t('The text format settings have been updated.'), t('Full HTML format successfully reverted.'));
 
     // Filter order.
     $edit = array();
     $edit['weights[' . $second_filter . ']'] = 2;
     $edit['weights[' . $first_filter . ']'] = 1;
-    $this->drupalPost('admin/settings/formats/' . $filtered . '/order', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $filtered . '/order', $edit, t('Save configuration'));
     $this->assertText(t('The filter ordering has been saved.'), t('Order successfully reverted.'));
   }
 
@@ -773,7 +773,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['name'] = $name;
     $edit['roles[1]'] = 1;
-    $this->drupalPost('admin/settings/formats/add', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added text format %format.', array('%format' => $name)), t('New format created.'));
     $this->assertText('hook_filter_format_insert invoked.', t('hook_filter_format_insert was invoked.'));
 
@@ -782,7 +782,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     // Update text format.
     $edit = array();
     $edit['roles[2]'] = 1;
-    $this->drupalPost('admin/settings/formats/' . $format, $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $format, $edit, t('Save configuration'));
     $this->assertRaw(t('The text format settings have been updated.'), t('Full HTML format successfully updated.'));
     $this->assertText('hook_filter_format_update invoked.', t('hook_filter_format_update() was invoked.'));
 
@@ -801,7 +801,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $this->assertNotNull($bid, t('New block found in database'));
 
     // Delete the text format.
-    $this->drupalPost('admin/settings/formats/' . $format . '/delete', array(), t('Delete'));
+    $this->drupalPost('admin/config/content/formats/' . $format . '/delete', array(), t('Delete'));
     $this->assertRaw(t('Deleted text format %format.', array('%format' => $name)), t('Format successfully deleted.'));
     $this->assertText('hook_filter_format_delete invoked.', t('hook_filter_format_delete() was invoked.'));
 
