@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1032 2009/08/27 20:25:28 dries Exp $
+// $Id: user.module,v 1.1033 2009/08/28 06:42:54 dries Exp $
 
 /**
  * @file
@@ -1316,8 +1316,7 @@ function user_menu() {
    'description' => 'Configure user accounts, roles and permissions.',
    'position' => 'right',
    'page callback' => 'system_admin_menu_block_page',
-   'access callback' => 'system_admin_menu_block_access',
-   'access arguments' => array('admin/config/people', 'access administration pages'),
+   'access arguments' => array('access administration pages'),
   );
   $items['admin/config/people/accounts'] = array(
     'title' => 'Account settings',
