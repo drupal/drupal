@@ -49,23 +49,56 @@ class FileTransferFTPWrapper extends FileTransfer {
   }
 
   function copyFileJailed($source, $destination) {
-    if (!@copy($this->connection . '/' . $source, $this->connection . '/' . $destination)) {
+    if (!@copy($source, $this->connection . '/' . $destination)) {
       throw new FileTransferException('Cannot copy @source_file to @destination_file.', NULL, array('@source' => $source, '@destination' => $destination));
     }
   }
 
   function removeFileJailed($destination) {
-    if (!@unlink($destination)) {
+    if (!@unlink($this->connection . '/' .$destination)) {
       throw new FileTransferException('Cannot remove @destination', NULL, array('@destination' => $destination));
     }
   }
-  
+
   function isDirectory($path) {
     return is_dir($this->connection . '/' . $path);
   }
+
+  public function isFile($path) {
+    // This is stupid, but is_file and file_exists don't work! always return true.
+    return @fopen($this->connection . '/' . $path,'r');
+  }
+
+  /**
+   * This is impossible with the stream wrapper,
+   * So we cheat and use the other implementation
+   *
+   * @staticvar FileTransferFTPExtension $ftp_ext_file_transfer
+   * @param string $path
+   * @param long $mode
+   * @param bool $recursive
+   */
+  function chmodJailed($path, $mode, $recursive) {
+    static $ftp_ext_file_transfer;
+
+    if (!$ftp_ext_file_transfer) {
+      $ftp_ext_file_transfer = new FileTransferFTPExtension($this->jail, $this->username, $this->password, $this->hostname, $this->port);
+    }
+    $ftp_ext_file_transfer->chmodJailed($path, $mode, $recursive);
+  }
+
 }
 
 class FileTransferFTPExtension extends FileTransfer {
+
+  public function __construct($jail, $username, $password, $hostname, $port) {
+    $this->username = $username;
+    $this->password = $password;
+    $this->hostname = $hostname;
+    $this->port = $port;
+    parent::__construct($jail);
+  }
+
   public function connect() {
     $this->connection = ftp_connect($this->hostname, $this->port);
 
@@ -76,7 +109,14 @@ class FileTransferFTPExtension extends FileTransfer {
       throw new FileTransferException("Cannot login to FTP server, please check username and password");
     }
   }
-  
+
+  /**
+   * Returns a copy of itself using common defaults.
+   *
+   * @param string $jail
+   * @param array $settings
+   * @return FileTransferFTPExtension
+   */
   static function factory($jail, $settings) {
     $settings['hostname'] = empty($settings['hostname']) ? 'localhost' : $settings['hostname'];
     $settings['port'] = empty($settings['port']) ? 21 : $settings['port'];
@@ -90,17 +130,20 @@ class FileTransferFTPExtension extends FileTransfer {
   }
 
   protected function createDirectoryJailed($directory) {
-    if (!@ftp_mkdir($this->connection, $directory)) {
+    if (!ftp_mkdir($this->connection, $directory)) {
       throw new FileTransferException("Cannot create directory @directory", NULL, array("@directory" => $directory));
     }
   }
 
   protected function removeDirectoryJailed($directory) {
     $pwd = ftp_pwd($this->connection);
-    if (!@ftp_chdir($this->connection, $directory)) {
+    if (!ftp_chdir($this->connection, $directory)) {
       throw new FileTransferException("Unable to change to directory @directory", NULL, array('@directory' => $directory));
     }
     $list = @ftp_nlist($this->connection, '.');
+    if (!$list) {
+      $list = array();
+    }
     foreach ($list as $item){
       if ($item == '.' || $item == '..') {
         continue;
@@ -124,14 +167,40 @@ class FileTransferFTPExtension extends FileTransfer {
       throw new FileTransferException("Unable to remove to file @file", NULL, array('@file' => $destination));
     }
   }
-  
+
   public function isDirectory($path) {
     $result = FALSE;
     $curr = ftp_pwd($this->connection);
-    if (ftp_chdir($this->connection, $path)) {
+    if (@ftp_chdir($this->connection, $path)) {
       $result = TRUE;
     }
     ftp_chdir($this->connection, $curr);
     return $result;
+  }
+
+  public function isFile($path) {
+    return ftp_size($this->connection, $path) != -1;
+  }
+
+  function chmodJailed($path, $mode, $recursive) {
+    if (!ftp_chmod($this->connection, $mode, $path)) {
+      throw new FileTransferException("Unable to set permissions on %file", NULL, array ('%file' => $path));
+    }
+    if ($this->isDirectory($path) && $recursive) {
+      $filelist = @ftp_nlist($this->connection, $path);
+      if (!$filelist) {
+        //empty directory - returns false
+        return;
+      }
+      foreach ($filelist as $file) {
+        $this->chmodJailed($file, $mode, $recursive);
+      }
+    }
+  }
+}
+
+if (!function_exists('ftp_chmod')) {
+  function ftp_chmod($ftp_stream, $mode, $filename) {
+    return ftp_site($ftp_stream, sprintf('CHMOD %o %s', $mode, $filename));
   }
 }

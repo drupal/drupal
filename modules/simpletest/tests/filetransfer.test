@@ -139,6 +139,14 @@ class TestFileTransfer extends FileTransfer {
   function isDirectory($path) {
     return $this->shouldIsDirectoryReturnTrue;
   }
+
+  function isFile($path) {
+    return FALSE;
+  }
+
+  function chmodJailed($path, $mode, $recursive) {
+    return;
+  }
 }
 
 /**
