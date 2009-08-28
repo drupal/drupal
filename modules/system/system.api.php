@@ -618,32 +618,47 @@ function hook_image_toolkits() {
 }
 
 /**
- * Alter any aspect of email sent by Drupal. You can use this hook
- * to add a common site footer to all outgoing email, add extra header
- * fields, and/or modify the email in any way. HTML-izing the
- * outgoing email is one possibility. See also drupal_mail().
+ * Alter an email message created with the drupal_mail() function.
+ *
+ * hook_mail_alter() allows modification of email messages created and sent
+ * with drupal_mail(). Usage examples include adding and/or changing message
+ * text, message fields, and message headers.
+ *
+ * Email messages sent using functions other than drupal_mail() will not
+ * invoke hook_mail_alter(). For example, a contributed module directly
+ * calling the drupal_mail_send() or PHP mail() function will not invoke this
+ * hook. All core modules use drupal_mail() for messaging, it is best practice
+ * but not manditory in contributed modules.
  *
  * @param $message
- *   A structured array containing the message to be altered. Keys in this
- *   array include:
+ *   An array containing the message data. Keys in this array include:
  *  - 'id':
- *     An id to identify the mail sent. Look at module source code
- *     or drupal_mail() for possible id values.
- *   - 'to'
+ *     The drupal_mail() id of the message. Look at module source code or
+ *     drupal_mail() for possible id values. 
+ *  - 'to':
  *     The address or addresses the message will be sent to. The
  *     formatting of this string must comply with RFC 2822.
- *   - 'subject'
- *     Subject of the email to be sent. This must not contain any newline
- *     characters, or the email may not be sent properly.
- *   - 'body'
- *     An array of lines containing the message to be sent. Drupal will format
- *     the correct line endings for you.
- *   - 'from'
+ *  - 'from':
  *     The address the message will be marked as being from, which is
  *     either a custom address or the site-wide default email address.
- *   - 'headers'
+ *  - 'subject':
+ *     Subject of the email to be sent. This must not contain any newline
+ *     characters, or the email may not be sent properly.
+ *  - 'body':
+ *     An array of strings containing the message text. The message body is
+ *     created by concatenating the individual array strings into a single text 
+ *     string using "\n\n" as a separator.
+ *  - 'headers':
  *     Associative array containing mail headers, such as From, Sender,
  *     MIME-Version, Content-Type, etc.
+ *  - 'params':
+ *     An array of optional parameters supplied by the caller of drupal_mail()
+ *     that is used to build the message before hook_mail_alter() is invoked.
+ *  - 'language':
+ *     The language object used to build the message before hook_mail_alter()
+ *     is invoked.
+ *
+ * @see drupal_mail()
  */
 function hook_mail_alter(&$message) {
   if ($message['id'] == 'modulename_messagekey') {
