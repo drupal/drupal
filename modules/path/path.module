@@ -22,9 +22,9 @@ function path_help($path, $arg) {
       $output .= '<p>' . t('This module also provides user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default. For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up mass URL aliasing.') . ' </p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@path">Path module</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) . '</p>';
       return $output;
-    case 'admin/settings/path':
+    case 'admin/config/search/path':
       return '<p>' . t("An alias defines a different name for an existing URL path - for example, the alias 'about' for the URL path 'node/1'. A URL path can have multiple aliases.") . '</p>';
-    case 'admin/settings/path/add':
+    case 'admin/config/search/path/add':
       return '<p>' . t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
   }
 }
@@ -33,21 +33,21 @@ function path_help($path, $arg) {
  * Implement hook_menu().
  */
 function path_menu() {
-  $items['admin/settings/path'] = array(
+  $items['admin/config/search/path'] = array(
     'title' => 'URL aliases',
     'description' => "Change your site's URL paths by aliasing them.",
     'page callback' => 'path_admin_overview',
     'access arguments' => array('administer url aliases'),
     'file' => 'path.admin.inc',
   );
-  $items['admin/settings/path/edit'] = array(
+  $items['admin/config/search/path/edit'] = array(
     'title' => 'Edit alias',
     'page callback' => 'path_admin_edit',
     'access arguments' => array('administer url aliases'),
     'type' => MENU_CALLBACK,
     'file' => 'path.admin.inc',
   );
-  $items['admin/settings/path/delete'] = array(
+  $items['admin/config/search/path/delete'] = array(
     'title' => 'Delete alias',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('path_admin_delete_confirm'),
@@ -55,12 +55,12 @@ function path_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'path.admin.inc',
   );
-  $items['admin/settings/path/list'] = array(
+  $items['admin/config/search/path/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['admin/settings/path/add'] = array(
+  $items['admin/config/search/path/add'] = array(
     'title' => 'Add alias',
     'page callback' => 'path_admin_edit',
     'access arguments' => array('administer url aliases'),

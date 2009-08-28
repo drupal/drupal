@@ -1252,7 +1252,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('type' => 'page'));
 
     // Create a path alias in default language (English).
-    $path = 'admin/settings/path/add';
+    $path = 'admin/config/search/path/add';
     $english_path = $this->randomName(8);
     $edit = array(
       'src' => 'node/' . $node->nid,
