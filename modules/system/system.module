@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.778 2009/08/28 06:42:54 dries Exp $
+// $Id: system.module,v 1.779 2009/08/28 16:23:05 dries Exp $
 
 /**
  * @file
@@ -855,6 +855,15 @@ function system_menu() {
     'page arguments' => array(array('status' => TRUE)),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/content'] = array(
+    'title' => 'Content authoring',
+    'description' => 'Settings related to formatting and authoring content.',
+    'position' => 'right',
+    'weight' => 5,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.31 2009/08/25 10:35:33 dries Exp $
+// $Id: search.test,v 1.32 2009/08/28 16:23:05 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -463,7 +463,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $edit = array(
       'filters[filter_html_escape]' => 1,
     );
-    $this->drupalPost('admin/settings/formats/1', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/1', $edit, t('Save configuration'));
     // Allow anonymous users to search content.
     $edit = array(
       DRUPAL_ANONYMOUS_RID . '[search content]' => 1,
