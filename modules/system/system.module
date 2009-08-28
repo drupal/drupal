@@ -567,8 +567,7 @@ function system_menu() {
     'position' => 'right',
     'weight' => -2,
     'page callback' => 'system_settings_overview',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/settings', 'access administration pages'),
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   $items['admin/structure'] = array(
@@ -577,8 +576,7 @@ function system_menu() {
     'position' => 'right',
     'weight' => -8,
     'page callback' => 'system_admin_menu_block_page',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/structure', 'access administration pages'),
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   // Appearance.
@@ -744,8 +742,7 @@ function system_menu() {
     'position' => 'left',
     'weight' => 10,
     'page callback' => 'system_admin_menu_block_page',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/config/development', 'access administration pages'),
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   $items['admin/config/development/maintenance'] = array(
@@ -770,8 +767,7 @@ function system_menu() {
     'position' => 'left',
     'weight' => 10,
     'page callback' => 'system_admin_menu_block_page',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/config/media', 'access administration pages'),
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   $items['admin/config/media/file-system'] = array(
@@ -794,8 +790,7 @@ function system_menu() {
     'title' => 'Web services',
     'description' => 'Tools related to web services.',
     'page callback' => 'system_admin_menu_block_page',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/config/services', 'access administration pages'),
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   $items['admin/config/services/rss-publishing'] = array(
@@ -820,8 +815,7 @@ function system_menu() {
     'position' => 'left',
     'weight' => -7,
     'page callback' => 'system_admin_menu_block_page',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/config/regional', 'access administration pages'),
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   $items['admin/config/regional/settings'] = array(
@@ -844,8 +838,7 @@ function system_menu() {
     'title' => 'Search and metadata',
     'description' => 'Local site search, metadata and SEO.',
     'page callback' => 'system_admin_menu_block_page',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/config/search', 'access administration pages'),
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   $items['admin/config/search/clean-urls'] = array(
@@ -880,8 +873,7 @@ function system_menu() {
     'title' => 'Reports',
     'description' => 'View reports from system logs and other status information.',
     'page callback' => 'system_admin_menu_block_page',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/reports', 'access site reports'),
+    'access arguments' => array('access site reports'),
     'weight' => 5,
     'position' => 'left',
     'file' => 'system.admin.inc',
@@ -1325,25 +1317,6 @@ function blocked_ip_load($iid) {
  */
 function _system_themes_access($theme) {
   return user_access('administer site configuration') && ($theme->status || $theme->name == variable_get('admin_theme', 0));
-}
-
-/**
- * Menu item access callback - hides empty system settings overview pages.
- *
- * @param $path
- *   The path of the menu item to check for child menu entries.
- * @param $string
- *   The permission, such as "administer nodes", being checked for.
- * @return
- *   Boolean TRUE if the current user has the requested permission and the
- *   current menu item has children.
- */
-function system_admin_menu_block_access($path, $permission) {
-  if (!user_access($permission)) {
-    return FALSE;
-  }
-  $content = system_admin_menu_block(array('path' => $path));
-  return !empty($content);
 }
 
 /**

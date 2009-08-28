@@ -1316,8 +1316,7 @@ function user_menu() {
    'description' => 'Configure user accounts, roles and permissions.',
    'position' => 'right',
    'page callback' => 'system_admin_menu_block_page',
-   'access callback' => 'system_admin_menu_block_access',
-   'access arguments' => array('admin/config/people', 'access administration pages'),
+   'access arguments' => array('access administration pages'),
   );
   $items['admin/config/people/accounts'] = array(
     'title' => 'Account settings',
