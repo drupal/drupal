@@ -149,13 +149,6 @@ function field_help($path, $arg) {
 }
 
 /**
- * Implement hook_init().
- */
-function field_init() {
-  drupal_add_css(drupal_get_path('module', 'field') . '/theme/field.css');
-}
-
-/**
  * Implement hook_theme().
  */
 function field_theme() {
@@ -634,13 +627,6 @@ function field_access($op, $field, $account = NULL) {
 /**
  * Theme preprocess function for field.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $object
- * - $field
- * - $items
- * - $teaser
- * - $page
- *
  * @see field.tpl.php
  */
 function template_preprocess_field(&$variables) {
@@ -649,54 +635,33 @@ function template_preprocess_field(&$variables) {
   $instance = field_info_instance($element['#field_name'], $bundle);
   $field = field_info_field($element['#field_name']);
 
-  $variables['object'] = $element['#object'];
-  $variables['field'] = $field;
-  $variables['instance'] = $instance;
-  $variables['items'] = array();
+  $field_type_css = strtr($field['type'], '_', '-');
+  $field_name_css = strtr($field['field_name'], '_', '-');
 
-  if ($element['#single']) {
-    // Single value formatter.
-    foreach (element_children($element['items']) as $delta) {
-      $variables['items'][$delta] = $element['items'][$delta]['#item'];
-      $variables['items'][$delta]['view'] = drupal_render_children($element['items'], array($delta));
-    }
-  }
-  else {
-    // Multiple values formatter.
-    // We display the 'all items' output as $items[0], as if it was the
-    // output of a single valued field.
-    // Raw values are still exposed for all items.
-    foreach (element_children($element['items']) as $delta) {
-      $variables['items'][$delta] = $element['items'][$delta]['#item'];
-    }
-    $variables['items'][0]['view'] = drupal_render_children($element, array('items'));
-  }
-
-  $variables['build_mode'] = $element['#build_mode'];
-  $variables['page'] = (bool)menu_get_object();
-
-  $field_empty = TRUE;
-
-  foreach ($variables['items'] as $delta => $item) {
-    if (!isset($item['view']) || (empty($item['view']) && (string)$item['view'] !== '0')) {
-      $variables['items'][$delta]['empty'] = TRUE;
-    }
-    else {
-      $field_empty = FALSE;
-      $variables['items'][$delta]['empty'] = FALSE;
-    }
-  }
+  // If the formatter is multiple, the template sees only one 'item', which
+  // will include all values.
+  $items = $element['#formatter_single'] ? $element['items'] : array($element['items']);
 
   $additions = array(
+    'object' => $element['#object'],
+    'field' => $field,
+    'instance' => $instance,
+    'build_mode' => $element['#build_mode'],
+    'items' => $items,
     'field_type' => $field['type'],
     'field_name' => $field['field_name'],
-    'field_type_css' => strtr($field['type'], '_', '-'),
-    'field_name_css' => strtr($field['field_name'], '_', '-'),
-    'label' => check_plain(t($instance['label'])),
+    'field_type_css' => $field_type_css,
+    'field_name_css' => $field_name_css,
+    'label' => $element['#title'],
     'label_display' => $element['#label_display'],
-    'field_empty' => $field_empty,
+    'label_hidden' => $element['#label_display'] == 'hidden',
     'field_language' => $element['#language'],
     'field_translatable' => $field['translatable'],
+    'classes_array' => array(
+      'field-name-' . $field_name_css,
+      'field-type-' . $field_type_css,
+      'field-label-' . $element['#label_display'],
+    ),
     'template_files' => array(
       'field',
       'field-' . $element['#field_name'],

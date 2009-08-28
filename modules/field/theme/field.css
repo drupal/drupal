@@ -1,19 +1,15 @@
 /* $Id$ */
 
 /* Field display */
-.field .field-label,
-.field .field-label-inline,
-.field .field-label-inline-first {
+.field .field-label {
   font-weight: bold;
 }
-.field .field-label-inline,
-.field .field-label-inline-first {
-  display: inline;
-}
-.field .field-label-inline {
-  visibility: hidden;
+.field-label-inline .field-label,
+.field-label-inline .field-items {
+  float:left;
 }
 
+/* Form display */
 form .field-multiple-table {
   margin: 0;
 }

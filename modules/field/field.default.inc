@@ -47,7 +47,7 @@ function field_default_insert($obj_type, $object, $field, $instance, $langcode, 
   // assigning it a default value. This way we ensure that only the intended
   // languages get a default value. Otherwise we could have default values for
   // not yet open languages.
-  if (empty($object) || !property_exists($object, $field['field_name']) || 
+  if (empty($object) || !property_exists($object, $field['field_name']) ||
     (isset($object->{$field['field_name']}[$langcode]) && count($object->{$field['field_name']}[$langcode]) == 0)) {
     $items = field_get_default_value($obj_type, $object, $field, $instance, $langcode);
   }
@@ -87,8 +87,8 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
       '#access' => field_access('view', $field),
       '#label_display' => $label_display,
       '#build_mode' => $build_mode,
-      '#single' => $single,
       '#language' => $langcode,
+      '#formatter_single' => $single,
       'items' => array(),
     );
 
@@ -103,9 +103,9 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
     // Append formatter information either on each item ('single-value' formatter)
     // or at the upper 'items' level ('multiple-value' formatter)
     $format_info = $info + array(
+      '#theme' => $theme,
       '#formatter' => $display['type'],
       '#settings' => $display['settings'],
-      '#theme' => $theme,
     );
 
     if ($single) {

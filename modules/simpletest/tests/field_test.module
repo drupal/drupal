@@ -521,6 +521,7 @@ function field_test_field_formatter_info() {
   return array(
     'field_test_default' => array(
       'label' => t('Default'),
+      'description' => t('Default formatter'),
       'field types' => array('test_field'),
       'settings' => array(
         'test_formatter_setting' => 'dummy test string',
@@ -530,7 +531,8 @@ function field_test_field_formatter_info() {
       ),
     ),
     'field_test_multiple' => array(
-      'label' => t('Default'),
+      'label' => t('Multiple'),
+      'description' => t('Multiple formatter'),
       'field types' => array('test_field'),
       'settings' => array(
         'test_formatter_setting_multiple' => 'dummy test string',
