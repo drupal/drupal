@@ -159,7 +159,7 @@ function block_schema() {
     ),
   );
 
-  $schema['box'] = array(
+  $schema['block_custom'] = array(
     'description' => 'Stores contents of custom-made blocks.',
     'fields' => array(
       'bid' => array(

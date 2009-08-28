@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Controls the boxes that are displayed around the main content.
+ * Controls the visual building blocks a page is constructed with.
  */
 
 /**
@@ -150,7 +150,7 @@ function block_menu() {
   $items['admin/structure/block/delete'] = array(
     'title' => 'Delete block',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_box_delete'),
+    'page arguments' => array('block_custom_block_delete'),
     'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
@@ -192,7 +192,7 @@ function _block_themes_access($theme) {
 function block_block_list() {
   $blocks = array();
 
-  $result = db_query('SELECT bid, info FROM {box} ORDER BY info');
+  $result = db_query('SELECT bid, info FROM {block_custom} ORDER BY info');
   foreach ($result as $block) {
     $blocks[$block->bid]['info'] = $block->info;
     // Not worth caching.
@@ -205,18 +205,18 @@ function block_block_list() {
  * Implement hook_block_configure().
  */
 function block_block_configure($delta = 0) {
-  $box = array('format' => FILTER_FORMAT_DEFAULT);
+  $custom_block = array('format' => FILTER_FORMAT_DEFAULT);
   if ($delta) {
-    $box = block_box_get($delta);
+    $custom_block = block_custom_block_get($delta);
   }
-  return block_box_form($box);
+  return block_custom_block_form($custom_block);
 }
 
 /**
  * Implement hook_block_save().
  */
 function block_block_save($delta = 0, $edit = array()) {
-  block_box_save($edit, $delta);
+  block_custom_block_save($edit, $delta);
 }
 
 /**
@@ -225,7 +225,7 @@ function block_block_save($delta = 0, $edit = array()) {
  * Generates the administrator-defined blocks for display.
  */
 function block_block_view($delta = 0, $edit = array()) {
-  $block = db_query('SELECT body, format FROM {box} WHERE bid = :bid', array(':bid' => $delta))->fetchObject();
+  $block = db_query('SELECT body, format FROM {block_custom} WHERE bid = :bid', array(':bid' => $delta))->fetchObject();
   $data['content'] = check_markup($block->body, $block->format);
   return $data;
 }
@@ -372,14 +372,14 @@ function _block_rehash() {
   return $blocks;
 }
 
-function block_box_get($bid) {
-  return db_query("SELECT * FROM {box} WHERE bid = :bid", array(':bid' => $bid))->fetchAssoc();
+function block_custom_block_get($bid) {
+  return db_query("SELECT * FROM {block_custom} WHERE bid = :bid", array(':bid' => $bid))->fetchAssoc();
 }
 
 /**
  * Define the custom block form.
  */
-function block_box_form($edit = array()) {
+function block_custom_block_form($edit = array()) {
   $edit += array(
     'info' => '',
     'body' => '',
@@ -409,8 +409,8 @@ function block_box_form($edit = array()) {
   return $form;
 }
 
-function block_box_save($edit, $delta) {
-  db_update('box')
+function block_custom_block_save($edit, $delta) {
+  db_update('block_custom')
     ->fields(array(
       'body' => $edit['body'],
       'info' => $edit['info'],
@@ -868,7 +868,7 @@ function block_user_role_delete($role) {
  * Implement hook_filter_format_delete().
  */
 function block_filter_format_delete($format, $default) {
-  db_update('box')
+  db_update('block_custom')
     ->fields(array('format' => $default->format))
     ->condition('format', $format->format)
     ->execute();

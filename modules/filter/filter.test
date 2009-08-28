@@ -787,17 +787,17 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $this->assertText('hook_filter_format_update invoked.', t('hook_filter_format_update() was invoked.'));
 
     // Add a new custom block.
-    $box = array();
-    $box['info'] = $this->randomName(8);
-    $box['title'] = $this->randomName(8);
-    $box['body'] = $this->randomName(32);
+    $custom_block = array();
+    $custom_block['info'] = $this->randomName(8);
+    $custom_block['title'] = $this->randomName(8);
+    $custom_block['body'] = $this->randomName(32);
     // Use the format created.
-    $box['body_format'] = $format;
-    $this->drupalPost('admin/structure/block/add', $box, t('Save block'));
+    $custom_block['body_format'] = $format;
+    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
     $this->assertText(t('The block has been created.'), t('New block successfully created.'));
 
     // Verify the new block is in the database.
-    $bid = db_query("SELECT bid FROM {box} WHERE info = :info", array(':info' => $box['info']))->fetchField();
+    $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
     $this->assertNotNull($bid, t('New block found in database'));
 
     // Delete the text format.
@@ -806,7 +806,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $this->assertText('hook_filter_format_delete invoked.', t('hook_filter_format_delete() was invoked.'));
 
     // Verify that the deleted format was replaced with the default format.
-    $current_format = db_select('box', 'b')
+    $current_format = db_select('block_custom', 'b')
       ->fields('b', array('format'))
       ->condition('bid', $bid)
       ->execute()

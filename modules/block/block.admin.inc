@@ -357,11 +357,11 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
 
 function block_admin_configure_validate($form, &$form_state) {
   if ($form_state['values']['module'] == 'block') {
-    $box_exists = (bool) db_query_range('SELECT 1 FROM {box} WHERE bid <> :bid AND info = :info', array(
+    $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE bid <> :bid AND info = :info', array(
       ':bid' => $form_state['values']['delta'],
       ':info' => $form_state['values']['info'],
     ), 0, 1)->fetchField();
-    if (empty($form_state['values']['info']) || $box_exists) {
+    if (empty($form_state['values']['info']) || $custom_block_exists) {
       form_set_error('info', t('Please ensure that each block description is unique.'));
     }
   }
@@ -435,9 +435,9 @@ function block_add_block_form(&$form_state) {
 }
 
 function block_add_block_form_validate($form, &$form_state) {
-  $box_exists = (bool) db_query_range('SELECT 1 FROM {box} WHERE info = :info', array(':info' => $form_state['values']['info']), 0, 1)->fetchField();
+  $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE info = :info', array(':info' => $form_state['values']['info']), 0, 1)->fetchField();
 
-  if (empty($form_state['values']['info']) || $box_exists) {
+  if (empty($form_state['values']['info']) || $custom_block_exists) {
     form_set_error('info', t('Please ensure that each block description is unique.'));
   }
 }
@@ -446,7 +446,7 @@ function block_add_block_form_validate($form, &$form_state) {
  * Save the new custom block.
  */
 function block_add_block_form_submit($form, &$form_state) {
-  $delta = db_insert('box')
+  $delta = db_insert('block_custom')
     ->fields(array(
       'body' => $form_state['values']['body'],
       'info' => $form_state['values']['info'],
@@ -513,19 +513,19 @@ function block_add_block_form_submit($form, &$form_state) {
 /**
  * Menu callback; confirm deletion of custom blocks.
  */
-function block_box_delete(&$form_state, $bid = 0) {
-  $box = block_box_get($bid);
-  $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
+function block_custom_block_delete(&$form_state, $bid = 0) {
+  $custom_block = block_custom_block_get($bid);
+  $form['info'] = array('#type' => 'hidden', '#value' => $custom_block['info'] ? $custom_block['info'] : $custom_block['title']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
 
-  return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/structure/block', '', t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $custom_block['info'])), 'admin/structure/block', '', t('Delete'), t('Cancel'));
 }
 
 /**
  * Deletion of custom blocks.
  */
-function block_box_delete_submit($form, &$form_state) {
-  db_delete('box')
+function block_custom_block_delete_submit($form, &$form_state) {
+  db_delete('block_custom')
     ->condition('bid', $form_state['values']['bid'])
     ->execute();
   db_delete('block')
