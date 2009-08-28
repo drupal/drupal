@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.30 2009/08/02 08:16:16 webchick Exp $
+// $Id: block.install,v 1.31 2009/08/28 19:44:05 webchick Exp $
 
 /**
  * @file
@@ -159,7 +159,7 @@ function block_schema() {
     ),
   );
 
-  $schema['box'] = array(
+  $schema['block_custom'] = array(
     'description' => 'Stores contents of custom-made blocks.',
     'fields' => array(
       'bid' => array(
