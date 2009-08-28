@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.19 2009/08/27 00:33:52 webchick Exp $
+// $Id: field_test.module,v 1.20 2009/08/28 06:51:07 dries Exp $
 
 define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
@@ -521,6 +521,7 @@ function field_test_field_formatter_info() {
   return array(
     'field_test_default' => array(
       'label' => t('Default'),
+      'description' => t('Default formatter'),
       'field types' => array('test_field'),
       'settings' => array(
         'test_formatter_setting' => 'dummy test string',
@@ -530,7 +531,8 @@ function field_test_field_formatter_info() {
       ),
     ),
     'field_test_multiple' => array(
-      'label' => t('Default'),
+      'label' => t('Multiple'),
+      'description' => t('Multiple formatter'),
       'field types' => array('test_field'),
       'settings' => array(
         'test_formatter_setting_multiple' => 'dummy test string',
