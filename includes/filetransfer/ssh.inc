@@ -1,5 +1,5 @@
 <?php
-// $Id: ssh.inc,v 1.2 2009/07/01 13:44:53 dries Exp $
+// $Id: ssh.inc,v 1.3 2009/08/28 07:51:55 dries Exp $
 
 /**
  * The SSH connection class for the update module.
@@ -7,7 +7,11 @@
 class FileTransferSSH extends FileTransfer {
 
   function __construct($jail, $username, $password, $hostname = "localhost", $port = 22) {
-    parent::__construct($jail, $username, $password, $hostname, $port);
+    $this->username = $username;
+    $this->password = $password;
+    $this->hostname = $hostname;
+    $this->port = $port;
+    parent::__construct($jail);
   }
 
   function connect() {
@@ -69,6 +73,26 @@ class FileTransferSSH extends FileTransfer {
       return FALSE;
     } else {
       throw new FileTransferException('Cannot check @path.', NULL, array('@path' => $path));
+    }
+  }
+
+  public function isFile($path) {
+    $file = escapeshellarg($path);
+    $cmd = "[ -f {$file} ] && echo 'yes'";
+    if ($output = @ssh2_exec($this->connection, $cmd)) {
+      if ($output == 'yes') {
+        return TRUE;
+      }
+      return FALSE;
+    } else {
+      throw new FileTransferException('Cannot check @path.', NULL, array('@path' => $path));
+    }
+  }
+
+  function chmodJailed($path, $mode, $recursive) {
+    $cmd = sprintf("chmod %s%o %s", $recursive ? '-R ' : '', $mode, escapeshellarg($path));
+    if (@!ssh2_exec($this->connection, $cmd)) {
+      throw new FileTransferException('Cannot change permissions of @path.', NULL, array('@path' => $path));
     }
   }
 }

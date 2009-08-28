@@ -1,5 +1,5 @@
 <?php
-// $Id: filetransfer.test,v 1.4 2009/08/17 19:14:41 webchick Exp $
+// $Id: filetransfer.test,v 1.5 2009/08/28 07:51:55 dries Exp $
 
 
 class FileTranferTest extends DrupalWebTestCase {
@@ -138,6 +138,14 @@ class TestFileTransfer extends FileTransfer {
   
   function isDirectory($path) {
     return $this->shouldIsDirectoryReturnTrue;
+  }
+
+  function isFile($path) {
+    return FALSE;
+  }
+
+  function chmodJailed($path, $mode, $recursive) {
+    return;
   }
 }
 
