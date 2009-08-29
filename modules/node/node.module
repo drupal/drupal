@@ -1228,36 +1228,25 @@ function node_permission() {
 
 /**
  * Gather the rankings from the the hook_ranking implementations.
+ *
+ * @param $query
+ *   A query object that has been extended with the Search DB Extender.
  */
-function _node_rankings() {
-  $rankings = array(
-    'total' => 0, 'join' => array(), 'score' => array(), 'args' => array(),
-  );
+function _node_rankings(SelectQueryExtender $query) {
   if ($ranking = module_invoke_all('ranking')) {
+    $tables = &$query->getTables();
     foreach ($ranking as $rank => $values) {
       if ($node_rank = variable_get('node_rank_' . $rank, 0)) {
         // If the table defined in the ranking isn't already joined, then add it.
-        if (isset($values['join']) && !isset($rankings['join'][$values['join']])) {
-          $rankings['join'][$values['join']] = $values['join'];
+        if (isset($values['join']) && !isset($tables[$values['join']['alias']])) {
+          $query->addJoin($values['join']['type'], $values['join']['table'], $values['join']['alias'], $values['join']['on']);
         }
-
-        // Add the rankings weighted score multiplier value, handling NULL gracefully.
-        $rankings['score'][] = 'CAST(%f AS DECIMAL) * COALESCE((' . $values['score'] . '), 0)';
-
-        // Add the the administrator's weighted score multiplier value for this ranking.
-        $rankings['total'] += $node_rank;
-        $rankings['arguments'][] = $node_rank;
-
-        // Add any additional arguments used by this ranking.
-        if (isset($values['arguments'])) {
-          $rankings['arguments'] = array_merge($rankings['arguments'], $values['arguments']);
-        }
+        $arguments = isset($values['arguments']) ? $values['arguments'] : array();
+        $query->addScore($values['score'], $arguments, $node_rank);
       }
     }
   }
-  return $rankings;
 }
-
 
 /**
  * Implement hook_search().
@@ -1305,61 +1294,35 @@ function node_search($op = 'search', $keys = NULL) {
 
     case 'search':
       // Build matching conditions
-      list($join1, $where1) = _db_rewrite_sql();
-      $arguments1 = array();
-      $conditions1 = 'n.status = 1';
+      $query = db_select('search_index', 'i')->extend('SearchQuery')->extend('PagerDefault');
+      $query->join('node', 'n', 'n.nid = i.sid');
+      $query
+        ->condition('n.status', 1)
+        ->addTag('node_access')
+        ->searchExpression($keys, 'node');
 
-      if ($type = search_query_extract($keys, 'type')) {
-        $types = array();
-        foreach (explode(',', $type) as $t) {
-          $types[] = "n.type = '%s'";
-          $arguments1[] = $t;
-        }
-        $conditions1 .= ' AND (' . implode(' OR ', $types) . ')';
-        $keys = search_query_insert($keys, 'type');
+      // Insert special keywords.
+      $query->setOption('type', 'n.type');
+      $query->setOption('language', 'n.language');
+      if ($query->setOption('term', 'tn.nid')) {
+        $query->join('taxonomy_term_node', 'tn', 'n.vid = tn.vid');
+      }
+      // Only continue if the first pass query matches.
+      if (!$query->executeFirstPass()) {
+        return array();
       }
 
-      if ($term = search_query_extract($keys, 'term')) {
-        $terms = array();
-        foreach (explode(',', $term) as $c) {
-          $terms[] = "tn.tid = %d";
-          $arguments1[] = $c;
-        }
-        $conditions1 .= ' AND (' . implode(' OR ', $terms) . ')';
-        $join1 .= ' INNER JOIN {taxonomy_term_node} tn ON n.vid = tn.vid';
-        $keys = search_query_insert($keys, 'term');
-      }
+      // Add the ranking expressions.
+      _node_rankings($query);
 
-      if ($languages = search_query_extract($keys, 'language')) {
-        $terms = array();
-        foreach (explode(',', $languages) as $l) {
-          $terms[] = "n.language = '%s'";
-          $arguments1[] = $l;
-        }
-        $conditions1 .= ' AND (' . implode(' OR ', $terms) . ')';
-        $keys = search_query_insert($keys, 'language');
-      }
-
-      // Get the ranking expressions.
-      $rankings = _node_rankings();
-
-      // When all search factors are disabled (ie they have a weight of zero),
-      // The default score is based only on keyword relevance.
-      if ($rankings['total'] == 0) {
-        $total = 1;
-        $arguments2 = array();
-        $join2 = '';
-        $select2 = 'SUM(i.relevance) AS calculated_score';
-      }
-      else {
-        $total = $rankings['total'];
-        $arguments2 = $rankings['arguments'];
-        $join2 = implode(' ', $rankings['join']);
-        $select2 = 'SUM(' . implode(' + ', $rankings['score']) . ') AS calculated_score';
-      }
-
-      // Do search.
-      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid ' . $join1, $conditions1 . (empty($where1) ? '' : ' AND ' . $where1), $arguments1, $select2, $join2, $arguments2);
+      // Add a count query.
+      $inner_query = clone $query;
+      $count_query = db_select($inner_query->fields('i', array('sid')));
+      $count_query->addExpression('COUNT(*)');
+      $query->setCountQuery($count_query);
+      $find = $query
+        ->limit(10)
+        ->execute();
 
       // Load results.
       $results = array();
@@ -1370,9 +1333,9 @@ function node_search($op = 'search', $keys = NULL) {
         $node->rendered = drupal_render($node->content);
 
         // Fetch comments for snippet.
-        $node->rendered .= module_invoke('comment', 'node_update_index', $node);
+        $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node);
         // Fetch terms for snippet.
-        $node->rendered .= module_invoke('taxonomy', 'node_update_index', $node);
+        $node->rendered .= ' ' . module_invoke('taxonomy', 'node_update_index', $node);
 
         $extra = module_invoke_all('node_search_result', $node);
 
@@ -1384,7 +1347,7 @@ function node_search($op = 'search', $keys = NULL) {
           'date' => $node->changed,
           'node' => $node,
           'extra' => $extra,
-          'score' => $total ? ($item->calculated_score / $total) : 0,
+          'score' => $item->calculated_score,
           'snippet' => search_excerpt($keys, $node->rendered),
         );
       }
@@ -1420,8 +1383,8 @@ function node_ranking() {
     $ranking['recent'] = array(
       'title' => t('Recently posted'),
       // Exponential decay with half-life of 6 months, starting at last indexed node
-      'score' => 'POW(2.0, (GREATEST(n.created, n.changed) - %d) * 6.43e-8)',
-      'arguments' => array($node_cron_last),
+      'score' => 'POW(2.0, (GREATEST(n.created, n.changed) - :node_cron_last) * 6.43e-8)',
+      'arguments' => array(':node_cron_last' => $node_cron_last),
     );
   }
   return $ranking;
@@ -2082,15 +2045,15 @@ function node_search_validate($form, &$form_state) {
     // checkboxes to 0.
     $form_state['values']['type'] = array_filter($form_state['values']['type']);
     if (count($form_state['values']['type'])) {
-      $keys = search_query_insert($keys, 'type', implode(',', array_keys($form_state['values']['type'])));
+      $keys = search_expression_insert($keys, 'type', implode(',', array_keys($form_state['values']['type'])));
     }
   }
 
   if (isset($form_state['values']['term']) && is_array($form_state['values']['term'])) {
-    $keys = search_query_insert($keys, 'term', implode(',', $form_state['values']['term']));
+    $keys = search_expression_insert($keys, 'term', implode(',', $form_state['values']['term']));
   }
   if (isset($form_state['values']['language']) && is_array($form_state['values']['language'])) {
-    $keys = search_query_insert($keys, 'language', implode(',', array_filter($form_state['values']['language'])));
+    $keys = search_expression_insert($keys, 'language', implode(',', array_filter($form_state['values']['language'])));
   }
   if ($form_state['values']['or'] != '') {
     if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' ' . $form_state['values']['or'], $matches)) {

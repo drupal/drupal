@@ -133,7 +133,12 @@ class SearchMatchTestCase extends DrupalWebTestCase {
       'xx "minim am veniam es" OR dolore' => array()
     );
     foreach ($queries as $query => $results) {
-      $set = do_search($query, SEARCH_TYPE);
+      $result = db_select('search_index', 'i')
+        ->extend('SearchQuery')
+        ->searchExpression($query, SEARCH_TYPE)
+        ->execute();
+
+      $set = $result ? $result->fetchAll() : array();
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
     }
@@ -148,7 +153,12 @@ class SearchMatchTestCase extends DrupalWebTestCase {
       'germany' => array(11, 12),
     );
     foreach ($queries as $query => $results) {
-      $set = do_search($query, SEARCH_TYPE_2);
+      $result = db_select('search_index', 'i')
+        ->extend('SearchQuery')
+        ->searchExpression($query, SEARCH_TYPE_2)
+        ->execute();
+
+      $set = $result ? $result->fetchAll() : array();
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
     }

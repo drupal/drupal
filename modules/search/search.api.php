@@ -29,13 +29,14 @@
  * capabilities. To do this, node module also implements hook_update_index()
  * which is used to create and maintain the index.
  *
- * We call do_search() with the keys, the module name, and extra SQL fragments
- * to use when searching. See hook_update_index() for more information.
+ * We call db_select('search_index', 'i')->extend('SearchQuery') and then add
+ * the keys, the module name, and extra SQL fragments to use when searching.
+ * See hook_update_index() for more information.
  *
  * @param $op
  *   A string defining which operation to perform:
  *   - 'admin': The hook should return a form array containing any fieldsets the
- *     module wants to add to the Search settings page at 
+ *     module wants to add to the Search settings page at
  *     admin/config/search/settings.
  *   - 'name': The hook should return a translated name defining the type of
  *     items that are searched for with this module ('content', 'users', ...).
@@ -77,12 +78,15 @@ function hook_search($op = 'search', $keys = NULL) {
       return t('Content');
 
     case 'reset':
-      db_query("UPDATE {search_dataset} SET reindex = %d WHERE type = 'node'", REQUEST_TIME);
+      db_update('search_dataset')
+        ->fields(array('reindex' => REQUEST_TIME))
+        ->condition('type', 'node')
+        ->execute();
       return;
 
     case 'status':
-      $total = db_result(db_query('SELECT COUNT(*) FROM {node} WHERE status = 1'));
-      $remaining = db_result(db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = 1 AND d.sid IS NULL OR d.reindex <> 0"));
+      $total = db_query('SELECT COUNT(*) FROM {node} WHERE status = 1')->fetchField();
+      $remaining = db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = 1 AND d.sid IS NULL OR d.reindex <> 0")->fetchField();
       return array('remaining' => $remaining, 'total' => $total);
 
     case 'admin':
@@ -111,61 +115,35 @@ function hook_search($op = 'search', $keys = NULL) {
 
     case 'search':
       // Build matching conditions
-      list($join1, $where1) = _db_rewrite_sql();
-      $arguments1 = array();
-      $conditions1 = 'n.status = 1';
+      $query = db_search()->extend('PagerDefault');
+      $query->join('node', 'n', 'n.nid = i.sid');
+      $query
+        ->condition('n.status', 1)
+        ->addTag('node_access')
+        ->searchExpression($keys, 'node');
 
-      if ($type = search_query_extract($keys, 'type')) {
-        $types = array();
-        foreach (explode(',', $type) as $t) {
-          $types[] = "n.type = '%s'";
-          $arguments1[] = $t;
-        }
-        $conditions1 .= ' AND (' . implode(' OR ', $types) . ')';
-        $keys = search_query_insert($keys, 'type');
+      // Insert special keywords.
+      $query->setOption('type', 'n.type');
+      $query->setOption('language', 'n.language');
+      if ($query->setOption('term', 'tn.nid')) {
+        $query->join('taxonomy_term_node', 'tn', 'n.vid = tn.vid');
+      }
+      // Only continue if the first pass query matches.
+      if (!$query->executeFirstPass()) {
+        return array();
       }
 
-      if ($category = search_query_extract($keys, 'category')) {
-        $categories = array();
-        foreach (explode(',', $category) as $c) {
-          $categories[] = "tn.tid = %d";
-          $arguments1[] = $c;
-        }
-        $conditions1 .= ' AND (' . implode(' OR ', $categories) . ')';
-        $join1 .= ' INNER JOIN {taxonomy_term_node} tn ON n.vid = tn.vid';
-        $keys = search_query_insert($keys, 'category');
-      }
+      // Add the ranking expressions.
+      _node_rankings($query);
 
-      if ($languages = search_query_extract($keys, 'language')) {
-        $categories = array();
-        foreach (explode(',', $languages) as $l) {
-          $categories[] = "n.language = '%s'";
-          $arguments1[] = $l;
-        }
-        $conditions1 .= ' AND (' . implode(' OR ', $categories) . ')';
-        $keys = search_query_insert($keys, 'language');
-      }
-
-      // Get the ranking expressions.
-      $rankings = _node_rankings();
-
-      // When all search factors are disabled (ie they have a weight of zero),
-      // The default score is based only on keyword relevance.
-      if ($rankings['total'] == 0) {
-        $total = 1;
-        $arguments2 = array();
-        $join2 = '';
-        $select2 = 'i.relevance AS score';
-      }
-      else {
-        $total = $rankings['total'];
-        $arguments2 = $rankings['arguments'];
-        $join2 = implode(' ', $rankings['join']);
-        $select2 = '(' . implode(' + ', $rankings['score']) . ') AS score';
-      }
-
-      // Do search.
-      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid ' . $join1, $conditions1 . (empty($where1) ? '' : ' AND ' . $where1), $arguments1, $select2, $join2, $arguments2);
+      // Add a count query.
+      $inner_query = clone $query;
+      $count_query = db_select($inner_query->fields('i', array('sid')));
+      $count_query->addExpression('COUNT(*)');
+      $query->setCountQuery($count_query);
+      $find = $query
+        ->limit(10)
+        ->execute();
 
       // Load results.
       $results = array();
@@ -176,9 +154,9 @@ function hook_search($op = 'search', $keys = NULL) {
         $node->body = drupal_render($node->content);
 
         // Fetch comments for snippet.
-        $node->body .= module_invoke('comment', 'node', $node, 'update_index');
+        $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node);
         // Fetch terms for snippet.
-        $node->body .= module_invoke('taxonomy', 'node', $node, 'update_index');
+        $node->rendered .= ' ' . module_invoke('taxonomy', 'node_update_index', $node);
 
         $extra = module_invoke_all('node_search_result', $node);
 
@@ -190,7 +168,7 @@ function hook_search($op = 'search', $keys = NULL) {
           'date' => $node->changed,
           'node' => $node,
           'extra' => $extra,
-          'score' => $total ? ($item->score / $total) : 0,
+          'score' => $item->calculated_score,
           'snippet' => search_excerpt($keys, $node->body),
         );
       }
