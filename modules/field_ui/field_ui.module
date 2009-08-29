@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.module,v 1.6 2009/08/24 01:21:51 webchick Exp $
+// $Id: field_ui.module,v 1.7 2009/08/29 04:42:56 webchick Exp $
 
 /**
  * @file
@@ -252,6 +252,9 @@ function field_ui_field_ui_build_modes_tabs() {
 function field_ui_update_field($field) {
   $field_types = field_info_field_types();
   $module = $field_types[$field['type']]['module'];
+
+  // If needed, remove the 'bundles' element added by field_info_field.
+  unset($field['bundles']);
 
   $defaults = field_info_field_settings($field['type']);
   $field['settings'] = array_merge($defaults, (array) $field['settings']);
