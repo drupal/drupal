@@ -319,9 +319,9 @@ function aggregator_cron() {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function aggregator_block_list() {
+function aggregator_block_info() {
   $block = array();
   $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
   foreach ($result as $category) {

@@ -12,7 +12,7 @@
  */
 
 /**
- * List of all blocks defined by the module.
+ * Define all blocks provided by the module.
  *
  * Any module can export a block (or blocks) to be displayed by defining
  * the _block hook. This hook is called by theme.inc to display a block,
@@ -52,7 +52,7 @@
  *
  * For a detailed usage example, see block_example.module.
  */
-function hook_block_list() {
+function hook_block_info() {
   $blocks['exciting'] = array(
     'info' => t('An exciting block provided by Mymodule.'),
     'weight' => 0,
@@ -76,7 +76,7 @@ function hook_block_list() {
  *   Which block to return. This is a descriptive string used to identify
  *   blocks within each module and also within the theme system.
  *   The $delta for each block is defined within the array that your module
- *   returns when the hook_block_list() implementation is called.
+ *   returns when the hook_block_info() implementation is called.
  * @return
  *   Optionally return the configuration form.
  *
@@ -101,7 +101,7 @@ function hook_block_configure($delta = '') {
  *   Which block to save the settings for. This is a descriptive string used
  *   to identify blocks within each module and also within the theme system.
  *   The $delta for each block is defined within the array that your module
- *   returns when the hook_block_list() implementation is called.
+ *   returns when the hook_block_info() implementation is called.
  * @param $edit
  *   The submitted form data from the configuration form.
  *
@@ -120,7 +120,7 @@ function hook_block_save($delta = '', $edit = array()) {
  *   Which block to return. This is a descriptive string used to identify
  *   blocks within each module and also within the theme system.
  *   The $delta for each block is defined within the array that your module
- *   returns when the hook_block_list() implementation is called.
+ *   returns when the hook_block_info() implementation is called.
  * @return
  *   An array which must define a 'subject' element and a 'content' element
  *   defining the block indexed by $delta.
@@ -166,7 +166,7 @@ function hook_block_view($delta = '') {
  * This example shows how to achieve language specific visibility setting for
  * blocks.
  */
-function hook_block_list_alter(&$blocks) {
+function hook_block_info_alter(&$blocks) {
   global $language, $theme_key;
 
   $result = db_query('SELECT module, delta, language FROM {my_table}');

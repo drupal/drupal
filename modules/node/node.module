@@ -1761,9 +1761,9 @@ function node_revision_list($node) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function node_block_list() {
+function node_block_info() {
   $blocks['syndicate']['info'] = t('Syndicate');
   // Not worth caching.
   $blocks['syndicate']['cache'] = BLOCK_NO_CACHE;

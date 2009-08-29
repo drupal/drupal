@@ -274,9 +274,9 @@ function menu_reset_item($item) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function menu_block_list() {
+function menu_block_info() {
   $menus = menu_get_menus(FALSE);
 
   $blocks = array();

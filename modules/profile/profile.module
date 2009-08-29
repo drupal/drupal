@@ -133,9 +133,9 @@ function profile_menu() {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
- function profile_block_list() {
+ function profile_block_info() {
   $blocks['author-information']['info'] = t('Author information');
   $blocks['author-information']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
   return $blocks;

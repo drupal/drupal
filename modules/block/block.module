@@ -15,7 +15,7 @@ define('BLOCK_REGION_NONE', -1);
  * Constants defining cache granularity for blocks.
  *
  * Modules specify the caching patterns for their blocks using binary
- * combinations of these constants in their hook_block_list():
+ * combinations of these constants in their hook_block_info():
  *   $block[delta]['cache'] = BLOCK_CACHE_PER_ROLE | BLOCK_CACHE_PER_PAGE;
  * BLOCK_CACHE_PER_ROLE is used as a default when no caching pattern is
  * specified.
@@ -187,9 +187,9 @@ function _block_themes_access($theme) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function block_block_list() {
+function block_block_info() {
   $blocks = array();
 
   $result = db_query('SELECT bid, info FROM {block_custom} ORDER BY info');
@@ -312,8 +312,8 @@ function _block_rehash() {
   // Valid region names for the theme.
   $regions = system_region_list($theme_key);
 
-  foreach (module_implements('block_list') as $module) {
-    $module_blocks = module_invoke($module, 'block_list');
+  foreach (module_implements('block_info') as $module) {
+    $module_blocks = module_invoke($module, 'block_info');
     if ($module_blocks) {
       foreach ($module_blocks as $delta => $block) {
         if (empty($old_blocks[$module][$delta])) {
@@ -437,7 +437,7 @@ function block_user_form(&$edit, $account, $category) {
       '#tree' => TRUE
     );
     foreach ($result as $block) {
-      $data = module_invoke($block->module, 'block_list');
+      $data = module_invoke($block->module, 'block_info');
       if ($data[$block->delta]['info']) {
         $return = TRUE;
         $form['block'][$block->module][$block->delta] = array(
@@ -576,24 +576,24 @@ function _block_load_blocks() {
     ->addTag('block_load')
     ->execute();
 
-  $block_list = $result->fetchAllAssoc('bid');
+  $block_info = $result->fetchAllAssoc('bid');
   // Allow modules to modify the block list.
-  drupal_alter('block_list', $block_list);
+  drupal_alter('block_info', $block_info);
 
   $blocks = array();
-  foreach ($block_list as $block) {
+  foreach ($block_info as $block) {
     $blocks[$block->region]["{$block->module}_{$block->delta}"] = $block;
   }
   return $blocks;
 }
 
 /**
- * Implement hook_block_list_alter().
+ * Implement hook_block_info_alter().
  *
  * Check the page, user role, content type and user specific visibilty settings.
  * Remove the block if the visibility conditions are not met.
  */
-function block_block_list_alter(&$blocks) {
+function block_block_info_alter(&$blocks) {
   global $user, $theme_key;
 
   // Build an array of roles for each block.

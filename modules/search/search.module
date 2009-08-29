@@ -161,9 +161,9 @@ function search_permission() {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function search_block_list() {
+function search_block_info() {
   $blocks['form']['info'] = t('Search form');
   // Not worth caching.
   $blocks['form']['cache'] = BLOCK_NO_CACHE;

@@ -1560,9 +1560,9 @@ function system_user_timezone(&$edit, &$form) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function system_block_list() {
+function system_block_info() {
   $blocks['main'] = array(
     'info' => t('Main page content'),
      // Cached elsewhere.

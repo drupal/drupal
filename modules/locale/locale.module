@@ -629,9 +629,9 @@ function locale_css_alter(&$css) {
 // Language switcher block
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function locale_block_list() {
+function locale_block_info() {
   $block['language-switcher']['info'] = t('Language switcher');
   // Not worth caching.
   $block['language-switcher']['cache'] = BLOCK_NO_CACHE;

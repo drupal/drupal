@@ -984,9 +984,9 @@ function user_login_block() {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function user_block_list() {
+function user_block_info() {
   global $user;
 
   $blocks['login']['info'] = t('User login');

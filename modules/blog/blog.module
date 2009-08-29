@@ -150,9 +150,9 @@ function _blog_post_exists($account) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function blog_block_list() {
+function blog_block_info() {
   $block['recent']['info'] = t('Recent blog posts');
   return $block;
 }

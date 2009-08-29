@@ -476,9 +476,9 @@ function forum_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function forum_block_list() {
+function forum_block_info() {
   $blocks['active']['info'] = t('Active forum topics');
   $blocks['new']['info'] = t('New forum topics');
   return $blocks;

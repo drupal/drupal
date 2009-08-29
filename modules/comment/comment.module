@@ -278,9 +278,9 @@ function comment_permission() {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function comment_block_list() {
+function comment_block_info() {
   $blocks['recent']['info'] = t('Recent comments');
 
   return $blocks;

@@ -207,9 +207,9 @@ function book_field_build_modes($obj_type) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function book_block_list() {
+function book_block_info() {
   $block = array();
   $block['navigation']['info'] = t('Book navigation');
   $block['navigation']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
