@@ -280,7 +280,7 @@ class FileSpaceUsedTest extends FileTestCase {
     return array(
       'name' => 'File space used tests',
       'description' => 'Tests the file_space_used() function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -340,7 +340,7 @@ class FileValidatorTest extends DrupalWebTestCase {
     return array(
       'name' => 'File validator tests',
       'description' => 'Tests the functions used to validate uploaded files.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -498,7 +498,7 @@ class FileUnmanagedSaveDataTest extends FileTestCase {
     return array(
       'name' => 'Unmanaged file save data',
       'description' => 'Tests the unmanaged file save data function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -542,7 +542,7 @@ class FileSaveUploadTest extends FileHookTestCase {
     return array(
       'name' => 'File uploading',
       'description' => 'Tests the file uploading functions.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -685,7 +685,7 @@ class FileDirectoryTest extends FileTestCase {
     return array(
       'name' => 'File paths and directories',
       'description' => 'Tests operations dealing with directories.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -810,7 +810,7 @@ class FileScanDirectoryTest extends FileTestCase {
     return array(
       'name' => 'File scan directory',
       'description' => 'Tests the file_scan_directory() function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -940,7 +940,7 @@ class FileUnmanagedDeleteTest extends FileTestCase {
     return array(
       'name' => 'Unmanaged file delete',
       'description' => 'Tests the unmanaged file delete function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -986,7 +986,7 @@ class FileUnmanagedDeleteRecursiveTest extends FileTestCase {
     return array(
       'name' => 'Unmanaged recursive file delete',
       'description' => 'Tests the unmanaged file delete recursive function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1063,7 +1063,7 @@ class FileUnmanagedMoveTest extends FileTestCase {
     return array(
       'name' => 'Unmanaged file moving',
       'description' => 'Tests the unmanaged file move function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1136,7 +1136,7 @@ class FileUnmanagedCopyTest extends FileTestCase {
     return array(
       'name' => 'Unmanaged file copying',
       'description' => 'Tests the unmanaged file copy function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1224,7 +1224,7 @@ class FileDeleteTest extends FileHookTestCase {
     return array(
       'name' => 'File delete',
       'description' => 'Tests the file delete function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1255,7 +1255,7 @@ class FileMoveTest extends FileHookTestCase {
     return array(
       'name' => 'File moving',
       'description' => 'Tests the file move function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1416,7 +1416,7 @@ class FileCopyTest extends FileHookTestCase {
     return array(
       'name' => 'File copying',
       'description' => 'Tests the file copy function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1562,7 +1562,7 @@ class FileLoadTest extends FileHookTestCase {
     return array(
       'name' => 'File loading',
       'description' => 'Tests the file_load() function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1643,7 +1643,7 @@ class FileSaveTest extends FileHookTestCase {
     return array(
       'name' => 'File saving',
       'description' => 'Tests the file_save() function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1700,7 +1700,7 @@ class FileValidateTest extends FileHookTestCase {
     return array(
       'name' => 'File validate',
       'description' => 'Tests the file_validate() function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1739,7 +1739,7 @@ class FileSaveDataTest extends FileHookTestCase {
     return array(
       'name' => 'File save data',
       'description' => 'Tests the file save data function.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1870,7 +1870,7 @@ class FileDownloadTest extends FileTestCase {
     return array(
       'name' => 'File download',
       'description' => 'Tests for file download/transfer functions.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -1977,7 +1977,7 @@ class FileNameMungingTest extends FileTestCase {
     return array(
       'name' => 'File naming',
       'description' => 'Test filename munging and unmunging.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -2038,7 +2038,7 @@ class FileMimeTypeTest extends DrupalWebTestCase {
     return array(
       'name' => 'File mimetypes',
       'description' => 'Test filename mimetype detection.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -2124,7 +2124,7 @@ class StreamWrapperRegistryTest extends DrupalWebTestCase {
     return array(
       'name' => 'Stream Wrapper Registry',
       'description' => 'Tests stream wrapper registry.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 

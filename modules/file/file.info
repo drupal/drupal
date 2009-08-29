@@ -1,0 +1,10 @@
+; $Id$
+name = File
+description = Defines a file field type.
+package = Core
+version = VERSION
+core = 7.x
+files[] = file.module
+files[] = file.field.inc
+files[] = file.install
+files[] = tests/file.test
