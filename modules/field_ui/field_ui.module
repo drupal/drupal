@@ -253,6 +253,9 @@ function field_ui_update_field($field) {
   $field_types = field_info_field_types();
   $module = $field_types[$field['type']]['module'];
 
+  // If needed, remove the 'bundles' element added by field_info_field.
+  unset($field['bundles']);
+
   $defaults = field_info_field_settings($field['type']);
   $field['settings'] = array_merge($defaults, (array) $field['settings']);
   $data = $field;

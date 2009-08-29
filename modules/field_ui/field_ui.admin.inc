@@ -654,7 +654,6 @@ function template_preprocess_field_ui_display_overview_form(&$vars) {
  * Submit handler for the display overview form.
  */
 function field_ui_display_overview_form_submit($form, &$form_state) {
-  module_load_include('inc', 'field', 'includes/field.crud');
   $form_values = $form_state['values'];
   foreach ($form_values as $key => $values) {
     if (in_array($key, $form['#fields'])) {
@@ -873,9 +872,6 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
     return;
   }
 
-  // Remove the 'bundles' element added by field_info_field.
-  // @todo This is ugly, there must be a better way.
-  unset($field['bundles']);
   $bundle = $form['#bundle'];
   $instance = field_info_instance($field['field_name'], $bundle);
 
@@ -1275,26 +1271,25 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
  */
 function field_ui_field_edit_form_submit($form, &$form_state) {
   $form_values = $form_state['values'];
-  $instance = $form_values['instance'];
-  $field_name = $instance['field_name'];
+  $field_values = $form_values['field'];
+  $instance_values = $form_values['instance'];
+  $field_name = $instance_values['field_name'];
 
   // Update any field settings that have changed.
-  $field = field_info_field($field_name);
-  // Remove the 'bundles' element added by field_info_field.
-  // @todo This is ugly, there must be a better way.
-  unset($field['bundles']);
-  $field = array_merge($field, $form_state['values']['field']);
+  $field = field_info_field($instance_values['field_name']);
+  $field = array_merge($field, $field_values);
   field_ui_update_field($field);
 
   // Move the default value from the sample widget to the default value field.
-  if (isset($instance['default_value_widget'])) {
-    $langcode = $form['instance']['default_value_widget'][$field_name]['#language'];
-    $instance['default_value'] = $instance['default_value_widget'][$field_name][$langcode];
-    unset($instance['default_value_widget']);
+  if (isset($instance_values['default_value_widget'])) {
+    $langcode = $instance_values['default_value_widget'][$field_name]['#language'];
+    $instance_values['default_value'] = $instance_values['default_value_widget'][$field_name][$langcode];
+    unset($instance_values['default_value_widget']);
   }
 
   // Update the instance settings.
-  module_load_include('inc', 'field', 'includes/field.crud');
+  $instance = field_info_instance($instance_values['field_name'], $instance_values['bundle']);
+  $instance = array_merge($instance, $instance_values);
   field_update_instance($instance);
 
   drupal_set_message(t('Saved %label configuration.', array('%label' => $instance['label'])));
