@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1033 2009/08/28 06:42:54 dries Exp $
+// $Id: user.module,v 1.1034 2009/08/29 04:55:32 webchick Exp $
 
 /**
  * @file
@@ -1317,6 +1317,8 @@ function user_menu() {
    'position' => 'right',
    'page callback' => 'system_admin_menu_block_page',
    'access arguments' => array('access administration pages'),
+   'file' => 'system.admin.inc',
+   'file path' => drupal_get_path('module', 'system'),
   );
   $items['admin/config/people/accounts'] = array(
     'title' => 'Account settings',
