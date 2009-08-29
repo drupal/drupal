@@ -658,8 +658,11 @@ function field_ui_display_overview_form_submit($form, &$form_state) {
   foreach ($form_values as $key => $values) {
     if (in_array($key, $form['#fields'])) {
       $instance = field_info_instance($key, $form['#bundle']);
-      unset($values['weight']);
-      $instance['display'] = array_merge($instance['display'], $values);
+      foreach ($instance['display'] as $build_mode => $display) {
+        if (isset($values[$build_mode])) {
+          $instance['display'][$build_mode] = array_merge($instance['display'][$build_mode], $values[$build_mode]);
+        }
+      }
       field_update_instance($instance);
     }
   }
