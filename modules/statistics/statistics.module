@@ -228,10 +228,12 @@ function statistics_cron() {
     variable_set('statistics_day_timestamp', REQUEST_TIME);
   }
 
-  // Clean up expired access logs.
-  db_delete('accesslog')
-    ->condition('timestamp', REQUEST_TIME - variable_get('statistics_flush_accesslog_timer', 259200), '<')
-    ->execute();
+  // Clean up expired access logs (if applicable).
+  if (variable_get('statistics_flush_accesslog_timer', 259200) > 0) {
+    db_delete('accesslog')
+      ->condition('timestamp', REQUEST_TIME - variable_get('statistics_flush_accesslog_timer', 259200), '<')
+      ->execute();
+  }
 }
 
 /**
