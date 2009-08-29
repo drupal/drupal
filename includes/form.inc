@@ -1625,7 +1625,6 @@ function form_get_options($element, $key) {
  */
 function theme_fieldset($element) {
   if (!empty($element['#collapsible'])) {
-    $element['#attached_js']['misc/collapse.js'] = array();
 
     if (!isset($element['#attributes']['class'])) {
       $element['#attributes']['class'] = array();
@@ -2247,6 +2246,9 @@ function form_process_fieldset(&$element, &$form_state) {
 
   // Contains form element summary functionalities.
   $element['#attached_js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
+  if (!empty($element['#collapsible'])) {
+    $element['#attached_js']['misc/collapse.js'] = array();
+  }
 
   return $element;
 }
