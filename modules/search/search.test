@@ -374,7 +374,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
       }
 
       // Do the search and assert the results.
-      $set = node_search('search', 'rocks');
+      $set = node_search_execute('rocks');
       $this->assertEqual($set[0]['node']->nid, $nodes[$node_rank][1]->nid, 'Search ranking "' . $node_rank . '" order.');
     }
   }

@@ -218,25 +218,45 @@ function search_menu() {
     'file path' => drupal_get_path('module', 'dblog'),
     'file' => 'dblog.admin.inc',
   );
-
-  foreach (module_implements('search') as $module) {
-    $items['search/' . $module . '/%menu_tail'] = array(
-      'title callback' => 'module_invoke',
-      'title arguments' => array($module, 'search', 'name', TRUE),
-      'page callback' => 'search_view',
-      'page arguments' => array($module),
-      'access callback' => '_search_menu',
-      'access arguments' => array($module),
-      'type' => MENU_LOCAL_TASK,
-      'parent' => 'search',
-      'file' => 'search.pages.inc',
-    );
+  drupal_static_reset('search_get_info');
+  $search_hooks = search_get_info();
+  foreach(variable_get('search_active_modules', array('node', 'user')) as $module) {
+    if (isset($search_hooks[$module])) {
+      $items['search/' . $search_hooks[$module]['path'] . '/%menu_tail'] = array(
+        'title' => $search_hooks[$module]['title'],
+        'page callback' => 'search_view',
+        'page arguments' => array($module),
+        'access callback' => '_search_menu_access',
+        'access arguments' => array($module),
+        'type' => MENU_LOCAL_TASK,
+        'file' => 'search.pages.inc',
+      );
+    }
   }
   return $items;
 }
 
-function _search_menu($name) {
-  return user_access('search content') && module_invoke($name, 'search', 'name');
+/**
+ * Get information about all available search hooks.
+ */
+function search_get_info() {
+  $search_hooks = &drupal_static(__FUNCTION__);
+
+  if (!isset($search_hooks)) {
+    foreach (module_implements('search_info') as $module) {
+      $search_hooks[$module] = call_user_func($module . '_search_info');
+      // Use module name as the default.
+      $search_hooks[$module] += array('title' => $module, 'path' => $module);
+    }
+  }
+  return $search_hooks;
+}
+
+/**
+ * Access callback for search tabs.
+ */
+function _search_menu_access($name) {
+  return user_access('search content') && (!function_exists($name . '_search_access') || module_invoke($name, 'search_access'));
 }
 
 /**
@@ -297,8 +317,10 @@ function search_cron() {
   // to date.
   register_shutdown_function('search_update_totals');
 
-  // Update word index
-  module_invoke_all('update_index');
+  foreach(variable_get('search_active_modules', array('node', 'user')) as $module) {
+    // Update word index
+    module_invoke($module, 'update_index');
+  }
 }
 
 /**
@@ -693,6 +715,10 @@ function search_touch_node($nid) {
     ->execute();
 }
 
+function search_touch_data($type, $sid) {
+  db_query("UPDATE {search_dataset} SET reindex = :time WHERE sid = :sid AND type = :type", array(':time' => REQUEST_TIME, ':sid' => $sid, ':type' => $type));
+}
+
 /**
  * Implement hook_node_update_index().
  */
@@ -969,8 +995,8 @@ function template_preprocess_search_block_form(&$variables) {
 function search_data($keys = NULL, $type = 'node') {
 
   if (isset($keys)) {
-    if (module_hook($type, 'search')) {
-      $results = module_invoke($type, 'search', 'search', $keys);
+    if (module_hook($type, 'search_execute')) {
+      $results = module_invoke($type, 'search_execute', $keys);
       if (isset($results) && is_array($results) && count($results)) {
         if (module_hook($type, 'search_page')) {
           return module_invoke($type, 'search_page', $results);

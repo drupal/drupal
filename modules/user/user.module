@@ -795,39 +795,46 @@ function user_file_delete($file) {
 }
 
 /**
- * Implement hook_search().
+ * Implement hook_search_info().
  */
-function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
-  switch ($op) {
-    case 'name':
-      if ($skip_access_check || user_access('access user profiles')) {
-        return t('Users');
-      }
-    case 'search':
-      if (user_access('access user profiles')) {
-        $find = array();
-        // Replace wildcards with MySQL/PostgreSQL wildcards.
-        $keys = preg_replace('!\*+!', '%', $keys);
-        $query = db_select('users')->extend('PagerDefault');
-        $query->fields('users', array('name', 'uid', 'mail'));
-        if (user_access('administer users')) {
-          // Administrators can also search in the otherwise private email field.
-          $query->condition(db_or()->
-            where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"))->
-            where('LOWER(mail) LIKE LOWER(:mail)', array(':mail' => "%$keys%")));
-        }
-        else {
-          $query->where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"));
-        }
-        $result = $query
-          ->limit(15)
-          ->execute();
-        foreach ($result as $account) {
-          $find[] = array('title' => $account->name . ' (' . $account->mail . ')', 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
-        }
-        return $find;
-      }
+function user_search_info() {
+  return array(
+    'title' => 'Users',
+  );
+}
+
+/**
+ * Implement hook_search_access().
+ */
+function user_search_access() {
+  return user_access('access user profiles');
+}
+
+/**
+ * Implement hook_search_execute().
+ */
+function user_search_execute($keys = NULL) {
+  $find = array();
+  // Replace wildcards with MySQL/PostgreSQL wildcards.
+  $keys = preg_replace('!\*+!', '%', $keys);
+  $query = db_select('users')->extend('PagerDefault');
+  $query->fields('users', array('name', 'uid', 'mail'));
+  if (user_access('administer users')) {
+    // Administrators can also search in the otherwise private email field.
+    $query->condition(db_or()->
+      where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"))->
+      where('LOWER(mail) LIKE LOWER(:mail)', array(':mail' => "%$keys%")));
   }
+  else {
+    $query->where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"));
+  }
+  $result = $query
+    ->limit(15)
+    ->execute();
+  foreach ($result as $account) {
+    $find[] = array('title' => $account->name . ' (' . $account->mail . ')', 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
+  }
+  return $find;
 }
 
 /**
