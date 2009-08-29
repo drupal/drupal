@@ -465,8 +465,7 @@ function file_load($fid) {
  * @see hook_file_insert()
  * @see hook_file_update()
  */
-function file_save($file) {
-  $file = (object)$file;
+function file_save(stdClass $file) {
   $file->timestamp = REQUEST_TIME;
   $file->filesize = filesize($file->uri);
 
@@ -519,9 +518,7 @@ function file_save($file) {
  * @see file_unmanaged_copy()
  * @see hook_file_copy()
  */
-function file_copy($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
-  $source = (object)$source;
-
+function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if ($uri = file_unmanaged_copy($source->uri, $destination, $replace)) {
     $file = clone $source;
     $file->fid = NULL;
@@ -722,9 +719,7 @@ function file_destination($destination, $replace) {
  * @see file_unmanaged_move()
  * @see hook_file_move()
  */
-function file_move($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
-  $source = (object)$source;
-
+function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if ($uri = file_unmanaged_move($source->uri, $destination, $replace)) {
     $delete_source = FALSE;
 
@@ -914,9 +909,7 @@ function file_create_filename($basename, $directory) {
  * @see hook_file_references()
  * @see hook_file_delete()
  */
-function file_delete($file, $force = FALSE) {
-  $file = (object)$file;
-
+function file_delete(stdClass $file, $force = FALSE) {
   // If any module returns a value from the reference hook, the file will not
   // be deleted from Drupal, but file_delete will return a populated array that
   // tests as TRUE.
@@ -1219,7 +1212,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
  *
  * @see hook_file_validate()
  */
-function file_validate(&$file, $validators = array()) {
+function file_validate(stdClass &$file, $validators = array()) {
   // Call the validation functions specified by this function's caller.
   $errors = array();
   foreach ($validators as $function => $args) {
@@ -1241,7 +1234,7 @@ function file_validate(&$file, $validators = array()) {
  * @return
  *   An array. If the file name is too long, it will contain an error message.
  */
-function file_validate_name_length($file) {
+function file_validate_name_length(stdClass $file) {
   $errors = array();
 
   if (empty($file->filename)) {
@@ -1266,7 +1259,7 @@ function file_validate_name_length($file) {
  *
  * @see hook_file_validate()
  */
-function file_validate_extensions($file, $extensions) {
+function file_validate_extensions(stdClass $file, $extensions) {
   $errors = array();
 
   $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote($extensions)) . ')$/i';
@@ -1295,7 +1288,7 @@ function file_validate_extensions($file, $extensions) {
  *
  * @see hook_file_validate()
  */
-function file_validate_size($file, $file_limit = 0, $user_limit = 0) {
+function file_validate_size(stdClass $file, $file_limit = 0, $user_limit = 0) {
   global $user;
 
   $errors = array();
@@ -1324,7 +1317,7 @@ function file_validate_size($file, $file_limit = 0, $user_limit = 0) {
  *
  * @see hook_file_validate()
  */
-function file_validate_is_image($file) {
+function file_validate_is_image(stdClass $file) {
   $errors = array();
 
   $info = image_get_info($file->uri);
@@ -1359,7 +1352,7 @@ function file_validate_is_image($file) {
  *
  * @see hook_file_validate()
  */
-function file_validate_image_resolution($file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
+function file_validate_image_resolution(stdClass $file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
   $errors = array();
 
   // Check first that the file is an image.
@@ -1608,11 +1601,10 @@ function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
         elseif ($depth >= $options['min_depth'] && preg_match($mask, $filename)) {
           // Always use this match over anything already set in $files with the
           // same $$options['key'].
-          $file = (object) array(
-            'uri' => $uri,
-            'filename' => $filename,
-            'name' => pathinfo($filename, PATHINFO_FILENAME),
-          );
+          $file = new StdClass;
+          $file->uri = $uri;
+          $file->filename = $filename;
+          $file->name = pathinfo($filename, PATHINFO_FILENAME);
           $key = $options['key'];
           $files[$file->$key] = $file;
           if ($options['callback']) {
