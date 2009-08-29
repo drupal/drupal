@@ -510,22 +510,16 @@ class FilterUnitTestCase extends DrupalWebTestCase {
 
   /**
    * Test the HTML escaping filter.
-   *
-   * Here we test only whether check_plain() does what it should.
    */
   function testNoHtmlFilter() {
-    // Test that characters that have special meaning in XML are changed into
-    // entities.
-    $f = check_plain('<>&"');
-    $this->assertEqual($f, '&lt;&gt;&amp;&quot;', t('No HTML filter basic test.'));
+    $this->_testEscapedHTML('_filter_html_escape');
+  }
 
-    // A single quote can also be used for evil things in some contexts.
-    $f = check_plain('\'');
-    $this->assertEqual($f, '&#039;', t('No HTML filter -- single quote.'));
-
-    // Test that the filter is not fooled by different evasion techniques.
-    $f = check_plain("\xc2\"");
-    $this->assertEqual($f, '', t('No HTML filter -- invalid UTF-8.'));
+  /**
+   * Test that the check_plain() function escapes HTML correctly.
+   */
+  function testCheckPlain() {
+    $this->_testEscapedHTML('check_plain');
   }
 
   /**
@@ -743,6 +737,30 @@ class FilterUnitTestCase extends DrupalWebTestCase {
    */
   function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
     return $this->assertTrue(strpos(strtolower(decode_entities($haystack)), $needle) === FALSE, $message, $group);
+  }
+
+  /**
+   * Helper method to test functions that are intended to escape HTML.
+   *
+   * @param $function
+   *   The name of the function to test.
+   */
+  function _testEscapedHTML($function) {
+    // Define string replacements for the assertion messages.
+    $replacements = array('@function' => $function);
+
+    // Test that characters that have special meaning in XML are changed into
+    // entities.
+    $f = $function('<>&"');
+    $this->assertEqual($f, '&lt;&gt;&amp;&quot;', t('The @function() function correctly filters basic HTML entities.', $replacements));
+
+    // A single quote can also be used for evil things in some contexts.
+    $f = $function('\'');
+    $this->assertEqual($f, '&#039;', t('The @function() function correctly filters single quotes.', $replacements));
+
+    // Test that the filter is not fooled by different evasion techniques.
+    $f = $function("\xc2\"");
+    $this->assertEqual($f, '', t('The @function() function correctly filters invalid UTF-8.', $replacements));
   }
 }
 

@@ -993,6 +993,13 @@ function _filter_autop($text) {
 }
 
 /**
+ * Escapes all HTML tags, so they will be visible instead of being effective.
+ */
+function _filter_html_escape($text) {
+  return trim(check_plain($text));
+}
+
+/**
  * @} End of "Standard filters".
  */
 
