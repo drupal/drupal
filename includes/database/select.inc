@@ -35,7 +35,7 @@ interface QueryExtendableInterface {
 /**
  * Interface definition for a Select Query object.
  */
-interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableInterface, QueryExtendableInterface {
+interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableInterface, QueryExtendableInterface, QueryPlaceholderInterface {
 
   /* Alter accessors to expose the query data to alter hooks. */
 
@@ -114,10 +114,14 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
   /**
    * Compiles and returns an associative array of the arguments for this prepared statement.
    *
+   * @param $queryPlaceholder
+   *   When collecting the arguments of a subquery, the main placeholder
+   *   object should be passed as this parameter.
+   *
    * @return
    *   An associative array of all placeholder arguments for this query.
    */
-  public function getArguments();
+  public function getArguments(QueryPlaceholderInterface $queryPlaceholder = NULL);
 
   /* Query building operations */
 
@@ -400,10 +404,20 @@ class SelectQueryExtender implements SelectQueryInterface {
    */
   protected $connection;
 
+  /**
+   * The placeholder counter.
+   */
+  protected $placeholder = 0;
 
   public function __construct(SelectQueryInterface $query, DatabaseConnection $connection) {
     $this->query = $query;
     $this->connection = $connection;
+  }
+
+  /* Implementations of QueryPlaceholderInterface. */
+
+  public function nextPlaceholder() {
+    return $this->placeholder++;
   }
 
   /* Implementations of QueryAlterableInterface. */
@@ -454,8 +468,8 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $this;
   }
 
-  public function compile(DatabaseConnection $connection) {
-    return $this->query->compile($connection);
+  public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
+    return $this->condition->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
   /* Implmeentations of QueryConditionInterface for the HAVING clause. */
@@ -510,8 +524,8 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $this->query->getTables();
   }
 
-  public function getArguments() {
-    return $this->query->getArguments();
+  public function getArguments(QueryPlaceholderInterface $queryPlaceholder = NULL) {
+    return $this->query->getArguments($queryPlaceholder);
   }
 
   public function isPrepared() {
@@ -826,9 +840,8 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $this;
   }
 
-
-  public function compile(DatabaseConnection $connection) {
-    return $this->where->compile($connection);
+  public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
+    return $this->where->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
   /* Implmeentations of QueryConditionInterface for the HAVING clause. */
@@ -855,7 +868,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
   }
 
   public function havingCompile(DatabaseConnection $connection) {
-    return $this->having->compile($connection);
+    return $this->having->compile($connection, $this);
   }
 
   /* Implementations of QueryExtendableInterface. */
@@ -897,9 +910,12 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $this->tables;
   }
 
-  public function getArguments() {
-    $this->where->compile($this->connection);
-    $this->having->compile($this->connection);
+  public function getArguments(QueryPlaceholderInterface $queryPlaceholder = NULL) {
+    if (!isset($queryPlaceholder)) {
+      $queryPlaceholder = $this;
+    }
+    $this->where->compile($this->connection, $queryPlaceholder);
+    $this->having->compile($this->connection, $queryPlaceholder);
     $args = $this->where->arguments() + $this->having->arguments();
     foreach ($this->tables as $table) {
       if ($table['arguments']) {
@@ -907,7 +923,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
       }
       // If this table is a subquery, grab its arguments recursively.
       if ($table['table'] instanceof SelectQueryInterface) {
-        $args += $table['table']->getArguments();
+        $args += $table['table']->getArguments($queryPlaceholder);
       }
     }
     foreach ($this->expressions as $expression) {
@@ -1179,7 +1195,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
     // WHERE
     if (count($this->where)) {
-      $this->where->compile($this->connection);
+      $this->where->compile($this->connection, $this);
       // There is an implicit string cast on $this->condition.
       $query .= "\nWHERE " . $this->where;
     }
@@ -1191,7 +1207,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
     // HAVING
     if (count($this->having)) {
-      $this->having->compile($this->connection);
+      $this->having->compile($this->connection, $this);
       // There is an implicit string cast on $this->having.
       $query .= "\nHAVING " . $this->having;
     }
@@ -1207,7 +1223,6 @@ class SelectQuery extends Query implements SelectQueryInterface {
     }
 
     // RANGE is database specific, so we can't do it here.
-
     return $query;
   }
 

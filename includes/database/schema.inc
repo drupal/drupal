@@ -146,12 +146,22 @@
  * @see drupal_install_schema()
  */
 
-abstract class DatabaseSchema {
+abstract class DatabaseSchema implements QueryPlaceholderInterface {
 
   protected $connection;
 
+  /**
+   * The placeholder counter.
+   */
+  protected $placeholder = 0;
+
+
   public function __construct($connection) {
     $this->connection = $connection;
+  }
+
+  public function nextPlaceholder() {
+    return $this->placeholder++;
   }
 
   /**
@@ -204,7 +214,7 @@ abstract class DatabaseSchema {
    */
   public function tableExists($table) {
     $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
-    $condition->compile($this->connection);
+    $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
     // concatination for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
@@ -224,7 +234,7 @@ abstract class DatabaseSchema {
    */
   public function findTables($table_expression) {
     $condition = $this->buildTableNameCondition($table_expression, 'LIKE');
-    $condition->compile($this->connection);
+    $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
     // concatination for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
@@ -239,7 +249,7 @@ abstract class DatabaseSchema {
   public function columnExists($table, $column) {
     $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
     $condition->condition('column_name', $column);
-    $condition->compile($this->connection);
+    $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
     // concatination for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
