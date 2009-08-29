@@ -93,10 +93,12 @@ function dblog_init() {
  */
 function dblog_cron() {
   // Cleanup the watchdog table
-  $max = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
-  db_delete('watchdog')
-    ->condition('wid', $max - variable_get('dblog_row_limit', 1000), '<=')
-    ->execute();
+  if (variable_get('dblog_row_limit', 1000) > 0) {
+    $max = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    db_delete('watchdog')
+      ->condition('wid', $max - variable_get('dblog_row_limit', 1000), '<=')
+      ->execute();
+  }
 }
 
 /**
@@ -160,7 +162,7 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
     '#type' => 'select',
     '#title' => t('Database log entries to keep'),
     '#default_value' => variable_get('dblog_row_limit', 1000),
-    '#options' => drupal_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
+    '#options' => array(0 => t('All')) + drupal_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
     '#description' => t('The maximum number of entries to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
   );
   $form['buttons']['#weight'] = 1;
