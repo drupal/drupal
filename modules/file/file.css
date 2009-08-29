@@ -1,0 +1,36 @@
+/* $Id: file.css,v 1.1 2009/08/29 12:52:32 dries Exp $ */
+
+/**
+ * Managed file element styles.
+ */
+.form-managed-file .form-file,
+.form-managed-file .form-submit {
+  margin: 0;
+}
+
+.form-managed-file input.progress-disabled {
+  float: none;
+  display: inline;
+}
+
+.form-managed-file div.ajax-progress,
+.form-managed-file div.throbber {
+  display: inline;
+  float: none;
+  padding: 1px 5px 2px 5px;
+}
+
+.form-managed-file div.ajax-progress div {
+  display: inline;
+}
+
+.form-managed-file div.ajax-progress-bar {
+  display: none;
+  margin-top: 4px;
+  width: 28em;
+  padding: 0;
+}
+
+.form-managed-file div.ajax-progress-bar div.bar {
+  margin: 0;
+}
