@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.285 2009/08/28 16:23:04 dries Exp $
+// $Id: filter.module,v 1.286 2009/08/29 03:55:44 webchick Exp $
 
 /**
  * @file
@@ -990,6 +990,13 @@ function _filter_autop($text) {
     $output .= $chunk;
   }
   return $output;
+}
+
+/**
+ * Escapes all HTML tags, so they will be visible instead of being effective.
+ */
+function _filter_html_escape($text) {
+  return trim(check_plain($text));
 }
 
 /**
