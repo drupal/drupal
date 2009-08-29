@@ -285,13 +285,23 @@ function file_stream_wrapper_get_instance_by_scheme($scheme) {
 }
 
 /**
- * Creates the web accessible URL to a stream.
+ * Creates a web-accessible URL for a stream to an external or local file.
  *
  * Compatibility: normal paths and stream wrappers.
  * @see http://drupal.org/node/515192
  *
+ * There are two kinds of local files:
+ * - "created files", i.e. those in the files directory (which is stored in
+ *   the file_directory_path variable and can be retrieved using
+ *   file_directory_path()). These are files that have either been uploaded by
+ *   users or were generated automatically (for example through CSS
+ *   aggregation).
+ * - "shipped files", i.e. those outside of the files directory, which ship as
+ *   part of Drupal core or contributed modules or themes.
+ *
  * @param $uri
- *   The URI to for which we need an external URL.
+ *   The URI to a file for which we need an external URL, or the path to a
+ *   shipped file.
  * @return
  *   A string containing a URL that may be used to access the file.
  *   If the provided string already contains a preceding 'http', nothing is done
@@ -299,11 +309,15 @@ function file_stream_wrapper_get_instance_by_scheme($scheme) {
  *   found to generate an external URL, then FALSE will be returned.
  */
 function file_create_url($uri) {
+  // Allow the URI to be altered, e.g. to serve a file from a CDN or static
+  // file server.
+  drupal_alter('file_url', $uri);
+  
   $scheme = file_uri_scheme($uri);
 
   if (!$scheme) {
-    // If this is not a properly formatted stream return the URI with the base
-    // url prepended.
+    // If this is not a properly formatted stream, then it is a shipped file.
+    // Therefor, return the URI with the base URL prepended.
     return $GLOBALS['base_url'] . '/' . $uri;
   }
   elseif ($scheme == 'http' || $scheme == 'https') {
@@ -320,9 +334,6 @@ function file_create_url($uri) {
       return FALSE;
     }
   }
-
-  // @todo Implement CDN integration hook stuff in this function.
-  // @see http://drupal.org/node/499156
 }
 
 /**

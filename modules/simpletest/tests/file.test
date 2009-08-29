@@ -1879,6 +1879,26 @@ class FileDownloadTest extends FileTestCase {
   }
 
   /**
+   * Test the public file transfer system.
+   */
+  function testPublicFileTransfer() {
+    // Test generating an URL to a created file.
+    $file = $this->createFile();
+    $url = file_create_url($file->uri);
+    $this->assertEqual($GLOBALS['base_url'] . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a URL for a created file.'));
+    $this->drupalHead($url);
+    $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the created file.'));
+  
+    // Test generating an URL to a shipped file (i.e. a file that is part of
+    // Drupal core, a module or a theme, for example a JavaScript file).
+    $filepath = 'misc/jquery.js';
+    $url = file_create_url($filepath);
+    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath, $url, t('Correctly generated a URL for a shipped file.'));
+    $this->drupalHead($url);
+    $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
+  }
+
+  /**
    * Test the private file transfer system.
    */
   function testPrivateFileTransfer() {
@@ -1904,6 +1924,48 @@ class FileDownloadTest extends FileTestCase {
     $url = file_create_url('private://' . $this->randomName());
     $this->drupalHead($url);
     $this->assertResponse(404, t('Correctly returned 404 response for a non-existent file.'));
+  }
+}
+
+/**
+ * Tests for file URL rewriting.
+ */
+class FileURLRewritingTest extends FileTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('File URL rewriting'),
+      'description' => t('Tests for file URL rewriting.'),
+      'group' => t('File'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('file_test');
+    variable_set('file_test_hook_file_url_alter', TRUE);
+  }
+
+  /**
+   * Test the generating of rewritten shipped file URLs.
+   */
+  function testShippedFileURL()  {
+    // Test generating an URL to a shipped file (i.e. a file that is part of
+    // Drupal core, a module or a theme, for example a JavaScript file).
+    $filepath = 'misc/jquery.js';
+    $url = file_create_url($filepath);
+    $this->assertEqual(FILE_URL_TEST_CDN_1 . '/' . $filepath, $url, t('Correctly generated a URL for a shipped file.'));
+    $filepath = 'misc/favicon.ico';
+    $url = file_create_url($filepath);
+    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $filepath, $url, t('Correctly generated a URL for a shipped file.'));
+  }
+
+  /**
+   * Test the generating of rewritten public created file URLs.
+   */
+  function testPublicCreatedFileURL() {
+    // Test generating an URL to a created file.
+    $file = $this->createFile();
+    $url = file_create_url($file->uri);
+    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a URL for a created file.'));
   }
 }
 

@@ -9,6 +9,11 @@
  * calling file_test_get_calls() or file_test_set_return().
  */
 
+
+define('FILE_URL_TEST_CDN_1', 'http://cdn1.example.com');
+define('FILE_URL_TEST_CDN_2', 'http://cdn2.example.com');
+
+
 /**
  * Implement hook_menu().
  */
@@ -262,6 +267,51 @@ function file_test_file_move($file, $source) {
  */
 function file_test_file_delete($file) {
   _file_test_log_call('delete', array($file));
+}
+
+/**
+ *  Implement hook_file_url_alter().
+ */
+function file_test_file_url_alter(&$uri) {
+  // Only run this hook when this variable is set. Otherwise, we'd have to add
+  // another hidden test module just for this hook.
+  if (!variable_get('file_test_hook_file_url_alter', FALSE)) {
+    return;
+  }
+
+  $cdn_extensions = array('css', 'js', 'gif', 'jpg', 'jpeg', 'png');
+
+  // Most CDNs don't support private file transfers without a lot of hassle,
+  // so don't support this in the common case.
+  $schemes = array('public');
+
+  $scheme = file_uri_scheme($uri);
+
+  // Only serve shipped files and public created files from the CDN.
+  if (!$scheme || in_array($scheme, $schemes)) {
+    // Shipped files.
+    if (!$scheme) {
+      $path = $uri;
+    }
+    // Public created files.
+    else {
+      $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+      $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+    }
+
+    // Clean up Windows paths.
+    $path = str_replace('\\', '/', $path);
+
+    // Serve files with one of the CDN extensions from CDN 1, all others from
+    // CDN 2.
+    $pathinfo = pathinfo($path);
+    if (array_key_exists('extension', $pathinfo) && in_array($pathinfo['extension'], $cdn_extensions)) {
+      $uri = FILE_URL_TEST_CDN_1 . '/' . $path;
+    }
+    else {
+      $uri = FILE_URL_TEST_CDN_2 . '/' . $path;
+    }
+  }
 }
 
 /**
