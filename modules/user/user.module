@@ -1317,6 +1317,8 @@ function user_menu() {
    'position' => 'right',
    'page callback' => 'system_admin_menu_block_page',
    'access arguments' => array('access administration pages'),
+   'file' => 'system.admin.inc',
+   'file path' => drupal_get_path('module', 'system'),
   );
   $items['admin/config/people/accounts'] = array(
     'title' => 'Account settings',
