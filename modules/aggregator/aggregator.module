@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.421 2009/08/24 17:11:41 webchick Exp $
+// $Id: aggregator.module,v 1.422 2009/08/29 05:46:01 dries Exp $
 
 /**
  * @file
@@ -319,9 +319,9 @@ function aggregator_cron() {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function aggregator_block_list() {
+function aggregator_block_info() {
   $block = array();
   $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
   foreach ($result as $category) {

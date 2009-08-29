@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.779 2009/08/28 16:23:05 dries Exp $
+// $Id: system.module,v 1.780 2009/08/29 05:46:04 dries Exp $
 
 /**
  * @file
@@ -1560,9 +1560,9 @@ function system_user_timezone(&$edit, &$form) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function system_block_list() {
+function system_block_info() {
   $blocks['main'] = array(
     'info' => t('Main page content'),
      // Cached elsewhere.

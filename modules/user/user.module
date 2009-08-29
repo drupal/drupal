@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1034 2009/08/29 04:55:32 webchick Exp $
+// $Id: user.module,v 1.1035 2009/08/29 05:46:04 dries Exp $
 
 /**
  * @file
@@ -984,9 +984,9 @@ function user_login_block() {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function user_block_list() {
+function user_block_info() {
   global $user;
 
   $blocks['login']['info'] = t('User login');

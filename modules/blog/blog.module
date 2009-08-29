@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.334 2009/08/24 00:14:19 webchick Exp $
+// $Id: blog.module,v 1.335 2009/08/29 05:46:02 dries Exp $
 
 /**
  * @file
@@ -150,9 +150,9 @@ function _blog_post_exists($account) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function blog_block_list() {
+function blog_block_info() {
   $block['recent']['info'] = t('Recent blog posts');
   return $block;
 }

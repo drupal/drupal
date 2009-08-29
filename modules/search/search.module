@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.308 2009/08/24 22:03:01 webchick Exp $
+// $Id: search.module,v 1.309 2009/08/29 05:46:04 dries Exp $
 
 /**
  * @file
@@ -161,9 +161,9 @@ function search_permission() {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function search_block_list() {
+function search_block_info() {
   $blocks['form']['info'] = t('Search form');
   // Not worth caching.
   $blocks['form']['cache'] = BLOCK_NO_CACHE;

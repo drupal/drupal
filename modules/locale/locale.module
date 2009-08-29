@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.256 2009/08/24 00:14:20 webchick Exp $
+// $Id: locale.module,v 1.257 2009/08/29 05:46:03 dries Exp $
 
 /**
  * @file
@@ -629,9 +629,9 @@ function locale_css_alter(&$css) {
 // Language switcher block
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function locale_block_list() {
+function locale_block_info() {
   $block['language-switcher']['info'] = t('Language switcher');
   // Not worth caching.
   $block['language-switcher']['cache'] = BLOCK_NO_CACHE;

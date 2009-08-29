@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.200 2009/08/24 00:14:21 webchick Exp $
+// $Id: menu.module,v 1.201 2009/08/29 05:46:03 dries Exp $
 
 /**
  * @file
@@ -274,9 +274,9 @@ function menu_reset_item($item) {
 }
 
 /**
- * Implement hook_block_list().
+ * Implement hook_block_info().
  */
-function menu_block_list() {
+function menu_block_info() {
   $menus = menu_get_menus(FALSE);
 
   $blocks = array();
