@@ -73,3 +73,30 @@ function openid_schema() {
 
   return $schema;
 }
+
+/**
+ * Implement hook_requirements().
+ */
+function openid_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    // Check for the PHP BC Math library.
+    if (!function_exists('bcadd')) {
+      $requirements['bcmath'] = array(
+        'value' => t('Not installed'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('OpenID requires the BC Math library for PHP which is missing or outdated. Please check the <a href="@url">PHP BC Math Library documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/en/book.bc.php')),
+      );
+    }
+    else {
+      $requirements['bcmath'] = array(
+        'value' => t('Installed'),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+    $requirements['bcmath']['title'] = t('BC Match library');
+  }
+
+  return $requirements;
+}
