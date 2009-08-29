@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.516 2009/08/26 10:53:45 dries Exp $
+// $Id: theme.inc,v 1.517 2009/08/29 04:16:14 webchick Exp $
 
 /**
  * @file
@@ -610,7 +610,7 @@ function list_themes($refresh = FALSE) {
  * - MODULE_preprocess_HOOK(&$variables)
  *   This is for modules that want to alter or provide extra variables for
  *   theming hooks not registered to itself. For example, if a module named
- *   "foo" wanted to alter the $submitted variable for the hook "node" a
+ *   "foo" wanted to alter the $classes_array variable for the hook "node" a
  *   preprocess function of foo_preprocess_node() can be created to intercept
  *   and alter the variable.
  *
@@ -624,8 +624,8 @@ function list_themes($refresh = FALSE) {
  *
  * - THEME_preprocess(&$variables)
  *   This is for themes that want to alter or provide extra variables. For
- *   example, if a theme named "foo" wanted to alter the $submitted variable for
- *   the hook "node" a preprocess function of foo_preprocess_node() can be
+ *   example, if a theme named "foo" wanted to alter the $classes_array variable
+ *   for the hook "node" a preprocess function of foo_preprocess_node() can be
  *   created to intercept and alter the variable.
  *
  * - THEME_preprocess_HOOK(&$variables)
@@ -646,7 +646,7 @@ function list_themes($refresh = FALSE) {
  * - MODULE_process_HOOK(&$variables)
  *   This is for modules that want to alter or provide extra variables for
  *   theming hooks not registered to itself. For example, if a module named
- *   "foo" wanted to alter the $submitted variable for the hook "node" a
+ *   "foo" wanted to alter the $classes_array variable for the hook "node" a
  *   process function of foo_process_node() can be created to intercept
  *   and alter the variable.
  *
