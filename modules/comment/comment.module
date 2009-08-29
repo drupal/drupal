@@ -148,9 +148,6 @@ function comment_theme() {
       'template' => 'comment-wrapper',
       'arguments' => array('content' => NULL),
     ),
-    'comment_submitted' => array(
-      'arguments' => array('comment' => NULL),
-    ),
   );
 }
 
@@ -2088,7 +2085,6 @@ function template_preprocess_comment(&$variables) {
   $variables['new']       = !empty($comment->new) ? t('new') : '';
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '';
   $variables['signature'] = $comment->signature;
-  $variables['submitted'] = theme('comment_submitted', $comment);
   $variables['title']     = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
   $variables['template_files'][] = 'comment-' . $variables['node']->type;
   // Set status to a string representation of comment->status.
@@ -2167,21 +2163,6 @@ function template_preprocess_comment_wrapper(&$variables) {
   $variables['node'] = $variables['content']['#node'];
   $variables['display_mode'] = _comment_get_display_setting('mode', $variables['node']);
   $variables['template_files'][] = 'comment-wrapper-' . $variables['node']->type;
-}
-
-/**
- * Theme a "Submitted by ..." notice.
- *
- * @param $comment
- *   The comment.
- * @ingroup themeable
- */
-function theme_comment_submitted($comment) {
-  return t('Submitted by !username on @datetime.',
-    array(
-      '!username' => theme('username', $comment),
-      '@datetime' => format_date($comment->timestamp)
-    ));
 }
 
 /**

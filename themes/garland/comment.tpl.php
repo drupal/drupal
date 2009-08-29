@@ -4,9 +4,8 @@
 <div class="<?php print $classes . ' ' . $zebra; ?>">
 
   <div class="clearfix">
-  <?php if ($submitted): ?>
-    <span class="submitted"><?php print $submitted; ?></span>
-  <?php endif; ?>
+
+    <span class="submitted"><?php print $date; ?> — <?php print $author; ?></span>
 
   <?php if ($new) : ?>
     <span class="new"><?php print drupal_ucfirst($new) ?></span>

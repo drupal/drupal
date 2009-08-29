@@ -128,9 +128,6 @@ function node_theme() {
     'node_log_message' => array(
       'arguments' => array('log' => NULL),
     ),
-    'node_submitted' => array(
-      'arguments' => array('node' => NULL),
-    ),
     'node_admin_overview' => array(
       'arguments' => array('name' => NULL, 'type' => NULL),
     ),
@@ -1142,11 +1139,11 @@ function template_preprocess_node(&$variables) {
 
   // Display post information only on certain node types.
   if (variable_get('node_submitted_' . $node->type, TRUE)) {
-    $variables['submitted'] = theme('node_submitted', $node);
+    $variables['display_submitted'] = TRUE;
     $variables['user_picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }
   else {
-    $variables['submitted'] = '';
+    $variables['display_submitted'] = FALSE;
     $variables['user_picture'] = '';
   }
 
@@ -2805,19 +2802,6 @@ function node_forms() {
     }
   }
   return $forms;
-}
-
-/**
- * Format the "Submitted by username on date/time" for each node
- *
- * @ingroup themeable
- */
-function theme_node_submitted($node) {
-  return t('Submitted by !username on @datetime',
-    array(
-      '!username' => theme('username', $node),
-      '@datetime' => format_date($node->created),
-    ));
 }
 
 /**

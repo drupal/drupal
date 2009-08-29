@@ -9,8 +9,8 @@
     <h2><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
   <?php endif; ?>
 
-  <?php if ($submitted): ?>
-    <span class="submitted"><?php print $submitted; ?></span>
+  <?php if ($display_submitted): ?>
+    <span class="submitted"><?php print $date; ?> — <?php print $name; ?></span>
   <?php endif; ?>
 
   <div class="content clearfix">

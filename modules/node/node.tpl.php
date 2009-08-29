@@ -17,8 +17,7 @@
  * - $name: Themed username of node author output from theme_username().
  * - $node_url: Direct url of the current node.
  * - $terms: the themed list of taxonomy term links output from theme_links().
- * - $submitted: themed submission information output from
- *   theme_node_submitted().
+ * - $display_submitted: whether submission information should be displayed.
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
  *   preprocess functions. The default values can be one or more of the following:
@@ -79,10 +78,15 @@
     <h2><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
   <?php endif; ?>
 
-  <?php if ($submitted || !empty($content['links']['terms'])): ?>
+  <?php if ($display_submitted || !empty($content['links']['terms'])): ?>
     <div class="meta">
-      <?php if ($submitted): ?>
-        <span class="submitted"><?php print $submitted; ?></span>
+      <?php if ($display_submitted): ?>
+        <span class="submitted">
+          <?php
+            print t('Submitted by !username on @datetime',
+              array('!username' => $name, '@datetime' => $date));
+          ?>
+        </span>
       <?php endif; ?>
 
       <?php if (!empty($content['links']['terms'])): ?>

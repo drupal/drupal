@@ -80,28 +80,6 @@ function garland_menu_local_tasks() {
 }
 
 /**
- * Format the "Submitted by username on date/time" for each comment.
- */
-function garland_comment_submitted($comment) {
-  return t('!datetime — !username',
-    array(
-      '!username' => theme('username', $comment),
-      '!datetime' => format_date($comment->timestamp)
-    ));
-}
-
-/**
- * Format the "Submitted by username on date/time" for each node.
- */
-function garland_node_submitted($node) {
-  return t('!datetime — !username',
-    array(
-      '!username' => theme('username', $node),
-      '!datetime' => format_date($node->created),
-    ));
-}
-
-/**
  * Generates IE CSS links for LTR and RTL languages.
  */
 function garland_get_ie_styles() {

@@ -17,7 +17,6 @@
  * - $signature: Authors signature.
  * - $status: Comment status. Possible values are:
  *   comment-unpublished, comment-published or comment-preview.
- * - $submitted: By line with date and time.
  * - $title: Linked title.
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
@@ -55,7 +54,10 @@
   <h3><?php print $title ?></h3>
 
   <div class="submitted">
-    <?php print $submitted ?>
+    <?php
+      print t('Submitted by !username on @datetime.',
+        array('!username' => $author, '@datetime' => $date));
+    ?>
   </div>
 
   <div class="content">

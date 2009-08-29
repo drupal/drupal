@@ -533,7 +533,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
 
     // Check that the post information is displayed.
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertRaw(theme('node_submitted', $node), t('Post information is displayed.'));
+    $this->assertRaw('<span class="submitted">', t('Post information is displayed.'));
   }
 
   /**
@@ -555,7 +555,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
 
     // Check that the post information is displayed.
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertNoRaw(theme('node_submitted', $node), t('Post information is not displayed.'));
+    $this->assertNoRaw('<span class="submitted">', t('Post information is not displayed.'));
   }
 }
 
