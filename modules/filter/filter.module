@@ -590,7 +590,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
  * Generate a selector for choosing a format in a form.
  *
  * @ingroup forms
- * @param $value
+ * @param $selected_format
  *   The ID of the format that is currently selected.
  * @param $weight
  *   The weight of the text format.
@@ -599,8 +599,8 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
  * @return
  *   HTML for the form element.
  */
-function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = array('format')) {
-  $value = filter_resolve_format($value);
+function filter_form($selected_format = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = array('format')) {
+  $selected_format = filter_resolve_format($selected_format);
   $formats = filter_formats();
 
   drupal_add_js('misc/form.js');
@@ -627,7 +627,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
     '#type' => 'select',
     '#title' => t('Text format'),
     '#options' => $options,
-    '#default_value' => $value,
+    '#default_value' => $selected_format,
     '#parents' => $parents,
     '#access' => count($formats) > 1,
     '#id' => $element_id,
