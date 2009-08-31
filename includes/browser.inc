@@ -207,6 +207,31 @@ class Browser {
   }
 
   /**
+   * Get HTTP authentication information.
+   *
+   * @return
+   *   Authentication information in the format, username:password.
+   */
+  public function getHttpAuthentication() {
+    if (isset($this->requestHeaders['Authorization'])) {
+      return base64_decode($this->requestHeaders['Authorization']);
+    }
+    return NULL;
+  }
+
+  /**
+   * Set HTTP authentication information.
+   *
+   * @param $username
+   *   HTTP authentication username, which cannot contain a ":".
+   * @param $password
+   *   HTTP authentication password.
+   */
+  public function setHttpAuthentication($username, $password) {
+    $this->requestHeaders['Authorization'] = base64_encode("$username:$password");
+  }
+
+  /**
    * Get the URL of the current page.
    *
    * @return
@@ -660,6 +685,9 @@ class Browser {
     $this->headers = array();
 
     // Ensure that request headers are up to date.
+    if ($this->getHttpAuthentication()) {
+      curl_setopt($this->handle, CURLOPT_USERPWD, $this->getHttpAuthentication());
+    }
     curl_setopt($this->handle, CURLOPT_USERAGENT, $this->requestHeaders['User-Agent']);
     curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->requestHeaders);
 
