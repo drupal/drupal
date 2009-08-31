@@ -3904,6 +3904,12 @@ function drupal_render_page($page) {
     drupal_set_page_content($page);
     $page = element_info('page');
   }
+
+  // Modules can add elements to $page as needed in hook_page_build().
+  foreach (module_implements('page_build') as $module) {
+    $function = $module . '_page_build';
+    $function($page);
+  }
   // Modules alter the $page as needed. Blocks are populated into regions like
   // 'sidebar_first', 'footer', etc.
   drupal_alter('page', $page);

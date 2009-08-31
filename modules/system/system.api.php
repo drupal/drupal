@@ -400,20 +400,57 @@ function hook_css_alter(&$css) {
 }
 
 /**
+ * Add elements to a page before it is rendered.
+ *
+ * Use this hook when you want to add elements at the page level. For your
+ * additions to be printed, they have to be placed below a top level array key
+ * of the $page array that has the name of a region of the active theme.
+ *
+ * By default, valid region keys are 'page_top', 'header', 'sidebar_first',
+ * 'content', 'sidebar_second' and 'page_bottom'. To get a list of all regions
+ * of the active theme, use system_region_list($theme). Note that $theme is a
+ * global variable.
+ *
+ * If you want to alter the elements added by other modules or if your module
+ * depends on the elements of other modules, use hook_page_alter() instead which
+ * runs after this hook.
+ *
+ * @param $page
+ *   Nested array of renderable elements that make up the page.
+ *
+ * @see hook_page_alter()
+ * @see drupal_render_page()
+ */
+function hook_page_build(&$page) {
+  if (menu_get_object('node', 1)) {
+    // We are on a node detail page. Append a standard disclaimer to the
+    // content region.
+    $page['content']['disclaimer'] = array(
+      '#markup' => t('Acme, Inc. is not responsible for the contents of this sample code.'),
+      '#weight' => 25,
+    );
+  }
+}
+
+/**
  * Perform alterations before a page is rendered.
  *
- * Use this hook when you want to add, remove, or alter elements at the page
- * level. If you are making changes to entities such as forms, menus, or user
+ * Use this hook when you want to remove or alter elements at the page
+ * level, or add elements at the page level that depend on an other module's
+ * elements (this hook runs after hook_page_build().
+ *
+ * If you are making changes to entities such as forms, menus, or user
  * profiles, use those objects' native alter hooks instead (hook_form_alter(),
  * for example).
  *
  * The $page array contains top level elements for each block region:
  * @code
+ *   $page['page_top']
  *   $page['header']
  *   $page['sidebar_first']
  *   $page['content']
  *   $page['sidebar_second']
- *   $page['footer']
+ *   $page['page_bottom']
  * @endcode
  *
  * The 'content' element contains the main content of the current page, and its
@@ -437,23 +474,21 @@ function hook_css_alter(&$css) {
  * Blocks may be referenced by their module/delta pair within a region:
  * @code
  *   // The login block in the first sidebar region.
- *   $page['sidebar_first']['user-login']['#block'];
+ *   $page['sidebar_first']['user_login']['#block'];
  * @endcode
  *
  * @param $page
  *   Nested array of renderable elements that make up the page.
  *
+ * @see hook_page_build()
  * @see drupal_render_page()
  */
-function hook_page_alter($page) {
-  if (menu_get_object('node', 1)) {
-    // We are on a node detail page. Append a standard disclaimer to the
-    // content region.
-    $page['content']['disclaimer'] = array(
-      '#markup' => t('Acme, Inc. is not responsible for the contents of this sample code.'),
-      '#weight' => 25,
-    );
-  }
+function hook_page_alter(&$page) {
+  // Add help text to the user login block.
+  $page['sidebar_first']['user_login']['help'] = array(
+    '#weight' => -10,
+    '#markup' => t('To post comments or add new content, you first have to log in.'),
+  );
 }
 
 /**

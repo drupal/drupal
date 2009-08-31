@@ -3085,9 +3085,9 @@ function system_retrieve_file($url, $destination = NULL, $overwrite = TRUE) {
 }
 
 /**
- * Implement hook_page_alter().
+ * Implement hook_page_build().
  */
-function system_page_alter(&$page) {
+function system_page_build(&$page) {
   // Automatic cron runs.
   // @see system_run_cron_image()
   if (system_run_cron_image_access()) {

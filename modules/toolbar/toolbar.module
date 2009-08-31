@@ -31,11 +31,11 @@ function toolbar_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implement hook_page_alter().
+ * Implement hook_page_build().
  * 
  * Add admin toolbar to the page_top region automatically.
  */
-function toolbar_page_alter(&$page) {
+function toolbar_page_build(&$page) {
   if (user_access('access toolbar')) {
     $page['page_top']['toolbar'] = toolbar_build();
   }

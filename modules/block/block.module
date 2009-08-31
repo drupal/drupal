@@ -235,7 +235,7 @@ function block_block_view($delta = 0, $edit = array()) {
  *
  * Render blocks into their regions.
  */
-function block_page_alter($page) {
+function block_page_build(&$page) {
   global $theme;
 
   // The theme system might not yet be initialized. We need $theme.
