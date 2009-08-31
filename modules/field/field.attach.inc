@@ -497,7 +497,7 @@ function field_attach_form($obj_type, $object, &$form, &$form_state, $langcode =
   // Let other modules make changes to the form.
   foreach (module_implements('field_attach_form') as $module) {
     $function = $module . '_field_attach_form';
-    $function($obj_type, $object, $form, $form_state);
+    $function($obj_type, $object, $form, $form_state, $langcode);
   }
 }
 
@@ -1095,7 +1095,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
   $output['#extra_fields'] = field_extra_fields($bundle);
 
   // Let other modules make changes after rendering the view.
-  drupal_alter('field_attach_view', $output, $obj_type, $object, $build_mode);
+  drupal_alter('field_attach_view', $output, $obj_type, $object, $build_mode, $langcode);
 
   return $output;
 }
