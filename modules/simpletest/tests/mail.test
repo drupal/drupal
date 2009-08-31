@@ -1,0 +1,51 @@
+<?php
+// $Id$
+
+/**
+ * Test the Drupal mailing system.
+ */
+class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
+  /**
+   * The most recent message that was sent through the test case.
+   *
+   * We take advantage here of the fact that static variables are shared among
+   * all instance of the same class.
+   */
+  private static $sent_message;
+
+  function getInfo() {
+    return array(
+      'name' => 'Mail system',
+      'description' => 'Performs tests on the pluggable mailing framework.',
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Set MailTestCase (i.e. this class) as the SMTP library
+    variable_set('mail_sending_system', array('default-system' => 'MailTestCase'));
+  }
+
+  /**
+   * Assert that the pluggable mail system is functional.
+   */
+  function testPluggableFramework() {
+    global $language;
+
+    // Use MailTestCase for sending a message.
+    $message = drupal_mail('simpletest', 'mail_test', 'testing@drupal.org', $language);
+
+    // Assert whether the message was sent through the send function.
+    $this->assertEqual(self::$sent_message['to'], 'testing@drupal.org', t('Pluggable mail system is extendable.'));
+  }
+
+  /**
+   * Send function that is called through the mail system.
+   */
+  public function mail(array $message) {
+    self::$sent_message = $message;
+  }
+}
+

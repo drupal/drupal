@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * API functions for processing and sending e-mail.
+ */
+
+/**
  * Compose and optionally send an e-mail message.
  *
  * Sending an e-mail works with defining an e-mail template (subject, text
@@ -61,10 +66,10 @@
  * @param $to
  *   The e-mail address or addresses where the message will be sent to. The
  *   formatting of this string must comply with RFC 2822. Some examples are:
- *    user@example.com
- *    user@example.com, anotheruser@example.com
- *    User <user@example.com>
- *    User <user@example.com>, Another User <anotheruser@example.com>
+ *   - user@example.com
+ *   - user@example.com, anotheruser@example.com
+ *   - User <user@example.com>
+ *   - User <user@example.com>, Another User <anotheruser@example.com>
  * @param $language
  *   Language object to use to compose the e-mail.
  * @param $params
@@ -127,7 +132,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 
   // Optionally send e-mail.
   if ($send) {
-    $message['result'] = drupal_mail_send($message);
+    $message['result'] = drupal_mail_sending_system($module, $key)->mail($message);
 
     // Log errors
     if (!$message['result']) {
@@ -140,58 +145,113 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 }
 
 /**
- * Send an e-mail message, using Drupal variables and default settings.
- * More information in the <a href="http://php.net/manual/en/function.mail.php">
- * PHP function reference for mail()</a>. See drupal_mail() for information on
- * how $message is composed.
+ * Returns an object that implements the MailSystemInterface.
  *
- * @param $message
- *  Message array with at least the following elements:
- *   - id
- *      A unique identifier of the e-mail type. Examples: 'contact_user_copy',
- *      'user_password_reset'.
- *   - to
- *      The mail address or addresses where the message will be sent to. The
- *      formatting of this string must comply with RFC 2822. Some examples are:
- *       user@example.com
- *       user@example.com, anotheruser@example.com
- *       User <user@example.com>
- *       User <user@example.com>, Another User <anotheruser@example.com>
- *   - subject
- *      Subject of the e-mail to be sent. This must not contain any newline
- *      characters, or the mail may not be sent properly.
- *   - body
- *      Message to be sent. Accepts both CRLF and LF line-endings.
- *      E-mail bodies must be wrapped. You can use drupal_wrap_mail() for
- *      smart plain text wrapping.
- *   - headers
- *      Associative array containing all mail headers.
- * @return
- *   Returns TRUE if the mail was successfully accepted for delivery,
- *   FALSE otherwise.
+ * Allows for one or more custom mail backends to send mail messages
+ * composed using drupal_mail().
+ *
+ * The selection of a particular implementation is controlled via the variable
+ * 'mail_sending_system', which is a keyed array.  The default implementation
+ * is the class whose name is the value of 'default-system' key. A more specific
+ * match first to key and then to module will be used in preference to the
+ * default. To specificy a different class for all mail sent by one module, set
+ * the class name as the value for the key corresponding to the module name. To
+ * specificy a class for a particular message sent by one module, set the class
+ * name as the value for the array key that is the message id, which is 
+ * "${module}_${key}".
+ *
+ * For example to debug all mail sent by the user module by logging it to a
+ * file, you might set the variable as something like:
+ *
+ * @code
+ * array(
+ *   'default-system' => 'DrupalMailSend',
+ *   'user' => 'DevelMailLog',
+ * );
+ * @endcode
+ *
+ * Finally, a different system can be specified for a specific e-mail ID (see
+ * the $key param), such as one of the keys used by the contact module:
+ *
+ * @code
+ * array(
+ *   'default-system' => 'DrupalMailSend',
+ *   'user' => 'DevelMailLog',
+ *   'contact_page_autoreply' => 'DrupalDevNullMailSend',
+ * );
+ * @endcode
+ *
+ * Other possible uses for system include a mail-sending class that actually
+ * sends (or duplicates) each message to SMS, Twitter, instant message, etc, or
+ * a class that queues up a large number of messages for more efficient bulk
+ * sending or for sending via a remote gateway so as to reduce the load
+ * on the local server.
+ *
+ * @param $module
+ *   The module name which was used by drupal_mail() to invoke hook_mail().
+ * @param $key
+ *   A key to identify the e-mail sent. The final e-mail ID for the e-mail
+ *   alter hook in drupal_mail() would have been {$module}_{$key}.
  */
-function drupal_mail_send($message) {
-  // Allow for a custom mail backend.
-  if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
-    include_once DRUPAL_ROOT . '/' . variable_get('smtp_library', '');
-    return drupal_mail_wrapper($message);
+function drupal_mail_sending_system($module, $key) {
+  $instances = &drupal_static(__FUNCTION__, array());
+
+  $id = $module . '_' . $key;
+  $configuration = variable_get('mail_sending_system', array('default-system' => 'DrupalMailSend'));
+
+  // Look for overrides for the default class, starting from the most specific
+  // id, and falling back to the module name.
+  if (isset($configuration[$id])) {
+    $class = $configuration[$id];
+  }
+  elseif (isset($configuration[$module])) {
+    $class = $configuration[$module];
   }
   else {
-    $mimeheaders = array();
-    foreach ($message['headers'] as $name => $value) {
-      $mimeheaders[] = $name . ': ' . mime_header_encode($value);
-    }
-    return mail(
-      $message['to'],
-      mime_header_encode($message['subject']),
-      // Note: e-mail uses CRLF for line-endings, but PHP's API requires LF.
-      // They will appear correctly in the actual e-mail that is sent.
-      str_replace("\r", '', $message['body']),
-      // For headers, PHP's API suggests that we use CRLF normally,
-      // but some MTAs incorrectly replace LF with CRLF. See #234403.
-      join("\n", $mimeheaders)
-    );
+    $class = $configuration['default-system'];
   }
+
+  if (empty($instances[$class])) {
+    $interfaces = class_implements($class);
+    if (isset($interfaces['MailSystemInterface'])) {
+      $instances[$class] = new $class;
+    }
+    else {
+      throw new Exception(t('Class %class does not implement interface %interface', array('%class' => $class, '%interface' => 'MailSystemInterface')));
+    }
+  }
+  return $instances[$class];
+}
+
+/**
+ * An interface for pluggable mail back-ends.
+ */
+interface MailSystemInterface {
+  /**
+   * Send an e-mail message composed by drupal_mail().
+   *
+   * @param $message
+   *   Message array with at least the following elements:
+   *   - id: A unique identifier of the e-mail type. Examples: 'contact_user_copy',
+   *     'user_password_reset'.
+   *   - to: The mail address or addresses where the message will be sent to.
+   *     The formatting of this string must comply with RFC 2822. Some examples:
+   *     - user@example.com
+   *     - user@example.com, anotheruser@example.com
+   *     - User <user@example.com>
+   *     - User <user@example.com>, Another User <anotheruser@example.com>
+   *    - subject: Subject of the e-mail to be sent. This must not contain any
+   *      newline characters, or the mail may not be sent properly.
+   *    - body: Message to be sent. Accepts both CRLF and LF line-endings.
+   *      E-mail bodies must be wrapped. You can use drupal_wrap_mail() for
+   *      smart plain text wrapping.
+   *    - headers: Associative array containing all additional mail headers not
+   *      defined by one of the other parameters.  PHP's mail() looks for Cc
+   *      and Bcc headers and sends the mail to addresses in these headers too.
+   * @return
+   *   TRUE if the mail was successfully accepted for delivery, otherwise FALSE.
+   */
+   public function mail(array $message);
 }
 
 /**

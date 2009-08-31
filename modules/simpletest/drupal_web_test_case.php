@@ -1103,9 +1103,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     unset($GLOBALS['conf']['language_default']);
     $language = language_default();
 
-    // Make sure our drupal_mail_wrapper function is called instead of the
-    // default mail handler.
-    variable_set('smtp_library', drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php');
+    // Use the test mail class instead of the default mail handler class.
+    variable_set('mail_sending_system', array('default-system' => 'TestingMailSystem'));
 
     // Use temporary files directory with the same prefix as the database.
     $public_files_directory  = $this->originalFileDirectory . '/' . $db_prefix;
@@ -1165,7 +1164,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     simpletest_log_read($this->testId, $db_prefix, get_class($this), TRUE);
     $db_prefix = $db_prefix_temp;
 
-    $emailCount = count(variable_get('simpletest_emails', array()));
+    $emailCount = count(variable_get('drupal_test_email_collector', array()));
     if ($emailCount) {
       $message = format_plural($emailCount, t('!count e-mail was sent during this test.'), t('!count e-mails were sent during this test.'), array('!count' => $emailCount));
       $this->pass($message, t('E-mail'));
@@ -1918,7 +1917,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   An array containing e-mail messages captured during the current test.
    */
   protected function drupalGetMails($filter = array()) {
-    $captured_emails = variable_get('simpletest_emails', array());
+    $captured_emails = variable_get('drupal_test_email_collector', array());
     $filtered_emails = array();
 
     foreach ($captured_emails as $message) {
@@ -2475,7 +2474,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertMail($name, $value = '', $message = '') {
-    $captured_emails = variable_get('simpletest_emails', array());
+    $captured_emails = variable_get('drupal_test_email_collector', array());
     $email = end($captured_emails);
     return $this->assertTrue($email && isset($email[$name]) && $email[$name] == $value, $message, t('E-mail'));
   }
@@ -2495,22 +2494,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       $this->pass(l(t('Verbose message'), $this->originalFileDirectory . '/simpletest/verbose/' . get_class($this) . '-' . $id . '.html', array('attributes' => array('target' => '_blank'))), 'Debug');
     }
   }
-}
 
-/**
- * Wrapper function to override the default mail handler function.
- *
- * @param  $message
- *   An e-mail message. See drupal_mail() for information on how $message is composed.
- * @return
- *   Returns TRUE to indicate that the e-mail was successfully accepted for delivery.
- */
-function drupal_mail_wrapper($message) {
-  $captured_emails = variable_get('simpletest_emails', array());
-  $captured_emails[] = $message;
-  variable_set('simpletest_emails', $captured_emails);
-
-  return TRUE;
 }
 
 /**

@@ -12,4 +12,5 @@ files[] = system.install
 files[] = system.test
 files[] = system.tar.inc
 files[] = system.tokens.inc
+files[] = mail.sending.inc
 required = TRUE
