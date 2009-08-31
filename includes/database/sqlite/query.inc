@@ -107,7 +107,7 @@ class UpdateQuery_sqlite extends UpdateQuery {
       }
     }
     if (count($condition)) {
-      $condition->compile($this->connection);
+      $condition->compile($this->connection, $this);
       $this->condition->where((string) $condition, $condition->arguments());
     }
     return parent::execute();
