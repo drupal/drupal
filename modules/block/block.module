@@ -12,55 +12,6 @@
 define('BLOCK_REGION_NONE', -1);
 
 /**
- * Constants defining cache granularity for blocks.
- *
- * Modules specify the caching patterns for their blocks using binary
- * combinations of these constants in their hook_block_info():
- *   $block[delta]['cache'] = BLOCK_CACHE_PER_ROLE | BLOCK_CACHE_PER_PAGE;
- * BLOCK_CACHE_PER_ROLE is used as a default when no caching pattern is
- * specified.
- *
- * The block cache is cleared in cache_clear_all(), and uses the same clearing
- * policy than page cache (node, comment, user, taxonomy added or updated...).
- * Blocks requiring more fine-grained clearing might consider disabling the
- * built-in block cache (BLOCK_NO_CACHE) and roll their own.
- *
- * Note that user 1 is excluded from block caching.
- */
-
-/**
- * The block should not get cached. This setting should be used:
- * - for simple blocks (notably those that do not perform any db query),
- * where querying the db cache would be more expensive than directly generating
- * the content.
- * - for blocks that change too frequently.
- */
-define('BLOCK_NO_CACHE', -1);
-
-/**
- * The block can change depending on the roles the user viewing the page belongs to.
- * This is the default setting, used when the block does not specify anything.
- */
-define('BLOCK_CACHE_PER_ROLE', 0x0001);
-
-/**
- * The block can change depending on the user viewing the page.
- * This setting can be resource-consuming for sites with large number of users,
- * and thus should only be used when BLOCK_CACHE_PER_ROLE is not sufficient.
- */
-define('BLOCK_CACHE_PER_USER', 0x0002);
-
-/**
- * The block can change depending on the page being viewed.
- */
-define('BLOCK_CACHE_PER_PAGE', 0x0004);
-
-/**
- * The block is the same for every user on every page where it is visible.
- */
-define('BLOCK_CACHE_GLOBAL', 0x0008);
-
-/**
  * Implement hook_help().
  */
 function block_help($path, $arg) {
@@ -196,7 +147,7 @@ function block_block_info() {
   foreach ($result as $block) {
     $blocks[$block->bid]['info'] = $block->info;
     // Not worth caching.
-    $blocks[$block->bid]['cache'] = BLOCK_NO_CACHE;
+    $blocks[$block->bid]['cache'] = DRUPAL_NO_CACHE;
   }
   return $blocks;
 }
@@ -707,7 +658,7 @@ function block_block_info_alter(&$blocks) {
  *   An array of block objects such as returned for one region by _block_load_blocks().
  *
  * @return
- *   An array of visible blocks with subject and content rendered.
+ *   An array of visible blocks as expected by drupal_render().
  */
 function _block_render_blocks($region_blocks) {
   foreach ($region_blocks as $key => $block) {
@@ -772,37 +723,17 @@ function _block_render_blocks($region_blocks) {
  *   The string used as cache_id for the block.
  */
 function _block_get_cache_id($block) {
-  global $theme, $base_root, $user;
-
+  global $user;
+  
   // User 1 being out of the regular 'roles define permissions' schema,
   // it brings too many chances of having unwanted output get in the cache
   // and later be served to other users. We therefore exclude user 1 from
   // block caching.
-  if (variable_get('block_cache', 0) && $block->cache != BLOCK_NO_CACHE && $user->uid != 1) {
-    $cid_parts = array();
-
+  if (variable_get('block_cache', 0) && !in_array($block->cache, array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM)) && $user->uid != 1) {
     // Start with common sub-patterns: block identification, theme, language.
     $cid_parts[] = $block->module;
     $cid_parts[] = $block->delta;
-    $cid_parts[] = $theme;
-    if (module_exists('locale')) {
-      global $language;
-      $cid_parts[] = $language->language;
-    }
-
-    // 'PER_ROLE' and 'PER_USER' are mutually exclusive. 'PER_USER' can be a
-    // resource drag for sites with many users, so when a module is being
-    // equivocal, we favor the less expensive 'PER_ROLE' pattern.
-    if ($block->cache & BLOCK_CACHE_PER_ROLE) {
-      $cid_parts[] = 'r.' . implode(',', array_keys($user->roles));
-    }
-    elseif ($block->cache & BLOCK_CACHE_PER_USER) {
-      $cid_parts[] = "u.$user->uid";
-    }
-
-    if ($block->cache & BLOCK_CACHE_PER_PAGE) {
-      $cid_parts[] = $base_root . request_uri();
-    }
+    $cid_parts += drupal_render_cid_parts($block->cache);
 
     return implode(':', $cid_parts);
   }

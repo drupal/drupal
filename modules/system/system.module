@@ -1576,12 +1576,12 @@ function system_block_info() {
   $blocks['main'] = array(
     'info' => t('Main page content'),
      // Cached elsewhere.
-    'cache' => BLOCK_NO_CACHE,
+    'cache' => DRUPAL_NO_CACHE,
   );
   $blocks['powered-by'] = array(
     'info' => t('Powered by Drupal'),
     'weight' => '10',
-    'cache' => BLOCK_NO_CACHE,
+    'cache' => DRUPAL_NO_CACHE,
   );
   $blocks['help'] = array(
     'info' => t('System help'),
@@ -1592,7 +1592,7 @@ function system_block_info() {
     $blocks[$menu_name]['info'] = t($title);
     // Menu blocks can't be cached because each menu item can have
     // a custom access callback. menu.inc manages its own caching.
-    $blocks[$menu_name]['cache'] = BLOCK_NO_CACHE;
+    $blocks[$menu_name]['cache'] = DRUPAL_NO_CACHE;
   }
   return $blocks;
 }

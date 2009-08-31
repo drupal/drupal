@@ -137,7 +137,7 @@ function profile_menu() {
  */
  function profile_block_info() {
   $blocks['author-information']['info'] = t('Author information');
-  $blocks['author-information']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
+  $blocks['author-information']['cache'] = DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE;
   return $blocks;
 }
 

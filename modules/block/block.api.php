@@ -26,18 +26,18 @@
  *   - 'info': (required) The human-readable name of the block.
  *   - 'cache': A bitmask of flags describing how the block should behave with
  *     respect to block caching. The following shortcut bitmasks are provided
- *     as constants in block.module:
- *     - BLOCK_CACHE_PER_ROLE (default): The block can change depending on the
+ *     as constants in common.inc:
+ *     - DRUPAL_CACHE_PER_ROLE (default): The block can change depending on the
  *       roles the user viewing the page belongs to.
- *     - BLOCK_CACHE_PER_USER: The block can change depending on the user
+ *     - DRUPAL_CACHE_PER_USER: The block can change depending on the user
  *       viewing the page. This setting can be resource-consuming for sites
  *       with large number of users, and should only be used when
- *       BLOCK_CACHE_PER_ROLE is not sufficient.
- *     - BLOCK_CACHE_PER_PAGE: The block can change depending on the page
+ *       DRUPAL_CACHE_PER_ROLE is not sufficient.
+ *     - DRUPAL_CACHE_PER_PAGE: The block can change depending on the page
  *       being viewed.
- *     - BLOCK_CACHE_GLOBAL: The block is the same for every user on every
+ *     - DRUPAL_CACHE_GLOBAL: The block is the same for every user on every
  *       page where it is visible.
- *     - BLOCK_NO_CACHE: The block should not get cached.
+ *     - DRUPAL_NO_CACHE: The block should not get cached.
  *   - 'weight', 'status', 'region', 'visibility', 'pages':
  *     You can give your blocks an explicit weight, enable them, limit them to
  *     given pages, etc. These settings will be registered when the block is first
@@ -58,12 +58,12 @@ function hook_block_info() {
     'weight' => 0,
     'status' => 1,
     'region' => 'sidebar_first',
-    // BLOCK_CACHE_PER_ROLE will be assumed for block 0.
+    // DRUPAL_CACHE_PER_ROLE will be assumed for block 0.
   );
 
   $blocks['amazing'] = array(
     'info' => t('An amazing block provided by Mymodule.'),
-    'cache' => BLOCK_CACHE_PER_ROLE | BLOCK_CACHE_PER_PAGE,
+    'cache' => DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE,
   );
 
   return $blocks;

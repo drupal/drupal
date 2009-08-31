@@ -212,7 +212,7 @@ function book_field_build_modes($obj_type) {
 function book_block_info() {
   $block = array();
   $block['navigation']['info'] = t('Book navigation');
-  $block['navigation']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
+  $block['navigation']['cache'] = DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE;
 
   return $block;
 }

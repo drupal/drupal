@@ -1751,7 +1751,7 @@ function node_revision_list($node) {
 function node_block_info() {
   $blocks['syndicate']['info'] = t('Syndicate');
   // Not worth caching.
-  $blocks['syndicate']['cache'] = BLOCK_NO_CACHE;
+  $blocks['syndicate']['cache'] = DRUPAL_NO_CACHE;
   return $blocks;
 }
 

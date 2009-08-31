@@ -634,7 +634,7 @@ function locale_css_alter(&$css) {
 function locale_block_info() {
   $block['language-switcher']['info'] = t('Language switcher');
   // Not worth caching.
-  $block['language-switcher']['cache'] = BLOCK_NO_CACHE;
+  $block['language-switcher']['cache'] = DRUPAL_NO_CACHE;
   return $block;
 }
 

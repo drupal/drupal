@@ -479,8 +479,14 @@ function forum_form_alter(&$form, $form_state, $form_id) {
  * Implement hook_block_info().
  */
 function forum_block_info() {
-  $blocks['active']['info'] = t('Active forum topics');
-  $blocks['new']['info'] = t('New forum topics');
+  $blocks['active'] = array(
+    'info' => t('Active forum topics'),
+    'cache' => DRUPAL_CACHE_CUSTOM,
+  );
+  $blocks['new'] = array(
+    'info' => t('New forum topics'),
+    'cache' => DRUPAL_CACHE_CUSTOM,
+  );
   return $blocks;
 }
 
@@ -506,41 +512,66 @@ function forum_block_save($delta = '', $edit = array()) {
  * most recently added forum topics.
  */
 function forum_block_view($delta = '') {
-  if (user_access('access content')) {
-    $query = db_select('node', 'n');
-    $query->join('forum', 'f', 'f.vid = n.vid');
-    $query->join('taxonomy_term_data', 'td', 'td.tid = f.tid');
-    $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
-    $query
-      ->fields('n', array('nid', 'title'))
-      ->fields('ncs', array('comment_count', 'last_comment_timestamp'))
-      ->condition('n.status', 1)
-      ->condition('td.vid', variable_get('forum_nav_vocabulary', 0))
-      ->addTag('node_access');
-    switch ($delta) {
-      case 'active':
-        $title = t('Active forum topics');
-        $query
-          ->orderBy('ncs.last_comment_timestamp', 'DESC')
-          ->range(0, variable_get('forum_block_num_active', '5'));
-        break;
+  $query = db_select('node', 'n');
+  $query->join('forum', 'f', 'f.vid = n.vid');
+  $query->join('taxonomy_term_data', 'td', 'td.tid = f.tid');
+  $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
+  $query
+    ->fields('n', array('nid', 'title'))
+    ->fields('ncs', array('comment_count', 'last_comment_timestamp'))
+    ->condition('n.status', 1)
+    ->condition('td.vid', variable_get('forum_nav_vocabulary', 0))
+    ->addTag('node_access');
+  switch ($delta) {
+    case 'active':
+      $title = t('Active forum topics');
+      $query
+        ->orderBy('ncs.last_comment_timestamp', 'DESC')
+        ->range(0, variable_get('forum_block_num_active', '5'));
+      break;
 
-      case 'new':
-        $title = t('New forum topics');
-        $query
-          ->orderBy('n.nid', 'DESC')
-          ->range(0, variable_get('forum_block_num_new', '5'));
-        break;
-    }
-
-    $result = $query->execute();
-    $content = node_title_list($result);
-    if (!empty($content)) {
-      $block['subject'] = $title;
-      $block['content'] = $content . theme('more_link', url('forum'), t('Read the latest forum topics.'));
-      return $block;
-    }
+    case 'new':
+      $title = t('New forum topics');
+      $query
+        ->orderBy('n.nid', 'DESC')
+        ->range(0, variable_get('forum_block_num_new', '5'));
+      break;
   }
+
+   $cache_keys[] = 'forum';
+   $cache_keys[] = $delta;
+   // Cache based on the altered query. Enables us to cache with node access enabled.
+   $query->preExecute();
+   $cache_keys[] = md5(serialize(array((string) $query, $query->getArguments())));
+
+   $block['subject'] = $title;
+   $block['content'] = array(
+     '#access' => user_access('access content'),
+     '#pre_render' => array('forum_block_view_pre_render'),
+     '#cache' => array(
+        'keys' => $cache_keys,
+        'expire' => CACHE_TEMPORARY,
+     ),
+     '#query' => $query,
+   );
+   return $block;
+}
+
+/**
+* A #pre_render callback. Lists nodes based on the element's #query property.
+*
+* @see forum_block_view().
+*
+* @return
+*   A renderable array.
+*/
+function forum_block_view_pre_render($elements) {
+  $result = $elements['#query']->execute();
+  if ($node_title_list = node_title_list($result)) {
+    $elements['forum_list'] = array('#markup' => $node_title_list);
+    $elements['forum_more'] = array('#markup' => theme('more_link', url('forum'), t('Read the latest forum topics.')));
+  }
+  return $elements;
 }
 
 /**

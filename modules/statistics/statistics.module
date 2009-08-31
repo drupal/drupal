@@ -300,7 +300,7 @@ function statistics_block_info() {
   if (variable_get('statistics_count_content_views', 0)) {
     $blocks['popular']['info'] = t('Popular content');
     // Too dynamic to cache.
-    $blocks['popular']['cache'] = BLOCK_NO_CACHE;
+    $blocks['popular']['cache'] = DRUPAL_NO_CACHE;
     return $blocks;
   }
 }

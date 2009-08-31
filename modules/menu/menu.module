@@ -285,7 +285,7 @@ function menu_block_info() {
     $blocks[$name]['info'] = check_plain($title);
     // Menu blocks can't be cached because each menu item can have
     // a custom access callback. menu.inc manages its own caching.
-    $blocks[$name]['cache'] = BLOCK_NO_CACHE;
+    $blocks[$name]['cache'] = DRUPAL_NO_CACHE;
   }
   return $blocks;
 }

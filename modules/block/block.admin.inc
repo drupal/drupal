@@ -467,7 +467,7 @@ function block_add_block_form_submit($form, &$form_state) {
         'status' => 0,
         'weight' => 0,
         'delta' => $delta, 
-        'cache' => BLOCK_NO_CACHE,
+        'cache' => DRUPAL_NO_CACHE,
       ));
     }
   }

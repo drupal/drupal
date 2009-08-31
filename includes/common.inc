@@ -77,6 +77,65 @@ define('JS_THEME', 100);
 define('HTTP_REQUEST_TIMEOUT', 1);
 
 /**
+ * Constants defining cache granularity for blocks and renderable arrays.
+ *
+ * Modules specify the caching patterns for their blocks using binary
+ * combinations of these constants in their hook_block_info():
+ *   $block[delta]['cache'] = DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE;
+ * DRUPAL_CACHE_PER_ROLE is used as a default when no caching pattern is
+ * specified. Use DRUPAL_CACHE_CUSTOM to disable standard block cache and
+ * implement
+ *
+ * The block cache is cleared in cache_clear_all(), and uses the same clearing
+ * policy than page cache (node, comment, user, taxonomy added or updated...).
+ * Blocks requiring more fine-grained clearing might consider disabling the
+ * built-in block cache (DRUPAL_NO_CACHE) and roll their own.
+ *
+ * Note that user 1 is excluded from block caching.
+ */
+
+/**
+ * The block should not get cached. This setting should be used:
+ * - for simple blocks (notably those that do not perform any db query),
+ * where querying the db cache would be more expensive than directly generating
+ * the content.
+ * - for blocks that change too frequently.
+ */
+define('DRUPAL_NO_CACHE', -1);
+
+/**
+ * The block is handling its own caching in its hook_block_view(). From the
+ * perspective of the block cache system, this is equivalent to DRUPAL_NO_CACHE.
+ * Useful when time based expiration is needed or a site uses a node access
+ * which invalidates standard block cache.
+ */
+define('DRUPAL_CACHE_CUSTOM', -2);
+
+/**
+ * The block or element can change depending on the roles the user viewing the
+ * page belongs to. This is the default setting for blocks, used when the block
+ * does not specify anything.
+ */
+define('DRUPAL_CACHE_PER_ROLE', 0x0001);
+
+/**
+ * The block or element can change depending on the user viewing the page.
+ * This setting can be resource-consuming for sites with large number of users,
+ * and thus should only be used when DRUPAL_CACHE_PER_ROLE is not sufficient.
+ */
+define('DRUPAL_CACHE_PER_USER', 0x0002);
+
+/**
+ * The block or element can change depending on the page being viewed.
+ */
+define('DRUPAL_CACHE_PER_PAGE', 0x0004);
+
+/**
+ * The block or element is the same for every user on every page where it is visible.
+ */
+define('DRUPAL_CACHE_GLOBAL', 0x0008);
+
+/**
  * Add content to a specified region.
  *
  * @param $region
@@ -3947,6 +4006,24 @@ function drupal_render_page($page) {
  * the placement of the form's children while not at all having to deal with
  * the form markup itself.
  *
+ * drupal_render() can optionally cache the rendered output of elements to
+ * improve performance. To use drupal_render() caching, set the element's #cache
+ * property to an associative array with one or several of the following keys:
+ *    - 'keys': An array of one or more keys that identify the element. If 'keys'
+ *       is set, the cache ID is created automatically from these keys.
+ *       @see drupal_render_cid_create()
+ *    - 'granularity' (optional): Define the cache granularity using binary
+ *       combinations of the cache granularity constants, e.g. DRUPAL_CACHE_PER_USER
+ *       to cache for each user seperately or
+ *       DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE to cache seperately for each
+ *       page and role. If not specified the element is cached globally for each
+ *       theme and language.
+ *    - 'cid': Specify the cache ID directly. Either 'keys' or 'cid' is required.
+ *       If 'cid' is set, 'keys' and 'granularity' are ignored. Use only if you
+ *       have special requirements.
+ *    - 'expire': Set to one of the cache lifetime constants.
+ *    - 'bin': Specify a cache bin to cache the element in. Defaults to 'cache'.
+ *
  * This function is usually called from within another function, like
  * drupal_get_form() or a theme function. Elements are sorted internally
  * using uasort(). Since this is expensive, when passing already sorted
@@ -3968,6 +4045,11 @@ function drupal_render(&$elements) {
   // Do not print elements twice.
   if (isset($elements['#printed']) && $elements['#printed']) {
     return;
+  }
+
+  // Try to fetch the element's markup from cache and return.
+  if ($cached_output = drupal_render_cache_get($elements)) {
+    return $cached_output;
   }
 
   // If the default values for this element have not been loaded yet, populate
@@ -4042,6 +4124,11 @@ function drupal_render(&$elements) {
 
   $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
   $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
+
+  // Cache the processed element if #cache is set.
+  if (isset($elements['#cache'])) {
+    drupal_render_cache_set($prefix . $elements['#children'] . $suffix, $elements);
+  }
 
   $elements['#printed'] = TRUE;
   return $prefix . $elements['#children'] . $suffix;
@@ -4118,6 +4205,135 @@ function hide(&$element) {
 function show(&$element) {
   $element['#printed'] = FALSE;
   return $element;
+}
+
+/**
+ * Get the rendered output of a renderable element from cache.
+ *
+ * @see drupal_render()
+ * @see drupal_render_cache_set()
+ * 
+ * @param $elements
+ *   A renderable array.
+ * @return
+ *   A markup string containing the rendered content of the element, or FALSE
+ *   if no cached copy of the element is available.
+ */
+function drupal_render_cache_get($elements) {
+  if (!in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) || !$cid = drupal_render_cid_create($elements)) {
+    return FALSE;
+  }
+  $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
+
+  if (!empty($cid) && $cache = cache_get($cid, $bin)) {
+    // Add additional libraries, CSS and JavaScript associated with this element.
+    drupal_process_attached(
+      isset($cache->data['#attached_library']) ? $cache->data['#attached_library'] : array(),
+      isset($cache->data['#attached_js']) ? $cache->data['#attached_js'] : array(),
+      isset($cache->data['#attached_css']) ? $cache->data['#attached_css'] : array()
+    );
+    // Return the rendered output.
+    return $cache->data['#markup'];;
+  }
+  return FALSE;
+}
+
+/**
+ * Cache the rendered output of a renderable element.
+ *
+ * This is called by drupal_render() if the #cache property is set on an element.
+ *
+ * @see drupal_render()
+ * @see drupal_render_cache_get()
+ *
+ * @param $markup
+ *   The rendered output string of $elements.
+ * @param $elements
+ *   A renderable array.
+ */
+function drupal_render_cache_set($markup, $elements) {
+  // Create the cache ID for the element 
+  if (!in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) || !$cid = drupal_render_cid_create($elements)) {
+    return FALSE;
+  }
+
+  $data['#markup'] = $markup;
+  // Persist additional CSS and JavaScript files associated with this element.
+  foreach (array('css', 'js', 'library') as $kind) {
+    if (!empty($elements['#attached_' . $kind])) {
+      $data['#attached_' . $kind] = $elements['#attached_' . $kind];
+    }
+  }
+  $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
+  $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CACHE_PERMANENT;
+  cache_set($cid, $data, $bin, $expire);
+}
+
+/**
+ * Helper function for building cache ids.
+ *
+ * @param $granularity
+ *   One or more cache granularity constants, e.g. DRUPAL_CACHE_PER_USER to cache
+ *   for each user seperately or DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE to
+ *   cache seperately for each page and role.
+ *
+ * @return
+ *   An array of cache ID parts, always containing the active theme. If the
+ *   locale module is enabled it also contains the active language. If
+ *   $granularity was passed in, more parts are added.
+ */
+function drupal_render_cid_parts($granularity = NULL) {
+  global $theme, $base_root, $user;
+
+  $cid_parts[] = $theme;
+  if (module_exists('locale')) {
+    global $language;
+    $cid_parts[] = $language->language;
+  }
+
+  if (!empty($granularity)) {
+    // 'PER_ROLE' and 'PER_USER' are mutually exclusive. 'PER_USER' can be a
+    // resource drag for sites with many users, so when a module is being
+    // equivocal, we favor the less expensive 'PER_ROLE' pattern.
+    if ($granularity & DRUPAL_CACHE_PER_ROLE) {
+      $cid_parts[] = 'r.' . implode(',', array_keys($user->roles));
+    }
+    elseif ($granularity & DRUPAL_CACHE_PER_USER) {
+      $cid_parts[] = "u.$user->uid";
+    }
+
+    if ($granularity & DRUPAL_CACHE_PER_PAGE) {
+      $cid_parts[] = $base_root . request_uri();
+    }
+  }
+
+  return $cid_parts;
+}
+
+/**
+ * Create the cache ID for a renderable element.
+ *
+ * This creates the cache ID string, either by returning the #cache['cid']
+ * property if present or by building the cache ID out of the #cache['keys']
+ * and, optionally, the #cache['granularity'] properties.
+ *
+ * @param $elements
+ *   A renderable array.
+ *
+ * @return
+ *   The cache ID string, or FALSE if the element may not be cached.
+ */
+function drupal_render_cid_create($elements) {
+  if (isset($elements['#cache']['cid'])) {
+    return $elements['#cache']['cid'];
+  }
+  elseif (isset($elements['#cache']['keys'])) {
+    $granularity = isset($elements['#cache']['granularity']) ? $elements['#cache']['granularity'] : NULL;
+    // Merge in additional cache ID parts based provided by drupal_render_cid_parts().
+    $cid_parts = array_merge($elements['#cache']['keys'], drupal_render_cid_parts($granularity));
+    return implode(':', $cid_parts);
+  }
+  return FALSE;
 }
 
 /**

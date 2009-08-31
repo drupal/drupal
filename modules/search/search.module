@@ -166,7 +166,7 @@ function search_permission() {
 function search_block_info() {
   $blocks['form']['info'] = t('Search form');
   // Not worth caching.
-  $blocks['form']['cache'] = BLOCK_NO_CACHE;
+  $blocks['form']['cache'] = DRUPAL_NO_CACHE;
   return $blocks;
 }
 
