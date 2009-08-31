@@ -2181,3 +2181,102 @@ function template_page_suggestions($args) {
 
   return $suggestions;
 }
+
+/**
+ * The variables generated here is a mirror of template_preprocess_page().
+ * This preprocessor will run it's course when theme_maintenance_page() is
+ * invoked. It is also used in theme_install_page() and theme_update_page() to
+ * keep all the variables consistent.
+ *
+ * An alternate template file of "maintenance-page-offline.tpl.php" can be
+ * used when the database is offline to hide errors and completely replace the
+ * content.
+ *
+ * The $variables array contains the following arguments:
+ * - $content
+ *
+ * @see maintenance-page.tpl.php
+ */
+function template_preprocess_maintenance_page(&$variables) {
+  // Add favicon
+  if (theme_get_setting('toggle_favicon')) {
+    $favicon = theme_get_setting('favicon');
+    $type = theme_get_setting('favicon_mimetype');
+    drupal_add_html_head('<link rel="shortcut icon" href="' . check_url($favicon) . '" type="' . check_plain($type) . '" />');
+  }
+
+  global $theme;
+  // Retrieve the theme data to list all available regions.
+  $theme_data = _system_get_theme_data();
+  $regions = $theme_data[$theme]->info['regions'];
+
+  // Get all region content set with drupal_add_region_content().
+  foreach (array_keys($regions) as $region) {
+    // Assign region to a region variable.
+    $region_content = drupal_get_region_content($region);
+    isset($variables[$region]) ? $variables[$region] .= $region_content : $variables[$region] = $region_content;
+  }
+
+  // Setup layout variable.
+  $variables['layout'] = 'none';
+  if (!empty($variables['sidebar_first'])) {
+    $variables['layout'] = 'first';
+  }
+  if (!empty($variables['sidebar_second'])) {
+    $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
+  }
+
+  // Construct page title
+  if (drupal_get_title()) {
+    $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
+  }
+  else {
+    $head_title = array(variable_get('site_name', 'Drupal'));
+    if (variable_get('site_slogan', '')) {
+      $head_title[] = variable_get('site_slogan', '');
+    }
+  }
+  $variables['head_title']        = implode(' | ', $head_title);
+  $variables['base_path']         = base_path();
+  $variables['front_page']        = url();
+  $variables['breadcrumb']        = '';
+  $variables['feed_icons']        = '';
+  $variables['head']              = drupal_get_html_head();
+  $variables['help']              = '';
+  $variables['language']          = $GLOBALS['language'];
+  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
+  $variables['logo']              = theme_get_setting('logo');
+  $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
+  $variables['main_menu']         = array();
+  $variables['secondary_menu']    = array();
+  $variables['search_box']        = '';
+  $variables['site_name']         = (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : '');
+  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : '');
+  $variables['css']               = drupal_add_css();
+  $variables['styles']            = drupal_get_css();
+  $variables['scripts']           = drupal_get_js();
+  $variables['tabs']              = '';
+  $variables['title']             = drupal_get_title();
+  $variables['closure']           = '';
+
+  // Compile a list of classes that are going to be applied to the body element.
+  $variables['classes_array'][] = 'in-maintenance';
+  if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
+    $variables['classes_array'][] = 'db-offline';
+  }
+  if ($variables['layout'] == 'both') {
+    $variables['classes_array'][] = 'two-sidebars';
+  }
+  elseif ($variables['layout'] == 'none') {
+    $variables['classes_array'][] = 'no-sidebars';
+  }
+  else {
+    $variables['classes_array'][] = 'one-sidebar sidebar-' . $variables['layout'];
+  }
+
+  // Dead databases will show error messages so supplying this template will
+  // allow themers to override the page and the content completely.
+  if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
+    $variables['template_file'] = 'maintenance-page-offline';
+  }
+}

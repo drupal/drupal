@@ -4479,8 +4479,6 @@ function drupal_common_theme() {
     'maintenance_page' => array(
       'arguments' => array('content' => NULL, 'show_messages' => TRUE),
       'template' => 'maintenance-page',
-      'path' => 'includes',
-      'file' => 'theme.maintenance.inc',
     ),
     'update_page' => array(
       'arguments' => array('content' => NULL, 'show_messages' => TRUE),
