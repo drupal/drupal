@@ -83,12 +83,6 @@ function node_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'moderate' => array(
-        'description' => 'Previously, a boolean indicating whether the node was "in moderation"; mostly no longer used.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'sticky' => array(
         'description' => 'Boolean indicating whether the node should be displayed at the top of lists in which it appears.',
         'type' => 'int',
@@ -112,7 +106,6 @@ function node_schema() {
     'indexes' => array(
       'node_changed'        => array('changed'),
       'node_created'        => array('created'),
-      'node_moderate'       => array('moderate'),
       'node_frontpage'      => array('promote', 'status', 'sticky', 'created'),
       'node_status_type'    => array('status', 'type', 'nid'),
       'node_title_type'     => array('title', array('type', 4)),
@@ -239,12 +232,6 @@ function node_schema() {
       ),
       'promote' => array(
         'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'moderate' => array(
-        'description' => 'Previously, a boolean indicating whether the node (at the time of this revision) was "in moderation"; mostly no longer used.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -436,11 +423,11 @@ function node_update_7004() {
 }
 
 /**
- * Add status/comment/promote/moderate and sticky columns to the {node_revision} table.
+ * Add status/comment/promote and sticky columns to the {node_revision} table.
  */
 function node_update_7005() {
   $ret = array();
-  foreach(array('status', 'comment', 'promote', 'moderate', 'sticky') as $column) {
+  foreach(array('status', 'comment', 'promote', 'sticky') as $column) {
     db_add_field($ret, 'node_revision', $column, array(
       'type' => 'int',
       'not null' => TRUE,
@@ -451,7 +438,7 @@ function node_update_7005() {
 }
 
 /**
- * Convert body and teaser from node properties to fields, and migrate status/comment/promote/moderate and sticky columns to the {node_revision} table.
+ * Convert body and teaser from node properties to fields, and migrate status/comment/promote and sticky columns to the {node_revision} table.
  */
 function node_update_7006(&$context) {
   $ret = array('#finished' => 0);
@@ -488,7 +475,7 @@ function node_update_7006(&$context) {
       $query = db_select('node', 'n');
       $nr = $query->innerJoin('node_revision', 'nr', 'n.vid = nr.vid');
       $revisions = $query
-        ->fields('n', array('type', 'status', 'comment', 'promote', 'moderate', 'sticky'))
+        ->fields('n', array('type', 'status', 'comment', 'promote', 'sticky'))
         ->fields($nr)
         ->condition('nr.vid', $context['last'], '>')
         ->orderBy('nr.vid', 'ASC')
@@ -532,7 +519,6 @@ function node_update_7006(&$context) {
             'status' => $revision->status,
             'comment' => $revision->comment,
             'promote' => $revision->promote,
-            'moderate' => $revision->moderate,
             'sticky' => $revision->sticky,
           ))
           ->condition('vid', $revision->vid)
