@@ -1386,13 +1386,16 @@ function theme_status_messages($display = NULL) {
  * @param $attributes
  *   A keyed array of attributes.
  * @param $heading
- *   An optional keyed array for a heading to precede the links:
+ *   An optional keyed array or a string for a heading to precede the links.
+ *   When using an array the following keys can be used:
  *    - text: the heading text
  *    - level: the heading level (e.g. 'h2', 'h3')
  *    - class: (optional) an array of the CSS classes for the heading
+ *   When using a string it will be used as the text of the heading and the
+ *   level will default to 'h2'.
  *   Headings should be used on navigation menus and any list of links that
  *   consistently appears on multiple pages. To make the heading invisible
- *   use class => 'element-invisible'. Do not use 'display:none', which
+ *   use the 'element-invisible' CSS class. Do not use 'display:none', which
  *   removes it from screen-readers and assistive technology. Headings allow
  *   screen-reader and keyboard only users to navigate to or skip the links.
  *   See http://juicystudio.com/article/screen-readers-display-none.php
@@ -1409,10 +1412,19 @@ function theme_links($links, $attributes = array('class' => array('links')), $he
 
     // Treat the heading first if it is present to prepend it to the
     // list of links.
-    if (!empty($heading['text']) && !empty($heading['level'])) {
+    if (!empty($heading)) {
+      if (is_string($heading)) {
+        // Prepare the array that will be used when the passed heading
+        // is a string.
+        $heading = array(
+          'text' => $heading,
+          // Set the default level of the heading.
+          'level' => 'h2',
+        );
+      }
       $output .= '<' . $heading['level'];
       if (!empty($heading['class'])) {
-        $output .= ' ' . drupal_attributes(array('class' => $heading['class']));
+        $output .= drupal_attributes(array('class' => $heading['class']));
       }
       $output .= '>' . check_plain($heading['text']) . '</' . $heading['level'] . '>';
     }

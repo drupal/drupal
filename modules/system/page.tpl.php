@@ -156,7 +156,7 @@
 
     <?php if ($main_menu): ?>
       <div id="navigation"><div class="section">
-        <?php print theme('links', $main_menu, array('id' => 'main-menu', 'class' => array('links', 'clearfix')), array('text' => t('Main menu'), 'level' => 'h2')); ?>
+        <?php print theme('links', $main_menu, array('id' => 'main-menu', 'class' => array('links', 'clearfix')), t('Main menu')); ?>
       </div></div> <!-- /.section, /#navigation -->
     <?php endif; ?>
 
@@ -195,7 +195,7 @@
     </div></div> <!-- /#main, /#main-wrapper -->
 
     <div id="footer"><div class="section">
-      <?php print theme('links', $secondary_menu, array('id' => 'secondary-menu', 'class' => array('links', 'clearfix')), array('text' => t('Secondary menu'), 'level' => 'h2')); ?>
+      <?php print theme('links', $secondary_menu, array('id' => 'secondary-menu', 'class' => array('links', 'clearfix')), t('Secondary menu')); ?>
       <?php if ($footer): ?><div id="footer-region" class="region"><?php print $footer; ?></div><?php endif; ?>
     </div></div> <!-- /.section, /#footer -->
 
