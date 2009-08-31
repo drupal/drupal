@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.14 2009/07/21 01:56:36 webchick Exp $
+// $Id: query.inc,v 1.15 2009/08/31 17:07:21 webchick Exp $
 
 /**
  * @ingroup database
@@ -158,7 +158,7 @@ class UpdateQuery_pgsql extends UpdateQuery {
     }
 
     if (count($this->condition)) {
-      $this->condition->compile($this->connection);
+      $this->condition->compile($this->connection, $this);
 
       $arguments = $this->condition->arguments();
       foreach ($arguments as $placeholder => &$value) {

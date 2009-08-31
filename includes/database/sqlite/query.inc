@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.7 2009/07/21 01:56:36 webchick Exp $
+// $Id: query.inc,v 1.8 2009/08/31 17:07:21 webchick Exp $
 
 /**
  * @file
@@ -107,7 +107,7 @@ class UpdateQuery_sqlite extends UpdateQuery {
       }
     }
     if (count($condition)) {
-      $condition->compile($this->connection);
+      $condition->compile($this->connection, $this);
       $this->condition->where((string) $condition, $condition->arguments());
     }
     return parent::execute();
