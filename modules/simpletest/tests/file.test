@@ -579,6 +579,8 @@ class FileSaveUploadTest extends FileHookTestCase {
     $this->assertTrue($max_fid_after > $this->maxFidBefore, t('A new file was created.'));
     $file1 = file_load($max_fid_after);
     $this->assertTrue($file1, t('Loaded the file.'));
+    // MIME type of the uploaded image may be either image/jpeg or image/png.
+    $this->assertEqual(substr($file1->filemime, 0, 5), 'image', 'A MIME type was set.');
 
     // Reset the hook counters to get rid of the 'load' we just called.
     file_test_reset();
@@ -597,6 +599,8 @@ class FileSaveUploadTest extends FileHookTestCase {
 
     $file2 = file_load($max_fid_after);
     $this->assertTrue($file2);
+    // MIME type of the uploaded image may be either image/jpeg or image/png.
+    $this->assertEqual(substr($file2->filemime, 0, 5), 'image', 'A MIME type was set.');
 
     // Load both files using file_load_multiple().
     $files = file_load_multiple(array($file1->fid, $file2->fid));
@@ -2034,6 +2038,10 @@ class FileNameMungingTest extends FileTestCase {
  * Tests for file_get_mimetype().
  */
 class FileMimeTypeTest extends DrupalWebTestCase {
+  function setUp() {
+    parent::setUp('file_test');
+  }
+
   public static function getInfo() {
     return array(
       'name' => 'File mimetypes',
@@ -2059,16 +2067,23 @@ class FileMimeTypeTest extends DrupalWebTestCase {
       'pcf.z' => 'application/octet-stream',
       'jar' => 'application/octet-stream',
       'some.junk' => 'application/octet-stream',
+      'foo.file_test_1' => 'madeup/file_test_1',
+      'foo.file_test_2' => 'madeup/file_test_2',
+      'foo.doc' => 'madeup/doc',
     );
 
-    // Test using default mappings (not using 'mime_extension_mapping').
-    variable_del('mime_extension_mapping');
+    // Test using default mappings.
     foreach ($test_case as $input => $expected) {
+      // Test stream [URI].
+      $output = file_get_mimetype($prefix . $input);
+      $this->assertIdentical($output, $expected, t('Mimetype for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
+
+      // Test normal path equivalent
       $output = file_get_mimetype($input);
       $this->assertIdentical($output, $expected, t('Mimetype (using default mappings) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
     }
 
-    // Now test using mappings from the mime_extension_mapping variable.
+    // Now test passing in the map.
     $mapping = array(
       'mimetypes' => array(
         0 => 'application/java-archive',
@@ -2090,21 +2105,11 @@ class FileMimeTypeTest extends DrupalWebTestCase {
       'pcf.z' => 'application/octet-stream',
       'jar' => 'application/octet-stream',
       'some.junk' => 'application/octet-stream',
+      'foo.file_test_1' => 'application/octet-stream',
+      'foo.file_test_2' => 'application/octet-stream',
+      'foo.doc' => 'application/octet-stream',
     );
 
-    variable_set('mime_extension_mapping', $mapping);
-    foreach ($test_case as $input => $expected) {
-      // Test stream [URI].
-      $output = file_get_mimetype($prefix . $input);
-      $this->assertIdentical($output, $expected, t('Mimetype for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
-
-      // Test normal path equivalent
-      $output = file_get_mimetype($input);
-      $this->assertIdentical($output, $expected, t('Mimetype (using mappings from variable) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
-    }
-
-    // Now test the same when passing in the map.
-    variable_del('mime_extension_mapping');
     foreach ($test_case as $input => $expected) {
       $output = file_get_mimetype($input, $mapping);
       $this->assertIdentical($output, $expected, t('Mimetype (using passed-in mappings) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));

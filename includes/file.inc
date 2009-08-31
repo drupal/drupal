@@ -1684,12 +1684,12 @@ function file_upload_max_size() {
  *   An optional map of extensions to their mimetypes, in the form:
  *    - 'mimetypes': a list of mimetypes, keyed by an identifier,
  *    - 'extensions': the mapping itself, an associative array in which
- *      the key is the extension (lowercase) and the value is the mimetype identifier.
- *    If $mapping is omitted, the drupal variable mime_extension_mapping is checked
- *    for a value and if that fails then file_default_mimetype_mapping() is called
+ *      the key is the extension (lowercase) and the value is the mimetype
+ *      identifier. If $mapping is NULL file_mimetype_mapping() is called.
  *
  * @return
- *   The internet media type registered for the extension or application/octet-stream for unknown extensions.
+ *   The internet media type registered for the extension or
+ *   application/octet-stream for unknown extensions.
  * @see
  *   file_default_mimetype_mapping()
  */

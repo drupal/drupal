@@ -207,7 +207,6 @@ class UploadTestCase extends DrupalWebTestCase {
    * @param string $filename Name of file to verify.
    */
   function checkUploadedFile($filename) {
-    global $base_url;
     $file = 'public://' . $filename;
     $this->drupalGet(file_create_url($file), array('external' => TRUE));
     $this->assertResponse(array(200), 'Uploaded ' . $filename . ' is accessible.');

@@ -125,6 +125,9 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Rewrote file handling to use PHP stream wrappers to enable support for
       both public and private files and to support pluggable storage mechanisms
       and access to remote resources (e.g. S3 storage or Flickr photos).
+    * The mime_extension_mapping variable has been removed. Modules that need to
+      alter the default MIME type extension mappings should implement
+      hook_file_mimetype_mapping_alter().
 - Image handling:
     * Improved image handling, including better support for add-on image
       libraries.
