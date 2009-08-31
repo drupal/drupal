@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.272 2009/08/29 05:46:03 dries Exp $
+// $Id: profile.module,v 1.273 2009/08/31 17:06:09 dries Exp $
 
 /**
  * @file
@@ -137,7 +137,7 @@ function profile_menu() {
  */
  function profile_block_info() {
   $blocks['author-information']['info'] = t('Author information');
-  $blocks['author-information']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
+  $blocks['author-information']['cache'] = DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE;
   return $blocks;
 }
 

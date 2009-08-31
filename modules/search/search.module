@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.311 2009/08/29 21:05:16 dries Exp $
+// $Id: search.module,v 1.312 2009/08/31 17:06:09 dries Exp $
 
 /**
  * @file
@@ -166,7 +166,7 @@ function search_permission() {
 function search_block_info() {
   $blocks['form']['info'] = t('Search form');
   // Not worth caching.
-  $blocks['form']['cache'] = BLOCK_NO_CACHE;
+  $blocks['form']['cache'] = DRUPAL_NO_CACHE;
   return $blocks;
 }
 
