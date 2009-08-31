@@ -1493,8 +1493,6 @@ function hook_file_download($filepath) {
  * (50+ times per page) so performance is critical.
  *
  * This function should alter the URI, if it wants to rewrite the file URL.
- * If it does so, no other hook_file_url_alter() implementation will be
- * allowed to further alter the path.
  *
  * @param $uri
  *   The URI to a file for which we need an external URL, or the path to a
