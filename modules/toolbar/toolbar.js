@@ -5,7 +5,7 @@
  * Implementation of Drupal.behaviors for admin.
  */
 Drupal.behaviors.admin = {
-  attach: function() {
+  attach: function(context) {
 
     // Set the intial state of the toolbar.
     $('#toolbar', context).once('toolbar', Drupal.admin.toolbar.init);
