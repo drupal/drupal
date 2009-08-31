@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.15 2009/08/25 21:53:47 dries Exp $
+// $Id: field.info.inc,v 1.16 2009/08/31 05:35:47 dries Exp $
 
 /**
  * @file
@@ -150,7 +150,7 @@ function _field_info_collate_types($reset = FALSE) {
           }
         }
       }
-      drupal_alter('fieldable_info', $info['fieldable types']);
+      drupal_alter('entity_info', $info['fieldable types']);
 
       cache_set('field_info_types', $info, 'cache_field');
     }
