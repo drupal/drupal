@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.15 2009/08/27 20:33:05 dries Exp $ */
+/* $Id: style.css,v 1.16 2009/08/31 17:40:04 webchick Exp $ */
 
 /**
  * Generic elements
@@ -19,10 +19,6 @@ a {
 
 a:hover {
   text-decoration: underline;
-}
-
-div.box, p {
-  margin: 0 0 20px;
 }
 
 hr {
