@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.978 2009/08/31 05:51:07 dries Exp $
+// $Id: common.inc,v 1.979 2009/08/31 16:46:31 webchick Exp $
 
 /**
  * @file
@@ -3903,6 +3903,12 @@ function drupal_render_page($page) {
   if (is_string($page) || (is_array($page) && (!isset($page['#type']) || ($page['#type'] != 'page')))) {
     drupal_set_page_content($page);
     $page = element_info('page');
+  }
+
+  // Modules can add elements to $page as needed in hook_page_build().
+  foreach (module_implements('page_build') as $module) {
+    $function = $module . '_page_build';
+    $function($page);
   }
   // Modules alter the $page as needed. Blocks are populated into regions like
   // 'sidebar_first', 'footer', etc.

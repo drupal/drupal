@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.371 2009/08/29 05:46:02 dries Exp $
+// $Id: block.module,v 1.372 2009/08/31 16:46:32 webchick Exp $
 
 /**
  * @file
@@ -235,7 +235,7 @@ function block_block_view($delta = 0, $edit = array()) {
  *
  * Render blocks into their regions.
  */
-function block_page_alter($page) {
+function block_page_build(&$page) {
   global $theme;
 
   // The theme system might not yet be initialized. We need $theme.
