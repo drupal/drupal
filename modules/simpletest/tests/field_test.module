@@ -90,11 +90,11 @@ function field_test_entity_info() {
 }
 
 /**
- * Implement hook_fieldable_info_alter().
+ * Implement hook_entity_info_alter().
  */
-function field_test_fieldable_info_alter(&$info) {
-  foreach (field_test_fieldable_info_translatable() as $obj_type => $translatable) {
-    $info[$obj_type]['translation_handlers']['field_test'] = TRUE;
+function field_test_entity_info_alter(&$entity_info) {
+  foreach (field_test_entity_info_translatable() as $obj_type => $translatable) {
+    $entity_info[$obj_type]['translation_handlers']['field_test'] = TRUE;
   }
 }
 
@@ -622,7 +622,7 @@ function field_test_field_languages($obj_type, $field, &$languages) {
 /**
  * Helper function to enable entity translations.
  */
-function field_test_fieldable_info_translatable($obj_type = NULL, $translatable = NULL) {
+function field_test_entity_info_translatable($obj_type = NULL, $translatable = NULL) {
   $stored_value = &drupal_static(__FUNCTION__, array());
   if (isset($obj_type) && isset($translatable)) {
     $stored_value[$obj_type] = $translatable;

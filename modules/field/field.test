@@ -1941,7 +1941,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     $this->assertTrue(count($available_languages) == 1 && $available_languages[0] === FIELD_LANGUAGE_NONE, t('Untranslatable entity: suggested language ignored.'));
 
     // Enable field translations for the entity.
-    field_test_fieldable_info_translatable('test_entity', TRUE);
+    field_test_entity_info_translatable('test_entity', TRUE);
 
     // Test hook_field_languages() invocation on a translatable field.
     $this->field['settings']['test_hook_in'] = TRUE;
@@ -2070,7 +2070,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
    */
   function testTranslatableFieldSaveLoad() {
     // Enable field translations for nodes.
-    field_test_fieldable_info_translatable('node', TRUE);
+    field_test_entity_info_translatable('node', TRUE);
     $obj_info = field_info_fieldable_types('node');
     $this->assertTrue(count($obj_info['translation_handlers']), t('Nodes are translatable.'));
 

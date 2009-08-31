@@ -150,7 +150,7 @@ function _field_info_collate_types($reset = FALSE) {
           }
         }
       }
-      drupal_alter('fieldable_info', $info['fieldable types']);
+      drupal_alter('entity_info', $info['fieldable types']);
 
       cache_set('field_info_types', $info, 'cache_field');
     }
