@@ -6,11 +6,7 @@
  */
 Drupal.behaviors.batch = {
   attach: function (context, settings) {
-    // This behavior attaches by ID, so is only valid once on a page.
-    if ($('#progress.batch-processed').size()) {
-      return;
-    }
-    $('#progress', context).addClass('batch-processed').each(function () {
+    $('#progress', context).once('batch', function () {
       var holder = $(this);
 
       // Success: redirect to the summary.

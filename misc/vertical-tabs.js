@@ -15,7 +15,7 @@
  */
 Drupal.behaviors.verticalTabs = {
   attach: function (context) {
-    $('.vertical-tabs-panes:not(.vertical-tabs-processed)', context).each(function () {
+    $('.vertical-tabs-panes', context).once('vertical-tabs', function () {
       var focusID = $(':hidden.vertical-tabs-active-tab', this).val();
       var focus;
       // Create the tab column.
@@ -42,7 +42,7 @@ Drupal.behaviors.verticalTabs = {
         focus = $('> .vertical-tabs-pane:first', this);
       }
       focus.data('verticalTab').focus();
-    }).addClass('vertical-tabs-processed');
+    });
   }
 };
 

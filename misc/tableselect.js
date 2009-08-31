@@ -3,7 +3,7 @@
 
 Drupal.behaviors.tableSelect = {
   attach: function (context, settings) {
-    $('form table:has(th.select-all):not(.tableSelect-processed)', context).each(Drupal.tableSelect);
+    $('form table:has(th.select-all)', context).once('table-select', Drupal.tableSelect);
   }
 };
 
@@ -56,7 +56,6 @@ Drupal.tableSelect = function () {
     // Keep track of the last checked checkbox.
     lastChecked = e.target;
   });
-  $(this).addClass('tableSelect-processed');
 };
 
 Drupal.tableSelectRange = function (from, to, state) {

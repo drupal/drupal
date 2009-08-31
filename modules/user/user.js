@@ -8,8 +8,8 @@
 Drupal.behaviors.password = {
   attach: function (context, settings) {
     var translate = settings.password;
-    $('input.password-field:not(.password-processed)', context).each(function () {
-      var passwordInput = $(this).addClass('password-processed');
+    $('input.password-field', context).once('password', function () {
+      var passwordInput = $(this);
       var innerWrapper = $(this).parent();
       var outerWrapper = $(this).parent().parent();
 

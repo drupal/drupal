@@ -61,8 +61,7 @@ Drupal.behaviors.formUpdated = {
 Drupal.behaviors.multiselectSelector = {
   attach: function (context, settings) {
     // Automatically selects the right radio button in a multiselect control.
-    $('.multiselect select:not(.multiselectSelector-processed)', context)
-      .addClass('multiselectSelector-processed').change(function () {
+    $('.multiselect select', context).once('multiselect').change(function () {
         $('.multiselect input:radio[value="' + this.id.substr(5) + '"]')
           .attr('checked', true);
     });
@@ -75,8 +74,7 @@ Drupal.behaviors.multiselectSelector = {
  */
 Drupal.behaviors.filterGuidelines = {
   attach: function (context) {
-    $('.filter-guidelines:not(.filter-guidelines-processed)', context)
-      .addClass('filter-guidelines-processed')
+    $('.filter-guidelines', context).once('filter-guidelines')
       .find('label').hide()
       .parents('.filter-wrapper').find('select.filter-list')
       .bind('change', function () {

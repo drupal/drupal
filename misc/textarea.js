@@ -3,20 +3,16 @@
 
 Drupal.behaviors.textarea = {
   attach: function (context, settings) {
-    $('textarea.resizable:not(.textarea-processed)', context).each(function () {
-      // Avoid non-processed teasers.
-      if ($(this).is(('textarea.teaser:not(.teaser-processed)'))) {
-        return false;
-      }
-      var textarea = $(this).addClass('textarea-processed'), staticOffset = null;
-
+    $('textarea.resizable', context).once('textarea', function () {
       // When wrapping the text area, work around an IE margin bug. See:
       // http://jaspan.com/ie-inherited-margin-bug-form-elements-and-haslayout
-      $(this).wrap('<div class="resizable-textarea"><span></span></div>')
-        .parent().append($('<div class="grippie"></div>').mousedown(startDrag));
+      var staticOffset = null;
+      var textarea = $(this).wrap('<div class="resizable-textarea"><span></span></div>');
+      var grippie = $('<div class="grippie"></div>').mousedown(startDrag);
 
-      var grippie = $('div.grippie', $(this).parent())[0];
-      grippie.style.marginRight = (grippie.offsetWidth - $(this)[0].offsetWidth) + 'px';
+      grippie
+        .insertAfter(textarea)
+        .css('margin-right', grippie.width() - textarea.width());
 
       function startDrag(e) {
         staticOffset = textarea.height() - e.pageY;

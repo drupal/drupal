@@ -4,10 +4,10 @@
 Drupal.behaviors.color = {
   attach: function (context, settings) {
     // This behavior attaches by ID, so is only valid once on a page.
-    if ($('#color_scheme_form .color-form.color-processed').size()) {
+    var form = $('#system-theme-settings .color-form', context).once('color');
+    if (form.length == 0) {
       return;
     }
-    var form = $('#system-theme-settings .color-form', context);
     var inputs = [];
     var hooks = [];
     var locks = [];
@@ -24,9 +24,7 @@ Drupal.behaviors.color = {
     }
 
     // Build a preview.
-    $('#preview:not(.color-processed)')
-      .append('<div id="gradient"></div>')
-      .addClass('color-processed');
+    $('#preview').once('color').append('<div id="gradient"></div>');
     var gradient = $('#preview #gradient');
     var h = parseInt(gradient.css('height')) / 10;
     for (i = 0; i < h; ++i) {

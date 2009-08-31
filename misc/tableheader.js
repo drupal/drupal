@@ -17,7 +17,7 @@ Drupal.behaviors.tableHeader = {
     // Keep track of all cloned table headers.
     var headers = [];
 
-    $('table.sticky-enabled thead:not(.tableHeader-processed)', context).each(function () {
+    $('table.sticky-enabled thead', context).once('tableheader', function () {
       // Clone thead so it inherits original jQuery properties.
       var headerClone = $(this).clone(true).insertBefore(this.parentNode).wrap('<table class="sticky-header"></table>').parent().css({
         position: 'fixed',
@@ -34,7 +34,6 @@ Drupal.behaviors.tableHeader = {
       tracker(headerClone);
 
       $(table).addClass('sticky-table');
-      $(this).addClass('tableHeader-processed');
     });
 
     // Define the anchor holding var.
@@ -81,11 +80,10 @@ Drupal.behaviors.tableHeader = {
 
     // Only attach to scrollbars once, even if Drupal.attachBehaviors is called
     //  multiple times.
-    if (!$('body').hasClass('tableHeader-processed')) {
-      $('body').addClass('tableHeader-processed');
+    $('body').once(function () {
       $(window).scroll(Drupal.tableHeaderDoScroll);
       $(document.documentElement).scroll(Drupal.tableHeaderDoScroll);
-    }
+    });
 
     // Track scrolling.
     Drupal.tableHeaderOnScroll = function () {

@@ -15,17 +15,11 @@
 Drupal.behaviors.tableDrag = {
   attach: function (context, settings) {
     for (var base in settings.tableDrag) {
-      if (!$('#' + base + '.tabledrag-processed', context).size()) {
-        var tableSettings = settings.tableDrag[base];
-
-        $('#' + base).filter(':not(.tabledrag-processed)').each(function () {
-          // Create the new tableDrag instance. Save in the Drupal variable
-          // to allow other scripts access to the object.
-          Drupal.tableDrag[base] = new Drupal.tableDrag(this, tableSettings);
-        });
-
-        $('#' + base).addClass('tabledrag-processed');
-      }
+      $('#' + base, context).once('tabledrag', function () {
+        // Create the new tableDrag instance. Save in the Drupal variable
+        // to allow other scripts access to the object.
+        Drupal.tableDrag[base] = new Drupal.tableDrag(this, settings.tableDrag[base]);
+      });
     }
   }
 };

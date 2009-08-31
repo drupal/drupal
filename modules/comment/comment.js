@@ -6,9 +6,7 @@ Drupal.behaviors.comment = {
     $.each(['name', 'homepage', 'mail'], function () {
       var cookie = Drupal.comment.getCookie('comment_info_' + this);
       if (cookie) {
-        $('#comment-form input[name=' + this + ']:not(.comment-processed)', context)
-          .val(cookie)
-          .addClass('comment-processed');
+        $('#comment-form input[name=' + this + ']', context).once('comment').val(cookie);
       }
     });
   }

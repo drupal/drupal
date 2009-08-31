@@ -7,7 +7,7 @@
 Drupal.behaviors.autocomplete = {
   attach: function (context, settings) {
     var acdb = [];
-    $('input.autocomplete:not(.autocomplete-processed)', context).each(function () {
+    $('input.autocomplete', context).once('autocomplete', function () {
       var uri = this.value;
       if (!acdb[uri]) {
         acdb[uri] = new Drupal.ACDB(uri);
@@ -16,7 +16,6 @@ Drupal.behaviors.autocomplete = {
         .attr('autocomplete', 'OFF')[0];
       $(input.form).submit(Drupal.autocompleteSubmit);
       new Drupal.jsAC(input, acdb[uri]);
-      $(this).addClass('autocomplete-processed');
     });
   }
 };
