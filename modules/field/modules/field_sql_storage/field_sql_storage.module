@@ -138,12 +138,6 @@ function _field_sql_storage_schema($field) {
         'not null' => FALSE,
         'description' => 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
       ),
-      'delta' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'The sequence number for this data item, used for multi-value fields',
-      ),
       // @todo Consider storing language as integer.
       'language' => array(
         'type' => 'varchar',
@@ -152,9 +146,23 @@ function _field_sql_storage_schema($field) {
         'default' => '',
         'description' => 'The language for this data item.',
       ),
+      'delta' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The sequence number for this data item, used for multi-value fields',
+      ),
     ),
+    // @todo Is the primary key needed at all ?
     'primary key' => array('etid', 'entity_id', 'deleted', 'delta', 'language'),
-    // TODO : index on 'bundle'
+    'indexes' => array(
+      'etid' => array('etid'),
+      'bundle' => array('bundle'),
+      'deleted' => array('deleted'),
+      'entity_id' => array('entity_id'),
+      'revision_id' => array('revision_id'),
+      'language' => array('language'),
+    ),
   );
 
   // Add field columns.
@@ -461,6 +469,21 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $count, &
     if (in_array($column, $field_columns)) {
       $column = _field_sql_storage_columnname($field_name, $column);
     }
+    // Translate entity types into numeric ids. Expressing the condition on the
+    // local 'etid' column rather than the JOINed 'type' column avoids a
+    // filesort.
+    if ($column == 'type') {
+      $column = 't.etid';
+      if (is_array($value)) {
+        foreach (array_keys($value) as $key) {
+          $value[$key] = _field_sql_storage_etid($value[$key]);
+        }
+      }
+      else {
+        $value = _field_sql_storage_etid($value);
+      }
+    }
+
     $query->condition($column, $value, $operator);
 
     if ($column == 'deleted') {
