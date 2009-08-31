@@ -1,4 +1,4 @@
-// $Id: timezone.js,v 1.6 2009/04/27 20:19:35 webchick Exp $
+// $Id: timezone.js,v 1.7 2009/08/31 05:51:08 dries Exp $
 (function ($) {
 
 /**
@@ -6,7 +6,7 @@
  */
 Drupal.behaviors.setTimezone = {
   attach: function (context, settings) {
-    $('select.timezone-detect:not(.timezone-processed)', context).addClass('timezone-processed').each(function () {
+    $('select.timezone-detect', context).once('timezone', function () {
       var dateString = Date();
       // In some client environments, date strings include a time zone
       // abbreviation, between 3 and 5 letters enclosed in parentheses,

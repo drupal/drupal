@@ -1,4 +1,4 @@
-// $Id: user.js,v 1.16 2009/08/21 14:27:47 dries Exp $
+// $Id: user.js,v 1.17 2009/08/31 05:51:08 dries Exp $
 (function ($) {
 
 /**
@@ -8,8 +8,8 @@
 Drupal.behaviors.password = {
   attach: function (context, settings) {
     var translate = settings.password;
-    $('input.password-field:not(.password-processed)', context).each(function () {
-      var passwordInput = $(this).addClass('password-processed');
+    $('input.password-field', context).once('password', function () {
+      var passwordInput = $(this);
       var innerWrapper = $(this).parent();
       var outerWrapper = $(this).parent().parent();
 

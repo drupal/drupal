@@ -1,4 +1,4 @@
-// $Id: batch.js,v 1.9 2009/04/27 20:19:35 webchick Exp $
+// $Id: batch.js,v 1.10 2009/08/31 05:51:07 dries Exp $
 (function ($) {
 
 /**
@@ -6,11 +6,7 @@
  */
 Drupal.behaviors.batch = {
   attach: function (context, settings) {
-    // This behavior attaches by ID, so is only valid once on a page.
-    if ($('#progress.batch-processed').size()) {
-      return;
-    }
-    $('#progress', context).addClass('batch-processed').each(function () {
+    $('#progress', context).once('batch', function () {
       var holder = $(this);
 
       // Success: redirect to the summary.

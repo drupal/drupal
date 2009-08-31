@@ -1,4 +1,4 @@
-// $Id: comment.js,v 1.11 2009/04/27 20:19:36 webchick Exp $
+// $Id: comment.js,v 1.12 2009/08/31 05:51:08 dries Exp $
 (function ($) {
 
 Drupal.behaviors.comment = {
@@ -6,9 +6,7 @@ Drupal.behaviors.comment = {
     $.each(['name', 'homepage', 'mail'], function () {
       var cookie = Drupal.comment.getCookie('comment_info_' + this);
       if (cookie) {
-        $('#comment-form input[name=' + this + ']:not(.comment-processed)', context)
-          .val(cookie)
-          .addClass('comment-processed');
+        $('#comment-form input[name=' + this + ']', context).once('comment').val(cookie);
       }
     });
   }

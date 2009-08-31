@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.29 2009/06/10 05:06:57 dries Exp $
+// $Id: tabledrag.js,v 1.30 2009/08/31 05:51:08 dries Exp $
 (function ($) {
 
 /**
@@ -15,17 +15,11 @@
 Drupal.behaviors.tableDrag = {
   attach: function (context, settings) {
     for (var base in settings.tableDrag) {
-      if (!$('#' + base + '.tabledrag-processed', context).size()) {
-        var tableSettings = settings.tableDrag[base];
-
-        $('#' + base).filter(':not(.tabledrag-processed)').each(function () {
-          // Create the new tableDrag instance. Save in the Drupal variable
-          // to allow other scripts access to the object.
-          Drupal.tableDrag[base] = new Drupal.tableDrag(this, tableSettings);
-        });
-
-        $('#' + base).addClass('tabledrag-processed');
-      }
+      $('#' + base, context).once('tabledrag', function () {
+        // Create the new tableDrag instance. Save in the Drupal variable
+        // to allow other scripts access to the object.
+        Drupal.tableDrag[base] = new Drupal.tableDrag(this, settings.tableDrag[base]);
+      });
     }
   }
 };

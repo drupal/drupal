@@ -1,9 +1,9 @@
-// $Id: tableselect.js,v 1.12 2009/04/27 20:19:35 webchick Exp $
+// $Id: tableselect.js,v 1.13 2009/08/31 05:51:08 dries Exp $
 (function ($) {
 
 Drupal.behaviors.tableSelect = {
   attach: function (context, settings) {
-    $('form table:has(th.select-all):not(.tableSelect-processed)', context).each(Drupal.tableSelect);
+    $('form table:has(th.select-all)', context).once('table-select', Drupal.tableSelect);
   }
 };
 
@@ -56,7 +56,6 @@ Drupal.tableSelect = function () {
     // Keep track of the last checked checkbox.
     lastChecked = e.target;
   });
-  $(this).addClass('tableSelect-processed');
 };
 
 Drupal.tableSelectRange = function (from, to, state) {

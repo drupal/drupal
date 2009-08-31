@@ -1,4 +1,4 @@
-// $Id: toolbar.js,v 1.1 2009/07/04 05:37:30 dries Exp $
+// $Id: toolbar.js,v 1.2 2009/08/31 05:51:08 dries Exp $
 (function ($) {
 
 /**
@@ -8,18 +8,12 @@ Drupal.behaviors.admin = {
   attach: function() {
 
     // Set the intial state of the toolbar.
-    $('#toolbar:not(.processed)').each(function() {
-      Drupal.admin.toolbar.init();
-      $(this).addClass('processed');
-    });
+    $('#toolbar', context).once('toolbar', Drupal.admin.toolbar.init);
 
     // Toggling of admin shortcuts visibility.
-    $('#toolbar span.toggle:not(.processed)').each(function() {
-      $(this).click(function() {
-        Drupal.admin.toolbar.toggle();
-        return false;
-      });
-      $(this).addClass('processed');
+    $('#toolbar span.toggle', context).once('toolbar-toggle').click(function() {
+      Drupal.admin.toolbar.toggle();
+      return false;
     });
   }
 };

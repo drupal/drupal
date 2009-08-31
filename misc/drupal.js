@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.57 2009/08/17 07:12:15 webchick Exp $
+// $Id: drupal.js,v 1.58 2009/08/31 05:51:07 dries Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
@@ -11,7 +11,6 @@ if ($ === undefined) {
     alert('Please wrap your JavaScript code in (function ($) { ... })(jQuery); to be compatible. See http://docs.jquery.com/Using_jQuery_with_Other_Libraries.');
   };
 }
-
 
 (function ($) {
 
@@ -38,10 +37,15 @@ if ($ === undefined) {
  * loaded, feeding in an element to be processed, in order to attach all
  * behaviors to the new content.
  *
- * Behaviors should use a class in the form behaviorName-processed to ensure
- * the behavior is attached only once to a given element. (Doing so enables
- * the reprocessing of given elements, which may be needed on occasion despite
- * the ability to limit behavior attachment to a particular element.)
+ * Behaviors should use
+ * @code
+ *   $(selector).once('behavior-name', function () {
+ *     ...
+ *   });
+ * @endcode
+ * to ensure the behavior is attached only once to a given element. (Doing so
+ * enables the reprocessing of given elements, which may be needed on occasion
+ * despite the ability to limit behavior attachment to a particular element.)
  *
  * @param context
  *   An element to attach behaviors to. If none is given, the document element

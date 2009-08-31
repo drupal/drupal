@@ -1,4 +1,4 @@
-// $Id: collapse.js,v 1.23 2009/04/27 20:19:35 webchick Exp $
+// $Id: collapse.js,v 1.24 2009/08/31 05:51:07 dries Exp $
 (function ($) {
 
 /**
@@ -53,7 +53,7 @@ Drupal.collapseScrollIntoView = function (node) {
 
 Drupal.behaviors.collapse = {
   attach: function (context, settings) {
-    $('fieldset.collapsible > legend:not(.collapse-processed)', context).each(function () {
+    $('fieldset.collapsible > legend', context).once('collapse', function () {
       var fieldset = $(this.parentNode);
       // Expand if there are errors inside
       if ($('input.error, textarea.error, select.error', fieldset).size() > 0) {
@@ -81,9 +81,10 @@ Drupal.behaviors.collapse = {
           return false;
         }))
         .append(summary)
-        .after($('<div class="fieldset-wrapper"></div>')
-          .append(fieldset.children(':not(legend):not(.action)'))
-        ).addClass('collapse-processed');
+        .after(
+          $('<div class="fieldset-wrapper"></div>')
+            .append(fieldset.children(':not(legend):not(.action)'))
+        );
     });
   }
 };

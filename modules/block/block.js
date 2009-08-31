@@ -1,4 +1,4 @@
-// $Id: block.js,v 1.10 2009/08/04 06:26:52 webchick Exp $
+// $Id: block.js,v 1.11 2009/08/31 05:51:08 dries Exp $
 (function ($) {
 
 /**
@@ -51,7 +51,7 @@ Drupal.behaviors.blockDrag = {
     };
 
     // Add the behavior to each region select list.
-    $('select.block-region-select:not(.blockregionselect-processed)', context).each(function () {
+    $('select.block-region-select', context).once('block-region-select', function () {
       $(this).change(function (event) {
         // Make our new row and select field.
         var row = $(this).parents('tr:first');
@@ -82,7 +82,6 @@ Drupal.behaviors.blockDrag = {
         // Remove focus from selectbox.
         select.get(0).blur();
       });
-      $(this).addClass('blockregionselect-processed');
     });
 
     var checkEmptyRegions = function (table, rowObject) {

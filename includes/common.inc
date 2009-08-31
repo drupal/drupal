@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.977 2009/08/26 15:00:17 dries Exp $
+// $Id: common.inc,v 1.978 2009/08/31 05:51:07 dries Exp $
 
 /**
  * @file
@@ -2960,8 +2960,9 @@ function drupal_add_js($data = NULL, $options = NULL) {
           'preprocess' => TRUE,
         ),
       );
-      // jQuery itself is registered as a library.
+      // Register all required libraries.
       drupal_add_library('system', 'jquery');
+      drupal_add_library('system', 'once');
     }
 
     switch ($options['type']) {
