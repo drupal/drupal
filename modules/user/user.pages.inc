@@ -240,11 +240,7 @@ function template_preprocess_user_profile_category(&$variables) {
 }
 
 /**
- * Form builder; Present the form to edit a given user or profile category.
- *
- * @ingroup forms
- * @see user_edit_validate()
- * @see user_edit_submit()
+ * Menu callback; Present the form to edit a given user or profile category.
  */
 function user_edit($account, $category = 'account') {
   drupal_set_title($account->name);
@@ -530,30 +526,6 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
     }
   }
   drupal_access_denied();
-}
-
-function user_edit_validate($form, &$form_state) {
-  user_module_invoke('validate', $form_state['values'], $form_state['values']['_account'], $form_state['values']['_category']);
-  // Validate input to ensure that non-privileged users can't alter protected data.
-  if ((!user_access('administer users') && array_intersect(array_keys($form_state['values']), array('uid', 'init', 'session'))) || (!user_access('administer permissions') && isset($form_state['values']['roles']))) {
-    watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
-    // set this to a value type field
-    form_set_error('category', t('Detected malicious attempt to alter protected user fields.'));
-  }
-}
-
-function user_edit_submit($form, &$form_state) {
-  $account = $form_state['values']['_account'];
-  $category = $form_state['values']['_category'];
-  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['cancel'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
-  user_module_invoke('submit', $form_state['values'], $account, $category);
-  user_save($account, $form_state['values'], $category);
-
-  // Clear the page cache because pages can contain usernames and/or profile information:
-  cache_clear_all();
-
-  drupal_set_message(t('The changes have been saved.'));
-  return;
 }
 
 /**
