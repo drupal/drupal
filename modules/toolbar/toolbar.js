@@ -1,11 +1,11 @@
-// $Id: toolbar.js,v 1.2 2009/08/31 05:51:08 dries Exp $
+// $Id: toolbar.js,v 1.3 2009/08/31 16:48:37 webchick Exp $
 (function ($) {
 
 /**
  * Implementation of Drupal.behaviors for admin.
  */
 Drupal.behaviors.admin = {
-  attach: function() {
+  attach: function(context) {
 
     // Set the intial state of the toolbar.
     $('#toolbar', context).once('toolbar', Drupal.admin.toolbar.init);
