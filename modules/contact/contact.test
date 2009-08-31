@@ -29,7 +29,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['contact_hourly_threshold'] = 3;
     $edit['contact_default_status'] = TRUE;
-    $this->drupalPost('admin/settings/contact', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/contact/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
 
     // Delete old categories to ensure that new categories are used.
@@ -322,7 +322,7 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['contact_default_status'] = TRUE;
     $edit['contact_hourly_threshold'] = $flood_control;
-    $this->drupalPost('admin/settings/contact', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/contact/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
 
     // Reload variables.
@@ -366,7 +366,7 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     // Disable the personal contact form.
     $edit = array();
     $edit['contact_default_status'] = FALSE;
-    $this->drupalPost('admin/settings/contact', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/contact/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
 
     // Reload variables.

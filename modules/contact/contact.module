@@ -16,11 +16,11 @@ function contact_help($path, $arg) {
       $output .= '<p>' . t("Personal contact forms allow users to be contacted via e-mail, while keeping recipient e-mail addresses private. Users may enable or disable their personal contact forms by editing their <em>My account</em> page. If enabled, a <em>Contact</em> tab leading to their personal contact form is available on their user profile. Site administrators have access to all personal contact forms (even if they have been disabled). The <em>Contact</em> tab is only visible when viewing another user's profile (users do not see their own <em>Contact</em> tab).") . '</p>';
       $output .= '<p>' . t('The <a href="@contact">contact page</a> provides a simple form for visitors to leave comments, feedback, or other requests. Messages are routed by selecting a category from a list of administrator-defined options; each category has its own set of e-mail recipients. Common categories for a business site include, for example, "Website feedback" (messages are forwarded to web site administrators) and "Product information" (messages are forwarded to members of the sales department). The actual e-mail addresses defined within a category are not displayed. Only users in roles with the <em>access site-wide contact form</em> permission may access the <a href="@contact">contact page</a>.', array('@contact' => url('contact'))) . '</p>';
       $output .= '<p>' . t('A link to your site\'s <a href="@contact">contact page</a> from the main <em>Navigation</em> menu is created, but is disabled by default. Create a similar link on another menu by adding a menu item pointing to the path "contact"', array('@contact' => url('contact'))) . '</p>';
-      $output .= '<p>' . t('Customize the <a href="@contact">contact page</a> with additional information (like physical location, mailing address, and telephone number) using the <a href="@contact-settings">contact form settings page</a>. The <a href="@contact-settings">settings page</a> also provides configuration options for the maximum number of contact form submissions a user may perform per hour, and the default status of users\' personal contact forms.', array('@contact-settings' => url('admin/settings/contact'), '@contact' => url('contact'))) . '</p>';
+      $output .= '<p>' . t('Customize the <a href="@contact">contact page</a> with additional information (like physical location, mailing address, and telephone number) using the <a href="@contact-settings">contact form settings page</a>. The <a href="@contact-settings">settings page</a> also provides configuration options for the maximum number of contact form submissions a user may perform per hour, and the default status of users\' personal contact forms.', array('@contact-settings' => url('admin/structure/contact/settings'), '@contact' => url('contact'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@contact">Contact module</a>.', array('@contact' => url('http://drupal.org/handbook/modules/contact/', array('absolute' => TRUE)))) . '</p>';
       return $output;
     case 'admin/structure/contact':
-      $output = '<p>' . t('This page lets you set up <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/settings/contact'), '@form' => url('contact'))) . '</p>';
+      $output = '<p>' . t('This page lets you set up <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/structure/contact/settings'), '@form' => url('contact'))) . '</p>';
       if (!module_exists('menu')) {
         $menu_note = t('The menu item can be customized and configured only once the menu module has been <a href="@modules-page">enabled</a>.', array('@modules-page' => url('admin/settings/modules')));
       }
@@ -90,13 +90,14 @@ function contact_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'contact.admin.inc',
   );
-  $items['admin/settings/contact'] = array(
-    'title' => 'Contact form',
-    'description' => 'Toggle personal contact forms and maximum contact form submissions.',
+  $items['admin/structure/contact/settings'] = array(
+    'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_settings'),
     'access arguments' => array('administer site-wide contact form'),
     'file' => 'contact.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
   );
   $items['contact'] = array(
     'title' => 'Contact',
