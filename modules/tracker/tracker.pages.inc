@@ -8,63 +8,67 @@
 
 
 /**
- * Menu callback. Prints a listing of active nodes on the site.
+ * Menu callback; prints a listing of active nodes on the site.
  */
 function tracker_page($account = NULL, $set_title = FALSE) {
-  // TODO: These queries are very expensive, see http://drupal.org/node/105639
-  $query = db_select('node', 'n', array('target' => 'slave'))->extend('PagerDefault');
-  $query->join('users', 'u', 'n.uid = u.uid');
-  $query->join('node_comment_statistics', 'l', 'n.nid = l.nid');
-  $query->addExpression('GREATEST(n.changed, l.last_comment_timestamp)', 'last_updated');
-  $query
-    ->distinct()
-    ->fields('n', array('nid', 'title', 'type', 'changed', 'uid'))
-    ->fields('u', array('name'))
-    ->fields('l', array('comment_count'))
-    ->condition('n.status', 1)
-    ->orderBy('last_updated', 'DESC')
-    ->addTag('node_access')
-    ->limit(25);
-
   if ($account) {
+    $query = db_select('tracker_user', 't')->extend('PagerDefault');
+    $query->condition('t.uid', $account->uid);
+
     if ($set_title) {
       // When viewed from user/%user/track, display the name of the user
       // as page title -- the tab title remains Track so this needs to be done
       // here and not in the menu definition.
       drupal_set_title($account->name);
     }
-    $query->leftJoin('comment', 'c', 'n.nid = c.nid AND (c.status = :status OR c.status IS NULL)', array(':status' => COMMENT_PUBLISHED));
-    $query->condition(db_or()
-      ->condition('n.uid', $account->uid)
-      ->condition('c.uid', $account->uid)
-    );
+  }
+  else {
+    $query = db_select('tracker_node', 't')->extend('PagerDefault');
   }
 
-  $result = $query->execute();
+  // This array acts as a placeholder for the data selected later
+  // while keeping the correct order.
+  $nodes = $query
+    ->addTag('node_access')
+    ->fields('t', array('nid', 'changed'))
+    ->condition('t.published', 1)
+    ->orderBy('t.changed', 'DESC')
+    ->limit(25)
+    ->execute()
+    ->fetchAllAssoc('nid');
 
-  $rows = array();
-  foreach ($result as $node) {
-    // Determine the number of comments:
-    $comments = 0;
-    if ($node->comment_count) {
-      $comments = $node->comment_count;
-
-      if ($new = comment_num_new($node->nid)) {
-        $comments .= '<br />';
-        $comments .= l(format_plural($new, '1 new', '@count new'), "node/$node->nid", array('query' => comment_new_page_count($node->comment_count, $new, $node), 'fragment' => 'new'));
-      }
+  if (!empty($nodes)) {
+    // Now, get the data and put into the placeholder array
+    $result = db_query('SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.nid IN (:nids)', array(':nids' => array_keys($nodes)));
+    foreach ($result as $node) {
+      $node->last_activity = $nodes[$node->nid]->changed;
+      $nodes[$node->nid] = $node;
     }
 
-    $rows[] = array(
-      check_plain(node_type_get_name($node->type)),
-      l($node->title, "node/$node->nid") . ' ' . theme('mark', node_mark($node->nid, $node->changed)),
-      theme('username', $node),
-      array('class' => array('replies'), 'data' => $comments),
-      t('!time ago', array('!time' => format_interval(REQUEST_TIME - $node->last_updated)))
-    );
-  }
+    // Finally display the data
+    $rows = array();
+    foreach ($nodes as $node) {
+      // Determine the number of comments:
+      $comments = 0;
+      if ($node->comment_count) {
+        $comments = $node->comment_count;
 
-  if (!$rows) {
+        if ($new = comment_num_new($node->nid)) {
+          $comments .= '<br />';
+          $comments .= l(format_plural($new, '1 new', '@count new'), 'node/'. $node->nid, array('fragment' => 'new'));
+        }
+      }
+
+      $rows[] = array(
+        check_plain(node_type_get_name($node->type)),
+        l($node->title, 'node/' . $node->nid) . ' ' . theme('mark', node_mark($node->nid, $node->changed)),
+        theme('username', $node),
+        array('class' => array('replies'), 'data' => $comments),
+        t('!time ago', array('!time' => format_interval(REQUEST_TIME - $node->last_activity)))
+      );
+    }
+  }
+  else {
     $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '5'));
   }
 
