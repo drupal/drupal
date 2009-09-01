@@ -7,3 +7,4 @@ version = VERSION
 core = 7.x
 files[] = color.module
 files[] = color.install
+files[] = color.test

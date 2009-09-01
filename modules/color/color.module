@@ -31,7 +31,7 @@ function color_theme() {
  * Implement hook_form_FORM_ID_alter().
  */
 function color_form_system_theme_settings_alter(&$form, &$form_state) {
-  if (color_get_info(arg(4)) && function_exists('gd_info')) {
+  if (color_get_info(arg(3)) && function_exists('gd_info')) {
     $form['color'] = array(
       '#type' => 'fieldset',
       '#title' => t('Color scheme'),
@@ -39,7 +39,7 @@ function color_form_system_theme_settings_alter(&$form, &$form_state) {
       '#attributes' => array('id' => 'color_scheme_form'),
       '#theme' => 'color_scheme_form',
     );
-    $form['color'] += color_scheme_form($form_state, arg(4));
+    $form['color'] += color_scheme_form($form_state, arg(3));
     $form['#submit'][] = 'color_scheme_form_submit';
   }
 }
@@ -71,44 +71,26 @@ function _color_theme_select_form_alter(&$form, &$form_state) {
  */
 function _color_page_alter(&$vars) {
   global $language, $theme_key;
+  $themes = list_themes();
 
   // Override stylesheets.
   $color_paths = variable_get('color_' . $theme_key . '_stylesheets', array());
   if (!empty($color_paths)) {
-    // Loop over theme CSS files and try to rebuild CSS array with rewritten
-    // stylesheets. Keep the original order intact for CSS cascading.
-    $new_theme_css = array();
 
-    foreach ($vars['css']['all']['theme'] as $old_path => $old_preprocess) {
-      // Add the non-colored stylesheet first as we might not find a
-      // re-colored stylesheet for replacement later.
-      $new_theme_css[$old_path] = $old_preprocess;
-
+    foreach ($themes[$theme_key]->stylesheets['all'] as $base_filename => $old_path) {
       // Loop over the path array with recolored CSS files to find matching
       // paths which could replace the non-recolored paths.
       foreach ($color_paths as $color_path) {
         // Color module currently requires unique file names to be used,
         // which allows us to compare different file paths.
         if (basename($old_path) == basename($color_path)) {
-          // Pull out the non-colored and add rewritten stylesheet.
-          unset($new_theme_css[$old_path]);
-          $new_theme_css[$color_path] = $old_preprocess;
-
-          // If the current language is RTL and the CSS file had an RTL variant,
-          // pull out the non-colored and add rewritten RTL stylesheet.
-          if ($language->direction == LANGUAGE_RTL) {
-            $rtl_old_path = str_replace('.css', '-rtl.css', $old_path);
-            $rtl_color_path = str_replace('.css', '-rtl.css', $color_path);
-            if (file_exists($rtl_color_path)) {
-              unset($new_theme_css[$rtl_old_path]);
-              $new_theme_css[$rtl_color_path] = $old_preprocess;
-            }
-          }
-          break;
+          // Replace the path to the new css file.
+          // This keeps the order of the stylesheets intact.
+          $vars['css'][$old_path]['data'] = $color_path;
         }
       }
     }
-    $vars['css']['all']['theme'] = $new_theme_css;
+
     $vars['styles'] = drupal_get_css($vars['css']);
   }
 
@@ -204,7 +186,7 @@ function color_scheme_form(&$form_state, $theme) {
       '#size' => 8,
     );
   }
-  $form['theme'] = array('#type' => 'value', '#value' => arg(4));
+  $form['theme'] = array('#type' => 'value', '#value' => arg(3));
   $form['info'] = array('#type' => 'value', '#value' => $info);
 
   return $form;
@@ -298,7 +280,7 @@ function color_scheme_form_submit($form, &$form_state) {
 
   // Prepare target locations for generated files.
   $id = $theme . '-' . substr(md5(serialize($palette) . microtime()), 0, 8);
-  $paths['color'] = file_directory_path() . '/color';
+  $paths['color'] = 'public://color';
   $paths['target'] = $paths['color'] . '/' . $id;
   foreach ($paths as $path) {
     file_prepare_directory($path, FILE_CREATE_DIRECTORY);
@@ -486,7 +468,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
   foreach ($info['slices'] as $file => $coord) {
     list($x, $y, $width, $height) = $coord;
     $base = basename($file);
-    $image = $paths['target'] . $base;
+    $image = drupal_realpath($paths['target'] . $base);
 
     // Cut out slice.
     if ($file == 'screenshot.png') {

@@ -65,6 +65,12 @@ function garland_preprocess_page(&$vars) {
   }
   $vars['site_html'] = implode(' ', $site_fields);
 
+}
+
+/**
+ * Override process function used to alter variables as late as possible.
+ */
+function garland_process_page(&$vars) {
   // Hook into color.module
   if (module_exists('color')) {
     _color_page_alter($vars);
