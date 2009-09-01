@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.28 2009/08/29 04:16:15 webchick Exp $
+// $Id: template.php,v 1.29 2009/09/01 20:39:55 webchick Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -65,6 +65,12 @@ function garland_preprocess_page(&$vars) {
   }
   $vars['site_html'] = implode(' ', $site_fields);
 
+}
+
+/**
+ * Override process function used to alter variables as late as possible.
+ */
+function garland_process_page(&$vars) {
   // Hook into color.module
   if (module_exists('color')) {
     _color_page_alter($vars);
