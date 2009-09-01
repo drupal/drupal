@@ -410,6 +410,8 @@ function update_do_one($module, $number, &$context) {
   // Record the schema update if it was completed successfully.
   if ($context['finished'] == 1 && empty($context['results'][$module]['#abort'])) {
     drupal_set_installed_schema_version($module, $number);
+    // Conserve memory and avoid errors by resetting all static variables.
+    drupal_static_reset();
   }
 
   $context['message'] = 'Updating ' . check_plain($module) . ' module';
