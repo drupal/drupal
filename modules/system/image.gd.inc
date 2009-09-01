@@ -321,5 +321,38 @@ function image_gd_create_tmp(stdClass $image, $width, $height) {
 }
 
 /**
+ * Get details about an image.
+ *
+ * @param $image
+ *   An image object.
+ * @return
+ *   FALSE, if the file could not be found or is not an image. Otherwise, a
+ *   keyed array containing information about the image:
+ *   - "width": Width, in pixels.
+ *   - "height": Height, in pixels.
+ *   - "extension": Commonly used file extension for the image.
+ *   - "mime_type": MIME type ('image/jpeg', 'image/gif', 'image/png').
+ *
+ * @see image_get_info()
+ */
+function image_gd_get_info(stdClass $image) {
+  $details = FALSE;
+  $data = getimagesize($image->source);
+
+  if (isset($data) && is_array($data)) {
+    $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
+    $extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
+    $details = array(
+      'width'     => $data[0],
+      'height'    => $data[1],
+      'extension' => $extension,
+      'mime_type' => $data['mime'],
+    );
+  }
+
+  return $details;
+}
+
+/**
  * @} End of "ingroup image".
  */

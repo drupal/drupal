@@ -101,36 +101,40 @@ function image_toolkit_invoke($method, stdClass $image, array $params = array())
 /**
  * Get details about an image.
  *
- * Drupal only supports GIF, JPG and PNG file formats.
+ * Drupal supports GIF, JPG and PNG file formats when used with the GD
+ * toolkit, and may support others, depending on which toolkits are
+ * installed.
  *
  * @param $filepath
  *   String specifying the path of the image file.
+ * @param $toolkit
+ *   An optional image toolkit name to override the default.
  * @return
  *   FALSE, if the file could not be found or is not an image. Otherwise, a
  *   keyed array containing information about the image:
- *    'width'     - Width, in pixels.
- *    'height'    - Height, in pixels.
- *    'extension' - Commonly used file extension for the image.
- *    'mime_type' - MIME type ('image/jpeg', 'image/gif', 'image/png').
- *    'file_size' - File size in bytes.
+ *   - "width": Width, in pixels.
+ *   - "height": Height, in pixels.
+ *   - "extension": Commonly used file extension for the image.
+ *   - "mime_type": MIME type ('image/jpeg', 'image/gif', 'image/png').
+ *   - "file_size": File size in bytes.
  */
-function image_get_info($filepath) {
+function image_get_info($filepath, $toolkit = FALSE) {
+  $details = FALSE;
   if (!is_file($filepath)) {
-    return FALSE;
+    return $details;
   }
 
-  $details = FALSE;
-  $data = @getimagesize($filepath);
-  $file_size = @filesize($filepath);
-
-  if (isset($data) && is_array($data)) {
-    $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
-    $extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
-    $details = array('width'     => $data[0],
-                     'height'    => $data[1],
-                     'extension' => $extension,
-                     'file_size' => $file_size,
-                     'mime_type' => $data['mime']);
+  if (!$toolkit) {
+    $toolkit = image_get_toolkit();
+  }
+  if ($toolkit) {
+    $image = new stdClass();
+    $image->source = $filepath;
+    $image->toolkit = $toolkit;
+    $details = image_toolkit_invoke('get_info', $image);
+    if (isset($details) && is_array($details)) {
+      $details['file_size'] = filesize($filepath);
+    }
   }
 
   return $details;
@@ -343,10 +347,12 @@ function image_load($file, $toolkit = FALSE) {
   if ($toolkit) {
     $image = new stdClass();
     $image->source = $file;
-    $image->info = image_get_info($file);
-    $image->toolkit = $toolkit;
-    if (image_toolkit_invoke('load', $image)) {
-      return $image;
+    $image->info = image_get_info($file, $toolkit);
+    if (isset($image->info) && is_array($image->info)) {
+      $image->toolkit = $toolkit;
+      if (image_toolkit_invoke('load', $image)) {
+        return $image;
+      }
     }
   }
   return FALSE;
@@ -374,7 +380,7 @@ function image_save(stdClass $image, $destination = NULL) {
   if ($return = image_toolkit_invoke('save', $image, array($destination))) {
     // Clear the cached file size and refresh the image information.
     clearstatcache();
-    $image->info = image_get_info($destination);
+    $image->info = image_get_info($destination, $image->toolkit);
 
     if (drupal_chmod($destination)) {
       return $return;

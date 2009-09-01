@@ -96,7 +96,7 @@ class ImageToolkitUnitTest extends ImageToolkitTestCase {
     $image = image_load($this->file, $this->toolkit);
     $this->assertTrue(is_object($image), t('Returned an object.'));
     $this->assertEqual($this->toolkit, $image->toolkit, t('Image had toolkit set.'));
-    $this->assertToolkitOperationsCalled(array('load'));
+    $this->assertToolkitOperationsCalled(array('load', 'get_info'));
   }
 
   /**
