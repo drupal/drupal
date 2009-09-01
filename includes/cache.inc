@@ -18,8 +18,8 @@ function _cache_get_object($bin) {
   // storage of a cache bin mid-request.
   static $cache_objects, $default_class;
   if (!isset($cache_objects[$bin])) {
-    $class = variable_get($bin, FALSE);
-    if (empty($class)) {
+    $class = variable_get('cache_class_' . $bin);
+    if (!isset($class)) {
       $class = variable_get('cache_default_class', 'DrupalDatabaseCache');
     }
     $cache_objects[$bin] = new $class($bin);
@@ -152,7 +152,7 @@ function cache_set($cid, $data, $bin = 'cache', $expire = CACHE_PERMANENT, array
  * @param $wildcard
  *   If $wildcard is TRUE, cache IDs starting with $cid are deleted in
  *   addition to the exact cache ID specified by $cid.  If $wildcard is
- *   TRUE and $cid is '*' then the entire table $table is emptied. 
+ *   TRUE and $cid is '*' then the entire table $table is emptied.
  */
 function cache_clear_all($cid = NULL, $bin = NULL, $wildcard = FALSE) {
   if (!isset($cid) && !isset($bin)) {
@@ -398,7 +398,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
         // simulate that the cache was flushed for this user by not returning
         // cached data that was cached before the timestamp.
         $user->cache = REQUEST_TIME;
-  
+
         $cache_flush = variable_get('cache_flush_' . $this->bin, 0);
         if ($cache_flush == 0) {
           // This is the first request to clear the cache, start a timer.
