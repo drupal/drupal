@@ -14,8 +14,9 @@
  * appropriate places in the template. Processed e-mail templates are
  * requested from hook_mail() from the module sending the e-mail. Any module
  * can modify the composed e-mail message array using hook_mail_alter().
- * Finally drupal_mail_send() sends the e-mail, which can be reused
- * if the exact same composed e-mail is to be sent to multiple recipients.
+ * Finally drupal_mail_sending_system()->mail() sends the e-mail, which can
+ * be reused if the exact same composed e-mail is to be sent to multiple
+ * recipients.
  *
  * Finding out what language to send the e-mail with needs some consideration.
  * If you send e-mail to a user, her preferred language should be fine, so
@@ -77,7 +78,8 @@
  * @param $from
  *   Sets From to this value, if given.
  * @param $send
- *   Send the message directly, without calling drupal_mail_send() manually.
+ *   Send the message directly, without calling
+ *   drupal_mail_sending_system()->mail() manually.
  * @return
  *   The $message array structure containing all details of the
  *   message. If already sent ($send = TRUE), then the 'result' element
@@ -165,7 +167,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
  *
  * @code
  * array(
- *   'default-system' => 'DrupalMailSend',
+ *   'default-system' => 'DefaultMailSystem',
  *   'user' => 'DevelMailLog',
  * );
  * @endcode
@@ -175,7 +177,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
  *
  * @code
  * array(
- *   'default-system' => 'DrupalMailSend',
+ *   'default-system' => 'DefaultMailSystem',
  *   'user' => 'DevelMailLog',
  *   'contact_page_autoreply' => 'DrupalDevNullMailSend',
  * );
@@ -197,7 +199,7 @@ function drupal_mail_sending_system($module, $key) {
   $instances = &drupal_static(__FUNCTION__, array());
 
   $id = $module . '_' . $key;
-  $configuration = variable_get('mail_sending_system', array('default-system' => 'DrupalMailSend'));
+  $configuration = variable_get('mail_sending_system', array('default-system' => 'DefaultMailSystem'));
 
   // Look for overrides for the default class, starting from the most specific
   // id, and falling back to the module name.

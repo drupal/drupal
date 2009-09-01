@@ -302,7 +302,7 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
     $this->assertEqual(count($captured_emails), 0, t('The captured e-mails queue is empty.'), t('E-mail'));
 
     // Send the e-mail.
-    $response = drupal_mail_send($message);
+    $response = drupal_mail_sending_system('simpletest', 'drupal_mail_test')->mail($message);
 
     // Ensure that there is one e-mail in the captured e-mails array.
     $captured_emails = $this->drupalGetMails();
@@ -323,7 +323,7 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
         'to' => $this->randomName(32) . '@example.com',
         'body' => $this->randomString(512),
       );
-      drupal_mail_send($message);
+      drupal_mail_sending_system('drupal_mail_test', $index)->mail($message);
     }
 
     // There should now be 6 e-mails captured.
@@ -340,7 +340,7 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
 
     // Send the last e-mail again, so we can confirm that the drupalGetMails-filter
     // correctly returns all e-mails with a given property/value.
-    drupal_mail_send($message);
+    drupal_mail_sending_system('drupal_mail_test', $index)->mail($message);
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test_4'));
     $this->assertEqual(count($captured_emails), 2, t('All e-mails with the same id are returned when filtering by id.'), t('E-mail'));
   }
