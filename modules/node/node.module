@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1117 2009/08/31 17:06:09 dries Exp $
+// $Id: node.module,v 1.1118 2009/09/01 16:50:11 webchick Exp $
 
 /**
  * @file
@@ -1905,7 +1905,7 @@ function node_page_default() {
       $default_links[] = l(t('Create content'), 'node/add');
     }
     if (user_access('administer site configuration')) {
-      $default_links[] = l(t('Change the default front page'), 'admin/settings/site-information');
+      $default_links[] = l(t('Change the default front page'), 'admin/config/system/site-information');
     }
     if (!empty($default_links)) {
       $default_message .= theme('item_list', $default_links);

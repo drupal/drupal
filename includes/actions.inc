@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.29 2009/07/20 18:51:31 dries Exp $
+// $Id: actions.inc,v 1.30 2009/09/01 16:50:11 webchick Exp $
 
 /**
  * @file
@@ -292,7 +292,7 @@ function actions_synchronize($delete_orphans = FALSE) {
       }
     }
     else {
-      $link = l(t('Remove orphaned actions'), 'admin/settings/actions/orphan');
+      $link = l(t('Remove orphaned actions'), 'admin/config/system/actions/orphan');
       $count = count($actions_in_db);
       $orphans = implode(', ', $orphaned);
       watchdog('actions', format_plural($count, 'One orphaned action (%orphans) exists in the actions table. !link', '@count orphaned actions (%orphans) exist in the actions table. !link'), array('@count' => $count, '%orphans' => $orphans, '!link' => $link), WATCHDOG_WARNING);
