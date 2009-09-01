@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.70 2009/08/31 17:45:04 dries Exp $
+// $Id: system.api.php,v 1.71 2009/09/01 17:40:27 webchick Exp $
 
 /**
  * @file
@@ -661,9 +661,9 @@ function hook_image_toolkits() {
  *
  * Email messages sent using functions other than drupal_mail() will not
  * invoke hook_mail_alter(). For example, a contributed module directly
- * calling the drupal_mail_send() or PHP mail() function will not invoke this
- * hook. All core modules use drupal_mail() for messaging, it is best practice
- * but not manditory in contributed modules.
+ * calling the drupal_mail_sending_system()->mail() or PHP mail() function
+ * will not invoke this hook. All core modules use drupal_mail() for
+ * messaging, it is best practice but not manditory in contributed modules.
  *
  * @param $message
  *   An array containing the message data. Keys in this array include:
