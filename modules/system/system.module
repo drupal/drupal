@@ -101,7 +101,7 @@ function system_help($path, $arg) {
       $output .= '<li>' . t('support for enabling and disabling <a href="@themes">themes</a>, which determine the design and presentation of your site. Drupal comes packaged with several core themes and additional contributed themes are available at the <a href="@drupal-themes">Drupal.org theme page</a>.', array('@themes' => url('admin/appearance'), '@drupal-themes' => 'http://drupal.org/project/themes')) . '</li>';
       $output .= '<li>' . t('a robust <a href="@cache-settings">caching system</a> that allows the efficient re-use of previously-constructed web pages and web page components. Drupal stores the pages requested by anonymous users in a compressed format; depending on your site configuration and the amount of your web traffic tied to anonymous visitors, Drupal\'s caching system may significantly increase the speed of your site.', array('@cache-settings' => url('admin/config/development/performance'))) . '</li>';
       $output .= '<li>' . t('a set of routine administrative operations that rely on a correctly-configured <a href="@cron">cron maintenance task</a> to run automatically. A number of other modules, including the feed aggregator, and search also rely on <a href="@cron">cron maintenance tasks</a>. For more information, see the online handbook entry for <a href="@handbook">configuring cron jobs</a>.', array('@cron' => url('admin/reports/status'), '@handbook' => 'http://drupal.org/cron')) . '</li>';
-      $output .= '<li>' . t('basic configuration options for your site, including <a href="@regional-settings">date and time settings</a>, <a href="@file-system">file system settings</a>, <a href="@clean-url">clean URL support</a>, <a href="@site-info">site name and other information</a>, and a <a href="@maintenance-mode">maintenance mode</a> for taking your site temporarily offline.', array('@regional-settings' => url('admin/config/regional/settings'), '@file-system' => url('admin/config/media/file-system'), '@clean-url' => url('admin/config/search/clean-urls'), '@site-info' => url('admin/settings/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</li></ul>';
+      $output .= '<li>' . t('basic configuration options for your site, including <a href="@regional-settings">date and time settings</a>, <a href="@file-system">file system settings</a>, <a href="@clean-url">clean URL support</a>, <a href="@site-info">site name and other information</a>, and a <a href="@maintenance-mode">maintenance mode</a> for taking your site temporarily offline.', array('@regional-settings' => url('admin/config/regional/settings'), '@file-system' => url('admin/config/media/file-system'), '@clean-url' => url('admin/config/search/clean-urls'), '@site-info' => url('admin/config/system/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</li></ul>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@system">System module</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) . '</p>';
       return $output;
     case 'admin/by-module':
@@ -133,15 +133,15 @@ function system_help($path, $arg) {
       if ($user->uid == 1) {
         return '<p>' . t('If you are upgrading to a newer version of Drupal or upgrading contributed modules or themes you may need to run !update-php.', array('!update-php' => l('update.php', 'update.php'))) . '</p>';
       }
-    case 'admin/settings/actions':
-    case 'admin/settings/actions/manage':
+    case 'admin/config/system/actions':
+    case 'admin/config/system/actions/manage':
       $output = '<p>' . t('Actions are individual tasks that the system can do, such as unpublishing a piece of content or banning a user. Modules, such as the trigger module, can fire these actions when certain system events happen; for example, when a new post is added or when a user logs in. Modules may also provide additional actions.') . '</p>';
       $output .= '<p>' . t('There are two types of actions: simple and advanced. Simple actions do not require any additional configuration, and are listed here automatically. Advanced actions can do more than simple actions; for example, send an e-mail to a specified address, or check for certain words within a piece of content. These actions need to be created and configured first before they may be used. To create an advanced action, select the action from the drop-down below and click the <em>Create</em> button.') . '</p>';
       if (module_exists('trigger')) {
         $output .= '<p>' . t('You may proceed to the <a href="@url">Triggers</a> page to assign these actions to system events.', array('@url' => url('admin/structure/trigger'))) . '</p>';
       }
       return $output;
-    case 'admin/settings/actions/configure':
+    case 'admin/config/system/actions/configure':
       return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended, in order to better identify the precise action taking place. This description will be displayed in modules such as the trigger module when assigning actions to system events, so it is best if it is as descriptive as possible (for example, "Send e-mail to Moderation Team" rather than simply "Send e-mail").');
     case 'admin/config/people/ip-blocking':
       return '<p>' . t('IP addresses listed here are blocked from your site before any modules are loaded. You may add IP addresses to the list, or delete existing entries.') . '</p>';
@@ -670,14 +670,14 @@ function system_menu() {
   );
 
   // Actions.
-  $items['admin/settings/actions'] = array(
+  $items['admin/config/system/actions'] = array(
     'title' => 'Actions',
     'description' => 'Manage the actions defined for your site.',
     'access arguments' => array('administer actions'),
     'page callback' => 'system_actions_manage',
     'file' => 'system.admin.inc',
   );
-  $items['admin/settings/actions/manage'] = array(
+  $items['admin/config/system/actions/manage'] = array(
     'title' => 'Manage actions',
     'description' => 'Manage the actions defined for your site.',
     'page callback' => 'system_actions_manage',
@@ -685,7 +685,7 @@ function system_menu() {
     'weight' => -2,
     'file' => 'system.admin.inc',
   );
-  $items['admin/settings/actions/configure'] = array(
+  $items['admin/config/system/actions/configure'] = array(
     'title' => 'Configure an advanced action',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_actions_configure'),
@@ -693,16 +693,16 @@ function system_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
-  $items['admin/settings/actions/delete/%actions'] = array(
+  $items['admin/config/system/actions/delete/%actions'] = array(
     'title' => 'Delete action',
     'description' => 'Delete an action.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_actions_delete_form', 4),
+    'page arguments' => array('system_actions_delete_form', 5),
     'access arguments' => array('administer actions'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
-  $items['admin/settings/actions/orphan'] = array(
+  $items['admin/config/system/actions/orphan'] = array(
     'title' => 'Remove orphans',
     'page callback' => 'system_actions_remove_orphans',
     'access arguments' => array('administer actions'),
@@ -866,15 +866,23 @@ function system_menu() {
     'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
-
-  // Settings.
-  $items['admin/settings/site-information'] = array(
+  $items['admin/config/system'] = array(
+    'title' => 'System',
+    'description' => 'General system related configuration.',
+    'position' => 'right',
+    'weight' => -5,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
     'description' => 'Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
+    'weight' => -10,
   );
 
   // Reports.
@@ -2530,8 +2538,8 @@ function system_actions_manage() {
     $row[] = array(
       array('data' => $action->type),
       array('data' => $action->description),
-      array('data' => $action->parameters ? l(t('configure'), "admin/settings/actions/configure/$action->aid") : ''),
-      array('data' => $action->parameters ? l(t('delete'), "admin/settings/actions/delete/$action->aid") : '')
+      array('data' => $action->parameters ? l(t('configure'), "admin/config/system/actions/configure/$action->aid") : ''),
+      array('data' => $action->parameters ? l(t('delete'), "admin/config/system/actions/delete/$action->aid") : '')
     );
   }
 
@@ -2588,7 +2596,7 @@ function system_actions_manage_form($form_state, $options = array()) {
  */
 function system_actions_manage_form_submit($form, &$form_state) {
   if ($form_state['values']['action']) {
-    $form_state['redirect'] = 'admin/settings/actions/configure/' . $form_state['values']['action'];
+    $form_state['redirect'] = 'admin/config/system/actions/configure/' . $form_state['values']['action'];
   }
 }
 
@@ -2611,7 +2619,7 @@ function system_actions_manage_form_submit($form, &$form_state) {
  */
 function system_actions_configure($form_state, $action = NULL) {
   if ($action === NULL) {
-    drupal_goto('admin/settings/actions');
+    drupal_goto('admin/config/system/actions');
   }
 
   $actions_map = actions_actions_map(actions_list());
@@ -2703,7 +2711,7 @@ function system_actions_configure_submit($form, &$form_state) {
   actions_save($function, $form_state['values']['actions_type'], $params, $form_state['values']['actions_description'], $aid);
   drupal_set_message(t('The action has been successfully saved.'));
 
-  $form_state['redirect'] = 'admin/settings/actions/manage';
+  $form_state['redirect'] = 'admin/config/system/actions/manage';
 }
 
 /**
@@ -2720,7 +2728,7 @@ function system_actions_delete_form($form_state, $action) {
   );
   return confirm_form($form,
     t('Are you sure you want to delete the action %action?', array('%action' => $action->description)),
-    'admin/settings/actions/manage',
+    'admin/config/system/actions/manage',
     t('This cannot be undone.'),
     t('Delete'), t('Cancel')
   );
@@ -2738,7 +2746,7 @@ function system_actions_delete_form_submit($form, &$form_state) {
   $description = check_plain($action->description);
   watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $description));
   drupal_set_message(t('Action %action was deleted', array('%action' => $description)));
-  $form_state['redirect'] = 'admin/settings/actions/manage';
+  $form_state['redirect'] = 'admin/config/system/actions/manage';
 }
 
 /**
@@ -2758,7 +2766,7 @@ function system_action_delete_orphans_post($orphaned) {
  */
 function system_actions_remove_orphans() {
   actions_synchronize(TRUE);
-  drupal_goto('admin/settings/actions/manage');
+  drupal_goto('admin/config/system/actions/manage');
 }
 
 /**

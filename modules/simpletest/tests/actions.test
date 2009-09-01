@@ -19,17 +19,17 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
     $user = $this->drupalCreateUser(array('administer actions'));
     $this->drupalLogin($user);
 
-    // Make a POST request to admin/settings/actions/manage.
+    // Make a POST request to admin/config/system/actions/manage.
     $edit = array();
     $edit['action'] = md5('system_goto_action');
-    $this->drupalPost('admin/settings/actions/manage', $edit, t('Create'));
+    $this->drupalPost('admin/config/system/actions/manage', $edit, t('Create'));
 
     // Make a POST request to the individual action configuration page.
     $edit = array();
     $action_description = $this->randomName();
     $edit['actions_description'] = $action_description;
     $edit['url'] = 'admin';
-    $this->drupalPost('admin/settings/actions/configure/' . md5('system_goto_action'), $edit, t('Save'));
+    $this->drupalPost('admin/config/system/actions/configure/' . md5('system_goto_action'), $edit, t('Save'));
 
     // Make sure that the new complex action was saved properly.
     $this->assertText(t('The action has been successfully saved.'), t("Make sure we get a confirmation that we've successfully saved the complex action."));
@@ -41,7 +41,7 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
     $new_action_description = $this->randomName();
     $edit['actions_description'] = $new_action_description;
     $edit['url'] = 'admin';
-    $this->drupalPost('admin/settings/actions/configure/1', $edit, t('Save'));
+    $this->drupalPost('admin/config/system/actions/configure/1', $edit, t('Save'));
 
     // Make sure that the action updated properly.
     $this->assertText(t('The action has been successfully saved.'), t("Make sure we get a confirmation that we've successfully updated the complex action."));
@@ -51,11 +51,11 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
     // Make sure that deletions work properly.
     $this->clickLink(t('delete'));
     $edit = array();
-    $this->drupalPost('admin/settings/actions/delete/1', $edit, t('Delete'));
+    $this->drupalPost('admin/config/system/actions/delete/1', $edit, t('Delete'));
 
     // Make sure that the action was actually deleted.
     $this->assertRaw(t('Action %action was deleted', array('%action' => $new_action_description)), t('Make sure that we get a delete confirmation message.'));
-    $this->drupalGet('admin/settings/actions/manage');
+    $this->drupalGet('admin/config/system/actions/manage');
     $this->assertNoText($new_action_description, t("Make sure the action description does not appear on the overview page after we've deleted the action."));
     $exists = db_query('SELECT aid FROM {actions} WHERE callback = :callback', array(':callback' => 'drupal_goto_action'))->fetchField();
     $this->assertFalse($exists, t('Make sure the action is gone from the database after being deleted.'));

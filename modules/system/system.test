@@ -545,7 +545,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode($edit);
 
     // Use a custom 403 page.
-    $this->drupalPost('admin/settings/site-information', array('site_403' => 'node/' . $node->nid), t('Save configuration'));
+    $this->drupalPost('admin/config/system/site-information', array('site_403' => 'node/' . $node->nid), t('Save configuration'));
 
     $this->drupalGet('admin');
     $this->assertText($node->title, t('Found the custom 403 page'));
@@ -559,7 +559,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
 
     // Log back in and remove the custom 403 page.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('admin/settings/site-information', array('site_403' => ''), t('Save configuration'));
+    $this->drupalPost('admin/config/system/site-information', array('site_403' => ''), t('Save configuration'));
 
     // Logout and check that the user login block is shown on default 403 pages.
     $this->drupalLogout();
@@ -579,7 +579,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
       'name' => $this->admin_user->name,
       'pass' => $this->admin_user->pass_raw,
     );
-    $this->drupalPost('admin/settings/site-information', $edit, t('Log in'));
+    $this->drupalPost('admin/config/system/site-information', $edit, t('Log in'));
 
     // Check that we're still on the same page.
     $this->assertText(t('Site information'));
@@ -622,7 +622,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode($edit);
 
     // Use a custom 404 page.
-    $this->drupalPost('admin/settings/site-information', array('site_404' => 'node/' . $node->nid), t('Save configuration'));
+    $this->drupalPost('admin/config/system/site-information', array('site_404' => 'node/' . $node->nid), t('Save configuration'));
 
     $this->drupalGet($this->randomName(10));
     $this->assertText($node->title, t('Found the custom 404 page'));
@@ -862,12 +862,12 @@ class FrontPageTestCase extends DrupalWebTestCase {
 
     // Change the front page to an invalid path.
     $edit = array('site_frontpage' => 'kittens');
-    $this->drupalPost('admin/settings/site-information', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
     $this->assertText(t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $edit['site_frontpage'])));
 
     // Change the front page to a valid path.
     $edit['site_frontpage'] = $this->node_path;
-    $this->drupalPost('admin/settings/site-information', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('The front page path has been saved.'));
 
     $this->drupalGet('');

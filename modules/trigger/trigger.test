@@ -150,7 +150,7 @@ class TriggerCronTestCase extends DrupalWebTestCase {
       'actions_description' => $action_description,
       'subject' => $action_description,
     );
-    $this->drupalPost('admin/settings/actions/configure/' . $hash, $edit, t('Save'));
+    $this->drupalPost('admin/config/system/actions/configure/' . $hash, $edit, t('Save'));
     $edit = array('aid' => md5('1'));
     $this->drupalPost('admin/structure/trigger/cron', $edit, t('Assign'));
  
@@ -160,7 +160,7 @@ class TriggerCronTestCase extends DrupalWebTestCase {
       'actions_description' => $action_description,
       'subject' => $action_description,
     );
-    $this->drupalPost('admin/settings/actions/configure/' . $hash, $edit, t('Save'));
+    $this->drupalPost('admin/config/system/actions/configure/' . $hash, $edit, t('Save'));
     $edit = array('aid' => md5('2'));
     $this->drupalPost('admin/structure/trigger/cron', $edit, t('Assign'));
  

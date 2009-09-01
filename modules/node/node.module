@@ -1905,7 +1905,7 @@ function node_page_default() {
       $default_links[] = l(t('Create content'), 'node/add');
     }
     if (user_access('administer site configuration')) {
-      $default_links[] = l(t('Change the default front page'), 'admin/settings/site-information');
+      $default_links[] = l(t('Change the default front page'), 'admin/config/system/site-information');
     }
     if (!empty($default_links)) {
       $default_message .= theme('item_list', $default_links);
