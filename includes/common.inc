@@ -3157,7 +3157,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
       case 'external':
         // Preprocessing for external JavaScript files is ignored.
-        $output .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . $item['data'] . "\"></script>\n";
+        $output .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . check_plain($item['data']) . "\"></script>\n";
         break;
     }
   }
