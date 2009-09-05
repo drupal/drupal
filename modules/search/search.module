@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.313 2009/09/05 10:39:57 dries Exp $
+// $Id: search.module,v 1.314 2009/09/05 10:53:09 dries Exp $
 
 /**
  * @file
@@ -271,7 +271,7 @@ function _search_menu_access($name) {
  */
 function search_reindex($sid = NULL, $type = NULL, $reindex = FALSE) {
   if ($type == NULL && $sid == NULL) {
-    module_invoke_all('search', 'reset');
+    module_invoke_all('search_reset');
   }
   else {
     db_delete('search_dataset')
