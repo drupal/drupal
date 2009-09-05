@@ -8,6 +8,36 @@
  */
 
 /**
+ * Node is not published.
+ */
+define('NODE_NOT_PUBLISHED', 0);
+
+/**
+ * Node is published.
+ */
+define('NODE_PUBLISHED', 1);
+
+/**
+ * Node is not promoted to front page.
+ */
+define('NODE_NOT_PROMOTED', 0);
+
+/**
+ * Node is promoted to front page.
+ */
+define('NODE_PROMOTED', 1);
+
+/**
+ * Node is not sticky at top of the page.
+ */
+define('NODE_NOT_STICKY', 0);
+
+/**
+ * Node is sticky at top of the page.
+ */
+define('NODE_STICKY', 1);
+
+/**
  * Nodes changed before this time are always marked as read.
  *
  * Nodes changed after this time may be marked new, updated, or read, depending
@@ -1279,8 +1309,8 @@ function node_search_reset() {
  * Implement hook_search_status().
  */
 function node_search_status() {
-  $total = db_query('SELECT COUNT(*) FROM {node} WHERE status = 1')->fetchField();
-  $remaining = db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = 1 AND d.sid IS NULL OR d.reindex <> 0")->fetchField();
+  $total = db_query('SELECT COUNT(*) FROM {node} WHERE status = %d', NODE_PUBLISHED)->fetchField();
+  $remaining = db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = %d AND d.sid IS NULL OR d.reindex <> 0", NODE_PUBLISHED)->fetchField();
   return array('remaining' => $remaining, 'total' => $total);
 }
 
@@ -2916,7 +2946,7 @@ function node_action_info() {
  * Sets the status of a node to 1, meaning published.
  */
 function node_publish_action($node, $context = array()) {
-  $node->status = 1;
+  $node->status = NODE_PUBLISHED;
   watchdog('action', 'Set @type %title to published.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
@@ -2925,7 +2955,7 @@ function node_publish_action($node, $context = array()) {
  * Sets the status of a node to 0, meaning unpublished.
  */
 function node_unpublish_action($node, $context = array()) {
-  $node->status = 0;
+  $node->status = NODE_NOT_PUBLISHED;
   watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
@@ -2934,7 +2964,7 @@ function node_unpublish_action($node, $context = array()) {
  * Sets the sticky-at-top-of-list property of a node to 1.
  */
 function node_make_sticky_action($node, $context = array()) {
-  $node->sticky = 1;
+  $node->sticky = NODE_STICKY;
   watchdog('action', 'Set @type %title to sticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
@@ -2943,7 +2973,7 @@ function node_make_sticky_action($node, $context = array()) {
  * Sets the sticky-at-top-of-list property of a node to 0.
  */
 function node_make_unsticky_action($node, $context = array()) {
-  $node->sticky = 0;
+  $node->sticky = NODE_NOT_STICKY;
   watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
@@ -2952,7 +2982,7 @@ function node_make_unsticky_action($node, $context = array()) {
  * Sets the promote property of a node to 1.
  */
 function node_promote_action($node, $context = array()) {
-  $node->promote = 1;
+  $node->promote = NODE_PROMOTED;
   watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
@@ -2961,7 +2991,7 @@ function node_promote_action($node, $context = array()) {
  * Sets the promote property of a node to 0.
  */
 function node_unpromote_action($node, $context = array()) {
-  $node->promote = 0;
+  $node->promote = NODE_NOT_PROMOTED;
   watchdog('action', 'Removed @type %title from front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
@@ -3061,7 +3091,7 @@ function node_unpublish_by_keyword_action_submit($form, $form_state) {
 function node_unpublish_by_keyword_action($node, $context) {
   foreach ($context['keywords'] as $keyword) {
     if (strpos(drupal_render(node_build(clone $node)), $keyword) !== FALSE || strpos($node->title, $keyword) !== FALSE) {
-      $node->status = 0;
+      $node->status = NODE_NOT_PUBLISHED;
       watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
       break;
     }

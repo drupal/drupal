@@ -30,32 +30,32 @@ function node_node_operations() {
     'publish' => array(
       'label' => t('Publish'),
       'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => 1)),
+      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED)),
     ),
     'unpublish' => array(
       'label' => t('Unpublish'),
       'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => 0)),
+      'callback arguments' => array('updates' => array('status' => NODE_NOT_PUBLISHED)),
     ),
     'promote' => array(
       'label' => t('Promote to front page'),
       'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => 1, 'promote' => 1)),
+      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'promote' => NODE_PROMOTED)),
     ),
     'demote' => array(
       'label' => t('Demote from front page'),
       'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('promote' => 0)),
+      'callback arguments' => array('updates' => array('promote' => NODE_NOT_PROMOTED)),
     ),
     'sticky' => array(
       'label' => t('Make sticky'),
       'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('status' => 1, 'sticky' => 1)),
+      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'sticky' => NODE_STICKY)),
     ),
     'unsticky' => array(
       'label' => t('Remove stickiness'),
       'callback' => 'node_mass_update',
-      'callback arguments' => array('updates' => array('sticky' => 0)),
+      'callback arguments' => array('updates' => array('sticky' => NODE_NOT_STICKY)),
     ),
     'delete' => array(
       'label' => t('Delete'),
