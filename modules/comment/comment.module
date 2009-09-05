@@ -1023,7 +1023,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       COMMENT_NODE_OPEN => array(
         '#type' => 'radio',
         '#title' => t('Open'),
-        '#description' => theme('indentation') . t('Users with the "Post comments" permission can post comments.'),
+        '#description' => t('Users with the "Post comments" permission can post comments.'),
         '#return_value' => COMMENT_NODE_OPEN,
         '#default_value' => $comment_settings,
         '#id' => 'edit-comment-2',
@@ -1032,7 +1032,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       COMMENT_NODE_CLOSED => array(
         '#type' => 'radio',
         '#title' => t('Closed'),
-        '#description' => theme('indentation') . t('Users cannot post comments, but existing comments will be displayed.'),
+        '#description' => t('Users cannot post comments, but existing comments will be displayed.'),
         '#return_value' => COMMENT_NODE_CLOSED,
         '#default_value' => $comment_settings,
         '#id' => 'edit-comment-1',
@@ -1041,7 +1041,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       COMMENT_NODE_HIDDEN => array(
         '#type' => 'radio',
         '#title' => t('Hidden'),
-        '#description' => theme('indentation') . t('Comments are hidden from view.'),
+        '#description' => t('Comments are hidden from view.'),
         '#return_value' => COMMENT_NODE_HIDDEN,
         '#default_value' => $comment_settings,
         '#id' => 'edit-comment-0',
@@ -1053,7 +1053,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
     if (empty($comment_count)) {
       unset($form['comment_settings']['comment']['#options'][COMMENT_NODE_HIDDEN]);
       unset($form['comment_settings']['comment'][COMMENT_NODE_HIDDEN]);
-      $form['comment_settings']['comment'][COMMENT_NODE_CLOSED]['#description'] = theme('indentation') . t('Users cannot post comments.');
+      $form['comment_settings']['comment'][COMMENT_NODE_CLOSED]['#description'] = t('Users cannot post comments.');
     }
   }
 }

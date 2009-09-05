@@ -537,6 +537,10 @@ div.form-item div.description {
   color: #666;
 }
 
+body div.form-type-radio div.description, body div.form-type-checkbox div.description {
+  margin-left: 1.5em;
+}
+
 /* Buttons */
 input.form-submit {
   cursor: pointer;
