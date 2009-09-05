@@ -1,5 +1,5 @@
 <?php
-// $Id: session_test.module,v 1.10 2009/07/01 12:47:30 dries Exp $
+// $Id: session_test.module,v 1.11 2009/09/05 13:05:30 dries Exp $
 
 /**
  * Implement hook_menu().
@@ -143,3 +143,20 @@ function session_test_user_login($edit = array(), $user = NULL) {
   }
 }
 
+/**
+ * Implement hook_form_FORM_ID_alter().
+ */
+function session_test_form_user_login_alter(&$form) {
+  $form['#https'] = TRUE;
+}
+
+/**
+ * Implement hook_drupal_goto_alter().
+ *
+ * Force the redirection to go to a non-secure page after being on a secure
+ * page through https.php.
+ */
+function session_test_drupal_goto_alter(&$args) {
+  global $base_insecure_url;
+  $args['path'] = $base_insecure_url . '/' . $args['path'];
+}

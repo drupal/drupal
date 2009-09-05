@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.69 2009/08/25 21:16:31 webchick Exp $
+// $Id: common.test,v 1.70 2009/09/05 13:05:30 dries Exp $
 
 /**
  * Tests for the l() function.
@@ -597,6 +597,43 @@ class DrupalSetContentTestCase extends DrupalWebTestCase {
       $region_content = drupal_get_region_content($region, $delimiter);
       $this->assertEqual($region_content, $values[$region], t('@region region text verified when fetching single region.', array('@region' => $region)));
     }
+  }
+}
+
+/**
+ * Testing drupal_goto and hook_drupal_goto_alter().
+ */
+class DrupalGotoTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Drupal goto',
+      'description' => 'Performs tests on the drupal_goto function and hook_drupal_goto_alter',
+      'group' => 'System'
+    );
+  }
+
+  function setUp() {
+    parent::setUp('common_test');
+  }
+
+  /**
+   * Test setting and retrieving content for theme regions.
+   */
+  function testDrupalGoto() {
+    $this->drupalGet('common-test/drupal_goto/redirect');
+
+    $this->assertNoText(t("Drupal goto failed to stop program"), t("Drupal goto stopped program."));
+    $this->assertText('drupal_goto', t("Drupal goto redirect failed."));
+  }
+
+  /**
+   * Test setting and retrieving content for theme regions.
+   */
+  function testDrupalGotoAlter() {
+    $this->drupalGet('common-test/drupal_goto/redirect_fail');
+
+    $this->assertNoText(t("Drupal goto failed to stop program"), t("Drupal goto stopped program."));
+    $this->assertNoText('drupal_goto_fail', t("Drupal goto redirect failed."));
   }
 }
 
