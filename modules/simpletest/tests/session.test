@@ -250,3 +250,95 @@ class SessionTestCase extends DrupalWebTestCase {
     }
   }
 }
+
+/**
+ * Ensure that when running under https two session cookies are generated.
+ */
+class SessionHttpsTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Session https handling',
+      'description' => 'Ensure that when running under https two session cookies are generated.',
+      'group' => 'Session'
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('session_test');
+  }
+
+  protected function testHttpsSession() {
+    global $is_https;
+
+    if ($is_https) {
+      // The functionality does not make sense when running on https.
+      return;
+    }
+
+    $insecure_session_name = session_name();
+    $secure_session_name = "S$insecure_session_name";
+
+    // Enable secure pages.
+    variable_set('https', TRUE);
+
+    $user = $this->drupalCreateUser(array('access administration pages'));
+
+    $this->curlClose();
+    $this->drupalGet('session-test/set/1');
+    // Check secure cookie on insecure page.
+    $this->assertFalse(isset($this->cookies[$secure_session_name]), 'The secure cookie is not sent on insecure pages.');
+    // Check insecure cookie on insecure page.
+    $this->assertFalse($this->cookies[$insecure_session_name]['secure'], 'The insecure cookie does not have the secure attribute');
+
+    // Check that password request form action is not secure.
+    $this->drupalGet('user/password');
+    $form = $this->xpath('//form[@id="user-pass"]');
+    $this->assertNotEqual(substr($form[0]['action'], 0, 6), 'https:', 'Password request form action is not secure');
+    $form[0]['action'] = $this->httpsUrl('user');
+
+    // Check that user login form action is secure.
+    $this->drupalGet('user');
+    $form = &$this->xpath('//form[@id="user-login"]');
+    $this->assertEqual(substr($form[0]['action'], 0, 6), 'https:', 'Login form action is secure');
+    $form[0]['action'] = $this->httpsUrl('user');
+
+    $edit = array(
+      'name' => $user->name,
+      'pass' => $user->pass_raw,
+    );
+    $this->drupalPost(NULL, $edit, t('Log in'));
+    // Check secure cookie on secure page.
+    $this->assertTrue($this->cookies[$secure_session_name]['secure'], 'The secure cookie has the secure attribute');
+    // Check insecure cookie on secure page.
+    $this->assertFalse($this->cookies[$insecure_session_name]['secure'], 'The insecure cookie does not have the secure attribute');
+    $args = array(
+      ':sid' => $this->cookies[$insecure_session_name]['value'],
+      ':ssid' => $this->cookies[$secure_session_name]['value'],
+    );
+    $this->assertTrue(db_query('SELECT sid FROM {sessions} WHERE sid = :sid AND ssid = :ssid', $args)->fetchField(), 'Session has both SIDs');
+    $cookies = array(
+      $insecure_session_name . '=' . $args[':sid'],
+      $secure_session_name . '=' . $args[':ssid'],
+    );
+
+    foreach ($cookies as $cookie_key => $cookie) {
+      foreach (array('admin', $this->httpsUrl('admin')) as $url_key => $url) {
+        $this->curlClose();
+
+        $this->drupalGet($url, array(), array('Cookie: ' . $cookie));
+        if ($cookie_key == $url_key) {
+          $this->assertText(t('Administer'));
+        }
+        else {
+          $this->assertNoText(t('Administer'));
+        }
+      }
+    }
+  }
+
+  protected function httpsUrl($url) {
+    global $base_url;
+    return $base_url . '/modules/simpletest/tests/https.php?q=' . $url;
+  }
+}

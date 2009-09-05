@@ -1310,13 +1310,19 @@ class DrupalWebTestCase extends DrupalTestCase {
       call_user_func_array(array(&$this, 'error'), unserialize(urldecode($matches[1])));
     }
 
-    // Save the session cookie, if set.
-    if (preg_match('/^Set-Cookie: ' . preg_quote($this->session_name) . '=([a-z90-9]+)/', $header, $matches)) {
-      if ($matches[1] != 'deleted') {
-        $this->session_id = $matches[1];
-      }
-      else {
-        $this->session_id = NULL;
+    // Save cookies.
+    if (preg_match('/^Set-Cookie: ([^=]+)=(.+)/', $header, $matches)) {
+      $name = $matches[1];
+      $parts = array_map('trim', explode(';', $matches[2]));
+      $value = array_shift($parts);
+      $this->cookies[$name] = array('value' => $value, 'secure' => in_array('secure', $parts));
+      if ($name == $this->session_name) {
+        if ($value != 'deleted') {
+          $this->session_id = $value;
+        }
+        else {
+          $this->session_id = NULL;
+        }
       }
     }
 

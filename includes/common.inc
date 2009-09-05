@@ -423,6 +423,14 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
     extract(parse_url(urldecode($_REQUEST['destination'])));
   }
 
+  $args = array(
+    'path' => &$path,
+    'query' => &$query,
+    'fragment' => &$fragment,
+    'http_response_code' => &$http_response_code,
+  );
+  drupal_alter('drupal_goto', $args);
+
   $url = url($path, array('query' => $query, 'fragment' => $fragment, 'absolute' => TRUE));
 
   // Allow modules to react to the end of the page request before redirecting.
@@ -2147,6 +2155,11 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  *   - 'language'
  *       An optional language object. Used to build the URL to link to and
  *       look up the proper alias for the link.
+ *   - 'https'
+ *       Whether this URL should point to a secure location. If not specified,
+ *       the current scheme is used, so the user stays on http or https
+ *       respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS
+ *       can only be enforced when the variable 'https' is set to TRUE.
  *   - 'base_url'
  *       Only used internally, to modify the base URL when a language dependent
  *       URL requires so.
@@ -2166,6 +2179,7 @@ function url($path = NULL, array $options = array()) {
     'query' => '',
     'absolute' => FALSE,
     'alias' => FALSE,
+    'https' => FALSE,
     'prefix' => ''
   );
   if (!isset($options['external'])) {
@@ -2203,7 +2217,7 @@ function url($path = NULL, array $options = array()) {
     return $path . $options['fragment'];
   }
 
-  global $base_url;
+  global $base_url, $base_secure_url, $base_insecure_url;
   $script = &drupal_static(__FUNCTION__);
 
   if (!isset($script)) {
@@ -2213,9 +2227,21 @@ function url($path = NULL, array $options = array()) {
     $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === FALSE) ? 'index.php' : '';
   }
 
+  // The base_url might be rewritten from the language rewrite in domain mode.
   if (!isset($options['base_url'])) {
-    // The base_url might be rewritten from the language rewrite in domain mode.
-    $options['base_url'] = $base_url;
+    if (isset($options['https']) && variable_get('https', FALSE)) {
+      if ($options['https'] === TRUE) {
+        $options['base_url'] = $base_secure_url;
+        $options['absolute'] = TRUE;
+      }
+      elseif ($options['https'] === FALSE) {
+        $options['base_url'] = $base_insecure_url;
+        $options['absolute'] = TRUE;
+      }
+    }
+    else {
+      $options['base_url'] = $base_url;
+    }
   }
 
   // Preserve the original path before aliasing.

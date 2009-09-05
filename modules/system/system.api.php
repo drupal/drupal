@@ -731,7 +731,7 @@ function hook_system_info_alter(&$info, $file) {
  * Permissions are checked using user_access().
  *
  * For a detailed usage example, see page_example.module.
- * 
+ *
  * @return
  *   An array of which permission names are the keys and their corresponding
  *   values are descriptions of each permission.
@@ -2189,7 +2189,27 @@ function hook_profile_tasks() {
     'myprofile_final_site_setup' => array(
     ),
   );
-  return $tasks; 
+  return $tasks;
+}
+
+/**
+ * Change the page the user is sent to by drupal_goto().
+ *
+ * @param $args
+ *   The array keys are the same as drupal_goto() arguments and the array can
+ *   be changed.
+ *   <code>
+ *     $args = array(
+ *       'path' => &$path,
+ *       'query' => &$query,
+ *       'fragment' => &$fragment,
+ *       'http_response_code' => &$http_response_code,
+ *     );
+ *   </code>
+ */
+function hook_drupal_goto_alter(array $args) {
+  // A good addition to misery module.
+  $args['http_response_code'] = 500;
 }
 
 /**

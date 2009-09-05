@@ -7,6 +7,70 @@
  */
 
 /**
+ * Implement hook_menu().
+ */
+function common_test_menu() {
+  $items = array();
+  $items['common-test/drupal_goto'] = array(
+    'title' => 'Drupal Goto',
+    'page callback' => 'common_test_drupal_goto_land',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['common-test/drupal_goto/fail'] = array(
+    'title' => 'Drupal Goto',
+    'page callback' => 'common_test_drupal_goto_land_fail',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['common-test/drupal_goto/redirect'] = array(
+    'title' => 'Drupal Goto',
+    'page callback' => 'common_test_drupal_goto_redirect',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['common-test/drupal_goto/redirect_fail'] = array(
+    'title' => 'Drupal Goto Failure',
+    'page callback' => 'drupal_goto',
+    'page arguments' => array('common-test/drupal_goto/fail'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Check that drupal_goto() exits once called.
+ */
+function common_test_drupal_goto_redirect() {
+  drupal_goto('common-test/drupal_goto');
+  print t("Drupal goto failed to stop program");
+}
+
+/**
+ * Landing page for drupal_goto().
+ */
+function common_test_drupal_goto_land() {
+  print "drupal_goto";
+}
+
+/**
+ * Fail landing page for drupal_goto().
+ */
+function common_test_drupal_goto_land_fail() {
+  print "drupal_goto_fail";
+}
+
+/**
+ * Implement hook_drupal_goto_alter().
+ */
+function common_test_drupal_goto_alter(&$args) {
+  if ($args['path'] == 'common-test/drupal_goto/fail') {
+    $args['path'] = 'common-test/drupal_goto/redirect';
+  }
+}
+
+/**
  * Implement hook_theme().
  */
 function common_test_theme() {

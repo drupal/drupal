@@ -601,6 +601,43 @@ class DrupalSetContentTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Testing drupal_goto and hook_drupal_goto_alter().
+ */
+class DrupalGotoTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Drupal goto',
+      'description' => 'Performs tests on the drupal_goto function and hook_drupal_goto_alter',
+      'group' => 'System'
+    );
+  }
+
+  function setUp() {
+    parent::setUp('common_test');
+  }
+
+  /**
+   * Test setting and retrieving content for theme regions.
+   */
+  function testDrupalGoto() {
+    $this->drupalGet('common-test/drupal_goto/redirect');
+
+    $this->assertNoText(t("Drupal goto failed to stop program"), t("Drupal goto stopped program."));
+    $this->assertText('drupal_goto', t("Drupal goto redirect failed."));
+  }
+
+  /**
+   * Test setting and retrieving content for theme regions.
+   */
+  function testDrupalGotoAlter() {
+    $this->drupalGet('common-test/drupal_goto/redirect_fail');
+
+    $this->assertNoText(t("Drupal goto failed to stop program"), t("Drupal goto stopped program."));
+    $this->assertNoText('drupal_goto_fail', t("Drupal goto redirect failed."));
+  }
+}
+
+/**
  * Tests for the JavaScript system.
  */
 class JavaScriptTestCase extends DrupalWebTestCase {

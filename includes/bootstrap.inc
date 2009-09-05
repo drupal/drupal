@@ -509,7 +509,7 @@ function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root;
 
   // Export the following settings.php variables to the global namespace
-  global $databases, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url;
+  global $databases, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $is_https, $base_secure_url, $base_insecure_url;
   $conf = array();
 
   if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
@@ -519,6 +519,7 @@ function drupal_settings_initialize() {
   if (isset($base_url)) {
     // Parse fixed base URL from settings.php.
     $parts = parse_url($base_url);
+    $http_protocol = $parts['scheme'];
     if (!isset($parts['path'])) {
       $parts['path'] = '';
     }
@@ -528,9 +529,10 @@ function drupal_settings_initialize() {
   }
   else {
     // Create base URL
-    $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+    $http_protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+    $base_root = $http_protocol . '://' . $_SERVER['HTTP_HOST'];
 
-    $base_url = $base_root .= '://' . $_SERVER['HTTP_HOST'];
+    $base_url = $base_root;
 
     // $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
     // be modified by a visitor.
@@ -543,6 +545,9 @@ function drupal_settings_initialize() {
       $base_path = '/';
     }
   }
+  $is_https = $http_protocol == 'https';
+  $base_secure_url = str_replace('http://', 'https://', $base_url);
+  $base_insecure_url = str_replace('https://', 'http://', $base_url);
 
   if ($cookie_domain) {
     // If the user specifies the cookie domain, also use it for session name.
@@ -557,15 +562,6 @@ function drupal_settings_initialize() {
       $cookie_domain = check_plain($_SERVER['HTTP_HOST']);
     }
   }
-  // To prevent session cookies from being hijacked, a user can configure the
-  // SSL version of their website to only transfer session cookies via SSL by
-  // using PHP's session.cookie_secure setting. The browser will then use two
-  // separate session cookies for the HTTPS and HTTP versions of the site. So we
-  // must use different session identifiers for HTTPS and HTTP to prevent a
-  // cookie collision.
-  if (ini_get('session.cookie_secure')) {
-    $session_name .= 'SSL';
-  }
   // Strip leading periods, www., and port numbers from cookie domain.
   $cookie_domain = ltrim($cookie_domain, '.');
   if (strpos($cookie_domain, 'www.') === 0) {
@@ -578,7 +574,17 @@ function drupal_settings_initialize() {
   if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
     ini_set('session.cookie_domain', $cookie_domain);
   }
-  session_name('SESS' . md5($session_name));
+  // To prevent session cookies from being hijacked, a user can configure the
+  // SSL version of their website to only transfer session cookies via SSL by
+  // using PHP's session.cookie_secure setting. The browser will then use two
+  // separate session cookies for the HTTPS and HTTP versions of the site. So we
+  // must use different session identifiers for HTTPS and HTTP to prevent a
+  // cookie collision.
+  if ($is_https) {
+    ini_set('session.cookie_secure', TRUE);
+  }
+  $prefix = ini_get('session.cookie_secure') ? 'SSESS' : 'SESS';
+  session_name($prefix . md5($session_name));
 }
 
 /**
