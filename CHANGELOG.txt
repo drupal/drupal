@@ -128,6 +128,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * The mime_extension_mapping variable has been removed. Modules that need to
       alter the default MIME type extension mappings should implement
       hook_file_mimetype_mapping_alter().
+    * Added the hook_file_url_alter() hook, which makes it possible to serve
+      files from a CDN.
 - Image handling:
     * Improved image handling, including better support for add-on image
       libraries.
