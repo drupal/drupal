@@ -43,7 +43,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     // kinds of database systems. These settings force MySQL to behave
     // the same as postgresql, or sqlite in regards to syntax interpretation
     // and invalid data handling. See http://drupal.org/node/344575 for further disscussion.
-    $this->exec("SET sql_mode='ANSI,TRADITIONAL'");
+    $this->exec("SET sql_mode='ANSI,TRADITIONAL,ONLY_FULL_GROUP_BY'");
   }
 
   public function queryRange($query, array $args, $from, $count, array $options = array()) {
