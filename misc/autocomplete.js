@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.33 2009/08/31 05:51:07 dries Exp $
+// $Id: autocomplete.js,v 1.34 2009/09/05 12:03:31 webchick Exp $
 (function ($) {
 
 /**
@@ -256,7 +256,8 @@ Drupal.ACDB.prototype.search = function (searchString) {
 
   // See if this string needs to be searched for anyway.
   searchString = searchString.replace(/^\s+|\s+$/, '');
-  if (searchString.charAt(searchString.length - 1) == ',') {
+  if (searchString.length <= 0 ||
+    searchString.charAt(searchString.length - 1) == ',') {
     return;
   }
 
