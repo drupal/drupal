@@ -271,7 +271,7 @@ function _search_menu_access($name) {
  */
 function search_reindex($sid = NULL, $type = NULL, $reindex = FALSE) {
   if ($type == NULL && $sid == NULL) {
-    module_invoke_all('search', 'reset');
+    module_invoke_all('search_reset');
   }
   else {
     db_delete('search_dataset')
