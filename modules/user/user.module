@@ -1950,6 +1950,7 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
       '#size' => 48,
       '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions pixels and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . variable_get('user_picture_guidelines', ''),
     );
+    $form['#validate'][] = 'user_profile_form_validate';
     $form['#validate'][] = 'user_validate_picture';
   }
   $form['#uid'] = $uid;
