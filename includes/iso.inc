@@ -1,5 +1,5 @@
 <?php
-// $Id: iso.inc,v 1.4 2009/07/30 10:14:17 dries Exp $
+// $Id: iso.inc,v 1.5 2009/09/05 05:41:55 dries Exp $
 
 /**
  * @file
@@ -74,7 +74,6 @@ function _country_get_predefined_list() {
     'CN' => $t('China'),
     'CO' => $t('Colombia'),
     'CR' => $t('Costa Rica'),
-    'CS' => $t('Serbia And Montenegro'),
     'CU' => $t('Cuba'),
     'CV' => $t('Cape Verde'),
     'CX' => $t('Christmas Island'),
