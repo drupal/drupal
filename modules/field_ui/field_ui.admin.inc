@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.10 2009/08/29 07:43:58 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.11 2009/09/05 12:34:00 webchick Exp $
 
 /**
  * @file
@@ -1285,7 +1285,7 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
 
   // Move the default value from the sample widget to the default value field.
   if (isset($instance_values['default_value_widget'])) {
-    $langcode = $instance_values['default_value_widget'][$field_name]['#language'];
+    $langcode = $form['instance']['default_value_widget'][$field_name]['#language'];
     $instance_values['default_value'] = $instance_values['default_value_widget'][$field_name][$langcode];
     unset($instance_values['default_value_widget']);
   }
