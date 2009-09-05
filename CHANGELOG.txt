@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.339 2009/08/31 05:47:33 dries Exp $
+// $Id: CHANGELOG.txt,v 1.340 2009/09/05 06:03:29 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -128,6 +128,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * The mime_extension_mapping variable has been removed. Modules that need to
       alter the default MIME type extension mappings should implement
       hook_file_mimetype_mapping_alter().
+    * Added the hook_file_url_alter() hook, which makes it possible to serve
+      files from a CDN.
 - Image handling:
     * Improved image handling, including better support for add-on image
       libraries.
