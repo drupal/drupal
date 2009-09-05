@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.981 2009/08/31 18:43:12 webchick Exp $
+// $Id: common.inc,v 1.982 2009/09/05 10:05:38 dries Exp $
 
 /**
  * @file
@@ -3157,7 +3157,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
       case 'external':
         // Preprocessing for external JavaScript files is ignored.
-        $output .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . $item['data'] . "\"></script>\n";
+        $output .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . check_plain($item['data']) . "\"></script>\n";
         break;
     }
   }
