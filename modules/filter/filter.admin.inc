@@ -99,7 +99,7 @@ function theme_filter_admin_overview($form) {
 function filter_admin_format_page($format = NULL) {
   if (!isset($format->name)) {
     drupal_set_title(t('Add text format'), PASS_THROUGH);
-    $format = (object)array('name' => '', 'roles' => '', 'format' => '');
+    $format = (object)array('name' => '', 'roles' => '', 'format' => FILTER_FORMAT_DEFAULT);
   }
   return drupal_get_form('filter_admin_format_form', $format);
 }
