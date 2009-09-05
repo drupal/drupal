@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1038 2009/09/01 17:40:28 webchick Exp $
+// $Id: user.module,v 1.1039 2009/09/05 05:45:45 dries Exp $
 
 /**
  * @file
@@ -1950,6 +1950,7 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
       '#size' => 48,
       '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions pixels and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . variable_get('user_picture_guidelines', ''),
     );
+    $form['#validate'][] = 'user_profile_form_validate';
     $form['#validate'][] = 'user_validate_picture';
   }
   $form['#uid'] = $uid;

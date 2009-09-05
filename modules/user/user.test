@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.57 2009/08/25 02:48:16 webchick Exp $
+// $Id: user.test,v 1.58 2009/09/05 05:45:45 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1184,5 +1184,40 @@ class UserSaveTestCase extends DrupalWebTestCase {
 
     $user_by_name = user_load_by_name($test_name);
     $this->assertTrue($user_by_name, t('Loading user by name.'));
+  }
+}
+
+/**
+ * Test case to test user_save() behaviour.
+ */
+class UserEditTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'User edit',
+      'description' => 'Test user edit page.',
+      'group' => 'User',
+    );
+  }
+
+  /**
+   * Test user edit page.
+   */
+  function testUserEdit() {
+    // Test user edit functionality with user pictures disabled.
+    variable_set('user_pictures', 0);
+    $user1 = $this->drupalCreateUser(array('change own username'));
+    $user2 = $this->drupalCreateUser(array());
+    $this->drupalLogin($user1);
+
+    // Test that error message appears when attempting to use a non-unique user name.
+    $edit['name'] = $user2->name;
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t('The name %name is already taken.', array('%name' => $edit['name'])));
+
+    // Repeat the test with user pictures enabled, which modifies the form.
+    variable_set('user_pictures', 1);
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t('The name %name is already taken.', array('%name' => $edit['name'])));
   }
 }
