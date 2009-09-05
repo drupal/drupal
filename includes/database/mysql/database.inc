@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.17 2009/03/25 18:43:01 webchick Exp $
+// $Id: database.inc,v 1.18 2009/09/05 10:42:45 dries Exp $
 
 /**
  * @file
@@ -43,7 +43,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     // kinds of database systems. These settings force MySQL to behave
     // the same as postgresql, or sqlite in regards to syntax interpretation
     // and invalid data handling. See http://drupal.org/node/344575 for further disscussion.
-    $this->exec("SET sql_mode='ANSI,TRADITIONAL'");
+    $this->exec("SET sql_mode='ANSI,TRADITIONAL,ONLY_FULL_GROUP_BY'");
   }
 
   public function queryRange($query, array $args, $from, $count, array $options = array()) {
