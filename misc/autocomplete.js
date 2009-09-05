@@ -256,7 +256,8 @@ Drupal.ACDB.prototype.search = function (searchString) {
 
   // See if this string needs to be searched for anyway.
   searchString = searchString.replace(/^\s+|\s+$/, '');
-  if (searchString.charAt(searchString.length - 1) == ',') {
+  if (searchString.length <= 0 ||
+    searchString.charAt(searchString.length - 1) == ',') {
     return;
   }
 
