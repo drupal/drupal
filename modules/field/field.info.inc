@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.16 2009/08/31 05:35:47 dries Exp $
+// $Id: field.info.inc,v 1.17 2009/09/05 09:57:21 dries Exp $
 
 /**
  * @file
@@ -206,7 +206,7 @@ function _field_info_collate_fields($reset = FALSE) {
     }
 
     // Populate 'fields' only with non-deleted fields.
-    $info['field'] = array();
+    $info['fields'] = array();
     foreach ($info['field_ids'] as $field) {
       if (!$field['deleted']) {
         $info['fields'][$field['field_name']] = $field;
