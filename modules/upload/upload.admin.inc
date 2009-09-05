@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.admin.inc,v 1.15 2009/08/22 09:48:34 dries Exp $
+// $Id: upload.admin.inc,v 1.16 2009/09/05 15:05:05 dries Exp $
 
 /**
  * @file
@@ -69,8 +69,8 @@ function upload_admin_settings() {
     '#type' => 'fieldset',
     '#title' => t('General settings'),
     '#collapsible' => TRUE,
-    '#attached_css' => array(
-      drupal_get_path('module', 'upload') . '/upload.admin.css',
+    '#attached'=> array(
+      'css' => array(drupal_get_path('module', 'upload') . '/upload.admin.css'),
     ),
   );
   $form['settings_general']['upload_max_resolution'] = array(

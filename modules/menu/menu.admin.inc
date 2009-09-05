@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.56 2009/08/24 01:49:41 webchick Exp $
+// $Id: menu.admin.inc,v 1.57 2009/09/05 15:05:03 dries Exp $
 
 /**
  * @file
@@ -448,7 +448,9 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
       '#maxsize' => MENU_MAX_MENU_NAME_LENGTH_UI,
       '#description' => t('This text will be used to construct the URL for the menu. The name must contain only lowercase letters, numbers and hyphens, and must be unique.'),
       '#required' => TRUE,
-      '#attached_js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+      '#attached' => array(
+        'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+      ),
     );
   }
 

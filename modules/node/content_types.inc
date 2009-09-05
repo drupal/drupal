@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.91 2009/08/24 19:26:46 dries Exp $
+// $Id: content_types.inc,v 1.92 2009/09/05 15:05:03 dries Exp $
 
 /**
  * @file
@@ -101,7 +101,9 @@ function node_type_form(&$form_state, $type = NULL) {
       '#maxlength' => 32,
       '#required' => TRUE,
       '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>add new content</em> page for this content type. This name must contain only lowercase letters, numbers, and underscores. Underscores will be converted into hyphens when constructing the URL of the <em>add new content</em> page. This name must be unique.'),
-      '#attached_js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+      '#attached' => array(
+        'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+      ),
     );
   }
   else {

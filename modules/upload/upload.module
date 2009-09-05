@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.256 2009/08/24 00:14:22 webchick Exp $
+// $Id: upload.module,v 1.257 2009/09/05 15:05:05 dries Exp $
 
 /**
  * @file
@@ -231,7 +231,9 @@ function upload_form_alter(&$form, $form_state, $form_id) {
         '#collapsible' => TRUE,
         '#collapsed' => empty($node->files),
         '#group' => 'additional_settings',
-        '#attached_js' => array(drupal_get_path('module', 'upload') . '/upload.js'),
+        '#attached' => array(
+          'js' => array(drupal_get_path('module', 'upload') . '/upload.js'),
+        ),
         '#description' => t('Changes made to the attachments are not permanent until you save this post. The first "listed" file will be included in RSS feeds.'),
         '#weight' => 30,
       );

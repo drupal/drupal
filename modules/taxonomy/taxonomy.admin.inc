@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.67 2009/08/31 20:44:22 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.68 2009/09/05 15:05:04 dries Exp $
 
 /**
  * @file
@@ -151,7 +151,9 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#maxlength' => 255,
     '#description' => t('The unique machine readable name for this vocabulary, used for theme templates, can only contain lowercase letters, numbers and underscores.'),
     '#required' => TRUE,
-    '#attached_js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+    ),
   );
   $form['help'] = array(
     '#type' => 'textfield',

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.369 2009/09/05 13:05:30 dries Exp $
+// $Id: form.inc,v 1.370 2009/09/05 15:05:01 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2253,9 +2253,9 @@ function form_process_fieldset(&$element, &$form_state) {
   $element['#group_members'] = &$form_state['groups'][$parents];
 
   // Contains form element summary functionalities.
-  $element['#attached_js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
+  $element['#attached']['js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
   if (!empty($element['#collapsible'])) {
-    $element['#attached_js']['misc/collapse.js'] = array();
+    $element['#attached']['js'][] = 'misc/collapse.js';
   }
 
   return $element;

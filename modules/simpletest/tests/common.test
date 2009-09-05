@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.70 2009/09/05 13:05:30 dries Exp $
+// $Id: common.test,v 1.71 2009/09/05 15:05:04 dries Exp $
 
 /**
  * Tests for the l() function.
@@ -896,14 +896,10 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Tests the addition of libraries through the #attached_library property.
+   * Tests the addition of libraries through the #attached['library'] property.
    */
   function testAttachedLibrary() {
-    $element = array(
-      '#attached_library' => array(
-        array('system', 'farbtastic'),
-      )
-    );
+    $element['#attached']['library'][] = array('system', 'farbtastic');
     drupal_render($element);
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'misc/farbtastic/farbtastic.js'), t('The attached_library property adds the additional libraries.'));

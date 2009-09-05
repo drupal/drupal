@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.202 2009/08/31 17:06:09 dries Exp $
+// $Id: menu.module,v 1.203 2009/09/05 15:05:03 dries Exp $
 
 /**
  * @file
@@ -412,7 +412,9 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#group' => 'additional_settings',
-      '#attached_js' => array(drupal_get_path('module', 'menu') . '/menu.js'),
+      '#attached' => array(
+        'js' => array(drupal_get_path('module', 'menu') . '/menu.js'),
+      ),
       '#tree' => TRUE,
       '#weight' => -2,
       '#attributes' => array('class' => array('menu-item-form')),

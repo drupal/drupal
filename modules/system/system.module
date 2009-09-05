@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.784 2009/09/01 16:50:12 webchick Exp $
+// $Id: system.module,v 1.785 2009/09/05 15:05:04 dries Exp $
 
 /**
  * @file
@@ -3101,8 +3101,10 @@ function system_page_build(&$page) {
   if (system_run_cron_image_access()) {
     $page['page_bottom']['run_cron'] = array(
       // Trigger cron run via AJAX.
-      '#attached_js' => array(
-        '(function($){ $.get(' . drupal_to_js(url('system/run-cron-image')) . '); })(jQuery);' => array('type' => 'inline', 'scope' => 'header'),
+      '#attached' => array(
+        'js' => array(
+          '(function($){ $.get(' . drupal_to_js(url('system/run-cron-image')) . '); })(jQuery);' => array('type' => 'inline', 'scope' => 'header'),
+        ),
       ),
       // Trigger cron run for clients not supporting JavaScript (fall-back).
       '#markup' => theme('system_run_cron_image', 'system/run-cron-image'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.7 2009/08/27 04:40:12 webchick Exp $
+// $Id: ajax.inc,v 1.8 2009/09/05 15:05:01 dries Exp $
 
 /**
  * @file
@@ -292,7 +292,7 @@ function ajax_process_form($element) {
   // we avoid the problem by checking if the JavaScript has already been added.
   if (!isset($js_added[$element['#id']]) && (isset($element['#ajax']['callback']) || isset($element['#ajax']['path'])) && isset($element['#ajax']['event'])) {
     drupal_add_library('system', 'form');
-    $element['#attached_js'] = array('misc/ajax.js');
+    $element['#attached']['js'][] = 'misc/ajax.js';
 
     $ajax_binding = array(
       'url'      => isset($element['#ajax']['callback']) ? url('system/ajax') : url($element['#ajax']['path']),
