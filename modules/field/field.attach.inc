@@ -490,7 +490,7 @@ function field_attach_form($obj_type, $object, &$form, &$form_state, $langcode =
 
   // Add custom weight handling.
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
-  $form['#attached_css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
+  $form['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $form['#pre_render'][] = '_field_extra_weights_pre_render';
   $form['#extra_fields'] = field_extra_fields($bundle);
 
@@ -1090,7 +1090,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
 
   // Add custom weight handling.
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
-  $output['#attached_css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
+  $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $output['#pre_render'][] = '_field_extra_weights_pre_render';
   $output['#extra_fields'] = field_extra_fields($bundle);
 

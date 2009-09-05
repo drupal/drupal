@@ -590,7 +590,7 @@ function comment_node_page_additions($node) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
       $build = comment_build_multiple($comments);
-      $build['#attached_css'][] = drupal_get_path('module', 'comment') . '/comment.css';
+      $build['#attached']['css'][] = drupal_get_path('module', 'comment') . '/comment.css';
       $build['pager']['#theme'] = 'pager';
       $additions['comments'] = $build;
     }
@@ -940,7 +940,9 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#group' => 'additional_settings',
-      '#attached_js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
+      '#attached' => array(
+        'js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
+      ),
     );
     $form['comment']['comment_default_mode'] = array(
       '#type' => 'checkbox',
@@ -1006,7 +1008,9 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#group' => 'additional_settings',
-      '#attached_js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
+      '#attached' => array(
+        'js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
+       ),
       '#weight' => 30,
     );
     $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;
@@ -1614,7 +1618,7 @@ function comment_form(&$form_state, $comment) {
   $node = node_load($comment->nid);
 
   if (!$user->uid && variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
-    $form_state['#attached_js'][] = drupal_get_path('module', 'comment') . '/comment.js';
+    $form_state['#attached']['js'][] = drupal_get_path('module', 'comment') . '/comment.js';
   }
 
   $comment = (array) $comment;

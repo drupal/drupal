@@ -61,12 +61,14 @@ function toolbar_build() {
   $module_path = drupal_get_path('module', 'toolbar');
   $build = array(
     '#theme' => 'toolbar',
-    '#attached_js' => array(
-      $module_path . '/toolbar.js',
-      array('data' => 'misc/jquery.cookie.js', 'weight' => JS_LIBRARY + 2),
-    ),
-    '#attached_css' => array(
-      $module_path . '/toolbar.css',
+    '#attached'=> array(
+      'js' => array(
+        $module_path . '/toolbar.js',
+        array('data' => 'misc/jquery.cookie.js', 'weight' => JS_LIBRARY + 2),
+      ),
+      'css' => array(
+        $module_path . '/toolbar.css',
+      ),
     ),
   );
 

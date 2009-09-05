@@ -172,7 +172,9 @@ function node_form(&$form_state, $node) {
       // Collapsed by default when "Create new revision" is unchecked
       '#collapsed' => !$node->revision,
       '#group' => 'additional_settings',
-      '#attached_js' => array(drupal_get_path('module', 'node') . '/node.js'),
+      '#attached' => array(
+        'js' => array(drupal_get_path('module', 'node') . '/node.js'),
+      ),
       '#weight' => 20,
     );
     $form['revision_information']['revision'] = array(
@@ -198,7 +200,9 @@ function node_form(&$form_state, $node) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
-    '#attached_js' => array(drupal_get_path('module', 'node') . '/node.js'),
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'node') . '/node.js'),
+    ),
     '#weight' => 90,
   );
   $form['author']['name'] = array(
@@ -229,7 +233,9 @@ function node_form(&$form_state, $node) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
-    '#attached_js' => array(drupal_get_path('module', 'node') . '/node.js'),
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'node') . '/node.js'),
+    ),
     '#weight' => 95,
   );
   $form['options']['status'] = array(

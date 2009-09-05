@@ -50,8 +50,10 @@ function file_elements() {
     '#upload_validators' => array(),
     '#upload_location' => NULL,
     '#extended' => FALSE,
-    '#attached_css' => array($file_path . '/file.css'),
-    '#attached_js' => array($file_path . '/file.js'),
+    '#attached' => array(
+      'css' => array($file_path . '/file.css'),
+      'js' => array($file_path . '/file.js'),
+    ),
   );
 
   return $elements;

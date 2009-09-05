@@ -3101,8 +3101,10 @@ function system_page_build(&$page) {
   if (system_run_cron_image_access()) {
     $page['page_bottom']['run_cron'] = array(
       // Trigger cron run via AJAX.
-      '#attached_js' => array(
-        '(function($){ $.get(' . drupal_to_js(url('system/run-cron-image')) . '); })(jQuery);' => array('type' => 'inline', 'scope' => 'header'),
+      '#attached' => array(
+        'js' => array(
+          '(function($){ $.get(' . drupal_to_js(url('system/run-cron-image')) . '); })(jQuery);' => array('type' => 'inline', 'scope' => 'header'),
+        ),
       ),
       // Trigger cron run for clients not supporting JavaScript (fall-back).
       '#markup' => theme('system_run_cron_image', 'system/run-cron-image'),

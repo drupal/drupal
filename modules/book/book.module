@@ -445,7 +445,9 @@ function _book_add_form_elements(&$form, $node) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
-    '#attached_js' => array(drupal_get_path('module', 'book') . '/book.js'),
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'book') . '/book.js'),
+    ),
     '#tree' => TRUE,
     '#attributes' => array('class' => array('book-outline-form')),
   );

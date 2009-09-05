@@ -69,8 +69,8 @@ function upload_admin_settings() {
     '#type' => 'fieldset',
     '#title' => t('General settings'),
     '#collapsible' => TRUE,
-    '#attached_css' => array(
-      drupal_get_path('module', 'upload') . '/upload.admin.css',
+    '#attached'=> array(
+      'css' => array(drupal_get_path('module', 'upload') . '/upload.admin.css'),
     ),
   );
   $form['settings_general']['upload_max_resolution'] = array(

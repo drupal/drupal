@@ -71,9 +71,7 @@ function file_field_settings_form($field, $instance) {
   $defaults = field_info_field_settings($field['type']);
   $settings = array_merge($defaults, $field['settings']);
 
-  $form = array(
-    '#attached_js' => array(drupal_get_path('module', 'file') . '/file.js'),
-  );
+  $form['#attached']['js'][] = drupal_get_path('module', 'file') . '/file.js';
 
   $form['display_field'] = array(
     '#type' => 'checkbox',
@@ -119,9 +117,7 @@ function file_field_settings_form($field, $instance) {
 function file_field_instance_settings_form($field, $instance) {
   $settings = $instance['settings'];
 
-  $form = array(
-    '#attached_js' => array(drupal_get_path('module', 'file') . '/file.js'),
-  );
+  $form['#attached']['js'][] = drupal_get_path('module', 'file') . '/file.js';
 
   $form['max_filesize'] = array(
     '#type' => 'textfield',

@@ -15,7 +15,9 @@ function image_style_list() {
   $styles = image_styles();
   $page['image_style_list'] = array(
     '#markup' => theme('image_style_list', $styles),
-    '#attached_css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
+    '#attached' => array(
+      'css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
+    ),
   );
 
   return $page;
@@ -40,7 +42,9 @@ function image_style_form(&$form_state, $style) {
   $form_state['image_style'] = $style;
   $form = array(
     '#tree' => TRUE,
-    '#attached_css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
+    '#attached' => array(
+      'css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
+    ),
   );
 
   // Allow the name of the style to be changed.
@@ -313,7 +317,9 @@ function image_effect_form(&$form_state, $style, $effect) {
 
   $form = array(
     '#tree' => TRUE,
-    '#attached_css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
+    '#attached' => array(
+      'css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
+    ),
   );
   if (function_exists($effect['form callback'])) {
     $form['data'] = call_user_func($effect['form callback'], $effect['data']);

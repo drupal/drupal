@@ -292,7 +292,7 @@ function ajax_process_form($element) {
   // we avoid the problem by checking if the JavaScript has already been added.
   if (!isset($js_added[$element['#id']]) && (isset($element['#ajax']['callback']) || isset($element['#ajax']['path'])) && isset($element['#ajax']['event'])) {
     drupal_add_library('system', 'form');
-    $element['#attached_js'] = array('misc/ajax.js');
+    $element['#attached']['js'][] = 'misc/ajax.js';
 
     $ajax_binding = array(
       'url'      => isset($element['#ajax']['callback']) ? url('system/ajax') : url($element['#ajax']['path']),

@@ -234,7 +234,9 @@ function path_form_alter(&$form, $form_state, $form_id) {
       '#collapsible' => TRUE,
       '#collapsed' => empty($path),
       '#group' => 'additional_settings',
-      '#attached_js' => array(drupal_get_path('module', 'path') . '/path.js'),
+      '#attached' => array(
+        'js' => array(drupal_get_path('module', 'path') . '/path.js'),
+      ),
       '#access' => user_access('create url aliases'),
       '#weight' => 30,
     );
