@@ -1285,7 +1285,7 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
 
   // Move the default value from the sample widget to the default value field.
   if (isset($instance_values['default_value_widget'])) {
-    $langcode = $instance_values['default_value_widget'][$field_name]['#language'];
+    $langcode = $form['instance']['default_value_widget'][$field_name]['#language'];
     $instance_values['default_value'] = $instance_values['default_value_widget'][$field_name][$langcode];
     unset($instance_values['default_value_widget']);
   }
