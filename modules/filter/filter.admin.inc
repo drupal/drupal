@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.42 2009/08/28 16:23:04 dries Exp $
+// $Id: filter.admin.inc,v 1.43 2009/09/05 13:22:13 webchick Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ function theme_filter_admin_overview($form) {
 function filter_admin_format_page($format = NULL) {
   if (!isset($format->name)) {
     drupal_set_title(t('Add text format'), PASS_THROUGH);
-    $format = (object)array('name' => '', 'roles' => '', 'format' => '');
+    $format = (object)array('name' => '', 'roles' => '', 'format' => FILTER_FORMAT_DEFAULT);
   }
   return drupal_get_form('filter_admin_format_form', $format);
 }
