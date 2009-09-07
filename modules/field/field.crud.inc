@@ -231,10 +231,12 @@ function field_create_field($field) {
 
   // Ensure the field name is unique over active and disabled fields.
   // We do not care about deleted fields.
-  // TODO : do we want specific messages when clashing with a disabled or inactive field ?
   $prior_field = field_read_field($field['field_name'], array('include_inactive' => TRUE));
   if (!empty($prior_field)) {
-    throw new FieldException(t('Attempt to create field name %name which already exists.', array('%name' => $field['field_name'])));
+    $message = $prior_field['active']?
+      t('Attempt to create field name %name which already exists and is active.', array('%name' => $field['field_name'])):
+      t('Attempt to create field name %name which already exists, although it is inactive.', array('%name' => $field['field_name']));
+    throw new FieldException($message);
   }
 
   $field += array(
@@ -447,10 +449,12 @@ function field_create_instance($instance) {
   // Problem : this would mean that a UI module cannot update an instance with a disabled formatter.
 
   // Ensure the field instance is unique.
-  // TODO : do we want specific messages when clashing with a disabled or inactive instance ?
   $prior_instance = field_read_instance($instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE));
   if (!empty($prior_instance)) {
-    throw new FieldException(t('Attempt to create a field instance %field_name,%bundle which already exists.', array('%field_name' => $instance['field_name'], '%bundle' => $instance['bundle'])));
+    $message = $prior_instance['widget']['active']?
+      t('Attempt to create a field instance %field_name,%bundle which already exists and is active.', array('%field_name' => $instance['field_name'], '%bundle' => $instance['bundle'])):
+      t('Attempt to create a field instance %field_name,%bundle which already exists, although inactive.', array('%field_name' => $instance['field_name'], '%bundle' => $instance['bundle']));
+    throw new FieldException($message);
   }
 
   _field_write_instance($instance);
