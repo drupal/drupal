@@ -23,7 +23,7 @@
  * need to remove the purged records, but no actual field data items
  * are affected.
  */
-function _field_info_cache_clear() {
+function field_info_cache_clear() {
   _field_info_collate_types(TRUE);
   drupal_static_reset('field_build_modes');
   _field_info_collate_fields(TRUE);

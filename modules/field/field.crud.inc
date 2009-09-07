@@ -870,7 +870,7 @@ function field_purge_instance($instance) {
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_purge_instance', $instance);
 
   // Clear the cache.
-  _field_info_cache_clear();
+  field_info_cache_clear();
 
   // Invoke external hooks after the cache is cleared for API consistency.
   module_invoke_all('field_purge_instance', $instance);
@@ -899,7 +899,7 @@ function field_purge_field($field) {
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_purge_field', $field);
 
   // Clear the cache.
-  _field_info_cache_clear();
+  field_info_cache_clear();
 
   // Invoke external hooks after the cache is cleared for API consistency.
   module_invoke_all('field_purge_field', $field);
