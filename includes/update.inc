@@ -273,7 +273,7 @@ function update_fix_d7_requirements() {
  *
  * Install profiles are now treated as modules by Drupal, and have an upgrade path
  * based on their schema version in the system table.
- * 
+ *
  * The install profile will be set to schema_version 0, as it has already been
  * installed. Any other hook_update_N functions provided by the install profile
  * will be run by update.php.
@@ -365,12 +365,30 @@ function update_parse_db_url($db_url) {
  * Perform one update and store the results which will later be displayed on
  * the finished page.
  *
- * An update function can force the current and all later updates for this
- * module to abort by returning a $ret array with an element like:
- * $ret['#abort'] = array('success' => FALSE, 'query' => 'What went wrong');
- * The schema version will not be updated in this case, and all the
- * aborted updates will continue to appear on update.php as updates that
+ * If an update function completes successfully, it should return a message
+ * as a string indicating success, for example:
+ * @code
+ * return t('New index added successfully.');
+ * @endcode
+ *
+ * Alternatively, it may return nothing. In that case, no message
+ * will be displayed at all.
+ *
+ * If it fails for whatever reason, it should throw an instance of
+ * DrupalUpdateException with an appropriate error message, for example:
+ * @code
+ * throw new DrupalUpdateException(t('Description of what went wrong'));
+ * @endcode
+ *
+ * If an exception is thrown, the current and all later updates for this module
+ * will be aborted. The schema version will not be updated in this case, and all
+ * the aborted updates will continue to appear on update.php as updates that
  * have not yet been run.
+ *
+ * If an update function needs to be re-run as part of a batch process, it
+ * should accept the $sandbox array by reference as its first parameter
+ * and set the #finished property to the percentage completed that it is, as a
+ * fraction of 1.
  *
  * @param $module
  *   The module whose update will be run.
@@ -386,14 +404,47 @@ function update_do_one($module, $number, &$context) {
     return;
   }
 
-  $function = $module . '_update_' . $number;
-  if (function_exists($function)) {
-    $ret = $function($context['sandbox']);
+  if (!isset($context['log'])) {
+    $context['log'] = variable_get('update_log_queries', 0);
   }
 
+  $ret = array();
+  $function = $module . '_update_' . $number;
+  if (function_exists($function)) {
+    try {
+      if ($context['log']) {
+        Database::startLog($function);
+      }
+      $ret['results']['query'] = $function($context['sandbox']);
+      $ret['results']['success'] = TRUE;
+
+      // @TODO Remove this block after all updates have been converted to
+      // return only strings.
+      if (is_array($ret['results']['query'])) {
+        $ret = $ret['results']['query'];
+      }
+    }
+    // @TODO We may want to do different error handling for different exception
+    // types, but for now we'll just print the message.
+    catch (Exception $e) {
+      $ret['#abort'] = array('success' => FALSE, 'query' => $e->getMessage());
+    }
+
+    if ($context['log']) {
+      $ret['queries'] = Database::getLog($function);
+    }
+  }
+
+  // @TODO Remove this block after all updates have been converted to return
+  // only strings.
   if (isset($ret['#finished'])) {
     $context['finished'] = $ret['#finished'];
     unset($ret['#finished']);
+  }
+
+  if (isset($context['sandbox']['#finished'])) {
+    $context['finished'] = $context['sandbox']['#finished'];
+    unset($context['sandbox']['#finished']);
   }
 
   if (!isset($context['results'][$module])) {
@@ -407,15 +458,19 @@ function update_do_one($module, $number, &$context) {
   if (!empty($ret['#abort'])) {
     $context['results'][$module]['#abort'] = TRUE;
   }
+
   // Record the schema update if it was completed successfully.
   if ($context['finished'] == 1 && empty($context['results'][$module]['#abort'])) {
     drupal_set_installed_schema_version($module, $number);
-    // Conserve memory and avoid errors by resetting all static variables.
-    drupal_static_reset();
   }
 
   $context['message'] = 'Updating ' . check_plain($module) . ' module';
 }
+
+/**
+ * @class Exception class used to throw error if a module update fails.
+ */
+class DrupalUpdateException extends Exception { }
 
 /**
  * Start the database update batch process.
@@ -518,7 +573,7 @@ function update_finished($success, $results, $operations) {
 function update_get_update_list() {
   // Make sure that the system module is first in the list of updates.
   $ret = array('system' => array());
-  
+
   $modules = drupal_get_installed_schema_version(NULL, FALSE, TRUE);
   foreach ($modules as $module => $schema_version) {
     $pending = array();
@@ -532,7 +587,7 @@ function update_get_update_list() {
         $ret[$module]['warning'] = '<em>' . $module . '</em> module can not be updated. Its schema version is ' . $schema_version . '. Updates up to and including ' . $last_removed . ' have been removed in this release. In order to update <em>' . $module . '</em> module, you will first <a href="http://drupal.org/upgrade">need to upgrade</a> to the last version in which these updates were available.';
         continue;
       }
-      
+
       $updates = drupal_map_assoc($updates);
       foreach (array_keys($updates) as $update) {
         if ($update > $schema_version) {
@@ -550,7 +605,7 @@ function update_get_update_list() {
       }
     }
   }
-  
+
   if (empty($ret['system'])) {
     unset($ret['system']);
   }

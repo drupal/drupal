@@ -140,23 +140,28 @@ function update_results_page() {
   // Output a list of queries executed
   if (!empty($_SESSION['update_results'])) {
     $output .= '<div id="update-results">';
-    $output .= '<h2>The following queries were executed</h2>';
+    $output .= '<h2>The following updates returned messages</h2>';
     foreach ($_SESSION['update_results'] as $module => $updates) {
       $output .= '<h3>' . $module . ' module</h3>';
       foreach ($updates as $number => $queries) {
         if ($number != '#abort') {
-          $output .= '<h4>Update #' . $number . '</h4>';
-          $output .= '<ul>';
+          $messages = array();
           foreach ($queries as $query) {
+            // If there is no message for this update, don't show anything.
+            if (empty($query['query'])) {
+              continue;
+            }
             if ($query['success']) {
-              $output .= '<li class="success">' . $query['query'] . '</li>';
+              $messages[] = '<li class="success">' . $query['query'] . '</li>';
             }
             else {
-              $output .= '<li class="failure"><strong>Failed:</strong> ' . $query['query'] . '</li>';
+              $messages[] = '<li class="failure"><strong>Failed:</strong> ' . $query['query'] . '</li>';
             }
           }
-          if (!count($queries)) {
-            $output .= '<li class="none">No queries</li>';
+
+          if ($messages) {
+            $output .= '<h4>Update #' . $number . "</h4>\n";
+            $output .= '<ul>' . implode("\n", $messages) . "</ul>\n";
           }
         }
         $output .= '</ul>';
