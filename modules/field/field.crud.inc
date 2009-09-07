@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.27 2009/08/22 00:58:52 webchick Exp $
+// $Id: field.crud.inc,v 1.28 2009/09/07 15:49:00 dries Exp $
 
 /**
  * @file
@@ -870,7 +870,7 @@ function field_purge_instance($instance) {
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_purge_instance', $instance);
 
   // Clear the cache.
-  _field_info_cache_clear();
+  field_info_cache_clear();
 
   // Invoke external hooks after the cache is cleared for API consistency.
   module_invoke_all('field_purge_instance', $instance);
@@ -899,7 +899,7 @@ function field_purge_field($field) {
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_purge_field', $field);
 
   // Clear the cache.
-  _field_info_cache_clear();
+  field_info_cache_clear();
 
   // Invoke external hooks after the cache is cleared for API consistency.
   module_invoke_all('field_purge_field', $field);

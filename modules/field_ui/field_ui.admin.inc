@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.11 2009/09/05 12:34:00 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.12 2009/09/07 15:49:01 dries Exp $
 
 /**
  * @file
@@ -73,7 +73,7 @@ function field_ui_field_overview_form(&$form_state, $obj_type, $bundle) {
 
   // When displaying the form, make sure the list of fields is up-to-date.
   if (empty($form_state['post'])) {
-    field_cache_clear();
+    field_info_cache_clear();
   }
 
   // Gather bundle information.
@@ -542,8 +542,6 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     unset($_REQUEST['destination']);
     $form_state['redirect'] = field_ui_get_destinations($destinations);
   }
-
-  field_cache_clear();
 }
 
 /**

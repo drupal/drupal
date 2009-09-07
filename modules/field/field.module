@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.30 2009/08/28 06:51:07 dries Exp $
+// $Id: field.module,v 1.31 2009/09/07 15:49:00 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -421,7 +421,7 @@ function field_cache_clear($rebuild_schema = FALSE) {
   cache_clear_all('*', 'cache_field', TRUE);
 
   module_load_include('inc', 'field', 'field.info');
-  _field_info_cache_clear();
+  field_info_cache_clear();
 
   // Refresh the schema to pick up new information.
   // TODO : if db storage gets abstracted out, we'll need to revisit how and when
