@@ -1352,6 +1352,54 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $this->assertEqual($names[0], 'Gonzo', t('Correct record returned for NOT NULL age.'));
     $this->assertEqual($names[1], 'Kermit', t('Correct record returned for NOT NULL age.'));
   }
+
+  /**
+   * Test that we can UNION multiple Select queries together. This is
+   * semantically equal to UNION DISTINCT, so we don't explicity test that.
+   */
+  function testUnion() {
+    $query_1 = db_select('test', 't')
+      ->fields('t', array('name'))
+      ->condition('age', array(27, 28), 'IN');
+
+    $query_2 = db_select('test', 't')
+      ->fields('t', array('name'))
+      ->condition('age', 28);
+
+    $query_1->union($query_2);
+
+    $names = $query_1->execute()->fetchCol();
+    
+    // Ensure we only get 2 records.
+    $this->assertEqual(count($names), 2, t('UNION correctly discarded duplicates.'));
+
+    $this->assertEqual($names[0], 'George', t('First query returned correct name.'));
+    $this->assertEqual($names[1], 'Ringo', t('Second query returned correct name.'));
+  }
+  
+  /**
+   * Test that we can UNION ALL multiple Select queries together.
+   */
+  function testUnionAll() {
+    $query_1 = db_select('test', 't')
+      ->fields('t', array('name'))
+      ->condition('age', array(27, 28), 'IN');
+      
+    $query_2 = db_select('test', 't')
+      ->fields('t', array('name'))
+      ->condition('age', 28);
+
+    $query_1->union($query_2, 'ALL');
+
+    $names = $query_1->execute()->fetchCol();
+
+    // Ensure we get all 3 records.
+    $this->assertEqual(count($names), 3, t('UNION ALL correctly preserved duplicates.'));
+
+    $this->assertEqual($names[0], 'George', t('First query returned correct first name.'));
+    $this->assertEqual($names[1], 'Ringo', t('Second query returned correct second name.'));
+    $this->assertEqual($names[2], 'Ringo', t('Third query returned correct name.'));
+  }
 }
 
 /**
