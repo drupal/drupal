@@ -1373,7 +1373,7 @@ function menu_get_names() {
   if (empty($names)) {
     $names = db_select('menu_links')
       ->distinct()
-      ->fields('menu_links', 'menu_name')
+      ->fields('menu_links', array('menu_name'))
       ->orderBy('menu_name')
       ->execute()->fetchCol();
   }

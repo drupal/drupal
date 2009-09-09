@@ -76,6 +76,13 @@ class MenuIncTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test menu_get_names().
+   */
+  function testMenuGetNames() {
+    $this->assertEqual(menu_get_names(), array('admin_shortcuts', 'main-menu', 'management', 'navigation', 'original', 'user-menu'), t('Expected menu names were returned.'));
+  }
+
+  /**
    * Tests for menu_name parameter for hook_menu().
    */
   function testMenuName() {
