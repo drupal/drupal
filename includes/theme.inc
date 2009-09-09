@@ -1855,52 +1855,105 @@ function theme_more_link($url, $title) {
 }
 
 /**
- * Format a username.
+ * Preprocess variables for theme_username().
  *
- * @param $object
- *   The user object to format, usually returned from user_load().
- * @return
- *   A string containing an HTML link to the user's page if the passed object
- *   suggests that this is a site user. Otherwise, only the username is returned.
+ * Modules that make any changes to the $variables['object'] properties like
+ * 'name' or 'extra' must insure that the final string is safe to include
+ * directly in the ouput by using check_plain() or filter_xss().
+ *
+ * @see theme_username().
  */
-function theme_username($object) {
-
-  if ($object->uid && $object->name) {
-    // Shorten the name when it is too long or it will break many tables.
-    if (drupal_strlen($object->name) > 20) {
-      $name = drupal_substr($object->name, 0, 15) . '...';
-    }
-    else {
-      $name = $object->name;
-    }
-
-    if (user_access('access user profiles')) {
-      $output = l($name, 'user/' . $object->uid, array('attributes' => array('title' => t('View user profile.'))));
-    }
-    else {
-      $output = check_plain($name);
-    }
-  }
-  elseif ($object->name) {
-    // Sometimes modules display content composed by people who are
-    // not registered members of the site (e.g. mailing list or news
-    // aggregator modules). This clause enables modules to display
-    // the true author of the content.
-    if (!empty($object->homepage)) {
-      $output = l($object->name, $object->homepage, array('attributes' => array('rel' => 'nofollow')));
-    }
-    else {
-      $output = check_plain($object->name);
-    }
-
+function template_preprocess_username(&$variables) {
+  $account = $variables['object'];
+  // Create a new empty object to populate with standardized data.
+  $variables['object'] = new stdClass;
+  // Keep a reference to the original data.
+  $variables['object']->account = $account;
+  $variables['object']->extra = '';
+  if (empty($account->uid)) {
+    $variables['object']->uid = 0;
     if (theme_get_setting('toggle_comment_user_verification')) {
-      $output .= ' (' . t('not verified') . ')';
+      $variables['object']->extra = ' (' . t('not verified') . ')';
     }
   }
   else {
-    $output = check_plain(variable_get('anonymous', t('Anonymous')));
+    $variables['object']->uid = (int)$account->uid;
+  }
+  if (empty($account->name)) {
+    $variables['object']->name = variable_get('anonymous', t('Anonymous'));
+  }
+  else {
+    $variables['object']->name = $account->name;
   }
 
+  $variables['object']->profile_access = user_access('access user profiles');
+  $variables['object']->link_attributes = array();
+  // Populate link path and attributes if appropriate.
+  if ($variables['object']->uid && $variables['object']->profile_access) {
+    // We are linking to a local user.
+    $variables['object']->link_attributes = array('title' => t('View user profile.'));
+    $variables['object']->link_path = 'user/' . $variables['object']->uid;
+  }
+  elseif (!empty($account->homepage)) {
+    $variables['object']->link_attributes = array('rel' => 'nofollow');
+    $variables['object']->link_path = $account->homepage;
+    $variables['object']->homepage = $account->homepage;
+  }
+  // We do not want the l() function to check_plain() a second time.
+  $variables['object']->link_options['html'] = TRUE;
+  // Set a default class.
+  $variables['object']->attributes = array('class' => array('username'));
+  // Shorten the name when it is too long or it will break many tables.
+  if (drupal_strlen($variables['object']->name) > 20) {
+    $variables['object']->name = drupal_substr($variables['object']->name, 0, 15) . '...';
+  }
+  // Make sure these are safe for use in the theme function.
+  $variables['object']->name = check_plain($variables['object']->name);
+  $variables['object']->extra = check_plain($variables['object']->extra);
+}
+
+/**
+ * Process variables for theme_username().
+ *
+ * @see theme_username().
+ */
+function template_process_username(&$variables) {
+  // Finalize the link_options array for passing to the l() function.
+  // This is done in the process phase so that attributes may be added by
+  // modules or the theme during the preprocess phase.
+  if (isset($variables['object']->link_path)) {
+    $variables['object']->link_options['attributes'] = $variables['object']->link_attributes + $variables['object']->attributes;
+  }
+}
+
+/**
+ * Format a username.
+ *
+ * @param $object
+ *   The user object to format, which has been processed to provide safe and
+ *   standarized elements. The object keys 'name', and 'extra' are safe strings
+ *   that can be used directly.
+ *
+ * @return
+ *   A string containing an HTML link to the user's page if the passed object
+ *   suggests that this is a site user. Otherwise, only the username is returned.
+ *
+ * @see template_preprocess_username()
+ * @see template_process_username()
+ */
+function theme_username($object) {
+  if (isset($object->link_path)) {
+    // We have a link path, so we should generate a link using l().
+    // Additional classes may be added as array elements like
+    // $object->link_options['attributes']['class'][] = 'myclass';
+    $output = l($object->name . $object->extra, $object->link_path, $object->link_options);
+  }
+  else {
+    // Modules may have added important attributes so they must be included
+    // in the output. Additional classes may be added as array elements like
+    // $object->attributes['class'][] = 'myclass';
+    $output = '<span' . drupal_attributes($object->attributes) . '>' . $object->name . $object->extra . '</span>';
+  }
   return $output;
 }
 
