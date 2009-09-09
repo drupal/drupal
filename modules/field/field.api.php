@@ -1265,16 +1265,13 @@ function hook_field_create_instance($instance) {
 /**
  * Act on a field being deleted.
  *
- * This hook is invoked just before the field is deleted.
- *
- * TODO: Not implemented.
+ * This hook is invoked just after field is deleted.
  *
  * @param $field
- *   The field being deleted.
+ *   The field just deleted.
  */
 function hook_field_delete_field($field) {
 }
-
 
 /**
  * Act on a field instance being updated.
@@ -1293,12 +1290,10 @@ function hook_field_update_instance($instance) {
 /**
  * Act on a field instance being deleted.
  *
- * This hook is invoked just before the instance is deleted.
- *
- * TODO: Not implemented.
+ * This hook is invoked just after the instance is deleted.
  *
  * @param $instance
- *   The instance just updated.
+ *   The instance just deleted.
  */
 function hook_field_delete_instance($instance) {
 }

@@ -379,14 +379,16 @@ function field_read_fields($params = array(), $include_additional = array()) {
  *   The field name to delete.
  */
 function field_delete_field($field_name) {
+  // Delete all non-deleted instances.
+  $field = field_info_field($field_name);
+  if (isset($field['bundles'])) {
+    foreach ($field['bundles'] as $bundle) {
+      field_delete_instance($field_name, $bundle);
+    }
+  }
+
   // Mark field storage for deletion.
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_delete_field', $field_name);
-
-  // Mark any instances of the field for deletion.
-  db_update('field_config_instance')
-    ->fields(array('deleted' => 1))
-    ->condition('field_name', $field_name)
-    ->execute();
 
   // Mark the field for deletion.
   db_update('field_config')
@@ -396,6 +398,8 @@ function field_delete_field($field_name) {
 
   // Clear the cache.
   field_cache_clear(TRUE);
+
+  module_invoke_all('field_delete_field', $field);
 }
 
 /**
@@ -683,6 +687,9 @@ function field_read_instances($params = array(), $include_additional = array()) 
  *   The bundle for the instance which will be deleted.
  */
 function field_delete_instance($field_name, $bundle) {
+  // Save the instance for hook_field_delete_instance before it is deleted.
+  $instance = field_info_instance($field_name, $bundle);
+
   // Mark the field instance for deletion.
   db_update('field_config_instance')
     ->fields(array('deleted' => 1))
@@ -694,6 +701,8 @@ function field_delete_instance($field_name, $bundle) {
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_delete_instance', $field_name, $bundle);
   // Clear the cache.
   field_cache_clear();
+
+  module_invoke_all('field_delete_instance', $instance);
 }
 
 /**
