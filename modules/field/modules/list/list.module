@@ -1,24 +1,10 @@
 <?php
-// $Id: list.module,v 1.13 2009/08/25 16:38:51 webchick Exp $
+// $Id: list.module,v 1.14 2009/09/09 21:21:54 dries Exp $
 
 /**
  * @file
  * Defines list field types that can be used with the Options module.
  */
-
-/**
- * Implement hook_theme().
- */
-function list_theme() {
-  return array(
-    'field_formatter_list_default' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_list_key' => array(
-      'arguments' => array('element' => NULL),
-    ),
-  );
-}
 
 /**
  * Implement hook_field_info().

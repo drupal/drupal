@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.508 2009/09/09 11:28:57 dries Exp $
+// $Id: taxonomy.module,v 1.509 2009/09/09 21:21:54 dries Exp $
 
 /**
  * @file
@@ -90,12 +90,6 @@ function taxonomy_theme() {
     ),
     'taxonomy_overview_terms' => array(
       'arguments' => array('form' => array()),
-    ),
-    'field_formatter_taxonomy_term_link' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_taxonomy_term_plain' => array(
-      'arguments' => array('element' => NULL),
     ),
     'taxonomy_autocomplete' => array(
       'arguments' => array('element' => NULL),

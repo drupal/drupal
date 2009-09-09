@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.25 2009/08/27 00:33:52 webchick Exp $
+// $Id: text.module,v 1.26 2009/09/09 21:21:54 dries Exp $
 
 /**
  * @file
@@ -15,18 +15,6 @@ function text_theme() {
       'arguments' => array('element' => NULL),
     ),
     'text_textfield' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_text_default' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_text_plain' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_text_trimmed' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_text_summary_or_trimmed' => array(
       'arguments' => array('element' => NULL),
     ),
   );
