@@ -7,20 +7,6 @@
  */
 
 /**
- * Implement hook_theme().
- */
-function list_theme() {
-  return array(
-    'field_formatter_list_default' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_list_key' => array(
-      'arguments' => array('element' => NULL),
-    ),
-  );
-}
-
-/**
  * Implement hook_field_info().
  */
 function list_field_info() {

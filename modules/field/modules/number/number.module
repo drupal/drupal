@@ -12,10 +12,16 @@
 function number_theme() {
   return array(
     'number' => array('arguments' => array('element' => NULL)),
-    'field_formatter_number_integer' => array('arguments' => array('element' => NULL), 'function' => 'theme_field_formatter_number'),
-    'field_formatter_number_decimal' => array('arguments' => array('element' => NULL), 'function' => 'theme_field_formatter_number'),
-    'field_formatter_number_unformatted' => array('arguments' => array('element' => NULL)),
   );
+}
+
+/**
+ * Implement hook_theme_alter().
+ */
+function number_theme_registry_alter(&$theme_registry) {
+  // The number_integer and number_decimal formatters use the same function.
+  $theme_registry['field_formatter_number_integer']['function'] = 'theme_field_formatter_number';
+  $theme_registry['field_formatter_number_decimal']['function'] = 'theme_field_formatter_number';
 }
 
 /**
@@ -204,7 +210,7 @@ function number_field_is_empty($item, $field) {
  */
 function number_field_formatter_info() {
   return array(
-    'number_integer' => array(
+    'number_default' => array(
       'label' => t('default'),
       'field types' => array('number_integer'),
       'settings' =>  array(

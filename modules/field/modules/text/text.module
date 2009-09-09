@@ -17,18 +17,6 @@ function text_theme() {
     'text_textfield' => array(
       'arguments' => array('element' => NULL),
     ),
-    'field_formatter_text_default' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_text_plain' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_text_trimmed' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_text_summary_or_trimmed' => array(
-      'arguments' => array('element' => NULL),
-    ),
   );
 }
 

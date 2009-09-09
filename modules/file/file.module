@@ -85,15 +85,6 @@ function file_theme() {
     'file_upload_help' => array(
       'arguments' => array('upload_validators' => NULL),
     ),
-    'field_formatter_file_default' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_file_table' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'field_formatter_file_url_plain' => array(
-      'arguments' => array('element' => NULL),
-    ),
   );
 }
 

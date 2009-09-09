@@ -153,8 +153,7 @@ function field_help($path, $arg) {
  */
 function field_theme() {
   $path = drupal_get_path('module', 'field') . '/theme';
-
-  return array(
+  $items = array(
     'field' => array(
       'template' => 'field',
       'arguments' => array('element' => NULL),
@@ -164,6 +163,13 @@ function field_theme() {
       'arguments' => array('element' => NULL),
     ),
   );
+  $field_formatters = field_info_formatter_types(NULL);
+  foreach ($field_formatters as $key => $field_formatter) {
+	$items["field_formatter_$key"] = array(
+      'arguments' => array('element' => NULL),
+    );
+  }
+  return $items;
 }
 
 /**

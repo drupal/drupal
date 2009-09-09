@@ -663,14 +663,25 @@ function hook_field_widget_error($element, $error) {
  * of drupal_render() on the render structure built by field_attach_view().
  *
  * The name of the theme hook invoked when displaying the values is derived
- * from formatter type names, following the pattern:
- * field_formatter_FORMATTER_NAME
- * The module implementing the formatters needs to register those theme hooks
- * using hook_theme().
+ * from formatter type names, using the pattern field_formatter_FORMATTER_NAME.
+ * field.module takes care of exposing the corresponding theme functions
+ * through hook_theme().  Specifically, field.module defines the theme
+ * hook:
+ *
+ * @code
+ *   'field_formatter_FORMATTER_NAME' => array(
+ *     'arguments' => array('element' => NULL),
+ *   )
+ * @code
+ *
+ * If a formatter requires a different theme hook definition,
+ * implement hook_theme_registry_alter().
  *
  * @see hook_field_formatter_info().
  * @see hook_field_formatter_info_alter().
  * @see theme_field_formatter_FORMATTER_NAME().
+ * @see hook_theme().
+ * @see hook_theme_registry_alter().
  *
  * @return
  *   An array describing the formatter types implemented by the module.
