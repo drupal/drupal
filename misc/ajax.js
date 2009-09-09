@@ -96,7 +96,7 @@ Drupal.ajax = function (base, element, element_settings) {
       type: 'bar',
       message: 'Please wait...'
     },
-    button: {},
+    button: {}
   };
 
   $.extend(this, defaults, element_settings);

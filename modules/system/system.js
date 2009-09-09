@@ -126,7 +126,7 @@ Drupal.behaviors.userTimeZones = {
     $('#edit-configurable-timezones', context).change(function () {
       $('#empty-timezone-message-wrapper').toggle();
     });
-  },
+  }
 };
 
 /**
@@ -160,7 +160,7 @@ Drupal.behaviors.pageCache = {
       $('#page-compression-wrapper').show();
       $('#cache-error').show();
     });
-  },
+  }
 };
 
 /**
