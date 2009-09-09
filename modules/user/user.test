@@ -5,108 +5,129 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'User registration',
-      'description' => 'Registers a user, fails login, resets password, successfully logs in with the one time password, fails password change, changes password, logs out, successfully logs in with the new password, visits profile page.',
+      'description' => 'Test registration of user under different configurations.',
       'group' => 'User'
     );
   }
-
-  /**
-   * Registers a user, fails login, resets password, successfully logs in with the one time password,
-   * changes password, logs out, successfully logs in with the new password, visits profile page.
-   *
-   * Assumes that the profile module is disabled.
-   */
-  function testUserRegistration() {
-    // Set user registration to "Visitors can create accounts and no administrator approval is required."
+  
+  function testRegistrationWithEmailVerification() {
+    // Require e-mail verification.
+    variable_set('user_email_verification', TRUE);
+    
+    // Set registration to administrator only.
+    variable_set('user_register', 0);
+    $this->drupalGet('user/register');
+    $this->assertResponse(403, t('Registration page is inaccessible when only administrators can create accounts.'));
+    
+    // Allow registration by site visitors without administrator approval.
     variable_set('user_register', 1);
-
-    // Enable user-configurable time zones, and set the default time zone to Brussels time.
-    variable_set('configurable_timezones', 1);
-    variable_set('date_default_timezone', 'Europe/Brussels');
-
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPost('user/register', $edit, t('Create new account'));
     $this->assertText(t('Your password and further instructions have been sent to your e-mail address.'), t('User registered successfully.'));
-
-    // Check database for created user.
-    $users = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
-    $user = reset($users);
-    $this->assertTrue($user, t('User found in database.'));
-    $this->assertTrue($user->uid > 0, t('User has valid user id.'));
-
-    // Check user fields.
-    $this->assertEqual($user->name, $name, t('Username matches.'));
-    $this->assertEqual($user->mail, $mail, t('E-mail address matches.'));
-    $this->assertEqual($user->theme, '', t('Correct theme field.'));
-    $this->assertEqual($user->signature, '', t('Correct signature field.'));
-    $this->assertTrue(($user->created > REQUEST_TIME - 20 ), t('Correct creation time.'));
-    $this->assertEqual($user->status, variable_get('user_register', 1) == 1 ? 1 : 0, t('Correct status field.'));
-    $this->assertEqual($user->timezone, variable_get('date_default_timezone'), t('Correct time zone field.'));
-    $this->assertEqual($user->language, '', t('Correct language field.'));
-    $this->assertEqual($user->picture, '', t('Correct picture field.'));
-    $this->assertEqual($user->init, $mail, t('Correct init field.'));
-
-    // Attempt to login with incorrect password.
+    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $this->assertTrue($new_user->status, t('New account is active after registration.'));
+    
+    // Allow registration by site visitors, but require administrator approval.
+    variable_set('user_register', 2);
     $edit = array();
-    $edit['name'] = $name;
-    $edit['pass'] = 'foo';
-    $this->drupalPost('user', $edit, t('Log in'));
-    $this->assertText(t('Sorry, unrecognized username or password. Have you forgotten your password?'), t('Invalid login attempt failed.'));
-
-    // Login using password reset page.
-    $url = user_pass_reset_url($user);
-    $this->drupalGet($url);
-    $this->assertText(t('This login can be used only once.'), t('Login can be used only once.'));
-
-    $this->drupalPost(NULL, NULL, t('Log in'));
-    $this->assertText(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'), t('This link is no longer valid.'));
-
-    // Check password type validation
+    $edit['name'] = $name = $this->randomName();
+    $edit['mail'] = $mail = $edit['name'] . '@example.com';
+    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $this->assertFalse($new_user->status, t('New account is blocked until approved by an administrator.'));
+  }
+  
+  function testRegistrationWithoutEmailVerification() {
+    // Don't require e-mail verification.
+    variable_set('user_email_verification', FALSE);
+    
+    // Allow registration by site visitors without administrator approval.
+    variable_set('user_register', 1);
     $edit = array();
+    $edit['name'] = $name = $this->randomName();
+    $edit['mail'] = $mail = $edit['name'] . '@example.com';
+    
+    // Try entering a mismatching password.
     $edit['pass[pass1]'] = '99999.0';
     $edit['pass[pass2]'] = '99999';
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPost('user/register', $edit, t('Create new account'));
     $this->assertText(t('The specified passwords do not match.'), t('Type mismatched passwords display an error message.'));
-    $this->assertNoText(t('The changes have been saved.'), t('Save user password with mismatched type in password confirm.'));
 
-    // Change user password.
-    $new_pass = user_password();
-    $edit = array();
-    $edit['pass[pass1]'] = $new_pass;
+    // Enter a correct password.
+    $edit['pass[pass1]'] = $new_pass = $this->randomName();
     $edit['pass[pass2]'] = $new_pass;
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertText(t('The changes have been saved.'), t('Password changed to @password', array('@password' => $new_pass)));
-
-    // Make sure password changes are present in database.
-    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
-
-    $user = user_load($user->uid, TRUE);
-    $this->assertTrue(user_check_password($new_pass, $user), t('Correct password in database.'));
-
-    // Logout of user account.
-    $this->clickLink(t('Log out'));
-    $this->assertNoText($user->name, t('Logged out.'));
-
-    // Login user.
+    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $this->assertText(t('Registration successful. You are now logged in.'), t('Users are logged in after registering.'));
+    $this->drupalLogout();
+    
+    // Allow registration by site visitors, but require administrator approval.
+    variable_set('user_register', 2);
     $edit = array();
-    $edit['name'] = $user->name;
-    $edit['pass'] = $new_pass;
-    $this->drupalPost('user', $edit, t('Log in'));
-    $this->assertText(t('Log out'), t('Logged in.'));
+    $edit['name'] = $name = $this->randomName();
+    $edit['mail'] = $mail = $edit['name'] . '@example.com';
+    $edit['pass[pass1]'] = $pass = $this->randomName();
+    $edit['pass[pass2]'] = $pass;
+    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->assertText(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.'), t('Users are notified of pending approval'));
+    
+    // Try to login before administrator approval.
+    $auth = array(
+      'name' => $name,
+      'pass' => $pass,
+    );
+    $this->drupalPost('user/login', $auth, t('Log in'));
+    $this->assertText(t('The username @name has not been activated or is blocked.', array('@name' => $name)), t('User cannot login yet.'));
 
-    $this->assertText($user->name, t('[logged in] Username found.'));
-    $this->assertNoText(t('Sorry. Unrecognized username or password.'), t('[logged in] No message for unrecognized username or password.'));
-    $this->assertNoText(t('User login'), t('[logged in] No user login form present.'));
+    // Activate the new account.
+    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $admin_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin_user);
+    $edit = array(
+      'status' => 1,
+    );
+    $this->drupalPost('user/' . $new_user->uid . '/edit', $edit, t('Save'));
+    $this->drupalLogout();
+    
+    // Login after administrator approval.
+    $this->drupalPost('user/login', $auth, t('Log in'));
+    $this->assertText(t('Member for'), t('User can log in after administrator approval.'));
+  }
 
-    $this->drupalGet('user');
-    $this->assertText($user->name, t('[user auth] Not login page.'));
-    $this->assertText(t('View'), t('[user auth] Found view tab on the profile page.'));
-    $this->assertText(t('Edit'), t('[user auth] Found edit tab on the profile page.'));
+  function testRegistrationDefaultValues() {
+    // Allow registration by site visitors without administrator approval.
+    variable_set('user_register', 1);
+    
+    // Don't require e-mail verification.
+    variable_set('user_email_verification', FALSE);
+    
+    // Set the default timezone to Brussels.
+    variable_set('configurable_timezones', 1);
+    variable_set('date_default_timezone', 'Europe/Brussels');
+    
+    $edit = array();
+    $edit['name'] = $name = $this->randomName();
+    $edit['mail'] = $mail = $edit['name'] . '@example.com';
+    $edit['pass[pass1]'] = $new_pass = $this->randomName();
+    $edit['pass[pass2]'] = $new_pass;
+    $this->drupalPost('user/register', $edit, t('Create new account'));
+    
+    // Check user fields.
+    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $this->assertEqual($new_user->name, $name, t('Username matches.'));
+    $this->assertEqual($new_user->mail, $mail, t('E-mail address matches.'));
+    $this->assertEqual($new_user->theme, '', t('Correct theme field.'));
+    $this->assertEqual($new_user->signature, '', t('Correct signature field.'));
+    $this->assertTrue(($new_user->created > REQUEST_TIME - 20 ), t('Correct creation time.'));
+    $this->assertEqual($new_user->status, variable_get('user_register', 1) == 1 ? 1 : 0, t('Correct status field.'));
+    $this->assertEqual($new_user->timezone, variable_get('date_default_timezone'), t('Correct time zone field.'));
+    $this->assertEqual($new_user->language, '', t('Correct language field.'));
+    $this->assertEqual($new_user->picture, '', t('Correct picture field.'));
+    $this->assertEqual($new_user->init, $mail, t('Correct init field.'));
   }
 }
-
 
 class UserValidationTestCase extends DrupalWebTestCase {
   public static function getInfo() {

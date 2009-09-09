@@ -2221,7 +2221,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
  * @param $role
  *   A string with the role name, or an integer with the role ID.
  * @return
- *   A fully-loaded role object if a role with the given name or ID 
+ *   A fully-loaded role object if a role with the given name or ID
  *   exists, FALSE otherwise.
  */
 function user_role_load($role) {
@@ -2241,7 +2241,7 @@ function user_role_load($role) {
  * @return
  *   Status constant indicating if role was created or updated.
  *   Failure to write the user role record will return FALSE. Otherwise.
- *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation 
+ *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
  *   performed.
  */
 function user_role_save($role) {
@@ -2257,7 +2257,7 @@ function user_role_save($role) {
     $status = drupal_write_record('role', $role);
     module_invoke_all('user_role_insert', $role);
   }
-  
+
   return $status;
 }
 
@@ -2280,10 +2280,10 @@ function user_role_delete($role) {
   db_delete('users_roles')
     ->condition('rid', $role->rid)
     ->execute();
-    
+
   // Clear the user access cache.
   user_access(NULL, NULL, TRUE);
-    
+
   module_invoke_all('user_role_delete', $role);
 }
 
@@ -2295,7 +2295,7 @@ function user_role_delete($role) {
  * @param $permissions
  *   An array of permissions strings.
  * @param $merge
- *   A boolean indicating whether to add permissions or to merge 
+ *   A boolean indicating whether to add permissions or to merge
  *   with all existing permissions.
  */
 function user_role_set_permissions($role, array $permissions = array(), $merge = FALSE) {
@@ -2971,56 +2971,41 @@ function user_register_submit($form, &$form_state) {
 
   watchdog('user', 'New user: %name (%email).', array('%name' => $name, '%email' => $mail), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
 
-  // The first user may login immediately, and receives a customized welcome e-mail.
-  if ($account->uid == 1) {
-    drupal_set_message(t('Welcome to Drupal. You are now logged in as user #1, which gives you full control over your website.'));
-    if (variable_get('user_email_verification', TRUE)) {
-      drupal_set_message(t('</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass)));
-    }
-
-    $form_state['values'] += $merge_data;
-    user_authenticate(array_merge($form_state));
-
-    $form_state['redirect'] = 'user/1/edit';
+  // Add plain text password into user account to generate mail tokens.
+  $account->password = $pass;
+  if ($admin && !$notify) {
+    drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
+  }
+  elseif (!variable_get('user_email_verification', TRUE) && $account->status && !$admin) {
+    // No e-mail verification is required, create new user account, and login
+    // user immediately.
+    _user_mail_notify('register_no_approval_required', $account);
+    $form_state['uid'] = $account->uid;
+    user_login_submit(array(), $form_state);
+    drupal_set_message(t('Registration successful. You are now logged in.'));
+    $form_state['redirect'] = '';
     return;
   }
-  else {
-    // Add plain text password into user account to generate mail tokens.
-    $account->password = $pass;
-    if ($admin && !$notify) {
-      drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
-    }
-    elseif (!variable_get('user_email_verification', TRUE) && $account->status && !$admin) {
-      // No e-mail verification is required, create new user account, and login
-      // user immediately.
-      _user_mail_notify('register_no_approval_required', $account);
-      if (user_authenticate(array_merge($form_state['values'], $merge_data))) {
-        drupal_set_message(t('Registration successful. You are now logged in.'));
-      }
-      $form_state['redirect'] = '';
-      return;
-    }
-    elseif ($account->status || $notify) {
-      // Create new user account, no administrator approval required.
-      $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
-      _user_mail_notify($op, $account);
-      if ($notify) {
-        drupal_set_message(t('Password and further instructions have been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
-      }
-      else {
-        drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
-        $form_state['redirect'] = '';
-        return;
-      }
+  elseif ($account->status || $notify) {
+    // Create new user account, no administrator approval required.
+    $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
+    _user_mail_notify($op, $account);
+    if ($notify) {
+      drupal_set_message(t('Password and further instructions have been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
     }
     else {
-      // Create new user account, administrator approval required.
-      _user_mail_notify('register_pending_approval', $account);
-      drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your e-mail address.'));
+      drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
       $form_state['redirect'] = '';
       return;
-
     }
+  }
+  else {
+    // Create new user account, administrator approval required.
+    _user_mail_notify('register_pending_approval', $account);
+    drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your e-mail address.'));
+    $form_state['redirect'] = '';
+    return;
+
   }
 }
 
