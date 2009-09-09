@@ -1661,8 +1661,7 @@ function taxonomy_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@taxonomy">Taxonomy module</a>.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) . '</p>';
       return $output;
     case 'admin/structure/taxonomy':
-      $output = '<p>' . t("The taxonomy module allows you to categorize your content using both tags and administrator defined terms. It is a flexible tool for classifying content with many advanced features. To begin, create a 'Vocabulary' to hold one set of terms or tags. You can create one free-tagging vocabulary for everything, or separate controlled vocabularies to define the various properties of your content, for example 'Countries' or 'Colors'.") . '</p>';
-      $output .= '<p>' . t('Use the list below to configure and review the vocabularies defined on your site, or to list and manage the terms (tags) they contain. A vocabulary may (optionally) be tied to specific content types as shown in the <em>Type</em> column and, if so, will be displayed when creating or editing posts of that type. Multiple vocabularies tied to the same content type will be displayed in the order shown below. Remember that your changes will not be saved until you click the <em>Save</em> button at the bottom of the page.') . '</p>';
+      $output = '<p>' . t('Configure the vocabularies and terms for your site.') . '</p>';
       return $output;
     case 'admin/structure/taxonomy/%/list':
       $vocabulary = taxonomy_vocabulary_load($arg[3]);
