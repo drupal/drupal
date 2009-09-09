@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.34 2009/08/31 05:51:08 dries Exp $
+// $Id: system.js,v 1.35 2009/09/09 21:53:15 dries Exp $
 (function ($) {
 
 /**
@@ -126,7 +126,7 @@ Drupal.behaviors.userTimeZones = {
     $('#edit-configurable-timezones', context).change(function () {
       $('#empty-timezone-message-wrapper').toggle();
     });
-  },
+  }
 };
 
 /**
@@ -160,7 +160,7 @@ Drupal.behaviors.pageCache = {
       $('#page-compression-wrapper').show();
       $('#cache-error').show();
     });
-  },
+  }
 };
 
 /**

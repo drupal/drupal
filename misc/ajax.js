@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.1 2009/08/17 07:12:15 webchick Exp $
+// $Id: ajax.js,v 1.2 2009/09/09 21:53:14 dries Exp $
 (function ($) {
 
 /**
@@ -96,7 +96,7 @@ Drupal.ajax = function (base, element, element_settings) {
       type: 'bar',
       message: 'Please wait...'
     },
-    button: {},
+    button: {}
   };
 
   $.extend(this, defaults, element_settings);
