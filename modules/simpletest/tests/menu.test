@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.13 2009/07/14 20:53:16 webchick Exp $
+// $Id: menu.test,v 1.14 2009/09/09 21:33:00 dries Exp $
 
 /**
  * @file
@@ -73,6 +73,13 @@ class MenuIncTestCase extends DrupalWebTestCase {
     $this->assertNoLink(t('Menu link #1'), 0, t('Not found menu link #1'));
     $this->assertNoLink(t('Menu link #1'), 0, t('Not found menu link #1-1'));
     $this->assertLink(t('Menu link #2'), 0, t('Found menu link #2'));
+  }
+
+  /**
+   * Test menu_get_names().
+   */
+  function testMenuGetNames() {
+    $this->assertEqual(menu_get_names(), array('admin_shortcuts', 'main-menu', 'management', 'navigation', 'original', 'user-menu'), t('Expected menu names were returned.'));
   }
 
   /**
