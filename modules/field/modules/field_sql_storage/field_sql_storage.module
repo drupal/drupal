@@ -26,7 +26,7 @@ function field_sql_storage_help($path, $arg) {
  *   A string containing the generated name for the database table
  */
 function _field_sql_storage_tablename($field) {
-  return "field_data_{$field['field_name']}_{$field['id']}";
+  return "field_data_{$field['field_name']}" . ($field['deleted'] ? "_{$field['id']}" : '');
 }
 
 /**
@@ -38,7 +38,7 @@ function _field_sql_storage_tablename($field) {
  *   A string containing the generated name for the database table
  */
 function _field_sql_storage_revision_tablename($field) {
-  return "field_revision_{$field['field_name']}_{$field['id']}";
+  return "field_revision_{$field['field_name']}" . ($field['deleted'] ? "_{$field['id']}" : '');
 }
 
 /**
@@ -207,12 +207,24 @@ function field_sql_storage_field_storage_create_field($field) {
  * Implement hook_field_storage_delete_field().
  */
 function field_sql_storage_field_storage_delete_field($field_name) {
-  // Mark all data associated with the field for deletion.
   $field = field_info_field($field_name);
+
+  // Mark all data associated with the field for deletion.
+  $field['deleted'] = 0;
   $table = _field_sql_storage_tablename($field);
+  $revision_table = _field_sql_storage_revision_tablename($field);
   db_update($table)
     ->fields(array('deleted' => 1))
     ->execute();
+
+  // Move the table to a unique name while the table contents are being deleted.
+  $ret = array();
+  $field['deleted'] = 1;
+  $new_table = _field_sql_storage_tablename($field);
+  $revision_new_table = _field_sql_storage_revision_tablename($field);
+  db_rename_table($ret, $table, $new_table);
+  db_rename_table($ret, $revision_table, $revision_new_table);
+  drupal_get_schema(NULL, TRUE);
 }
 
 /**
