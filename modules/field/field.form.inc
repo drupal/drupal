@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.23 2009/08/27 04:40:12 webchick Exp $
+// $Id: field.form.inc,v 1.24 2009/09/10 22:31:58 webchick Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
   // This could be called with no object, as when a UI module creates a
   // dummy form to set default values.
   if ($object) {
-    list($id, , ) = field_attach_extract_ids($obj_type, $object);
+    list($id, , ) = field_extract_ids($obj_type, $object);
   }
   $addition = array();
 
