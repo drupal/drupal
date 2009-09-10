@@ -1061,7 +1061,7 @@ function book_export_traverse($tree, $visit_func) {
  *   The HTML generated for the given node.
  */
 function book_node_export($node, $children = '') {
-  $node = node_build_content($node, 'print');
+  node_build_content($node, 'print');
   $node->rendered = drupal_render($node->content);
 
   return theme('book_node_export_html', $node, $children);

@@ -179,7 +179,7 @@ function hook_search_execute($keys = NULL) {
   foreach ($find as $item) {
     // Build the node body.
     $node = node_load($item->sid);
-    $node = node_build_content($node, 'search_result');
+    node_build_content($node, 'search_result');
     $node->body = drupal_render($node->content);
 
     // Fetch comments for snippet.
@@ -265,7 +265,7 @@ function hook_update_index() {
     variable_set('node_cron_last', $node->changed);
 
     // Render the node.
-    $node = node_build_content($node, 'search_index');
+    node_build_content($node, 'search_index');
     $node->rendered = drupal_render($node->content);
 
     $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->rendered;

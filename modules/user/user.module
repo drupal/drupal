@@ -1371,7 +1371,7 @@ function user_menu() {
     'title' => 'My account',
     'title callback' => 'user_page_title',
     'title arguments' => array(1),
-    'page callback' => 'user_view',
+    'page callback' => 'user_build',
     'page arguments' => array(1),
     'access callback' => 'user_view_access',
     'access arguments' => array(1),
@@ -1502,12 +1502,9 @@ function user_uid_optional_to_arg($arg) {
 }
 
 /**
- * Menu item title callback - use the user name if it's not the current user.
+ * Menu item title callback - use the user name.
  */
 function user_page_title($account) {
-  if ($account->uid == $GLOBALS['user']->uid) {
-    return t('My account');
-  }
   return $account->name;
 }
 
@@ -2068,23 +2065,61 @@ function _user_cancel($edit, $account, $method) {
 }
 
 /**
- * Builds a structured array representing the profile content.
+ * Generate an array for rendering the given user.
+ *
+ * When viewing a user profile, the $page array contains:
+ *
+ * - $page['content']['Profile Category']:
+ *   Profile categories keyed by their human-readable names.
+ * - $page['content']['Profile Category']['profile_machine_name']:
+ *   Profile fields keyed by their machine-readable names.
+ * - $page['content']['user_picture']:
+ *   User's rendered picture.
+ * - $page['content']['summary']:
+ *   Contains the default "History" profile data for a user.
+ * - $page['content']['#account']:
+ *   The user account of the profile being viewed.
+ *
+ * To theme user profiles, copy modules/user/user-profile.tpl.php
+ * to your theme directory, and edit it as instructed in that file's comments. 
  *
  * @param $account
  *   A user object.
  *
  * @return
- *   A structured array containing the individual elements of the profile.
+ *   An array as expected by drupal_render().
+ */
+function user_build($account) {
+  // Retrieve all profile fields and attach to $account->content.
+  user_build_content($account);
+
+  $build = $account->content;
+  // We don't need duplicate rendering info in account->content.
+  unset($account->content);
+  
+  $build += array(
+    '#theme' => 'user_profile',
+    '#account' => $account,
+  );
+
+  return $build;
+}
+
+/**
+ * Builds a structured array representing the profile content.
+ *
+ * @param $account
+ *   A user object.
+ *
  */
 function user_build_content($account) {
   $account->content = array();
 
   // Build fields content.
-  // TODO D7 : figure out where exactly this needs to go
   $account->content += field_attach_view('user', $account);
 
+  // Populate $account->content with a render() array.
   module_invoke_all('user_view', $account);
-  return $account->content;
 }
 
 /**

@@ -767,9 +767,13 @@ function comment_prepare_thread(&$comments) {
  */
 function comment_build($comment, $build_mode = 'full') {
   $node = node_load($comment->nid);
-  $comment = comment_build_content($comment, $build_mode);
+  
+  // Populate $comment->content with a render() array.
+  comment_build_content($comment, $build_mode);
 
   $build = $comment->content;
+  // We don't need duplicate rendering info in comment->content.
+  unset($comment->content);
 
   $build += array(
     '#theme' => 'comment',
@@ -812,9 +816,6 @@ function comment_build($comment, $build_mode = 'full') {
  *   A comment object.
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
- * @return
- *   A structured array containing the individual elements
- *   of the comment's content.
  */
 function comment_build_content($comment, $build_mode = 'full') {
   if (empty($comment->content)) {
@@ -841,8 +842,6 @@ function comment_build_content($comment, $build_mode = 'full') {
 
   // Allow modules to modify the structured comment.
   drupal_alter('comment_build', $comment, $build_mode);
-
-  return $comment;
 }
 
 /**
@@ -2084,13 +2083,18 @@ function template_preprocess_comment(&$variables) {
   $variables['comment']   = $comment;
   $variables['node']      = node_load($comment->nid);
   $variables['author']    = theme('username', $comment);
-  $variables['content']   = $comment->content;
   $variables['date']      = format_date($comment->timestamp);
   $variables['new']       = !empty($comment->new) ? t('new') : '';
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '';
   $variables['signature'] = $comment->signature;
   $variables['title']     = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
   $variables['template_files'][] = 'comment-' . $variables['node']->type;
+  
+  // Helpful $content variable for templates.
+  foreach (element_children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+  
   // Set status to a string representation of comment->status.
   if (isset($comment->in_preview)) {
     $variables['status']  = 'comment-preview';

@@ -160,39 +160,6 @@ function user_logout() {
 }
 
 /**
- * Menu callback; Displays a user or user profile page.
- *
- * The $page['content'] array for user profile pages contains:
- *
- * - $page['content']['Profile Category']:
- *   Profile categories keyed by their human-readable names.
- * - $page['content']['Profile Category']['profile_machine_name']:
- *   Profile fields keyed by their machine-readable names.
- * - $page['content']['user_picture']:
- *   User's rendered picture.
- * - $page['content']['summary']:
- *   Contains the default "History" profile data for a user.
- * - $page['content']['#account']:
- *   The user account of the profile being viewed.
- *
- * To theme user profiles, copy modules/user/user-profile.tpl.php
- * to your theme directory, and edit it as instructed in that file's comments.
- */
-function user_view($account) {
-  drupal_set_title($account->name);
-  // Retrieve all profile fields and attach to $account->content.
-  user_build_content($account);
-
-  $build = $account->content;
-  $build += array(
-    '#theme' => 'user_profile',
-    '#account' => $account,
-  );
-
-  return $build;
-}
-
-/**
  * Process variables for user-profile.tpl.php.
  *
  * The $variables array contains the following arguments:
@@ -202,7 +169,10 @@ function user_view($account) {
  */
 function template_preprocess_user_profile(&$variables) {
   $account = $variables['elements']['#account'];
-  $variables['user_profile'] = $account->content;
+  // Helpful $user_profile variable for templates.
+  foreach (element_children($variables['elements']) as $key) {
+    $variables['user_profile'][$key] = $variables['elements'][$key];
+  }
 }
 
 /**

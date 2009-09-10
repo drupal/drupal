@@ -1030,9 +1030,13 @@ function node_delete_multiple($nids) {
 function node_build($node, $build_mode = 'full') {
   $node = (object)$node;
 
-  $node = node_build_content($node, $build_mode);
+  // Populate $node->content with a render() array.
+  node_build_content($node, $build_mode);
 
   $build = $node->content;
+  // We don't need duplicate rendering info in node->content.
+  unset($node->content);
+  
   $build += array(
     '#theme' => 'node',
     '#node' => $node,
@@ -1066,9 +1070,6 @@ function node_build($node, $build_mode = 'full') {
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
  *
- * @return
- *   A structured array containing the individual elements
- *   of the node's content.
  */
 function node_build_content($node, $build_mode = 'full') {
   // The 'view' hook can be implemented to overwrite the default function
@@ -1104,8 +1105,6 @@ function node_build_content($node, $build_mode = 'full') {
 
   // Allow modules to modify the structured node.
   drupal_alter('node_build', $node, $build_mode);
-
-  return $node;
 }
 
 /**
@@ -1163,9 +1162,14 @@ function template_preprocess_node(&$variables) {
 
   // Flatten the node object's member fields.
   $variables = array_merge((array)$node, $variables);
+  
+  // Helpful $content variable for templates.
+  foreach (element_children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
 
   // Make the field variables available with the appropriate language.
-  field_attach_preprocess('node', $node, $node->content, $variables);
+  field_attach_preprocess('node', $node, $variables['content'], $variables);
 
   // Display post information only on certain node types.
   if (variable_get('node_submitted_' . $node->type, TRUE)) {
@@ -1382,7 +1386,7 @@ function node_search_execute($keys = NULL) {
   foreach ($find as $item) {
     // Render the node.
     $node = node_load($item->sid);
-    $node = node_build_content($node, 'search_result');
+    node_build_content($node, 'search_result');
     $node->rendered = drupal_render($node->content);
   
     // Fetch comments for snippet.
@@ -1841,7 +1845,7 @@ function node_feed($nids = FALSE, $channel = array()) {
 
     // The node gets built and modules add to or modify $node->rss_elements
     // and $node->rss_namespaces.
-    $node = node_build_content($node, 'rss');
+    node_build_content($node, 'rss');
 
     if (!empty($node->rss_namespaces)) {
       $namespaces = array_merge($namespaces, $node->rss_namespaces);
@@ -1985,7 +1989,7 @@ function _node_index_node($node) {
   variable_set('node_cron_last', $node->changed);
 
   // Render the node.
-  $node = node_build_content($node, 'search_index');
+  node_build_content($node, 'search_index');
   $node->rendered = drupal_render($node->content);
 
   $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->rendered;

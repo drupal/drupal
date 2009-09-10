@@ -88,7 +88,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
 
-    $this->assertText(t('My account'), t('User was logged in.'));
+    $this->assertText($this->web_user->name, t('User was logged in.'));
   }
 
   /**
@@ -150,7 +150,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     // so the form is submitted manually instead.
     $this->assertRaw('<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>', t('JavaScript form submission found.'));
     $this->drupalPost(NULL, array(), t('Send'));
-    $this->assertText(t('My account'), t('User was logged in.'));
+    $this->assertText('johndoe', t('User was logged in.'));
 
     $user = user_load_by_name('johndoe');
     $this->assertTrue($user, t('User was found.'));
