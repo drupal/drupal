@@ -22,7 +22,7 @@ function contact_help($path, $arg) {
     case 'admin/structure/contact':
       $output = '<p>' . t('This page lets you set up <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/structure/contact/settings'), '@form' => url('contact'))) . '</p>';
       if (!module_exists('menu')) {
-        $menu_note = t('The menu item can be customized and configured only once the menu module has been <a href="@modules-page">enabled</a>.', array('@modules-page' => url('admin/settings/modules')));
+        $menu_note = t('The menu item can be customized and configured only once the menu module has been <a href="@modules-page">enabled</a>.', array('@modules-page' => url('admin/config/modules')));
       }
       else {
         $menu_note = '';

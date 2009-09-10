@@ -534,15 +534,6 @@ function system_menu() {
   );
 
   // Menu items that are basically just menu blocks.
-  $items['admin/settings'] = array(
-    'title' => 'Site configuration',
-    'description' => 'Configure site settings.',
-    'position' => 'right',
-    'weight' => -2,
-    'page callback' => 'system_settings_overview',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-  );
   $items['admin/structure'] = array(
     'title' => 'Structure',
     'description' => 'Control how your site looks and feels.',

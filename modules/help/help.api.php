@@ -46,7 +46,7 @@
  *   $output .= 'A role defines a group of users that have certain
  *     privileges as defined in %permission.';
  *   $output = t($output, array('%permission' => l(t('user permissions'),
- *     'admin/settings/permission')));
+ *     'admin/config/people/permissions')));
  *
  * For a detailed usage example, see page_example.module.
  */
@@ -57,8 +57,7 @@ function hook_help($path, $arg) {
 
     case 'admin/structure/block':
       return t('<p>Blocks are boxes of content that may be rendered into certain regions of your web pages, for example, into sidebars. They are usually generated automatically by modules, but administrators can create blocks manually.</p>
-<p>If you want certain blocks to disable themselves temporarily during high server loads, check the "Throttle" box. You can configure the auto-throttle on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
-<p>You can configure the behavior of each block (for example, specifying on which pages and for what users it will appear) by clicking the "configure" link for each block.</p>', array('@throttle' => url('admin/settings/throttle')));
+<p>You can configure the behavior of each block (for example, specifying on which pages and for what users it will appear) by clicking the "configure" link for each block.</p>');
   }
 }
 
