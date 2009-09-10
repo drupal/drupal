@@ -838,17 +838,16 @@ function user_search_execute($keys = NULL) {
 }
 
 /**
- * Implement hook_elements().
+ * Implement hook_element_info().
  */
-function user_elements() {
-  return array(
-    'user_profile_category' => array(
-      '#theme_wrappers' => array('user_profile_category')
-    ),
-    'user_profile_item' => array(
-      '#theme' => 'user_profile_item'
-    ),
+function user_element_info() {
+  $types['user_profile_category'] = array(
+    '#theme_wrappers' => array('user_profile_category'),
   );
+  $types['user_profile_item'] = array(
+    '#theme' => 'user_profile_item',
+  );
+  return $types;
 }
 
 /**

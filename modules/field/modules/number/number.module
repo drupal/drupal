@@ -292,32 +292,26 @@ function number_field_widget_info() {
 }
 
 /**
- * Implement FAPI hook_elements().
- *
- * Any FAPI callbacks needed for individual widgets can be declared here,
- * and the element will be passed to those callbacks for processing.
- *
- * Drupal will automatically theme the element using a theme with
- * the same name as the hook_elements key.
+ * Implement hook_element_info().
  *
  * Includes a regex to check for valid values as an additional parameter
  * the validator can use. The regex can be overridden if necessary.
  */
-function number_elements() {
-  return array(
-    'number' => array(
-      '#input' => TRUE,
-      '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('number_elements_process'),
-    ),
+function number_element_info() {
+  $types['number'] = array(
+    '#input' => TRUE,
+    '#columns' => array('value'),
+    '#delta' => 0,
+    '#process' => array('number_elements_process'),
   );
+  return $types;
 }
 
 /**
  * Implement hook_field_widget().
  *
  * Attach a single form element to the form. It will be built out and
- * validated in the callback(s) listed in hook_elements. We build it
+ * validated in the callback(s) listed in hook_element_info(). We build it
  * out in the callbacks rather than here in hook_widget so it can be
  * plugged into any module that can provide it with valid
  * $field information.

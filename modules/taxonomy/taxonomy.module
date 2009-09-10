@@ -2144,23 +2144,16 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
 }
 
 /**
- * Implement FAPI hook_elements().
- *
- * Any FAPI callbacks needed for individual widgets can be declared here,
- * and the element will be passed to those callbacks for processing.
- *
- * Drupal will automatically theme the element using a theme with
- * the same name as the hook_elements key.
+ * Implement hook_element_info().
  */
-function taxonomy_elements() {
-  return array(
-    'taxonomy_autocomplete' => array(
-      '#input' => TRUE,
-      '#columns' => array('value'),
-      '#delta' => 0,
-      '#process' => array('taxonomy_autocomplete_elements_process'),
-    ),
+function taxonomy_element_info() {
+  $types['taxonomy_autocomplete'] = array(
+    '#input' => TRUE,
+    '#columns' => array('value'),
+    '#delta' => 0,
+    '#process' => array('taxonomy_autocomplete_elements_process'),
   );
+  return $types;
 }
 
 /**

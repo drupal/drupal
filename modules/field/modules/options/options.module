@@ -67,32 +67,28 @@ function options_field_widget_info() {
 }
 
 /**
- * Implement FAPI hook_elements().
- *
- * Any FAPI callbacks needed for individual widgets can be declared here,
- * and the element will be passed to those callbacks for processing.
- *
- * Drupal will automatically theme the element using a theme with
- * the same name as the hook_elements key.
+ * Implement hook_element_info().
  */
-function options_elements() {
-  return array(
-    'options_select' => array(
-      '#input' => TRUE,
-      '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('options_select_elements_process'),
-      ),
-    'options_buttons' => array(
-      '#input' => TRUE,
-      '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('options_buttons_elements_process'),
-      ),
-    'options_onoff' => array(
-      '#input' => TRUE,
-      '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('options_onoff_elements_process'),
-      ),
-    );
+function options_element_info() {
+  $types['options_select'] = array(
+    '#input' => TRUE,
+    '#columns' => array('value'),
+    '#delta' => 0,
+    '#process' => array('options_select_elements_process'),
+  );
+  $types['options_buttons'] = array(
+    '#input' => TRUE,
+    '#columns' => array('value'),
+    '#delta' => 0,
+    '#process' => array('options_buttons_elements_process'),
+  );
+  $types['options_onoff'] = array(
+    '#input' => TRUE,
+    '#columns' => array('value'),
+    '#delta' => 0,
+    '#process' => array('options_onoff_elements_process'),
+  );
+  return $types;
 }
 
 /**

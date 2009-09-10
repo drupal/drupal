@@ -521,48 +521,44 @@ function text_field_widget_settings_form($field, $instance) {
 }
 
 /**
- * Implement FAPI hook_elements().
- *
- * Any FAPI callbacks needed for individual widgets can be declared here,
- * and the element will be passed to those callbacks for processing.
- *
- * Drupal will automatically theme the element using a theme with
- * the same name as the hook_elements key.
+ * Implement hook_element_info().
  *
  * Autocomplete_path is not used by text_field_widget but other
  * widgets can use it (see nodereference and userreference).
  */
-function text_elements() {
-  return array(
-    'text_textfield' => array(
-      '#input' => TRUE,
-      '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('text_textfield_elements_process'),
-      '#theme_wrappers' => array('text_textfield'),
-      '#autocomplete_path' => FALSE,
-    ),
-    'text_textarea' => array(
-      '#input' => TRUE,
-      '#columns' => array('value', 'format'), '#delta' => 0,
-      '#process' => array('text_textarea_elements_process'),
-      '#theme_wrappers' => array('text_textarea'),
-      '#filter_value' => FILTER_FORMAT_DEFAULT,
-    ),
-    'text_textarea_with_summary' => array(
-      '#input' => TRUE,
-      '#columns' => array('value', 'format', 'summary'), '#delta' => 0,
-      '#process' => array('text_textarea_with_summary_process'),
-      '#theme_wrappers' => array('text_textarea'),
-      '#filter_value' => FILTER_FORMAT_DEFAULT,
-    ),
+function text_element_info() {
+  $types['text_textfield'] = array(
+    '#input' => TRUE,
+    '#columns' => array('value'),
+    '#delta' => 0,
+    '#process' => array('text_textfield_elements_process'),
+    '#theme_wrappers' => array('text_textfield'),
+    '#autocomplete_path' => FALSE,
   );
+  $types['text_textarea'] = array(
+    '#input' => TRUE,
+    '#columns' => array('value', 'format'),
+    '#delta' => 0,
+    '#process' => array('text_textarea_elements_process'),
+    '#theme_wrappers' => array('text_textarea'),
+    '#filter_value' => FILTER_FORMAT_DEFAULT,
+  );
+  $types['text_textarea_with_summary'] = array(
+    '#input' => TRUE,
+    '#columns' => array('value', 'format', 'summary'),
+    '#delta' => 0,
+    '#process' => array('text_textarea_with_summary_process'),
+    '#theme_wrappers' => array('text_textarea'),
+    '#filter_value' => FILTER_FORMAT_DEFAULT,
+  );
+  return $types;
 }
 
 /**
  * Implement hook_field_widget().
  *
  * Attach a single form element to the form. It will be built out and
- * validated in the callback(s) listed in hook_elements. We build it
+ * validated in the callback(s) listed in hook_element_info(). We build it
  * out in the callbacks rather than here in hook_field_widget so it can be
  * plugged into any module that can provide it with valid
  * $field information.

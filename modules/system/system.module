@@ -279,32 +279,28 @@ function system_entity_info() {
 }
 
 /**
- * Implement hook_elements().
+ * Implement hook_element_info().
  */
-function system_elements() {
-  // Top level form
-  $type['form'] = array(
+function system_element_info() {
+  // Top level elements.
+  $types['form'] = array(
     '#method' => 'post',
     '#action' => request_uri(),
     '#theme_wrappers' => array('form'),
   );
-
-  $type['page'] = array(
+  $types['page'] = array(
     '#show_messages' => TRUE,
     '#theme' => 'page',
   );
-
-  $type['list'] = array(
+  $types['list'] = array(
     '#title' => '',
     '#list_type' => 'ul',
     '#attributes' => array(),
     '#items' => array(),
   );
 
-  /**
-   * Input elements.
-   */
-  $type['submit'] = array(
+  // Input elements.
+  $types['submit'] = array(
     '#input' => TRUE,
     '#name' => 'op',
     '#button_type' => 'submit',
@@ -312,8 +308,7 @@ function system_elements() {
     '#process' => array('ajax_process_form'),
     '#theme_wrappers' => array('button'),
   );
-
-  $type['button'] = array(
+  $types['button'] = array(
     '#input' => TRUE,
     '#name' => 'op',
     '#button_type' => 'submit',
@@ -321,8 +316,7 @@ function system_elements() {
     '#process' => array('ajax_process_form'),
     '#theme_wrappers' => array('button'),
   );
-
-  $type['image_button'] = array(
+  $types['image_button'] = array(
     '#input' => TRUE,
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
@@ -332,8 +326,7 @@ function system_elements() {
     '#src' => NULL,
     '#theme_wrappers' => array('image_button'),
   );
-
-  $type['textfield'] = array(
+  $types['textfield'] = array(
     '#input' => TRUE,
     '#size' => 60,
     '#maxlength' => 128,
@@ -342,8 +335,7 @@ function system_elements() {
     '#theme' => 'textfield',
     '#theme_wrappers' => array('form_element'),
   );
-
-  $type['password'] = array(
+  $types['password'] = array(
     '#input' => TRUE,
     '#size' => 60,
     '#maxlength' => 128,
@@ -351,14 +343,12 @@ function system_elements() {
     '#theme' => 'password',
     '#theme_wrappers' => array('form_element'),
   );
-
-  $type['password_confirm'] = array(
+  $types['password_confirm'] = array(
     '#input' => TRUE,
     '#process' => array('form_process_password_confirm'),
     '#theme_wrappers' => array('form_element'),
   );
-
-  $type['textarea'] = array(
+  $types['textarea'] = array(
     '#input' => TRUE,
     '#cols' => 60,
     '#rows' => 5,
@@ -367,15 +357,13 @@ function system_elements() {
     '#theme' => 'textarea',
     '#theme_wrappers' => array('form_element'),
   );
-
-  $type['radios'] = array(
+  $types['radios'] = array(
     '#input' => TRUE,
     '#process' => array('form_process_radios'),
     '#theme_wrappers' => array('radios'),
     '#pre_render' => array('form_pre_render_conditional_form_element'),
   );
-
-  $type['radio'] = array(
+  $types['radio'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,
     '#process' => array('ajax_process_form'),
@@ -383,16 +371,14 @@ function system_elements() {
     '#theme_wrappers' => array('form_element'),
     '#form_element_skip_title' => TRUE,
   );
-
-  $type['checkboxes'] = array(
+  $types['checkboxes'] = array(
     '#input' => TRUE,
     '#tree' => TRUE,
     '#process' => array('form_process_checkboxes'),
     '#theme_wrappers' => array('checkboxes'),
     '#pre_render' => array('form_pre_render_conditional_form_element'),
   );
-
-  $type['checkbox'] = array(
+  $types['checkbox'] = array(
     '#input' => TRUE,
     '#return_value' => 1,
     '#process' => array('ajax_process_form'),
@@ -400,8 +386,7 @@ function system_elements() {
     '#theme_wrappers' => array('form_element'),
     '#form_element_skip_title' => TRUE,
   );
-
-  $type['select'] = array(
+  $types['select'] = array(
     '#input' => TRUE,
     '#size' => 0,
     '#multiple' => FALSE,
@@ -409,64 +394,54 @@ function system_elements() {
     '#theme' => 'select',
     '#theme_wrappers' => array('form_element'),
   );
-
-  $type['weight'] = array(
+  $types['weight'] = array(
     '#input' => TRUE,
     '#delta' => 10,
     '#default_value' => 0,
     '#process' => array('form_process_weight', 'ajax_process_form'),
   );
-
-  $type['date'] = array(
+  $types['date'] = array(
     '#input' => TRUE,
     '#element_validate' => array('date_validate'),
     '#process' => array('form_process_date'),
     '#theme' => 'date',
     '#theme_wrappers' => array('form_element'),
   );
-
-  $type['file'] = array(
+  $types['file'] = array(
     '#input' => TRUE,
     '#size' => 60,
     '#theme' => 'file',
     '#theme_wrappers' => array('form_element'),
   );
-
-  $type['tableselect'] = array(
+  $types['tableselect'] = array(
     '#input' => TRUE,
     '#js_select' => TRUE,
     '#multiple' => TRUE,
     '#process' => array('form_process_tableselect'),
     '#options' => array(),
     '#empty' => '',
-    '#theme' => 'tableselect'
+    '#theme' => 'tableselect',
   );
 
-  /**
-   * Form structure.
-   */
-  $type['item'] = array(
+  // Form structure.
+  $types['item'] = array(
     '#markup' => '',
     '#theme' => 'markup',
     '#theme_wrappers' => array('form_element'),
   );
-
-  $type['hidden'] = array(
+  $types['hidden'] = array(
     '#input' => TRUE,
     '#process' => array('ajax_process_form'),
     '#theme' => 'hidden',
   );
-
-  $type['value'] = array(
+  $types['value'] = array(
     '#input' => TRUE,
   );
-
-  $type['markup'] = array(
+  $types['markup'] = array(
     '#markup' => '',
     '#theme' => 'markup',
   );
-
-  $type['fieldset'] = array(
+  $types['fieldset'] = array(
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#value' => NULL,
@@ -474,19 +449,17 @@ function system_elements() {
     '#pre_render' => array('form_pre_render_fieldset'),
     '#theme_wrappers' => array('fieldset'),
   );
-
-  $type['vertical_tabs'] = array(
+  $types['vertical_tabs'] = array(
     '#theme_wrappers' => array('vertical_tabs'),
     '#default_tab' => '',
     '#process' => array('form_process_vertical_tabs'),
   );
-
-  $type['token'] = array(
+  $types['token'] = array(
     '#input' => TRUE,
     '#theme' => array('hidden'),
   );
 
-  return $type;
+  return $types;
 }
 
 /**

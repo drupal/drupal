@@ -1932,7 +1932,7 @@ function form_process_radios($element) {
  *   $form_state['values']['body_format'] = 1;
  * @endcode
  *
- * @see system_elements(), filter_form()
+ * @see system_element_info(), filter_form()
  */
 function form_process_text_format($element) {
   if (isset($element['#text_format'])) {

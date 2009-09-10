@@ -30,15 +30,13 @@ function file_menu() {
 }
 
 /**
- * Implement hook_elements().
+ * Implement hook_element_info().
+ *
+ * The managed file element may be used independently anywhere in Drupal.
  */
-function file_elements() {
-  $elements = array();
-
+function file_element_info() {
   $file_path = drupal_get_path('module', 'file');
-
-  // The managed file element may be used independently anywhere in Drupal.
-  $elements['managed_file'] = array(
+  $types['managed_file'] = array(
     '#input' => TRUE,
     '#process' => array('file_managed_file_process'),
     '#value_callback' => 'file_managed_file_value',
@@ -55,8 +53,7 @@ function file_elements() {
       'js' => array($file_path . '/file.js'),
     ),
   );
-
-  return $elements;
+  return $types;
 }
 
 /**

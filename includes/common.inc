@@ -4424,25 +4424,16 @@ function element_info($type) {
 
   if (!isset($cache)) {
     $basic_defaults = element_basic_defaults();
-    $cache = array();
-
-    foreach (module_implements('elements') as $module) {
-      $elements = module_invoke($module, 'elements');
-      if (isset($elements) && is_array($elements)) {
-        $cache = array_merge_recursive($cache, $elements);
-      }
-    }
-    if (!empty($cache)) {
-      foreach ($cache as $element_type => $info) {
-        $cache[$element_type] = array_merge_recursive($basic_defaults, $info);
-        $cache[$element_type]['#type'] = $element_type;
-      }
+    $cache = module_invoke_all('element_info');
+    foreach ($cache as $element_type => $info) {
+      $cache[$element_type] = array_merge_recursive($basic_defaults, $info);
+      $cache[$element_type]['#type'] = $element_type;
     }
     // Allow modules to alter the element type defaults.
     drupal_alter('element_info', $cache);
   }
 
-  return $cache[$type];
+  return isset($cache[$type]) ? $cache[$type] : array();
 }
 
 /**

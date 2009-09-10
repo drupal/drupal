@@ -470,7 +470,7 @@ function field_test_field_widget_info() {
  * Implement hook_field_widget().
  *
  * Attach a single form element to the form. It will be built out and
- * validated in the callback(s) listed in hook_elements. We build it
+ * validated in the callback(s) listed in hook_element_info(). We build it
  * out in the callbacks rather than here in hook_widget so it can be
  * plugged into any module that can provide it with valid
  * $field information.
