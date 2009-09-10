@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1120 2009/09/10 12:33:44 webchick Exp $
+// $Id: node.module,v 1.1121 2009/09/10 22:10:10 webchick Exp $
 
 /**
  * @file
@@ -465,8 +465,6 @@ function node_types_rebuild() {
   // Reset cached node type information so that the next access
   // will use the updated data.
   node_type_clear();
-  // This is required for proper menu items at node/add/type.
-  menu_rebuild();
 }
 
 /**

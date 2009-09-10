@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.986 2009/09/10 06:38:16 dries Exp $
+// $Id: common.inc,v 1.987 2009/09/10 22:10:10 webchick Exp $
 
 /**
  * @file
@@ -5221,7 +5221,7 @@ function drupal_flush_all_caches() {
   }
 
   drupal_theme_rebuild();
-  // Rebuild content types, menu will be rebuilt as well.
+  menu_rebuild();
   node_types_rebuild();
   // Don't clear cache_form - in-progress form submissions may break.
   // Ordered so clearing the page cache will always be the last action.
