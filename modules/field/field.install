@@ -1,17 +1,10 @@
 <?php
-// $Id: field.install,v 1.12 2009/08/22 00:58:52 webchick Exp $
+// $Id: field.install,v 1.13 2009/09/10 06:38:17 dries Exp $
 
 /**
  * @file
  * Install, update and uninstall functions for the field module.
  */
-
-/**
- * Implement hook_install().
- */
-function field_install() {
-  drupal_install_schema('field');
-}
 
 /**
  * Implement hook_schema.

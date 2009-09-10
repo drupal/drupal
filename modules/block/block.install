@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.31 2009/08/28 19:44:05 webchick Exp $
+// $Id: block.install,v 1.32 2009/09/10 06:38:17 dries Exp $
 
 /**
  * @file
@@ -205,7 +205,6 @@ function block_schema() {
  * Implement hook_install().
  */
 function block_install() {
-  drupal_install_schema('block');
 
   // Block should go first so that other modules can alter its output
   // during hook_page_alter(). Almost everything on the page is a block,
@@ -214,13 +213,6 @@ function block_install() {
     ->fields(array('weight' => -5))
     ->condition('name', 'block')
     ->execute();
-}
-
-/**
- * Implement hook_uninstall().
- */
-function block_uninstall() {
-  drupal_uninstall_schema('block');
 }
 
 /**

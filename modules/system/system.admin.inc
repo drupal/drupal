@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.198 2009/09/10 06:32:54 dries Exp $
+// $Id: system.admin.inc,v 1.199 2009/09/10 06:38:20 dries Exp $
 
 /**
  * @file
@@ -1051,10 +1051,10 @@ function system_modules_uninstall($form_state = NULL) {
     // Grab the module info
     $info = unserialize($module->info);
 
-    // Load the .install file, and check for an uninstall hook.
+    // Load the .install file, and check for an uninstall or schema hook.
     // If the hook exists, the module can be uninstalled.
     module_load_install($module->name);
-    if (module_hook($module->name, 'uninstall')) {
+    if (module_hook($module->name, 'uninstall') || module_hook($module->name, 'schema')) {
       $form['modules'][$module->name]['name'] = array('#markup' => $info['name'] ? $info['name'] : $module->name);
       $form['modules'][$module->name]['description'] = array('#markup' => t($info['description']));
       $options[$module->name] = '';

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.22 2009/06/01 22:07:09 dries Exp $
+// $Id: search.install,v 1.23 2009/09/10 06:38:19 dries Exp $
 
 /**
  * @file
@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function search_install() {
-  // Create tables.
-  drupal_install_schema('search');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function search_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('search');
-
   variable_del('minimum_word_size');
   variable_del('overlap_cjk');
   variable_del('search_cron_limit');

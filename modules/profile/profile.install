@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.20 2009/06/01 22:07:09 dries Exp $
+// $Id: profile.install,v 1.21 2009/09/10 06:38:19 dries Exp $
 
 /**
  * @file
@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function profile_install() {
-  // Create tables.
-  drupal_install_schema('profile');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function profile_uninstall() {
-  // Remove tables
-  drupal_uninstall_schema('profile');
-
   variable_del('profile_block_author_fields');
 }
 

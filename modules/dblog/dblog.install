@@ -1,26 +1,10 @@
 <?php
-// $Id: dblog.install,v 1.16 2009/05/27 18:33:56 dries Exp $
+// $Id: dblog.install,v 1.17 2009/09/10 06:38:17 dries Exp $
 
 /**
  * @file
  * Install, update and uninstall functions for the dblog module.
  */
-
-/**
- * Implement hook_install().
- */
-function dblog_install() {
-  // Create tables.
-  drupal_install_schema('dblog');
-}
-
-/**
- * Implement hook_uninstall().
- */
-function dblog_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('dblog');
-}
 
 /**
  * Implement hook_schema().

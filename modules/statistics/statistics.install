@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.21 2009/06/01 22:07:10 dries Exp $
+// $Id: statistics.install,v 1.22 2009/09/10 06:38:19 dries Exp $
 
 /**
  * @file
@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function statistics_install() {
-  // Create tables.
-  drupal_install_schema('statistics');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function statistics_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('statistics');
-
   // Remove variables.
   variable_del('statistics_count_content_views');
   variable_del('statistics_enable_access_log');

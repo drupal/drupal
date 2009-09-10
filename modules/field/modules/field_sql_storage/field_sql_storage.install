@@ -1,24 +1,10 @@
 <?php
-// $Id: field_sql_storage.install,v 1.5 2009/05/27 18:33:56 dries Exp $
+// $Id: field_sql_storage.install,v 1.6 2009/09/10 06:38:17 dries Exp $
 
 /**
  * @file
  * Install, update and uninstall functions for the field_sql_storage module.
  */
-
-/**
- * Implement hook_install().
- */
-function field_sql_storage_install() {
-  drupal_install_schema('field_sql_storage');
-}
-
-/**
- * Implement hook_uninstall().
- */
-function field_sql_storage_uninstall() {
-  drupal_uninstall_schema('field_sql_storage');
-}
 
 /**
  * Implement hook_schema().

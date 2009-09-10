@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.9 2009/06/22 13:21:38 dries Exp $
+// $Id: update.install,v 1.10 2009/09/10 06:38:20 dries Exp $
 
 /**
  * @file
@@ -7,19 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function update_install() {
-  // Create cache table.
-  drupal_install_schema('update');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function update_uninstall() {
-  // Remove cache table.
-  drupal_uninstall_schema('update');
   // Clear any variables that might be in use
   $variables = array(
     'update_check_frequency',

@@ -1,26 +1,10 @@
 <?php
-// $Id: openid.install,v 1.7 2009/08/29 21:07:43 dries Exp $
+// $Id: openid.install,v 1.8 2009/09/10 06:38:19 dries Exp $
 
 /**
  * @file
  * Install, update and uninstall functions for the openid module.
  */
-
-/**
- * Implement hook_install().
- */
-function openid_install() {
-  // Create table.
-  drupal_install_schema('openid');
-}
-
-/**
- * Implement hook_uninstall().
- */
-function openid_uninstall() {
-  // Remove table.
-  drupal_uninstall_schema('openid');
-}
 
 /**
  * Implement hook_schema().

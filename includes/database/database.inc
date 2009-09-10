@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.74 2009/08/24 18:22:54 dries Exp $
+// $Id: database.inc,v 1.75 2009/09/10 06:38:16 dries Exp $
 
 /**
  * @file
@@ -2130,7 +2130,9 @@ function db_close(array $options = array()) {
  *   A Schema API table definition array.
  */
 function db_create_table(&$ret, $name, $table) {
-  return Database::getConnection()->schema()->createTable($ret, $name, $table);
+  if (!db_table_exists($name)) {
+    return Database::getConnection()->schema()->createTable($ret, $name, $table);
+  }
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.install,v 1.13 2009/08/17 19:14:41 webchick Exp $
+// $Id: upload.install,v 1.14 2009/09/10 06:38:20 dries Exp $
 
 /**
  * @file
@@ -10,26 +10,6 @@
  * @file
  * This is the install file for the upload module.
  */
-
-/**
- * Implement hook_install().
- */
-function upload_install() {
-  // Create table. The upload table might have been created in the Drupal 5
-  // to Drupal 6 upgrade, and was migrated from the file_revisions table. So
-  // in this case, there is no need to create the table, it is already there.
-  if (!db_table_exists('upload')) {
-    drupal_install_schema('upload');
-  }
-}
-
-/**
- * Implement hook_uninstall().
- */
-function upload_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('upload');
-}
 
 /**
  * Implement hook_schema().

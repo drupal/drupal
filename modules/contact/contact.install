@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.13 2009/05/27 18:33:56 dries Exp $
+// $Id: contact.install,v 1.14 2009/09/10 06:38:17 dries Exp $
 
 /**
  * @file
@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function contact_install() {
-  // Create tables.
-  drupal_install_schema('contact');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function contact_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('contact');
-
   variable_del('contact_default_status');
   variable_del('contact_form_information');
   variable_del('contact_hourly_threshold');

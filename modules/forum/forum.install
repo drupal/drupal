@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.33 2009/08/20 14:58:30 dries Exp $
+// $Id: forum.install,v 1.34 2009/09/10 06:38:17 dries Exp $
 
 /**
  * @file
@@ -10,8 +10,6 @@
  * Implement hook_install().
  */
 function forum_install() {
-  // Create tables.
-  drupal_install_schema('forum');
   // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
   db_update('system')
     ->fields(array('weight' => 1))
@@ -61,7 +59,6 @@ function forum_uninstall() {
   $vid = variable_get('forum_nav_vocabulary', 0);
   taxonomy_vocabulary_delete($vid);
 
-  drupal_uninstall_schema('forum');
   variable_del('forum_containers');
   variable_del('forum_nav_vocabulary');
   variable_del('forum_hot_topic');

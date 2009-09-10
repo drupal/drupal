@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.install,v 1.4 2009/05/27 18:34:00 dries Exp $
+// $Id: field_test.install,v 1.5 2009/09/10 06:38:19 dries Exp $
 
 /**
  * @file
@@ -63,18 +63,4 @@ function field_test_schema() {
   );
 
   return $schema;
-}
-
-/**
- * Implement hook_install().
- */
-function field_test_install() {
-  drupal_install_schema('field_test');
-}
-
-/**
- * Implement hook_uninstall().
- */
-function field_test_uninstall() {
-  drupal_uninstall_schema('field_test');
 }

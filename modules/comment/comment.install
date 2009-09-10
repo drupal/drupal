@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.44 2009/08/09 02:46:27 webchick Exp $
+// $Id: comment.install,v 1.45 2009/09/10 06:38:17 dries Exp $
 
 /**
  * @file
@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function comment_install() {
-  // Create tables.
-  drupal_install_schema('comment');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function comment_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('comment');
-
   // Remove variables.
   variable_del('comment_block_count');
   $node_types = array_keys(node_type_get_types());
