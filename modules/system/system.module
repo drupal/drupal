@@ -877,7 +877,7 @@ function system_menu() {
   );
   $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
-    'description' => 'Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.',
+    'description' => 'Change basic site name, e-mail address, slogan, default front page, number of posts per page, error pages and cron.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
