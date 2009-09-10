@@ -1000,6 +1000,7 @@ function system_modules_submit($form, &$form_state) {
   registry_rebuild();
   drupal_theme_rebuild();
   node_types_rebuild();
+  menu_rebuild();
   cache_clear_all('schema', 'cache');
   cache_clear_all('entity_info', 'cache');
   drupal_clear_css_cache();

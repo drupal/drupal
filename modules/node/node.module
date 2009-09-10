@@ -465,8 +465,6 @@ function node_types_rebuild() {
   // Reset cached node type information so that the next access
   // will use the updated data.
   node_type_clear();
-  // This is required for proper menu items at node/add/type.
-  menu_rebuild();
 }
 
 /**

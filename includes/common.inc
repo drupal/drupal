@@ -5221,7 +5221,7 @@ function drupal_flush_all_caches() {
   }
 
   drupal_theme_rebuild();
-  // Rebuild content types, menu will be rebuilt as well.
+  menu_rebuild();
   node_types_rebuild();
   // Don't clear cache_form - in-progress form submissions may break.
   // Ordered so clearing the page cache will always be the last action.
