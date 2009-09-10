@@ -6,21 +6,10 @@
  * Install, update and uninstall functions for the taxonomy module.
  */
 
- /**
- * Implement hook_install().
- */
-function taxonomy_install() {
-  // Create tables.
-  drupal_install_schema('taxonomy');
-}
-
 /**
  * Implement hook_uninstall().
  */
 function taxonomy_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('taxonomy');
-
   // Remove variables.
   variable_del('taxonomy_override_selector');
   variable_del('taxonomy_terms_per_page_admin');

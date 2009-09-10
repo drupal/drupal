@@ -7,22 +7,6 @@
  */
 
 /**
- * Implement hook_install().
- */
-function openid_install() {
-  // Create table.
-  drupal_install_schema('openid');
-}
-
-/**
- * Implement hook_uninstall().
- */
-function openid_uninstall() {
-  // Remove table.
-  drupal_uninstall_schema('openid');
-}
-
-/**
  * Implement hook_schema().
  */
 function openid_schema() {

@@ -7,13 +7,6 @@
  */
 
 /**
- * Implement hook_install().
- */
-function field_install() {
-  drupal_install_schema('field');
-}
-
-/**
  * Implement hook_schema.
  */
 function field_schema() {

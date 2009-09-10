@@ -64,17 +64,3 @@ function field_test_schema() {
 
   return $schema;
 }
-
-/**
- * Implement hook_install().
- */
-function field_test_install() {
-  drupal_install_schema('field_test');
-}
-
-/**
- * Implement hook_uninstall().
- */
-function field_test_uninstall() {
-  drupal_uninstall_schema('field_test');
-}

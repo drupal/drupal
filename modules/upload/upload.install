@@ -12,26 +12,6 @@
  */
 
 /**
- * Implement hook_install().
- */
-function upload_install() {
-  // Create table. The upload table might have been created in the Drupal 5
-  // to Drupal 6 upgrade, and was migrated from the file_revisions table. So
-  // in this case, there is no need to create the table, it is already there.
-  if (!db_table_exists('upload')) {
-    drupal_install_schema('upload');
-  }
-}
-
-/**
- * Implement hook_uninstall().
- */
-function upload_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('upload');
-}
-
-/**
  * Implement hook_schema().
  */
 function upload_schema() {

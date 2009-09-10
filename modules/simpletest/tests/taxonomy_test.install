@@ -33,18 +33,3 @@ function taxonomy_test_schema() {
 
   return $schema;
 }
-
-/**
- * Implement hook_install().
- */
-function taxonomy_test_install() {
-  drupal_install_schema('taxonomy_test');
-}
-
-/**
- * Implement hook_uninstall().
- */
-function taxonomy_test_uninstall() {
-  drupal_uninstall_schema('taxonomy_test');
-}
-

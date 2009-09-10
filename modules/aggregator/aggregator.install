@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function aggregator_install() {
-  // Create tables.
-  drupal_install_schema('aggregator');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function aggregator_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('aggregator');
-
   variable_del('aggregator_allowed_html_tags');
   variable_del('aggregator_summary_items');
   variable_del('aggregator_clear');

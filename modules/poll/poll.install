@@ -7,22 +7,6 @@
  */
 
 /**
- * Implement hook_install().
- */
-function poll_install() {
-  // Create tables.
-  drupal_install_schema('poll');
-}
-
-/**
- * Implement hook_uninstall().
- */
-function poll_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('poll');
-}
-
-/**
  * Implement hook_schema().
  */
 function poll_schema() {

@@ -7,19 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function update_install() {
-  // Create cache table.
-  drupal_install_schema('update');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function update_uninstall() {
-  // Remove cache table.
-  drupal_uninstall_schema('update');
   // Clear any variables that might be in use
   $variables = array(
     'update_check_frequency',

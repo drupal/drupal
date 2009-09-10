@@ -10,8 +10,6 @@
  * Implement hook_install().
  */
 function image_install() {
-  drupal_install_schema('image');
-
   // Create the styles directory and ensure it's writable.
   $path = file_directory_path() . '/styles';
   file_prepare_directory($path, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
@@ -21,8 +19,6 @@ function image_install() {
  * Implement hook_uninstall().
  */
 function image_uninstall() {
-  drupal_uninstall_schema('image');
-
   // Remove the styles directory and generated images.
   $path = file_directory_path() . '/styles';
   file_unmanaged_delete_recursive($path);

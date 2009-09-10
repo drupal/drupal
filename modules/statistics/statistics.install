@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function statistics_install() {
-  // Create tables.
-  drupal_install_schema('statistics');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function statistics_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('statistics');
-
   // Remove variables.
   variable_del('statistics_count_content_views');
   variable_del('statistics_enable_access_log');

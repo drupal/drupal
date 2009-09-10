@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function profile_install() {
-  // Create tables.
-  drupal_install_schema('profile');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function profile_uninstall() {
-  // Remove tables
-  drupal_uninstall_schema('profile');
-
   variable_del('profile_block_author_fields');
 }
 

@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function search_install() {
-  // Create tables.
-  drupal_install_schema('search');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function search_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('search');
-
   variable_del('minimum_word_size');
   variable_del('overlap_cjk');
   variable_del('search_cron_limit');

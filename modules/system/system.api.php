@@ -1797,7 +1797,10 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
 }
 
 /**
- * Install the current version of the database schema, and any other setup tasks.
+ * Perform setup tasks when the module is installed.
+ *
+ * If the module implements hook_schema(), the database tables will
+ * be created before this hook is fired.
  *
  * The hook will be called the first time a module is installed, and the
  * module's schema version will be set to the module's greatest numbered update
@@ -1807,7 +1810,7 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
  *
  * See the Schema API documentation at
  * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
- * for details on hook_schema, where a database tables are defined.
+ * for details on hook_schema and how database tables are defined.
  *
  * Note that since this function is called from a full bootstrap, all functions
  * (including those in modules enabled by the current page request) are
@@ -1818,9 +1821,20 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
  * be removed during uninstall should be removed with hook_uninstall().
  *
  * @see hook_uninstall()
+ * @see hook_schema()
  */
 function hook_install() {
-  drupal_install_schema('upload');
+  // Populate the default {node_access} record.
+  db_insert('node_access')
+    ->fields(array(
+      'nid' => 0,
+      'gid' => 0,
+      'realm' => 'all',
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+    ))
+    ->execute();
 }
 
 /**
@@ -1949,15 +1963,19 @@ function hook_update_last_removed() {
  *
  * The information that the module should remove includes:
  * - variables that the module has set using variable_set() or system_settings_form()
- * - tables the module has created, using drupal_uninstall_schema()
  * - modifications to existing tables
  *
- * The module should not remove its entry from the {system} table.
+ * The module should not remove its entry from the {system} table. Database tables
+ * defined by hook_schema() will be removed automatically.
  *
- * The uninstall hook will fire when the module gets uninstalled.
+ * The uninstall hook will fire when the module gets uninstalled but before the
+ * module's database tables are removed, allowing your module to query its own
+ * tables during this routine.
+ *
+ * @see hook_install()
+ * @see hook_schema()
  */
 function hook_uninstall() {
-  drupal_uninstall_schema('upload');
   variable_del('upload_file_types');
 }
 

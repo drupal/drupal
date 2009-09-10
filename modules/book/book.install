@@ -10,8 +10,6 @@
  * Implement hook_install().
  */
 function book_install() {
-  // Create tables.
-  drupal_install_schema('book');
   // Add the node type.
   _book_install_type_create();
 }
@@ -23,8 +21,6 @@ function book_uninstall() {
   // Delete menu links.
   db_query("DELETE FROM {menu_links} WHERE module = 'book'");
   menu_cache_clear_all();
-  // Remove tables.
-  drupal_uninstall_schema('book');
 }
 
 function _book_install_type_create() {

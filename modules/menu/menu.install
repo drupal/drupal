@@ -10,8 +10,6 @@
  * Implement hook_install().
  */
 function menu_install() {
-  // Create tables.
-  drupal_install_schema('menu');
   $system_menus = menu_list_system_menus();
   $descriptions = array(
     'navigation' => 'The <em>Navigation</em> menu contains links such as Recent posts (if the Tracker module is enabled). Non-administrative links are added to this menu by default by modules.',
@@ -31,8 +29,6 @@ function menu_install() {
  * Implement hook_uninstall().
  */
 function menu_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('menu');
   menu_rebuild();
 }
 

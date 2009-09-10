@@ -10,7 +10,6 @@
  * Implement hook_install().
  */
 function simpletest_install() {
-  drupal_install_schema('simpletest');
   // Check for files directory.
   $path = 'public://simpletest';
   if (file_prepare_directory($path, FILE_CREATE_DIRECTORY)) {
@@ -109,9 +108,6 @@ function simpletest_uninstall() {
   variable_del('simpletest_password');
   variable_del('simpletest_clear_results');
   variable_del('simpletest_verbose');
-
-  // Uninstall schema.
-  drupal_uninstall_schema('simpletest');
 
   // Remove generated files.
   $path = file_directory_path() . '/simpletest';

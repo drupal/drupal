@@ -338,6 +338,9 @@ function system_install() {
   $modules = array('system', 'filter', 'user', 'node');
   foreach ($modules as $module) {
     drupal_install_schema($module);
+    $versions = drupal_get_schema_versions($module);
+    $version = $versions ? max($versions) : SCHEMA_INSTALLED;
+    drupal_set_installed_schema_version($module, $version);
   }
 
   // Load system theme data appropriately.

@@ -14,9 +14,6 @@ function locale_install() {
   // fields; non-MySQL database servers need to ensure the field type is text
   // and that LIKE produces a case-sensitive comparison.
 
-  // Create tables.
-  drupal_install_schema('locale');
-
   db_insert('languages')
     ->fields(array(
       'language' => 'en',
@@ -83,8 +80,6 @@ function locale_uninstall() {
   // try to query the unexisting {locales_source} and {locales_target} tables.
   drupal_language_initialize();
 
-  // Remove tables.
-  drupal_uninstall_schema('locale');
 }
 
 /**

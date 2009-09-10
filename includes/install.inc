@@ -586,8 +586,9 @@ function drupal_install_modules($module_list = array(), $disable_modules_install
  */
 function _drupal_install_module($module) {
   if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
-    module_load_install($module);
     drupal_load('module', $module);
+    drupal_install_schema($module);
+    // Now allow the module to perform install tasks.
     module_invoke($module, 'install');
     $versions = drupal_get_schema_versions($module);
     drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
@@ -663,6 +664,8 @@ function drupal_uninstall_modules($module_list = array()) {
     // Uninstall the module.
     module_load_install($module);
     module_invoke($module, 'uninstall');
+    drupal_uninstall_schema($module);
+
     watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
 
     // Now remove the menu links for all paths declared by this module.

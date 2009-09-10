@@ -7,20 +7,9 @@
  */
 
 /**
- * Implement hook_install().
- */
-function comment_install() {
-  // Create tables.
-  drupal_install_schema('comment');
-}
-
-/**
  * Implement hook_uninstall().
  */
 function comment_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('comment');
-
   // Remove variables.
   variable_del('comment_block_count');
   $node_types = array_keys(node_type_get_types());

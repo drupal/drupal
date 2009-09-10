@@ -10,19 +10,8 @@
  * Implement hook_install().
  */
 function trigger_install() {
-  // Create tables.
-  drupal_install_schema('trigger');
-
   // Do initial synchronization of actions in code and the database.
   actions_synchronize();
-}
-
-/**
- * Implement hook_uninstall().
- */
-function trigger_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('trigger');
 }
 
 /**

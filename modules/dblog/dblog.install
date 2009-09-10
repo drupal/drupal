@@ -7,22 +7,6 @@
  */
 
 /**
- * Implement hook_install().
- */
-function dblog_install() {
-  // Create tables.
-  drupal_install_schema('dblog');
-}
-
-/**
- * Implement hook_uninstall().
- */
-function dblog_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('dblog');
-}
-
-/**
  * Implement hook_schema().
  */
 function dblog_schema() {

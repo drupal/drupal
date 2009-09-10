@@ -2130,7 +2130,9 @@ function db_close(array $options = array()) {
  *   A Schema API table definition array.
  */
 function db_create_table(&$ret, $name, $table) {
-  return Database::getConnection()->schema()->createTable($ret, $name, $table);
+  if (!db_table_exists($name)) {
+    return Database::getConnection()->schema()->createTable($ret, $name, $table);
+  }
 }
 
 /**
