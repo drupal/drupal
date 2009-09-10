@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.72 2009/09/05 13:05:31 dries Exp $
+// $Id: system.api.php,v 1.73 2009/09/10 06:31:39 dries Exp $
 
 /**
  * @file
@@ -215,10 +215,15 @@ function hook_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
  *  - "#pre_render": array of callback functions taking $element and $form_state.
  *  - "#post_render": array of callback functions taking $element and $form_state.
  *  - "#submit": array of callback functions taking $form and $form_state.
+ *
+ * @see hook_element_info_alter()
+ * @see system_element_info()
  */
-function hook_elements() {
-  $type['filter_format'] = array('#input' => TRUE);
-  return $type;
+function hook_element_info() {
+  $types['filter_format'] = array(
+    '#input' => TRUE,
+  );
+  return $types;
 }
 
 /**
@@ -228,9 +233,9 @@ function hook_elements() {
  * defined by a module.
  *
  * @param &$type
- *   All element type defaults as collected by hook_elements().
+ *   All element type defaults as collected by hook_element_info().
  *
- * @see hook_elements()
+ * @see hook_element_info()
  */
 function hook_element_info_alter(&$type) {
   // Decrease the default size of textfields.

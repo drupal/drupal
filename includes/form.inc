@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.370 2009/09/05 15:05:01 dries Exp $
+// $Id: form.inc,v 1.371 2009/09/10 06:31:38 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1932,7 +1932,7 @@ function form_process_radios($element) {
  *   $form_state['values']['body_format'] = 1;
  * @endcode
  *
- * @see system_elements(), filter_form()
+ * @see system_element_info(), filter_form()
  */
 function form_process_text_format($element) {
   if (isset($element['#text_format'])) {

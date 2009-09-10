@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.33 2009/09/09 21:21:53 dries Exp $
+// $Id: field.api.php,v 1.34 2009/09/10 06:31:38 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -603,7 +603,7 @@ function hook_field_widget_info_alter(&$info) {
  * Return a single form element for a form.
  *
  * It will be built out and validated in the callback(s) listed in
- * hook_elements. We build it out in the callbacks rather than in
+ * hook_element_info(). We build it out in the callbacks rather than in
  * hook_field_widget so it can be plugged into any module that can
  * provide it with valid $field information.
  *
