@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.197 2009/08/26 10:53:45 dries Exp $
+// $Id: system.admin.inc,v 1.198 2009/09/10 06:32:54 dries Exp $
 
 /**
  * @file
@@ -184,7 +184,7 @@ function system_settings_overview() {
     db_check_setup();
   }
 
-  $item = menu_get_item('admin/settings');
+  $item = menu_get_item('admin/config');
   $content = system_admin_menu_block($item);
 
   $output = theme('admin_block_content', $content);
@@ -1417,7 +1417,7 @@ function system_performance_settings() {
   $disabled = !$is_writable;
   $disabled_message = '';
   if(!$is_writable) {
-    $disabled_message = ' ' . t('<strong class="error">Please set up the <a href="!file-system">public files directory</a> to make these optimizations available.</strong>', array('!file-system' => url('admin/settings/file-system')));
+    $disabled_message = ' ' . t('<strong class="error">Please set up the <a href="!file-system">public files directory</a> to make these optimizations available.</strong>', array('!file-system' => url('admin/config/media/file-system')));
   }
 
   $form['bandwidth_optimization'] = array(
