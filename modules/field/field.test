@@ -2135,7 +2135,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
   function _generateStubObjects($obj_type, $objects, $field_name = NULL) {
     $stubs = array();
     foreach ($objects as $obj) {
-      $stub = field_attach_create_stub_object($obj_type, field_attach_extract_ids($obj_type, $obj));
+      $stub = field_create_stub_entity($obj_type, field_extract_ids($obj_type, $obj));
       if (isset($field_name)) {
         $stub->{$field_name} = $obj->{$field_name};
       }

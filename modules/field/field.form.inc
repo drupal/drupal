@@ -13,7 +13,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
   // This could be called with no object, as when a UI module creates a
   // dummy form to set default values.
   if ($object) {
-    list($id, , ) = field_attach_extract_ids($obj_type, $object);
+    list($id, , ) = field_extract_ids($obj_type, $object);
   }
   $addition = array();
 

@@ -66,7 +66,7 @@ function field_ui_inactive_message($bundle) {
  * Allows fields and pseudo-fields to be re-ordered.
  */
 function field_ui_field_overview_form(&$form_state, $obj_type, $bundle) {
-  $bundle = field_attach_extract_bundle($obj_type, $bundle);
+  $bundle = field_extract_bundle($obj_type, $bundle);
 
   field_ui_inactive_message($bundle);
   $admin_path = _field_ui_bundle_admin_path($bundle);
@@ -551,7 +551,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
  * full build modes, and how the field labels should be rendered.
  */
 function field_ui_display_overview_form(&$form_state, $obj_type, $bundle, $build_modes_selector = 'basic') {
-  $bundle = field_attach_extract_bundle($obj_type, $bundle);
+  $bundle = field_extract_bundle($obj_type, $bundle);
 
   field_ui_inactive_message($bundle);
   $admin_path = _field_ui_bundle_admin_path($bundle);
@@ -791,7 +791,7 @@ function field_ui_field_has_data($field) {
  * Menu callback; presents the field settings edit page.
  */
 function field_ui_field_settings_form(&$form_state, $obj_type, $bundle, $instance) {
-  $bundle = field_attach_extract_bundle($obj_type, $bundle);
+  $bundle = field_extract_bundle($obj_type, $bundle);
   $field = field_info_field($instance['field_name']);
 
   // When a field is first created, we have to get data from the db.
@@ -888,7 +888,7 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
  * Menu callback; select a widget for the field.
  */
 function field_ui_widget_type_form(&$form_state, $obj_type, $bundle, $instance) {
-  $bundle = field_attach_extract_bundle($obj_type, $bundle);
+  $bundle = field_extract_bundle($obj_type, $bundle);
   $field = field_read_field($instance['field_name']);
 
   $field_type = field_info_field_types($field['type']);
@@ -947,7 +947,7 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
  * Menu callback; present a form for removing a field from a content type.
  */
 function field_ui_field_delete_form(&$form_state, $obj_type, $bundle, $instance) {
-  $bundle = field_attach_extract_bundle($obj_type, $bundle);
+  $bundle = field_extract_bundle($obj_type, $bundle);
   $field = field_info_field($instance['field_name']);
   $admin_path = _field_ui_bundle_admin_path($bundle);
 
@@ -1001,7 +1001,7 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
  * Menu callback; presents the field instance edit page.
  */
 function field_ui_field_edit_form(&$form_state, $obj_type, $bundle, $instance) {
-  $bundle = field_attach_extract_bundle($obj_type, $bundle);
+  $bundle = field_extract_bundle($obj_type, $bundle);
 
   $field = field_info_field($instance['field_name']);
   $form['#field'] = $field;

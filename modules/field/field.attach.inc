@@ -182,7 +182,7 @@ function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $options
 
   // Iterate through the object's field instances.
   $return = array();
-  list(, , $bundle) = field_attach_extract_ids($obj_type, $object);
+  list(, , $bundle) = field_extract_ids($obj_type, $object);
 
   if ($options['deleted']) {
     $instances = field_read_instances(array('bundle' => $bundle), array('include_deleted' => $options['deleted']));
@@ -299,7 +299,7 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
   // is deleted, so we reference field data via the
   // $object->$field_name property.
   foreach ($objects as $object) {
-    list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+    list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
 
     if ($options['deleted']) {
       $instances = field_read_field(array('bundle' => $bundle, array('include_deleted' => $options['deleted'])));
@@ -489,7 +489,7 @@ function field_attach_form($obj_type, $object, &$form, &$form_state, $langcode =
   $form += (array) _field_invoke_default('form', $obj_type, $object, $form, $form_state, $options);
 
   // Add custom weight handling.
-  list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
   $form['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $form['#pre_render'][] = '_field_extra_weights_pre_render';
   $form['#extra_fields'] = field_extra_fields($bundle);
@@ -608,7 +608,7 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
     if ($cache_write) {
       foreach ($queried_objects as $id => $object) {
         $data = array();
-        list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+        list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
         $instances = field_info_instances($bundle);
         foreach ($instances as $instance) {
           $data[$instance['field_name']] = $queried_objects[$id]->{$instance['field_name']};
@@ -802,7 +802,7 @@ function field_attach_insert($obj_type, $object) {
   // Field storage module saves any remaining unsaved fields.
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object, FIELD_STORAGE_INSERT, $skip_fields);
 
-  list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle, $cacheable) = field_extract_ids($obj_type, $object);
   if ($cacheable) {
     cache_clear_all("field:$obj_type:$id", 'cache_field');
   }
@@ -830,7 +830,7 @@ function field_attach_update($obj_type, $object) {
   // Field storage module saves any remaining unsaved fields.
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object, FIELD_STORAGE_UPDATE, $skip_fields);
 
-  list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle, $cacheable) = field_extract_ids($obj_type, $object);
   if ($cacheable) {
     cache_clear_all("field:$obj_type:$id", 'cache_field');
   }
@@ -855,7 +855,7 @@ function field_attach_delete($obj_type, $object) {
     $function($obj_type, $object);
   }
 
-  list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle, $cacheable) = field_extract_ids($obj_type, $object);
   if ($cacheable) {
     cache_clear_all("field:$obj_type:$id", 'cache_field');
   }
@@ -1089,7 +1089,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
   $output = _field_invoke_default('view', $obj_type, $object, $build_mode, $null, $options);
 
   // Add custom weight handling.
-  list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
   $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $output['#pre_render'][] = '_field_extra_weights_pre_render';
   $output['#extra_fields'] = field_extra_fields($bundle);
@@ -1119,7 +1119,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
  *   values.
  */
 function field_attach_preprocess($obj_type, $object, $element, &$variables) {
-  list(, , $bundle) = field_attach_extract_ids($obj_type, $object);
+  list(, , $bundle) = field_extract_ids($obj_type, $object);
 
   foreach (field_info_instances($bundle) as $instance) {
     $field_name = $instance['field_name'];
@@ -1243,85 +1243,6 @@ function field_attach_delete_bundle($bundle) {
   }
 }
 
-/**
- * Helper function to extract id, vid, and bundle name from an object.
- *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
- *   The object from which to extract values.
- * @return
- *   A numerically indexed array (not a hash table) containing these
- *   elements:
- *
- *   0: primary id of the object
- *   1: revision id of the object, or NULL if $obj_type is not versioned
- *   2: bundle name of the object
- *   3: whether $obj_type's fields should be cached (TRUE/FALSE)
- */
-function field_attach_extract_ids($obj_type, $object) {
-  // TODO D7 : prevent against broken 3rd party $node without 'type'.
-  $info = field_info_fieldable_types($obj_type);
-  // Objects being created might not have id/vid yet.
-  $id = isset($object->{$info['object keys']['id']}) ? $object->{$info['object keys']['id']} : NULL;
-  $vid = ($info['object keys']['revision'] && isset($object->{$info['object keys']['revision']})) ? $object->{$info['object keys']['revision']} : NULL;
-  // If no bundle key provided, then we assume a single bundle, named after the
-  // type of the object.
-  $bundle = $info['object keys']['bundle'] ? $object->{$info['object keys']['bundle']} : $obj_type;
-  $cacheable = $info['cacheable'];
-  return array($id, $vid, $bundle, $cacheable);
-}
-
-/**
- * Helper function to extract id, vid, and bundle name from an object.
- *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $bundle
- *   The bundle object (or string if bundles for this object type do not exist
- *   as standalone objects).
- * @return
- *   The bundle name.
- */
-function field_attach_extract_bundle($obj_type, $bundle) {
-  if (is_string($bundle)) {
-    return $bundle;
-  }
-
-  $info = field_info_fieldable_types($obj_type);
-  if (is_object($bundle) && isset($info['bundle keys']['bundle']) && isset($bundle->{$info['bundle keys']['bundle']})) {
-    return $bundle->{$info['bundle keys']['bundle']};
-  }
-}
-
-/**
- * Helper function to assemble an object structure with initial ids.
- *
- * This function can be seen as reciprocal to field_attach_extract_ids().
- *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $ids
- *   A numerically indexed array, as returned by field_attach_extract_ids(),
- *   containing these elements:
- *   0: primary id of the object
- *   1: revision id of the object, or NULL if $obj_type is not versioned
- *   2: bundle name of the object
- * @return
- *   An $object structure, initialized with the ids provided.
- */
-function field_attach_create_stub_object($obj_type, $ids) {
-  $object = new stdClass();
-  $info = field_info_fieldable_types($obj_type);
-  $object->{$info['object keys']['id']} = $ids[0];
-  if (isset($info['object keys']['revision']) && !is_null($ids[1])) {
-    $object->{$info['object keys']['revision']} = $ids[1];
-  }
-  if ($info['object keys']['bundle']) {
-    $object->{$info['object keys']['bundle']} = $ids[2];
-  }
-  return $object;
-}
 
 /**
  * @} End of "defgroup field_attach"

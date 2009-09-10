@@ -59,7 +59,7 @@ function field_default_insert($obj_type, $object, $field, $instance, $langcode, 
  * @see field_attach_view()
  */
 function field_default_view($obj_type, $object, $field, $instance, $langcode, $items, $build_mode) {
-  list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
 
   $addition = array();
   $display = $instance['display'][$build_mode];
