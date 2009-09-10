@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.test,v 1.3 2009/07/13 21:51:10 webchick Exp $
+// $Id: openid.test,v 1.4 2009/09/10 12:33:45 webchick Exp $
 
 /**
  * Test login and account registration using OpenID.
@@ -88,7 +88,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
 
-    $this->assertText(t('My account'), t('User was logged in.'));
+    $this->assertText($this->web_user->name, t('User was logged in.'));
   }
 
   /**
@@ -150,7 +150,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     // so the form is submitted manually instead.
     $this->assertRaw('<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>', t('JavaScript form submission found.'));
     $this->drupalPost(NULL, array(), t('Send'));
-    $this->assertText(t('My account'), t('User was logged in.'));
+    $this->assertText('johndoe', t('User was logged in.'));
 
     $user = user_load_by_name('johndoe');
     $this->assertTrue($user, t('User was found.'));
