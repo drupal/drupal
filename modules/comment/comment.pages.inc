@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.24 2009/08/01 05:58:18 dries Exp $
+// $Id: comment.pages.inc,v 1.25 2009/09/11 13:37:52 webchick Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function comment_reply($node, $pid = NULL) {
           $comment->node_type = 'comment_node_' . $node->type;
           field_attach_load('comment', array($comment->cid => $comment));
           $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-          $build['comment_parent'] = comment_build($comment);
+          $build['comment_parent'] = comment_build($comment, $node);
         }
         else {
           drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
