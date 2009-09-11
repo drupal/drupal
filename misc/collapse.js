@@ -2,7 +2,7 @@
 (function ($) {
 
 /**
- * Toggle the visibility of a fieldset using smooth animations
+ * Toggle the visibility of a fieldset using smooth animations.
  */
 Drupal.toggleFieldset = function (fieldset) {
   if ($(fieldset).is('.collapsed')) {
@@ -20,7 +20,7 @@ Drupal.toggleFieldset = function (fieldset) {
         $('div.action', fieldset).show();
       },
       step: function () {
-        // Scroll the fieldset into view
+        // Scroll the fieldset into view.
         Drupal.collapseScrollIntoView(this.parentNode);
       }
     });
@@ -45,7 +45,8 @@ Drupal.collapseScrollIntoView = function (node) {
   if (posY + node.offsetHeight + fudge > h + offset) {
     if (node.offsetHeight > h) {
       window.scrollTo(0, posY);
-    } else {
+    }
+    else {
       window.scrollTo(0, posY + node.offsetHeight - h + fudge);
     }
   }
@@ -55,7 +56,7 @@ Drupal.behaviors.collapse = {
   attach: function (context, settings) {
     $('fieldset.collapsible > legend', context).once('collapse', function () {
       var fieldset = $(this.parentNode);
-      // Expand if there are errors inside
+      // Expand if there are errors inside.
       if ($('input.error, textarea.error, select.error', fieldset).size() > 0) {
         fieldset.removeClass('collapsed');
       }
@@ -68,12 +69,12 @@ Drupal.behaviors.collapse = {
         })
         .trigger('summaryUpdated');
 
-      // Turn the legend into a clickable link and wrap the contents of the fieldset
-      // in a div for easier animation
+      // Turn the legend into a clickable link and wrap the contents of the
+      // fieldset in a div for easier animation.
       var text = this.innerHTML;
         $(this).empty().append($('<a href="#">' + text + '</a>').click(function () {
           var fieldset = $(this).parents('fieldset:first')[0];
-          // Don't animate multiple times
+          // Don't animate multiple times.
           if (!fieldset.animating) {
             fieldset.animating = true;
             Drupal.toggleFieldset(fieldset);
