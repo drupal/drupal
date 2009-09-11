@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.521 2009/09/11 06:48:02 dries Exp $
+// $Id: theme.inc,v 1.522 2009/09/11 14:14:16 dries Exp $
 
 /**
  * @file
@@ -1509,7 +1509,12 @@ function theme_image($path, $alt = '', $title = '', $attributes = array(), $gets
  */
 function theme_breadcrumb($breadcrumb) {
   if (!empty($breadcrumb)) {
-    return '<div class="breadcrumb">' . implode(' » ', $breadcrumb) . '</div>';
+    // Provide a navigational heading to give context for breadcrumb links to
+    // screen-reader users. Make the heading invisible with .element-invisible.
+    $output = '<h2 class="element-invisible">' . t('You are here') . '</h2>';
+
+    $output .= '<div class="breadcrumb">' . implode(' » ', $breadcrumb) . '</div>';
+    return $output;
   }
 }
 
