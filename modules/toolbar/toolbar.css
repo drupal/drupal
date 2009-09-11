@@ -76,7 +76,7 @@ div#toolbar div.toolbar-menu {
 
 div#toolbar div.toolbar-menu #toolbar-user {
   position: absolute;
-  right: 35px;
+  right: 10px;
 }
 
 div#toolbar div.toolbar-menu #toolbar-menu {
@@ -84,9 +84,16 @@ div#toolbar div.toolbar-menu #toolbar-menu {
   left: 10px;
 }
 
+/**
+ * Give space for the shortcuts visibility toggling element when it is added.
+ */
+div#toolbar.toolbar-processed div.toolbar-menu #toolbar-menu {
+  left: 45px;
+}
+
 div#toolbar div.toolbar-menu span.toggle {
   position: absolute;
-  right: 10px;
+  left: 10px;
   cursor: pointer;
   background: url(toolbar.png) 0 -60px no-repeat;
   text-indent: -9999px;
