@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.48 2009/09/10 22:31:58 webchick Exp $
+// $Id: field.test,v 1.49 2009/09/11 03:42:34 webchick Exp $
 
 /**
  * @file
@@ -1542,6 +1542,20 @@ class FieldCrudTestCase extends FieldTestCase {
     }
     catch (FieldException $e) {
       $this->pass(t('Cannot create a field with a name longer than 32 characters.'));
+    }
+
+    // Check that field name can not be an object key.
+    // "ftvid" is known as an object key from the "test_entity" type.
+    try {
+      $field_definition = array(
+        'type' => 'test_field',
+        'field_name' => 'ftvid',
+      );
+      $field = field_create_field($field_definition);
+      $this->fail(t('Cannot create a field bearing the name of an object key.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot create a field bearing the name of an object key.'));
     }
   }
 

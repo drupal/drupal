@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.30 2009/09/09 11:37:34 dries Exp $
+// $Id: field.crud.inc,v 1.31 2009/09/11 03:42:34 webchick Exp $
 
 /**
  * @file
@@ -237,6 +237,15 @@ function field_create_field($field) {
       t('Attempt to create field name %name which already exists and is active.', array('%name' => $field['field_name'])):
       t('Attempt to create field name %name which already exists, although it is inactive.', array('%name' => $field['field_name']));
     throw new FieldException($message);
+  }
+
+  // Disallow reserved field names. This can't prevent all field name
+  // collisions with existing object properties, but some is better
+  // than none.
+  foreach (field_info_fieldable_types() as $type => $info) {
+    if (in_array($field['field_name'], $info['object keys'])) {
+      throw new FieldException(t('Attempt to create field name %name which is reserved by entity type %type.', array('%name' => $field['field_name'], '%type' => $type)));
+    }
   }
 
   $field += array(
