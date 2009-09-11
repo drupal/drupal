@@ -1,4 +1,4 @@
-# $Id: robots.txt,v 1.13 2008/11/29 09:33:50 dries Exp $
+# $Id: robots.txt,v 1.14 2009/09/11 04:17:07 webchick Exp $
 #
 # robots.txt
 #
@@ -25,7 +25,6 @@ Disallow: /misc/
 Disallow: /modules/
 Disallow: /profiles/
 Disallow: /scripts/
-Disallow: /sites/
 Disallow: /themes/
 # Files
 Disallow: /CHANGELOG.txt
