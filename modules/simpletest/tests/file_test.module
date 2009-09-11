@@ -1,5 +1,5 @@
 <?php
-// $Id: file_test.module,v 1.15 2009/08/31 05:47:34 dries Exp $
+// $Id: file_test.module,v 1.16 2009/09/11 04:45:23 webchick Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ define('FILE_URL_TEST_CDN_2', 'http://cdn2.example.com');
  */
 function file_test_menu() {
   $items['file-test/upload'] = array(
-    'title' => t('Upload test'),
+    'title' => 'Upload test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_file_test_form'),
     'access arguments' => array('access content'),
