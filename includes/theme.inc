@@ -1840,10 +1840,11 @@ function theme_more_help_link($url) {
  *   The url of the feed.
  * @param $title
  *   A descriptive title of the feed.
-  */
+ */
 function theme_feed_icon($url, $title) {
-  if ($image = theme('image', 'misc/feed.png', t('Subscribe to %feed-title', array('%feed-title' => $title)))) {
-    return '<a href="' . check_url($url) . '" class="feed-icon">' . $image . '</a>';
+  $text = t('Subscribe to @feed-title', array('@feed-title' => $title));
+  if ($image = theme('image', 'misc/feed.png', $text)) {
+    return '<a href="' . check_url($url) . '" title="' . $text . '" class="feed-icon">' . $image . '</a>';
   }
 }
 
