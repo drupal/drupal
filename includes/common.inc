@@ -4126,7 +4126,7 @@ function drupal_render(&$elements) {
   }
 
   // Try to fetch the element's markup from cache and return.
-  if ($cached_output = drupal_render_cache_get($elements)) {
+  if (isset($elements['#cache']) && $cached_output = drupal_render_cache_get($elements)) {
     return $cached_output;
   }
 
