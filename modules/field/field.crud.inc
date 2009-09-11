@@ -239,6 +239,15 @@ function field_create_field($field) {
     throw new FieldException($message);
   }
 
+  // Disallow reserved field names. This can't prevent all field name
+  // collisions with existing object properties, but some is better
+  // than none.
+  foreach (field_info_fieldable_types() as $type => $info) {
+    if (in_array($field['field_name'], $info['object keys'])) {
+      throw new FieldException(t('Attempt to create field name %name which is reserved by entity type %type.', array('%name' => $field['field_name'], '%type' => $type)));
+    }
+  }
+
   $field += array(
     'cardinality' => 1,
     'translatable' => FALSE,
