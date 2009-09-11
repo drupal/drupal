@@ -756,8 +756,24 @@ function template_preprocess_field(&$variables) {
     ),
   );
   $variables = array_merge($variables, $additions);
+
+  // Initialize attributes for each item.
+  foreach ($variables['items'] as $delta => $item) {
+    $variables['item_attributes_array'][$delta] = array();
+  }
 }
 
+/**
+ * Theme process function for field.tpl.php.
+ *
+ * @see field.tpl.php
+ */
+function template_process_field(&$variables) {
+  // Flatten out attributes for each item.
+  foreach ($variables['items'] as $delta => $item) {
+    $variables['item_attributes'][$delta] = drupal_attributes($variables['item_attributes_array'][$delta]);
+  }
+}
 /**
  * @} End of "defgroup field"
  */

@@ -1,7 +1,7 @@
 <?php
 // $Id$
 ?>
-<div class="<?php print $classes . ' ' . $zebra; ?>">
+<div class="<?php print $classes . ' ' . $zebra; ?>"<?php print $attributes; ?>>
 
   <div class="clearfix">
 
@@ -13,7 +13,7 @@
 
   <?php print $picture ?>
 
-    <h3><?php print $title ?></h3>
+    <h3<?php print $title_attributes; ?>><?php print $title ?></h3>
 
     <div class="content">
       <?php hide($content['links']); print render($content); ?>

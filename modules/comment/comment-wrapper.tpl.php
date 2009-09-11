@@ -30,7 +30,7 @@
  * @see theme_comment_wrapper()
  */
 ?>
-<div id="comments" class="<?php print $classes; ?>">
+<div id="comments" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php if ($node->type != 'forum'): ?>
     <h2 class="comments"><?php print t('Comments'); ?></h2>
   <?php endif; ?>

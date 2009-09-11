@@ -35,9 +35,9 @@
  * @see template_process()
  */
 ?>
-<div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="<?php print $classes; ?>">
+<div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 <?php if ($block->subject): ?>
-  <h2><?php print $block->subject ?></h2>
+  <h2<?php print $title_attributes; ?>><?php print $block->subject ?></h2>
 <?php endif;?>
 
   <div class="content">

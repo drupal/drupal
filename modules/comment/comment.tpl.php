@@ -44,14 +44,14 @@
  * @see theme_comment()
  */
 ?>
-<div class="<?php print $classes; ?> clearfix">
+<div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
   <?php print $picture ?>
 
   <?php if ($new): ?>
     <span class="new"><?php print $new ?></span>
   <?php endif; ?>
 
-  <h3><?php print $title ?></h3>
+  <h3<?php print $title_attributes; ?>><?php print $title ?></h3>
 
   <div class="submitted">
     <?php

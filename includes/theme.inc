@@ -2042,6 +2042,10 @@ function template_preprocess(&$variables, $hook) {
   // Initialize html class attribute for the current hook.
   $variables['classes_array'] = array($hook);
 
+  // Initialize attributes for the top-level template entity and its title.
+  $variables['attributes_array'] = array();
+  $variables['title_attributes_array'] = array();
+
   // Set default variables that depend on the database.
   $variables['is_admin']            = FALSE;
   $variables['is_front']            = FALSE;
@@ -2066,6 +2070,10 @@ function template_preprocess(&$variables, $hook) {
 function template_process(&$variables, $hook) {
   // Flatten out classes.
   $variables['classes'] = implode(' ', $variables['classes_array']);
+
+  // Flatten out attributes and title_attributes.
+  $variables['attributes'] = drupal_attributes($variables['attributes_array']);
+  $variables['title_attributes'] = drupal_attributes($variables['title_attributes_array']);
 }
 
 /**
