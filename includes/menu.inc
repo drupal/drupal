@@ -413,7 +413,7 @@ function menu_execute_active_handler($path = NULL) {
   if ($router_item = menu_get_item($path)) {
     if ($router_item['access']) {
       if ($router_item['file']) {
-        require_once($router_item['file']);
+        require_once DRUPAL_ROOT . '/' . $router_item['file'];
       }
       return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
     }
