@@ -716,6 +716,10 @@ function text_textarea_with_summary_process($element, $form_state, $form) {
     '#description' => t('Leave blank to use trimmed value of full text as the summary.'),
     '#required' => $element['#required'],
     '#display' => $display,
+    '#attached' => array('js' => array(drupal_get_path('module', 'text') . '/text.js')),
+    '#attributes' => array('class' => array('text-textarea-summary')),
+    '#prefix' => '<div class="text-summary-wrapper">',
+    '#suffix' => '</div>',
   );
 
   $field_key = $element['#columns'][0];
@@ -728,6 +732,9 @@ function text_textarea_with_summary_process($element, $form_state, $form) {
     '#description' => $element['#description'],
     '#required' => $element['#required'],
     '#required' => $instance['required'],
+    '#attributes' => array('class' => array('text-full-textarea')),
+    '#prefix' => '<div class="text-full-wrapper">',
+    '#suffix' => '</div>',
   );
 
   if (!empty($instance['settings']['text_processing'])) {
