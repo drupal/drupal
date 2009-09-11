@@ -6,45 +6,45 @@
  */
 function session_test_menu() {
   $items['session-test/get'] = array(
-    'title' => t('Session value'),
+    'title' => 'Session value',
     'page callback' => '_session_test_get',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['session-test/id'] = array(
-    'title' => t('Session ID value'),
+    'title' => 'Session ID',
     'page callback' => '_session_test_id',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['session-test/set/%'] = array(
-    'title' => t('Set Session value'),
+    'title' => 'Set session value',
     'page callback' => '_session_test_set',
     'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['session-test/no-set/%'] = array(
-    'title' => t('Disabled session set value'),
+    'title' => 'Set session value but do not save session',
     'page callback' => '_session_test_no_set',
     'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['session-test/set-message'] = array(
-    'title' => t('Session value'),
+    'title' => 'Set message',
     'page callback' => '_session_test_set_message',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['session-test/set-message-but-dont-save'] = array(
-    'title' => t('Session value'),
+    'title' => 'Set message but do not save session',
     'page callback' => '_session_test_set_message_but_dont_save',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['session-test/set-not-started'] = array(
-    'title' => t('Session value'),
+    'title' => 'Set message when session is not started',
     'page callback' => '_session_test_set_not_started',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,

@@ -19,7 +19,7 @@ define('FILE_URL_TEST_CDN_2', 'http://cdn2.example.com');
  */
 function file_test_menu() {
   $items['file-test/upload'] = array(
-    'title' => t('Upload test'),
+    'title' => 'Upload test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_file_test_form'),
     'access arguments' => array('access content'),
