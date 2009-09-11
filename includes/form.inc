@@ -2890,6 +2890,8 @@ function batch_set($batch_definition) {
 function batch_process($redirect = NULL, $url = NULL) {
   $batch =& batch_get();
 
+  drupal_theme_initialize();
+  
   if (isset($batch)) {
     // Add process information
     $url = isset($url) ? $url : 'batch';
@@ -2899,6 +2901,7 @@ function batch_process($redirect = NULL, $url = NULL) {
       'url' => isset($url) ? $url : 'batch',
       'source_page' => $_GET['q'],
       'redirect' => $redirect,
+      'theme' => $GLOBALS['theme_key'],
     );
     $batch += $process_info;
 
