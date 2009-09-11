@@ -348,6 +348,28 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
   public function orderBy($field, $direction = 'ASC');
 
   /**
+   * Orders the result set by a random value.
+   *
+   * This may be stacked with other orderBy() calls. If so, the query will order
+   * by each specified field, including this one, in the order called. Although
+   * this method may be called multiple times on the same query, doing so
+   * is not particularly useful.
+   *
+   * Note: The method used by most drivers may not scale to very large result
+   * sets. If you need to work with extremely large data sets, you may create
+   * your own database driver by subclassing off of an existing driver and
+   * implementing your own randomization mechanism. See
+   *
+   * http://jan.kneschke.de/projects/mysql/order-by-rand/
+   *
+   * for an example of such an alternate sorting mechanism.
+   *
+   * @return
+   *   The called object
+   */
+  public function orderRandom();
+
+  /**
    * Restricts a query to a given range in the result set.
    *
    * If this method is called with no parameters, will remove any range
@@ -640,6 +662,11 @@ class SelectQueryExtender implements SelectQueryInterface {
 
   public function orderBy($field, $direction = 'ASC') {
     $this->query->orderBy($field, $direction);
+    return $this;
+  }
+
+  public function orderRandom() {
+    $this->query->orderRandom();
     return $this;
   }
 
@@ -1179,6 +1206,12 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
   public function orderBy($field, $direction = 'ASC') {
     $this->order[$field] = $direction;
+    return $this;
+  }
+
+  public function orderRandom() {
+    $alias = $this->addExpression('RAND()', 'random_field');
+    $this->orderBy($alias);
     return $this;
   }
 

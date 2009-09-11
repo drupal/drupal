@@ -1400,6 +1400,55 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $this->assertEqual($names[1], 'Ringo', t('Second query returned correct second name.'));
     $this->assertEqual($names[2], 'Ringo', t('Third query returned correct name.'));
   }
+
+  /**
+   * Test that random ordering of queries works.
+   *
+   * This is a non-deterministic query. That is, it is not guaranteed to pass
+   * 100% of the time.  Random numbers are like that. Instead, we take two sets
+   * of random selects.  By the laws of probability, the average of each set
+   * should be roughly the average of the data set being selected from and
+   * roughly the same each time through, provided that the original data set
+   * is evenly distributed. Because we know that ours is, this test should pass
+   * correctly 99% of the time. It is not possible to unit test for that other
+   * 1% successfully, so that will have to do.
+   */
+  function testRandomOrder() {
+    $sets = 2;
+    $runs = 50;
+
+    $ids = array();
+    $ids = array();
+
+    $max = db_query("SELECT MAX(id) FROM {test}")->fetchField();
+    $min = db_query("SELECT MIN(id) FROM {test}")->fetchField();
+
+    $ideal_average = ($min + $max) / 2;
+    $allowed_deviation = ($max - $min) / 4;
+
+    for ($i = 0; $i < $sets; ++$i) {
+      for ($j = 0; $j < $runs; ++$j) {
+        $ids[$i][] = db_select('test', 't')
+          ->fields('t', array('id'))
+          ->range(0, 1)
+          ->orderRandom()
+          ->orderBy('id')
+          ->execute()
+          ->fetchField();
+      }
+    }
+
+    for ($i = 0; $i < $sets; ++$i) {
+      $found_average[$i] = array_sum($ids[$i]) / count($ids[$i]);
+      $deviation = abs($found_average[$i] - $ideal_average);
+      $this->assertTrue($deviation <= $allowed_deviation, t('Random ids are within allowed deviation.'));
+    }
+
+    for ($i = 1; $i < $sets; ++$i) {
+      $deviation = abs($found_average[$i] - $found_average[$i-1]);
+      $this->assertTrue($deviation <= $allowed_deviation, t('Random ids are within allowed deviation from each other.'));
+    }
+  }
 }
 
 /**
@@ -2897,7 +2946,7 @@ class DatabaseExtraTypesTestCase extends DrupalWebTestCase {
              'description' => t('Test Time field'),
              'type' => 'time',
              'not null' => FALSE,
-	       ),
+           ),
          ),
        );
        $ret = array();
