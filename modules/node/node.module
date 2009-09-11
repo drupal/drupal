@@ -2185,7 +2185,7 @@ function node_search_validate($form, &$form_state) {
  *   Optional, a user object representing the user for whom the operation is to
  *   be performed. Determines access for a user other than the current user.
  * @return
- *   TRUE if the operation may be performed.
+ *   TRUE if the operation may be performed, FALSE otherwise.
  */
 function node_access($op, $node, $account = NULL) {
   global $user;
@@ -2234,13 +2234,14 @@ function node_access($op, $node, $account = NULL) {
   // node_access table.
   if ($op != 'create' && $node->nid) {
     $query = db_select('node_access');
-    $query->addExpression('COUNT(*)');
+    $query->addExpression('1');
     $query->condition('grant_' . $op, 1, '>=');
     $nids = db_or()->condition('nid', $node->nid);
     if ($node->status) {
       $nids->condition('nid', 0);
     }
     $query->condition($nids);
+    $query->range(0, 1);
 
     $grants = db_or();
     foreach (node_access_grants($op, $account) as $realm => $gids) {
@@ -2251,10 +2252,10 @@ function node_access($op, $node, $account = NULL) {
         );
       }
     }
-    if (count($grants) > 0 ) {
+    if (count($grants) > 0) {
       $query->condition($grants);
     }
-    return $query
+    return (bool) $query
       ->execute()
       ->fetchField();
   }
