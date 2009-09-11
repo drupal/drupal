@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.203 2009/09/11 02:04:12 webchick Exp $
+// $Id: install.php,v 1.204 2009/09/11 03:15:51 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1415,7 +1415,7 @@ function install_import_locales_remaining(&$install_state) {
  *   A message informing the user that the installation is complete.
  */
 function install_finished(&$install_state) {
-  drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
+  drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())), PASS_THROUGH);
   $messages = drupal_set_message();
   $output = '<p>' . st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) . '</p>';
   $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
