@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.39 2009/08/31 18:43:12 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.40 2009/09/11 13:56:56 dries Exp $
 
 /**
  * @file
@@ -87,16 +87,24 @@ function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine 
  */
 function theme_task_list($items, $active = NULL) {
   $done = isset($items[$active]) || $active == NULL;
-  $output = '<ol class="task-list">';
+  $output = '<h2 class="element-invisible">Installation tasks</h2>';
+  $output .= '<ol class="task-list">';
+
   foreach ($items as $k => $item) {
     if ($active == $k) {
       $class = 'active';
+      $status = '(' . t('active') . ')';
       $done = FALSE;
     }
     else {
       $class = $done ? 'done' : '';
+      $status = $done ? '(' . t('done') . ')' : '';
     }
-    $output .= '<li class="' . $class . '">' . $item . '</li>';
+    $output .= '<li';
+    $output .= ($class ? ' class="' . $class . '"' : '') . '>';
+    $output .= $item;
+    $output .= ($status ? '<span class="element-invisible">' . $status . '</span>' : '');
+    $output .= '</li>';
   }
   $output .= '</ol>';
   return $output;
