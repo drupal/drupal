@@ -617,33 +617,26 @@ function user_password($length = 10) {
  *
  * @param $roles
  *   An array whose keys are the role IDs of interest, such as $user->roles.
- * @param $reset
- *   Optional parameter - if TRUE data in the static variable is rebuilt.
  *
  * @return
  *   An array indexed by role ID. Each value is an array whose keys are the
  *   permission strings for the given role ID.
  */
-function user_role_permissions($roles = array(), $reset = FALSE) {
-  static $stored_permissions = array();
-
-  if ($reset) {
-    // Clear the data cached in the static variable.
-    $stored_permissions = array();
-  }
+function user_role_permissions($roles = array()) {
+  $cache = &drupal_static(__FUNCTION__, array());
 
   $role_permissions = $fetch = array();
 
   if ($roles) {
     foreach ($roles as $rid => $name) {
-      if (isset($stored_permissions[$rid])) {
-        $role_permissions[$rid] = $stored_permissions[$rid];
+      if (isset($cache[$rid])) {
+        $role_permissions[$rid] = $cache[$rid];
       }
       else {
         // Add this rid to the list of those needing to be fetched.
         $fetch[] = $rid;
         // Prepare in case no permissions are returned.
-        $stored_permissions[$rid] = array();
+        $cache[$rid] = array();
       }
     }
 
@@ -653,11 +646,11 @@ function user_role_permissions($roles = array(), $reset = FALSE) {
       $result = db_query("SELECT rid, permission FROM {role_permission} WHERE rid IN (:fetch)", array(':fetch' => $fetch));
 
       foreach ($result as $row) {
-        $stored_permissions[$row->rid][$row->permission] = TRUE;
+        $cache[$row->rid][$row->permission] = TRUE;
       }
       foreach ($fetch as $rid) {
         // For every rid, we know we at least assigned an empty array.
-        $role_permissions[$rid] = $stored_permissions[$rid];
+        $role_permissions[$rid] = $cache[$rid];
       }
     }
   }
@@ -672,10 +665,6 @@ function user_role_permissions($roles = array(), $reset = FALSE) {
  *   The permission, such as "administer nodes", being checked for.
  * @param $account
  *   (optional) The account to check, if not given use currently logged in user.
- * @param $reset
- *   (optional) Resets the user's permissions cache, which will result in a
- *   recalculation of the user's permissions. This is necessary to support
- *   dynamically added user roles.
  *
  * @return
  *   Boolean TRUE if the current user has the requested permission.
@@ -684,13 +673,9 @@ function user_role_permissions($roles = array(), $reset = FALSE) {
  * way, we guarantee consistent behavior, and ensure that the superuser
  * can perform all actions.
  */
-function user_access($string, $account = NULL, $reset = FALSE) {
+function user_access($string, $account = NULL) {
   global $user;
-  static $perm = array();
-
-  if ($reset) {
-    $perm = array();
-  }
+  $perm = &drupal_static(__FUNCTION__, array());
 
   if (!isset($account)) {
     $account = $user;
@@ -704,7 +689,7 @@ function user_access($string, $account = NULL, $reset = FALSE) {
   // To reduce the number of SQL queries, we cache the user's permissions
   // in a static variable.
   if (!isset($perm[$account->uid])) {
-    $role_permissions = user_role_permissions($account->roles, $reset);
+    $role_permissions = user_role_permissions($account->roles);
 
     $perms = array();
     foreach ($role_permissions as $one_role) {
@@ -2292,6 +2277,10 @@ function user_role_save($role) {
     module_invoke_all('user_role_insert', $role);
   }
 
+  // Clear the user access cache.
+  drupal_static_reset('user_access');
+  drupal_static_reset('user_role_permissions');
+
   return $status;
 }
 
@@ -2316,7 +2305,8 @@ function user_role_delete($role) {
     ->execute();
 
   // Clear the user access cache.
-  user_access(NULL, NULL, TRUE);
+  drupal_static_reset('user_access');
+  drupal_static_reset('user_role_permissions');
 
   module_invoke_all('user_role_delete', $role);
 }
@@ -2352,7 +2342,8 @@ function user_role_set_permissions($role, array $permissions = array(), $merge =
   }
 
   // Clear the user access cache.
-  user_access(NULL, NULL, TRUE);
+  drupal_static_reset('user_access');
+  drupal_static_reset('user_role_permissions');
 
   return TRUE;
 }
