@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.343 2009/09/11 01:28:34 webchick Exp $
+// $Id: menu.inc,v 1.344 2009/09/11 15:05:42 webchick Exp $
 
 /**
  * @file
@@ -413,7 +413,7 @@ function menu_execute_active_handler($path = NULL) {
   if ($router_item = menu_get_item($path)) {
     if ($router_item['access']) {
       if ($router_item['file']) {
-        require_once($router_item['file']);
+        require_once DRUPAL_ROOT . '/' . $router_item['file'];
       }
       return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
     }
