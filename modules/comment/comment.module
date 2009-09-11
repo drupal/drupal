@@ -589,7 +589,7 @@ function comment_node_page_additions($node) {
     if ($cids = comment_get_thread($node)) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
-      $build = comment_build_multiple($comments);
+      $build = comment_build_multiple($comments, $node);
       $build['#attached']['css'][] = drupal_get_path('module', 'comment') . '/comment.css';
       $build['pager']['#theme'] = 'pager';
       $additions['comments'] = $build;
@@ -759,17 +759,17 @@ function comment_prepare_thread(&$comments) {
  *
  * @param $comment
  *   A comment object.
+ * @param $node
+ *   The node the comment is attached to.
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
  *
  * @return
  *   An array as expected by drupal_render().
  */
-function comment_build($comment, $build_mode = 'full') {
-  $node = node_load($comment->nid);
-  
+function comment_build($comment, $node, $build_mode = 'full') {
   // Populate $comment->content with a render() array.
-  comment_build_content($comment, $build_mode);
+  comment_build_content($comment, $node, $build_mode);
 
   $build = $comment->content;
   // We don't need duplicate rendering info in comment->content.
@@ -778,6 +778,7 @@ function comment_build($comment, $build_mode = 'full') {
   $build += array(
     '#theme' => 'comment',
     '#comment' => $comment,
+    '#node' => $node,
     '#build_mode' => $build_mode,
   );
 
@@ -814,10 +815,12 @@ function comment_build($comment, $build_mode = 'full') {
  *
  * @param $comment
  *   A comment object.
+ * @param $node
+ *   The node the comment is attached to.
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
  */
-function comment_build_content($comment, $build_mode = 'full') {
+function comment_build_content($comment, $node, $build_mode = 'full') {
   if (empty($comment->content)) {
     $comment->content = array();
   }
@@ -832,7 +835,7 @@ function comment_build_content($comment, $build_mode = 'full') {
   if (empty($comment->in_preview)) {
     $comment->content['links']['comment'] = array(
       '#theme' => 'links',
-      '#links' => comment_links($comment),
+      '#links' => comment_links($comment, $node),
       '#attributes' => array('class' => array('links', 'inline')),
     );
   }
@@ -851,12 +854,13 @@ function comment_build_content($comment, $build_mode = 'full') {
  *
  * @param $comment
  *   The comment object.
+ * @param $node
+ *   The node the comment is attached to.
  * @return
  *   A structured array of links.
  */
-function comment_links($comment) {
+function comment_links($comment, $node) {
   $links = array();
-  $node = node_load($comment->nid);
   if ($node->comment == COMMENT_NODE_OPEN) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment_delete'] = array(
@@ -909,6 +913,8 @@ function comment_links($comment) {
  *
  * @param $comments
  *   An array of comments as returned by comment_load_multiple().
+ * @param $node
+ *   The node the comments are attached to.
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
  * @param $weight
@@ -916,12 +922,12 @@ function comment_links($comment) {
  * @return
  *   An array in the format expected by drupal_render().
  */
-function comment_build_multiple($comments, $build_mode = 'full', $weight = 0) {
+function comment_build_multiple($comments, $node, $build_mode = 'full', $weight = 0) {
   $build = array(
     '#sorted' => TRUE,
   );
   foreach ($comments as $comment) {
-    $build[$comment->cid] = comment_build($comment, $build_mode);
+    $build[$comment->cid] = comment_build($comment, $node, $build_mode);
     $build[$comment->cid]['#weight'] = $weight;
     $weight++;
   }
@@ -1903,7 +1909,7 @@ function comment_preview($comment) {
 
     $comment->timestamp = !empty($comment->timestamp) ? $comment->timestamp : REQUEST_TIME;
     $comment->in_preview = TRUE;
-    $comment_build = comment_build($comment);
+    $comment_build = comment_build($comment, $node);
     $comment_build += array(
       '#weight' => -100,
       '#prefix' => '<div class="preview">',
@@ -1917,7 +1923,7 @@ function comment_preview($comment) {
     $build = array();
     if ($comments = comment_load_multiple(array($comment->pid), array('status' => COMMENT_PUBLISHED))) {
       $parent_comment = $comments[$comment->pid];
-      $build = comment_build($parent_comment);
+      $build = comment_build($parent_comment, $node);
     }
   }
   else {
@@ -2080,8 +2086,9 @@ function comment_form_submit($form, &$form_state) {
  */
 function template_preprocess_comment(&$variables) {
   $comment = $variables['elements']['#comment'];
+  $node = $variables['elements']['#node'];
   $variables['comment']   = $comment;
-  $variables['node']      = node_load($comment->nid);
+  $variables['node']      = $node;
   $variables['author']    = theme('username', $comment);
   $variables['date']      = format_date($comment->timestamp);
   $variables['new']       = !empty($comment->new) ? t('new') : '';
