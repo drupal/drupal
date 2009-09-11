@@ -110,8 +110,8 @@ function system_help($path, $arg) {
       $output = '<p>' . t('Select the default theme for Drupal. To configure site-wide display settings, click the "configure" task above. Alternatively, to override these settings in a specific theme, click the "configure" link for that theme. Note that different themes may have different regions available for displaying content.') . '</p>';
       $output .= '<p>' . t('To change the appearance of your site, a number of <a href="@themes">contributed themes</a> are available.', array('@themes' => 'http://drupal.org/project/themes')) . '</p>';
       return $output;
-    case 'admin/appearance/settings/' . $arg[4]:
-      $reference = explode('.', $arg[4], 2);
+    case 'admin/appearance/settings/' . $arg[3]:
+      $reference = explode('.', $arg[3], 2);
       $theme = array_pop($reference);
       return '<p>' . t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.', array('%template' => $theme, '@global' => url('admin/appearance/settings'))) . '</p>';
     case 'admin/appearance/settings':
