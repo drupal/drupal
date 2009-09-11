@@ -70,6 +70,13 @@ function filter_theme() {
  * Implement hook_menu().
  */
 function filter_menu() {
+  $items['filter/tips'] = array(
+    'title' => 'Compose tips',
+    'page callback' => 'filter_tips_long',
+    'access callback' => TRUE,
+    'type' => MENU_SUGGESTED_ITEM,
+    'file' => 'filter.pages.inc',
+  );
   $items['admin/config/content/formats'] = array(
     'title' => 'Text formats',
     'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
@@ -89,13 +96,6 @@ function filter_menu() {
     'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
     'file' => 'filter.admin.inc',
-  );
-  $items['filter/tips'] = array(
-    'title' => 'Compose tips',
-    'page callback' => 'filter_tips_long',
-    'access callback' => TRUE,
-    'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'filter.pages.inc',
   );
   $items['admin/config/content/formats/%filter_format'] = array(
     'type' => MENU_CALLBACK,
@@ -185,15 +185,14 @@ function filter_format_save($format) {
   // to the bottom.
   $current = filter_list_format($format->format);
   $filters = $format->filters;
-
-  foreach ($filters as $name => $status) {
+  foreach ($filters as $name => $filter) {
     $fields = array();
     // Add new filters to the bottom.
     $fields['weight'] = isset($current[$name]->weight) ? $current[$name]->weight : 10;
-    $fields['status'] = $status;
+    $fields['status'] = $filter['status'];
     // Only update settings if there are any.
-    if (!empty($format->settings[$name])) {
-      $fields['settings'] = serialize($format->settings[$name]);
+    if (!empty($filter['settings'])) {
+      $fields['settings'] = serialize($filter['settings']);
     }
     db_merge('filter')
       ->key(array(
@@ -211,6 +210,8 @@ function filter_format_save($format) {
     module_invoke_all('filter_format_update', $format);
   }
 
+  // Clear the filter cache whenever a text format is saved.
+  drupal_static_reset('filter_list_format');
   cache_clear_all($format->format . ':', 'cache_filter', TRUE);
 
   return $return;
@@ -386,6 +387,7 @@ function _filter_html_escape_tips($filter, $format, $long = FALSE) {
 /**
  * @} End of "Tips callback for filters".
  */
+
 /**
  * Retrieve a list of text formats.
  */
@@ -472,47 +474,52 @@ function filter_format_allowcache($format) {
 }
 
 /**
- * Retrieve a list of filters for a certain format.
+ * Retrieve a list of filters for a given text format.
  *
  * @param $format
  *   The format ID.
+ * @param $include_disabled
+ *   (optional) Boolean whether to retrieve all filters associated with the
+ *   given format, including those that are disabled. Defaults to FALSE.
  * @return
  *   An array of filter objects assosiated to the given format.
  */
-function filter_list_format($format) {
-  static $filters = array();
+function filter_list_format($format, $include_disabled = FALSE) {
+  $filters = &drupal_static(__FUNCTION__, array());
   $filter_info = filter_get_filters();
 
-  if (!isset($filters[$format])) {
-    $filters[$format] = array();
-    $result = db_select('filter', 'filter')
+  if (!isset($filters[$format]) || $include_disabled) {
+    $format_filters = array();
+    $query = db_select('filter', 'filter')
       ->fields('filter')
       ->condition('format', $format)
-      ->condition('status', 1)
       ->orderBy('weight')
       ->orderBy('module')
-      ->orderBy('name')
-      ->execute();
-    foreach ($result as $filter) {
-      if (isset($filter_info[$filter->name])) {
-        $filter->title = $filter_info[$filter->name]['title'];
+      ->orderBy('name');
+    if (!$include_disabled) {
+      $query->condition('status', 1);
+    }
+    $result = $query->execute()->fetchAllAssoc('name');
+    foreach ($result as $name => $filter) {
+      if (isset($filter_info[$name])) {
+        $filter->title = $filter_info[$name]['title'];
         // Unpack stored filter settings.
-        if (isset($filter->settings)) {
-          $filter->settings = unserialize($filter->settings);
-        }
-        else {
-          $filter->settings = array();
-        }
+        $filter->settings = (isset($filter->settings) ? unserialize($filter->settings) : array());
         // Apply default filter settings.
-        if (isset($filter_info[$filter->name]['default settings'])) {
-          $filter->settings = array_merge($filter_info[$filter->name]['default settings'], $filter->settings);
+        if (isset($filter_info[$name]['default settings'])) {
+          $filter->settings = array_merge($filter_info[$name]['default settings'], $filter->settings);
         }
-        $filters[$format][$filter->name] = $filter;
+        $format_filters[$name] = $filter;
       }
     }
+    // Prevent statically caching of disabled filters.
+    if ($include_disabled) {
+      return $format_filters;
+    }
+    $filters[$format] = $format_filters;
   }
 
-  return $filters[$format];
+  return isset($filters[$format]) ? $filters[$format] : array();
 }
 
 /**

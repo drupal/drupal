@@ -538,14 +538,13 @@ function forum_block_view($delta = '') {
       break;
   }
 
-   $cache_keys[] = 'forum';
-   $cache_keys[] = $delta;
-   // Cache based on the altered query. Enables us to cache with node access enabled.
-   $query->preExecute();
-   $cache_keys[] = md5(serialize(array((string) $query, $query->getArguments())));
+  $cache_keys = array_merge(array('forum', $delta), drupal_render_cid_parts());
+  // Cache based on the altered query. Enables us to cache with node access enabled.
+  $query->preExecute();
+  $cache_keys[] = md5(serialize(array((string) $query, $query->getArguments())));
 
-   $block['subject'] = $title;
-   $block['content'] = array(
+  $block['subject'] = $title;
+  $block['content'] = array(
      '#access' => user_access('access content'),
      '#pre_render' => array('forum_block_view_pre_render'),
      '#cache' => array(
@@ -553,8 +552,8 @@ function forum_block_view($delta = '') {
         'expire' => CACHE_TEMPORARY,
      ),
      '#query' => $query,
-   );
-   return $block;
+  );
+  return $block;
 }
 
 /**

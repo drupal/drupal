@@ -118,7 +118,8 @@ function filter_admin_format_form(&$form_state, $format) {
     $form['default_format'] = array('#type' => 'hidden', '#value' => 1);
   }
 
-  $form['name'] = array('#type' => 'textfield',
+  $form['name'] = array(
+    '#type' => 'textfield',
     '#title' => t('Name'),
     '#default_value' => $format->name,
     '#description' => t('Specify a unique name for this text format.'),
@@ -144,7 +145,7 @@ function filter_admin_format_form(&$form_state, $format) {
   }
   // Table with filters
   $filter_info = filter_get_filters();
-  $filters = filter_list_format($format->format);
+  $filters = filter_list_format($format->format, TRUE);
 
   $form['filters'] = array('#type' => 'fieldset',
     '#title' => t('Filters'),
@@ -152,10 +153,10 @@ function filter_admin_format_form(&$form_state, $format) {
     '#tree' => TRUE,
   );
   foreach ($filter_info as $name => $filter) {
-    $form['filters'][$name] = array(
+    $form['filters'][$name]['status'] = array(
       '#type' => 'checkbox',
       '#title' => $filter['title'],
-      '#default_value' => isset($filters[$name]),
+      '#default_value' => !empty($filters[$name]->status),
       '#description' => $filter['description'],
     );
   }

@@ -65,8 +65,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['name'] = $this->randomName();
     $edit['roles[2]'] = 1;
-    $edit['filters[' . $second_filter . ']'] = TRUE;
-    $edit['filters[' . $first_filter . ']'] = TRUE;
+    $edit['filters[' . $second_filter . '][status]'] = TRUE;
+    $edit['filters[' . $first_filter . '][status]'] = TRUE;
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), t('New filter created.'));
 
@@ -75,8 +75,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     if ($format !== NULL) {
       $this->assertFieldByName('roles[2]', '', t('Role found.'));
-      $this->assertFieldByName('filters[' . $second_filter . ']', '', t('Line break filter found.'));
-      $this->assertFieldByName('filters[' . $first_filter . ']', '', t('Url filter found.'));
+      $this->assertFieldByName('filters[' . $second_filter . '][status]', '', t('Line break filter found.'));
+      $this->assertFieldByName('filters[' . $first_filter . '][status]', '', t('Url filter found.'));
 
       // Delete new filter.
       $this->drupalPost('admin/config/content/formats/' . $format->format . '/delete', array(), t('Delete'));
