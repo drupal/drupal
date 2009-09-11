@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.987 2009/09/10 22:10:10 webchick Exp $
+// $Id: common.inc,v 1.988 2009/09/11 15:12:29 dries Exp $
 
 /**
  * @file
@@ -4126,7 +4126,7 @@ function drupal_render(&$elements) {
   }
 
   // Try to fetch the element's markup from cache and return.
-  if ($cached_output = drupal_render_cache_get($elements)) {
+  if (isset($elements['#cache']) && $cached_output = drupal_render_cache_get($elements)) {
     return $cached_output;
   }
 
