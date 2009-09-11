@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.15 2009/08/22 14:34:21 webchick Exp $
+// $Id: simpletest.pages.inc,v 1.16 2009/09/11 01:53:29 webchick Exp $
 
 /**
  * @file
@@ -402,10 +402,10 @@ function simpletest_result_status_image($status) {
 
   if (!isset($map)) {
     $map = array(
-      'pass' => theme('image', 'misc/watchdog-ok.png'),
-      'fail' => theme('image', 'misc/watchdog-error.png'),
-      'exception' => theme('image', 'misc/watchdog-warning.png'),
-      'debug' => theme('image', 'misc/watchdog-warning.png'),
+      'pass' => theme('image', 'misc/watchdog-ok.png', t('Pass')),
+      'fail' => theme('image', 'misc/watchdog-error.png', t('Fail')),
+      'exception' => theme('image', 'misc/watchdog-warning.png', t('Exception')),
+      'debug' => theme('image', 'misc/watchdog-warning.png', t('Debug')),
     );
   }
   if (isset($map[$status])) {
