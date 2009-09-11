@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.371 2009/09/10 06:31:38 dries Exp $
+// $Id: form.inc,v 1.372 2009/09/11 04:09:26 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2890,6 +2890,8 @@ function batch_set($batch_definition) {
 function batch_process($redirect = NULL, $url = NULL) {
   $batch =& batch_get();
 
+  drupal_theme_initialize();
+  
   if (isset($batch)) {
     // Add process information
     $url = isset($url) ? $url : 'batch';
@@ -2899,6 +2901,7 @@ function batch_process($redirect = NULL, $url = NULL) {
       'url' => isset($url) ? $url : 'batch',
       'source_page' => $_GET['q'],
       'redirect' => $redirect,
+      'theme' => $GLOBALS['theme_key'],
     );
     $batch += $process_info;
 
