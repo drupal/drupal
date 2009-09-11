@@ -39,7 +39,7 @@ function number_field_info() {
     'number_decimal' => array(
       'label' => t('Decimal'),
       'description' => t('This field stores a number in the database in a fixed decimal format.'),
-      'settings' => array('precision' => 10, 'scale' => 2, 'decimal' => ' .'),
+      'settings' => array('precision' => 10, 'scale' => 2, 'decimal' => '.'),
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
       'default_formatter' => 'number_integer',
@@ -480,7 +480,7 @@ function number_decimal_validate($element, &$form_state) {
       form_set_error($error_field, t('Only numbers and the decimal character (%decimal) are allowed in %field.', array('%decimal' => $field['settings']['decimal'], '%field' => t($instance['label']))));
     }
     else {
-      $value = str_replace($field['settings']['decimal'], ' .', $value);
+      $value = str_replace($field['settings']['decimal'], '.', $value);
       $value = round($value, $field['settings']['scale']);
       form_set_value($element[$field_key], $value, $form_state);
     }
