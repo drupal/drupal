@@ -323,9 +323,16 @@ ul.secondary li.active a.active {
   list-style-type: none;
   list-style-image: none;
 }
+
+#block-system-main ul.admin-list.compact {
+  margin-bottom: 8px;
+}
+
 #block-system-main ul.admin-list.compact li {
   border: 0;
   background: none;
+  margin-bottom: 2px;
+  padding-top: 2px;
 }
 
 #block-system-main ul.admin-list li:last-child {
