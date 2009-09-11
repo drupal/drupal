@@ -1,7 +1,7 @@
 <?php
-// $Id: comment.tpl.php,v 1.15 2009/08/29 04:16:15 webchick Exp $
+// $Id: comment.tpl.php,v 1.16 2009/09/11 06:48:03 dries Exp $
 ?>
-<div class="<?php print $classes . ' ' . $zebra; ?>">
+<div class="<?php print $classes . ' ' . $zebra; ?>"<?php print $attributes; ?>>
 
   <div class="clearfix">
 
@@ -13,7 +13,7 @@
 
   <?php print $picture ?>
 
-    <h3><?php print $title ?></h3>
+    <h3<?php print $title_attributes; ?>><?php print $title ?></h3>
 
     <div class="content">
       <?php hide($content['links']); print render($content); ?>

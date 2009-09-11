@@ -1,5 +1,5 @@
 <?php
-// $Id: comment-wrapper.tpl.php,v 1.7 2009/07/28 10:09:25 dries Exp $
+// $Id: comment-wrapper.tpl.php,v 1.8 2009/09/11 06:48:02 dries Exp $
 
 /**
  * @file
@@ -30,7 +30,7 @@
  * @see theme_comment_wrapper()
  */
 ?>
-<div id="comments" class="<?php print $classes; ?>">
+<div id="comments" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php if ($node->type != 'forum'): ?>
     <h2 class="comments"><?php print t('Comments'); ?></h2>
   <?php endif; ?>

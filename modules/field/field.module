@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.33 2009/09/10 22:31:58 webchick Exp $
+// $Id: field.module,v 1.34 2009/09/11 06:48:02 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -756,8 +756,24 @@ function template_preprocess_field(&$variables) {
     ),
   );
   $variables = array_merge($variables, $additions);
+
+  // Initialize attributes for each item.
+  foreach ($variables['items'] as $delta => $item) {
+    $variables['item_attributes_array'][$delta] = array();
+  }
 }
 
+/**
+ * Theme process function for field.tpl.php.
+ *
+ * @see field.tpl.php
+ */
+function template_process_field(&$variables) {
+  // Flatten out attributes for each item.
+  foreach ($variables['items'] as $delta => $item) {
+    $variables['item_attributes'][$delta] = drupal_attributes($variables['item_attributes_array'][$delta]);
+  }
+}
 /**
  * @} End of "defgroup field"
  */

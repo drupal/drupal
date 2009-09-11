@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.21 2009/08/29 04:16:15 webchick Exp $
+// $Id: node.tpl.php,v 1.22 2009/09/11 06:48:03 dries Exp $
 
 /**
  * @file
@@ -70,12 +70,12 @@
  * @see template_process()
  */
 ?>
-<div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix">
+<div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 
   <?php print $user_picture; ?>
 
   <?php if (!$page): ?>
-    <h2><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
+    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
   <?php endif; ?>
 
   <?php if ($display_submitted || !empty($content['links']['terms'])): ?>
