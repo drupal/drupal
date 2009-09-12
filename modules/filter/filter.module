@@ -390,17 +390,31 @@ function _filter_html_escape_tips($filter, $format, $long = FALSE) {
 
 /**
  * Retrieve a list of text formats.
+ *
+ * @param $format
+ *   (optional) The text format to retrieve; if omitted or NULL, retrieve an
+ *   array of accessible text formats.
+ * @param $account
+ *   (optional) The user account to retrieve accessible text formats for; if
+ *   omitted, the currently logged-in user is used.
+ *
+ * @return
+ *   Either one text format object or a list of text format objects, depending
+ *   on the $format parameter. FALSE if the user does not have access to the
+ *   given text $format.
  */
-function filter_formats($index = NULL) {
+function filter_formats($format = NULL, $account = NULL) {
   global $user;
-  static $formats;
+  $formats = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($account)) {
+    $account = $user;
+  }
 
   // Administrators can always use all text formats.
-  $all = user_access('administer filters');
+  $all = user_access('administer filters', $account);
 
-  if (!isset($formats)) {
-    $formats = array();
-
+  if (!isset($formats[$account->uid])) {
     $query = db_select('filter_format', 'f');
     $query->addField('f', 'format', 'format');
     $query->addField('f', 'name', 'name');
@@ -418,12 +432,12 @@ function filter_formats($index = NULL) {
       $query->condition($or);
     }
 
-    $formats = $query->execute()->fetchAllAssoc('format');
+    $formats[$account->uid] = $query->execute()->fetchAllAssoc('format');
   }
-  if (isset($index)) {
-    return isset($formats[$index]) ? $formats[$index] : FALSE;
+  if (isset($format)) {
+    return isset($formats[$account->uid][$format]) ? $formats[$account->uid][$format] : FALSE;
   }
-  return $formats;
+  return $formats[$account->uid];
 }
 
 /**
@@ -651,16 +665,27 @@ function filter_form($selected_format = FILTER_FORMAT_DEFAULT, $weight = NULL, $
 }
 
 /**
- * Returns TRUE if the user is allowed to access this format.
+ * Returns whether a user is allowed to access a given text format.
+ *
+ * @param $format
+ *   The format of a text to be filtered. Specify FILTER_FORMAT_DEFAULT for
+ *   the site's default text format.
+ * @param $account
+ *   (optional) The user account to check access for; if omitted, the currently
+ *   logged-in user is used.
+ *
+ * @return
+ *   Boolean TRUE if the user is allowed to access the given format.
+ *
+ * @see filter_formats()
  */
-function filter_access($format) {
+function filter_access($format, $account = NULL) {
   $format = filter_resolve_format($format);
-  if (user_access('administer filters') || ($format == variable_get('filter_default_format', 1))) {
+  if (user_access('administer filters', $account) || ($format == variable_get('filter_default_format', 1))) {
     return TRUE;
   }
   else {
-    $formats = filter_formats();
-    return isset($formats[$format]);
+    return (bool) filter_formats($format, $account);
   }
 }
 

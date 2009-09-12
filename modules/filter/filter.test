@@ -26,6 +26,10 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     list($filtered, $full) = $this->checkFilterFormats();
 
+    // Verify access permissions to Full HTML format.
+    $this->assertTrue(filter_access($full, $admin_user), t('Admin user may use Full HTML.'));
+    $this->assertFalse(filter_access($full, $web_user), t('Web user may not use Full HTML.'));
+
     // Change default filter.
     $edit = array();
     $edit['default'] = $full;
