@@ -32,5 +32,20 @@ function hook_openid($op, $request) {
 }
 
 /**
+ * Allow modules to act upon a successful OpenID login.
+ *
+ * @param $response
+ *   Response values from the OpenID Provider.
+ * @param $account
+ *   The Drupal user account that logged in
+ *
+ */
+function hook_openid_response($response, $account) {
+  if (isset($response['openid.ns.ax'])) {
+    _mymodule_store_ax_fields($response, $account);
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
