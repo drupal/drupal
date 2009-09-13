@@ -2,7 +2,7 @@
 // $Id$
 
 class ForumTestCase extends DrupalWebTestCase {
-  protected $big_user;
+  protected $admin_user;
   protected $own_user;
   protected $any_user;
   protected $nid_user;
@@ -25,7 +25,7 @@ class ForumTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('taxonomy', 'comment', 'forum');
     // Create users.
-    $this->big_user = $this->drupalCreateUser(array('administer blocks', 'administer forums', 'administer menu', 'administer taxonomy', 'create forum content')); // 'access administration pages'));
+    $this->admin_user = $this->drupalCreateUser(array('administer blocks', 'administer forums', 'administer menu', 'administer taxonomy', 'create forum content')); // 'access administration pages'));
     $this->own_user = $this->drupalCreateUser(array('create forum content', 'edit own forum content', 'delete own forum content'));
     $this->any_user = $this->drupalCreateUser(array('create forum content', 'edit any forum content', 'delete any forum content', 'access administration pages'));
     $this->nid_user = $this->drupalCreateUser(array());
@@ -36,27 +36,27 @@ class ForumTestCase extends DrupalWebTestCase {
    */
   function testForum() {
     // Do the admin tests.
-    $this->doAdminTests($this->big_user);
+    $this->doAdminTests($this->admin_user);
     // Generate topics to populate the active forum block.
     $this->generateForumTopics($this->forum);
 
-    // Login the nid user to view the forum topics and generate an Active forum topics list (FAILS).
+    // Login the nid user to view the forum topics and generate an active forum
+    // topics list.
     $this->drupalLogin($this->nid_user);
-    // View the forum topics.
     $this->viewForumTopics($this->nids);
 
     // Do basic tests for the any forum user.
     $this->doBasicTests($this->any_user, TRUE);
+
     // Create another forum node for the any forum user.
-//    $node = $this->drupalCreateNode(array('type' => 'forum', 'uid' => $this->any_user->uid));
     $node = $this->createForumTopic($this->forum, FALSE);
 
     // Do basic tests for the own forum user.
     $this->doBasicTests($this->own_user, FALSE);
+
     // Verify the own forum user only has access to the forum view node.
     $this->verifyForums($this->any_user, $node, FALSE, 403);
     // Create another forum node for the own forum user.
-//    $node = $this->drupalCreateNode(array('type' => 'forum', 'uid' => $this->own_user->uid));
     $node = $this->createForumTopic($this->forum, FALSE);
 
     // Login the any forum user.
@@ -79,7 +79,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $edit['forum_active[region]'] = 'sidebar_second';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), t('[Active forum topics] Forum block was enabled'));
+    $this->assertText(t('The block settings have been updated.'), t('Active forum topics forum block was enabled'));
 
     // Enable the new forum block.
     $edit = array();
@@ -153,9 +153,13 @@ class ForumTestCase extends DrupalWebTestCase {
   /**
    * Create a forum container or a forum.
    *
-   * @param string $type Forum type (forum container or forum).
-   * @param integer $parent Forum parent (default = 0 = a root forum; >0 = a forum container or another forum).
-   * @return object Taxonomy_term_data created.
+   * @param $type
+   *   Forum type (forum container or forum).
+   * @param $parent
+   *   Forum parent (default = 0 = a root forum; >0 = a forum container or
+   *   another forum).
+   * @return
+   *   taxonomy_term_data created.
    */
   function createForum($type, $parent = 0) {
     // Generate a random name/description.
@@ -190,10 +194,11 @@ class ForumTestCase extends DrupalWebTestCase {
   /**
    * Delete a forum.
    *
-   * @param integer $tid Forum id.
+   * @param $tid
+   *   The forum ID.
    */
   function deleteForum($tid) {
-    // Delete the forum id.
+    // Delete the forum.
     $this->drupalPost('admin/structure/forum/edit/forum/' . $tid, array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
 
@@ -205,8 +210,10 @@ class ForumTestCase extends DrupalWebTestCase {
   /**
    * Run basic tests on the indicated user.
    *
-   * @param object $user The logged in user.
-   * @param boolean $admin User has 'access administration pages' privilege.
+   * @param $user
+   *   The logged in user.
+   * @param $admin
+   *   User has 'access administration pages' privilege.
    */
   private function doBasicTests($user, $admin) {
     // Login the user.
@@ -230,7 +237,10 @@ class ForumTestCase extends DrupalWebTestCase {
     // Generate a random subject/body.
     $title = $this->randomName(20);
     $body = $this->randomName(200);
-    $tid = $forum['tid']; // Without this being set, post variable equals the first non-blank in select items list.
+
+    // Without this being set, post variable equals the first non-blank in
+    // select items list.
+    $tid = $forum['tid'];
 
     $langcode = FIELD_LANGUAGE_NONE;
     $edit = array(
@@ -239,12 +249,11 @@ class ForumTestCase extends DrupalWebTestCase {
       'taxonomy[1]' => $tid
     );
 
-    // TODO The taxonomy select value is set by drupal code when the tid is part of the url.
-    // However, unless a tid is passed in the edit array, when drupalPost runs, the select value is not preserved.
-    // Instead, the post variables seem to pick up the first non-blank value in the select list.
-
+    // TODO The taxonomy select value is set by drupal code when the tid is part
+    // of the url. However, unless a tid is passed in the edit array, when
+    // drupalPost() runs, the select value is not preserved. Instead, the post
+    // variables seem to pick up the first non-blank value in the select list.
     // Create forum topic.
-//    $this->drupalPost('node/add/forum/' . $forum['tid'], $edit, t('Save'));
     $this->drupalPost('node/add/forum/', $edit, t('Save'));
     $type = t('Forum topic');
     if ($container) {
@@ -270,12 +279,16 @@ class ForumTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Verify the logged in user has the desired access to the various forum nodes.
+   * Verify the logged in user has access to a forum nodes.
    *
-   * @param object $node_user The user who creates the node.
-   * @param object $node Node.
-   * @param boolean $admin User has 'access administration pages' privilege.
-   * @param integer $response HTTP response code.
+   * @param $node_user
+   *   The user who creates the node.
+   * @param $node
+   *   The node being checked.
+   * @param $admin
+   *   Boolean to indicate whether the user can 'access administration pages'.
+   * @param $response
+   *   The exptected HTTP response code.
    */
   private function verifyForums($node_user, $node, $admin, $response = 200) {
     $crumb = '›';
@@ -294,8 +307,6 @@ class ForumTestCase extends DrupalWebTestCase {
     // Verify the forum blocks were displayed.
     $this->drupalGet('');
     $this->assertResponse(200);
-    // This block never seems to display?
-//    $this->assertText(t('Active forum topics'), t('[Active forum topics] Forum block was displayed'));
     $this->assertText(t('New forum topics'), t('[New forum topics] Forum block was displayed'));
 
     // View forum container page.
@@ -324,7 +335,8 @@ class ForumTestCase extends DrupalWebTestCase {
       $edit['title'] = 'node/' . $node->nid;
       $langcode = FIELD_LANGUAGE_NONE;
       $edit["body[$langcode][0][value]"] = $this->randomName(256);
-      $edit['taxonomy[1]'] = $this->root_forum['tid']; // Assumes the topic is initially associated with $forum.
+      // Assume the topic is initially associated with $forum.
+      $edit['taxonomy[1]'] = $this->root_forum['tid'];
       $edit['shadow'] = TRUE;
       $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
       $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit['title'])), t('Forum node was edited'));
@@ -346,7 +358,8 @@ class ForumTestCase extends DrupalWebTestCase {
   /**
    * Verify display of forum page.
    *
-   * @param array $forum Forum array (a row from taxonomy_term_data table).
+   * @param $forum
+   *   A row from taxonomy_term_data table in array.
    */
   private function verifyForumView($forum, $parent = NULL) {
     $crumb = '›';
@@ -379,7 +392,12 @@ class ForumTestCase extends DrupalWebTestCase {
   /**
    * View forum topics to test display of active forum block.
    *
-   * @param array $nids Forum node id array.
+   * @todo The logic here is completely incorrect, since the active
+   * forum topics block is determined by comments on the node, not by views.
+   * @todo DIE
+   *
+   * @param $nids
+   *   An array of forum node IDs.
    */
   private function viewForumTopics($nids) {
     $crumb = '›';
