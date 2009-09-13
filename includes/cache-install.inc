@@ -28,5 +28,8 @@ class DrupalFakeCache implements DrupalCacheInterface {
 
   function clear($cid = NULL, $wildcard = FALSE) {
   }
-	
+
+  function isEmpty() {
+    return TRUE;
+  }
 }
