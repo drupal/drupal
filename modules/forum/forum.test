@@ -63,6 +63,11 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->any_user);
     // Verify the any forum user has access to all the forum nodes.
     $this->verifyForums($this->own_user, $node, TRUE);
+
+    // Verify the topic and post counts on the forum page.
+    $this->drupalGet('forum');
+    $this->assertRaw("<td class=\"topics\">\n          6                  </td>");
+    $this->assertRaw('<td class="posts">6</td>');
   }
 
   /**

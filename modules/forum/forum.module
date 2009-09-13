@@ -623,7 +623,7 @@ function forum_get_forums($tid = 0) {
   if (count($_forums)) {
     $query = db_select('node', 'n');
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
-    $query->join('forum', 'f', 'f.vid = f.vid');
+    $query->join('forum', 'f', 'n.vid = f.vid');
     $query->addExpression('COUNT(n.nid)', 'topic_count');
     $query->addExpression('SUM(ncs.comment_count)', 'comment_count');
     $counts = $query
