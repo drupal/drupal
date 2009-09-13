@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.39 2009/09/01 20:43:21 webchick Exp $
+// $Id: cache.inc,v 1.40 2009/09/13 17:49:51 dries Exp $
 
 /**
  * Get the cache object for a cache bin.
@@ -168,6 +168,21 @@ function cache_clear_all($cid = NULL, $bin = NULL, $wildcard = FALSE) {
 }
 
 /**
+ * Check if a cache bin is empty.
+ *
+ * A cache bin is considered empty if it does not contain any valid data for any
+ * cache ID.
+ *
+ * @param $bin
+ *   The cache bin to check.
+ * @return
+ *   TRUE if the cache bin specified is empty.
+ */
+function cache_is_empty($bin) {
+  return _cache_get_object($bin)->isEmpty();
+}
+
+/**
  * Interface for cache implementations.
  *
  * All cache implementations have to implement this interface. DrupalDatabaseCache
@@ -260,6 +275,17 @@ interface DrupalCacheInterface {
    *   match. If '*' is given as $cid, the bin $bin will be emptied.
    */
   function clear($cid = NULL, $wildcard = FALSE);
+
+  /**
+   * Check if a cache bin is empty.
+   *
+   * A cache bin is considered empty if it does not contain any valid data for
+   * any cache ID.
+   *
+   * @return
+   *   TRUE if the cache bin specified is empty.
+   */
+  function isEmpty();
 }
 
 /**
@@ -448,5 +474,15 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
           ->execute();
       }
     }
+  }
+
+  function isEmpty() {
+    $this->garbageCollection();
+    $query = db_select($this->bin);
+    $query->addExpression('1');
+    $result = $query->range(0, 1)
+      ->execute()
+      ->fetchField();
+    return empty($result);
   }
 }

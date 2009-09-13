@@ -1,5 +1,5 @@
 <?php
-// $Id: cache-install.inc,v 1.4 2009/09/13 15:09:45 dries Exp $
+// $Id: cache-install.inc,v 1.5 2009/09/13 17:49:51 dries Exp $
 
 /**
  * A stub cache implementation to be used during the installation
@@ -28,5 +28,8 @@ class DrupalFakeCache implements DrupalCacheInterface {
 
   function clear($cid = NULL, $wildcard = FALSE) {
   }
-	
+
+  function isEmpty() {
+    return TRUE;
+  }
 }

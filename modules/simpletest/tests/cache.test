@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.test,v 1.9 2009/07/13 21:51:41 webchick Exp $
+// $Id: cache.test,v 1.10 2009/09/13 17:49:51 dries Exp $
 
 class CacheTestCase extends DrupalWebTestCase {
   protected $default_bin = 'cache';
@@ -310,5 +310,42 @@ class CacheClearCase extends CacheTestCase {
                        || $this->checkCacheExists('test_cid_clear2', $this->default_value)
                        || $this->checkCacheExists('test_cid_clear3', $this->default_value),
                        t('All cache entries removed when the array exceeded the cache clear threshold.'));
+  }
+}
+
+/**
+ * Test cache_is_empty() function.
+ */
+class CacheIsEmptyCase extends CacheTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Cache emptiness test',
+      'description' => 'Check if a cache bin is empty after performing clear operations.',
+      'group' => 'Cache'
+    );
+  }
+
+  function setUp() {
+    $this->default_bin = 'cache_page';
+    $this->default_value = $this->randomName(10);
+
+    parent::setUp();
+  }
+
+  /**
+   * Test clearing using a cid.
+   */
+  function testIsEmpty() {
+    // Clear the cache bin.
+    cache_clear_all('*', $this->default_bin);
+    $this->assertTrue(cache_is_empty($this->default_bin), t('The cache bin is empty'));
+    // Add some data to the cache bin.
+    cache_set($this->default_cid, $this->default_value, $this->default_bin);
+    $this->assertCacheExists(t('Cache was set.'), $this->default_value, $this->default_cid);
+    $this->assertFalse(cache_is_empty($this->default_bin), t('The cache bin is not empty'));
+    // Remove the cached data.
+    cache_clear_all($this->default_cid, $this->default_bin);
+    $this->assertCacheRemoved(t('Cache was removed.'), $this->default_cid);
+    $this->assertTrue(cache_is_empty($this->default_bin), t('The cache bin is empty'));
   }
 }
