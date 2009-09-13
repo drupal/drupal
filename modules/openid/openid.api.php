@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.api.php,v 1.2 2009/05/24 17:39:33 dries Exp $
+// $Id: openid.api.php,v 1.3 2009/09/13 14:20:00 dries Exp $
 
 /**
  * @file
@@ -29,6 +29,21 @@ function hook_openid($op, $request) {
     $request['openid.identity'] = 'http://myname.myopenid.com/';
   }
   return $request;
+}
+
+/**
+ * Allow modules to act upon a successful OpenID login.
+ *
+ * @param $response
+ *   Response values from the OpenID Provider.
+ * @param $account
+ *   The Drupal user account that logged in
+ *
+ */
+function hook_openid_response($response, $account) {
+  if (isset($response['openid.ns.ax'])) {
+    _mymodule_store_ax_fields($response, $account);
+  }
 }
 
 /**

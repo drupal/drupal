@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.56 2009/08/24 00:14:21 webchick Exp $
+// $Id: openid.module,v 1.57 2009/09/13 14:20:00 dries Exp $
 
 /**
  * @file
@@ -418,6 +418,8 @@ function openid_authentication($response) {
         // Load global $user and perform final login tasks.
         $form_state['uid'] = $account->uid;
         user_login_submit(array(), $form_state);
+        // Let other modules act on OpenID login
+        module_invoke_all('openid_response', $response, $account);
       }
     }
     else {
@@ -458,6 +460,8 @@ function openid_authentication($response) {
       // Load global $user and perform final login tasks.
       $form_state['uid'] = $account->uid;
       user_login_submit(array(), $form_state);
+      // Let other modules act on OpenID login
+      module_invoke_all('openid_response', $response, $account);
     }
     drupal_redirect_form($form, $form_state['redirect']);
   }
