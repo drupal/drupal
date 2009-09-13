@@ -257,6 +257,13 @@ function install_begin_request(&$install_state) {
   drupal_load('module', 'filter');
   drupal_load('module', 'user');
 
+  // Load the cache infrastructure with the Fake Cache. Switch to the database cache
+  // later if possible.
+  require_once DRUPAL_ROOT . '/includes/cache.inc';
+  require_once DRUPAL_ROOT . '/includes/cache-install.inc';
+  $conf['cache_inc'] = 'includes/cache.inc';
+  $conf['cache_default_class'] = 'DrupalFakeCache';
+   
   // Prepare for themed output, if necessary. We need to run this at the
   // beginning of the page request to avoid a different theme accidentally
   // getting set.
@@ -271,8 +278,7 @@ function install_begin_request(&$install_state) {
     // Since we have a database connection, we use the normal cache system.
     // This is important, as the installer calls into the Drupal system for
     // the clean URL checks, so we should maintain the cache properly.
-    require_once DRUPAL_ROOT . '/includes/cache.inc';
-    $conf['cache_inc'] = 'includes/cache.inc';
+    unset($conf['cache_default_class']);
 
     // Initialize the database system. Note that the connection
     // won't be initialized until it is actually requested.
@@ -282,13 +288,6 @@ function install_begin_request(&$install_state) {
     $task = install_verify_completed_task();
   }
   else {
-    // Since no persistent storage is available yet, and functions that check
-    // for cached data will fail, we temporarily replace the normal cache
-    // system with a stubbed-out version that short-circuits the actual
-    // caching process and avoids any errors.
-    require_once DRUPAL_ROOT . '/includes/cache-install.inc';
-    $conf['cache_inc'] = 'includes/cache-install.inc';
-
     $task = NULL;
 
     // Since previous versions of Drupal stored database connection information
