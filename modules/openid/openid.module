@@ -113,7 +113,7 @@ function openid_form_alter(&$form, $form_state, $form_id) {
     );
     $form['openid.return_to'] = array('#type' => 'hidden', '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => drupal_get_destination())));
   }
-  elseif ($form_id == 'user_register' && isset($_SESSION['openid'])) {
+  elseif ($form_id == 'user_register' && isset($_SESSION['openid']['values'])) {
     // We were unable to auto-register a new user. Prefill the registration
     // form with the values we have.
     $form['name']['#default_value'] = $_SESSION['openid']['values']['name'];
