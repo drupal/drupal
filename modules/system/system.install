@@ -1064,6 +1064,7 @@ function system_schema() {
       array(
         'modules' => array(array('type', 12), 'status', 'weight', 'filename'),
         'bootstrap' => array(array('type', 12), 'status', 'bootstrap', 'weight', 'filename'),
+        'type_name' => array(array('type', 12), 'name'),
       ),
     );
 
@@ -2604,6 +2605,15 @@ function system_update_6051() {
 function system_update_6052() {
   $ret = array();
   db_add_index($ret, 'menu_router', 'tab_root_weight_title', array(array('tab_root', 64), 'weight', 'title'));
+  return $ret;
+}
+
+/**
+ * Add a {system} index on type and name.
+ */
+function system_update_6053() {
+  $ret = array();
+  db_add_index($ret, 'system', 'type_name', array(array('type', 12), 'name'));
   return $ret;
 }
 
