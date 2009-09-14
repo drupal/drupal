@@ -2039,7 +2039,7 @@ function system_update_6027() {
     if ($module_blocks = module_invoke($module, 'block', 'list')) {
       foreach ($module_blocks as $delta => $block) {
         if (isset($block['cache'])) {
-          db_query("UPDATE {blocks} SET cache = %d WHERE module = '%s' AND delta = %d", $block['cache'], $module, $delta);
+          db_query("UPDATE {blocks} SET cache = %d WHERE module = '%s' AND delta = '%s'", $block['cache'], $module, $delta);
         }
       }
     }
