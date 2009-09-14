@@ -164,21 +164,20 @@ define('DRUPAL_KILOBYTE', 1024);
 define('LANGUAGE_NEGOTIATION_NONE', 0);
 
 /**
- * Path based negotiation with fallback to default language
- * if no defined path prefix identified.
+ * Path based negotiation with fallback to default language if no defined path
+ * prefix identified.
  */
 define('LANGUAGE_NEGOTIATION_PATH_DEFAULT', 1);
 
 /**
- * Path based negotiation with fallback to user preferences
- * and browser language detection if no defined path prefix
- * identified.
+ * Path based negotiation with fallback to user preferences and browser
+ * language detection if no defined path prefix identified.
  */
 define('LANGUAGE_NEGOTIATION_PATH', 2);
 
 /**
- * Domain based negotiation with fallback to default language
- * if no language identified by domain.
+ * Domain based negotiation with fallback to default language if no language
+ * identified by domain.
  */
 define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
 
@@ -229,9 +228,8 @@ define('REGISTRY_WRITE_LOOKUP_CACHE', 2);
 
 
 /**
- * Start the timer with the specified name. If you start and stop
- * the same timer multiple times, the measured intervals will be
- * accumulated.
+ * Start the timer with the specified name. If you start and stop the same
+ * timer multiple times, the measured intervals will be accumulated.
  *
  * @param name
  *   The name of the timer.
@@ -271,9 +269,8 @@ function timer_read($name) {
  * @param name
  *   The name of the timer.
  * @return
- *   A timer array. The array contains the number of times the
- *   timer has been started and stopped (count) and the accumulated
- *   timer value in ms (time).
+ *   A timer array. The array contains the number of times the timer has been
+ *   started and stopped (count) and the accumulated timer value in ms (time).
  */
 function timer_stop($name) {
   global $timers;
