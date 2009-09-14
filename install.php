@@ -45,7 +45,7 @@ define('INSTALL_TASK_RUN_IF_REACHED', 2);
  * once and be marked complete once they are successfully finished. For
  * example, the Drupal installer uses this flag for the batch installation of
  * modules on the new site, and also for the configuration form that collects
- * basic site information and sets up the first user account.
+ * basic site information and sets up the site maintenance account.
  */
 define('INSTALL_TASK_RUN_IF_NOT_COMPLETED', 3);
 
@@ -1000,8 +1000,7 @@ function install_find_profiles() {
 }
 
 /**
- * Installation task; allow the site administrator to select which profile to
- * install.
+ * Installation task; select which profile to install.
  *
  * @param $install_state
  *   An array of information about the current installation state. The chosen
@@ -1117,8 +1116,7 @@ function install_find_locales($profilename) {
 }
 
 /**
- * Installation task; allow the site administrator to select which locale to
- * use for the current profile.
+ * Installation task; select which locale to use for the current profile.
  *
  * @param $install_state
  *   An array of information about the current installation state. The chosen
@@ -1555,7 +1553,7 @@ function _install_configure_form(&$form_state, &$install_state) {
   );
   $form['admin_account'] = array(
     '#type' => 'fieldset',
-    '#title' => st('Administrator account'),
+    '#title' => st('Site maintenance account'),
     '#collapsible' => FALSE,
   );
 
@@ -1677,8 +1675,8 @@ function install_configure_form_submit($form, &$form_state) {
   if ($form_state['values']['update_status_module'][1]) {
     drupal_install_modules(array('update'));
  
-    // Add the administrator's email address to the list of addresses to be
-    // notified when updates are available, if selected.
+    // Add the site maintenance account's email address to the list of
+    // addresses to be notified when updates are available, if selected.
     if ($form_state['values']['update_status_module'][2]) {
       variable_set('update_notify_emails', array($form_state['values']['account']['mail']));
     }

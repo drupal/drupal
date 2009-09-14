@@ -36,10 +36,10 @@ Let's begin!
     More information on multisite configuration is located in INSTALL.txt.
 
 2.  If possible, log on as the user with user ID 1, which is the first account
-    created and the main administrator account. User ID 1 will be able to
-    automatically access update.php in step #10. There are special instructions
-    in step #10 if you are unable to log on as user ID 1. Do not close your
-    browser until the final step is complete.
+    created - also known as the site maintenance account. Only this account will
+    be able to automatically access update.php in step #10. There are special
+    instructions in step #10 if you are unable to log on as user ID 1. Do not
+    close your browser until the final step is complete.
 
 3.  Place the site in "Offline" mode, to let the database updates run without
     interruption and avoid displaying errors to end users of the site. This

@@ -119,8 +119,8 @@ INSTALLATION
    (e.g., http://www.example.com).
 
    You will be guided through several screens to set up the database,
-   create tables, add the first user account and provide basic web
-   site settings.
+   create tables, add the site maintenance account (the first user, also known
+   as user/1), and provide basic web site settings.
 
    The install script will attempt to create a files storage directory
    in the default location at sites/default/files (the location of the
@@ -152,8 +152,8 @@ INSTALLATION
 5. CONFIGURE DRUPAL
 
    When the install script succeeds, you will be directed to the "Welcome"
-   page, and you will be logged in as the administrator already. Proceed with
-   the initial configuration steps suggested on the "Welcome" page.
+   page logged in with the site maintenance account. Proceed with the initial
+   configuration steps suggested on the "Welcome" page.
 
    If the default Drupal theme is not displaying properly and links on the page
    result in "Page Not Found" errors, try manually setting the $base_url variable

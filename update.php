@@ -13,9 +13,10 @@ define('DRUPAL_ROOT', getcwd());
  * Point your browser to "http://www.example.com/update.php" and follow the
  * instructions.
  *
- * If you are not logged in as administrator, you will need to modify the access
- * check statement inside your settings.php file. After finishing the upgrade,
- * be sure to open settings.php again, and change it back to its original state!
+ * If you are not logged in using the site maintenance account, you will need
+ * to modify the access check statement inside your settings.php file. After
+ * finishing the upgrade, be sure to open settings.php again, and change it back
+ * to its original state!
  */
 
 /**
@@ -201,12 +202,12 @@ function update_info_page() {
 
 function update_access_denied_page() {
   drupal_set_title('Access denied');
-  return '<p>Access denied. You are not authorized to access this page. Please log in as the admin user (the first user you created). If you cannot log in, you will have to edit <code>settings.php</code> to bypass this access check. To do this:</p>
+  return '<p>Access denied. You are not authorized to access this page. Please log in using the site maintenance account (the account you created during installation). If you cannot log in, you will have to edit <code>settings.php</code> to bypass this access check. To do this:</p>
 <ol>
  <li>With a text editor find the settings.php file on your system. From the main Drupal directory that you installed all the files into, go to <code>sites/your_site_name</code> if such directory exists, or else to <code>sites/default</code> which applies otherwise.</li>
  <li>There is a line inside your settings.php file that says <code>$update_free_access = FALSE;</code>. Change it to <code>$update_free_access = TRUE;</code>.</li>
  <li>As soon as the update.php script is done, you must change the settings.php file back to its original form with <code>$update_free_access = FALSE;</code>.</li>
- <li>To avoid having this problem in future, remember to log in to your website as the admin user (the user you first created) before you backup your database at the beginning of the update process.</li>
+ <li>To avoid having this problem in the future, remember to log in to your website using the site maintenance account (the account you created during installation) before you backup your database at the beginning of the update process.</li>
 </ol>';
 }
 
