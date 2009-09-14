@@ -58,7 +58,7 @@ function blog_page_last() {
   $output = '';
   $items = array();
 
-  if (user_access('edit own blog')) {
+  if (user_access('create blog entries')) {
     $items[] = l(t('Create new blog entry.'), "node/add/blog");
   }
 
