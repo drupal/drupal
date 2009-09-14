@@ -906,7 +906,7 @@ function db_drop_index(&$ret, $table, $name) {
  *   table specification but without the 'fields' element.
  */
 function db_change_field(&$ret, $table, $field, $field_new, $spec, $new_keys = array()) {
-  $ret[] = update_sql("ALTER TABLE {". $table ."} RENAME $field TO ". $field ."_old");
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} RENAME "'. $field .'" TO "'. $field .'_old"');
   $not_null = isset($spec['not null']) ? $spec['not null'] : FALSE;
   unset($spec['not null']);
 
