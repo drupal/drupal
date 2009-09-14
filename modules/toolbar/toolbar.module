@@ -90,7 +90,7 @@ function toolbar_build() {
         'html' => TRUE,
       ),
       'logout' => array(
-        'title' => t('Logout'),
+        'title' => t('Log out'),
         'href' => 'user/logout',
       ),
     ),
