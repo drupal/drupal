@@ -75,10 +75,8 @@ function dblog_schema() {
         'description' => 'URL of the origin of the event.',
       ),
       'referer' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
+        'type' => 'text',
+        'not null' => FALSE,
         'description' => 'URL of referring page.',
       ),
       'hostname' => array(
@@ -102,3 +100,21 @@ function dblog_schema() {
   return $schema;
 }
 
+/**
+ * @defgroup updates-5.x-to-6.x Database logging updates from 5.x to 6.x
+ * @{
+ */
+
+/**
+ * Allow longer referrers.
+ */
+function dblog_update_6000() {
+  $ret = array();
+  db_change_field($ret, 'watchdog', 'referer', 'referer', array('type' => 'text', 'not null' => FALSE));
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-5.x-to-6.x"
+ * The next series of updates should start at 7000.
+ */
