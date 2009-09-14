@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.30 2009/09/14 07:33:55 dries Exp $
+// $Id: default.settings.php,v 1.31 2009/09/14 19:03:04 dries Exp $
 
 /**
  * @file
@@ -71,7 +71,7 @@
  * password, host, and database name.
  *
  * Some database engines support transactions.  In order to enable
- * transaction support for a given database, set the 'transaction' key
+ * transaction support for a given database, set the 'transactions' key
  * to TRUE.  To disable it, set it to FALSE.  Note that the default value
  * varies by driver.  For MySQL, the default is FALSE since MyISAM tables
  * do not support transactions.
