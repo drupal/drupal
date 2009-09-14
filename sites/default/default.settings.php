@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.29 2009/08/22 20:10:38 dries Exp $
+// $Id: default.settings.php,v 1.30 2009/09/14 07:33:55 dries Exp $
 
 /**
  * @file
@@ -156,11 +156,12 @@ $db_prefix = '';
 /**
  * Access control for update.php script
  *
- * If you are updating your Drupal installation using the update.php script
- * being not logged in as administrator, you will need to modify the access
- * check statement below. Change the FALSE to a TRUE to disable the access
- * check. After finishing the upgrade, be sure to open this file again
- * and change the TRUE back to a FALSE!
+ * If you are updating your Drupal installation using the update.php script but
+ * are not logged in using the site maintenance account (the account that was
+ * created during installation), you will need to modify the access check
+ * statement below. Change the FALSE to a TRUE to disable the access check.
+ * After finishing the upgrade, be sure to open this file again and change the
+ * TRUE back to a FALSE!
  */
 $update_free_access = FALSE;
 
