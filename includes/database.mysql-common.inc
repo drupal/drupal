@@ -156,7 +156,7 @@ function _db_process_field($field) {
 function _db_create_field_sql($name, $spec) {
   $sql = "`". $name ."` ". $spec['mysql_type'];
 
-  if (isset($spec['length'])) {
+  if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
     $sql .= '('. $spec['length'] .')';
   }
   elseif (isset($spec['precision']) && isset($spec['scale'])) {
