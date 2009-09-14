@@ -355,7 +355,7 @@ function poll_choice_js() {
 }
 
 /**
- * Implementation of hook_submit().
+ * Renumbers fields and creates a teaser when a poll node is submitted.
  */
 function poll_node_form_submit(&$form, &$form_state) {
   // Renumber fields
