@@ -352,6 +352,11 @@ function drupal_not_found() {
 
   watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
+  // Keep old path for reference, and to allow forms to redirect to it.
+  if (!isset($_REQUEST['destination'])) {
+    $_REQUEST['destination'] = $_GET['q'];
+  }
+
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   if ($path && $path != $_GET['q']) {
     // Set the active item in case there are tabs to display, or other
@@ -376,6 +381,11 @@ function drupal_access_denied() {
   drupal_set_header('HTTP/1.1 403 Forbidden');
 
   watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+
+  // Keep old path for reference, and to allow forms to redirect to it.
+  if (!isset($_REQUEST['destination'])) {
+    $_REQUEST['destination'] = $_GET['q'];
+  }
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   if ($path && $path != $_GET['q']) {
