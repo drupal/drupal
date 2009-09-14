@@ -101,7 +101,7 @@ function dblog_schema() {
 }
 
 /**
- * @defgroup updates-5.x-to-6.x Database logging updates from 5.x to 6.x
+ * @defgroup updates-6.x-extra Extra database logging updates for 6.x
  * @{
  */
 
@@ -115,6 +115,6 @@ function dblog_update_6000() {
 }
 
 /**
- * @} End of "defgroup updates-5.x-to-6.x"
+ * @} End of "defgroup updates-6.x-extra"
  * The next series of updates should start at 7000.
  */
