@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.147 2009/09/05 13:05:30 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.148 2009/09/14 19:05:06 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -902,7 +902,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $role->name = $name;
     user_role_save($role);
     user_role_set_permissions($role->name, $permissions);
-    
+
     $this->assertTrue(isset($role->rid), t('Created role of name: @name, id: @rid', array('@name' => $name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
     if ($role && !empty($role->rid)) {
       $count = db_query('SELECT COUNT(*) FROM {role_permission} WHERE rid = :rid', array(':rid' => $role->rid))->fetchField();
@@ -1969,7 +1969,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function assertRaw($raw, $message = '', $group = 'Other') {
     if (!$message) {
-      $message = t('Raw "@raw" found', array('@raw' => check_plain($raw)));
+      $message = t('Raw "@raw" found', array('@raw' => $raw));
     }
     return $this->assert(strpos($this->content, $raw) !== FALSE, $message, $group);
   }
@@ -1989,7 +1989,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function assertNoRaw($raw, $message = '', $group = 'Other') {
     if (!$message) {
-      $message = t('Raw "@raw" not found', array('@raw' => check_plain($raw)));
+      $message = t('Raw "@raw" not found', array('@raw' => $raw));
     }
     return $this->assert(strpos($this->content, $raw) === FALSE, $message, $group);
   }
