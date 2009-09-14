@@ -757,7 +757,7 @@ function comment_save($edit) {
           $edit['timestamp'] = time();
         }
 
-        if ($edit['uid'] === $user->uid) { // '===' because we want to modify anonymous users too
+        if ($edit['uid'] === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
           $edit['name'] = $user->name;
         }
 
@@ -1384,7 +1384,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   $form['cid'] = array('#type' => 'value', '#value' => !empty($edit['cid']) ? $edit['cid'] : NULL);
   $form['pid'] = array('#type' => 'value', '#value' => !empty($edit['pid']) ? $edit['pid'] : NULL);
   $form['nid'] = array('#type' => 'value', '#value' => $edit['nid']);
-  $form['uid'] = array('#type' => 'value', '#value' => !empty($edit['uid']) ? $edit['uid'] : NULL);
+  $form['uid'] = array('#type' => 'value', '#value' => !empty($edit['uid']) ? $edit['uid'] : 0);
 
   // Only show save button if preview is optional or if we are in preview mode.
   // We show the save button in preview mode even if there are form errors so that
