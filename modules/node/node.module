@@ -3047,7 +3047,7 @@ function node_assign_owner_action_form($context) {
       '#default_value' => $owner_name,
       '#autocomplete_path' => 'user/autocomplete',
       '#size' => '6',
-      '#maxlength' => '7',
+      '#maxlength' => '60',
       '#description' => $description,
     );
   }
