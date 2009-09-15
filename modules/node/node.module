@@ -1988,7 +1988,7 @@ function node_search_validate($form, &$form_state) {
  *   Optional, a user object representing the user for whom the operation is to
  *   be performed. Determines access for a user other than the current user.
  * @return
- *   TRUE if the operation may be performed.
+ *   TRUE if the operation may be performed, or FALSE otherwise.
  */
 function node_access($op, $node, $account = NULL) {
   global $user;
@@ -2045,9 +2045,9 @@ function node_access($op, $node, $account = NULL) {
       $grants_sql = 'AND ('. implode(' OR ', $grants) .')';
     }
 
-    $sql = "SELECT COUNT(*) FROM {node_access} WHERE (nid = 0 OR nid = %d) $grants_sql AND grant_$op >= 1";
-    $result = db_query($sql, $node->nid);
-    return (db_result($result));
+    $sql = "SELECT 1 FROM {node_access} WHERE (nid = 0 OR nid = %d) $grants_sql AND grant_$op >= 1";
+    $result = db_query_range($sql, $node->nid, 0, 1);
+    return (bool) db_result($result);
   }
 
   // Let authors view their own nodes.
