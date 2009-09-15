@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.tpl.php,v 1.3 2009/09/11 00:37:38 webchick Exp $
+// $Id: toolbar.tpl.php,v 1.4 2009/09/15 03:38:06 webchick Exp $
 
 /**
  * @file
@@ -16,6 +16,7 @@
 ?>
 <div id="toolbar" class="clearfix">
   <div class="toolbar-menu clearfix">
+    <span class="toggle toggle-active"><?php print t('Show shortcuts'); ?></span>
     <?php print render($toolbar['toolbar_menu']); ?>
     <?php print render($toolbar['toolbar_user']); ?>
   </div>
