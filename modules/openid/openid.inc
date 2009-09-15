@@ -109,11 +109,15 @@ function openid_redirect_form(&$form_state, $url, $message) {
  * Determine if the given identifier is an XRI ID.
  */
 function _openid_is_xri($identifier) {
-  $firstchar = substr($identifier, 0, 1);
-  if ($firstchar == "@" || $firstchar == "=")
-    return TRUE;
+  // Strip the xri:// scheme from the identifier if present.
+  if (stripos($identifier, 'xri://') !== FALSE) {
+    $identifier = substr($identifier, 6);
+  }
 
-  if (stristr($identifier, 'xri://') !== FALSE) {
+
+  // Test whether the identifier starts with an XRI global context symbol or (.
+  $firstchar = substr($identifier, 0, 1);
+  if (strpos("=@+$!(", $firstchar) !== FALSE) {
     return TRUE;
   }
 

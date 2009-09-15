@@ -219,4 +219,34 @@ class OpenIDUnitTest extends DrupalWebTestCase {
     $association->mac_key = "1234567890abcdefghij\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\xF0\xF1\xF2\xF3\xF4\xF5\xF6\xF7\xF8\xF9";
     $this->assertEqual(_openid_signature($association, $response, array('foo', 'bar')), 'QnKZQzSFstT+GNiJDFOptdcZjrc=', t('Expected signature calculated.'));
   }
+
+  /**
+   * Test _openid_is_xri().
+   */
+  function testOpenidXRITest() {
+    // Test that the XRI test is according to OpenID Authentication 2.0,
+    // section 7.2. If the user-supplied string starts with xri:// it should be
+    // stripped and the resulting string should be treated as an XRI when it
+    // starts with "=", "@", "+", "$", "!" or "(".
+    $this->assertTrue(_openid_is_xri('xri://=foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme.'));
+    $this->assertTrue(_openid_is_xri('xri://@foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme.'));
+    $this->assertTrue(_openid_is_xri('xri://+foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme.'));
+    $this->assertTrue(_openid_is_xri('xri://$foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme.'));
+    $this->assertTrue(_openid_is_xri('xri://!foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme..'));
+    $this->assertTrue(_openid_is_xri('xri://(foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme..'));
+
+    $this->assertTrue(_openid_is_xri('=foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('@foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('+foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('$foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('!foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('(foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
+
+    $this->assertFalse(_openid_is_xri('foo'), t('_openid_is_xri returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('xri://foo'), t('_openid_is_xri returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('http://foo/'), t('_openid_is_xri returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('http://example.com/'), t('_openid_is_xri returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('user@example.com/'), t('_openid_is_xri returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('http://user@example.com/'), t('_openid_is_xri returned expected result for an http URL.'));
+  }
 }
