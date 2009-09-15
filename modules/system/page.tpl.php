@@ -10,47 +10,11 @@
  * General utility variables:
  * - $base_path: The base URL path of the Drupal installation. At the very
  *   least, this will always default to /.
- * - $css: An array of CSS files for the current page.
  * - $directory: The directory the template is located in, e.g. modules/system
  *   or themes/garland.
- * - $classes_array: Array of html class attribute values. It is flattened
- *   into a string within the variable $classes.
  * - $is_front: TRUE if the current page is the front page. Used to toggle the mission statement.
  * - $logged_in: TRUE if the user is registered and signed in.
  * - $is_admin: TRUE if the user has permission to access administration pages.
- *
- * Page metadata:
- * - $language: (object) The language the site is being displayed in.
- *   $language->language contains its textual representation.
- *   $language->dir contains the language direction. It will either be 'ltr' or 'rtl'.
- * - $rdf_namespaces: All the RDF namespace prefixes used in the HTML document.
- * - $grddl_profile: A GRDDL profile allowing agents to extract the RDF data.
- * - $head_title: A modified version of the page title, for use in the TITLE tag.
- * - $head: Markup for the HEAD section (including meta tags, keyword tags, and
- *   so on).
- * - $styles: Style tags necessary to import all CSS files for the page.
- * - $scripts: Script tags necessary to load the JavaScript files and settings
- *   for the page.
- * - $classes: String of classes that can be used to style contextually through
- *   CSS. It should be placed within the <body> tag. When selecting through CSS
- *   it's recommended that you use the body tag, e.g., "body.front". It can be
- *   manipulated through the variable $classes_array from preprocess functions.
- *   The default values can be one or more of the following:
- *   - page: The current template type, i.e., "theming hook".
- *   - front: Page is the home page.
- *   - not-front: Page is not the home page.
- *   - logged-in: The current viewer is logged in.
- *   - not-logged-in: The current viewer is not logged in.
- *   - page-[level 1 path]: The internal first level path. For example, viewing
- *     example.com/user/2 would result in "page-user". Path aliases do not apply.
- *   - node-type-[node type]: When viewing a single node, the type of that node.
- *     For example, if the node is a "Blog entry" it would result in "node-type-blog".
- *     Note that the machine name will often be in a short form of the human readable label.
- *   The following only apply with the default 'sidebar_first' and 'sidebar_second' block regions:
- *     - two-sidebars: When both sidebars have content.
- *     - no-sidebars: When no sidebar content exists.
- *     - one-sidebar and sidebar-first or sidebar-second: A combination of the two classes
- *       when only one of the two sidebars have content.
  *
  * Site identity:
  * - $front_page: The URL of the front page. Use this instead of $base_path,
@@ -76,41 +40,22 @@
  * - $messages: HTML for status and error messages. Should be displayed prominently.
  * - $tabs: Tabs linking to any sub-pages beneath the current page (e.g., the view
  *   and edit tabs when displaying a node).
- * - $help: Dynamic help text, mostly for admin pages.
- * - $content: The main content of the current page.
  * - $feed_icons: A string of all feed icons for the current page.
- * - $sidebar_first: Items for the first sidebar.
- * - $sidebar_second: Items for the second sidebar.
- * - $highlight: Items for the highlighted content region.
  *
- * Opening and closing data:
- * - $page_top: Initial markup from any modules that have altered the
- *   page. This variable should always be output first, before all other dynamic
- *   content.
- * - $footer : The footer region.
- * - $page_bottom: Final closing markup from any modules that have altered the
- *   page. This variable should always be output last, after all other dynamic
- *   content.
- *
+ * Regions:
+ * - $page['help']: Dynamic help text, mostly for admin pages.
+ * - $page['highlight']: Items for the highlighted content region.
+ * - $page['content']: The main content of the current page.
+ * - $page['sidebar_first']: Items for the first sidebar.
+ * - $page['sidebar_second']: Items for the second sidebar.
+ * - $page['header']: Items for the header region.
+ * - $page['footer']: Items for the footer region.
+ * 
  * @see template_preprocess()
  * @see template_preprocess_page()
  * @see template_process()
  */
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
-  "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language; ?>" dir="<?php print $language->dir; ?>"
-  <?php print $rdf_namespaces; ?>>
-
-<head profile="<?php print $grddl_profile; ?>">
-  <title><?php print $head_title; ?></title>
-  <?php print $head; ?>
-  <?php print $styles; ?>
-  <?php print $scripts; ?>
-</head>
-<body class="<?php print $classes; ?>">
-
-  <?php print $page_top; ?>
 
   <div id="page-wrapper"><div id="page">
 
@@ -146,9 +91,9 @@
         <div id="search-box"><?php print $search_box; ?></div>
       <?php endif; ?>
 
-      <?php if ($header): ?>
+      <?php if ($page['header']): ?>
         <div id="header-region" class="region">
-          <?php print $header; ?>
+          <?php print render($page['header']); ?>
         </div>
       <?php endif; ?>
 
@@ -169,26 +114,26 @@
     <div id="main-wrapper"><div id="main" class="clearfix">
 
       <div id="content" class="column"><div class="section">
-        <?php if ($highlight): ?><div id="highlight"><?php print $highlight; ?></div><?php endif; ?>
+        <?php if ($page['highlight']): ?><div id="highlight"><?php print render($page['highlight']); ?></div><?php endif; ?>
         <?php if ($title): ?><h1 class="title" id="page-title"><?php print $title; ?></h1><?php endif; ?>
         <?php if ($tabs): ?><div class="tabs"><?php print $tabs; ?></div><?php endif; ?>
-        <?php print $help; ?>
+        <?php print render($page['help']); ?>
         <?php if ($action_links): ?><ul class="action-links"><?php print $action_links; ?></ul><?php endif; ?>
         <div id="content-area" class="region">
-          <?php print $content; ?>
+          <?php print render($page['content']); ?>
         </div> <!-- /#content-area -->
         <?php print $feed_icons; ?>
       </div></div> <!-- /.section, /#content -->
 
-      <?php if ($sidebar_first): ?>
+      <?php if ($page['sidebar_first']): ?>
         <div id="sidebar-first" class="column sidebar"><div class="section region">
-          <?php print $sidebar_first; ?>
+          <?php print render($page['sidebar_first']); ?>
         </div></div> <!-- /.section, /#sidebar-first -->
       <?php endif; ?>
 
-      <?php if ($sidebar_second): ?>
+      <?php if ($page['sidebar_second']): ?>
         <div id="sidebar-second" class="column sidebar"><div class="section region">
-          <?php print $sidebar_second; ?>
+          <?php print render($page['sidebar_second']); ?>
         </div></div> <!-- /.section, /#sidebar-second -->
       <?php endif; ?>
 
@@ -196,12 +141,11 @@
 
     <div id="footer"><div class="section">
       <?php print theme('links', $secondary_menu, array('id' => 'secondary-menu', 'class' => array('links', 'clearfix')), t('Secondary menu')); ?>
-      <?php if ($footer): ?><div id="footer-region" class="region"><?php print $footer; ?></div><?php endif; ?>
+      <?php if ($page['footer']): ?>
+        <div id="footer-region" class="region">
+          <?php print render($page['footer']); ?>
+        </div>
+      <?php endif; ?>
     </div></div> <!-- /.section, /#footer -->
 
   </div></div> <!-- /#page, /#page-wrapper -->
-
-  <?php print $page_bottom; ?>
-
-</body>
-</html>

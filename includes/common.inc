@@ -4532,6 +4532,10 @@ function drupal_common_theme() {
     'placeholder' => array(
       'arguments' => array('text' => NULL)
     ),
+    'html' => array(
+      'arguments' => array('page' => NULL),
+      'template' => 'html',
+    ),
     'page' => array(
       'arguments' => array('page' => NULL),
       'template' => 'page',

@@ -20,6 +20,17 @@ function garland_breadcrumb($breadcrumb) {
 }
 
 /**
+ * Override or insert variables into the html template.
+ */
+function garland_process_html(&$vars) {
+  // Hook into color.module
+  if (module_exists('color')) {
+    _color_html_alter($vars);
+  }
+  $vars['styles'] .= "\n<!--[if lt IE 7]>\n" . garland_get_ie_styles() . "<![endif]-->\n";
+}
+
+/**
  * Override or insert variables into the page template.
  */
 function garland_preprocess_page(&$vars) {
@@ -54,7 +65,6 @@ function garland_preprocess_page(&$vars) {
   else {
     $vars['secondary_nav'] = FALSE;
   }
-  $vars['ie_styles'] = garland_get_ie_styles();
 
   // Prepare header
   $site_fields = array();
@@ -73,7 +83,7 @@ function garland_preprocess_page(&$vars) {
 }
 
 /**
- * Override process function used to alter variables as late as possible.
+ * Override or insert variables into the page template.
  */
 function garland_process_page(&$vars) {
   // Hook into color.module

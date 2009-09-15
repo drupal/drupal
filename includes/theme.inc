@@ -2083,6 +2083,86 @@ function template_process(&$variables, $hook) {
 }
 
 /**
+ * Preprocess variables for html.tpl.php
+ *
+ * @see system_elements()
+ * @see html.tpl.php
+ */
+function template_preprocess_html(&$variables) {
+  // Compile a list of classes that are going to be applied to the body element.
+  // This allows advanced theming based on context (home page, node of certain type, etc.).
+  // Add a class that tells us whether we're on the front page or not.
+  $variables['classes_array'][] = $variables['is_front'] ? 'front' : 'not-front';
+  // Add a class that tells us whether the page is viewed by an authenticated user or not.
+  $variables['classes_array'][] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
+
+  // Add information about the number of sidebars.
+  if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
+    $variables['classes_array'][] = 'two-sidebars';
+  }
+  elseif (!empty($variables['page']['sidebar_first'])) {
+    $variables['classes_array'][] = 'one-sidebar sidebar-first';
+  }
+  elseif (!empty($variables['page']['sidebar_second'])) {
+    $variables['classes_array'][] = 'one-sidebar sidebar-second';
+  }
+  else {
+    $variables['classes_array'][] = 'no-sidebars';
+  }
+  
+  // Populate the body classes.
+  if ($suggestions = template_page_suggestions(arg(), 'page')) {
+    foreach ($suggestions as $suggestion) {
+      if ($suggestion != 'page-front') {
+        // Add current suggestion to page classes to make it possible to theme the page
+        // depending on the current page type (e.g. node, admin, user, etc.) as well as
+        // more specific data like node-12 or node-edit. To avoid illegal characters in
+        // the class, we're removing everything disallowed. We are not using 'a-z' as
+        //  that might leave in certain international characters (e.g. German umlauts).
+        $variables['classes_array'][] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', form_clean_id(drupal_strtolower($suggestion)));
+      }
+    }
+  }
+  
+  if ($node = menu_get_object()) {
+    $variables['classes_array'][] = 'node-type-' . form_clean_id($node->type);
+  }
+
+  // RDFa allows annotation of XHTML pages with RDF data, while GRDDL provides
+  // mechanisms for extraction of this RDF content via XSLT transformation
+  // using an associated GRDDL profile.
+  $variables['rdf_namespaces']    = drupal_get_rdf_namespaces();
+  $variables['grddl_profile']     = 'http://ns.inria.fr/grddl/rdfa/';
+  $variables['language']          = $GLOBALS['language'];
+  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
+
+
+  // Add favicon.
+  if (theme_get_setting('toggle_favicon')) {
+    $favicon = theme_get_setting('favicon');
+    $type = theme_get_setting('favicon_mimetype');
+    drupal_add_html_head('<link rel="shortcut icon" href="' . check_url($favicon) . '" type="' . check_plain($type) . '" />');
+  }
+
+  // Construct page title.
+  if (drupal_get_title()) {
+    $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
+  }
+  else {
+    $head_title = array(variable_get('site_name', 'Drupal'));
+    if (variable_get('site_slogan', '')) {
+      $head_title[] = variable_get('site_slogan', '');
+    }
+  }
+  $variables['head_title'] = implode(' | ', $head_title);
+  
+  // Populate the page template suggestions.
+  if ($suggestions = template_page_suggestions(arg(), 'html')) {
+    $variables['template_files'] = $suggestions;
+  }
+}
+
+/**
  * Preprocess variables for page.tpl.php
  *
  * Most themes utilize their own copy of page.tpl.php. The default is located
@@ -2103,33 +2183,21 @@ function template_preprocess_page(&$variables) {
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['show_messages'] = $variables['page']['#show_messages'];
 
-  // Add favicon.
-  if (theme_get_setting('toggle_favicon')) {
-    $favicon = theme_get_setting('favicon');
-    $type = theme_get_setting('favicon_mimetype');
-    drupal_add_html_head('<link rel="shortcut icon" href="' . check_url($favicon) . '" type="' . check_plain($type) . '" />');
-  }
-
   // Set up layout variable.
   $variables['layout'] = 'none';
   if (!empty($variables['page']['sidebar_first'])) {
     $variables['layout'] = 'first';
   }
+  else {
+    $variables['page']['sidebar_first'] = array();
+  }
   if (!empty($variables['page']['sidebar_second'])) {
     $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
   }
-
-  // Construct page title
-  if (drupal_get_title()) {
-    $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
-  }
   else {
-    $head_title = array(variable_get('site_name', 'Drupal'));
-    if (variable_get('site_slogan', '')) {
-      $head_title[] = variable_get('site_slogan', '');
-    }
+    $variables['page']['sidebar_second'] = array();
   }
-  $variables['head_title']        = implode(' | ', $head_title);
+
   $variables['base_path']         = base_path();
   $variables['front_page']        = url();
   $variables['breadcrumb']        = theme('breadcrumb', drupal_get_breadcrumb());
@@ -2146,69 +2214,32 @@ function template_preprocess_page(&$variables) {
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin(variable_get('site_slogan', '')) : '');
   $variables['tabs']              = theme('menu_local_tasks');
   $variables['title']             = drupal_get_title();
-  // RDFa allows annotation of XHTML pages with RDF data, while GRDDL provides
-  // mechanisms for extraction of this RDF content via XSLT transformation
-  // using an associated GRDDL profile.
-  $variables['rdf_namespaces']    = drupal_get_rdf_namespaces();
-  $variables['grddl_profile']     = 'http://ns.inria.fr/grddl/rdfa/';
 
   if ($node = menu_get_object()) {
     $variables['node'] = $node;
   }
 
-  // Compile a list of classes that are going to be applied to the body element.
-  // This allows advanced theming based on context (home page, node of certain type, etc.).
-  // Add a class that tells us whether we're on the front page or not.
-  $variables['classes_array'][] = $variables['is_front'] ? 'front' : 'not-front';
-  // Add a class that tells us whether the page is viewed by an authenticated user or not.
-  $variables['classes_array'][] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
-
   // Populate the page template suggestions.
-  if ($suggestions = template_page_suggestions(arg())) {
+  if ($suggestions = template_page_suggestions(arg(), 'page')) {
     $variables['template_files'] = $suggestions;
-    foreach ($suggestions as $suggestion) {
-      if ($suggestion != 'page-front') {
-        // Add current suggestion to page classes to make it possible to theme the page
-        // depending on the current page type (e.g. node, admin, user, etc.) as well as
-        // more specific data like node-12 or node-edit. To avoid illegal characters in
-        // the class, we're removing everything disallowed. We are not using 'a-z' as
-        //  that might leave in certain international characters (e.g. German umlauts).
-        $variables['classes_array'][] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', form_clean_id(drupal_strtolower($suggestion)));
-      }
-    }
-  }
-
-  // If on an individual node page, add the node type to body classes.
-  if (isset($variables['node']) && $variables['node']->type) {
-    $variables['classes_array'][] = 'node-type-' . form_clean_id($variables['node']->type);
-  }
-  // Add information about the number of sidebars.
-  if ($variables['layout'] == 'both') {
-    $variables['classes_array'][] = 'two-sidebars';
-  }
-  elseif ($variables['layout'] == 'none') {
-    $variables['classes_array'][] = 'no-sidebars';
-  }
-  else {
-    $variables['classes_array'][] = 'one-sidebar sidebar-' . $variables['layout'];
   }
 }
 /**
- * Process variables for page.tpl.php
+ * Process variables for html.tpl.php
  *
  * Perform final addition and modification of variables before passing into
  * the template. To customize these variables, call drupal_render() on elements
  * in $variables['page'] during THEME_preprocess_page().
  *
- * @see template_preprocess_page()
- * @see page.tpl.php
+ * @see template_preprocess_html()
+ * @see html.tpl.php
  */
-function template_process_page(&$variables) {
-  // Render each region into top level variables.
-  foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
-    $variables[$region_key] = drupal_render($variables['page'][$region_key]);
-  }
-  // Append javascript to $page_bottom
+function template_process_html(&$variables) {
+  // Render page_top and page_bottom into top level variables.
+  $variables['page_top'] = drupal_render($variables['page']['page_top']);
+  $variables['page_bottom'] = drupal_render($variables['page']['page_bottom']);
+  // Place the rendered HTML for the page body into a top level variable.
+  $variables['page']              = $variables['page']['#children'];
   $variables['page_bottom'] .= drupal_get_js('footer');
 
   $variables['head']    = drupal_get_html_head();
@@ -2226,7 +2257,7 @@ function template_process_page(&$variables) {
  * @return
  *   An array of suggested template files.
  */
-function template_page_suggestions($args) {
+function template_page_suggestions($args, $suggestion) {
 
   // Build a list of suggested template files and body classes in order of
   // specificity. One suggestion is made for every element of the current path,
@@ -2239,7 +2270,6 @@ function template_page_suggestions($args) {
   // page-node.tpl.php       page-node
   // page.tpl.php
 
-  $suggestion = 'page';
   $suggestions = array();
   foreach ($args as $arg) {
     // Remove slashes or null per SA-CORE-2009-003.
@@ -2255,7 +2285,7 @@ function template_page_suggestions($args) {
     }
   }
   if (drupal_is_front_page()) {
-    $suggestions[] = 'page-front';
+    $suggestions[] = $suggestion . '-front';
   }
 
   return $suggestions;

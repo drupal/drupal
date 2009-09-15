@@ -69,7 +69,7 @@ function _color_theme_select_form_alter(&$form, &$form_state) {
 /**
  * Callback for the theme to alter the resources used.
  */
-function _color_page_alter(&$vars) {
+function _color_html_alter(&$vars) {
   global $language, $theme_key;
   $themes = list_themes();
 
@@ -93,6 +93,13 @@ function _color_page_alter(&$vars) {
 
     $vars['styles'] = drupal_get_css($vars['css']);
   }
+}
+
+/**
+ * Callback for the theme to alter the resources used.
+ */
+function _color_page_alter(&$vars) {
+  global $language, $theme_key;
 
   // Override logo.
   $logo = variable_get('color_' . $theme_key . '_logo');

@@ -46,7 +46,7 @@ function toolbar_page_build(&$page) {
  *
  * Add some page classes, so global page theming can adjust to the toolbar.
  */
-function toolbar_preprocess_page(&$vars) {
+function toolbar_preprocess_html(&$vars) {
   if (user_access('access toolbar')) {
     $vars['classes_array'][] = 'toolbar toolbar-shortcuts';
   }

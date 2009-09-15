@@ -291,6 +291,7 @@ function system_element_info() {
   $types['page'] = array(
     '#show_messages' => TRUE,
     '#theme' => 'page',
+    '#theme_wrappers' => array('html'),
   );
   $types['list'] = array(
     '#title' => '',
