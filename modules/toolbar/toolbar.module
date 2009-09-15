@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.12 2009/09/15 17:10:39 webchick Exp $
+// $Id: toolbar.module,v 1.13 2009/09/15 20:50:48 dries Exp $
 
 /**
  * @file
@@ -65,6 +65,10 @@ function toolbar_build() {
       'js' => array(
         $module_path . '/toolbar.js',
         array('data' => 'misc/jquery.cookie.js', 'weight' => JS_LIBRARY + 2),
+        array(
+          'data' => array('tableHeaderOffset' => 'Drupal.admin.toolbar.height'),
+          'type' => 'setting'
+        ),
       ),
       'css' => array(
         $module_path . '/toolbar.css',
