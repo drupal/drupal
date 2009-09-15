@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1122 2009/09/11 04:06:39 webchick Exp $
+// $Id: node.module,v 1.1123 2009/09/15 20:54:27 dries Exp $
 
 /**
  * @file
@@ -3047,7 +3047,7 @@ function node_assign_owner_action_form($context) {
       '#default_value' => $owner_name,
       '#autocomplete_path' => 'user/autocomplete',
       '#size' => '6',
-      '#maxlength' => '7',
+      '#maxlength' => '60',
       '#description' => $description,
     );
   }
