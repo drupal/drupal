@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.789 2009/09/11 02:14:20 webchick Exp $
+// $Id: system.module,v 1.790 2009/09/15 17:10:39 webchick Exp $
 
 /**
  * @file
@@ -291,6 +291,7 @@ function system_element_info() {
   $types['page'] = array(
     '#show_messages' => TRUE,
     '#theme' => 'page',
+    '#theme_wrappers' => array('html'),
   );
   $types['list'] = array(
     '#title' => '',

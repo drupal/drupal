@@ -1,20 +1,6 @@
 <?php
-// $Id: page.tpl.php,v 1.3 2009/08/22 19:58:28 webchick Exp $
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
-  "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language; ?>" dir="<?php print $language->dir; ?>"
-  <?php print $rdf_namespaces; ?>>
-  <head profile="<?php print $grddl_profile; ?>">
-    <title><?php print $head_title; ?></title>
-    <?php print $head; ?>
-    <?php print $styles; ?>
-    <?php print $scripts; ?>
-    <?php print $ie_styles; ?>
-  </head>
-  <body class="<?php print $classes; ?>">
-
-  <?php print $page_top; ?>
-
+// $Id: page.tpl.php,v 1.4 2009/09/15 17:10:39 webchick Exp $
+?>
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>
     <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
@@ -28,13 +14,13 @@
       <?php if ($show_messages && $messages): ?>
         <div id="console" class="clearfix"><?php print $messages; ?></div>
       <?php endif; ?>
-      <?php if ($help): ?>
+      <?php if ($page['help']): ?>
         <div id="help">
-          <?php print $help; ?>
+          <?php print render($page['help']); ?>
         </div>
       <?php endif; ?>
       <?php if ($action_links): ?><ul class="action-links"><?php print $action_links; ?></ul><?php endif; ?>
-      <?php print $content; ?>
+      <?php print render($page['content']); ?>
     </div>
 
     <div id="footer">
@@ -42,8 +28,3 @@
     </div>
 
   </div>
-
-  <?php print $page_bottom; ?>
-
-  </body>
-</html>

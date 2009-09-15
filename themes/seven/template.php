@@ -1,13 +1,15 @@
 <?php
-// $Id: template.php,v 1.5 2009/08/22 14:34:23 webchick Exp $
+// $Id: template.php,v 1.6 2009/09/15 17:10:39 webchick Exp $
 
 /**
  * Override or insert variables into the page template.
  */
+function seven_process_html(&$vars) {
+  $vars['ie_styles'] = '<!--[if lt IE 7]><style type="text/css" media="screen">@import ' . path_to_theme() . '/ie6.css";</style><![endif]-->';
+}
 function seven_preprocess_page(&$vars) {
   $vars['primary_local_tasks'] = menu_primary_local_tasks();
   $vars['secondary_local_tasks'] = menu_secondary_local_tasks();
-  $vars['ie_styles'] = '<!--[if lt IE 7]><style type="text/css" media="screen">@import ' . path_to_theme() . '/ie6.css";</style><![endif]-->';
 }
 
 /**
