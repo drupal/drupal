@@ -253,7 +253,7 @@ function taxonomy_del_vocabulary($vid) {
 }
 
 /**
- * Dynamicly check and update the hierarachy flag of a vocabulary.
+ * Dynamically check and update the hierarachy flag of a vocabulary.
  *
  * Checks the current parents of all terms in a vocabulary and updates the
  * vocabularies hierarchy setting to the lowest possible level. A hierarchy with
