@@ -1913,9 +1913,8 @@ function template_preprocess_username(&$variables) {
   if (drupal_strlen($variables['object']->name) > 20) {
     $variables['object']->name = drupal_substr($variables['object']->name, 0, 15) . '...';
   }
-  // Make sure these are safe for use in the theme function.
+  // Make sure name is safe for use in the theme function.
   $variables['object']->name = check_plain($variables['object']->name);
-  $variables['object']->extra = check_plain($variables['object']->extra);
 }
 
 /**
