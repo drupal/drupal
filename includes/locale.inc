@@ -1018,9 +1018,9 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
  *   Text group to import PO file into (eg. 'default' for interface translations)
  */
 function _locale_import_po($file, $langcode, $mode, $group = NULL) {
-  // If not in 'safe mode', increase the maximum execution time.
-  if (!ini_get('safe_mode')) {
-    set_time_limit(240);
+  // Try to allocate enough time to parse and import the data.
+  if (function_exists('set_time_limit')) {
+    @set_time_limit(240);
   }
 
   // Check if we have the language already in the database.
