@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.206 2009/09/14 07:33:55 dries Exp $
+// $Id: install.php,v 1.207 2009/09/16 00:04:30 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1423,6 +1423,11 @@ function install_finished(&$install_state) {
   // Rebuild menu and registry to get content type links registered by the
   // profile, and possibly any other menu items created through the tasks.
   menu_rebuild();
+
+  // Rebuild the database cache of node types, so that any node types added
+  // by newly installed modules are registered correctly and initialized with
+  // the necessary fields.
+  node_types_rebuild();
 
   // Register actions declared by any modules.
   actions_synchronize();
