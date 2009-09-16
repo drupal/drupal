@@ -1,7 +1,13 @@
 // $Id$
 
-Drupal 6.14-dev, xxxx-xx-xx (development release)
+Drupal 6.14, 2009-09-16
 ----------------------
+- Fixed security issues (OpenID association cross site request forgeries,
+  OpenID impersonation and File upload), see SA-CORE-2009-008.
+- Changed the system modules page to not run all cache rebuilds; use the
+  button on the performance settings page to achieve the same effect.
+- Added support for PHP 5.3.0 out of the box.
+- Fixed a variety of small bugs.
 
 Drupal 6.13, 2009-07-01
 ----------------------
@@ -194,6 +200,12 @@ Drupal 6.0, 2008-02-13
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
+
+Drupal 5.20, 2009-09-16
+-----------------------
+- Avoid security problems resulting from writing Drupal 6-style menu declarations.
+- Fixed security issues (session fixation), see SA-CORE-2009-008.
+- Fixed a variety of small bugs.
 
 Drupal 5.19, 2009-07-01
 -----------------------
