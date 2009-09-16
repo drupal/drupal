@@ -473,10 +473,12 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
   function testDrupalHTTPRequest() {
     // Parse URL schema.
     $missing_scheme = drupal_http_request('example.com/path');
-    $this->assertEqual($missing_scheme->error, 'missing schema', t('Returned with "missing schema" error.'));
+    $this->assertEqual($missing_scheme->code, -1002, t('Returned with "-1002" error code.'));
+    $this->assertEqual($missing_scheme->error, 'missing schema', t('Returned with "missing schema" error message.'));
 
     $unable_to_parse = drupal_http_request('http:///path');
-    $this->assertEqual($unable_to_parse->error, 'unable to parse URL', t('Returned with "unable to parse URL" error.'));
+    $this->assertEqual($unable_to_parse->code, -1001, t('Returned with "-1001" error code.'));
+    $this->assertEqual($unable_to_parse->error, 'unable to parse URL', t('Returned with "unable to parse URL" error message.'));
 
     // Fetch page.
     $result = drupal_http_request(url('node', array('absolute' => TRUE)));
@@ -525,13 +527,16 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $this->assertFalse(isset($redirect_301->redirect_code), t('drupal_http_request does not follow 301 redirect if max_redirects = 0.'));
 
     $redirect_invalid = drupal_http_request(url('system-test/redirect-noscheme', array('absolute' => TRUE)), array('max_redirects' => 1));
-    $this->assertEqual($redirect_invalid->error, 'missing schema', t('301 redirect to invalid URL returned with error "!error".', array('!error' => $redirect_invalid->error)));
+    $this->assertEqual($redirect_invalid->code, -1002, t('301 redirect to invalid URL returned with error code !error.', array('!error' => $redirect_invalid->error)));
+    $this->assertEqual($redirect_invalid->error, 'missing schema', t('301 redirect to invalid URL returned with error message "!error".', array('!error' => $redirect_invalid->error)));
 
     $redirect_invalid = drupal_http_request(url('system-test/redirect-noparse', array('absolute' => TRUE)), array('max_redirects' => 1));
-    $this->assertEqual($redirect_invalid->error, 'unable to parse URL', t('301 redirect to invalid URL returned with error "!error".', array('!error' => $redirect_invalid->error)));
+    $this->assertEqual($redirect_invalid->code, -1001, t('301 redirect to invalid URL returned with error message code "!error".', array('!error' => $redirect_invalid->error)));
+    $this->assertEqual($redirect_invalid->error, 'unable to parse URL', t('301 redirect to invalid URL returned with error message "!error".', array('!error' => $redirect_invalid->error)));
 
     $redirect_invalid = drupal_http_request(url('system-test/redirect-invalid-scheme', array('absolute' => TRUE)), array('max_redirects' => 1));
-    $this->assertEqual($redirect_invalid->error, 'invalid schema ftp', t('301 redirect to invalid URL returned with error "!error".', array('!error' => $redirect_invalid->error)));
+    $this->assertEqual($redirect_invalid->code, -1003, t('301 redirect to invalid URL returned with error code !error.', array('!error' => $redirect_invalid->error)));
+    $this->assertEqual($redirect_invalid->error, 'invalid schema ftp', t('301 redirect to invalid URL returned with error message "!error".', array('!error' => $redirect_invalid->error)));
 
     $redirect_302 = drupal_http_request(url('system-test/redirect/302', array('absolute' => TRUE)), array('max_redirects' => 1));
     $this->assertEqual($redirect_302->redirect_code, 302, t('drupal_http_request follows the 302 redirect.'));
