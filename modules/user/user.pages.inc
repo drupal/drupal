@@ -148,7 +148,9 @@ function user_logout() {
 
   // Destroy the current session:
   session_destroy();
-  module_invoke_all('user', 'logout', NULL, $user);
+  // Only variables can be passed by reference workaround.
+  $null = NULL;
+  user_module_invoke('logout', $null, $user);
 
   // Load the anonymous user
   $user = drupal_anonymous_user();

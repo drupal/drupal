@@ -550,6 +550,8 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     $errors = array();
     foreach ($validators as $function => $args) {
       array_unshift($args, $file);
+      // Make sure $file is passed around by reference.
+      $args[0] = &$file;
       $errors = array_merge($errors, call_user_func_array($function, $args));
     }
 
