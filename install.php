@@ -1424,6 +1424,11 @@ function install_finished(&$install_state) {
   // profile, and possibly any other menu items created through the tasks.
   menu_rebuild();
 
+  // Rebuild the database cache of node types, so that any node types added
+  // by newly installed modules are registered correctly and initialized with
+  // the necessary fields.
+  node_types_rebuild();
+
   // Register actions declared by any modules.
   actions_synchronize();
 
