@@ -625,10 +625,6 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  *   The form array.
  */
 function system_modules($form_state = array()) {
-  drupal_rebuild_theme_registry();
-  node_types_rebuild();
-  menu_rebuild();
-  cache_clear_all('schema', 'cache');
   // Get current list of modules.
   $files = module_rebuild_cache();
 
@@ -940,6 +936,10 @@ function system_modules_submit($form, &$form_state) {
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
+  drupal_rebuild_theme_registry();
+  node_types_rebuild();
+  menu_rebuild();
+  cache_clear_all('schema', 'cache');
   drupal_clear_css_cache();
   drupal_clear_js_cache();
 
