@@ -1149,6 +1149,8 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
           $user = $account;
           // And proceed with normal login, going to user page.
           $edit = array();
+          // Regenerate the session ID to prevent against session fixation attacks.
+          sess_regenerate();
           user_module_invoke('login', $edit, $user);
           drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'));
           drupal_goto('user/'. $user->uid .'/edit');
