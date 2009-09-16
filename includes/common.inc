@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.989 2009/09/15 17:10:38 webchick Exp $
+// $Id: common.inc,v 1.990 2009/09/16 15:28:00 webchick Exp $
 
 /**
  * @file
@@ -578,11 +578,13 @@ function drupal_http_request($url, array $options = array()) {
 
   if ($uri == FALSE) {
     $result->error = 'unable to parse URL';
+    $result->code = -1001;
     return $result;
   }
 
   if (!isset($uri['scheme'])) {
     $result->error = 'missing schema';
+    $result->code = -1002;
     return $result;
   }
 
@@ -611,6 +613,7 @@ function drupal_http_request($url, array $options = array()) {
       break;
     default:
       $result->error = 'invalid schema ' . $uri['scheme'];
+      $result->code = -1003;
       return $result;
   }
 
