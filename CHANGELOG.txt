@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.15-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.14, 2009-09-16
 ----------------------
 - Fixed security issues (OpenID association cross site request forgeries,
