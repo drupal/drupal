@@ -83,10 +83,11 @@ function openid_user_add_validate($form, &$form_state) {
   if (db_query("SELECT authname FROM {authmap} WHERE authname = :authname", (array(':authname' => $claimed_id)))->fetchField()) {
     form_set_error('openid_identifier', t('That OpenID is already in use on this site.'));
   }
-  else {
-    $return_to = url('user/' . arg(1) . '/openid', array('absolute' => TRUE));
-    openid_begin($form_state['values']['openid_identifier'], $return_to);
-  }
+}
+
+function openid_user_add_submit($form, &$form_state) {
+  $return_to = url('user/' . arg(1) . '/openid', array('absolute' => TRUE));
+  openid_begin($form_state['values']['openid_identifier'], $return_to);
 }
 
 /**

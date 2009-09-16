@@ -206,7 +206,7 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
   }
 
   if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 . '/server', $services[0]['types'])) {
-    $identity = 'http://specs.openid.net/auth/2.0/identifier_select';
+    $claimed_id = $identity = 'http://specs.openid.net/auth/2.0/identifier_select';
   }
   $authn_request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $services[0]['version']);
 
