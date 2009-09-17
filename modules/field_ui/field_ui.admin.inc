@@ -480,6 +480,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     $field = array(
       'field_name' => $values['field_name'],
       'type' => $values['type'],
+      'translatable' => TRUE,
     );
     $instance = array(
       'field_name' => $field['field_name'],
@@ -830,6 +831,15 @@ function field_ui_field_settings_form(&$form_state, $obj_type, $bundle, $instanc
   $form['field']['type'] = array('#type' => 'value', '#value' => $field['type']);
   $form['field']['module'] = array('#type' => 'value', '#value' => $field['module']);
   $form['field']['active'] = array('#type' => 'value', '#value' => $field['active']);
+
+  // Set translatability.
+  $form['field']['translatable'] = array(
+    '#type' => 'radios',
+    '#title' => t('Multilingual settings'),
+    '#options' => array(TRUE => t('Translatable field'), FALSE => t('Language neutral field')),
+    '#default_value' => $field['translatable'],
+    '#description' => t("Translatable fields can have a different value for each available language. An example of a translatable field is an article's <em>body</em>. Language neutral fields will retain the same value across all translations. An example of a language neutral field is a user profile's <em>first name</em>."),
+  ); 
 
   // Add settings provided by the field module.
   $form['field']['settings'] = array();
