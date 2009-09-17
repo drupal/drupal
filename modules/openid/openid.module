@@ -121,7 +121,7 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
     '#weight' => -1,
     '#description' => l(t('What is OpenID?'), 'http://openid.net/', array('external' => TRUE)),
   );
-  $form['openid.return_to'] = array('#type' => 'hidden', '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => drupal_get_destination())));
+  $form['openid.return_to'] = array('#type' => 'hidden', '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => user_login_destination())));
 }
 
 /**

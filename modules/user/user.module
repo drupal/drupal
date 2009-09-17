@@ -3142,3 +3142,11 @@ function user_modules_uninstalled($modules) {
       ->execute();
   }
 }
+
+/**
+ * Rewrite the destination to prevent redirecting to login page after login.
+ */
+function user_login_destination() {
+  $destination = drupal_get_destination();
+  return $destination == 'destination=user%2Flogin' ? 'destination=user' : $destination;
+}
