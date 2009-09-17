@@ -1,5 +1,10 @@
 <?php
-// $Id: menu.test,v 1.20 2009/08/21 14:27:44 dries Exp $
+// $Id: menu.test,v 1.21 2009/09/17 03:18:30 webchick Exp $
+
+/**
+ * @file
+ * Tests file for the menu module.
+ */
 
 class MenuTestCase extends DrupalWebTestCase {
   protected $big_user;
