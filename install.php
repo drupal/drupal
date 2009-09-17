@@ -1397,6 +1397,7 @@ function install_import_locales_remaining(&$install_state) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
   // Collect files to import for this language. Skip components already covered
   // in the initial batch set.
+  $install_locale = $install_state['parameters']['locale'];
   $batch = locale_batch_by_language($install_locale, NULL, variable_get('install_locale_batch_components', array()));
   // Remove temporary variable.
   variable_del('install_locale_batch_components');
