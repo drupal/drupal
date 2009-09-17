@@ -147,6 +147,78 @@ function hook_translated_menu_link_alter(&$item, $map) {
   }
 }
 
+ /**
+ * Inform modules that a menu link has been created.
+ *
+ * This hook is used to notify module that menu items have been
+ * created. Contributed modules may use the information to perform
+ * actions based on the information entered into the menu system.
+ *
+ * @param $link
+ *   The $link record saved into the {menu_links} table.
+ * @return
+ *   None.
+ *
+ * @see hook_menu_link_update()
+ * @see hook_menu_link_delete()
+ */
+function hook_menu_link_insert($link) {
+  // In our sample case, we track menu items as editing sections
+  // of the site. These are stored in our table as 'disabled' items.
+  $record['mlid'] = $link['mlid'];
+  $record['menu_name'] = $link['menu_name'];
+  $record['status'] = 0;
+  drupal_write_record('menu_example', $record);
+}
+
+/**
+ * Inform modules that a menu link has been updated.
+ *
+ * This hook is used to notify module that menu items have been
+ * updated. Contributed modules may use the information to perform
+ * actions based on the information entered into the menu system.
+ *
+ * @param $link
+ *   The $link record saved into the {menu_links} table.
+ * @return
+ *   None.
+ *
+ * @see hook_menu_link_insert()
+ * @see hook_menu_link_delete()
+ */
+function hook_menu_link_update($link) {
+  // If the parent menu has changed, update our record.
+  $menu_name = db_result(db_query("SELECT mlid, menu_name, status FROM {menu_example} WHERE mlid = :mlid", array(':mlid' => $link['mlid'])));
+  if ($menu_name != $link['menu_name']) {
+    db_update('menu_example')
+      ->fields(array('menu_name' => $link['menu_name']))
+      ->condition('mlid', $link['mlid'])
+      ->execute();
+  }
+}
+
+/**
+ * Inform modules that a menu link has been deleted.
+ *
+ * This hook is used to notify module that menu items have been
+ * deleted. Contributed modules may use the information to perform
+ * actions based on the information entered into the menu system.
+ *
+ * @param $link
+ *   The $link record saved into the {menu_links} table.
+ * @return
+ *   None.
+ *
+ * @see hook_menu_link_insert()
+ * @see hook_menu_link_update()
+ */
+function hook_menu_link_delete($link) {
+  // Delete the record from our table.
+  db_delete('menu_example')
+    ->condition('mlid', $link['mlid'])
+    ->execute();
+}
+
 /**
  * @} End of "addtogroup hooks".
  */

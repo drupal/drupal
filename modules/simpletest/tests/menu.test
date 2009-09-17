@@ -132,6 +132,21 @@ class MenuIncTestCase extends DrupalWebTestCase {
     $this->assertEqual($compare_item, $item, t('Modified menu item is equal to newly retrieved menu item.'), 'menu');
   }
 
+  /**
+   * Test menu maintainance hooks.
+   */
+  function testMenuItemHooks() {
+    // Create an item.
+    menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/4', 'Menu link #4');
+    $this->assertEqual(menu_test_static_variable(), 'insert', t('hook_menu_link_insert() fired correctly'));
+    // Update the item.
+    menu_link_maintain('menu_test', 'update', 'menu_test_maintain/4', 'Menu link updated');
+    $this->assertEqual(menu_test_static_variable(), 'update', t('hook_menu_link_update() fired correctly'));
+    // Delete the item.
+    menu_link_maintain('menu_test', 'delete', 'menu_test_maintain/4', '');
+    $this->assertEqual(menu_test_static_variable(), 'delete', t('hook_menu_link_delete() fired correctly'));
+  }
+
 }
 
 /**

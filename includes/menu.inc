@@ -2140,6 +2140,9 @@ function _menu_delete_item($item, $force = FALSE) {
     }
     db_delete('menu_links')->condition('mlid', $item['mlid'])->execute();
 
+    // Notify modules we have deleted the item.
+    module_invoke_all('menu_link_delete', $item);
+
     // Update the has_children status of the parent.
     _menu_update_parental_status($item);
     menu_cache_clear($item['menu_name']);
@@ -2334,7 +2337,13 @@ function menu_link_save(&$item) {
     if ($existing_item && $menu_name != $existing_item['menu_name']) {
       menu_cache_clear($existing_item['menu_name']);
     }
-
+    // Notify modules we have acted on a menu item.
+    $hook = 'menu_link_insert';
+    if ($existing_item) {
+      $hook = 'menu_link_update';
+    }
+    module_invoke_all($hook, $item);
+    // Now clear the cache.
     _menu_clear_page_cache();
   }
   return $item['mlid'];
@@ -2437,21 +2446,11 @@ function menu_link_maintain($module, $op, $link_path, $link_title) {
       return menu_link_save($menu_link);
       break;
     case 'update':
-      db_update('menu_links')
-        ->fields(array('link_title' => $link_title))
-        ->condition('link_path', $link_path)
-        ->condition('customized', 0)
-        ->condition('module', $module)
-        ->execute();
-      $result = db_select('menu_links')
-        ->fields('menu_links', array('menu_name'))
-        ->condition('link_path', $link_path)
-        ->condition('customized', 0)
-        ->condition('module', $module)
-        ->groupBy('menu_name')
-        ->execute()->fetchCol();
-      foreach ($result as $menu_name) {
-        menu_cache_clear($menu_name);
+      $result = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path AND module = :module AND customized = 0", array(':link_path' => $link_path, ':module' => $module))->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($result as $link) {
+        $link['link_title'] = $link_title;
+        $link['options'] = unserialize($link['options']);
+        menu_link_save($link);
       }
       break;
     case 'delete':

@@ -73,3 +73,49 @@ function menu_test_menu_name($new_name = '') {
   }
   return $name;
 }
+
+/**
+ * Implement hook_menu_link_insert().
+ *
+ * @return
+ *  A random string.
+ */
+function menu_test_menu_link_insert($item) {
+  menu_test_static_variable('insert');
+}
+
+/**
+ * Implement hook_menu_link_update().
+ *
+ * @return
+ *  A random string.
+ */
+function menu_test_menu_link_update($item) {
+  menu_test_static_variable('update');
+}
+
+/**
+ * Implement hook_menu_link_delete().
+ *
+ * @return
+ *  A random string.
+ */
+function menu_test_menu_link_delete($item) {
+  menu_test_static_variable('delete');
+}
+
+/**
+ * Static function for testing hook results.
+ *
+ * @param $value
+ *   The value to set or NULL to return the current value.
+ * @return
+ *   A text string for comparison to test assertions.
+ */
+function menu_test_static_variable($value = NULL) {
+  static $variable;
+  if (!empty($value)) {
+    $variable = $value;
+  }
+  return $variable;
+}
