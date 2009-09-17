@@ -1063,7 +1063,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Install the modules specified by the default profile.
     drupal_install_modules($profile_details['dependencies'], TRUE);
 
-    node_type_clear();
+    drupal_static_reset('_node_types_build');
 
     // Install additional modules one at a time in order to make sure that the
     // list of modules is updated between each module's installation.

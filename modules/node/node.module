@@ -361,13 +361,6 @@ function _node_extract_type($node) {
 }
 
 /**
- * Clear the statically cached node type information.
- */
-function node_type_clear() {
-  drupal_static_reset('_node_types_build');
-}
-
-/**
  * Returns a list of all the available node types.
  *
  * @return
@@ -448,12 +441,13 @@ function node_type_get_name($node) {
 }
 
 /**
- * Resets the database cache of node types, and saves all new or non-modified
- * module-defined node types to the database.
+ * Resets the database cache of node types.
+ *
+ * All new or non-modified module-defined node types are saved to the database.
  */
 function node_types_rebuild() {
   // Reset and load updated node types.
-  node_type_clear();
+  drupal_static_reset('_node_types_build');
   foreach (node_type_get_types() as $type => $info) {
     if (!empty($info->is_new)) {
       node_type_save($info);
@@ -462,9 +456,6 @@ function node_types_rebuild() {
       node_type_delete($info->type);
     }
   }
-  // Reset cached node type information so that the next access
-  // will use the updated data.
-  node_type_clear();
 }
 
 /**
@@ -508,7 +499,7 @@ function node_type_save($info) {
     }
     node_configure_fields($type);
     module_invoke_all('node_type_update', $type);
-    return SAVED_UPDATED;
+    $status = SAVED_UPDATED;
   }
   else {
     $fields['orig_type'] = (string) $type->orig_type;
@@ -519,8 +510,13 @@ function node_type_save($info) {
     field_attach_create_bundle($type->type);
     node_configure_fields($type);
     module_invoke_all('node_type_insert', $type);
-    return SAVED_NEW;
+    $status = SAVED_NEW;
   }
+
+  // Clear the node type cache.
+  drupal_static_reset('_node_types_build');
+
+  return $status;
 }
 
 /**
@@ -594,6 +590,9 @@ function node_type_delete($type) {
     ->condition('type', $type)
     ->execute();
   module_invoke_all('node_type_delete', $info);
+
+  // Clear the node type cache.
+  drupal_static_reset('_node_types_build');
 }
 
 /**
@@ -1638,8 +1637,9 @@ function node_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  // Reset internal static cache of _node_types_build, forces to rebuild the node type information.
-  node_type_clear();
+  // Reset internal static cache of _node_types_build(), forces to rebuild the
+  // node type information.
+  drupal_static_reset('_node_types_build');
   foreach (node_type_get_types() as $type) {
     $type_url_str = str_replace('_', '-', $type->type);
     $items['node/add/' . $type_url_str] = array(

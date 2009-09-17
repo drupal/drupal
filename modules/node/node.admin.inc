@@ -586,7 +586,6 @@ function node_multiple_delete_confirm_submit($form, &$form_state) {
     drupal_set_message(t('Deleted @count posts.', array('@count' => $count)));
   }
   $form_state['redirect'] = 'admin/content';
-  return;
 }
 
 /**
@@ -594,5 +593,5 @@ function node_multiple_delete_confirm_submit($form, &$form_state) {
  */
 function node_modules_installed($modules) {
   // Clear node type cache for node permissions.
-  node_type_clear();
+  drupal_static_reset('_node_types_build');
 }

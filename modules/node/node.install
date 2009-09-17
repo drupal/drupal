@@ -408,7 +408,7 @@ function node_update_7004() {
 
   // Map old preview setting to new values order.
   $original_preview ? $original_preview = 2 : $original_preview = 1;
-  node_type_clear();
+  drupal_static_reset('_node_types_build');
   $type_list = node_type_get_types();
 
   // Apply original settings to all types.
@@ -444,7 +444,7 @@ function node_update_7006(&$context) {
   $ret = array('#finished' => 0);
 
   // Get node type info for every invocation.
-  node_type_clear();
+  drupal_static_reset('_node_types_build');
   $node_types = node_type_get_types();
 
   if (!isset($context['total'])) {
