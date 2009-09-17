@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1043 2009/09/11 06:20:49 dries Exp $
+// $Id: user.module,v 1.1044 2009/09/17 03:16:16 webchick Exp $
 
 /**
  * @file
@@ -3141,4 +3141,12 @@ function user_modules_uninstalled($modules) {
       ->condition('permission', $permissions, 'IN')
       ->execute();
   }
+}
+
+/**
+ * Rewrite the destination to prevent redirecting to login page after login.
+ */
+function user_login_destination() {
+  $destination = drupal_get_destination();
+  return $destination == 'destination=user%2Flogin' ? 'destination=user' : $destination;
 }
