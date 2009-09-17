@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests file for the menu module.
+ */
+
 class MenuTestCase extends DrupalWebTestCase {
   protected $big_user;
   protected $std_user;
