@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.23 2009/09/11 02:47:11 webchick Exp $
+// $Id: select.inc,v 1.24 2009/09/18 00:04:21 webchick Exp $
 
 /**
  * @ingroup database
@@ -1084,7 +1084,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $args = $this->getArguments();
 
     if (!empty($this->range)) {
-      return $this->connection->queryRange((string)$this, $args, $this->range['start'], $this->range['length'], $this->queryOptions);
+      return $this->connection->queryRange((string)$this, $this->range['start'], $this->range['length'], $args, $this->queryOptions);
     }
     return $this->connection->query((string)$this, $args, $this->queryOptions);
   }

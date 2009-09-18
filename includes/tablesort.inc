@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.53 2009/08/26 04:58:23 webchick Exp $
+// $Id: tablesort.inc,v 1.54 2009/09/18 00:04:21 webchick Exp $
 
 /**
  * @file
@@ -143,37 +143,6 @@ function tablesort_init($header) {
   $ts['sort'] = tablesort_get_sort($header);
   $ts['query_string'] = tablesort_get_querystring();
   return $ts;
-}
-
-/**
- * Create an SQL sort clause.
- *
- * This function produces the ORDER BY clause to insert in your SQL queries,
- * assuring that the returned database table rows match the sort order chosen
- * by the user.
- *
- * @param $header
- *   An array of column headers in the format described in theme_table().
- * @param $before
- *   An SQL string to insert after ORDER BY and before the table sorting code.
- *   Useful for sorting by important attributes like "sticky" first.
- * @return
- *   An SQL string to append to the end of a query.
- *
- * @ingroup database
- */
-function tablesort_sql($header, $before = '') {
-  $ts = tablesort_init($header);
-  if ($ts['sql']) {
-    // Based on code from db_escape_table(), but this can also contain a dot.
-    $field = preg_replace('/[^A-Za-z0-9_.]+/', '', $ts['sql']);
-
-    // Sort order can only be ASC or DESC.
-    $sort = drupal_strtoupper($ts['sort']);
-    $sort = in_array($sort, array('ASC', 'DESC')) ? $sort : '';
-
-    return " ORDER BY $before $field $sort";
-  }
 }
 
 /**

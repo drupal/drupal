@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.208 2009/09/17 02:34:32 webchick Exp $
+// $Id: install.php,v 1.209 2009/09/18 00:04:21 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -756,8 +756,8 @@ function install_system_module(&$install_state) {
  */
 function install_verify_completed_task() {
   try {
-    if ($result = db_query("SELECT value FROM {variable} WHERE name = '%s'", 'install_task')) {
-      $task = unserialize(db_result($result));
+    if ($result = db_query("SELECT value FROM {variable} WHERE name = :name", array('name' => 'install_task'))) {
+      $task = unserialize($result->fetchField());
     }
   }
   // Do not trigger an error if the database query fails, since the database

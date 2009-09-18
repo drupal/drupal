@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.990 2009/09/16 15:28:00 webchick Exp $
+// $Id: common.inc,v 1.991 2009/09/18 00:04:21 webchick Exp $
 
 /**
  * @file
@@ -881,7 +881,7 @@ function _drupal_decode_exception($exception) {
     // The first element in the stack is the call, the second element gives us the caller.
     // We skip calls that occurred in one of the classes of the database layer
     // or in one of its global functions.
-    $db_functions = array('db_query', 'pager_query', 'db_query_range', 'db_query_temporary', 'update_sql');
+    $db_functions = array('db_query',  'db_query_range', 'update_sql');
     while (!empty($backtrace[1]) && ($caller = $backtrace[1]) &&
         ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE || strpos($caller['class'], 'PDO') !== FALSE)) ||
         in_array($caller['function'], $db_functions))) {
