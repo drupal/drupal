@@ -440,7 +440,7 @@ function block_system_themes_form_submit(&$form, &$form_state) {
     }
     if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] !== variable_get('admin_theme', 0)) {
       // If we're changing themes, make sure the theme has its blocks initialized.
-      $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', array(':theme' => $form_state['values']['admin_theme']), 0, 1)->fetchField();
+      $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', 0, 1, array(':theme' => $form_state['values']['admin_theme']))->fetchField();
       if (!$has_blocks) {
         block_theme_initialize($form_state['values']['admin_theme']);
       }
@@ -461,7 +461,7 @@ function block_system_themes_form_submit(&$form, &$form_state) {
  */
 function block_theme_initialize($theme) {
   // Initialize theme's blocks if none already registered.
-  $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', array(':theme' => $theme), 0, 1)->fetchField();
+  $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', 0, 1, array(':theme' => $theme))->fetchField();
   if (!$has_blocks) {
     $default_theme = variable_get('theme_default', 'garland');
     $regions = system_region_list($theme);
@@ -821,7 +821,7 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
   );
 
   // Check if the "Who's online" block is enabled.
-  $online_block_enabled = db_query_range("SELECT 1 FROM {block} b WHERE module = 'user' AND delta = 'online' AND status = 1", array(), 0, 1)->fetchField();
+  $online_block_enabled = db_query_range("SELECT 1 FROM {block} b WHERE module = 'user' AND delta = 'online' AND status = 1", 0, 1)->fetchField();
 
   // If the "Who's online" block is enabled, append some descriptive text to
   // the end of the form description.

@@ -252,8 +252,8 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  *   that ran.
  */
 function simpletest_last_test_get($test_id) {
-  $last_prefix = db_result(db_query_range('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id), 0, 1));
-  $last_test_class = db_result(db_query_range('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', array(':test_id' => $test_id), 0, 1));
+  $last_prefix = db_query_range('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', 0, 1, array(':test_id' => $test_id))->fetchField();
+  $last_test_class = db_query_range('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, array(':test_id' => $test_id))->fetchField();
   return array($last_prefix, $last_test_class);
 }
 

@@ -135,11 +135,11 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     return parent::prepare($query, $options);
   }
 
-  public function queryRange($query, array $args, $from, $count, array $options = array()) {
+  public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
     return $this->query($query . ' LIMIT ' . $from . ', ' . $count, $args, $options);
   }
 
-  public function queryTemporary($query, array $args, array $options = array()) {
+  public function queryTemporary($query, array $args = array(), array $options = array()) {
     $tablename = $this->generateTemporaryTableName();
     $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE {' . $tablename . '} AS SELECT', $query), $args, $options);
     return $tablename;
@@ -163,15 +163,6 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     // because all the work in our implementation is done in
     // DatabaseStatement_sqlite::execute() and cannot be cached.
     return $this->prepare($this->prefixTables($query));
-  }
-
-  /**
-   * @todo Remove this as soon as db_rewrite_sql() has been exterminated.
-   */
-  public function distinctField($table, $field, $query) {
-    $field_to_select = 'DISTINCT(' . $table . '.' . $field . ')';
-    // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
-    return preg_replace('/(SELECT.*)(?:' . $table . '\.|\s)(?<!DISTINCT\()(?<!DISTINCT\(' . $table . '\.)' . $field . '(.*FROM )/AUsi', '\1 ' . $field_to_select . '\2', $query);
   }
 }
 

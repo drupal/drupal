@@ -138,53 +138,6 @@ function hook_cron() {
 }
 
 /**
- * Rewrite database queries, usually for access control.
- *
- * Add JOIN and WHERE statements to queries and decide whether the primary_field
- * shall be made DISTINCT. For node objects, primary field is always called nid.
- * For taxonomy terms, it is tid and for vocabularies it is vid. For comments,
- * it is cid. Primary table is the table where the primary object (node, file,
- * taxonomy_term_node etc.) is.
- *
- * You shall return an associative array. Possible keys are 'join', 'where' and
- * 'distinct'. The value of 'distinct' shall be 1 if you want that the
- * primary_field made DISTINCT.
- *
- * @param $query
- *   Query to be rewritten.
- * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query.
- *   Typical table names would be: {block}, {comment}, {forum}, {node},
- *   {menu}, {taxonomy_term_data} or {taxonomy_vocabulary}. However, it is more common for
- *   $primary_table to contain the usual table alias: b, c, f, n, m, t or v.
- * @param $primary_field
- *   Name of the primary field.
- * @param $args
- *   Array of additional arguments.
- * @return
- *   An array of join statements, where statements, distinct decision.
- */
-function hook_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
-  switch ($primary_field) {
-    case 'nid':
-      // this query deals with node objects
-      $return = array();
-      if ($primary_table != 'n') {
-        $return['join'] = "LEFT JOIN {node} n ON $primary_table.nid = n.nid";
-      }
-      $return['where'] = 'created >' . mktime(0, 0, 0, 1, 1, 2005);
-      return $return;
-      break;
-    case 'tid':
-      // this query deals with taxonomy objects
-      break;
-    case 'vid':
-      // this query deals with vocabulary objects
-      break;
-  }
-}
-
-/**
  * Allows modules to declare their own Forms API element types and specify their
  * default values.
  *
@@ -1432,7 +1385,7 @@ function hook_file_move($file, $source) {
  */
 function hook_file_references($file) {
   // If upload.module is still using a file, do not let other modules delete it.
-  $file_used = (bool) db_query_range('SELECT 1 FROM {upload} WHERE fid = :fid', array(':fid' => $file->fid), 0, 1)->fetchField();
+  $file_used = (bool) db_query_range('SELECT 1 FROM {upload} WHERE fid = :fid', 0, 1, array(':fid' => $file->fid))->fetchField();
   if ($file_used) {
     // Return the name of the module and how many references it has to the file.
     return array('upload' => $count);

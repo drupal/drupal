@@ -333,10 +333,10 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
 
 function block_admin_configure_validate($form, &$form_state) {
   if ($form_state['values']['module'] == 'block') {
-    $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE bid <> :bid AND info = :info', array(
+    $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE bid <> :bid AND info = :info', 0, 1, array(
       ':bid' => $form_state['values']['delta'],
       ':info' => $form_state['values']['info'],
-    ), 0, 1)->fetchField();
+    ))->fetchField();
     if (empty($form_state['values']['info']) || $custom_block_exists) {
       form_set_error('info', t('Please ensure that each block description is unique.'));
     }
@@ -411,7 +411,7 @@ function block_add_block_form(&$form_state) {
 }
 
 function block_add_block_form_validate($form, &$form_state) {
-  $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE info = :info', array(':info' => $form_state['values']['info']), 0, 1)->fetchField();
+  $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE info = :info', 0, 1, array(':info' => $form_state['values']['info']))->fetchField();
 
   if (empty($form_state['values']['info']) || $custom_block_exists) {
     form_set_error('info', t('Please ensure that each block description is unique.'));

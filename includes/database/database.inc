@@ -23,9 +23,10 @@
  * inherits much of its syntax and semantics.
  *
  * Most Drupal database SELECT queries are performed by a call to db_query() or
- * db_query_range(). Module authors should also consider using pager_query() for
- * queries that return results that need to be presented on multiple pages, and
- * tablesort_sql() for generating appropriate queries for sortable tables.
+ * db_query_range(). Module authors should also consider using the PagerDefault
+ * Extender for queries that return results that need to be presented on
+ * multiple pages, and the Tablesort Extender for generating appropriate queries
+ * for sortable tables.
  *
  * For example, one might wish to return a list of the most recent 10 nodes
  * authored by a given user. Instead of directly issuing the SQL query
@@ -943,7 +944,7 @@ abstract class DatabaseConnection extends PDO {
    *   A database query result resource, or NULL if the query was not executed
    *   correctly.
    */
-  abstract public function queryRange($query, array $args, $from, $count, array $options = array());
+  abstract public function queryRange($query, $from, $count, array $args = array(), array $options = array());
 
   /**
    * Generate a temporary table name.
@@ -977,7 +978,7 @@ abstract class DatabaseConnection extends PDO {
    * @return
    *   The name of the temporary table.
    */
-  abstract function queryTemporary($query, array $args, array $options = array());
+  abstract function queryTemporary($query, array $args = array(), array $options = array());
 
   /**
    * Returns the type of database driver.
@@ -1812,12 +1813,10 @@ class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInt
  * @return
  *   A prepared statement object, already executed.
  */
-function db_query($query, $args = array(), $options = array()) {
-  if (!is_array($args)) {
-    $args = func_get_args();
-    array_shift($args);
+function db_query($query, array $args = array(), array $options = array()) {
+  if (empty($options['target'])) {
+    $options['target'] = 'default';
   }
-  list($query, $args, $options) = _db_query_process_args($query, $args, $options);
 
   return Database::getConnection($options['target'])->query($query, $args, $options);
 }
@@ -1830,30 +1829,26 @@ function db_query($query, $args = array(), $options = array()) {
  *   The prepared statement query to run. Although it will accept both
  *   named and unnamed placeholders, named placeholders are strongly preferred
  *   as they are more self-documenting.
+ * @param $from
+ *   The first record from the result set to return.
+ * @param $limit
+ *   The number of records to return from the result set.
  * @param $args
  *   An array of values to substitute into the query. If the query uses named
  *   placeholders, this is an associative array in any order. If the query uses
  *   unnamed placeholders (?), this is an indexed array and the order must match
  *   the order of placeholders in the query string.
- * @param $from
- *   The first record from the result set to return.
- * @param $limit
- *   The number of records to return from the result set.
  * @param $options
  *   An array of options to control how the query operates.
  * @return
  *   A prepared statement object, already executed.
  */
-function db_query_range($query, $args, $from = 0, $count = 0, $options = array()) {
-  if (!is_array($args)) {
-    $args = func_get_args();
-    array_shift($args);
-    $count = array_pop($args);
-    $from = array_pop($args);
+function db_query_range($query, $from, $count, array $args = array(), array $options = array()) {
+  if (empty($options['target'])) {
+    $options['target'] = 'default';
   }
-  list($query, $args, $options) = _db_query_process_args($query, $args, $options);
 
-  return Database::getConnection($options['target'])->queryRange($query, $args, $from, $count, $options);
+  return Database::getConnection($options['target'])->queryRange($query, $from, $count, $args, $options);
 }
 
 /**
@@ -1874,12 +1869,10 @@ function db_query_range($query, $args, $from = 0, $count = 0, $options = array()
  * @return
  *   The name of the temporary table.
  */
-function db_query_temporary($query, $args, $options = array()) {
-  if (!is_array($args)) {
-    $args = func_get_args();
-    array_shift($args);
+function db_query_temporary($query, array $args = array(), array $options = array()) {
+  if (empty($options['target'])) {
+    $options['target'] = 'default';
   }
-  list($query, $args, $options) = _db_query_process_args($query, $args, $options);
 
   return Database::getConnection($options['target'])->queryTemporary($query, $args, $options);
 }
@@ -2062,26 +2055,6 @@ function db_escape_table($table) {
 function update_sql($sql) {
   $result = Database::getConnection()->query($sql);
   return array('success' => $result !== FALSE, 'query' => check_plain($sql));
-}
-
-/**
- * Wraps the given table.field entry with a DISTINCT(). The wrapper is added to
- * the SELECT list entry of the given query and the resulting query is returned.
- * This function only applies the wrapper if a DISTINCT doesn't already exist in
- * the query.
- *
- * @todo Remove this.
- * @param $table
- *   Table containing the field to set as DISTINCT
- * @param $field
- *   Field to set as DISTINCT
- * @param $query
- *   Query to apply the wrapper to
- * @return
- *   SQL query with the DISTINCT wrapper surrounding the given table.field.
- */
-function db_distinct_field($table, $field, $query) {
-  return Database::getConnection()->distinctField($table, $field, $query);
 }
 
 /**
@@ -2476,24 +2449,6 @@ function db_ignore_slave() {
 }
 
 /**
- * @ingroup database-legacy
- *
- * These functions are no longer necessary, as the DatabaseStatementInterface interface
- * offers this and much more functionality. They are kept temporarily for backward
- * compatibility during conversion and should be removed as soon as possible.
- *
- * @{
- */
-
-function db_fetch_object(DatabaseStatementInterface $statement) {
-  return $statement->fetch(PDO::FETCH_OBJ);
-}
-
-function db_result(DatabaseStatementInterface $statement) {
-  return $statement->fetchField();
-}
-
-/**
  * Redirect the user to the installation script if Drupal has not been
  * installed yet (i.e., if no $databases array has been defined in the
  * settings file) and we are not already there. Otherwise, do nothing.
@@ -2505,151 +2460,3 @@ function _db_check_install_needed() {
     install_goto('install.php');
   }
 }
-
-/**
- * Backward-compatibility utility.
- *
- * This function should be removed after all queries have been converted
- * to the new API. It is temporary only.
- *
- * @todo Remove this once the query conversion is complete.
- */
-function _db_query_process_args($query, $args, $options) {
-
-  if (!is_array($options)) {
-    $options = array();
-  }
-  if (empty($options['target'])) {
-    $options['target'] = 'default';
-  }
-
-  // Temporary backward-compatibility hacks. Remove later.
-  $old_query = $query;
-  $query = str_replace(array('%n', '%d', '%f', '%b', "'%s'", '%s'), '?', $old_query);
-  if ($old_query !== $query) {
-    $args = array_values($args);  // The old system allowed named arrays, but PDO doesn't if you use ?.
-  }
-
-  return array($query, $args, $options);
-}
-
-/**
- * Helper function for db_rewrite_sql.
- *
- * Collects JOIN and WHERE statements via hook_db_rewrite_sql()
- * Decides whether to select primary_key or DISTINCT(primary_key)
- *
- * @todo Remove this function when all code has been converted to query_alter.
- * @param $query
- *   Query to be rewritten.
- * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query.
- *   Typical table names would be: {block}, {comment}, {forum}, {node},
- *   {menu}, {taxonomy_term_data} or {taxonomy_vocabulary}. However, in most cases the usual
- *   table alias (b, c, f, n, m, t or v) is used instead of the table name.
- * @param $primary_field
- *   Name of the primary field.
- * @param $args
- *   Array of additional arguments.
- * @return
- *   An array: join statements, where statements, field or DISTINCT(field).
- */
-function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'nid', $args = array()) {
-  $where = array();
-  $join = array();
-  $distinct = FALSE;
-  foreach (module_implements('db_rewrite_sql') as $module) {
-    $result = module_invoke($module, 'db_rewrite_sql', $query, $primary_table, $primary_field, $args);
-    if (isset($result) && is_array($result)) {
-      if (isset($result['where'])) {
-        $where[] = $result['where'];
-      }
-      if (isset($result['join'])) {
-        $join[] = $result['join'];
-      }
-      if (isset($result['distinct']) && $result['distinct']) {
-        $distinct = TRUE;
-      }
-    }
-    elseif (isset($result)) {
-      $where[] = $result;
-    }
-  }
-
-  $where = empty($where) ? '' : '(' . implode(') AND (', $where) . ')';
-  $join = empty($join) ? '' : implode(' ', $join);
-
-  return array($join, $where, $distinct);
-}
-
-/**
- * Rewrites node, taxonomy and comment queries. Use it for listing queries. Do not
- * use FROM table1, table2 syntax, use JOIN instead.
- *
- * @todo Remove this function when all code has been converted to query_alter.
- * @param $query
- *   Query to be rewritten.
- * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query.
- *   Typical table names would be: {block}, {comment}, {forum}, {node},
- *   {menu}, {taxonomy_term_data} or {taxonomy_vocabulary}. However, it is more common to use the
- *   the usual table aliases: b, c, f, n, m, t or v.
- * @param $primary_field
- *   Name of the primary field.
- * @param $args
- *   An array of arguments, passed to the implementations of hook_db_rewrite_sql.
- * @return
- *   The original query with JOIN and WHERE statements inserted from
- *   hook_db_rewrite_sql implementations. nid is rewritten if needed.
- */
-function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $args = array()) {
-  list($join, $where, $distinct) = _db_rewrite_sql($query, $primary_table, $primary_field, $args);
-
-  if ($distinct) {
-    $query = db_distinct_field($primary_table, $primary_field, $query);
-  }
-
-  if (!empty($where) || !empty($join)) {
-    $pattern = '{
-      # Beginning of the string
-      ^
-      ((?P<anonymous_view>
-        # Everything within this set of parentheses is named "anonymous view"
-        (?:
-          [^()]++                   # anything not parentheses
-        |
-          \( (?P>anonymous_view) \)          # an open parenthesis, more "anonymous view" and finally a close parenthesis.
-        )*
-      )[^()]+WHERE)
-    }x';
-    preg_match($pattern, $query, $matches);
-    if ($where) {
-      $n = strlen($matches[1]);
-      $second_part = substr($query, $n);
-      $first_part = substr($matches[1], 0, $n - 5) . " $join WHERE $where AND ( ";
-      foreach (array('GROUP', 'ORDER', 'LIMIT') as $needle) {
-        $pos = strrpos($second_part, $needle);
-        if ($pos !== FALSE) {
-          // All needles are five characters long.
-          $pos += 5;
-          break;
-        }
-      }
-      if ($pos === FALSE) {
-        $query = $first_part . $second_part . ')';
-      }
-      else {
-        $query = $first_part . substr($second_part, 0, -$pos) . ')' . substr($second_part, -$pos);
-      }
-    }
-    else {
-      $query = $matches[1] . " $join " . substr($query, strlen($matches[1]));
-    }
-  }
-
-  return $query;
-}
-
-/**
- * @} End of "ingroup database-legacy".
- */

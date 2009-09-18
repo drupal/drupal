@@ -2448,7 +2448,7 @@ class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
    */
   function testRangeQuery() {
     // Test if return correct number of rows.
-    $range_rows = db_query_range("SELECT name FROM {system} ORDER BY name", array(), 2, 3)->fetchAll();
+    $range_rows = db_query_range("SELECT name FROM {system} ORDER BY name", 2, 3)->fetchAll();
     $this->assertEqual(count($range_rows), 3, t('Range query work and return correct number of rows.'));
 
     // Test if return target data.

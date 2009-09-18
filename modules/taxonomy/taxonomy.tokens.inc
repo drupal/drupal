@@ -124,7 +124,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
 
         case 'node-count':
           $sql = "SELECT COUNT (1) FROM {taxonomy_term_node} tn WHERE tn.tid = :tid";
-          $count = db_result(db_query($sql, array(':tid' => $term->tid)));
+          $count = db_query($sql, array(':tid' => $term->tid))->fetchField();
           $replacements[$original] = $count;
           break;
 
@@ -172,13 +172,13 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
 
         case 'term-count':
           $sql = "SELECT COUNT (1) FROM {taxonomy_term_data} td WHERE td.vid = :vid";
-          $count = db_result(db_query($sql, array(':vid' => $vocabulary->vid)));
+          $count = db_query($sql, array(':vid' => $vocabulary->vid))->fetchField();
           $replacements[$original] = $count;
           break;
 
         case 'node-count':
           $sql = "SELECT COUNT (1) FROM {taxonomy_term_node} tn LEFT JOIN {taxonomy_term_data} td ON tn.tid = td.tid WHERE td.vid = :vid";
-          $count = db_result(db_query($sql, array(':vid' => $vocabulary->vid)));
+          $count = db_query($sql, array(':vid' => $vocabulary->vid))->fetchField();
           $replacements[$original] = $count;
           break;
       }

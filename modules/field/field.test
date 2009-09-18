@@ -1036,7 +1036,7 @@ class FieldInfoTestCase extends FieldTestCase {
     // Simulate a stored field definition missing a field setting (e.g. a
     // third-party module adding a new field setting has been enabled, and
     // existing fields do not know the setting yet).
-    $data = db_result(db_query('SELECT data FROM {field_config} WHERE field_name = :field_name', array(':field_name' => $field_definition['field_name'])));
+    $data = db_query('SELECT data FROM {field_config} WHERE field_name = :field_name', array(':field_name' => $field_definition['field_name']))->fetchField();
     $data = unserialize($data);
     $data['settings'] = array();
     db_update('field_config')
@@ -1072,7 +1072,7 @@ class FieldInfoTestCase extends FieldTestCase {
     // Simulate a stored instance definition missing various settings (e.g. a
     // third-party module adding instance, widget or display settings has been
     // enabled, but existing instances do not know the new settings).
-    $data = db_result(db_query('SELECT data FROM {field_config_instance} WHERE field_name = :field_name AND bundle = :bundle', array(':field_name' => $instance_definition['field_name'], ':bundle' => $instance_definition['bundle'])));
+    $data = db_query('SELECT data FROM {field_config_instance} WHERE field_name = :field_name AND bundle = :bundle', array(':field_name' => $instance_definition['field_name'], ':bundle' => $instance_definition['bundle']))->fetchField();
     $data = unserialize($data);
     $data['settings'] = array();
     $data['widget']['settings'] = 'unavailable_widget';

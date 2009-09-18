@@ -270,7 +270,7 @@ function user_update_7000(&$sandbox) {
     $has_rows = FALSE;
     // Update this many per page load.
     $count = 1000;
-    $result = db_query_range("SELECT uid, pass FROM {users} WHERE uid > 0 ORDER BY uid", array(), $sandbox['user_from'], $count);
+    $result = db_query_range("SELECT uid, pass FROM {users} WHERE uid > 0 ORDER BY uid", $sandbox['user_from'], $count);
     foreach ($result as $account) {
       $has_rows = TRUE;
       $new_hash = user_hash_password($account->pass, $hash_count_log2);
@@ -328,7 +328,7 @@ function user_update_7002(&$sandbox) {
     $contributed_date_module = db_column_exists('users', 'timezone_name');
     $contributed_event_module = db_column_exists('users', 'timezone_id');
 
-    $results = db_query_range("SELECT uid FROM {users} ORDER BY uid", array(), $sandbox['user_from'], $count);
+    $results = db_query_range("SELECT uid FROM {users} ORDER BY uid", $sandbox['user_from'], $count);
     foreach ($results as $account) {
       $timezone = NULL;
       // If the contributed Date module has created a users.timezone_name
@@ -434,7 +434,7 @@ function user_update_7004(&$sandbox) {
   // As a batch operation move the photos into the {file} table and update the
   // {users} records.
   $limit = 500;
-  $result = db_query_range("SELECT uid, picture FROM {user} WHERE picture <> '' AND uid > :uid ORDER BY uid", array(':uid' => $sandbox['last_user_processed']), 0, $limit);
+  $result = db_query_range("SELECT uid, picture FROM {user} WHERE picture <> '' AND uid > :uid ORDER BY uid", 0, $limit, array(':uid' => $sandbox['last_user_processed']));
   foreach ($result as $user) {
     // Don't bother adding files that don't exist.
     if (!file_exists($user->picture)) {

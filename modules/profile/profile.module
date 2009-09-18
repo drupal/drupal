@@ -510,10 +510,10 @@ function profile_category_access($account, $category) {
     return TRUE;
   }
   else {
-    $category_visible = (bool) db_query_range('SELECT 1 FROM {profile_field} WHERE category = :category AND visibility <> :visibility', array(
+    $category_visible = (bool) db_query_range('SELECT 1 FROM {profile_field} WHERE category = :category AND visibility <> :visibility', 0, 1, array(
       ':category' => $category,
       ':visibility' => PROFILE_HIDDEN
-    ), 0, 1)->fetchField();
+    ))->fetchField();
     return user_edit_access($account) && $category_visible;
   }
 }

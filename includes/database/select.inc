@@ -1084,7 +1084,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $args = $this->getArguments();
 
     if (!empty($this->range)) {
-      return $this->connection->queryRange((string)$this, $args, $this->range['start'], $this->range['length'], $this->queryOptions);
+      return $this->connection->queryRange((string)$this, $this->range['start'], $this->range['length'], $args, $this->queryOptions);
     }
     return $this->connection->query((string)$this, $args, $this->queryOptions);
   }

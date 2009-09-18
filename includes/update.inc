@@ -131,10 +131,10 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
 function update_fix_compatibility() {
   $ret = array();
   $incompatible = array();
-  $query = db_query("SELECT name, type, status FROM {system} WHERE status = 1 AND type IN ('module','theme')");
-  while ($result = db_fetch_object($query)) {
-    if (update_check_incompatibility($result->name, $result->type)) {
-      $incompatible[] = $result->name;
+  $result = db_query("SELECT name, type, status FROM {system} WHERE status = 1 AND type IN ('module','theme')");
+  foreach ($result as $row) {
+    if (update_check_incompatibility($row->name, $row->type)) {
+      $incompatible[] = $row->name;
     }
   }
   if (!empty($incompatible)) {

@@ -377,7 +377,7 @@ function aggregator_block_view($delta = '') {
       case 'feed':
         if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {
           $block['subject'] = check_plain($feed->title);
-          $result = db_query_range("SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC", array(':fid' => $id), 0, $feed->block);
+          $result = db_query_range("SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC", 0, $feed->block, array(':fid' => $id));
           $read_more = theme('more_link', url('aggregator/sources/' . $feed->fid), t("View this feed's recent news."));
         }
         break;
@@ -385,7 +385,7 @@ function aggregator_block_view($delta = '') {
       case 'category':
         if ($category = db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchObject()) {
           $block['subject'] = check_plain($category->title);
-          $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = :cid ORDER BY i.timestamp DESC, i.iid DESC', array(':cid' => $category->cid), 0, $category->block);
+          $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = :cid ORDER BY i.timestamp DESC, i.iid DESC', 0, $category->block, array(':cid' => $category->cid));
           $read_more = theme('more_link', url('aggregator/categories/' . $category->cid), t("View this category's recent news."));
         }
         break;

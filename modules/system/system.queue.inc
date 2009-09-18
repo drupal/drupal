@@ -204,7 +204,7 @@ class SystemQueue implements DrupalQueueInterface {
     // meantime. Therefore loop until an item is successfully claimed or we are
     // reasonably sure there are no unclaimed items left.
     while (TRUE) {
-      $item = db_query_range('SELECT data, item_id FROM {queue} q WHERE consumer_id = 0 AND name = :name ORDER BY created ASC', array(':name' => $this->name), 0, 1)->fetchObject();
+      $item = db_query_range('SELECT data, item_id FROM {queue} q WHERE consumer_id = 0 AND name = :name ORDER BY created ASC', 0, 1, array(':name' => $this->name))->fetchObject();
       if ($item) {
         // Try to mark the item as ours. We cannot rely on REQUEST_TIME
         // because items might be claimed by a single consumer which runs

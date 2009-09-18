@@ -115,7 +115,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
 
     $result = db_query("SELECT * FROM {watchdog} WHERE type = 'actions_loop_test' OR type = 'actions' ORDER BY timestamp");
     $loop_started = FALSE;
-    while ($row = db_fetch_object($result)) {
+    foreach ($result as $row) {
       
       $expected_message = array_shift($expected);
       $this->assertEqual($row->message, $expected_message, t('Expected message %expected, got %message.', array('%expected' => $expected_message, '%message' => $row->message)));

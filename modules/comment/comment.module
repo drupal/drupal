@@ -435,7 +435,7 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
       WHERE nid = :nid
         AND status = 0
       ORDER BY timestamp DESC) AS thread
-      ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1))', array(':nid' => $node->nid), 0, $new_replies)->fetchField();
+      ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 0, $new_replies, array(':nid' => $node->nid))->fetchField();
     $thread = substr($result, 0, -1);
     $count = db_query('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
       ':nid' => $node->nid,
@@ -2240,10 +2240,10 @@ function _comment_update_node_statistics($nid) {
 
   if ($count > 0) {
     // Comments exist.
-    $last_reply = db_query_range('SELECT cid, name, timestamp, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', array(
+    $last_reply = db_query_range('SELECT cid, name, timestamp, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', 0, 1, array(
       ':nid' => $nid,
       ':status' => COMMENT_PUBLISHED,
-    ), 0, 1)->fetchObject();
+    ))->fetchObject();
     db_update('node_comment_statistics')
       ->fields( array(
         'comment_count' => $count,

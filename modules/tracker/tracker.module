@@ -69,7 +69,7 @@ function tracker_cron() {
   $batch_size = variable_get('tracker_batch_size', 1000);
   if ($max_nid > 0) {
     $last_nid = FALSE;
-    $result = db_query_range('SELECT nid, uid, status FROM {node} WHERE nid <= :max_nid ORDER BY nid DESC', array(':max_nid' => $max_nid), 0, $batch_size);
+    $result = db_query_range('SELECT nid, uid, status FROM {node} WHERE nid <= :max_nid ORDER BY nid DESC', 0, $batch_size, array(':max_nid' => $max_nid));
 
     $count = 0;
 
@@ -266,10 +266,10 @@ function _tracker_add($nid, $uid, $changed) {
  */
 function _tracker_calculate_changed($nid) {
   $changed = db_query('SELECT changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
-  $latest_comment = db_query_range('SELECT cid, timestamp FROM {comment} WHERE nid = :nid AND status = :status ORDER BY timestamp DESC', array(
+  $latest_comment = db_query_range('SELECT cid, timestamp FROM {comment} WHERE nid = :nid AND status = :status ORDER BY timestamp DESC', 0, 1, array(
     ':nid' => $nid,
     ':status' => COMMENT_PUBLISHED,
-  ), 0, 1)->fetchObject();
+  ))->fetchObject();
   if ($latest_comment && $latest_comment->timestamp > $changed) {
     $changed = $latest_comment->timestamp;
   }
@@ -301,10 +301,10 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     // Comments are a second reason to keep the user's subscription.
     if (!$keep_subscription) {
       // Check if the user has commented at least once on the given nid
-      $keep_subscription = db_query_range('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND uid = :uid AND status = 0', array(
+      $keep_subscription = db_query_range('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND uid = :uid AND status = 0', 0, 1, array(
         ':nid' => $nid,
         ':uid' => $uid,
-      ), 0, 1)->fetchField();
+      ))->fetchField();
     }
 
     // If we haven't found a reason to keep the user's subscription, delete it.

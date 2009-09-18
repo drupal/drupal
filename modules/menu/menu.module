@@ -365,17 +365,15 @@ function menu_node_prepare($node) {
     $item = array();
     if (isset($node->nid)) {
       // Give priority to the default menu
-      $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", array(
+      $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", 0, 1, array(
         ':path' => 'node/' . $node->nid,
         ':menu_name' => $menu_name,
-      ), 0, 1)
-      ->fetchField();
+      ))->fetchField();
       // Check all menus if a link does not exist in the default menu.
       if (!$mlid) {
-        $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", array(
+        $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", 0, 1, array(
           ':path' => 'node/' . $node->nid,
-        ), 0, 1)
-        ->fetchField();
+        ))->fetchField();
       }
       if ($mlid) {
         $item = menu_link_load($mlid);

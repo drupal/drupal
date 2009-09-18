@@ -350,17 +350,38 @@ function system_install() {
   // uid 2 which is not what we want. So we insert the first user here, the
   // anonymous user. uid is 1 here for now, but very soon it will be changed
   // to 0.
-  db_query("INSERT INTO {users} (name, mail) VALUES('%s', '%s')", '', '');
+  db_insert('users')
+    ->fields(array(
+      'name' => '',
+      'mail' => '',
+    ))
+    ->execute();
   // We need some placeholders here as name and mail are uniques and data is
   // presumed to be a serialized array. Install will change uid 1 immediately
   // anyways. So we insert the superuser here, the uid is 2 here for now, but
   // very soon it will be changed to 1.
-  db_query("INSERT INTO {users} (name, mail, created, status, data) VALUES('%s', '%s', %d, %d, '%s')", 'placeholder-for-uid-1', 'placeholder-for-uid-1', REQUEST_TIME, 1, serialize(array()));
+
+  db_insert('users')
+    ->fields(array(
+      'name' => 'placeholder-for-uid-1',
+      'mail' => 'placeholder-for-uid-1',
+      'created' => REQUEST_TIME,
+      'status' => 1,
+      'data' => serialize(array()),
+    ))
+    ->execute();
   // This sets the above two users uid 0 (anonymous). We avoid an explicit 0
   // otherwise MySQL might insert the next auto_increment value.
-  db_query("UPDATE {users} SET uid = uid - uid WHERE name = '%s'", '');
+  db_update('users')
+    ->expression('uid', 'uid - uid')
+    ->condition('name', '')
+    ->execute();
+
   // This sets uid 1 (superuser). We skip uid 2 but that's not a big problem.
-  db_query("UPDATE {users} SET uid = 1 WHERE name = '%s'", 'placeholder-for-uid-1');
+  db_update('users')
+    ->fields(array('uid' => 1))
+    ->condition('name', 'placeholder-for-uid-1')
+    ->execute();
 
   // Built-in roles.
   $rid_anonymous = db_insert('role')

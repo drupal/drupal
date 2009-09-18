@@ -570,7 +570,7 @@ function menu_edit_menu_validate($form, &$form_state) {
     // We will add 'menu-' to the menu name to help avoid name-space conflicts.
     $item['menu_name'] = 'menu-' . $item['menu_name'];
     $custom_exists = db_query('SELECT menu_name FROM {menu_custom} WHERE menu_name = :menu', array(':menu' => $item['menu_name']))->fetchField();
-    $link_exists = db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = :menu", array(':menu' => $item['menu_name']), 0, 1)->fetchField();
+    $link_exists = db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = :menu", 0, 1, array(':menu' => $item['menu_name']))->fetchField();
     if ($custom_exists || $link_exists) {
       form_set_error('menu_name', t('The menu already exists.'));
     }

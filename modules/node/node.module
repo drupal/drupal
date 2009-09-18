@@ -470,7 +470,7 @@ function node_types_rebuild() {
 function node_type_save($info) {
   $is_existing = FALSE;
   $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;
-  $is_existing = (bool) db_query_range('SELECT 1 FROM {node_type} WHERE type = :type', array(':type' => $existing_type), 0, 1)->fetchField();
+  $is_existing = (bool) db_query_range('SELECT 1 FROM {node_type} WHERE type = :type', 0, 1, array(':type' => $existing_type))->fetchField();
   $type = node_type_set_defaults($info);
 
   $fields = array(
@@ -2357,61 +2357,6 @@ function node_permissions_get_configured_types() {
 }
 
 /**
- * Generate an SQL join clause for use in fetching a node listing.
- *
- * @param $node_alias
- *   If the node table has been given an SQL alias other than the default
- *   "n", that must be passed here.
- * @param $node_access_alias
- *   If the node_access table has been given an SQL alias other than the default
- *   "na", that must be passed here.
- * @return
- *   An SQL join clause.
- */
-function _node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
-  if (user_access('bypass node access')) {
-    return '';
-  }
-
-  return 'INNER JOIN {node_access} ' . $node_access_alias . ' ON ' . $node_access_alias . '.nid = ' . $node_alias . '.nid';
-}
-
-/**
- * Generate an SQL where clause for use in fetching a node listing.
- *
- * @param $op
- *   The operation that must be allowed to return a node.
- * @param $node_access_alias
- *   If the node_access table has been given an SQL alias other than the default
- *   "na", that must be passed here.
- * @param $account
- *   The user object for the user performing the operation. If omitted, the
- *   current user is used.
- * @return
- *   An SQL where clause.
- */
-function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $account = NULL) {
-  if (user_access('bypass node access')) {
-    return;
-  }
-
-  $grants = array();
-  foreach (node_access_grants($op, $account) as $realm => $gids) {
-    foreach ($gids as $gid) {
-      $grants[] = "($node_access_alias.gid = $gid AND $node_access_alias.realm = '$realm')";
-    }
-  }
-
-  $grants_sql = '';
-  if (count($grants)) {
-    $grants_sql = 'AND (' . implode(' OR ', $grants) . ')';
-  }
-
-  $sql = "$node_access_alias.grant_$op >= 1 $grants_sql";
-  return $sql;
-}
-
-/**
  * Fetch an array of permission IDs granted to the given user ID.
  *
  * The implementation here provides only the universal "all" grant. A node
@@ -2484,17 +2429,6 @@ function node_access_view_all_nodes() {
   return $access;
 }
 
-/**
- * Implement hook_db_rewrite_sql().
- */
-function node_db_rewrite_sql($query, $primary_table, $primary_field) {
-  if ($primary_field == 'nid' && !node_access_view_all_nodes()) {
-    $return['join'] = _node_access_join_sql($primary_table);
-    $return['where'] = _node_access_where_sql();
-    $return['distinct'] = 1;
-    return $return;
-  }
-}
 
 /**
  * Implement hook_query_TAG_alter().
@@ -2739,7 +2673,7 @@ function _node_access_rebuild_batch_operation(&$context) {
 
   // Process the next 20 nodes.
   $limit = 20;
-  $nids = db_query_range("SELECT nid FROM {node} WHERE nid > :nid ORDER BY nid ASC", array(':nid' => $context['sandbox']['current_node']), 0, $limit)->fetchCol();
+  $nids = db_query_range("SELECT nid FROM {node} WHERE nid > :nid ORDER BY nid ASC", 0, $limit, array(':nid' => $context['sandbox']['current_node']))->fetchCol();
   $nodes = node_load_multiple($nids, array(), TRUE);
   foreach ($nodes as $node) {
     // To preserve database integrity, only acquire grants if the node
@@ -3055,7 +2989,7 @@ function node_assign_owner_action_form($context) {
 }
 
 function node_assign_owner_action_validate($form, $form_state) {
-  $exists = (bool) db_query_range('SELECT 1 FROM {users} WHERE name = :name', array(':name' => $form_state['values']['owner_name']), 0, 1)->fetchField();
+  $exists = (bool) db_query_range('SELECT 1 FROM {users} WHERE name = :name', 0, 1, array(':name' => $form_state['values']['owner_name']))->fetchField();
   if (!$exists) {
     form_set_error('owner_name', t('Please enter a valid username.'));
   }

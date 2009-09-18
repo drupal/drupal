@@ -10,7 +10,7 @@
  * Implement hook_install().
  */
 function php_install() {
-  $format_exists = (bool) db_query_range('SELECT 1 FROM {filter_format} WHERE name = :name', array(':name' => 'PHP code'), 0, 1)->fetchField();
+  $format_exists = (bool) db_query_range('SELECT 1 FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'PHP code'))->fetchField();
   // Add a PHP code text format, if it does not exist. Do this only for the
   // first install (or if the format has been manually deleted) as there is no
   // reliable method to identify the format in an uninstall hook or in

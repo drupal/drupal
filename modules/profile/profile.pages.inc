@@ -123,12 +123,12 @@ function profile_browse() {
  */
 function profile_autocomplete($field, $string) {
   $matches = array();
-  $autocomplete_field = (bool) db_query_range("SELECT 1 FROM {profile_field} WHERE fid = :fid AND autocomplete = 1", array(':fid' => $field), 0, 1)->fetchField();
+  $autocomplete_field = (bool) db_query_range("SELECT 1 FROM {profile_field} WHERE fid = :fid AND autocomplete = 1", 0, 1, array(':fid' => $field))->fetchField();
   if ($autocomplete_field) {
-    $values = db_query_range("SELECT value FROM {profile_value} WHERE fid = :fid AND LOWER(value) LIKE LOWER(:value) GROUP BY value ORDER BY value ASC", array(
+    $values = db_query_range("SELECT value FROM {profile_value} WHERE fid = :fid AND LOWER(value) LIKE LOWER(:value) GROUP BY value ORDER BY value ASC", 0, 10, array(
       ':fid' => $field,
       ':value' => $string . '%',
-    ), 0, 10)->fetchCol();
+    ))->fetchCol();
     foreach ($values as $value) {
       $matches[$value] = check_plain($value);
     }

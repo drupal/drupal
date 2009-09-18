@@ -46,21 +46,6 @@ function comment_enable() {
 }
 
 /**
- * Changed node_comment_statistics to use node->changed to avoid future timestamps.
- */
-function comment_update_1() {
-  // Change any future last comment timestamps to current time.
-  db_query('UPDATE {node_comment_statistics} SET last_comment_timestamp = %d WHERE last_comment_timestamp > %d', REQUEST_TIME, REQUEST_TIME);
-
-  // Unstuck node indexing timestamp if needed.
-  if (($last = variable_get('node_cron_last', FALSE)) !== FALSE) {
-    variable_set('node_cron_last', min(REQUEST_TIME, $last));
-  }
-
-  return array();
-}
-
-/**
  * @defgroup updates-6.x-to-7.x Comment updates from 6.x to 7.x
  * @{
  */
