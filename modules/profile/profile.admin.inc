@@ -12,10 +12,9 @@
  * @ingroup forms
  * @see profile_admin_overview_submit()
  */
-function profile_admin_overview() {
+function profile_admin_overview($form) {
   $result = db_query('SELECT title, name, type, category, fid, weight FROM {profile_field} ORDER BY category, weight');
 
-  $form = array();
   $categories = array();
   foreach ($result as $field) {
     // Collect all category information
@@ -170,7 +169,7 @@ function theme_profile_admin_overview($form) {
  * @see profile_field_form_validate()
  * @see profile_field_form_submit()
  */
-function profile_field_form(&$form_state, $arg = NULL) {
+function profile_field_form($form, &$form_state, $arg = NULL) {
   if (arg(4) == 'edit') {
     if (is_numeric($arg)) {
       $fid = $arg;
@@ -380,7 +379,7 @@ function profile_field_form_submit($form, &$form_state) {
 /**
  * Menu callback; deletes a field from all user profiles.
  */
-function profile_field_delete(&$form_state, $fid) {
+function profile_field_delete($form, &$form_state, $fid) {
   $field = db_query("SELECT title FROM {profile_field} WHERE fid = :fid", array(':fid' => $fid))->fetchObject();
   if (!$field) {
     drupal_not_found();

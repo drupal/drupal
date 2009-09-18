@@ -378,7 +378,7 @@ function system_themes_form_submit($form, &$form_state) {
  * @ingroup forms
  * @see system_theme_settings_submit()
  */
-function system_theme_settings(&$form_state, $key = '') {
+function system_theme_settings($form, &$form_state, $key = '') {
   $directory_path = file_directory_path();
   if (!file_prepare_directory($directory_path, FILE_CREATE_DIRECTORY)) {
     drupal_set_message(t('The directory %directory does not exist or is not writable.', array('%directory' => $directory_path)), 'warning');
@@ -633,7 +633,7 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  * @return
  *   The form array.
  */
-function system_modules($form_state = array()) {
+function system_modules($form, $form_state = array()) {
   // Get current list of modules.
   $files = system_get_module_data();
 
@@ -834,7 +834,6 @@ function _system_modules_build_row($info, $extra) {
  * @ingroup forms
  */
 function system_modules_confirm_form($modules, $storage) {
-  $form = array();
   $items = array();
 
   $form['validation_modules'] = array('#type' => 'value', '#value' => $modules);
@@ -1034,7 +1033,7 @@ function system_modules_submit($form, &$form_state) {
  * @return
  *   A form array representing the currently disabled modules.
  */
-function system_modules_uninstall($form_state = NULL) {
+function system_modules_uninstall($form, $form_state = NULL) {
   // Make sure the install API is available.
   include_once DRUPAL_ROOT . '/includes/install.inc';
 
@@ -1043,12 +1042,9 @@ function system_modules_uninstall($form_state = NULL) {
     return $confirm_form;
   }
 
-  $form = array();
-
   // Pull all disabled modules from the system table.
   $disabled_modules = db_query("SELECT name, filename, info FROM {system} WHERE type = 'module' AND status = 0 AND schema_version > :schema ORDER BY name", array(':schema' => SCHEMA_UNINSTALLED));
   foreach ($disabled_modules as $module) {
-
     // Grab the module info
     $info = unserialize($module->info);
 
@@ -1186,7 +1182,7 @@ function system_ip_blocking() {
  * @see system_ip_blocking_form_validate()
  * @see system_ip_blocking_form_submit()
  */
-function system_ip_blocking_form($form_state) {
+function system_ip_blocking_form($form, $form_state) {
   $form['ip'] = array(
     '#title' => t('IP address'),
     '#type' => 'textfield',
@@ -1232,7 +1228,7 @@ function system_ip_blocking_form_submit($form, &$form_state) {
  *
  * @see system_ip_blocking_delete_submit()
  */
-function system_ip_blocking_delete(&$form_state, $iid) {
+function system_ip_blocking_delete($form, &$form_state, $iid) {
   $form['blocked_ip'] = array(
     '#type' => 'value',
     '#value' => $iid,
@@ -1826,7 +1822,7 @@ function system_site_maintenance_mode() {
  * @ingroup forms
  * @see system_settings_form()
  */
-function system_clean_url_settings() {
+function system_clean_url_settings($form) {
   global $base_url;
 
   // When accessing this form using a non-clean URL, allow a re-check to make

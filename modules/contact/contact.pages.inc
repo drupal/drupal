@@ -171,7 +171,7 @@ function contact_personal_page($account) {
 /**
  * Form builder; the personal contact form.
  */
-function contact_personal_form(&$form_state, $recipient) {
+function contact_personal_form($form, &$form_state, $recipient) {
   global $user;
   $form['#token'] = $user->name . $user->mail;
   $form['recipient'] = array('#type' => 'value', '#value' => $recipient);

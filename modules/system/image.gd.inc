@@ -16,7 +16,6 @@
  */
 function image_gd_settings() {
   if (image_gd_check_settings()) {
-    $form = array();
     $form['status'] = array(
       '#markup' => t('The GD toolkit is installed and working properly.')
     );

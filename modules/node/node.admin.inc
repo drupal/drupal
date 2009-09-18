@@ -366,7 +366,7 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
 /**
  * Menu callback: content administration.
  */
-function node_admin_content($form_state) {
+function node_admin_content($form, $form_state) {
   if (isset($form_state['values']['operation']) && $form_state['values']['operation'] == 'delete') {
     return node_multiple_delete_confirm($form_state, array_filter($form_state['values']['nodes']));
   }
@@ -555,7 +555,7 @@ function theme_node_admin_nodes($form) {
   return $output;
 }
 
-function node_multiple_delete_confirm(&$form_state, $nodes) {
+function node_multiple_delete_confirm($form, &$form_state, $nodes) {
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter returns only elements with TRUE values
   foreach ($nodes as $nid => $value) {

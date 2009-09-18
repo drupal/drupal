@@ -25,7 +25,7 @@ function block_admin_display($theme = NULL) {
 /**
  * Generate main blocks administration form.
  */
-function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
+function block_admin_display_form($form, &$form_state, $blocks, $theme = NULL) {
   global $theme_key, $custom_theme;
 
   drupal_add_css(drupal_get_path('module', 'block') . '/block.css', array('preprocess' => FALSE));
@@ -42,10 +42,8 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
   $weight_delta = round(count($blocks) / 2);
 
   // Build the form tree.
-  $form = array(
-    '#action' => arg(4) ? url('admin/structure/block/list/' . $theme_key) : url('admin/structure/block'),
-    '#tree' => TRUE,
-  );
+  $form['#action'] = arg(4) ? url('admin/structure/block/list/' . $theme_key) : url('admin/structure/block');
+  $form['#tree'] = TRUE;
 
   foreach ($blocks as $i => $block) {
     $key = $block['module'] . '_' . $block['delta'];
@@ -155,7 +153,7 @@ function _block_compare($a, $b) {
 /**
  * Menu callback; displays the block configuration form.
  */
-function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
+function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) {
   $form['module'] = array(
     '#type' => 'value',
     '#value' => $module,
@@ -406,8 +404,8 @@ function block_admin_configure_submit($form, &$form_state) {
 /**
  * Menu callback: display the custom block addition form.
  */
-function block_add_block_form(&$form_state) {
-  return block_admin_configure($form_state, 'block', NULL);
+function block_add_block_form($form, &$form_state) {
+  return block_admin_configure($form, $form_state, 'block', NULL);
 }
 
 function block_add_block_form_validate($form, &$form_state) {
@@ -489,7 +487,7 @@ function block_add_block_form_submit($form, &$form_state) {
 /**
  * Menu callback; confirm deletion of custom blocks.
  */
-function block_custom_block_delete(&$form_state, $bid = 0) {
+function block_custom_block_delete($form, &$form_state, $bid = 0) {
   $custom_block = block_custom_block_get($bid);
   $form['info'] = array('#type' => 'hidden', '#value' => $custom_block['info'] ? $custom_block['info'] : $custom_block['title']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);

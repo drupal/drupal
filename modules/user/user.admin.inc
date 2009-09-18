@@ -206,7 +206,7 @@ function user_admin_account() {
  * Submit the user administration update form.
  */
 function user_admin_account_submit($form, &$form_state) {
-  $operations = module_invoke_all('user_operations', $form_state);
+  $operations = module_invoke_all('user_operations', $form, $form_state);
   $operation = $operations[$form_state['values']['operation']];
   // Filter out unchecked accounts.
   $accounts = array_filter($form_state['values']['accounts']);
@@ -602,7 +602,7 @@ function user_admin_settings() {
  * @see user_admin_permissions_submit()
  * @see theme_user_admin_permissions()
  */
-function user_admin_permissions($form_state, $rid = NULL) {
+function user_admin_permissions($form, $form_state, $rid = NULL) {
 
   // Retrieve role names for columns.
   $role_names = user_roles();

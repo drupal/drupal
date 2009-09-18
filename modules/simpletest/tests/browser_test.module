@@ -39,9 +39,7 @@ function browser_test_print_get() {
   exit;
 }
 
-function browser_test_print_post_form(&$form_state) {
-  $form = array();
-
+function browser_test_print_post_form($form, &$form_state) {
   $form['foo'] = array(
     '#type' => 'textfield',
   );

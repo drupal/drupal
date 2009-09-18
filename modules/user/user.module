@@ -864,8 +864,9 @@ function user_user_view($account) {
  */
 function user_user_form(&$edit, $account, $category) {
   if ($category == 'account') {
+    $form = array();
     $form_state = array();
-    return user_edit_form($form_state, (isset($account->uid) ? $account->uid : FALSE), $edit);
+    return user_edit_form($form, $form_state, (isset($account->uid) ? $account->uid : FALSE), $edit);
   }
 }
 
@@ -943,13 +944,11 @@ function user_user_categories() {
   ));
 }
 
-function user_login_block() {
-  $form = array(
-    '#action' => url($_GET['q'], array('query' => drupal_get_destination())),
-    '#id' => 'user-login-form',
-    '#validate' => user_login_default_validators(),
-    '#submit' => array('user_login_submit'),
-  );
+function user_login_block($form) {
+  $form['#action'] = url($_GET['q'], array('query' => drupal_get_destination()));
+  $form['#id'] = 'user-login-form';
+  $form['#validate'] = user_login_default_validators();
+  $form['#submit'][] = 'user_login_submit';
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
     '#maxlength' => USERNAME_MAX_LENGTH,
@@ -1544,7 +1543,7 @@ function user_set_authmaps($account, $authmaps) {
  *
  * @ingroup forms
  */
-function user_login(&$form_state) {
+function user_login($form, &$form_state) {
   global $user;
 
   // If we are already logged on, go to the user page instead.
@@ -1811,11 +1810,9 @@ function user_pass_rehash($password, $timestamp, $login) {
   return md5($timestamp . $password . $login);
 }
 
-function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
+function user_edit_form($form, &$form_state, $uid, $edit, $register = FALSE) {
   _user_password_dynamic_validation();
   $admin = user_access('administer users');
-
-  $form = array();
 
   // Account information:
   $form['account'] = array('#type' => 'fieldset',
@@ -2351,7 +2348,7 @@ function user_role_set_permissions($role, array $permissions = array(), $merge =
 /**
  * Implement hook_user_operations().
  */
-function user_user_operations($form_state = array()) {
+function user_user_operations($form = array(), $form_state = array()) {
   $operations = array(
     'unblock' => array(
       'label' => t('Unblock the selected users'),
@@ -2475,7 +2472,7 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
   }
 }
 
-function user_multiple_cancel_confirm(&$form_state) {
+function user_multiple_cancel_confirm($form, &$form_state) {
   $edit = $form_state['input'];
 
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
@@ -3041,7 +3038,7 @@ function user_register_submit($form, &$form_state) {
  * @see user_register_validate()
  * @see user_register_submit()
  */
-function user_register() {
+function user_register($form, &$form_state) {
   global $user;
 
   $admin = user_access('administer users');
@@ -3052,7 +3049,7 @@ function user_register() {
   }
 
   // Start with the default user edit fields.
-  $form = user_edit_form($form_state, NULL, NULL, TRUE);
+  $form = user_edit_form($form, $form_state, NULL, NULL, TRUE);
   if ($admin) {
     $form['account']['notify'] = array(
      '#type' => 'checkbox',

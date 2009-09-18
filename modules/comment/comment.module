@@ -1616,7 +1616,7 @@ function comment_get_display_page($cid, $node_type) {
  * @see comment_form_validate()
  * @see comment_form_submit()
  */
-function comment_form(&$form_state, $comment) {
+function comment_form($form, &$form_state, $comment) {
   global $user;
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
@@ -1634,7 +1634,6 @@ function comment_form(&$form_state, $comment) {
   $comment += array('name' => '', 'mail' => '', 'homepage' => '');
   $comment = (object) $comment;
 
-  $form = array();
   if (isset($form_state['comment_preview'])) {
     $form += $form_state['comment_preview'];
   }

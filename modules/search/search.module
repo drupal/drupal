@@ -864,8 +864,7 @@ function search_get_keys() {
  * @return
  *   An HTML string containing the search form.
  */
-function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prompt = NULL) {
-
+function search_form($form, &$form_state, $action = '', $keys = '', $type = NULL, $prompt = NULL) {
   // Add CSS
   drupal_add_css(drupal_get_path('module', 'search') . '/search.css', array('preprocess' => FALSE));
 
@@ -876,10 +875,8 @@ function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prom
     $prompt = t('Enter your keywords');
   }
 
-  $form = array(
-    '#action' => $action,
-    '#attributes' => array('class' => array('search-form')),
-  );
+  $form['#action'] = $action;
+  $form['#attributes']['class'][] = 'search-form';
   $form['module'] = array('#type' => 'value', '#value' => $type);
   $form['basic'] = array('#type' => 'item', '#title' => $prompt, '#id' => 'edit-keys');
   $form['basic']['inline'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
@@ -906,7 +903,7 @@ function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prom
  * @see search-theme-form.tpl.php
  * @see search-block-form.tpl.php
  */
-function search_box(&$form_state, $form_id) {
+function search_box($form, &$form_state, $form_id) {
   $form[$form_id] = array(
     '#title' => t('Search this site'),
     '#type' => 'textfield',

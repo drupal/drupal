@@ -91,7 +91,7 @@
  *   format.
  *
  * @code
- *   function mymodule_filter_settings(&$form_state, $filter, $defaults) {
+ *   function mymodule_filter_settings($form, &$form_state, $filter, $defaults) {
  *     $form['mymodule_url_length'] = array(
  *       '#type' => 'textfield',
  *       '#title' => t('Maximum link text length'),

@@ -966,8 +966,6 @@ class SystemSettingsForm extends DrupalWebTestCase {
    * Tests the handling of automatic defaults in systems_settings_form().
    */
   function testAutomaticDefaults() {
-    $form = array();
-
     $form['system_settings_form_test'] = array(
       '#type' => 'checkbox',
       '#default_value' => FALSE,

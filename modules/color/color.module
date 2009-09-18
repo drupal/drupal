@@ -31,7 +31,7 @@ function color_theme() {
  * Implement hook_form_FORM_ID_alter().
  */
 function color_form_system_theme_settings_alter(&$form, &$form_state) {
-  if (color_get_info(arg(3)) && function_exists('gd_info')) {
+  if (isset($form_state['args'][0]) && ($theme = $form_state['args'][0]) && color_get_info($theme) && function_exists('gd_info')) {
     $form['color'] = array(
       '#type' => 'fieldset',
       '#title' => t('Color scheme'),
@@ -39,7 +39,7 @@ function color_form_system_theme_settings_alter(&$form, &$form_state) {
       '#attributes' => array('id' => 'color_scheme_form'),
       '#theme' => 'color_scheme_form',
     );
-    $form['color'] += color_scheme_form($form_state, arg(3));
+    $form['color'] += color_scheme_form($form, $form_state, $theme);
     $form['#submit'][] = 'color_scheme_form_submit';
   }
 }
@@ -139,7 +139,8 @@ function color_get_palette($theme, $default = FALSE) {
 /**
  * Form callback. Returns the configuration form.
  */
-function color_scheme_form(&$form_state, $theme) {
+function color_scheme_form($form, &$form_state, $theme) {
+  $form = array();
   $base = drupal_get_path('module', 'color');
   $info = color_get_info($theme);
 
@@ -195,7 +196,7 @@ function color_scheme_form(&$form_state, $theme) {
       '#size' => 8,
     );
   }
-  $form['theme'] = array('#type' => 'value', '#value' => arg(3));
+  $form['theme'] = array('#type' => 'value', '#value' => $theme);
   $form['info'] = array('#type' => 'value', '#value' => $info);
 
   return $form;

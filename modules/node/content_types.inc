@@ -57,7 +57,7 @@ function theme_node_admin_overview($name, $type) {
 /**
  * Generates the node type editing form.
  */
-function node_type_form(&$form_state, $type = NULL) {
+function node_type_form($form, &$form_state, $type = NULL) {
   if (!isset($type->type)) {
     // This is a new type. Node module managed types are custom and unlocked.
     $type = node_type_set_defaults(array('custom' => 1, 'locked' => 0));
@@ -415,7 +415,7 @@ function node_type_reset($type) {
 /**
  * Menu callback; delete a single content type.
  */
-function node_type_delete_confirm(&$form_state, $type) {
+function node_type_delete_confirm($form, &$form_state, $type) {
   $form['type'] = array('#type' => 'value', '#value' => $type->type);
   $form['name'] = array('#type' => 'value', '#value' => $type->name);
 

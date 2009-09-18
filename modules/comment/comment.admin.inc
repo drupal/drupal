@@ -34,7 +34,7 @@ function comment_admin($type = 'new') {
  * @see comment_admin_overview_submit()
  * @see theme_comment_admin_overview()
  */
-function comment_admin_overview($type = 'new', $arg) {
+function comment_admin_overview($form, &$form_state, $arg) {
   // Build an 'Update options' form.
   $form['options'] = array(
     '#type' => 'fieldset',
@@ -159,7 +159,7 @@ function comment_admin_overview_submit($form, &$form_state) {
  * @ingroup forms
  * @see comment_multiple_delete_confirm_submit()
  */
-function comment_multiple_delete_confirm(&$form_state) {
+function comment_multiple_delete_confirm($form, &$form_state) {
   $edit = $form_state['input'];
 
   $form['comments'] = array(
@@ -232,8 +232,7 @@ function comment_delete_page($cid = NULL) {
  * @ingroup forms
  * @see comment_confirm_delete_submit()
  */
-function comment_confirm_delete(&$form_state, $comment) {
-  $form = array();
+function comment_confirm_delete($form, &$form_state, $comment) {
   $form['#comment'] = $comment;
   return confirm_form(
     $form,

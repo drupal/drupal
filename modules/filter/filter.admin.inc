@@ -13,13 +13,12 @@
  * @ingroup forms
  * @see filter_admin_overview_submit()
  */
-function filter_admin_overview() {
-
+function filter_admin_overview($form) {
   // Overview of all formats.
   $formats = filter_formats();
   $error = FALSE;
 
-  $form = array('#tree' => TRUE);
+  $form['#tree'] = TRUE;
   foreach ($formats as $id => $format) {
     $roles = array();
     foreach (user_roles() as $rid => $name) {
@@ -111,7 +110,7 @@ function filter_admin_format_page($format = NULL) {
  * @see filter_admin_format_form_validate()
  * @see filter_admin_format_form_submit()
  */
-function filter_admin_format_form(&$form_state, $format) {
+function filter_admin_format_form($form, &$form_state, $format) {
   $default = ($format->format == variable_get('filter_default_format', 1));
   if ($default) {
     $help = t('All roles for the default format must be enabled and cannot be changed.');
@@ -219,7 +218,7 @@ function filter_admin_format_form_submit($form, &$form_state) {
  * @ingroup forms
  * @see filter_admin_delete_submit()
  */
-function filter_admin_delete(&$form_state, $format) {
+function filter_admin_delete($form, &$form_state, $format) {
   if ($format) {
     if ($format->format != variable_get('filter_default_format', 1)) {
       $form['#format'] = $format;
@@ -269,7 +268,7 @@ function filter_admin_configure_page($format) {
  *
  * @ingroup forms
  */
-function filter_admin_configure(&$form_state, $format) {
+function filter_admin_configure($form, &$form_state, $format) {
   $filters = filter_list_format($format->format);
   $filter_info = filter_get_filters();
 
@@ -279,7 +278,7 @@ function filter_admin_configure(&$form_state, $format) {
       // Pass along stored filter settings and default settings, but also the
       // format object and all filters to allow for complex implementations.
       $defaults = (isset($filter_info[$name]['default settings']) ? $filter_info[$name]['default settings'] : array());
-      $settings_form = $filter_info[$name]['settings callback']($form_state, $filters[$name], $defaults, $format, $filters);
+      $settings_form = $filter_info[$name]['settings callback']($form, $form_state, $filters[$name], $defaults, $format, $filters);
       if (isset($settings_form) && is_array($settings_form)) {
         $form['settings'][$name] = array(
           '#type' => 'fieldset',
@@ -339,7 +338,7 @@ function filter_admin_order_page($format) {
  * @see theme_filter_admin_order()
  * @see filter_admin_order_submit()
  */
-function filter_admin_order(&$form_state, $format = NULL) {
+function filter_admin_order($form, &$form_state, $format = NULL) {
   // Get list (with forced refresh).
   $filters = filter_list_format($format->format);
 

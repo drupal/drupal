@@ -274,7 +274,7 @@ function _dblog_format_message($dblog) {
  * @see dblog_filter_form_submit()
  * @see dblog_filter_form_validate()
  */
-function dblog_filter_form() {
+function dblog_filter_form($form) {
   $filters = dblog_filters();
 
   $form['filters'] = array(
@@ -347,7 +347,7 @@ function dblog_filter_form_submit($form, &$form_state) {
  * @ingroup forms
  * @see dblog_clear_log_submit()
  */
-function dblog_clear_log_form() {
+function dblog_clear_log_form($form) {
   $form['dblog_clear'] = array(
     '#type' => 'fieldset',
     '#title' => t('Clear log messages'),
@@ -367,7 +367,7 @@ function dblog_clear_log_form() {
 /**
  * Submit callback: clear database with log messages.
  */
-function dblog_clear_log_submit(&$form_state, $form) {
+function dblog_clear_log_submit() {
   db_delete('watchdog')->execute();
   drupal_set_message(t('Database log cleared.'));
 }

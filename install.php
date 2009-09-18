@@ -801,7 +801,7 @@ function install_verify_settings() {
  * @return
  *   The form API definition for the database configuration form.
  */
-function install_settings_form(&$form_state, &$install_state) {
+function install_settings_form($form, &$form_state, &$install_state) {
   global $databases, $db_prefix;
   $profile = $install_state['parameters']['profile'];
   $install_locale = $install_state['parameters']['locale'];
@@ -1069,7 +1069,7 @@ function _install_select_profile($profiles) {
  * @param $profile_files
  *   Array of .profile files, as returned from file_scan_directory().
  */
-function install_select_profile_form(&$form_state, $profile_files) {
+function install_select_profile_form($form, &$form_state, $profile_files) {
   $profiles = array();
   $names = array();
 
@@ -1205,7 +1205,7 @@ function install_select_locale(&$install_state) {
 /**
  * Form API array definition for language selection.
  */
-function install_select_locale_form(&$form_state, $locales) {
+function install_select_locale_form($form, &$form_state, $locales) {
   include_once DRUPAL_ROOT . '/includes/iso.inc';
   $languages = _locale_get_predefined_list();
   foreach ($locales as $locale) {
@@ -1337,7 +1337,7 @@ function install_import_locales(&$install_state) {
  * @return
  *   The form API definition for the site configuration form.
  */
-function install_configure_form(&$form_state, &$install_state) {
+function install_configure_form($form, &$form_state, &$install_state) {
   if (variable_get('site_name', FALSE) || variable_get('site_mail', FALSE)) {
     // Site already configured: This should never happen, means re-running the
     // installer, possibly by an attacker after the 'install_task' variable got
@@ -1382,7 +1382,7 @@ function install_configure_form(&$form_state, &$install_state) {
   drupal_get_schema(NULL, TRUE);
 
   // Return the form.
-  return _install_configure_form($form_state, $install_state);
+  return _install_configure_form($form, $form_state, $install_state);
 }
 
 /**
@@ -1535,7 +1535,7 @@ function install_check_requirements($install_state) {
 /**
  * Form API array definition for site configuration.
  */
-function _install_configure_form(&$form_state, &$install_state) {
+function _install_configure_form($form, &$form_state, &$install_state) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
 
   $form['site_information'] = array(

@@ -13,9 +13,9 @@
  * @see taxonomy_overview_vocabularies_submit()
  * @see theme_taxonomy_overview_vocabularies()
  */
-function taxonomy_overview_vocabularies() {
+function taxonomy_overview_vocabularies($form) {
   $vocabularies = taxonomy_get_vocabularies();
-  $form = array('#tree' => TRUE);
+  $form['#tree'] = TRUE;
   foreach ($vocabularies as $vocabulary) {
     $types = array();
     foreach ($vocabulary->nodes as $type) {
@@ -102,7 +102,7 @@ function theme_taxonomy_overview_vocabularies($form) {
  * @ingroup forms
  * @see taxonomy_form_vocabulary_submit()
  */
-function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
+function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
   if (!is_array($edit)) {
     $edit = (array)$edit;
   }
@@ -121,7 +121,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
   $form['#vocabulary'] = (object) $edit;
   // Check whether we need a deletion confirmation form.
   if (isset($form_state['confirm_delete']) && isset($form_state['values']['vid'])) {
-    return taxonomy_vocabulary_confirm_delete($form_state, $form_state['values']['vid']);
+    return taxonomy_vocabulary_confirm_delete($form, $form_state, $form_state['values']['vid']);
   }
   $form['name'] = array(
     '#type' => 'textfield',
@@ -278,7 +278,7 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
  * @see taxonomy_overview_terms_submit()
  * @see theme_taxonomy_overview_terms()
  */
-function taxonomy_overview_terms(&$form_state, $vocabulary) {
+function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
   global $pager_page_array, $pager_total, $pager_total_items;
 
   // Check for confirmation forms.
@@ -286,11 +286,9 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
     return taxonomy_vocabulary_confirm_reset_alphabetical($form_state, $vocabulary->vid);
   }
 
-  $form = array(
-    '#vocabulary' => $vocabulary,
-    '#tree' => TRUE,
-    '#parent_fields' => FALSE,
-  );
+  $form['#vocabulary'] = $vocabulary;
+  $form['#tree'] = TRUE;
+  $form['#parent_fields'] = FALSE;
 
   $page            = isset($_GET['page']) ? $_GET['page'] : 0;
   $page_increment  = variable_get('taxonomy_terms_per_page_admin', 100);  // Number of terms per page.
@@ -677,7 +675,7 @@ function theme_taxonomy_overview_terms($form) {
  * @ingroup forms
  * @see taxonomy_form_term_submit()
  */
-function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
+function taxonomy_form_term($form, &$form_state, $vocabulary, $edit = array()) {
   $edit += array(
     'name' => '',
     'description' => '',
@@ -700,10 +698,10 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
 
   // Check for confirmation forms.
   if (isset($form_state['confirm_delete'])) {
-    return array_merge($form, taxonomy_term_confirm_delete($form_state, $edit['tid']));
+    return array_merge($form, taxonomy_term_confirm_delete($form, $form_state, $edit['tid']));
   }
   elseif (isset($form_state['confirm_parents'])) {
-    return array_merge($form, taxonomy_term_confirm_parents($form_state, $vocabulary));
+    return array_merge($form, taxonomy_term_confirm_parents($form, $form_state, $vocabulary));
   }
 
   $form['identification'] = array(
@@ -885,8 +883,7 @@ function taxonomy_form_term_submit_builder($form, &$form_state) {
  * @ingroup forms
  * @see taxonomy_form_term()
  */
-function taxonomy_term_confirm_parents(&$form_state, $vocabulary) {
-  $form = array();
+function taxonomy_term_confirm_parents($form, &$form_state, $vocabulary) {
   foreach (element_children($form_state['values']) as $key) {
     $form[$key] = array(
       '#type' => 'value',
@@ -905,7 +902,7 @@ function taxonomy_term_confirm_parents(&$form_state, $vocabulary) {
  * @ingroup forms
  * @see taxonomy_term_confirm_delete_submit()
  */
-function taxonomy_term_confirm_delete(&$form_state, $tid) {
+function taxonomy_term_confirm_delete($form, &$form_state, $tid) {
   $term = taxonomy_term_load($tid);
 
   $form['type'] = array('#type' => 'value', '#value' => 'term');
@@ -942,7 +939,7 @@ function taxonomy_term_confirm_delete_submit($form, &$form_state) {
  * @ingroup forms
  * @see taxonomy_vocabulary_confirm_delete_submit()
  */
-function taxonomy_vocabulary_confirm_delete(&$form_state, $vid) {
+function taxonomy_vocabulary_confirm_delete($form, &$form_state, $vid) {
   $vocabulary = taxonomy_vocabulary_load($vid);
 
   $form['#id'] = 'taxonomy_vocabulary_confirm_delete';
@@ -978,7 +975,7 @@ function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
  * @ingroup forms
  * @see taxonomy_vocabulary_confirm_reset_alphabetical_submit()
  */
-function taxonomy_vocabulary_confirm_reset_alphabetical(&$form_state, $vid) {
+function taxonomy_vocabulary_confirm_reset_alphabetical($form, &$form_state, $vid) {
   $vocabulary = taxonomy_vocabulary_load($vid);
 
   $form['type'] = array('#type' => 'value', '#value' => 'vocabulary');

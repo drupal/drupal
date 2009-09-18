@@ -2719,10 +2719,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
  * Implement hook_form().
  */
 function node_content_form($node, $form_state) {
-
   $type = node_type_get_type($node);
-
-  $form = array();
 
   if ($type->has_title) {
     $form['title'] = array(

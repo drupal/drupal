@@ -40,7 +40,7 @@ function theme_menu_admin_overview($title, $name, $description) {
  * Shows for one menu the menu links accessible to the current user and
  * relevant operations.
  */
-function menu_overview_form(&$form_state, $menu) {
+function menu_overview_form($form, &$form_state, $menu) {
   global $menu_admin;
   $sql = "
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
@@ -60,7 +60,7 @@ function menu_overview_form(&$form_state, $menu) {
   menu_tree_check_access($tree, $node_links);
   $menu_admin = FALSE;
 
-  $form = _menu_overview_tree_form($tree);
+  $form = array_merge($form, _menu_overview_tree_form($tree));
   $form['#menu'] =  $menu;
   if (element_children($form)) {
     $form['submit'] = array(
@@ -243,7 +243,7 @@ function theme_menu_overview_form($form) {
 /**
  * Menu callback; Build the menu link editing form.
  */
-function menu_edit_item(&$form_state, $type, $item, $menu) {
+function menu_edit_item($form, &$form_state, $type, $item, $menu) {
 
   $form['menu'] = array(
     '#type' => 'fieldset',
@@ -404,7 +404,7 @@ function menu_edit_item_submit($form, &$form_state) {
 /**
  * Menu callback; Build the form that handles the adding/editing of a custom menu.
  */
-function menu_edit_menu(&$form_state, $type, $menu = array()) {
+function menu_edit_menu($form, &$form_state, $type, $menu = array()) {
   $system_menus = menu_list_system_menus();
   $menu += array('menu_name' => '', 'title' => '', 'description' => '');
 
@@ -497,7 +497,7 @@ function menu_delete_menu_page($menu) {
 /**
  * Build a confirm form for deletion of a custom menu.
  */
-function menu_delete_menu_confirm(&$form_state, $menu) {
+function menu_delete_menu_confirm($form, &$form_state, $menu) {
   $form['#menu'] = $menu;
   $caption = '';
   $num_links = db_query("SELECT COUNT(*) FROM {menu_links} WHERE menu_name = :menu", array(':menu' => $menu['menu_name']))->fetchField();
@@ -639,7 +639,7 @@ function menu_item_delete_page($item) {
 /**
  * Build a confirm form for deletion of a single menu link.
  */
-function menu_item_delete_form(&$form_state, $item) {
+function menu_item_delete_form($form, &$form_state, $item) {
   $form['#item'] = $item;
   return confirm_form($form, t('Are you sure you want to delete the custom menu link %item?', array('%item' => $item['link_title'])), 'admin/structure/menu-customize/' . $item['menu_name']);
 }
@@ -659,7 +659,7 @@ function menu_item_delete_form_submit($form, &$form_state) {
 /**
  * Menu callback; reset a single modified menu link.
  */
-function menu_reset_item_confirm(&$form_state, $item) {
+function menu_reset_item_confirm($form, &$form_state, $item) {
   $form['item'] = array('#type' => 'value', '#value' => $item);
   return confirm_form($form, t('Are you sure you want to reset the link %item to its default values?', array('%item' => $item['link_title'])), 'admin/structure/menu-customize/' . $item['menu_name'], t('Any customizations will be lost. This action cannot be undone.'), t('Reset'));
 }

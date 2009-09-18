@@ -1392,8 +1392,6 @@ function system_filetransfer_backend_form_ssh() {
  * Helper function because SSH and FTP backends share the same elements
  */
 function _system_filetransfer_backend_form_common() {
-  $form = array();
-
   $form['hostname'] = array (
     '#type' => 'textfield',
     '#title' => t('Host'),
@@ -2536,7 +2534,7 @@ function system_actions_manage() {
  * @return
  *   Form definition.
  */
-function system_actions_manage_form($form_state, $options = array()) {
+function system_actions_manage_form($form, $form_state, $options = array()) {
   $form['parent'] = array(
     '#type' => 'fieldset',
     '#title' => t('Make a new advanced action available'),
@@ -2582,7 +2580,7 @@ function system_actions_manage_form_submit($form, &$form_state) {
  * @return
  *   Form definition.
  */
-function system_actions_configure($form_state, $action = NULL) {
+function system_actions_configure($form, &$form_state, $action = NULL) {
   if ($action === NULL) {
     drupal_goto('admin/config/system/actions');
   }
@@ -2685,7 +2683,7 @@ function system_actions_configure_submit($form, &$form_state) {
  * @ingroup forms
  * @see system_actions_delete_form_submit()
  */
-function system_actions_delete_form($form_state, $action) {
+function system_actions_delete_form($form, $form_state, $action) {
 
   $form['aid'] = array(
     '#type' => 'hidden',

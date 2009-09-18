@@ -256,9 +256,7 @@ function field_test_entity_edit($entity) {
 /**
  * Form to set the value of fields attached to our entity.
  */
-function field_test_entity_form(&$form_state, $entity) {
-  $form = array();
-
+function field_test_entity_form($form, &$form_state, $entity) {
   if (isset($form_state['test_entity'])) {
     $entity = $form_state['test_entity'] + (array)$entity;
   }

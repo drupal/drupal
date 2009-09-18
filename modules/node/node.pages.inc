@@ -107,7 +107,7 @@ function node_object_prepare($node) {
 /**
  * Generate the node add/edit form array.
  */
-function node_form(&$form_state, $node) {
+function node_form($form, &$form_state, $node) {
   global $user;
 
   if (isset($form_state['node'])) {
@@ -453,7 +453,7 @@ function node_form_submit_build_node($form, &$form_state) {
 /**
  * Menu callback -- ask for confirmation of node deletion
  */
-function node_delete_confirm(&$form_state, $node) {
+function node_delete_confirm($form, &$form_state, $node) {
   $form['nid'] = array(
     '#type' => 'value',
     '#value' => $node->nid,
@@ -536,7 +536,7 @@ function node_revision_overview($node) {
 /**
  * Ask for confirmation of the reversion to prevent against CSRF attacks.
  */
-function node_revision_revert_confirm($form_state, $node_revision) {
+function node_revision_revert_confirm($form, $form_state, $node_revision) {
   $form['#node_revision'] = $node_revision;
   return confirm_form($form, t('Are you sure you want to revert to the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/' . $node_revision->nid . '/revisions', '', t('Revert'), t('Cancel'));
 }
@@ -556,7 +556,7 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
   $form_state['redirect'] = 'node/' . $node_revision->nid . '/revisions';
 }
 
-function node_revision_delete_confirm($form_state, $node_revision) {
+function node_revision_delete_confirm($form, $form_state, $node_revision) {
   $form['#node_revision'] = $node_revision;
   return confirm_form($form, t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/' . $node_revision->nid . '/revisions', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
 }

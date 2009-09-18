@@ -102,7 +102,7 @@ function book_outline($node) {
  *
  * @ingroup forms
  */
-function book_outline_form(&$form_state, $node) {
+function book_outline_form($form, &$form_state, $node) {
   if (!isset($node->book)) {
     // The node is not part of any book yet - set default options.
     $node->book = _book_link_defaults($node->nid);
@@ -186,7 +186,7 @@ function book_outline_form_submit($form, &$form_state) {
  *
  * @ingroup forms
  */
-function book_remove_form(&$form_state, $node) {
+function book_remove_form($form, &$form_state, $node) {
   $form['#node'] = $node;
   $title = array('%title' => $node->title);
 

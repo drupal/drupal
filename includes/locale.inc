@@ -166,9 +166,8 @@ function locale_languages_add_screen() {
 /**
  * Predefined language setup form.
  */
-function locale_languages_predefined_form() {
+function locale_languages_predefined_form($form) {
   $predefined = _locale_prepare_predefined_list();
-  $form = array();
   $form['language list'] = array('#type' => 'fieldset',
     '#title' => t('Predefined language'),
     '#collapsible' => TRUE,
@@ -186,8 +185,7 @@ function locale_languages_predefined_form() {
 /**
  * Custom language addition form.
  */
-function locale_languages_custom_form() {
-  $form = array();
+function locale_languages_custom_form($form) {
   $form['custom language'] = array('#type' => 'fieldset',
     '#title' => t('Custom language'),
     '#collapsible' => TRUE,
@@ -210,9 +208,8 @@ function locale_languages_custom_form() {
  * @param $langcode
  *   Language code of the language to edit.
  */
-function locale_languages_edit_form(&$form_state, $langcode) {
+function locale_languages_edit_form($form, &$form_state, $langcode) {
   if ($language = db_query("SELECT * FROM {languages} WHERE language = :language", array(':language' => $langcode))->fetchObject()) {
-    $form = array();
     _locale_languages_common_controls($form, $language);
     $form['submit'] = array(
       '#type' => 'submit',
@@ -406,7 +403,7 @@ function locale_languages_edit_form_submit($form, &$form_state) {
 /**
  * User interface for the language deletion confirmation screen.
  */
-function locale_languages_delete_form(&$form_state, $langcode) {
+function locale_languages_delete_form($form, &$form_state, $langcode) {
 
   // Do not allow deletion of English locale.
   if ($langcode == 'en') {
@@ -698,7 +695,7 @@ function locale_translation_filter_form_submit($form, &$form_state) {
 /**
  * User interface for the translation import screen.
  */
-function locale_translate_import_form() {
+function locale_translate_import_form($form) {
   // Get all languages, except English
   drupal_static_reset('language_list');
   $names = locale_language_list('name');
@@ -716,7 +713,6 @@ function locale_translate_import_form() {
     $default = key($names);
   }
 
-  $form = array();
   $form['import'] = array('#type' => 'fieldset',
     '#title' => t('Import translation'),
   );
@@ -816,7 +812,7 @@ function locale_translate_export_screen() {
  * @param $names
  *   An associate array with localized language names
  */
-function locale_translate_export_po_form(&$form_state, $names) {
+function locale_translate_export_po_form($form, &$form_state, $names) {
   $form['export'] = array('#type' => 'fieldset',
     '#title' => t('Export translation'),
     '#collapsible' => TRUE,
@@ -881,7 +877,7 @@ function locale_translate_export_po_form_submit($form, &$form_state) {
 /**
  * User interface for string editing.
  */
-function locale_translate_edit_form(&$form_state, $lid) {
+function locale_translate_edit_form($form, &$form_state, $lid) {
   // Fetch source string, if possible.
   $source = db_query('SELECT source, context, textgroup, location FROM {locales_source} WHERE lid = :lid', array(':lid' => $lid))->fetchObject();
   if (!$source) {
@@ -1051,7 +1047,7 @@ function locale_translate_delete_page($lid) {
 /**
  * User interface for the string deletion confirmation screen.
  */
-function locale_translate_delete_form(&$form_state, $source) {
+function locale_translate_delete_form($form, &$form_state, $source) {
   $form['lid'] = array('#type' => 'value', '#value' => $source->lid);
   return confirm_form($form, t('Are you sure you want to delete the string "%source"?', array('%source' => $source->source)), 'admin/config/regional/translate/translate', t('Deleting the string will remove all translations of this string in all languages. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }

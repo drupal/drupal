@@ -628,7 +628,7 @@ function poll_teaser($node) {
  * @see poll_vote()
  * @see phptemplate_preprocess_poll_vote()
  */
-function poll_view_voting(&$form_state, $node, $block = FALSE) {
+function poll_view_voting($form, &$form_state, $node, $block = FALSE) {
   if ($node->choice) {
     $list = array();
     foreach ($node->choice as $i => $choice) {
@@ -837,7 +837,7 @@ function template_preprocess_poll_bar(&$variables) {
  * @ingroup forms
  * @see poll_cancel()
  */
-function poll_cancel_form(&$form_state, $nid) {
+function poll_cancel_form($form, &$form_state, $nid) {
   // Store the nid so we can get to it in submit functions.
   $form['#nid'] = $nid;
 

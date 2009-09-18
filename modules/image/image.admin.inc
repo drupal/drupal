@@ -35,17 +35,13 @@ function image_style_list() {
  * @see image_style_form_submit()
  * @see image_style_name_validate()
  */
-function image_style_form(&$form_state, $style) {
+function image_style_form($form, &$form_state, $style) {
   $title = t('Edit %name style', array('%name' => $style['name']));
   drupal_set_title($title, PASS_THROUGH);
 
   $form_state['image_style'] = $style;
-  $form = array(
-    '#tree' => TRUE,
-    '#attached' => array(
-      'css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
-    ),
-  );
+  $form['#tree'] = TRUE;
+  $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array('preprocess' => FALSE);
 
   // Allow the name of the style to be changed.
   $form['name'] = array(
@@ -187,9 +183,7 @@ function image_style_form_submit($form, &$form_state) {
  * @see image_style_add_form_submit()
  * @see image_style_name_validate()
  */
-function image_style_add_form(&$form_state) {
-  $form = array();
-
+function image_style_add_form($form, &$form_state) {
   $form['name'] = array(
     '#type' => 'textfield',
     '#size' => '64',
@@ -243,9 +237,8 @@ function image_style_name_validate($element, $form_state) {
  * @ingroup forms
  * @see image_style_delete_form_submit()
  */
-function image_style_delete_form($form_state, $style) {
+function image_style_delete_form($form, $form_state, $style) {
   $form_state['image_style'] = $style;
-  $form = array();
 
   $replacement_styles = array_diff_key(image_style_options(), array($style['name'] => ''));
   $replacement_styles[''] = t('No replacement, just delete');
@@ -298,7 +291,7 @@ function image_style_delete_form_submit($form, &$form_state) {
  * @see image_crop_form()
  * @see image_effect_form_submit()
  */
-function image_effect_form(&$form_state, $style, $effect) {
+function image_effect_form($form, &$form_state, $style, $effect) {
   if (!empty($effect['data'])) {
     $title = t('Edit %label effect', array('%label' => $effect['label']));
   }
@@ -315,12 +308,8 @@ function image_effect_form(&$form_state, $style, $effect) {
     drupal_goto('admin/config/media/image-styles/edit/' . $style['name']);
   }
 
-  $form = array(
-    '#tree' => TRUE,
-    '#attached' => array(
-      'css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
-    ),
-  );
+  $form['#tree'] = TRUE;
+  $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array('preprocess' => FALSE);
   if (function_exists($effect['form callback'])) {
     $form['data'] = call_user_func($effect['form callback'], $effect['data']);
   }
@@ -365,11 +354,10 @@ function image_effect_form_submit($form, &$form_state) {
  * @ingroup forms
  * @see image_effect_delete_form_submit()
  */
-function image_effect_delete_form(&$form_state, $style, $effect) {
+function image_effect_delete_form($form, &$form_state, $style, $effect) {
   $form_state['image_style'] = $style;
   $form_state['image_effect'] = $effect;
 
-  $form = array();
   $question = t('Are you sure you want to delete the @effect effect from the %style style?', array('%style' => $style['name'], '@effect' => $effect['label']));
   return confirm_form($form, $question, 'admin/config/media/image-styles/edit/' . $style['name'], '', t('Delete'));
 }

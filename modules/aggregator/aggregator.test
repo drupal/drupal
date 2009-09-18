@@ -551,20 +551,20 @@ class ImportOPMLTestCase extends AggregatorTestCase {
   function validateImportFormFields() {
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
 
-    $form = array();
-    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
+    $edit = array();
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $edit, t('Import'));
     $this->assertRaw(t('You must <em>either</em> upload a file or enter a URL.'), t('Error if no fields are filled.'));
 
     $path = $this->getEmptyOpml();
-    $form = array(
+    $edit = array(
       'files[upload]' => $path,
       'remote' => file_create_url($path),
     );
-    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $edit, t('Import'));
     $this->assertRaw(t('You must <em>either</em> upload a file or enter a URL.'), t('Error if both fields are filled.'));
 
-    $form = array('remote' => 'invalidUrl://empty');
-    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
+    $edit = array('remote' => 'invalidUrl://empty');
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $edit, t('Import'));
     $this->assertText(t('This URL is not valid.'), t('Error if the URL is invalid.'));
 
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
@@ -581,8 +581,8 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
     $this->assertText(t('No new feed has been added.'), t('Attempting to upload invalid XML.'));
 
-    $form = array('remote' => file_create_url($this->getEmptyOpml()));
-    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
+    $edit = array('remote' => file_create_url($this->getEmptyOpml()));
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $edit, t('Import'));
     $this->assertText(t('No new feed has been added.'), t('Attempting to load empty OPML from remote URL.'));
 
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
@@ -604,12 +604,12 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $feeds[0] = $this->getFeedEditArray();
     $feeds[1] = $this->getFeedEditArray();
     $feeds[2] = $this->getFeedEditArray();
-    $form = array(
+    $edit = array(
       'files[upload]' => $this->getValidOpml($feeds),
       'refresh'       => '900',
       'category[1]'   => $category,
     );
-    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $edit, t('Import'));
     $this->assertRaw(t('A feed with the URL %url already exists.', array('%url' => $feeds[0]['url'])), t('Verifying that a duplicate URL was identified'));
     $this->assertRaw(t('A feed named %title already exists.', array('%title' => $feeds[1]['title'])), t('Verifying that a duplicate title was identified'));
 

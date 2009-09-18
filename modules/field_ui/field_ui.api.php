@@ -85,7 +85,6 @@ function hook_field_instance_settings_form($field, $instance) {
 function hook_field_widget_settings_form($field, $instance) {
   $widget = $instance['widget'];
   $settings = $widget['settings'];
-  $form = array();
 
   if ($widget['type'] == 'text_textfield') {
     $form['size'] = array(

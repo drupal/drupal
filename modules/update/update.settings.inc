@@ -9,9 +9,7 @@
 /**
  * Form builder for the update settings tab.
  */
-function update_settings() {
-  $form = array();
-
+function update_settings($form) {
   $notify_emails = variable_get('update_notify_emails', array());
   $form['update_notify_emails'] = array(
     '#type' => 'textarea',

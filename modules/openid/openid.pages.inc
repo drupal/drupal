@@ -93,7 +93,7 @@ function openid_user_add_submit($form, &$form_state) {
 /**
  * Menu callback; Delete the specified OpenID identity from the system.
  */
-function openid_user_delete_form($form_state, $account, $aid = 0) {
+function openid_user_delete_form($form, $form_state, $account, $aid = 0) {
   $authname = db_query("SELECT authname FROM {authmap} WHERE uid = :uid AND aid = :aid AND module = 'openid'", array(
     ':uid' => $account->uid,
     ':aid' => $aid,
@@ -102,14 +102,14 @@ function openid_user_delete_form($form_state, $account, $aid = 0) {
   return confirm_form(array(), t('Are you sure you want to delete the OpenID %authname for %user?', array('%authname' => $authname, '%user' => $account->name)), 'user/' . $account->uid . '/openid');
 }
 
-function openid_user_delete_form_submit(&$form_state, $form_values) {
+function openid_user_delete_form_submit($form, &$form_state) {
   $query = db_delete('authmap')
-    ->condition('uid', $form_state['#args'][0]->uid)
-    ->condition('aid', $form_state['#args'][1])
+    ->condition('uid', $form_state['args'][0]->uid)
+    ->condition('aid', $form_state['args'][1])
     ->condition('module', 'openid')
     ->execute();
   if ($query) {
     drupal_set_message(t('OpenID deleted.'));
   }
-  $form_state['#redirect'] = 'user/' . $form_state['#args'][0]->uid . '/openid';
+  $form_state['#redirect'] = 'user/' . $form_state['args'][0]->uid . '/openid';
 }

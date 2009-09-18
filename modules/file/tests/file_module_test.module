@@ -22,10 +22,8 @@ function file_module_test_menu() {
   return $items;
 }
 
-function file_module_test_form($form_state) {
-  $form = array(
-    '#tree' => TRUE,
-  );
+function file_module_test_form($form, $form_state) {
+  $form['#tree'] = TRUE;
 
   $form['file'] = array(
     '#type' => 'managed_file',

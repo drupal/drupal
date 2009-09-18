@@ -58,7 +58,7 @@ function aggregator_view() {
  * @see aggregator_form_feed_validate()
  * @see aggregator_form_feed_submit()
  */
-function aggregator_form_feed(&$form_state, stdClass $feed = NULL) {
+function aggregator_form_feed($form, &$form_state, stdClass $feed = NULL) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
   $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
 
@@ -196,7 +196,7 @@ function aggregator_form_feed_submit($form, &$form_state) {
   }
 }
 
-function aggregator_admin_remove_feed($form_state, $feed) {
+function aggregator_admin_remove_feed($form, $form_state, $feed) {
   return confirm_form(
     array(
       'feed' => array(
@@ -230,7 +230,7 @@ function aggregator_admin_remove_feed_submit($form, &$form_state) {
  * @see aggregator_form_opml_validate()
  * @see aggregator_form_opml_submit()
  */
-function aggregator_form_opml(&$form_state) {
+function aggregator_form_opml($form, &$form_state) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
 
   $form['upload'] = array(
@@ -390,7 +390,7 @@ function aggregator_admin_refresh_feed($feed) {
  *
  * @ingroup forms
  */
-function aggregator_admin_form($form_state) {
+function aggregator_admin_form($form, $form_state) {
   // Make sure configuration is sane.
   aggregator_sanitize_configuration();
 
@@ -496,7 +496,7 @@ function aggregator_admin_form_submit($form, &$form_state) {
  * @see aggregator_form_category_validate()
  * @see aggregator_form_category_submit()
  */
-function aggregator_form_category(&$form_state, $edit = array('title' => '', 'description' => '', 'cid' => NULL)) {
+function aggregator_form_category($form, &$form_state, $edit = array('title' => '', 'description' => '', 'cid' => NULL)) {
   $form['title'] = array('#type' => 'textfield',
     '#title' => t('Title'),
     '#default_value' => $edit['title'],

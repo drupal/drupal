@@ -44,7 +44,7 @@ function file_test_stream_wrappers() {
 /**
  * Form to test file uploads.
  */
-function _file_test_form(&$form_state) {
+function _file_test_form($form, &$form_state) {
   $form['file_test_upload'] = array(
     '#type' => 'file',
     '#title' => t('Upload an image'),

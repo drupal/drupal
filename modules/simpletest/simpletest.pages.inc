@@ -9,9 +9,7 @@
 /**
  * List tests arranged in groups that can be selected and run.
  */
-function simpletest_test_form() {
-  $form = array();
-
+function simpletest_test_form($form) {
   $form['tests'] = array(
     '#type' => 'fieldset',
     '#title' => t('Tests'),
@@ -196,9 +194,7 @@ function simpletest_test_form_submit($form, &$form_state) {
 /**
  * Test results form for $test_id.
  */
-function simpletest_result_form(&$form_state, $test_id) {
-  $form = array();
-
+function simpletest_result_form($form, &$form_state, $test_id) {
   // Make sure there are test results to display and a re-run is not being performed.
   $results = array();
   if (is_numeric($test_id) && !$results = simpletest_result_get($test_id)) {
@@ -417,9 +413,7 @@ function simpletest_result_status_image($status) {
 /**
  * Provides settings form for SimpleTest variables.
  */
-function simpletest_settings_form(&$form_state) {
-  $form = array();
-
+function simpletest_settings_form($form, &$form_state) {
   $form['general'] = array(
     '#type' => 'fieldset',
     '#title' => t('General'),

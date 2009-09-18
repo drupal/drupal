@@ -55,7 +55,7 @@ function _search_get_module_names() {
  * @see search_admin_settings_submit()
  * @see search_admin_reindex_submit()
  */
-function search_admin_settings() {
+function search_admin_settings($form) {
   // Collect some stats
   $remaining = 0;
   $total = 0;

@@ -95,7 +95,6 @@ function hook_search_status() {
  * @ingroup search
  */
 function hook_search_admin() {
-  $form = array();
   // Output form for defining rank factor weights.
   $form['content_ranking'] = array(
     '#type' => 'fieldset',

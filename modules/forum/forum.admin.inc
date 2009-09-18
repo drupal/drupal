@@ -27,7 +27,7 @@ function forum_form_main($type, $edit = array()) {
  * @ingroup forms
  * @see forum_form_submit()
  */
-function forum_form_forum(&$form_state, $edit = array()) {
+function forum_form_forum($form, &$form_state, $edit = array()) {
   $edit += array(
     'name' => '',
     'description' => '',
@@ -105,7 +105,7 @@ function forum_form_submit($form, &$form_state) {
  * @ingroup forms
  * @see forum_form_submit()
  */
-function forum_form_container(&$form_state, $edit = array()) {
+function forum_form_container($form, &$form_state, $edit = array()) {
   $edit += array(
     'name' => '',
     'description' => '',
@@ -160,7 +160,7 @@ function forum_form_container(&$form_state, $edit = array()) {
  *
  * @param $tid ID of the term to be deleted
  */
-function forum_confirm_delete(&$form_state, $tid) {
+function forum_confirm_delete($form, &$form_state, $tid) {
   $term = taxonomy_term_load($tid);
 
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
@@ -186,8 +186,7 @@ function forum_confirm_delete_submit($form, &$form_state) {
  *
  * @see system_settings_form()
  */
-function forum_admin_settings() {
-  $form = array();
+function forum_admin_settings($form) {
   $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500));
   $form['forum_hot_topic'] = array('#type' => 'select',
     '#title' => t('Hot topic threshold'),
@@ -215,12 +214,12 @@ function forum_admin_settings() {
 /**
  * Returns an overview list of existing forums and containers
  */
-function forum_overview(&$form_state) {
+function forum_overview($form, &$form_state) {
   module_load_include('inc', 'taxonomy', 'taxonomy.admin');
 
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
-  $form = taxonomy_overview_terms($form_state, $vocabulary);
+  $form = taxonomy_overview_terms($form, $form_state, $vocabulary);
 
   foreach (element_children($form) as $key) {
     if (isset($form[$key]['#term'])) {

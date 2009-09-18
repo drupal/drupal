@@ -84,8 +84,7 @@ function openid_redirect($url, $message) {
   exit;
 }
 
-function openid_redirect_form(&$form_state, $url, $message) {
-  $form = array();
+function openid_redirect_form($form, &$form_state, $url, $message) {
   $form['#action'] = $url;
   $form['#method'] = "post";
   foreach ($message as $key => $value) {

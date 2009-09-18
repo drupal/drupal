@@ -77,9 +77,8 @@ function book_admin_settings_validate($form, &$form_state) {
  *
  * @ingroup forms.
  */
-function book_admin_edit($form_state, $node) {
+function book_admin_edit($form, $form_state, $node) {
   drupal_set_title($node->title);
-  $form = array();
   $form['#node'] = $node;
   _book_admin_table($node, $form);
   $form['save'] = array(

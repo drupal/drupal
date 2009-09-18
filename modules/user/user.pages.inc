@@ -75,7 +75,7 @@ function user_pass_submit($form, &$form_state) {
 /**
  * Menu callback; process one time login link and redirects to the user page on success.
  */
-function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action = NULL) {
+function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $action = NULL) {
   global $user;
 
   // When processing the one-time login link, we have to make sure that a user
@@ -225,7 +225,7 @@ function user_edit($account, $category = 'account') {
  * @see user_profile_form_submit()
  * @see user_cancel_confirm_form_submit()
  */
-function user_profile_form($form_state, $account, $category = 'account') {
+function user_profile_form($form, $form_state, $account, $category = 'account') {
   global $user;
 
   $edit = (empty($form_state['values'])) ? (array)$account : $form_state['values'];
@@ -306,7 +306,7 @@ function user_edit_cancel_submit($form, &$form_state) {
  * @ingroup forms
  * @see user_edit_cancel_submit()
  */
-function user_cancel_confirm_form(&$form_state, $account) {
+function user_cancel_confirm_form($form, &$form_state, $account) {
   global $user;
 
   $form['_account'] = array('#type' => 'value', '#value' => $account);
@@ -451,7 +451,6 @@ function user_cancel_methods() {
 
   // Turn all methods into real form elements.
   $default_method = variable_get('user_cancel_method', 'user_cancel_block');
-  $form = array();
   foreach ($methods as $name => $method) {
     $form[$name] = array(
       '#type' => 'radio',
