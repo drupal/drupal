@@ -248,7 +248,8 @@ function book_block_view($delta = '') {
         $book_menus[$book_id] = menu_tree_output($pseudo_tree);
       }
     }
-    $block['content'] = theme('book_all_books_block', $book_menus);
+    $book_menus['#theme'] = 'book_all_books_block';
+    $block['content'] = $book_menus;
   }
   elseif ($current_bid) {
     // Only display this block when the user is browsing a book.
@@ -705,7 +706,7 @@ function book_children($book_link) {
     }
   }
 
-  return $children ? menu_tree_output($children) : '';
+  return $children ? drupal_render(menu_tree_output($children)) : '';
 }
 
 /**
@@ -889,6 +890,27 @@ function book_form_node_delete_confirm_alter(&$form, $form_state) {
  */
 function _book_link_defaults($nid) {
   return array('original_bid' => 0, 'menu_name' => '', 'nid' => $nid, 'bid' => 0, 'router_path' => 'node/%', 'plid' => 0, 'mlid' => 0, 'has_children' => 0, 'weight' => 0, 'module' => 'book', 'options' => array());
+}
+
+/**
+ * Process variables for book-all-books-block.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $book_menus
+ *
+ * All non-renderable elements are removed so that the template has full
+ * access to the structured data but can also simply iterate over all
+ * elements and render them (as in the default template).
+ *
+ * @see book-navigation.tpl.php
+ */
+function template_preprocess_book_all_books_block(&$variables) {
+  // Remove all non-renderable elements.
+  $elements = $variables['book_menus'];
+  $variables['book_menus'] = array();
+  foreach (element_children($elements) as $index) {
+    $variables['book_menus'][$index] = $elements[$index];
+  }
 }
 
 /**

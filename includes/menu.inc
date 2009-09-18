@@ -552,6 +552,14 @@ function _menu_check_access(&$item, $map) {
 function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   $callback = $item['title_callback'];
   $item['localized_options'] = $item['options'];
+  // All 'class' attributes are assumed to be an array during rendering, but
+  // links stored in the database may use an old string value.
+  // @todo In order to remove this code we need to implement a database update
+  //   including unserializing all existing link options and running this code
+  //   on them, as well as adding validation to menu_link_save().
+  if (isset($item['options']['attributes']['class']) && is_string($item['options']['attributes']['class'])) {
+    $item['localized_options']['attributes']['class'] = explode(' ', $item['options']['attributes']['class']);
+  }
   // If we are translating the title of a menu link, and its title is the same
   // as the corresponding router item, then we can use the title information
   // from the router. If it's customized, then we need to use the link title
@@ -805,16 +813,21 @@ function menu_tree($menu_name) {
 /**
  * Returns a rendered menu tree.
  *
+ * The menu item's LI element is given one of the following classes:
+ * - expanded: The menu item is showing its submenu.
+ * - collapsed: The menu item has a submenu which is not shown.
+ * - leaf: The menu item has no submenu.
+ *
  * @param $tree
  *   A data structure representing the tree as returned from menu_tree_data.
  * @return
- *   The rendered HTML of that data structure.
+ *   A structured array to be rendered by drupal_render().
  */
 function menu_tree_output($tree) {
-  $output = '';
+  $build = array();
   $items = array();
 
-  // Pull out just the menu items we are going to render so that we
+  // Pull out just the menu links we are going to render so that we
   // get an accurate count for the first/last classes.
   foreach ($tree as $data) {
     if (!$data['link']['hidden']) {
@@ -824,23 +837,47 @@ function menu_tree_output($tree) {
 
   $num_items = count($items);
   foreach ($items as $i => $data) {
-    $extra_class = array();
+    $class = array();
     if ($i == 0) {
-      $extra_class[] = 'first';
+      $class[] = 'first';
     }
     if ($i == $num_items - 1) {
-      $extra_class[] = 'last';
+      $class[] = 'last';
     }
-    $extra_class = implode(' ', $extra_class);
-    $link = theme('menu_item_link', $data['link']);
+    // Set a class if the link has children.
     if ($data['below']) {
-      $output .= theme('menu_item', $link, $data['link']['has_children'], menu_tree_output($data['below']), $data['link']['in_active_trail'], $extra_class);
+      $class[] = 'expanded';
+    }
+    elseif ($data['link']['has_children']) {
+      $class[] = 'collapsed';
     }
     else {
-      $output .= theme('menu_item', $link, $data['link']['has_children'], '', $data['link']['in_active_trail'], $extra_class);
+      $class[] = 'leaf';
     }
+    // Set a class if the link is in the active trail.
+    if ($data['link']['in_active_trail']) {
+      $class[] = 'active-trail';
+      $data['localized_options']['attributes']['class'][] = 'active-trail';
+    }
+
+    $element['#theme'] = 'menu_link';
+    $element['#attributes']['class'] = $class;
+    $element['#title'] = $data['link']['title'];
+    $element['#href'] = $data['link']['href'];
+    $element['#localized_options'] = !empty($data['localized_options']) ? $data['localized_options'] : array();
+    $element['#below'] = $data['below'] ? menu_tree_output($data['below']) : $data['below'];
+    $element['#original_link'] = $data['link'];
+    // Index using the link's unique mlid.
+    $build[$data['link']['mlid']] = $element;
   }
-  return $output ? theme('menu_tree', $output) : '';
+  if ($build) {
+    // Make sure drupal_render() does not re-order the links.
+    $build['#sorted'] = TRUE;
+    // Add the theme wrapper for outer markup.
+    $build['#theme_wrappers'][] = 'menu_tree';
+  }
+
+  return $build;
 }
 
 /**
@@ -1254,20 +1291,16 @@ function _menu_tree_data(&$links, $parents, $depth) {
 }
 
 /**
- * Generate the HTML output for a single menu link.
+ * Preprocess the rendered tree for theme_menu_tree.
  *
  * @ingroup themeable
  */
-function theme_menu_item_link($link) {
-  if (empty($link['localized_options'])) {
-    $link['localized_options'] = array();
-  }
-
-  return l($link['title'], $link['href'], $link['localized_options']);
+function template_preprocess_menu_tree(&$variables) {
+  $variables['tree'] = $variables['tree']['#children'];
 }
 
 /**
- * Generate the HTML output for a menu tree
+ * Theme wrapper for the HTML output for a menu sub-tree.
  *
  * @ingroup themeable
  */
@@ -1276,56 +1309,47 @@ function theme_menu_tree($tree) {
 }
 
 /**
- * Generate the HTML output for a menu item and submenu.
+ * Generate the HTML output for a menu link and submenu.
  *
- * The menu item's LI element is given one of the following classes:
- * - expanded: The menu item is showing its submenu.
- * - collapsed: The menu item has a submenu which is not shown.
- * - leaf: The menu item has no submenu.
+ * @param $element
+ *   Structured array data for a menu link.
  *
  * @ingroup themeable
- *
- * @param $link
- *   The fully-formatted link for this menu item.
- * @param $has_children
- *   Boolean value indicating if this menu item has children.
- * @param $menu
- *   Contains a fully-formatted submenu, if one exists for this menu item.
- *   Defaults to NULL.
- * @param $in_active_trail
- *   Boolean determining if the current page is below the menu item in the
- *   menu system. Defaults to FALSE.
- * @param $extra_class
- *   Extra classes that should be added to the class of the list item.
- *   Defaults to NULL.
  */
-function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FALSE, $extra_class = NULL) {
-  $class = ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf'));
-  if (!empty($extra_class)) {
-    $class .= ' ' . $extra_class;
+function theme_menu_link(array $element) {
+  $sub_menu = '';
+
+  if ($element['#below']) {
+    $sub_menu = drupal_render($element['#below']);
   }
-  if ($in_active_trail) {
-    $class .= ' active-trail';
-  }
-  return '<li class="' . $class . '">' . $link . $menu . "</li>\n";
+  $output = l($element['#title'], $element['#href'], $element['#localized_options']);
+  return '<li' . drupal_attributes($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 }
 
 /**
  * Generate the HTML output for a single local task link.
  *
+ * @param $link
+ *   A menu link array with 'title', 'href', and 'localized_options' keys.
+ * @param $active
+ *   A boolean indicating whether the local task is active.
+ *
  * @ingroup themeable
  */
 function theme_menu_local_task($link, $active = FALSE) {
-  return '<li ' . ($active ? 'class="active" ' : '') . '>' . $link . "</li>\n";
+  return '<li ' . ($active ? 'class="active" ' : '') . '>' . l($link['title'], $link['href'], $link['localized_options']) . "</li>\n";
 }
 
 /**
  * Generate the HTML output for a single local action link.
  *
+ * @param $link
+ *   A menu link array with 'title', 'href', and 'localized_options' keys.
+ *
  * @ingroup themeable
  */
 function theme_menu_local_action($link) {
-  return '<li>' . $link . "</li>\n";
+  return '<li>' . l($link['title'], $link['href'], $link['localized_options']) . "</li>\n";
 }
 
 /**
@@ -1528,17 +1552,18 @@ function menu_local_tasks($level = 0) {
       $action_count = 0;
       foreach ($children[$path] as $item) {
         if ($item['access']) {
+          $link = $item;
           // The default task is always active.
           if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
             // Find the first parent which is not a default local task or action.
             for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
-            $link = theme('menu_item_link', array('href' => $tasks[$p]['href']) + $item);
+            // Use the path of the parent instead.
+            $link['href'] = $tasks[$p]['href'];
             $tabs_current .= theme('menu_local_task', $link, TRUE);
             $next_path = $item['path'];
             $tab_count++;
           }
           else {
-            $link = theme('menu_item_link', $item);
             if ($item['type'] == MENU_LOCAL_TASK) {
               $tabs_current .= theme('menu_local_task', $link);
               $tab_count++;
@@ -1574,16 +1599,15 @@ function menu_local_tasks($level = 0) {
         }
         if ($item['access']) {
           $count++;
+          $link = $item;
           if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
             // Find the first parent which is not a default local task.
             for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
-            $link = theme('menu_item_link', array('href' => $tasks[$p]['href']) + $item);
+            // Use the path of the parent instead.
+            $link['href'] = $tasks[$p]['href'];
             if ($item['path'] == $router_item['path']) {
               $root_path = $tasks[$p]['path'];
             }
-          }
-          else {
-            $link = theme('menu_item_link', $item);
           }
           // We check for the active tab.
           if ($item['path'] == $path) {
