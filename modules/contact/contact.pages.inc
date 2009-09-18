@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.23 2009/07/20 18:51:33 dries Exp $
+// $Id: contact.pages.inc,v 1.24 2009/09/18 00:12:46 webchick Exp $
 
 /**
  * @file
@@ -171,7 +171,7 @@ function contact_personal_page($account) {
 /**
  * Form builder; the personal contact form.
  */
-function contact_personal_form(&$form_state, $recipient) {
+function contact_personal_form($form, &$form_state, $recipient) {
   global $user;
   $form['#token'] = $user->name . $user->mail;
   $form['recipient'] = array('#type' => 'value', '#value' => $recipient);

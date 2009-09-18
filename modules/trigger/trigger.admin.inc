@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.16 2009/09/01 16:50:12 webchick Exp $
+// $Id: trigger.admin.inc,v 1.17 2009/09/18 00:12:48 webchick Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ function trigger_assign($type = NULL) {
  * @ingroup forms
  * @see trigger_unassign_submit()
  */
-function trigger_unassign($form_state, $hook = NULL, $op = NULL, $aid = NULL) {
+function trigger_unassign($form, $form_state, $hook = NULL, $op = NULL, $aid = NULL) {
   if (!($hook && $op && $aid)) {
     drupal_goto('admin/structure/trigger/assign');
   }
@@ -114,7 +114,7 @@ function trigger_unassign_submit($form, &$form_state) {
  * @see trigger_assign_form_validate()
  * @see trigger_assign_form_submit()
  */
-function trigger_assign_form($form_state, $hook, $op, $description) {
+function trigger_assign_form($form, $form_state, $hook, $op, $description) {
   $form['hook'] = array(
     '#type' => 'hidden',
     '#value' => $hook,

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.settings.inc,v 1.8 2009/08/24 00:42:34 webchick Exp $
+// $Id: update.settings.inc,v 1.9 2009/09/18 00:12:48 webchick Exp $
 
 /**
  * @file
@@ -9,9 +9,7 @@
 /**
  * Form builder for the update settings tab.
  */
-function update_settings() {
-  $form = array();
-
+function update_settings($form) {
   $notify_emails = variable_get('update_notify_emails', array());
   $form['update_notify_emails'] = array(
     '#type' => 'textarea',

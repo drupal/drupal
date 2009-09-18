@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.13 2009/08/27 21:18:19 dries Exp $
+// $Id: filter.api.php,v 1.14 2009/09/18 00:12:46 webchick Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@
  *   format.
  *
  * @code
- *   function mymodule_filter_settings(&$form_state, $filter, $defaults) {
+ *   function mymodule_filter_settings($form, &$form_state, $filter, $defaults) {
  *     $form['mymodule_url_length'] = array(
  *       '#type' => 'textfield',
  *       '#title' => t('Maximum link text length'),

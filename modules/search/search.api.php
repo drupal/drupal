@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.15 2009/09/10 12:33:45 webchick Exp $
+// $Id: search.api.php,v 1.16 2009/09/18 00:12:47 webchick Exp $
 
 /**
  * @file
@@ -95,7 +95,6 @@ function hook_search_status() {
  * @ingroup search
  */
 function hook_search_admin() {
-  $form = array();
   // Output form for defining rank factor weights.
   $form['content_ranking'] = array(
     '#type' => 'fieldset',

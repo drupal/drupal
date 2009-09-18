@@ -1,5 +1,5 @@
 <?php
-// $Id: search.admin.inc,v 1.11 2009/08/29 21:05:16 dries Exp $
+// $Id: search.admin.inc,v 1.12 2009/09/18 00:12:47 webchick Exp $
 
 /**
  * @file
@@ -55,7 +55,7 @@ function _search_get_module_names() {
  * @see search_admin_settings_submit()
  * @see search_admin_reindex_submit()
  */
-function search_admin_settings() {
+function search_admin_settings($form) {
   // Collect some stats
   $remaining = 0;
   $total = 0;

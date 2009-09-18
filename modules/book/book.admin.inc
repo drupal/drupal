@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.21 2009/08/22 14:34:18 webchick Exp $
+// $Id: book.admin.inc,v 1.22 2009/09/18 00:12:45 webchick Exp $
 
 /**
  * @file
@@ -77,9 +77,8 @@ function book_admin_settings_validate($form, &$form_state) {
  *
  * @ingroup forms.
  */
-function book_admin_edit($form_state, $node) {
+function book_admin_edit($form, $form_state, $node) {
   drupal_set_title($node->title);
-  $form = array();
   $form['#node'] = $node;
   _book_admin_table($node, $form);
   $form['save'] = array(

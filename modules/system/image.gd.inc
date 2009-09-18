@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.12 2009/09/01 17:49:11 webchick Exp $
+// $Id: image.gd.inc,v 1.13 2009/09/18 00:12:48 webchick Exp $
 
 /**
  * @file
@@ -16,7 +16,6 @@
  */
 function image_gd_settings() {
   if (image_gd_check_settings()) {
-    $form = array();
     $form['status'] = array(
       '#markup' => t('The GD toolkit is installed and working properly.')
     );

@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.api.php,v 1.1 2009/08/19 13:31:13 webchick Exp $
+// $Id: field_ui.api.php,v 1.2 2009/09/18 00:12:46 webchick Exp $
 
 /**
  * @file
@@ -85,7 +85,6 @@ function hook_field_instance_settings_form($field, $instance) {
 function hook_field_widget_settings_form($field, $instance) {
   $widget = $instance['widget'];
   $settings = $widget['settings'];
-  $form = array();
 
   if ($widget['type'] == 'text_textfield') {
     $form['size'] = array(

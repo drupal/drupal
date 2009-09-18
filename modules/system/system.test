@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.75 2009/09/01 16:50:12 webchick Exp $
+// $Id: system.test,v 1.76 2009/09/18 00:12:48 webchick Exp $
 
 /**
  * Helper class for module test cases.
@@ -966,8 +966,6 @@ class SystemSettingsForm extends DrupalWebTestCase {
    * Tests the handling of automatic defaults in systems_settings_form().
    */
   function testAutomaticDefaults() {
-    $form = array();
-
     $form['system_settings_form_test'] = array(
       '#type' => 'checkbox',
       '#default_value' => FALSE,

@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.14 2009/08/19 12:56:47 dries Exp $
+// $Id: contact.admin.inc,v 1.15 2009/09/18 00:12:46 webchick Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function contact_admin_categories() {
 /**
  * Category edit page.
  */
-function contact_admin_edit($form_state = array(), $op, $contact = NULL) {
+function contact_admin_edit($form, $form_state = array(), $op, $contact = NULL) {
 
   if (empty($contact) || $op == 'add') {
     $contact = array(
@@ -138,7 +138,7 @@ function contact_admin_edit_submit($form, &$form_state) {
 /**
  * Category delete page.
  */
-function contact_admin_delete(&$form_state, $contact) {
+function contact_admin_delete($form, &$form_state, $contact) {
 
   $form['contact'] = array(
     '#type' => 'value',

@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.19 2009/09/15 19:46:04 webchick Exp $
+// $Id: openid.inc,v 1.20 2009/09/18 00:12:47 webchick Exp $
 
 /**
  * @file
@@ -84,8 +84,7 @@ function openid_redirect($url, $message) {
   exit;
 }
 
-function openid_redirect_form(&$form_state, $url, $message) {
-  $form = array();
+function openid_redirect_form($form, &$form_state, $url, $message) {
   $form['#action'] = $url;
   $form['#method'] = "post";
   foreach ($message as $key => $value) {

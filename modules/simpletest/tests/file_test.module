@@ -1,5 +1,5 @@
 <?php
-// $Id: file_test.module,v 1.16 2009/09/11 04:45:23 webchick Exp $
+// $Id: file_test.module,v 1.17 2009/09/18 00:12:48 webchick Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function file_test_stream_wrappers() {
 /**
  * Form to test file uploads.
  */
-function _file_test_form(&$form_state) {
+function _file_test_form($form, &$form_state) {
   $form['file_test_upload'] = array(
     '#type' => 'file',
     '#title' => t('Upload an image'),

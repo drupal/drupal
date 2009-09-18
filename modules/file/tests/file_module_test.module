@@ -1,5 +1,5 @@
 <?php
-// $Id: file_module_test.module,v 1.1 2009/08/29 12:52:32 dries Exp $
+// $Id: file_module_test.module,v 1.2 2009/09/18 00:12:46 webchick Exp $
 
 /**
  * @file
@@ -22,10 +22,8 @@ function file_module_test_menu() {
   return $items;
 }
 
-function file_module_test_form($form_state) {
-  $form = array(
-    '#tree' => TRUE,
-  );
+function file_module_test_form($form, $form_state) {
+  $form['#tree'] = TRUE;
 
   $form['file'] = array(
     '#type' => 'managed_file',
