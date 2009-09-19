@@ -1310,8 +1310,8 @@ function node_search_reset() {
  * Implement hook_search_status().
  */
 function node_search_status() {
-  $total = db_query('SELECT COUNT(*) FROM {node} WHERE status = %d', NODE_PUBLISHED)->fetchField();
-  $remaining = db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = %d AND d.sid IS NULL OR d.reindex <> 0", NODE_PUBLISHED)->fetchField();
+  $total = db_query('SELECT COUNT(*) FROM {node} WHERE status = :status', array(':status' => NODE_PUBLISHED))->fetchField();
+  $remaining = db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = :status AND d.sid IS NULL OR d.reindex <> 0", array(':status' => NODE_PUBLISHED))->fetchField();
   return array('remaining' => $remaining, 'total' => $total);
 }
 
