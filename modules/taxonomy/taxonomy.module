@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.510 2009/09/10 06:31:39 dries Exp $
+// $Id: taxonomy.module,v 1.511 2009/09/19 11:07:36 dries Exp $
 
 /**
  * @file
@@ -1700,27 +1700,6 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
     }
   }
   return implode(', ', $typed_tags);
-}
-
-/**
- * Implement hook_hook_info().
- */
-function taxonomy_hook_info() {
-  return array(
-    'taxonomy' => array(
-      'taxonomy' => array(
-        'insert' => array(
-          'runs when' => t('After saving a new term to the database'),
-        ),
-        'update' => array(
-          'runs when' => t('After saving an updated term to the database'),
-        ),
-        'delete' => array(
-          'runs when' => t('After deleting a term')
-        ),
-      ),
-    ),
-  );
 }
 
 /**
