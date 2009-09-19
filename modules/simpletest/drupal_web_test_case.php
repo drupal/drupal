@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.149 2009/09/17 03:12:41 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.150 2009/09/19 10:54:35 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -901,7 +901,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $role = new stdClass();
     $role->name = $name;
     user_role_save($role);
-    user_role_set_permissions($role->name, $permissions);
+    user_role_grant_permissions($role->rid, $permissions);
 
     $this->assertTrue(isset($role->rid), t('Created role of name: @name, id: @rid', array('@name' => $name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
     if ($role && !empty($role->rid)) {
