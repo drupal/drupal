@@ -24,7 +24,7 @@ if ($args['execute-batch']) {
 }
 else {
   // Run administrative functions as CLI.
-  simpletest_script_init("PHP CLI");
+  simpletest_script_init(NULL);
 }
 
 // Bootstrap to perform initial validation or other operations.
