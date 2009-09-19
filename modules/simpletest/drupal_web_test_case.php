@@ -1728,7 +1728,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[text()="' . $label . '"]');
-    $message = ($message ?  $message : t('Link with label "!label" found.', array('!label' => $label)));
+    $message = ($message ?  $message : t('Link with label %label found.', array('%label' => $label)));
     return $this->assert(isset($links[$index]), $message, $group);
   }
 
@@ -1748,7 +1748,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function assertNoLink($label, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[text()="' . $label . '"]');
-    $message = ($message ?  $message : t('Link with label "!label" not found.', array('!label' => $label)));
+    $message = ($message ?  $message : t('Link with label %label not found.', array('%label' => $label)));
     return $this->assert(empty($links), $message, $group);
   }
 
@@ -1775,7 +1775,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
     }
 
-    $this->assertTrue(isset($urls[$index]), t('Clicked link "!label" (!url_target) from !url_before', array('!label' => $label, '!url_target' => $url_target, '!url_before' => $url_before)), t('Browser'));
+    $this->assertTrue(isset($urls[$index]), t('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), t('Browser'));
 
     if (isset($urls[$index])) {
       return $this->drupalGet($url_target);
