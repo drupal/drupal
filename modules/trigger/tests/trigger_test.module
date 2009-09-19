@@ -10,22 +10,64 @@
  * Implementation of hook_action_info().
  */
 function trigger_test_action_info() {
-  // Register an action that can be assigned to the trigger "cron run".
+  // Register an action that can be assigned to the trigger "cron".
   return array(
     'trigger_test_system_cron_action' => array(
       'type' => 'system',
-      'description' => t('Cron test action'),
+      'label' => t('Cron test action'),
       'configurable' => FALSE,
-      'hooks' => array(
-        'cron' => array('run'),
-      ),
+      'triggers' => array('cron'),
     ),
     'trigger_test_system_cron_conf_action' => array(
       'type' => 'system',
-      'description' => t('Cron test configurable action'),
+      'label' => t('Cron test configurable action'),
       'configurable' => TRUE,
-      'hooks' => array(
-        'cron' => array('run'),
+      'triggers' => array('cron'),
+    ),
+    'trigger_test_generic_action' => array(
+      'type' => 'system',
+      'label' => t('Generic test action'),
+      'configurable' => FALSE,
+      'triggers' => array(
+        'taxonomy_term_insert',
+        'taxonomy_term_update',
+        'taxonomy_delete',
+        'comment_insert',
+        'comment_update',
+        'comment_delete',
+        'user_insert',
+        'user_update',
+        'user_delete',
+        'user_login',
+        'user_logout',
+        'user_view',
+      ),
+    ),
+    'trigger_test_generic_any_action' => array(
+      'type' => 'system',
+      'label' => t('Generic test action for any trigger'),
+      'configurable' => FALSE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_trigger_info().
+ */
+function trigger_test_trigger_info() {
+  // Register triggers that this module provides. The first is an additional
+  // node trigger and the second is our own, which should create a new tab
+  // on the trigger assignment page.
+  return array(
+    'node' => array(
+      'node_triggertest' => array(
+        'runs when' => t('A test trigger is fired'),
+      ),
+    ),
+    'trigger_test' => array(
+      'trigger_test_triggertest' => array(
+        'runs when' => t('Another test trigger is fired'),
       ),
     ),
   );
@@ -73,4 +115,20 @@ function trigger_test_system_cron_conf_action_submit($form, $form_state) {
     'subject' => $form_values['subject'],
   );
   return $params;
+}
+
+/**
+ * Action fired during the "taxonomy", "comment", and "user" trigger tests.
+ */
+function trigger_test_generic_action($context) {
+  // Indicate successful execution by setting a persistent variable.
+  variable_set('trigger_test_generic_action', TRUE);
+}
+
+/**
+ * Action fired during the additional trigger tests.
+ */
+function trigger_test_generic_any_action($context) {
+  // Indicate successful execution by setting a persistent variable.
+  variable_set('trigger_test_generic_any_action', TRUE);
 }

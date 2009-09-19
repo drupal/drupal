@@ -59,7 +59,7 @@ class TriggerContentTestCase extends DrupalWebTestCase {
       $this->assertRaw(t('The action you chose is already assigned to that trigger.'), t('Check to make sure an error occurs when assigning an action to a trigger twice.'));
 
       // Test 3: The action should be able to be unassigned from a trigger.
-      $this->drupalPost('admin/structure/trigger/unassign/node/presave/' . $hash, array(), t('Unassign'));
+      $this->drupalPost('admin/structure/trigger/unassign/node/node_presave/' . $hash, array(), t('Unassign'));
       $this->assertRaw(t('Action %action has been unassigned.', array('%action' => ucfirst($info['name']))), t('Check to make sure the @action action can be unassigned from the trigger.', array('@action' => $info['name'])));
       $assigned = db_query("SELECT COUNT(*) FROM {trigger_assignments} WHERE aid IN (:keys)", array(':keys' => $content_actions))->fetchField();
       $this->assertFalse($assigned, t('Check to make sure unassign worked properly at the database level.'));
@@ -79,32 +79,32 @@ class TriggerContentTestCase extends DrupalWebTestCase {
       'node_publish_action' => array(
         'property' => 'status',
         'expected' => 1,
-        'name' => t('publish post'),
+        'name' => t('publish content'),
       ),
       'node_unpublish_action' => array(
         'property' => 'status',
         'expected' => 0,
-        'name' => t('unpublish post'),
+        'name' => t('unpublish content'),
       ),
       'node_make_sticky_action' => array(
         'property' => 'sticky',
         'expected' => 1,
-        'name' => t('make post sticky'),
+        'name' => t('make content sticky'),
       ),
       'node_make_unsticky_action' => array(
         'property' => 'sticky',
         'expected' => 0,
-        'name' => t('make post unsticky'),
+        'name' => t('make content unsticky'),
       ),
       'node_promote_action' => array(
         'property' => 'promote',
         'expected' => 1,
-        'name' => t('promote post to front page'),
+        'name' => t('promote content to front page'),
       ),
       'node_unpromote_action' => array(
         'property' => 'promote',
         'expected' => 0,
-        'name' => t('remove post from front page'),
+        'name' => t('remove content from front page'),
       ),
     );
     return $info[$action];
@@ -138,41 +138,161 @@ class TriggerCronTestCase extends DrupalWebTestCase {
     // Create an administrative user.
     $test_user = $this->drupalCreateUser(array('administer actions'));
     $this->drupalLogin($test_user);
- 
+
     // Assign a non-configurable action to the cron run trigger.
     $edit = array('aid' => md5('trigger_test_system_cron_action'));
-    $this->drupalPost('admin/structure/trigger/cron', $edit, t('Assign'));
- 
+    $this->drupalPost('admin/structure/trigger/system', $edit, t('Assign'));
+
     // Assign a configurable action to the cron trigger.
     $hash = md5('trigger_test_system_cron_conf_action');
-    $action_description = $this->randomName();
+    $action_label = $this->randomName();
     $edit = array(
-      'actions_description' => $action_description,
-      'subject' => $action_description,
+      'actions_label' => $action_label,
+      'subject' => $action_label,
     );
     $this->drupalPost('admin/config/system/actions/configure/' . $hash, $edit, t('Save'));
     $edit = array('aid' => md5('1'));
-    $this->drupalPost('admin/structure/trigger/cron', $edit, t('Assign'));
- 
+    $this->drupalPost('admin/structure/trigger/system', $edit, t('Assign'));
+
     // Add a second configurable action to the cron trigger.
-    $action_description = $this->randomName();
+    $action_label = $this->randomName();
     $edit = array(
-      'actions_description' => $action_description,
-      'subject' => $action_description,
+      'actions_label' => $action_label,
+      'subject' => $action_label,
     );
     $this->drupalPost('admin/config/system/actions/configure/' . $hash, $edit, t('Save'));
     $edit = array('aid' => md5('2'));
-    $this->drupalPost('admin/structure/trigger/cron', $edit, t('Assign'));
- 
+    $this->drupalPost('admin/structure/trigger/system', $edit, t('Assign'));
+
     // Force a cron run.
     drupal_cron_run();
- 
+
     // Make sure the non-configurable action has fired.
     $action_run = variable_get('trigger_test_system_cron_action', FALSE);
     $this->assertTrue($action_run, t('Check that the cron run triggered the test action.'));
- 
+
     // Make sure that both configurable actions have fired.
     $action_run = variable_get('trigger_test_system_cron_conf_action', 0) == 2;
     $this->assertTrue($action_run, t('Check that the cron run triggered both complex actions.'));
+  }
+}
+
+/**
+ * Test other triggers.
+ */
+class TriggerOtherTestCase extends DrupalWebTestCase {
+  var $_cleanup_roles = array();
+  var $_cleanup_users = array();
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Trigger other actions',
+      'description' => 'Test triggering of user, comment, taxonomy actions.' ,
+      'group' => 'Trigger',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('trigger', 'trigger_test');
+  }
+
+  /**
+   * Test triggering on user create.
+   */
+  function testActionsUser() {
+    // Assign an action to the create user trigger.
+    $test_user = $this->drupalCreateUser(array('administer actions'));
+    $this->drupalLogin($test_user);
+    $action_id = 'trigger_test_generic_action';
+    $hash = md5($action_id);
+    $edit = array('aid' => $hash);
+    $this->drupalPost('admin/structure/trigger/user', $edit, t('Assign'));
+
+    // Set action variable to FALSE.
+    variable_set( $action_id, FALSE );
+
+    // Create an unblocked user
+    $web_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($web_user);
+    $name = $this->randomName();
+    $pass = user_password();
+    $edit = array();
+    $edit['name'] = $name;
+    $edit['mail'] = $name . '@example.com';
+    $edit['pass[pass1]'] = $pass;
+    $edit['pass[pass2]'] = $pass;
+    $edit['status'] = 1;
+    $this->drupalPost('admin/people/create', $edit, t('Create new account'));
+
+    // Verify that the action variable has been set.
+    $this->assertTrue(variable_get($action_id, FALSE), t('Check that creating a user triggered the test action.'));
+
+    // Reset the action variable.
+    variable_set( $action_id, FALSE );
+  }
+
+  /**
+   * Test triggering on comment save.
+   */
+  function testActionsComment() {
+    // Assign an action to the comment save trigger.
+    $test_user = $this->drupalCreateUser(array('administer actions'));
+    $this->drupalLogin($test_user);
+    $action_id = 'trigger_test_generic_action';
+    $hash = md5($action_id);
+    $edit = array('aid' => $hash);
+    $this->drupalPost('admin/structure/trigger/comment', $edit, t('Assign'));
+
+    // Set action variable to FALSE.
+    variable_set( $action_id, FALSE );
+
+    // Create a node and add a comment to it.
+    $web_user = $this->drupalCreateUser(array('create article content', 'access content', 'post comments without approval', 'post comments'));
+    $this->drupalLogin($web_user);
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $edit = array();
+    $edit['subject'] = $this->randomName(10);
+    $edit['comment'] = $this->randomName(10) . ' ' . $this->randomName(10);
+    $this->drupalGet('comment/reply/' . $node->nid);
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Verify that the action variable has been set.
+    $this->assertTrue(variable_get($action_id, FALSE), t('Check that creating a comment triggered the action.'));
+  }
+
+  /**
+   * Test triggering on taxonomy new term.
+   */
+  function testActionsTaxonomy() {
+    // Assign an action to the taxonomy term save trigger.
+    $test_user = $this->drupalCreateUser(array('administer actions'));
+    $this->drupalLogin($test_user);
+    $action_id = 'trigger_test_generic_action';
+    $hash = md5($action_id);
+    $edit = array('aid' => $hash);
+    $this->drupalPost('admin/structure/trigger/taxonomy', $edit, t('Assign'));
+
+    // Set action variable to FALSE.
+    variable_set( $action_id, FALSE );
+
+    // Create a taxonomy vocabulary and add a term to it.
+
+    // Create a vocabulary.
+    $vocabulary = new stdClass();
+    $vocabulary->name = $this->randomName();
+    $vocabulary->description = $this->randomName();
+    $vocabulary->machine_name = drupal_strtolower($this->randomName());
+    $vocabulary->help = '';
+    $vocabulary->nodes = array('article' => 'article');
+    $vocabulary->weight = mt_rand(0, 10);
+    taxonomy_vocabulary_save($vocabulary);
+
+    $term = new stdClass();
+    $term->name = $this->randomName();
+    $term->vid = $vocabulary->vid;
+    taxonomy_term_save($term);
+
+    // Verify that the action variable has been set.
+    $this->assertTrue(variable_get($action_id, FALSE), t('Check that creating a taxonomy term triggered the action.'));
   }
 }

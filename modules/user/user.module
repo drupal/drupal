@@ -2925,45 +2925,15 @@ function user_image_style_save($style) {
 }
 
 /**
- * Implement hook_hook_info().
- */
-function user_hook_info() {
-  return array(
-    'user' => array(
-      'user' => array(
-        'insert' => array(
-          'runs when' => t('After a user account has been created'),
-        ),
-        'update' => array(
-          'runs when' => t("After a user's profile has been updated"),
-        ),
-        'delete' => array(
-          'runs when' => t('After a user has been deleted')
-        ),
-        'login' => array(
-          'runs when' => t('After a user has logged in')
-        ),
-        'logout' => array(
-          'runs when' => t('After a user has logged out')
-        ),
-        'view' => array(
-          'runs when' => t("When a user's profile is being viewed")
-        ),
-      ),
-    ),
-  );
-}
-
-/**
  * Implement hook_action_info().
  */
 function user_action_info() {
   return array(
     'user_block_user_action' => array(
-      'description' => t('Block current user'),
+      'label' => t('Block current user'),
       'type' => 'user',
       'configurable' => FALSE,
-      'hooks' => array(),
+      'triggers' => array(),
     ),
   );
 }

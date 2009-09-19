@@ -182,6 +182,10 @@ Drupal 7.0, xxxx-xx-xx (development version)
       them complete access to the site.
     * Access control affects both published and unpublished nodes.
     * Numerous other improvements to the node access system.
+- Actions system
+    * Simplified definitions of actions and triggers.
+    * Removed dependency on the combination of hooks and operations. Triggers
+      now directly map to module hooks.
 
 Drupal 6.0, 2008-02-13
 ----------------------

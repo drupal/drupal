@@ -2,15 +2,13 @@
 // $Id$
 
 /**
- * Implement hook_hook_info().
+ * Implement hook_trigger_info().
  */
-function actions_loop_test_hook_info() {
+function actions_loop_test_trigger_info() {
   return array(
     'actions_loop_test' => array(
       'watchdog' => array(
-        'run' => array(
-          'runs when' => t('When a message is logged'),
-        ),
+        'label' => t('When a message is logged'),
       ),
     ),
   );
@@ -26,13 +24,11 @@ function actions_loop_test_watchdog(array $log_entry) {
   }
   // Get all the action ids assigned to the trigger on the watchdog hook's
   // "run" event.
-  $aids = _trigger_get_hook_aids('watchdog', 'run');
+  $aids = trigger_get_assigned_actions('watchdog');
   // We can pass in any applicable information in $context. There isn't much in
-  // this case, but we'll pass in the hook name and the operation name as the
-  // bare minimum.
+  // this case, but we'll pass in the hook name as the bare minimum.
   $context = array(
     'hook' => 'watchdog',
-    'op' => 'run',
   );
   // Fire the actions on the associated object ($log_entry) and the context
   // variable.
@@ -54,12 +50,10 @@ function actions_loop_test_init() {
 function actions_loop_test_action_info() {
   return array(
     'actions_loop_test_log' => array(
-      'description' => t('Write a message to the log.'),
+      'label' => t('Write a message to the log.'),
       'type' => 'system',
       'configurable' => FALSE,
-      'hooks' => array(
-        'any' => TRUE,
-      )
+      'triggers' => array('any'),
     ),
   );
 }

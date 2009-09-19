@@ -574,8 +574,8 @@ function system_schema() {
         'not null' => TRUE,
         'size' => 'big',
       ),
-      'description' => array(
-        'description' => 'Description of the action.',
+      'label' => array(
+        'description' => 'Label of the action.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -2489,6 +2489,15 @@ function system_update_7036() {
 function system_update_7037() {
   $ret = array();
   db_rename_table($ret, 'box', 'block_custom');
+  return $ret;
+}
+
+/**
+ * Rename action description to label.
+ */
+function system_update_7038() {
+  $ret = array();
+  db_change_field($ret, 'actions', 'description', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'));
   return $ret;
 }
 

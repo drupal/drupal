@@ -1703,27 +1703,6 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
 }
 
 /**
- * Implement hook_hook_info().
- */
-function taxonomy_hook_info() {
-  return array(
-    'taxonomy' => array(
-      'taxonomy' => array(
-        'insert' => array(
-          'runs when' => t('After saving a new term to the database'),
-        ),
-        'update' => array(
-          'runs when' => t('After saving an updated term to the database'),
-        ),
-        'delete' => array(
-          'runs when' => t('After deleting a term')
-        ),
-      ),
-    ),
-  );
-}
-
-/**
  * Implement hook_field_info().
  *
  * Field settings:

@@ -26,14 +26,7 @@ function trigger_schema() {
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Primary Key: The name of the internal Drupal hook upon which an action is firing; for example, node.',
-      ),
-      'op' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Primary Key: The specific operation of the hook upon which an action is firing: for example, presave.',
+        'description' => 'Primary Key: The name of the internal Drupal hook; for example, node_insert.',
       ),
       'aid' => array(
         'type' => 'varchar',
@@ -49,7 +42,7 @@ function trigger_schema() {
         'description' => 'The weight of the trigger assignment in relation to other triggers.',
       ),
     ),
-    'primary key' => array('hook', 'op', 'aid'),
+    'primary key' => array('hook', 'aid'),
     'foreign keys' => array(
       'aid' => array('actions' => 'aid'),
     ),
@@ -57,4 +50,17 @@ function trigger_schema() {
   return $schema;
 }
 
+/**
+ * Adds operation names to the hook names and drops the "op" field.
+ */
+function trigger_update_7000() {
+  $ret = array();
+  $result = db_query("SELECT hook, op, aid FROM {trigger_assignments} WHERE op <> ''");
 
+  while ($row = db_fetch_object($result)) {
+    $ret[] = update_sql("UPDATE {trigger_assignments} SET hook = '%s' WHERE hook = '%s' AND op = '%s' AND aid = '%s'", $row->hook . '_' . $row->op, $row->hook, $row->op, $row->aid);
+  }
+  $ret[] = update_sql("ALTER TABLE {trigger_assignments} DROP op");
+
+  return $ret;
+}

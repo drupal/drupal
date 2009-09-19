@@ -2754,123 +2754,90 @@ function node_forms() {
 }
 
 /**
- * Implement hook_hook_info().
- */
-function node_hook_info() {
-  return array(
-    'node' => array(
-      'node' => array(
-        'presave' => array(
-          'runs when' => t('When either saving a new post or updating an existing post'),
-        ),
-        'insert' => array(
-          'runs when' => t('After saving a new post'),
-        ),
-        'update' => array(
-          'runs when' => t('After saving an updated post'),
-        ),
-        'delete' => array(
-          'runs when' => t('After deleting a post')
-        ),
-        'view' => array(
-          'runs when' => t('When content is viewed by an authenticated user')
-        ),
-      ),
-    ),
-  );
-}
-
-/**
  * Implement hook_action_info().
  */
 function node_action_info() {
   return array(
     'node_publish_action' => array(
       'type' => 'node',
-      'description' => t('Publish post'),
+      'label' => t('Publish content'),
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
-      'hooks' => array(
-        'node' => array('presave'),
-        'comment' => array('insert', 'update'),
-      ),
+      'triggers' => array('node_presave', 'comment_insert', 'comment_update'),
     ),
     'node_unpublish_action' => array(
       'type' => 'node',
-      'description' => t('Unpublish post'),
+      'label' => t('Unpublish content'),
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
-      'hooks' => array(
-        'node' => array('presave'),
-        'comment' => array('delete', 'insert', 'update'),
+      'triggers' => array(
+        'node_presave',
+        'comment_insert',
+        'comment_update',
+        'comment_delete'
       ),
     ),
     'node_make_sticky_action' => array(
       'type' => 'node',
-      'description' => t('Make post sticky'),
+      'label' => t('Make content sticky'),
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
-      'hooks' => array(
-        'node' => array('presave'),
-        'comment' => array('insert', 'update'),
-      ),
+      'triggers' => array('node_presave', 'comment_insert', 'comment_update'),
     ),
     'node_make_unsticky_action' => array(
       'type' => 'node',
-      'description' => t('Make post unsticky'),
+      'label' => t('Make content unsticky'),
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
-      'hooks' => array(
-        'node' => array('presave'),
-        'comment' => array('delete', 'insert', 'update'),
+      'triggers' => array(
+        'node_presave',
+        'comment_insert',
+        'comment_update',
+        'comment_delete'
       ),
     ),
     'node_promote_action' => array(
       'type' => 'node',
-      'description' => t('Promote post to front page'),
+      'label' => t('Promote content to front page'),
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
-      'hooks' => array(
-        'node' => array('presave'),
-        'comment' => array('insert', 'update'),
-      ),
+      'triggers' => array('node_presave', 'comment_insert', 'comment_update'),
     ),
     'node_unpromote_action' => array(
       'type' => 'node',
-      'description' => t('Remove post from front page'),
+      'label' => t('Remove content from front page'),
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
-      'hooks' => array(
-        'node' => array('presave'),
-        'comment' => array('delete', 'insert', 'update'),
+      'triggers' => array(
+        'node_presave',
+        'comment_insert',
+        'comment_update',
+        'comment_delete'
       ),
     ),
     'node_assign_owner_action' => array(
       'type' => 'node',
-      'description' => t('Change the author of a post'),
+      'label' => t('Change the author of content'),
       'configurable' => TRUE,
       'behavior' => array('changes_node_property'),
-      'hooks' => array(
-        'any' => TRUE,
-        'node' => array('presave'),
-        'comment' => array('delete', 'insert', 'update'),
+      'triggers' => array(
+        'node_presave',
+        'comment_insert',
+        'comment_update',
+        'comment_delete',
       ),
     ),
     'node_save_action' => array(
       'type' => 'node',
-      'description' => t('Save post'),
+      'label' => t('Save content'),
       'configurable' => FALSE,
-      'hooks' => array(
-        'comment' => array('delete', 'insert', 'update'),
-      ),
+      'triggers' => array('comment_delete', 'comment_insert', 'comment_update'),
     ),
     'node_unpublish_by_keyword_action' => array(
       'type' => 'node',
-      'description' => t('Unpublish post containing keyword(s)'),
+      'label' => t('Unpublish content containing keyword(s)'),
       'configurable' => TRUE,
-      'hooks' => array(
-        'node' => array('presave', 'insert', 'update'),
-      ),
+      'triggers' => array('node_presave', 'node_insert', 'node_update'),
     ),
   );
 }

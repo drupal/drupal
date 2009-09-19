@@ -2296,3 +2296,276 @@ function theme_system_themes_form($form) {
   $output .= drupal_render_children($form);
   return $output;
 }
+
+/**
+ * Menu callback; Displays an overview of available and configured actions.
+ */
+function system_actions_manage() {
+  actions_synchronize();
+  $actions = actions_list();
+  $actions_map = actions_actions_map($actions);
+  $options = array(t('Choose an advanced action'));
+  $unconfigurable = array();
+
+  foreach ($actions_map as $key => $array) {
+    if ($array['configurable']) {
+      $options[$key] = $array['label'] . '...';
+    }
+    else {
+      $unconfigurable[] = $array;
+    }
+  }
+
+  $row = array();
+  $instances_present = db_query("SELECT aid FROM {actions} WHERE parameters <> ''")->fetchField();
+  $header = array(
+    array('data' => t('Action type'), 'field' => 'type'),
+    array('data' => t('Label'), 'field' => 'label'),
+    array('data' => $instances_present ? t('Operations') : '', 'colspan' => '2')
+  );
+  $query = db_select('actions')->extend('PagerDefault')->extend('TableSort');
+  $result = $query
+    ->fields('actions')
+    ->limit(50)
+    ->orderByHeader($header)
+    ->execute();
+
+  foreach ($result as $action) {
+    $row[] = array(
+      array('data' => $action->type),
+      array('data' => $action->label),
+      array('data' => $action->parameters ? l(t('configure'), "admin/config/system/actions/configure/$action->aid") : ''),
+      array('data' => $action->parameters ? l(t('delete'), "admin/config/system/actions/delete/$action->aid") : '')
+    );
+  }
+
+  if ($row) {
+    $pager = theme('pager', NULL);
+    if (!empty($pager)) {
+      $row[] = array(array('data' => $pager, 'colspan' => '3'));
+    }
+    $build['system_actions_header'] = array('#markup' => '<h3>' . t('Actions available to Drupal:') . '</h3>');
+    $build['system_actions_table'] = array('#markup' => theme('table', $header, $row));
+  }
+
+  if ($actions_map) {
+    $build['system_actions_manage_form'] = drupal_get_form('system_actions_manage_form', $options);
+  }
+
+  return $build;
+}
+
+/**
+ * Define the form for the actions overview page.
+ *
+ * @param $form_state
+ *   An associative array containing the current state of the form; not used.
+ * @param $options
+ *   An array of configurable actions.
+ * @return
+ *   Form definition.
+ *
+ * @ingroup forms
+ * @see system_actions_manage_form_submit()
+ */
+function system_actions_manage_form($form, &$form_state, $options = array()) {
+  $form['parent'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Make a new advanced action available'),
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
+  );
+  $form['parent']['action'] = array(
+    '#type' => 'select',
+    '#default_value' => '',
+    '#options' => $options,
+    '#description' => '',
+  );
+  $form['parent']['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Create'),
+  );
+  return $form;
+}
+
+/**
+ * Process system_actions_manage form submissions.
+ *
+ * @see system_actions_manage_form()
+ */
+function system_actions_manage_form_submit($form, &$form_state) {
+  if ($form_state['values']['action']) {
+    $form_state['redirect'] = 'admin/config/system/actions/configure/' . $form_state['values']['action'];
+  }
+}
+
+/**
+ * Menu callback; Creates the form for configuration of a single action.
+ *
+ * We provide the "Description" field. The rest of the form is provided by the
+ * action. We then provide the Save button. Because we are combining unknown
+ * form elements with the action configuration form, we use an 'actions_' prefix
+ * on our elements.
+ *
+ * @param $action
+ *   md5 hash of an action ID or an integer. If it is an md5 hash, we are
+ *   creating a new instance. If it is an integer, we are editing an existing
+ *   instance.
+ * @return
+ *   A form definition.
+ *
+ * @see system_actions_configure_validate()
+ * @see system_actions_configure_submit()
+ */
+function system_actions_configure($form, &$form_state, $action = NULL) {
+  if ($action === NULL) {
+    drupal_goto('admin/config/system/actions');
+  }
+
+  $actions_map = actions_actions_map(actions_list());
+  $edit = array();
+
+  // Numeric action denotes saved instance of a configurable action.
+  if (is_numeric($action)) {
+    $aid = $action;
+    // Load stored parameter values from database.
+    $data = db_query("SELECT * FROM {actions} WHERE aid = :aid", array(':aid' => $aid))->fetch();
+    $edit['actions_label'] = $data->label;
+    $edit['actions_type'] = $data->type;
+    $function = $data->callback;
+    $action = md5($data->callback);
+    $params = unserialize($data->parameters);
+    if ($params) {
+      foreach ($params as $name => $val) {
+        $edit[$name] = $val;
+      }
+    }
+  }
+  // Otherwise, we are creating a new action instance.
+  else {
+    $function = $actions_map[$action]['callback'];
+    $edit['actions_label'] = $actions_map[$action]['label'];
+    $edit['actions_type'] = $actions_map[$action]['type'];
+  }
+
+  $form['actions_label'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Label'),
+    '#default_value' => $edit['actions_label'],
+    '#maxlength' => '255',
+    '#description' => t('A unique label for this advanced action. This label will be displayed in the interface of modules that integrate with actions, such as Trigger module.'),
+    '#weight' => -10
+  );
+  $action_form = $function . '_form';
+  $form = array_merge($form, $action_form($edit));
+  $form['actions_type'] = array(
+    '#type' => 'value',
+    '#value' => $edit['actions_type'],
+  );
+  $form['actions_action'] = array(
+    '#type' => 'hidden',
+    '#value' => $action,
+  );
+  // $aid is set when configuring an existing action instance.
+  if (isset($aid)) {
+    $form['actions_aid'] = array(
+      '#type' => 'hidden',
+      '#value' => $aid,
+    );
+  }
+  $form['actions_configured'] = array(
+    '#type' => 'hidden',
+    '#value' => '1',
+  );
+  $form['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#weight' => 13
+  );
+
+  return $form;
+}
+
+/**
+ * Validate system_actions_configure() form submissions.
+ */
+function system_actions_configure_validate($form, &$form_state) {
+  $function = actions_function_lookup($form_state['values']['actions_action']) . '_validate';
+  // Hand off validation to the action.
+  if (function_exists($function)) {
+    $function($form, $form_state);
+  }
+}
+
+/**
+ * Process system_actions_configure() form submissions.
+ */
+function system_actions_configure_submit($form, &$form_state) {
+  $function = actions_function_lookup($form_state['values']['actions_action']);
+  $submit_function = $function . '_submit';
+
+  // Action will return keyed array of values to store.
+  $params = $submit_function($form, $form_state);
+  $aid = isset($form_state['values']['actions_aid']) ? $form_state['values']['actions_aid'] : NULL;
+
+  actions_save($function, $form_state['values']['actions_type'], $params, $form_state['values']['actions_label'], $aid);
+  drupal_set_message(t('The action has been successfully saved.'));
+
+  $form_state['redirect'] = 'admin/config/system/actions/manage';
+}
+
+/**
+ * Create the form for confirmation of deleting an action.
+ *
+ * @see system_actions_delete_form_submit()
+ * @ingroup forms
+ */
+function system_actions_delete_form($form, &$form_state, $action) {
+  $form['aid'] = array(
+    '#type' => 'hidden',
+    '#value' => $action->aid,
+  );
+  return confirm_form($form,
+    t('Are you sure you want to delete the action %action?', array('%action' => $action->label)),
+    'admin/config/system/actions/manage',
+    t('This cannot be undone.'),
+    t('Delete'),
+    t('Cancel')
+  );
+}
+
+/**
+ * Process system_actions_delete form submissions.
+ *
+ * Post-deletion operations for action deletion.
+ */
+function system_actions_delete_form_submit($form, &$form_state) {
+  $aid = $form_state['values']['aid'];
+  $action = actions_load($aid);
+  actions_delete($aid);
+  $label = check_plain($action->label);
+  watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $label));
+  drupal_set_message(t('Action %action was deleted', array('%action' => $label)));
+  $form_state['redirect'] = 'admin/config/system/actions/manage';
+}
+
+/**
+ * Post-deletion operations for deleting action orphans.
+ *
+ * @param $orphaned
+ *   An array of orphaned actions.
+ */
+function system_action_delete_orphans_post($orphaned) {
+  foreach ($orphaned as $callback) {
+    drupal_set_message(t("Deleted orphaned action (%action).", array('%action' => $callback)));
+  }
+}
+
+/**
+ * Remove actions that are in the database but not supported by any enabled module.
+ */
+function system_actions_remove_orphans() {
+  actions_synchronize(TRUE);
+  drupal_goto('admin/config/system/actions/manage');
+}
+

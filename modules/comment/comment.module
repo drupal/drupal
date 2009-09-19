@@ -2296,49 +2296,21 @@ function vancode2int($c = '00') {
 }
 
 /**
- * Implement hook_hook_info().
- */
-function comment_hook_info() {
-  return array(
-    'comment' => array(
-      'comment' => array(
-        'insert' => array(
-          'runs when' => t('After saving a new comment'),
-        ),
-        'update' => array(
-          'runs when' => t('After saving an updated comment'),
-        ),
-        'delete' => array(
-          'runs when' => t('After deleting a comment')
-        ),
-        'view' => array(
-          'runs when' => t('When a comment is being viewed by an authenticated user')
-        ),
-      ),
-    ),
-  );
-}
-
-/**
  * Implement hook_action_info().
  */
 function comment_action_info() {
   return array(
     'comment_unpublish_action' => array(
-      'description' => t('Unpublish comment'),
+      'label' => t('Unpublish comment'),
       'type' => 'comment',
       'configurable' => FALSE,
-      'hooks' => array(
-        'comment' => array('insert', 'update'),
-      )
+      'triggers' => array('comment_insert', 'comment_update'),
     ),
     'comment_unpublish_by_keyword_action' => array(
-      'description' => t('Unpublish comment containing keyword(s)'),
+      'label' => t('Unpublish comment containing keyword(s)'),
       'type' => 'comment',
       'configurable' => TRUE,
-      'hooks' => array(
-        'comment' => array('insert', 'update'),
-      )
+      'triggers' => array('comment_insert', 'comment_update'),
     )
   );
 }
