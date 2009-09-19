@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.35 2009/08/17 19:14:41 webchick Exp $
+// $Id: run-tests.sh,v 1.36 2009/09/19 10:38:47 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -24,7 +24,7 @@ if ($args['execute-batch']) {
 }
 else {
   // Run administrative functions as CLI.
-  simpletest_script_init("PHP CLI");
+  simpletest_script_init(NULL);
 }
 
 // Bootstrap to perform initial validation or other operations.
