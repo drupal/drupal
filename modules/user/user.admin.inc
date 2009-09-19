@@ -626,7 +626,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
       $form['permission'][] = array(
         '#markup' => $info['name'],
         '#id' => $module,
-        );
+      );
       foreach ($permissions as $perm => $perm_item) {
         $options[$perm] = '';
         $form['permission'][$perm] = array(
@@ -663,8 +663,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
  */
 function user_admin_permissions_submit($form, &$form_state) {
   foreach ($form_state['values']['role_names'] as $rid => $name) {
-    $permissions = array_filter($form_state['values'][$rid]);
-    user_role_set_permissions($rid, $permissions);
+    user_role_change_permissions($rid, $form_state['values'][$rid]);
   }
 
   drupal_set_message(t('The changes have been saved.'));

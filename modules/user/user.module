@@ -2301,39 +2301,69 @@ function user_role_delete($role) {
     ->condition('rid', $role->rid)
     ->execute();
 
+  module_invoke_all('user_role_delete', $role);
+
   // Clear the user access cache.
   drupal_static_reset('user_access');
   drupal_static_reset('user_role_permissions');
-
-  module_invoke_all('user_role_delete', $role);
 }
 
 /**
- * Assign permissions to a user role.
+ * Change permissions for a user role.
  *
- * @param $role
- *   A string with the role name, or an integer with the role ID.
+ * This function may be used to grant and revoke multiple permissions at once.
+ * For example, when a form exposes checkboxes to configure permissions for a
+ * role, the submitted values may be directly passed on in a form submit
+ * handler.
+ *
+ * @param $rid
+ *   The ID of a user role to alter.
  * @param $permissions
- *   An array of permissions strings.
- * @param $merge
- *   A boolean indicating whether to add permissions or to merge
- *   with all existing permissions.
+ *   An array of permissions, where the key holds the permission name and the
+ *   value is an integer or boolean that determines whether to grant or revoke
+ *   the permission:
+ *   @code
+ *     array(
+ *       'administer nodes' => 0,
+ *       'access user profiles' => 1,
+ *     )
+ *   @endcode
+ *   Existing permissions are not changed, unless specified in $permissions.
+ *
+ * @see user_role_grant_permissions()
+ * @see user_role_revoke_permissions()
  */
-function user_role_set_permissions($role, array $permissions = array(), $merge = FALSE) {
-  $role = user_role_load($role);
-  if (!$merge) {
-    // Delete existing permissions for the role.
-    db_delete('role_permission')
-      ->condition('rid', $role->rid)
-      ->execute();
+function user_role_change_permissions($rid, array $permissions = array()) {
+  // Grant new permissions for the role.
+  $grant = array_filter($permissions);
+  if (!empty($grant)) {
+    user_role_grant_permissions($rid, array_keys($grant));
   }
+  // Revoke permissions for the role.
+  $revoke = array_diff_assoc($permissions, $grant);
+  if (!empty($revoke)) {
+    user_role_revoke_permissions($rid, array_keys($revoke));
+  }
+}
 
-  // Assign the new permissions for the role.
-  foreach ($permissions as $permission_string) {
+/**
+ * Grant permissions to a user role.
+ *
+ * @param $rid
+ *   The ID of a user role to alter.
+ * @param $permissions
+ *   A list of permission names to grant.
+ *
+ * @see user_role_change_permissions()
+ * @see user_role_revoke_permissions()
+ */
+function user_role_grant_permissions($rid, array $permissions = array()) {
+  // Grant new permissions for the role.
+  foreach ($permissions as $name) {
     db_merge('role_permission')
       ->key(array(
-        'rid' => $role->rid,
-        'permission' => $permission_string,
+        'rid' => $rid,
+        'permission' => $name,
       ))
       ->execute();
   }
@@ -2341,8 +2371,29 @@ function user_role_set_permissions($role, array $permissions = array(), $merge =
   // Clear the user access cache.
   drupal_static_reset('user_access');
   drupal_static_reset('user_role_permissions');
+}
 
-  return TRUE;
+/**
+ * Revoke permissions from a user role.
+ *
+ * @param $rid
+ *   The ID of a user role to alter.
+ * @param $permissions
+ *   A list of permission names to revoke.
+ *
+ * @see user_role_change_permissions()
+ * @see user_role_grant_permissions()
+ */
+function user_role_revoke_permissions($rid, array $permissions = array()) {
+  // Revoke permissions for the role.
+  db_delete('role_permission')
+    ->condition('rid', $rid)
+    ->condition('permission', $permissions, 'IN')
+    ->execute();
+
+  // Clear the user access cache.
+  drupal_static_reset('user_access');
+  drupal_static_reset('user_role_permissions');
 }
 
 /**

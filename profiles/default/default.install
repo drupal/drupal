@@ -184,15 +184,15 @@ function default_install() {
   db_insert('taxonomy_vocabulary_node_type')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
 
   // Enable default permissions for system roles.
-  user_role_set_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));
-  user_role_set_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'post comments without approval'));
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'post comments without approval'));
 
 
   // Create a default role for site administrators, with all available permissions assigned.
   $admin_role = new stdClass();
   $admin_role->name = 'administrator';
   user_role_save($admin_role);
-  user_role_set_permissions($admin_role->name, array_keys(module_invoke_all('permission')));
+  user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
   // Set this as the administrator role.
   variable_set('user_admin_role', $admin_role->rid);
 

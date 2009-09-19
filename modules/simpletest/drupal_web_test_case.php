@@ -901,7 +901,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $role = new stdClass();
     $role->name = $name;
     user_role_save($role);
-    user_role_set_permissions($role->name, $permissions);
+    user_role_grant_permissions($role->rid, $permissions);
 
     $this->assertTrue(isset($role->rid), t('Created role of name: @name, id: @rid', array('@name' => $name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
     if ($role && !empty($role->rid)) {

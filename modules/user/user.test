@@ -928,6 +928,31 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
     $this->assertTrue(user_access('administer news feeds', $this->admin_user), t('The permission was automatically assigned to the administrator role'));
   }
+
+  /**
+   * Verify proper permission changes by user_role_change_permissions().
+   */
+  function testUserRoleChangePermissions() {
+    $rid = $this->rid;
+    $account = $this->admin_user;
+
+    // Verify current permissions.
+    $this->assertFalse(user_access('administer nodes', $account), t('User does not have "administer nodes" permission.'));
+    $this->assertTrue(user_access('access user profiles', $account), t('User has "access user profiles" permission.'));
+    $this->assertTrue(user_access('administer site configuration', $account), t('User has "administer site configuration" permission.'));
+
+    // Change permissions.
+    $permissions = array(
+      'administer nodes' => 1,
+      'access user profiles' => 0,
+    );
+    user_role_change_permissions($rid, $permissions);
+
+    // Verify proper permission changes.
+    $this->assertTrue(user_access('administer nodes', $account), t('User now has "administer nodes" permission.'));
+    $this->assertFalse(user_access('access user profiles', $account), t('User no longer has "access user profiles" permission.'));
+    $this->assertTrue(user_access('administer site configuration', $account), t('User still has "administer site configuration" permission.'));
+  }
 }
 
 class UserAdminTestCase extends DrupalWebTestCase {
