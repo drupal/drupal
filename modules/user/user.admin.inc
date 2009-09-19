@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.79 2009/09/19 10:54:35 dries Exp $
+// $Id: user.admin.inc,v 1.80 2009/09/19 11:18:32 dries Exp $
 
 /**
  * @file
@@ -291,7 +291,7 @@ function user_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('Require e-mail verification when a visitor creates an account.'),
     '#default_value' => variable_get('user_email_verification', TRUE),
-    '#description' => t('New users will be required to validate their e-mail address prior to logging into the site, and will be assigned a system-generated password. If disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.')
+    '#description' => t('New users will be required to validate their e-mail address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.')
   );
   module_load_include('inc', 'user', 'user.pages');
   $form['registration_cancellation']['user_cancel_method'] = array(
