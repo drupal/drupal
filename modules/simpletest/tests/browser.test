@@ -13,9 +13,9 @@ class BrowserTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Browser'),
-      'description' => t('Test general browser functionality.'),
-      'group' => t('Browser'),
+      'name' => 'Browser',
+      'description' => 'Test general browser functionality.',
+      'group' => 'Browser',
     );
   }
 
@@ -50,9 +50,9 @@ class BrowserBackendTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Browser - wrapper backends'),
-      'description' => t('Test stream and curl backends execution of GET and POST requests.'),
-      'group' => t('Browser'),
+      'name' => 'Browser - wrapper backends',
+      'description' => 'Test stream and curl backends execution of GET and POST requests.',
+      'group' => 'Browser',
     );
   }
 
@@ -95,9 +95,9 @@ class BrowserPageTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Browser - page'),
-      'description' => t('Check "BrowserPage" class functionality.'),
-      'group' => t('Browser'),
+      'name' => 'Browser - page',
+      'description' => 'Check "BrowserPage" class functionality.',
+      'group' => 'Browser',
     );
   }
 

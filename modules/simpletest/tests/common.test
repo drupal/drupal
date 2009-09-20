@@ -1324,9 +1324,9 @@ class FormatDateUnitTest extends DrupalWebTestCase {
 class DrupalAttributesUnitTest extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('HTML Attributes'),
-      'description' => t('Perform unit tests on the drupal_attributes() function.'),
-      'group' => t('System')
+      'name' => 'HTML Attributes',
+      'description' => 'Perform unit tests on the drupal_attributes() function.',
+      'group' => 'System',
     );
   }
 

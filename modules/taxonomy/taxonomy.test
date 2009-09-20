@@ -382,7 +382,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     return array(
       'name' => 'Taxonomy term functions and forms.',
       'description' => 'Test load, save and delete for taxonomy terms.',
-      'group' => 'Taxonomy'
+      'group' => 'Taxonomy',
     );
   }
 
@@ -663,7 +663,7 @@ class TaxonomyHooksTestCase extends TaxonomyWebTestCase {
     return array(
       'name' => 'Taxonomy term hooks',
       'description' => 'Hooks for taxonomy term load/save/delete.',
-      'group' => 'Taxonomy'
+      'group' => 'Taxonomy',
     );
   }
 
@@ -714,9 +714,9 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name'  => t('Taxonomy term field'),
-      'description'  => t('Test the creation of term fields.'),
-      'group' => t('Taxonomy')
+      'name'  => 'Taxonomy term field',
+      'description'  => 'Test the creation of term fields.',
+      'group' => 'Taxonomy',
     );
   }
 

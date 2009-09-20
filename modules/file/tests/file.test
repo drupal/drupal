@@ -176,11 +176,11 @@ class FileFieldTestCase extends DrupalWebTestCase {
  * Test class to test file handling with node revisions.
  */
 class FileFieldRevisionTestCase extends FileFieldTestCase {
-  public function getInfo() {
+  public static function getInfo() {
     return array(
-      'name' => t('File field revision test'),
-      'description' => t('Test creating and deleting revisions with files attached.'),
-      'group' => t('File'),
+      'name' => 'File field revision test',
+      'description' => 'Test creating and deleting revisions with files attached.',
+      'group' => 'File',
     );
   }
 
@@ -269,11 +269,11 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
  * Test class to check that formatters are working properly.
  */
 class FileFieldDisplayTestCase extends FileFieldTestCase {
-  public function getInfo() {
+  public static function getInfo() {
     return array(
-      'name' => t('File field display tests'),
-      'description' => t('Test the display of file fields in node and views.'),
-      'group' => t('File'),
+      'name' => 'File field display tests',
+      'description' => 'Test the display of file fields in node and views.',
+      'group' => 'File',
     );
   }
 
@@ -323,11 +323,11 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
   protected $field;
   protected $node_type;
 
-  public function getInfo() {
+  public static function getInfo() {
     return array(
-      'name' => t('File field validation tests'),
-      'description' => t('Tests validation functions such as file type, max file size, max size per node, and required.'),
-      'group' => t('File'),
+      'name' => 'File field validation tests',
+      'description' => 'Tests validation functions such as file type, max file size, max size per node, and required.',
+      'group' => 'File',
     );
   }
 
@@ -478,11 +478,11 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
  * Test class to check that files are uploaded to proper locations.
  */
 class FileFieldPathTestCase extends FileFieldTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
-      'name' => t('File field file path tests'),
-      'description' => t('Test that files are uploaded to the proper location with token support.'),
-      'group' => t('File'),
+      'name' => 'File field file path tests',
+      'description' => 'Test that files are uploaded to the proper location with token support.',
+      'group' => 'File',
     );
   }
 

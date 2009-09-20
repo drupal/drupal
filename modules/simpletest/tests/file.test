@@ -1937,9 +1937,9 @@ class FileDownloadTest extends FileTestCase {
 class FileURLRewritingTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File URL rewriting'),
-      'description' => t('Tests for file URL rewriting.'),
-      'group' => t('File'),
+      'name' => 'File URL rewriting',
+      'description' => 'Tests for file URL rewriting.',
+      'group' => 'File',
     );
   }
 

@@ -284,9 +284,9 @@ class BootstrapGetFilenameTestCase extends DrupalUnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Get Filename Test'),
-      'description' => t('Test that drupal_get_filename() works correctly when the file is not found in the database.'),
-      'group' => t('Bootstrap'),
+      'name' => 'Get filename test',
+      'description' => 'Test that drupal_get_filename() works correctly when the file is not found in the database.',
+      'group' => 'Bootstrap',
     );
   }
 
