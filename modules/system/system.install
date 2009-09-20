@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.388 2009/09/20 07:32:18 dries Exp $
+// $Id: system.install,v 1.389 2009/09/20 17:56:24 dries Exp $
 
 /**
  * @file
@@ -62,17 +62,6 @@ function system_requirements($phase) {
   if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
     $requirements['php']['description'] = $t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
-  }
-
-  // Make sure the tokenizer extension is enabled, which is required by the code registry.
-  $requirements['php_tokenizer'] = array(
-    'title' => $t('PHP tokenizer'),
-    'value' => $t('Enabled'),
-  );
-  if (!function_exists('token_get_all')) {
-    $requirements['php_tokenizer']['value'] = $t('Not enabled');
-    $requirements['php_tokenizer']['description'] = $t('Drupal requires the <a href="@url">tokenizer extension</a> to be enabled.', array('@url' => 'http://php.net/tokenizer'));
-    $requirements['php_tokenizer']['severity'] = REQUIREMENT_ERROR;
   }
 
   // Test PHP register_globals setting.
