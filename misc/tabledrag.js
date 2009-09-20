@@ -293,7 +293,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
             self.rowObject.swap('before', previousRow);
             self.rowObject.interval = null;
             self.rowObject.indent(0);
-            window.scrollBy(0, -parseInt(item.offsetHeight));
+            window.scrollBy(0, -parseInt(item.offsetHeight, 10));
           }
           handle.get(0).focus(); // Regain focus after the DOM manipulation.
         }
@@ -325,7 +325,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
               nextGroupRow = $(nextGroup.group).filter(':last').get(0);
               self.rowObject.swap('after', nextGroupRow);
               // No need to check for indentation, 0 is the only valid one.
-              window.scrollBy(0, parseInt(groupHeight));
+              window.scrollBy(0, parseInt(groupHeight, 10));
             }
           }
           else {
@@ -333,7 +333,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
             self.rowObject.swap('after', nextRow);
             self.rowObject.interval = null;
             self.rowObject.indent(0);
-            window.scrollBy(0, parseInt(item.offsetHeight));
+            window.scrollBy(0, parseInt(item.offsetHeight, 10));
           }
           handle.get(0).focus(); // Regain focus after the DOM manipulation.
         }
@@ -524,11 +524,11 @@ Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
     // table cells, grab the firstChild of the row and use that instead.
     // http://jacob.peargrove.com/blog/2006/technical/table-row-offsettop-bug-in-safari.
     if (row.offsetHeight == 0) {
-      var rowHeight = parseInt(row.firstChild.offsetHeight) / 2;
+      var rowHeight = parseInt(row.firstChild.offsetHeight, 10) / 2;
     }
     // Other browsers.
     else {
-      var rowHeight = parseInt(row.offsetHeight) / 2;
+      var rowHeight = parseInt(row.offsetHeight, 10) / 2;
     }
 
     // Because we always insert before, we need to offset the height a bit.
@@ -697,7 +697,7 @@ Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
         }
         else {
           // Assume a numeric input field.
-          var weight = parseInt($(targetClass, siblings[0]).val()) || 0;
+          var weight = parseInt($(targetClass, siblings[0]).val(), 10) || 0;
           $(targetClass, siblings).each(function () {
             this.value = weight;
             weight++;

@@ -26,7 +26,7 @@ Drupal.behaviors.color = {
     // Build a preview.
     $('#preview').once('color').append('<div id="gradient"></div>');
     var gradient = $('#preview #gradient');
-    var h = parseInt(gradient.css('height')) / 10;
+    var h = parseInt(gradient.css('height'), 10) / 10;
     for (i = 0; i < h; ++i) {
       gradient.append('<div class="gradient-line"></div>');
     }
