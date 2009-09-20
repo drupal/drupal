@@ -77,8 +77,13 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
       // Configurable actions need parameters.
       if (is_numeric($action_id)) {
         $function = $params['callback'];
-        $context = array_merge($context, $params);
-        $actions_result[$action_id] = $function($object, $context, $a1, $a2);
+        if (function_exists($function)) {
+          $context = array_merge($context, $params);
+          $actions_result[$action_id] = $function($object, $context, $a1, $a2);
+        }
+        else {
+          $actions_result[$action_id] = FALSE;
+        }
       }
       // Singleton action; $action_id is the function name.
       else {
@@ -92,8 +97,13 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
     if (is_numeric($action_ids)) {
       $action = db_query("SELECT callback, parameters FROM {actions} WHERE aid = :aid", array(':aid' => $action_ids))->fetchObject();
       $function = $action->callback;
-      $context = array_merge($context, unserialize($action->parameters));
-      $actions_result[$action_ids] = $function($object, $context, $a1, $a2);
+      if (function_exists($function)) {
+        $context = array_merge($context, unserialize($action->parameters));
+        $actions_result[$action_ids] = $function($object, $context, $a1, $a2);
+      }
+      else {
+        $actions_result[$action_ids] = FALSE;
+      }
     }
     // Singleton action; $action_ids is the function name.
     else {
