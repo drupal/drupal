@@ -64,17 +64,6 @@ function system_requirements($phase) {
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
   }
 
-  // Make sure the tokenizer extension is enabled, which is required by the code registry.
-  $requirements['php_tokenizer'] = array(
-    'title' => $t('PHP tokenizer'),
-    'value' => $t('Enabled'),
-  );
-  if (!function_exists('token_get_all')) {
-    $requirements['php_tokenizer']['value'] = $t('Not enabled');
-    $requirements['php_tokenizer']['description'] = $t('Drupal requires the <a href="@url">tokenizer extension</a> to be enabled.', array('@url' => 'http://php.net/tokenizer'));
-    $requirements['php_tokenizer']['severity'] = REQUIREMENT_ERROR;
-  }
-
   // Test PHP register_globals setting.
   $requirements['php_register_globals'] = array(
     'title' => $t('PHP register globals'),
