@@ -1,4 +1,4 @@
-// $Id: color.js,v 1.14 2009/08/31 05:51:08 dries Exp $
+// $Id: color.js,v 1.15 2009/09/20 19:14:40 dries Exp $
 (function ($) {
 
 Drupal.behaviors.color = {
@@ -26,7 +26,7 @@ Drupal.behaviors.color = {
     // Build a preview.
     $('#preview').once('color').append('<div id="gradient"></div>');
     var gradient = $('#preview #gradient');
-    var h = parseInt(gradient.css('height')) / 10;
+    var h = parseInt(gradient.css('height'), 10) / 10;
     for (i = 0; i < h; ++i) {
       gradient.append('<div class="gradient-line"></div>');
     }
