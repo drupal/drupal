@@ -187,12 +187,12 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
     $edit = array('name' => $this->randomName());
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
-    filter_format_reset_cache();
+    filter_formats_reset();
     $this->checkPermissions(array(), TRUE);
     $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
     $permission = filter_permission_name(filter_format_load($format_id));
     $rid = max(array_keys($this->web_user->roles));
-    user_role_set_permissions($rid, array($permission), TRUE);
+    user_role_grant_permissions($rid, array($permission), TRUE);
     $this->drupalLogin($this->web_user);
 
     // Display edition form.
@@ -214,11 +214,6 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $this->content = drupal_render($entity->content);
     $this->assertRaw($value, t('Value is displayed unfiltered'));
   }
-
-  // Test formatters.
-  /**
-   *
-   */
 }
 
 class TextSummaryTestCase extends DrupalWebTestCase {
