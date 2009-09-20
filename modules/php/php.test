@@ -5,6 +5,8 @@
  * Base PHP test case class.
  */
 class PHPTestCase extends DrupalWebTestCase {
+  protected $php_code_format;
+
   function setUp() {
     parent::setUp('php');
 
@@ -12,9 +14,14 @@ class PHPTestCase extends DrupalWebTestCase {
     $admin_user = $this->drupalCreateUser(array('administer filters'));
     $this->drupalLogin($admin_user);
 
-    // Confirm that the PHP filter is #3.
-    $this->drupalGet('admin/config/content/formats/3');
-    $this->assertText('PHP code', t('On PHP code filter page.'));
+    // Confirm that the PHP code text format was inserted as the newest format
+    // on the site.
+    $newest_format_id = db_query("SELECT MAX(format) FROM {filter_format}")->fetchField();
+    $newest_format = filter_format_load($newest_format_id);
+    $this->assertEqual($newest_format->name, 'PHP code', t('PHP code text format was created.'));
+
+    // Store the format ID of the PHP code text format for later use.
+    $this->php_code_format = $newest_format_id;
   }
 
   /**
@@ -43,15 +50,12 @@ class PHPFilterTestCase extends PHPTestCase {
    * Make sure that the PHP filter evaluates PHP code when used.
    */
   function testPHPFilter() {
-    // Setup PHP filter.
-    $edit = array();
-    $edit['roles[2]'] = TRUE; // Set authenticated users to have permission to use filter.
-    $this->drupalPost(NULL, $edit, 'Save configuration');
-    $this->assertText(t('The text format settings have been updated.'), t('PHP format available to authenticated users.'));
-
-    // Create node with PHP filter enabled.
-    $web_user = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content'));
+    // Log in as a user with permission to use the PHP code text format.
+    $php_code_permission = filter_permission_name(filter_format_load($this->php_code_format));
+    $web_user = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content', $php_code_permission));
     $this->drupalLogin($web_user);
+
+    // Create a node with PHP code in it.
     $node = $this->createNodeWithCode();
 
     // Make sure that the PHP code shows up as text.
@@ -61,7 +65,7 @@ class PHPFilterTestCase extends PHPTestCase {
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();
     $langcode = FIELD_LANGUAGE_NONE;
-    $edit["body[$langcode][0][value_format]"] = 3;
+    $edit["body[$langcode][0][value_format]"] = $this->php_code_format;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title)), t('PHP code filter turned on.'));
 
@@ -98,6 +102,6 @@ class PHPAccessTestCase extends PHPTestCase {
 
     // Make sure that user doesn't have access to filter.
     $this->drupalGet('node/' . $node->nid . '/edit');
-    $this->assertNoFieldByName('body_format', '3', t('Format not available.'));
+    $this->assertNoRaw('<option value="' . $this->php_code_format . '">', t('PHP code format not available.'));
   }
 }

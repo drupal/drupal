@@ -292,7 +292,7 @@ function profile_view_field($account, $field) {
   if (isset($account->{$field->name}) && $value = $account->{$field->name}) {
     switch ($field->type) {
       case 'textarea':
-        return check_markup($value);
+        return check_markup($value, filter_default_format($account));
       case 'textfield':
       case 'selection':
         return $browse ? l($value, 'profile/' . $field->name . '/' . $value) : check_plain($value);

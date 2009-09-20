@@ -728,7 +728,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Merge body field value and format separately.
     $body = array(
       'value' => $this->randomName(32),
-      'format' => FILTER_FORMAT_DEFAULT
+      'format' => filter_default_format(),
     );
     $settings['body'][FIELD_LANGUAGE_NONE][0] += $body;
 

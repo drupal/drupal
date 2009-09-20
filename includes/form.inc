@@ -1917,7 +1917,7 @@ function form_process_radios($element) {
  *   $form['body'] = array(
  *     '#type' => 'textarea',
  *     '#title' => t('Body'),
- *     '#text_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
+ *     '#text_format' => isset($node->format) ? $node->format : filter_default_format(),
  *   );
  * @endcode
  *

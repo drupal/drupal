@@ -19,7 +19,6 @@ function php_install() {
     $format = db_insert('filter_format')
       ->fields(array(
         'name' => 'PHP code',
-        'roles' => '',
         'cache' => 0,
       ))
       ->execute();

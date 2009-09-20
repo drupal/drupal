@@ -77,13 +77,6 @@ function filter_schema() {
         'default' => '',
         'description' => 'Name of the text format (Filtered HTML).',
       ),
-      'roles' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'A comma-separated string of roles; references {role}.rid.', // This is bad since you can't use joins, nor index.
-      ),
       'cache' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -110,6 +103,11 @@ function filter_schema() {
 
   return $schema;
 }
+
+/**
+ * @defgroup updates-6.x-to-7.x Filter updates from 6.x to 7.x
+ * @{
+ */
 
 /**
  * Add a weight column to the filter formats table.
@@ -260,3 +258,88 @@ function filter_update_7004() {
   return $ret;
 }
 
+/**
+ * Integrate text formats with the user permissions system.
+ *
+ * This function converts text format role assignments to use the new text
+ * format permissions introduced in Drupal 7, creates a fallback (plain text)
+ * format that is available to all users, and explicitly sets the text format
+ * in cases that used to rely on a single site-wide default.
+ */
+function filter_update_7005() {
+  $ret = array();
+
+  // Move role data from the filter system to the user permission system.
+  $all_roles = array_keys(user_roles());
+  $default_format = variable_get('filter_default_format', 1);
+  $result = db_query("SELECT * FROM {filter_format}");
+  foreach ($result as $format) {
+    // We need to assign the default format to all roles (regardless of what
+    // was stored in the database) to preserve the behavior of the site at the
+    // moment of the upgrade.
+    $format_roles = ($format->format == $default_format ? $all_roles : explode(',', $format->roles));
+    foreach ($format_roles as $format_role) {
+      if (in_array($format_role, $all_roles)) {
+        user_role_grant_permissions($format_role, array(filter_permission_name($format)));
+      }
+    }
+  }
+
+  // Drop the roles field from the {filter_format} table.
+  db_drop_field($ret, 'filter_format', 'roles');
+
+  // Add a fallback text format which outputs plain text and appears last on
+  // the list for all users. Generate a unique name for it, starting with
+  // "Plain text".
+  $start_name = 'Plain text';
+  $format_name = $start_name;
+  while ($format = db_query('SELECT format FROM {filter_format} WHERE name = :name', array(':name' => $format_name))->fetchField()) {
+    $id = empty($id) ? 1 : $id + 1;
+    $format_name = $start_name . ' ' . $id;
+  }
+  $fallback_format = new stdClass();
+  $fallback_format->name = $format_name;
+  $fallback_format->cache = 1;
+  $fallback_format->weight = 1;
+  // This format should output plain text, so we escape all HTML and apply the
+  // line break filter only.
+  $fallback_format->filters = array(
+    'filter_html_escape' => array('status' => 1),
+    'filter_autop' => array('status' => 1),
+  );
+  filter_format_save($fallback_format);
+  variable_set('filter_fallback_format', $fallback_format->format);
+  drupal_set_message('A new <em>Plain text</em> format has been created which will be available to all users. You can configure this text format on the <a href="' . url('admin/config/content/formats/' . $fallback_format->format) . '">text format configuration page</a>.');
+
+  // Move the former site-wide default text format to the top of the list, so
+  // that it continues to be the default text format for all users.
+  db_update('filter_format')
+    ->fields(array('weight' => -1))
+    ->condition('format', $default_format)
+    ->execute();
+
+  // It was previously possible for a value of "0" to be stored in database
+  // tables to indicate that a particular piece of text should be filtered
+  // using the default text format. Therefore, we have to convert all such
+  // instances (in Drupal core) to explicitly use the appropriate format.
+  // Note that the update of the node body field is handled separately, in
+  // node_update_7006().
+  foreach (array('block_custom', 'comment') as $table) {
+    if (db_table_exists($table)) {
+      db_update($table)
+        ->fields(array('format' => $default_format))
+        ->condition('format', 0)
+        ->execute();
+    }
+  }
+
+  // We do not delete the 'filter_default_format' variable, since other modules
+  // may need it in their update functions.
+  // @todo This variable can be deleted in Drupal 8.
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
+ */

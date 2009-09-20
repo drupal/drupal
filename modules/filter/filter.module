@@ -7,14 +7,6 @@
  */
 
 /**
- * Special format ID which means "use the default format".
- *
- * This value can be passed to the filter APIs as a format ID: this is
- * equivalent to not passing an explicit format at all.
- */
-define('FILTER_FORMAT_DEFAULT', 0);
-
-/**
  * Implement hook_help().
  */
 function filter_help($path, $arg) {
@@ -22,12 +14,12 @@ function filter_help($path, $arg) {
     case 'admin/help#filter':
       $output = '<p>' . t("The filter module allows administrators to configure text formats for use on your site. A text format defines the HTML tags, codes, and other input allowed in both content and comments, and is a key feature in guarding against potentially damaging input from malicious users. Two formats included by default are <em>Filtered HTML</em> (which allows only an administrator-approved subset of HTML tags) and <em>Full HTML</em> (which allows the full set of HTML tags). Additional formats may be created by an administrator.") . '</p>';
       $output .= '<p>' . t('Each text format uses filters to manipulate text, and most formats apply several different filters to text in a specific order. Each filter is designed for a specific purpose, and generally either adds, removes or transforms elements within user-entered text before it is displayed. A filter does not change the actual content of a post, but instead, modifies it temporarily before it is displayed. A filter may remove unapproved HTML tags, for instance, while another automatically adds HTML to make links referenced in text clickable.') . '</p>';
-      $output .= '<p>' . t('Users with access to more than one text format can use the <em>Text format</em> fieldset to choose between available text formats when creating or editing multi-line content. Administrators determine the text formats available to each user role, select a default text format, and control the order of formats listed in the <em>Text format</em> fieldset.') . '</p>';
+      $output .= '<p>' . t('Users with access to more than one text format can use the <em>Text format</em> fieldset to choose between available text formats when creating or editing multi-line content. Administrators determine the text formats available to each user role and control the order of formats listed in the <em>Text format</em> fieldset.') . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@filter">Filter module</a>.', array('@filter' => 'http://drupal.org/handbook/modules/filter/')) . '</p>';
       return $output;
     case 'admin/config/content/formats':
-      $output = '<p>' . t('Use the list below to review the text formats available to each user role, to select a default text format, and to control the order of formats listed in the <em>Text format</em> fieldset. (The <em>Text format</em> fieldset is displayed below textareas when users with access to more than one text format create multi-line content.) The text format selected as <em>Default</em> is available to all users and, unless another format is selected, is applied to all content. All text formats are available to users in roles with the "administer filters" permission.') . '</p>';
-      $output .= '<p>' . t('Since text formats, if available, are presented in the same order as the list below, it may be helpful to arrange the formats in descending order of your preference for their use. Remember that your changes will not be saved until you click the <em>Save changes</em> button at the bottom of the page.') . '</p>';
+      $output = '<p>' . t('Use the list below to review the text formats available to each user role and to control the order of formats listed in the <em>Text format</em> fieldset. (The <em>Text format</em> fieldset is displayed below textareas when users with access to more than one text format create multi-line content.) All text formats are available to users in roles with the "administer filters" permission, and the special %fallback format is available to all users. You can configure access to other text formats on the <a href="@url">permissions page</a>.', array('%fallback' => filter_fallback_format_title(), '@url' => url('admin/config/people/permissions', array('fragment' => 'module-filter')))) . '</p>';
+      $output .= '<p>' . t('Since text formats, if available, are presented in the same order as the list below, and the default format for each user is the first one on the list for which that user has access, it may be helpful to arrange the formats in descending order of your preference for their use. Remember that your changes will not be saved until you click the <em>Save changes</em> button at the bottom of the page.') . '</p>';
       return $output;
     case 'admin/config/content/formats/%':
       return '<p>' . t('Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this format. If you notice some filters are causing conflicts in the output, you can <a href="@rearrange">rearrange them</a>.', array('@rearrange' => url('admin/config/content/formats/' . $arg[4] . '/order'))) . '</p>';
@@ -133,11 +125,26 @@ function filter_menu() {
     'title' => 'Delete text format',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_delete', 4),
-    'access arguments' => array('administer filters'),
+    'access callback' => '_filter_delete_format_access',
+    'access arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'filter.admin.inc',
   );
   return $items;
+}
+
+/**
+ * Access callback for deleting text formats.
+ *
+ * @param $format
+ *   A text format object.
+ * @return
+ *   TRUE if the text format can be deleted by the current user, FALSE
+ *   otherwise.
+ */
+function _filter_delete_format_access($format) {
+  // The fallback format can never be deleted.
+  return user_access('administer filters') && ($format->format != filter_fallback_format());
 }
 
 /**
@@ -150,7 +157,8 @@ function filter_menu() {
  *   A fully-populated text format object.
  */
 function filter_format_load($format) {
-  return filter_formats($format);
+  $formats = filter_formats();
+  return isset($formats[$format]) ? $formats[$format] : FALSE;
 }
 
 /**
@@ -160,17 +168,6 @@ function filter_format_load($format) {
  *   A format object.
  */
 function filter_format_save($format) {
-  // We store the roles as a string for ease of use.
-  // We should always set all roles to TRUE when saving the default format.
-  // We use leading and trailing comma's to allow easy substring matching.
-  $roles = array_filter($format->roles);
-  if (!empty($format->format) && $format->format == variable_get('filter_default_format', 1)) {
-    $roles = ',' . implode(',', array_keys(user_roles())) . ',';
-  }
-  else {
-    $roles = ',' . implode(',', array_keys($roles)) . ',';
-  }
-  $format->roles = $roles;
   $format->name = trim($format->name);
 
   // Add a new text format.
@@ -208,11 +205,17 @@ function filter_format_save($format) {
   }
   else {
     module_invoke_all('filter_format_update', $format);
+    // Explicitly indicate that the format was updated. We need to do this
+    // since if the filters were updated but the format object itself was not,
+    // the call to drupal_write_record() above would not return an indication
+    // that anything had changed.
+    $return = SAVED_UPDATED;
+
+    // Clear the filter cache whenever a text format is updated.
+    cache_clear_all($format->format . ':', 'cache_filter', TRUE);
   }
 
-  // Clear the filter cache whenever a text format is saved.
-  drupal_static_reset('filter_list_format');
-  cache_clear_all($format->format . ':', 'cache_filter', TRUE);
+  filter_formats_reset();
 
   return $return;
 }
@@ -232,9 +235,10 @@ function filter_format_delete($format) {
     ->execute();
 
   // Allow modules to react on text format deletion.
-  $default = filter_format_load(variable_get('filter_default_format', 1));
-  module_invoke_all('filter_format_delete', $format, $default);
+  $fallback = filter_format_load(filter_fallback_format());
+  module_invoke_all('filter_format_delete', $format, $fallback);
 
+  filter_formats_reset();
   cache_clear_all($format->format . ':', 'cache_filter', TRUE);
 }
 
@@ -249,12 +253,42 @@ function filter_admin_format_title($format) {
  * Implement hook_permission().
  */
 function filter_permission() {
-  return array(
-    'administer filters' => array(
-      'title' => t('Administer filters'),
-      'description' => t('Manage text formats and filters, and select which roles may use them. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
-    ),
+  $perms['administer filters'] = array(
+    'title' => t('Administer filters'),
+    'description' => t('Manage text formats and filters, and use any of them, without restriction, when entering or editing content. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
   );
+
+  // Generate permissions for each text format. Warn the administrator that any
+  // of them are potentially unsafe.
+  foreach (filter_formats() as $format) {
+    $permission = filter_permission_name($format);
+    if (!empty($permission)) {
+      // Only link to the text format configuration page if the user who is
+      // viewing this will have access to that page.
+      $format_name_replacement = user_access('administer filters') ? l($format->name, 'admin/config/content/formats/' . $format->format) : theme('placeholder', $format->name);
+      $perms[$permission] = array(
+        'title' => t("Use the %text_format text format", array('%text_format' => $format->name)),
+        'description' => t('Use !text_format in forms when entering or editing content. %warning', array('!text_format' => $format_name_replacement, '%warning' => t('Warning: This permission may have security implications depending on how the text format is configured.'))),
+      );
+    }
+  }
+  return $perms;
+}
+
+/**
+ * Returns the machine-readable permission name for a provided text format.
+ *
+ * @param $format
+ *   An object representing a text format.
+ * @return
+ *   The machine-readable permission name, or FALSE if the provided text format
+ *   is malformed or is the fallback format (which is available to all users).
+ */
+function filter_permission_name($format) {
+  if (isset($format->format) && $format->format != filter_fallback_format()) {
+    return 'use text format ' . $format->format;
+  }
+  return FALSE;
 }
 
 /**
@@ -389,55 +423,139 @@ function _filter_html_escape_tips($filter, $format, $long = FALSE) {
  */
 
 /**
- * Retrieve a list of text formats.
+ * Retrieve a list of text formats, ordered by weight.
  *
- * @param $format
- *   (optional) The text format to retrieve; if omitted or NULL, retrieve an
- *   array of accessible text formats.
  * @param $account
- *   (optional) The user account to retrieve accessible text formats for; if
- *   omitted, the currently logged-in user is used.
- *
+ *   (optional) If provided, only those formats that are allowed for this user
+ *   account will be returned. All formats will be returned otherwise.
  * @return
- *   Either one text format object or a list of text format objects, depending
- *   on the $format parameter. FALSE if the user does not have access to the
- *   given text $format.
+ *   An array of text format objects, keyed by the format ID and ordered by
+ *   weight.
+ *
+ * @see filter_formats_reset()
  */
-function filter_formats($format = NULL, $account = NULL) {
-  global $user;
+function filter_formats($account = NULL) {
   $formats = &drupal_static(__FUNCTION__, array());
 
+  // Statically cache all existing formats upfront.
+  if (!isset($formats['all'])) {
+    $formats['all'] = db_query('SELECT * FROM {filter_format} ORDER BY weight')->fetchAllAssoc('format');
+  }
+
+  // Build a list of user-specific formats.
+  if (isset($account) && !isset($formats['user'][$account->uid])) {
+    $formats['user'][$account->uid] = array();
+    foreach ($formats['all'] as $format) {
+      if (filter_access($format, $account)) {
+        $formats['user'][$account->uid][$format->format] = $format;
+      }
+    }
+  }
+
+  return isset($account) ? $formats['user'][$account->uid] : $formats['all'];
+}
+
+/**
+ * Resets the static cache of all text formats.
+ *
+ * @see filter_formats()
+ */
+function filter_formats_reset() {
+  drupal_static_reset('filter_list_format');
+  drupal_static_reset('filter_formats');
+}
+
+/**
+ * Retrieves a list of roles that are allowed to use a given text format.
+ *
+ * @param $format
+ *   An object representing the text format.
+ * @return
+ *   An array of role names, keyed by role ID.
+ */
+function filter_get_roles_by_format($format) {
+  // Handle the fallback format upfront (all roles have access to this format).
+  if ($format->format == filter_fallback_format()) {
+    return user_roles();
+  }
+  // Do not list any roles if the permission does not exist.
+  $permission = filter_permission_name($format);
+  return !empty($permission) ? user_roles(FALSE, $permission) : array();
+}
+
+/**
+ * Retrieves a list of text formats that are allowed for a given role.
+ *
+ * @param $rid
+ *   The user role ID to retrieve text formats for.
+ * @return
+ *   An array of text format objects that are allowed for the role, keyed by
+ *   the text format ID and ordered by weight.
+ */
+function filter_get_formats_by_role($rid) {
+  $formats = array();
+  foreach (filter_formats() as $format) {
+    $roles = filter_get_roles_by_format($format);
+    if (isset($roles[$rid])) {
+      $formats[$format->format] = $format;
+    }
+  }
+  return $formats;
+}
+
+/**
+ * Returns the ID of the default text format for a particular user.
+ *
+ * The default text format is the first available format that the user is
+ * allowed to access, when the formats are ordered by weight. It should
+ * generally be used as a default choice when presenting the user with a list
+ * of possible text formats (for example, in a node creation form).
+ *
+ * Conversely, when existing content that does not have an assigned text format
+ * needs to be filtered for display, the default text format is the wrong
+ * choice, because it is not guaranteed to be consistent from user to user, and
+ * some trusted users may have an unsafe text format set by default, which
+ * should not be used on text of unknown origin. Instead, the fallback format
+ * returned by filter_fallback_format() should be used, since that is intended
+ * to be a safe, consistent format that is always available to all users.
+ *
+ * @param $account
+ *   (optional) The user account to check. Defaults to the currently logged-in
+ *   user.
+ * @return
+ *   The ID of the user's default text format.
+ *
+ * @see filter_fallback_format()
+ */
+function filter_default_format($account = NULL) {
+  global $user;
   if (!isset($account)) {
     $account = $user;
   }
+  // Get a list of formats for this user, ordered by weight. The first one
+  // available is the user's default format.
+  $format = array_shift(filter_formats($account));
+  return $format->format;
+}
 
-  // Administrators can always use all text formats.
-  $all = user_access('administer filters', $account);
+/**
+ * Returns the ID of the fallback text format that all users have access to.
+ */
+function filter_fallback_format() {
+  // This variable is automatically set in the database for all installations
+  // of Drupal. In the event that it gets deleted somehow, there is no safe
+  // default to return, since we do not want to risk making an existing (and
+  // potentially unsafe) text format on the site automatically available to all
+  // users. Returning NULL at least guarantees that this cannot happen.
+  return variable_get('filter_fallback_format');
+}
 
-  if (!isset($formats[$account->uid])) {
-    $query = db_select('filter_format', 'f');
-    $query->addField('f', 'format', 'format');
-    $query->addField('f', 'name', 'name');
-    $query->addField('f', 'roles', 'roles');
-    $query->addField('f', 'cache', 'cache');
-    $query->addField('f', 'weight', 'weight');
-    $query->orderBy('weight');
-
-    // Build query for selecting the format(s) based on the user's roles.
-    if (!$all) {
-      $or = db_or()->condition('format', variable_get('filter_default_format', 1));
-      foreach ($user->roles as $rid => $role) {
-        $or->condition('roles', '%' . (int)$rid . '%', 'LIKE');
-      }
-      $query->condition($or);
-    }
-
-    $formats[$account->uid] = $query->execute()->fetchAllAssoc('format');
-  }
-  if (isset($format)) {
-    return isset($formats[$account->uid][$format]) ? $formats[$account->uid][$format] : FALSE;
-  }
-  return $formats[$account->uid];
+/**
+ * Returns the title of the fallback text format.
+ */
+function filter_fallback_format_title() {
+  $fallback_format = filter_format_load(filter_fallback_format());
+  return filter_admin_format_title($fallback_format);
 }
 
 /**
@@ -470,17 +588,10 @@ function _filter_list_cmp($a, $b) {
 }
 
 /**
- * Resolve a format id, including the default format.
- */
-function filter_resolve_format($format) {
-  return $format == FILTER_FORMAT_DEFAULT ? variable_get('filter_default_format', 1) : $format;
-}
-/**
  * Check if text in a certain text format is allowed to be cached.
  */
 function filter_format_allowcache($format) {
   static $cache = array();
-  $format = filter_resolve_format($format);
   if (!isset($cache[$format])) {
     $cache[$format] = db_query('SELECT cache FROM {filter_format} WHERE format = :format', array(':format' => $format))->fetchField();
   }
@@ -557,8 +668,8 @@ function filter_list_format($format, $include_disabled = FALSE) {
  * @param $text
  *   The text to be filtered.
  * @param $format
- *   The format of the text to be filtered. Specify FILTER_FORMAT_DEFAULT for
- *   the default format.
+ *   The format of the text to be filtered. If no format is assigned, the
+ *   fallback format will be used.
  * @param $langcode
  *   Optional: the language code of the text to be filtered, e.g. 'en' for
  *   English. This allows filters to be language aware so language specific
@@ -568,8 +679,10 @@ function filter_list_format($format, $include_disabled = FALSE) {
  *   The caller may set this to FALSE when the output is already cached
  *   elsewhere to avoid duplicate cache lookups and storage.
  */
-function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $cache = TRUE) {
-  $format = filter_resolve_format($format);
+function check_markup($text, $format = NULL, $langcode = '', $cache = TRUE) {
+  if (empty($format)) {
+    $format = filter_fallback_format();
+  }
 
   // Check for a cached version of this piece of text.
   $cache_id = $format . ':' . $langcode . ':' . md5($text);
@@ -620,9 +733,16 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
  * @return
  *   HTML for the form element.
  */
-function filter_form($selected_format = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = array('format')) {
-  $selected_format = filter_resolve_format($selected_format);
-  $formats = filter_formats();
+function filter_form($selected_format = NULL, $weight = NULL, $parents = array('format')) {
+  global $user;
+
+  // Use the default format for this user if none was selected.
+  if (empty($selected_format)) {
+    $selected_format = filter_default_format($user);
+  }
+
+  // Get a list of formats that the current user has access to.
+  $formats = filter_formats($user);
 
   drupal_add_js('misc/form.js');
   drupal_add_css(drupal_get_path('module', 'filter') . '/filter.css');
@@ -665,28 +785,31 @@ function filter_form($selected_format = FILTER_FORMAT_DEFAULT, $weight = NULL, $
 }
 
 /**
- * Returns whether a user is allowed to access a given text format.
+ * Checks if a user has access to a particular text format.
  *
  * @param $format
- *   The format of a text to be filtered. Specify FILTER_FORMAT_DEFAULT for
- *   the site's default text format.
+ *   An object representing the text format.
  * @param $account
  *   (optional) The user account to check access for; if omitted, the currently
  *   logged-in user is used.
  *
  * @return
  *   Boolean TRUE if the user is allowed to access the given format.
- *
- * @see filter_formats()
  */
 function filter_access($format, $account = NULL) {
-  $format = filter_resolve_format($format);
-  if (user_access('administer filters', $account) || ($format == variable_get('filter_default_format', 1))) {
+  global $user;
+  if (!isset($account)) {
+    $account = $user;
+  }
+  // Handle special cases up front. All users have access to the fallback
+  // format, and administrators have access to all formats.
+  if (user_access('administer filters', $account) || $format->format == filter_fallback_format()) {
     return TRUE;
   }
-  else {
-    return (bool) filter_formats($format, $account);
-  }
+  // Check the permission if one exists; otherwise, we have a non-existent
+  // format so we return FALSE.
+  $permission = filter_permission_name($format);
+  return !empty($permission) && user_access($permission, $account);
 }
 
 /**
@@ -698,7 +821,9 @@ function filter_access($format, $account = NULL) {
  * Helper function for fetching filter tips.
  */
 function _filter_tips($format, $long = FALSE) {
-  $formats = filter_formats();
+  global $user;
+
+  $formats = filter_formats($user);
   $filter_info = filter_get_filters();
 
   $tips = array();
@@ -1034,15 +1159,3 @@ function _filter_html_escape($text) {
 /**
  * @} End of "Standard filters".
  */
-
-/**
- * Implement hook_user_role_delete().
- * 
- * Remove deleted role from formats that use it. 
- */
-function filter_user_role_delete($role) {
-  db_update('filter_format')
-    ->expression('roles', 'REPLACE(roles, :rid, :replacement)', array(':rid' => ',' . $role->rid, ':replacement' => ''))
-    ->condition('roles', '%,' . $role->rid . '%', 'LIKE')
-    ->execute();
-}

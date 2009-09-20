@@ -3,6 +3,8 @@
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
+  protected $admin_user;
+  protected $web_user;
 
   public static function getInfo() {
     return array(
@@ -15,8 +17,9 @@ class TextFieldTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('field_test');
 
-    $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
-    $this->drupalLogin($web_user);
+    $this->admin_user = $this->drupalCreateUser(array('administer filters'));
+    $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
+    $this->drupalLogin($this->web_user);
   }
 
   // Test fields.
@@ -147,15 +150,23 @@ class TextFieldTestCase extends DrupalWebTestCase {
     field_create_instance($this->instance);
     $langcode = FIELD_LANGUAGE_NONE;
 
-    // Display creation form.
-    // By default, the user only has access to 'Filtered HTML', and no format
-    // selector is displayed
+    // Delete all text formats besides the plain text fallback format.
+    $this->drupalLogin($this->admin_user);
+    foreach (filter_formats() as $format) {
+      if ($format->format != filter_fallback_format()) {
+        $this->drupalPost('admin/config/content/formats/' . $format->format . '/delete', array(), t('Delete'));
+      }
+    }
+    $this->drupalLogin($this->web_user);
+
+    // Display the creation form. Since the user only has access to one format,
+    // no format selector will be displayed.
     $this->drupalGet('test-entity/add/test-bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
-    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][value_format]", '1', t('Format selector is not displayed'));
+    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][value_format]", '', t('Format selector is not displayed'));
 
     // Submit with data that should be filtered.
-    $value = $this->randomName() . '<br />' . $this->randomName();
+    $value = '<em>' . $this->randomName() . '</em>';
     $edit = array(
       "{$this->field_name}[$langcode][0][value]" => $value,
     );
@@ -168,21 +179,31 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $entity = field_test_entity_load($id);
     $entity->content = field_attach_view($entity_type, $entity);
     $this->content = drupal_render($entity->content);
-    $this->assertNoRaw($value, 'Filtered tags are not displayed');
-    $this->assertRaw(str_replace('<br />', '', $value), t('Filtered value is displayed correctly'));
+    $this->assertNoRaw($value, t('HTML tags are not displayed.'));
+    $this->assertRaw(check_plain($value), t('Escaped HTML is displayed correctly.'));
 
-    // Allow the user to use the 'Full HTML' format.
-    db_update('filter_format')->fields(array('roles' => ',2,'))->condition('format', 2)->execute();
+    // Create a new text format that does not escape HTML, and grant the user
+    // access to it.
+    $this->drupalLogin($this->admin_user);
+    $edit = array('name' => $this->randomName());
+    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    filter_format_reset_cache();
+    $this->checkPermissions(array(), TRUE);
+    $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
+    $permission = filter_permission_name(filter_format_load($format_id));
+    $rid = max(array_keys($this->web_user->roles));
+    user_role_set_permissions($rid, array($permission), TRUE);
+    $this->drupalLogin($this->web_user);
 
     // Display edition form.
     // We should now have a 'text format' selector.
     $this->drupalGet('test-entity/' . $id . '/edit');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value_format]", '1', t('Format selector is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value_format]", '', t('Format selector is displayed'));
 
-    // Edit and change the format to 'Full HTML'.
+    // Edit and change the text format to the new one that was created.
     $edit = array(
-      "{$this->field_name}[$langcode][0][value_format]" => 2,
+      "{$this->field_name}[$langcode][0][value_format]" => $format_id,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), t('Entity was updated'));

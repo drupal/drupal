@@ -43,6 +43,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Redesigned the add content type screen.
     * Highlight duplicate URL aliases.
     * Renamed "input formats" to "text formats".
+    * Moved text format permissions to the main permissions page.
     * Added configurable ability for users to cancel their own accounts.
     * Added "vertical tabs", a reusable interface component that features automatic
       summaries and increases usability.
@@ -80,6 +81,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       fallback to the system time zone and will have to be reconfigured by each user.
 - Filter system:
     * Revamped the filter API and text format storage.
+    * Added support for default text formats to be assigned on a per-role basis.
     * Refactored the HTML corrector to take advantage of PHP 5 features.
 - Removed ping module:
     * Contributed modules with similar functionality are available.

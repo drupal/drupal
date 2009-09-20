@@ -409,7 +409,6 @@ function system_install() {
       ->execute();
   }
 
-
   variable_set('theme_default', 'garland');
 
   db_update('system')
@@ -433,15 +432,22 @@ function system_install() {
   $filtered_html_format = db_insert('filter_format')
     ->fields(array(
       'name' => 'Filtered HTML',
-      'roles' => ',' . DRUPAL_ANONYMOUS_RID . ',' . DRUPAL_AUTHENTICATED_RID . ',',
       'cache' => 1,
+      'weight' => 0,
     ))
     ->execute();
   $full_html_format = db_insert('filter_format')
     ->fields(array(
       'name' => 'Full HTML',
-      'roles' => '',
       'cache' => 1,
+      'weight' => 0,
+    ))
+    ->execute();
+  $plain_text_format = db_insert('filter_format')
+    ->fields(array(
+      'name' => 'Plain text',
+      'cache' => 1,
+      'weight' => 1,
     ))
     ->execute();
 
@@ -507,10 +513,27 @@ function system_install() {
       'weight' => 10,
       'status' => 1,
     ))
+  // Plain text:
+    // Escape all HTML.
+    ->values(array(
+      'format' => $plain_text_format,
+      'module' => 'filter',
+      'name' => 'filter_html_escape',
+      'weight' => 0,
+      'status' => 1,
+    ))
+    // Line break filter.
+    ->values(array(
+      'format' => $plain_text_format,
+      'module' => 'filter',
+      'name' => 'filter_autop',
+      'weight' => 1,
+      'status' => 1,
+    ))
     ->execute();
 
-  // Set the default input format to Filtered HTML.
-  variable_set('filter_default_format', $filtered_html_format);
+  // Set the fallback format to plain text.
+  variable_set('filter_fallback_format', $plain_text_format);
 
   $cron_key = md5(mt_rand());
 
@@ -2073,8 +2096,9 @@ function system_update_7021() {
   $ret[] = update_sql("UPDATE {block} SET region = 'sidebar_second' WHERE region = 'right'");
 
   // Migrate contact form information.
+  $default_format = variable_get('filter_default_format', 1);
   if ($contact_help = variable_get('contact_form_information', '')) {
-    $bid = db_insert('box')->fields(array('body' => $contact_help, 'info' => 'Contact page help', 'format' => FILTER_FORMAT_DEFAULT))->execute();
+    $bid = db_insert('box')->fields(array('body' => $contact_help, 'info' => 'Contact page help', 'format' => $default_format))->execute();
     foreach ($themes_with_blocks as $theme) {
       // Add contact help block for themes, which had blocks.
       $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, visibility, pages, cache) VALUES ('block', '" . $bid . "', '" . $theme . "', 1, 5, 'help', 1, 'contact', -1)");
@@ -2084,7 +2108,7 @@ function system_update_7021() {
 
   // Migrate user help setting.
   if ($user_help = variable_get('user_registration_help', '')) {
-    $bid = db_insert('box')->fields(array('body' => $user_help, 'info' => 'User registration guidelines', 'format' => FILTER_FORMAT_DEFAULT))->execute();
+    $bid = db_insert('box')->fields(array('body' => $user_help, 'info' => 'User registration guidelines', 'format' => $default_format))->execute();
     foreach ($themes_with_blocks as $theme) {
       // Add user registration help block for themes, which had blocks.
       $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, visibility, pages, cache) VALUES ('block', '" . $bid . "', '" . $theme . "', 1, 5, 'help', 1, 'user/register', -1)");
@@ -2094,7 +2118,7 @@ function system_update_7021() {
 
   // Migrate site mission setting.
   if ($mission = variable_get('site_mission')) {
-    $bid = db_insert('box')->fields(array('body' => $mission, 'info' => 'Site mission', 'format' => FILTER_FORMAT_DEFAULT))->execute();
+    $bid = db_insert('box')->fields(array('body' => $mission, 'info' => 'Site mission', 'format' => $default_format))->execute();
     foreach ($themes_with_blocks as $theme) {
       // Add mission block for themes, which had blocks.
       $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, visibility, pages, cache) VALUES ('block', '" . $bid . "', '" . $theme . "', 1, 0, 'highlight', 1, '<front>', -1)");
@@ -2106,7 +2130,7 @@ function system_update_7021() {
 
   // Migrate site footer message to a custom block.
   if ($footer_message = variable_get('site_footer', '')) {
-    $bid = db_insert('box')->fields(array('body' => $footer_message, 'info' => 'Footer message', 'format' => FILTER_FORMAT_DEFAULT))->execute();
+    $bid = db_insert('box')->fields(array('body' => $footer_message, 'info' => 'Footer message', 'format' => $default_format))->execute();
     foreach ($themes_with_blocks as $theme) {
       // Add site footer block for themes, which had blocks.
       // Set low weight, so the block comes early (it used to be

@@ -156,7 +156,7 @@ function block_block_info() {
  * Implement hook_block_configure().
  */
 function block_block_configure($delta = 0) {
-  $custom_block = array('format' => FILTER_FORMAT_DEFAULT);
+  $custom_block = array('format' => filter_default_format());
   if ($delta) {
     $custom_block = block_custom_block_get($delta);
   }
@@ -350,12 +350,12 @@ function block_custom_block_form($edit = array()) {
     '#type' => 'textarea',
     '#title' => t('Block body'),
     '#default_value' => $edit['body'],
-    '#text_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
+    '#text_format' => isset($edit['format']) ? $edit['format'] : filter_default_format(),
     '#rows' => 15,
     '#description' => t('The content of the block as shown to the user.'),
     '#required' => TRUE,
     '#weight' => -17,
-    '#access' => filter_access($edit['format']),
+    '#access' => filter_access(filter_format_load($edit['format'])),
   );
 
   return $form;
@@ -799,9 +799,9 @@ function block_user_role_delete($role) {
 /**
  * Implement hook_filter_format_delete().
  */
-function block_filter_format_delete($format, $default) {
+function block_filter_format_delete($format, $fallback) {
   db_update('block_custom')
-    ->fields(array('format' => $default->format))
+    ->fields(array('format' => $fallback->format))
     ->condition('format', $format->format)
     ->execute();
 }

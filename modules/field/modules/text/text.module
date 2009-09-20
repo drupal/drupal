@@ -541,7 +541,7 @@ function text_element_info() {
     '#delta' => 0,
     '#process' => array('text_textarea_elements_process'),
     '#theme_wrappers' => array('text_textarea'),
-    '#filter_value' => FILTER_FORMAT_DEFAULT,
+    '#filter_value' => filter_default_format(),
   );
   $types['text_textarea_with_summary'] = array(
     '#input' => TRUE,
@@ -549,7 +549,7 @@ function text_element_info() {
     '#delta' => 0,
     '#process' => array('text_textarea_with_summary_process'),
     '#theme_wrappers' => array('text_textarea'),
-    '#filter_value' => FILTER_FORMAT_DEFAULT,
+    '#filter_value' => filter_default_format(),
   );
   return $types;
 }
@@ -651,7 +651,7 @@ function text_textfield_elements_process($element, $form_state, $form) {
 
   if (!empty($instance['settings']['text_processing'])) {
     $filter_key  = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
-    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : FILTER_FORMAT_DEFAULT;
+    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : filter_default_format();
     $element[$field_key]['#text_format'] = $format;
   }
 
@@ -684,7 +684,7 @@ function text_textarea_elements_process($element, $form_state, $form) {
 
   if (!empty($instance['settings']['text_processing'])) {
     $filter_key = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
-    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : FILTER_FORMAT_DEFAULT;
+    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : filter_default_format();
     $element[$field_key]['#text_format'] = $format;
   }
 
@@ -739,7 +739,7 @@ function text_textarea_with_summary_process($element, $form_state, $form) {
 
   if (!empty($instance['settings']['text_processing'])) {
     $filter_key  = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
-    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : FILTER_FORMAT_DEFAULT;
+    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : filter_default_format();
     $element[$field_key]['#text_format'] = $format;
   }
 
@@ -760,7 +760,7 @@ function text_field_widget_formatted_text_value($form, $edit = FALSE) {
     // The format selector uses #access = FALSE if only one format is
     // available. In this case, we don't receive its value, and need to
     // manually set it.
-    $edit['format'] = !empty($edit[$default_key]) ? $edit[$default_key] : filter_resolve_format(FILTER_FORMAT_DEFAULT);
+    $edit['format'] = !empty($edit[$default_key]) ? $edit[$default_key] : filter_default_format();
     unset($edit[$default_key]);
     return $edit;
   }

@@ -374,7 +374,17 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     // Create a node, using the PHP filter that tests drupal_add_css().
     $settings = array(
       'type' => 'page',
-      'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => t('This tests the inline CSS!') . "<?php drupal_add_css('$css', 'inline'); ?>", 'format' => 3))), // PHP filter.
+      'body' => array(
+        FIELD_LANGUAGE_NONE => array(
+          array(
+            'value' => t('This tests the inline CSS!') . "<?php drupal_add_css('$css', 'inline'); ?>",
+            // The "PHP code" format is always the most recent one added, since
+            // the PHP module was enabled in the setUp() method of the current
+            // test.
+            'format' => db_query("SELECT MAX(format) FROM {filter_format}")->fetchField(),
+          ),
+        ),
+      ),
       'promote' => 1,
     );
     $node = $this->drupalCreateNode($settings);

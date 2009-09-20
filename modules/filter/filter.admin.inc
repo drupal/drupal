@@ -7,8 +7,7 @@
  */
 
 /**
- * Menu callback; Displays a list of all text formats and which
- * one is the default.
+ * Menu callback; Displays a list of all text formats and allows them to be rearranged.
  *
  * @ingroup forms
  * @see filter_admin_overview_submit()
@@ -16,37 +15,33 @@
 function filter_admin_overview($form) {
   // Overview of all formats.
   $formats = filter_formats();
-  $error = FALSE;
+  $fallback_format = filter_fallback_format();
 
   $form['#tree'] = TRUE;
   foreach ($formats as $id => $format) {
-    $roles = array();
-    foreach (user_roles() as $rid => $name) {
-      // Prepare a roles array with roles that may access the filter.
-      if (strpos($format->roles, ",$rid,") !== FALSE) {
-        $roles[] = $name;
-      }
+    // Check whether this is the fallback text format. This format is available
+    // to all roles and cannot be deleted via the admin interface.
+    $form['formats'][$id]['#is_fallback'] = ($id == $fallback_format);
+    if ($form['formats'][$id]['#is_fallback']) {
+      $form['formats'][$id]['name'] = array('#markup' => theme('placeholder', $format->name));
+      $roles_markup = theme('placeholder', t('All roles may use this format'));
     }
-    $default = ($id == variable_get('filter_default_format', 1));
-    $options[$id] = '';
-    $form[$id]['name'] = array('#markup' => $format->name);
-    $form[$id]['roles'] = array('#markup' => $default ? t('All roles may use the default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
-    $form[$id]['configure'] = array('#markup' => l(t('configure'), 'admin/config/content/formats/' . $id));
-    $form[$id]['delete'] = array('#markup' => $default ? '' : l(t('delete'), 'admin/config/content/formats/delete/' . $id));
-    $form[$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
+    else {
+      $form['formats'][$id]['name'] = array('#markup' => check_plain($format->name));
+      $roles = filter_get_roles_by_format($format);
+      $roles_markup = $roles ? implode(', ', $roles) : t('No roles may use this format');
+    }
+    $form['formats'][$id]['roles'] = array('#markup' => $roles_markup);
+    $form['formats'][$id]['configure'] = array('#markup' => l(t('configure'), 'admin/config/content/formats/' . $id));
+    $form['formats'][$id]['delete'] = array('#markup' => $form['formats'][$id]['#is_fallback'] ? '' : l(t('delete'), 'admin/config/content/formats/delete/' . $id));
+    $form['formats'][$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
-  $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));
   return $form;
 }
 
 function filter_admin_overview_submit($form, &$form_state) {
-  // Process form submission to set the default format.
-  if (is_numeric($form_state['values']['default'])) {
-    drupal_set_message(t('Default format updated.'));
-    variable_set('filter_default_format', $form_state['values']['default']);
-  }
-  foreach ($form_state['values'] as $id => $data) {
+  foreach ($form_state['values']['formats'] as $id => $data) {
     if (is_array($data) && isset($data['weight'])) {
       // Only update if this is a form element with weight.
       db_update('filter_format')
@@ -55,35 +50,31 @@ function filter_admin_overview_submit($form, &$form_state) {
         ->execute();
     }
   }
+  filter_formats_reset();
   drupal_set_message(t('The text format ordering has been saved.'));
 }
 
 /**
- * Theme the admin overview form.
+ * Theme the text format administration overview form.
  *
  * @ingroup themeable
  */
 function theme_filter_admin_overview($form) {
   $rows = array();
-  foreach (element_children($form) as $id) {
-    $element = $form[$id];
-    if (isset($element['roles']) && is_array($element['roles'])) {
-      $element['weight']['#attributes']['class'] = array('text-format-order-weight');
-      $rows[] = array(
-        'data' => array(
-          check_plain($element['name']['#markup']),
-          drupal_render($element['roles']),
-          drupal_render($form['default'][$id]),
-          drupal_render($element['weight']),
-          drupal_render($element['configure']),
-          drupal_render($element['delete']),
-        ),
-        'class' => array('draggable'),
-      );
-      unset($form[$id]);
-    }
+  foreach (element_children($form['formats']) as $id) {
+    $form['formats'][$id]['weight']['#attributes']['class'] = array('text-format-order-weight');
+    $rows[] = array(
+      'data' => array(
+        drupal_render($form['formats'][$id]['name']),
+        drupal_render($form['formats'][$id]['roles']),
+        drupal_render($form['formats'][$id]['weight']),
+        drupal_render($form['formats'][$id]['configure']),
+        drupal_render($form['formats'][$id]['delete']),
+      ),
+      'class' => array('draggable'),
+    );
   }
-  $header = array(t('Name'), t('Roles'), t('Default'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Name'), t('Roles'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
   $output = theme('table', $header, $rows, array('id' => 'text-format-order'));
   $output .= drupal_render_children($form);
 
@@ -98,7 +89,7 @@ function theme_filter_admin_overview($form) {
 function filter_admin_format_page($format = NULL) {
   if (!isset($format->name)) {
     drupal_set_title(t('Add text format'), PASS_THROUGH);
-    $format = (object)array('name' => '', 'roles' => '', 'format' => FILTER_FORMAT_DEFAULT);
+    $format = (object)array('name' => '', 'format' => 0);
   }
   return drupal_get_form('filter_admin_format_form', $format);
 }
@@ -111,10 +102,9 @@ function filter_admin_format_page($format = NULL) {
  * @see filter_admin_format_form_submit()
  */
 function filter_admin_format_form($form, &$form_state, $format) {
-  $default = ($format->format == variable_get('filter_default_format', 1));
-  if ($default) {
-    $help = t('All roles for the default format must be enabled and cannot be changed.');
-    $form['default_format'] = array('#type' => 'hidden', '#value' => 1);
+  $is_fallback = ($format->format == filter_fallback_format());
+  if ($is_fallback) {
+    $help = t('All roles for this text format must be enabled and cannot be changed.');
   }
 
   $form['name'] = array(
@@ -128,17 +118,16 @@ function filter_admin_format_form($form, &$form_state, $format) {
   // Add a row of checkboxes for form group.
   $form['roles'] = array('#type' => 'fieldset',
     '#title' => t('Roles'),
-    '#description' => $default ? $help : t('Choose which roles may use this text format. Note that roles with the "administer filters" permission can always use all text formats.'),
+    '#description' => $is_fallback ? $help : t('Choose which roles may use this text format. Note that roles with the "administer filters" permission can always use all text formats.'),
     '#tree' => TRUE,
   );
-
+  $checked = filter_get_roles_by_format($format);
   foreach (user_roles() as $rid => $name) {
-    $checked = strpos($format->roles, ",$rid,") !== FALSE;
     $form['roles'][$rid] = array('#type' => 'checkbox',
       '#title' => $name,
-      '#default_value' => ($default || $checked),
+      '#default_value' => ($is_fallback || isset($checked[$rid])),
     );
-    if ($default) {
+    if ($is_fallback) {
       $form['roles'][$rid]['#disabled'] = TRUE;
     }
   }
@@ -201,13 +190,19 @@ function filter_admin_format_form_submit($form, &$form_state) {
   $format->format = isset($form_state['values']['format']) ? $form_state['values']['format'] : NULL;
   $status = filter_format_save($format);
 
+  if ($permission = filter_permission_name($format)) {
+    foreach ($format->roles as $rid => $enabled) {
+      user_role_change_permissions($rid, array($permission => $enabled));
+    }
+  }
+
   switch ($status) {
     case SAVED_NEW:
       drupal_set_message(t('Added text format %format.', array('%format' => $format->name)));
       break;
 
     case SAVED_UPDATED:
-      drupal_set_message(t('The text format settings have been updated.'));
+      drupal_set_message(t('The text format %format has been updated.', array('%format' => $format->name)));
       break;
   }
 }
@@ -219,26 +214,15 @@ function filter_admin_format_form_submit($form, &$form_state) {
  * @see filter_admin_delete_submit()
  */
 function filter_admin_delete($form, &$form_state, $format) {
-  if ($format) {
-    if ($format->format != variable_get('filter_default_format', 1)) {
-      $form['#format'] = $format;
+  $form['#format'] = $format;
 
-      return confirm_form($form,
-        t('Are you sure you want to delete the text format %format?', array('%format' => $format->name)),
-        'admin/config/content/formats',
-        t('If you have any content left in this text format, it will be switched to the default text format. This action cannot be undone.'),
-        t('Delete'),
-        t('Cancel')
-      );
-    }
-    else {
-      drupal_set_message(t('The default format cannot be deleted.'));
-      drupal_goto('admin/config/content/formats');
-    }
-  }
-  else {
-    drupal_not_found();
-  }
+  return confirm_form($form,
+    t('Are you sure you want to delete the text format %format?', array('%format' => $format->name)),
+    'admin/config/content/formats',
+    t('If you have any content left in this text format, it will be switched to the %fallback text format. This action cannot be undone.', array('%fallback' => filter_fallback_format_title())),
+    t('Delete'),
+    t('Cancel')
+  );
 }
 
 /**
