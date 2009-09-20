@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.315 2009/09/18 00:12:47 webchick Exp $
+// $Id: search.module,v 1.316 2009/09/20 17:18:04 dries Exp $
 
 /**
  * @file
@@ -714,10 +714,6 @@ function search_touch_node($nid) {
     ->condition('type', 'node')
     ->condition('sid', $nid)
     ->execute();
-}
-
-function search_touch_data($type, $sid) {
-  db_query("UPDATE {search_dataset} SET reindex = :time WHERE sid = :sid AND type = :type", array(':time' => REQUEST_TIME, ':sid' => $sid, ':type' => $type));
 }
 
 /**
