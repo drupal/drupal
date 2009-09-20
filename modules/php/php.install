@@ -1,5 +1,5 @@
 <?php
-// $Id: php.install,v 1.13 2009/09/18 00:04:23 webchick Exp $
+// $Id: php.install,v 1.14 2009/09/20 07:32:18 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,6 @@ function php_install() {
     $format = db_insert('filter_format')
       ->fields(array(
         'name' => 'PHP code',
-        'roles' => '',
         'cache' => 0,
       ))
       ->execute();

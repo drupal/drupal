@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.772 2009/09/19 11:07:36 dries Exp $
+// $Id: comment.module,v 1.773 2009/09/20 07:32:17 dries Exp $
 
 /**
  * @file
@@ -1814,7 +1814,7 @@ function comment_form($form, &$form_state, $comment) {
     '#title' => t('Comment'),
     '#rows' => 15,
     '#default_value' => $default,
-    '#text_format' => isset($comment->format) ? $comment->format : FILTER_FORMAT_DEFAULT,
+    '#text_format' => isset($comment->format) ? $comment->format : filter_default_format(),
     '#required' => TRUE,
   );
 
@@ -2418,9 +2418,9 @@ function comment_menu_alter(&$items) {
 /**
  * Implement hook_filter_format_delete().
  */
-function comment_filter_format_delete($format, $default) {
+function comment_filter_format_delete($format, $fallback) {
   db_update('comment')
-    ->fields(array('format' => $default->format))
+    ->fields(array('format' => $fallback->format))
     ->condition('format', $format->format)
     ->execute();
 }

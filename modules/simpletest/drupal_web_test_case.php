@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.151 2009/09/19 11:20:34 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.152 2009/09/20 07:32:18 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -728,7 +728,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Merge body field value and format separately.
     $body = array(
       'value' => $this->randomName(32),
-      'format' => FILTER_FORMAT_DEFAULT
+      'format' => filter_default_format(),
     );
     $settings['body'][FIELD_LANGUAGE_NONE][0] += $body;
 

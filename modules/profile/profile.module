@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.274 2009/09/18 00:04:23 webchick Exp $
+// $Id: profile.module,v 1.275 2009/09/20 07:32:18 dries Exp $
 
 /**
  * @file
@@ -292,7 +292,7 @@ function profile_view_field($account, $field) {
   if (isset($account->{$field->name}) && $value = $account->{$field->name}) {
     switch ($field->type) {
       case 'textarea':
-        return check_markup($value);
+        return check_markup($value, filter_default_format($account));
       case 'textfield':
       case 'selection':
         return $browse ? l($value, 'profile/' . $field->name . '/' . $value) : check_plain($value);

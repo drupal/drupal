@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.373 2009/09/18 00:12:45 webchick Exp $
+// $Id: form.inc,v 1.374 2009/09/20 07:32:17 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1917,7 +1917,7 @@ function form_process_radios($element) {
  *   $form['body'] = array(
  *     '#type' => 'textarea',
  *     '#title' => t('Body'),
- *     '#text_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
+ *     '#text_format' => isset($node->format) ? $node->format : filter_default_format(),
  *   );
  * @endcode
  *
