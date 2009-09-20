@@ -716,10 +716,6 @@ function search_touch_node($nid) {
     ->execute();
 }
 
-function search_touch_data($type, $sid) {
-  db_query("UPDATE {search_dataset} SET reindex = :time WHERE sid = :sid AND type = :type", array(':time' => REQUEST_TIME, ':sid' => $sid, ':type' => $type));
-}
-
 /**
  * Implement hook_node_update_index().
  */
