@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1049 2009/09/21 06:44:14 dries Exp $
+// $Id: user.module,v 1.1050 2009/09/21 08:52:41 dries Exp $
 
 /**
  * @file
@@ -2877,6 +2877,10 @@ function _user_password_dynamic_validation() {
         'sameAsUsername' => t('Make it different from your username'),
         'confirmSuccess' => t('yes'),
         'confirmFailure' => t('no'),
+        'weak'           => t('Weak'),
+        'fair'           => t('Fair'),
+        'good'           => t('Good'),
+        'strong'         => t('Strong'),
         'confirmTitle' => t('Passwords match:'),
         'username' => (isset($user->name) ? $user->name : ''))),
       'setting');

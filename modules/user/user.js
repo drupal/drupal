@@ -1,4 +1,4 @@
-// $Id: user.js,v 1.17 2009/08/31 05:51:08 dries Exp $
+// $Id: user.js,v 1.18 2009/09/21 08:52:41 dries Exp $
 (function ($) {
 
 /**
@@ -18,10 +18,11 @@ Drupal.behaviors.password = {
       var passwordResult = $('span.password-result', passwordStrength);
       innerWrapper.addClass('password-parent');
 
-      // Add the description box at the end.
-      var passwordMeter = '<div id="password-strength"><div class="password-strength-title">' + translate.strengthTitle + '</div><div id="password-indicator"><div id="indicator"></div></div></div>';
+      // Add the description box.
+      var passwordMeter = '<div id="password-strength"><div id="password-strength-text"></div><div class="password-strength-title">' + translate.strengthTitle + '</div><div id="password-indicator"><div id="indicator"></div></div></div>';
+
       $('div.description', outerWrapper).prepend('<div class="password-suggestions"></div>');
-      $(innerWrapper).append(passwordMeter);
+      $(innerWrapper).prepend(passwordMeter);
       var passwordDescription = $('div.password-suggestions', outerWrapper).hide();
 
       // Add the password confirmation layer.
@@ -51,6 +52,9 @@ Drupal.behaviors.password = {
 
         // Adjust the length of the strength indicator.
         $('#indicator').css('width', result.strength + '%');
+
+        // Update the strength indication text.
+        $("#password-strength-text").html(result.indicatorText);
 
         passwordCheckMatch();
       };
@@ -155,9 +159,21 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
     strength = 5;
   }
 
+  // Based on the strength, work out what text should be shown by the password strength meter.
+  if (strength < 60) {
+    indicatorText = translate.weak;
+  } else if (strength < 70) {
+    indicatorText = translate.fair;
+  } else if (strength < 80) {
+    indicatorText = translate.good;
+  } else if (strength < 100) {
+    indicatorText = translate.strong;
+  }
+
   // Assemble the final message.
   msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
-  return { strength: strength, message: msg };
+  return { strength: strength, message: msg, indicatorText: indicatorText }
+
 };
 
 /**
