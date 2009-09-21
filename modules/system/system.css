@@ -520,15 +520,22 @@ html.js .js-hide {
 /*
 ** Password strength indicator
 */
+#password-strength {
+  width: 17em;
+  float: right;  /* LTR */
+  margin-top: 1.4em;
+}
 .password-strength-title {
-  float: left; /* LTR */
+  display: inline;
+}
+#password-strength-text {
+  float: right; /* LTR */
+  font-weight: bold;
 }
 #password-indicator {
-  border: 1px solid #B4B4B4;
-  float: right;
-  height: 0.9em;
-  margin: 0.3em 0.80em 0 0.3em;
-  width: 5em;
+  background-color: #C4C4C4;
+  height: 0.3em;
+  width: 100%;
 }
 #password-indicator div {
   height: 100%;
@@ -538,6 +545,10 @@ html.js .js-hide {
 input.password-confirm, input.password-field {
   width: 16em;
   margin-bottom: 0.4em;
+}
+div.password-confirm {
+  display: inline;
+  padding-left: 1em;
 }
 div.password-suggestions {
   padding: 0.2em 0.5em;
@@ -550,8 +561,7 @@ div.password-suggestions ul {
 }
 .password-parent {
   margin: 0;
-  float: left; /* LTR */
-  width: 17.3em;
+  width: 34.3em;
 }
 
 /*

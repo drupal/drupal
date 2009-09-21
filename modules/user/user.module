@@ -2877,6 +2877,10 @@ function _user_password_dynamic_validation() {
         'sameAsUsername' => t('Make it different from your username'),
         'confirmSuccess' => t('yes'),
         'confirmFailure' => t('no'),
+        'weak'           => t('Weak'),
+        'fair'           => t('Fair'),
+        'good'           => t('Good'),
+        'strong'         => t('Strong'),
         'confirmTitle' => t('Passwords match:'),
         'username' => (isset($user->name) ? $user->name : ''))),
       'setting');
