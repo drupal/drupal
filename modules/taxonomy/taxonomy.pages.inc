@@ -135,7 +135,7 @@ function taxonomy_autocomplete_legacy($vid = 0, $tags_typed = '') {
     }
   }
 
-  drupal_json(array_merge($term_matches, $synonym_matches));
+  drupal_json_output(array_merge($term_matches, $synonym_matches));
 }
 
 /**
@@ -191,5 +191,5 @@ function taxonomy_autocomplete($field_name, $bundle, $tags_typed = '') {
     }
   }
 
-  drupal_json($term_matches);
+  drupal_json_output($term_matches);
 }

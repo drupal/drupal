@@ -3167,7 +3167,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   foreach ($items as $item) {
     switch ($item['type']) {
       case 'setting':
-        $output .= '<script type="text/javascript">' . $embed_prefix . 'jQuery.extend(Drupal.settings, ' . drupal_to_js(call_user_func_array('array_merge_recursive', $item['data'])) . ");" . $embed_suffix . "</script>\n";
+        $output .= '<script type="text/javascript">' . $embed_prefix . 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(call_user_func_array('array_merge_recursive', $item['data'])) . ");" . $embed_suffix . "</script>\n";
         break;
 
       case 'inline':
@@ -3585,7 +3585,7 @@ function drupal_clear_js_cache() {
  *
  * We use HTML-safe strings, i.e. with <, > and & escaped.
  */
-function drupal_to_js($var) {
+function drupal_json_encode($var) {
   // json_encode() does not escape <, > and &, so we do it with str_replace()
   return str_replace(array("<", ">", "&"), array('\x3c', '\x3e', '\x26'), json_encode($var));
 }
@@ -3599,12 +3599,12 @@ function drupal_to_js($var) {
  * @param $var
  *   (optional) If set, the variable will be converted to JSON and output.
  */
-function drupal_json($var = NULL) {
+function drupal_json_output($var = NULL) {
   // We are returning JavaScript, so tell the browser.
   drupal_set_header('Content-Type', 'text/javascript; charset=utf-8');
 
   if (isset($var)) {
-    echo drupal_to_js($var);
+    echo drupal_json_encode($var);
   }
 }
 

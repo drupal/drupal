@@ -18,7 +18,7 @@ function user_autocomplete($string = '') {
     }
   }
 
-  drupal_json($matches);
+  drupal_json_output($matches);
 }
 
 /**

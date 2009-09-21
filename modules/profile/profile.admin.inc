@@ -423,5 +423,5 @@ function profile_admin_settings_autocomplete($string) {
   foreach ($result as $data) {
     $matches[$data->category] = check_plain($data->category);
   }
-  drupal_json($matches);
+  drupal_json_output($matches);
 }

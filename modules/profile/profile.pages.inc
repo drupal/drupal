@@ -134,5 +134,5 @@ function profile_autocomplete($field, $string) {
     }
   }
 
-  drupal_json($matches);
+  drupal_json_output($matches);
 }

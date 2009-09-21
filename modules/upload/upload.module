@@ -644,7 +644,7 @@ function upload_js() {
   if (!($cached_form = form_get_cache($_POST['form_build_id'], $cached_form_state)) || !isset($cached_form['#node']) || !isset($cached_form['attachments'])) {
     form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
     $output = theme('status_messages');
-    print drupal_to_js(array('status' => TRUE, 'data' => $output));
+    print drupal_json_encode(array('status' => TRUE, 'data' => $output));
     exit();
   }
 

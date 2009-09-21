@@ -140,7 +140,7 @@ function _batch_do() {
   // Perform actual processing.
   list($percentage, $message) = _batch_process();
 
-  drupal_json(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
+  drupal_json_output(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
 }
 
 /**

@@ -1790,7 +1790,7 @@ function system_regional_settings_submit($form, &$form_state) {
  */
 function system_date_time_lookup() {
   $result = format_date(REQUEST_TIME, 'custom', $_GET['format']);
-  drupal_json($result);
+  drupal_json_output($result);
 }
 
 /**

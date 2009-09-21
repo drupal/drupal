@@ -816,7 +816,7 @@ function system_menu() {
   );
   $items['admin/config/search/clean-urls/check'] = array(
     'title' => 'Clean URL check',
-    'page callback' => 'drupal_json',
+    'page callback' => 'drupal_json_output',
     'page arguments' => array(array('status' => TRUE)),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
@@ -2656,7 +2656,7 @@ function system_timezone($abbreviation = '', $offset = -1, $is_daylight_saving_t
   // interpreted as the empty string.
   $abbreviation = $abbreviation ? $abbreviation : '';
   $timezone = timezone_name_from_abbr($abbreviation, intval($offset), $is_daylight_saving_time);
-  drupal_json($timezone);
+  drupal_json_output($timezone);
 }
 
 /**
@@ -2768,7 +2768,7 @@ function system_page_build(&$page) {
       // Trigger cron run via AJAX.
       '#attached' => array(
         'js' => array(
-          '(function($){ $.get(' . drupal_to_js(url('system/run-cron-image')) . '); })(jQuery);' => array('type' => 'inline', 'scope' => 'header'),
+          '(function($){ $.get(' . drupal_json_encode(url('system/run-cron-image')) . '); })(jQuery);' => array('type' => 'inline', 'scope' => 'header'),
         ),
       ),
       // Trigger cron run for clients not supporting JavaScript (fall-back).

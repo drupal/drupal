@@ -2425,7 +2425,7 @@ function _locale_rebuild_js($langcode = NULL) {
       $data .= "'pluralFormula': function (\$n) { return Number({$language->formula}); }, ";
     }
 
-    $data .= "'strings': " . drupal_to_js($translations) . " };";
+    $data .= "'strings': " . drupal_json_encode($translations) . " };";
     $data_hash = md5($data);
   }
 

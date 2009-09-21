@@ -1405,7 +1405,7 @@ class FieldFormTestCase extends FieldTestCase {
     $this->drupalPost(NULL, $edit, $submit);
     unset($this->additionalCurlOptions[CURLOPT_URL]);
 
-    // The response is drupal_json, so we need to undo some escaping.
+    // The response is drupal_json_output, so we need to undo some escaping.
     $commands = json_decode(str_replace(array('\x3c', '\x3e', '\x26'), array("<", ">", "&"), $this->drupalGetContent()));
 
     // The JSON response will be two AJAX commands. The first is a settings
