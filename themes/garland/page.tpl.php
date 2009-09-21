@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.33 2009/09/15 17:10:39 webchick Exp $
+// $Id: page.tpl.php,v 1.34 2009/09/21 06:36:54 dries Exp $
 ?>
   <div id="header-region" class="clearfix"><?php print render($page['header']); ?></div>
 
@@ -24,7 +24,6 @@
 
       <?php if ($page['sidebar_first']): ?>
         <div id="sidebar-first" class="sidebar">
-          <?php if ($search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
           <?php print render($page['sidebar_first']); ?>
         </div>
       <?php endif; ?>
@@ -48,7 +47,6 @@
 
       <?php if ($page['sidebar_second']): ?>
         <div id="sidebar-second" class="sidebar">
-          <?php if (!$page['sidebar_first'] && $search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
           <?php print render($page['sidebar_second']); ?>
         </div>
       <?php endif; ?>

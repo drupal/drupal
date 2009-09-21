@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.35 2009/09/11 15:39:48 dries Exp $
+// $Id: search.test,v 1.36 2009/09/21 06:36:54 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -503,7 +503,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Search for $title.
     $edit = array(
-      'search_theme_form' => $comment_body,
+      'search_block_form' => $comment_body,
     );
     $this->drupalPost('', $edit, t('Search'));
     $this->assertText($node->title, t('Node found in search results.'));
