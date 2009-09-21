@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.15 2009/09/18 00:12:46 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.16 2009/09/21 06:44:13 dries Exp $
 
 /**
  * @file
@@ -540,7 +540,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
 
   if ($destinations) {
     $destinations[] = urldecode(substr(drupal_get_destination(), 12));
-    unset($_REQUEST['destination']);
+    unset($_GET['destination']);
     $form_state['redirect'] = field_ui_get_destinations($destinations);
   }
 }

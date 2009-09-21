@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.8 2009/09/05 15:05:01 dries Exp $
+// $Id: ajax.inc,v 1.9 2009/09/21 06:44:13 dries Exp $
 
 /**
  * @file
@@ -184,7 +184,7 @@ function ajax_get_form() {
   }
 
   // Since some of the submit handlers are run, redirects need to be disabled.
-  $form['#redirect'] = FALSE;
+  $form_state['no_redirect'] = TRUE;
 
   // The form needs to be processed; prepare for that by setting a few internal
   // variables.

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1048 2009/09/19 11:07:37 dries Exp $
+// $Id: user.module,v 1.1049 2009/09/21 06:44:14 dries Exp $
 
 /**
  * @file
@@ -3078,7 +3078,7 @@ function user_register($form, &$form_state) {
     );
     // Redirect back to page which initiated the create request;
     // usually admin/people/create.
-    $form['destination'] = array('#type' => 'hidden', '#value' => $_GET['q']);
+    $form_state['redirect'] = $_GET['q'];
   }
 
   // Create a dummy variable for pass-by-reference parameters.

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.80 2009/09/18 00:12:47 webchick Exp $
+// $Id: node.pages.inc,v 1.81 2009/09/21 06:44:13 dries Exp $
 
 /**
  * @file
@@ -301,9 +301,9 @@ function node_form($form, &$form_state, $node) {
  */
 function node_form_delete_submit($form, &$form_state) {
   $destination = '';
-  if (isset($_REQUEST['destination'])) {
+  if (isset($_GET['destination'])) {
     $destination = drupal_get_destination();
-    unset($_REQUEST['destination']);
+    unset($_GET['destination']);
   }
   $node = $form['#node'];
   $form_state['redirect'] = array('node/' . $node->nid . '/delete', $destination);

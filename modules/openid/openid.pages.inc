@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.21 2009/09/18 00:12:47 webchick Exp $
+// $Id: openid.pages.inc,v 1.22 2009/09/21 06:44:14 dries Exp $
 
 /**
  * @file
@@ -111,5 +111,5 @@ function openid_user_delete_form_submit($form, &$form_state) {
   if ($query) {
     drupal_set_message(t('OpenID deleted.'));
   }
-  $form_state['#redirect'] = 'user/' . $form_state['args'][0]->uid . '/openid';
+  $form_state['redirect'] = 'user/' . $form_state['args'][0]->uid . '/openid';
 }

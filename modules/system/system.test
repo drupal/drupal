@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.76 2009/09/18 00:12:48 webchick Exp $
+// $Id: system.test,v 1.77 2009/09/21 06:44:14 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -512,20 +512,14 @@ class AdminMetaTagTestCase extends DrupalWebTestCase {
 class AccessDeniedTestCase extends DrupalWebTestCase {
   protected $admin_user;
 
-  /**
-   * Implement getInfo().
-   */
   public static function getInfo() {
     return array(
       'name' => '403 functionality',
-      'description' => "Tests page access denied functionality, including custom 403 pages.",
+      'description' => 'Tests page access denied functionality, including custom 403 pages.',
       'group' => 'System'
     );
   }
 
-  /**
-   * Implement setUp().
-   */
   function setUp() {
     parent::setUp();
 
