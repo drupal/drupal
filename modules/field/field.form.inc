@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.24 2009/09/10 22:31:58 webchick Exp $
+// $Id: field.form.inc,v 1.25 2009/09/21 08:54:57 dries Exp $
 
 /**
  * @file
@@ -362,9 +362,5 @@ function field_add_more_js($form, $form_state) {
   $field_form[$langcode][$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($field_form[$langcode][$delta]['#prefix']) ? $field_form[$langcode][$delta]['#prefix'] : '');
   $field_form[$langcode][$delta]['#suffix'] = (isset($field_form[$langcode][$delta]['#suffix']) ? $field_form[$langcode][$delta]['#suffix'] : '') . '</div>';
 
-  $output = theme('status_messages') . drupal_render($field_form);
-
-  $commands = array();
-  $commands[] = ajax_command_replace(NULL, $output);
-  ajax_render($commands);
+  return drupal_render($field_form);
 }
