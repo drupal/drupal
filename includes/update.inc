@@ -87,24 +87,19 @@ function update_prepare_d7_bootstrap() {
     );
     update_extra_requirements($requirements);
   }
+
+  // The new {blocked_ips} table is used in Drupal 7 to store a list of
+  // banned IP addresses. If this table doesn't exist then we are still
+  // running on a Drupal 6 database, so we suppress the unavoidable errors
+  // that occur by creating a static list.
+  $GLOBALS['conf']['blocked_ips'] = array();
+
   // Allow the database system to work even if the registry has not been
   // created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
   drupal_install_initialize_database();
   spl_autoload_unregister('drupal_autoload_class');
   spl_autoload_unregister('drupal_autoload_interface');
-  // The new {blocked_ips} table is used in Drupal 7 to store a list of
-  // banned IP addresses. If this table doesn't exist then we are still
-  // running on a Drupal 6 database, so suppress the unavoidable errors
-  // that occur.
-  try {
-    drupal_bootstrap(DRUPAL_BOOTSTRAP_ACCESS);
-  }
-  catch (Exception $e) {
-    if (db_table_exists('blocked_ips')) {
-      throw $e;
-    }
-  }
 }
 
 /**
