@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.38 2009/09/21 06:44:13 dries Exp $
+// $Id: batch.inc,v 1.39 2009/09/21 07:56:07 dries Exp $
 
 
 /**
@@ -140,7 +140,7 @@ function _batch_do() {
   // Perform actual processing.
   list($percentage, $message) = _batch_process();
 
-  drupal_json(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
+  drupal_json_output(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
 }
 
 /**

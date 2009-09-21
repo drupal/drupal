@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.35 2009/08/24 00:14:22 webchick Exp $
+// $Id: taxonomy.pages.inc,v 1.36 2009/09/21 07:56:08 dries Exp $
 
 /**
  * @file
@@ -135,7 +135,7 @@ function taxonomy_autocomplete_legacy($vid = 0, $tags_typed = '') {
     }
   }
 
-  drupal_json(array_merge($term_matches, $synonym_matches));
+  drupal_json_output(array_merge($term_matches, $synonym_matches));
 }
 
 /**
@@ -191,5 +191,5 @@ function taxonomy_autocomplete($field_name, $bundle, $tags_typed = '') {
     }
   }
 
-  drupal_json($term_matches);
+  drupal_json_output($term_matches);
 }

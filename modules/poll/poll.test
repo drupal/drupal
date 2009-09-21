@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.test,v 1.22 2009/08/17 07:12:16 webchick Exp $
+// $Id: poll.test,v 1.23 2009/09/21 07:56:08 dries Exp $
 
 /**
  * @file
@@ -344,7 +344,7 @@ class PollJSAddChoice extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('More choices'));
     unset($this->additionalCurlOptions[CURLOPT_URL]);
 
-    // The response is drupal_json, so we need to undo some escaping.
+    // The response is drupal_json_output, so we need to undo some escaping.
     $commands = json_decode(str_replace(array('\x3c', '\x3e', '\x26'), array("<", ">", "&"), $this->drupalGetContent()));
 
     // The JSON response will be two AJAX commands. The first is a settings

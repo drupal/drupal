@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.54 2009/09/21 06:44:14 dries Exp $
+// $Id: user.pages.inc,v 1.55 2009/09/21 07:56:09 dries Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function user_autocomplete($string = '') {
     }
   }
 
-  drupal_json($matches);
+  drupal_json_output($matches);
 }
 
 /**

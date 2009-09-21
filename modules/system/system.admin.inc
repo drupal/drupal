@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.204 2009/09/21 06:44:14 dries Exp $
+// $Id: system.admin.inc,v 1.205 2009/09/21 07:56:08 dries Exp $
 
 /**
  * @file
@@ -1790,7 +1790,7 @@ function system_regional_settings_submit($form, &$form_state) {
  */
 function system_date_time_lookup() {
   $result = format_date(REQUEST_TIME, 'custom', $_GET['format']);
-  drupal_json($result);
+  drupal_json_output($result);
 }
 
 /**

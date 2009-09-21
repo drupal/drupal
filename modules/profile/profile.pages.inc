@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.19 2009/09/18 00:04:23 webchick Exp $
+// $Id: profile.pages.inc,v 1.20 2009/09/21 07:56:08 dries Exp $
 
 /**
  * @file
@@ -134,5 +134,5 @@ function profile_autocomplete($field, $string) {
     }
   }
 
-  drupal_json($matches);
+  drupal_json_output($matches);
 }
