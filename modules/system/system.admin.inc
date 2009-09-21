@@ -1576,7 +1576,7 @@ function system_rss_feeds_settings() {
   $form['feed_item_length'] = array(
     '#type' => 'select',
     '#title' => t('Feed content'),
-    '#default_value' => 'teaser',
+    '#default_value' => 'fulltext',
     '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
     '#description' => t('Global setting for the default display of content items in each feed.')
   );

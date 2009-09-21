@@ -372,7 +372,7 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
   drupal_set_header('Content-Type', 'application/rss+xml; charset=utf-8');
 
   $items = '';
-  $feed_length = variable_get('feed_item_length', 'teaser');
+  $feed_length = variable_get('feed_item_length', 'fulltext');
   foreach ($feeds as $feed) {
     switch ($feed_length) {
       case 'teaser':
