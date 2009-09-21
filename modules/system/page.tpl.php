@@ -26,7 +26,6 @@
  *   in theme settings.
  *
  * Navigation:
- * - $search_box: HTML to display the search box, empty if search has been disabled.
  * - $main_menu (array): An array containing the Main menu links for the
  *   site, if they have been configured.
  * - $secondary_menu (array): An array containing the Secondary menu links for
@@ -85,10 +84,6 @@
             <div id="site-slogan"><?php print $site_slogan; ?></div>
           <?php endif; ?>
         </div> <!-- /#name-and-slogan -->
-      <?php endif; ?>
-
-      <?php if ($search_box): ?>
-        <div id="search-box"><?php print $search_box; ?></div>
       <?php endif; ?>
 
       <?php if ($page['header']): ?>

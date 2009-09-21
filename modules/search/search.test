@@ -503,7 +503,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Search for $title.
     $edit = array(
-      'search_theme_form' => $comment_body,
+      'search_block_form' => $comment_body,
     );
     $this->drupalPost('', $edit, t('Search'));
     $this->assertText($node->title, t('Node found in search results.'));

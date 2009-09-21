@@ -21,6 +21,16 @@ function default_install() {
       'cache' => -1,
     ),
     array(
+      'module' => 'search',
+      'delta' => 'form',
+      'theme' => 'garland',
+      'status' => 1,
+      'weight' => -1,
+      'region' => 'sidebar_first',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
       'module' => 'user',
       'delta' => 'login',
       'theme' => 'garland',

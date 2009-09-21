@@ -63,7 +63,6 @@
 
       <?php if ($sidebar_first): ?>
         <div id="sidebar-first" class="sidebar">
-          <?php if ($search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
           <?php print $sidebar_first ?>
         </div>
       <?php endif; ?>

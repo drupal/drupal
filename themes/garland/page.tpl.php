@@ -24,7 +24,6 @@
 
       <?php if ($page['sidebar_first']): ?>
         <div id="sidebar-first" class="sidebar">
-          <?php if ($search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
           <?php print render($page['sidebar_first']); ?>
         </div>
       <?php endif; ?>
@@ -48,7 +47,6 @@
 
       <?php if ($page['sidebar_second']): ?>
         <div id="sidebar-second" class="sidebar">
-          <?php if (!$page['sidebar_first'] && $search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
           <?php print render($page['sidebar_second']); ?>
         </div>
       <?php endif; ?>
