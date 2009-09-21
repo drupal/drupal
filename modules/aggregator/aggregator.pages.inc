@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.33 2009/09/18 00:04:22 webchick Exp $
+// $Id: aggregator.pages.inc,v 1.34 2009/09/21 07:59:18 dries Exp $
 
 /**
  * @file
@@ -372,7 +372,7 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
   drupal_set_header('Content-Type', 'application/rss+xml; charset=utf-8');
 
   $items = '';
-  $feed_length = variable_get('feed_item_length', 'teaser');
+  $feed_length = variable_get('feed_item_length', 'fulltext');
   foreach ($feeds as $feed) {
     switch ($feed_length) {
       case 'teaser':

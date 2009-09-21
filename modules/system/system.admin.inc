@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.205 2009/09/21 07:56:08 dries Exp $
+// $Id: system.admin.inc,v 1.206 2009/09/21 07:59:18 dries Exp $
 
 /**
  * @file
@@ -1576,7 +1576,7 @@ function system_rss_feeds_settings() {
   $form['feed_item_length'] = array(
     '#type' => 'select',
     '#title' => t('Feed content'),
-    '#default_value' => 'teaser',
+    '#default_value' => 'fulltext',
     '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
     '#description' => t('Global setting for the default display of content items in each feed.')
   );
