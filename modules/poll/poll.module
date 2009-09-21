@@ -382,7 +382,7 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
 function poll_choice_js($form, $form_state) {
   $choice_form = $form['choice_wrapper']['choice'];
 
-  return theme('status_messages') . drupal_render($choice_form);
+  return drupal_render($choice_form);
 }
 
 /**

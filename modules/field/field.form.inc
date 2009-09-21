@@ -362,9 +362,5 @@ function field_add_more_js($form, $form_state) {
   $field_form[$langcode][$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($field_form[$langcode][$delta]['#prefix']) ? $field_form[$langcode][$delta]['#prefix'] : '');
   $field_form[$langcode][$delta]['#suffix'] = (isset($field_form[$langcode][$delta]['#suffix']) ? $field_form[$langcode][$delta]['#suffix'] : '') . '</div>';
 
-  $output = theme('status_messages') . drupal_render($field_form);
-
-  $commands = array();
-  $commands[] = ajax_command_replace(NULL, $output);
-  ajax_render($commands);
+  return drupal_render($field_form);
 }

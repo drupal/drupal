@@ -214,14 +214,20 @@ function ajax_form_callback() {
   if (function_exists($callback)) {
     $html = $callback($form, $form_state);
 
-    // If the returned value is a string, assume it is HTML and create
-    // a command object to return automatically.
+    // If the returned value is a string, assume it is HTML, add the status
+    // messages, and create a command object to return automatically. We want
+    // the status messages inside the new wrapper, so that they get replaced
+    // on subsequent AJAX calls for the same wrapper.
+    // @see ajax_command_replace()
     if (is_string($html)) {
       $commands = array();
       $commands[] = ajax_command_replace(NULL, $html);
+      $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
     }
     // Otherwise, $html is supposed to be an array of commands, suitable for
-    // Drupal.ajax, so we pass it on as is.
+    // Drupal.ajax, so we pass it on as is. In this situation, the callback is
+    // doing something fancy, so let it decide how to handle status messages
+    // without second guessing it.
     else {
       $commands = $html;
     }
@@ -369,6 +375,19 @@ function ajax_command_alert($text) {
  *
  * This command is implemented by Drupal.ajax.prototype.commands.insert()
  * defined in misc/ajax.js.
+ *
+ * When using this command, it is likely that any status messages shall be
+ * output with the given HTML. In case an AJAX callback returns a HTML string
+ * instead of an AJAX command structure, ajax_form_callback() automatically
+ * prepends the returned output with status messages.
+ * To achieve the same result using an AJAX command structure, the AJAX callback
+ * may use the following:
+ * @code
+ *   $commands = array();
+ *   $commands[] = ajax_command_replace(NULL, $output);
+ *   $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
+ *   return $commands;
+ * @endcode
  *
  * @param $selector
  *   A jQuery selector string. If the command is a response to a request from
