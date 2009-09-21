@@ -148,7 +148,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
   $info = $first_instance->getInfo();
 
   $batch = array(
-    'title' => t('Running SimpleTests'),
+    'title' => t('Running tests'),
     'operations' => array(
       array('_simpletest_batch_operation', array($test_list, $test_id)),
     ),
