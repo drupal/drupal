@@ -364,8 +364,8 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
  * @see drupal_goto()
  */
 function drupal_get_destination() {
-  if (isset($_REQUEST['destination'])) {
-    return 'destination=' . urlencode($_REQUEST['destination']);
+  if (isset($_GET['destination'])) {
+    return 'destination=' . urlencode($_GET['destination']);
   }
   else {
     // Use $_GET here to retrieve the original path in source form.
@@ -418,9 +418,8 @@ function drupal_get_destination() {
  * @see drupal_get_destination()
  */
 function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response_code = 302) {
-
-  if (isset($_REQUEST['destination'])) {
-    extract(parse_url(urldecode($_REQUEST['destination'])));
+  if (isset($_GET['destination'])) {
+    extract(parse_url(urldecode($_GET['destination'])));
   }
 
   $args = array(
@@ -471,8 +470,8 @@ function drupal_not_found() {
   watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
   // Keep old path for reference, and to allow forms to redirect to it.
-  if (!isset($_REQUEST['destination'])) {
-    $_REQUEST['destination'] = $_GET['q'];
+  if (!isset($_GET['destination'])) {
+    $_GET['destination'] = $_GET['q'];
   }
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
@@ -502,8 +501,8 @@ function drupal_access_denied() {
   watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
   // Keep old path for reference, and to allow forms to redirect to it.
-  if (!isset($_REQUEST['destination'])) {
-    $_REQUEST['destination'] = $_GET['q'];
+  if (!isset($_GET['destination'])) {
+    $_GET['destination'] = $_GET['q'];
   }
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));

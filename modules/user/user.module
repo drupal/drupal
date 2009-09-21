@@ -3078,7 +3078,7 @@ function user_register($form, &$form_state) {
     );
     // Redirect back to page which initiated the create request;
     // usually admin/people/create.
-    $form['destination'] = array('#type' => 'hidden', '#value' => $_GET['q']);
+    $form_state['redirect'] = $_GET['q'];
   }
 
   // Create a dummy variable for pass-by-reference parameters.

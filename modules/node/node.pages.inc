@@ -301,9 +301,9 @@ function node_form($form, &$form_state, $node) {
  */
 function node_form_delete_submit($form, &$form_state) {
   $destination = '';
-  if (isset($_REQUEST['destination'])) {
+  if (isset($_GET['destination'])) {
     $destination = drupal_get_destination();
-    unset($_REQUEST['destination']);
+    unset($_GET['destination']);
   }
   $node = $form['#node'];
   $form_state['redirect'] = array('node/' . $node->nid . '/delete', $destination);

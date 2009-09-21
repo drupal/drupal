@@ -122,8 +122,13 @@ function drupal_get_form($form_id) {
  *     structure, which is passed on to the actual form builder function.
  *     Such forms cannot use drupal_get_form() and need to prepare $form_state
  *     on their own.
+ *   Further $form_state properties controlling the redirection behavior after
+ *   form submission may be found in drupal_redirect_form().
+ *
  * @return
  *   The rendered form or NULL, depending upon the $form_state flags that were set.
+ *
+ * @see drupal_redirect_form()
  */
 function drupal_build_form($form_id, &$form_state) {
   // Ensure some defaults; if already set they will not be overridden.
@@ -503,6 +508,8 @@ function drupal_retrieve_form($form_id, &$form_state) {
 }
 
 /**
+ * Processes a form submission.
+ *
  * This function is the heart of form API. The form gets built, validated and in
  * appropriate cases, submitted.
  *
@@ -579,20 +586,8 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // Set a flag to indicate the the form has been processed and executed.
       $form_state['executed'] = TRUE;
 
-      // The form is executed. By default, we're finished now and redirect to a
-      // new destination page. The path of the destination page can be set in
-      // $form['#redirect'] or $form_state['redirect']. If neither of the two is
-      // set, the user is redirect to the current page, which means a fresh,
-      // unpopulated copy of the form.
-      // Redirection is skipped, though, if
-      // - the form was called by drupal_form_submit(),
-      // - the form has to be rebuilt because either $form_state['rebuild'] was
-      //   set to TRUE or $form_state['storage'] was populated by a submit handler.
-      // - $form_state['no_redirect'] is set to TRUE,
-      // - $form_state['redirect'] or $form['#redirect'] is set to FALSE.
-      if (!$form_state['programmed'] && empty($form_state['rebuild']) && empty($form_state['storage']) && empty($form_state['no_redirect'])) {
-        drupal_redirect_form($form, $form_state['redirect']);
-      }
+      // Redirect the form based on values in $form_state.
+      drupal_redirect_form($form_state);
     }
   }
 }
@@ -732,33 +727,67 @@ function drupal_validate_form($form_id, $form, &$form_state) {
 }
 
 /**
- * Redirect the user to a URL after a form has been processed.
+ * Redirects the user to a URL after a form has been processed.
  *
- * @param $form
- *   An associative array containing the structure of the form.
- * @param $redirect
- *   An optional value containing the destination path to redirect
- *   to if none is specified by the form.
+ * After a form was executed, the data in $form_state controls whether the form
+ * is redirected. By default, we redirect to a new destination page. The path of
+ * the destination page can be set in $form_state['redirect']. If that is not
+ * set, the user is redirected to the current page to display a fresh,
+ * unpopulated copy of the form.
+ *
+ * There are several triggers that may prevent a redirection though:
+ * - If $form_state['redirect'] is FALSE, a form builder function or form
+ *   validation/submit handler does not want a user to be redirected, which
+ *   means that drupal_goto() is not invoked. For most forms, the redirection
+ *   logic will be the same regardless of whether $form_state['redirect'] is
+ *   undefined or FALSE. However, in case it was not defined and the current
+ *   request contains a 'destination' query string, drupal_goto() will redirect
+ *   to that given destination instead. Only setting $form_state['redirect'] to
+ *   FALSE will prevent any redirection.
+ * - If $form_state['no_redirect'] is TRUE, then the callback that originally
+ *   built the form explicitly disallows any redirection, regardless of the
+ *   redirection value in $form_state['redirect']. For example, ajax_get_form()
+ *   defines $form_state['no_redirect'] when building a form in an AJAX
+ *   callback to prevent any redirection. $form_state['no_redirect'] should NOT
+ *   be altered by form builder functions or form validation/submit handlers.
+ * - If $form_state['programmed'] is TRUE, the form submission was usually
+ *   invoked via drupal_form_submit(), so any redirection would break the script
+ *   that invoked drupal_form_submit().
+ * - If $form_state['rebuild'] is TRUE or $form_state['storage'] is populated,
+ *   the form is most probably a multi-step form and needs to be rebuilt without
+ *   redirection.
+ *
+ * @param $form_state
+ *   A keyed array containing the current state of the form.
+ *
+ * @see drupal_process_form()
+ * @see drupal_build_form()
  */
-function drupal_redirect_form($form, $redirect = NULL) {
-  $goto = NULL;
-  if (isset($redirect)) {
-    $goto = $redirect;
+function drupal_redirect_form($form_state) {
+  // Skip redirection for form submissions invoked via drupal_form_submit().
+  if (!empty($form_state['programmed'])) {
+    return;
   }
-  if ($goto !== FALSE && isset($form['#redirect'])) {
-    $goto = $form['#redirect'];
+  // Skip redirection for multi-step forms.
+  if (!empty($form_state['rebuild']) || !empty($form_state['storage'])) {
+    return;
   }
-  if (!isset($goto) || ($goto !== FALSE)) {
-    if (isset($goto)) {
-      if (is_array($goto)) {
-        call_user_func_array('drupal_goto', $goto);
+  // Skip redirection if it was explicitly disallowed.
+  if (!empty($form_state['no_redirect'])) {
+    return;
+  }
+  // Only invoke drupal_goto() if redirect value was not set to FALSE.
+  if (!isset($form_state['redirect']) || $form_state['redirect'] !== FALSE) {
+    if (isset($form_state['redirect'])) {
+      if (is_array($form_state['redirect'])) {
+        call_user_func_array('drupal_goto', $form_state['redirect']);
       }
       else {
         // This function can be called from the installer, which guarantees
         // that $redirect will always be a string, so catch that case here
         // and use the appropriate redirect function.
         $function = drupal_installation_attempted() ? 'install_goto' : 'drupal_goto';
-        $function($goto);
+        $function($form_state['redirect']);
       }
     }
     drupal_goto($_GET['q']);
@@ -2922,12 +2951,11 @@ function batch_process($redirect = NULL, $url = NULL) {
     $batch += $process_info;
 
     if ($batch['progressive']) {
-      // Clear the way for the drupal_goto redirection to the batch processing
-      // page, by saving and unsetting the 'destination' if any, on both places
-      // drupal_goto looks for it.
-      if (isset($_REQUEST['destination'])) {
-        $batch['destination'] = $_REQUEST['destination'];
-        unset($_REQUEST['destination']);
+      // Clear the way for the drupal_goto() redirection to the batch processing
+      // page, by saving and unsetting the 'destination', if there is any.
+      if (isset($_GET['destination'])) {
+        $batch['destination'] = $_GET['destination'];
+        unset($_GET['destination']);
       }
 
       // Initiate db storage in order to get a batch id. We have to provide

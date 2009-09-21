@@ -292,9 +292,9 @@ function user_profile_form_submit($form, &$form_state) {
  */
 function user_edit_cancel_submit($form, &$form_state) {
   $destination = '';
-  if (isset($_REQUEST['destination'])) {
+  if (isset($_GET['destination'])) {
     $destination = drupal_get_destination();
-    unset($_REQUEST['destination']);
+    unset($_GET['destination']);
   }
   // Note: We redirect from user/uid/edit to user/uid/cancel to make the tabs disappear.
   $form_state['redirect'] = array("user/" . $form_state['values']['_account']->uid . "/cancel", $destination);
@@ -391,9 +391,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
   if (user_access('administer users') && empty($form_state['values']['user_cancel_confirm']) && $account->uid != $user->uid) {
     user_cancel($form_state['values'], $account->uid, $form_state['values']['user_cancel_method']);
 
-    if (!isset($_REQUEST['destination'])) {
-      $form_state['redirect'] = 'admin/people';
-    }
+    $form_state['redirect'] = 'admin/people';
   }
   else {
     // Store cancelling method and whether to notify the user in $account for
@@ -407,9 +405,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
     drupal_set_message(t('A confirmation request to cancel your account has been sent to your e-mail address.'));
     watchdog('user', 'Sent account cancellation request to %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
 
-    if (!isset($_REQUEST['destination'])) {
-      $form_state['redirect'] = "user/$account->uid";
-    }
+    $form_state['redirect'] = "user/$account->uid";
   }
 }
 

@@ -184,7 +184,7 @@ function ajax_get_form() {
   }
 
   // Since some of the submit handlers are run, redirects need to be disabled.
-  $form['#redirect'] = FALSE;
+  $form_state['no_redirect'] = TRUE;
 
   // The form needs to be processed; prepare for that by setting a few internal
   // variables.

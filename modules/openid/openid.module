@@ -445,7 +445,7 @@ function openid_authentication($response) {
       $_SESSION['openid']['values'] = $form_state['values'];
       // We'll want to redirect back to the same place.
       $destination = drupal_get_destination();
-      unset($_REQUEST['destination']);
+      unset($_GET['destination']);
       drupal_goto('user/register', $destination);
     }
     else {
@@ -463,7 +463,7 @@ function openid_authentication($response) {
       // Let other modules act on OpenID login
       module_invoke_all('openid_response', $response, $account);
     }
-    drupal_redirect_form($form, $form_state['redirect']);
+    drupal_redirect_form($form_state);
   }
   else {
     drupal_set_message(t('Only site administrators can create new user accounts.'), 'error');

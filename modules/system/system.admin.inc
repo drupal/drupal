@@ -1822,7 +1822,7 @@ function system_site_maintenance_mode() {
  * @ingroup forms
  * @see system_settings_form()
  */
-function system_clean_url_settings($form) {
+function system_clean_url_settings($form, &$form_state) {
   global $base_url;
 
   // When accessing this form using a non-clean URL, allow a re-check to make
@@ -1852,7 +1852,7 @@ function system_clean_url_settings($form) {
   else {
     drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
 
-    $form['#redirect'] = $base_url . '/admin/config/search/clean-urls';
+    $form_state['redirect'] = $base_url . '/admin/config/search/clean-urls';
     $form['clean_url_description'] = array(
       '#type' => 'markup',
       '#markup' => '<p>' . t('Use URLs like <code>example.com/user</code> instead of <code>example.com/?q=user</code>.') . ' ' . t('If you are directed to a <em>Page not found (404)</em> error after testing for clean URLs, see the <a href="@handbook">online handbook</a>.', array('@handbook' => 'http://drupal.org/node/15365')) . '</p>',

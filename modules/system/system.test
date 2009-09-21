@@ -512,20 +512,14 @@ class AdminMetaTagTestCase extends DrupalWebTestCase {
 class AccessDeniedTestCase extends DrupalWebTestCase {
   protected $admin_user;
 
-  /**
-   * Implement getInfo().
-   */
   public static function getInfo() {
     return array(
       'name' => '403 functionality',
-      'description' => "Tests page access denied functionality, including custom 403 pages.",
+      'description' => 'Tests page access denied functionality, including custom 403 pages.',
       'group' => 'System'
     );
   }
 
-  /**
-   * Implement setUp().
-   */
   function setUp() {
     parent::setUp();
 

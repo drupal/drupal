@@ -540,7 +540,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
 
   if ($destinations) {
     $destinations[] = urldecode(substr(drupal_get_destination(), 12));
-    unset($_REQUEST['destination']);
+    unset($_GET['destination']);
     $form_state['redirect'] = field_ui_get_destinations($destinations);
   }
 }
