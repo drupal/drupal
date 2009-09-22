@@ -1573,7 +1573,7 @@ function _node_add_access() {
 function node_menu() {
   $items['admin/content'] = array(
     'title' => 'Content',
-    'description' => 'Find and manage content and comments.',
+    'description' => 'Find and manage content.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_admin_content'),
     'access arguments' => array('administer nodes'),
@@ -1582,6 +1582,7 @@ function node_menu() {
   );
   $items['admin/content/node'] = array(
     'title' => 'Content',
+    'description' => "View, edit, and delete your site's content.",
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );

@@ -1277,11 +1277,6 @@ function user_menu() {
     'weight' => -4,
     'file' => 'user.admin.inc',
   );
-  $items['admin/people/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
   $items['admin/people/create'] = array(
     'title' => 'Add user',
     'page arguments' => array('create'),
