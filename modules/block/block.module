@@ -374,10 +374,11 @@ function block_custom_block_save($edit, $delta) {
 }
 
 /**
- * Implement hook_user_form().
+ * Implement hook_form_FORM_ID_alter().
  */
-function block_user_form(&$edit, $account, $category) {
-  if ($category == 'account') {
+function block_form_user_profile_form_alter(&$form, &$form_state) {
+  if ($form['#user_category'] == 'account') {
+    $account = $form['#user'];
     $rids = array_keys($account->roles);
     $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom <> 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
     $form['block'] = array(
@@ -400,8 +401,8 @@ function block_user_form(&$edit, $account, $category) {
       }
     }
 
-    if (!empty($return)) {
-      return $form;
+    if (!isset($return)) {
+      $form['block']['#access'] = FALSE;
     }
   }
 }

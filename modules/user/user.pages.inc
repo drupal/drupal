@@ -225,19 +225,21 @@ function user_edit($account, $category = 'account') {
  * @see user_profile_form_submit()
  * @see user_cancel_confirm_form_submit()
  */
-function user_profile_form($form, $form_state, $account, $category = 'account') {
+function user_profile_form($form, &$form_state, $account, $category = 'account') {
   global $user;
 
-  $edit = (empty($form_state['values'])) ? (array)$account : $form_state['values'];
+  $form['#user'] = $account;
+  $form['#user_category'] = $category;
 
-  $form = _user_forms($edit, $account, $category);
+  if ($category == 'account') {
+    user_edit_form($form, $form_state);
+  }
 
   // Attach field widgets.
-  field_attach_form('user', (object) $edit, $form, $form_state);
+  field_attach_form('user', $account, $form, $form_state);
 
-  $form['_category'] = array('#type' => 'value', '#value' => $category);
-  $form['_account'] = array('#type' => 'value', '#value' => $account);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save'), '#weight' => 30);
+
   if (($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users')) {
     $form['cancel'] = array(
       '#type' => 'submit',
@@ -257,7 +259,7 @@ function user_profile_form_validate($form, &$form_state) {
   $edit = (object)$form_state['values'];
   field_attach_form_validate('user', $edit, $form, $form_state);
   $edit = (array)$edit;
-  user_module_invoke('validate', $edit, $form_state['values']['_account'], $form_state['values']['_category']);
+  user_module_invoke('validate', $edit, $form['#user'], $form['#user_category']);
   // Validate input to ensure that non-privileged users can't alter protected data.
   if ((!user_access('administer users') && array_intersect(array_keys($edit), array('uid', 'init', 'session'))) || (!user_access('administer permissions') && isset($form_state['values']['roles']))) {
     watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
@@ -270,9 +272,9 @@ function user_profile_form_validate($form, &$form_state) {
  * Submit function for the user account and profile editing form.
  */
 function user_profile_form_submit($form, &$form_state) {
-  $account = $form_state['values']['_account'];
-  $category = $form_state['values']['_category'];
-  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['cancel'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
+  $account = $form['#user'];
+  $category = $form['#user_category'];
+  unset($form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['cancel'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['form_build_id']);
 
   $edit = (object)$form_state['values'];
   field_attach_submit('user', $edit, $form, $form_state);
@@ -284,7 +286,6 @@ function user_profile_form_submit($form, &$form_state) {
   cache_clear_all();
 
   drupal_set_message(t('The changes have been saved.'));
-  return;
 }
 
 /**
@@ -297,7 +298,7 @@ function user_edit_cancel_submit($form, &$form_state) {
     unset($_GET['destination']);
   }
   // Note: We redirect from user/uid/edit to user/uid/cancel to make the tabs disappear.
-  $form_state['redirect'] = array("user/" . $form_state['values']['_account']->uid . "/cancel", $destination);
+  $form_state['redirect'] = array("user/" . $form['#user']->uid . "/cancel", $destination);
 }
 
 /**

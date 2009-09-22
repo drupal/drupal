@@ -860,17 +860,6 @@ function user_user_view($account) {
 }
 
 /**
- * Implement hook_user_form.
- */
-function user_user_form(&$edit, $account, $category) {
-  if ($category == 'account') {
-    $form = array();
-    $form_state = array();
-    return user_edit_form($form, $form_state, (isset($account->uid) ? $account->uid : FALSE), $edit);
-  }
-}
-
-/**
  * Implement hook_user_validate().
  */
 function user_user_validate(&$edit, $account, $category) {
@@ -1810,7 +1799,12 @@ function user_pass_rehash($password, $timestamp, $login) {
   return md5($timestamp . $password . $login);
 }
 
-function user_edit_form($form, &$form_state, $uid, $edit, $register = FALSE) {
+function user_edit_form(&$form, &$form_state) {
+  global $user;
+
+  $account = $form['#user'];
+  $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
+
   _user_password_dynamic_validation();
   $admin = user_access('administer users');
 
@@ -1819,24 +1813,29 @@ function user_edit_form($form, &$form_state, $uid, $edit, $register = FALSE) {
     '#title' => t('Account information'),
     '#weight' => -10,
   );
-  // Only show name field when: registration page; or user is editing own account and can change username; or an admin user.
-  if ($register || ($GLOBALS['user']->uid == $uid && user_access('change own username')) || $admin) {
+  // Only show name field when: registration page; or user is editing own
+  // account and can change username; or an admin user.
+  if ($register || ($user->uid == $account->uid && user_access('change own username')) || $admin) {
     $form['account']['name'] = array('#type' => 'textfield',
       '#title' => t('Username'),
-      '#default_value' => $edit['name'],
       '#maxlength' => USERNAME_MAX_LENGTH,
       '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
       '#required' => TRUE,
       '#attributes' => array('class' => array('username')),
     );
+    if (!$register) {
+      $form['account']['name']['#default_value'] = $account->name;
+    }
   }
   $form['account']['mail'] = array('#type' => 'textfield',
     '#title' => t('E-mail address'),
-    '#default_value' => $edit['mail'],
     '#maxlength' => EMAIL_MAX_LENGTH,
     '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
     '#required' => TRUE,
   );
+  if (!$register) {
+    $form['account']['mail']['#default_value'] = $account->mail;
+  }
   if (!$register) {
     $form['account']['pass'] = array('#type' => 'password_confirm',
       '#description' => t('To change the current user password, enter the new password in both fields.'),
@@ -1855,7 +1854,7 @@ function user_edit_form($form, &$form_state, $uid, $edit, $register = FALSE) {
     $form['account']['status'] = array(
       '#type' => 'radios',
       '#title' => t('Status'),
-      '#default_value' => isset($edit['status']) ? $edit['status'] : 1,
+      '#default_value' => isset($account->status) ? $account->status : 1,
       '#options' => array(t('Blocked'), t('Active'))
     );
   }
@@ -1876,11 +1875,10 @@ function user_edit_form($form, &$form_state, $uid, $edit, $register = FALSE) {
 
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
     if ($roles) {
-      $default = empty($edit['roles']) ? array() : array_keys($edit['roles']);
       $form['account']['roles'] = array(
         '#type' => 'checkboxes',
         '#title' => t('Roles'),
-        '#default_value' => $default,
+        '#default_value' => isset($account->roles) ? array_keys($account->roles) : array(),
         '#options' => $roles,
         DRUPAL_AUTHENTICATED_RID => $checkbox_authenticated,
       );
@@ -1897,13 +1895,13 @@ function user_edit_form($form, &$form_state, $uid, $edit, $register = FALSE) {
     $form['signature_settings']['signature'] = array(
       '#type' => 'textarea',
       '#title' => t('Signature'),
-      '#default_value' => $edit['signature'],
+      '#default_value' => isset($account->signature) ? $account->signature : '',
       '#description' => t('Your signature will be publicly displayed at the end of your comments.'),
     );
   }
 
   // Picture/avatar:
-  if (variable_get('user_pictures', 0) && !$register) {
+  if (variable_get('user_pictures', 0) && !$register && !$admin) {
     $form['picture'] = array(
       '#type' => 'fieldset',
       '#title' => t('Picture'),
@@ -1911,15 +1909,15 @@ function user_edit_form($form, &$form_state, $uid, $edit, $register = FALSE) {
     );
     $form['picture']['picture'] = array(
       '#type' => 'value',
-      '#value' => $edit['picture'],
+      '#value' => isset($account->picture) ? $account->picture : NULL,
     );
     $form['picture']['picture_current'] = array(
-      '#markup' => theme('user_picture', (object)$edit),
+      '#markup' => theme('user_picture', $account),
     );
     $form['picture']['picture_delete'] = array(
       '#type' => 'checkbox',
       '#title' => t('Delete picture'),
-      '#access' => !empty($edit['picture']->fid),
+      '#access' => !empty($account->picture->fid),
       '#description' => t('Check this box to delete your current picture.'),
     );
     $form['picture']['picture_upload'] = array(
@@ -1931,9 +1929,6 @@ function user_edit_form($form, &$form_state, $uid, $edit, $register = FALSE) {
     $form['#validate'][] = 'user_profile_form_validate';
     $form['#validate'][] = 'user_validate_picture';
   }
-  $form['#uid'] = $uid;
-
-  return $form;
 }
 
 /**
@@ -3073,8 +3068,11 @@ function user_register($form, &$form_state) {
     drupal_goto('user/' . $user->uid);
   }
 
-  // Start with the default user edit fields.
-  $form = user_edit_form($form, $form_state, NULL, NULL, TRUE);
+  $form['#user'] = drupal_anonymous_user();
+  $form['#user_category'] = 'register';
+
+  // Start with the default user account fields.
+  user_edit_form($form, $form_state);
   if ($admin) {
     $form['account']['notify'] = array(
      '#type' => 'checkbox',
@@ -3083,13 +3081,6 @@ function user_register($form, &$form_state) {
     // Redirect back to page which initiated the create request;
     // usually admin/people/create.
     $form_state['redirect'] = $_GET['q'];
-  }
-
-  // Create a dummy variable for pass-by-reference parameters.
-  $null = NULL;
-  $extra = _user_forms($null, NULL, NULL, 'register');
-  if ($extra) {
-    $form = array_merge_recursive($form, $extra);
   }
 
   // If the "account" fieldset is the only element at the top level, its
@@ -3109,23 +3100,6 @@ function user_register($form, &$form_state) {
 function user_register_validate($form, &$form_state) {
   user_module_invoke('validate', $form_state['values'], $form_state['values'], 'account');
 }
-
-/**
- * Retrieve a list of all form elements for the specified category.
- */
-function _user_forms(&$edit, $account, $category, $hook = 'form') {
-  $groups = array();
-  foreach (module_implements('user_' . $hook) as $module) {
-    $function = $module . '_user_' . $hook;
-    if ($data = $function($edit, $account, $category)) {
-      $groups = array_merge_recursive($data, $groups);
-    }
-  }
-  uasort($groups, '_user_sort');
-
-  return empty($groups) ? FALSE : $groups;
-}
-
 
 /**
  * Implementation of hook_modules_installed().

@@ -210,13 +210,6 @@ function profile_block_view($delta = '') {
 }
 
 /**
- * Implement hook_user_register().
- */
-function profile_user_register(&$edit, $account, $category) {
-  return profile_form_profile($edit, $account, $category, TRUE);
-}
-
-/**
  * Implement hook_user_update().
  */
 function profile_user_update(&$edit, $account, $category) {
@@ -228,13 +221,6 @@ function profile_user_update(&$edit, $account, $category) {
  */
 function profile_user_insert(&$edit, $account, $category) {
   return profile_save_profile($edit, $account, $category, TRUE);
-}
-
-/**
- * Implement hook_user_form().
- */
-function profile_user_form(&$edit, $account, $category) {
-  return profile_form_profile($edit, $account, $category);
 }
 
 /**
@@ -378,7 +364,17 @@ function _profile_form_explanation($field) {
   return $output;
 }
 
-function profile_form_profile($edit, $account, $category, $register = FALSE) {
+/**
+ * Implement hook_form_alter().
+ */
+function profile_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'user_register' || $form_id == 'user_profile_form') {
+    $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
+    $form = array_merge($form, profile_form_profile($form['#user'], $form['#user_category'], $register));
+  }
+}
+
+function profile_form_profile($account, $category, $register = FALSE) {
   $result = _profile_get_fields($category, $register);
   $weight = 1;
   $fields = array();
@@ -392,7 +388,7 @@ function profile_form_profile($edit, $account, $category, $register = FALSE) {
       case 'url':
         $fields[$category][$field->name] = array('#type' => 'textfield',
           '#title' => check_plain($field->title),
-          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
+          '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#maxlength' => 255,
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
@@ -404,7 +400,7 @@ function profile_form_profile($edit, $account, $category, $register = FALSE) {
       case 'textarea':
         $fields[$category][$field->name] = array('#type' => 'textarea',
           '#title' => check_plain($field->title),
-          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
+          '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
@@ -412,7 +408,7 @@ function profile_form_profile($edit, $account, $category, $register = FALSE) {
       case 'list':
         $fields[$category][$field->name] = array('#type' => 'textarea',
           '#title' => check_plain($field->title),
-          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
+          '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
@@ -420,7 +416,7 @@ function profile_form_profile($edit, $account, $category, $register = FALSE) {
       case 'checkbox':
         $fields[$category][$field->name] = array('#type' => 'checkbox',
           '#title' => check_plain($field->title),
-          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
+          '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
@@ -435,7 +431,7 @@ function profile_form_profile($edit, $account, $category, $register = FALSE) {
         }
         $fields[$category][$field->name] = array('#type' => 'select',
           '#title' => check_plain($field->title),
-          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
+          '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#options' => $options,
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
@@ -444,7 +440,7 @@ function profile_form_profile($edit, $account, $category, $register = FALSE) {
       case 'date':
         $fields[$category][$field->name] = array('#type' => 'date',
           '#title' => check_plain($field->title),
-          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
+          '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );

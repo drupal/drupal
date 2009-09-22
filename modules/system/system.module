@@ -1475,25 +1475,24 @@ function system_preprocess_page(&$variables) {
 }
 
 /**
- * Implement hook_user_form().
+ * Implement hook_form_FORM_ID_alter().
  */
-function system_user_form(&$edit, $account, $category) {
-  if ($category == 'account') {
+function system_form_user_profile_form_alter(&$form, &$form_state) {
+  if ($form['#user_category'] == 'account') {
     if (variable_get('configurable_timezones', 1)) {
-      system_user_timezone($edit, $form);
+      system_user_timezone($form, $form_state);
     }
     return $form;
   }
 }
 
 /**
- * Implement hook_user_register().
+ * Implement hook_form_FORM_ID_alter().
  */
-function system_user_register(&$edit, $account, $category) {
+function system_form_user_register_alter(&$form, &$form_state) {
   if (variable_get('configurable_timezones', 1)) {
-    $form = array();
     if (variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) == DRUPAL_USER_TIMEZONE_SELECT) {
-      system_user_timezone($edit, $form);
+      system_user_timezone($form, $form_state);
     }
     else {
       $form['account']['timezone'] = array(
@@ -1518,8 +1517,11 @@ function system_user_login(&$edit, $account) {
 /**
  * Add the time zone field to the user edit and register forms.
  */
-function system_user_timezone(&$edit, &$form) {
+function system_user_timezone(&$form, &$form_state) {
   global $user;
+
+  $account = $form['#user'];
+
   $form['timezone'] = array(
     '#type' => 'fieldset',
     '#title' => t('Locale settings'),
@@ -1529,11 +1531,11 @@ function system_user_timezone(&$edit, &$form) {
   $form['timezone']['timezone'] = array(
     '#type' => 'select',
     '#title' => t('Time zone'),
-    '#default_value' => $edit['timezone'] ? $edit['timezone'] : ($edit['uid'] == $user->uid ? variable_get('date_default_timezone', '') : ''),
-    '#options' => system_time_zones(($edit['uid'] != $user->uid)),
+    '#default_value' => isset($account->timezone) ? $account->timezone : ($account->uid == $user->uid ? variable_get('date_default_timezone', '') : ''),
+    '#options' => system_time_zones($account->uid != $user->uid),
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   );
-  if (!$edit['timezone'] && $edit['uid'] == $user->uid) {
+  if (!isset($account->timezone) && $account->uid == $user->uid) {
     $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Please confirm the selection and click save.');
     $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
     drupal_add_js('misc/timezone.js');

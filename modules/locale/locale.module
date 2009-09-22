@@ -224,34 +224,18 @@ function locale_locale($op = 'groups') {
 }
 
 /**
- * Implement hook_user_register().
+ * Form builder callback to display language selection widget.
+ *
+ * @ingroup forms
+ * @see locale_form_alter()
  */
-function locale_user_register(&$edit, $account, $category) {
-  // If we have more then one language and either creating a user on the
-  // admin interface or edit the user, show the language selector.
-  if (variable_get('language_count', 1) > 1 && user_access('administer users')) {
-    return locale_language_selector_form($account);
-  }
-}
-
-/**
- * Implement hook_user_form().
- */
-function locale_user_form(&$edit, $account, $category) {
-  // If we have more then one language and either creating a user on the
-  // admin interface or edit the user, show the language selector.
-  if (variable_get('language_count', 1) > 1 && $category == 'account') {
-    return locale_language_selector_form($account);
-  }
-}
-
-function locale_language_selector_form($user) {
+function locale_language_selector_form(&$form, &$form_state, $user) {
   global $language;
   $languages = language_list('enabled');
   $languages = $languages[1];
 
   // If the user is being created, we set the user language to the page language.
-  $user_preferred_language = $user ? user_preferred_language($user) : $language;
+  $user_preferred_language = $user->uid ? user_preferred_language($user) : $language;
 
   $names = array();
   foreach ($languages as $langcode => $item) {
@@ -273,7 +257,6 @@ function locale_language_selector_form($user) {
     '#options' => $names,
     '#description' => ($mode == LANGUAGE_NEGOTIATION_PATH) ? t("This account's default language for e-mails, and preferred language for site presentation.") : t("This account's default language for e-mails."),
   );
-  return $form;
 }
 
 /**
@@ -306,9 +289,19 @@ function locale_form_node_type_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_form_alter(). Adds language fields to forms.
+ * Implement hook_form_alter().
+ *
+ * Adds language fields to forms.
  */
 function locale_form_alter(&$form, &$form_state, $form_id) {
+  // Only alter user forms if there is more than one language.
+  if (variable_get('language_count', 1) > 1) {
+    // Display language selector when either creating a user on the admin
+    // interface or editing a user account.
+    if (($form_id == 'user_register' && user_access('administer users')) || ($form_id == 'user_profile_form' && $form['#user_category'] == 'account')) {
+      locale_language_selector_form($form, $form_state, $form['#user']);
+    }
+  }
   if (isset($form['#id']) && $form['#id'] == 'node-form') {
     if (isset($form['#node']->type) && variable_get('language_content_type_' . $form['#node']->type, 0)) {
       $form['language'] = array(

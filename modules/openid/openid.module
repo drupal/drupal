@@ -125,7 +125,9 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_form_alter(). Adds OpenID login to the login forms.
+ * Implement hook_form_alter().
+ *
+ * Adds OpenID login to the login forms.
  */
 function openid_form_user_register_alter(&$form, &$form_state) {
   if (isset($_SESSION['openid']['values'])) {

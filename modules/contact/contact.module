@@ -145,10 +145,11 @@ function contact_load($cid) {
 }
 
 /**
- * Implement hook_user_form().
+ * Implement hook_form_FORM_ID_alter().
  */
-function contact_user_form(&$edit, $account, $category) {
-  if ($category == 'account') {
+function contact_form_user_profile_form_alter(&$form, &$form_state) {
+  if ($form['#user_category'] == 'account') {
+    $account = $form['#user'];
     $form['contact'] = array('#type' => 'fieldset',
       '#title' => t('Contact settings'),
       '#weight' => 5,
@@ -156,10 +157,9 @@ function contact_user_form(&$edit, $account, $category) {
     );
     $form['contact']['contact'] = array('#type' => 'checkbox',
       '#title' => t('Personal contact form'),
-      '#default_value' => !empty($edit['contact']) ? $edit['contact'] : FALSE,
+      '#default_value' => !empty($account->contact) ? $account->contact : FALSE,
       '#description' => t('Allow other users to contact you via a <a href="@url">personal contact form</a> which keeps your e-mail address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.', array('@url' => url("user/$account->uid/contact"))),
     );
-    return $form;
   }
 }
 

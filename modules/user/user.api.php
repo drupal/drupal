@@ -218,38 +218,6 @@ function hook_user_categories() {
 }
 
 /**
- * The user account edit form is about to be displayed.
- *
- * The module should present the form elements it wishes to inject
- * into the form.
- *
- * @param &$edit
- *   The array of form values submitted by the user.
- * @param $account
- *   The user object on which the operation is being performed.
- * @param $category
- *   The active category of user information being edited.
- * @return
- *   A $form array containing the form elements to display.
- */
-function hook_user_form(&$edit, $account, $category = NULL) {
-  if ($category == 'account') {
-    $form['comment_settings'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Comment settings'),
-      '#collapsible' => TRUE,
-      '#weight' => 4);
-    $form['comment_settings']['signature'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Signature'),
-      '#default_value' => $edit['signature'],
-      '#description' => t('Your signature will be publicly displayed at the end of your comments.'));
-    return $form;
-  }
-}
-
-
-/**
  * The user account is being added.
  *
  * The module should save its custom additions to the user object into the
@@ -300,37 +268,6 @@ function hook_user_logout($account) {
       'time' => time(),
     ))
     ->execute();
-}
-
-/**
- * The user account registration form is about to be displayed.
- *
- * The module should present the form elements it wishes to inject into the
- * form.
- *
- * @param &$edit
- *   The array of form values submitted by the user.
- * @param $account
- *   The user object on which the operation is being performed.
- * @param $category
- *   The active category of user information being edited.
- * @return
- *   A $form array containing the form elements to display.
- */
-function hook_user_register(&$edit, $account, $category) {
-  if (variable_get('configurable_timezones', 1)) {
-    $form = array();
-    if (variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) == DRUPAL_USER_TIMEZONE_SELECT) {
-      system_user_timezone($edit, $form);
-    }
-    else {
-      $form['timezone'] = array(
-        '#type' => 'hidden',
-        '#value' => variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) ? '' : variable_get('date_default_timezone', ''),
-      );
-    }
-    return $form;
-  }
 }
 
 /**
