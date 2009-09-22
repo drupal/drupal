@@ -714,3 +714,13 @@ function field_test_field_delete($obj_type, $object, $field, $instance, $items) 
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
+
+/**
+ *
+ * 'Field storage' API.
+ *
+ */
+
+function field_test_field_storage_create_field($field) {
+  throw new Exception('field_test storage module always fails to create fields');
+}

@@ -1560,6 +1560,35 @@ class FieldCrudTestCase extends FieldTestCase {
   }
 
   /**
+   * Test failure to create a field.
+   */
+  function testCreateFieldFail() {
+    $field_name = 'duplicate';
+    $field_definition = array('field_name' => $field_name, 'type' => 'test_field');
+    $query = db_select('field_config')->condition('field_name', $field_name)->countQuery();
+
+    // The field does not appear in field_config.
+    $count = $query->execute()->fetchField();
+    $this->assertEqual($count, 0, 'A field_config row for the field does not exist.');
+
+    // Make field creation fail.
+    variable_set('field_storage_module', 'field_test');
+    
+    // Try to create the field.
+    try {
+      $field = field_create_field($field_definition);
+      $this->assertTrue(FALSE, 'Field creation (correctly) fails.');
+    }
+    catch (Exception $e) {
+      $this->assertTrue(TRUE, 'Field creation (correctly) fails.');
+    }
+
+    // The field does not appear in field_config.
+    $count = $query->execute()->fetchField();
+    $this->assertEqual($count, 0, 'A field_config row for the field does not exist.');
+  }
+    
+  /**
    * Test reading back a field definition.
    */
   function testReadField() {
