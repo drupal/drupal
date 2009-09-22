@@ -1,4 +1,4 @@
-/* $Id: user.css,v 1.13 2009/08/06 05:06:00 webchick Exp $ */
+/* $Id: user.css,v 1.14 2009/09/22 07:25:10 dries Exp $ */
 
 #permissions td.module {
   font-weight: bold;
@@ -8,9 +8,6 @@
 }
 #permissions tr.odd .form-item, #permissions tr.even .form-item {
   white-space: normal;
-}
-#user-login-form {
-  text-align: center;
 }
 #user-admin-filter ul {
   list-style-type: none;
