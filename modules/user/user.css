@@ -9,9 +9,6 @@
 #permissions tr.odd .form-item, #permissions tr.even .form-item {
   white-space: normal;
 }
-#user-login-form {
-  text-align: center;
-}
 #user-admin-filter ul {
   list-style-type: none;
   list-style-image: none;
