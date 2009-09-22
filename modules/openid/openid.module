@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.60 2009/09/21 06:44:14 dries Exp $
+// $Id: openid.module,v 1.61 2009/09/22 07:50:16 dries Exp $
 
 /**
  * @file
@@ -125,7 +125,9 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_form_alter(). Adds OpenID login to the login forms.
+ * Implement hook_form_alter().
+ *
+ * Adds OpenID login to the login forms.
  */
 function openid_form_user_register_alter(&$form, &$form_state) {
   if (isset($_SESSION['openid']['values'])) {
