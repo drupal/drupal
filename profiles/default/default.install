@@ -115,7 +115,7 @@ function default_install() {
   foreach ($values as $record) {
     $query->values($record);
   }
-  $query->execute();  
+  $query->execute();
 
   // Insert default user-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
@@ -175,23 +175,20 @@ function default_install() {
   variable_set('theme_settings', $theme_settings);
 
   // Create a default vocabulary named "Tags", enabled for the 'article' content type.
-  $description = st('Use tags to group articles on similar topics into categories.');
-  $help = st('Enter a comma-separated list of words to describe your content.');
-
-  $vid = db_insert('taxonomy_vocabulary')->fields(array(
-    'name' => 'Tags',
-    'description' => $description,
-    'machine_name' => 'tags',
-    'help' => $help,
-    'relations' => 0,
-    'hierarchy' => 0,
-    'multiple' => 0,
-    'required' => 0,
-    'tags' => 1,
-    'module' => 'taxonomy',
-    'weight' => 0,
-  ))->execute();
-  db_insert('taxonomy_vocabulary_node_type')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
+  $vocabulary = new stdClass;
+  $vocabulary->name = 'Tags';
+  $vocabulary->description = st('Use tags to group articles on similar topics into categories.');
+  $vocabulary->machine_name = 'tags';
+  $vocabulary->help = st('Enter a comma-separated list of words to describe your content.');
+  $vocabulary->relations = 0;
+  $vocabulary->hierarchy = 0;
+  $vocabulary->multiple = 0;
+  $vocabulary->required = 0;
+  $vocabulary->tags = 1;
+  $vocabulary->module = 'taxonomy';
+  $vocabulary->weight = 0;
+  $vocabulary->nodes = array('article' => 'article');
+  taxonomy_vocabulary_save($vocabulary);
 
   // Enable default permissions for system roles.
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'use text format 1'));
