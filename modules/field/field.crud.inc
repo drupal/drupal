@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.31 2009/09/11 03:42:34 webchick Exp $
+// $Id: field.crud.inc,v 1.32 2009/09/22 08:44:03 dries Exp $
 
 /**
  * @file
@@ -291,7 +291,17 @@ function field_create_field($field) {
 
   // Invoke hook_field_storage_create_field after the field is
   // complete (e.g. it has its id).
-  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_create_field', $field);
+  try {
+    module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_create_field', $field);
+  }
+  catch (Exception $e) {
+    // If storage creation failed, remove the field_config record before
+    // rethrowing the exception.
+    db_delete('field_config')
+      ->condition('id', $field['id'])
+      ->execute();
+    throw $e;
+  }
 
   // Clear caches
   field_cache_clear(TRUE);
