@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.44 2009/08/21 14:27:44 dries Exp $
+// $Id: comment.test,v 1.45 2009/09/22 07:36:57 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -46,7 +46,7 @@ class CommentHelperCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
     $match = array();
     // Get comment ID
-    preg_match('/#comment-([^"]+)/', $this->getURL(), $match);
+    preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
 
     // Get comment.
     if ($contact !== TRUE) { // If true then attempting to find error message.
