@@ -46,7 +46,7 @@ class CommentHelperCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
     $match = array();
     // Get comment ID
-    preg_match('/#comment-([^"]+)/', $this->getURL(), $match);
+    preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
 
     // Get comment.
     if ($contact !== TRUE) { // If true then attempting to find error message.

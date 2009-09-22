@@ -2064,16 +2064,21 @@ function comment_form_submit($form, &$form_state) {
     else {
       drupal_set_message(t('Your comment has been posted.'));
     }
-    $redirect = array('comment/' . $comment->cid, array(), 'comment-' . $comment->cid);
+    $query = array();
+    // Find the current display page for this comment.
+    $page = comment_get_display_page($comment->cid, $node->type);
+    if ($page > 0) {
+      $query['page'] = $page;
+    }
+    // Redirect to the newly posted comment.
+    $redirect = array('node/' . $node->nid, $query, 'comment-' . $comment->cid);
   }
   else {
     watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), WATCHDOG_WARNING);
     drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject)), 'error');
-    $page = comment_new_page_count($node->comment_count, 1, $node);
-    $redirect = array('node/' . $node->nid, $page);
+    // Redirect the user to the node they are commenting on.
+    $redirect = 'node/' . $node->nid;
   }
-
-  // Redirect the user to the node they're commenting on.
   unset($form_state['rebuild']);
   $form_state['redirect'] = $redirect;
 }
