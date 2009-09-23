@@ -92,24 +92,34 @@ function drupal_load_updates() {
  *   Otherwise, FALSE.
  */
 function drupal_get_schema_versions($module) {
-  $updates = array();
-  $functions = get_defined_functions();
-  foreach ($functions['user'] as $function) {
-    if (strpos($function, $module . '_update_') === 0) {
-      $version = substr($function, strlen($module . '_update_'));
-      if (is_numeric($version)) {
-        $updates[] = $version;
+  $updates = &drupal_static(__FUNCTION__, NULL);
+  if (!isset($updates)) {
+    $updates = array();
+    // Prepare regular expression to match all possible defined hook_update_N().
+    $modules = db_query("SELECT name FROM {system} WHERE type = 'module'")
+      ->fetchCol();
+    $regexp = '/^(?P<module>' . implode('|', $modules) . ')_update_(?P<version>\d+)$/';
+    $functions = get_defined_functions();
+    // Narrow this down to functions ending with an integer, since all
+    // hook_update_N() functions end this way, and there are other
+    // possible functions which match '_update_'. We use preg_grep() here
+    // instead of foreaching through all defined functions, since the loop
+    // through all PHP functions can take significant page execution time
+    // and this function is called on every administrative page via
+    // system_requirements().
+    foreach (preg_grep('/_\d+$/', $functions['user']) as $function) {
+      // If this function is a module update function, add it to the list of
+      // module updates.
+      if (preg_match($regexp, $function, $matches)) {
+        $updates[$matches['module']][] = $matches['version'];
       }
     }
+    // Ensure that updates are applied in numerical order.
+    foreach ($updates as &$module_updates) {
+      sort($module_updates, SORT_NUMERIC);
+    }
   }
-  if (count($updates) == 0) {
-    return FALSE;
-  }
-
-  // Make sure updates are run in numeric order, not in definition order.
-  sort($updates, SORT_NUMERIC);
-
-  return $updates;
+  return isset($updates[$module]) ? $updates[$module] : FALSE;
 }
 
 /**
