@@ -549,10 +549,7 @@ function node_configure_fields($type) {
         'widget_type' => 'text_textarea_with_summary',
         'settings' => array('display_summary' => TRUE),
 
-        // With no UI in core, we have to define default
-        // formatters for the teaser and full view.
-        // This may change if the method of handling displays
-        // is changed or if a UI gets into core.
+        // Define default formatters for the teaser and full view.
         'display' => array(
           'full' => array(
             'label' => 'hidden',
