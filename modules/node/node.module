@@ -2320,7 +2320,7 @@ function node_access_rebuild($batch_mode = FALSE) {
     else {
       // Try to allocate enough time to rebuild node grants
       if (function_exists('set_time_limit')) {
-        @set_time_limit($time_limit);
+        @set_time_limit(240);
       }
       $result = db_query("SELECT nid FROM {node}");
       while ($node = db_fetch_object($result)) {

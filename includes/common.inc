@@ -2662,7 +2662,7 @@ function page_set_cache() {
 function drupal_cron_run() {
   // Try to allocate enough time to run all the hook_cron implementations.
   if (function_exists('set_time_limit')) {
-    @set_time_limit($time_limit);
+    @set_time_limit(240);
   }
 
   // Fetch the cron semaphore
