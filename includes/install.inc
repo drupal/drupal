@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.112 2009/09/23 15:04:34 dries Exp $
+// $Id: install.inc,v 1.113 2009/09/25 14:54:49 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -93,12 +93,10 @@ function drupal_load_updates() {
  */
 function drupal_get_schema_versions($module) {
   $updates = &drupal_static(__FUNCTION__, NULL);
-  if (!isset($updates)) {
+  if (!isset($updates[$module])) {
     $updates = array();
     // Prepare regular expression to match all possible defined hook_update_N().
-    $modules = db_query("SELECT name FROM {system} WHERE type = 'module'")
-      ->fetchCol();
-    $regexp = '/^(?P<module>' . implode('|', $modules) . ')_update_(?P<version>\d+)$/';
+    $regexp = '/^(?P<module>.+)_update_(?P<version>\d+)$/';
     $functions = get_defined_functions();
     // Narrow this down to functions ending with an integer, since all
     // hook_update_N() functions end this way, and there are other
