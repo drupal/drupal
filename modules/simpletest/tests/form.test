@@ -27,46 +27,63 @@ class FormsTestCase extends DrupalWebTestCase {
     $empty_strings = array('""' => "", '"\n"' => "\n", '" "' => " ", '"\t"' => "\t", '" \n\t "' => " \n\t ", '"\n\n\n\n\n"' => "\n\n\n\n\n");
     $empty_arrays = array('array()' => array());
 
-    $elements['textfield']['element'] = array('#title' => $this->randomName(), '#type' => 'textfield', '#required' => TRUE);
+    $elements['textfield']['element'] = array('#title' => $this->randomName(), '#type' => 'textfield');
     $elements['textfield']['empty_values'] = $empty_strings;
 
-    $elements['password']['element'] = array('#title' => $this->randomName(), '#type' => 'password', '#required' => TRUE);
+    $elements['password']['element'] = array('#title' => $this->randomName(), '#type' => 'password');
     $elements['password']['empty_values'] = $empty_strings;
 
-    $elements['password_confirm']['element'] = array('#title' => $this->randomName(), '#type' => 'password_confirm', '#required' => TRUE);
+    $elements['password_confirm']['element'] = array('#title' => $this->randomName(), '#type' => 'password_confirm');
     $elements['password_confirm']['empty_values'] = $empty_strings;
 
-    $elements['textarea']['element'] = array('#title' => $this->randomName(), '#type' => 'textarea', '#required' => TRUE);
+    $elements['textarea']['element'] = array('#title' => $this->randomName(), '#type' => 'textarea');
     $elements['textarea']['empty_values'] = $empty_strings;
 
-    $elements['radios']['element'] = array('#title' => $this->randomName(), '#type' => 'radios', '#required' => TRUE, '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
+    $elements['radios']['element'] = array('#title' => $this->randomName(), '#type' => 'radios', '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
     $elements['radios']['empty_values'] = $empty_arrays;
 
-    $elements['checkboxes']['element'] = array('#title' => $this->randomName(), '#type' => 'checkboxes', '#required' => TRUE, '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
+    $elements['checkboxes']['element'] = array('#title' => $this->randomName(), '#type' => 'checkboxes', '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
     $elements['checkboxes']['empty_values'] = $empty_arrays;
 
-    $elements['select']['element'] = array('#title' => $this->randomName(), '#type' => 'select', '#required' => TRUE, '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
+    $elements['select']['element'] = array('#title' => $this->randomName(), '#type' => 'select', '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
     $elements['select']['empty_values'] = $empty_strings;
 
-    $elements['file']['element'] = array('#title' => $this->randomName(), '#type' => 'file', '#required' => TRUE);
+    $elements['file']['element'] = array('#title' => $this->randomName(), '#type' => 'file');
     $elements['file']['empty_values'] = $empty_strings;
 
     // Go through all the elements and all the empty values for them
     foreach ($elements as $type => $data) {
       foreach ($data['empty_values'] as $key => $empty) {
-        $form_id = $this->randomName();
-        $form = $form_state = array();
-        $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
-        $element = $data['element']['#title'];
-        $form[$element] = $data['element'];
-        $form_state['values'][$element] = $empty;
-        $form_state['input'] = $form_state['values'];
-        $form_state['input']['form_id'] = $form_id;
-        $form_state['method'] = 'post';
-        drupal_prepare_form($form_id, $form, $form_state);
-        drupal_process_form($form_id, $form, $form_state);
-        $errors = form_get_errors();
-        $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");
+        foreach (array(TRUE, FALSE) as $required) {
+          $form_id = $this->randomName();
+          $form = $form_state = array();
+          form_clear_error();
+          $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
+          $element = $data['element']['#title'];
+          $form[$element] = $data['element'];
+          $form[$element]['#required'] = $required;
+          $form_state['values'][$element] = $empty;
+          $form_state['input'] = $form_state['values'];
+          $form_state['input']['form_id'] = $form_id;
+          $form_state['method'] = 'post';
+          drupal_prepare_form($form_id, $form, $form_state);
+          drupal_process_form($form_id, $form, $form_state);
+          $errors = form_get_errors();
+          if ($required) {
+            // Make sure we have a form error for this element.
+            $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");
+          }
+          elseif ($type == 'select') {
+            // Select elements are going to have validation errors with empty
+            // input, since those are illegal choices. Just make sure the
+            // error is not "field is required".
+            $this->assertTrue((empty($errors[$element]) || strpos('field is required', $errors[$element]) === FALSE), "Optional '$type' field '$element' is not treated as a required element");
+          }
+          else {
+            // Make sure there is *no* form error for this element.
+            $this->assertTrue(empty($errors[$element]), "Optional '$type' field '$element' has no errors with empty input");
+          }
+        }
       }
     }
     // Clear the expected form error messages so they don't appear as exceptions.
