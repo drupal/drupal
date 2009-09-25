@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.42 2009/09/20 07:32:18 dries Exp $
+// $Id: filter.test,v 1.43 2009/09/25 14:06:09 dries Exp $
 
 class FilterAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -8,6 +8,42 @@ class FilterAdminTestCase extends DrupalWebTestCase {
       'description' => 'Thoroughly test the administrative interface of the filter module.',
       'group' => 'Filter',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create users.
+    $this->admin_user = $this->drupalCreateUser(array('administer filters'));
+    $this->web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  function testFormatAdmin() {
+    // Add text format.
+    $this->drupalGet('admin/config/content/formats');
+    $this->clickLink('Add text format');
+    $edit = array(
+      'name' => $this->randomName(),
+    );
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+
+    // Edit text format.
+    $format = $this->getFilter($edit['name']);
+    $this->drupalGet('admin/config/content/formats');
+    $this->assertRaw('admin/config/content/formats/' . $format->format);
+    $this->drupalGet('admin/config/content/formats/' . $format->format);
+    $this->drupalPost(NULL, array(), t('Save configuration'));
+
+    // Delete text format.
+    $this->drupalGet('admin/config/content/formats');
+    $this->assertRaw('admin/config/content/formats/' . $format->format . '/delete');
+    $this->drupalGet('admin/config/content/formats/' . $format->format . '/delete');
+    $this->drupalPost(NULL, array(), t('Delete'));
+
+    // Verify that deleted text format no longer exists.
+    $this->drupalGet('admin/config/content/formats/' . $format->format);
+    $this->assertResponse(404, t('Deleted text format no longer exists.'));
   }
 
   /**
@@ -19,11 +55,6 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Line filter.
     $second_filter = 'filter_autop';
 
-    // Create users.
-    $admin_user = $this->drupalCreateUser(array('administer filters'));
-    $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
-    $this->drupalLogin($admin_user);
-
     list($filtered, $full, $plain) = $this->checkFilterFormats();
 
     // Check that the fallback format exists and cannot be deleted.
@@ -34,8 +65,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->assertResponse(403, t('The fallback format cannot be deleted.'));
 
     // Verify access permissions to Full HTML format.
-    $this->assertTrue(filter_access(filter_format_load($full), $admin_user), t('Admin user may use Full HTML.'));
-    $this->assertFalse(filter_access(filter_format_load($full), $web_user), t('Web user may not use Full HTML.'));
+    $this->assertTrue(filter_access(filter_format_load($full), $this->admin_user), t('Admin user may use Full HTML.'));
+    $this->assertFalse(filter_access(filter_format_load($full), $this->web_user), t('Web user may not use Full HTML.'));
 
     // Add an additional tag.
     $edit = array();
@@ -96,7 +127,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Switch user.
     $this->drupalLogout();
-    $this->drupalLogin($web_user);
+    $this->drupalLogin($this->web_user);
 
     $this->drupalGet('node/add/page');
     $this->assertRaw('<option value="' . $full . '">Full HTML</option>', t('Full HTML filter accessible.'));
@@ -129,7 +160,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Switch user.
     $this->drupalLogout();
-    $this->drupalLogin($admin_user);
+    $this->drupalLogin($this->admin_user);
 
     // Clean up.
     // Allowed tags.

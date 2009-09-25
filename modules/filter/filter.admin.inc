@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.46 2009/09/20 07:32:17 dries Exp $
+// $Id: filter.admin.inc,v 1.47 2009/09/25 14:06:09 dries Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ function filter_admin_overview($form) {
     }
     $form['formats'][$id]['roles'] = array('#markup' => $roles_markup);
     $form['formats'][$id]['configure'] = array('#markup' => l(t('configure'), 'admin/config/content/formats/' . $id));
-    $form['formats'][$id]['delete'] = array('#markup' => $form['formats'][$id]['#is_fallback'] ? '' : l(t('delete'), 'admin/config/content/formats/delete/' . $id));
+    $form['formats'][$id]['delete'] = array('#markup' => $form['formats'][$id]['#is_fallback'] ? '' : l(t('delete'), 'admin/config/content/formats/' . $id . '/delete'));
     $form['formats'][$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));
