@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.152 2009/09/20 07:32:18 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.153 2009/09/25 15:12:56 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -762,6 +762,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $defaults = array(
       'type' => $name,
       'name' => $name,
+      'base' => 'node_content',
       'description' => '',
       'help' => '',
       'title_label' => 'Title',
@@ -783,6 +784,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     $saved_type = node_type_save($type);
     node_types_rebuild();
+    menu_rebuild();
 
     $this->assertEqual($saved_type, SAVED_NEW, t('Created content type %type.', array('%type' => $type->type)));
 
