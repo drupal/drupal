@@ -780,10 +780,11 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
  * @return
  *   A fully-populated node object.
  */
-function node_load($nid, $vid = array(), $reset = FALSE) {
-  $vid = isset($vid) ? array('vid' => $vid) : NULL;
-  $node = node_load_multiple(array($nid), $vid, $reset);
-  return $node ? $node[$nid] : FALSE;
+function node_load($nid = NULL, $vid = NULL, $reset = FALSE) {
+  $nids = (isset($nid) ? array($nid) : array());
+  $conditions = (isset($vid) ? array('vid' => $vid) : array());
+  $node = node_load_multiple($nids, $conditions, $reset);
+  return $node ? reset($node) : FALSE;
 }
 
 /**
@@ -1008,6 +1009,31 @@ function node_delete_multiple($nids) {
   // Clear the page and block and node_load_multiple caches.
   cache_clear_all();
   drupal_static_reset('node_load_multiple');
+}
+
+/**
+ * Delete a node revision.
+ *
+ * @param $revision_id
+ *   The revision ID to delete.
+ */
+function node_revision_delete($revision_id) {
+  if ($revision = node_load(NULL, $revision_id)) {
+    // Prevent deleting the current revision.
+    $node = node_load($revision->nid);
+    if ($revision_id == $node->vid) {
+      return FALSE;
+    }
+
+    db_delete('node_revision')
+      ->condition('nid', $revision->nid)
+      ->condition('vid', $revision->vid)
+      ->execute();
+    module_invoke_all('node_revision_delete', $revision);
+    field_attach_delete_revision('node', $revision);
+    return TRUE;
+  }
+  return FALSE;
 }
 
 /**
@@ -1484,13 +1510,12 @@ function node_user_cancel($edit, $account, $method) {
         ->condition('uid', $account->uid)
         ->execute()
         ->fetchCol();
-      foreach ($nodes as $nid) {
-        node_delete($nid);
-      }
+      node_delete_multiple($nodes);
       // Delete old revisions.
-      db_delete('node_revision')
-        ->condition('uid', $account->uid)
-        ->execute();
+      $revisions = db_query('SELECT vid FROM {node_revision} WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
+      foreach ($revisions as $revision) {
+        node_revision_delete($revision);
+      }
       // Clean history.
       db_delete('history')
         ->condition('uid', $account->uid)

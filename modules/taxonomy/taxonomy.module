@@ -865,8 +865,7 @@ function taxonomy_node_get_terms($node, $key = 'tid') {
  * Save term associations for a given node.
  */
 function taxonomy_node_save($node, $terms) {
-
-  taxonomy_node_delete_revision($node);
+  taxonomy_node_revision_delete($node);
 
   // Free tagging vocabularies do not send their tids in the form,
   // so we'll detect them here and process them independently.
@@ -1594,11 +1593,11 @@ function taxonomy_node_delete($node) {
 }
 
 /**
- * Implement hook_node_delete_revision().
+ * Implement hook_node_revision_delete().
  *
  * Remove associations of a node to its terms.
  */
-function taxonomy_node_delete_revision($node) {
+function taxonomy_node_revision_delete($node) {
   db_delete('taxonomy_term_node')
     ->condition('vid', $node->vid)
     ->execute();

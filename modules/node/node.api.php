@@ -281,7 +281,7 @@ function hook_node_delete($node) {
  * @param $node
  *   The node the action is being performed on.
  */
-function hook_node_delete_revision($node) {
+function hook_node_revision_delete($node) {
   db_delete('upload')->condition('vid', $node->vid)->execute();
   if (!is_array($node->files)) {
     return;

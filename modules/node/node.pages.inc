@@ -563,12 +563,8 @@ function node_revision_delete_confirm($form, $form_state, $node_revision) {
 
 function node_revision_delete_confirm_submit($form, &$form_state) {
   $node_revision = $form['#node_revision'];
-  db_delete('node_revision')
-    ->condition('nid', $node_revision->nid)
-    ->condition('vid', $node_revision->vid)
-    ->execute();
-  module_invoke_all('node_delete_revision', $node_revision);
-  field_attach_delete_revision('node', $node_revision);
+  node_revision_delete($node_revision->vid);
+
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
   drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_type_get_name($node_revision), '%title' => $node_revision->title)));
   $form_state['redirect'] = 'node/' . $node_revision->nid;
