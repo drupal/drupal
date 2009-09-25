@@ -762,6 +762,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $defaults = array(
       'type' => $name,
       'name' => $name,
+      'base' => 'node_content',
       'description' => '',
       'help' => '',
       'title_label' => 'Title',
@@ -783,6 +784,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     $saved_type = node_type_save($type);
     node_types_rebuild();
+    menu_rebuild();
 
     $this->assertEqual($saved_type, SAVED_NEW, t('Created content type %type.', array('%type' => $type->type)));
 

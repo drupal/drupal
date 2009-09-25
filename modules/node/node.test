@@ -840,6 +840,23 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     $this->assertEqual($node_types['article']->name, node_type_get_name('article'), t('Correct node type name has been returned.'));
     $this->assertEqual($node_types['page']->base, node_type_get_base('page'), t('Correct node type base has been returned.'));
   }
+
+  /**
+   * Test creating a content type.
+   */
+  function testNodeTypeCreation() {
+    $type = $this->drupalCreateContentType();
+
+    $type_exists = db_query('SELECT 1 FROM {node_type} WHERE type = :type', array(':type' => $type->type))->fetchField();
+    $this->assertTrue($type_exists, 'The new content type has been created in the database.');
+
+    // Login a test user.
+    $web_user = $this->drupalCreateUser(array('create ' . $type->name . ' content'));
+    $this->drupalLogin($web_user);
+
+    $this->drupalGet('node/add/' . str_replace('_', '-', $type->name));
+    $this->assertResponse(200, 'The new content type can be accessed at node/add.');
+  }
 }
 
 /**
