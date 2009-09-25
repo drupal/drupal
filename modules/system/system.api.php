@@ -124,17 +124,49 @@ function hook_entity_info_alter(&$entity_info) {
  * intervals can implement hook_cron(). The engine will then call the hook
  * at the appropriate intervals defined by the administrator. This interface
  * is particularly handy to implement timers or to automate certain tasks.
- * Database maintenance, recalculation of settings or parameters, and
- * automatic mailings are good candidates for cron tasks.
+ * Database maintenance, recalculation of settings or parameters are good
+ * candidates for cron tasks.
+ * Long running tasks should use the queue API, define one or more queues with
+ * hook_cron_queue_info() and put items in the queue instead of running them in
+ * hook_cron(). Examples of jobs that are good candidates for hook_cron_queue_info
+ * include automated mailing, retrieving remote data, and intensive file tasks.
  *
  * This hook will only be called if cron.php is run (e.g. by crontab).
  */
 function hook_cron() {
   $result = db_query('SELECT * FROM {site} WHERE checked = 0 OR checked + refresh < :time', array(':time' => REQUEST_TIME));
+  $queue = DrupalQueue::get('aggregator_feeds');
 
   foreach ($result as $site) {
-    cloud_update($site);
+    $queue->createItem($site);
   }
+}
+
+/**
+ * Declare queues holding items that need to be run periodically.
+ *
+ * While there can be only one hook_cron() process running at the same time,
+ * there can be any number of processes defined here running. Because of
+ * this, long running tasks are much better suited for this API. Items queued
+ * in hook_cron might be processed in the same cron run if there are not many
+ * items in the queue, otherwise it might take several requests.which can be run
+ * in parallel.
+ *
+ * @return
+ *   An associative array where the key is the queue name and the value is
+ *   again an associative array. Possible keys are:
+ *     'worker callback'  The name of the function to call. It will be called
+ *                        with one argument, the $item from createItem called
+ *                        in hook_cron.
+ *     'time'             How much time Drupal should spend on calling this
+ *                        worker in seconds. Optional, defaults to 15.
+ */
+function hook_cron_queue_info() {
+  $queues['aggregator_feeds'] = array(
+    'worker callback' => 'aggregator_refresh',
+    'time' => 15,
+  );
+  return $queues;
 }
 
 /**

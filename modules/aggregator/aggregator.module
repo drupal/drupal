@@ -306,16 +306,28 @@ function aggregator_permission() {
 /**
  * Implement hook_cron().
  *
- * Checks news feeds for updates once their refresh interval has elapsed.
+ * Queues news feeds for updates once their refresh interval has elapsed.
  */
 function aggregator_cron() {
   $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < :time AND refresh != :never', array(
     ':time' => REQUEST_TIME,
     ':never' => AGGREGATOR_CLEAR_NEVER
   ));
+  $queue = DrupalQueue::get('aggregator_feeds');
   foreach ($result as $feed) {
-    aggregator_refresh($feed);
+    $queue->createItem($feed);
   }
+}
+
+/**
+ * Implement hook_cron_queue_info().
+ */
+function aggregator_cron_queue_info() {
+  $queues['aggregator_feeds'] = array(
+    'worker callback' => 'aggregator_refresh',
+    'time' => 60,
+  );
+  return $queues;
 }
 
 /**

@@ -128,7 +128,8 @@ class AggregatorTestCase extends DrupalWebTestCase {
    */
   function updateAndRemove($feed, $expected_count) {
     $this->updateFeedItems($feed, $expected_count);
-    $this->assertText('There is new syndicated content from');
+    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
+    $this->assertTrue($count);
     $this->removeFeedItems($feed);
     $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
     $this->assertTrue($count == 0);

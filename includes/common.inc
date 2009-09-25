@@ -3837,6 +3837,11 @@ function drupal_cron_run() {
 
   // Fetch the cron semaphore
   $semaphore = variable_get('cron_semaphore', FALSE);
+  
+  $return = FALSE;
+  // Grab the defined cron queues.
+  $queues = module_invoke_all('cron_queue_info');
+  drupal_alter('cron_queue_info', $queues);
 
   if ($semaphore) {
     if (REQUEST_TIME - $semaphore > 3600) {
@@ -3853,6 +3858,11 @@ function drupal_cron_run() {
     }
   }
   else {
+    // Make sure every queue exists. There is no harm in trying to recreate an
+    // existing queue.
+    foreach ($queues as $queue_name => $info) {
+      DrupalQueue::get($queue_name)->createQueue();
+    }
     // Register shutdown callback
     register_shutdown_function('drupal_cron_cleanup');
 
@@ -3870,8 +3880,19 @@ function drupal_cron_run() {
     variable_del('cron_semaphore');
 
     // Return TRUE so other functions can check if it did run successfully
-    return TRUE;
+    $return = TRUE;
   }
+  
+  foreach ($queues as $queue_name => $info) {
+    $function = $info['worker callback'];
+    $end = time() + (isset($info['time']) ? $info['time'] : 15);
+    $queue = DrupalQueue::get($queue_name);
+    while (time() < $end && ($item = $queue->claimItem())) {
+      $function($item->data);
+      $queue->deleteItem($item);
+    }
+  }
+  return $return;
 }
 
 /**
