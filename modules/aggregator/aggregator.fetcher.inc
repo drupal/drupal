@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.fetcher.inc,v 1.8 2009/08/24 00:14:19 webchick Exp $
+// $Id: aggregator.fetcher.inc,v 1.9 2009/09/25 23:53:26 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function aggregator_aggregator_fetch($feed) {
     $headers['If-None-Match'] = $feed->etag;
   }
   if ($feed->modified) {
-    $headers['If-Modified-Since'] = gmdate('D, d M Y H:i:s', $feed->modified) . ' GMT';
+    $headers['If-Modified-Since'] = gmdate(DATE_RFC1123, $feed->modified);
   }
 
   // Request feed.

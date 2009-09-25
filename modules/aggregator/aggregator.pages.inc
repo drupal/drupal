@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.34 2009/09/21 07:59:18 dries Exp $
+// $Id: aggregator.pages.inc,v 1.35 2009/09/25 23:53:26 dries Exp $
 
 /**
  * @file
@@ -435,7 +435,7 @@ function theme_aggregator_page_opml($feeds) {
   $output .= "<opml version=\"1.1\">\n";
   $output .= "<head>\n";
   $output .= '<title>' . check_plain(variable_get('site_name', 'Drupal')) . "</title>\n";
-  $output .= '<dateModified>' . gmdate('r') . "</dateModified>\n";
+  $output .= '<dateModified>' . gmdate(DATE_RFC2822, REQUEST_TIME) . "</dateModified>\n";
   $output .= "</head>\n";
   $output .= "<body>\n";
   foreach ($feeds as $feed) {
