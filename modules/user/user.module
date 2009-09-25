@@ -1804,14 +1804,16 @@ function user_edit_form(&$form, &$form_state) {
   $admin = user_access('administer users');
 
   // Account information:
-  $form['account'] = array('#type' => 'fieldset',
+  $form['account'] = array(
+    '#type' => 'fieldset',
     '#title' => t('Account information'),
     '#weight' => -10,
   );
   // Only show name field when: registration page; or user is editing own
   // account and can change username; or an admin user.
   if ($register || ($user->uid == $account->uid && user_access('change own username')) || $admin) {
-    $form['account']['name'] = array('#type' => 'textfield',
+    $form['account']['name'] = array(
+      '#type' => 'textfield',
       '#title' => t('Username'),
       '#maxlength' => USERNAME_MAX_LENGTH,
       '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
@@ -1822,7 +1824,8 @@ function user_edit_form(&$form, &$form_state) {
       $form['account']['name']['#default_value'] = $account->name;
     }
   }
-  $form['account']['mail'] = array('#type' => 'textfield',
+  $form['account']['mail'] = array(
+    '#type' => 'textfield',
     '#title' => t('E-mail address'),
     '#maxlength' => EMAIL_MAX_LENGTH,
     '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
@@ -1832,7 +1835,8 @@ function user_edit_form(&$form, &$form_state) {
     $form['account']['mail']['#default_value'] = $account->mail;
   }
   if (!$register) {
-    $form['account']['pass'] = array('#type' => 'password_confirm',
+    $form['account']['pass'] = array(
+      '#type' => 'password_confirm',
       '#description' => t('To change the current user password, enter the new password in both fields.'),
       '#size' => 25,
     );
@@ -1896,7 +1900,7 @@ function user_edit_form(&$form, &$form_state) {
   }
 
   // Picture/avatar:
-  if (variable_get('user_pictures', 0) && !$register && !$admin) {
+  if (variable_get('user_pictures', 0) && !$register) {
     $form['picture'] = array(
       '#type' => 'fieldset',
       '#title' => t('Picture'),
