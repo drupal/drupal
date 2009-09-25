@@ -83,8 +83,6 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Revamped the filter API and text format storage.
     * Added support for default text formats to be assigned on a per-role basis.
     * Refactored the HTML corrector to take advantage of PHP 5 features.
-- Removed ping module:
-    * Contributed modules with similar functionality are available.
 - User system:
     * Added clean API functions for creating, loading, updating, and deleting
       user roles and permissions.
@@ -96,9 +94,6 @@ Drupal 7.0, xxxx-xx-xx (development version)
       at the operating system level.
     * Removed per-user themes: Contributed modules with similar functionality
       are available.
-- Removed throttle module:
-    * Alternative methods for improving performance are available in other core and
-      contributed modules.
 - Added code registry:
     * Using the registry, modules declare their includable files via their .info file,
       allowing Drupal to lazy-load classes and interfaces as needed.
@@ -173,10 +168,14 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Upgraded the jQuery Forms library to 2.21.
     * Added jQuery UI 1.7.2, which allows improvements to Drupal's user
       experience.
-- Better module version support.
+- Better module version support
     * Modules now can specify which version of another module they depend on.
-- Blog API
-    * This module has been removed from core.
+- Removed modules from core
+    * The following modules have been removed from core, because contributed
+      modules with similar functionality are available:
+      * Blog API module
+      * Ping module
+      * Throttle module
 - Improved node access control system.
     * All modules may now influence the access to a node at runtime, not just
       the module that defined a node.
@@ -188,6 +187,11 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Simplified definitions of actions and triggers.
     * Removed dependency on the combination of hooks and operations. Triggers
       now directly map to module hooks.
+- Task handling
+    * Added a queue API to process many or long-running tasks.
+    * Added queue API support to cron API.
+    * Added a locking framework to coordinate long-running operations across
+      requests.
 
 Drupal 6.0, 2008-02-13
 ----------------------

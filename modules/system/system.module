@@ -1895,7 +1895,7 @@ function _system_get_module_data() {
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info files if necessary.
-    drupal_alter('system_info', $modules[$key]->info, $modules[$key]);
+    drupal_alter('system_info', $modules[$key]->info, $modules[$key], 'module');
   }
 
   // The install profile is required.
@@ -1988,7 +1988,7 @@ function _system_get_theme_data() {
 
       // Invoke hook_system_info_alter() to give installed modules a chance to
       // modify the data in the .info files if necessary.
-      drupal_alter('system_info', $themes[$key]->info, $themes[$key]);
+      drupal_alter('system_info', $themes[$key]->info, $themes[$key], 'theme');
 
       if (!empty($themes[$key]->info['base theme'])) {
         $sub_themes[] = $key;
@@ -2150,11 +2150,13 @@ function system_region_list($theme_key, $show = REGIONS_ALL) {
 /**
  * Implement hook_system_info_alter().
  */
-function system_system_info_alter(&$info, $file) {
+function system_system_info_alter(&$info, $file, $type) {
   // Remove page-top from the blocks UI since it is reserved for modules to
   // populate from outside the blocks system.
-  $info['regions_hidden'][] = 'page_top';
-  $info['regions_hidden'][] = 'page_bottom';
+  if ($type == 'theme') {
+    $info['regions_hidden'][] = 'page_top';
+    $info['regions_hidden'][] = 'page_bottom';
+  }
 }
 
 /**

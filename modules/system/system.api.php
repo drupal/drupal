@@ -120,25 +120,48 @@ function hook_entity_info_alter(&$entity_info) {
 /**
  * Perform periodic actions.
  *
+ * This hook will only be called if cron.php is run (e.g. by crontab).
+ *
  * Modules that require to schedule some commands to be executed at regular
  * intervals can implement hook_cron(). The engine will then call the hook
  * at the appropriate intervals defined by the administrator. This interface
  * is particularly handy to implement timers or to automate certain tasks.
  * Database maintenance, recalculation of settings or parameters are good
  * candidates for cron tasks.
- * Long running tasks should use the queue API, define one or more queues with
- * hook_cron_queue_info() and put items in the queue instead of running them in
- * hook_cron(). Examples of jobs that are good candidates for hook_cron_queue_info
- * include automated mailing, retrieving remote data, and intensive file tasks.
  *
- * This hook will only be called if cron.php is run (e.g. by crontab).
+ * Short-running or not resource intensive tasks can be executed directly.
+ *
+ * Long-running tasks should use the queue API. To do this, one or more queues
+ * need to be defined via hook_cron_queue_info(). Items that need to be
+ * processed are appended to the defined queue, instead of processing them
+ * directly in hook_cron().
+ * Examples of jobs that are good candidates for
+ * hook_cron_queue_info() include automated mailing, retrieving remote data, and
+ * intensive file tasks.
+ *
+ * @return
+ *   None.
+ *
+ * @see hook_cron_queue_info()
  */
 function hook_cron() {
-  $result = db_query('SELECT * FROM {site} WHERE checked = 0 OR checked + refresh < :time', array(':time' => REQUEST_TIME));
-  $queue = DrupalQueue::get('aggregator_feeds');
+  // Short-running operation example, not using a queue:
+  // Delete all expired records since the last cron run.
+  $expires = variable_get('mymodule_cron_last_run', REQUEST_TIME);
+  db_delete('mymodule_table')
+    ->condition('expires', $expires, '>=')
+    ->execute();
+  variable_set('mymodule_cron_last_run', REQUEST_TIME);
 
-  foreach ($result as $site) {
-    $queue->createItem($site);
+  // Long-running operation example, leveraging a queue:
+  // Fetch feeds from other sites.
+  $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < :time AND refresh != :never', array(
+    ':time' => REQUEST_TIME,
+    ':never' => AGGREGATOR_CLEAR_NEVER,
+  ));
+  $queue = DrupalQueue::get('aggregator_feeds');
+  foreach ($result as $feed) {
+    $queue->createItem($feed);
   }
 }
 
@@ -148,18 +171,20 @@ function hook_cron() {
  * While there can be only one hook_cron() process running at the same time,
  * there can be any number of processes defined here running. Because of
  * this, long running tasks are much better suited for this API. Items queued
- * in hook_cron might be processed in the same cron run if there are not many
- * items in the queue, otherwise it might take several requests.which can be run
- * in parallel.
+ * in hook_cron() might be processed in the same cron run if there are not many
+ * items in the queue, otherwise it might take several requests, which can be
+ * run in parallel.
  *
  * @return
  *   An associative array where the key is the queue name and the value is
  *   again an associative array. Possible keys are:
- *     'worker callback'  The name of the function to call. It will be called
- *                        with one argument, the $item from createItem called
- *                        in hook_cron.
- *     'time'             How much time Drupal should spend on calling this
- *                        worker in seconds. Optional, defaults to 15.
+ *   - 'worker callback': The name of the function to call. It will be called
+ *     with one argument, the item created via DrupalQueue::createItem() in
+ *     hook_cron().
+ *   - 'time': (optional) How much time Drupal should spend on calling this
+ *     worker in seconds. Defaults to 15.
+ *
+ * @see hook_cron()
  */
 function hook_cron_queue_info() {
   $queues['aggregator_feeds'] = array(
@@ -703,8 +728,11 @@ function hook_mail_alter(&$message) {
  * @param $file
  *   Full information about the module or theme, including $file->name, and
  *   $file->filename
+ * @param $type
+ *   Either 'module' or 'theme', depending on the type of .info file that was
+ *   passed.
  */
-function hook_system_info_alter(&$info, $file) {
+function hook_system_info_alter(&$info, $file, $type) {
   // Only fill this in if the .info file does not define a 'datestamp'.
   if (empty($info['datestamp'])) {
     $info['datestamp'] = filemtime($file->filename);
