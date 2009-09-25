@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.37 2009/08/27 07:22:15 dries Exp $
+// $Id: node.api.php,v 1.38 2009/09/25 14:24:34 dries Exp $
 
 /**
  * @file
@@ -281,7 +281,7 @@ function hook_node_delete($node) {
  * @param $node
  *   The node the action is being performed on.
  */
-function hook_node_delete_revision($node) {
+function hook_node_revision_delete($node) {
   db_delete('upload')->condition('vid', $node->vid)->execute();
   if (!is_array($node->files)) {
     return;
