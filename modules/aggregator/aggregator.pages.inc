@@ -435,7 +435,7 @@ function theme_aggregator_page_opml($feeds) {
   $output .= "<opml version=\"1.1\">\n";
   $output .= "<head>\n";
   $output .= '<title>' . check_plain(variable_get('site_name', 'Drupal')) . "</title>\n";
-  $output .= '<dateModified>' . gmdate('r') . "</dateModified>\n";
+  $output .= '<dateModified>' . gmdate(DATE_RFC2822, REQUEST_TIME) . "</dateModified>\n";
   $output .= "</head>\n";
   $output .= "<body>\n";
   foreach ($feeds as $feed) {
