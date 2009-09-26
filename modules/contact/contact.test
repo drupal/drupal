@@ -22,14 +22,17 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
    */
   function testSiteWideContact() {
     // Create and login administrative user.
-    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer site-wide contact form', 'administer permissions'));
+    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer site-wide contact form', 'administer permissions', 'administer users'));
     $this->drupalLogin($admin_user);
+    
+    $flood_limit = 3;
+    variable_set('contact_threshold_limit', $flood_limit);
+    variable_set('contact_threshold_window', 600);
 
     // Set settings.
     $edit = array();
-    $edit['contact_hourly_threshold'] = 3;
     $edit['contact_default_status'] = TRUE;
-    $this->drupalPost('admin/structure/contact/settings', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/people/accounts', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
 
     // Delete old categories to ensure that new categories are used.
@@ -139,13 +142,13 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->assertText(t('You must select a valid category.'), t('Valid category required.'));
 
     // Submit contact form with correct values and check flood interval.
-    for ($i = 0; $i < $edit['contact_hourly_threshold']; $i++) {
+    for ($i = 0; $i < $flood_limit; $i++) {
       $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $categories[0], $this->randomName(64));
       $this->assertText(t('Your message has been sent.'), t('Message sent.'));
     }
     // Submit contact form one over limit.
     $this->drupalGet('contact');
-    $this->assertRaw(t('You cannot send more than %number messages per hour. Please try again later.', array('%number' => $edit['contact_hourly_threshold'])), t('Message threshold reached.'));
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Please try again later.', array('%number' => variable_get('contact_threshold_limit', 3), '@interval' => format_interval(600))), t('Message threshold reached.'));
 
     // Delete created categories.
     $this->drupalLogin($admin_user);
@@ -157,7 +160,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
   */
   function testAutoReply() {
     // Create and login administrative user.
-    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer site-wide contact form', 'administer permissions'));
+    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer site-wide contact form', 'administer permissions', 'administer users'));
     $this->drupalLogin($admin_user);
 
     // Set up three categories, 2 with an auto-reply and one without.
@@ -314,15 +317,16 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
    * Test personal contact form.
    */
   function testPersonalContact() {
-    $admin_user = $this->drupalCreateUser(array('administer site-wide contact form'));
+    $admin_user = $this->drupalCreateUser(array('administer site-wide contact form', 'administer users'));
     $this->drupalLogin($admin_user);
+    
+    $flood_limit = 3;
+    variable_set('contact_threshold_limit', $flood_limit);
 
     // Enable the personal contact form.
-    $flood_control = 3;
     $edit = array();
     $edit['contact_default_status'] = TRUE;
-    $edit['contact_hourly_threshold'] = $flood_control;
-    $this->drupalPost('admin/structure/contact/settings', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/people/accounts', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
 
     // Reload variables.
@@ -349,7 +353,7 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     $this->assertIdentical($num_records_flood, '0', t('Flood table emptied.'));
 
     // Submit contact form with correct values and check flood interval.
-    for ($i = 0; $i < $flood_control; $i++) {
+    for ($i = 0; $i < $flood_limit; $i++) {
       $this->drupalGet('user/' . $web_user2->uid . '/contact');
       $this->drupalPost(NULL, $edit, t('Send message'));
       $this->assertText(t('Your message has been sent.'), t('Message sent.'));
@@ -357,7 +361,7 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
 
     // Submit contact form one over limit.
     $this->drupalGet('user/' . $web_user2->uid . '/contact');
-    $this->assertRaw(t('You cannot send more than %number messages per hour. Please try again later.', array('%number' => $flood_control)), t('Message threshold reached.'));
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Please try again later.', array('%number' => $flood_limit, '@interval' => format_interval(variable_get('contact_threshold_window', 3600)))), t('Message threshold reached.'));
 
     $this->drupalLogout();
 
@@ -366,7 +370,7 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     // Disable the personal contact form.
     $edit = array();
     $edit['contact_default_status'] = FALSE;
-    $this->drupalPost('admin/structure/contact/settings', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/people/accounts', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
 
     // Reload variables.

@@ -59,12 +59,6 @@ function contact_menu() {
     'access arguments' => array('administer site-wide contact form'),
     'file' => 'contact.admin.inc',
   );
-  $items['admin/structure/contact/list'] = array(
-    'title' => 'List',
-    'page callback' => 'contact_admin_categories',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'contact.admin.inc',
-  );
   $items['admin/structure/contact/add'] = array(
     'title' => 'Add category',
     'page callback' => 'drupal_get_form',
@@ -89,15 +83,6 @@ function contact_menu() {
     'access arguments' => array('administer site-wide contact form'),
     'type' => MENU_CALLBACK,
     'file' => 'contact.admin.inc',
-  );
-  $items['admin/structure/contact/settings'] = array(
-    'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('contact_admin_settings'),
-    'access arguments' => array('administer site-wide contact form'),
-    'file' => 'contact.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
   );
   $items['contact'] = array(
     'title' => 'Contact',
@@ -200,4 +185,20 @@ function contact_mail($key, &$message, $params) {
       $message['body'][] = $params['message'];
       break;
   }
+}
+
+/**
+ * Implement of hook_form_FORM_ID_alter().
+ */
+function contact_form_user_admin_settings_alter(&$form, $form_state) {
+  $form['contact'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Contact forms'),
+    '#weight' => 0,
+  );
+  $form['contact']['contact_default_status'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable the personal contact form by default for new users.'),
+    '#default_value' => 1,
+  );
 }

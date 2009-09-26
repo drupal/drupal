@@ -162,18 +162,3 @@ function contact_admin_delete_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/structure/contact';
   return;
 }
-
-function contact_admin_settings() {
-  $form['contact_hourly_threshold'] = array('#type' => 'select',
-    '#title' => t('Hourly threshold'),
-    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50)),
-    '#default_value' => 3,
-    '#description' => t('The maximum number of contact form submissions a user can perform per hour.'),
-  );
-  $form['contact_default_status'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable the personal contact form by default for new users'),
-    '#default_value' => 1,
-  );
-  return system_settings_form($form, TRUE);
-}

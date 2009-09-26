@@ -11,8 +11,8 @@
  */
 function contact_uninstall() {
   variable_del('contact_default_status');
-  variable_del('contact_form_information');
-  variable_del('contact_hourly_threshold');
+  variable_del('contact_threshold_limit');
+  variable_del('contact_threshold_window');
 }
 
 /**
@@ -73,3 +73,22 @@ function contact_schema() {
 
   return $schema;
 }
+
+/**
+ * @defgroup updates-6.x-to-7.x Contact updates from 6.x to 7.x
+ * @{
+ */
+
+/**
+ * Rename the threshold limit variable.
+ */
+function contact_update_7000() {
+  variable_set('contact_threshold_limit', variable_get('contact_hourly_threshold', 5));
+  variable_del('contact_hourly_threshold');
+  return array();
+}
+
+/**
+ * @} End of "defgroup updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
+ */
