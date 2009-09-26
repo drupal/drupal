@@ -1,0 +1,100 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * This file contains tests for the update module.
+ */
+
+class UpdateTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Update functionality',
+      'description' => 'Tests the update module through a series of functional tests using mock XML data.',
+      'group' => 'Update',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('update_test', 'update');
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
+  }
+
+  /**
+   * Tests the update module when no updates are available.
+   */
+  function testNoUpdatesAvailable() {
+    $this->setSystemInfo7_0();
+    $this->refreshUpdateData('no-updates.xml');
+    $this->drupalGet('admin/reports/updates');
+    $this->standardTests();
+    $this->assertText(t('Up to date'));
+    $this->assertNoText(t('Update available'));
+    $this->assertNoText(t('Security update required!'));
+  }
+
+  /**
+   * Tests the update module when one normal update ("7.1") is available.
+   */
+  function testNormalUpdateAvailable() {
+    $this->setSystemInfo7_0();
+    $this->refreshUpdateData('normal-update.xml');
+    $this->drupalGet('admin/reports/updates');
+    $this->standardTests();
+    $this->assertNoText(t('Up to date'));
+    $this->assertText(t('Update available'));
+    $this->assertNoText(t('Security update required!'));
+    $this->assertRaw(l('7.1', 'http://example.com/drupal-7-1-release'), t('Link to release appears.'));
+    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-1.tar.gz'), t('Link to download appears.'));
+    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-1-release'), t('Link to release notes appears.'));
+  }
+
+  /**
+   * Tests the update module when a security update ("7.2") is available.
+   */
+  function testSecurityUpdateAvailable() {
+    $this->setSystemInfo7_0();
+    $this->refreshUpdateData('security-update.xml');
+    $this->drupalGet('admin/reports/updates');
+    $this->standardTests();
+    $this->assertNoText(t('Up to date'));
+    $this->assertNoText(t('Update available'));
+    $this->assertText(t('Security update required!'));
+    $this->assertRaw(l('7.2', 'http://example.com/drupal-7-2-release'), t('Link to release appears.'));
+    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), t('Link to download appears.'));
+    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-2-release'), t('Link to release notes appears.'));
+  }
+
+  /**
+   * Helper function: force te update cache to refresh based on the contents of
+   * the specified XML file.
+   *
+   * @param $xml
+   *   The file name of the XML file to use for mock update data.
+   */
+  protected function refreshUpdateData($xml) {
+    variable_set('update_test_xml', $xml);
+    $this->drupalGet('admin/reports/updates/check');
+  }
+
+  protected function setSystemInfo7_0() {
+    $setting = array(
+      '#all' => array(
+        'version' => '7.0',
+      ),
+    );
+    variable_set('update_test_system_info', $setting);
+  }
+
+  /**
+   * Helper function: run a series of assertions that are applicable for all
+   * update statuses.
+   */
+  protected function standardTests() {
+    $this->assertRaw(l(t('Check manually'), 'admin/reports/updates/check'), t('Link to check available updates manually appears.'));
+    $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'), t('Link to the Drupal project appears.'));
+  }
+}

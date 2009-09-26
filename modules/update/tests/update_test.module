@@ -1,0 +1,50 @@
+<?php
+// $Id$
+
+/**
+ * Implement hook_menu().
+ */
+function update_test_menu() {
+  $items = array();
+
+  $items['update-test'] = array(
+    'title' => t('Update test'),
+    'page callback' => 'update_test_mock_page',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implement hook_system_info_alter().
+ *
+ * This checks the 'update_test_system_info' variable and sees if we need to
+ * alter the system info for the given $file based on the setting. The setting
+ * is expected to be a nested associative array. If the key '#all' is defined,
+ * its subarray will include .info keys and values for all modules and themes
+ * on the system. Otherwise, the settings array is keyed by the module or
+ * theme short name ($file->name) and the subarrays contain settings just for
+ * that module or theme.
+ */
+function update_test_system_info_alter(&$info, $file) {
+  $setting = variable_get('update_test_system_info', array());
+  foreach (array('#all', $file->name) as $id) {
+    if (!empty($setting[$id])) {
+      foreach ($setting[$id] as $key => $value) {
+        $info[$key] = $value;
+      }
+    }
+  }
+}
+
+/**
+ * Page callback, prints mock XML for the update module.
+ */
+function update_test_mock_page() {
+  $xml = variable_get('update_test_xml', FALSE);
+  // Note: this will cause an exception to occur if no variable was set and
+  // $file is FALSE.
+  readfile(drupal_get_path('module', 'update_test') . "/$xml");
+}
