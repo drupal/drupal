@@ -49,6 +49,7 @@ Joon Park 'dvessel' <http://drupal.org/user/56782>
 
 UPDATE MODULE
 Derek Wright 'dww' <http://drupal.org/user/46549>
+Dave Reid 'davereid' <http://drupal.org/user/53892>
 
 USER EXPERIENCE AND USABILITY
 Roy Scholten 'yoroy' <http://drupal.org/user/41502>
