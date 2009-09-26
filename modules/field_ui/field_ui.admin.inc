@@ -781,14 +781,6 @@ function field_ui_existing_field_options($bundle) {
 }
 
 /**
- * Helper function to determine if a field has data in the database.
- */
-function field_ui_field_has_data($field) {
-  $results = field_attach_query($field['id'], array(), 1);
-  return !empty($results);
-}
-
-/**
  * Menu callback; presents the field settings edit page.
  */
 function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $instance) {
@@ -821,7 +813,7 @@ function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $
 
   // See if data already exists for this field.
   // If so, prevent changes to the field settings.
-  $has_data = field_ui_field_has_data($field);
+  $has_data = field_attach_field_has_data($field);
   if ($has_data) {
     $form['field']['#description'] = '<div class=error>' . t('There is data for this field in the database. The field settings can no longer be changed.' . '</div>') . $form['field']['#description'];
   }
@@ -841,26 +833,18 @@ function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $
     '#description' => t("Translatable fields can have a different value for each available language. An example of a translatable field is an article's <em>body</em>. Language neutral fields will retain the same value across all translations. An example of a language neutral field is a user profile's <em>first name</em>."),
   ); 
 
-  // Add settings provided by the field module.
+  // Add settings provided by the field module. The field module is
+  // responsible for not returning settings that cannot be changed if
+  // the field already has data.
   $form['field']['settings'] = array();
-  $additions = module_invoke($field_type['module'], 'field_settings_form', $field, $instance);
+  $additions = module_invoke($field_type['module'], 'field_settings_form', $field, $instance, $has_data);
   if (is_array($additions)) {
     $form['field']['settings'] = $additions;
-    // @todo Filter this so only the settings that cannot be changed are shown
-    //   in this form. For now, treating all settings as changeable, which means
-    //   they show up here and in edit form.
   }
   if (empty($form['field']['settings'])) {
     $form['field']['settings'] = array(
       '#markup' => t('%field has no field settings.', array('%field' => $instance['label'])),
     );
-  }
-  else {
-    foreach ($form['field']['settings'] as $key => $setting) {
-      if (substr($key, 0, 1) != '#') {
-        $form['field']['settings'][$key]['#disabled'] = $has_data;
-      }
-    }
   }
   $form['#bundle'] = $bundle;
 
@@ -878,20 +862,22 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
   // Merge incoming form values into the existing field.
   $field = field_info_field($field_values['field_name']);
 
-  // Do not allow changes to fields with data.
-  if (field_ui_field_has_data($field)) {
-    return;
-  }
-
   $bundle = $form['#bundle'];
   $instance = field_info_instance($field['field_name'], $bundle);
 
   // Update the field.
   $field = array_merge($field, $field_values);
-  field_ui_update_field($field);
 
-  drupal_set_message(t('Updated field %label field settings.', array('%label' => $instance['label'])));
-  $form_state['redirect'] = field_ui_next_destination($bundle);
+  try {
+    field_update_field($field);
+    drupal_set_message(t('Updated field %label field settings.', array('%label' => $instance['label'])));
+    $form_state['redirect'] = field_ui_next_destination($bundle);
+  }
+  catch (FieldException $e) {
+    drupal_set_message(t('Attempt to update field %label failed: %message.', array('%label' => $instance['label'], '%message' => $e->getMessage())), 'error');
+    // TODO: Where do we go from here?
+    $form_state['redirect'] = field_ui_next_destination($bundle);
+  }
 }
 
 /**
@@ -1128,7 +1114,13 @@ function field_ui_field_edit_form($form, &$form_state, $obj_type, $bundle, $inst
   $description .= $info['description'] . '</p>';
   $form['#prefix'] = '<div class="description">' . $description . '</div>';
 
-  $description = '<p>' . t('These settings apply to the %field field everywhere it is used.', array('%field' => $instance['label'])) . '</p>';
+  $has_data = field_attach_field_has_data($field);
+  if ($has_data) {
+    $description = '<p>' . t('These settings apply to the %field field everywhere it is used. Because the field already has data, some settings can no longer be changed.', array('%field' => $instance['label'])) . '</p>';
+  }
+  else {
+    $description = '<p>' . t('These settings apply to the %field field everywhere it is used.', array('%field' => $instance['label'])) . '</p>';
+  }
 
   // Create a form structure for the field values.
   $form['field'] = array(
@@ -1151,10 +1143,11 @@ function field_ui_field_edit_form($form, &$form_state, $obj_type, $bundle, $inst
     '#description' => $description,
   );
 
-  // Add additional field settings from the field module.
-  $additions = module_invoke($field['module'], 'field_settings_form', $field, $instance);
+  // Add additional field settings from the field module. The field module is
+  // responsible for not returning settings that cannot be changed if
+  // the field already has data.
+  $additions = module_invoke($field['module'], 'field_settings_form', $field, $instance, $has_data);
   if (is_array($additions)) {
-    // @todo Filter additional settings by whether they can be changed.
     $form['field']['settings'] = $additions;
   }
 
@@ -1289,7 +1282,7 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
   // Update any field settings that have changed.
   $field = field_info_field($instance_values['field_name']);
   $field = array_merge($field, $field_values);
-  field_ui_update_field($field);
+  field_update_field($field);
 
   // Move the default value from the sample widget to the default value field.
   if (isset($instance_values['default_value_widget'])) {

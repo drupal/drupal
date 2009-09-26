@@ -12,7 +12,7 @@
 function field_sql_storage_help($path, $arg) {
   switch ($path) {
     case 'admin/help#field_sql_storage':
-      $output = '<p>' . t('The Field SQL Storage module stores Field API data in the database.  It is the default field storage module, but other field storage modules may be available in the contributions repository.') . '</p>';
+      $output = '<p>' . t('The Field SQL Storage module stores Field API data in the database. It is the default field storage module, but other field storage modules may be available in the contributions repository.') . '</p>';
       return $output;
   }
 }
@@ -200,6 +200,64 @@ function field_sql_storage_field_storage_create_field($field) {
   $schema = _field_sql_storage_schema($field);
   foreach ($schema as $name => $table) {
     db_create_table($ret, $name, $table);
+  }
+}
+
+/**
+ * Implement hook_field_update_field_forbid().
+ *
+ * Forbid any field update that changes column definitions if there is
+ * any data.
+ */
+function field_sql_storage_field_update_forbid($field, $prior_field, $has_data) {
+  if ($has_data && $field['columns'] != $prior_field['columns']) {
+    throw new FieldException("field_sql_storage cannot change the schema for an existing field with data.");
+  }
+}
+
+/**
+ * Implement hook_field_storage_update_field().
+ */
+function field_sql_storage_field_storage_update_field($field, $prior_field, $has_data) {
+  $ret = array();
+
+  if (! $has_data) {
+    // There is no data. Re-create the tables completely.
+    $prior_schema = _field_sql_storage_schema($prior_field);
+    foreach ($prior_schema as $name => $table) {
+      db_drop_table($ret, $name, $table);
+    }
+    $schema = _field_sql_storage_schema($field);
+    foreach ($schema as $name => $table) {
+      db_create_table($ret, $name, $table);
+    }
+  }
+  else {
+    // There is data, so there are no column changes. Drop all the
+    // prior indexes and create all the new ones, except for all the
+    // priors that exist unchanged.
+    $table = _field_sql_storage_tablename($prior_field);
+    $revision_table = _field_sql_storage_revision_tablename($prior_field);
+    foreach ($prior_field['indexes'] as $name => $columns) {
+      if (!isset($field['indexes'][$name]) || $columns != $field['indexes'][$name]) {
+        $real_name = _field_sql_storage_indexname($field['field_name'], $name);
+        db_drop_index($ret, $table, $real_name);
+        db_drop_index($ret, $revision_table, $real_name);
+      }
+    }
+    $table = _field_sql_storage_tablename($field);
+    $revision_table = _field_sql_storage_revision_tablename($field);
+    foreach ($field['indexes'] as $name => $columns) {
+      if (!isset($prior_field['indexes'][$name]) || $columns != $prior_field['indexes'][$name]) {
+        $real_name = _field_sql_storage_indexname($field['field_name'], $name);
+        $real_columns = array();
+        foreach ($columns as $column_name) {
+          $real_columns[] = _field_sql_storage_columnname($field['field_name'], $column_name);
+        }
+        db_add_index($ret, $table, $real_name, $real_columns);
+        db_add_index($ret, $revision_table, $real_name, $real_columns);
+      }
+    }
   }
 }
 

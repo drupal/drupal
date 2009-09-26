@@ -242,33 +242,6 @@ function field_ui_field_ui_build_modes_tabs() {
 }
 
 /**
- * Updates a field.
- *
- * Field API does not allow field updates, so we create a method here to
- * update a field if no data is created yet.
- *
- * @see field_create_field()
- */
-function field_ui_update_field($field) {
-  $field_types = field_info_field_types();
-  $module = $field_types[$field['type']]['module'];
-
-  // If needed, remove the 'bundles' element added by field_info_field.
-  unset($field['bundles']);
-
-  $defaults = field_info_field_settings($field['type']);
-  $field['settings'] = array_merge($defaults, (array) $field['settings']);
-  $data = $field;
-  unset($data['id'], $data['columns'], $data['field_name'], $data['type'], $data['locked'], $data['module'], $data['cardinality'], $data['active'], $data['deleted']);
-  $field['data'] = $data;
-
-  drupal_write_record('field_config', $field, array('field_name'));
-
-  // Clear caches.
-  field_cache_clear(TRUE);
-}
-
-/**
  * Implement hook_field_attach_create_bundle().
  */
 function field_ui_field_attach_create_bundle($bundle) {

@@ -22,7 +22,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_sql_storage', 'field', 'field_test');
+    parent::setUp('field_sql_storage', 'field', 'field_test', 'text');
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
     $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);
     $this->field = field_create_field($this->field);
@@ -293,5 +293,66 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
       ->execute()
       ->fetchField();
     $this->assertEqual($count, 1, 'NULL field translation is wiped.');
+  }
+
+
+  /**
+   * Test adding and removing indexes while data is present.
+   */
+  function testFieldUpdateIndexesWithData() {
+    // We do not have a db-agnostic inspection system in core yet, so
+    // for now we can only test this on mysql.
+    if (Database::getConnection()->databaseType() == 'mysql') {
+      // Create a decimal field.
+      $field_name = 'testfield';
+      $field = array('field_name' => $field_name, 'type' => 'text');
+      $field = field_create_field($field);
+      $instance = array('field_name' => $field_name, 'bundle' => FIELD_TEST_BUNDLE);
+      $instance = field_create_instance($instance);
+      $tables = array(_field_sql_storage_tablename($field), _field_sql_storage_revision_tablename($field));
+
+      // Verify the indexes we will create do not exist yet.
+      foreach ($tables as $table) {
+        $indexes = $this->getIndexes($table);
+        $this->assertTrue(empty($indexes['value']), t("No index named value exists in $table"));
+        $this->assertTrue(empty($indexes['value_format']), t("No index named value_format exists in $table"));
+      }
+
+      // Add data so the table cannot be dropped.
+      $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+      $entity->{$field_name}[FIELD_LANGUAGE_NONE][0]['value'] = 'field data';
+      field_attach_insert('test_entity', $entity);
+
+      // Add an index
+      $field = array('field_name' => $field_name, 'indexes' => array('value' => array('value')));
+      field_update_field($field);
+      foreach ($tables as $table) {
+        $indexes = $this->getIndexes($table);
+        $this->assertTrue($indexes["{$field_name}_value"] == array(1 => "{$field_name}_value"), t("Index on value created in $table"));
+      }
+        
+      // Add a different index, removing the existing custom one.
+      $field = array('field_name' => $field_name, 'indexes' => array('value_format' => array('value', 'format')));
+      field_update_field($field);
+      foreach ($tables as $table) {
+        $indexes = $this->getIndexes($table);
+        $this->assertTrue($indexes["{$field_name}_value_format"] == array(1 => "{$field_name}_value", 2 => "{$field_name}_format"), t("Index on value_format created in $table"));
+        $this->assertTrue(empty($indexes["{$field_name}_value"]), t("Index on value removed in $table"));
+      }
+        
+      // Verify that the tables were not dropped.
+      $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+      field_attach_load('test_entity', array(0 => $entity));
+      $this->assertEqual($entity->{$field_name}[FIELD_LANGUAGE_NONE][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
+    }
+  }
+
+  function getIndexes($table) {
+    $indexes = array();
+    $result = db_query("SHOW INDEXES FROM {" . $table . "}");
+    foreach ($result as $row) {
+      $indexes[$row->key_name][$row->seq_in_index] = $row->column_name;
+    }
+    return $indexes;
   }
 }

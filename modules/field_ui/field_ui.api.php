@@ -14,14 +14,27 @@
 /**
  * Field settings form.
  *
+ * The field type module is responsible for not returning form elements that
+ * cannot be changed. It may not always be possible to tell in advance, but
+ * modules should attempt to inform the user what is going/likely to work.
+ *
+ * @todo: Only the field type module knows which settings will affect the
+ * field's schema, but only the field storage module knows what schema
+ * changes are permitted once a field already has data. Probably we need an
+ * easy way for a field type module to ask whether an update to a new schema
+ * will be allowed without having to build up a fake $prior_field structure
+ * for hook_field_update_forbid().
+ *
  * @param $field
  *   The field structure being configured.
  * @param $instance
  *   The instance structure being configured.
+ * @param $has_data
+ *   Whether the field already has data.
  * @return
  *   The form definition for the field settings.
  */
-function hook_field_settings_form($field, $instance) {
+function hook_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
   $form['max_length'] = array(
     '#type' => 'textfield',

@@ -1429,13 +1429,14 @@ class FieldCrudTestCase extends FieldTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Field CRUD tests',
-      'description' => 'Create / read /update fields.',
+      'description' => 'Test field create, read, update, and delete.',
       'group' => 'Field',
     );
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    // field_update_field() tests use number.module
+    parent::setUp('field_test', 'number');
   }
 
   // TODO : test creation with
@@ -1724,6 +1725,108 @@ class FieldCrudTestCase extends FieldTestCase {
     $this->assertIdentical(count($entity->{$field['field_name']}[$langcode]), count($values), "Data in previously deleted field saves and loads correctly");
     foreach ($values as $delta => $value) {
       $this->assertEqual($entity->{$field['field_name']}[$langcode][$delta]['value'], $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
+    }
+  }
+
+  function testUpdateNonExistentField() {
+    $test_field = array('field_name' => 'does_not_exist', 'type' => 'number_decimal');
+    try {
+      field_update_field($test_field);
+      $this->fail(t('Cannot update a field that does not exist.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot update a field that does not exist.'));
+    }
+  }
+
+  function testUpdateFieldType() {
+    $field = array('field_name' => 'field_type', 'type' => 'number_decimal');
+    $field = field_create_field($field);
+    
+    $test_field = array('field_name' => 'field_type', 'type' => 'number_integer');
+    try {
+      field_update_field($test_field);
+      $this->fail(t('Cannot update a field to a different type.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot update a field to a different type.'));
+    }
+  }
+
+  /**
+   * Test updating a field.
+   */
+  function testUpdateField() {
+    // Create a decimal 5.2 field.
+    $field = array('field_name' => 'decimal53', 'type' => 'number_decimal', 'cardinality' => 3, 'settings' => array('precision' => 5, 'scale' => 2));
+    $field = field_create_field($field);
+    $instance = array('field_name' => 'decimal53', 'bundle' => FIELD_TEST_BUNDLE);
+    $instance = field_create_instance($instance);
+
+    // Update it to a deciaml 5.3 field.
+    $field['settings']['scale'] = 3;
+    field_update_field($field);
+
+    // Save values with 2, 3, and 4 decimal places.
+    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+    $entity->decimal53[FIELD_LANGUAGE_NONE][0]['value'] = '1.23';
+    $entity->decimal53[FIELD_LANGUAGE_NONE][1]['value'] = '1.235';
+    $entity->decimal53[FIELD_LANGUAGE_NONE][2]['value'] = '1.2355';
+    field_attach_insert('test_entity', $entity);
+    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+
+    // Verify that the updated 5.3 field rounds to 3 decimal places.
+    field_attach_load('test_entity', array(0 => $entity));
+    $this->assertEqual($entity->decimal53[FIELD_LANGUAGE_NONE][0]['value'], '1.23', t('2 decimal places are left alone'));
+    $this->assertEqual($entity->decimal53[FIELD_LANGUAGE_NONE][1]['value'], '1.235', t('3 decimal places are left alone'));
+    $this->assertEqual($entity->decimal53[FIELD_LANGUAGE_NONE][2]['value'], '1.236', t('4 decimal places are rounded to 3'));
+  }
+
+  /**
+   * Test updating a field with data.
+   */
+  function testUpdateFieldSchemaWithData() {
+    // Create a decimal 5.2 field and add some data.
+    $field = array('field_name' => 'decimal52', 'type' => 'number_decimal', 'settings' => array('precision' => 5, 'scale' => 2));
+    $field = field_create_field($field);
+    $instance = array('field_name' => 'decimal52', 'bundle' => FIELD_TEST_BUNDLE);
+    $instance = field_create_instance($instance);
+    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+    $entity->decimal52[FIELD_LANGUAGE_NONE][0]['value'] = '1.235';
+    field_attach_insert('test_entity', $entity);
+
+    // Attempt to update the field in a way that would work without data.
+    $field['settings']['scale'] = 3;
+    try {
+      field_update_field($field);
+      $this->fail(t('Cannot update field schema with data.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot update field schema with data.'));
+    }
+  }
+
+  /**
+   * Test field type modules forbidding an update.
+   */
+  function testUpdateFieldForbid() {
+    $field = array('field_name' => 'forbidden', 'type' => 'test_field', 'settings' => array('changeable' => 0, 'unchangeable' => 0));
+    $field = field_create_field($field);
+    $field['settings']['changeable']++;
+    try {
+      field_update_field($field);
+      $this->pass(t("A changeable setting can be updated."));
+    }
+    catch (FieldException $e) {
+      $this->fail(t("An unchangeable setting cannot be updated."));
+    }
+    $field['settings']['unchangeable']++;
+    try {
+      field_update_field($field);
+      $this->fail(t("An unchangeable setting can be updated."));
+    }
+    catch (FieldException $e) {
+      $this->pass(t("An unchangeable setting cannot be updated."));
     }
   }
 }

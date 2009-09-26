@@ -116,7 +116,7 @@ function text_field_schema($field) {
 /**
  * Implement hook_field_settings_form().
  */
-function text_field_settings_form($field, $instance) {
+function text_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
 
   $form['max_length'] = array(
@@ -126,6 +126,9 @@ function text_field_settings_form($field, $instance) {
     '#required' => FALSE,
     '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
     '#element_validate' => array('_element_validate_integer_positive'),
+    // @todo: If $has_data, add a validate handler that only allows
+    // max_length to increase.
+    '#disabled' => $has_data,
   );
 
   return $form;
@@ -318,7 +321,7 @@ function theme_field_formatter_text_trimmed($element) {
 
 /**
  * Theme function for 'summary or trimmed' field formatter for
- * text_with_summary fields.  This formatter returns the summary
+ * text_with_summary fields. This formatter returns the summary
  * element of the field or, if the summary is empty, the trimmed
  * version of the full element of the field.
  */

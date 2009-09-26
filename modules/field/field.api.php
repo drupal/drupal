@@ -665,7 +665,7 @@ function hook_field_widget_error($element, $error) {
  * The name of the theme hook invoked when displaying the values is derived
  * from formatter type names, using the pattern field_formatter_FORMATTER_NAME.
  * field.module takes care of exposing the corresponding theme functions
- * through hook_theme().  Specifically, field.module defines the theme
+ * through hook_theme(). Specifically, field.module defines the theme
  * hook:
  *
  * @code
@@ -1271,6 +1271,56 @@ function hook_field_create_field($field) {
  *   The instance just created.
  */
 function hook_field_create_instance($instance) {
+}
+
+/**
+ * Forbid a field update from occurring.
+ *
+ * Any module may forbid any update for any reason. For example, the
+ * field's storage module might forbid an update if it would change
+ * the storage schema while data for the field exists. A field type
+ * module might forbid an update if it would change existing data's
+ * semantics, or if there are external dependencies on field settings
+ * that cannot be updated.
+ *
+ * @param $field
+ *   The field as it will be post-update.
+ * @param $prior_field
+ *   The field as it is pre-update.
+ * @param $has_data
+ *   Whether any data already exists for this field.
+ * @return
+ *   Throws a FieldException to prevent the update from occuring.
+ */
+function hook_field_update_field_forbid($field, $prior_field, $has_data) {
+  // A 'list' field stores integer keys mapped to display values. If
+  // the new field will have fewer values, and any data exists for the
+  // abandonded keys, the field will have no way to display them. So,
+  // forbid such an update.
+  if ($has_data && count($field['settings']['allowed_values']) < count($prior_field['settings']['allowed_values'])) {
+    // Identify the keys that will be lost.
+    $lost_keys = array_diff(array_keys($field['settings']['allowed_values']), array_keys($prior_field['settings']['allowed_values']));
+    // If any data exist for those keys, forbid the update.
+    $count = field_attach_query($prior_field['id'], array('value', $lost_keys, 'IN'), 1);
+    if ($count > 0) {
+      throw new FieldException("Cannot update a list field not to include keys with existing data");
+    }
+  }
+}
+
+/**
+ * Act on a field being updated.
+ *
+ * This hook is invoked just after field is updated.
+ *
+ * @param $field
+ *   The field as it is post-update.
+ * @param $prior_field
+ *   The field as it was pre-update.
+ * @param $has_data
+ *   Whether any data already exists for this field.
+ */
+function hook_field_update_field($field, $prior_field, $has_data) {
 }
 
 /**

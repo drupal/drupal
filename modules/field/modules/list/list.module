@@ -85,8 +85,14 @@ function list_field_schema($field) {
 
 /**
  * Implement hook_field_settings_form().
+ *
+ * @todo: If $has_data, add a form validate function to verify that the
+ * new allowed values do not exclude any keys for which data already
+ * exists in the databae (use field_attach_query()) to find out.
+ * Implement the validate function via hook_field_update_forbid() so
+ * list.module does not depend on form submission.
  */
-function list_field_settings_form($field, $instance) {
+function list_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
 
   $form['allowed_values'] = array(

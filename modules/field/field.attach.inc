@@ -153,7 +153,7 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *   An associative array of additional options, with the following keys:
  *  - 'field_name': The name of the field whose operation should be
  *    invoked. By default, the operation is invoked on all the fields
- *    in the object's bundle.  NOTE: This option is not compatible with
+ *    in the object's bundle. NOTE: This option is not compatible with
  *    the 'deleted' option; the 'field_id' option should be used
  *    instead.
  *  - 'field_id': The id of the field whose operation should be
@@ -1009,6 +1009,19 @@ function field_attach_query($field_id, $conditions, $count, &$cursor = NULL, $ag
  */
 function field_attach_query_revisions($field_id, $conditions, $count, &$cursor = NULL) {
   return field_attach_query($field_id, $conditions, $count, $cursor, FIELD_LOAD_REVISION);
+}
+
+/**
+ * Determine whether a field has any data.
+ *
+ * @param $field
+ *   A field structure.
+ * @return
+ *   TRUE if the field has data for any object; FALSE otherwise.
+ */
+function field_attach_field_has_data($field) {
+  $results = field_attach_query($field['id'], array(), 1);
+  return !empty($results);
 }
 
 /**

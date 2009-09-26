@@ -349,6 +349,8 @@ function field_test_field_info() {
       'label' => t('Test Field'),
       'settings' => array(
         'test_field_setting' => 'dummy test string',
+        'changeable' => 'a changeable field setting',
+        'unchangeable' => 'an unchangeable field setting',
       ),
       'instance_settings' => array(
         'test_instance_setting' => 'dummy test string',
@@ -358,6 +360,15 @@ function field_test_field_info() {
       'default_formatter' => 'field_test_default',
     ),
   );
+}
+
+/**
+ * Implement hook_field_update_forbid().
+ */
+function field_test_field_update_forbid($field, $prior_field, $has_data) {
+  if ($field['type'] == 'test_field' && $field['settings']['unchangeable'] != $prior_field['settings']['unchangeable']) {
+    throw new FieldException("field_test 'unchangeable' setting cannot be changed'");
+  }
 }
 
 /**
@@ -634,7 +645,7 @@ function field_test_entity_info_translatable($obj_type = NULL, $translatable = N
  *
  * This function is a simple in-memory key-value store with the
  * distinction that it stores all values for a given key instead of
- * just the most recently set value.  field_test module hooks call
+ * just the most recently set value. field_test module hooks call
  * this function to record their arguments, keyed by hook name. The
  * unit tests later call this function to verify that the correct
  * hooks were called and were passed the correct arguments.

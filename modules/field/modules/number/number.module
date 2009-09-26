@@ -96,7 +96,7 @@ function number_field_schema($field) {
 /**
  * Implement hook_field_settings_form().
  */
-function number_field_settings_form($field, $instance) {
+function number_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
   $form = array();
 
@@ -107,6 +107,7 @@ function number_field_settings_form($field, $instance) {
       '#options' => drupal_map_assoc(range(10, 32)),
       '#default_value' => $settings['precision'],
       '#description' => t('The total number of digits to store in the database, including those to the right of the decimal.'),
+      '#disabled' => $has_data,
     );
     $form['scale'] = array(
       '#type' => 'select',
@@ -114,6 +115,7 @@ function number_field_settings_form($field, $instance) {
       '#options' => drupal_map_assoc(range(0, 10)),
       '#default_value' => $settings['scale'],
       '#description' => t('The number of digits to the right of the decimal.'),
+      '#disabled' => $has_data,
     );
     $form['decimal'] = array(
       '#type' => 'select',
