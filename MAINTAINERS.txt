@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.32 2009/08/25 10:58:31 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.33 2009/09/26 16:51:23 dries Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -49,6 +49,7 @@ Joon Park 'dvessel' <http://drupal.org/user/56782>
 
 UPDATE MODULE
 Derek Wright 'dww' <http://drupal.org/user/46549>
+Dave Reid 'davereid' <http://drupal.org/user/53892>
 
 USER EXPERIENCE AND USABILITY
 Roy Scholten 'yoroy' <http://drupal.org/user/41502>
