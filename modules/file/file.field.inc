@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.3 2009/09/10 22:31:58 webchick Exp $
+// $Id: file.field.inc,v 1.4 2009/09/26 15:57:38 dries Exp $
 
 /**
  * @file
@@ -67,7 +67,7 @@ function file_field_schema($field) {
 /**
  * Implement hook_field_settings_form().
  */
-function file_field_settings_form($field, $instance) {
+function file_field_settings_form($field, $instance, $has_data) {
   $defaults = field_info_field_settings($field['type']);
   $settings = array_merge($defaults, $field['settings']);
 
@@ -98,6 +98,7 @@ function file_field_settings_form($field, $instance) {
     '#options' => $scheme_options,
     '#default_value' => $settings['uri_scheme'],
     '#description' => t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
+    '#disabled' => $has_data,
   );
 
   $form['default_file'] = array(

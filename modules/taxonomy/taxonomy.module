@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.512 2009/09/25 14:24:34 dries Exp $
+// $Id: taxonomy.module,v 1.513 2009/09/26 15:57:39 dries Exp $
 
 /**
  * @file
@@ -2137,7 +2137,7 @@ function taxonomy_element_info() {
 /**
  * Implement hook_field_settings_form().
  */
-function taxonomy_field_settings_form($field, $instance) {
+function taxonomy_field_settings_form($field, $instance, $has_data) {
   // Get proper values for 'allowed_values_function', which is a core setting.
   $vocabularies = taxonomy_get_vocabularies();
   $options = array();
@@ -2156,6 +2156,7 @@ function taxonomy_field_settings_form($field, $instance) {
       '#options' => $options,
       '#required' => TRUE,
       '#description' => t('The vocabulary which supplies the options for this field.'),
+      '#disabled' => $has_data,
     );
     $form['allowed_values'][$delta]['parent'] = array(
       '#type' => 'value',
