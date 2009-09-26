@@ -1,0 +1,8 @@
+; $Id: update_test.info,v 1.1 2009/09/26 17:03:13 dries Exp $
+name = Update test
+description = Support module for update module testing.
+package = Testing
+version = VERSION
+core = 7.x
+files[] = update_test.module
+hidden = TRUE
