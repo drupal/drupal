@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.24 2009/09/21 06:36:54 dries Exp $
+// $Id: search.install,v 1.25 2009/09/27 00:12:14 dries Exp $
 
 /**
  * @file
@@ -13,13 +13,6 @@ function search_uninstall() {
   variable_del('minimum_word_size');
   variable_del('overlap_cjk');
   variable_del('search_cron_limit');
-}
-
-/**
- * Implement hook_install().
- */
-function search_install() {
-  drupal_set_message(t('You can <a href="@url">add the search block</a> now.', array('@url' => url('admin/structure/block'))));
 }
 
 /**
