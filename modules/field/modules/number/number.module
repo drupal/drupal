@@ -20,7 +20,7 @@ function number_theme() {
  */
 function number_theme_registry_alter(&$theme_registry) {
   // The number_integer and number_decimal formatters use the same function.
-  $theme_registry['field_formatter_number_integer']['function'] = 'theme_field_formatter_number';
+  $theme_registry['field_formatter_number_default']['function'] = 'theme_field_formatter_number';
   $theme_registry['field_formatter_number_decimal']['function'] = 'theme_field_formatter_number';
 }
 
@@ -34,7 +34,7 @@ function number_field_info() {
       'description' => t('This field stores a number in the database as an integer.'),
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
-      'default_formatter' => 'number_integer',
+      'default_formatter' => 'number_default',
     ),
     'number_decimal' => array(
       'label' => t('Decimal'),
@@ -42,14 +42,14 @@ function number_field_info() {
       'settings' => array('precision' => 10, 'scale' => 2, 'decimal' => '.'),
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
-      'default_formatter' => 'number_integer',
+      'default_formatter' => 'number_decimal',
     ),
     'number_float' => array(
       'label' => t('Float'),
       'description' => t('This field stores a number in the database in a floating point format.'),
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
-      'default_formatter' => 'number_integer',
+      'default_formatter' => 'number_decimal',
     ),
   );
 }
