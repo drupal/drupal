@@ -14,7 +14,6 @@ function module_load_all($bootstrap = FALSE) {
   foreach (module_list(TRUE, $bootstrap) as $module) {
     drupal_load('module', $module);
   }
-  module_implements('', FALSE, TRUE);
 }
 
 /**
@@ -336,19 +335,44 @@ function module_hook($module, $hook) {
  * @param $sort
  *   By default, modules are ordered by weight and filename, settings this option
  *   to TRUE, module list will be ordered by module name.
- * @param $refresh
+ * @param $reset
  *   For internal use only: Whether to force the stored list of hook
  *   implementations to be regenerated (such as after enabling a new module,
  *   before processing hook_enable).
+ *
  * @return
  *   An array with the names of the modules which are implementing this hook.
+ *
+ * @see module_implements_write_cache().
  */
-function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
-  static $implementations;
+function module_implements($hook, $sort = FALSE, $reset = FALSE) {
+  $implementations = &drupal_static(__FUNCTION__, array());
 
-  if ($refresh) {
+  // We maintain a persistent cache of hook implementations in addition to the
+  // static cache to avoid looping through every module and every hook on each
+  // request. Benchmarks show that the benefit of this caching outweighs the
+  // additional database hit even when using the default database caching
+  // backend and only a small number of modules are enabled. The cost of the
+  // cache_get() is more or less constant and reduced further when non-database
+  // caching backends are used, so there will be more significant gains when a
+  // large number of modules are installed or hooks invoked, since this can
+  // quickly lead to module_hook() being called several thousand times
+  // per request.
+  if ($reset) {
     $implementations = array();
+    cache_set('module_implements', array());
     return;
+  }
+
+  // Fetch implementations from cache.
+  if (empty($implementations)) {
+    $implementations = cache_get('module_implements');
+    if ($implementations === FALSE) {
+      $implementations = array();
+    }
+    else {
+      $implementations = $implementations->data;
+    }
   }
 
   if (!isset($implementations[$hook])) {
@@ -356,7 +380,22 @@ function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
     $list = module_list(FALSE, FALSE, $sort);
     foreach ($list as $module) {
       if (module_hook($module, $hook)) {
-        $implementations[$hook][] = $module;
+        $implementations[$hook][$module] = $module;
+        // We added something to the cache, so write it when we are done.
+        $implementations['#write_cache'] = TRUE;
+      }
+    }
+  }
+  else {
+    foreach ($implementations[$hook] as $module) {
+      // It is possible that a module removed a hook implementation without the
+      // implementations cache being rebuilt yet, so we check module_hook() on
+      // each request to avoid undefined function errors.
+      if (!module_hook($module, $hook)) {
+        // Clear out the stale implementation from the cache and force a cache
+        // refresh to forget about no longer existing hook implementations.
+        unset($implementations[$hook][$module]);
+        $implementations['#write_cache'] = TRUE;
       }
     }
   }
@@ -368,6 +407,24 @@ function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
   // references, which causes some modules' hooks not to be called.
   // See also http://www.zend.com/zend/art/ref-count.php.
   return (array)$implementations[$hook];
+}
+
+/**
+ * Writes the hook implementation cache.
+ *
+ * @see module_implements()
+ */
+function module_implements_write_cache() {
+  $implementations = &drupal_static('module_implements');
+  // Check whether we need to write the cache. We do not want to cache hooks,
+  // which are only invoked on HTTP POST requests. Maybe the page is not
+  // cacheable for other reasons than the HTTP request type as well, but this
+  // does not matter for the hook implementation cache, because nothing breaks
+  // if hook implementations are not cached.
+  if (isset($implementations['#write_cache']) && drupal_page_is_cacheable()) {
+    unset($implementations['#write_cache']);
+    cache_set('module_implements', $implementations);
+  }
 }
 
 /**

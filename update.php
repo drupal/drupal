@@ -292,6 +292,10 @@ if (empty($op) && $update_access_allowed) {
   drupal_load('module', 'system');
   drupal_load('module', 'filter');
 
+  // Reset the module_implements() cache so that any new hook implementations
+  // in updated code are picked up.
+  module_implements('', FALSE, TRUE);
+
   // Set up $language, since the installer components require it.
   drupal_language_initialize();
 
