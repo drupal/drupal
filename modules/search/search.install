@@ -16,13 +16,6 @@ function search_uninstall() {
 }
 
 /**
- * Implement hook_install().
- */
-function search_install() {
-  drupal_set_message(t('You can <a href="@url">add the search block</a> now.', array('@url' => url('admin/structure/block'))));
-}
-
-/**
  * Implement hook_schema().
  */
 function search_schema() {
