@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.303 2009/09/14 07:33:55 dries Exp $
+// $Id: update.php,v 1.304 2009/09/27 11:08:45 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -291,6 +291,10 @@ if (empty($op) && $update_access_allowed) {
   module_list(TRUE, FALSE, FALSE, $module_list);
   drupal_load('module', 'system');
   drupal_load('module', 'filter');
+
+  // Reset the module_implements() cache so that any new hook implementations
+  // in updated code are picked up.
+  module_implements('', FALSE, TRUE);
 
   // Set up $language, since the installer components require it.
   drupal_language_initialize();

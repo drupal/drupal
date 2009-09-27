@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.995 2009/09/25 15:20:12 dries Exp $
+// $Id: common.inc,v 1.996 2009/09/27 11:08:45 dries Exp $
 
 /**
  * @file
@@ -2405,6 +2405,7 @@ function drupal_page_footer() {
 
   _registry_check_code(REGISTRY_WRITE_LOOKUP_CACHE);
   drupal_cache_system_paths();
+  module_implements_write_cache();
 }
 
 /**
