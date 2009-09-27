@@ -1,5 +1,5 @@
 <?php
-// $Id: update.test,v 1.1 2009/09/26 17:03:13 dries Exp $
+// $Id: update.test,v 1.2 2009/09/27 00:15:28 dries Exp $
 
 /**
  * @file
@@ -66,6 +66,30 @@ class UpdateTestCase extends DrupalWebTestCase {
     $this->assertRaw(l('7.2', 'http://example.com/drupal-7-2-release'), t('Link to release appears.'));
     $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), t('Link to download appears.'));
     $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-2-release'), t('Link to release notes appears.'));
+  }
+
+  /**
+   * Ensure proper results where there are date mismatches among modules.
+   */
+  function testDatestampMismatch() {
+    $system_info = array(
+      '#all' => array(
+        // We need to think we're running a -dev snapshot to see dates.
+        'version' => '7.0-dev',
+        'datestamp' => time(),
+      ),
+      'block' => array(
+        // This is 2001-09-09 01:46:40 GMT, so test for "2001-Sep-".
+        'datestamp' => '1000000000',
+      ),
+    );
+    variable_set('update_test_system_info', $system_info);
+    $this->refreshUpdateData('dev-snapshot.xml');
+    $this->drupalGet('admin/reports/updates');
+    $this->assertNoText(t('2001-Sep-'));
+    $this->assertText(t('Up to date'));
+    $this->assertNoText(t('Update available'));
+    $this->assertNoText(t('Security update required!'));
   }
 
   /**
