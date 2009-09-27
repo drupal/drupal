@@ -78,6 +78,7 @@ function _field_info_collate_types($reset = FALSE) {
         'field types' => array(),
         'widget types' => array(),
         'formatter types' => array(),
+        'storage types' => array(),
         'fieldable types' => array(),
       );
 
@@ -110,7 +111,7 @@ function _field_info_collate_types($reset = FALSE) {
       }
       drupal_alter('field_widget_info', $info['widget types']);
 
-      // Populate formatters.
+      // Populate formatter types.
       foreach (module_implements('field_formatter_info') as $module) {
         $formatter_types = (array) module_invoke($module, 'field_formatter_info');
         foreach ($formatter_types as $name => $formatter_info) {
@@ -123,6 +124,20 @@ function _field_info_collate_types($reset = FALSE) {
         }
       }
       drupal_alter('field_formatter_info', $info['formatter types']);
+
+      // Populate storage types.
+      foreach (module_implements('field_storage_info') as $module) {
+        $storage_types = (array) module_invoke($module, 'field_storage_info');
+        foreach ($storage_types as $name => $storage_info) {
+          // Provide defaults.
+          $storage_info += array(
+            'settings' => array(),
+          );
+          $info['storage types'][$name] = $storage_info;
+          $info['storage types'][$name]['module'] = $module;
+        }
+      }
+      drupal_alter('field_storage_info', $info['storage types']);
 
       // Populate information about 'fieldable' entities.
       foreach (module_implements('entity_info') as $module) {
@@ -246,6 +261,7 @@ function _field_info_collate_fields($reset = FALSE) {
 function _field_info_prepare_field($field) {
   // Make sure all expected field settings are present.
   $field['settings'] += field_info_field_settings($field['type']);
+  $field['storage']['settings'] += field_info_storage_settings($field['storage']['type']);
 
   return $field;
 }
@@ -371,8 +387,8 @@ function field_info_field_types($field_type = NULL) {
  *   returned.
  * @return
  *   Either a widget type description, as provided by
- *   hook_field_widget_info(), or an array of all existing widget
- *   types, keyed by widget type name.
+ *   hook_field_widget_info(), or an array of all existing widget types, keyed
+ *   by widget type name.
  */
 function field_info_widget_types($widget_type = NULL) {
   $info = _field_info_collate_types();
@@ -394,8 +410,9 @@ function field_info_widget_types($widget_type = NULL) {
  *   (optional) A formatter type name. If ommitted, all formatter types will be
  *   returned.
  * @return
- *   Either a formatter type description, as provided by hook_field_formatter_info(),
- *   or an array of all existing widget types, keyed by widget type name.
+ *   Either a formatter type description, as provided by
+ *   hook_field_formatter_info(), or an array of all existing formatter types,
+ *   keyed by formatter type name.
  */
 function field_info_formatter_types($formatter_type = NULL) {
   $info = _field_info_collate_types();
@@ -407,6 +424,30 @@ function field_info_formatter_types($formatter_type = NULL) {
   }
   else {
     return $formatter_types;
+  }
+}
+
+/**
+ * Return hook_field_storage_info() data.
+ *
+ * @param $storage_type
+ *   (optional) A storage type name. If ommitted, all storage types will be
+ *   returned.
+ * @return
+ *   Either a storage type description, as provided by
+ *   hook_field_storage_info(), or an array of all existing storage types,
+ *   keyed by storage type name.
+ */
+function field_info_storage_types($storage_type = NULL) {
+  $info = _field_info_collate_types();
+  $storage_types = $info['storage types'];
+  if ($storage_type) {
+    if (isset($storage_types[$storage_type])) {
+      return $storage_types[$storage_type];
+    }
+  }
+  else {
+    return $storage_types;
   }
 }
 
@@ -574,8 +615,8 @@ function field_info_instance_settings($type) {
  * @param $type
  *   A widget type name.
  * @return
- *   The field type's default settings, as provided by hook_field_info(), or an
- *   empty array.
+ *   The widget type's default settings, as provided by
+ *   hook_field_widget_info(), or an empty array.
  */
 function field_info_widget_settings($type) {
   $info = field_info_widget_types($type);
@@ -588,11 +629,25 @@ function field_info_widget_settings($type) {
  * @param $type
  *   A field formatter type name.
  * @return
- *   The field formatter's default settings, as provided by
- *   hook_field_info(), or an empty array.
+ *   The formatter type's default settings, as provided by
+ *   hook_field_formatter_info(), or an empty array.
  */
 function field_info_formatter_settings($type) {
   $info = field_info_formatter_types($type);
+  return isset($info['settings']) ? $info['settings'] : array();
+}
+
+/**
+ * Return a field formatter's default settings.
+ *
+ * @param $type
+ *   A field storage type name.
+ * @return
+ *   The storage type's default settings, as provided by
+ *   hook_field_storage_info(), or an empty array.
+ */
+function field_info_storage_settings($type) {
+  $info = field_info_storage_types($type);
   return isset($info['settings']) ? $info['settings'] : array();
 }
 

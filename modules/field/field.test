@@ -10,6 +10,18 @@
  * Parent class for Field API tests.
  */
 class FieldTestCase extends DrupalWebTestCase {
+  var $default_storage = 'field_sql_storage';
+
+  /**
+   * Set the default field storage backend for fields created during tests.
+   */
+  function setUp() {
+    // Call parent::setUp().
+    $args = func_get_args();
+    call_user_func_array(array('parent', 'setUp'), $args);
+    // Set default storage backend.
+    variable_set('field_storage_default', $this->default_storage);
+  }
 
   /**
    * Generate random values for a field_test field.
@@ -212,6 +224,56 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
   }
 
   /**
+   * Test saving and loading fields using different storage backends.
+   */
+  function testFieldAttachSaveLoadDifferentStorage() {
+    $entity_type = 'test_entity';
+    $langcode = FIELD_LANGUAGE_NONE;
+
+    // Create two fields using different storage backends, and their instances.
+    $fields = array(
+      array(
+        'field_name' => 'field_1',
+        'type' => 'test_field',
+        'cardinality' => 4,
+        'storage' => array('type' => 'field_sql_storage')
+      ),
+      array(
+        'field_name' => 'field_2',
+        'type' => 'test_field',
+        'cardinality' => 4,
+        'storage' => array('type' => 'field_test_storage')
+      ),
+    );
+    foreach ($fields as $field) {
+      field_create_field($field);
+      $instance = array(
+        'field_name' => $field['field_name'],
+        'bundle' => 'test_bundle',
+      );
+      field_create_instance($instance);
+    }
+
+    $entity_init = field_test_create_stub_entity();
+
+    // Create entity and insert random values.
+    $entity = clone($entity_init);
+    $values = array();
+    foreach ($fields as $field) {
+      $values[$field['field_name']] = $this->_generateTestFieldValues($this->field['cardinality']);
+      $entity->{$field['field_name']}[$langcode] = $values[$field['field_name']];
+    }
+    field_attach_insert($entity_type, $entity);
+
+    // Check that values are loaded as expected.
+    $entity = clone($entity_init);
+    field_attach_load($entity_type, array($entity->ftid => $entity));
+    foreach ($fields as $field) {
+      $this->assertEqual($values[$field['field_name']], $entity->{$field['field_name']}[$langcode], t('%storage storage: expected values were found.', array('%storage' => $field['storage']['type'])));
+    }
+  }
+
+  /**
    * Tests insert and update with missing or NULL fields.
    */
   function testFieldAttachSaveMissingData() {
@@ -225,17 +287,17 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), t('Insert: missing field results in no value saved'));
+    $this->assertTrue(empty($entity->{$this->field_name}), t('Insert: missing field results in no value saved'));
 
     // Insert: Field is NULL.
     field_cache_clear();
     $entity = clone($entity_init);
-    $entity->{$this->field_name}[$langcode] = NULL;
+    $entity->{$this->field_name} = NULL;
     field_attach_insert($entity_type, $entity);
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), t('Insert: NULL field results in no value saved'));
+    $this->assertTrue(empty($entity->{$this->field_name}), t('Insert: NULL field results in no value saved'));
 
     // Add some real data.
     field_cache_clear();
@@ -260,12 +322,33 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     // Update: Field is NULL. Data should be wiped.
     field_cache_clear();
     $entity = clone($entity_init);
-    $entity->{$this->field_name}[$langcode] = NULL;
+    $entity->{$this->field_name} = NULL;
     field_attach_update($entity_type, $entity);
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), t('Update: NULL field removes existing values'));
+    $this->assertTrue(empty($entity->{$this->field_name}), t('Update: NULL field removes existing values'));
+
+    // Re-add some data.
+    field_cache_clear();
+    $entity = clone($entity_init);
+    $values = $this->_generateTestFieldValues(1);
+    $entity->{$this->field_name}[$langcode] = $values;
+    field_attach_update($entity_type, $entity);
+
+    $entity = clone($entity_init);
+    field_attach_load($entity_type, array($entity->ftid => $entity));
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, t('Field data saved'));
+
+    // Update: Field is empty array. Data should be wiped.
+    field_cache_clear();
+    $entity = clone($entity_init);
+    $entity->{$this->field_name} = array();
+    field_attach_update($entity_type, $entity);
+
+    $entity = clone($entity_init);
+    field_attach_load($entity_type, array($entity->ftid => $entity));
+    $this->assertTrue(empty($entity->{$this->field_name}), t('Update: empty array removes existing values'));
   }
 
   /**
@@ -391,7 +474,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     $this->assertIdentical($this->instance['bundle'], $new_bundle, "Bundle name has been updated in the instance.");
 
     // Verify the field data is present on load.
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_stub_entity(0, 0, $new_bundle);
     field_attach_load($entity_type, array(0 => $entity));
     $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], "Bundle name has been updated in the field storage");
   }
@@ -956,6 +1039,7 @@ class FieldInfoTestCase extends FieldTestCase {
     $field_test_info = field_test_field_info();
     $formatter_info = field_test_field_formatter_info();
     $widget_info = field_test_field_widget_info();
+    $storage_info = field_test_field_storage_info();
 
     $info = field_info_field_types();
     foreach ($field_test_info as $t_key => $field_type) {
@@ -979,6 +1063,14 @@ class FieldInfoTestCase extends FieldTestCase {
         $this->assertEqual($info[$w_key][$key], $val, t("Widget type $w_key key $key is $val"));
       }
       $this->assertEqual($info[$w_key]['module'], 'field_test',  t("Widget type field_test module appears"));
+    }
+
+    $info = field_info_storage_types();
+    foreach ($storage_info as $s_key => $storage) {
+      foreach ($storage as $key => $val) {
+        $this->assertEqual($info[$s_key][$key], $val, t("Storage type $s_key key $key is $val"));
+      }
+      $this->assertEqual($info[$s_key]['module'], 'field_test',  t("Storage type field_test module appears"));
     }
 
     // Verify that no unexpected instances exist.
@@ -1473,6 +1565,9 @@ class FieldCrudTestCase extends FieldTestCase {
     $field_type = field_info_field_types($field_definition['type']);
     $this->assertIdentical($record['data']['settings'], $field_type['settings'], t('Default field settings have been written.'));
 
+    // Ensure that default storage was set.
+    $this->assertEqual($record['storage_type'], variable_get('field_storage_default'), t('The field type is properly saved.'));
+
     // Guarantee that the name is unique.
     try {
       field_create_field($field_definition);
@@ -1565,16 +1660,13 @@ class FieldCrudTestCase extends FieldTestCase {
    */
   function testCreateFieldFail() {
     $field_name = 'duplicate';
-    $field_definition = array('field_name' => $field_name, 'type' => 'test_field');
+    $field_definition = array('field_name' => $field_name, 'type' => 'test_field', 'storage' => array('type' => 'field_test_storage_failure'));
     $query = db_select('field_config')->condition('field_name', $field_name)->countQuery();
 
     // The field does not appear in field_config.
     $count = $query->execute()->fetchField();
     $this->assertEqual($count, 0, 'A field_config row for the field does not exist.');
 
-    // Make field creation fail.
-    variable_set('field_storage_module', 'field_test');
-    
     // Try to create the field.
     try {
       $field = field_create_field($field_definition);
@@ -1679,8 +1771,7 @@ class FieldCrudTestCase extends FieldTestCase {
 
     // Make sure that the field is marked as deleted when it is specifically
     // loaded.
-    $fields = field_read_fields(array(), array('include_deleted' => TRUE));
-    $field = current($field);
+    $field = field_read_field($this->field['field_name'], array('include_deleted' => TRUE));
     $this->assertTrue(!empty($field['deleted']), t('A deleted field is marked for deletion.'));
 
     // Make sure that this field's instance is marked as deleted when it is
@@ -1829,6 +1920,69 @@ class FieldCrudTestCase extends FieldTestCase {
       $this->pass(t("An unchangeable setting cannot be updated."));
     }
   }
+
+  /**
+   * Test that fields are properly marked active or inactive.
+   */
+  function testActive() {
+    $field_definition = array(
+      'field_name' => 'field_1',
+      'type' => 'test_field',
+      // For this test, we need a storage backend provided by a different
+      // module than field_test.module.
+      'storage' => array(
+        'type' => 'field_sql_storage',
+      ),
+    );
+    field_create_field($field_definition);
+
+    // Test disabling and enabling:
+    // - the field type module,
+    // - the storage module,
+    // - both.
+    $this->_testActiveHelper($field_definition, array('field_test'));
+    $this->_testActiveHelper($field_definition, array('field_sql_storage'));
+    $this->_testActiveHelper($field_definition, array('field_test', 'field_sql_storage'));
+  }
+
+  /**
+   * Helper function for testActive().
+   *
+   * Test dependency between a field and a set of modules.
+   *
+   * @param $field_definition
+   *   A field definition.
+   * @param $modules
+   *   An aray of module names. The field will be tested to be inactive as long
+   *   as any of those modules is disabled.
+   */
+  function _testActiveHelper($field_definition, $modules) {
+    $field_name = $field_definition['field_name'];
+
+    // Read the field.
+    $field = field_read_field($field_name);
+    $this->assertTrue($field_definition <= $field, t('The field was properly read.'));
+
+    module_disable($modules);
+
+    $fields = field_read_fields(array('field_name' => $field_name), array('include_inactive' => TRUE));
+    $this->assertTrue(isset($fields[$field_name]) && $field_definition < $field, t('The field is properly read when explicitly fetching inactive fields.'));
+
+    // Re-enable modules one by one, and check that the field is still inactive
+    // while some modules remain disabled.
+    while ($modules) {
+      $field = field_read_field($field_name);
+      $this->assertTrue(empty($field), t('%modules disabled. The field is marked inactive.', array('%modules' => implode(', ', $modules))));
+
+      $module = array_shift($modules);
+      module_enable(array($module));
+    }
+
+    // Check that the field is active again after all modules have been
+    // enabled.
+    $field = field_read_field($field_name);
+    $this->assertTrue($field_definition <= $field, t('The field was was marked active.'));
+  }
 }
 
 class FieldInstanceCrudTestCase extends FieldTestCase {
@@ -1844,6 +1998,7 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
 
   function setUp() {
     parent::setUp('field_test');
+
     $this->field = array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',
@@ -2430,7 +2585,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
 
     // The field still exists, not deleted, because it has a second instance.
     $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1, 'include_inactive' => 1));
-    $this->assertEqual($field, $fields[$field['id']], 'The field exists and is not deleted');
+    $this->assertTrue(isset($fields[$field['id']]), 'The field exists and is not deleted');
   }
 
   /**
@@ -2452,7 +2607,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
 
       // The field still exists, not deleted, because it was never deleted.
       $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1, 'include_inactive' => 1));
-      $this->assertEqual($field, $fields[$field['id']], 'The field exists and is not deleted');
+      $this->assertTrue(isset($fields[$field['id']]), 'The field exists and is not deleted');
     }
 
     // Delete the field.

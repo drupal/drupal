@@ -183,8 +183,8 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $this->assertTrue(empty($rev_values), "All values for all revisions are stored in revision table {$this->revision_table}");
 
     // Check that update leaves the field data untouched if
-    // $object->{$field_name} has no language key.
-    unset($entity->{$this->field_name}[$langcode]);
+    // $object->{$field_name} is absent.
+    unset($entity->{$this->field_name});
     field_attach_update($entity_type, $entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
@@ -194,7 +194,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     }
 
     // Check that update with an empty $object->$field_name empties the field.
-    $entity->{$this->field_name}[$langcode] = NULL;
+    $entity->{$this->field_name} = NULL;
     field_attach_update($entity_type, $entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     $this->assertEqual(count($rows), 0, t("Update with an empty field_name entry empties the field."));
@@ -217,7 +217,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $this->assertEqual($count, 0, 'Missing field results in no inserts');
 
     // Insert: Field is NULL
-    $entity->{$this->field_name}[$langcode] = NULL;
+    $entity->{$this->field_name} = NULL;
     field_attach_insert($entity_type, $entity);
     $count = db_select($this->table)
       ->countQuery()

@@ -28,7 +28,41 @@ function field_schema() {
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
-        'description' => 'The type of this field, coming from a field module',
+        'description' => 'The type of this field.',
+      ),
+     'module' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The module that implements the field type.',
+      ),
+      'active' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Boolean indicating whether the module that implements the field type is enabled.',
+      ),
+      'storage_type' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'description' => 'The storage backend for the field.',
+      ),
+      'storage_module' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The module that implements the storage backend.',
+      ),
+      'storage_active' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Boolean indicating whether the module that implements the storage backend is enabled.',
       ),
       'locked' => array(
         'type' => 'int',
@@ -42,13 +76,7 @@ function field_schema() {
         'size' => 'medium',
         'not null' => TRUE,
         'serialize' => TRUE,
-        'description' => 'Field specific settings, for example maximum length',
-      ),
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
+        'description' => 'Serialized data containing the field properties that do not warrant a dedicated column.',
       ),
       'cardinality' => array(
         'type' => 'int',
@@ -57,12 +85,6 @@ function field_schema() {
         'default' => 0,
       ),
       'translatable' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'active' => array(
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
@@ -77,14 +99,17 @@ function field_schema() {
     ),
     'primary key' => array('id'),
     'indexes' => array(
-      // used by field_delete_field() among others
       'field_name' => array('field_name'),
-      // used by field_read_fields()
-      'active_deleted' => array('active', 'deleted'),
-      // used by field_modules_disabled()
+      // Used by field_read_fields().
+      'active' => array('active'),
+      'storage_active' => array('storage_active'),
+      'deleted' => array('deleted'),
+      // Used by field_modules_disabled().
       'module' => array('module'),
-      // used by field_associate_fields()
+      'storage_module' => array('storage_module'),
+      // Used by field_associate_fields().
       'type' => array('type'),
+      'storage_type' => array('storage_type'),
     ),
   );
   $schema['field_config_instance'] = array(
@@ -124,13 +149,14 @@ function field_schema() {
     ),
     'primary key' => array('id'),
     'indexes' => array(
-      // used by field_delete_instance()
+      // Used by field_delete_instance().
       'field_name_bundle' => array('field_name', 'bundle'),
-      // used by field_read_instances()
-      'widget_active_deleted' => array('widget_active', 'deleted'),
-      // used by field_modules_disabled()
+      // Used by field_read_instances().
+      'widget_active' => array('widget_active'),
+      'deleted' => array('deleted'),
+      // Used by field_modules_disabled().
       'widget_module' => array('widget_module'),
-      // used by field_associate_fields()
+      // Used by field_associate_fields().
       'widget_type' => array('widget_type'),
     ),
   );

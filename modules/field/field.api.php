@@ -70,10 +70,10 @@ function hook_field_extra_fields($bundle) {
 /**
  * @defgroup field_types Field Types API
  * @{
- * Define field types, widget types, and display formatter types.
+ * Define field types, widget types, display formatter types, storage types.
  *
  * The bulk of the Field Types API are related to field types. A field type
- * represents a particular data storage type (integer, string, date, etc.) that
+ * represents a particular type of data (integer, string, date, etc.) that
  * can be attached to a fieldable object. hook_field_info() defines the basic
  * properties of a field type, and a variety of other field hooks are called by
  * the Field Attach API to perform field-type-specific actions.
@@ -97,6 +97,9 @@ function hook_field_extra_fields($bundle) {
  * behavior of existing field types.
  * @see hook_field_widget_info().
  * @see hook_field_formatter_info().
+ *
+ * A third kind of pluggable handlers, storage backends, is defined by the
+ * @link field_storage Field Storage API @endlink.
  */
 
 /**
@@ -1097,6 +1100,45 @@ function hook_field_attach_delete_bundle($bundle, $instances) {
  */
 
 /**
+ * Expose Field API storage backends.
+ *
+ * @return
+ *   An array describing the storage backends implemented by the module.
+ *   The keys are storage backend names. To avoid name clashes, storage backend
+ *   names should be prefixed with the name of the module that exposes them.
+ *   The values are arrays describing the storage backend, with the following
+ *   key/value pairs:
+ *   - label: The human-readable name of the storage backend.
+ *   - description: A short description for the storage backend.
+ *   - settings: An array whose keys are the names of the settings available
+ *     for the storage backend, and whose values are the default values for
+ *     those settings.
+ */
+function hook_field_storage_info() {
+  return array(
+    'field_sql_storage' => array(
+      'label' => t('Default SQL storage'),
+      'description' => t('Stores fields in the local SQL database, using per-field tables.'),
+      'settings' => array(),
+    ),
+  );
+}
+
+/**
+ * Perform alterations on Field API storage types.
+ *
+ * @param $info
+ *   Array of informations on storage types exposed by
+ *   hook_field_field_storage_info() implementations.
+ */
+function hook_field_storage_info_alter(&$info) {
+  // Add a setting to a storage type.
+  $info['field_sql_storage']['settings'] += array(
+    'mymodule_additional_setting' => 'default value',
+  );
+}
+
+/**
  * Load field data for a set of objects.
  *
  * @param $obj_type
@@ -1107,15 +1149,15 @@ function hook_field_attach_delete_bundle($bundle, $instances) {
  *   FIELD_LOAD_CURRENT to load the most recent revision for all
  *   fields, or FIELD_LOAD_REVISION to load the version indicated by
  *   each object.
- * @param $skip_fields
- *   An array keyed by field ids whose data has already been loaded and
- *   therefore should not be loaded again. The values associated to these keys
- *   are not specified.
+ * @param $fields
+ *   An array listing the fields to be loaded. The keys of the array are field
+ *   ids, the values of the array are the object ids (or revision ids,
+ *   depending on the $age parameter) to be loaded for each field.
  * @return
  *   Loaded field values are added to $objects. Fields with no values should be
  *   set as an empty array.
  */
-function hook_field_storage_load($obj_type, $objects, $age, $skip_fields) {
+function hook_field_storage_load($obj_type, $objects, $age, $fields) {
 }
 
 /**
@@ -1128,12 +1170,11 @@ function hook_field_storage_load($obj_type, $objects, $age, $skip_fields) {
  * @param $op
  *   FIELD_STORAGE_UPDATE when updating an existing object,
  *   FIELD_STORAGE_INSERT when inserting a new object.
- * @param $skip_fields
- *   An array keyed by field ids whose data has already been written and
- *   therefore should not be written again. The values associated to these keys
- *   are not specified.
+ * @param $fields
+ *   An array listing the fields to be written. The keys and values of the
+ *   array are field ids.
  */
-function hook_field_storage_write($obj_type, $object, $op, $skip_fields) {
+function hook_field_storage_write($obj_type, $object, $op, $fields) {
 }
 
 /**
@@ -1143,8 +1184,11 @@ function hook_field_storage_write($obj_type, $object, $op, $skip_fields) {
  *   The entity type of object, such as 'node' or 'user'.
  * @param $object
  *   The object on which to operate.
+ * @param $fields
+ *   An array listing the fields to delete. The keys and values of the
+ *   array are field ids.
  */
-function hook_field_storage_delete($obj_type, $object) {
+function hook_field_storage_delete($obj_type, $object, $fields) {
 }
 
 /**
@@ -1159,8 +1203,11 @@ function hook_field_storage_delete($obj_type, $object) {
  *   The object on which to operate. The revision to delete is
  *   indicated by the object's revision id property, as identified by
  *   hook_fieldable_info() for $obj_type.
+ * @param $fields
+ *   An array listing the fields to delete. The keys and values of the
+ *   array are field ids.
  */
-function hook_field_storage_delete_revision($obj_type, $object) {
+function hook_field_storage_delete_revision($obj_type, $object, $fields) {
 }
 
 /**
@@ -1186,26 +1233,6 @@ function hook_field_storage_query($field_name, $conditions, $count, &$cursor = N
 }
 
 /**
- * Act on creation of a new bundle.
- *
- * @param $bundle
- *   The name of the bundle being created.
- */
-function hook_field_storage_create_bundle($bundle) {
-}
-
-/**
- * Act on a bundle being renamed.
- *
- * @param $bundle_old
- *   The old name of the bundle.
- * @param $bundle_new
- *   The new name of the bundle.
- */
-function hook_field_storage_rename_bundle($bundle_old, $bundle_new) {
-}
-
-/**
  * Act on creation of a new field.
  *
  * @param $field
@@ -1217,21 +1244,19 @@ function hook_field_storage_create_field($field) {
 /**
  * Act on deletion of a field.
  *
- * @param $field_name
- *   The name of the field being deleted.
+ * @param $field
+ *   The field being deleted.
  */
-function hook_field_storage_delete_field($field_name) {
+function hook_field_storage_delete_field($field) {
 }
 
 /**
  * Act on deletion of a field instance.
  *
- * @param $field_name
- *   The name of the field in the new instance.
- * @param $bundle
- *   The name of the bundle in the new instance.
+ * @param $instance
+ *   The instance being deleted.
  */
-function hook_field_storage_delete_instance($field_name, $bundle) {
+function hook_field_storage_delete_instance($instance) {
 }
 
 /**
