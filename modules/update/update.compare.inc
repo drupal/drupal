@@ -117,6 +117,10 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
       $file->info['_info_file_ctime'] = filectime($info_filename);
     }
 
+    if (!isset($file->info['datestamp'])) {
+      $file->info['datestamp'] = 0;
+    }
+
     $project_name = $file->info['project'];
 
     // Figure out what project type we're going to use to display this module
@@ -139,7 +143,7 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
       $projects[$project_name] = array(
         'name' => $project_name,
         'info' => $file->info,
-        'datestamp' => isset($file->info['datestamp']) ? $file->info['datestamp'] : 0,
+        'datestamp' => $file->info['datestamp'],
         'includes' => array($file->name => $file->info['name']),
         'project_type' => $project_display_type,
         'project_status' => $status,
@@ -153,6 +157,7 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
       // for disabled modules, too.
       $projects[$project_name]['includes'][$file->name] = $file->info['name'];
       $projects[$project_name]['info']['_info_file_ctime'] = max($projects[$project_name]['info']['_info_file_ctime'], $file->info['_info_file_ctime']);
+      $projects[$project_name]['datestamp'] = max($projects[$project_name]['datestamp'], $file->info['datestamp']);
     }
     elseif (empty($status)) {
       // If we have a project_name that matches, but the project_display_type

@@ -69,6 +69,30 @@ class UpdateTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Ensure proper results where there are date mismatches among modules.
+   */
+  function testDatestampMismatch() {
+    $system_info = array(
+      '#all' => array(
+        // We need to think we're running a -dev snapshot to see dates.
+        'version' => '7.0-dev',
+        'datestamp' => time(),
+      ),
+      'block' => array(
+        // This is 2001-09-09 01:46:40 GMT, so test for "2001-Sep-".
+        'datestamp' => '1000000000',
+      ),
+    );
+    variable_set('update_test_system_info', $system_info);
+    $this->refreshUpdateData('dev-snapshot.xml');
+    $this->drupalGet('admin/reports/updates');
+    $this->assertNoText(t('2001-Sep-'));
+    $this->assertText(t('Up to date'));
+    $this->assertNoText(t('Update available'));
+    $this->assertNoText(t('Security update required!'));
+  }
+
+  /**
    * Helper function: force te update cache to refresh based on the contents of
    * the specified XML file.
    *
