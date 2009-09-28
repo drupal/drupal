@@ -98,7 +98,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Add forum to navigation menu.
     $edit = array();
-    $this->drupalPost('admin/structure/menu-customize/navigation', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/menu/manage/navigation', $edit, t('Save configuration'));
     $this->assertResponse(200);
 
     // Edit forum taxonomy.

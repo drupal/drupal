@@ -92,13 +92,13 @@ function node_help($path, $arg) {
     case 'admin/structure/types/add':
       return '<p>' . t('Each piece of content is of a specific content type. Each <em>content type</em> can have different fields, behaviors, and permissions assigned to it.') . '</p>';
 
-    case 'admin/structure/node-type/' . $arg[3] . '/fields':
+    case 'admin/structure/types/manage/' . $arg[3] . '/fields':
       return '<p>' . t('This form lets you add, edit, and arrange fields within the %type content type.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
 
-    case 'admin/structure/node-type/' . $arg[3] . '/display':
+    case 'admin/structure/types/manage/' . $arg[3] . '/display':
       return '<p>' . t('This form lets you configure how fields and labels are displayed when %type content is viewed in teaser and full-page mode.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
 
-    case 'admin/structure/node-type/' . $arg[3] . '/display/' . $arg[5]:
+    case 'admin/structure/types/manage/' . $arg[3] . '/display/' . $arg[5]:
       return '<p>' . t('This form lets you configure how fields should be displayed when rendered %type content in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
 
     case 'node/%/revisions':
@@ -200,7 +200,7 @@ function node_entity_info() {
     $return['node']['bundles'][$type] = array(
       'label' => $name,
       'admin' => array(
-        'path' => 'admin/structure/node-type/' . str_replace('_', '-', $type),
+        'path' => 'admin/structure/types/manage/' . str_replace('_', '-', $type),
         'access arguments' => array('administer content types'),
       ),
     );
@@ -1675,7 +1675,7 @@ function node_menu() {
       'description' => $type->description,
       'file' => 'node.pages.inc',
     );
-    $items['admin/structure/node-type/' . $type_url_str] = array(
+    $items['admin/structure/types/manage/' . $type_url_str] = array(
       'title' => $type->name,
       'page callback' => 'drupal_get_form',
       'page arguments' => array('node_type_form', $type),
@@ -1683,11 +1683,11 @@ function node_menu() {
       'type' => MENU_CALLBACK,
       'file' => 'content_types.inc',
     );
-    $items['admin/structure/node-type/' . $type_url_str . '/edit'] = array(
+    $items['admin/structure/types/manage/' . $type_url_str . '/edit'] = array(
       'title' => 'Edit',
       'type' => MENU_DEFAULT_LOCAL_TASK,
     );
-    $items['admin/structure/node-type/' . $type_url_str . '/delete'] = array(
+    $items['admin/structure/types/manage/' . $type_url_str . '/delete'] = array(
       'title' => 'Delete',
       'page arguments' => array('node_type_delete_confirm', $type),
       'access arguments' => array('administer content types'),

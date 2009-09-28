@@ -424,7 +424,7 @@ class SummaryLengthTestCase extends DrupalWebTestCase {
     $edit = array (
       'teaser_length' => 200,
     );
-    $this->drupalPost('admin/structure/node-type/page', $edit, t('Save content type'));
+    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     // Attempt to access the front page again and check if the summary is now only 200 characters in length.
     $this->drupalGet("node");
     $this->assertNoRaw($expected, t('Check that the summary is not longer than 200 characters'), 'Node');
@@ -522,7 +522,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
     // Set page content type to display post information.
     $edit = array();
     $edit['node_submitted'] = TRUE;
-    $this->drupalPost('admin/structure/node-type/page', $edit, t('Save content type'));
+    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     // Create a node.
     $edit = array();
@@ -544,7 +544,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
     // Set page content type to display post information.
     $edit = array();
     $edit['node_submitted'] = FALSE;
-    $this->drupalPost('admin/structure/node-type/page', $edit, t('Save content type'));
+    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     // Create a node.
     $edit = array();

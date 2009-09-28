@@ -78,41 +78,41 @@ function menu_menu() {
     'weight' => 5,
     'file' => 'menu.admin.inc',
   );
-  $items['admin/structure/menu-customize/%menu'] = array(
+  $items['admin/structure/menu/manage/%menu'] = array(
     'title' => 'Customize menu',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_overview_form', 3),
+    'page arguments' => array('menu_overview_form', 4),
     'title callback' => 'menu_overview_title',
-    'title arguments' => array(3),
+    'title arguments' => array(4),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
-  $items['admin/structure/menu-customize/%menu/list'] = array(
+  $items['admin/structure/menu/manage/%menu/list'] = array(
     'title' => 'List links',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/structure/menu-customize/%menu/add'] = array(
+  $items['admin/structure/menu/manage/%menu/add'] = array(
     'title' => 'Add link',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_edit_item', 'add', NULL, 3),
+    'page arguments' => array('menu_edit_item', 'add', NULL, 4),
     'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'menu.admin.inc',
   );
-  $items['admin/structure/menu-customize/%menu/edit'] = array(
+  $items['admin/structure/menu/manage/%menu/edit'] = array(
     'title' => 'Edit menu',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_edit_menu', 'edit', 3),
+    'page arguments' => array('menu_edit_menu', 'edit', 4),
     'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'menu.admin.inc',
   );
-  $items['admin/structure/menu-customize/%menu/delete'] = array(
+  $items['admin/structure/menu/manage/%menu/delete'] = array(
     'title' => 'Delete menu',
     'page callback' => 'menu_delete_menu_page',
-    'page arguments' => array(3),
+    'page arguments' => array(4),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
@@ -168,7 +168,7 @@ function menu_theme() {
 function menu_enable() {
   menu_rebuild();
   $base_link = db_query("SELECT mlid AS plid, menu_name FROM {menu_links} WHERE link_path = 'admin/structure/menu' AND module = 'system'")->fetchAssoc();
-  $base_link['router_path'] = 'admin/structure/menu-customize/%';
+  $base_link['router_path'] = 'admin/structure/menu/manage/%';
   $base_link['module'] = 'menu';
   $result = db_query("SELECT * FROM {menu_custom}", array(), array('fetch' => PDO::FETCH_ASSOC));
   foreach ($result as $menu) {
@@ -176,7 +176,7 @@ function menu_enable() {
     $link = $base_link;
     $link['mlid'] = 0;
     $link['link_title'] = $menu['title'];
-    $link['link_path'] = 'admin/structure/menu-customize/' . $menu['menu_name'];
+    $link['link_path'] = 'admin/structure/menu/manage/' . $menu['menu_name'];
     $menu_link = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND plid = :plid", array(
       ':path' => $link['link_path'],
       ':plid' => $link['plid']

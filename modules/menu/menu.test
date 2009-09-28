@@ -148,7 +148,7 @@ class MenuTestCase extends DrupalWebTestCase {
     $title = $this->menu['title'];
 
     // Delete custom menu.
-    $this->drupalPost("admin/structure/menu-customize/$menu_name/delete", array(), t('Delete'));
+    $this->drupalPost("admin/structure/menu/manage/$menu_name/delete", array(), t('Delete'));
     $this->assertResponse(200);
     $this->assertRaw(t('The custom menu %title has been deleted.', array('%title' => $title)), t('Custom menu was deleted'));
     $this->assertFalse(menu_load($menu_name), 'Custom menu was deleted');
@@ -186,7 +186,7 @@ class MenuTestCase extends DrupalWebTestCase {
     // Note in the UI the 'mlid:x[hidden]' form element maps to enabled, or
     // NOT hidden.
     $edit['mlid:' . $item1['mlid'] . '[hidden]'] = TRUE;
-    $this->drupalPost('admin/structure/menu-customize/' . $item1['menu_name'], $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/menu/manage/' . $item1['menu_name'], $edit, t('Save configuration'));
 
     // Verify in the database.
     $hidden = db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $item1['mlid']))->fetchField();
@@ -207,7 +207,7 @@ class MenuTestCase extends DrupalWebTestCase {
    */
   function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'navigation') {
     // View add menu link page.
-    $this->drupalGet("admin/structure/menu-customize/$menu_name/add");
+    $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertResponse(200);
 
     $title = '!link_' . $this->randomName(16);
@@ -222,7 +222,7 @@ class MenuTestCase extends DrupalWebTestCase {
     );
 
     // Add menu link.
-    $this->drupalPost("admin/structure/menu-customize/$menu_name/add", $edit, t('Save'));
+    $this->drupalPost("admin/structure/menu/manage/$menu_name/add", $edit, t('Save'));
     $this->assertResponse(200);
     // Unlike most other modules, there is no confirmation message displayed.
 
@@ -259,7 +259,7 @@ class MenuTestCase extends DrupalWebTestCase {
         'menu[link_path]' => $link_path,
         'menu[link_title]' => 'title',
       );
-      $this->drupalPost("admin/structure/menu-customize/$menu_name/add", $edit, t('Save'));
+      $this->drupalPost("admin/structure/menu/manage/$menu_name/add", $edit, t('Save'));
       $this->assertRaw(t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $link_path)), 'Menu link was not created');
     }
   }
@@ -318,7 +318,7 @@ class MenuTestCase extends DrupalWebTestCase {
     // Unlike most other modules, there is no confirmation message displayed.
 
     // Verify menu link.
-    $this->drupalGet('admin/structure/menu-customize/' . $item['menu_name']);
+    $this->drupalGet('admin/structure/menu/manage/' . $item['menu_name']);
     $this->assertText($title, 'Menu link was edited');
   }
 
@@ -452,7 +452,7 @@ class MenuTestCase extends DrupalWebTestCase {
     }
 
     // View navigation menu customization node.
-    $this->drupalGet('admin/structure/menu-customize/navigation');
+    $this->drupalGet('admin/structure/menu/manage/navigation');
         $this->assertResponse($response);
     if ($response == 200) {
       $this->assertText(t('Navigation'), t('Navigation menu node was displayed'));

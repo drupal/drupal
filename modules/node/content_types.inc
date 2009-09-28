@@ -21,11 +21,11 @@ function node_overview_types() {
       $type_url_str = str_replace('_', '-', $type->type);
       $row = array(theme('node_admin_overview', $name, $type));
       // Set the edit column.
-      $row[] = array('data' => l(t('edit'), 'admin/structure/node-type/' . $type_url_str));
+      $row[] = array('data' => l(t('edit'), 'admin/structure/types/manage/' . $type_url_str));
 
       // Set the delete column.
       if ($type->custom) {
-        $row[] = array('data' => l(t('delete'), 'admin/structure/node-type/' . $type_url_str . '/delete'));
+        $row[] = array('data' => l(t('delete'), 'admin/structure/types/manage/' . $type_url_str . '/delete'));
       }
       else {
         $row[] = array('data' => '');
@@ -316,7 +316,7 @@ function node_type_form_submit($form, &$form_state) {
   $type->locked = $form_state['values']['locked'];
 
   if ($op == t('Delete content type')) {
-    $form_state['redirect'] = 'admin/structure/node-type/' . str_replace('_', '-', $type->old_type) . '/delete';
+    $form_state['redirect'] = 'admin/structure/types/manage/' . str_replace('_', '-', $type->old_type) . '/delete';
     return;
   }
 
