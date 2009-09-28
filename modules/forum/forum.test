@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.31 2009/09/13 14:12:07 dries Exp $
+// $Id: forum.test,v 1.32 2009/09/28 22:14:30 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -98,7 +98,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Add forum to navigation menu.
     $edit = array();
-    $this->drupalPost('admin/structure/menu-customize/navigation', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/menu/manage/navigation', $edit, t('Save configuration'));
     $this->assertResponse(200);
 
     // Edit forum taxonomy.

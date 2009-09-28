@@ -1,5 +1,5 @@
 <?php
-// $Id: default.install,v 1.6 2009/09/22 07:44:58 dries Exp $
+// $Id: default.install,v 1.7 2009/09/28 22:14:31 dries Exp $
 
 /**
  * Implement hook_install().
@@ -206,7 +206,7 @@ function default_install() {
   menu_rebuild();
 
   // Save some default links.
-  $link = array('link_path' => 'admin/structure/menu-customize/main-menu/add', 'link_title' => 'Add a main menu link', 'menu_name' => 'main-menu');
+  $link = array('link_path' => 'admin/structure/menu/manage/main-menu/add', 'link_title' => 'Add a main menu link', 'menu_name' => 'main-menu');
   menu_link_save($link);
 
   // Enable the admin theme.
