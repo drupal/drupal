@@ -204,6 +204,8 @@ function drupal_session_initialize() {
 
 /**
  * Forcefully start a session, preserving already set session data.
+ *
+ * @ingroup php_wrappers
  */
 function drupal_session_start() {
   if (!drupal_session_started()) {
@@ -264,6 +266,8 @@ function drupal_session_started($set = NULL) {
 
 /**
  * Called when an anonymous user becomes authenticated or vice-versa.
+ *
+ * @ingroup php_wrappers
  */
 function drupal_session_regenerate() {
   global $user, $is_https;

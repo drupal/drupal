@@ -312,7 +312,7 @@ function file_create_url($uri) {
   // Allow the URI to be altered, e.g. to serve a file from a CDN or static
   // file server.
   drupal_alter('file_url', $uri);
-  
+
   $scheme = file_uri_scheme($uri);
 
   if (!$scheme) {
@@ -1725,6 +1725,8 @@ function file_get_mimetype($uri, $mapping = NULL) {
  *   more information.
  * @return
  *   TRUE for success, FALSE in the event of an error.
+ *
+ * @ingroup php_wrappers
  */
 function drupal_chmod($uri, $mode = NULL) {
   if (!isset($mode)) {
@@ -1775,6 +1777,7 @@ function drupal_chmod($uri, $mode = NULL) {
  *   The absolute pathname, or FALSE on failure.
  *
  * @see realpath()
+ * @ingroup php_wrappers
  */
 function drupal_realpath($uri) {
   // If this URI is a stream, pass it off to the appropriate stream wrapper.
@@ -1804,6 +1807,7 @@ function drupal_realpath($uri) {
  *   A string containing the directory name.
  *
  * @see dirname()
+ * @ingroup php_wrappers
  */
 function drupal_dirname($uri) {
 	$scheme = file_uri_scheme($uri);
@@ -1844,6 +1848,7 @@ function drupal_dirname($uri) {
  *   Boolean TRUE on success, or FALSE on failure.
  *
  * @see mkdir()
+ * @ingroup php_wrappers
  */
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
 
@@ -1878,6 +1883,7 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
  *   The new temporary fillename, or FALSE on failure.
  *
  * @see tempnam()
+ * @ingroup php_wrappers
  */
 function drupal_tempnam($directory, $prefix) {
  	$scheme = file_uri_scheme($directory);

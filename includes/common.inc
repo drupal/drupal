@@ -10,6 +10,37 @@
  */
 
 /**
+ * @defgroup php_wrappers PHP wrapper functions
+ * @{
+ * Functions that are wrappers or custom implementations of PHP functions.
+ *
+ * Certain PHP functions should not be used in Drupal. Instead, Drupal's
+ * replacement functions should be used.
+ *
+ * For example, for improved or more secure UTF8-handling, or RFC-compliant
+ * handling of URLs in Drupal.
+ *
+ * For ease of use and memorizing, all these wrapper functions use the same name
+ * as the original PHP function, but prefixed with "drupal_". Beware, however,
+ * that not all wrapper functions support the same arguments as the original
+ * functions.
+ *
+ * You should always use these wrapper functions in your code.
+ *
+ * Wrong:
+ * @code
+ *   $my_substring = substr($original_string, 0, 5);
+ * @endcode
+ *
+ * Correct:
+ * @code
+ *   $my_substring = drupal_substr($original_string, 0, 5);
+ * @endcode
+ *
+ * @} End of "defgroup php_wrappers".
+ */
+
+/**
  * Error reporting level: display no errors.
  */
 define('ERROR_REPORTING_HIDE', 0);
@@ -2466,6 +2497,8 @@ function drupal_map_assoc($array, $function = NULL) {
  * @param $time_limit
  *   An integer specifying the new time limit, in seconds. A value of 0
  *   indicates unlimited execution time.
+ *
+ * @ingroup php_wrappers
  */
 function drupal_set_time_limit($time_limit) {
   if (function_exists('set_time_limit')) {
@@ -3249,7 +3282,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  * @see drupal_render().
  */
 function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_check = FALSE) {
-  // If there is nothing to process then return. 
+  // If there is nothing to process then return.
   if (empty($elements['#attached'])) {
     return;
   }
@@ -3838,7 +3871,7 @@ function drupal_cron_run() {
 
   // Fetch the cron semaphore
   $semaphore = variable_get('cron_semaphore', FALSE);
-  
+
   $return = FALSE;
   // Grab the defined cron queues.
   $queues = module_invoke_all('cron_queue_info');
@@ -3883,7 +3916,7 @@ function drupal_cron_run() {
     // Return TRUE so other functions can check if it did run successfully
     $return = TRUE;
   }
-  
+
   foreach ($queues as $queue_name => $info) {
     $function = $info['worker callback'];
     $end = time() + (isset($info['time']) ? $info['time'] : 15);
@@ -4311,7 +4344,7 @@ function show(&$element) {
  *
  * @see drupal_render()
  * @see drupal_render_cache_set()
- * 
+ *
  * @param $elements
  *   A renderable array.
  * @return
@@ -4348,7 +4381,7 @@ function drupal_render_cache_get($elements) {
  *   A renderable array.
  */
 function drupal_render_cache_set($markup, $elements) {
-  // Create the cache ID for the element 
+  // Create the cache ID for the element.
   if (!in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) || !$cid = drupal_render_cid_create($elements)) {
     return FALSE;
   }
