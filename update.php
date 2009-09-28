@@ -86,7 +86,7 @@ function update_script_selection_form() {
       '#markup' => '<p>The version of Drupal you are updating from has been automatically detected.</p>',
       '#weight' => -5,
     );
-    $form['start']['#title'] = strtr('!num pending updates', array('!num' => $count));
+    $form['start']['#title'] = format_plural($count, '1 pending update', '@count pending updates');
     $form['has_js'] = array(
       '#type' => 'hidden',
       '#default_value' => FALSE,
