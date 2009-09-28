@@ -84,6 +84,10 @@ function _update_process_info_list(&$projects, $list, $project_type) {
       $file->info['_info_file_ctime'] = filectime($info_filename);
     }
 
+    if (!isset($file->info['datestamp'])) {
+      $file->info['datestamp'] = 0;
+    }
+
     $project_name = $file->info['project'];
     if (!isset($projects[$project_name])) {
       // Only process this if we haven't done this project, since a single
@@ -91,7 +95,7 @@ function _update_process_info_list(&$projects, $list, $project_type) {
       $projects[$project_name] = array(
         'name' => $project_name,
         'info' => $file->info,
-        'datestamp' => isset($file->info['datestamp']) ? $file->info['datestamp'] : 0,
+        'datestamp' => $file->info['datestamp'],
         'includes' => array($file->name => $file->info['name']),
         'project_type' => $project_name == 'drupal' ? 'core' : $project_type,
       );
@@ -99,6 +103,7 @@ function _update_process_info_list(&$projects, $list, $project_type) {
     else {
       $projects[$project_name]['includes'][$file->name] = $file->info['name'];
       $projects[$project_name]['info']['_info_file_ctime'] = max($projects[$project_name]['info']['_info_file_ctime'], $file->info['_info_file_ctime']);
+      $projects[$project_name]['datestamp'] = max($projects[$project_name]['datestamp'], $file->info['datestamp']);
     }
   }
 }
