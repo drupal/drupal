@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.389 2009/09/20 17:56:24 dries Exp $
+// $Id: system.install,v 1.390 2009/09/28 15:38:27 dries Exp $
 
 /**
  * @file
@@ -2046,6 +2046,7 @@ function system_update_7017() {
 function system_update_7018() {
   $ret = array();
   db_drop_index($ret, 'system', 'modules');
+  db_drop_index($ret, 'system', 'type_name');
   db_change_field($ret, 'system', 'type', 'type', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
   db_add_index($ret, 'system', 'modules', array('type', 'status', 'weight', 'name'));
   db_add_index($ret, 'system', 'type_name', array('type', 'name'));
