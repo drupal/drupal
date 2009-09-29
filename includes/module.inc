@@ -416,12 +416,10 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
  */
 function module_implements_write_cache() {
   $implementations = &drupal_static('module_implements');
-  // Check whether we need to write the cache. We do not want to cache hooks,
-  // which are only invoked on HTTP POST requests. Maybe the page is not
-  // cacheable for other reasons than the HTTP request type as well, but this
-  // does not matter for the hook implementation cache, because nothing breaks
-  // if hook implementations are not cached.
-  if (isset($implementations['#write_cache']) && drupal_page_is_cacheable()) {
+  // Check whether we need to write the cache. We do not want to cache hooks
+  // which are only invoked on HTTP POST requests since these do not need to be
+  // optimized as tightly, and not doing so keeps the cache entry smaller.
+  if (isset($implementations['#write_cache']) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD')) {
     unset($implementations['#write_cache']);
     cache_set('module_implements', $implementations);
   }

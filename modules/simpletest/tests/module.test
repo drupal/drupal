@@ -81,6 +81,24 @@ class ModuleUnitTest extends DrupalWebTestCase {
     ksort($expected_values);
     $this->assertIdentical($expected_values, module_list(FALSE, FALSE, TRUE), t('@condition: module_list() returns correctly sorted results', array('@condition' => $condition)));
   }
+
+  /**
+   * Test module_implements() caching.
+   */
+  function testModuleImplements() {
+    // Clear the cache.
+    cache_clear_all('module_implements', 'cache');
+    $this->assertFalse(cache_get('module_implements'), t('The module implements cache is empty.'));
+    $this->drupalGet('');
+    $this->assertTrue(cache_get('module_implements'), t('The module implements cache is populated after requesting a page.'));
+
+    // Test again with an authenticated user.
+    $this->user = $this->drupalCreateUser();
+    $this->drupalLogin($this->user);
+    cache_clear_all('module_implements', 'cache');
+    $this->drupalGet('');
+    $this->assertTrue(cache_get('module_implements'), t('The module implements cache is populated after requesting a page.'));
+  }
 }
 
 /**
