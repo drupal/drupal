@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.392 2009/09/29 15:31:16 dries Exp $
+// $Id: system.install,v 1.393 2009/09/29 17:00:03 webchick Exp $
 
 /**
  * @file
@@ -331,6 +331,11 @@ function system_install() {
     $version = $versions ? max($versions) : SCHEMA_INSTALLED;
     drupal_set_installed_schema_version($module, $version);
   }
+
+  // Clear out module list and hook implementation statics before calling
+  // system_get_theme_data().
+  module_list(TRUE);
+  module_implements('', FALSE, TRUE);
 
   // Load system theme data appropriately.
   system_get_theme_data();
