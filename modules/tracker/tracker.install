@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.install,v 1.1 2009/08/31 08:55:12 dries Exp $
+// $Id: tracker.install,v 1.2 2009/09/29 15:13:57 dries Exp $
 
 /**
  * Implement hook_install().
@@ -197,16 +197,14 @@ function tracker_update_7000() {
     ),
   );
 
-  $ret = array();
   foreach ($schema as $name => $table) {
-    db_create_table($ret, $name, $table);
+    db_create_table($name, $table);
   }
 
   $max_nid = db_query('SELECT MAX(nid) FROM {node}')->fetchField();
   if ($max_nid != 0) {
     variable_set('tracker_index_nid', $max_nid);
   }
-  return $ret;
 }
 
 /**

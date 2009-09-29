@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.153 2009/09/25 15:12:56 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.154 2009/09/29 15:13:56 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1180,7 +1180,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       $schema = drupal_get_schema(NULL, TRUE);
       $ret = array();
       foreach ($schema as $name => $table) {
-        db_drop_table($ret, $name);
+        db_drop_table($name);
       }
 
       // Return the database prefix to the original.

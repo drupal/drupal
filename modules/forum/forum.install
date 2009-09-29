@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.34 2009/09/10 06:38:17 dries Exp $
+// $Id: forum.install,v 1.35 2009/09/29 15:13:55 dries Exp $
 
 /**
  * @file
@@ -116,9 +116,6 @@ function forum_schema() {
  * Add new index to forum table.
  */
 function forum_update_7000() {
-  $ret = array();
-  db_drop_index($ret, 'forum', 'nid');
-  db_add_index($ret, 'forum', 'forum_topic', array('nid', 'tid'));
-
-  return $ret;
+  db_drop_index('forum', 'nid');
+  db_add_index('forum', 'forum_topic', array('nid', 'tid'));
 }

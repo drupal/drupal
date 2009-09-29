@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.26 2009/09/27 12:52:55 dries Exp $
+// $Id: field_test.module,v 1.27 2009/09/29 15:13:56 dries Exp $
 
 define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
@@ -1115,9 +1115,9 @@ function field_test_memorize($key = NULL, $value = NULL) {
   $memorize = &drupal_static(__FUNCTION__, NULL);
 
   if (is_null($key)) {
-    $ret = $memorize;
+    $return = $memorize;
     $memorize = array();
-    return $ret;
+    return $return;
   }
   if (is_array($memorize)) {
     $memorize[$key][] = $value;

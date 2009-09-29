@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.15 2009/09/26 00:13:19 dries Exp $
+// $Id: contact.install,v 1.16 2009/09/29 15:13:55 dries Exp $
 
 /**
  * @file
@@ -85,7 +85,6 @@ function contact_schema() {
 function contact_update_7000() {
   variable_set('contact_threshold_limit', variable_get('contact_hourly_threshold', 5));
   variable_del('contact_hourly_threshold');
-  return array();
 }
 
 /**
