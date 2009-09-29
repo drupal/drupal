@@ -1,5 +1,5 @@
 <?php
-// $Id: module.test,v 1.13 2009/08/24 00:14:21 webchick Exp $
+// $Id: module.test,v 1.14 2009/09/29 18:08:28 webchick Exp $
 
 /**
  * @file
@@ -80,6 +80,24 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $this->assertIdentical($expected_values, module_list(), t('@condition: module_list() returns correct results', array('@condition' => $condition)));
     ksort($expected_values);
     $this->assertIdentical($expected_values, module_list(FALSE, FALSE, TRUE), t('@condition: module_list() returns correctly sorted results', array('@condition' => $condition)));
+  }
+
+  /**
+   * Test module_implements() caching.
+   */
+  function testModuleImplements() {
+    // Clear the cache.
+    cache_clear_all('module_implements', 'cache');
+    $this->assertFalse(cache_get('module_implements'), t('The module implements cache is empty.'));
+    $this->drupalGet('');
+    $this->assertTrue(cache_get('module_implements'), t('The module implements cache is populated after requesting a page.'));
+
+    // Test again with an authenticated user.
+    $this->user = $this->drupalCreateUser();
+    $this->drupalLogin($this->user);
+    cache_clear_all('module_implements', 'cache');
+    $this->drupalGet('');
+    $this->assertTrue(cache_get('module_implements'), t('The module implements cache is populated after requesting a page.'));
   }
 }
 
