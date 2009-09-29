@@ -1,6 +1,7 @@
-; $Id: minnelli.info,v 1.8 2008/02/18 19:19:49 dries Exp $
+; $Id: minnelli.info,v 1.9 2009/09/29 16:30:29 webchick Exp $
 name = Minnelli
 description = Tableless, recolorable, multi-column, fixed width theme.
+package = Core
 version = VERSION
 core = 7.x
 base theme = garland

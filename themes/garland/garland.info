@@ -1,6 +1,7 @@
-; $Id: garland.info,v 1.7 2009/08/11 12:27:37 dries Exp $
+; $Id: garland.info,v 1.8 2009/09/29 16:30:29 webchick Exp $
 name = Garland
 description = Tableless, recolorable, multi-column, fluid width theme.
+package = Core
 version = VERSION
 core = 7.x
 engine = phptemplate
