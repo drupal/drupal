@@ -445,7 +445,7 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
   }
 
   if ($pageno >= 1) {
-    $pagenum = "page=" . intval($pageno);
+    $pagenum = array('page' => intval($pageno));
   }
 
   return $pagenum;
@@ -2153,10 +2153,10 @@ function theme_comment_post_forbidden($node) {
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
       if (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_SEPARATE_PAGE) {
-        $destination = 'destination=' . rawurlencode("comment/reply/$node->nid#comment-form");
+        $destination = array('destination' => "comment/reply/$node->nid#comment-form");
       }
       else {
-        $destination = 'destination=' . rawurlencode("node/$node->nid#comment-form");
+        $destination = array('destination' => "node/$node->nid#comment-form");
       }
 
       if (variable_get('user_register', 1)) {

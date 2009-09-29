@@ -73,7 +73,7 @@ function book_node_view_link($node, $build_mode) {
         $links['book_add_child'] = array(
           'title' => t('Add child page'),
           'href' => 'node/add/' . str_replace('_', '-', $child_type),
-          'query' => 'parent=' . $node->book['mlid'],
+          'query' => array('parent' => $node->book['mlid']),
         );
       }
 

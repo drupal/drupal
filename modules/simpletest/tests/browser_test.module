@@ -58,7 +58,7 @@ function browser_test_print_post_form_submit($form, &$form_state) {
 
 function browser_test_refresh_meta() {
   if (!isset($_GET['refresh'])) {
-    $url = url('browser_test/refresh/meta', array('absolute' => TRUE, 'query' => 'refresh=true'));
+    $url = url('browser_test/refresh/meta', array('absolute' => TRUE, 'query' => array('refresh' => 'true')));
     drupal_add_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
     return '';
   }
@@ -68,7 +68,7 @@ function browser_test_refresh_meta() {
 
 function browser_test_refresh_header() {
   if (!isset($_GET['refresh'])) {
-    $url = url('browser_test/refresh/header', array('absolute' => TRUE, 'query' => 'refresh=true'));
+    $url = url('browser_test/refresh/header', array('absolute' => TRUE, 'query' => array('refresh' => 'true')));
     drupal_set_header('Location', $url);
     return '';
   }

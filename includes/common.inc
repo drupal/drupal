@@ -348,36 +348,86 @@ function drupal_get_feeds($delimiter = "\n") {
  */
 
 /**
- * Parse an array into a valid urlencoded query string.
+ * Process a URL query parameter array to remove unwanted elements.
  *
  * @param $query
- *   The array to be processed e.g. $_GET.
+ *   (optional) An array to be processed. Defaults to $_GET.
  * @param $exclude
- *   The array filled with keys to be excluded. Use parent[child] to exclude
- *   nested items.
+ *   (optional) A list of $query array keys to remove. Use "parent[child]" to
+ *   exclude nested items. Defaults to array('q').
  * @param $parent
- *   Should not be passed, only used in recursive calls.
+ *   Internal use only. Used to build the $query array key for nested items.
+ *
  * @return
- *   An urlencoded string which can be appended to/as the URL query string.
+ *   An array containing query parameters, which can be used for url().
  */
-function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
+function drupal_get_query_parameters(array $query = NULL, array $exclude = array('q'), $parent = '') {
+  // Set defaults, if none given.
+  if (!isset($query)) {
+    $query = $_GET;
+  }
+  // If $exclude is empty, there is nothing to filter.
+  if (empty($exclude)) {
+    return $query;
+  }
+  elseif (!$parent) {
+    $exclude = array_flip($exclude);
+  }
+
   $params = array();
-
   foreach ($query as $key => $value) {
-    $key = rawurlencode($key);
-    if ($parent) {
-      $key = $parent . '[' . $key . ']';
-    }
-
-    if (in_array($key, $exclude)) {
+    $string_key = ($parent ? $parent . '[' . $key . ']' : $key);
+    if (isset($exclude[$string_key])) {
       continue;
     }
 
     if (is_array($value)) {
-      $params[] = drupal_query_string_encode($value, $exclude, $key);
+      $params[$key] = drupal_get_query_parameters($value, $exclude, $string_key);
     }
     else {
-      $params[] = $key . '=' . rawurlencode($value);
+      $params[$key] = $value;
+    }
+  }
+
+  return $params;
+}
+
+/**
+ * Parse an array into a valid, rawurlencoded query string.
+ *
+ * This differs from http_build_query() as we need to rawurlencode() (instead of
+ * urlencode()) all query parameters.
+ *
+ * @param $query
+ *   The query parameter array to be processed, e.g. $_GET.
+ * @param $parent
+ *   Internal use only. Used to build the $query array key for nested items.
+ *
+ * @return
+ *   A rawurlencoded string which can be used as or appended to the URL query
+ *   string.
+ *
+ * @see drupal_get_query_parameters()
+ * @ingroup php_wrappers
+ */
+function drupal_http_build_query(array $query, $parent = '') {
+  $params = array();
+
+  foreach ($query as $key => $value) {
+    $key = ($parent ? $parent . '[' . rawurlencode($key) . ']' : rawurlencode($key));
+
+    // Recurse into children.
+    if (is_array($value)) {
+      $params[] = drupal_http_build_query($value, $key);
+    }
+    // If a query parameter value is NULL, only append its key.
+    elseif (!isset($value)) {
+      $params[] = $key;
+    }
+    else {
+      // For better readability of paths in query strings, we decode slashes.
+      // @see drupal_encode_path()
+      $params[] = $key . '=' . str_replace('%2F', '/', rawurlencode($value));
     }
   }
 
@@ -385,7 +435,7 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
 }
 
 /**
- * Prepare a destination query string for use in combination with drupal_goto().
+ * Prepare a 'destination' URL query parameter for use in combination with drupal_goto().
  *
  * Used to direct the user back to the referring page after completing a form.
  * By default the current URL is returned. If a destination exists in the
@@ -395,17 +445,126 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
  * @see drupal_goto()
  */
 function drupal_get_destination() {
+  $destination = &drupal_static(__FUNCTION__);
+
+  if (isset($destination)) {
+    return $destination;
+  }
+
   if (isset($_GET['destination'])) {
-    return 'destination=' . urlencode($_GET['destination']);
+    $destination = array('destination' => $_GET['destination']);
   }
   else {
-    // Use $_GET here to retrieve the original path in source form.
-    $path = isset($_GET['q']) ? $_GET['q'] : '';
-    $query = drupal_query_string_encode($_GET, array('q'));
+    $path = $_GET['q'];
+    $query = drupal_http_build_query(drupal_get_query_parameters());
     if ($query != '') {
       $path .= '?' . $query;
     }
-    return 'destination=' . urlencode($path);
+    $destination = array('destination' => $path);
+  }
+  return $destination;
+}
+
+/**
+ * Wrapper around parse_url() to parse a given URL into an associative array, suitable for url().
+ *
+ * The returned array contains a 'path' that may be passed separately to url().
+ * For example:
+ * @code
+ *   $options = drupal_parse_url($_GET['destination']);
+ *   $my_url = url($options['path'], $options);
+ *   $my_link = l('Example link', $options['path'], $options);
+ * @endcode
+ *
+ * This is required, because url() does not support relative URLs containing a
+ * query string or fragment in its $path argument. Instead, any query string
+ * needs to be parsed into an associative query parameter array in
+ * $options['query'] and the fragment into $options['fragment'].
+ *
+ * @param $url
+ *   The URL string to parse, f.e. $_GET['destination'].
+ *
+ * @return
+ *   An associative array containing the keys:
+ *   - 'path': The path of the URL. If the given $url is external, this includes
+ *     the scheme and host.
+ *   - 'query': An array of query parameters of $url, if existent.
+ *   - 'fragment': The fragment of $url, if existent.
+ *
+ * @see url()
+ * @see drupal_goto()
+ * @ingroup php_wrappers
+ */
+function drupal_parse_url($url) {
+  $options = array(
+    'path' => NULL,
+    'query' => array(),
+    'fragment' => '',
+  );
+
+  // External URLs: not using parse_url() here, so we do not have to rebuild
+  // the scheme, host, and path without having any use for it.
+  if (strpos($url, '://') !== FALSE) {
+    // Split off everything before the query string into 'path'.
+    $parts = explode('?', $url);
+    $options['path'] = $parts[0];
+    // If there is a query string, transform it into keyed query parameters.
+    if (isset($parts[1])) {
+      $query_parts = explode('#', $parts[1]);
+      parse_str($query_parts[0], $options['query']);
+      // Take over the fragment, if there is any.
+      if (isset($query_parts[1])) {
+        $options['fragment'] = $query_parts[1];
+      }
+    }
+  }
+  // Internal URLs.
+  else {
+    $parts = parse_url($url);
+    $options['path'] = $parts['path'];
+    if (isset($parts['query'])) {
+      parse_str($parts['query'], $options['query']);
+    }
+    if (isset($parts['fragment'])) {
+      $options['fragment'] = $parts['fragment'];
+    }
+  }
+
+  return $options;
+}
+
+/**
+ * Encode a path for usage in a URL.
+ *
+ * Wrapper around rawurlencode() which avoids Apache quirks. Should be used when
+ * placing arbitrary data into the path component of an URL.
+ *
+ * Do not use this function to pass a path to url(). url() properly handles
+ * and encodes paths internally.
+ * This function should only be used on paths, not on query string arguments.
+ * Otherwise, unwanted double encoding will occur.
+ *
+ * Notes:
+ * - For esthetic reasons, we do not escape slashes. This also avoids a 'feature'
+ *   in Apache where it 404s on any path containing '%2F'.
+ * - mod_rewrite unescapes %-encoded ampersands, hashes, and slashes when clean
+ *   URLs are used, which are interpreted as delimiters by PHP. These
+ *   characters are double escaped so PHP will still see the encoded version.
+ * - With clean URLs, Apache changes '//' to '/', so every second slash is
+ *   double escaped.
+ *
+ * @param $path
+ *   The URL path component to encode.
+ */
+function drupal_encode_path($path) {
+  if (!empty($GLOBALS['conf']['clean_url'])) {
+    return str_replace(array('%2F', '%26', '%23', '//'),
+                       array('/', '%2526', '%2523', '/%252F'),
+                       rawurlencode($path)
+    );
+  }
+  else {
+    return str_replace('%2F', '/', rawurlencode($path));
   }
 }
 
@@ -448,9 +607,9 @@ function drupal_get_destination() {
  *   supported.
  * @see drupal_get_destination()
  */
-function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response_code = 302) {
+function drupal_goto($path = '', array $query = array(), $fragment = NULL, $http_response_code = 302) {
   if (isset($_GET['destination'])) {
-    extract(parse_url(urldecode($_GET['destination'])));
+    extract(drupal_parse_url(urldecode($_GET['destination'])));
   }
 
   $args = array(
@@ -2163,42 +2322,35 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  */
 
 /**
- * Generate a URL from a Drupal menu path. Will also pass-through existing URLs.
+ * Generate a URL.
  *
  * @param $path
- *   The Drupal path being linked to, such as "admin/content", or an
- *   existing URL like "http://drupal.org/". The special path
- *   '<front>' may also be given and will generate the site's base URL.
+ *   The Drupal path being linked to, such as "admin/content", or an existing
+ *   URL like "http://drupal.org/". The special path '<front>' may also be given
+ *   and will generate the site's base URL.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *   - 'query'
- *       A URL-encoded query string to append to the link, or an array of query
- *       key/value-pairs without any URL-encoding.
- *   - 'fragment'
- *       A fragment identifier (or named anchor) to append to the link.
- *       Do not include the '#' character.
- *   - 'absolute' (default FALSE)
- *       Whether to force the output to be an absolute link (beginning with
- *       http:). Useful for links that will be displayed outside the site, such
- *       as in an RSS feed.
- *   - 'alias' (default FALSE)
- *       Whether the given path is an alias already.
- *   - 'external'
- *       Whether the given path is an external URL.
- *   - 'language'
- *       An optional language object. Used to build the URL to link to and
- *       look up the proper alias for the link.
- *   - 'https'
- *       Whether this URL should point to a secure location. If not specified,
- *       the current scheme is used, so the user stays on http or https
- *       respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS
- *       can only be enforced when the variable 'https' is set to TRUE.
- *   - 'base_url'
- *       Only used internally, to modify the base URL when a language dependent
- *       URL requires so.
- *   - 'prefix'
- *       Only used internally, to modify the path when a language dependent URL
- *       requires so.
+ *   - 'query': An array of query key/value-pairs (without any URL-encoding) to
+ *     append to the link.
+ *   - 'fragment': A fragment identifier (or named anchor) to append to the
+ *     link. Do not include the leading '#' character.
+ *   - 'absolute': Defaults to FALSE. Whether to force the output to be an
+ *     absolute link (beginning with http:). Useful for links that will be
+ *     displayed outside the site, such as in a RSS feed.
+ *   - 'alias': Defaults to FALSE. Whether the given path is a URL alias
+ *     already.
+ *   - 'external': Whether the given path is an external URL.
+ *   - 'language': An optional language object. Used to build the URL to link to
+ *     and look up the proper alias for the link.
+ *   - 'https': Whether this URL should point to a secure location. If not
+ *     specified, the current scheme is used, so the user stays on http or https
+ *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
+ *     only be enforced when the variable 'https' is set to TRUE.
+ *   - 'base_url': Only used internally, to modify the base URL when a language
+ *     dependent URL requires so.
+ *   - 'prefix': Only used internally, to modify the path when a language
+ *     dependent URL requires so.
+ *
  * @return
  *   A string containing a URL to the given path.
  *
@@ -2209,7 +2361,7 @@ function url($path = NULL, array $options = array()) {
   // Merge in defaults.
   $options += array(
     'fragment' => '',
-    'query' => '',
+    'query' => array(),
     'absolute' => FALSE,
     'alias' => FALSE,
     'https' => FALSE,
@@ -2230,21 +2382,19 @@ function url($path = NULL, array $options = array()) {
   if ($options['fragment']) {
     $options['fragment'] = '#' . $options['fragment'];
   }
-  if (is_array($options['query'])) {
-    $options['query'] = drupal_query_string_encode($options['query']);
-  }
 
   if ($options['external']) {
     // Split off the fragment.
     if (strpos($path, '#') !== FALSE) {
       list($path, $old_fragment) = explode('#', $path, 2);
+      // If $options contains no fragment, take it over from the path.
       if (isset($old_fragment) && !$options['fragment']) {
         $options['fragment'] = '#' . $old_fragment;
       }
     }
     // Append the query.
     if ($options['query']) {
-      $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . $options['query'];
+      $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($options['query']);
     }
     // Reassemble.
     return $path . $options['fragment'];
@@ -2295,28 +2445,31 @@ function url($path = NULL, array $options = array()) {
 
   $base = $options['absolute'] ? $options['base_url'] . '/' : base_path();
   $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
-  $path = drupal_encode_path($prefix . $path);
 
-  if (variable_get('clean_url', '0')) {
-    // With Clean URLs.
+  // With Clean URLs.
+  if (!empty($GLOBALS['conf']['clean_url'])) {
+    $path = drupal_encode_path($prefix . $path);
     if ($options['query']) {
-      return $base . $path . '?' . $options['query'] . $options['fragment'];
+      return $base . $path . '?' . drupal_http_build_query($options['query']) . $options['fragment'];
     }
     else {
       return $base . $path . $options['fragment'];
     }
   }
+  // Without Clean URLs.
   else {
-    // Without Clean URLs.
-    $variables = array();
+    $path = $prefix . $path;
+    $query = array();
     if (!empty($path)) {
-      $variables[] = 'q=' . $path;
+      $query['q'] = $path;
     }
-    if (!empty($options['query'])) {
-      $variables[] = $options['query'];
+    if ($options['query']) {
+      // We do not use array_merge() here to prevent overriding $path via query
+      // parameters.
+      $query += $options['query'];
     }
-    if ($query = join('&', $variables)) {
-      return $base . $script . '?' . $query . $options['fragment'];
+    if ($query) {
+      return $base . $script . '?' . drupal_http_build_query($query) . $options['fragment'];
     }
     else {
       return $base . $options['fragment'];
@@ -3639,38 +3792,6 @@ function drupal_json_output($var = NULL) {
 
   if (isset($var)) {
     echo drupal_json_encode($var);
-  }
-}
-
-/**
- * Wrapper around urlencode() which avoids Apache quirks.
- *
- * Should be used when placing arbitrary data in an URL. Note that Drupal paths
- * are urlencoded() when passed through url() and do not require urlencoding()
- * of individual components.
- *
- * Notes:
- * - For esthetic reasons, we do not escape slashes. This also avoids a 'feature'
- *   in Apache where it 404s on any path containing '%2F'.
- * - mod_rewrite unescapes %-encoded ampersands, hashes, and slashes when clean
- *   URLs are used, which are interpreted as delimiters by PHP. These
- *   characters are double escaped so PHP will still see the encoded version.
- * - With clean URLs, Apache changes '//' to '/', so every second slash is
- *   double escaped.
- * - This function should only be used on paths, not on query string arguments,
- *   otherwise unwanted double encoding will occur.
- *
- * @param $text
- *   String to encode
- */
-function drupal_encode_path($text) {
-  if (variable_get('clean_url', '0')) {
-    return str_replace(array('%2F', '%26', '%23', '//'),
-                        array('/', '%2526', '%2523', '/%252F'),
-                        rawurlencode($text));
-  }
-  else {
-    return str_replace('%2F', '/', rawurlencode($text));
   }
 }
 

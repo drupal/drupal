@@ -639,7 +639,7 @@ function install_tasks_to_display($install_state) {
  * @see install_full_redirect_url()
  */
 function install_redirect_url($install_state) {
-  return 'install.php?' . drupal_query_string_encode($install_state['parameters']);
+  return 'install.php?' . drupal_http_build_query($install_state['parameters']);
 }
 
 /**

@@ -2336,7 +2336,7 @@ function system_admin_compact_mode() {
 function system_admin_compact_page($mode = 'off') {
   global $user;
   user_save($user, array('admin_compact_mode' => ($mode == 'on')));
-  drupal_goto(drupal_get_destination());
+  drupal_goto();
 }
 
 /**

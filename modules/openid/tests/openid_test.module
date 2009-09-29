@@ -229,5 +229,5 @@ function _openid_test_endpoint_authenticate() {
   // Put the signed message into the query string of a URL supplied by the
   // Relying Party, and redirect the user.
   drupal_set_header('Content-Type', 'text/plain');
-  header('Location: ' . url($_REQUEST['openid_return_to'], array('query' => http_build_query($response, '', '&'), 'external' => TRUE)));
+  header('Location: ' . url($_REQUEST['openid_return_to'], array('query' => $response, 'external' => TRUE)));
 }

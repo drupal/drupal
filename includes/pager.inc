@@ -171,18 +171,18 @@ class PagerDefault extends SelectQueryExtender {
 }
 
 /**
- * Compose a query string to append to pager requests.
+ * Compose a URL query parameter array for pager links.
  *
  * @return
- *   A query string that consists of all components of the current page request
- *   except for those pertaining to paging.
+ *   A URL query parameter array that consists of all components of the current
+ *   page request except for those pertaining to paging.
  */
-function pager_get_querystring() {
-  static $string = NULL;
-  if (!isset($string)) {
-    $string = drupal_query_string_encode($_REQUEST, array_merge(array('q', 'page'), array_keys($_COOKIE)));
+function pager_get_query_parameters() {
+  $query = &drupal_static(__FUNCTION__);
+  if (!isset($query)) {
+    $query = drupal_get_query_parameters($_REQUEST, array_merge(array('q', 'page'), array_keys($_COOKIE)));
   }
-  return $string;
+  return $query;
 }
 
 /**
@@ -465,11 +465,10 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
 
   $query = array();
   if (count($parameters)) {
-    $query[] = drupal_query_string_encode($parameters, array());
+    $query = drupal_get_query_parameters($parameters, array());
   }
-  $querystring = pager_get_querystring();
-  if ($querystring != '') {
-    $query[] = $querystring;
+  if ($query_pager = pager_get_query_parameters()) {
+    $query = array_merge($query, $query_pager);
   }
 
   // Set each pager link title
@@ -491,7 +490,7 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
     }
   }
 
-  return l($text, $_GET['q'], array('attributes' => $attributes, 'query' => count($query) ? implode('&', $query) : NULL));
+  return l($text, $_GET['q'], array('attributes' => $attributes, 'query' => $query));
 }
 
 /**

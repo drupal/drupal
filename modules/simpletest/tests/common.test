@@ -2,14 +2,13 @@
 // $Id$
 
 /**
- * Tests for the l() function.
+ * Tests for URL generation functions.
  */
-class CommonLUnitTest extends DrupalUnitTestCase {
-
+class CommonURLUnitTest extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'URL generation tests',
-      'description' => 'Confirm that url(), drupal_query_string_encode(), and l() work correctly with various input.',
+      'description' => 'Confirm that url(), drupal_get_query_parameters(), drupal_http_build_query(), and l() work correctly with various input.',
       'group' => 'System',
     );
   }
@@ -26,47 +25,195 @@ class CommonLUnitTest extends DrupalUnitTestCase {
   }
 
   /**
-    * Test drupal_query_string_encode().
-    */
-   function testDrupalQueryStringEncode() {
-     $this->assertEqual(drupal_query_string_encode(array('a' => ' &#//+%20@۞')), 'a=%20%26%23%2F%2F%2B%2520%40%DB%9E', t('Value was properly encoded.'));
-     $this->assertEqual(drupal_query_string_encode(array(' &#//+%20@۞' => 'a')), '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', t('Key was properly encoded.'));
-     $this->assertEqual(drupal_query_string_encode(array('a' => '1', 'b' => '2', 'c' => '3'), array('b')), 'a=1&c=3', t('Value was properly excluded.'));
-     $this->assertEqual(drupal_query_string_encode(array('a' => array('b' => '2', 'c' => '3')), array('b', 'a[c]')), 'a[b]=2', t('Nested array was properly encoded.'));
-   }
-   
+   * Test drupal_get_query_parameters().
+   */
+  function testDrupalGetQueryParameters() {
+    $original = array(
+      'a' => 1,
+      'b' => array(
+        'd' => 4,
+        'e' => array(
+          'f' => 5,
+        ),
+      ),
+      'c' => 3,
+      'q' => 'foo/bar',
+    );
+
+    // Default arguments.
+    $result = $_GET;
+    unset($result['q']);
+    $this->assertEqual(drupal_get_query_parameters(), $result, t("\$_GET['q'] was removed."));
+
+    // Default exclusion.
+    $result = $original;
+    unset($result['q']);
+    $this->assertEqual(drupal_get_query_parameters($original), $result, t("'q' was removed."));
+
+    // First-level exclusion.
+    $result = $original;
+    unset($result['b']);
+    $this->assertEqual(drupal_get_query_parameters($original, array('b')), $result, t("'b' was removed."));
+
+    // Second-level exclusion.
+    $result = $original;
+    unset($result['b']['d']);
+    $this->assertEqual(drupal_get_query_parameters($original, array('b[d]')), $result, t("'b[d]' was removed."));
+
+    // Third-level exclusion.
+    $result = $original;
+    unset($result['b']['e']['f']);
+    $this->assertEqual(drupal_get_query_parameters($original, array('b[e][f]')), $result, t("'b[e][f]' was removed."));
+
+    // Multiple exclusions.
+    $result = $original;
+    unset($result['a'], $result['b']['e'], $result['c']);
+    $this->assertEqual(drupal_get_query_parameters($original, array('a', 'b[e]', 'c')), $result, t("'a', 'b[e]', 'c' were removed."));
+  }
+
+  /**
+   * Test drupal_http_build_query().
+   */
+  function testDrupalHttpBuildQuery() {
+    $this->assertEqual(drupal_http_build_query(array('a' => ' &#//+%20@۞')), 'a=%20%26%23//%2B%2520%40%DB%9E', t('Value was properly encoded.'));
+    $this->assertEqual(drupal_http_build_query(array(' &#//+%20@۞' => 'a')), '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', t('Key was properly encoded.'));
+    $this->assertEqual(drupal_http_build_query(array('a' => '1', 'b' => '2', 'c' => '3')), 'a=1&b=2&c=3', t('Multiple values were properly concatenated.'));
+    $this->assertEqual(drupal_http_build_query(array('a' => array('b' => '2', 'c' => '3'), 'd' => 'foo')), 'a[b]=2&a[c]=3&d=foo', t('Nested array was properly encoded.'));
+  }
+
+  /**
+   * Test drupal_parse_url().
+   */
+  function testDrupalParseUrl() {
+    // Relative URL.
+    $url = 'foo/bar?foo=bar&bar=baz&baz#foo';
+    $result = array(
+      'path' => 'foo/bar',
+      'query' => array('foo' => 'bar', 'bar' => 'baz', 'baz' => ''),
+      'fragment' => 'foo',
+    );
+    $this->assertEqual(drupal_parse_url($url), $result, t('Relative URL parsed correctly.'));
+
+    // Absolute URL.
+    $url = '/foo/bar?foo=bar&bar=baz&baz#foo';
+    $result = array(
+      'path' => '/foo/bar',
+      'query' => array('foo' => 'bar', 'bar' => 'baz', 'baz' => ''),
+      'fragment' => 'foo',
+    );
+    $this->assertEqual(drupal_parse_url($url), $result, t('Absolute URL parsed correctly.'));
+
+    // External URL.
+    $url = 'http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
+    $result = array(
+      'path' => 'http://drupal.org/foo/bar',
+      'query' => array('foo' => 'bar', 'bar' => 'baz', 'baz' => ''),
+      'fragment' => 'foo',
+    );
+    $this->assertEqual(drupal_parse_url($url), $result, t('External URL parsed correctly.'));
+  }
+
   /**
    * Test url() with/without query, with/without fragment, absolute on/off and
    * assert all that works when clean URLs are on and off.
    */
   function testUrl() {
     global $base_url;
-    
+
     foreach (array(FALSE, TRUE) as $absolute) {
       // Get the expected start of the path string.
       $base = $absolute ? $base_url . '/' : base_path();
       $absolute_string = $absolute ? 'absolute' : NULL;
-      
-      // Run tests with clean urls disabled.
+
+      // Disable Clean URLs.
       $GLOBALS['conf']['clean_url'] = 0;
-      $clean_urls = 'disabled';
-      
-      $this->assertTrue(url('node', array('absolute' => $absolute)) == $base . '?q=node', t('Creation of @absolute internal url with clean urls @clean_urls.', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
-      $this->assertTrue(url('node', array('fragment' => 'foo', 'absolute' => $absolute)) == $base . '?q=node#foo', t('Creation of @absolute internal url with fragment option with clean urls @clean_urls.', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
-      $this->assertTrue(url('node', array('query' => 'foo', 'absolute' => $absolute)) == $base . '?q=node&foo', t('Creation of @absolute internal url with query option with clean urls @clean_urls.', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
-      $this->assertTrue(url('node', array('query' => 'foo', 'fragment' => 'bar', 'absolute' => $absolute)) == $base . '?q=node&foo#bar', t('Creation of @absolute internal url with query and fragment option with clean urls @clean_urls.', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
-      $this->assertTrue(url('<front>', array('absolute' => $absolute)) == $base, t('Creation of @absolute internal url using front with clean urls @clean_urls.', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
-  
-      // Run tests again with clean urls enabled.
+
+      $url = $base . '?q=node/123';
+      $result = url('node/123', array('absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . '?q=node/123#foo';
+      $result = url('node/123', array('fragment' => 'foo', 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . '?q=node/123&foo';
+      $result = url('node/123', array('query' => array('foo' => NULL), 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . '?q=node/123&foo=bar&bar=baz';
+      $result = url('node/123', array('query' => array('foo' => 'bar', 'bar' => 'baz'), 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . '?q=node/123&foo#bar';
+      $result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base;
+      $result = url('<front>', array('absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      // Enable Clean URLs.
       $GLOBALS['conf']['clean_url'] = 1;
-      $clean_urls = 'enabled';
-      
-      $this->assertTrue(url('node', array('absolute' => $absolute)) == $base . 'node', t('Creation of @absolute internal url with clean urls @clean_urls.', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
-      $this->assertTrue(url('node', array('fragment' => 'foo', 'absolute' => $absolute)) == $base . 'node#foo', t('Creation of @absolute internal url with fragment option with clean urls @clean_urls.', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
-      $this->assertTrue(url('node', array('query' => 'foo', 'absolute' => $absolute)) == $base . 'node?foo', t('Creation of @absolute internal url with query option with clean urls @clean_urls.', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
-      $this->assertTrue(url('node', array('query' => 'foo', 'fragment' => 'bar', 'absolute' => $absolute)) == $base . 'node?foo#bar', t('Creation of @absolute internal url with query and fragment option with clean urls @clean_urls.', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
-      $this->assertTrue(url('<front>', array('absolute' => $absolute)) == $base, t('Creation of @absolute internal url using front with clean urls @clean_urls', array('@absolute' => $absolute_string, '@clean_urls' => $clean_urls)));
+
+      $url = $base . 'node/123';
+      $result = url('node/123', array('absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . 'node/123#foo';
+      $result = url('node/123', array('fragment' => 'foo', 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . 'node/123?foo';
+      $result = url('node/123', array('query' => array('foo' => NULL), 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . 'node/123?foo=bar&bar=baz';
+      $result = url('node/123', array('query' => array('foo' => 'bar', 'bar' => 'baz'), 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . 'node/123?foo#bar';
+      $result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base;
+      $result = url('<front>', array('absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
     }
+  }
+
+  /**
+   * Test external URL handling.
+   */
+  function testExternalUrls() {
+    $test_url = 'http://drupal.org/';
+
+    // Verify external URL can contain a fragment.
+    $url = $test_url . '#drupal';
+    $result = url($url);
+    $this->assertEqual($url, $result, t('External URL with fragment works without a fragment in $options.'));
+
+    // Verify fragment can be overidden in an external URL.
+    $url = $test_url . '#drupal';
+    $fragment = $this->randomName(10);
+    $result = url($url, array('fragment' => $fragment));
+    $this->assertEqual($test_url . '#' . $fragment, $result, t('External URL fragment is overidden with a custom fragment in $options.'));
+
+    // Verify external URL can contain a query string.
+    $url = $test_url . '?drupal=awesome';
+    $result = url($url);
+    $this->assertEqual($url, $result, t('External URL with query string works without a query string in $options.'));
+
+    // Verify external URL can be extended with a query string.
+    $url = $test_url;
+    $query = array($this->randomName(5) => $this->randomName(5));
+    $result = url($url, array('query' => $query));
+    $this->assertEqual($url . '?' . http_build_query($query, '', '&'), $result, t('External URL can be extended with a query string in $options.'));
+
+    // Verify query string can be extended in an external URL.
+    $url = $test_url . '?drupal=awesome';
+    $query = array($this->randomName(5) => $this->randomName(5));
+    $result = url($url, array('query' => $query));
+    $this->assertEqual($url . '&' . http_build_query($query, '', '&'), $result, t('External URL query string can be extended with a custom query string in $options.'));
   }
 }
 
@@ -222,54 +369,6 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
       $this->fail(t('Leftover tag %leftover was left over.', array('%leftover' => $leftover)));
     }
   }
-}
-
-/**
- * Tests url().
- */
-class UrlTestCase extends DrupalWebtestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests for the url() function',
-      'description' => 'Performs tests on the url() function.',
-      'group' => 'System',
-    );
-  }
-
-  /**
-   * Test the url() function's $options array.
-   *
-   * Assert that calling url() with an external URL
-   *   1. containing a fragment works with and without a fragment in $options.
-   *   2. containing or not containing a query works with a query in $options.
-   */
-  function testUrlOptions() {
-    // Testing the fragment handling.
-    $fragment = $this->randomName(10);
-    $test_url = 'http://www.drupal.org/#' . $fragment;
-
-    $result_url = url($test_url);
-    $this->assertEqual($test_url, $result_url, t("External URL containing a fragment works without a fragment in options. url('http://drupal.org/#frag1');"));
-
-    $result_url = url($test_url, array('fragment' => $fragment));
-    $this->assertEqual($test_url, $result_url, t("External URL containing a fragment works with a fragment in options. url('http://drupal.org/#frag1', array('fragment' => 'frag1'));"));
-
-    // Testing the query handling.
-    $query = $this->randomName(10);
-    $query2 = $this->randomName(10);
-    $test_url = 'http://www.drupal.org/?' . $query;
-
-    // The external URL contains a query.
-    $result_url = url($test_url, array('query' => $query2));
-    $this->assertEqual($test_url . '&' . $query2, $result_url, t("External URL with a query passed in the path paramater. url('http://drupal.org/?param1', array('query' => 'param2'));"));
-
-    // The external URL does not contain a query.
-    $test_url = 'http://www.drupal.org';
-    $result_url = url($test_url, array('query' => $query2));
-    $this->assertEqual($test_url . '?' . $query2, $result_url, t("External URL without a query passed in the path paramater. url('http://drupal.org', array('query' => 'param2'));"));
-  }
-
 }
 
 /**
@@ -563,9 +662,15 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
 
   function testDrupalGetDestination() {
     $query = $this->randomName(10);
-    $url = url('system-test/destination', array('absolute' => TRUE, 'query' => $query));
-    $this->drupalGet($url);
-    $this->assertText($query, t('The query passed to the page is correctly represented by drupal_get_detination().'));
+
+    // Verify that a 'destination' query string is used as destination.
+    $this->drupalGet('system-test/destination', array('query' => array('destination' => $query)));
+    $this->assertText('The destination: ' . $query, t('The given query string destination is determined as destination.'));
+
+    // Verify that the current path is used as destination.
+    $this->drupalGet('system-test/destination', array('query' => array($query => NULL)));
+    $url = 'system-test/destination?' . $query;
+    $this->assertText('The destination: ' . $url, t('The current path is determined as destination.'));
   }
 }
 

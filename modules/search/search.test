@@ -499,7 +499,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Invoke search index update.
     $this->drupalLogout();
-    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => 'cron_key=' . variable_get('cron_key', 'drupal')));
+    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))));
 
     // Search for $title.
     $edit = array(
@@ -521,7 +521,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Invoke search index update.
     $this->drupalLogout();
-    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => 'cron_key=' . variable_get('cron_key', 'drupal')));
+    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))));
 
     // Search for $title.
     $this->drupalPost('', $edit, t('Search'));

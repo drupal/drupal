@@ -2984,7 +2984,7 @@ function batch_process($redirect = NULL, $url = NULL) {
       // Set the batch number in the session to guarantee that it will stay alive.
       $_SESSION['batches'][$batch['id']] = TRUE;
 
-      drupal_goto($batch['url'], 'op=start&id=' . $batch['id']);
+      drupal_goto($batch['url'], array('op' => 'start', 'id' => $batch['id']));
     }
     else {
       // Non-progressive execution: bypass the whole progressbar workflow

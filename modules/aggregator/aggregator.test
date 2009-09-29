@@ -56,7 +56,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $feed_name = $this->randomName(10);
     if (!$feed_url) {
       $feed_url = url('rss.xml', array(
-        'query' => 'feed=' . $feed_name,
+        'query' => array('feed' => $feed_name),
         'absolute' => TRUE,
       ));
     }

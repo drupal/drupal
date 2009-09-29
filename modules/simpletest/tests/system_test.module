@@ -116,7 +116,8 @@ function system_test_redirect_invalid_scheme() {
 }
 
 function system_test_destination() {
-  return 'The destination: ' . drupal_get_destination();
+  $destination = drupal_get_destination();
+  return 'The destination: ' . $destination['destination'];
 }
 
 /**

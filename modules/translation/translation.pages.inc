@@ -47,7 +47,7 @@ function translation_node_overview($node) {
       // No such translation in the set yet: help user to create it.
       $title = t('n/a');
       if (node_access('create', $node)) {
-        $options[] = l(t('add translation'), 'node/add/' . str_replace('_', '-', $node->type), array('query' => "translation=$node->nid&language=$language->language"));
+        $options[] = l(t('add translation'), 'node/add/' . str_replace('_', '-', $node->type), array('query' => array('translation' => $node->nid, 'language' => $language->language)));
       }
       $status = t('Not translated');
     }

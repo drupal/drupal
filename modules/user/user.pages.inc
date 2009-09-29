@@ -292,7 +292,7 @@ function user_profile_form_submit($form, &$form_state) {
  * Submit function for the 'Cancel account' button on the user edit form.
  */
 function user_edit_cancel_submit($form, &$form_state) {
-  $destination = '';
+  $destination = array();
   if (isset($_GET['destination'])) {
     $destination = drupal_get_destination();
     unset($_GET['destination']);

@@ -300,7 +300,7 @@ function node_form($form, &$form_state, $node) {
  * Button submit function: handle the 'Delete' button on the node form.
  */
 function node_form_delete_submit($form, &$form_state) {
-  $destination = '';
+  $destination = array();
   if (isset($_GET['destination'])) {
     $destination = drupal_get_destination();
     unset($_GET['destination']);

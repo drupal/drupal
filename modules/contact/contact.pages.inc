@@ -155,7 +155,7 @@ function contact_personal_page($account) {
   global $user;
 
   if (!valid_email_address($user->mail)) {
-    $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit", array('query' => 'destination=' . drupal_get_destination()))));
+    $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit", array('query' => drupal_get_destination()))));
   }
   elseif (!flood_is_allowed('contact', variable_get('contact_threshold_limit', 5), variable_get('contact_threshold_window', 3600)) && !user_access('administer site-wide contact form')) {
     $output = t("You cannot send more than %number messages in @interval. Please try again later.", array('%number' => variable_get('contact_threshold_limit', 3), '@interval' => format_interval(variable_get('contact_threshold_window', 3600))));
