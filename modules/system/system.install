@@ -332,6 +332,11 @@ function system_install() {
     drupal_set_installed_schema_version($module, $version);
   }
 
+  // Clear out module list and hook implementation statics before calling
+  // system_get_theme_data().
+  module_list(TRUE);
+  module_implements('', FALSE, TRUE);
+
   // Load system theme data appropriately.
   system_get_theme_data();
 
