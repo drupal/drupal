@@ -1,6 +1,7 @@
 ; $Id$
 name = Garland
 description = Tableless, recolorable, multi-column, fluid width theme.
+package = Core
 version = VERSION
 core = 7.x
 engine = phptemplate
