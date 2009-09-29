@@ -911,7 +911,7 @@ function _drupal_decode_exception($exception) {
     // The first element in the stack is the call, the second element gives us the caller.
     // We skip calls that occurred in one of the classes of the database layer
     // or in one of its global functions.
-    $db_functions = array('db_query',  'db_query_range', 'update_sql');
+    $db_functions = array('db_query',  'db_query_range');
     while (!empty($backtrace[1]) && ($caller = $backtrace[1]) &&
         ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE || strpos($caller['class'], 'PDO') !== FALSE)) ||
         in_array($caller['function'], $db_functions))) {
@@ -4790,11 +4790,9 @@ function drupal_install_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
   _drupal_schema_initialize($module, $schema);
 
-  $ret = array();
   foreach ($schema as $name => $table) {
-    db_create_table($ret, $name, $table);
+    db_create_table($name, $table);
   }
-  return $ret;
 }
 
 /**
@@ -4815,13 +4813,11 @@ function drupal_uninstall_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
   _drupal_schema_initialize($module, $schema);
 
-  $ret = array();
   foreach ($schema as $table) {
     if (db_table_exists($table['name'])) {
-      db_drop_table($ret, $table['name']);
+      db_drop_table($table['name']);
     }
   }
-  return $ret;
 }
 
 /**

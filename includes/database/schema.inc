@@ -267,30 +267,24 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
   /**
    * Rename a table.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be renamed.
    * @param $new_name
    *   The new name for the table.
    */
-  abstract public function renameTable(&$ret, $table, $new_name);
+  abstract public function renameTable($table, $new_name);
 
   /**
    * Drop a table.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be dropped.
    */
-  abstract public function dropTable(&$ret, $table);
+  abstract public function dropTable($table);
 
   /**
    * Add a new field to a table.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   Name of the table to be altered.
    * @param $field
@@ -309,25 +303,21 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   or index including it in this array. @see db_change_field for more
    *   explanation why.
    */
-  abstract public function addField(&$ret, $table, $field, $spec, $keys_new = array());
+  abstract public function addField($table, $field, $spec, $keys_new = array());
 
   /**
    * Drop a field.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be altered.
    * @param $field
    *   The field to be dropped.
    */
-  abstract public function dropField(&$ret, $table, $field);
+  abstract public function dropField($table, $field);
 
   /**
    * Set the default value for a field.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be altered.
    * @param $field
@@ -335,47 +325,39 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * @param $default
    *   Default value to be set. NULL for 'default NULL'.
    */
-  abstract public function fieldSetDefault(&$ret, $table, $field, $default);
+  abstract public function fieldSetDefault($table, $field, $default);
 
   /**
    * Set a field to have no default value.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be altered.
    * @param $field
    *   The field to be altered.
    */
-  abstract public function fieldSetNoDefault(&$ret, $table, $field);
+  abstract public function fieldSetNoDefault($table, $field);
 
   /**
    * Add a primary key.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be altered.
    * @param $fields
    *   Fields for the primary key.
    */
-  abstract public function addPrimaryKey(&$ret, $table, $fields);
+  abstract public function addPrimaryKey($table, $fields);
 
   /**
    * Drop the primary key.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be altered.
    */
-  abstract public function dropPrimaryKey(&$ret, $table);
+  abstract public function dropPrimaryKey($table);
 
   /**
    * Add a unique key.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be altered.
    * @param $name
@@ -383,25 +365,21 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * @param $fields
    *   An array of field names.
    */
-  abstract public function addUniqueKey(&$ret, $table, $name, $fields);
+  abstract public function addUniqueKey($table, $name, $fields);
 
   /**
    * Drop a unique key.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be altered.
    * @param $name
    *   The name of the key.
    */
-  abstract public function dropUniqueKey(&$ret, $table, $name);
+  abstract public function dropUniqueKey($table, $name);
 
   /**
    * Add an index.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be altered.
    * @param $name
@@ -409,20 +387,17 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * @param $fields
    *   An array of field names.
    */
-  abstract public function addIndex(&$ret, $table, $name, $fields);
+  abstract public function addIndex($table, $name, $fields);
 
   /**
    * Drop an index.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   The table to be altered.
    * @param $name
    *   The name of the index.
    */
-  abstract public function dropIndex(&$ret, $table, $name);
-
+  abstract public function dropIndex($table, $name);
 
   /**
    * Change a field definition.
@@ -447,8 +422,8 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * and you want to change foo.bar to be type serial, leaving it as the
    * primary key. The correct sequence is:
    * @code
-   * db_drop_primary_key($ret, 'foo');
-   * db_change_field($ret, 'foo', 'bar', 'bar',
+   * db_drop_primary_key('foo');
+   * db_change_field('foo', 'bar', 'bar',
    *   array('type' => 'serial', 'not null' => TRUE),
    *   array('primary key' => array('bar')));
    * @endcode
@@ -471,8 +446,6 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * unless you are converting a field to be type serial. You can use
    * the $keys_new argument in all cases.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $table
    *   Name of the table.
    * @param $field
@@ -486,22 +459,20 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   table along with changing the field. The format is the same as a
    *   table specification but without the 'fields' element.
    */
-  abstract public function changeField(&$ret, $table, $field, $field_new, $spec, $keys_new = array());
+  abstract public function changeField($table, $field, $field_new, $spec, $keys_new = array());
 
   /**
    * Create a new table from a Drupal table definition.
    *
-   * @param $ret
-   *   Array to which query results will be added.
    * @param $name
    *   The name of the table to create.
    * @param $table
    *   A Schema API table definition array.
    */
-  public function createTable(&$ret, $name, $table) {
-    $statements = $this->createTableSql($name, $table);
+  public function createTable($name, $table) {
+  	$statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
-      $ret[] = update_sql($statement);
+    	$this->connection->query($statement);
     }
   }
 
@@ -517,16 +488,16 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   An array of field names.
    */
   public function fieldNames($fields) {
-    $ret = array();
+    $return = array();
     foreach ($fields as $field) {
       if (is_array($field)) {
-        $ret[] = $field[0];
+        $return[] = $field[0];
       }
       else {
-        $ret[] = $field;
+        $return[] = $field;
       }
     }
-    return $ret;
+    return $return;
   }
 
   /**

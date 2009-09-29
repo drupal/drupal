@@ -96,26 +96,20 @@ function dblog_schema() {
  * Allow NULL values for links and longer referers.
  */
 function dblog_update_7001() {
-  $ret = array();
-  db_change_field($ret, 'watchdog', 'link', 'link', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
-  db_change_field($ret, 'watchdog', 'referer', 'referer', array('type' => 'text', 'not null' => FALSE));
-  return $ret;
+  db_change_field('watchdog', 'link', 'link', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
+  db_change_field('watchdog', 'referer', 'referer', array('type' => 'text', 'not null' => FALSE));
 }
 
 /**
  * Add index on uid.
  */
 function dblog_update_7002() {
-  $ret = array();
-  db_add_index($ret, 'watchdog', 'uid', array('uid'));
-  return $ret;
+  db_add_index('watchdog', 'uid', array('uid'));
 }
 
 /**
  * Allow longer type values.
  */
 function dblog_update_7003() {
-  $ret = array();
-  db_change_field($ret, 'watchdog', 'type', 'type', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
-  return $ret;
+  db_change_field('watchdog', 'type', 'type', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
 }

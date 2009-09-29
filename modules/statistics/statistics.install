@@ -142,9 +142,7 @@ function statistics_schema() {
  * Allow longer referrers.
  */
 function statistics_update_7000() {
-  $ret = array();
-  db_change_field($ret, 'accesslog', 'url', 'url', array('type' => 'text', 'not null' => FALSE));
-  return $ret;
+  db_change_field('accesslog', 'url', 'url', array('type' => 'text', 'not null' => FALSE));
 }
 
 /**

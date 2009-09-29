@@ -82,7 +82,6 @@ function upload_schema() {
  * Migrate upload module files from {files} to {file}.
  */
 function upload_update_7000(&$sandbox) {
-  $ret = array();
 
   /*
     TODO: Fix the updates. This is broken. See http://drupal.org/node/329301#comment-1404336
@@ -128,8 +127,6 @@ function upload_update_7000(&$sandbox) {
 
   // Indicate our current progress to the batch update system. If there's no
   // max value then there's nothing to update and we're finished.
-  $ret['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
-
-  return $ret;
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 }
 

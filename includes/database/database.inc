@@ -2042,22 +2042,6 @@ function db_escape_table($table) {
 }
 
 /**
- * Perform an SQL query and return success or failure.
- *
- * @param $sql
- *   A string containing a complete SQL query. %-substitution
- *   parameters are not supported.
- * @return
- *   An array containing the keys:
- *     success: a boolean indicating whether the query succeeded
- *     query: the SQL query executed, passed through check_plain()
- */
-function update_sql($sql) {
-  $result = Database::getConnection()->query($sql);
-  return array('success' => $result !== FALSE, 'query' => check_plain($sql));
-}
-
-/**
  * Retrieve the name of the currently active database driver, such as
  * "mysql" or "pgsql".
  *
@@ -2095,16 +2079,14 @@ function db_close(array $options = array()) {
 /**
  * Create a new table from a Drupal table definition.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $name
  *   The name of the table to create.
  * @param $table
  *   A Schema API table definition array.
  */
-function db_create_table(&$ret, $name, $table) {
+function db_create_table($name, $table) {
   if (!db_table_exists($name)) {
-    return Database::getConnection()->schema()->createTable($ret, $name, $table);
+    return Database::getConnection()->schema()->createTable($name, $table);
   }
 }
 
@@ -2165,34 +2147,28 @@ function db_type_map() {
 /**
  * Rename a table.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be renamed.
  * @param $new_name
  *   The new name for the table.
  */
-function db_rename_table(&$ret, $table, $new_name) {
-  return Database::getConnection()->schema()->renameTable($ret, $table, $new_name);
+function db_rename_table($table, $new_name) {
+  return Database::getConnection()->schema()->renameTable($table, $new_name);
 }
 
 /**
  * Drop a table.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be dropped.
  */
-function db_drop_table(&$ret, $table) {
-  return Database::getConnection()->schema()->dropTable($ret, $table);
+function db_drop_table($table) {
+  return Database::getConnection()->schema()->dropTable($table);
 }
 
 /**
  * Add a new field to a table.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   Name of the table to be altered.
  * @param $field
@@ -2212,29 +2188,25 @@ function db_drop_table(&$ret, $table) {
  *   explanation why.
  * @see db_change_field()
  */
-function db_add_field(&$ret, $table, $field, $spec, $keys_new = array()) {
-  return Database::getConnection()->schema()->addField($ret, $table, $field, $spec, $keys_new);
+function db_add_field($table, $field, $spec, $keys_new = array()) {
+  return Database::getConnection()->schema()->addField($table, $field, $spec, $keys_new);
 }
 
 /**
  * Drop a field.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be altered.
  * @param $field
  *   The field to be dropped.
  */
-function db_drop_field(&$ret, $table, $field) {
-  return Database::getConnection()->schema()->dropField($ret, $table, $field);
+function db_drop_field($table, $field) {
+  return Database::getConnection()->schema()->dropField($table, $field);
 }
 
 /**
  * Set the default value for a field.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be altered.
  * @param $field
@@ -2242,55 +2214,47 @@ function db_drop_field(&$ret, $table, $field) {
  * @param $default
  *   Default value to be set. NULL for 'default NULL'.
  */
-function db_field_set_default(&$ret, $table, $field, $default) {
-  return Database::getConnection()->schema()->fieldSetDefault($ret, $table, $field, $default);
+function db_field_set_default($table, $field, $default) {
+  return Database::getConnection()->schema()->fieldSetDefault($table, $field, $default);
 }
 
 /**
  * Set a field to have no default value.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be altered.
  * @param $field
  *   The field to be altered.
  */
-function db_field_set_no_default(&$ret, $table, $field) {
-  return Database::getConnection()->schema()->fieldSetNoDefault($ret, $table, $field);
+function db_field_set_no_default($table, $field) {
+  return Database::getConnection()->schema()->fieldSetNoDefault($table, $field);
 }
 
 /**
  * Add a primary key.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be altered.
  * @param $fields
  *   Fields for the primary key.
  */
-function db_add_primary_key(&$ret, $table, $fields) {
-  return Database::getConnection()->schema()->addPrimaryKey($ret, $table, $fields);
+function db_add_primary_key($table, $fields) {
+  return Database::getConnection()->schema()->addPrimaryKey($table, $fields);
 }
 
 /**
  * Drop the primary key.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be altered.
  */
-function db_drop_primary_key(&$ret, $table) {
-  return Database::getConnection()->schema()->dropPrimaryKey($ret, $table);
+function db_drop_primary_key($table) {
+  return Database::getConnection()->schema()->dropPrimaryKey($table);
 }
 
 /**
  * Add a unique key.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be altered.
  * @param $name
@@ -2298,29 +2262,25 @@ function db_drop_primary_key(&$ret, $table) {
  * @param $fields
  *   An array of field names.
  */
-function db_add_unique_key(&$ret, $table, $name, $fields) {
-  return Database::getConnection()->schema()->addUniqueKey($ret, $table, $name, $fields);
+function db_add_unique_key($table, $name, $fields) {
+  return Database::getConnection()->schema()->addUniqueKey($table, $name, $fields);
 }
 
 /**
  * Drop a unique key.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be altered.
  * @param $name
  *   The name of the key.
  */
-function db_drop_unique_key(&$ret, $table, $name) {
-  return Database::getConnection()->schema()->dropUniqueKey($ret, $table, $name);
+function db_drop_unique_key($table, $name) {
+  return Database::getConnection()->schema()->dropUniqueKey($table, $name);
 }
 
 /**
  * Add an index.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be altered.
  * @param $name
@@ -2328,22 +2288,20 @@ function db_drop_unique_key(&$ret, $table, $name) {
  * @param $fields
  *   An array of field names.
  */
-function db_add_index(&$ret, $table, $name, $fields) {
-  return Database::getConnection()->schema()->addIndex($ret, $table, $name, $fields);
+function db_add_index($table, $name, $fields) {
+  return Database::getConnection()->schema()->addIndex($table, $name, $fields);
 }
 
 /**
  * Drop an index.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   The table to be altered.
  * @param $name
  *   The name of the index.
  */
-function db_drop_index(&$ret, $table, $name) {
-  return Database::getConnection()->schema()->dropIndex($ret, $table, $name);
+function db_drop_index($table, $name) {
+  return Database::getConnection()->schema()->dropIndex($table, $name);
 }
 
 /**
@@ -2369,8 +2327,8 @@ function db_drop_index(&$ret, $table, $name) {
  * and you want to change foo.bar to be type serial, leaving it as the
  * primary key. The correct sequence is:
  * @code
- * db_drop_primary_key($ret, 'foo');
- * db_change_field($ret, 'foo', 'bar', 'bar',
+ * db_drop_primary_key('foo');
+ * db_change_field('foo', 'bar', 'bar',
  *   array('type' => 'serial', 'not null' => TRUE),
  *   array('primary key' => array('bar')));
  * @endcode
@@ -2393,8 +2351,6 @@ function db_drop_index(&$ret, $table, $name) {
  * unless you are converting a field to be type serial. You can use
  * the $keys_new argument in all cases.
  *
- * @param $ret
- *   Array to which query results will be added.
  * @param $table
  *   Name of the table.
  * @param $field
@@ -2408,9 +2364,8 @@ function db_drop_index(&$ret, $table, $name) {
  *   table along with changing the field. The format is the same as a
  *   table specification but without the 'fields' element.
  */
-
-function db_change_field(&$ret, $table, $field, $field_new, $spec, $keys_new = array()) {
-  return Database::getConnection()->schema()->changeField($ret, $table, $field, $field_new, $spec, $keys_new);
+function db_change_field($table, $field, $field_new, $spec, $keys_new = array()) {
+  return Database::getConnection()->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
 }
 
 /**

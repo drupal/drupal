@@ -40,12 +40,11 @@ class DatabaseTestCase extends DrupalWebTestCase {
    */
   function installTables($schema) {
     // This ends up being a test for table drop and create, too, which is nice.
-    $ret = array();
     foreach ($schema as $name => $data) {
       if (db_table_exists($name)) {
-        db_drop_table($ret, $name);
+        db_drop_table($name);
       }
-      db_create_table($ret, $name, $data);
+      db_create_table($name, $data);
     }
 
     foreach ($schema as $name => $data) {
@@ -1369,14 +1368,14 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $query_1->union($query_2);
 
     $names = $query_1->execute()->fetchCol();
-    
+
     // Ensure we only get 2 records.
     $this->assertEqual(count($names), 2, t('UNION correctly discarded duplicates.'));
 
     $this->assertEqual($names[0], 'George', t('First query returned correct name.'));
     $this->assertEqual($names[1], 'Ringo', t('Second query returned correct name.'));
   }
-  
+
   /**
    * Test that we can UNION ALL multiple Select queries together.
    */
@@ -1384,7 +1383,7 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $query_1 = db_select('test', 't')
       ->fields('t', array('name'))
       ->condition('age', array(27, 28), 'IN');
-      
+
     $query_2 = db_select('test', 't')
       ->fields('t', array('name'))
       ->condition('age', 28);
@@ -2904,9 +2903,8 @@ class DatabaseExtraTypesTestCase extends DrupalWebTestCase {
            ),
          ),
        );
-       $ret = array();
-       db_create_table($ret, 'date_table', $date_table);
-       $this->assertEqual($ret[0]['success'], 1, t('Created table with date field'));
+       db_create_table('date_table', $date_table);
+       $this->assertTrue(db_table_exists('date_table'), t('Created table with date field'));
 
        db_insert('date_table')->fields(array('date_field'))
          ->values(array('date_field' => '2001-01-01'))
@@ -2926,8 +2924,8 @@ class DatabaseExtraTypesTestCase extends DrupalWebTestCase {
        $this->assertEqual($date, '2100-06-30', t('Date retrieved in order @date', array('@date' => $date)));
 
 
-       db_drop_table($ret, 'date_table');
-       $this->assertEqual($ret[1]['success'], 1, t('Dropped table with date field'));
+       db_drop_table('date_table');
+       $this->assertFalse(db_table_exists('date_table'), t('Dropped table with date field'));
 
      } catch (Exception $e) {
        $this->fail($e->getMessage());
@@ -2949,9 +2947,8 @@ class DatabaseExtraTypesTestCase extends DrupalWebTestCase {
            ),
          ),
        );
-       $ret = array();
-       db_create_table($ret, 'time_table', $time_table);
-       $this->assertEqual($ret[0]['success'], 1, t('Created table with time field'));
+       db_create_table('time_table', $time_table);
+       $this->assertTrue(db_table_exists('time_table'), t('Created table with time field'));
 
        db_insert('time_table')->fields(array('time_field'))
          ->values(array('time_field' => '12:59:00'))
@@ -2970,8 +2967,8 @@ class DatabaseExtraTypesTestCase extends DrupalWebTestCase {
        $time = $res->fetch()->time_field;
        $this->assertEqual($time, '23:17:00', t('Time retrieved in order @time', array('@time' => $time)));
 
-       db_drop_table($ret, 'time_table');
-       $this->assertEqual($ret[1]['success'], 1, t('Dropped table with time field'));
+       db_drop_table('time_table');
+       $this->assertFalse(db_table_exists('time_table'), t('Dropped table with time field'));
      } catch (Exception $e) {
        $this->fail($e->getMessage());
      }

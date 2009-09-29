@@ -765,7 +765,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
     }
 
     // Now import strings into the language
-    if ($ret = _locale_import_po($file, $langcode, $form_state['values']['mode'], $form_state['values']['group']) == FALSE) {
+    if ($return = _locale_import_po($file, $langcode, $form_state['values']['mode'], $form_state['values']['group']) == FALSE) {
       $variables = array('%filename' => $file->filename);
       drupal_set_message(t('The translation import of %filename failed.', $variables), 'error');
       watchdog('locale', 'The translation import of %filename failed.', $variables, WATCHDOG_ERROR);
@@ -2175,7 +2175,7 @@ function _locale_export_string($str) {
  */
 function _locale_export_wrap($str, $len) {
   $words = explode(' ', $str);
-  $ret = array();
+  $return = array();
 
   $cur = "";
   $nstr = 1;
@@ -2186,16 +2186,16 @@ function _locale_export_wrap($str, $len) {
       $nstr = 0;
     }
     elseif (strlen("$cur $word") > $len) {
-      $ret[] = $cur . " ";
+      $return[] = $cur . " ";
       $cur = $word;
     }
     else {
       $cur = "$cur $word";
     }
   }
-  $ret[] = $cur;
+  $return[] = $cur;
 
-  return implode("\n", $ret);
+  return implode("\n", $return);
 }
 
 /**

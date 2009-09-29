@@ -36,10 +36,8 @@ function locale_install() {
  * Allow longer location.
  */
 function locale_update_7000() {
-  $ret = array();
-  db_drop_index($ret, 'locales_source', 'source');
-  db_add_index($ret, 'locales_source', 'source_context', array(array('source', 30), 'context'));
-  return $ret;
+  db_drop_index('locales_source', 'source');
+  db_add_index('locales_source', 'source_context', array(array('source', 30), 'context'));
 }
 
 /**

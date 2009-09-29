@@ -1115,9 +1115,9 @@ function field_test_memorize($key = NULL, $value = NULL) {
   $memorize = &drupal_static(__FUNCTION__, NULL);
 
   if (is_null($key)) {
-    $ret = $memorize;
+    $return = $memorize;
     $memorize = array();
-    return $ret;
+    return $return;
   }
   if (is_array($memorize)) {
     $memorize[$key][] = $value;

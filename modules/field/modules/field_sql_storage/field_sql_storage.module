@@ -211,7 +211,7 @@ function _field_sql_storage_schema($field) {
 function field_sql_storage_field_storage_create_field($field) {
   $schema = _field_sql_storage_schema($field);
   foreach ($schema as $name => $table) {
-    db_create_table($ret, $name, $table);
+    db_create_table($name, $table);
   }
 }
 
@@ -231,17 +231,15 @@ function field_sql_storage_field_update_forbid($field, $prior_field, $has_data) 
  * Implement hook_field_storage_update_field().
  */
 function field_sql_storage_field_storage_update_field($field, $prior_field, $has_data) {
-  $ret = array();
-
   if (! $has_data) {
     // There is no data. Re-create the tables completely.
     $prior_schema = _field_sql_storage_schema($prior_field);
     foreach ($prior_schema as $name => $table) {
-      db_drop_table($ret, $name, $table);
+      db_drop_table($name, $table);
     }
     $schema = _field_sql_storage_schema($field);
     foreach ($schema as $name => $table) {
-      db_create_table($ret, $name, $table);
+      db_create_table($name, $table);
     }
   }
   else {
@@ -253,8 +251,8 @@ function field_sql_storage_field_storage_update_field($field, $prior_field, $has
     foreach ($prior_field['indexes'] as $name => $columns) {
       if (!isset($field['indexes'][$name]) || $columns != $field['indexes'][$name]) {
         $real_name = _field_sql_storage_indexname($field['field_name'], $name);
-        db_drop_index($ret, $table, $real_name);
-        db_drop_index($ret, $revision_table, $real_name);
+        db_drop_index($table, $real_name);
+        db_drop_index($revision_table, $real_name);
       }
     }
     $table = _field_sql_storage_tablename($field);
@@ -266,8 +264,8 @@ function field_sql_storage_field_storage_update_field($field, $prior_field, $has
         foreach ($columns as $column_name) {
           $real_columns[] = _field_sql_storage_columnname($field['field_name'], $column_name);
         }
-        db_add_index($ret, $table, $real_name, $real_columns);
-        db_add_index($ret, $revision_table, $real_name, $real_columns);
+        db_add_index($table, $real_name, $real_columns);
+        db_add_index($revision_table, $real_name, $real_columns);
       }
     }
   }
@@ -286,12 +284,11 @@ function field_sql_storage_field_storage_delete_field($field) {
     ->execute();
 
   // Move the table to a unique name while the table contents are being deleted.
-  $ret = array();
   $field['deleted'] = 1;
   $new_table = _field_sql_storage_tablename($field);
   $revision_new_table = _field_sql_storage_revision_tablename($field);
-  db_rename_table($ret, $table, $new_table);
-  db_rename_table($ret, $revision_table, $revision_new_table);
+  db_rename_table($table, $new_table);
+  db_rename_table($revision_table, $revision_new_table);
   drupal_get_schema(NULL, TRUE);
 }
 
@@ -655,10 +652,9 @@ function field_sql_storage_field_attach_rename_bundle($bundle_old, $bundle_new) 
  * that is left is to delete the table.
  */
 function field_sql_storage_field_storage_purge_field($field) {
-  $ret = array();
   $table_name = _field_sql_storage_tablename($field);
   $revision_name = _field_sql_storage_revision_tablename($field);
-  db_drop_table($ret, $table_name);
-  db_drop_table($ret, $revision_name);
+  db_drop_table($table_name);
+  db_drop_table($revision_name);
 }
 

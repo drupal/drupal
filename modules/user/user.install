@@ -255,12 +255,12 @@ function user_schema() {
  * lengthy process, and is performed batch-wise.
  */
 function user_update_7000(&$sandbox) {
-  $ret = array('#finished' => 0);
+  $sandbox['#finished'] = 0;
   // Lower than DRUPAL_HASH_COUNT to make the update run at a reasonable speed.
   $hash_count_log2 = 11;
   // Multi-part update.
   if (!isset($sandbox['user_from'])) {
-    db_change_field($ret, 'users', 'pass', 'pass', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
+    db_change_field('users', 'pass', 'pass', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
     $sandbox['user_from'] = 0;
     $sandbox['user_count'] = db_query("SELECT COUNT(uid) FROM {users}")->fetchField();
   }
@@ -283,14 +283,13 @@ function user_update_7000(&$sandbox) {
           ->execute();
       }
     }
-    $ret['#finished'] = $sandbox['user_from']/$sandbox['user_count'];
+    $sandbox['#finished'] = $sandbox['user_from']/$sandbox['user_count'];
     $sandbox['user_from'] += $count;
     if (!$has_rows) {
-      $ret['#finished'] = 1;
-      $ret[] = array('success' => TRUE, 'query' => "UPDATE {users} SET pass = 'U' . user_hash_password(pass) WHERE uid > 0");
+      $sandbox['#finished'] = 1;
+      return t('User passwords rehashed to improve security');
     }
   }
-  return $ret;
 }
 
 /**
@@ -300,23 +299,20 @@ function user_update_7000(&$sandbox) {
  */
 
 function user_update_7001() {
-  $ret = array();
-  db_drop_field($ret, 'users', 'threshold');
-  db_drop_field($ret, 'users', 'mode');
-  db_drop_field($ret, 'users', 'sort');
-
-  return $ret;
+  db_drop_field('users', 'threshold');
+  db_drop_field('users', 'mode');
+  db_drop_field('users', 'sort');
 }
 
 /**
  * Convert user time zones from time zone offsets to time zone names.
  */
 function user_update_7002(&$sandbox) {
-  $ret = array('#finished' => 0);
+  $sandbox['#finished'] = 0;
 
   // Multi-part update.
   if (!isset($sandbox['user_from'])) {
-    db_change_field($ret, 'users', 'timezone', 'timezone', array('type' => 'varchar', 'length' => 32, 'not null' => FALSE));
+    db_change_field('users', 'timezone', 'timezone', array('type' => 'varchar', 'length' => 32, 'not null' => FALSE));
     $sandbox['user_from'] = 0;
     $sandbox['user_count'] = db_query("SELECT COUNT(uid) FROM {users}")->fetchField();
     $sandbox['user_not_migrated'] = 0;
@@ -355,25 +351,30 @@ function user_update_7002(&$sandbox) {
         }
       }
       if ($timezone) {
-        db_query("UPDATE {users} SET timezone = :timezone WHERE uid = :uid", array(':timezone' => $timezone, ':uid' => $account->uid));
+      	db_update('users')
+      	  ->fields(array('timezone' => $timezone))
+      	  ->condition('uid', $account->uid)
+      	  ->execute();
       }
       else {
         $sandbox['user_not_migrated']++;
-        db_query("UPDATE {users} SET timezone = NULL WHERE uid = :uid", array(':uid' => $account->uid));
+        db_update('users')
+          ->fields(array('timezone', NULL))
+          ->condition('uid', $account->uid)
+          ->execute();
       }
       $sandbox['user_from']++;
     }
 
-    $ret['#finished'] = $sandbox['user_from'] / $sandbox['user_count'];
+    $sandbox['#finished'] = $sandbox['user_from'] / $sandbox['user_count'];
     if ($sandbox['user_from'] == $sandbox['user_count']) {
-      $ret[] = array('success' => TRUE, 'query' => "Migrate user time zones.");
       if ($sandbox['user_not_migrated'] > 0) {
         variable_set('empty_timezone_message', 1);
         drupal_set_message('Some user time zones have been emptied and need to be set to the correct values. Use the new ' . l('time zone options', 'admin/config/regional/settings') . ' to choose whether to remind users at login to set the correct time zone.', 'warning');
       }
+      return t('Migrated user time zones');
     }
   }
-  return $ret;
 }
 
 /**
@@ -384,7 +385,6 @@ function user_update_7002(&$sandbox) {
  * which is the same as the 'user_cancel_reassign' method now.
  */
 function user_update_7003() {
-  $ret = array();
   // Set the default account cancellation method.
   variable_set('user_cancel_method', 'user_cancel_reassign');
   // Re-assign notification setting.
@@ -401,14 +401,12 @@ function user_update_7003() {
     variable_set('user_mail_status_canceled_body', $setting);
     variable_del('user_mail_status_deleted_body');
   }
-  return $ret;
 }
 
 /**
  * Add the user's pictures to the {file} table and make them managed files.
  */
 function user_update_7004(&$sandbox) {
-  $ret = array();
 
   $picture_field = array(
     'type' => 'int',
@@ -422,7 +420,7 @@ function user_update_7004(&$sandbox) {
     // update.
     if (!db_column_exists('users', 'picture_fid')) {
       // Add a new field for the fid.
-      db_add_field($ret, 'users', 'picture_fid', $picture_field);
+      db_add_field('users', 'picture_fid', $picture_field);
     }
 
     // Initialize batch update information.
@@ -469,16 +467,14 @@ function user_update_7004(&$sandbox) {
 
   // Indicate our current progress to the batch update system. If there's no
   // max value then there's nothing to update and we're finished.
-  $ret['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
   // When we're finished, drop the old picture field and rename the new one to
   // replace it.
-  if (isset($ret['#finished']) && $ret['#finished'] == 1) {
-    db_drop_field($ret, 'user', 'picture');
-    db_change_field($ret, 'user', 'picture_fid', 'picture', $picture_field);
+  if (isset($sandbox['#finished']) && $sandbox['#finished'] == 1) {
+    db_drop_field('user', 'picture');
+    db_change_field('user', 'picture_fid', 'picture', $picture_field);
   }
-
-  return $ret;
 }
 
 /**

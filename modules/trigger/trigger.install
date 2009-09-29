@@ -54,13 +54,15 @@ function trigger_schema() {
  * Adds operation names to the hook names and drops the "op" field.
  */
 function trigger_update_7000() {
-  $ret = array();
   $result = db_query("SELECT hook, op, aid FROM {trigger_assignments} WHERE op <> ''");
 
-  while ($row = db_fetch_object($result)) {
-    $ret[] = update_sql("UPDATE {trigger_assignments} SET hook = '%s' WHERE hook = '%s' AND op = '%s' AND aid = '%s'", $row->hook . '_' . $row->op, $row->hook, $row->op, $row->aid);
+  foreach ($result as $record) {
+    db_update('trigger_assignments')
+      ->fields(array('hook' => $record->hook . '_' . $record->op))
+      ->condition('hook', $record->hook)
+      ->condition('op', $record->op)
+      ->condition('aid', $record->aid)
+      ->execute();
   }
-  $ret[] = update_sql("ALTER TABLE {trigger_assignments} DROP op");
-
-  return $ret;
+  db_drop_field('trigger_assignments', 'op');
 }

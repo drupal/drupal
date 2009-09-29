@@ -14,7 +14,6 @@
  * current version of Drupal core.
  */
 function update_fix_compatibility() {
-  $ret = array();
   $incompatible = array();
   $result = db_query("SELECT name, type, status FROM {system} WHERE status = 1 AND type IN ('module','theme')");
   foreach ($result as $row) {
@@ -23,9 +22,11 @@ function update_fix_compatibility() {
     }
   }
   if (!empty($incompatible)) {
-    $ret[] = update_sql("UPDATE {system} SET status = 0 WHERE name IN ('" . implode("','", $incompatible) . "')");
+  	db_update('system')
+  	  ->fields(array('status' => 0))
+  	  ->condition('name', $incompatible, 'IN')
+  	  ->execute();
   }
-  return $ret;
 }
 
 /**
@@ -113,7 +114,6 @@ function update_prepare_d7_bootstrap() {
  */
 function update_fix_d7_requirements() {
   global $conf;
-  $ret = array();
 
   // Rewrite the settings.php file if necessary.
   // @see update_prepare_d7_bootstrap().
@@ -126,11 +126,11 @@ function update_fix_d7_requirements() {
     // Add the cache_path table.
     $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
     $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
-    db_create_table($ret, 'cache_path', $schema['cache_path']);
+    db_create_table('cache_path', $schema['cache_path']);
 
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
-      db_add_field($ret, 'locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));
+      db_add_field('locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));
     }
 
     // Rename 'site_offline_message' variable to 'maintenance_mode_message'.
@@ -144,8 +144,6 @@ function update_fix_d7_requirements() {
   }
 
   update_fix_d7_install_profile();
-
-  return $ret;
 }
 
 /**
@@ -160,7 +158,6 @@ function update_fix_d7_requirements() {
  */
 function update_fix_d7_install_profile() {
   $profile = drupal_get_profile();
-
 
   $results = db_select('system', 's')
     ->fields('s', array('name', 'schema_version'))

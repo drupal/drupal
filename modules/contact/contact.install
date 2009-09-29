@@ -85,7 +85,6 @@ function contact_schema() {
 function contact_update_7000() {
   variable_set('contact_threshold_limit', variable_get('contact_hourly_threshold', 5));
   variable_del('contact_hourly_threshold');
-  return array();
 }
 
 /**

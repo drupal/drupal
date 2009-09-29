@@ -223,9 +223,10 @@ function block_install() {
  * so before block module runs, there will not be much to alter.
  */
 function block_update_7000() {
-  $ret = array();
-  $ret[] = update_sql("UPDATE {system} SET weight = -5 WHERE name = 'block'");
-  return $ret;
+  db_update('system')
+    ->fields(array('weight', '-5'))
+    ->condition('name', 'block')
+    ->execute();
 }
 
 
@@ -233,8 +234,6 @@ function block_update_7000() {
  * Add the block_node_type table.
  */
 function block_update_7001() {
-  $ret = array();
-
   $schema['block_node_type'] = array(
     'description' => 'Sets up display criteria for blocks based on content types',
     'fields' => array(
@@ -263,6 +262,5 @@ function block_update_7001() {
     ),
   );
 
-  db_create_table($ret, 'block_node_type', $schema['block_node_type']);
-  return $ret;
+  db_create_table('block_node_type', $schema['block_node_type']);
 }

@@ -1180,7 +1180,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       $schema = drupal_get_schema(NULL, TRUE);
       $ret = array();
       foreach ($schema as $name => $table) {
-        db_drop_table($ret, $name);
+        db_drop_table($name);
       }
 
       // Return the database prefix to the original.

@@ -37,8 +37,7 @@ class SchemaTestCase extends DrupalWebTestCase {
         ),
       ),
     );
-    $ret = array();
-    db_create_table($ret, 'test_table', $table_specification);
+    db_create_table('test_table', $table_specification);
 
     // Assert that the table exists.
     $this->assertTrue(db_table_exists('test_table'), t('The table exists.'));
@@ -53,19 +52,19 @@ class SchemaTestCase extends DrupalWebTestCase {
     $this->assertFalse($this->tryInsert(), t('Insert without a default failed.'));
 
     // Add a default value to the column.
-    db_field_set_default($ret, 'test_table', 'test_field', 0);
+    db_field_set_default('test_table', 'test_field', 0);
     // The insert should now succeed.
     $this->assertTrue($this->tryInsert(), t('Insert with a default succeeded.'));
 
     // Remove the default.
-    db_field_set_no_default($ret, 'test_table', 'test_field');
+    db_field_set_no_default('test_table', 'test_field');
     // The insert should fail again.
     $this->assertFalse($this->tryInsert(), t('Insert without a default failed.'));
 
     // Rename the table.
-    db_rename_table($ret, 'test_table', 'test_table2');
+    db_rename_table('test_table', 'test_table2');
     // We need the default so that we can insert after the rename.
-    db_field_set_default($ret, 'test_table2', 'test_field', 0);
+    db_field_set_default('test_table2', 'test_field', 0);
     $this->assertFalse($this->tryInsert(), t('Insert into the old table failed.'));
     $this->assertTrue($this->tryInsert('test_table2'), t('Insert into the new table succeeded.'));
 
@@ -74,19 +73,19 @@ class SchemaTestCase extends DrupalWebTestCase {
     $this->assertEqual($count, 2, t('Two fields were successfully inserted.'));
 
     // Try to drop the table.
-    db_drop_table($ret, 'test_table2');
+    db_drop_table('test_table2');
     $this->assertFalse(db_table_exists('test_table2'), t('The dropped table does not exist.'));
 
     // Recreate the table.
-    db_create_table($ret, 'test_table', $table_specification);
-    db_field_set_default($ret, 'test_table', 'test_field', 0);
-    db_add_field($ret, 'test_table', 'test_serial', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => 'Added column description.'));
+    db_create_table('test_table', $table_specification);
+    db_field_set_default('test_table', 'test_field', 0);
+    db_add_field('test_table', 'test_serial', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => 'Added column description.'));
 
     // Assert that the column comment has been set.
     $this->checkSchemaComment('Added column description.', 'test_table', 'test_serial');
 
     // Change the new field to a serial column.
-    db_change_field($ret, 'test_table', 'test_serial', 'test_serial', array('type' => 'serial', 'not null' => TRUE, 'description' => 'Changed column description.'), array('primary key' => array('test_serial')));
+    db_change_field('test_table', 'test_serial', 'test_serial', array('type' => 'serial', 'not null' => TRUE, 'description' => 'Changed column description.'), array('primary key' => array('test_serial')));
 
     // Assert that the column comment has been set.
     $this->checkSchemaComment('Changed column description.', 'test_table', 'test_serial');

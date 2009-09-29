@@ -151,8 +151,6 @@ function profile_schema() {
  * Rename {profile_fields} table to {profile_field} and {profile_values} to {profile_value}.
  */
 function profile_update_7001() {
-  $ret = array();
-  db_rename_table($ret, 'profile_fields', 'profile_field');
-  db_rename_table($ret, 'profile_values', 'profile_value');
-  return $ret;
+  db_rename_table('profile_fields', 'profile_field');
+  db_rename_table('profile_values', 'profile_value');
 }

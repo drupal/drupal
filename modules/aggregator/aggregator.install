@@ -266,10 +266,9 @@ function aggregator_schema() {
  * Add hash column to aggregator_feed table.
  */
 function aggregator_update_7000() {
-  $ret = array();
-  db_add_field($ret, 'aggregator_feed', 'hash', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
-  return $ret;
+  db_add_field('aggregator_feed', 'hash', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
 }
+
 /**
  * Add aggregator teaser length to settings from old global default teaser length
  */

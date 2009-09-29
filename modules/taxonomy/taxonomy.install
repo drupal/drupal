@@ -293,7 +293,6 @@ function taxonomy_schema() {
  * Add vocabulary machine_name column.
  */
 function taxonomy_update_7002() {
-  $ret = array();
   $field = array(
     'type' => 'varchar',
     'length' => 255,
@@ -302,7 +301,7 @@ function taxonomy_update_7002() {
     'description' => 'The vocabulary machine name.',
   );
 
-  db_add_field($ret, 'taxonomy_vocabulary', 'machine_name', $field);
+  db_add_field('taxonomy_vocabulary', 'machine_name', $field);
 
   foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
     $machine_name = 'vocabulary_' . $vid;
@@ -312,7 +311,6 @@ function taxonomy_update_7002() {
       ->execute();
     field_attach_create_bundle($machine_name);
   }
-  return $ret;
 }
 
 /**
@@ -322,8 +320,5 @@ function taxonomy_update_7002() {
  * itself is retained to allow for data to be upgraded.
  */
 function taxonomy_update_7003() {
-  $ret = array();
-  db_drop_field($ret, 'taxonomy_vocabulary', 'relations');
-
-  return $ret;
+  db_drop_field('taxonomy_vocabulary', 'relations');
 }

@@ -684,7 +684,7 @@ function hook_image_toolkits() {
  *   An array containing the message data. Keys in this array include:
  *  - 'id':
  *     The drupal_mail() id of the message. Look at module source code or
- *     drupal_mail() for possible id values. 
+ *     drupal_mail() for possible id values.
  *  - 'to':
  *     The address or addresses the message will be sent to. The
  *     formatting of this string must comply with RFC 2822.
@@ -696,7 +696,7 @@ function hook_image_toolkits() {
  *     characters, or the email may not be sent properly.
  *  - 'body':
  *     An array of strings containing the message text. The message body is
- *     created by concatenating the individual array strings into a single text 
+ *     created by concatenating the individual array strings into a single text
  *     string using "\n\n" as a separator.
  *  - 'headers':
  *     Associative array containing mail headers, such as From, Sender,
@@ -1897,30 +1897,28 @@ function hook_install() {
  * If your update task is potentially time-consuming, you'll need to implement a
  * multipass update to avoid PHP timeouts. Multipass updates use the $sandbox
  * parameter provided by the batch API (normally, $context['sandbox']) to store
- * information between successive calls, and the $ret['#finished'] return value
+ * information between successive calls, and the $sandbox['#finished'] value
  * to provide feedback regarding completion level.
  *
  * See the batch operations page for more information on how to use the batch API:
  * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
  *
- * @return An array with the results of the calls to update_sql(). An upate
- *   function can force the current and all later updates for this
- *   module to abort by returning a $ret array with an element like:
- *   $ret['#abort'] = array('success' => FALSE, 'query' => 'What went wrong');
- *   The schema version will not be updated in this case, and all the
- *   aborted updates will continue to appear on update.php as updates that
- *   have not yet been run. Multipass update functions will also want to pass
- *   back the $ret['#finished'] variable to inform the batch API of progress.
+ * @throws DrupalUpdateException, PDOException
+ *   In case of error, update hooks should throw an instance of DrupalUpdateException
+ *   with a meaningful message for the user. If a database query fails for whatever
+ *   reason, it will throw a PDOException.
+ *
+ * @return
+ *   Optionally update hooks may return a translated string that will be displayed
+ *   to the user. If no message is returned, no message will be presented to the
+ *   user.
  */
 function hook_update_N(&$sandbox = NULL) {
   // For most updates, the following is sufficient.
-  $ret = array();
-  db_add_field($ret, 'mytable1', 'newcol', array('type' => 'int', 'not null' => TRUE, 'description' => 'My new integer column.'));
-  return $ret;
+  db_add_field('mytable1', 'newcol', array('type' => 'int', 'not null' => TRUE, 'description' => 'My new integer column.'));
 
   // However, for more complex operations that may take a long time,
   // you may hook into Batch API as in the following example.
-  $ret = array();
 
   // Update 3 users at a time to have an exclamation point after their names.
   // (They're really happy that we can do batch API in this hook!)
@@ -1938,15 +1936,23 @@ function hook_update_N(&$sandbox = NULL) {
     ->execute();
   foreach ($users as $user) {
     $user->name .= '!';
-    $ret[] = update_sql("UPDATE {users} SET name = '$user->name' WHERE uid = $user->uid");
+    db_update('users')
+      ->fields(array('name' => $user->name))
+      ->condition('uid', $user->uid)
+      ->execute();
 
     $sandbox['progress']++;
     $sandbox['current_uid'] = $user->uid;
   }
 
-  $ret['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
-  return $ret;
+  // To display a message to the user when the update is completed, return it.
+  // If you do not want to display a completion message, simply return nothing.
+  return t('The update did what it was supposed to do.');
+
+  // In case of an error, simply throw an exception with an error message.
+  throw new DrupalUpdateException('Something went wrong; here is what you should do.');
 }
 
 /**

@@ -58,40 +58,42 @@ function comment_update_7000() {
   foreach ($types as $type => $object) {
     variable_del('comment_default_order' . $type);
   }
-  return array(array('success' => TRUE, 'query' => 'Comment order settings removed.'));
+  return t('Comment order settings removed.');
 }
 
 /**
  * Change comment status from published being 0 to being 1
  */
 function comment_update_7001() {
-  $ret = array();
-  $ret[] = update_sql("UPDATE {comments} SET status = 3 WHERE status = 0");
-  $ret[] = update_sql("UPDATE {comments} SET status = 0 WHERE status = 1");
-  $ret[] = update_sql("UPDATE {comments} SET status = 1 WHERE status = 3");
+  $changes = array(
+    3 => 0,
+    0 => 1,
+    1 => 3,
+  );
 
-  return $ret;
+  foreach ($changes as $old => $new) {
+  db_update('comments')
+    ->fields(array('status', $new))
+    ->condition('status', $old)
+    ->execute();
+  }
 }
 
 /**
  * Rename {comments} table to {comment}.
  */
 function comment_update_7002() {
-  $ret = array();
-  db_rename_table($ret, 'comments', 'comment');
-  return $ret;
+  db_rename_table('comments', 'comment');
 }
 
 /**
  * Improve indexes on the comment table.
  */
 function comment_update_7003() {
-  $ret = array();
-  db_drop_index($ret, 'comment', 'status');
-  db_drop_index($ret, 'comment', 'pid');
-  db_add_index($ret, 'comment', 'comment_pid_status', array('pid', 'status'));
-  db_add_index($ret, 'comment', 'comment_num_new', array('nid', 'timestamp', 'status'));
-  return $ret;
+  db_drop_index('comment', 'status');
+  db_drop_index('comment', 'pid');
+  db_add_index('comment', 'comment_pid_status', array('pid', 'status'));
+  db_add_index('comment', 'comment_num_new', array('nid', 'timestamp', 'status'));
 }
 
 /**
@@ -108,29 +110,23 @@ function comment_update_7004() {
       variable_set('comment_default_mode_' . $type, 0);
     }
   }
-  return array();
 }
 
 /**
  * Create comment Field API bundles.
  */
 function comment_update_7005() {
-  $ret = array();
-
   foreach (node_type_get_types() as $info) {
     field_attach_create_bundle('comment_node_' . $info->type);
   }
-  return $ret;
 }
 
 /**
  * Create user related indexes.
  */
 function comment_update_7006() {
-  $ret = array();
-  db_add_index($ret, 'comment', 'comment_uid', array('uid'));
-  db_add_index($ret, 'node_comment_statistics', 'last_comment_uid', array('last_comment_uid'));
-  return $ret;
+  db_add_index('comment', 'comment_uid', array('uid'));
+  db_add_index('node_comment_statistics', 'last_comment_uid', array('last_comment_uid'));
 }
 
 /**
