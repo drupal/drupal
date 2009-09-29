@@ -145,7 +145,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
 
   $form_element = array(
     '#theme' => 'field_multiple_value_form',
-    '#multiple' => $field['cardinality'],
+    '#cardinality' => $field['cardinality'],
     '#title' => $title,
     '#required' => $instance['required'],
     '#description' => $description,
@@ -224,7 +224,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
 function theme_field_multiple_value_form($element) {
   $output = '';
 
-  if ($element['#multiple'] > 1 || $element['#multiple'] == FIELD_CARDINALITY_UNLIMITED) {
+  if ($element['#cardinality'] > 1 || $element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
     $table_id = $element['#field_name'] . '_values';
     $order_class = $element['#field_name'] . '-delta-order';
     $required = !empty($element['#required']) ? '<span class="form-required" title="' . t('This field is required. ') . '">*</span>' : '';
