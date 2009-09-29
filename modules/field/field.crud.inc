@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.34 2009/09/27 12:52:55 dries Exp $
+// $Id: field.crud.inc,v 1.35 2009/09/29 17:36:29 webchick Exp $
 
 /**
  * @file
@@ -324,6 +324,7 @@ function field_create_field($field) {
     'locked' => $field['locked'],
     'data' => $data,
     'cardinality' => $field['cardinality'],
+    'translatable' => $field['translatable'],
     'deleted' => $field['deleted'],
   );
 
