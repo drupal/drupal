@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.210 2009/09/18 00:12:45 webchick Exp $
+// $Id: install.php,v 1.211 2009/09/29 15:31:12 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -639,7 +639,7 @@ function install_tasks_to_display($install_state) {
  * @see install_full_redirect_url()
  */
 function install_redirect_url($install_state) {
-  return 'install.php?' . drupal_query_string_encode($install_state['parameters']);
+  return 'install.php?' . drupal_http_build_query($install_state['parameters']);
 }
 
 /**

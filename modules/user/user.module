@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1053 2009/09/25 15:14:18 dries Exp $
+// $Id: user.module,v 1.1054 2009/09/29 15:31:16 dries Exp $
 
 /**
  * @file
@@ -3139,9 +3139,16 @@ function user_modules_uninstalled($modules) {
 }
 
 /**
- * Rewrite the destination to prevent redirecting to login page after login.
+ * Helper function to rewrite the destination to avoid redirecting to login page after login.
+ *
+ * Third-party authentication modules may use this function to determine the
+ * proper destination after a user has been properly logged in.
  */
 function user_login_destination() {
   $destination = drupal_get_destination();
-  return $destination == 'destination=user%2Flogin' ? 'destination=user' : $destination;
+  if ($destination['destination'] == 'user/login') {
+    $destination['destination'] = 'user';
+  }
+  return $destination;
 }
+

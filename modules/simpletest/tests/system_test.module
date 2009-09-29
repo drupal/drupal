@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.15 2009/08/17 20:32:30 dries Exp $
+// $Id: system_test.module,v 1.16 2009/09/29 15:31:16 dries Exp $
 
 /**
  * Implement hook_menu().
@@ -116,7 +116,8 @@ function system_test_redirect_invalid_scheme() {
 }
 
 function system_test_destination() {
-  return 'The destination: ' . drupal_get_destination();
+  $destination = drupal_get_destination();
+  return 'The destination: ' . $destination['destination'];
 }
 
 /**

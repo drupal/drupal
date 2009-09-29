@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.82 2009/09/25 14:24:34 dries Exp $
+// $Id: node.pages.inc,v 1.83 2009/09/29 15:31:15 dries Exp $
 
 /**
  * @file
@@ -300,7 +300,7 @@ function node_form($form, &$form_state, $node) {
  * Button submit function: handle the 'Delete' button on the node form.
  */
 function node_form_delete_submit($form, &$form_state) {
-  $destination = '';
+  $destination = array();
   if (isset($_GET['destination'])) {
     $destination = drupal_get_destination();
     unset($_GET['destination']);

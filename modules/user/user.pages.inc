@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.56 2009/09/22 07:50:16 dries Exp $
+// $Id: user.pages.inc,v 1.57 2009/09/29 15:31:17 dries Exp $
 
 /**
  * @file
@@ -292,7 +292,7 @@ function user_profile_form_submit($form, &$form_state) {
  * Submit function for the 'Cancel account' button on the user edit form.
  */
 function user_edit_cancel_submit($form, &$form_state) {
-  $destination = '';
+  $destination = array();
   if (isset($_GET['destination'])) {
     $destination = drupal_get_destination();
     unset($_GET['destination']);

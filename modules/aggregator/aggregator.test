@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.33 2009/09/25 15:20:12 dries Exp $
+// $Id: aggregator.test,v 1.34 2009/09/29 15:31:13 dries Exp $
 
 /**
  * @file
@@ -56,7 +56,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $feed_name = $this->randomName(10);
     if (!$feed_url) {
       $feed_url = url('rss.xml', array(
-        'query' => 'feed=' . $feed_name,
+        'query' => array('feed' => $feed_name),
         'absolute' => TRUE,
       ));
     }

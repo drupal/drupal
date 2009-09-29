@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.77 2009/09/21 06:44:14 dries Exp $
+// $Id: system.test,v 1.78 2009/09/29 15:31:16 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -379,12 +379,12 @@ class CronRunTestCase extends DrupalWebTestCase {
 
     // Run cron anonymously with a random cron key.
     $key = $this->randomName(16);
-    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE, 'query' => 'cron_key=' . $key));
+    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => $key)));
     $this->assertResponse(403);
 
     // Run cron anonymously with the valid cron key.
     $key = variable_get('cron_key', 'drupal');
-    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE, 'query' => 'cron_key=' . $key));
+    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => $key)));
     $this->assertResponse(200);
 
     // Execute cron directly.

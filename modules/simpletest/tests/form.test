@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.16 2009/09/25 17:18:41 dries Exp $
+// $Id: form.test,v 1.17 2009/09/29 15:31:16 dries Exp $
 
 /**
  * @file
@@ -447,10 +447,10 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
     $user = $this->drupalCreateUser(array('access content'));
     $this->drupalLogin($user);
 
-    $this->drupalPost('form_test/form-storage', array('title' => 'new', 'value' => 'value_is_set'), 'Continue', array('query' => 'cache=1'));
+    $this->drupalPost('form_test/form-storage', array('title' => 'new', 'value' => 'value_is_set'), 'Continue', array('query' => array('cache' => 1)));
     $this->assertText('Form constructions: 1', t('The form has been constructed one time till now.'));
 
-    $this->drupalPost(NULL, array(), 'Save', array('query' => 'cache=1'));
+    $this->drupalPost(NULL, array(), 'Save', array('query' => array('cache' => 1)));
     $this->assertText('Form constructions: 2', t('The form has been constructed two times till now.'));
     $this->assertText('Title: new', t('The form storage has stored the values.'));
   }

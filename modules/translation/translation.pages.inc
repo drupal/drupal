@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.pages.inc,v 1.8 2009/07/29 06:39:35 dries Exp $
+// $Id: translation.pages.inc,v 1.9 2009/09/29 15:31:16 dries Exp $
 
 /**
  * @file
@@ -47,7 +47,7 @@ function translation_node_overview($node) {
       // No such translation in the set yet: help user to create it.
       $title = t('n/a');
       if (node_access('create', $node)) {
-        $options[] = l(t('add translation'), 'node/add/' . str_replace('_', '-', $node->type), array('query' => "translation=$node->nid&language=$language->language"));
+        $options[] = l(t('add translation'), 'node/add/' . str_replace('_', '-', $node->type), array('query' => array('translation' => $node->nid, 'language' => $language->language)));
       }
       $status = t('Not translated');
     }

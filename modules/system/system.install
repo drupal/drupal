@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.391 2009/09/29 15:13:56 dries Exp $
+// $Id: system.install,v 1.392 2009/09/29 15:31:16 dries Exp $
 
 /**
  * @file
@@ -172,7 +172,7 @@ function system_requirements($phase) {
     }
 
     $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url($base_url . '/cron.php', array('external' => TRUE, 'query' => 'cron_key=' . variable_get('cron_key', 'drupal')))));
+    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url($base_url . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))))));
 
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
