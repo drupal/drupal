@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.48 2009/09/27 12:52:55 dries Exp $
+// $Id: field.attach.inc,v 1.49 2009/09/29 01:08:35 dries Exp $
 
 /**
  * @file
@@ -452,7 +452,7 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
  *
  *         // Only for 'single' widgets:
  *         '#theme' => 'field_multiple_value_form',
- *         '#multiple' => the field cardinality,
+ *         '#cardinality' => the field cardinality,
  *         // One sub-array per copy of the widget, keyed by delta.
  *         0 => array(
  *           '#title' => the title to be displayed by the widget,
