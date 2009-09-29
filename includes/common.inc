@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.999 2009/09/29 15:31:13 dries Exp $
+// $Id: common.inc,v 1.1000 2009/09/29 17:52:46 dries Exp $
 
 /**
  * @file
@@ -3052,9 +3052,6 @@ function drupal_load_stylesheet($file, $optimize = NULL) {
  *   Contents of the stylesheet including the imported stylesheets.
  */
 function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
-  // Replaces @import commands with the actual stylesheet content.
-  // This happens recursively but omits external files.
-  $contents = preg_replace_callback('/@import\s*(?:url\()?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\)?;/', '_drupal_load_stylesheet', $contents);
   // Remove multiple charset declarations for standards compliance (and fixing Safari problems).
   $contents = preg_replace('/^@charset\s+[\'"](\S*)\b[\'"];/i', '', $contents);
 
@@ -3066,6 +3063,10 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
       [\n\r]                        # Remove line breaks.
       >x', '\1', $contents);
   }
+
+  // Replaces @import commands with the actual stylesheet content.
+  // This happens recursively but omits external files.
+  $contents = preg_replace_callback('/@import\s*(?:url\()?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\)?;/', '_drupal_load_stylesheet', $contents);
   return $contents;
 }
 
