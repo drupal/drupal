@@ -2194,7 +2194,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
 
     $this->obj_type = 'test_entity';
 
-    $this->field = array(
+    $field = array(
       'field_name' => $this->field_name,
       'type' => 'test_field',
       'cardinality' => 4,
@@ -2203,9 +2203,10 @@ class FieldTranslationsTestCase extends FieldTestCase {
         'test_hook_in' => FALSE,
       ),
     );
-    field_create_field($this->field);
+    field_create_field($field);
+    $this->field = field_read_field($this->field_name);
 
-    $this->instance = array(
+    $instance = array(
       'field_name' => $this->field_name,
       'bundle' => 'test_bundle',
       'label' => $this->randomName() . '_label',
@@ -2222,7 +2223,8 @@ class FieldTranslationsTestCase extends FieldTestCase {
         ),
       ),
     );
-    field_create_instance($this->instance);
+    field_create_instance($instance);
+    $this->instance = field_read_instance($this->field_name, 'test_bundle');
 
     for ($i = 0; $i < 3; ++$i) {
       locale_inc_callback('locale_add_language', 'l' . $i, $this->randomString(), $this->randomString());
@@ -2380,7 +2382,9 @@ class FieldTranslationsTestCase extends FieldTestCase {
     $obj_type = 'test_entity';
     $object = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
     $field_translations = array();
-    foreach (field_multilingual_available_languages($obj_type, $this->field) as $langcode) {
+    $available_languages = field_multilingual_available_languages($obj_type, $this->field);
+    $this->assertTrue(count($available_languages) > 1, t('Field is translatable.')); 
+    foreach ($available_languages as $langcode) {
       $field_translations[$langcode] = $this->_generateTestFieldValues($this->field['cardinality']);
     }
 

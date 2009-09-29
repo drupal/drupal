@@ -324,6 +324,7 @@ function field_create_field($field) {
     'locked' => $field['locked'],
     'data' => $data,
     'cardinality' => $field['cardinality'],
+    'translatable' => $field['translatable'],
     'deleted' => $field['deleted'],
   );
 
