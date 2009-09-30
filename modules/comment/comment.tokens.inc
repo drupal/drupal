@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tokens.inc,v 1.1 2009/08/19 20:19:36 dries Exp $
+// $Id: comment.tokens.inc,v 1.2 2009/09/30 18:37:30 dries Exp $
 
 /**
  * @file
@@ -113,8 +113,8 @@ function comment_token_info() {
 function comment_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
-    $url_options['language'] = $language;
-    $language_code = $language->language;
+    $url_options['language'] = $options['language'];
+    $language_code = $options['language']->language;
   }
   else {
     $language_code = NULL;
