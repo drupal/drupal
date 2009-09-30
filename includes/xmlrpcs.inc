@@ -106,8 +106,8 @@ function xmlrpc_server_error($error, $message = FALSE) {
 
 function xmlrpc_server_output($xml) {
   $xml = '<?xml version="1.0"?>' . "\n" . $xml;
-  drupal_set_header('Content-Length', strlen($xml));
-  drupal_set_header('Content-Type', 'text/xml');
+  drupal_add_http_header('Content-Length', strlen($xml));
+  drupal_add_http_header('Content-Type', 'text/xml');
   echo $xml;
   exit;
 }

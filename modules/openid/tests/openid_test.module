@@ -69,7 +69,7 @@ function openid_test_menu() {
  */
 function openid_test_yadis_xrds() {
   if ($_SERVER['HTTP_ACCEPT'] == 'application/xrds+xml') {
-    drupal_set_header('Content-Type', 'application/xrds+xml');
+    drupal_add_http_header('Content-Type', 'application/xrds+xml');
     print '<?xml version="1.0" encoding="UTF-8"?>
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)">
         <XRD>
@@ -89,7 +89,7 @@ function openid_test_yadis_xrds() {
  * Menu callback; regular HTML page with an X-XRDS-Location HTTP header.
  */
 function openid_test_yadis_x_xrds_location() {
-  drupal_set_header('X-XRDS-Location', url('openid-test/yadis/xrds', array('absolute' => TRUE)));
+  drupal_add_http_header('X-XRDS-Location', url('openid-test/yadis/xrds', array('absolute' => TRUE)));
   return t('This page includes an X-RDS-Location HTTP header containing the URL of an XRDS document.');
 }
 
@@ -181,7 +181,7 @@ function _openid_test_endpoint_associate() {
 
   // Respond to Relying Party in the special Key-Value Form Encoding (see OpenID
   // Authentication 1.0, section 4.1.1).
-  drupal_set_header('Content-Type', 'text/plain');
+  drupal_add_http_header('Content-Type', 'text/plain');
   print _openid_create_message($response);
 }
 
@@ -228,6 +228,6 @@ function _openid_test_endpoint_authenticate() {
 
   // Put the signed message into the query string of a URL supplied by the
   // Relying Party, and redirect the user.
-  drupal_set_header('Content-Type', 'text/plain');
+  drupal_add_http_header('Content-Type', 'text/plain');
   header('Location: ' . url($_REQUEST['openid_return_to'], array('query' => $response, 'external' => TRUE)));
 }

@@ -645,7 +645,7 @@ function drupal_goto($path = '', array $query = array(), $fragment = NULL, $http
  */
 function drupal_site_offline() {
   drupal_maintenance_theme();
-  drupal_set_header('503 Service unavailable');
+  drupal_add_http_header('503 Service unavailable');
   drupal_set_title(t('Site under maintenance'));
   print theme('maintenance_page', filter_xss_admin(variable_get('maintenance_mode_message',
     t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))))));
@@ -655,7 +655,7 @@ function drupal_site_offline() {
  * Generates a 404 error if the request can not be handled.
  */
 function drupal_not_found() {
-  drupal_set_header('404 Not Found');
+  drupal_add_http_header('404 Not Found');
 
   watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
@@ -687,7 +687,7 @@ function drupal_not_found() {
  * Generates a 403 error if the request is not allowed.
  */
 function drupal_access_denied() {
-  drupal_set_header('403 Forbidden');
+  drupal_add_http_header('403 Forbidden');
   watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
   // Keep old path for reference, and to allow forms to redirect to it.
@@ -1139,7 +1139,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   }
 
   if ($fatal) {
-    drupal_set_header('500 Service unavailable (with message)');
+    drupal_add_http_header('500 Service unavailable (with message)');
   }
 
   if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
@@ -3411,7 +3411,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  * callback function and each value an array of arguments. For example:
  *
  * @code
- * $build['#attached']['drupal_set_header'] = array(
+ * $build['#attached']['drupal_add_http_header'] = array(
  *   array('Content-Type', 'application/rss+xml; charset=utf-8'),
  * );
  * @endcode
@@ -3789,7 +3789,7 @@ function drupal_json_encode($var) {
  */
 function drupal_json_output($var = NULL) {
   // We are returning JavaScript, so tell the browser.
-  drupal_set_header('Content-Type', 'text/javascript; charset=utf-8');
+  drupal_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
 
   if (isset($var)) {
     echo drupal_json_encode($var);
@@ -3902,7 +3902,7 @@ function _drupal_bootstrap_full() {
   set_exception_handler('_drupal_exception_handler');
 
   // Emit the correct charset HTTP header.
-  drupal_set_header('Content-Type', 'text/html; charset=utf-8');
+  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
   // Detect string handling method
   unicode_check();
   // Undo magic quotes
@@ -3957,9 +3957,9 @@ function drupal_page_set_cache() {
     );
 
     // Restore preferred header names based on the lower-case names returned
-    // by drupal_get_header().
+    // by drupal_get_http_header().
     $header_names = _drupal_set_preferred_header_name();
-    foreach (drupal_get_header() as $name_lower => $value) {
+    foreach (drupal_get_http_header() as $name_lower => $value) {
       $cache->headers[$header_names[$name_lower]] = $value;
     }
 

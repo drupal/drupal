@@ -10,8 +10,6 @@
  * Implement hook_menu().
  */
 function browser_test_menu() {
-  $items = array();
-
   $items['browser_test/print/get'] = array(
     'page callback' => 'browser_test_print_get',
     'access arguments' => array('access content'),
@@ -69,7 +67,7 @@ function browser_test_refresh_meta() {
 function browser_test_refresh_header() {
   if (!isset($_GET['refresh'])) {
     $url = url('browser_test/refresh/header', array('absolute' => TRUE, 'query' => array('refresh' => 'true')));
-    drupal_set_header('Location', $url);
+    drupal_add_http_header('Location', $url);
     return '';
   }
   echo 'Refresh successful';

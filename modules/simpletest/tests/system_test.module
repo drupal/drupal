@@ -96,7 +96,7 @@ function system_test_redirect($code) {
 }
 
 function system_test_set_header() {
-  drupal_set_header($_GET['name'], $_GET['value']);
+  drupal_add_http_header($_GET['name'], $_GET['value']);
   return t('The following header was set: %name: %value', array('%name' => $_GET['name'], '%value' => $_GET['value']));
 }
 

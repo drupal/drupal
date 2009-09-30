@@ -33,21 +33,21 @@ function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   // Send appropriate response. We respond with a 304 not modified on either
   // etag or on last modified.
   if ($use_last_modified) {
-    drupal_set_header('Last-Modified', gmdate(DATE_RFC1123, $last_modified));
+    drupal_add_http_header('Last-Modified', gmdate(DATE_RFC1123, $last_modified));
   }
   if ($use_etag) {
-    drupal_set_header('ETag', $etag);
+    drupal_add_http_header('ETag', $etag);
   }
   // Return 304 not modified if either last modified or etag match.
   if ($last_modified == $if_modified_since || $etag == $if_none_match) {
-    drupal_set_header('304 Not Modified');
+    drupal_add_http_header('304 Not Modified');
     return;
   }
 
   // The following headers force validation of cache:
-  drupal_set_header('Expires', 'Sun, 19 Nov 1978 05:00:00 GMT');
-  drupal_set_header('Cache-Control', 'must-revalidate');
-  drupal_set_header('Content-Type', 'application/rss+xml; charset=utf-8');
+  drupal_add_http_header('Expires', 'Sun, 19 Nov 1978 05:00:00 GMT');
+  drupal_add_http_header('Cache-Control', 'must-revalidate');
+  drupal_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');
 
   // Read actual feed from file.
   $file_name = DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/tests/aggregator_test_rss091.xml';

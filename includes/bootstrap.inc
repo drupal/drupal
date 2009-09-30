@@ -843,7 +843,7 @@ function drupal_load($type, $name) {
  * @param $append
  *   Whether to append the value to an existing header or to replace it.
  */
-function drupal_set_header($name = NULL, $value = NULL, $append = FALSE) {
+function drupal_add_http_header($name = NULL, $value = NULL, $append = FALSE) {
   // The headers as name/value pairs.
   $headers = &drupal_static(__FUNCTION__, array());
 
@@ -885,8 +885,8 @@ function drupal_set_header($name = NULL, $value = NULL, $append = FALSE) {
  *   A string containing the header value, or FALSE if the header has been set,
  *   or NULL if the header has not been set.
  */
-function drupal_get_header($name = NULL) {
-  $headers = drupal_set_header();
+function drupal_get_http_header($name = NULL) {
+  $headers = drupal_add_http_header();
   if (isset($name)) {
     $name = strtolower($name);
     return isset($headers[$name]) ? $headers[$name] : NULL;
@@ -910,9 +910,9 @@ function _drupal_set_preferred_header_name($name = NULL) {
 }
 
 /**
- * Send the HTTP response headers previously set using drupal_set_header().
+ * Send the HTTP response headers previously set using drupal_add_http_header().
  * Add default headers, unless they have been replaced or unset using
- * drupal_set_header().
+ * drupal_add_http_header().
  *
  * @param $default_headers
  *   An array of headers as name/value pairs.
@@ -921,7 +921,7 @@ function _drupal_set_preferred_header_name($name = NULL) {
  */
 function drupal_send_headers($default_headers = array(), $only_default = FALSE) {
   $headers_sent = &drupal_static(__FUNCTION__, FALSE);
-  $headers = drupal_get_header();
+  $headers = drupal_get_http_header();
   if ($only_default && $headers_sent) {
     $headers = array();
   }
@@ -994,7 +994,7 @@ function drupal_page_header() {
  *
  * The headers allow as much as possible in proxies and browsers without any
  * particular knowledge about the pages. Modules can override these headers
- * using drupal_set_header().
+ * using drupal_add_http_header().
  *
  * If the request is conditional (using If-Modified-Since and If-None-Match),
  * and the conditions match those currently in the cache, a 304 Not Modified
@@ -1006,10 +1006,10 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   $return_compressed = $page_compression && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE;
 
   // Get headers set in hook_boot(). Keys are lower-case.
-  $hook_boot_headers = drupal_get_header();
+  $hook_boot_headers = drupal_get_http_header();
 
   // Headers generated in this function, that may be replaced or unset using
-  // drupal_set_headers(). Keys are mixed-case.
+  // drupal_add_http_headers(). Keys are mixed-case.
   $default_headers = array();
 
   foreach ($cache->headers as $name => $value) {
@@ -1018,7 +1018,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
     // headers set in hook_boot().
     $name_lower = strtolower($name);
     if (in_array($name_lower, array('content-location', 'expires', 'cache-control', 'vary')) && !isset($hook_boot_headers[$name_lower])) {
-      drupal_set_header($name, $value);
+      drupal_add_http_header($name, $value);
       unset($cache->headers[$name]);
     }
   }
@@ -1050,7 +1050,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
 
   // Send the remaining headers.
   foreach ($cache->headers as $name => $value) {
-    drupal_set_header($name, $value);
+    drupal_add_http_header($name, $value);
   }
 
   $default_headers['Last-Modified'] = gmdate(DATE_RFC1123, $cache->created);

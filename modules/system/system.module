@@ -2730,7 +2730,7 @@ function theme_meta_generator_html($version = VERSION) {
  * @ingroup themeable
  */
 function theme_meta_generator_header($version = VERSION) {
-  drupal_set_header('X-Generator', 'Drupal ' . $version . ' (http://drupal.org)');
+  drupal_add_http_header('X-Generator', 'Drupal ' . $version . ' (http://drupal.org)');
 }
 
 /**
@@ -2824,7 +2824,7 @@ function system_run_cron_image() {
 
   // Output a transparent 1x1 image to the browser; required for clients not
   // supporting JavaScript.
-  drupal_set_header('Content-Type', 'image/gif');
+  drupal_add_http_header('Content-Type', 'image/gif');
   echo "\x47\x49\x46\x38\x39\x61\x1\x0\x1\x0\x80\xff\x0\xc0\xc0\xc0\x0\x0\x0\x21\xf9\x4\x1\x0\x0\x0\x0\x2c\x0\x0\x0\x0\x1\x0\x1\x0\x0\x2\x2\x44\x1\x0\x3b";
 
   // Cron threshold semaphore is used to avoid errors every time the image

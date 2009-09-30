@@ -1502,7 +1502,7 @@ function file_transfer($uri, $headers) {
   }
 
   foreach ($headers as $name => $value) {
-    drupal_set_header($name, $value);
+    drupal_add_http_header($name, $value);
   }
   drupal_send_headers();
   $scheme = file_uri_scheme($uri);
