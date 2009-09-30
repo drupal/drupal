@@ -89,6 +89,21 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost(NULL, array(), t('Send'));
 
     $this->assertText($this->web_user->name, t('User was logged in.'));
+
+    // Test logging in via the user/login page.
+    $this->drupalLogout();
+    $this->drupalPost('user/login', $edit, t('Log in'));
+
+    // Check we are on the OpenID redirect form.
+    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+
+    // Submit form to the OpenID Provider Endpoint.
+    $this->drupalPost(NULL, array(), t('Send'));
+
+    $this->assertText($this->web_user->name, t('User was logged in.'));
+
+    // Verify user was redirected away from user/login to an accessible page.
+    $this->assertResponse(200);
   }
 
   /**
