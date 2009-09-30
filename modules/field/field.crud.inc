@@ -410,7 +410,7 @@ function field_update_field($field) {
   );
   $field['indexes'] += $schema['indexes'];
 
-  $has_data = field_attach_field_has_data($field);
+  $has_data = field_has_data($field);
 
   // See if any module forbids the update by throwing an exception.
   foreach (module_implements('field_update_forbid') as $module) {

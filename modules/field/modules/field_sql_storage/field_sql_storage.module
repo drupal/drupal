@@ -223,7 +223,7 @@ function field_sql_storage_field_storage_create_field($field) {
  */
 function field_sql_storage_field_update_forbid($field, $prior_field, $has_data) {
   if ($has_data && $field['columns'] != $prior_field['columns']) {
-    throw new FieldException("field_sql_storage cannot change the schema for an existing field with data.");
+    throw new FieldUpdateForbiddenException("field_sql_storage cannot change the schema for an existing field with data.");
   }
 }
 

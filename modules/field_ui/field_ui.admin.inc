@@ -1115,7 +1115,7 @@ function field_ui_field_edit_form($form, &$form_state, $obj_type, $bundle, $inst
   $description .= $info['description'] . '</p>';
   $form['#prefix'] = '<div class="description">' . $description . '</div>';
 
-  $has_data = field_attach_field_has_data($field);
+  $has_data = field_has_data($field);
   if ($has_data) {
     $description = '<p>' . t('These settings apply to the %field field everywhere it is used. Because the field already has data, some settings can no longer be changed.', array('%field' => $instance['label'])) . '</p>';
   }
@@ -1144,7 +1144,7 @@ function field_ui_field_edit_form($form, &$form_state, $obj_type, $bundle, $inst
     '#description' => $description,
   );
 
-  // Add additional field settings from the field module. The field module is
+  // Add additional field type settings. The field type module is
   // responsible for not returning settings that cannot be changed if
   // the field already has data.
   $additions = module_invoke($field['module'], 'field_settings_form', $field, $instance, $has_data);

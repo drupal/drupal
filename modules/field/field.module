@@ -131,6 +131,11 @@ define('FIELD_QUERY_COMPLETE', 'FIELD_QUERY_COMPLETE');
 class FieldException extends Exception {}
 
 /**
+ * Exception class thrown by hook_field_update_forbid().
+ */
+class FieldUpdateForbiddenException extends FieldException {}
+
+/**
  * Implement hook_flush_caches.
  */
 function field_flush_caches() {
@@ -608,6 +613,19 @@ function field_view_field($obj_type, $object, $field, $instance, $build_mode = '
     $output = $view[$field['field_name']];
   }
   return $output;
+}
+
+/**
+ * Determine whether a field has any data.
+ *
+ * @param $field
+ *   A field structure.
+ * @return
+ *   TRUE if the field has data for any object; FALSE otherwise.
+ */
+function field_has_data($field) {
+  $results = field_attach_query($field['id'], array(), 1);
+  return !empty($results);
 }
 
 /**

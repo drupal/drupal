@@ -1315,7 +1315,7 @@ function hook_field_create_instance($instance) {
  * @param $has_data
  *   Whether any data already exists for this field.
  * @return
- *   Throws a FieldException to prevent the update from occuring.
+ *   Throws a FieldUpdateForbiddenException to prevent the update from occuring.
  */
 function hook_field_update_field_forbid($field, $prior_field, $has_data) {
   // A 'list' field stores integer keys mapped to display values. If
@@ -1328,7 +1328,7 @@ function hook_field_update_field_forbid($field, $prior_field, $has_data) {
     // If any data exist for those keys, forbid the update.
     $count = field_attach_query($prior_field['id'], array('value', $lost_keys, 'IN'), 1);
     if ($count > 0) {
-      throw new FieldException("Cannot update a list field not to include keys with existing data");
+      throw new FieldUpdateForbiddenException("Cannot update a list field not to include keys with existing data");
     }
   }
 }

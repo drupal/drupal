@@ -295,6 +295,29 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $this->assertEqual($count, 1, 'NULL field translation is wiped.');
   }
 
+  /**
+   * Test trying to update a field with data.
+   */
+  function testUpdateFieldSchemaWithData() {
+    // Create a decimal 5.2 field and add some data.
+    $field = array('field_name' => 'decimal52', 'type' => 'number_decimal', 'settings' => array('precision' => 5, 'scale' => 2));
+    $field = field_create_field($field);
+    $instance = array('field_name' => 'decimal52', 'bundle' => FIELD_TEST_BUNDLE);
+    $instance = field_create_instance($instance);
+    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+    $entity->decimal52[FIELD_LANGUAGE_NONE][0]['value'] = '1.235';
+    field_attach_insert('test_entity', $entity);
+
+    // Attempt to update the field in a way that would work without data.
+    $field['settings']['scale'] = 3;
+    try {
+      field_update_field($field);
+      $this->fail(t('Cannot update field schema with data.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot update field schema with data.'));
+    }
+  }
 
   /**
    * Test adding and removing indexes while data is present.

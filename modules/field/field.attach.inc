@@ -1110,19 +1110,6 @@ function field_attach_query_revisions($field_id, $conditions, $count, &$cursor =
 }
 
 /**
- * Determine whether a field has any data.
- *
- * @param $field
- *   A field structure.
- * @return
- *   TRUE if the field has data for any object; FALSE otherwise.
- */
-function field_attach_field_has_data($field) {
-  $results = field_attach_query($field['id'], array(), 1);
-  return !empty($results);
-}
-
-/**
  * Generate and return a structured content array tree suitable for
  * drupal_render() for all of the fields on an object. The format of
  * each field's rendered content depends on the display formatter and
