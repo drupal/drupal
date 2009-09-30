@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.35 2009/09/27 12:52:55 dries Exp $
+// $Id: field.module,v 1.36 2009/09/30 12:26:36 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -129,6 +129,11 @@ define('FIELD_QUERY_COMPLETE', 'FIELD_QUERY_COMPLETE');
  * Field API exceptions to be caught by a single catch block.
  */
 class FieldException extends Exception {}
+
+/**
+ * Exception class thrown by hook_field_update_forbid().
+ */
+class FieldUpdateForbiddenException extends FieldException {}
 
 /**
  * Implement hook_flush_caches.
@@ -608,6 +613,19 @@ function field_view_field($obj_type, $object, $field, $instance, $build_mode = '
     $output = $view[$field['field_name']];
   }
   return $output;
+}
+
+/**
+ * Determine whether a field has any data.
+ *
+ * @param $field
+ *   A field structure.
+ * @return
+ *   TRUE if the field has data for any object; FALSE otherwise.
+ */
+function field_has_data($field) {
+  $results = field_attach_query($field['id'], array(), 1);
+  return !empty($results);
 }
 
 /**

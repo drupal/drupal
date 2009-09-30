@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.49 2009/09/29 01:08:35 dries Exp $
+// $Id: field.attach.inc,v 1.50 2009/09/30 12:26:36 dries Exp $
 
 /**
  * @file
@@ -1107,19 +1107,6 @@ function field_attach_query($field_id, $conditions, $count, &$cursor = NULL, $ag
  */
 function field_attach_query_revisions($field_id, $conditions, $count, &$cursor = NULL) {
   return field_attach_query($field_id, $conditions, $count, $cursor, FIELD_LOAD_REVISION);
-}
-
-/**
- * Determine whether a field has any data.
- *
- * @param $field
- *   A field structure.
- * @return
- *   TRUE if the field has data for any object; FALSE otherwise.
- */
-function field_attach_field_has_data($field) {
-  $results = field_attach_query($field['id'], array(), 1);
-  return !empty($results);
 }
 
 /**

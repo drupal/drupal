@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.35 2009/09/29 17:36:29 webchick Exp $
+// $Id: field.crud.inc,v 1.36 2009/09/30 12:26:36 dries Exp $
 
 /**
  * @file
@@ -410,7 +410,7 @@ function field_update_field($field) {
   );
   $field['indexes'] += $schema['indexes'];
 
-  $has_data = field_attach_field_has_data($field);
+  $has_data = field_has_data($field);
 
   // See if any module forbids the update by throwing an exception.
   foreach (module_implements('field_update_forbid') as $module) {

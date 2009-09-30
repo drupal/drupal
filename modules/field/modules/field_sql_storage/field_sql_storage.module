@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.25 2009/09/29 15:13:55 dries Exp $
+// $Id: field_sql_storage.module,v 1.26 2009/09/30 12:26:36 dries Exp $
 
 /**
  * @file
@@ -223,7 +223,7 @@ function field_sql_storage_field_storage_create_field($field) {
  */
 function field_sql_storage_field_update_forbid($field, $prior_field, $has_data) {
   if ($has_data && $field['columns'] != $prior_field['columns']) {
-    throw new FieldException("field_sql_storage cannot change the schema for an existing field with data.");
+    throw new FieldUpdateForbiddenException("field_sql_storage cannot change the schema for an existing field with data.");
   }
 }
 

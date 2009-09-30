@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.55 2009/09/29 17:36:29 webchick Exp $
+// $Id: field.test,v 1.56 2009/09/30 12:26:36 dries Exp $
 
 /**
  * @file
@@ -1871,30 +1871,6 @@ class FieldCrudTestCase extends FieldTestCase {
     $this->assertEqual($entity->decimal53[FIELD_LANGUAGE_NONE][0]['value'], '1.23', t('2 decimal places are left alone'));
     $this->assertEqual($entity->decimal53[FIELD_LANGUAGE_NONE][1]['value'], '1.235', t('3 decimal places are left alone'));
     $this->assertEqual($entity->decimal53[FIELD_LANGUAGE_NONE][2]['value'], '1.236', t('4 decimal places are rounded to 3'));
-  }
-
-  /**
-   * Test updating a field with data.
-   */
-  function testUpdateFieldSchemaWithData() {
-    // Create a decimal 5.2 field and add some data.
-    $field = array('field_name' => 'decimal52', 'type' => 'number_decimal', 'settings' => array('precision' => 5, 'scale' => 2));
-    $field = field_create_field($field);
-    $instance = array('field_name' => 'decimal52', 'bundle' => FIELD_TEST_BUNDLE);
-    $instance = field_create_instance($instance);
-    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
-    $entity->decimal52[FIELD_LANGUAGE_NONE][0]['value'] = '1.235';
-    field_attach_insert('test_entity', $entity);
-
-    // Attempt to update the field in a way that would work without data.
-    $field['settings']['scale'] = 3;
-    try {
-      field_update_field($field);
-      $this->fail(t('Cannot update field schema with data.'));
-    }
-    catch (FieldException $e) {
-      $this->pass(t('Cannot update field schema with data.'));
-    }
   }
 
   /**
