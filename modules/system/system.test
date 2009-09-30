@@ -1185,7 +1185,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser();
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
     $node->title = '<blink>Blinking Text</blink>';
-    global $user;
+    global $user, $language;
 
     $source  = '[node:title]';         // Title of the node we passed in
     $source .= '[node:author:name]';   // Node author's name
@@ -1197,13 +1197,13 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     $target  = check_plain($node->title);
     $target .= check_plain($account->name);
-    $target .= format_interval(REQUEST_TIME - $node->created, 2);
+    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language->language);
     $target .= check_plain($user->name);
     $target .= '[user:name]';
-    $target .= format_date(REQUEST_TIME, 'short');
+    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language->language);
     $target .= '[bogus:token]';
 
-    $result = token_replace($source, array('node' => $node));
+    $result = token_replace($source, array('node' => $node), array('language' => $language));
 
     // Check that the results of token_generate are sanitized properly. This does NOT
     // test the cleanliness of every token -- just that the $sanitize flag is being

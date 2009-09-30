@@ -113,8 +113,8 @@ function comment_token_info() {
 function comment_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
-    $url_options['language'] = $language;
-    $language_code = $language->language;
+    $url_options['language'] = $options['language'];
+    $language_code = $options['language']->language;
   }
   else {
     $language_code = NULL;
