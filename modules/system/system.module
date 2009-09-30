@@ -2136,7 +2136,8 @@ function system_region_list($theme_key, $show = REGIONS_ALL) {
   $list = &drupal_static(__FUNCTION__, array());
 
   if (empty($list[$theme_key][$show])) {
-    $info = unserialize(db_query("SELECT info FROM {system} WHERE type = :type AND name = :name", array(':type' => 'theme', ':name' => $theme_key))->fetchField());
+    $themes = list_themes();
+    $info = $themes[$theme_key]->info;
     // If requested, suppress hidden regions. @see block_admin_display_form().
     foreach ($info['regions'] as $name => $label) {
       if ($show == REGIONS_ALL || !isset($info['regions_hidden']) || !in_array($name, $info['regions_hidden'])) {
