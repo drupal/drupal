@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.191 2009/09/28 22:22:53 dries Exp $
+// $Id: file.inc,v 1.192 2009/09/30 18:36:01 dries Exp $
 
 /**
  * @file
@@ -1502,7 +1502,7 @@ function file_transfer($uri, $headers) {
   }
 
   foreach ($headers as $name => $value) {
-    drupal_set_header($name, $value);
+    drupal_add_http_header($name, $value);
   }
   drupal_send_headers();
   $scheme = file_uri_scheme($uri);

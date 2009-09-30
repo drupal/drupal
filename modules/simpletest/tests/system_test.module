@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.16 2009/09/29 15:31:16 dries Exp $
+// $Id: system_test.module,v 1.17 2009/09/30 18:36:02 dries Exp $
 
 /**
  * Implement hook_menu().
@@ -96,7 +96,7 @@ function system_test_redirect($code) {
 }
 
 function system_test_set_header() {
-  drupal_set_header($_GET['name'], $_GET['value']);
+  drupal_add_http_header($_GET['name'], $_GET['value']);
   return t('The following header was set: %name: %value', array('%name' => $_GET['name'], '%value' => $_GET['value']));
 }
 

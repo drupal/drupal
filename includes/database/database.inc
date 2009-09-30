@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.77 2009/09/29 15:13:54 dries Exp $
+// $Id: database.inc,v 1.78 2009/09/30 18:36:01 dries Exp $
 
 /**
  * @file
@@ -2381,7 +2381,7 @@ function _db_error_page($error = '') {
   global $db_type;
   drupal_language_initialize();
   drupal_maintenance_theme();
-  drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' 503 Service Unavailable');
+  drupal_add_http_header($_SERVER['SERVER_PROTOCOL'] . ' 503 Service Unavailable');
   drupal_set_title('Site offline');
 }
 
