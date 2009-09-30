@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1000 2009/09/29 17:52:46 dries Exp $
+// $Id: common.inc,v 1.1001 2009/09/30 13:09:29 dries Exp $
 
 /**
  * @file
@@ -3918,7 +3918,10 @@ function _drupal_bootstrap_full() {
     ini_set('log_errors', 1);
     ini_set('error_log', file_directory_path() . '/error.log');
   }
-
+  // Set a custom theme for the current page, if there is one. We need to run
+  // this before invoking hook_init(), since any modules which initialize the
+  // theme system will prevent a custom theme from being correctly set later.
+  menu_set_custom_theme();
   // Let all modules take action before menu system handles the request
   // We do not want this while running update.php.
   if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {

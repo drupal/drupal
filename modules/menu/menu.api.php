@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.api.php,v 1.10 2009/09/17 04:07:39 webchick Exp $
+// $Id: menu.api.php,v 1.11 2009/09/30 13:09:29 dries Exp $
 
 /**
  * @file
@@ -39,6 +39,13 @@
  *     whether the user has access rights to this menu item. Defaults to
  *     user_access() unless a value is inherited from a parent menu item.
  *   - "access arguments": An array of arguments to pass to the access callback
+ *     function. Integer values pass the corresponding URL component.
+ *   - "theme callback": Optional. A function returning the machine-readable
+ *     name of the theme that will be used to render the page. If the function
+ *     returns nothing, the main site theme will be used. If no function is
+ *     provided, the main site theme will also be used, unless a value is
+ *     inherited from a parent menu item.
+ *   - "theme arguments": An array of arguments to pass to the theme callback
  *     function. Integer values pass the corresponding URL component.
  *   - "file": A file that will be included before the callbacks are accessed;
  *     this allows callback functions to be in separate files. The file should

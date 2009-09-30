@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.206 2009/09/21 07:59:18 dries Exp $
+// $Id: system.admin.inc,v 1.207 2009/09/30 13:09:30 dries Exp $
 
 /**
  * @file
@@ -233,7 +233,7 @@ function system_themes_form() {
     );
     $options[$theme->name] = $theme->info['name'];
 
-    if (!empty($theme->status) || $theme->name == variable_get('admin_theme', 0)) {
+    if (drupal_theme_access($theme)) {
       $form[$theme->name]['operations'] = array('#markup' => l(t('configure'), 'admin/appearance/settings/' . $theme->name) );
     }
     else {
