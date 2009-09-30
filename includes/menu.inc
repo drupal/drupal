@@ -359,8 +359,9 @@ function menu_set_item($path, $router_item) {
  *   The router item, an associate array corresponding to one row in the
  *   menu_router table. The value of key map holds the loaded objects. The
  *   value of key access is TRUE if the current user can access this page.
- *   The values for key title, page_arguments, access_arguments will be
- *   filled in based on the database values and the objects loaded.
+ *   The values for key title, page_arguments, access_arguments, and
+ *   theme_arguments will be filled in based on the database values and the
+ *   objects loaded.
  */
 function menu_get_item($path = NULL, $router_item = NULL) {
   $router_items = &drupal_static(__FUNCTION__);
@@ -391,6 +392,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
       if ($router_item['access']) {
         $router_item['map'] = $map;
         $router_item['page_arguments'] = array_merge(menu_unserialize($router_item['page_arguments'], $map), array_slice($map, $router_item['number_parts']));
+        $router_item['theme_arguments'] = array_merge(menu_unserialize($router_item['theme_arguments'], $map), array_slice($map, $router_item['number_parts']));
       }
     }
     $router_items[$path] = $router_item;
@@ -936,6 +938,8 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
         'title',
         'title_callback',
         'title_arguments',
+        'theme_callback',
+        'theme_arguments',
         'type',
         'description',
       ));
@@ -1117,6 +1121,8 @@ function menu_tree_page_data($menu_name, $max_depth = NULL) {
           'title',
           'title_callback',
           'title_arguments',
+          'theme_callback',
+          'theme_arguments',
           'type',
           'description',
         ));
@@ -1387,6 +1393,38 @@ function menu_get_active_help() {
     }
   }
   return $output;
+}
+
+/**
+ * Gets the custom theme for the current page, if there is one.
+ *
+ * @param $initialize
+ *   This parameter should only be used internally; it is set to TRUE in order
+ *   to force the custom theme to be initialized from the menu router item for
+ *   the current page.
+ * @return
+ *   The machine-readable name of the custom theme, if there is one.
+ *
+ * @see menu_set_custom_theme()
+ */
+function menu_get_custom_theme($initialize = FALSE) {
+  $custom_theme = &drupal_static(__FUNCTION__);
+  // Skip this if the site is offline or being installed or updated, since the
+  // menu system may not be correctly initialized then.
+  if ($initialize && !_menu_site_is_offline(TRUE) && (!defined('MAINTENANCE_MODE') || (MAINTENANCE_MODE != 'update' && MAINTENANCE_MODE != 'install'))) {
+    $router_item = menu_get_item();
+    if (!empty($router_item['access']) && !empty($router_item['theme_callback']) && function_exists($router_item['theme_callback'])) {
+      $custom_theme = call_user_func_array($router_item['theme_callback'], $router_item['theme_arguments']);
+    }
+  }
+  return $custom_theme;
+}
+
+/**
+ * Sets a custom theme for the current page, if there is one.
+ */
+function menu_set_custom_theme() {
+  menu_get_custom_theme(TRUE);
 }
 
 /**
@@ -2728,6 +2766,13 @@ function _menu_router_build($callbacks) {
             $item['file path'] = $parent['file path'];
           }
         }
+        // Same for theme callbacks.
+        if (!isset($item['theme callback']) && isset($parent['theme callback'])) {
+          $item['theme callback'] = $parent['theme callback'];
+          if (!isset($item['theme arguments']) && isset($parent['theme arguments'])) {
+            $item['theme arguments'] = $parent['theme arguments'];
+          }
+        }
       }
     }
     if (!isset($item['access callback']) && isset($item['access arguments'])) {
@@ -2749,6 +2794,8 @@ function _menu_router_build($callbacks) {
       'block callback' => '',
       'title arguments' => array(),
       'title callback' => 't',
+      'theme arguments' => array(),
+      'theme callback' => '',
       'description' => '',
       'position' => '',
       'tab_parent' => '',
@@ -2798,6 +2845,8 @@ function _menu_router_save($menu, $masks) {
       'title',
       'title_callback',
       'title_arguments',
+      'theme_callback',
+      'theme_arguments',
       'type',
       'block_callback',
       'description',
@@ -2823,6 +2872,8 @@ function _menu_router_save($menu, $masks) {
       'title' => $item['title'],
       'title_callback' => $item['title callback'],
       'title_arguments' => ($item['title arguments'] ? serialize($item['title arguments']) : ''),
+      'theme_callback' => $item['theme callback'],
+      'theme_arguments' => serialize($item['theme arguments']),
       'type' => $item['type'],
       'block_callback' => $item['block callback'],
       'description' => $item['description'],
@@ -2853,20 +2904,24 @@ function menu_path_is_external($path) {
  * This function will log the current user out and redirect to front page
  * if the current user has no 'access site in maintenance mode' permission.
  *
+ * @param $check_only
+ *   If this is set to TRUE, the function will perform the access checks and
+ *   return the site offline status, but not log the user out or display any
+ *   messages.
  * @return
  *   FALSE if the site is not in maintenance mode, the user login page is
  *   displayed, or the user has the 'access site in maintenance mode'
  *   permission. TRUE for anonymous users not being on the login page when the
  *   site is in maintenance mode.
  */
-function _menu_site_is_offline() {
+function _menu_site_is_offline($check_only = FALSE) {
   // Check if site is in maintenance mode.
   if (variable_get('maintenance_mode', 0)) {
     if (user_access('access site in maintenance mode')) {
       // Ensure that the maintenance mode message is displayed only once
       // (allowing for page redirects) and specifically suppress its display on
       // the maintenance mode settings page.
-      if ($_GET['q'] != 'admin/config/development/maintenance') {
+      if (!$check_only && $_GET['q'] != 'admin/config/development/maintenance') {
         if (user_access('administer site configuration')) {
           drupal_set_message(t('Operating in maintenance mode. <a href="@url">Go online.</a>', array('@url' => url('admin/config/development/maintenance'))), 'status', FALSE);
         }
@@ -2881,8 +2936,10 @@ function _menu_site_is_offline() {
         return ($_GET['q'] != 'user' && $_GET['q'] != 'user/login');
       }
       // Logged in users are unprivileged here, so they are logged out.
-      require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'user') . '/user.pages.inc';
-      user_logout();
+      if (!$check_only) {
+        require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'user') . '/user.pages.inc';
+        user_logout();
+      }
     }
   }
   return FALSE;

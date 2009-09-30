@@ -10,11 +10,6 @@
  * Menu callback for admin/structure/block.
  */
 function block_admin_display($theme = NULL) {
-  global $custom_theme;
-
-  // If non-default theme configuration has been selected, set the custom theme.
-  $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');
-
   // Fetch and sort blocks.
   $blocks = _block_rehash();
   usort($blocks, '_block_compare');
@@ -26,13 +21,9 @@ function block_admin_display($theme = NULL) {
  * Generate main blocks administration form.
  */
 function block_admin_display_form($form, &$form_state, $blocks, $theme = NULL) {
-  global $theme_key, $custom_theme;
+  global $theme_key;
 
   drupal_add_css(drupal_get_path('module', 'block') . '/block.css', array('preprocess' => FALSE));
-
-  // If non-default theme configuration has been selected, set the custom theme.
-  $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');
-  drupal_theme_initialize();
 
   $block_regions = system_region_list($theme_key, REGIONS_VISIBLE) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 

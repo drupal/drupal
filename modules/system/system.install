@@ -955,6 +955,20 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'theme_callback' => array(
+        'description' => 'A function which returns the name of the theme that will be used to render this page. If left empty, the default theme will be used.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'theme_arguments' => array(
+        'description' => 'A serialized array of arguments for the theme callback.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'type' => array(
         'description' => 'Numeric representation of the type of the menu item, like MENU_LOCAL_TASK.',
         'type' => 'int',
@@ -2546,6 +2560,15 @@ function system_update_7037() {
  */
 function system_update_7038() {
   db_change_field('actions', 'description', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'));
+}
+
+/**
+ * Adds fields to the {menu_router} table to allow custom themes to be set per
+ * page.
+ */
+function system_update_7039() {
+  db_add_field('menu_router', 'theme_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+  db_add_field('menu_router', 'theme_arguments', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
 }
 
 /**

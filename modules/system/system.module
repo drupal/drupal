@@ -509,6 +509,8 @@ function system_menu() {
     'page callback' => 'system_main_admin_page',
     'weight' => 9,
     'menu_name' => 'management',
+    'theme callback' => 'variable_get',
+    'theme arguments' => array('admin_theme'),
     'file' => 'system.admin.inc',
   );
   $items['admin/compact'] = array(
@@ -1309,7 +1311,7 @@ function blocked_ip_load($iid) {
  * Menu item access callback - only admin or enabled themes can be accessed.
  */
 function _system_themes_access($theme) {
-  return user_access('administer site configuration') && ($theme->status || $theme->name == variable_get('admin_theme', 0));
+  return user_access('administer site configuration') && drupal_theme_access($theme);
 }
 
 /**
@@ -1423,14 +1425,10 @@ function _system_filetransfer_backend_form_common() {
  * Implement hook_init().
  */
 function system_init() {
-  // Use the administrative theme if the user is looking at a page in the admin/* path.
+  // Add the CSS for this module.
   if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit'))) {
-    global $custom_theme;
-    $custom_theme = variable_get('admin_theme', 0);
     drupal_add_css(drupal_get_path('module', 'system') . '/admin.css', array('weight' => CSS_SYSTEM));
   }
-
-  // Add the CSS for this module.
   drupal_add_css(drupal_get_path('module', 'system') . '/defaults.css', array('weight' => CSS_SYSTEM));
   drupal_add_css(drupal_get_path('module', 'system') . '/system.css', array('weight' => CSS_SYSTEM));
   drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css', array('weight' => CSS_SYSTEM));
@@ -1665,7 +1663,7 @@ function system_admin_menu_block($item) {
   $default_task = NULL;
   $has_subitems = FALSE;
   $result = db_query("
-    SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, m.path, m.weight as router_weight, ml.*
+    SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.theme_callback, m.theme_arguments, m.type, m.description, m.path, m.weight as router_weight, ml.*
     FROM {menu_router} m 
     LEFT JOIN {menu_links} ml ON m.path = ml.router_path
     WHERE (ml.plid = :plid AND ml.menu_name = :name AND hidden = 0) OR (m.tab_parent = :path AND m.type IN (:local_task, :default_task))", array(':plid' => $item['mlid'], ':name' => $item['menu_name'], ':path' => $item['path'], ':local_task' => MENU_LOCAL_TASK, ':default_task' => MENU_DEFAULT_LOCAL_TASK), array('fetch' => PDO::FETCH_ASSOC));
@@ -2353,7 +2351,7 @@ function system_get_module_admin_tasks($module) {
 
   if (empty($items)) {
     $result = db_query("
-       SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
+       SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.theme_callback, m.theme_arguments, m.type, ml.*
        FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.link_path LIKE 'admin/%' AND hidden >= 0 AND module = 'system' AND m.number_parts > 2", array(), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $item) {
       _menu_link_translate($item);

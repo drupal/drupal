@@ -1652,6 +1652,7 @@ function node_menu() {
     'access callback' => '_node_add_access',
     'weight' => 1,
     'menu_name' => 'management',
+    'theme callback' => '_node_custom_theme',
     'file' => 'node.pages.inc',
   );
   $items['rss.xml'] = array(
@@ -1713,6 +1714,7 @@ function node_menu() {
     'page arguments' => array(1),
     'access callback' => 'node_access',
     'access arguments' => array('update', 1),
+    'theme callback' => '_node_custom_theme',
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
     'file' => 'node.pages.inc',
@@ -1774,6 +1776,17 @@ function node_menu() {
  */
 function node_page_title($node) {
   return $node->title;
+}
+
+/**
+ * Theme callback for creating and editing nodes.
+ */
+function _node_custom_theme() {
+  // Use the administration theme if the site is configured to use it for
+  // nodes.
+  if (variable_get('node_admin_theme')) {
+    return variable_get('admin_theme');
+  }
 }
 
 /**

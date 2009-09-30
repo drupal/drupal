@@ -76,6 +76,7 @@ function block_menu() {
     'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
     'page callback' => 'block_admin_display',
     'access arguments' => array('administer blocks'),
+    'theme callback' => '_block_custom_theme',
     'file' => 'block.admin.inc',
   );
   $items['admin/structure/block/list'] = array(
@@ -123,6 +124,8 @@ function block_menu() {
       'weight' => $key == $default ? -10 : 0,
       'access callback' => '_block_themes_access',
       'access arguments' => array($theme),
+      'theme callback' => '_block_custom_theme',
+      'theme arguments' => array($key),
       'file' => 'block.admin.inc',
     );
   }
@@ -133,8 +136,23 @@ function block_menu() {
  * Menu item access callback - only admin or enabled themes can be accessed.
  */
 function _block_themes_access($theme) {
-  $admin_theme = variable_get('admin_theme');
-  return user_access('administer blocks') && ($theme->status || ($admin_theme && ($theme->name == $admin_theme)));
+  return user_access('administer blocks') && drupal_theme_access($theme);
+}
+
+/**
+ * Theme callback for the block configuration pages.
+ *
+ * @param $theme
+ *   The theme whose blocks are being configured. If not set, the default theme
+ *   is assumed.
+ * @return
+ *   The theme that should be used for the block configuration page, or NULL
+ *   to indicate that the default theme should be used.
+ */
+function _block_custom_theme($theme = NULL) {
+  // We return exactly what was passed in, to guarantee that the page will
+  // always be displayed using the theme whose blocks are being configured.
+  return $theme;
 }
 
 /**

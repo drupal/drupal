@@ -18,6 +18,10 @@ class MenuIncTestCase extends DrupalWebTestCase {
   function setUp() {
     // Enable dummy module that implements hook_menu.
     parent::setUp('menu_test');
+    // Make the tests below more robust by explicitly setting the default theme
+    // and administrative theme that they expect.
+    variable_set('theme_default', 'garland');
+    variable_set('admin_theme', 'seven');
   }
 
   /**
@@ -27,6 +31,80 @@ class MenuIncTestCase extends DrupalWebTestCase {
     $this->drupalGet('node');
     $this->assertText('A title with @placeholder', t('Raw text found on the page'));
     $this->assertNoText(t('A title with @placeholder', array('@placeholder' => 'some other text')), t('Text with placeholder substitutions not found.'));
+  }
+
+  /**
+   * Test the theme callback when it is set to use an administrative theme.
+   */
+  function testThemeCallbackAdministrative() {
+    $this->drupalGet('menu-test/theme-callback/use-admin-theme');
+    $this->assertText('Requested theme: seven. Actual theme: seven.', t('The administrative theme can be correctly set in a theme callback.'));
+    $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
+  }
+
+  /**
+   * Test that the theme callback is properly inherited.
+   */
+  function testThemeCallbackInheritance() {
+    $this->drupalGet('menu-test/theme-callback/use-admin-theme/inheritance');
+    $this->assertText('Requested theme: seven. Actual theme: seven. Theme callback inheritance is being tested.', t('Theme callback inheritance correctly uses the administrative theme.'));
+    $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
+  }
+
+  /**
+   * Test the theme callback when the site is in maintenance mode.
+   */
+  function testThemeCallbackMaintenanceMode() {
+    variable_set('maintenance_mode', TRUE);
+
+    // For a regular user, the fact that the site is in maintenance mode means
+    // we expect the theme callback system to be bypassed entirely.
+    $this->drupalGet('menu-test/theme-callback/use-admin-theme');
+    $this->assertRaw('minnelli/minnelli.css', t("The maintenance theme's CSS appears on the page."));
+
+    // An administrator, however, should continue to see the requested theme.
+    $admin_user = $this->drupalCreateUser(array('access site in maintenance mode'));
+    $this->drupalLogin($admin_user);
+    $this->drupalGet('menu-test/theme-callback/use-admin-theme');
+    $this->assertText('Requested theme: seven. Actual theme: seven.', t('The theme callback system is correctly triggered for an administrator when the site is in maintenance mode.'));
+    $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
+  }
+
+  /**
+   * Test the theme callback when it is set to use an optional theme.
+   */
+  function testThemeCallbackOptionalTheme() {
+    // Request a theme that is not enabled.
+    $this->drupalGet('menu-test/theme-callback/use-stark-theme');
+    $this->assertText('Requested theme: stark. Actual theme: garland.', t('The theme callback system falls back on the default theme when a theme that is not enabled is requested.'));
+    $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
+
+    // Now enable the theme and request it again.
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+    $this->drupalPost('admin/appearance', array('status[stark]' => 1), t('Save configuration'));
+    $this->drupalLogout();
+    $this->drupalGet('menu-test/theme-callback/use-stark-theme');
+    $this->assertText('Requested theme: stark. Actual theme: stark.', t('The theme callback system uses an optional theme once it has been enabled.'));
+    $this->assertRaw('stark/layout.css', t("The optional theme's CSS appears on the page."));
+  }
+
+  /**
+   * Test the theme callback when it is set to use a theme that does not exist.
+   */
+  function testThemeCallbackFakeTheme() {
+    $this->drupalGet('menu-test/theme-callback/use-fake-theme');
+    $this->assertText('Requested theme: fake_theme. Actual theme: garland.', t('The theme callback system falls back on the default theme when a theme that does not exist is requested.'));
+    $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
+  }
+
+  /**
+   * Test the theme callback when no theme is requested.
+   */
+  function testThemeCallbackNoThemeRequested() {
+    $this->drupalGet('menu-test/theme-callback/no-theme-requested');
+    $this->assertText('Requested theme: NONE. Actual theme: garland.', t('The theme callback system falls back on the default theme when no theme is requested.'));
+    $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
   }
 
   /**

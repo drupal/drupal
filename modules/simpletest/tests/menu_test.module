@@ -44,6 +44,20 @@ function menu_test_menu() {
     'title' => 'Unattached subchild router',
     'page callback' => 'node_page_default',
   );
+  // Theme callback tests.
+  $items['menu-test/theme-callback/%'] = array(
+    'title' => 'Page that displays different themes',
+    'page callback' => 'menu_test_theme_page_callback',
+    'access arguments' => array('access content'),
+    'theme callback' => 'menu_test_theme_callback',
+    'theme arguments' => array(2),
+  );
+  $items['menu-test/theme-callback/%/inheritance'] = array(
+    'title' => 'Page that tests theme callback inheritance.',
+    'page callback' => 'menu_test_theme_page_callback',
+    'page arguments' => array(TRUE),
+    'access arguments' => array('access content'),
+  );
   return $items;
 }
 
@@ -55,6 +69,56 @@ function menu_test_menu() {
  */
 function menu_test_callback() {
   return $this->randomName();
+}
+
+/**
+ * Page callback to use when testing the theme callback functionality.
+ *
+ * @param $inherited
+ *   An optional boolean to set to TRUE when the requested page is intended to
+ *   inherit the theme of its parent.
+ * @return
+ *   A string describing the requested custom theme and actual theme being used
+ *   for the current page request.
+ */
+function menu_test_theme_page_callback($inherited = FALSE) {
+  global $theme_key;
+  // Initialize the theme system so that $theme_key will be populated.
+  drupal_theme_initialize();
+  // Now check both the requested custom theme and the actual theme being used.
+  $custom_theme = menu_get_custom_theme();
+  $requested_theme = empty($custom_theme) ? 'NONE' : $custom_theme;
+  $output = "Requested theme: $requested_theme. Actual theme: $theme_key.";
+  if ($inherited) {
+    $output .= ' Theme callback inheritance is being tested.';
+  }
+  return $output;
+}
+
+/**
+ * Theme callback to use when testing the theme callback functionality.
+ *
+ * @param $argument
+ *   The argument passed in from the URL.
+ * @return
+ *   The name of the custom theme to request for the current page.
+ */
+function menu_test_theme_callback($argument) {
+  // Test using the variable administrative theme.
+  if ($argument == 'use-admin-theme') {
+    return variable_get('admin_theme');
+  }
+  // Test using a theme that exists, but may or may not be enabled.
+  elseif ($argument == 'use-stark-theme') {
+    return 'stark';
+  }
+  // Test using a theme that does not exist.
+  elseif ($argument == 'use-fake-theme') {
+    return 'fake_theme';
+  }
+  // For any other value of the URL argument, do not return anything. This
+  // allows us to test that returning nothing from a theme callback function
+  // causes the page to correctly fall back on using the main site theme.
 }
 
 /**

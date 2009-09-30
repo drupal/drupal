@@ -38,10 +38,24 @@ define('MARK_UPDATED', 2);
  */
 
 /**
+ * Determines if a theme is available to use.
+ *
+ * @param $theme
+ *   An object representing the theme to check.
+ * @return
+ *   Boolean TRUE if the theme is enabled or is the site administration theme;
+ *   FALSE otherwise.
+ */
+function drupal_theme_access($theme) {
+  $admin_theme = variable_get('admin_theme');
+  return !empty($theme->status) || ($admin_theme && $theme->name == $admin_theme);
+}
+
+/**
  * Initialize the theme system by loading the theme.
  */
 function drupal_theme_initialize() {
-  global $theme, $user, $custom_theme, $theme_key;
+  global $theme, $user, $theme_key;
 
   // If $theme is already set, assume the others are set, too, and do nothing
   if (isset($theme)) {
@@ -52,12 +66,13 @@ function drupal_theme_initialize() {
   $themes = list_themes();
 
   // Only select the user selected theme if it is available in the
-  // list of enabled themes.
-  $theme = !empty($user->theme) && !empty($themes[$user->theme]->status) ? $user->theme : variable_get('theme_default', 'garland');
+  // list of themes that can be accessed.
+  $theme = !empty($user->theme) && isset($themes[$user->theme]) && drupal_theme_access($themes[$user->theme]) ? $user->theme : variable_get('theme_default', 'garland');
 
   // Allow modules to override the present theme... only select custom theme
-  // if it is available in the list of installed themes.
-  $theme = $custom_theme && $themes[$custom_theme] ? $custom_theme : $theme;
+  // if it is available in the list of themes that can be accessed.
+  $custom_theme = menu_get_custom_theme();
+  $theme = $custom_theme && isset($themes[$custom_theme]) && drupal_theme_access($themes[$custom_theme]) ? $custom_theme : $theme;
 
   // Store the identifier for retrieving theme settings with.
   $theme_key = $theme;
