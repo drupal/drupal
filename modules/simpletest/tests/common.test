@@ -94,6 +94,15 @@ class CommonURLUnitTest extends DrupalUnitTestCase {
     );
     $this->assertEqual(drupal_parse_url($url), $result, t('Relative URL parsed correctly.'));
 
+    // Relative URL that is known to confuse parse_url().
+    $url = 'foo/bar:1';
+    $result = array(
+      'path' => 'foo/bar:1',
+      'query' => array(),
+      'fragment' => '',
+    );
+    $this->assertEqual(drupal_parse_url($url), $result, t('Relative URL parsed correctly.'));
+
     // Absolute URL.
     $url = '/foo/bar?foo=bar&bar=baz&baz#foo';
     $result = array(
