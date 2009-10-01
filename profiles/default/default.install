@@ -205,10 +205,6 @@ function default_install() {
   // Update the menu router information.
   menu_rebuild();
 
-  // Save some default links.
-  $link = array('link_path' => 'admin/structure/menu/manage/main-menu/add', 'link_title' => 'Add a main menu link', 'menu_name' => 'main-menu');
-  menu_link_save($link);
-
   // Enable the admin theme.
   db_update('system')
     ->fields(array('status' => 1))
