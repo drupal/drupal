@@ -814,7 +814,7 @@ function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $
 
   // See if data already exists for this field.
   // If so, prevent changes to the field settings.
-  $has_data = field_attach_field_has_data($field);
+  $has_data = field_has_data($field);
   if ($has_data) {
     $form['field']['#description'] = '<div class=error>' . t('There is data for this field in the database. The field settings can no longer be changed.' . '</div>') . $form['field']['#description'];
   }
