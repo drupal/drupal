@@ -3,14 +3,60 @@
 
 /**
  * @file
- * This file contains tests for the update module.
+ * This file contains tests for the update module. The overarching methodology
+ * of these tests is we need to compare a given state of installed modules and
+ * themes (e.g. version, project grouping, timestamps, etc) vs. a current
+ * state of what the release history XML files we fetch say is available.  We
+ * have dummy XML files (in the 'tests' subdirectory) that describe various
+ * scenarios of what's available for different test projects, and we have
+ * dummy .info file data (specified via hook_system_info_alter() in the
+ * update_test helper module) describing what's currently installed.  Each
+ * test case defines a set of projects to install, their current state (via
+ * the 'update_test_system_info' variable) and the desired availabile update
+ * data (via the 'update_test_xml_map' variable), and then performs a series
+ * of assertions that the report matches our expectations given the specific
+ * initial state and availability scenario.
  */
 
-class UpdateTestCase extends DrupalWebTestCase {
+/**
+ * Base class to define some shared functions used by all update tests.
+ */
+class UpdateTestHelper extends DrupalWebTestCase {
+  /**
+   * Refresh the update status based on the desired available update scenario.
+   *
+   * @param $xml_map
+   *   Array that maps project names to availability scenarios to fetch.
+   *   The key '#all' is used if a project-specific mapping is not defined.
+   *
+   * @see update_test_mock_page()
+   */
+  protected function refreshUpdateStatus($xml_map) {
+    // Tell update module to fetch from the URL provided by update_test module.
+    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
+    // Save the map for update_test_mock_page() to use.
+    variable_set('update_test_xml_map', $xml_map);
+    // Manually check the update status.
+    $this->drupalGet('admin/reports/updates/check');
+  }
+
+  /**
+   * Run a series of assertions that are applicable for all update statuses.
+   */
+  protected function standardTests() {
+    $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
+    $this->assertRaw(l(t('Check manually'), 'admin/reports/updates/check'), t('Link to check available updates manually appears.'));
+    $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'), t('Link to the Drupal project appears.'));
+    $this->assertNoText(t('No available releases found'));
+  }
+
+}
+
+class UpdateCoreTestCase extends UpdateTestHelper {
 
   public static function getInfo() {
     return array(
-      'name' => 'Update functionality',
+      'name' => 'Update core functionality',
       'description' => 'Tests the update module through a series of functional tests using mock XML data.',
       'group' => 'Update',
     );
@@ -20,7 +66,6 @@ class UpdateTestCase extends DrupalWebTestCase {
     parent::setUp('update_test', 'update');
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
-    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
   }
 
   /**
@@ -28,7 +73,7 @@ class UpdateTestCase extends DrupalWebTestCase {
    */
   function testNoUpdatesAvailable() {
     $this->setSystemInfo7_0();
-    $this->refreshUpdateData('no-updates.xml');
+    $this->refreshUpdateStatus(array('drupal' => '0'));
     $this->drupalGet('admin/reports/updates');
     $this->standardTests();
     $this->assertText(t('Up to date'));
@@ -41,7 +86,7 @@ class UpdateTestCase extends DrupalWebTestCase {
    */
   function testNormalUpdateAvailable() {
     $this->setSystemInfo7_0();
-    $this->refreshUpdateData('normal-update.xml');
+    $this->refreshUpdateStatus(array('drupal' => '1'));
     $this->drupalGet('admin/reports/updates');
     $this->standardTests();
     $this->assertNoText(t('Up to date'));
@@ -57,7 +102,7 @@ class UpdateTestCase extends DrupalWebTestCase {
    */
   function testSecurityUpdateAvailable() {
     $this->setSystemInfo7_0();
-    $this->refreshUpdateData('security-update.xml');
+    $this->refreshUpdateStatus(array('drupal' => '2-sec'));
     $this->drupalGet('admin/reports/updates');
     $this->standardTests();
     $this->assertNoText(t('Up to date'));
@@ -84,24 +129,12 @@ class UpdateTestCase extends DrupalWebTestCase {
       ),
     );
     variable_set('update_test_system_info', $system_info);
-    $this->refreshUpdateData('dev-snapshot.xml');
+    $this->refreshUpdateStatus(array('drupal' => 'dev'));
     $this->drupalGet('admin/reports/updates');
     $this->assertNoText(t('2001-Sep-'));
     $this->assertText(t('Up to date'));
     $this->assertNoText(t('Update available'));
     $this->assertNoText(t('Security update required!'));
-  }
-
-  /**
-   * Helper function: force te update cache to refresh based on the contents of
-   * the specified XML file.
-   *
-   * @param $xml
-   *   The file name of the XML file to use for mock update data.
-   */
-  protected function refreshUpdateData($xml) {
-    variable_set('update_test_xml', $xml);
-    $this->drupalGet('admin/reports/updates/check');
   }
 
   protected function setSystemInfo7_0() {
@@ -113,12 +146,51 @@ class UpdateTestCase extends DrupalWebTestCase {
     variable_set('update_test_system_info', $setting);
   }
 
+}
+
+class UpdateTestContribCase extends UpdateTestHelper {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Update contrib functionality',
+      'description' => 'Tests how the update module handles contributed modules and themes in a series of functional tests using mock XML data.',
+      'group' => 'Update',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('update_test', 'update', 'aaa_update_test', 'bbb_update_test', 'ccc_update_test');
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+  }
+
   /**
-   * Helper function: run a series of assertions that are applicable for all
-   * update statuses.
+   * Test the basic functionality of a contrib module on the status report.
    */
-  protected function standardTests() {
-    $this->assertRaw(l(t('Check manually'), 'admin/reports/updates/check'), t('Link to check available updates manually appears.'));
-    $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'), t('Link to the Drupal project appears.'));
+  function testUpdateContribBasic() {
+    $system_info = array(
+      '#all' => array(
+        'version' => '7.0',
+      ),
+      'aaa_update_test' => array(
+        'project' => 'aaa_update_test',
+        'version' => '7.x-1.0',
+        'hidden' => FALSE,
+      ),
+    );
+    variable_set('update_test_system_info', $system_info);
+    $this->refreshUpdateStatus(
+      array(
+        'drupal' => '0',
+        'aaa_update_test' => '1_0',
+      )
+    );
+    $this->drupalGet('admin/reports/updates');
+    $this->standardTests();
+    $this->assertText(t('Up to date'));
+    $this->assertRaw('<h3>' . t('Modules') . '</h3>');
+    $this->assertNoText(t('Update available'));
+    $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), t('Link to aaa_update_test project appears.'));
   }
 }
+

@@ -41,10 +41,30 @@ function update_test_system_info_alter(&$info, $file) {
 
 /**
  * Page callback, prints mock XML for the update module.
+ *
+ * The specific XML file to print depends on two things: the project we're
+ * trying to fetch data for, and the desired "availability scenario" for that
+ * project which we're trying to test. Before attempting to fetch this data
+ * (by checking for updates on the available updates report), callers need to
+ * define the 'update_test_xml_map' variable as an array, keyed by project
+ * name, indicating which availability scenario to use for that project.
+ *
+ * @param $project_name
+ *   The project short name update.module is trying to fetch data for (the
+ *   fetch URLs are of the form: [base_url]/[project_name]/[core_version]).
  */
-function update_test_mock_page() {
-  $xml = variable_get('update_test_xml', FALSE);
-  // Note: this will cause an exception to occur if no variable was set and
-  // $file is FALSE.
-  readfile(drupal_get_path('module', 'update_test') . "/$xml");
+function update_test_mock_page($project_name) {
+  $xml_map = variable_get('update_test_xml_map', FALSE);
+  if (isset($xml_map[$project_name])) {
+    $availability_scenario = $xml_map[$project_name];
+  }
+  elseif (isset($xml_map['#all'])) {
+    $availability_scenario = $xml_map['#all'];
+  }
+  else {
+    return FALSE;
+  }
+
+  $path = drupal_get_path('module', 'update_test');
+  readfile("$path/$project_name.$availability_scenario.xml");
 }
