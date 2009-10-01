@@ -1,0 +1,7 @@
+<?php
+// $Id: ccc_update_test.module,v 1.1 2009/10/01 19:23:21 dries Exp $
+
+/**
+ * @file
+ * Dummy module for testing Update status.
+ */

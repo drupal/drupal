@@ -1,0 +1,7 @@
+; $Id: aaa_update_test.info,v 1.1 2009/10/01 19:23:21 dries Exp $
+name = AAA Update test
+description = Support module for update module testing.
+package = Testing
+core = 7.x
+files[] = aaa_update_test.module
+hidden = TRUE

@@ -1,0 +1,7 @@
+; $Id: bbb_update_test.info,v 1.1 2009/10/01 19:23:21 dries Exp $
+name = BBB Update test
+description = Support module for update module testing.
+package = Testing
+core = 7.x
+files[] = bbb_update_test.module
+hidden = TRUE

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>AAA Update test</title>
+<short_name>aaa_update_test</short_name>
+<dc:creator>Drupal</dc:creator>
+<api_version>7.x</api_version>
+<recommended_major>1</recommended_major>
+<supported_majors>1</supported_majors>
+<default_major>1</default_major>
+<project_status>published</project_status>
+<link>http://example.com/project/aaa_update_test</link>
+  <terms>
+   <term><name>Projects</name><value>Modules</value></term>
+  </terms>
+<releases>
+ <release>
+  <name>aaa_update_test 7.x-1.0</name>
+  <version>7.x-1.0</version>
+  <tag>DRUPAL-7--1-0</tag>
+  <version_major>1</version_major>
+  <version_patch>0</version_patch>
+  <status>published</status>
+  <release_link>http://example.com/aaa_update_test-7-x-1-0-release</release_link>
+  <download_link>http://example.com/aaa_update_test-7.x-1.0.tar.gz</download_link>
+  <date>1250424521</date>
+  <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
+  <filesize>1073741824</filesize>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+  </terms>
+ </release>
+</releases>
+</project>
