@@ -144,9 +144,6 @@
  *         edit forms.
  *     - module (string, read-only)
  *         The name of the module that implements the widget type.
- *     - active (integer, read-only)
- *         TRUE if the module that implements the widget type is currently
- *         enabled, FALSE otherwise.
  * - display (array)
  *     A sub-array of key/value pairs identifying build modes and the way the
  *     field values should be displayed in each build mode.
@@ -597,7 +594,7 @@ function field_create_instance($instance) {
   // Check that the specified field exists.
   $field = field_read_field($instance['field_name']);
   if (empty($field)) {
-    throw new FieldException("Attempt to create an instance of a field that doesn't exist.");
+    throw new FieldException("Attempt to create an instance of a field that doesn't exist or is currently inactive.");
   }
 
   // Set the field id.
@@ -613,12 +610,12 @@ function field_create_instance($instance) {
   // Those checks should probably happen in _field_write_instance() ?
   // Problem : this would mean that a UI module cannot update an instance with a disabled formatter.
 
-  // Ensure the field instance is unique.
-  $prior_instance = field_read_instance($instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE));
+  // Ensure the field instance is unique within the bundle.
+  // We only check for instances of active fields, since adding an instance of
+  // a disabled field is not supported.
+  $prior_instance = field_read_instance($instance['field_name'], $instance['bundle']);
   if (!empty($prior_instance)) {
-    $message = $prior_instance['widget']['active']?
-      t('Attempt to create a field instance %field_name,%bundle which already exists and is active.', array('%field_name' => $instance['field_name'], '%bundle' => $instance['bundle'])):
-      t('Attempt to create a field instance %field_name,%bundle which already exists, although inactive.', array('%field_name' => $instance['field_name'], '%bundle' => $instance['bundle']));
+    $message = t('Attempt to create a field instance that already exists.');
     throw new FieldException($message);
   }
 
@@ -707,11 +704,8 @@ function _field_write_instance($instance, $update = FALSE) {
   );
   // Check widget module.
   $widget_type = field_info_widget_types($instance['widget']['type']);
-  $widget_module = $widget_type['module'];
-  $widget_active = module_exists($widget_module);
+  $instance['widget']['module'] = $widget_type['module'];
   $instance['widget']['settings'] += field_info_widget_settings($instance['widget']['type']);
-  $instance['widget']['module'] = $widget_module;
-  $instance['widget']['active'] = $widget_active;
 
   // Make sure there is at least display info for the 'full' build mode.
   $instance['display'] += array(
@@ -736,15 +730,12 @@ function _field_write_instance($instance, $update = FALSE) {
   // not have its own column and is not automatically populated when the
   // instance is read.
   $data = $instance;
-  unset($data['id'], $data['field_id'], $data['field_name'], $data['bundle'], $data['widget']['type'], $data['widget']['module'], $data['widget']['active'], $data['deleted']);
+  unset($data['id'], $data['field_id'], $data['field_name'], $data['bundle'], $data['deleted']);
 
   $record = array(
     'field_id' => $instance['field_id'],
     'field_name' => $instance['field_name'],
     'bundle' => $instance['bundle'],
-    'widget_type' => $instance['widget']['type'],
-    'widget_module' => $widget_module,
-    'widget_active' => $widget_active,
     'data' => $data,
     'deleted' => $instance['deleted'],
   );
@@ -773,8 +764,9 @@ function _field_write_instance($instance, $update = FALSE) {
  *   The bundle to which the field is bound.
  * @param array $include_additional
  *   The default behavior of this function is to not return an instance that
- *   is inactive. Setting
- *   $include_additional['include_inactive'] to TRUE will override this
+ *   has been deleted, or whose field is inactive. Setting
+ *   $include_additional['include_inactive'] or
+ *   $include_additional['include_deleted'] to TRUE will override this
  *   behavior.
  * @return
  *   An instance structure, or FALSE.
@@ -793,8 +785,8 @@ function field_read_instance($field_name, $bundle, $include_additional = array()
  *   field_config_instance table. If NULL, all instances will be returned.
  * @param $include_additional
  *   The default behavior of this function is to not return field
- *   instances that are inactive or have been marked deleted. Setting
- *   $include_additional['include_inactive'] or
+ *   instances that have been marked deleted, or whose field is inactive.
+ *   Setting $include_additional['include_inactive'] or
  *   $include_additional['include_deleted'] to TRUE will override this
  *   behavior.
  * @return
@@ -812,8 +804,7 @@ function field_read_instances($params = array(), $include_additional = array()) 
   if (!isset($include_additional['include_inactive']) || !$include_additional['include_inactive']) {
     $query
       ->condition('fc.active', 1)
-      ->condition('fc.storage_active', 1)
-      ->condition('fci.widget_active', 1);
+      ->condition('fc.storage_active', 1);
   }
   if (!isset($include_additional['include_deleted']) || !$include_additional['include_deleted']) {
     $query->condition('fc.deleted', 0);
@@ -830,9 +821,6 @@ function field_read_instances($params = array(), $include_additional = array()) 
     $instance['field_name'] = $record['field_name'];
     $instance['bundle'] = $record['bundle'];
     $instance['deleted'] = $record['deleted'];
-    $instance['widget']['type'] = $record['widget_type'];
-    $instance['widget']['module'] = $record['widget_module'];
-    $instance['widget']['active'] = $record['widget_active'];
 
     module_invoke_all('field_read_instance', $instance);
     $instances[] = $instance;

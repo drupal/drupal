@@ -228,10 +228,6 @@ function field_modules_disabled($modules) {
       ->fields(array('storage_active' => 0))
       ->condition('storage_module', $module)
       ->execute();
-    db_update('field_config_instance')
-      ->fields(array('widget_active' => 0))
-      ->condition('widget_module', $module)
-      ->execute();
     field_cache_clear(TRUE);
   }
 }
@@ -259,15 +255,6 @@ function field_associate_fields($module) {
     db_update('field_config')
       ->fields(array('storage_module' => $module, 'storage_active' => 1))
       ->condition('storage_type', $name)
-      ->execute();
-  }
-  // Associate widget types.
-  $widget_types = (array) module_invoke($module, 'field_widget_info');
-  foreach ($widget_types as $name => $widget_info) {
-    watchdog('field', 'Updating widget type %type with module %module.', array('%type' => $name, '%module' => $module));
-    db_update('field_config_instance')
-      ->fields(array('widget_module' => $module, 'widget_active' => 1))
-      ->condition('widget_type', $name)
       ->execute();
   }
 }

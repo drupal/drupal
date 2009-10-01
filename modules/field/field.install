@@ -124,15 +124,17 @@ function field_schema() {
         'not null' => TRUE,
         'description' => 'The identifier of the field attached by this instance',
       ),
-      'field_name'        => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
-      'bundle'            => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'widget_type'       => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'widget_module'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'widget_active' => array(
-        'type' => 'int',
-        'size' => 'tiny',
+      'field_name' => array(
+        'type' => 'varchar',
+        'length' => 32,
         'not null' => TRUE,
-        'default' => 0,
+        'default' => ''
+      ),
+      'bundle' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => ''
       ),
       'data' => array(
         'type' => 'text',
@@ -152,12 +154,7 @@ function field_schema() {
       // Used by field_delete_instance().
       'field_name_bundle' => array('field_name', 'bundle'),
       // Used by field_read_instances().
-      'widget_active' => array('widget_active'),
       'deleted' => array('deleted'),
-      // Used by field_modules_disabled().
-      'widget_module' => array('widget_module'),
-      // Used by field_associate_fields().
-      'widget_type' => array('widget_type'),
     ),
   );
   $schema['cache_field'] = drupal_get_schema_unprocessed('system', 'cache');

@@ -2012,7 +2012,7 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     $this->assertIdentical($record['data']['required'], FALSE, t('Required defaults to false.'));
     $this->assertIdentical($record['data']['label'], $this->instance_definition['field_name'], t('Label defaults to field name.'));
     $this->assertIdentical($record['data']['description'], '', t('Description defaults to empty string.'));
-    $this->assertIdentical($record['widget_type'], $field_type['default_widget'], t('Default widget has been written.'));
+    $this->assertIdentical($record['data']['widget']['type'], $field_type['default_widget'], t('Default widget has been written.'));
     $this->assertTrue(isset($record['data']['display']['full']), t('Display for "full" build_mode has been written.'));
     $this->assertIdentical($record['data']['display']['full']['type'], $field_type['default_formatter'], t('Default formatter for "full" build_mode has been written.'));
 
