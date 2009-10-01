@@ -217,7 +217,8 @@ function hook_cron_queue_info() {
  *  name as the key. Each sub-array has a number of possible attributes:
  *  - "#input": boolean indicating whether or not this element carries a value
  *    (even if it's hidden).
- *  - "#process": array of callback functions taking $element and $form_state.
+ *  - "#process": array of callback functions taking $element, $form_state,
+ *    and $complete_form.
  *  - "#after_build": array of callback functions taking $element and $form_state.
  *  - "#validate": array of callback functions taking $form and $form_state.
  *  - "#element_validate": array of callback functions taking $element and
