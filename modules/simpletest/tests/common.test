@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.75 2009/09/29 15:31:15 dries Exp $
+// $Id: common.test,v 1.76 2009/10/01 19:04:26 dries Exp $
 
 /**
  * Tests for URL generation functions.
@@ -91,6 +91,15 @@ class CommonURLUnitTest extends DrupalUnitTestCase {
       'path' => 'foo/bar',
       'query' => array('foo' => 'bar', 'bar' => 'baz', 'baz' => ''),
       'fragment' => 'foo',
+    );
+    $this->assertEqual(drupal_parse_url($url), $result, t('Relative URL parsed correctly.'));
+
+    // Relative URL that is known to confuse parse_url().
+    $url = 'foo/bar:1';
+    $result = array(
+      'path' => 'foo/bar:1',
+      'query' => array(),
+      'fragment' => '',
     );
     $this->assertEqual(drupal_parse_url($url), $result, t('Relative URL parsed correctly.'));
 

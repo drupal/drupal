@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1002 2009/09/30 18:36:01 dries Exp $
+// $Id: common.inc,v 1.1003 2009/10/01 19:04:25 dries Exp $
 
 /**
  * @file
@@ -520,8 +520,11 @@ function drupal_parse_url($url) {
   }
   // Internal URLs.
   else {
-    $parts = parse_url($url);
-    $options['path'] = $parts['path'];
+    // parse_url() does not support relative URLs, so make it absolute. E.g. the
+    // relative URL "foo/bar:1" isn't properly parsed.
+    $parts = parse_url('http://example.com/' . $url);
+    // Strip the leading slash that was just added.
+    $options['path'] = substr($parts['path'], 1);
     if (isset($parts['query'])) {
       parse_str($parts['query'], $options['query']);
     }
