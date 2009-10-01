@@ -1772,7 +1772,25 @@ function menu_set_active_item($path) {
 }
 
 /**
- * Set (or get) the active trail for the current page - the path to root in the menu tree.
+ * Sets or gets the active trail (path to root menu root) of the current page.
+ *
+ * @param $new_trail
+ *   Menu trail to set, or NULL to use previously-set or calculated trail. If
+ *   supplying a trail, use the same format as the return value (see below).
+ * @return
+ *   Path to menu root of the current page, as an array of menu link items,
+ *   starting with the site's home page. Each link item is an associative array
+ *   with the following components:
+ *   - 'title': Title of the item.
+ *   - 'href': Drupal path of the item.
+ *   - 'localized_options': Options for passing into the l() function.
+ *   - 'type': A menu type constant, such as MENU_DEFAULT_LOCAL_TASK, or 0 to
+ *     indicate it's not really in the menu (used for the home page item).
+ *   If $new_trail is supplied, the value is saved in a static variable and
+ *   returned. If $new_trail is not supplied, and there is a saved value from
+ *   a previous call, the saved value is returned. If $new_trail is not supplied
+ *   and there is no saved value, the path to the current page is calculated,
+ *   saved as the static value, and returned.
  */
 function menu_set_active_trail($new_trail = NULL) {
   $trail = &drupal_static(__FUNCTION__);
@@ -1852,7 +1870,9 @@ function menu_set_active_trail($new_trail = NULL) {
 }
 
 /**
- * Get the active trail for the current page - the path to root in the menu tree.
+ * Gets the active trail (path to root menu root) of the current page.
+ *
+ * See menu_set_active_trail() for details of return value.
  */
 function menu_get_active_trail() {
   return menu_set_active_trail();
