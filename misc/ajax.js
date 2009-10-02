@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.2 2009/09/09 21:53:14 dries Exp $
+// $Id: ajax.js,v 1.3 2009/10/02 14:55:40 dries Exp $
 (function ($) {
 
 /**
@@ -182,6 +182,10 @@ Drupal.ajax = function (base, element, element_settings) {
 Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
   // Disable the element that received the change.
   $(this.element).addClass('progress-disabled').attr('disabled', true);
+
+  // Server-side code needs to know what element triggered the call, so it can
+  // find the #ajax binding.
+  form_values.push({ name: 'ajax_triggering_element', value: this.formPath });
 
   // Insert progressbar or throbber.
   if (this.progress.type == 'bar') {
