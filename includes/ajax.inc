@@ -24,20 +24,19 @@
  * a different callback function to invoke, which can return updated HTML or can
  * also return a richer set of AJAX framework commands.
  *
- * @see @link ajax_commands AJAX framework commands @endlink
+ * See @link ajax_commands AJAX framework commands @endlink
  *
  * To implement AJAX handling in a normal form, just add '#ajax' to the form
  * definition of a field. That field will trigger an AJAX event when it is
  * clicked (or changed, depending on the kind of field). #ajax supports
  * the following parameters (either 'path' or 'callback' is required at least):
  * - #ajax['path']: The menu path to use for the request. This path should map
- *   to a menu page callback that returns data using ajax_render(). By default,
- *   this is 'system/ajax'. Be warned that the default path currently only works
- *   for buttons. It will not work for selects, textfields, or textareas.
- * - #ajax['callback']: The callback to invoke, which will receive a $form and
- *   $form_state as arguments, and should return the HTML to replace. By
- *   default, the page callback defined for the menu path 'system/ajax' is
- *   triggered to handle the server side of the #ajax event.
+ *   to a menu page callback that returns data using ajax_render(). Defaults to
+ *   'system/ajax', which invokes ajax_form_callback().
+ * - #ajax['callback']: The callback to invoke to handle the server side of the
+ *   AJAX event, which will receive a $form and $form_state as arguments, and
+ *   should return a HTML string to replace the original element or a list of
+ *   AJAX commands.
  * - #ajax['wrapper']: The CSS ID of the AJAX area. The HTML returned from the
  *   callback will replace whatever is currently in this wrapper. It is
  *   important to ensure that this wrapper exists in the form. The wrapper is
@@ -74,8 +73,6 @@
  * be converted to a JSON object and returned to the client, which will then
  * iterate over the array and process it like a macro language.
  *
- * @see @link ajax_commands AJAX framework commands @endlink
- *
  * Each command is an object. $object->command is the type of command and will
  * be used to find the method (it will correlate directly to a method in
  * the Drupal.ajax[command] space). The object may contain any other data that
@@ -83,7 +80,6 @@
  *
  * Commands are usually created with a couple of helper functions, so they
  * look like this:
- *
  * @code
  *   $commands = array();
  *   // Replace the content of '#object-1' on the page with 'some html here'.
@@ -91,8 +87,29 @@
  *   // Add a visual "changed" marker to the '#object-1' element.
  *   $commands[] = ajax_command_changed('#object-1');
  *   // Output new markup to the browser and end the request.
+ *   // Note: Only custom AJAX paths/page callbacks need to do this manually.
  *   ajax_render($commands);
  * @endcode
+ *
+ * When the system's default #ajax['path'] is used, the invoked callback
+ * function can either return a HTML string or an AJAX command structure.
+ *
+ * In case an AJAX callback returns a HTML string instead of an AJAX command
+ * structure, ajax_form_callback() automatically replaces the original container
+ * by using the ajax_command_replace() command and additionally prepends the
+ * returned output with any status messages.
+ *
+ * When returning an AJAX command structure, it is likely that any status
+ * messages shall be output with the given HTML. To achieve the same result
+ * using an AJAX command structure, the AJAX callback may use the following:
+ * @code
+ *   $commands = array();
+ *   $commands[] = ajax_command_replace(NULL, $output);
+ *   $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
+ *   return $commands;
+ * @endcode
+ *
+ * See @link ajax_commands AJAX framework commands @endlink
  */
 
 /**
@@ -196,9 +213,37 @@ function ajax_get_form() {
 }
 
 /**
- * Menu callback for AJAX callbacks through the #ajax['callback'] Form API property.
+ * Menu callback; handles AJAX requests for the #ajax Form API property.
+ *
+ * This rebuilds the form from cache and invokes the defined #ajax['callback']
+ * to return an AJAX command structure for JavaScript. In case no 'callback' has
+ * been defined, nothing will happen.
+ *
+ * The Form API #ajax property can be set both for buttons and other input
+ * elements.
+ *
+ * ajax_process_form() defines an additional 'formPath' JavaScript setting
+ * that is used by Drupal.ajax.prototype.beforeSubmit() to automatically inject
+ * an additional field 'ajax_triggering_element' to the submitted form values,
+ * which contains the array #parents of the element in the form structure.
+ * This additional field allows ajax_form_callback() to determine which
+ * element triggered the action, as non-submit form elements do not
+ * provide this information in $form_state['clicked_button'], which can
+ * also be used to determine triggering element, but only submit-type
+ * form elements.
+ *
+ * This function is also the canonical example of how to implement
+ * #ajax['path']. If processing is required that cannot be accomplished with
+ * a callback, re-implement this function and set #ajax['path'] to the
+ * enhanced function.
  */
 function ajax_form_callback() {
+  // Find the triggering element, which was set up for us on the client side.
+  if (!empty($_REQUEST['ajax_triggering_element'])) {
+    $triggering_element_path = $_REQUEST['ajax_triggering_element'];
+    // Remove the value for form validation.
+    unset($_REQUEST['ajax_triggering_element']);
+  }
   list($form, $form_state, $form_id, $form_build_id) = ajax_get_form();
 
   // Build, validate and if possible, submit the form.
@@ -208,17 +253,40 @@ function ajax_form_callback() {
   // drupal_process_form() set up.
   $form = drupal_rebuild_form($form_id, $form_state, $form_build_id);
 
-  // Get the callback function from the clicked button.
-  $ajax = $form_state['clicked_button']['#ajax'];
-  $callback = $ajax['callback'];
-  if (function_exists($callback)) {
+  // $triggering_element_path in a simple form might just be 'myselect', which
+  // would mean we should use the element $form['myselect']. For nested form
+  // elements we need to recurse into the form structure to find the triggering
+  // element, so we can retrieve the #ajax['callback'] from it.
+  if (!empty($triggering_element_path)) {
+    if (!isset($form['#access']) || $form['#access']) {
+      $triggering_element = $form;
+      foreach (explode('/', $triggering_element_path) as $key) {
+        if (!empty($triggering_element[$key]) && (!isset($triggering_element[$key]['#access']) || $triggering_element[$key]['#access'])) {
+          $triggering_element = $triggering_element[$key];
+        }
+        else {
+          // We did not find the $triggering_element or do not have #access,
+          // so break out and do not provide it.
+          $triggering_element = NULL;
+          break;
+        }
+      }
+    }
+  }
+  if (empty($triggering_element)) {
+    $triggering_element = $form_state['clicked_button'];
+  }
+  // Now that we have the element, get a callback if there is one.
+  if (!empty($triggering_element)) {
+    $callback = $triggering_element['#ajax']['callback'];
+  }
+  if (!empty($callback) && function_exists($callback)) {
     $html = $callback($form, $form_state);
 
     // If the returned value is a string, assume it is HTML, add the status
     // messages, and create a command object to return automatically. We want
     // the status messages inside the new wrapper, so that they get replaced
     // on subsequent AJAX calls for the same wrapper.
-    // @see ajax_command_replace()
     if (is_string($html)) {
       $commands = array();
       $commands[] = ajax_command_replace(NULL, $html);
@@ -311,6 +379,7 @@ function ajax_process_form($element) {
       'method'   => empty($element['#ajax']['method']) ? 'replace' : $element['#ajax']['method'],
       'progress' => empty($element['#ajax']['progress']) ? array('type' => 'throbber') : $element['#ajax']['progress'],
       'button'   => isset($element['#executes_submit_callback']) ? array($element['#name'] => $element['#value']) : FALSE,
+      'formPath' => implode('/', $element['#array_parents']),
     );
 
     // Convert a simple #ajax['progress'] type string into an array.
@@ -341,7 +410,6 @@ function ajax_process_form($element) {
 /**
  * @defgroup ajax_commands AJAX framework commands
  * @{
- * @ingroup ajax
  */
 
 /**
@@ -375,19 +443,6 @@ function ajax_command_alert($text) {
  *
  * This command is implemented by Drupal.ajax.prototype.commands.insert()
  * defined in misc/ajax.js.
- *
- * When using this command, it is likely that any status messages shall be
- * output with the given HTML. In case an AJAX callback returns a HTML string
- * instead of an AJAX command structure, ajax_form_callback() automatically
- * prepends the returned output with status messages.
- * To achieve the same result using an AJAX command structure, the AJAX callback
- * may use the following:
- * @code
- *   $commands = array();
- *   $commands[] = ajax_command_replace(NULL, $output);
- *   $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
- *   return $commands;
- * @endcode
  *
  * @param $selector
  *   A jQuery selector string. If the command is a response to a request from
