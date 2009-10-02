@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.50 2009/09/30 12:26:36 dries Exp $
+// $Id: field.attach.inc,v 1.51 2009/10/02 14:39:43 dries Exp $
 
 /**
  * @file
@@ -1328,7 +1328,7 @@ function field_attach_delete_bundle($bundle) {
   // First, delete the instances themseves.
   $instances = field_info_instances($bundle);
   foreach ($instances as $instance) {
-    field_delete_instance($instance['field_name'], $bundle);
+    field_delete_instance($instance);
   }
 
   // Clear the cache.
