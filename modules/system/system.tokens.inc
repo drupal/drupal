@@ -48,6 +48,10 @@ function system_token_info() {
     'name' => t("URL"),
     'description' => t("The URL of the site's front page."),
   );
+  $site['url-brief'] = array(
+    'name' => t("URL (brief)"),
+    'description' => t("The URL of the site's front page without the protocol."),
+  );  
   $site['login-url'] = array(
     'name' => t("Login page"),
     'description' => t("The URL of the site's login page."),
@@ -179,6 +183,10 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
 
         case 'url':
           $replacements[$original] = url('<front>', $url_options);
+          break;
+
+        case 'url-brief':
+          $replacements[$original] = preg_replace('!^https?://!', '', url('<front>', $url_options)); 
           break;
 
         case 'login-url':
