@@ -289,7 +289,17 @@ function poll_form($node, $form_state) {
   );
 
   // Poll attributes
-  $duration = array(0 => t('Unlimited')) + drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval");
+  $duration = array(
+    // 1-6 days.
+    86400, 2 * 86400, 3 * 86400, 4 * 86400, 5 * 86400, 6 * 86400,
+    // 1-3 weeks (7 days).
+    604800, 2 * 604800, 3 * 604800,
+    // 1-3,6,9 months (30 days).
+    2592000, 2 * 2592000, 3 * 2592000, 6 * 2592000, 9 * 2592000,
+    // 1 year (365 days).
+    31536000,
+  );
+  $duration = array(0 => t('Unlimited')) + drupal_map_assoc($duration, 'format_interval');
   $active = array(0 => t('Closed'), 1 => t('Active'));
 
   $form['settings'] = array(
