@@ -5198,72 +5198,87 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
  */
 
 /**
- * Parse Drupal info file format.
+ * Parse Drupal module and theme info file format.
  *
- * Files should use an ini-like format to specify values.
- * White-space generally doesn't matter, except inside values.
- * e.g.
+ * Info files are NOT for placing arbitrary theme and module-specific settings.
+ * Use variable_get() and variable_set() for that.
  *
- * @verbatim
- *   key = value
- *   key = "value"
- *   key = 'value'
- *   key = "multi-line
- *
- *   value"
- *   key = 'multi-line
- *
- *   value'
- *   key
- *   =
- *   'value'
- * @endverbatim
- *
- * Arrays are created using a GET-like syntax:
- *
- * @verbatim
- *   key[] = "numeric array"
- *   key[index] = "associative array"
- *   key[index][] = "nested numeric array"
- *   key[index][index] = "nested associative array"
- * @endverbatim
- *
- * PHP constants are substituted in, but only when used as the entire value:
- *
- * Comments should start with a semi-colon at the beginning of a line.
- *
- * This function is NOT for placing arbitrary module-specific settings. Use
- * variable_get() and variable_set() for that.
- *
- * Information stored in the module.info file:
+ * Information stored in a module .info file:
  * - name: The real name of the module for display purposes.
  * - description: A brief description of the module.
  * - dependencies: An array of shortnames of other modules this module requires.
  * - package: The name of the package of modules this module belongs to.
  *
- * Example of .info file:
- * @verbatim
- *   name = Forum
- *   description = Enables threaded discussions about general topics.
- *   dependencies[] = taxonomy
- *   dependencies[] = comment
- *   package = Core
- *   version = VERSION
- * @endverbatim
+ * @see forum.info
+ *
+ * Information stored in a theme .info file:
+ * - name: The real name of the theme for display purposes
+ * - description: Brief description
+ * - screenshot: Path to screenshot relative to the theme's .info file.
+ * - engine: Theme engine, typically: engine = phptemplate
+ * - base: Name of a base theme, if applicable, eg: base = zen
+ * - regions: Listed regions eg: region[left] = Left sidebar
+ * - features: Features available eg: features[] = logo
+ * - stylesheets: Theme stylesheets eg: stylesheets[all][] = my-style.css
+ * - scripts: Theme scripts eg: scripts[] = my-script.css
+ *
+ * @see garland.info
  *
  * @param $filename
  *   The file we are parsing. Accepts file with relative or absolute path.
  * @return
  *   The info array.
+ *
+ * @see drupal_parse_info_format()
  */
 function drupal_parse_info_file($filename) {
-  $info = array();
-
   if (!file_exists($filename)) {
-    return $info;
+    return array();
   }
 
   $data = file_get_contents($filename);
+  return drupal_parse_info_format($data);
+}
+
+/**
+ * Parse data in Drupal's .info format.
+ *
+ * Data should be in an .ini-like format to specify values. White-space
+ * generally doesn't matter, except inside values:
+ * @code
+ *   key = value
+ *   key = "value"
+ *   key = 'value'
+ *   key = "multi-line
+ *   value"
+ *   key = 'multi-line
+ *   value'
+ *   key
+ *   =
+ *   'value'
+ * @endcode
+ *
+ * Arrays are created using a HTTP GET alike syntax:
+ * @code
+ *   key[] = "numeric array"
+ *   key[index] = "associative array"
+ *   key[index][] = "nested numeric array"
+ *   key[index][index] = "nested associative array"
+ * @endcode
+ *
+ * PHP constants are substituted in, but only when used as the entire value.
+ * Comments should start with a semi-colon at the beginning of a line.
+ *
+ * @param $data
+ *   A string to parse.
+ * @return
+ *   The info array.
+ *
+ * @see drupal_parse_info_file()
+ */
+function drupal_parse_info_format($data) {
+  $info = array();
+
   if (preg_match_all('
     @^\s*                           # Start at the beginning of a line, ignoring leading whitespace
     ((?:
