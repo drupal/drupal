@@ -2125,12 +2125,12 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     field_create_instance($this->instance_definition);
     $this->another_instance_definition = $this->instance_definition;
     $this->another_instance_definition['bundle'] .= '_another_bundle';
-    field_create_instance($this->another_instance_definition);
+    $instance = field_create_instance($this->another_instance_definition);
 
     // Test that the first instance is not deleted, and then delete it.
     $instance = field_read_instance($this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
     $this->assertTrue(!empty($instance) && empty($instance['deleted']), t('A new field instance is not marked for deletion.'));
-    field_delete_instance($this->instance_definition['field_name'], $this->instance_definition['bundle']);
+    field_delete_instance($instance);
 
     // Make sure the instance is marked as deleted when the instance is
     // specifically loaded.
@@ -2490,7 +2490,8 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $this->assertEqual(count($found['test_entity']), 10, 'Correct number of objects found before deleting');
 
     // Delete the instance.
-    field_delete_instance($field['field_name'], $bundle);
+    $instance = field_info_instance($field['field_name'], $bundle);
+    field_delete_instance($instance);
 
     // The instance still exists, deleted.
     $instances = field_read_instances(array('field_id' => $field['id'], 'deleted' => 1), array('include_deleted' => 1, 'include_inactive' => 1));
@@ -2522,7 +2523,8 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $field = reset($this->fields);
 
     // Delete the instance.
-    field_delete_instance($field['field_name'], $bundle);
+    $instance = field_info_instance($field['field_name'], $bundle);
+    field_delete_instance($instance);
 
     // No field hooks were called.
     $mem = field_test_memorize();
@@ -2577,7 +2579,8 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
 
     foreach ($this->bundles as $bundle) {
       // Delete the instance.
-      field_delete_instance($field['field_name'], $bundle);
+      $instance = field_info_instance($field['field_name'], $bundle);
+      field_delete_instance($instance);
 
       // Purge the data.
       field_purge_batch(10);

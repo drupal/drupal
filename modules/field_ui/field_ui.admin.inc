@@ -979,7 +979,7 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
   $bundle_label = $bundles[$bundle]['label'];
 
   if (!empty($bundle) && $field && !$field['locked'] && $form_values['confirm']) {
-    field_delete_instance($field['field_name'], $bundle);
+    field_delete_instance($instance);
     // Delete the field if that was the last instance.
     if (count($field['bundles'] == 1)) {
       field_delete_field($field['field_name']);
