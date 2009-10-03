@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1135 2009/09/30 18:36:02 dries Exp $
+// $Id: node.module,v 1.1136 2009/10/03 00:52:24 dries Exp $
 
 /**
  * @file
@@ -1008,7 +1008,7 @@ function node_delete_multiple($nids) {
 
   // Clear the page and block and node_load_multiple caches.
   cache_clear_all();
-  drupal_static_reset('node_load_multiple');
+  entity_get_controller('node')->resetCache();
 }
 
 /**
