@@ -2895,24 +2895,33 @@ function batch_set($batch_definition) {
  * @param $url
  *   (optional - should only be used for separate scripts like update.php)
  *   URL of the batch processing page.
+ * @param $redirect_callback
+ *   (optional) Specify a function to be called to redirect to the progressive
+ *   processing page. By default drupal_goto() will be used to redirect to a
+ *   page which will do the progressive page. Specifying another function will
+ *   allow the progressive processing to be processed differently.
  */
-function batch_process($redirect = NULL, $url = NULL) {
+function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'drupal_goto') {
   $batch =& batch_get();
 
   drupal_theme_initialize();
   
   if (isset($batch)) {
     // Add process information
-    $url = isset($url) ? $url : 'batch';
     $process_info = array(
       'current_set' => 0,
       'progressive' => TRUE,
-      'url' => isset($url) ? $url : 'batch',
+      'url' => $url,
       'source_page' => $_GET['q'],
       'redirect' => $redirect,
       'theme' => $GLOBALS['theme_key'],
+      'redirect_callback' => $redirect_callback,
     );
     $batch += $process_info;
+
+    // The batch is now completely built. Allow other modules to make changes to the 
+    // batch so that it is easier to reuse batch processes in other enviroments.
+    drupal_alter('batch', $batch);
 
     if ($batch['progressive']) {
       // Clear the way for the drupal_goto() redirection to the batch processing
@@ -2948,7 +2957,10 @@ function batch_process($redirect = NULL, $url = NULL) {
       // Set the batch number in the session to guarantee that it will stay alive.
       $_SESSION['batches'][$batch['id']] = TRUE;
 
-      drupal_goto($batch['url'], array('op' => 'start', 'id' => $batch['id']));
+      $function = $batch['redirect_callback'];
+      if (function_exists($function)) {
+        $function($batch['url'], array('op' => 'start', 'id' => $batch['id']));
+      }
     }
     else {
       // Non-progressive execution: bypass the whole progressbar workflow
