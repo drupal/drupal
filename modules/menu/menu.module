@@ -361,7 +361,7 @@ function menu_node_delete($node) {
 function menu_node_prepare($node) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
-    $menu_name = variable_get('menu_default_node_menu', 'main-menu');
+    $menu_name = variable_get('menu_default_node_menu', 'navigation');
     $item = array();
     if (isset($node->nid)) {
       // Give priority to the default menu
@@ -445,7 +445,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
     $options = menu_parent_options(menu_get_menus(), $item);
     $default = $item['menu_name'] . ':' . $item['plid'];
     if (!isset($options[$default])) {
-      $default = 'main-menu:0';
+      $default = 'navigation:0';
     }
     $form['menu']['parent'] = array(
       '#type' => 'select',

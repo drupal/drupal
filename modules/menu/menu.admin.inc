@@ -325,7 +325,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
   $options = menu_parent_options(menu_get_menus(), $item);
   $default = $item['menu_name'] . ':' . $item['plid'];
   if (!isset($options[$default])) {
-    $default = 'main-menu:0';
+    $default = 'navigation:0';
   }
   $form['menu']['parent'] = array(
     '#type' => 'select',
@@ -687,17 +687,17 @@ function menu_configure() {
   $form['menu_default_node_menu'] = array(
     '#type' => 'select',
     '#title' => t('Default menu for content'),
-    '#default_value' => 'main-menu',
+    '#default_value' => 'navigation',
     '#options' => $menu_options,
     '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
   );
 
-  $main = variable_get('menu_main_links_source', 'main-menu');
+  $main = variable_get('menu_main_links_source', 'navigation');
   $main_options = array_merge($menu_options, array('' => t('No Main links')));
   $form['menu_main_links_source'] = array(
     '#type' => 'select',
     '#title' => t('Source for the Main links'),
-    '#default_value' => 'main-menu',
+    '#default_value' => 'navigation',
     '#options' => $main_options,
     '#tree' => FALSE,
     '#description' => t('Select what should be displayed as the Main links (typically at the top of the page).'),
