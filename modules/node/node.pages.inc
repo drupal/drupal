@@ -61,7 +61,7 @@ function node_add($type) {
   // If a node type has been specified, validate its existence.
   if (isset($types[$type]) && node_access('create', $type)) {
     // Initialize settings:
-    $node = array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => '');
+    $node = (object)array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => '');
 
     drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)), PASS_THROUGH);
     $output = drupal_get_form($type . '_node_form', $node);
@@ -71,12 +71,11 @@ function node_add($type) {
 }
 
 function node_form_validate($form, &$form_state) {
-  $node = $form_state['values'];
+  $node = (object)$form_state['values'];
   node_validate($node, $form);
 
   // Field validation. Requires access to $form_state, so this cannot be
   // done in node_validate() as it currently exists.
-  $node = (object)$node;
   field_attach_form_validate('node', $node, $form, $form_state);
 }
 
@@ -111,12 +110,11 @@ function node_form($form, &$form_state, $node) {
   global $user;
 
   if (isset($form_state['node'])) {
-    $node = $form_state['node'] + (array)$node;
+    $node = (object)($form_state['node'] + (array)$node);
   }
   if (isset($form_state['node_preview'])) {
     $form['#prefix'] = $form_state['node_preview'];
   }
-  $node = (object)$node;
   foreach (array('title') as $key) {
     if (!isset($node->$key)) {
       $node->$key = NULL;
@@ -441,7 +439,7 @@ function node_form_submit_build_node($form, &$form_state) {
   // functions to process the form values into an updated node.
   unset($form_state['submit_handlers']);
   form_execute_handlers('submit', $form, $form_state);
-  $node = node_submit($form_state['values']);
+  $node = node_submit((object)$form_state['values']);
 
   field_attach_submit('node', $node, $form, $form_state);
 

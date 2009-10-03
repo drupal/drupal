@@ -622,7 +622,7 @@ function _node_types_build() {
   if (is_object($_node_types)) {
     return $_node_types;
   }
-  $_node_types = (object) array('types' => array(), 'names' => array());
+  $_node_types = (object)array('types' => array(), 'names' => array());
 
   $info_array = module_invoke_all('node_info');
   foreach ($info_array as $type => $info) {
@@ -713,7 +713,7 @@ function node_type_set_defaults($info = array()) {
  * Determine whether a node hook exists.
  *
  * @param $node
- *   Either a node object, node array, or a string containing the node type.
+ *   A node object or a string containing the node type.
  * @param $hook
  *   A string containing the name of the hook.
  * @return
@@ -728,7 +728,7 @@ function node_hook($node, $hook) {
  * Invoke a node hook.
  *
  * @param $node
- *   Either a node object, node array, or a string containing the node type.
+ *   A node object or a string containing the node type.
  * @param $hook
  *   A string containing the name of the hook.
  * @param $a2, $a3, $a4
@@ -791,8 +791,6 @@ function node_load($nid = NULL, $vid = NULL, $reset = FALSE) {
  * Perform validation checks on the given node.
  */
 function node_validate($node, $form = array()) {
-  // Convert the node to an object, if necessary.
-  $node = (object)$node;
   $type = node_type_get_type($node);
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
@@ -824,9 +822,6 @@ function node_validate($node, $form = array()) {
  */
 function node_submit($node) {
   global $user;
-
-  // Convert the node to an object, if necessary.
-  $node = (object)$node;
 
   if (user_access('administer nodes')) {
     // Populate the "authored by" field.
@@ -1040,7 +1035,7 @@ function node_revision_delete($revision_id) {
  * Generate an array for rendering the given node.
  *
  * @param $node
- *   A node array or node object.
+ *   A node object.
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
  *
@@ -1048,8 +1043,6 @@ function node_revision_delete($revision_id) {
  *   An array as expected by drupal_render().
  */
 function node_build($node, $build_mode = 'full') {
-  $node = (object)$node;
-
   // Populate $node->content with a render() array.
   node_build_content($node, $build_mode);
 
@@ -2215,8 +2208,8 @@ function node_search_validate($form, &$form_state) {
  *   - "delete"
  *   - "create"
  * @param $node
- *   The node object (or node array) on which the operation is to be performed,
- *   or node type (e.g. 'forum') for "create" operation.
+ *   The node object on which the operation is to be performed, or node type
+ *   (e.g. 'forum') for "create" operation.
  * @param $account
  *   Optional, a user object representing the user for whom the operation is to
  *   be performed. Determines access for a user other than the current user.
@@ -2230,10 +2223,6 @@ function node_access($op, $node, $account = NULL) {
     // If there was no node to check against, or the $op was not one of the
     // supported ones, we return access denied.
     return FALSE;
-  }
-  // Convert the node to an object if necessary:
-  if ($op != 'create') {
-    $node = (object)$node;
   }
   // If no user object is supplied, the access check is for the current user.
   if (empty($account)) {
