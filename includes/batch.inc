@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.39 2009/09/21 07:56:07 dries Exp $
+// $Id: batch.inc,v 1.40 2009/10/03 20:17:45 dries Exp $
 
 
 /**
@@ -445,7 +445,10 @@ function _batch_finished() {
     // If no redirection happened, save the final $form_state value to be
     // retrieved by drupal_get_form() and redirect to the originating page.
     $_SESSION['batch_form_state'] = $_batch['form_state'];
-    drupal_goto($_batch['source_page']);
+    $function = $_batch['redirect_callback'];
+    if (function_exists($function)) {
+      $function($_batch['source_url'], array('op' => 'finish', 'id' => $_batch['id']));
+    }
   }
 }
 

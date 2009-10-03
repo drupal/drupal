@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.11 2009/09/29 15:13:54 dries Exp $
+// $Id: update.inc,v 1.12 2009/10/03 20:17:46 dries Exp $
 
 /**
  * @file
@@ -361,8 +361,11 @@ class DrupalUpdateException extends Exception { }
  *   scripts like update.php).
  * @param $batch
  *   Optional parameters to pass into the batch API.
+ * @param $redirect_callback
+ *   (optional) Specify a function to be called to redirect to the progressive
+ *   processing page.
  */
-function update_batch($start, $redirect = NULL, $url = NULL, $batch = array()) {
+function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $redirect_callback = 'drupal_goto') {
   // During the update, bring the site offline so that schema changes do not
   // affect visiting users.
   $_SESSION['maintenance_mode'] = variable_get('maintenance_mode', FALSE);
@@ -393,7 +396,7 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array()) {
     'file' => 'includes/update.inc',
   );
   batch_set($batch);
-  batch_process($redirect, $url);
+  batch_process($redirect, $url, $redirect_callback);
 }
 
 /**
