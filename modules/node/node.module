@@ -1008,7 +1008,7 @@ function node_delete_multiple($nids) {
 
   // Clear the page and block and node_load_multiple caches.
   cache_clear_all();
-  drupal_static_reset('node_load_multiple');
+  entity_get_controller('node')->resetCache();
 }
 
 /**
