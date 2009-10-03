@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1137 2009/10/03 17:45:26 dries Exp $
+// $Id: node.module,v 1.1138 2009/10/03 19:16:03 dries Exp $
 
 /**
  * @file
@@ -1195,7 +1195,7 @@ function template_preprocess_node(&$variables) {
   }
 
   // Gather node classes.
-  $variables['classes_array'][] = 'node-' . $node->type;
+  $variables['classes_array'][] = drupal_css_class('node-' . $node->type);
   if ($variables['promote']) {
     $variables['classes_array'][] = 'node-promoted';
   }
