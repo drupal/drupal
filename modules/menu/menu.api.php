@@ -116,6 +116,35 @@
  * @endcode
  * See @link form_api Form API documentation @endlink for details.
  *
+ *
+ * You can also make groups of menu items to be rendered (by default) as tabs
+ * on a page. To do that, first create one menu item of type MENU_NORMAL_ITEM,
+ * with your chosen path, such as 'foo'. Then duplicate that menu item, using a
+ * subdirectory path, such as 'foo/tab1', and changing the type to
+ * MENU_DEFAULT_LOCAL_TASK to make it the default tab for the group. Then add
+ * the additional tab items, with paths such as "foo/tab2" etc., with type
+ * MENU_LOCAL_TASK. Example:
+ * @code
+ * // This will make "Foo settings" appear on the admin Config page
+ * $items['admin/config/foo'] = array(
+ *   'title' => 'Foo settings',
+ *   'type' => MENU_NORMAL_ITEM,
+ *   // page callback, etc. need to be added here
+ * );
+ * // When you go to "Foo settings", "Global settings" will be the main tab
+ * $items['admin/config/foo/global'] = array(
+ *   'title' => 'Global settings',
+ *   'type' => MENU_DEFAULT_LOCAL_TASK,
+ *   // page callback, etc. need to be added here
+ * );
+ * // Make an additional tab called "Node settings"
+ * $items['admin/config/foo/node'] = array(
+ *   'title' => 'Node settings',
+ *   'type' => MENU_LOCAL_TASK,
+ *   // page callback, etc. need to be added here
+ * );
+ * @endcode
+ *
  * This hook is rarely called (for example, when modules are enabled), and
  * its results are cached in the database.
  *
