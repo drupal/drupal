@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.307 2009/09/30 18:36:01 dries Exp $
+// $Id: bootstrap.inc,v 1.308 2009/10/03 19:27:44 dries Exp $
 
 /**
  * @file
@@ -1388,6 +1388,9 @@ function drupal_anonymous_user($session = '') {
  * @param $new_phase
  *   A boolean, set to FALSE if calling drupal_bootstrap from inside a
  *   function called from drupal_bootstrap (recursion).
+ * @return
+ *   The most recently completed phase.
+ *   
  */
 function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   $final_phase = &drupal_static(__FUNCTION__ . '_final_phase');
