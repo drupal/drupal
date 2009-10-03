@@ -39,13 +39,6 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['form_test/form_clean_id'] = array(
-    'title' => 'form_clean_id test',
-    'page callback' => 'form_test_form_clean_id_page',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-
   $items['form_test/drupal_form_submit_batch_api'] = array(
     'title' => 'BatchAPI Drupal_form_submit tests',
     'page callback' => 'form_test_drupal_form_submit_batch_api',
@@ -70,28 +63,6 @@ function form_test_menu() {
   );
 
   return $items;
-}
-
-/**
- * Generate a page with three forms, to test the clean_id generation.
- */
-function form_test_form_clean_id_page() {
-  $build['form_test_test_form1'] = drupal_get_form('form_test_test_form');
-  $build['form_test_test_form2'] = drupal_get_form('form_test_test_form');
-  $build['form_test_test_form3'] = drupal_get_form('form_test_test_form');
-  return $build;
-}
-
-/**
- * A simple form to test clean_id generation.
- */
-function form_test_test_form($form, &$form_state) {
-  $form['input'] = array(
-    '#type' => 'item',
-    '#title' => 'Test Textfield',
-    '#markup' => form_clean_id('form_test_form_clean_id_presence'),
-  );
-  return $form;
 }
 
 /**

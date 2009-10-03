@@ -2128,18 +2128,17 @@ function template_preprocess_html(&$variables) {
   if ($suggestions = template_page_suggestions(arg(), 'page')) {
     foreach ($suggestions as $suggestion) {
       if ($suggestion != 'page-front') {
-        // Add current suggestion to page classes to make it possible to theme the page
-        // depending on the current page type (e.g. node, admin, user, etc.) as well as
-        // more specific data like node-12 or node-edit. To avoid illegal characters in
-        // the class, we're removing everything disallowed. We are not using 'a-z' as
-        //  that might leave in certain international characters (e.g. German umlauts).
-        $variables['classes_array'][] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', form_clean_id(drupal_strtolower($suggestion)));
+        // Add current suggestion to page classes to make it possible to theme
+        // the page depending on the current page type (e.g. node, admin, user,
+        // etc.) as well as more specific data like node-12 or node-edit.
+        $variables['classes_array'][] = drupal_css_class($suggestion);
       }
     }
   }
   
+  // If on an individual node page, add the node type to body classes.
   if ($node = menu_get_object()) {
-    $variables['classes_array'][] = 'node-type-' . form_clean_id($node->type);
+    $variables['classes_array'][] = drupal_css_class('node-type-' . $node->type);
   }
 
   // RDFa allows annotation of XHTML pages with RDF data, while GRDDL provides
@@ -2149,7 +2148,6 @@ function template_preprocess_html(&$variables) {
   $variables['grddl_profile']     = 'http://ns.inria.fr/grddl/rdfa/';
   $variables['language']          = $GLOBALS['language'];
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
-
 
   // Add favicon.
   if (theme_get_setting('toggle_favicon')) {

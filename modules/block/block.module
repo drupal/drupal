@@ -797,7 +797,7 @@ function template_preprocess_block(&$variables) {
   // Create the $content variable that templates expect.
   $variables['content'] = $variables['elements']['#children'];
 
-  $variables['classes_array'][] = 'block-' . $variables['block']->module;
+  $variables['classes_array'][] = drupal_css_class('block-' . $variables['block']->module);
 
   $variables['template_files'][] = 'block-' . $variables['block']->region;
   $variables['template_files'][] = 'block-' . $variables['block']->module;

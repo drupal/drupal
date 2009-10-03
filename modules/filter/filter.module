@@ -746,7 +746,7 @@ function filter_form($selected_format = NULL, $weight = NULL, $parents = array('
 
   drupal_add_js('misc/form.js');
   drupal_add_css(drupal_get_path('module', 'filter') . '/filter.css');
-  $element_id = form_clean_id('edit-' . implode('-', $parents));
+  $element_id = drupal_css_id('edit-' . implode('-', $parents));
 
   $form = array(
     '#type' => 'fieldset',

@@ -547,12 +547,12 @@ function drupal_process_form($form_id, &$form, &$form_state) {
   if ($form_state['process_input']) {
     drupal_validate_form($form_id, $form, $form_state);
 
-    // form_clean_id() maintains a cache of element IDs it has seen,
+    // drupal_css_id() maintains a cache of element IDs it has seen,
     // so it can prevent duplicates. We want to be sure we reset that
     // cache when a form is processed, so scenarios that result in
     // the form being built behind the scenes and again for the
     // browser don't increment all the element IDs needlessly.
-    drupal_static_reset('form_clean_id');
+    drupal_static_reset('drupal_css_id');
 
     if ($form_state['submitted'] && !form_get_errors() && !$form_state['rebuild']) {
       // Execute form submit handlers.
@@ -636,7 +636,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   elseif (isset($user->uid) && $user->uid && !$form_state['programmed']) {
     $form['#token'] = $form_id;
     $form['form_token'] = array(
-      '#id' => form_clean_id('edit-' . $form_id . '-form-token'),
+      '#id' => drupal_css_id('edit-' . $form_id . '-form-token'),
       '#type' => 'token',
       '#default_value' => drupal_get_token($form['#token']),
     );
@@ -646,11 +646,11 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     $form['form_id'] = array(
       '#type' => 'hidden',
       '#value' => $form_id,
-      '#id' => form_clean_id("edit-$form_id"),
+      '#id' => drupal_css_id("edit-$form_id"),
     );
   }
   if (!isset($form['#id'])) {
-    $form['#id'] = form_clean_id($form_id);
+    $form['#id'] = drupal_css_id($form_id);
   }
 
   $form += element_info('form');
@@ -1046,7 +1046,7 @@ function form_builder($form_id, $element, &$form_state) {
   }
 
   if (!isset($element['#id'])) {
-    $element['#id'] = form_clean_id('edit-' . implode('-', $element['#parents']));
+    $element['#id'] = drupal_css_id('edit-' . implode('-', $element['#parents']));
   }
   // Handle input elements.
   if (!empty($element['#input'])) {
@@ -1919,7 +1919,7 @@ function form_process_radios($element) {
           '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
-          '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
+          '#id' => drupal_css_id('edit-' . implode('-', $parents_for_id)),
           '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
         );
       }
@@ -2235,7 +2235,7 @@ function form_process_tableselect($element) {
             '#default_value' => ($element['#default_value'] == $key) ? $key : NULL,
             '#attributes' => $element['#attributes'],
             '#parents' => $element['#parents'],
-            '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
+            '#id' => drupal_css_id('edit-' . implode('-', $parents_for_id)),
             '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
           );
         }
@@ -2681,42 +2681,6 @@ function _form_set_class(&$element, $class = array()) {
   if (form_get_error($element)) {
     $element['#attributes']['class'][] = 'error';
   }
-}
-
-/**
- * Prepare an HTML ID attribute string for a form item.
- *
- * Remove invalid characters and guarantee uniqueness.
- *
- * @param $id
- *   The ID to clean.
- * @param $flush
- *   If set to TRUE, the function will flush and reset the static array
- *   which is built to test the uniqueness of element IDs. This is only
- *   used if a form has completed the validation process. This parameter
- *   should never be set to TRUE if this function is being called to
- *   assign an ID to the #ID element.
- * @return
- *   The cleaned ID.
- */
-function form_clean_id($id = NULL) {
-  $seen_ids = &drupal_static(__FUNCTION__, array());
-  $id = str_replace(array('][', '_', ' '), '-', $id);
-
-  // Ensure IDs are unique. The first occurrence is held but left alone.
-  // Subsequent occurrences get a number appended to them. This incrementing
-  // will almost certainly break code that relies on explicit HTML IDs in
-  // forms that appear more than once on the page, but the alternative is
-  // outputting duplicate IDs, which would break JS code and XHTML
-  // validity anyways. For now, it's an acceptable stopgap solution.
-  if (isset($seen_ids[$id])) {
-    $id = $id . '-' . $seen_ids[$id]++;
-  }
-  else {
-    $seen_ids[$id] = 1;
-  }
-
-  return $id;
 }
 
 /**

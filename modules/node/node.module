@@ -1195,7 +1195,7 @@ function template_preprocess_node(&$variables) {
   }
 
   // Gather node classes.
-  $variables['classes_array'][] = 'node-' . $node->type;
+  $variables['classes_array'][] = drupal_css_class('node-' . $node->type);
   if ($variables['promote']) {
     $variables['classes_array'][] = 'node-promoted';
   }
