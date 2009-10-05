@@ -2136,14 +2136,14 @@ function template_preprocess_html(&$variables) {
         // Add current suggestion to page classes to make it possible to theme
         // the page depending on the current page type (e.g. node, admin, user,
         // etc.) as well as more specific data like node-12 or node-edit.
-        $variables['classes_array'][] = drupal_css_class($suggestion);
+        $variables['classes_array'][] = drupal_html_class($suggestion);
       }
     }
   }
   
   // If on an individual node page, add the node type to body classes.
   if ($node = menu_get_object()) {
-    $variables['classes_array'][] = drupal_css_class('node-type-' . $node->type);
+    $variables['classes_array'][] = drupal_html_class('node-type-' . $node->type);
   }
 
   // RDFa allows annotation of XHTML pages with RDF data, while GRDDL provides

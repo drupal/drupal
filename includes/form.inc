@@ -547,12 +547,12 @@ function drupal_process_form($form_id, &$form, &$form_state) {
   if ($form_state['process_input']) {
     drupal_validate_form($form_id, $form, $form_state);
 
-    // drupal_css_id() maintains a cache of element IDs it has seen,
+    // drupal_html_id() maintains a cache of element IDs it has seen,
     // so it can prevent duplicates. We want to be sure we reset that
     // cache when a form is processed, so scenarios that result in
     // the form being built behind the scenes and again for the
     // browser don't increment all the element IDs needlessly.
-    drupal_static_reset('drupal_css_id');
+    drupal_static_reset('drupal_html_id');
 
     if ($form_state['submitted'] && !form_get_errors() && !$form_state['rebuild']) {
       // Execute form submit handlers.
@@ -636,7 +636,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   elseif (isset($user->uid) && $user->uid && !$form_state['programmed']) {
     $form['#token'] = $form_id;
     $form['form_token'] = array(
-      '#id' => drupal_css_id('edit-' . $form_id . '-form-token'),
+      '#id' => drupal_html_id('edit-' . $form_id . '-form-token'),
       '#type' => 'token',
       '#default_value' => drupal_get_token($form['#token']),
     );
@@ -646,11 +646,11 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     $form['form_id'] = array(
       '#type' => 'hidden',
       '#value' => $form_id,
-      '#id' => drupal_css_id("edit-$form_id"),
+      '#id' => drupal_html_id("edit-$form_id"),
     );
   }
   if (!isset($form['#id'])) {
-    $form['#id'] = drupal_css_id($form_id);
+    $form['#id'] = drupal_html_id($form_id);
   }
 
   $form += element_info('form');
@@ -1046,7 +1046,7 @@ function form_builder($form_id, $element, &$form_state) {
   }
 
   if (!isset($element['#id'])) {
-    $element['#id'] = drupal_css_id('edit-' . implode('-', $element['#parents']));
+    $element['#id'] = drupal_html_id('edit-' . implode('-', $element['#parents']));
   }
   // Handle input elements.
   if (!empty($element['#input'])) {
@@ -1919,7 +1919,7 @@ function form_process_radios($element) {
           '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
-          '#id' => drupal_css_id('edit-' . implode('-', $parents_for_id)),
+          '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
           '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
         );
       }
@@ -2235,7 +2235,7 @@ function form_process_tableselect($element) {
             '#default_value' => ($element['#default_value'] == $key) ? $key : NULL,
             '#attributes' => $element['#attributes'],
             '#parents' => $element['#parents'],
-            '#id' => drupal_css_id('edit-' . implode('-', $parents_for_id)),
+            '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
             '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
           );
         }

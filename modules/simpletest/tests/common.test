@@ -579,49 +579,49 @@ class DrupalCSSIdentifierTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'CSS identifiers',
-      'description' => 'Test the functions drupal_css_class() and drupal_css_id() for expected behavior',
+      'description' => 'Test the functions drupal_html_class() and drupal_html_id() for expected behavior',
       'group' => 'System',
     );
   }
 
   /**
-   * Tests that drupal_css_class() cleans the class name properly.
+   * Tests that drupal_html_class() cleans the class name properly.
    */
   function testDrupalCleanCSSIdentifier() {
     // Verify that no valid ASCII characters are stripped from the class name.
     $class = 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789';
-    $this->assertIdentical(drupal_clean_css_identifier($class, array()), $class, t('Verify valid ASCII characters pass through.'));
+    $this->assertIdentical(drupal_clean_html_identifier($class, array()), $class, t('Verify valid ASCII characters pass through.'));
 
     // Verify that no valid UTF-8 characters are stripped from the class name.
     $class = '¡¢£¤¥';
-    $this->assertIdentical(drupal_clean_css_identifier($class, array()), $class, t('Verify valid UTF-8 characters pass through.'));
+    $this->assertIdentical(drupal_clean_html_identifier($class, array()), $class, t('Verify valid UTF-8 characters pass through.'));
 
     // Verify that invalid characters (including non-breaking space) are stripped from the class name.
-    $this->assertIdentical(drupal_clean_css_identifier('invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ class', array()), 'invalidclass', t('Strip invalid characters.'));
+    $this->assertIdentical(drupal_clean_html_identifier('invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ class', array()), 'invalidclass', t('Strip invalid characters.'));
   }
 
   /**
-   * Tests that drupal_css_class() cleans the class name properly.
+   * Tests that drupal_html_class() cleans the class name properly.
    */
   function testDrupalCSSClass() {
     // Verify Drupal coding standards are enforced.
-    $this->assertIdentical(drupal_css_class('CLASS NAME_[Ü]'), 'class-name--ü', t('Enforce Drupal coding standards.'));
+    $this->assertIdentical(drupal_html_class('CLASS NAME_[Ü]'), 'class-name--ü', t('Enforce Drupal coding standards.'));
   }
 
   /**
-   * Tests that drupal_css_id() cleans the id name properly.
+   * Tests that drupal_html_id() cleans the id name properly.
    */
   function testDrupalCSSId() {
     // Verify Drupal coding standards are enforced.
-    $this->assertIdentical(drupal_css_id('ID NAME_[Ü]'), 'id-name--ü', t('Enforce Drupal coding standards.'));
+    $this->assertIdentical(drupal_html_id('ID NAME_[Ü]'), 'id-name--ü', t('Enforce Drupal coding standards.'));
 
     // Reset the static cache so we can ensure the unique id count is at zero.
-    drupal_static_reset('drupal_css_id');
+    drupal_static_reset('drupal_html_id');
 
     // Clean up IDs with invalid starting characters.
-    $this->assertIdentical(drupal_css_id('test-unique-id'), 'test-unique-id', t('Test the uniqueness of IDs #1.'));
-    $this->assertIdentical(drupal_css_id('test-unique-id'), 'test-unique-id-2', t('Test the uniqueness of IDs #2.'));
-    $this->assertIdentical(drupal_css_id('test-unique-id'), 'test-unique-id-3', t('Test the uniqueness of IDs #3.'));
+    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id', t('Test the uniqueness of IDs #1.'));
+    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id-2', t('Test the uniqueness of IDs #2.'));
+    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id-3', t('Test the uniqueness of IDs #3.'));
   }
 }
 
@@ -1498,7 +1498,7 @@ class DrupalAttributesUnitTest extends DrupalUnitTestCase {
   }
 
   /**
-   * Tests that drupal_css_class() cleans the class name properly.
+   * Tests that drupal_html_class() cleans the class name properly.
    */
   function testDrupalAttributes() {
     // Verify that special characters are HTML encoded.

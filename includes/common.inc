@@ -3095,23 +3095,23 @@ function drupal_clear_css_cache() {
 }
 
 /**
- * Prepare a string for use as a valid CSS identifier (element, class or ID selector).
+ * Prepare a string for use as a valid identifier (element, class or ID name).
  *
  * http://www.w3.org/TR/CSS21/syndata.html#characters shows the syntax for valid
- * CSS identifiers (including element names, classes, and IDs in selectors.)
+ * identifiers (including element names, classes, and IDs in selectors.)
  *
  * @param $identifier
- *   The CSS identifier to clean.
+ *   The identifier to clean.
  * @param $filter
  *   An array of string replacements to use on the identifier.
  * @return
  *   The cleaned identifier.
  */
-function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '[' => '-', ']' => '')) {
+function drupal_clean_html_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '[' => '-', ']' => '')) {
   // By default, we filter using Drupal's coding standards.
   $identifier = strtr($identifier, $filter);
 
-  // Valid characters in a CSS identifier are:
+  // Valid characters in a identifier are:
   // - the hyphen (U+002D)
   // - a-z (U+0030 - U+0039)
   // - A-Z (U+0041 - U+005A)
@@ -3125,7 +3125,7 @@ function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_
 }
 
 /**
- * Prepare a string for use as a valid CSS class name.
+ * Prepare a string for use as a valid class name.
  *
  * Do not pass one string containing multiple classes as they will be
  * incorrectly concatenated with dashes, i.e. "one two" will become "one-two".
@@ -3135,8 +3135,8 @@ function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_
  * @return
  *   The cleaned class name.
  */
-function drupal_css_class($class) {
-  return drupal_clean_css_identifier(drupal_strtolower($class));
+function drupal_html_class($class) {
+  return drupal_clean_html_identifier(drupal_strtolower($class));
 }
 
 /**
@@ -3147,9 +3147,9 @@ function drupal_css_class($class) {
  * @return
  *   The cleaned ID.
  */
-function drupal_css_id($id) {
+function drupal_html_id($id) {
   $seen_ids = &drupal_static(__FUNCTION__, array());
-  $id = drupal_clean_css_identifier(drupal_strtolower($id));
+  $id = drupal_clean_html_identifier(drupal_strtolower($id));
 
   // Ensure IDs are unique. The first occurrence is held but left alone.
   // Subsequent occurrences get a number appended to them. This incrementing
