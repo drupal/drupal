@@ -625,11 +625,10 @@ class DrupalCSSIdentifierTestCase extends DrupalUnitTestCase {
   }
 }
 
-
 /**
  * CSS Unit Tests.
  */
-class CascadingStylesheetsUnitTestCase extends DrupalWebTestCase {
+class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'CSS Unit Tests',
@@ -639,36 +638,32 @@ class CascadingStylesheetsUnitTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Tests basic CSS loading with and without optimization
-   * (drupal_load_stylesheet()).
-   * This can be enhanced by adding additional css files with variant test cases.
+   * Tests basic CSS loading with and without optimization via drupal_load_stylesheet().
+   *
+   * This can be enhanced by adding additional CSS files with variant test cases.
    * Currently, this is specifically testing to make sure that whitespace
    * is treated with adequate respect (not arbitrarily removing linefeeds).
    */
   function testLoadCssBasic() {
-    /**
-     * Array of files to test. Original = .css,
-     * unoptimized expected output = .css.unoptimized.css,
-     * optimized expected = .css.optimized.css
-     * They live in the simpletest/files/css_test_files directory
-     */
-    $testfiles = array('css_input_without_import.css', );
+    // Array of files to test living in 'simpletest/files/css_test_files/'.
+    // - Original: name.css
+    // - Unoptimized expected content: name.css.unoptimized.css
+    // - Optimized expected content: name.css.optimized.css
+    $testfiles = array(
+      'css_input_without_import.css',
+    );
     $path = drupal_get_path('module', 'simpletest') . '/files/css_test_files';
     foreach ($testfiles as $file) {
       $expected = file_get_contents("$path/$file.unoptimized.css");
-      $unoptimized_output = drupal_load_stylesheet("$path/$file", FALSE);
-      $this->assertEqual($unoptimized_output, $expected,
-        t('Loaded CSS Stylesheet has expected contents (unoptimized) (@file)',
-          array('@file' => $file)));
+      $unoptimized_output = drupal_load_stylesheet("$path/$file.unoptimized.css", FALSE);
+      $this->assertEqual($unoptimized_output, $expected, t('Unoptimized CSS file has expected contents (@file)', array('@file' => $file)));
+
       $expected = file_get_contents("$path/$file.optimized.css");
       $optimized_output = drupal_load_stylesheet("$path/$file", TRUE);
-      $this->assertEqual($optimized_output, $expected,
-        t('Loaded CSS Stylesheet has expected contents (optimized) (@file)',
-          array('@file' => $file)));
+      $this->assertEqual($optimized_output, $expected, t('Optimized CSS file has expected contents (@file)', array('@file' => $file)));
     }
   }
 }
-
 
 /**
  * Test drupal_http_request().
