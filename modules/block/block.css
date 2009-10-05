@@ -1,6 +1,6 @@
-/* $Id: block.css,v 1.6 2007/11/14 09:49:30 dries Exp $ */
+/* $Id: block.css,v 1.7 2009/10/05 02:43:01 webchick Exp $ */
 
-#blocks td.region {
+#blocks tr.region-title td {
   font-weight: bold;
 }
 #blocks tr.region-message {

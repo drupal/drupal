@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.15 2009/08/06 05:06:00 webchick Exp $ */
+/* $Id: style-rtl.css,v 1.16 2009/10/05 02:43:01 webchick Exp $ */
 
 html {
   direction: rtl;
@@ -72,7 +72,7 @@ dl dd {
   margin: 2em 0 1em 0.5em;
 }
 
-#header-region h2 {
+.region-header h2 {
   margin: 0 0 0 1em;
 }
 

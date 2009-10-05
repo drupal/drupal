@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.31 2009/09/15 17:10:39 webchick Exp $
+// $Id: template.php,v 1.32 2009/10/05 02:43:01 webchick Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -89,6 +89,15 @@ function garland_process_page(&$vars) {
   // Hook into color.module
   if (module_exists('color')) {
     _color_page_alter($vars);
+  }
+}
+
+/**
+ * Override or insert variables into the region template.
+ */
+function garland_preprocess_region(&$vars) {
+  if ($vars['region'] == 'header') {
+    $vars['classes_array'][] = 'clearfix';
   }
 }
 

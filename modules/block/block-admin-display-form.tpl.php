@@ -1,5 +1,5 @@
 <?php
-// $Id: block-admin-display-form.tpl.php,v 1.6 2008/05/15 21:30:02 dries Exp $
+// $Id: block-admin-display-form.tpl.php,v 1.7 2009/10/05 02:43:01 webchick Exp $
 
 /**
  * @file
@@ -45,8 +45,8 @@
   <tbody>
     <?php $row = 0; ?>
     <?php foreach ($block_regions as $region => $title): ?>
-      <tr class="region region-<?php print $region?>">
-        <td colspan="5" class="region"><?php print $title; ?></td>
+      <tr class="region-title region-title-<?php print $region?>">
+        <td colspan="5"><?php print $title; ?></td>
       </tr>
       <tr class="region-message region-<?php print $region?>-message <?php print empty($block_listing[$region]) ? 'region-empty' : 'region-populated'; ?>">
         <td colspan="5"><em><?php print t('No blocks in this region'); ?></em></td>

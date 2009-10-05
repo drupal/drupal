@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1006 2009/10/05 01:18:25 webchick Exp $
+// $Id: common.inc,v 1.1007 2009/10/05 02:43:01 webchick Exp $
 
 /**
  * @file
@@ -4807,6 +4807,10 @@ function drupal_common_theme() {
     ),
     'install_page' => array(
       'arguments' => array('content' => NULL),
+    ),
+    'region' => array(
+      'arguments' => array('elements' => NULL),
+      'template' => 'region',
     ),
     'task_list' => array(
       'arguments' => array('items' => NULL, 'active' => NULL),
