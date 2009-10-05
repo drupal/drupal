@@ -294,14 +294,12 @@ function hook_translated_menu_link_alter(&$item, $map) {
  /**
  * Inform modules that a menu link has been created.
  *
- * This hook is used to notify module that menu items have been
+ * This hook is used to notify modules that menu items have been
  * created. Contributed modules may use the information to perform
  * actions based on the information entered into the menu system.
  *
  * @param $link
- *   The $link record saved into the {menu_links} table.
- * @return
- *   None.
+ *   Associative array defining a menu link as passed into menu_link_save().
  *
  * @see hook_menu_link_update()
  * @see hook_menu_link_delete()
@@ -318,14 +316,12 @@ function hook_menu_link_insert($link) {
 /**
  * Inform modules that a menu link has been updated.
  *
- * This hook is used to notify module that menu items have been
+ * This hook is used to notify modules that menu items have been
  * updated. Contributed modules may use the information to perform
  * actions based on the information entered into the menu system.
  *
  * @param $link
- *   The $link record saved into the {menu_links} table.
- * @return
- *   None.
+ *   Associative array defining a menu link as passed into menu_link_save().
  *
  * @see hook_menu_link_insert()
  * @see hook_menu_link_delete()
@@ -344,14 +340,12 @@ function hook_menu_link_update($link) {
 /**
  * Inform modules that a menu link has been deleted.
  *
- * This hook is used to notify module that menu items have been
+ * This hook is used to notify modules that menu items have been
  * deleted. Contributed modules may use the information to perform
  * actions based on the information entered into the menu system.
  *
  * @param $link
- *   The $link record saved into the {menu_links} table.
- * @return
- *   None.
+ *   Associative array defining a menu link as passed into menu_link_save().
  *
  * @see hook_menu_link_insert()
  * @see hook_menu_link_update()
