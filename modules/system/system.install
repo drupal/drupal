@@ -54,12 +54,24 @@ function system_requirements($phase) {
     'value' => $software,
   );
 
-  // Test PHP version
-  $requirements['php'] = array(
-    'title' => $t('PHP'),
-    'value' => ($phase == 'runtime') ? l(phpversion(), 'admin/reports/status/php') : phpversion(),
-  );
-  if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
+  // Test PHP version and show link to phpinfo() if it's available
+  $phpversion = phpversion();
+  if (function_exists('phpinfo')) {
+    $requirements['php'] = array(
+      'title' => $t('PHP'),
+      'value' => ($phase == 'runtime') ? $phpversion .' ('. l($t('more information'), 'admin/reports/status/php') .')' : $phpversion,
+    );
+  }
+  else {
+    $requirements['php'] = array(
+      'title' => $t('PHP'),
+      'value' => $phpversion,
+      'description' => $t('The phpinfo() function has been disabled for security reasons. To see your server\'s phpinfo() information, change your PHP settings or contact your server administrator. For more information, please read the <a href="@phpinfo">Enabling and disabling phpinfo()</a> handbook page.', array('@phpinfo' => 'http://drupal.org/node/243993')),
+      'severity' => REQUIREMENT_INFO,
+    );
+  }
+
+  if (version_compare($phpversion, DRUPAL_MINIMUM_PHP) < 0) {
     $requirements['php']['description'] = $t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
   }
