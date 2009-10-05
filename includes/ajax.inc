@@ -26,21 +26,26 @@
  *
  * See @link ajax_commands AJAX framework commands @endlink
  *
- * To implement AJAX handling in a normal form, just add '#ajax' to the form
+ * To implement AJAX handling in a normal form, add '#ajax' to the form
  * definition of a field. That field will trigger an AJAX event when it is
  * clicked (or changed, depending on the kind of field). #ajax supports
  * the following parameters (either 'path' or 'callback' is required at least):
  * - #ajax['path']: The menu path to use for the request. This path should map
  *   to a menu page callback that returns data using ajax_render(). Defaults to
- *   'system/ajax', which invokes ajax_form_callback().
+ *   'system/ajax', which invokes ajax_form_callback(). If you use a custom
+ *   path, you must set up the menu entry and handle the entire callback in your
+ *   own code.
  * - #ajax['callback']: The callback to invoke to handle the server side of the
  *   AJAX event, which will receive a $form and $form_state as arguments, and
- *   should return a HTML string to replace the original element or a list of
- *   AJAX commands.
- * - #ajax['wrapper']: The CSS ID of the AJAX area. The HTML returned from the
- *   callback will replace whatever is currently in this wrapper. It is
- *   important to ensure that this wrapper exists in the form. The wrapper is
- *   usually created using #prefix and #suffix properties in the form.
+ *   should return a HTML string to replace the original element named in
+ *   #ajax['wrapper'] or a list of AJAX commands.
+ * - #ajax['wrapper']: The CSS ID of the area to be replaced by the HTML
+ *   returned by the #ajax['callback'] function. The HTML string returned from
+ *   the callback will replace the entire element named by #ajax['wrapper'].
+ *   The wrapper is usually created using #prefix and #suffix properties in the
+ *   form. Note that this is the wrapper ID, not a CSS selector. So to replace
+ *   the element referred to by the CSS selector #some-selector on the page,
+ *   use #ajax['wrapper'] = 'some-selector', not '#some-selector'.
  * - #ajax['effect']: The jQuery effect to use when placing the new HTML.
  *   Defaults to no effect. Valid options are 'none', 'slide', or 'fade'.
  * - #ajax['speed']: The effect speed to use. Defaults to 'slow'. May be
@@ -53,6 +58,11 @@
  *   Defaults to 'replace'. May be: 'replace', 'append', 'prepend',
  *   'before', 'after', or 'html'. See the jQuery documentation for more
  *   information on these methods.
+ * - #ajax['progress']: Choose either a throbber or progress bar that is
+ *   displayed while awaiting a response from the callback, and add an optional
+ *   message. Possible keys: 'type', 'message', 'url', 'interval'.
+ *   More information is available in the
+ *   @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html/7 Form API Reference @endlink
  *
  * In addition to using Form API for doing in-form modification, AJAX may be
  * enabled by adding classes to buttons and links. By adding the 'use-ajax'
