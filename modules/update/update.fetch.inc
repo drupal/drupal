@@ -189,7 +189,15 @@ function _update_cron_notify() {
 function update_parse_xml($raw_xml_list) {
   $data = array();
   foreach ($raw_xml_list as $raw_xml) {
-    $xml = new SimpleXMLElement($raw_xml);
+    try {
+      $xml = new SimpleXMLElement($raw_xml);
+    }
+    catch (Exception $e) {
+      // SimpleXMLElement::__construct produces an E_WARNING error message for
+      // each error found in the XML data and throws an exception if errors
+      // were detected. Catch any exception and break to the next XML string.
+      break;
+    }
     $short_name = (string)$xml->short_name;
     $data[$short_name] = array();
     foreach ($xml as $k => $v) {
