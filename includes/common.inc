@@ -4808,6 +4808,10 @@ function drupal_common_theme() {
     'install_page' => array(
       'arguments' => array('content' => NULL),
     ),
+    'region' => array(
+      'arguments' => array('elements' => NULL),
+      'template' => 'region',
+    ),
     'task_list' => array(
       'arguments' => array('items' => NULL, 'active' => NULL),
     ),

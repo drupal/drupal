@@ -2714,7 +2714,6 @@ function theme_system_compact_link() {
   return $output;
 }
 
-
 /**
  * Send Drupal and the major version number in the META GENERATOR HTML.
  *
@@ -2801,6 +2800,18 @@ function system_page_build(&$page) {
       // Trigger cron run for clients not supporting JavaScript (fall-back).
       '#markup' => theme('system_run_cron_image', 'system/run-cron-image'),
     );
+  }
+
+  // Find all block regions so they can be rendered.
+  $regions = system_region_list($GLOBALS['theme']);
+
+  // Load all region content assigned via blocks.
+  foreach (array_keys($regions) as $region) {
+    // Don't render empty regions.
+    if (!empty($page[$region])) {
+      $page[$region]['#theme_wrappers'][] = 'region';
+      $page[$region]['#region'] = $region;
+    }
   }
 }
 

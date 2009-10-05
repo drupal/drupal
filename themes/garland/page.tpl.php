@@ -1,7 +1,7 @@
 <?php
 // $Id$
 ?>
-  <div id="header-region" class="clearfix"><?php print render($page['header']); ?></div>
+  <?php print render($page['header']); ?>
 
   <div id="wrapper">
     <div id="container" class="clearfix">
@@ -42,7 +42,7 @@
             <?php print render($page['content']); ?>
           </div>
           <?php print $feed_icons ?>
-          <div id="footer"><?php print render($page['footer']) ?></div>
+          <?php print render($page['footer']) ?>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
       <?php if ($page['sidebar_second']): ?>

@@ -1,6 +1,6 @@
 /* $Id$ */
 
-#blocks td.region {
+#blocks tr.region-title td {
   font-weight: bold;
 }
 #blocks tr.region-message {

@@ -93,6 +93,15 @@ function garland_process_page(&$vars) {
 }
 
 /**
+ * Override or insert variables into the region template.
+ */
+function garland_preprocess_region(&$vars) {
+  if ($vars['region'] == 'header') {
+    $vars['classes_array'][] = 'clearfix';
+  }
+}
+
+/**
  * Returns the rendered local tasks. The default implementation renders
  * them as tabs. Overridden to split the secondary tasks.
  */

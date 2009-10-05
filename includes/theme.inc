@@ -2404,3 +2404,22 @@ function template_preprocess_maintenance_page(&$variables) {
     $variables['template_file'] = 'maintenance-page-offline';
   }
 }
+
+/**
+ * Preprocess variables for region.tpl.php
+ *
+ * Prepare the values passed to the theme_region function to be passed into a
+ * pluggable template engine. Uses the region name to generate a template file
+ * suggestions. If none are found, the default region.tpl.php is used.
+ *
+ * @see region.tpl.php
+ */
+function template_preprocess_region(&$variables) {
+  // Create the $content variable that templates expect.
+  $variables['content'] = $variables['elements']['#children'];
+  $variables['region'] = $variables['elements']['#region'];
+
+  $region = 'region-' . str_replace('_', '-', $variables['region']);
+  $variables['classes_array'][] = $region;
+  $variables['template_files'][] = $region;
+}

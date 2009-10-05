@@ -26,10 +26,10 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Define the existing regions
     $this->regions = array();
-    $this->regions[] = array('name' => 'header', 'id' => 'header-region');
-    $this->regions[] = array('name' => 'sidebar_first', 'id' => 'sidebar-first');
-    $this->regions[] = array('name' => 'content', 'id' => 'center');
-    $this->regions[] = array('name' => 'sidebar_second', 'id' => 'sidebar-second');
+    $this->regions[] = array('name' => 'header', 'class' => 'region region-header clearfix');
+    $this->regions[] = array('name' => 'sidebar_first');
+    $this->regions[] = array('name' => 'content');
+    $this->regions[] = array('name' => 'sidebar_second');
     $this->regions[] = array('name' => 'footer');
   }
 
@@ -193,8 +193,8 @@ class BlockTestCase extends DrupalWebTestCase {
 
   function moveBlockToRegion($block, $region) {
     // If an id for an region hasn't been specified, we assume it's the same as the name.
-    if (!(isset($region['id']))) {
-      $region['id'] = $region['name'];
+    if (!(isset($region['class']))) {
+      $region['class'] = 'region region-' . str_replace('_', '-', $region['name']);
     }
 
     // Set the created block to a specific region.
@@ -209,7 +209,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertText(t($block['title']), t('Block successfully being displayed on the page.'));
 
     // Confirm that the custom block was found at the proper region.
-    $xpath = '//div[@id="' . $region['id'] . '"]//div[@id="block-' . $block['module'] . '-' . $block['delta'] . '"]/*';
+    $xpath = '//div[@class="' . $region['class'] . '"]//div[@id="block-' . $block['module'] . '-' . $block['delta'] . '"]/*';
     $this->assertFieldByXPath($xpath, FALSE, t('Custom block found in %region_name region.', array('%region_name' => $region['name'])));
   }
 }

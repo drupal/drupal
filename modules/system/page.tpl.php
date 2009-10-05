@@ -86,11 +86,7 @@
         </div> <!-- /#name-and-slogan -->
       <?php endif; ?>
 
-      <?php if ($page['header']): ?>
-        <div id="header-region" class="region">
-          <?php print render($page['header']); ?>
-        </div>
-      <?php endif; ?>
+      <?php print render($page['header']); ?>
 
     </div></div> <!-- /.section, /#header -->
 
@@ -114,20 +110,18 @@
         <?php if ($tabs): ?><div class="tabs"><?php print $tabs; ?></div><?php endif; ?>
         <?php print render($page['help']); ?>
         <?php if ($action_links): ?><ul class="action-links"><?php print $action_links; ?></ul><?php endif; ?>
-        <div id="content-area" class="region">
-          <?php print render($page['content']); ?>
-        </div> <!-- /#content-area -->
+        <?php print render($page['content']); ?>
         <?php print $feed_icons; ?>
       </div></div> <!-- /.section, /#content -->
 
       <?php if ($page['sidebar_first']): ?>
-        <div id="sidebar-first" class="column sidebar"><div class="section region">
+        <div id="sidebar-first" class="column sidebar"><div class="section">
           <?php print render($page['sidebar_first']); ?>
         </div></div> <!-- /.section, /#sidebar-first -->
       <?php endif; ?>
 
       <?php if ($page['sidebar_second']): ?>
-        <div id="sidebar-second" class="column sidebar"><div class="section region">
+        <div id="sidebar-second" class="column sidebar"><div class="section">
           <?php print render($page['sidebar_second']); ?>
         </div></div> <!-- /.section, /#sidebar-second -->
       <?php endif; ?>
@@ -136,11 +130,7 @@
 
     <div id="footer"><div class="section">
       <?php print theme('links', $secondary_menu, array('id' => 'secondary-menu', 'class' => array('links', 'clearfix')), t('Secondary menu')); ?>
-      <?php if ($page['footer']): ?>
-        <div id="footer-region" class="region">
-          <?php print render($page['footer']); ?>
-        </div>
-      <?php endif; ?>
+      <?php print render($page['footer']); ?>
     </div></div> <!-- /.section, /#footer -->
 
   </div></div> <!-- /#page, /#page-wrapper -->

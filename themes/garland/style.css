@@ -218,7 +218,7 @@ tr.even td.active {
   background-color: #e6f1f7;
 }
 
-td.region, td.module, td.container, td.category {
+td.region-title, td.module, td.container, td.category {
   border-top: 1.5em solid #fff;
   border-bottom: 1px solid #b4d7f0;
   background-color: #d4e7f3;
@@ -226,7 +226,7 @@ td.region, td.module, td.container, td.category {
   font-weight: bold;
 }
 
-tr:first-child td.region, tr:first-child td.module, tr:first-child td.container, tr:first-child td.category {
+tr:first-child td.region-title, tr:first-child td.module, tr:first-child td.container, tr:first-child td.category {
   border-top-width: 0;
 }
 
@@ -293,17 +293,17 @@ table .form-button, table .form-submit {
 /**
  * Layout
  */
-#header-region {
+.region-header {
   min-height: 1em;
   background: #d2e6f3 url(images/bg-navigation.png) repeat-x 50% 100%;
 }
 
-#header-region .block {
+.region-header .block {
   display: block;
   margin: 0 1em;
 }
 
-#header-region .block-region {
+.region-header .block-region {
   display: block;
   margin: 0 0.5em 1em;
   padding: 0.5em;
@@ -311,7 +311,7 @@ table .form-button, table .form-submit {
   top: 0.5em;
 }
 
-#header-region * {
+.region-header * {
   display: inline;
   line-height: 1.5em;
   margin-top: 0;
@@ -319,19 +319,19 @@ table .form-button, table .form-submit {
 }
 
 /* Prevent the previous directive from showing the content of script elements in Mozilla browsers. */
-#header-region script {
+.region-header script {
   display: none;
 }
 
-#header-region p, #header-region img {
+.region-header p, .region-header img {
   margin-top: 0.5em;
 }
 
-#header-region h2 {
+.region-header h2 {
   margin: 0 1em 0 0; /* LTR */
 }
 
-#header-region h3, #header-region label, #header-region li {
+.region-header h3, .region-header label, .region-header li {
   margin: 0 1em;
   padding: 0;
   background: none;
@@ -471,7 +471,7 @@ body.two-sidebars #squeeze {
   min-height: 400px;
 }
 
-#wrapper #container #footer {
+#wrapper #container .region-footer {
   float: none;
   clear: both;
   text-align: center;
@@ -486,15 +486,15 @@ body.two-sidebars #squeeze {
   z-index: 3;
 }
 
-body.sidebar-first #footer {
+body.sidebar-first .region-footer {
   margin-left: -210px;
 }
 
-body.sidebar-second #footer {
+body.sidebar-second .region-footer {
   margin-right: -210px;
 }
 
-body.two-sidebars #footer {
+body.two-sidebars .region-footer {
   margin: 0 -210px;
 }
 
