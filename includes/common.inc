@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1007 2009/10/05 02:43:01 webchick Exp $
+// $Id: common.inc,v 1.1008 2009/10/05 02:48:38 webchick Exp $
 
 /**
  * @file
@@ -3062,8 +3062,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     // Perform some safe CSS optimizations.
     $contents = preg_replace('<
       \s*([@{}:;,]|\)\s|\s\()\s* |  # Remove whitespace around separators, but keep space around parentheses.
-      /\*([^*\\\\]|\*(?!/))+\*/ |   # Remove comments that are not CSS hacks.
-      [\n\r]                        # Remove line breaks.
+      /\*([^*\\\\]|\*(?!/))+\*/     # Remove comments that are not CSS hacks.
       >x', '\1', $contents);
   }
 
