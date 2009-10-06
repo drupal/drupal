@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.31 2009/09/29 16:30:29 webchick Exp $
+// $Id: update.compare.inc,v 1.32 2009/10/06 01:38:55 webchick Exp $
 
 /**
  * @file
@@ -62,7 +62,7 @@ function update_get_projects() {
  * modules or themes are being processed (there is a setting to control if
  * disabled code should be included in the Available updates report or not),
  * those are only processed after $projects has been populated with
- * information about the enabled code. 'Hidden' modules are always
+ * information about the enabled code. 'Hidden' modules and themes are always
  * ignored. This function also records the latest change time on the .info
  * files for each module or theme, which is important data which is used when
  * deciding if the cached available update data should be invalidated.
@@ -90,7 +90,7 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
       continue;
     }
 
-    // Skip if it's a hidden module.
+    // Skip if it's a hidden module or theme.
     if (!empty($file->info['hidden'])) {
       continue;
     }

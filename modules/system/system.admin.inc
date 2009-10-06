@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.207 2009/09/30 13:09:30 dries Exp $
+// $Id: system.admin.inc,v 1.208 2009/10/06 01:38:55 webchick Exp $
 
 /**
  * @file
@@ -199,8 +199,16 @@ function system_settings_overview() {
  * @see system_themes_form_submit()
  */
 function system_themes_form() {
-
+  // Get current list of themes.
   $themes = system_get_theme_data();
+
+  // Remove hidden themes from the display list.
+  foreach ($themes as $theme_key => $theme) {
+    if (!empty($theme->info['hidden'])) {
+      unset($themes[$theme_key]);
+    }
+  }
+
   uasort($themes, 'system_sort_modules_by_info_name');
 
   $status = array();
