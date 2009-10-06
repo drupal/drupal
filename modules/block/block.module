@@ -298,6 +298,19 @@ function _block_rehash() {
   return $blocks;
 }
 
+/**
+ * Returns information from database about a user-created (custom) block.
+ *
+ * @param $bid
+ *   ID of the block to get information for.
+ * @return
+ *   Associative array of information stored in the database for this block.
+ *   Array keys:
+ *   - bid: Block ID.
+ *   - info: Block description.
+ *   - body: Block contents.
+ *   - format: Filter ID of the filter format for the body.
+ */
 function block_box_get($bid) {
   return db_fetch_array(db_query("SELECT * FROM {boxes} WHERE bid = %d", $bid));
 }
@@ -336,6 +349,19 @@ function block_box_form($edit = array()) {
   return $form;
 }
 
+/**
+ * Saves a user-created block in the database.
+ *
+ * @param $edit
+ *   Associative array of fields to save. Array keys:
+ *   - info: Block description.
+ *   - body: Block contents.
+ *   - format: Filter ID of the filter format for the body.
+ * @param $delta
+ *   Block ID of the block to save.
+ * @return
+ *   Always returns TRUE.
+ */
 function block_box_save($edit, $delta) {
   if (!filter_access($edit['format'])) {
     $edit['format'] = FILTER_FORMAT_DEFAULT;
