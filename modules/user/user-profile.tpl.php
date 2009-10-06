@@ -25,21 +25,19 @@
  * markup for the group.
  *
  * To check for all available data within $profile, use the code below.
- *
  * @code
  *   print '<pre>'. check_plain(print_r($profile, 1)) .'</pre>';
  * @endcode
- *
- * @see user-profile-category.tpl.php
- *   Where the html is handled for the group.
- * @see user-profile-field.tpl.php
- *   Where the html is handled for each item in the group.
  *
  * Available variables:
  *   - $user_profile: All user profile data. Ready for print.
  *   - $profile: Keyed array of profile categories and their items or other data
  *     provided by modules.
  *
+ * @see user-profile-category.tpl.php
+ *   Where the html is handled for the group.
+ * @see user-profile-item.tpl.php
+ *   Where the html is handled for each item in the group.
  * @see template_preprocess_user_profile()
  */
 ?>
