@@ -1831,7 +1831,7 @@ function db_query($query, array $args = array(), array $options = array()) {
  *   as they are more self-documenting.
  * @param $from
  *   The first record from the result set to return.
- * @param $limit
+ * @param $count
  *   The number of records to return from the result set.
  * @param $args
  *   An array of values to substitute into the query. If the query uses named
