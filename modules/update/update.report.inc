@@ -188,7 +188,8 @@ function theme_update_report($data) {
     if (!isset($rows[$project['project_type']])) {
       $rows[$project['project_type']] = array();
     }
-    $rows[$project['project_type']][] = array(
+    $row_key = isset($project['title']) ? drupal_strtolower($project['title']) : drupal_strtolower($project['name']);
+    $rows[$project['project_type']][$row_key] = array(
       'class' => $class,
       'data' => array($row),
     );
@@ -203,6 +204,7 @@ function theme_update_report($data) {
   );
   foreach ($project_types as $type_name => $type_label) {
     if (!empty($rows[$type_name])) {
+      ksort($rows[$type_name]);
       $output .= "\n<h3>". $type_label ."</h3>\n";
       $output .= theme('table', $header, $rows[$type_name], array('class' => 'update'));
     }
