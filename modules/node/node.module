@@ -139,10 +139,6 @@ function node_theme() {
       'arguments' => array('form' => NULL),
       'file' => 'node.admin.inc',
     ),
-    'node_admin_nodes' => array(
-      'arguments' => array('form' => NULL),
-      'file' => 'node.admin.inc',
-    ),
     'node_add_list' => array(
       'arguments' => array('content' => NULL),
       'file' => 'node.pages.inc',

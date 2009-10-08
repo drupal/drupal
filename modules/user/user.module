@@ -65,10 +65,6 @@ function user_theme() {
       'arguments' => array('form' => NULL),
       'file' => 'user.admin.inc',
     ),
-    'user_admin_account' => array(
-      'arguments' => array('form' => NULL),
-      'file' => 'user.admin.inc',
-    ),
     'user_filter_form' => array(
       'arguments' => array('form' => NULL),
       'file' => 'user.admin.inc',
