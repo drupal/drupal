@@ -3,6 +3,9 @@
 List of maintainers
 --------------------------------------------------------------------------------
 
+CONTACT MODULE
+Dave Reid 'davereid' <http://drupal.org/user/53892>
+
 DATABASE SYSTEM
 Larry Garfield 'Crell' <http://drupal.org/user/26398>
 
