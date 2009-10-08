@@ -266,5 +266,104 @@ class UpdateTestContribCase extends UpdateTestHelper {
     $this->assertTrue(strpos($this->drupalGetContent(), $bbb_project_link) < strpos($this->drupalGetContent(), $ccc_project_link), "'BBB Update test' project is listed before the 'CCC Update test' project");
   }
 
+  /**
+   * Test that subthemes are notified about security updates for base themes.
+   */
+  function testUpdateBaseThemeSecurityUpdate() {
+    // Only enable the subtheme, not the base theme.
+    db_update('system')
+      ->fields(array('status' => 1))
+      ->condition('type', 'theme')
+      ->condition('name', 'update_test_subtheme')
+      ->execute();
+
+    // Define the initial state for core and the subtheme.
+    $system_info = array(
+      // We want core to be version 7.0.    
+      '#all' => array(
+        'version' => '7.0',
+      ),
+      // Show the update_test_basetheme
+      'update_test_basetheme' => array(
+        'project' => 'update_test_basetheme',
+        'version' => '7.x-1.0',
+        'hidden' => FALSE,
+      ),
+      // Show the update_test_subtheme
+      'update_test_subtheme' => array(
+        'project' => 'update_test_subtheme',
+        'version' => '7.x-1.0',
+        'hidden' => FALSE,
+      ),
+    );
+    variable_set('update_test_system_info', $system_info);
+    $xml_mapping = array(
+      'drupal' => '0',
+      'update_test_subtheme' => '1_0',
+      'update_test_basetheme' => '1_1-sec',
+    );
+    $this->refreshUpdateStatus($xml_mapping);
+    $this->drupalGet('admin/reports/updates');
+    $this->assertText(t('Security update required!'));
+    $this->assertRaw(l(t('Update test base theme'), 'http://example.com/project/update_test_basetheme'), t('Link to the Update test base theme project appears.'));
+  }
+
+  /**
+   * Test that disabled themes are only shown when desired.
+   */
+  function testUpdateShowDisabledThemes() {
+    // Make sure all the update_test_* themes are disabled.
+    db_update('system')
+      ->fields(array('status' => 0))
+      ->condition('type', 'theme')
+      ->condition('name', 'update_test_%', 'LIKE')
+      ->execute();
+
+    // Define the initial state for core and the test contrib themes.
+    $system_info = array(
+      // We want core to be version 7.0.    
+      '#all' => array(
+        'version' => '7.0',
+      ),
+      // The update_test_basetheme should be visible and up to date.
+      'update_test_basetheme' => array(
+        'project' => 'update_test_basetheme',
+        'version' => '7.x-1.1',
+        'hidden' => FALSE,
+      ),
+      // The update_test_subtheme should be visible and up to date.
+      'update_test_subtheme' => array(
+        'project' => 'update_test_subtheme',
+        'version' => '7.x-1.0',
+        'hidden' => FALSE,
+      ),
+    );
+    variable_set('update_test_system_info', $system_info);
+    $xml_mapping = array(
+      'drupal' => '0',
+      'update_test_subtheme' => '1_0',
+      'update_test_basetheme' => '1_1-sec',
+    );
+    $base_theme_project_link = l(t('Update test base theme'), 'http://example.com/project/update_test_basetheme');
+    $sub_theme_project_link = l(t('Update test subtheme'), 'http://example.com/project/update_test_subtheme');
+    foreach (array(TRUE, FALSE) as $check_disabled) {
+      variable_set('update_check_disabled', $check_disabled);
+      $this->refreshUpdateStatus($xml_mapping);
+      $this->drupalGet('admin/reports/updates');
+      // In neither case should we see the "Themes" heading for enabled themes.
+      $this->assertNoText(t('Themes'));
+      if ($check_disabled) {
+        $this->assertText(t('Disabled themes'));
+        $this->assertRaw($base_theme_project_link, t('Link to the Update test base theme project appears.'));
+        $this->assertRaw($sub_theme_project_link, t('Link to the Update test subtheme project appears.'));
+      }
+      else {
+        $this->assertNoText(t('Disabled themes'));
+        $this->assertNoRaw($base_theme_project_link, t('Link to the Update test base theme project does not appear.'));
+        $this->assertNoRaw($sub_theme_project_link, t('Link to the Update test subtheme project does not appear.'));
+      }
+    }
+  }
+
 }
 

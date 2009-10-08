@@ -81,7 +81,24 @@ function update_get_projects() {
  */
 function _update_process_info_list(&$projects, $list, $project_type, $status) {
   foreach ($list as $file) {
-    if ($file->status != $status) {
+    // A disabled base theme of an enabled sub-theme still has all of its code
+    // run by the sub-theme, so we include it in our "enabled" projects list.
+    if ($status && !$file->status && !empty($file->sub_themes)) {
+      foreach ($file->sub_themes as $key => $name) {
+        // Build a list of enabled sub-themes.
+        if ($list[$key]->status) {
+          $file->enabled_sub_themes[$key] = $name;
+        }
+      }
+      // If there are no enabled subthemes, we should ignore this base theme
+      // for the enabled case. If the site is trying to display disabled
+      // themes, we'll catch it then.
+      if (empty($file->enabled_sub_themes)) {
+        continue;
+      }
+    }
+    // Otherwise, just add projects of the proper status to our list.
+    elseif ($file->status != $status) {
       continue;
     }
 
@@ -133,9 +150,24 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
     else {
       $project_display_type = $project_type;
     }
-    if (empty($status)) {
+    if (empty($status) && empty($file->enabled_sub_themes)) {
       // If we're processing disabled modules or themes, append a suffix.
+      // However, we don't do this to a a base theme with enabled
+      // subthemes, since we treat that case as if it is enabled.
       $project_display_type .= '-disabled';
+    }
+    // Add a list of sub-themes that "depend on" the project and a list of base
+    // themes that are "required by" the project.
+    if ($project_name == 'drupal') {
+      // Drupal core is always required, so this extra info would be noise.
+      $sub_themes = array();
+      $base_themes = array();
+    }
+    else {
+      // Add list of enabled sub-themes.
+      $sub_themes = !empty($file->enabled_sub_themes) ? $file->enabled_sub_themes : array();
+      // Add list of base themes.
+      $base_themes = !empty($file->base_themes) ? $file->base_themes : array();
     }
     if (!isset($projects[$project_name])) {
       // Only process this if we haven't done this project, since a single
@@ -147,6 +179,8 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
         'includes' => array($file->name => $file->info['name']),
         'project_type' => $project_display_type,
         'project_status' => $status,
+        'sub_themes' => $sub_themes,
+        'base_themes' => $base_themes,
       );
     }
     elseif ($projects[$project_name]['project_type'] == $project_display_type) {
@@ -158,6 +192,12 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
       $projects[$project_name]['includes'][$file->name] = $file->info['name'];
       $projects[$project_name]['info']['_info_file_ctime'] = max($projects[$project_name]['info']['_info_file_ctime'], $file->info['_info_file_ctime']);
       $projects[$project_name]['datestamp'] = max($projects[$project_name]['datestamp'], $file->info['datestamp']);
+      if (!empty($sub_themes)) {
+        $projects[$project_name]['sub_themes'] += $sub_themes;
+      }
+      if (!empty($base_themes)) {
+        $projects[$project_name]['base_themes'] += $base_themes;
+      }
     }
     elseif (empty($status)) {
       // If we have a project_name that matches, but the project_display_type

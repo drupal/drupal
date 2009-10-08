@@ -172,6 +172,9 @@ function update_theme() {
     'update_version' => array(
       'arguments' => array('version' => NULL, 'tag' => NULL, 'class' => array()),
     ),
+    'update_status_label' => array(
+      'arguments' => array('status' => NULL),
+    ),
   );
 }
 

@@ -41,6 +41,15 @@ function theme_update_report($data) {
 
   $notification_level = variable_get('update_notification_threshold', 'all');
 
+  // Create an array of status values keyed by module or theme name, since
+  // we'll need this while generating the report if we have to cross reference
+  // anything (e.g. subthemes which have base themes missing an update).
+  foreach ($data as $project) {
+    foreach ($project['includes'] as $key => $name) {
+      $status[$key] = $project['status'];
+    }
+  }
+
   foreach ($data as $project) {
     switch ($project['status']) {
       case UPDATE_CURRENT:
@@ -67,26 +76,8 @@ function theme_update_report($data) {
     }
 
     $row = '<div class="version-status">';
-    switch ($project['status']) {
-      case UPDATE_NOT_SECURE:
-        $row .= '<span class="security-error">' . t('Security update required!') . '</span>';
-        break;
-      case UPDATE_REVOKED:
-        $row .= '<span class="revoked">' . t('Revoked!') . '</span>';
-        break;
-      case UPDATE_NOT_SUPPORTED:
-        $row .= '<span class="not-supported">' . t('Not supported!') . '</span>';
-        break;
-      case UPDATE_NOT_CURRENT:
-        $row .= '<span class="not-current">' . t('Update available') . '</span>';
-        break;
-      case UPDATE_CURRENT:
-        $row .= '<span class="current">' . t('Up to date') . '</span>';
-        break;
-      default:
-        $row .= check_plain($project['reason']);
-        break;
-    }
+    $status_label = theme('update_status_label', $project['status']);
+    $row .= !empty($status_label) ? $status_label : check_plain($project['reason']);
     $row .= '<span class="icon">' . $icon . '</span>';
     $row .= "</div>\n";
 
@@ -194,6 +185,33 @@ function theme_update_report($data) {
     }
     $row .= "</div>\n";
 
+    if (!empty($project['base_themes'])) {
+      $row .= '<div class="basethemes">';
+      asort($project['base_themes']);
+      $base_themes = array();
+      foreach ($project['base_themes'] as $base_key => $base_theme) {
+        switch ($status[$base_key]) {
+          case UPDATE_NOT_SECURE:
+          case UPDATE_REVOKED:
+          case UPDATE_NOT_SUPPORTED:
+            $base_themes[] = t('%base_theme (!base_label)', array('%base_theme' => $base_theme, '!base_label' => theme('update_status_label', $status[$base_key])));
+            break;
+            
+          default:
+            $base_themes[] = theme('placeholder', $base_theme);
+        }
+      }
+      $row .= t('Depends on: !basethemes', array('!basethemes' => implode(', ', $base_themes)));
+      $row .= "</div>\n";
+    }
+
+    if (!empty($project['sub_themes'])) {
+      $row .= '<div class="subthemes">';
+      sort($project['sub_themes']);
+      $row .= t('Required by: %subthemes', array('%subthemes' => implode(', ', $project['sub_themes'])));
+      $row .= "</div>\n";
+    }
+
     $row .= "</div>\n"; // info div.
 
     if (!isset($rows[$project['project_type']])) {
@@ -222,6 +240,34 @@ function theme_update_report($data) {
   }
   drupal_add_css(drupal_get_path('module', 'update') . '/update.css');
   return $output;
+}
+
+/**
+ * Generate the HTML for the label to display for a project's update status.
+ *
+ * @param $status
+ *   The integer code for a project's current update status.
+ *
+ * @see update_calculate_project_data()
+ */
+function theme_update_status_label($status) {
+  switch ($status) {
+    case UPDATE_NOT_SECURE:
+      return '<span class="security-error">' . t('Security update required!') . '</span>';
+
+    case UPDATE_REVOKED:
+      return '<span class="revoked">' . t('Revoked!') . '</span>';
+
+    case UPDATE_NOT_SUPPORTED:
+      return '<span class="not-supported">' . t('Not supported!') . '</span>';
+
+    case UPDATE_NOT_CURRENT:
+      return '<span class="not-current">' . t('Update available') . '</span>';
+
+    case UPDATE_CURRENT:
+      return '<span class="current">' . t('Up to date') . '</span>';
+
+  }
 }
 
 /**
