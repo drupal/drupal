@@ -39,11 +39,11 @@
  *       curly-brackets. For example, the node table vid field
  *       description might contain "Always holds the largest (most
  *       recent) {node_revision}.vid value for this nid."
- *     - 'type': The generic datatype: 'varchar', 'int', 'serial'
- *       'float', 'numeric', 'text', 'blob' or 'datetime'. Most types
- *       just map to the according database engine specific
- *       datatypes. Use 'serial' for auto incrementing fields. This
- *       will expand to 'int auto_increment' on mysql.
+ *     - 'type': The generic datatype: 'char', 'varchar', 'text', 'blob', 'int',
+ *       'float', 'numeric', 'serial', 'date', 'datetime' or 'time'. Most types
+ *       types just map to the according database engine specific datatypes. Use
+ *       'serial' for auto incrementing fields. This will expand to 'INT
+ *       auto_increment' on MySQL.
  *     - 'serialize': A boolean indicating whether the field will be stored as
  *       a serialized string.
  *     - 'size': The data size: 'tiny', 'small', 'medium', 'normal',
