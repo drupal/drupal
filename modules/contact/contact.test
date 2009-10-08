@@ -22,7 +22,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
    */
   function testSiteWideContact() {
     // Create and login administrative user.
-    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer site-wide contact form', 'administer permissions', 'administer users'));
+    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer site-wide contact form', 'administer users'));
     $this->drupalLogin($admin_user);
     
     $flood_limit = 3;
@@ -39,7 +39,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->deleteCategories();
 
     // Ensure that the contact form won't be shown without categories.
-    $this->setPermission('anonymous user', array('access site-wide contact form' => TRUE));
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertResponse(404);
@@ -80,7 +80,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Category %category has been updated.', array('%category' => $category)), t('Category successfully updated.'));
 
     // Ensure that the contact form is shown without a category selection input.
-    $this->setPermission('anonymous user', array('access site-wide contact form' => TRUE));
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertText(t('Your e-mail address'), t('Contact form is shown when there is one category.'));
@@ -98,19 +98,15 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     db_delete('flood')->execute();
     $num_records_after = db_query("SELECT COUNT(*) FROM {flood}")->fetchField();
     $this->assertIdentical($num_records_after, '0', t('Flood table emptied.'));
-
-    // Check to see that anonymous user cannot see contact page without permission.
-    $this->setPermission('anonymous user', array('access site-wide contact form' => FALSE));
     $this->drupalLogout();
 
+    // Check to see that anonymous user cannot see contact page without permission.
+    user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalGet('contact');
     $this->assertResponse(403, t('Access denied to anonymous user without permission.'));
 
     // Give anonymous user permission and see that page is viewable.
-    $this->drupalLogin($admin_user);
-    $this->setPermission('anonymous user', array('access site-wide contact form' => TRUE));
-    $this->drupalLogout();
-
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalGet('contact');
     $this->assertResponse(200, t('Access granted to anonymous user with permission.'));
 
@@ -271,29 +267,6 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
   function getCategories() {
     $categories = db_query('SELECT cid FROM {contact}')->fetchCol();
     return $categories;
-  }
-
-  /**
-   * Set permission.
-   *
-   * @param string $role User role to set permissions for.
-   * @param array $permissions Key-value array of permissions to set.
-   */
-  function setPermission($role, $permissions) {
-    // Get role id (rid) for specified role.
-    $rid = db_query("SELECT rid FROM {role} WHERE name = :name", array(':name' => $role))->fetchField();
-    if ($rid === FALSE) {
-      $this->fail(t(' [permission] Role "' . $role . '" not found.'));
-    }
-
-    // Create edit array from permission.
-    $edit = array();
-    foreach ($permissions as $name => $value) {
-      $edit[$rid . '[' . $name . ']'] = $value;
-    }
-
-    $this->drupalPost('admin/config/people/permissions', $edit, t('Save permissions'));
-    $this->assertText(t('The changes have been saved.'), t(' [permission] Saved changes.'));
   }
 }
 
