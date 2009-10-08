@@ -5,8 +5,8 @@
  * @file
  * Administrative page callbacks for the forum module.
  */
-
 function forum_form_main($type, $edit = array()) {
+  $edit = (array) $edit;
   if ((isset($_POST['op']) && $_POST['op'] == t('Delete')) || !empty($_POST['confirm'])) {
     return drupal_get_form('forum_confirm_delete', $edit['tid']);
   }

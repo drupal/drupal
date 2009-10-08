@@ -175,20 +175,26 @@ function default_install() {
   variable_set('theme_settings', $theme_settings);
 
   // Create a default vocabulary named "Tags", enabled for the 'article' content type.
-  $vocabulary = new stdClass;
-  $vocabulary->name = 'Tags';
-  $vocabulary->description = st('Use tags to group articles on similar topics into categories.');
-  $vocabulary->machine_name = 'tags';
-  $vocabulary->help = st('Enter a comma-separated list of words to describe your content.');
-  $vocabulary->relations = 0;
-  $vocabulary->hierarchy = 0;
-  $vocabulary->multiple = 0;
-  $vocabulary->required = 0;
-  $vocabulary->tags = 1;
-  $vocabulary->module = 'taxonomy';
-  $vocabulary->weight = 0;
-  $vocabulary->nodes = array('article' => 'article');
+  $description = st('Use tags to group articles on similar topics into categories.');
+  $help = st('Enter a comma-separated list of words to describe your content.');
+  $vocabulary = (object) array(
+    'name' => 'Tags',
+    'description' => $description,
+    'machine_name' => 'tags',
+    'help' => $help,
+    'weight' => 0,
+  );
   taxonomy_vocabulary_save($vocabulary);
+  $instance = array(
+    'field_name' => 'taxonomy_' . $vocabulary->machine_name,
+    'label' => $vocabulary->name,
+    'bundle' => 'article',
+    'description' => $vocabulary->help,
+    'widget' => array(
+      'type' => 'taxonomy_autocomplete',
+    ),
+  );
+  field_create_instance($instance);
 
   // Enable default permissions for system roles.
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'use text format 1'));

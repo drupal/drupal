@@ -85,7 +85,7 @@ function node_object_prepare($node) {
   // If this is a new node, fill in the default values.
   if (!isset($node->nid)) {
     foreach (array('status', 'promote', 'sticky') as $key) {
-      $node->$key = in_array($key, $node_options);
+      $node->$key = (int) in_array($key, $node_options);
     }
     global $user;
     $node->uid = $user->uid;
@@ -543,9 +543,6 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
   $node_revision = $form['#node_revision'];
   $node_revision->revision = 1;
   $node_revision->log = t('Copy of the revision from %date.', array('%date' => format_date($node_revision->revision_timestamp)));
-  if (module_exists('taxonomy')) {
-    $node_revision->taxonomy = array_keys($node_revision->taxonomy);
-  }
 
   node_save($node_revision);
 

@@ -93,42 +93,6 @@ function taxonomy_schema() {
     'primary key' => array('tid', 'parent'),
   );
 
-  $schema['taxonomy_term_node'] = array(
-    'description' => 'Stores the relationship of terms to nodes.',
-    'fields' => array(
-      'nid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Primary Key: The {node}.nid of the node.',
-      ),
-      'vid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Primary Key: The {node}.vid of the node.',
-      ),
-      'tid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Primary Key: The {taxonomy_term_data}.tid of a term assigned to the node.',
-      ),
-    ),
-    'indexes' => array(
-      'vid' => array('vid'),
-      'nid' => array('nid'),
-    ),
-    'foreign keys' => array(
-      'nid' => array('node' => 'nid'),
-      'vid' => array('node' => 'vid'),
-      'tid' => array('taxonomy_term_data' => 'tid'),
-    ),
-    'primary key' => array('tid', 'vid'),
-  );
   $schema['taxonomy_term_synonym'] = array(
     'description' => 'Stores term synonyms.',
     'fields' => array(
@@ -191,13 +155,6 @@ function taxonomy_schema() {
         'size' => 'big',
         'description' => 'Description of the vocabulary.',
       ),
-      'help' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Help text to display for the vocabulary.',
-      ),
       'relations' => array(
         'type' => 'int',
         'unsigned' => TRUE,
@@ -214,30 +171,6 @@ function taxonomy_schema() {
         'size' => 'tiny',
         'description' => 'The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)',
       ),
-      'multiple' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Whether or not multiple terms from this vocabulary may be assigned to a node. (0 = disabled, 1 = enabled)',
-      ),
-      'required' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Whether or not terms are required for nodes using this vocabulary. (0 = disabled, 1 = enabled)',
-      ),
-      'tags' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Whether or not free tagging is enabled for the vocabulary. (0 = disabled, 1 = enabled)',
-      ),
       'module' => array(
         'type' => 'varchar',
         'length' => 255,
@@ -250,7 +183,7 @@ function taxonomy_schema() {
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => 'The weight of the vocabulary in relation to other vocabularies.',
+        'description' => 'The weight of this vocabulary in relation to other vocabularies.',
       ),
     ),
     'primary key' => array('vid'),
@@ -259,30 +192,44 @@ function taxonomy_schema() {
     ),
   );
 
-  $schema['taxonomy_vocabulary_node_type'] = array(
-    'description' => 'Stores which node types vocabularies may be used with.',
+  $schema['taxonomy_index'] = array(
+    'description' => 'Maintains denormalized information about node/term relationships.',
     'fields' => array(
-      'vid' => array(
+      'nid' => array(
+        'description' => 'The {node}.nid this record tracks.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Primary Key: the {taxonomy_vocabulary}.vid of the vocabulary.',
       ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 32,
+      'tid' => array(
+         'description' => 'The term ID.',
+         'type' => 'int',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+         'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node is sticky.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the node was created.',
+        'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => '',
-        'description' => 'The {node}.type of the node type for which the vocabulary may be used.',
+        'default'=> 0,
       ),
     ),
-    'primary key' => array('type', 'vid'),
     'indexes' => array(
-      'vid' => array('vid'),
+      'term_node' => array('tid', 'sticky', 'created'),
     ),
     'foreign keys' => array(
-      'vid' => array('taxonomy_vocabulary' => 'vid'),
+      'node' => 'nid',
+      'taxonomy_term_data' => 'tid',
     ),
   );
 
@@ -321,4 +268,171 @@ function taxonomy_update_7002() {
  */
 function taxonomy_update_7003() {
   db_drop_field('taxonomy_vocabulary', 'relations');
+}
+
+/**
+ * Move taxonomy vocabulary associations for nodes to fields and field instances.
+ */
+function taxonomy_update_7004() {
+  $taxonomy_index = array(
+    'description' => 'Maintains denormalized information about node/term relationships.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node}.nid this record tracks.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'tid' => array(
+         'description' => 'The term ID.',
+         'type' => 'int',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+         'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node is sticky.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the node was created.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default'=> 0,
+      ),
+    ),
+    'indexes' => array(
+      'term_node' => array('tid', 'sticky', 'created'),
+    ),
+    'foreign keys' => array(
+      'node' => 'nid',
+      'taxonomy_term_data' => 'tid',
+    ),
+  );
+  db_create_table('taxonomy_index', $taxonomy_index);
+
+  // Use an inline version of Drupal 6 taxonomy_get_vocabularies() here since
+  // we can no longer rely on $vocabulary->nodes from the API function.
+  $result = db_query('SELECT v.*, n.type FROM {taxonomy_vocabulary} v LEFT JOIN {taxonomy_vocabulary_node_type} n ON v.vid = n.vid ORDER BY v.weight, v.name');
+  $vocabularies = array();
+  foreach ($result as $record) {
+    // If no node types are associated with a vocabulary, the LEFT JOIN will
+    // return a NULL value for type.
+    if (isset($record->type)) {
+      $node_types[$record->vid][$record->type] = $record->type;
+      unset($record->type);
+      $record->nodes = $node_types[$record->vid];
+    }
+    elseif (!isset($record->nodes)) {
+      $record->nodes = array();
+    }
+    $vocabularies[$record->vid] = $record;
+  }
+
+  foreach ($vocabularies as $vocabulary) {
+    $field_name = 'taxonomy_' . $vocabulary->machine_name;
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'taxonomy_term',
+      'cardinality' => $vocabulary->multiple || $vocabulary->tags ? FIELD_CARDINALITY_UNLIMITED : 1,
+      'settings' => array(
+        'required' => $vocabulary->required ? TRUE : FALSE,
+        'allowed_values' => array(
+          array(
+            'vid' => $vocabulary->vid,
+            'parent' => 0,
+          ),
+        ),
+      ),
+    );
+    field_create_field($field);
+
+    foreach ($vocabulary->nodes as $bundle) {
+      $instance = array(
+        'label' => $vocabulary->name,
+        'field_name' => $field_name,
+        'bundle' => $bundle,
+        'description' => $vocabulary->help,
+        'widget' => array(
+          'type' => $vocabulary->tags ? 'taxonomy_autocomplete' : 'select',
+        ),
+      );
+      field_create_instance($instance);
+    }
+  }
+  db_drop_table('taxonomy_vocabulary_node_type');
+  $fields = array('help', 'multiple', 'required', 'tags');
+  foreach ($fields as $field) {
+    db_drop_field('taxonomy_vocabulary', $field);
+  }
+}
+
+/**
+ * Migrate {taxonomy_term_node} table to field storage.
+ */
+function taxonomy_update_7005(&$sandbox) {
+  // Since we are upgrading from Drupal 6, we know that only
+  // field_sql_storage.module will be enabled.
+  $field = field_info_field($field['field_name']);
+  $data_table = _field_sql_storage_tablename($field);
+  $revision_table = _field_sql_storage_revision_tablename($field);
+  $etid = _field_sql_storage_etid('node');
+  $value_column = $field['field_name'] . '_value';
+  $columns = array('etid', 'entity_id', 'revision_id', 'bundle', 'delta', $value_column);
+
+  // This is a multi-pass update. On the first call we need to initialize some
+  // variables.
+  if (!isset($sandbox['total'])) {
+    $sandbox['last'] = 0;
+    $sandbox['count'] = 0;
+
+    $query = db_select('taxonomy_term_node', 't');
+    $sandbox['total'] = $query->countQuery()->execute()->fetchField();
+    $found = (bool) $sandbox['total'];
+  }
+  else {
+    // We do each pass in batches of 1000, this should result in a
+    // maximum of 2000 insert queries each operation.
+    $batch = 1000 + $sandbox['last'];
+
+    // Query and save data for the current revision.
+    $result = db_query_range('SELECT td.tid, tn.nid, td.weight, tn.vid, n2.type, n2.created, n2.sticky FROM {taxonomy_term_data} td INNER JOIN {taxonomy_term_node} tn ON td.tid = tn.tid INNER JOIN {node} n2 ON tn.nid = n2.nid INNER JOIN {node} n ON tn.vid = n.vid AND td.vid = :vocabulary_id ORDER BY td.weight ASC', array(':vocabulary_id' => $vocabulary->vid), $sandbox['last'], $batch);
+    $deltas = array();
+    foreach ($result as $record) {
+      $found = TRUE;
+      $sandbox['count'] += 1;
+      // Start deltas from 0, and increment by one for each
+      // term attached to a node.
+      $deltas[$record->nid] = isset($deltas[$record->nid]) ? ++$deltas[$record->nid] : 0;
+      $values = array($etid, $record->nid, $record->vid, $record->type, $deltas[$record->nid], $record->tid);
+      db_insert($data_table)->fields($columns)->values($values)->execute();
+
+      // Update the {taxonomy_index} table.
+      db_insert('taxonomy_index')
+        ->fields(array('nid', 'tid', 'sticky', 'created',))
+        ->values(array($record->nid, $record->tid, $record->sticky, $record->created))
+        ->execute();
+    }
+
+    // Query and save data for all revisions.
+    $result = db_query('SELECT td.tid, tn.nid, td.weight, tn.vid, n.type FROM {taxonomy_term_data} td INNER JOIN {taxonomy_term_node} tn ON td.tid = tn.tid AND td.vid = :vocabulary_id INNER JOIN {node} n ON tn.nid = n.nid ORDER BY td.weight ASC', array(':vocabulary_id' => $vocabulary->vid), $sandbox['last'][$batch]);
+    $deltas = array();
+    foreach ($result as $record) {
+      $found = TRUE;
+      $sandbox['count'] += 1;
+      // Start deltas at 0, and increment by one for each term attached to a revision.
+      $deltas[$record->vid] = isset($deltas[$record->vid]) ? ++$deltas[$record->vid] : 0;
+      $values = array($etid, $record->nid, $record->vid, $record->type, $deltas[$record->vid], $record->tid);
+      db_insert($revision_table)->fields($columns)->values($values)->execute();
+    }
+    $sandbox['last'] = $batch;
+  }
+  if (!$found) {
+   db_drop_table('taxonomy_term_node');
+  }
 }
