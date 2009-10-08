@@ -334,29 +334,30 @@ function simpletest_test_get_all() {
     }
     else {
       // Select all clases in files ending with .test.
-      $classes = db_select('registry')
-        ->fields('registry', array('name'))
-        ->condition('type', 'class')
-        ->condition('filename', '%.test', 'LIKE')
-        ->execute();
-
-      $groups = array();
+      $classes = db_query("SELECT name FROM {registry} WHERE type = :type AND filename LIKE :name", array(':type' => 'class', ':name' => '%.test'));
 
       // Check that each class has a getInfo() method and store the information
       // in an array keyed with the group specified in the test information.
+      $groups = array();
       foreach ($classes as $class) {
         $class = $class->name;
+        // Test classes need to implement getInfo() to be valid.
         if (class_exists($class) && method_exists($class, 'getInfo')) {
-          // Valid test class, retrieve test information.
           $info = call_user_func(array($class, 'getInfo'));
 
-          // Initialize test groups.
-          if (!isset($groups[$info['group']])) {
-            $groups[$info['group']] = array();
+          // If this test class requires a non-existing module, skip it.
+          if (!empty($info['dependencies'])) {
+            foreach ($info['dependencies'] as $module) {
+              if (!drupal_get_filename('module', $module)) {
+                continue 2;
+              }
+            }
           }
+
           $groups[$info['group']][$class] = $info;
         }
       }
+
       // Sort the groups and tests within the groups by name.
       uksort($groups, 'strnatcasecmp');
       foreach ($groups as $group => &$tests) {
