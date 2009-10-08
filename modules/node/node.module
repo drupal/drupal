@@ -974,36 +974,38 @@ function node_delete($nid) {
  *   An array of node IDs.
  */
 function node_delete_multiple($nids) {
-  $nodes = node_load_multiple($nids, array());
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids, array());
 
-  db_delete('node')
-    ->condition('nid', $nids, 'IN')
-    ->execute();
-  db_delete('node_revision')
-    ->condition('nid', $nids, 'IN')
-    ->execute();
-  db_delete('history')
-    ->condition('nid', $nids, 'IN')
-    ->execute();
+    db_delete('node')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
+    db_delete('node_revision')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
+    db_delete('history')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
 
-  foreach ($nodes as $nid => $node) {
-    // Call the node-specific callback (if any):
-    node_invoke($node, 'delete');
-    module_invoke_all('node_delete', $node);
-    field_attach_delete('node', $node);
+    foreach ($nodes as $nid => $node) {
+      // Call the node-specific callback (if any):
+      node_invoke($node, 'delete');
+      module_invoke_all('node_delete', $node);
+      field_attach_delete('node', $node);
 
-    // Remove this node from the search index if needed.
-    // This code is implemented in node module rather than in search module,
-    // because node module is implementing search module's API, not the other
-    // way around.
-    if (module_exists('search')) {
-      search_reindex($nid, 'node');
+      // Remove this node from the search index if needed.
+      // This code is implemented in node module rather than in search module,
+      // because node module is implementing search module's API, not the other
+      // way around.
+      if (module_exists('search')) {
+        search_reindex($nid, 'node');
+      }
     }
-  }
 
-  // Clear the page and block and node_load_multiple caches.
-  cache_clear_all();
-  entity_get_controller('node')->resetCache();
+    // Clear the page and block and node_load_multiple caches.
+    cache_clear_all();
+    entity_get_controller('node')->resetCache();
+  }
 }
 
 /**
