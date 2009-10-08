@@ -1,5 +1,5 @@
 <?php
-// $Id: forum-topic-list.tpl.php,v 1.7 2009/07/28 10:41:20 dries Exp $
+// $Id: forum-topic-list.tpl.php,v 1.8 2009/10/08 07:58:45 webchick Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@
  * - $topic->message: If the topic has been moved, this contains an
  *   explanation and a link.
  * - $topic->zebra: 'even' or 'odd' string used for row class.
- * - $topic->num_comments: The number of replies on this topic.
+ * - $topic->comment_count: The number of replies on this topic.
  * - $topic->new_replies: A flag to indicate whether there are unread comments.
  * - $topic->new_url: If there are unread replies, this is a link to them.
  * - $topic->new_text: Text containing the translated, properly pluralized count.
@@ -53,7 +53,7 @@
       <td colspan="3"><?php print $topic->message; ?></td>
     <?php else: ?>
       <td class="replies">
-        <?php print $topic->num_comments; ?>
+        <?php print $topic->comment_count; ?>
         <?php if ($topic->new_replies): ?>
           <br />
           <a href="<?php print $topic->new_url; ?>"><?php print $topic->new_text; ?></a>
