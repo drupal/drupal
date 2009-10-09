@@ -66,6 +66,21 @@ function contact_schema() {
 }
 
 /**
+ * Implement hook_install().
+ */
+function contact_install() {
+  // Insert a default contact category.
+  db_insert('contact')
+    ->fields(array(
+      'category' => 'Website feedback',
+      'recipients' => variable_get('site_mail', ini_get('sendmail_from')),
+      'selected' => 1,
+      'reply' => '',
+    ))
+    ->execute();
+}
+
+/**
  * Implement hook_uninstall().
  */
 function contact_uninstall() {

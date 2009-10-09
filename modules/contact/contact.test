@@ -169,7 +169,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     // Test the auto-reply for category 'foo'.
     $email = $this->randomName(32) . '@example.com';
     $subject = $this->randomString(64);
-    $this->submitContact($this->randomName(16), $email, $subject, 1, $this->randomString(128));
+    $this->submitContact($this->randomName(16), $email, $subject, 2, $this->randomString(128));
 
     // We are testing the auto-reply, so there should be one e-mail going to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'foo@example.com'));
@@ -178,7 +178,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     // Test the auto-reply for category 'bar'.
     $email = $this->randomName(32) . '@example.com';
-    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 2, $this->randomString(128));
+    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 3, $this->randomString(128));
 
     // Auto-reply for category 'bar' should result in one auto-reply e-mail to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'bar@example.com'));
@@ -187,7 +187,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomName(32) . '@example.com';
-    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 3, $this->randomString(128));
+    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 4, $this->randomString(128));
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'no_autoreply@example.com'));
     $this->assertEqual(count($captured_emails), 0, t('No auto-reply e-mail was sent to the sender for category "no-autoreply".'), t('Contact'));
   }
