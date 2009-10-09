@@ -239,6 +239,7 @@ function drupal_build_form($form_id, &$form_state) {
  */
 function form_state_defaults() {
   return array(
+    'args' => array(),
     'rebuild' => FALSE,
     'redirect' => NULL,
     'storage' => NULL,
