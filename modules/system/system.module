@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.802 2009/10/09 01:00:05 dries Exp $
+// $Id: system.module,v 1.803 2009/10/09 07:48:06 webchick Exp $
 
 /**
  * @file
@@ -215,6 +215,10 @@ function system_permission() {
     'administer site configuration' => array(
       'title' => t('Administer site configuration'),
       'description' => t('Configure site-wide settings such as module or theme administration settings.'),
+    ),
+    'administer software updates' => array(
+      'title' => t('Administer software updates'),
+      'description' => t('Run the update.php script.'),
     ),
     'administer actions' => array(
       'title' => t('Administer actions'),
