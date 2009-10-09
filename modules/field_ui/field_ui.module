@@ -54,6 +54,7 @@ function field_ui_menu() {
         $path = $bundle_info['admin']['path'];
         $bundle_arg = isset($bundle_info['admin']['bundle argument']) ? $bundle_info['admin']['bundle argument'] : $bundle_name;
         $access = array_intersect_key($bundle_info['admin'], drupal_map_assoc(array('access callback', 'access arguments')));
+        $instance_position = count(explode('/', $path)) + 1;
 
         $items["$path/fields"] = array(
           'title' => 'Manage fields',
@@ -63,11 +64,10 @@ function field_ui_menu() {
           'weight' => 1,
           'file' => 'field_ui.admin.inc',
         ) + $access;
-        $instance_position = count(explode('/', $path)) + 1;
         $items["$path/fields/%field_ui_menu"] = array(
           'title callback' => 'field_ui_menu_label',
           'title arguments' => array($instance_position),
-          'load arguments' => array($bundle_name),
+          'load arguments' => array($bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
@@ -75,7 +75,7 @@ function field_ui_menu() {
         ) + $access;
         $items["$path/fields/%field_ui_menu/edit"] = array(
           'title' => 'Edit instance settings',
-          'load arguments' => array($bundle_name),
+          'load arguments' => array($bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -83,7 +83,7 @@ function field_ui_menu() {
         ) + $access;
         $items["$path/fields/%field_ui_menu/field-settings"] = array(
           'title' => 'Edit field settings',
-          'load arguments' => array($bundle_name),
+          'load arguments' => array($bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_settings_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
@@ -91,7 +91,7 @@ function field_ui_menu() {
         ) + $access;
         $items["$path/fields/%field_ui_menu/widget-type"] = array(
           'title' => 'Change widget type',
-          'load arguments' => array($bundle_name),
+          'load arguments' => array($bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_widget_type_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
@@ -99,7 +99,7 @@ function field_ui_menu() {
         ) + $access;
         $items["$path/fields/%field_ui_menu/delete"] = array(
           'title' => 'Delete instance',
-          'load arguments' => array($bundle_name),
+          'load arguments' => array($bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_delete_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
