@@ -852,6 +852,20 @@ function block_filter_format_delete($format, $fallback) {
 }
 
 /**
+ * Implement hook_menu_delete().
+ */
+function block_menu_delete($menu) {
+  db_delete('block')
+    ->condition('module', 'menu')
+    ->condition('delta', $menu['menu_name'])
+    ->execute();
+  db_delete('block_role')
+    ->condition('module', 'menu')
+    ->condition('delta', $menu['menu_name'])
+    ->execute();
+}
+
+/**
  * Implement hook_form_FORM_ID_alter().
  */
 function block_form_system_performance_settings_alter(&$form, &$form_state) {

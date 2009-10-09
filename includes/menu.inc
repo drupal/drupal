@@ -1464,7 +1464,13 @@ function menu_get_names() {
  * Return an array containing the names of system-defined (default) menus.
  */
 function menu_list_system_menus() {
-  return array('navigation' => 'Navigation', 'management' => 'Management', 'user-menu' => 'User menu', 'main-menu' => 'Main menu', 'secondary-menu' => 'Secondary menu');
+  return array(
+    'navigation' => 'Navigation',
+    'management' => 'Management',
+    'user-menu' => 'User menu',
+    'main-menu' => 'Main menu',
+    'secondary-menu' => 'Secondary menu',
+  );
 }
 
 /**

@@ -92,11 +92,38 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->menu = $this->addCustomMenu();
     $this->doMenuTests($this->menu['menu_name']);
     $this->addInvalidMenuLink($this->menu['menu_name']);
+    $this->addCustomMenuCRUD();
+  }
+
+  /**
+   * Add custom menu using CRUD functions.
+   */
+  function addCustomMenuCRUD() {
+    // Add a new custom menu.
+    $menu_name = substr(md5($this->randomName(16)), 0, MENU_MAX_MENU_NAME_LENGTH_UI);
+    $title = $this->randomName(16);
+
+    $menu = array(
+      'menu_name' => $menu_name,
+      'title' => $title,
+      'description' => 'Description text',
+    );
+    menu_save($menu);
+
+    // Assert the new menu.
+    $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
+    $this->assertText($title, t('Custom menu was added.'));
+
+    // Edit the menu.
+    $new_title = $this->randomName(16);
+    $menu['title'] = $new_title;
+    menu_save($menu);
+    $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
+    $this->assertText($new_title, t('Custom menu was edited.'));
   }
 
   /**
    * Add custom menu.
-   *
    */
   function addCustomMenu() {
     // Add custom menu.
@@ -152,6 +179,9 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->assertResponse(200);
     $this->assertRaw(t('The custom menu %title has been deleted.', array('%title' => $title)), t('Custom menu was deleted'));
     $this->assertFalse(menu_load($menu_name), 'Custom menu was deleted');
+    // Test if all menu links associated to the menu were removed from database.
+    $result = db_query("SELECT menu_name FROM {menu_links} WHERE menu_name = :menu_name", array(':menu_name' => $menu_name))->fetchField();
+    $this->assertFalse($result, t('All menu links associated to the custom menu were deleted.'));    
   }
 
   /**

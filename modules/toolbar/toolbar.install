@@ -14,13 +14,12 @@
  */
 function toolbar_install() {
   $t = get_t();
-  $query = db_insert('menu_custom')
-    ->fields(array(
-      'menu_name' => 'admin_shortcuts',
-      'title' => $t('Administration shortcuts'),
-      'description' => $t('The <em>Admininstration shortcuts</em> menu contains commonly used links for administrative tasks.')
-    ))
-    ->execute();
+  $menu = array(
+    'menu_name' => 'admin_shortcuts',
+    'title' => $t('Administration shortcuts'),
+    'description' => $t('The <em>Administration shortcuts</em> menu contains commonly used links for administrative tasks.'),
+  );
+  menu_save($menu);
 
   // Add starter convenience shortcuts.
   menu_rebuild();

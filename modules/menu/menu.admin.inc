@@ -408,7 +408,11 @@ function menu_edit_item_submit($form, &$form_state) {
  */
 function menu_edit_menu($form, &$form_state, $type, $menu = array()) {
   $system_menus = menu_list_system_menus();
-  $menu += array('menu_name' => '', 'title' => '', 'description' => '');
+  $menu += array('menu_name' => '', 'old_name' => '', 'title' => '', 'description' => '');
+  if (!empty($menu['menu_name'])) {
+    $menu['old_name'] = $menu['menu_name'];
+  }
+  $form['old_name'] = array('#type' => 'value', '#value' => $menu['old_name']);
 
   // The title of a system menu cannot be altered.
   if (isset($system_menus[$menu['menu_name']])) {
@@ -425,7 +429,7 @@ function menu_edit_menu($form, &$form_state, $type, $menu = array()) {
   }
 
   // The internal menu name can only be defined during initial menu creation.
-  if ($type == 'edit') {
+  if (!empty($menu['old_name'])) {
     $form['#insert'] = FALSE;
     $form['menu_name'] = array('#type' => 'value', '#value' => $menu['menu_name']);
   }
@@ -516,41 +520,28 @@ function menu_delete_menu_confirm($form, &$form_state, $menu) {
 function menu_delete_menu_confirm_submit($form, &$form_state) {
   $menu = $form['#menu'];
   $form_state['redirect'] = 'admin/structure/menu';
+
   // System-defined menus may not be deleted - only menus defined by this module.
   $system_menus = menu_list_system_menus();
   if (isset($system_menus[$menu['menu_name']])  || !(db_query("SELECT 1 FROM {menu_custom} WHERE menu_name = :menu", array(':menu' => $menu['menu_name']))->fetchField())) {
     return;
   }
-  // Reset all the menu links defined by the system via hook_menu.
+
+  // Reset all the menu links defined by the system via hook_menu().
   $result = db_query("SELECT * FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.menu_name = :menu AND ml.module = 'system' ORDER BY m.number_parts ASC", array(':menu' => $menu['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
-  foreach ($result as $item) {
-    menu_reset_item($item);
+  foreach ($result as $link) {
+    menu_reset_item($link);
   }
+
   // Delete all links to the overview page for this menu.
   $result = db_query("SELECT mlid FROM {menu_links} ml WHERE ml.link_path = :link", array(':link' => 'admin/structure/menu/manage/' . $menu['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
-  foreach ($result as $m) {
-    menu_link_delete($m['mlid']);
+  foreach ($result as $link) {
+    menu_link_delete($link['mlid']);
   }
-  // Delete all the links in the menu and the menu from the list of custom menus.
-  db_delete('menu_links')
-    ->condition('menu_name', $menu['menu_name'])
-    ->execute();
-  db_delete('menu_custom')
-    ->condition('menu_name', $menu['menu_name'])
-    ->execute();
-  // Delete all the blocks for this menu.
-  if (module_exists('block')) {
-    db_delete('block')
-      ->condition('module', 'menu')
-      ->condition('delta', $menu['menu_name'])
-      ->execute();
-    db_delete('block_role')
-      ->condition('module', 'menu')
-      ->condition('delta', $menu['menu_name'])
-      ->execute();
-  }
-  menu_cache_clear_all();
-  cache_clear_all();
+
+  // Delete the custom menu and all its menu links.
+  menu_delete($menu);
+
   $t_args = array('%title' => $menu['title']);
   drupal_set_message(t('The custom menu %title has been deleted.', $t_args));
   watchdog('menu', 'Deleted custom menu %title and all its menu links.', $t_args, WATCHDOG_NOTICE);
@@ -571,8 +562,8 @@ function menu_edit_menu_validate($form, &$form_state) {
 
     // We will add 'menu-' to the menu name to help avoid name-space conflicts.
     $item['menu_name'] = 'menu-' . $item['menu_name'];
-    $custom_exists = db_query('SELECT menu_name FROM {menu_custom} WHERE menu_name = :menu', array(':menu' => $item['menu_name']))->fetchField();
-    $link_exists = db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = :menu", 0, 1, array(':menu' => $item['menu_name']))->fetchField();
+    $custom_exists = db_query_range('SELECT 1 FROM {menu_custom} WHERE menu_name = :menu', 0, 1, array(':menu' => $item['menu_name']))->fetchField();
+    $link_exists = db_query_range("SELECT 1 FROM {menu_links} WHERE menu_name = :menu", 0, 1, array(':menu' => $item['menu_name']))->fetchField();
     if ($custom_exists || $link_exists) {
       form_set_error('menu_name', t('The menu already exists.'));
     }
@@ -599,22 +590,10 @@ function menu_edit_menu_submit($form, &$form_state) {
     ->fetchField();
 
     menu_link_save($link);
-    db_insert('menu_custom')
-      ->fields(array(
-        'menu_name' => $menu['menu_name'],
-        'title' => $menu['title'],
-        'description' => $menu['description'],
-      ))
-      ->execute();
+    menu_save($menu);
   }
   else {
-    db_update('menu_custom')
-      ->fields(array(
-        'title' => $menu['title'],
-        'description' => $menu['description'],
-      ))
-      ->condition('menu_name', $menu['menu_name'])
-      ->execute();
+    menu_save($menu);
     $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path", array(':path' => $path . $menu['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $m) {
       $link = menu_link_load($m['mlid']);

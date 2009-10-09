@@ -198,9 +198,95 @@ function menu_overview_title($menu) {
 
 /**
  * Load the data for a single custom menu.
+ *
+ * @param $menu_name
+ *   The unique name of a custom menu to load.
  */
 function menu_load($menu_name) {
   return db_query("SELECT * FROM {menu_custom} WHERE menu_name = :menu", array(':menu' => $menu_name))->fetchAssoc();
+}
+
+/**
+ * Save a custom menu.
+ *
+ * @param $menu
+ *   An array representing a custom menu:
+ *   - menu_name: The unique name of the custom menu.
+ *   - title: The human readable menu title.
+ *   - description: The custom menu description.
+ *   - old_name: For existing menus, the current 'menu_name', otherwise empty.
+ *     Decides whether hook_menu_insert() or hook_menu_update() will be invoked.
+ *
+ * Modules should always pass a fully populated $menu when saving a custom
+ * menu, so other modules are able to output proper status or watchdog messages.
+ *
+ * @see menu_load()
+ */
+function menu_save($menu) {
+  db_merge('menu_custom')
+    ->key(array('menu_name' => $menu['menu_name']))
+    ->fields(array(
+      'title' => $menu['title'],
+      'description' => $menu['description'],
+    ))
+    ->execute();
+
+  // Since custom menus are keyed by name and their machine-name cannot be
+  // changed, there is no real differentiation between inserting and updating a
+  // menu. To overcome this, we define the existing menu_name as 'old_name' in
+  // menu_edit_menu().
+  // @todo Replace this condition when db_merge() returns the proper query
+  //   result (insert/update).
+  if (!empty($menu['old_name'])) {
+    module_invoke_all('menu_update', $menu);
+  }
+  else {
+    module_invoke_all('menu_insert', $menu);
+  }
+}
+
+/**
+ * Delete a custom menu and all contained links.
+ *
+ * Note that this function deletes all menu links in a custom menu. While menu
+ * links derived from router paths may be restored by rebuilding the menu, all
+ * customized and custom links will be irreversibly gone. Therefore, this
+ * function should usually be called from a user interface (form submit) handler
+ * only, which allows the user to confirm the action.
+ *
+ * @param $menu
+ *   An array representing a custom menu:
+ *   - menu_name: The unique name of the custom menu.
+ *   - title: The human readable menu title.
+ *   - description: The custom menu description.
+ *
+ * Modules should always pass a fully populated $menu when deleting a custom
+ * menu, so other modules are able to output proper status or watchdog messages.
+ *
+ * @see menu_load()
+ *
+ * _menu_delete_item() will take care of clearing the page cache. Other modules
+ * should take care of their menu-related data by implementing
+ * hook_menu_delete().
+ */
+function menu_delete($menu) {
+  // Delete all links from the menu.
+  $links = db_query("SELECT * FROM {menu_links} WHERE menu_name = :menu_name", array(':menu_name' => $menu['menu_name']));
+  foreach ($links as $link) {
+    // To speed up the deletion process, we reset some link properties that
+    // would trigger re-parenting logic in _menu_delete_item() and
+    // _menu_update_parental_status().
+    $link['has_children'] = FALSE;
+    $link['plid'] = 0;
+    _menu_delete_item($link);
+  }
+
+  // Delete the custom menu.
+  db_delete('menu_custom')
+    ->condition('menu_name', $menu['menu_name'])
+    ->execute();
+
+  module_invoke_all('menu_delete', $menu);
 }
 
 /**
@@ -496,3 +582,4 @@ function menu_get_menus($all = TRUE) {
 
   return $query->execute()->fetchAllKeyed();
 }
+
