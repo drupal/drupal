@@ -22,9 +22,9 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
    */
   function testSiteWideContact() {
     // Create and login administrative user.
-    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer site-wide contact form', 'administer users'));
+    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer contact forms', 'administer users'));
     $this->drupalLogin($admin_user);
-    
+
     $flood_limit = 3;
     variable_set('contact_threshold_limit', $flood_limit);
     variable_set('contact_threshold_window', 600);
@@ -156,7 +156,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
   */
   function testAutoReply() {
     // Create and login administrative user.
-    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer site-wide contact form', 'administer permissions', 'administer users'));
+    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer contact forms', 'administer permissions', 'administer users'));
     $this->drupalLogin($admin_user);
 
     // Set up three categories, 2 with an auto-reply and one without.
@@ -290,9 +290,9 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
    * Test personal contact form.
    */
   function testPersonalContact() {
-    $admin_user = $this->drupalCreateUser(array('administer site-wide contact form', 'administer users'));
+    $admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users'));
     $this->drupalLogin($admin_user);
-    
+
     $flood_limit = 3;
     variable_set('contact_threshold_limit', $flood_limit);
 

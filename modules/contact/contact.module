@@ -37,13 +37,13 @@ function contact_help($path, $arg) {
  */
 function contact_permission() {
   return array(
-    'administer site-wide contact form' => array(
-      'title' => t('Administer site-wide contact form'),
-      'description' => t('Configure site-wide contact form administration settings.'),
+    'administer contact forms' => array(
+      'title' => t('Administer contact forms'),
+      'description' => t('Manage contact forms and configure contact form adminstrative settings.'),
     ),
     'access site-wide contact form' => array(
       'title' => t('Access site-wide contact form'),
-      'description' => t('Send feedback to administrators via e-mail using the site-wide contact form.'),
+      'description' => t('Send e-mails to administer-defiend recipients using the site-wide contact form.'),
     ),
   );
 }
@@ -56,14 +56,14 @@ function contact_menu() {
     'title' => 'Contact form',
     'description' => 'Create a system contact form and set up categories for the form to use.',
     'page callback' => 'contact_admin_categories',
-    'access arguments' => array('administer site-wide contact form'),
+    'access arguments' => array('administer contact forms'),
     'file' => 'contact.admin.inc',
   );
   $items['admin/structure/contact/add'] = array(
     'title' => 'Add category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_edit', 3),
-    'access arguments' => array('administer site-wide contact form'),
+    'access arguments' => array('administer contact forms'),
     'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
     'file' => 'contact.admin.inc',
@@ -72,7 +72,7 @@ function contact_menu() {
     'title' => 'Edit contact category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_edit', 3, 4),
-    'access arguments' => array('administer site-wide contact form'),
+    'access arguments' => array('administer contact forms'),
     'type' => MENU_CALLBACK,
     'file' => 'contact.admin.inc',
   );
@@ -80,7 +80,7 @@ function contact_menu() {
     'title' => 'Delete contact',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_delete', 4),
-    'access arguments' => array('administer site-wide contact form'),
+    'access arguments' => array('administer contact forms'),
     'type' => MENU_CALLBACK,
     'file' => 'contact.admin.inc',
   );

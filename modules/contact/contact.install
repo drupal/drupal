@@ -88,6 +88,16 @@ function contact_update_7000() {
 }
 
 /**
+ * Rename the administer contact forms permission.
+ */
+function contact_update_7001() {
+  db_update('role_permission')
+    ->fields(array('permission' => 'administer contact forms'))
+    ->condition('permission', 'administer site-wide contact form')
+    ->execute();
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
