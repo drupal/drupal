@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.34 2009/10/08 18:16:31 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.35 2009/10/09 07:58:16 webchick Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -41,6 +41,10 @@ Peter Wolanin <http://drupal.org/user/49851>
 
 SECURITY COORDINATOR
 Heine Deelstra 'heine' <http://drupal.org/user/17943>
+
+TAXONOMY MODULE
+Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
+Benjamin Doherty 'bangpound' <http://drupal.org/user/100456>
 
 TESTING SUBSYSTEM
 Károly Négyesi 'chx' <http://drupal.org/user/9446>
