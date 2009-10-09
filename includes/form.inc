@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.380 2009/10/09 00:59:54 dries Exp $
+// $Id: form.inc,v 1.381 2009/10/09 08:12:07 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -239,6 +239,7 @@ function drupal_build_form($form_id, &$form_state) {
  */
 function form_state_defaults() {
   return array(
+    'args' => array(),
     'rebuild' => FALSE,
     'redirect' => NULL,
     'storage' => NULL,
