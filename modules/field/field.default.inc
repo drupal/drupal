@@ -84,7 +84,7 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
       '#theme' => 'field',
       '#weight' => $display['weight'],
       '#title' => check_plain(t($instance['label'])),
-      '#access' => field_access('view', $field),
+      '#access' => field_access('view', $field, $obj_type, $object),
       '#label_display' => $label_display,
       '#build_mode' => $build_mode,
       '#language' => $langcode,

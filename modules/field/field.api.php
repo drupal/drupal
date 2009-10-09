@@ -1433,11 +1433,15 @@ function hook_field_build_modes($obj_type) {
  *   - "view"
  * @param $field
  *   The field on which the operation is to be performed.
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   (optional) The object for the operation.
  * @param $account
  *   (optional) The account to check, if not given use currently logged in user.
  * @return
  *   TRUE if the operation is allowed;
  *   FALSE if the operation is denied.
  */
-function hook_field_access($op, $field, $account) {
+function hook_field_access($op, $field, $obj_type, $object, $account) {
 }

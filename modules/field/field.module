@@ -499,7 +499,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
     $field = field_info_field($field);
   }
 
-  if (field_access('view', $field)) {
+  if (field_access('view', $field, $obj_type, $object)) {
     $field_type = field_info_field_types($field['type']);
 
     // We need $field, $instance, $obj_type, $object to be able to display a value...
@@ -624,20 +624,24 @@ function field_has_data($field) {
  *   - "view"
  * @param $field
  *   The field on which the operation is to be performed.
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   (optional) The object for the operation.
  * @param $account
  *   (optional) The account to check, if not given use currently logged in user.
  * @return
  *   TRUE if the operation is allowed;
  *   FALSE if the operation is denied.
  */
-function field_access($op, $field, $account = NULL) {
+function field_access($op, $field, $obj_type, $object = NULL, $account = NULL) {
   global $user;
 
   if (is_null($account)) {
     $account = $user;
   }
 
-  $field_access = module_invoke_all('field_access', $op, $field, $account);
+  $field_access = module_invoke_all('field_access', $op, $field, $obj_type, $object, $account);
   foreach ($field_access as $value) {
     if ($value === FALSE) {
       return FALSE;

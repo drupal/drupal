@@ -22,7 +22,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
   // If the field is not accessible, don't add anything. The field value will
   // be left unchanged on update, or considered empty on insert (default value
   // will be inserted if applicable).
-  if (!field_access('edit', $field)) {
+  if (!field_access('edit', $field, $obj_type, $object)) {
     return $addition;
   }
 
