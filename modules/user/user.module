@@ -2057,7 +2057,7 @@ function _user_cancel($edit, $account, $method) {
  *   The user account of the profile being viewed.
  *
  * To theme user profiles, copy modules/user/user-profile.tpl.php
- * to your theme directory, and edit it as instructed in that file's comments. 
+ * to your theme directory, and edit it as instructed in that file's comments.
  *
  * @param $account
  *   A user object.
@@ -2072,7 +2072,7 @@ function user_build($account) {
   $build = $account->content;
   // We don't need duplicate rendering info in account->content.
   unset($account->content);
-  
+
   $build += array(
     '#theme' => 'user_profile',
     '#account' => $account,
@@ -2566,8 +2566,8 @@ function user_user_operations($form = array(), $form_state = array()) {
  * Callback function for admin mass unblocking users.
  */
 function user_user_operations_unblock($accounts) {
-  foreach ($accounts as $uid) {
-    $account = user_load($uid);
+  $accounts = user_load_multiple($accounts);
+  foreach ($accounts as $account) {
     // Skip unblocking user if they are already unblocked.
     if ($account !== FALSE && $account->status == 0) {
       user_save($account, array('status' => 1));
@@ -2579,8 +2579,8 @@ function user_user_operations_unblock($accounts) {
  * Callback function for admin mass blocking users.
  */
 function user_user_operations_block($accounts) {
-  foreach ($accounts as $uid) {
-    $account = user_load($uid);
+  $accounts = user_load_multiple($accounts);
+  foreach ($accounts as $account) {
     // Skip blocking user if they are already blocked.
     if ($account !== FALSE && $account->status == 1) {
       user_save($account, array('status' => 0));
@@ -2598,8 +2598,8 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
 
   switch ($operation) {
     case 'add_role':
-      foreach ($accounts as $uid) {
-        $account = user_load($uid);
+      $accounts = user_load_multiple($accounts);
+      foreach ($accounts as $account) {
         // Skip adding the role to the user if they already have it.
         if ($account !== FALSE && !isset($account->roles[$rid])) {
           $roles = $account->roles + array($rid => $role_name);
@@ -2608,8 +2608,8 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
       }
       break;
     case 'remove_role':
-      foreach ($accounts as $uid) {
-        $account = user_load($uid);
+      $accounts = user_load_multiple($accounts);
+      foreach ($accounts as $account) {
         // Skip removing the role from the user if they already don't have it.
         if ($account !== FALSE && isset($account->roles[$rid])) {
           $roles = array_diff($account->roles, array($rid => $role_name));
