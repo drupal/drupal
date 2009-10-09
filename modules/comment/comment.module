@@ -96,7 +96,7 @@ function comment_help($path, $arg) {
 }
 
 /**
- * Implement hook_entity_info() {
+ * Implement hook_entity_info().
  */
 function comment_entity_info() {
   $return =  array(
@@ -1493,7 +1493,7 @@ class CommentController extends DrupalDefaultEntityController {
     $this->query->addField('n', 'type', 'node_type');
     $this->query->innerJoin('users', 'u', 'base.uid = u.uid');
     $this->query->addField('u', 'name', 'registered_name');
-    $this->query->fields('u', array( 'uid', 'signature', 'picture', 'data', 'status'));
+    $this->query->fields('u', array('uid', 'signature', 'picture', 'data'));
   }
 
   protected function attachLoad(&$comments) {
@@ -1665,11 +1665,11 @@ function comment_form($form, &$form_state, $comment) {
         $author = $comment->registered_name;
       }
 
-      if (!empty($comment->status)) {
+      if (isset($comment->status)) {
         $status = $comment->status;
       }
       else {
-        $status = 0;
+        $status = COMMENT_NOT_PUBLISHED;
       }
 
       if (!empty($comment->date)) {
@@ -1742,8 +1742,8 @@ function comment_form($form, &$form_state, $comment) {
         '#type' => 'radios',
         '#parents' => array('status'),
         '#title' => t('Status'),
-        '#default_value' =>  $status,
-        '#options' => array(t('Not published'), t('Published')),
+        '#default_value' => $status,
+        '#options' => array(COMMENT_NOT_PUBLISHED => t('Not published'), COMMENT_PUBLISHED => t('Published')),
         '#weight' => -1,
       );
     }
