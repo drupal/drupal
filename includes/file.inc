@@ -948,7 +948,7 @@ function file_delete(stdClass $file, $force = FALSE) {
  * entry recorded in the files table.
  *
  * @param $path
- *   A string containing a filepath or URI.
+ *   A string containing a file path or (streamwrapper) URI.
  * @return
  *   TRUE for success or path does not exist, or FALSE in the event of an
  *   error.
@@ -957,6 +957,8 @@ function file_delete(stdClass $file, $force = FALSE) {
  * @see file_unmanaged_delete_recursive()
  */
 function file_unmanaged_delete($path) {
+  // Resolve streamwrapper URI to local path.
+  $path = drupal_realpath($path);
   if (is_dir($path)) {
     watchdog('file', '%path is a directory and cannot be removed using file_unmanaged_delete().', array('%path' => $path), WATCHDOG_ERROR);
     return FALSE;
@@ -989,14 +991,16 @@ function file_unmanaged_delete($path) {
  * Note that this only deletes visible files with write permission.
  *
  * @param $path
- *   A string containing a URI, filepath. or directory path.
+ *   A string containing eiher an URI or a file or directory path.
  * @return
- *   TRUE for success or path does not exist, or FALSE in the event of an
+ *   TRUE for success or if path does not exist, FALSE in the event of an
  *   error.
  *
  * @see file_unmanaged_delete()
  */
 function file_unmanaged_delete_recursive($path) {
+  // Resolve streamwrapper URI to local path.
+  $path = drupal_realpath($path);
   if (is_dir($path)) {
     $dir = dir($path);
     while (($entry = $dir->read()) !== FALSE) {
