@@ -165,9 +165,22 @@ function filter_format_load($format) {
  * Save a text format object to the database.
  *
  * @param $format
- *   A format object.
+ *   A format object using the properties:
+ *   - 'name': The title of the text format.
+ *   - 'format': (optional) The internal ID of the text format. If omitted, a
+ *     new text format is created.
+ *   - 'roles': (optional) An associative array containing the roles allowed to
+ *     access/use the text format.
+ *   - 'filters': (optional) An associative, multi-dimensional array of filters
+ *     assigned to the text format, using the properties:
+ *     - 'weight': The weight of the filter in the text format.
+ *     - 'status': A boolean indicating whether the filter is enabled in the
+ *       text format.
+ *     - 'module': The name of the module implementing the filter.
+ *     - 'settings': (optional) An array of configured settings for the filter.
+ *       See hook_filter_info() for details.
  */
-function filter_format_save($format) {
+function filter_format_save(&$format) {
   $format->name = trim($format->name);
 
   // Add a new text format.
@@ -180,13 +193,18 @@ function filter_format_save($format) {
 
   // Get the filters currently active in the format, to add new filters
   // to the bottom.
-  $current = filter_list_format($format->format);
-  $filters = $format->filters;
-  foreach ($filters as $name => $filter) {
+  $current = filter_list_format($format->format, TRUE);
+  $filter_info = filter_get_filters();
+  if (!isset($format->filters)) {
+    $format->filters = array();
+  }
+  foreach ($format->filters as $name => $filter) {
     $fields = array();
     // Add new filters to the bottom.
     $fields['weight'] = isset($current[$name]->weight) ? $current[$name]->weight : 10;
     $fields['status'] = $filter['status'];
+    $fields['module'] = $filter_info[$name]['module'];
+    $format->filters[$name]['module'] = $filter_info[$name]['module'];
     // Only update settings if there are any.
     if (!empty($filter['settings'])) {
       $fields['settings'] = serialize($filter['settings']);
@@ -568,6 +586,10 @@ function filter_get_filters() {
     foreach (module_implements('filter_info') as $module) {
       $info = module_invoke($module, 'filter_info');
       if (isset($info) && is_array($info)) {
+        // Assign the name of the module implementing the filters.
+        foreach (array_keys($info) as $name) {
+          $info[$name]['module'] = $module;
+        }
         $filters = array_merge($filters, $info);
       }
     }
@@ -648,22 +670,13 @@ function filter_list_format($format, $include_disabled = FALSE) {
 }
 
 /**
- * @name Filtering functions
- * @{
- * Modules which need to have content filtered can use these functions to
- * interact with the filter system.
- *
- * For more info, see the hook_filter() documentation.
- *
- * Note: because filters can inject JavaScript or execute PHP code, security is
- * vital here. When a user supplies a $format, you should validate it with
- * filter_access($format) before accepting/using it. This is normally done in
- * the validation stage of the node system. You should for example never make a
- * preview of content in a disallowed format.
- */
-
-/**
  * Run all the enabled filters on a piece of text.
+ *
+ * Note: Because filters can inject JavaScript or execute PHP code, security is
+ * vital here. When a user supplies a $format, you should validate it using
+ * filter_access($format) before accepting/using it. This is normally done in
+ * the validation stage of the Form API. You should for example never make a
+ * preview of content in a disallowed format.
  *
  * @param $text
  *   The text to be filtered.
@@ -811,11 +824,6 @@ function filter_access($format, $account = NULL) {
   $permission = filter_permission_name($format);
   return !empty($permission) && user_access($permission, $account);
 }
-
-/**
- * @} End of "Filtering functions".
- */
-
 
 /**
  * Helper function for fetching filter tips.
