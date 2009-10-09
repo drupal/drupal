@@ -11,10 +11,13 @@
  * Site-wide contact page.
  */
 function contact_site_page() {
-  if (!flood_is_allowed('contact', variable_get('contact_threshold_limit', 5), variable_get('contact_threshold_window', 3600)) && !user_access('administer contact forms')) {
-    $output = t("You cannot send more than %number messages in @interval. Please try again later.", array('%number' => variable_get('contact_threshold_limit', 3), '@interval' => format_interval(variable_get('contact_threshold_window', 3600))));
+  $limit = variable_get('contact_threshold_limit', 5);
+  $window = variable_get('contact_threshold_window', 3600);
+
+  if (!flood_is_allowed('contact', $limit, $window) && !user_access('administer contact forms')) {
+    $output = t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window)));
   }
-  elseif (!db_query("SELECT COUNT(cid) FROM {contact}")->fetchField()) {
+  elseif (!db_query("SELECT 1 FROM {contact}")->fetchField()) {
     if (user_access('administer contact forms')) {
       $output = t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array('@add' => url('admin/structure/contact/add')));
     }
@@ -32,14 +35,14 @@ function contact_site_page() {
 /**
  * Form builder; the site-wide contact form.
  */
-function contact_site_form() {
+function contact_site_form($form, &$form_state) {
   global $user;
 
   $categories = db_query("SELECT cid, category FROM {contact} ORDER BY weight, category")->fetchAllKeyed();
-  $default_category = (int) db_query("SELECT cid FROM {contact} WHERE selected = 1")->fetchField();
+  $default_category = db_query("SELECT cid FROM {contact} WHERE selected = 1")->fetchField();
 
-  // If there is more than one category available and no default category has been selected,
-  // prepend a default placeholder value.
+  // If there is more than one category available and no default category has
+  // been selected, prepend a default placeholder value.
   if (!$default_category) {
     if (count($categories) > 1) {
       $categories = array(0 => t('- Please choose -')) + $categories;
@@ -151,18 +154,21 @@ function contact_site_form_submit($form, &$form_state) {
 /**
  * Personal contact page.
  */
-function contact_personal_page($account) {
+function contact_personal_page(stdClass $recipient) {
   global $user;
+
+  $limit = variable_get('contact_threshold_limit', 5);
+  $window = variable_get('contact_threshold_window', 3600);
 
   if (!valid_email_address($user->mail)) {
     $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit", array('query' => drupal_get_destination()))));
   }
-  elseif (!flood_is_allowed('contact', variable_get('contact_threshold_limit', 5), variable_get('contact_threshold_window', 3600)) && !user_access('administer contact forms')) {
-    $output = t("You cannot send more than %number messages in @interval. Please try again later.", array('%number' => variable_get('contact_threshold_limit', 3), '@interval' => format_interval(variable_get('contact_threshold_window', 3600))));
+  elseif (!flood_is_allowed('contact', $limit, $window) && !user_access('administer contact forms') && !user_access('administer users')) {
+    $output = t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window)));
   }
   else {
-    drupal_set_title($account->name);
-    $output = drupal_get_form('contact_personal_form', $account);
+    drupal_set_title(t('Contact @username', array('@username' => $recipient->name)), PASS_THROUGH);
+    $output = drupal_get_form('contact_personal_form', $recipient);
   }
 
   return $output;
@@ -171,7 +177,7 @@ function contact_personal_page($account) {
 /**
  * Form builder; the personal contact form.
  */
-function contact_personal_form($form, &$form_state, $recipient) {
+function contact_personal_form($form, &$form_state, stdClass $recipient) {
   global $user;
   $form['#token'] = $user->name . $user->mail;
   $form['recipient'] = array('#type' => 'value', '#value' => $recipient);

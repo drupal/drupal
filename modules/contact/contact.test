@@ -64,7 +64,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     // Create first valid category.
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
+    $this->assertRaw(t('Category %category has been saved.', array('%category' => $category)), t('Category successfully saved.'));
 
     // Make sure the newly created category is included in the list of categories.
     $this->assertNoUniqueText($category, t('New category included in categories list.'));
@@ -77,7 +77,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->assertEqual($category_array['recipients'], $recipients_str);
     $this->assertEqual($category_array['reply'], $reply);
     $this->assertFalse($category_array['selected']);
-    $this->assertRaw(t('Category %category has been updated.', array('%category' => $category)), t('Category successfully updated.'));
+    $this->assertRaw(t('Category %category has been saved.', array('%category' => $category)), t('Category successfully saved.'));
 
     // Ensure that the contact form is shown without a category selection input.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
@@ -89,10 +89,10 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     // Add more categories.
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
-    $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
+    $this->assertRaw(t('Category %category has been saved.', array('%category' => $category)), t('Category successfully saved.'));
 
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
-    $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
+    $this->assertRaw(t('Category %category has been saved.', array('%category' => $category)), t('Category successfully saved.'));
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
     db_delete('flood')->execute();

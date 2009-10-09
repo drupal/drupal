@@ -7,15 +7,6 @@
  */
 
 /**
- * Implement hook_uninstall().
- */
-function contact_uninstall() {
-  variable_del('contact_default_status');
-  variable_del('contact_threshold_limit');
-  variable_del('contact_threshold_window');
-}
-
-/**
  * Implement hook_schema().
  */
 function contact_schema() {
@@ -72,6 +63,15 @@ function contact_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Implement hook_uninstall().
+ */
+function contact_uninstall() {
+  variable_del('contact_default_status');
+  variable_del('contact_threshold_limit');
+  variable_del('contact_threshold_window');
 }
 
 /**
