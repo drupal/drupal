@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.69 2009/10/09 01:00:00 dries Exp $
+// $Id: node.admin.inc,v 1.70 2009/10/09 01:31:17 dries Exp $
 
 /**
  * @file
@@ -434,7 +434,7 @@ function node_admin_nodes() {
     '#options' => $options,
     '#default_value' => 'approve',
   );
-  unset($options);
+  $options = array();
   $form['options']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),
