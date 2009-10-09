@@ -42,6 +42,10 @@ Peter Wolanin <http://drupal.org/user/49851>
 SECURITY COORDINATOR
 Heine Deelstra 'heine' <http://drupal.org/user/17943>
 
+TAXONOMY MODULE
+Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
+Benjamin Doherty 'bangpound' <http://drupal.org/user/100456>
+
 TESTING SUBSYSTEM
 Károly Négyesi 'chx' <http://drupal.org/user/9446>
 Jimmy Berry 'boombatower' <http://drupal.org/user/214218>
