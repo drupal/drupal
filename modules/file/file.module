@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.5 2009/10/09 00:59:58 dries Exp $
+// $Id: file.module,v 1.6 2009/10/09 07:31:38 webchick Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 // Load all Field module hooks for File.
-require(DRUPAL_ROOT . '/modules/file/file.field.inc');
+module_load_include('inc', 'file', 'file.field');
 
 /**
  * Implement hook_menu().
