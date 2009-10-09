@@ -39,11 +39,11 @@ function contact_permission() {
   return array(
     'administer contact forms' => array(
       'title' => t('Administer contact forms'),
-      'description' => t('Manage contact forms and configure contact form adminstrative settings.'),
+      'description' => t('Manage contact forms and configure contact form administrative settings.'),
     ),
     'access site-wide contact form' => array(
       'title' => t('Access site-wide contact form'),
-      'description' => t('Send e-mails to administer-defiend recipients using the site-wide contact form.'),
+      'description' => t('Send e-mails to administrator-defined recipients using the site-wide contact form.'),
     ),
   );
 }
