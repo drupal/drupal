@@ -7,7 +7,7 @@
  */
 
 // Load all Field module hooks for File.
-require(DRUPAL_ROOT . '/modules/file/file.field.inc');
+module_load_include('inc', 'file', 'file.field');
 
 /**
  * Implement hook_menu().
