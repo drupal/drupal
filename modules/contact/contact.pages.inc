@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.29 2009/10/09 02:34:07 dries Exp $
+// $Id: contact.pages.inc,v 1.30 2009/10/09 15:39:12 dries Exp $
 
 /**
  * @file
@@ -50,6 +50,11 @@ function contact_site_form($form, &$form_state) {
     else {
       $default_category = key($categories);
     }
+  }
+
+  if (!$user->uid) {
+    $form['#attached']['library'][] = array('system', 'cookie');
+    $form['#attached']['js'][] = drupal_get_path('module', 'contact') . '/contact.js';
   }
 
   $form['#token'] = $user->uid ? $user->name . $user->mail : '';
@@ -117,9 +122,14 @@ function contact_site_form_validate($form, &$form_state) {
  * Form submission handler for contact_site_form().
  */
 function contact_site_form_submit($form, &$form_state) {
-  global $language;
+  global $user, $language;
 
   $values = $form_state['values'];
+
+  // Save the anonymous user information to a cookie for reuse.
+  if (!$user->uid) {
+    user_cookie_save($values);
+  }
 
   // E-mail address of the sender: as the form field is a text field,
   // all instances of \r and \n have been automatically stripped from it.
