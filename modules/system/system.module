@@ -216,6 +216,10 @@ function system_permission() {
       'title' => t('Administer site configuration'),
       'description' => t('Configure site-wide settings such as module or theme administration settings.'),
     ),
+    'administer software updates' => array(
+      'title' => t('Administer software updates'),
+      'description' => t('Run the update.php script.'),
+    ),
     'administer actions' => array(
       'title' => t('Administer actions'),
       'description' => t('Manage the actions defined for your site.'),

@@ -13,10 +13,11 @@ define('DRUPAL_ROOT', getcwd());
  * Point your browser to "http://www.example.com/update.php" and follow the
  * instructions.
  *
- * If you are not logged in using the site maintenance account, you will need
- * to modify the access check statement inside your settings.php file. After
- * finishing the upgrade, be sure to open settings.php again, and change it back
- * to its original state!
+ * If you are not logged in using either the site maintenance account or an
+ * account with the "Administer software updates" permission, you will need to
+ * modify the access check statement inside your settings.php file. After
+ * finishing the upgrade, be sure to open settings.php again, and change it
+ * back to its original state!
  */
 
 /**
@@ -98,7 +99,6 @@ function update_script_selection_form() {
   }
   return $form;
 }
-
 
 function update_helpful_links() {
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
@@ -201,14 +201,40 @@ function update_info_page() {
 }
 
 function update_access_denied_page() {
+  drupal_add_http_header('403 Forbidden');
+  watchdog('access denied', 'update.php', NULL, WATCHDOG_WARNING);
   drupal_set_title('Access denied');
-  return '<p>Access denied. You are not authorized to access this page. Please log in using the site maintenance account (the account you created during installation). If you cannot log in, you will have to edit <code>settings.php</code> to bypass this access check. To do this:</p>
+  return '<p>Access denied. You are not authorized to access this page. Please log in using either an account with the <em>administer software updates</em> permission or the site maintenance account (the account you created during installation). If you cannot log in, you will have to edit <code>settings.php</code> to bypass this access check. To do this:</p>
 <ol>
  <li>With a text editor find the settings.php file on your system. From the main Drupal directory that you installed all the files into, go to <code>sites/your_site_name</code> if such directory exists, or else to <code>sites/default</code> which applies otherwise.</li>
  <li>There is a line inside your settings.php file that says <code>$update_free_access = FALSE;</code>. Change it to <code>$update_free_access = TRUE;</code>.</li>
  <li>As soon as the update.php script is done, you must change the settings.php file back to its original form with <code>$update_free_access = FALSE;</code>.</li>
- <li>To avoid having this problem in the future, remember to log in to your website using the site maintenance account (the account you created during installation) before you backup your database at the beginning of the update process.</li>
+ <li>To avoid having this problem in the future, remember to log in to your website using either an account with the <em>administer software updates</em> permission or the site maintenance account (the account you created during installation) before you backup your database at the beginning of the update process.</li>
 </ol>';
+}
+
+/**
+ * Determines if the current user is allowed to run update.php.
+ *
+ * @return
+ *   TRUE if the current user should be granted access, or FALSE otherwise.
+ */
+function update_access_allowed() {
+  global $update_free_access, $user;
+
+  // Allow the global variable in settings.php to override the access check.
+  if (!empty($update_free_access)) {
+    return TRUE;
+  }
+  // Calls to user_access() might fail during the Drupal 6 to 7 update process,
+  // so we fall back on requiring that the user be logged in as user #1.
+  try {
+    require_once drupal_get_path('module', 'user') . '/user.module';
+    return user_access('administer software updates');
+  }
+  catch (Exception $e) {
+    return ($user->uid == 1);
+  }
 }
 
 /**
@@ -273,13 +299,12 @@ update_prepare_d7_bootstrap();
 
 // Determine if the current user has access to run update.php.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
-$update_access_allowed = !empty($update_free_access) || $user->uid == 1;
 
 // Only allow the requirements check to proceed if the current user has access
 // to run updates (since it may expose sensitive information about the site's
 // configuration).
 $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
-if (empty($op) && $update_access_allowed) {
+if (empty($op) && update_access_allowed()) {
   require_once DRUPAL_ROOT . '/includes/install.inc';
   require_once DRUPAL_ROOT . '/includes/file.inc';
   require_once DRUPAL_ROOT . '/modules/system/system.install';
@@ -317,7 +342,7 @@ drupal_maintenance_theme();
 ini_set('display_errors', TRUE);
 
 // Only proceed with updates if the user is allowed to run them.
-if ($update_access_allowed) {
+if (update_access_allowed()) {
 
   include_once DRUPAL_ROOT . '/includes/install.inc';
   include_once DRUPAL_ROOT . '/includes/batch.inc';

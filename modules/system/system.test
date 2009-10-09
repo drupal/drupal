@@ -1210,7 +1210,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     // passed properly through the call stack and being handled correctly by a 'known'
     // token, [node:title].
     $this->assertFalse(strcmp($target, $result), t('Basic placeholder tokens replaced.'));
-    
+
     $raw_tokens = array('title' => '[node:title]');
     $generated = token_generate('node', $raw_tokens, array('node' => $node));
     $this->assertFalse(strcmp($generated['[node:title]'], check_plain($node->title)), t('Token sanitized.'));
@@ -1288,5 +1288,58 @@ array_space[a b] = Value';
     $this->assertEqual($parsed['array_deep_assoc'], $expected['array_deep_assoc'], t('Set a nested associative array.'));
     $this->assertEqual($parsed['array_space'], $expected['array_space'], t('Set an array with a whitespace in the key.'));
     $this->assertEqual($parsed, $expected, t('Entire parsed .info string and expected array are identical.'));
+  }
+}
+
+/**
+ * Tests for the update system functionality.
+ */
+class UpdateScriptFunctionalTest extends DrupalWebTestCase {
+  private $update_url;
+  private $update_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Update functionality',
+      'description' => 'Tests the update script access and functionality.',
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->update_url = $GLOBALS['base_url'] . '/update.php';
+    $this->update_user = $this->drupalCreateUser(array('administer software updates'));
+  }
+
+  /**
+   * Tests access to the update script.
+   */
+  function testUpdateAccess() {
+    // Try accessing update.php without the proper permission.
+    $regular_user = $this->drupalCreateUser();
+    $this->drupalLogin($regular_user);
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->assertResponse(403);
+
+    // Try accessing update.php as an anonymous user.
+    $this->drupalLogout();
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->assertResponse(403);
+
+    // Access the update page with the proper permission.
+    $this->drupalLogin($this->update_user);
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->assertResponse(200);
+
+    // Access the update page as user 1.
+    $user1 = user_load(1);
+    $user1->pass_raw = user_password();
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+    $user1->pass = user_hash_password(trim($user1->pass_raw));
+    db_query("UPDATE {users} SET pass = :pass WHERE uid = :uid", array(':pass' => $user1->pass, ':uid' => $user1->uid));
+    $this->drupalLogin($user1);
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->assertResponse(200);
   }
 }
