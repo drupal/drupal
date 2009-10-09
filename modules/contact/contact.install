@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.18 2009/10/09 02:34:07 dries Exp $
+// $Id: contact.install,v 1.19 2009/10/09 02:54:10 dries Exp $
 
 /**
  * @file
@@ -63,6 +63,21 @@ function contact_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Implement hook_install().
+ */
+function contact_install() {
+  // Insert a default contact category.
+  db_insert('contact')
+    ->fields(array(
+      'category' => 'Website feedback',
+      'recipients' => variable_get('site_mail', ini_get('sendmail_from')),
+      'selected' => 1,
+      'reply' => '',
+    ))
+    ->execute();
 }
 
 /**
