@@ -414,8 +414,8 @@ function comment_get_recent($number = 10) {
  *   "page=X" if the page number is greater than zero; empty string otherwise.
  */
 function comment_new_page_count($num_comments, $new_replies, $node) {
-  $comments_per_page = _comment_get_display_setting('comments_per_page', $node);
-  $mode = _comment_get_display_setting('mode', $node);
+  $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
+  $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
   $pagenum = NULL;
   $flat = $mode == COMMENT_MODE_FLAT ? TRUE : FALSE;
   if ($num_comments <= $comments_per_page) {
@@ -586,7 +586,9 @@ function comment_node_page_additions($node) {
   // Unpublished comments are not included in $node->comment_count, so show
   // comments unconditionally if the user is an administrator.
   if ($node->comment_count || user_access('administer comments')) {
-    if ($cids = comment_get_thread($node)) {
+    $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
+    $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
+    if ($cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
       $build = comment_build_multiple($comments, $node);
@@ -615,10 +617,14 @@ function comment_node_page_additions($node) {
 }
 
 /**
- * Retrieve comment(s) for a thread.
+ * Retrieve comments for a thread.
  *
  * @param $node
  *   The node whose comment(s) needs rendering.
+ * @param $mode
+ *   The comment display mode; COMMENT_MODE_FLAT or COMMENT_MODE_THREADED.
+ * @param $comments_per_page
+ *   The amount of comments to display per page.
  *
  * To display threaded comments in the correct order we keep a 'thread' field
  * and order by that value. This field keeps this data in
@@ -674,10 +680,7 @@ function comment_node_page_additions($node) {
  * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
  * to consider the trailing "/" so we use a substring only.
  */
- function comment_get_thread($node) {
-  $mode = _comment_get_display_setting('mode', $node);
-  $comments_per_page = _comment_get_display_setting('comments_per_page', $node);
-
+function comment_get_thread($node, $mode, $comments_per_page) {
   $query = db_select('comment', 'c')->extend('PagerDefault');
   $query->addField('c', 'cid');
   $query
@@ -783,7 +786,7 @@ function comment_build($comment, $node, $build_mode = 'full') {
   );
 
   $prefix = '';
-  $is_threaded = isset($comment->divs) && _comment_get_display_setting('mode', $node) == COMMENT_MODE_THREADED;
+  $is_threaded = isset($comment->divs) && variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED) == COMMENT_MODE_THREADED;
 
   // Add 'new' anchor if needed.
   if (!empty($comment->first_new)) {
@@ -2183,7 +2186,7 @@ function theme_comment_post_forbidden($variables) {
 function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.
   $variables['node'] = $variables['content']['#node'];
-  $variables['display_mode'] = _comment_get_display_setting('mode', $variables['node']);
+  $variables['display_mode'] = variable_get('comment_default_mode_' . $variables['node']->type, COMMENT_MODE_THREADED);
   $variables['template_files'][] = 'comment-wrapper-' . $variables['node']->type;
 }
 
@@ -2206,27 +2209,6 @@ function _comment_get_modes() {
  */
 function _comment_per_page() {
   return drupal_map_assoc(array(10, 30, 50, 70, 90, 150, 200, 250, 300));
-}
-
-/**
- * Return a current comment display setting
- *
- * @param $setting
- *   can be one of these: 'mode', 'sort', 'comments_per_page'
- * @param $node
- *   The comment node in question.
- */
-function _comment_get_display_setting($setting, $node) {
-  switch ($setting) {
-    case 'mode':
-      $value = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
-      break;
-
-    case 'comments_per_page':
-      $value = variable_get('comment_default_per_page_' . $node->type, 50);
-  }
-
-  return $value;
 }
 
 /**
