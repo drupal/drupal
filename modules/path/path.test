@@ -183,7 +183,9 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     drupal_static_reset('language_list');
 
     // Set language negotiation to "Path prefix with fallback".
-    variable_set('language_negotiation', LANGUAGE_NEGOTIATION_PATH);
+    include_once DRUPAL_ROOT . '/includes/locale.inc';
+    variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
+    variable_set('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX);
 
     // Force inclusion of language.inc.
     drupal_language_initialize();

@@ -7,138 +7,392 @@
  */
 
 /**
- *  Choose a language for the page, based on language negotiation settings.
+ * No language negotiation. The default language is used.
  */
-function language_initialize() {
-  global $user;
+define('LANGUAGE_NEGOTIATION_DEFAULT', 'language-default');
 
-  // Configured presentation language mode.
-  $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
-  // Get a list of enabled languages.
-  $languages = language_list('enabled');
-  $languages = $languages[1];
+/**
+ * Return all the defined language types.
+ *
+ * @return
+ *   An array of language type names. The name will be used as the global
+ *   variable name the language value will be stored in.
+ */
+function language_types_info() {
+  $language_types = &drupal_static(__FUNCTION__);
 
-  switch ($mode) {
-    case LANGUAGE_NEGOTIATION_NONE:
-      return language_default();
+  if (!isset($language_types)) {
+    $language_types = module_invoke_all('language_types_info');
+    // Let other modules alter the list of language types.
+    drupal_alter('language_types_info', $language_types);
+  }
 
-    case LANGUAGE_NEGOTIATION_DOMAIN:
-      foreach ($languages as $language) {
-        $host = parse_url($language->domain, PHP_URL_HOST);
-        if ($host && ($_SERVER['HTTP_HOST'] == $host)) {
-          return $language;
+  return $language_types;
+}
+
+/**
+ * Return only the configurable language types.
+ *
+ * A language type maybe configurable or fixed. A fixed language type is a type
+ * whose negotiation values are unchangable and defined while defining the
+ * language type itself.
+ *
+ * @return
+ *   An array of language type names.
+ */
+function language_types_configurable() {
+  $configurable = &drupal_static(__FUNCTION__);
+
+  if (!isset($configurable)) {
+    $types = variable_get('language_types', drupal_language_types());
+    $configurable = array_keys(array_filter($types));
+  }
+
+  return $configurable;
+}
+
+/**
+ * Disable the given language types.
+ *
+ * @param $types
+ *   An array of language types.
+ */
+function language_types_disable($types) {
+  $enabled_types = variable_get('language_types', drupal_language_types());
+
+  foreach ($types as $type) {
+    unset($enabled_types[$type]);
+  }
+
+  variable_set('language_types', $enabled_types);
+}
+
+/**
+ * Check if a language provider is enabled.
+ *
+ * This has two possible behaviors:
+ *  - If $provider_id is given return its ID if enabled, FALSE otherwise.
+ *  - If no ID is passed the first enabled language provider is returned.
+ *
+ * @param $type
+ *   The language negotiation type.
+ * @param $provider_id
+ *   The language provider ID.
+ *
+ * @return
+ *   The provider ID if it is enabled, FALSE otherwise.
+ */
+function language_negotiation_get($type, $provider_id = NULL) {
+  $negotiation = variable_get("language_negotiation_$type", array());
+
+  if (empty($negotiation)) {
+    return empty($provider_id) ? LANGUAGE_NEGOTIATION_DEFAULT : FALSE;
+  }
+
+  if (empty($provider_id)) {
+    return key($negotiation);
+  }
+
+  if (isset($negotiation[$provider_id])) {
+    return $provider_id;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Check if the given language provider is enabled for any configurable language
+ * type.
+ *
+ * @param $provider_id
+ *   The language provider ID.
+ *
+ * @return
+ *   TRUE if there is at least one language type for which the give language
+ *   provider is enabled, FALSE otherwise.
+ */
+function language_negotiation_get_any($provider_id) {
+  foreach (language_types_configurable() as $type) {
+    if (language_negotiation_get($type, $provider_id)) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Return the language switch links for the given language.
+ *
+ * @param $type
+ *   The language negotiation type.
+ * @param $path
+ *   The internal path the switch links will be relative to.
+ *
+ * @return
+ *   A keyed array of links ready to be themed.
+ */
+function language_negotiation_get_switch_links($type, $path) {
+  $links = FALSE;
+  $negotiation = variable_get("language_negotiation_$type", array());
+
+  foreach ($negotiation as $id => $provider) {
+    if (isset($provider['callbacks']['switcher'])) {
+      if (isset($provider['file'])) {
+        require_once DRUPAL_ROOT . '/' . $provider['file'];
+      }
+
+      $callback = $provider['callbacks']['switcher'];
+      $result = $callback($type, $path);
+
+      if (!empty($result)) {
+        // Allow modules to provide translations for specific links.
+        drupal_alter('language_switch_links', $result, $type, $path);
+        $links = (object) array('links' => $result, 'provider' => $id);
+        break;
+      }
+    }
+  }
+
+  return $links;
+}
+
+
+/**
+ * Save a list of language providers.
+ *
+ * @param $type
+ *   The language negotiation type.
+ * @param $language_providers
+ *   An array of language provider ids.
+ */
+function language_negotiation_set($type, $language_providers) {
+  // Save only the necessary fields.
+  $provider_fields = array('callbacks', 'file', 'cache');
+
+  $negotiation = array();
+  $providers_weight = array();
+  $defined_providers = language_negotiation_info();
+  $default_types = language_types_configurable();
+
+  // Initialize the providers weight list.
+  foreach ($language_providers as $id => $provider) {
+    $providers_weight[$id] = language_provider_weight($provider);
+  }
+
+  // Order providers list by weight.
+  asort($providers_weight);
+
+  foreach ($providers_weight as $id => $weight) {
+    if (isset($defined_providers[$id])) {
+      $provider = $defined_providers[$id];
+      // If the provider does not express any preference about types, make it
+      // available for any configurable type.
+      $types = array_flip(isset($provider['types']) ? $provider['types'] : $default_types);
+      // Check if the provider is defined and has the right type.
+      if (isset($types[$type])) {
+        $provider_data = array();
+        foreach ($provider_fields as $field) {
+          if (isset($provider[$field])) {
+            $provider_data[$field] = $provider[$field];
+          }
         }
+        $negotiation[$id] = $provider_data;
       }
-      return language_default();
-
-    case LANGUAGE_NEGOTIATION_PATH_DEFAULT:
-    case LANGUAGE_NEGOTIATION_PATH:
-      // $_GET['q'] might not be available at this time, because
-      // path initialization runs after the language bootstrap phase.
-      $args = isset($_GET['q']) ? explode('/', $_GET['q']) : array();
-      $prefix = array_shift($args);
-      // Search prefix within enabled languages.
-      foreach ($languages as $language) {
-        if (!empty($language->prefix) && $language->prefix == $prefix) {
-          // Rebuild $GET['q'] with the language removed.
-          $_GET['q'] = implode('/', $args);
-          return $language;
-        }
-      }
-      if ($mode == LANGUAGE_NEGOTIATION_PATH_DEFAULT) {
-        // If we did not found the language by prefix, choose the default.
-        return language_default();
-      }
-      break;
+    }
   }
 
-  // User language.
-  if ($user->uid && isset($languages[$user->language])) {
-    return $languages[$user->language];
+  variable_set("language_negotiation_$type", $negotiation);
+}
+
+/**
+ * Return all the defined language providers.
+ *
+ * @return
+ *   An array of language providers.
+ */
+function language_negotiation_info() {
+  $language_providers = &drupal_static(__FUNCTION__);
+
+  if (!isset($language_providers)) {
+    // Collect all the module-defined language negotiation providers.
+    $language_providers = module_invoke_all('language_negotiation_info');
+
+    // Add the default language provider.
+    $language_providers[LANGUAGE_NEGOTIATION_DEFAULT] = array(
+      'callbacks' => array('language' => 'language_from_default'),
+      'weight' => 10,
+      'name' => t('Default'),
+      'description' => t('The default site language (@language_name) is used.', array('@language_name' => language_default()->native)),
+    );
+
+    // Let other modules alter the list of language providers.
+    drupal_alter('language_negotiation_info', $language_providers);
   }
 
-  // Browser accept-language parsing.
-  if ($language = language_from_browser()) {
-    return $language;
+  return $language_providers;
+}
+
+/**
+ * Helper function used to cache the language providers results.
+ *
+ * @param $provider_id
+ *   The language provider ID.
+ * @param $provider
+ *   The language provider to be invoked. If not passed it will be explicitly
+ *   loaded through language_negotiation_info().
+ *
+ * @return
+ *   The language provider's return value.
+ */
+function language_provider_invoke($provider_id, $provider = NULL) {
+  $results = &drupal_static(__FUNCTION__);
+
+  if (!isset($results[$provider_id])) {
+    global $user;
+
+    // Get languages grouped by status and select only the enabled ones.
+    $languages = language_list('enabled');
+    $languages = $languages[1];
+
+    if (!isset($provider)) {
+      $providers = language_negotiation_info();
+      $provider = $providers[$provider_id];
+    }
+
+    if (isset($provider['file'])) {
+      require_once DRUPAL_ROOT . '/' . $provider['file'];
+    }
+
+    // If the language provider has no cache preference or this is satisified
+    // we can execute the callback.
+    $cache = !isset($provider['cache']) || $user->uid || $provider['cache'] == variable_get('cache', CACHE_DISABLED);
+    $callback = isset($provider['callbacks']['language']) ? $provider['callbacks']['language'] : FALSE;
+    $langcode = $cache && function_exists($callback) ? $callback($languages) : FALSE;
+    $results[$provider_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
   }
 
-  // Fall back on the default if everything else fails.
+  return $results[$provider_id];
+}
+
+/**
+ * Return the passed language provider weight or a default value.
+ *
+ * @param $provider
+ *   A language provider data structure.
+ *
+ * @return
+ *   A numeric weight.
+ */
+function language_provider_weight($provider) {
+  $default = is_numeric($provider) ? $provider : 0;
+  return isset($provider['weight']) && is_numeric($provider['weight']) ? $provider['weight'] : $default;
+}
+
+/**
+ * Choose a language for the given type based on language negotiation settings.
+ *
+ * @param $type
+ *   The language type.
+ *
+ * @return
+ *   The negotiated language object.
+ */
+function language_initialize($type) {
+  // Execute the language providers in the order they were set up and return the
+  // first valid language found.
+  $negotiation = variable_get("language_negotiation_$type", array());
+
+  foreach ($negotiation as $id => $provider) {
+    $language = language_provider_invoke($id, $provider);
+    if ($language) {
+      return $language;
+    }
+  }
+
+  // If no other language was found use the default one.
   return language_default();
 }
 
 /**
- * Identify language from the Accept-language HTTP header we got.
+ * Default language provider.
+ *
+ * @return
+ *   The default language code.
  */
-function language_from_browser() {
-  // Specified by the user via the browser's Accept Language setting
-  // Samples: "hu, en-us;q=0.66, en;q=0.33", "hu,en-us;q=0.5"
-  $browser_langs = array();
+function language_from_default() {
+  return language_default()->language;
+}
 
-  if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-    $browser_accept = explode(",", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    for ($i = 0; $i < count($browser_accept); $i++) {
-      // The language part is either a code or a code with a quality.
-      // We cannot do anything with a * code, so it is skipped.
-      // If the quality is missing, it is assumed to be 1 according to the RFC.
-      if (preg_match("!([a-z-]+)(;q=([0-9\\.]+))?!", trim($browser_accept[$i]), $found)) {
-        $browser_langs[$found[1]] = (isset($found[3]) ? (float) $found[3] : 1.0);
+/**
+ * Rewrite URLs allowing modules to hook in.
+ *
+ * @param $path
+ *   The path to rewrite.
+ * @param $options
+ *   An associative array of additional options as in url().
+ */
+function language_url_rewrite(&$path, &$options) {
+  // Only modify relative (insite) URLs.
+  if (!$options['external']) {
+    static $callbacks;
+
+    if (!isset($callbacks)) {
+      $callbacks = array();
+
+      foreach (language_types_configurable() as $type) {
+        // Get url rewriter callbacks only from enabled language providers.
+        $negotiation = variable_get("language_negotiation_$type", array());
+
+        foreach ($negotiation as $id => $provider) {
+          if (isset($provider['file'])) {
+            require_once DRUPAL_ROOT . '/' . $provider['file'];
+          }
+
+          // Avoid duplicate callback entries.
+          if (isset($provider['callbacks']['url_rewrite'])) {
+            $callbacks[$provider['callbacks']['url_rewrite']] = NULL;
+          }
+        }
       }
+
+      $callbacks = array_keys($callbacks);
     }
-  }
 
-  // Order the codes by quality
-  arsort($browser_langs);
-
-  // Try to find the first preferred language we have
-  $languages = language_list('enabled');
-  foreach ($browser_langs as $langcode => $q) {
-    if (isset($languages['1'][$langcode])) {
-      return $languages['1'][$langcode];
+    foreach ($callbacks as $callback) {
+      $callback($path, $options);
     }
   }
 }
 
 /**
- * Rewrite URLs with language based prefix. Parameters are the same
- * as those of the url() function.
+ * Split the given path into prefix and actual path.
+ *
+ * Parse the given path and return the language object identified by the
+ * prefix and the actual path.
+ *
+ * @param $path
+ *   The path to split.
+ * @param $languages
+ *   An array of valid languages.
+ *
+ * @return
+ *   An array composed of:
+ *    - A language object corresponding to the identified prefix on success,
+ *      FALSE otherwise.
+ *    - The path without the prefix on success, the given path otherwise.
  */
-function language_url_rewrite(&$path, &$options) {
-  global $language;
+function language_url_split_prefix($path, $languages) {
+  $args = empty($path) ? array() : explode('/', $path);
+  $prefix = array_shift($args);
 
-  // Only modify relative (insite) URLs.
-  if (!$options['external']) {
-
-    // Language can be passed as an option, or we go for current language.
-    if (!isset($options['language'])) {
-      $options['language'] = $language;
-    }
-
-    switch (variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
-      case LANGUAGE_NEGOTIATION_NONE:
-        // No language dependent path allowed in this mode.
-        unset($options['language']);
-        break;
-
-      case LANGUAGE_NEGOTIATION_DOMAIN:
-        if ($options['language']->domain) {
-          // Ask for an absolute URL with our modified base_url.
-          $options['absolute'] = TRUE;
-          $options['base_url'] = $options['language']->domain;
-        }
-        break;
-
-      case LANGUAGE_NEGOTIATION_PATH_DEFAULT:
-        $default = language_default();
-        if ($options['language']->language == $default->language) {
-          break;
-        }
-        // Intentionally no break here.
-
-      case LANGUAGE_NEGOTIATION_PATH:
-        if (!empty($options['language']->prefix)) {
-          $options['prefix'] = $options['language']->prefix . '/';
-        }
-        break;
+  // Search prefix within enabled languages.
+  foreach ($languages as $language) {
+    if (!empty($language->prefix) && $language->prefix == $prefix) {
+      // Rebuild $path with the language removed.
+      return array($language, implode('/', $args));
     }
   }
+
+  return array(FALSE, $path);
 }

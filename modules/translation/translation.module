@@ -170,23 +170,17 @@ function translation_form_alter(&$form, &$form_state, $form_id) {
  */
 function translation_node_view($node, $build_mode) {
   if (isset($node->tnid) && $translations = translation_node_get_translations($node->tnid)) {
-    // Do not show link to the same node.
-    unset($translations[$node->language]);
-    $languages = language_list();
-    foreach ($languages as $langcode => $language) {
-      if (isset($translations[$langcode])) {
-        $links["node_translation_$langcode"] = array(
-          'title' => $language->native,
-          'href' => 'node/' . $translations[$langcode]->nid,
-          'language' => $language,
-          'attributes' => array('title' => $translations[$langcode]->title, 'class' => array('translation-link')),
-        );
-        $node->content['links']['translation'] = array(
-          '#theme' => 'links',
-          '#links' => $links,
-          '#attributes' => array('class' => array('links', 'inline')),
-        );
-      }
+    $path = 'node/' . $node->nid;
+    $links = language_negotiation_get_switch_links(LANGUAGE_TYPE_CONTENT, $path);
+    if (is_object($links)) {
+      $links = $links->links;
+      // Do not show link to the same node.
+      unset($links[$node->language]);
+      $node->content['links']['translation'] = array(
+        '#theme' => 'links',
+        '#links' => $links,
+        '#attributes' => array('class' => array('links', 'inline')),
+      );
     }
   }
 }
@@ -407,12 +401,12 @@ function translation_path_get_translations($path) {
 }
 
 /**
- * Implement hook_translation_link_alter().
+ * Implement hook_language_switch_link_alter().
  *
  * Replaces links with pointers to translated versions of the content.
  */
-function translation_translation_link_alter(array &$links, $path) {
-  if ($paths = translation_path_get_translations($path)) {
+function translation_language_switch_links_alter(array &$links, $type, $path) {
+  if ($type == LANGUAGE_TYPE_CONTENT && $paths = translation_path_get_translations($path)) {
     foreach ($links as $langcode => $link) {
       if (isset($paths[$langcode])) {
         // Translation in a different node.

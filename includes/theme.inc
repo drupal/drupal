@@ -1397,7 +1397,7 @@ function theme_links($variables) {
   $links = $variables['links'];
   $attributes = $variables['attributes'];
   $heading = $variables['heading'];
-  global $language;
+  global $language_url;
   $output = '';
 
   if (count($links) > 0) {
@@ -1438,7 +1438,7 @@ function theme_links($variables) {
         $class[] = 'last';
       }
       if (isset($link['href']) && ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()))
-          && (empty($link['language']) || $link['language']->language == $language->language)) {
+          && (empty($link['language']) || $link['language']->language == $language_url->language)) {
         $class[] = 'active';
       }
       $output .= '<li' . drupal_attributes(array('class' => $class)) . '>';

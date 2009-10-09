@@ -1138,6 +1138,52 @@ function node_build_content($node, $build_mode = 'full') {
 }
 
 /**
+ * Implement hook_language_negotiation_info().
+ */
+function node_language_negotiation_info() {
+  $providers = array();
+
+  $providers['node-language'] = array(
+    'types' => array(LANGUAGE_TYPE_CONTENT),
+    'callbacks' => array('language' => 'node_language_provider'),
+    'file' => drupal_get_path('module', 'node') . '/node.module',
+    'name' => t('Node'),
+    'description' => t('The current node language is used.'),
+  );
+
+  return $providers;
+}
+
+/**
+ * Return the language of the current node.
+ *
+ * @param $languages
+ *   An array of valid language objects.
+ *
+ * @return
+ *   A valid language code on succes, FALSE otherwise.
+ */
+function node_language_provider($languages) {
+  require_once DRUPAL_ROOT . '/includes/path.inc';
+
+  $path = isset($_GET['q']) ? $_GET['q'] : '';
+  list($language, $path) = language_url_split_prefix($path, $languages);
+  $language = $language ? $language : language_default();
+  $path = drupal_get_normal_path($path, $language->language);
+
+  // We cannot use args now.
+  $path = explode('/', $path);
+  // Act only if we are in a node page.
+  if ($path[0] == 'node' && $nid = intval($path[1])) {
+    // We cannot perform a node load here.
+    $result = db_query('SELECT n.language FROM {node} n WHERE n.nid = :nid', array(':nid' => $nid))->fetchAssoc();
+    return $result['language'];
+  }
+
+  return FALSE;
+}
+
+/**
  * Generate an array which displays a node detail page.
  *
  * @param $node

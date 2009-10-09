@@ -154,27 +154,19 @@ define('DRUPAL_AUTHENTICATED_RID', 2);
 define('DRUPAL_KILOBYTE', 1024);
 
 /**
- * No language negotiation. The default language is used.
+ * The type of language used to define the content language.
  */
-define('LANGUAGE_NEGOTIATION_NONE', 0);
+define('LANGUAGE_TYPE_CONTENT', 'language');
 
 /**
- * Path based negotiation with fallback to default language if no defined path
- * prefix identified.
+ * The type of language used to select the user interface.
  */
-define('LANGUAGE_NEGOTIATION_PATH_DEFAULT', 1);
+define('LANGUAGE_TYPE_INTERFACE', 'language_interface');
 
 /**
- * Path based negotiation with fallback to user preferences and browser
- * language detection if no defined path prefix identified.
+ * The type of language used for URLs.
  */
-define('LANGUAGE_NEGOTIATION_PATH', 2);
-
-/**
- * Domain based negotiation with fallback to default language if no language
- * identified by domain.
- */
-define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
+define('LANGUAGE_TYPE_URL', 'language_url');
 
 /**
  * Language written left to right. Possible value of $language->direction.
@@ -1628,20 +1620,47 @@ function get_t() {
 }
 
 /**
- *  Choose a language for the current page, based on site and user preferences.
+ * Initialize all the defined language types.
  */
 function drupal_language_initialize() {
-  global $language, $user;
+  $types = language_types();
 
   // Ensure the language is correctly returned, even without multilanguage support.
   // Useful for eg. XML/HTML 'lang' attributes.
   if (variable_get('language_count', 1) == 1) {
-    $language = language_default();
+    $default = language_default();
+    foreach ($types as $type) {
+      $GLOBALS[$type] = $default;
+    }
   }
   else {
     include_once DRUPAL_ROOT . '/includes/language.inc';
-    $language = language_initialize();
+    foreach ($types as $type) {
+      $GLOBALS[$type] = language_initialize($type);
+    }
   }
+}
+
+/**
+ * The built-in language types.
+ *
+ * @return
+ *   An array of key-values pairs where the key is the language type and the
+ *   value is its configurability.
+ */
+function drupal_language_types() {
+  return array(
+    LANGUAGE_TYPE_CONTENT => TRUE,
+    LANGUAGE_TYPE_INTERFACE => TRUE,
+    LANGUAGE_TYPE_URL => FALSE,
+  );
+}
+
+/**
+ * Return an array of the available language types.
+ */
+function language_types() {
+  return array_keys(variable_get('language_types', drupal_language_types()));
 }
 
 /**

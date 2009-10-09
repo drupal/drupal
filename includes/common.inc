@@ -393,6 +393,26 @@ function drupal_get_query_parameters(array $query = NULL, array $exclude = array
 }
 
 /**
+ * Split an URL-encoded query string into an array.
+ *
+ * @param $query
+ *   The query string to split.
+ *
+ * @return
+ *   An array of url decoded couples $param_name => $value.
+ */
+function drupal_get_query_array($query) {
+  $result = array();
+  if (!empty($query)) {
+    foreach (explode('&', $query) as $param) {
+      $param = explode('=', $param);
+      $result[$param[0]] = isset($param[1]) ? rawurldecode($param[1]) : '';
+    }
+  }
+  return $result;
+}
+
+/**
  * Parse an array into a valid, rawurlencoded query string.
  *
  * This differs from http_build_query() as we need to rawurlencode() (instead of
@@ -1455,12 +1475,12 @@ function fix_gpc_magic() {
  *   The translated string.
  */
 function t($string, array $args = array(), array $options = array()) {
-  global $language;
+  global $language_interface;
   static $custom_strings;
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = isset($language->language) ? $language->language : 'en';
+    $options['langcode'] = isset($language_interface->language) ? $language_interface->language : 'en';
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -2438,7 +2458,8 @@ function url($path = NULL, array $options = array()) {
     $path = '';
   }
   elseif (!empty($path) && !$options['alias']) {
-    $path = drupal_get_path_alias($path, isset($options['language']) ? $options['language']->language : '');
+    $language = isset($options['language']) && isset($options['language']->language) ? $options['language']->language : '';
+    $path = drupal_get_path_alias($path, $language);
   }
 
   if (function_exists('custom_url_rewrite_outbound')) {
@@ -2546,7 +2567,7 @@ function drupal_attributes(array $attributes = array()) {
  *   an HTML string containing a link to the given path.
  */
 function l($text, $path, array $options = array()) {
-  global $language;
+  global $language_url;
 
   // Merge in defaults.
   $options += array(
@@ -2556,7 +2577,7 @@ function l($text, $path, array $options = array()) {
 
   // Append active class.
   if (($path == $_GET['q'] || ($path == '<front>' && drupal_is_front_page())) &&
-      (empty($options['language']) || $options['language']->language == $language->language)) {
+      (empty($options['language']) || $options['language']->language == $language_url->language)) {
     $options['attributes']['class'][] = 'active';
   }
 

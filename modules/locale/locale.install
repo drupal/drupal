@@ -41,6 +41,47 @@ function locale_update_7000() {
 }
 
 /**
+ * Upgrade language negotiation settings.
+ */
+function locale_update_7001() {
+  require_once DRUPAL_ROOT . '/includes/language.inc';
+
+  switch (variable_get('language_negotiation', 0)) {
+    // LANGUAGE_NEGOTIATION_NONE.
+    case 0:
+      $negotiation = array();
+      break;
+
+    // LANGUAGE_NEGOTIATION_PATH_DEFAULT.
+    case 1:
+      $negotiation = array(LOCALE_LANGUAGE_NEGOTIATION_URL);
+      break;
+
+    // LANGUAGE_NEGOTIATION_PATH.
+    case 2:
+      $negotiation = array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_USER, LOCALE_LANGUAGE_NEGOTIATION_BROWSER);
+      break;
+
+    // LANGUAGE_NEGOTIATION_DOMAIN.
+    case 3:
+      variable_set('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN);
+      $negotiation = array(LOCALE_LANGUAGE_NEGOTIATION_URL);
+      break;
+  }
+
+  // Save new language negotiation options: UI language is tied to content
+  // language as this was Drupal 6 behavior.
+  language_negotiation_set(LANGUAGE_TYPE_CONTENT, array_flip($negotiation));
+  language_negotiation_set(LANGUAGE_TYPE_INTERFACE, array(LOCALE_LANGUAGE_NEGOTIATION_CONTENT => 0));
+  language_negotiation_set(LANGUAGE_TYPE_URL, array(LOCALE_LANGUAGE_NEGOTIATION_URL => 0));
+
+  // Unset the old language negotiation system variable.
+  variable_del('language_negotiation');
+
+  return array();
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  */
 
@@ -62,15 +103,23 @@ function locale_uninstall() {
   // Clear variables.
   variable_del('language_default');
   variable_del('language_count');
-  variable_del('language_negotiation');
-  variable_del('javascript_parsed');
+  variable_del('language_types');
+  variable_del('locale_language_negotiation_url_part');
+  variable_del('locale_language_negotiation_session_param');
   variable_del('language_content_type_default');
   variable_del('language_content_type_negotiation');
   variable_del('locale_cache_strings');
   variable_del('locale_js_directory');
+  variable_del('javascript_parsed');
+
+  foreach (language_types() as $type) {
+    variable_del("language_negotiation_$type");
+    variable_del("locale_language_providers_enabled_$type");
+    variable_del("locale_language_providers_weight_$type");
+  }
 
   foreach (node_type_get_types() as $type => $content_type) {
-    $setting = variable_del('language_content_type_' . $type);
+    $setting = variable_del("language_content_type_$type");
   }
 
   // Switch back to English: with a $language->language value different from 'en'

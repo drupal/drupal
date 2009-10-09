@@ -910,11 +910,11 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
   /**
    * The default language set for the UI before uninstall.
    */
-  protected $ui_language;
+  protected $language_interface;
 
   function setUp() {
     parent::setUp('locale');
-    $this->ui_language = 'en';
+    $this->language_interface = 'en';
   }
 
   /**
@@ -925,15 +925,12 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Add a new language and optionally set it as default.
     require_once DRUPAL_ROOT . '/includes/locale.inc';
-    locale_add_language('fr', 'French', 'Français', LANGUAGE_LTR, '', '', TRUE, $this->ui_language == 'fr');
+    locale_add_language('fr', 'French', 'Français', LANGUAGE_LTR, '', '', TRUE, $this->language_interface == 'fr');
 
     // Check the UI language.
     drupal_language_initialize();
-    global $language;
-    $this->assertEqual($language->language, $this->ui_language, t('Current language: %lang', array('%lang' => $language->language)));
-
-    // Change language negotiation options.
-    variable_set('language_negotiation', LANGUAGE_NEGOTIATION_PATH_DEFAULT);
+    global $language_interface;
+    $this->assertEqual($language_interface->language, $this->language_interface, t('Current language: %lang', array('%lang' => $language_interface->language)));
 
     // Enable multilingual workflow option for articles.
     variable_set('language_content_type_article', 1);
@@ -959,6 +956,17 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     // Disable string caching.
     variable_set('locale_cache_strings', 0);
 
+    // Change language negotiation options.
+    drupal_load('module', 'locale');
+    variable_set('language_types', drupal_language_types() + array('language_custom' => TRUE));
+    variable_set('language_negotiation_' . LANGUAGE_TYPE_INTERFACE, locale_language_negotiation_info());
+    variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
+    variable_set('language_negotiation_' . LANGUAGE_TYPE_URL, locale_language_negotiation_info());
+
+    // Change language providers settings.
+    variable_set('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX);
+    variable_set('locale_language_negotiation_session_param', TRUE);
+
     // Uninstall Locale.
     module_disable($locale_module);
     drupal_uninstall_modules($locale_module);
@@ -968,7 +976,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check the init language logic.
     drupal_language_initialize();
-    $this->assertEqual($language->language, 'en', t('Language after uninstall: %lang', array('%lang' => $language->language)));
+    $this->assertEqual($language_interface->language, 'en', t('Language after uninstall: %lang', array('%lang' => $language_interface->language)));
 
     // Check JavaScript files deletion.
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
@@ -978,8 +986,17 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     $this->assertEqual($language_count, 1, t('Language count: %count', array('%count' => $language_count)));
 
     // Check language negotiation.
-    $language_negotiation = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE) == LANGUAGE_NEGOTIATION_NONE;
-    $this->assertTrue($language_negotiation, t('Language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+    $this->assertTrue(count(language_types()) == count(drupal_language_types()), t('Language types reset'));
+    $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_DEFAULT;
+    $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+    $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_CONTENT) == LANGUAGE_NEGOTIATION_DEFAULT;
+    $this->assertTrue($language_negotiation, t('Content language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+    $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_URL) == LANGUAGE_NEGOTIATION_DEFAULT;
+    $this->assertTrue($language_negotiation, t('URL language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+
+    // Check language providers settings.
+    $this->assertFalse(variable_get('locale_language_negotiation_url_part', FALSE), t('URL language provider indicator settings cleared.'));
+    $this->assertFalse(variable_get('locale_language_negotiation_session_param', FALSE), t('Visit language provider settings cleared.'));
 
     // Check JavaScript parsed.
     $javascript_parsed_count = count(variable_get('javascript_parsed', array()));
@@ -1011,14 +1028,14 @@ class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest 
   public static function getInfo() {
     return array(
       'name' => 'Locale uninstall (FR)',
-      'description' => 'Tests the uninstall process using French as UI language.',
+      'description' => 'Tests the uninstall process using French as interface language.',
       'group' => 'Locale',
     );
   }
 
   function setUp() {
     parent::setUp();
-    $this->ui_language = 'fr';
+    $this->language_interface = 'fr';
   }
 }
 
@@ -1050,7 +1067,7 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
   function testLanguageBlock() {
     // Enable the language switching block.
     $edit = array(
-      'locale_language-switcher[region]' => 'sidebar_first',
+      'locale_language[region]' => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
@@ -1061,18 +1078,16 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set language negotiation.
-    $edit = array(
-      'language_negotiation' => LANGUAGE_NEGOTIATION_PATH_DEFAULT,
-    );
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
+    drupal_load('module', 'locale');
+    include_once DRUPAL_ROOT . '/includes/language.inc';
+    language_negotiation_set(LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
 
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
     $this->assertText(t('Languages'), t('Language switcher block found.'));
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id="block-locale-language-switcher"]');
+    list($language_switcher) = $this->xpath('//div[@id="block-locale-language"]');
     $links = array(
       'active' => array(),
       'inactive' => array(),
@@ -1243,10 +1258,8 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Set language negotiation.
-    $edit = array(
-      'language_negotiation' => LANGUAGE_NEGOTIATION_PATH_DEFAULT,
-    );
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    drupal_load('module', 'locale');
+    variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
 
     // Create a node.
     $node = $this->drupalCreateNode(array('type' => 'page'));
@@ -1352,12 +1365,6 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost($path, $edit, t('Save configuration'));
 
-    // Set language negotiation.
-    $edit = array(
-      'language_negotiation' => LANGUAGE_NEGOTIATION_PATH_DEFAULT,
-    );
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
-
     // Set page content type to use multilingual support.
     $this->drupalGet('admin/structure/types/manage/page');
     $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
@@ -1412,7 +1419,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
 
 /**
  * Test UI language negotiation
- * 1. LANGUAGE_NEGOTIATION_PATH_DEFAULT
+ * 1. URL (PATH) > DEFAULT
  *    UI Language base on URL prefix, browser language preference has no
  *    influence:
  *      admin/config
@@ -1421,7 +1428,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
  *        UI in Chinese
  *      blah-blah/admin/config
  *        404
- * 2. LANGUAGE_NEGOTIATION_PATH
+ * 2. URL (PATH) > BROWSER > DEFAULT
  *        admin/config
  *          UI in user's browser language preference if the site has that
  *          language enabled, if not, the default language
@@ -1429,7 +1436,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
  *          UI in Chinese
  *        blah-blah/admin/config
  *          404
- * 3. LANGUAGE_NEGOTIATION_DOMAIN
+ * 3. URL (DOMAIN) > DEFAULT
  *        http://example.com/admin/config
  *          UI language in site default
  *        http://example.cn/admin/config
@@ -1446,6 +1453,8 @@ class UILanguageNegotiationTest extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('locale', 'locale_test');
+    require_once DRUPAL_ROOT . '/includes/language.inc';
+    drupal_load('module', 'locale');
   }
 
   /**
@@ -1505,46 +1514,49 @@ class UILanguageNegotiationTest extends DrupalWebTestCase {
     );
     $this->drupalPost(NULL, $edit, t('Save translations'));
 
+    // Configure URL language rewrite.
+    variable_set('locale_language_negotiation_url_type', LANGUAGE_TYPE_INTERFACE);
+
     $tests = array(
       // Default, browser preference should have no influence.
       array(
-        'language_negotiation' => LANGUAGE_NEGOTIATION_PATH_DEFAULT,
+        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
         'http_header' => $http_header_browser_fallback,
-        'message' => 'LANGUAGE_NEGOTIATION_PATH_DEFAULT: no language prefix, UI language is default and not the browser language preference setting is used.',
+        'message' => 'URL (PATH) > DEFAULT: no language prefix, UI language is default and the browser language preference setting is not used.',
       ),
       // Language prefix.
       array(
-        'language_negotiation' => LANGUAGE_NEGOTIATION_PATH_DEFAULT,
+        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => "$language/admin/config",
         'expect' => $language_string,
         'http_header' => $http_header_browser_fallback,
-        'message' => 'LANGUAGE_NEGOTIATION_PATH_DEFAULT: with language prefix, UI language is switched based on path prefix',
+        'message' => 'URL (PATH) > DEFAULT: with language prefix, UI language is switched based on path prefix',
       ),
       // Default, go by browser preference.
       array(
-        'language_negotiation' => LANGUAGE_NEGOTIATION_PATH,
+        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
         'path' => 'admin/config',
         'expect' => $language_browser_fallback_string,
         'http_header' => $http_header_browser_fallback,
-        'message' => 'LANGUAGE_NEGOTIATION_PATH: no language prefix, UI language is determined by browser language preference',
+        'message' => 'URL (PATH) > BROWSER: no language prefix, UI language is determined by browser language preference',
       ),
       // Prefix, switch to the language.
       array(
-        'language_negotiation' => LANGUAGE_NEGOTIATION_PATH,
+        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
         'path' => "$language/admin/config",
         'expect' => $language_string,
         'http_header' => $http_header_browser_fallback,
-        'message' => 'LANGUAGE_NEGOTIATION_PATH: with langage prefix, UI language is based on path prefix',
+        'message' => 'URL (PATH) > BROWSER: with langage prefix, UI language is based on path prefix',
       ),
       // Default, browser language preference is not one of site's lang.
       array(
-        'language_negotiation' => LANGUAGE_NEGOTIATION_PATH,
+        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
         'http_header' => $http_header_blah,
-        'message' => 'LANGUAGE_NEGOTIATION_PATH: no language prefix and browser language preference set to unknown language should use default language',
+        'message' => 'URL (PATH) > BROWSER > DEFAULT: no language prefix and browser language preference set to unknown language should use default language',
       ),
     );
 
@@ -1553,35 +1565,36 @@ class UILanguageNegotiationTest extends DrupalWebTestCase {
     }
 
     // Unknown language prefix should return 404.
-    foreach(array(LANGUAGE_NEGOTIATION_PATH_DEFAULT, LANGUAGE_NEGOTIATION_PATH) as $negotiation) {
-      variable_set('language_negotiation', $negotiation);
-      $this->drupalGet("$language_unknown/admin/config", array(), $http_header_browser_fallback);
-      $this->assertResponse(404, "Unknown language path prefix should return 404, code = $negotiation");
-    }
+    variable_set('language_negotiation_' . LANGUAGE_TYPE_INTERFACE, locale_language_negotiation_info());
+    $this->drupalGet("$language_unknown/admin/config", array(), $http_header_browser_fallback);
+    $this->assertResponse(404, "Unknown language path prefix should return 404");
 
     // Setup for domain negotiation, first configure the language to have domain
     // URL.
     $edit = array('prefix' => '', 'domain' => "http://$language_domain");
     $this->drupalPost("admin/config/regional/language/edit/$language", $edit, t('Save language'));
     // Set the site to use domain language negotiation.
-    variable_set('language_negotiation', LANGUAGE_NEGOTIATION_DOMAIN);
 
     $tests = array(
       // Default domain, browser preference should have no influence.
       array(
+        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'locale_language_negotiation_url_part' => LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
         'path' => 'admin/config',
         'expect' => $default_string,
         'http_header' => $http_header_browser_fallback,
-        'message' => 'LANGUAGE_NEGOTIATION_DOMAIN: default domain should get default language',
+        'message' => 'URL (DOMAIN) > DEFAULT: default domain should get default language',
       ),
       // Language domain specific URL, we set the $_SERVER['HTTP_HOST'] in
       // locale_test.module hook_boot() to simulate this.
       array(
+        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'locale_language_negotiation_url_part' => LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
         'locale_test_domain' => $language_domain,
         'path' => 'admin/config',
         'expect' => $language_string,
         'http_header' => $http_header_browser_fallback,
-        'message' => 'LANGUAGE_NEGOTIATION_DOMAIN: domain example.cn should switch to Chinese',
+        'message' => 'URL (DOMAIN) > DEFAULT: domain example.cn should switch to Chinese',
       ),
     );
 
@@ -1592,7 +1605,11 @@ class UILanguageNegotiationTest extends DrupalWebTestCase {
 
   private function runTest($test) {
     if (!empty($test['language_negotiation'])) {
-      variable_set('language_negotiation', $test['language_negotiation']);
+      $negotiation = array_flip($test['language_negotiation']);
+      language_negotiation_set(LANGUAGE_TYPE_INTERFACE, $negotiation);
+    }
+    if (!empty($test['locale_language_negotiation_url_part'])) {
+      variable_set('locale_language_negotiation_url_part', $test['locale_language_negotiation_url_part']);
     }
     if (!empty($test['locale_test_domain'])) {
       variable_set('locale_test_domain', $test['locale_test_domain']);
