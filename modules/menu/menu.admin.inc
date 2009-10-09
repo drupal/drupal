@@ -42,6 +42,7 @@ function theme_menu_admin_overview($variables) {
  */
 function menu_overview_form($form, &$form_state, $menu) {
   global $menu_admin;
+  $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/menu.css');
   $sql = "
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
@@ -91,10 +92,6 @@ function _menu_overview_tree_form($tree) {
       $form[$mlid]['hidden'] = array(
         '#type' => 'checkbox',
         '#default_value' => !$item['hidden'],
-      );
-      $form[$mlid]['expanded'] = array(
-        '#type' => 'checkbox',
-        '#default_value' => $item['expanded'],
       );
       $form[$mlid]['weight'] = array(
         '#type' => 'weight',
@@ -154,7 +151,7 @@ function menu_overview_form_submit($form, &$form_state) {
   $form = array_merge($order, $form); // Update our original form with the new order.
 
   $updated_items = array();
-  $fields = array('expanded', 'weight', 'plid');
+  $fields = array('weight', 'plid');
   foreach (element_children($form) as $mlid) {
     if (isset($form[$mlid]['#item'])) {
       $element = $form[$mlid];
@@ -195,7 +192,6 @@ function theme_menu_overview_form($variables) {
   $header = array(
     t('Menu link'),
     array('data' => t('Enabled'), 'class' => array('checkbox')),
-    array('data' => t('Show as expanded'), 'class' => array('checkbox')),
     t('Weight'),
     array('data' => t('Operations'), 'colspan' => '3'),
   );
@@ -207,7 +203,7 @@ function theme_menu_overview_form($variables) {
       // Build a list of operations.
       $operations = array();
       foreach (element_children($element['operations']) as $op) {
-        $operations[] = drupal_render($element['operations'][$op]);
+        $operations[] = array('data' => drupal_render($element['operations'][$op]), 'class' => array('menu-operations'));
       }
       while (count($operations) < 2) {
         $operations[] = '';
@@ -223,8 +219,7 @@ function theme_menu_overview_form($variables) {
 
       $row = array();
       $row[] = theme('indentation', array('size' => $element['#item']['depth'] - 1)) . drupal_render($element['title']);
-      $row[] = array('data' => drupal_render($element['hidden']), 'class' => array('checkbox'));
-      $row[] = array('data' => drupal_render($element['expanded']), 'class' => array('checkbox'));
+      $row[] = array('data' => drupal_render($element['hidden']), 'class' => array('checkbox', 'menu-enabled'));
       $row[] = drupal_render($element['weight']) . drupal_render($element['plid']) . drupal_render($element['mlid']);
       $row = array_merge($row, $operations);
 
