@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.192 2009/09/30 18:36:01 dries Exp $
+// $Id: file.inc,v 1.193 2009/10/09 00:59:54 dries Exp $
 
 /**
  * @file
@@ -1162,7 +1162,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   if (!empty($errors)) {
     $message = t('The specified file %name could not be uploaded.', array('%name' => $file->filename));
     if (count($errors) > 1) {
-      $message .= theme('item_list', $errors);
+      $message .= theme('item_list', array('items' => $errors));
     }
     else {
       $message .= ' ' . array_pop($errors);

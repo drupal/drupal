@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.20 2009/09/21 07:56:08 dries Exp $
+// $Id: profile.pages.inc,v 1.21 2009/10/09 01:00:02 dries Exp $
 
 /**
  * @file
@@ -71,13 +71,13 @@ function profile_browse() {
     $content = '';
     foreach ($users as $account) {
       $profile = _profile_update_user_fields($fields, $account);
-      $content .= theme('profile_listing', $account, $profile);
+      $content .= theme('profile_listing', array('account' => $account, 'fields' => $profile));
     }
-    $output = theme('profile_wrapper', $content);
-    $output .= theme('pager', NULL);
+    $output = theme('profile_wrapper', array('content' => $content));
+    $output .= theme('pager', array('tags' => NULL));
 
     if ($field->type == 'selection' || $field->type == 'list' || $field->type == 'textfield') {
-      $title = strtr(check_plain($field->page), array('%value' => theme('placeholder', $value)));
+      $title = strtr(check_plain($field->page), array('%value' => theme('placeholder', array('text' => $value))));
     }
     else {
       $title = check_plain($field->page);
@@ -108,10 +108,10 @@ function profile_browse() {
     $content = '';
     foreach ($users as $account) {
       $profile = _profile_update_user_fields($fields, $account);
-      $content .= theme('profile_listing', $account, $profile);
+      $content .= theme('profile_listing', array('account' => $account, 'fields' => $profile));
     }
-    $output = theme('profile_wrapper', $content);
-    $output .= theme('pager', NULL);
+    $output = theme('profile_wrapper', array('content' => $content));
+    $output .= theme('pager', array('tags' => NULL));
 
     drupal_set_title(t('User list'));
     return $output;

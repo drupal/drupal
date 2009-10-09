@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.16 2009/09/18 00:12:47 webchick Exp $
+// $Id: search.api.php,v 1.17 2009/10/09 01:00:02 dries Exp $
 
 /**
  * @file
@@ -192,7 +192,7 @@ function hook_search_execute($keys = NULL) {
       'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
       'type' => check_plain(node_type_get_name($node)),
       'title' => $node->title,
-      'user' => theme('username', $node),
+      'user' => theme('username', array('account' => $node)),
       'date' => $node->changed,
       'node' => $node,
       'extra' => $extra,

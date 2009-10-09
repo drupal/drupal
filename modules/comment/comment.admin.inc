@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.32 2009/09/18 00:12:45 webchick Exp $
+// $Id: comment.admin.inc,v 1.33 2009/10/09 00:59:56 dries Exp $
 
 /**
  * @file
@@ -87,7 +87,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
   foreach ($result as $comment) {
     $options[$comment->cid] = array(
       'subject' => l($comment->subject, 'comment/' . $comment->cid, array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid)),
-      'author' => theme('username', $comment),
+      'author' => theme('username', array('account' => $comment)),
       'posted_in' => l($comment->node_title, 'node/' . $comment->nid),
       'time' => format_date($comment->timestamp, 'short'),
       'operations' => l(t('edit'), 'comment/edit/' . $comment->cid, array('query' => $destination)),

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.parser.inc,v 1.4 2009/07/15 21:32:43 dries Exp $
+// $Id: aggregator.parser.inc,v 1.5 2009/10/09 00:59:55 dries Exp $
 
 /**
  * @file
@@ -37,7 +37,7 @@ function aggregator_aggregator_parse($feed) {
     }
 
     if (!empty($image['link']) && !empty($image['url']) && !empty($image['title'])) {
-      $image = l(theme('image', $image['url'], $image['title']), $image['link'], array('html' => TRUE));
+      $image = l(theme('image', array('path' => $image['url'], 'alt' => $image['title'])), $image['link'], array('html' => TRUE));
     }
     else {
       $image = '';

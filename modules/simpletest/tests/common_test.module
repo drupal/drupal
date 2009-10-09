@@ -1,5 +1,5 @@
 <?php
-// $Id: common_test.module,v 1.3 2009/09/05 13:05:30 dries Exp $
+// $Id: common_test.module,v 1.4 2009/10/09 01:00:03 dries Exp $
 
 /**
  * @file
@@ -84,8 +84,8 @@ function common_test_theme() {
 /**
  * Theme function for testing drupal_render() theming.
  */
-function theme_common_test_foo($foo, $bar) {
-  return $foo . $bar;
+function theme_common_test_foo($variables) {
+  return $variables['foo'] . $variables['bar'];
 }
 
 /**

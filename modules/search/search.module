@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.318 2009/09/21 06:44:14 dries Exp $
+// $Id: search.module,v 1.319 2009/10/09 01:00:02 dries Exp $
 
 /**
  * @file
@@ -965,7 +965,7 @@ function search_data($keys = NULL, $type = 'node') {
           return module_invoke($type, 'search_page', $results);
         }
         else {
-          return theme('search_results', $results, $type);
+          return theme('search_results', array('results' => $results, 'type' => $type));
         }
       }
     }

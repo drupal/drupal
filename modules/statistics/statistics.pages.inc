@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.pages.inc,v 1.16 2009/08/25 10:27:15 dries Exp $
+// $Id: statistics.pages.inc,v 1.17 2009/10/09 01:00:04 dries Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ function statistics_node_tracker() {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
         _statistics_link($log->url),
-        theme('username', $log),
+        theme('username', array('account' => $log)),
         l(t('details'), "admin/reports/access/$log->aid"),
       );
     }

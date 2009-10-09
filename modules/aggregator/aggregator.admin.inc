@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.43 2009/09/18 00:12:45 webchick Exp $
+// $Id: aggregator.admin.inc,v 1.44 2009/10/09 00:59:55 dries Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@ function aggregator_view() {
   if (empty($rows)) {
     $rows[] = array(array('data' => t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => url('admin/content/aggregator/add/feed'))), 'colspan' => '5', 'class' => array('message')));
   }
-  $output .= theme('table', $header, $rows);
+  $output .= theme('table', array('header' => $header, 'rows' => $rows));
 
   $result = db_query('SELECT c.cid, c.title, COUNT(ci.iid) as items FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid GROUP BY c.cid, c.title ORDER BY title');
 
@@ -46,7 +46,7 @@ function aggregator_view() {
   if (empty($rows)) {
     $rows[] = array(array('data' => t('No categories available. <a href="@link">Add category</a>.', array('@link' => url('admin/config/services/aggregator/add/category'))), 'colspan' => '5', 'class' => array('message')));
   }
-  $output .= theme('table', $header, $rows);
+  $output .= theme('table', array('header' => $header, 'rows' => $rows));
 
   return $output;
 }

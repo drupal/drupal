@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.22 2009/08/10 22:39:24 webchick Exp $
+// $Id: blog.pages.inc,v 1.23 2009/10/09 00:59:55 dries Exp $
 
 /**
  * @file
@@ -55,7 +55,7 @@ function blog_page_user($account) {
       drupal_set_message(t('You have not created any blog entries.'));
     }
     else {
-      drupal_set_message(t('!author has not created any blog entries.', array('!author' => theme('username', $account))));
+      drupal_set_message(t('!author has not created any blog entries.', array('!author' => theme('username', array('account' => $account)))));
     }
   }
   drupal_add_feed(url('blog/' . $account->uid . '/feed'), t('RSS - !title', array('!title' => $title)));

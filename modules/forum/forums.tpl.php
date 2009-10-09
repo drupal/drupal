@@ -1,5 +1,5 @@
 <?php
-// $Id: forums.tpl.php,v 1.5 2008/10/13 12:31:42 dries Exp $
+// $Id: forums.tpl.php,v 1.6 2009/10/09 00:59:59 dries Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@
 ?>
 <?php if ($forums_defined): ?>
 <div id="forum">
-  <?php print theme('links', $links); ?>
+  <?php print theme('links', array('links' => $links)); ?>
   <?php print $forums; ?>
   <?php print $topics; ?>
 </div>

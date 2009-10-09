@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.42 2009/08/29 03:36:27 webchick Exp $
+// $Id: dblog.module,v 1.43 2009/10/09 00:59:56 dries Exp $
 
 /**
  * @file
@@ -173,8 +173,10 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
  *
  * @ingroup themeable
  */
-function theme_dblog_filters($form) {
+function theme_dblog_filters($variables) {
+  $form = $variables['form'];
   $output = '';
+
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);
   }

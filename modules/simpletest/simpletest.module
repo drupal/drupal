@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.76 2009/10/08 15:18:27 dries Exp $
+// $Id: simpletest.module,v 1.77 2009/10/09 01:00:03 dries Exp $
 
 /**
  * @file
@@ -209,7 +209,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   }
   $context['message'] = t('Processed test @num of @max - %test.', array('%test' => $info['name'], '@num' => $max - $size, '@max' => $max));
   $context['message'] .= '<div class="simpletest-' . ($test_results['#fail'] + $test_results['#exception'] ? 'fail' : 'pass') . '">Overall results: ' . _simpletest_format_summary_line($test_results) . '</div>';
-  $context['message'] .= theme('item_list', $items);
+  $context['message'] .= theme('item_list', array('items' => $items));
 
   // Save working values for the next iteration.
   $context['sandbox']['tests'] = $test_list;

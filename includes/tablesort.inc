@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.55 2009/09/29 15:31:13 dries Exp $
+// $Id: tablesort.inc,v 1.56 2009/10/09 00:59:54 dries Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ function tablesort_header($cell, $header, $ts) {
     if ($cell['data'] == $ts['name']) {
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
       $cell['class'][] = 'active';
-      $image = theme('tablesort_indicator', $ts['sort']);
+      $image = theme('tablesort_indicator', array('style' => $ts['sort']));
     }
     else {
       // If the user clicks a different header, we want to sort ascending initially.
