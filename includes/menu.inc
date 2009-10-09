@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.349 2009/10/09 00:59:54 dries Exp $
+// $Id: menu.inc,v 1.350 2009/10/09 08:02:24 webchick Exp $
 
 /**
  * @file
@@ -1464,7 +1464,13 @@ function menu_get_names() {
  * Return an array containing the names of system-defined (default) menus.
  */
 function menu_list_system_menus() {
-  return array('navigation' => 'Navigation', 'management' => 'Management', 'user-menu' => 'User menu', 'main-menu' => 'Main menu', 'secondary-menu' => 'Secondary menu');
+  return array(
+    'navigation' => 'Navigation',
+    'management' => 'Management',
+    'user-menu' => 'User menu',
+    'main-menu' => 'Main menu',
+    'secondary-menu' => 'Secondary menu',
+  );
 }
 
 /**

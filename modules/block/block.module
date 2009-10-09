@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.383 2009/10/05 01:18:25 webchick Exp $
+// $Id: block.module,v 1.384 2009/10/09 08:02:24 webchick Exp $
 
 /**
  * @file
@@ -848,6 +848,20 @@ function block_filter_format_delete($format, $fallback) {
   db_update('block_custom')
     ->fields(array('format' => $fallback->format))
     ->condition('format', $format->format)
+    ->execute();
+}
+
+/**
+ * Implement hook_menu_delete().
+ */
+function block_menu_delete($menu) {
+  db_delete('block')
+    ->condition('module', 'menu')
+    ->condition('delta', $menu['menu_name'])
+    ->execute();
+  db_delete('block_role')
+    ->condition('module', 'menu')
+    ->condition('delta', $menu['menu_name'])
     ->execute();
 }
 
