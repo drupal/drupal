@@ -1637,7 +1637,8 @@ function comment_form($form, &$form_state, $comment) {
   $node = node_load($comment->nid);
 
   if (!$user->uid && variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
-    $form_state['#attached']['js'][] = drupal_get_path('module', 'comment') . '/comment.js';
+    $form['#attached']['library'][] = array('system', 'cookie');
+    $form['#attached']['js'][] = drupal_get_path('module', 'comment') . '/comment.js';
   }
 
   $comment = (array) $comment;
@@ -1957,15 +1958,6 @@ function comment_form_validate($form, &$form_state) {
   $comment = (object) $form_state['values'];
   field_attach_form_validate('comment', $comment, $form, $form_state);
 
-  if ($user->uid === 0) {
-    foreach (array('name', 'homepage', 'mail') as $field) {
-      // Set cookie for 365 days.
-      if (isset($form_state['values'][$field])) {
-        setcookie('comment_info_' . $field, $form_state['values'][$field], REQUEST_TIME + 31536000, '/');
-      }
-    }
-  }
-
   if (isset($form_state['values']['date'])) {
     if (strtotime($form_state['values']['date']) === FALSE) {
       form_set_error('date', t('You have to specify a valid date.'));
@@ -2068,6 +2060,11 @@ function comment_form_submit($form, &$form_state) {
   $node = node_load($form_state['values']['nid']);
   $comment = comment_form_submit_build_comment($form, $form_state);
   if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
+    // Save the anonymous user information to a cookie for reuse.
+    if (!$comment->uid) {
+      user_cookie_save($form_state['values']);
+    }
+
     comment_save($comment);
     // Explain the approval queue if necessary.
     if ($comment->status == COMMENT_NOT_PUBLISHED) {
@@ -2425,4 +2422,3 @@ function comment_filter_format_delete($format, $fallback) {
     ->condition('format', $format->format)
     ->execute();
 }
-
