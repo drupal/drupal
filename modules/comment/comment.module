@@ -170,7 +170,8 @@ function comment_menu() {
     'weight' => -10,
   );
   $items['admin/content/comment/approval'] = array(
-    'title' => 'Approval queue',
+    'title' => 'Unapproved comments',
+    'title callback' => 'comment_count_unpublished',
     'page arguments' => array('approval'),
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
@@ -216,6 +217,16 @@ function comment_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Returns a menu title which includes the number of unapproved comments.
+ */
+function comment_count_unpublished() {
+  $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE status = :status', array(
+    ':status' => COMMENT_NOT_PUBLISHED,
+  ))->fetchField();
+  return t('Unapproved comments (@count)', array('@count' => $count));
 }
 
 /**
