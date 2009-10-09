@@ -3094,10 +3094,10 @@ function drupal_clear_css_cache() {
 }
 
 /**
- * Prepare a string for use as a valid identifier (element, class or ID name).
+ * Prepare a string for use as a valid CSS identifier (element, class or ID name).
  *
  * http://www.w3.org/TR/CSS21/syndata.html#characters shows the syntax for valid
- * identifiers (including element names, classes, and IDs in selectors.)
+ * CSS identifiers (including element names, classes, and IDs in selectors.)
  *
  * @param $identifier
  *   The identifier to clean.
@@ -3106,11 +3106,11 @@ function drupal_clear_css_cache() {
  * @return
  *   The cleaned identifier.
  */
-function drupal_clean_html_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '[' => '-', ']' => '')) {
+function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '[' => '-', ']' => '')) {
   // By default, we filter using Drupal's coding standards.
   $identifier = strtr($identifier, $filter);
 
-  // Valid characters in a identifier are:
+  // Valid characters in a CSS identifier are:
   // - the hyphen (U+002D)
   // - a-z (U+0030 - U+0039)
   // - A-Z (U+0041 - U+005A)
@@ -3135,7 +3135,7 @@ function drupal_clean_html_identifier($identifier, $filter = array(' ' => '-', '
  *   The cleaned class name.
  */
 function drupal_html_class($class) {
-  return drupal_clean_html_identifier(drupal_strtolower($class));
+  return drupal_clean_css_identifier(drupal_strtolower($class));
 }
 
 /**
@@ -3148,7 +3148,15 @@ function drupal_html_class($class) {
  */
 function drupal_html_id($id) {
   $seen_ids = &drupal_static(__FUNCTION__, array());
-  $id = drupal_clean_html_identifier(drupal_strtolower($id));
+  $id = strtr(drupal_strtolower($id), array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
+
+  // As defined in http://www.w3.org/TR/html4/types.html#type-name, HTML IDs can
+  // only contain letters, digits ([0-9]), hyphens ("-"), underscores ("_"),
+  // colons (":"), and periods ("."). We strip out any character not in that
+  // list. Note that the CSS spec doesn't allow colons or periods in identifiers
+  // (http://www.w3.org/TR/CSS21/syndata.html#characters), so we strip those two
+  // characters as well.
+  $id = preg_replace('/[^A-Za-z0-9\-_]/', '', $id);
 
   // Ensure IDs are unique. The first occurrence is held but left alone.
   // Subsequent occurrences get a number appended to them. This incrementing
