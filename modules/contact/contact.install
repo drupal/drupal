@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.16 2009/09/29 15:13:55 dries Exp $
+// $Id: contact.install,v 1.17 2009/10/09 00:54:33 dries Exp $
 
 /**
  * @file
@@ -85,6 +85,16 @@ function contact_schema() {
 function contact_update_7000() {
   variable_set('contact_threshold_limit', variable_get('contact_hourly_threshold', 5));
   variable_del('contact_hourly_threshold');
+}
+
+/**
+ * Rename the administer contact forms permission.
+ */
+function contact_update_7001() {
+  db_update('role_permission')
+    ->fields(array('permission' => 'administer contact forms'))
+    ->condition('permission', 'administer site-wide contact form')
+    ->execute();
 }
 
 /**
