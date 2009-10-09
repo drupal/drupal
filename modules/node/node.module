@@ -185,6 +185,9 @@ function node_entity_info() {
         'revision' => 'vid',
         'bundle' => 'type',
       ),
+      'bundle keys' => array(
+        'bundle' => 'type',
+      ),
       // Node.module handles its own caching.
       // 'cacheable' => FALSE,
       'bundles' => array(),
@@ -196,7 +199,9 @@ function node_entity_info() {
     $return['node']['bundles'][$type] = array(
       'label' => $name,
       'admin' => array(
-        'path' => 'admin/structure/types/manage/' . str_replace('_', '-', $type),
+        'path' => 'admin/structure/types/manage/%node_type',
+        'real path' => 'admin/structure/types/manage/' . str_replace('_', '-', $type),
+        'bundle argument' => 4,
         'access arguments' => array('administer content types'),
       ),
     );
@@ -452,6 +457,20 @@ function node_types_rebuild() {
       node_type_delete($info->type);
     }
   }
+}
+
+/**
+ * Menu argument loader; Load a node type by string.
+ *
+ * @param $name
+ *   The machine-readable name of a node type to load; having '_' replaced with
+ *   '-'.
+ *
+ * @return
+ *   A node type object or FALSE if $name does not exist.
+ */
+function node_type_load($name) {
+  return node_type_get_type(strtr($name, array('-' => '_')));
 }
 
 /**
@@ -1633,6 +1652,27 @@ function node_menu() {
     'type' => MENU_LOCAL_ACTION,
     'file' => 'content_types.inc',
   );
+  $items['admin/structure/types/manage/%node_type'] = array(
+    'title' => 'Edit content type',
+    'title callback' => 'node_type_page_title',
+    'title arguments' => array(4),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('node_type_form', 4),
+    'access arguments' => array('administer content types'),
+    'file' => 'content_types.inc',
+  );
+  $items['admin/structure/types/manage/%node_type/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/structure/types/manage/%node_type/delete'] = array(
+    'title' => 'Delete',
+    'page arguments' => array('node_type_delete_confirm', 4),
+    'access arguments' => array('administer content types'),
+    'type' => MENU_CALLBACK,
+    'file' => 'content_types.inc',
+  );
+
   $items['node'] = array(
     'title' => 'Content',
     'page callback' => 'node_page_default',
@@ -1654,6 +1694,7 @@ function node_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  // @todo Remove this loop when we have a 'description callback' property.
   // Reset internal static cache of _node_types_build(), forces to rebuild the
   // node type information.
   drupal_static_reset('_node_types_build');
@@ -1668,25 +1709,6 @@ function node_menu() {
       'access arguments' => array('create', $type->type),
       'description' => $type->description,
       'file' => 'node.pages.inc',
-    );
-    $items['admin/structure/types/manage/' . $type_url_str] = array(
-      'title' => $type->name,
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('node_type_form', $type),
-      'access arguments' => array('administer content types'),
-      'type' => MENU_CALLBACK,
-      'file' => 'content_types.inc',
-    );
-    $items['admin/structure/types/manage/' . $type_url_str . '/edit'] = array(
-      'title' => 'Edit',
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-    );
-    $items['admin/structure/types/manage/' . $type_url_str . '/delete'] = array(
-      'title' => 'Delete',
-      'page arguments' => array('node_type_delete_confirm', $type),
-      'access arguments' => array('administer content types'),
-      'type' => MENU_CALLBACK,
-      'file' => 'content_types.inc',
     );
   }
   $items['node/%node'] = array(
@@ -1762,6 +1784,13 @@ function node_menu() {
     'file' => 'node.pages.inc',
   );
   return $items;
+}
+
+/**
+ * Title callback for a node type.
+ */
+function node_type_page_title($type) {
+  return $type->name;
 }
 
 /**
