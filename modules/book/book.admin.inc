@@ -24,7 +24,7 @@ function book_admin_overview() {
     $rows[] = array(array('data' => t('No books available.'), 'colspan' => 2));
   }
 
-  return theme('table', $headers, $rows);
+  return theme('table', array('header' => $headers, 'rows' => $rows));
 }
 
 /**
@@ -221,7 +221,9 @@ function _book_admin_table_tree($tree, &$form) {
  * @ingroup themeable
  * @see book_admin_table()
  */
-function theme_book_admin_table($form) {
+function theme_book_admin_table($variables) {
+  $form = $variables['form'];
+
   drupal_add_tabledrag('book-outline', 'match', 'parent', 'book-plid', 'book-plid', 'book-mlid', TRUE, MENU_MAX_DEPTH - 2);
   drupal_add_tabledrag('book-outline', 'order', 'sibling', 'book-weight');
 
@@ -240,7 +242,7 @@ function theme_book_admin_table($form) {
     $form[$key]['weight']['#attributes']['class'] = array('book-weight');
 
     $data = array(
-      theme('indentation', $form[$key]['depth']['#value'] - 2) . drupal_render($form[$key]['title']),
+      theme('indentation', array('size' => $form[$key]['depth']['#value'] - 2)) . drupal_render($form[$key]['title']),
       drupal_render($form[$key]['weight']),
       drupal_render($form[$key]['plid']) . drupal_render($form[$key]['mlid']),
       l(t('view'), $href),
@@ -255,6 +257,6 @@ function theme_book_admin_table($form) {
     $rows[] = $row;
   }
 
-  return theme('table', $header, $rows, array('id' => 'book-outline'));
+  return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'book-outline')));
 }
 

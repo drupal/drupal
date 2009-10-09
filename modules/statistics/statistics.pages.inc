@@ -33,7 +33,7 @@ function statistics_node_tracker() {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
         _statistics_link($log->url),
-        theme('username', $log),
+        theme('username', array('account' => $log)),
         l(t('details'), "admin/reports/access/$log->aid"),
       );
     }

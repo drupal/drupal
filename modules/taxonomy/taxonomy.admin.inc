@@ -56,7 +56,9 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
  * @ingroup themeable
  * @see taxonomy_overview_vocabularies()
  */
-function theme_taxonomy_overview_vocabularies($form) {
+function theme_taxonomy_overview_vocabularies($variables) {
+  $form = $variables['form'];
+
   $rows = array();
 
   foreach (element_children($form) as $key) {
@@ -86,7 +88,7 @@ function theme_taxonomy_overview_vocabularies($form) {
     drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
   }
   $header[] = array('data' => t('Operations'), 'colspan' => '3');
-  return theme('table', $header, $rows, array('id' => 'taxonomy')) . drupal_render_children($form);
+  return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'taxonomy'))) . drupal_render_children($form);
 }
 
 /**
@@ -507,7 +509,9 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
  * @ingroup themeable
  * @see taxonomy_overview_terms()
  */
-function theme_taxonomy_overview_terms($form) {
+function theme_taxonomy_overview_terms($variables) {
+  $form = $variables['form'];
+
   $page_increment  = $form['#page_increment'];
   $page_entries    = $form['#page_entries'];
   $back_peddle     = $form['#back_peddle'];
@@ -529,7 +533,7 @@ function theme_taxonomy_overview_terms($form) {
       $term = &$form[$key];
 
       $row = array();
-      $row[] = (isset($term['#term']['depth']) && $term['#term']['depth'] > 0 ? theme('indentation', $term['#term']['depth']) : '') . drupal_render($term['view']);
+      $row[] = (isset($term['#term']['depth']) && $term['#term']['depth'] > 0 ? theme('indentation', array('size' => $term['#term']['depth'])) : ''). drupal_render($term['view']);
       if ($form['#parent_fields']) {
         $term['tid']['#attributes']['class'] = array('term-id');
         $term['parent']['#attributes']['class'] = array('term-parent');
@@ -579,9 +583,9 @@ function theme_taxonomy_overview_terms($form) {
   }
 
   $header = array(t('Name'), t('Operations'));
-  $output = theme('table', $header, $rows, array('id' => 'taxonomy'));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'taxonomy')));
   $output .= drupal_render_children($form);
-  $output .= theme('pager', NULL);
+  $output .= theme('pager', array('tags' => NULL));
 
   return $output;
 }

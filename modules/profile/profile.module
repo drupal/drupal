@@ -193,7 +193,7 @@ function profile_block_view($delta = '') {
 
       if (!empty($fields)) {
         $profile = _profile_update_user_fields($fields, $account);
-        $output .= theme('profile_block', $account, $profile, TRUE);
+        $output .= theme('profile_block', array('account' => $account, 'fields' => $profile));
       }
 
       if (isset($use_fields['user_profile']) && $use_fields['user_profile']) {
@@ -525,7 +525,7 @@ function profile_category_access($account, $category) {
  */
 function template_preprocess_profile_block(&$variables) {
 
-  $variables['user_picture'] = theme('user_picture', $variables['account']);
+  $variables['user_picture'] = theme('user_picture', array('account' => $variables['account']));
   $variables['profile'] = array();
   // Supply filtered version of $fields that have values.
   foreach ($variables['fields'] as $field) {
@@ -549,8 +549,8 @@ function template_preprocess_profile_block(&$variables) {
  */
 function template_preprocess_profile_listing(&$variables) {
 
-  $variables['user_picture'] = theme('user_picture', $variables['account']);
-  $variables['name'] = theme('username', $variables['account']);
+  $variables['user_picture'] = theme('user_picture', array('account' => $variables['account']));
+  $variables['name'] = theme('username', array('account' => $variables['account']));
   $variables['profile'] = array();
   // Supply filtered version of $fields that have values.
   foreach ($variables['fields'] as $field) {

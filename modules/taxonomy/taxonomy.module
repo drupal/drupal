@@ -1002,8 +1002,8 @@ function _taxonomy_term_select($title, $value, $vocabulary_id, $description, $bl
  *
  * @ingroup themeable
  */
-function theme_taxonomy_term_select($element) {
-  return theme('select', $element);
+function theme_taxonomy_term_select($variables) {
+  return theme('select', $variables['element']);
 }
 
 /**
@@ -1219,16 +1219,16 @@ function taxonomy_field_formatter_info() {
 /**
  * Theme function for 'link' term field formatter.
  */
-function theme_field_formatter_taxonomy_term_link($element) {
-  $term = $element['#item']['taxonomy_term'];
+function theme_field_formatter_taxonomy_term_link($variables) {
+  $term = $variables['element']['#item']['taxonomy_term'];
   return l($term->name, taxonomy_term_path($term));
 }
 
 /**
  * Theme function for 'plain' term field formatter.
  */
-function theme_field_formatter_taxonomy_term_plain($element) {
-  $term = $element['#item']['taxonomy_term'];
+function theme_field_formatter_taxonomy_term_plain($variables) {
+  $term = $variables['element']['#item']['taxonomy_term'];
   return $term->name;
 }
 

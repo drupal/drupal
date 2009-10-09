@@ -37,7 +37,7 @@ function aggregator_aggregator_parse($feed) {
     }
 
     if (!empty($image['link']) && !empty($image['url']) && !empty($image['title'])) {
-      $image = l(theme('image', $image['url'], $image['title']), $image['link'], array('html' => TRUE));
+      $image = l(theme('image', array('path' => $image['url'], 'alt' => $image['title'])), $image['link'], array('html' => TRUE));
     }
     else {
       $image = '';

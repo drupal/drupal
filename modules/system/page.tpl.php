@@ -92,7 +92,7 @@
 
     <?php if ($main_menu): ?>
       <div id="navigation"><div class="section">
-        <?php print theme('links', $main_menu, array('id' => 'main-menu', 'class' => array('links', 'clearfix')), t('Main menu')); ?>
+        <?php print theme('links', array('links' => $main_menu, 'attributes' => array('id' => 'main-menu', 'class' => array('links', 'clearfix')), 'heading' => t('Main menu'))); ?>
       </div></div> <!-- /.section, /#navigation -->
     <?php endif; ?>
 
@@ -129,7 +129,7 @@
     </div></div> <!-- /#main, /#main-wrapper -->
 
     <div id="footer"><div class="section">
-      <?php print theme('links', $secondary_menu, array('id' => 'secondary-menu', 'class' => array('links', 'clearfix')), t('Secondary menu')); ?>
+      <?php print theme('links', array('links' => $secondary_menu, 'attributes' => array('id' => 'secondary-menu', 'class' => array('links', 'clearfix')), 'heading' => t('Secondary menu'))); ?>
       <?php print render($page['footer']); ?>
     </div></div> <!-- /.section, /#footer -->
 

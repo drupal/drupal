@@ -80,7 +80,7 @@ function file_theme() {
       'arguments' => array('element' => NULL),
     ),
     'file_upload_help' => array(
-      'arguments' => array('upload_validators' => NULL),
+      'arguments' => array('description' => NULL, 'upload_validators' => NULL),
     ),
   );
 }
@@ -413,7 +413,7 @@ function file_managed_file_process($element, &$form_state, $form) {
   if ($fid && $element['#file']) {
     $element['filename'] = array(
       '#type' => 'markup',
-      '#markup' => theme('file_link', $element['#file']) . ' ',
+      '#markup' => theme('file_link', array('file' => $element['#file'])) . ' ',
       '#weight' => -10,
     );
   }
@@ -577,7 +577,9 @@ function file_managed_file_save_upload($element) {
 /**
  * Theme a managed file element.
  */
-function theme_file_managed_file($element) {
+function theme_file_managed_file($variables) {
+  $element = $variables['element'];
+
   // This wrapper is required to apply JS behaviors and CSS styling.
   $output = '';
   $output .= '<div class="form-managed-file">';
@@ -589,12 +591,15 @@ function theme_file_managed_file($element) {
 /**
  * Output a link to a file.
  *
- * @param $file
- *   A file object to which the link will be created.
+ * @param $variables
+ *   An associative array containing:
+ *   - file: A file object to which the link will be created.
  */
-function theme_file_link($file) {
+function theme_file_link($variables) {
+  $file = $variables['file'];
+
   $url = file_create_url($file->uri);
-  $icon = theme('file_icon', $file);
+  $icon = theme('file_icon', array('file' => $file));
 
   // Set options as per anchor format described at
   // http://microformats.org/wiki/file-format-examples
@@ -619,10 +624,13 @@ function theme_file_link($file) {
 /**
  * Return an image with an appropriate icon for the given file.
  *
- * @param $file
- *   A file object for which to make an icon.
+ * @param $variables
+ *   An associative array containing:
+ *   - file: A file object for which to make an icon.
  */
-function theme_file_icon($file) {
+function theme_file_icon($variables) {
+  $file = $variables['file'];
+
   $mime = check_plain($file->filemime);
   $icon_url = file_icon_url($file);
   return '<img class="file-icon" alt="" title="' . $mime . '" src="' . $icon_url . '" />';

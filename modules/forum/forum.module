@@ -596,7 +596,7 @@ function forum_block_view_pre_render($elements) {
   $result = $elements['#query']->execute();
   if ($node_title_list = node_title_list($result)) {
     $elements['forum_list'] = array('#markup' => $node_title_list);
-    $elements['forum_more'] = array('#markup' => theme('more_link', url('forum'), t('Read the latest forum topics.')));
+    $elements['forum_more'] = array('#markup' => theme('more_link', array('url' => url('forum'), 'title' => t('Read the latest forum topics.'))));
   }
   return $elements;
 }
@@ -869,14 +869,14 @@ function template_preprocess_forums(&$variables) {
     $variables['links'] = $forum_types;
 
     if (!empty($variables['forums'])) {
-      $variables['forums'] = theme('forum_list', $variables['forums'], $variables['parents'], $variables['tid']);
+      $variables['forums'] = theme('forum_list', $variables);
     }
     else {
       $variables['forums'] = '';
     }
 
     if ($variables['tid'] && !in_array($variables['tid'], variable_get('forum_containers', array()))) {
-      $variables['topics'] = theme('forum_topic_list', $variables['tid'], $variables['topics'], $variables['sortby'], $variables['forum_per_page']);
+      $variables['topics'] = theme('forum_topic_list', $variables);
       drupal_add_feed(url('taxonomy/term/' . $variables['tid'] . '/0/feed'), 'RSS - ' . $title);
     }
     else {
@@ -943,7 +943,7 @@ function template_preprocess_forum_list(&$variables) {
       }
       $variables['forums'][$id]->old_topics = $forum->num_topics - $variables['forums'][$id]->new_topics;
     }
-    $variables['forums'][$id]->last_reply = theme('forum_submitted', $forum->last_post);
+    $variables['forums'][$id]->last_reply = theme('forum_submitted', array('topic' => $forum->last_post));
   }
   // Give meaning to $tid for themers. $tid actually stands for term id.
   $variables['forum_id'] = $variables['tid'];
@@ -977,7 +977,7 @@ function template_preprocess_forum_topic_list(&$variables) {
   if (!empty($variables['topics'])) {
     $row = 0;
     foreach ($variables['topics'] as $id => $topic) {
-      $variables['topics'][$id]->icon = theme('forum_icon', $topic->new, $topic->comment_count, $topic->comment_mode, $topic->sticky);
+      $variables['topics'][$id]->icon = theme('forum_icon', array('new_posts' => $topic->new, 'num_posts' => $topic->comment_count, 'comment_mode' => $topic->comment_mode, 'sticky' => $topic->sticky));
       $variables['topics'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
       $row++;
 
@@ -995,8 +995,8 @@ function template_preprocess_forum_topic_list(&$variables) {
         $variables['topics'][$id]->message = '';
       }
       $topic->uid = $topic->last_comment_uid ? $topic->last_comment_uid : $topic->uid;
-      $variables['topics'][$id]->created = theme('forum_submitted', $topic);
-      $variables['topics'][$id]->last_reply = theme('forum_submitted', isset($topic->last_reply) ? $topic->last_reply : NULL);
+      $variables['topics'][$id]->created = theme('forum_submitted', array('topic' => $topic));
+      $variables['topics'][$id]->last_reply = theme('forum_submitted', array('topic' => isset($topic->last_reply) ? $topic->last_reply : NULL));
 
       $variables['topics'][$id]->new_text = '';
       $variables['topics'][$id]->new_url = '';
@@ -1015,7 +1015,7 @@ function template_preprocess_forum_topic_list(&$variables) {
   $variables['topic_id'] = $variables['tid'];
   unset($variables['tid']);
 
-  $variables['pager'] = theme('pager', NULL);
+  $variables['pager'] = theme('pager', array('tags' => NULL));
 }
 
 /**
@@ -1057,7 +1057,7 @@ function template_preprocess_forum_icon(&$variables) {
  * @see theme_forum_submitted()
  */
 function template_preprocess_forum_submitted(&$variables) {
-  $variables['author'] = isset($variables['topic']->uid) ? theme('username', $variables['topic']) : '';
+  $variables['author'] = isset($variables['topic']->uid) ? theme('username', array('account' => $variables['topic'])) : '';
   $variables['time'] = isset($variables['topic']->created) ? format_interval(REQUEST_TIME - $variables['topic']->created) : '';
 }
 

@@ -24,7 +24,7 @@ function node_add_page() {
     $item = array_shift($content);
     drupal_goto($item['href']);
   }
-  return theme('node_add_list', $content);
+  return theme('node_add_list', array('content' => $content));
 }
 
 /**
@@ -32,7 +32,8 @@ function node_add_page() {
  *
  * @ingroup themeable
  */
-function theme_node_add_list($content) {
+function theme_node_add_list($variables) {
+  $content = $variables['content'];
   $output = '';
 
   if ($content) {
@@ -318,7 +319,9 @@ function node_form_build_preview($form, &$form_state) {
  *
  * @ingroup themeable
  */
-function theme_node_form($form) {
+function theme_node_form($variables) {
+  $form = $variables['form'];
+
   $output = "\n<div class=\"node-form\">\n";
 
   $output .= "  <div class=\"standard\">\n";
@@ -361,7 +364,7 @@ function node_preview($node) {
     if (!form_get_errors()) {
       $cloned_node = clone $node;
       $cloned_node->in_preview = TRUE;
-      $output = theme('node_preview', $cloned_node);
+      $output = theme('node_preview', array('node' => $cloned_node));
     }
     drupal_set_title(t('Preview'), PASS_THROUGH);
 
@@ -372,12 +375,15 @@ function node_preview($node) {
 /**
  * Display a node preview for display during node creation and editing.
  *
- * @param $node
- *   The node object which is being previewed.
+ * @param $variables
+ *   An associative array containing:
+ *   - node: The node object which is being previewed.
  *
  * @ingroup themeable
  */
-function theme_node_preview($node) {
+function theme_node_preview($variables) {
+  $node = $variables['node'];
+
   $output = '<div class="preview">';
 
   $preview_trimmed_version = FALSE;
@@ -504,13 +510,13 @@ function node_revision_overview($node) {
     $operations = array();
 
     if ($revision->current_vid > 0) {
-      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid"), '!username' => theme('username', $revision)))
+      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid"), '!username' => theme('username', array('account' => $revision))))
                                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
                      'class' => array('revision-current'));
-      $operations[] = array('data' => theme('placeholder', t('current revision')), 'class' => array('revision-current'), 'colspan' => 2);
+      $operations[] = array('data' => theme('placeholder', array('text' => t('current revision'))), 'class' => array('revision-current'), 'colspan' => 2);
     }
     else {
-      $row[] = t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', $revision)))
+      $row[] = t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', array('account' => $revision))))
                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
         $operations[] = l(t('revert'), "node/$node->nid/revisions/$revision->vid/revert");

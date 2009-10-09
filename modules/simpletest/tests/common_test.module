@@ -84,8 +84,8 @@ function common_test_theme() {
 /**
  * Theme function for testing drupal_render() theming.
  */
-function theme_common_test_foo($foo, $bar) {
-  return $foo . $bar;
+function theme_common_test_foo($variables) {
+  return $variables['foo'] . $variables['bar'];
 }
 
 /**

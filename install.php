@@ -679,9 +679,9 @@ function install_display_output($output, $install_state) {
     // Let the theming function know when every step of the installation has
     // been completed.
     $active_task = $install_state['installation_finished'] ? NULL : $install_state['active_task'];
-    drupal_add_region_content('sidebar_first', theme_task_list(install_tasks_to_display($install_state), $active_task));
+    drupal_add_region_content('sidebar_first', theme('task_list', array('items' => install_tasks_to_display($install_state), 'active' => $active_task)));
   }
-  print theme($install_state['database_tables_exist'] ? 'maintenance_page' : 'install_page', $output);
+  print theme($install_state['database_tables_exist'] ? 'maintenance_page' : 'install_page', array('content' => $output));
   exit;
 }
 
@@ -708,7 +708,7 @@ function install_verify_requirements(&$install_state) {
   if ($severity == REQUIREMENT_ERROR) {
     if ($install_state['interactive']) {
       drupal_set_title(st('Requirements problem'));
-      $status_report = theme('status_report', $requirements);
+      $status_report = theme('status_report', array('requirements' => $requirements));
       $status_report .= st('Check the error messages and <a href="!url">proceed with the installation</a>.', array('!url' => request_uri()));
       return $status_report;
     }
@@ -1025,7 +1025,8 @@ function install_select_profile(&$install_state) {
       if ($install_state['interactive']) {
         include_once DRUPAL_ROOT . '/includes/form.inc';
         drupal_set_title(st('Select an installation profile'));
-        return drupal_render(drupal_get_form('install_select_profile_form', $install_state['profiles']));
+        $form = drupal_get_form('install_select_profile_form', $install_state['profiles']);
+        return drupal_render($form);
       }
       else {
         throw new Exception(install_no_profile_error());

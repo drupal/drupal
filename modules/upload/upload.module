@@ -436,7 +436,9 @@ function upload_node_search_result($node) {
  *
  * @ingroup themeable
  */
-function theme_upload_attachments($elements) {
+function theme_upload_attachments($variables) {
+  $elements = $variables['elements'];
+
   $header = array(t('Attachment'), t('Size'));
   $rows = array();
   foreach ($elements['#files'] as $file) {
@@ -448,7 +450,7 @@ function theme_upload_attachments($elements) {
     }
   }
   if (count($rows)) {
-    return theme('table', $header, $rows, array('class' => array('attachments')));
+    return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('class' => array('attachments'))));
   }
 }
 
@@ -600,7 +602,9 @@ function _upload_form($node) {
  *
  * @ingroup themeable
  */
-function theme_upload_form_current($form) {
+function theme_upload_form_current($variables) {
+  $form = $variables['form'];
+
   $header = array('', t('Delete'), t('List'), t('Description'), t('Weight'), t('Size'));
   drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
 
@@ -616,7 +620,7 @@ function theme_upload_form_current($form) {
     $row[] = drupal_render($form[$key]['size']);
     $rows[] = array('data' => $row, 'class' => array('draggable'));
   }
-  $output = theme('table', $header, $rows, array('id' => 'upload-attachments'));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'upload-attachments')));
   $output .= drupal_render_children($form);
   return $output;
 }
@@ -627,9 +631,9 @@ function theme_upload_form_current($form) {
  *
  * @ingroup themeable
  */
-function theme_upload_form_new($form) {
+function theme_upload_form_new($variables) {
   drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
-  $output = drupal_render_children($form);
+  $output = drupal_render_children($variables['form']);
   return $output;
 }
 

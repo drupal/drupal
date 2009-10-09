@@ -242,14 +242,16 @@ function number_field_formatter_info() {
 /**
  * Theme function for 'unformatted' number field formatter.
  */
-function theme_field_formatter_number_unformatted($element) {
+function theme_field_formatter_number_unformatted($variables) {
+  $element = $variables['element'];
   return $element['#item']['value'];
 }
 
 /**
  * Proxy theme function for number field formatters.
  */
-function theme_field_formatter_number($element) {
+function theme_field_formatter_number($variables) {
+  $element = $variables['element'];
   $field = field_info_field($element['#field_name']);
   $instance = field_info_instance($element['#field_name'], $element['#bundle']);
   $value = $element['#item']['value'];
@@ -493,12 +495,13 @@ function number_decimal_validate($element, &$form_state) {
  * FAPI theme for an individual number element.
  *
  * The textfield is already rendered by the textfield
- * theme and the HTML output lives in $element['#children'].
+ * theme and the HTML output lives in $variables['element']['#children'].
  * Override this theme to make custom changes to the output.
  *
- * $element['#field_name'] contains the field name
- * $element['#delta] is the position of this element in the group
+ * $variables['element']['#field_name'] contains the field name
+ * $variables['element']['#delta] is the position of this element in the group
  */
-function theme_number($element) {
+function theme_number($variables) {
+  $element = $variables['element'];
   return $element['#children'];
 }

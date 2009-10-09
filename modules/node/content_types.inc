@@ -16,10 +16,10 @@ function node_overview_types() {
   $rows = array();
 
   foreach ($names as $key => $name) {
-    $type = $types[$key]; 
+    $type = $types[$key];
     if (node_hook($type->type, 'form')) {
       $type_url_str = str_replace('_', '-', $type->type);
-      $row = array(theme('node_admin_overview', $name, $type));
+      $row = array(theme('node_admin_overview', array('name' => $name, 'type' => $type)));
       // Set the edit column.
       $row[] = array('data' => l(t('edit'), 'admin/structure/types/manage/' . $type_url_str));
 
@@ -47,7 +47,10 @@ function node_overview_types() {
   return $build;
 }
 
-function theme_node_admin_overview($name, $type) {
+function theme_node_admin_overview($variables) {
+  $name = $variables['name'];
+  $type = $variables['type'];
+
   $output = check_plain($name);
   $output .= ' <small> (Machine name: ' . check_plain($type->type) . ')</small>';
   $output .= '<div class="description">' . filter_xss_admin($type->description) . '</div>';

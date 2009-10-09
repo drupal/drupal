@@ -836,7 +836,7 @@ function user_element_info() {
  */
 function user_user_view($account) {
   $account->content['user_picture'] = array(
-    '#markup' => theme('user_picture', $account),
+    '#markup' => theme('user_picture', array('account' => $account)),
     '#weight' => -10,
   );
   if (!isset($account->content['summary'])) {
@@ -954,7 +954,7 @@ function user_login_block($form) {
     $items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
   }
   $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
-  $form['links'] = array('#markup' => theme('item_list', $items));
+  $form['links'] = array('#markup' => theme('item_list', array('items' => $items)));
   return $form;
 }
 
@@ -1041,7 +1041,7 @@ function user_block_view($delta = '') {
       if (user_access('access content')) {
         // Retrieve a list of new users who have subsequently accessed the site successfully.
         $items = db_query_range('SELECT uid, name FROM {users} WHERE status <> 0 AND access <> 0 ORDER BY created DESC', 0, variable_get('user_block_whois_new_count', 5))->fetchAll();
-        $output = theme('user_list', $items);
+        $output = theme('user_list', array('users' => $items));
 
         $block['subject'] = t('Who\'s new');
         $block['content'] = $output;
@@ -1077,7 +1077,7 @@ function user_block_view($delta = '') {
         $max_users = variable_get('user_block_max_list_count', 10);
         if ($authenticated_count && $max_users) {
           $items = db_query_range('SELECT u.uid, u.name, MAX(s.timestamp) AS max_timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= :interval AND s.uid > 0 GROUP BY u.uid, u.name ORDER BY max_timestamp DESC', 0, $max_users, array(':interval' => $interval))->fetchAll();
-          $output .= theme('user_list', $items, t('Online users'));
+          $output .= theme('user_list', array('users' => $items, 'titles' => t('Online users')));
         }
 
         $block['subject'] = t('Who\'s online');
@@ -1121,10 +1121,10 @@ function template_preprocess_user_picture(&$variables) {
     if (isset($filepath)) {
       $alt = t("@user's picture", array('@user' => $account->name ? $account->name : variable_get('anonymous', t('Anonymous'))));
       if (module_exists('image') && $style = variable_get('user_picture_style', '')) {
-        $variables['user_picture'] = theme('image_style', $style, $filepath, $alt, $alt, array(), FALSE);
+        $variables['user_picture'] = theme('image_style', array('style_name' => $style, 'path' => $filepath, 'alt' => $alt, 'title' => $alt, 'attributes' => array(), 'getsize' => FALSE));
       }
       else {
-        $variables['user_picture'] = theme('image', $filepath, $alt, $alt, array(), FALSE);
+        $variables['user_picture'] = theme('image', array('path' => $filepath, 'alt' => $alt, 'title' => $alt, 'attributes' => array(), 'getsize' => FALSE));
       }
       if (!empty($account->uid) && user_access('access user profiles')) {
         $attributes = array('attributes' => array('title' => t('View user profile.')), 'html' => TRUE);
@@ -1137,20 +1137,24 @@ function template_preprocess_user_picture(&$variables) {
 /**
  * Make a list of users.
  *
- * @param $users
- *   An array with user objects. Should contain at least the name and uid.
- * @param $title
- *  (optional) Title to pass on to theme_item_list().
+ * @param $variables
+ *   An associative array containing:
+ *   - users: An array with user objects. Should contain at least the name and
+ *     uid.
+ *   - title: (optional) Title to pass on to theme_item_list().
  *
  * @ingroup themeable
  */
-function theme_user_list($users, $title = NULL) {
+function theme_user_list($variables) {
+  $users = $variables['users'];
+  $title = $variables['title'];
+
   if (!empty($users)) {
     foreach ($users as $user) {
-      $items[] = theme('username', $user);
+      $items[] = theme('username', array('account' => $user));
     }
   }
-  return theme('item_list', $items, $title);
+  return theme('item_list', array('items' => $items, 'title' => $title));
 }
 
 function user_is_anonymous() {
@@ -1907,7 +1911,7 @@ function user_edit_form(&$form, &$form_state) {
       '#value' => isset($account->picture) ? $account->picture : NULL,
     );
     $form['picture']['picture_current'] = array(
-      '#markup' => theme('user_picture', $account),
+      '#markup' => theme('user_picture', array('account' => $account)),
     );
     $form['picture']['picture_delete'] = array(
       '#type' => 'checkbox',
@@ -2834,8 +2838,10 @@ function user_comment_view($comment) {
  *
  * @ingroup themeable
  */
-function theme_user_signature($signature) {
+function theme_user_signature($variables) {
+  $signature = $variables['signature'];
   $output = '';
+
   if ($signature) {
     $output .= '<div class="clear">';
     $output .= '<div>—</div>';

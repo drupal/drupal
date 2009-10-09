@@ -173,8 +173,10 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
  *
  * @ingroup themeable
  */
-function theme_dblog_filters($form) {
+function theme_dblog_filters($variables) {
+  $form = $variables['form'];
   $output = '';
+
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);
   }

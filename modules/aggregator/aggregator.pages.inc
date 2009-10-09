@@ -37,7 +37,7 @@ function aggregator_page_source($arg1, $arg2 = NULL) {
   // $arg1 is $form_state and $arg2 is $feed. Otherwise, $arg1 is $feed.
   $feed = is_object($arg2) ? $arg2 : $arg1;
   drupal_set_title($feed->title);
-  $feed_source = theme('aggregator_feed_source', $feed);
+  $feed_source = theme('aggregator_feed_source', array('feed' => $feed));
 
   // It is safe to include the fid in the query because it's loaded from the
   // database by aggregator_feed_load.
@@ -128,9 +128,9 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
     // Assemble themed output.
     $output = $feed_source;
     foreach ($items as $item) {
-      $output .= theme('aggregator_item', $item);
+      $output .= theme('aggregator_item', array('item' => $item));
     }
-    $output = theme('aggregator_wrapper', $output);
+    $output = theme('aggregator_wrapper', array('content' => $output));
   }
 
   return $output;
@@ -163,7 +163,7 @@ function aggregator_categorize_items($items, $feed_source = '') {
     '#tree' => TRUE,
   );
   foreach ($items as $item) {
-    $form['items'][$item->iid] = array('#markup' => theme('aggregator_item', $item));
+    $form['items'][$item->iid] = array('#markup' => theme('aggregator_item', array('item' => $item)));
     $form['categories'][$item->iid] = array();
     $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = :iid', array(':iid' => $item->iid));
     $selected = array();
@@ -229,13 +229,17 @@ function aggregator_categorize_items_submit($form, &$form_state) {
 /**
  * Theme the page list form for assigning categories.
  *
- * @param $form
- *   An associative array containing the structure of the form.
+ * @param $variables
+ *   An associative array containing:
+ *   - form: An associative array containing the structure of the form.
+ *
  * @return
  *   The output HTML.
  * @ingroup themeable
  */
-function theme_aggregator_categorize_items($form) {
+function theme_aggregator_categorize_items($variables) {
+  $form = $variables['form'];
+
   $output = drupal_render($form['feed_source']);
   $rows = array();
   if (!empty($form['items'])) {
@@ -246,11 +250,11 @@ function theme_aggregator_categorize_items($form) {
       );
     }
   }
-  $output .= theme('table', array('', t('Categorize')), $rows);
+  $output .= theme('table', array('header' => array('', t('Categorize')), 'rows' => $rows));
   $output .= drupal_render($form['submit']);
   $output .= drupal_render_children($form);
 
-  return theme('aggregator_wrapper', $output);
+  return theme('aggregator_wrapper', array('content' => $output));
 }
 
 /**
@@ -259,7 +263,7 @@ function theme_aggregator_categorize_items($form) {
  * @see aggregator-wrapper.tpl.php
  */
 function template_preprocess_aggregator_wrapper(&$variables) {
-  $variables['pager'] = theme('pager', NULL);
+  $variables['pager'] = theme('pager', array('tags' => NULL));
 }
 
 /**
@@ -306,15 +310,15 @@ function aggregator_page_sources() {
     if (variable_get('aggregator_summary_items', 3)) {
       $items = db_query_range('SELECT i.title, i.timestamp, i.link FROM {aggregator_item} i WHERE i.fid = :fid ORDER BY i.timestamp DESC', 0, variable_get('aggregator_summary_items', 3), array(':fid' => $feed->fid));
       foreach ($items as $item) {
-        $summary_items[] = theme('aggregator_summary_item', $item);
+        $summary_items[] = theme('aggregator_summary_item', array('item' => $item));
       }
     }
     $feed->url = url('aggregator/sources/' . $feed->fid);
-    $output .= theme('aggregator_summary_items', $summary_items, $feed);
+    $output .= theme('aggregator_summary_items', array('summary_items' => $summary_items, 'source' => $feed));
   }
-  $output .= theme('feed_icon', url('aggregator/opml'), t('OPML feed'));
+  $output .= theme('feed_icon', array('url' => url('aggregator/opml'), 'title' => t('OPML feed')));
 
-  return theme('aggregator_wrapper', $output);
+  return theme('aggregator_wrapper', array('content' => $output));
 }
 
 /**
@@ -329,14 +333,14 @@ function aggregator_page_categories() {
       $summary_items = array();
       $items = db_query_range('SELECT i.title, i.timestamp, i.link, f.title as feed_title, f.link as feed_link FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON i.iid = ci.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE ci.cid = :cid ORDER BY i.timestamp DESC', 0, variable_get('aggregator_summary_items', 3), array(':cid' => $category->cid));
       foreach ($items as $item) {
-        $summary_items[] = theme('aggregator_summary_item', $item);
+        $summary_items[] = theme('aggregator_summary_item', array('item' => $item));
       }
     }
     $category->url = url('aggregator/categories/' . $category->cid);
-    $output .= theme('aggregator_summary_items', $summary_items, $category);
+    $output .= theme('aggregator_summary_items', array('summary_items' => $summary_items, 'source' => $category));
   }
 
-  return theme('aggregator_wrapper', $output);
+  return theme('aggregator_wrapper', array('content' => $output));
 }
 
 /**
@@ -356,19 +360,23 @@ function aggregator_page_rss() {
   }
 
   $feeds = $result->fetchAll();
-  return theme('aggregator_page_rss', $feeds, $category);
+  return theme('aggregator_page_rss', array('feeds' => $feeds, 'category' => $category));
 }
 
 /**
  * Theme the RSS output.
  *
- * @param $feeds
- *   An array of the feeds to theme.
- * @param $category
- *   A common category, if any, for all the feeds.
+ * @param $variables
+ *   An associative array containing:
+ *   - feeds: An array of the feeds to theme.
+ *   - category: A common category, if any, for all the feeds.
+ *
  * @ingroup themeable
  */
-function theme_aggregator_page_rss($feeds, $category = NULL) {
+function theme_aggregator_page_rss($variables) {
+  $feeds = $variables['feeds'];
+  $category = $variables['category'];
+
   drupal_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');
 
   $items = '';
@@ -418,17 +426,21 @@ function aggregator_page_opml($cid = NULL) {
   }
 
   $feeds = $result->fetchAll();
-  return theme('aggregator_page_opml', $feeds);
+  return theme('aggregator_page_opml', array('feeds' => $feeds));
 }
 
 /**
  * Theme the OPML feed output.
  *
- * @param $feeds
- *   An array of the feeds to theme.
+ * @param $variables
+ *   An associative array containing:
+ *   - feeds: An array of the feeds to theme.
+ *
  * @ingroup themeable
  */
-function theme_aggregator_page_opml($feeds) {
+function theme_aggregator_page_opml($variables) {
+  $feeds = $variables['feeds'];
+
   drupal_add_http_header('Content-Type', 'text/xml; charset=utf-8');
 
   $output  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
@@ -454,7 +466,7 @@ function theme_aggregator_page_opml($feeds) {
  */
 function template_preprocess_aggregator_summary_items(&$variables) {
   $variables['title'] = check_plain($variables['source']->title);
-  $variables['summary_list'] = theme('item_list', $variables['summary_items']);
+  $variables['summary_list'] = theme('item_list', array('items' => $variables['summary_items']));
   $variables['source_url'] = $variables['source']->url;
 }
 
@@ -486,7 +498,7 @@ function template_preprocess_aggregator_summary_item(&$variables) {
 function template_preprocess_aggregator_feed_source(&$variables) {
   $feed = $variables['feed'];
 
-  $variables['source_icon'] = theme('feed_icon', $feed->url, t('!title feed', array('!title' => $feed->title)));
+  $variables['source_icon'] = theme('feed_icon', array('url' => $feed->url, 'title' => t('!title feed', array('!title' => $feed->title))));
   $variables['source_image'] = $feed->image;
   $variables['source_description'] = aggregator_filter_xss($feed->description);
   $variables['source_url'] = check_url(url($feed->link, array('absolute' => TRUE)));

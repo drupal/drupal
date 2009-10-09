@@ -56,7 +56,7 @@ function system_main_admin_page($arg = NULL) {
         }
         else {
           // Theme items below.
-          $block['content'] .= theme('admin_block_content', $content);
+          $block['content'] .= theme('admin_block_content', array('content' => $content));
         }
       }
       // Prepare for sorting as in function _menu_tree_check_access().
@@ -66,7 +66,7 @@ function system_main_admin_page($arg = NULL) {
   }
   if ($blocks) {
     ksort($blocks);
-    return theme('admin_page', $blocks);
+    return theme('admin_page', array('blocks' => $blocks));
   }
   else {
     return t('You do not have any administrative items.');
@@ -105,7 +105,7 @@ function system_admin_config_page() {
         $function = $item['block_callback'];
         $block['content'] .= $function();
       }
-      $block['content'] .= theme('admin_block_content', system_admin_menu_block($item));
+      $block['content'] .= theme('admin_block_content', array('content' => system_admin_menu_block($item)));
       // Prepare for sorting as in function _menu_tree_check_access().
       // The weight is offset so it is always positive, with a uniform 5-digits.
       $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
@@ -113,7 +113,7 @@ function system_admin_config_page() {
   }
   if ($blocks) {
     ksort($blocks);
-    return theme('admin_page', $blocks);
+    return theme('admin_page', array('blocks' => $blocks));
   }
   else {
     return t('You do not have any administrative items.');
@@ -133,7 +133,7 @@ function system_admin_config_page() {
 function system_admin_menu_block_page() {
   $item = menu_get_item();
   if ($content = system_admin_menu_block($item)) {
-    $output = theme('admin_block_content', $content);
+    $output = theme('admin_block_content', array('content' => $content));
   }
   else {
     $output = t('You do not have any administrative items.');
@@ -172,7 +172,7 @@ function system_admin_by_module() {
       $menu_items[$file->info['name']] = array($file->info['description'], $admin_tasks);
     }
   }
-  return theme('system_admin_by_module', $menu_items);
+  return theme('system_admin_by_module', array('menu_items' => $menu_items));
 }
 
 /**
@@ -187,7 +187,7 @@ function system_settings_overview() {
   $item = menu_get_item('admin/config');
   $content = system_admin_menu_block($item);
 
-  $output = theme('admin_block_content', $content);
+  $output = theme('admin_block_content', array('content' => $content));
 
   return $output;
 }
@@ -232,7 +232,7 @@ function system_themes_form() {
         break;
       }
     }
-    $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), '', array('class' => array('screenshot')), FALSE) : t('no screenshot');
+    $screenshot = $screenshot ? theme('image', array('path' => $screenshot, 'alt' => t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), 'title' => '', 'attributes' => array('class' => array('screenshot')), 'getsize' => FALSE)) : t('no screenshot');
 
     $form[$theme->name]['screenshot'] = array('#markup' => $screenshot);
     $form[$theme->name]['info'] = array(
@@ -699,7 +699,7 @@ function system_modules($form, $form_state = array()) {
     if ($help_arg && $module->status && in_array($filename, module_implements('help'))) {
       if (module_invoke($filename, 'help', "admin/help#$filename", $help_arg)) {
         // Module has a help page.
-        $extra['help'] = theme('more_help_link', url("admin/help/$filename"));
+        $extra['help'] = theme('more_help_link', array('url' => url("admin/help/$filename")));
       }
     }
     // Mark dependents disabled so the user cannot remove required modules.
@@ -816,9 +816,9 @@ function _system_modules_build_row($info, $extra) {
   }
   else {
     $form['enable'] = array(
-      '#markup' =>  theme('image', 'misc/watchdog-error.png', t('incompatible'), $status_short),
+      '#markup' =>  theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('incompatible'), 'title' => $status_short)),
     );
-    $form['description']['#markup'] .= theme('system_modules_incompatible', $status_long);
+    $form['description']['#markup'] .= theme('system_modules_incompatible', array('message' => $status_long));
   }
 
   // Show a "more help" link for modules that have them.
@@ -854,7 +854,7 @@ function system_modules_confirm_form($modules, $storage) {
     );
     $items[] = format_plural(count($info['requires']), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', $t_argument);
   }
-  $form['text'] = array('#markup' => theme('item_list', $items));
+  $form['text'] = array('#markup' => theme('item_list', array('items' => $items)));
 
   if ($form) {
     // Set some default form values
@@ -1113,7 +1113,7 @@ function system_modules_uninstall_confirm_form($storage) {
   if (isset($uninstall)) {
     $form['#confirmed'] = TRUE;
     $form['uninstall']['#tree'] = TRUE;
-    $form['modules'] = array('#markup' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>' . theme('item_list', $uninstall));
+    $form['modules'] = array('#markup' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>' . theme('item_list', array('items' => $uninstall)));
     $form = confirm_form(
       $form,
       t('Confirm uninstall'),
@@ -1900,7 +1900,7 @@ function system_status($check = FALSE) {
     ->condition('pass', '')
     ->condition('status', 0)
     ->execute();
-  return theme('status_report', $requirements);
+  return theme('status_report', array('requirements' => $requirements));
 }
 
 /**
@@ -1953,12 +1953,16 @@ function system_batch_page() {
 /**
  * This function formats an administrative block for display.
  *
- * @param $block
- *   An array containing information about the block. It should
- *   include a 'title', a 'description' and a formatted 'content'.
+ * @param $variables
+ *   An associative array containing:
+ *   - block: An array containing information about the block. It should
+ *     include a 'title', a 'description' and a formatted 'content'.
+ *
  * @ingroup themeable
  */
-function theme_admin_block($block) {
+function theme_admin_block($variables) {
+  $block = $variables['block'];
+
   // Don't display the block if it has no content to display.
   if (empty($block['show'])) {
     return '';
@@ -1994,12 +1998,16 @@ EOT;
 /**
  * This function formats the content of an administrative block.
  *
- * @param $content
- *   An array containing information about the block. It should
- *   include a 'title', a 'description' and a formatted 'content'.
+ * @param $variables
+ *   An associative array containing:
+ *   - content: An array containing information about the block. It should
+ *     include a 'title', a 'description' and a formatted 'content'.
+ *
  * @ingroup themeable
  */
-function theme_admin_block_content($content) {
+function theme_admin_block_content($variables) {
+  $content = $variables['content'];
+
   if (!$content) {
     return '';
   }
@@ -2025,19 +2033,23 @@ function theme_admin_block_content($content) {
 /**
  * This function formats an administrative page for viewing.
  *
- * @param $blocks
- *   An array of blocks to display. Each array should include a
- *   'title', a 'description', a formatted 'content' and a
- *   'position' which will control which container it will be
- *   in. This is usually 'left' or 'right'.
+ * @param $variables
+ *   An associative array containing:
+ *   - blocks: An array of blocks to display. Each array should include a
+ *     'title', a 'description', a formatted 'content' and a
+ *     'position' which will control which container it will be
+ *     in. This is usually 'left' or 'right'.
+ *
  * @ingroup themeable
  */
-function theme_admin_page($blocks) {
+function theme_admin_page($variables) {
+  $blocks = $variables['blocks'];
+
   $stripe = 0;
   $container = array();
 
   foreach ($blocks as $block) {
-    if ($block_output = theme('admin_block', $block)) {
+    if ($block_output = theme('admin_block', array('block' => $block))) {
       if (empty($block['position'])) {
         // perform automatic striping.
         $block['position'] = ++$stripe % 2 ? 'left' : 'right';
@@ -2064,11 +2076,15 @@ function theme_admin_page($blocks) {
 /**
  * Theme output of the dashboard page.
  *
- * @param $menu_items
- *   An array of modules to be displayed.
+ * @param $variables
+ *   An associative array containing:
+ *   - menu_items: An array of modules to be displayed.
+ *
  * @ingroup themeable
  */
-function theme_system_admin_by_module($menu_items) {
+function theme_system_admin_by_module($variables) {
+  $menu_items = $variables['menu_items'];
+
   $stripe = 0;
   $output = '';
   $container = array('left' => '', 'right' => '');
@@ -2083,11 +2099,11 @@ function theme_system_admin_by_module($menu_items) {
     if (count($items)) {
       $block = array();
       $block['title'] = $module;
-      $block['content'] = theme('item_list', $items);
+      $block['content'] = theme('item_list', array('items' => $items));
       $block['description'] = t($description);
       $block['show'] = TRUE;
 
-      if ($block_output = theme('admin_block', $block)) {
+      if ($block_output = theme('admin_block', array('block' => $block))) {
         if (!isset($block['position'])) {
           // Perform automatic striping.
           $block['position'] = $position;
@@ -2112,11 +2128,15 @@ function theme_system_admin_by_module($menu_items) {
 /**
  * Theme requirements status report.
  *
- * @param $requirements
- *   An array of requirements.
+ * @param $variables
+ *   An associative array containing:
+ *   - requirements: An array of requirements.
+ *
  * @ingroup themeable
  */
-function theme_status_report($requirements) {
+function theme_status_report($variables) {
+  $requirements = $variables['requirements'];
+
   $i = 0;
   $output = '<table class="system-status-report">';
   foreach ($requirements as $requirement) {
@@ -2149,11 +2169,15 @@ function theme_status_report($requirements) {
 /**
  * Theme callback for the modules form.
  *
- * @param $form
- *   An associative array containing the structure of the form.
+ * @param $variables
+ *   An associative array containing:
+ *   - form: An associative array containing the structure of the form.
+ *
  * @ingroup themeable
  */
-function theme_system_modules_fieldset($form) {
+function theme_system_modules_fieldset($variables) {
+  $form = $variables['form'];
+
   // Individual table headers.
   $rows = array();
   // Iterate through all the modules, which are
@@ -2188,32 +2212,40 @@ function theme_system_modules_fieldset($form) {
     $rows[] = $row;
   }
 
-  return theme('table', $form['#header'], $rows);
+  return theme('table', array('header' => $form['#header'], 'rows' => $rows));
 }
 
 /**
  * Themes an incompatible message.
  *
  * @ingroup themeable
- * @param $message
- *   The form array representing the currently disabled modules.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - message: The form array representing the currently disabled modules.
+ *
  * @return
  *   An HTML string for the message.
  */
-function theme_system_modules_incompatible($message) {
-  return '<div class="incompatible">' . $message . '</div>';
+function theme_system_modules_incompatible($variables) {
+  return '<div class="incompatible">' . $variables['message'] . '</div>';
 }
 
 /**
  * Themes a table of currently disabled modules.
  *
  * @ingroup themeable
- * @param $form
- *   The form array representing the currently disabled modules.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: The form array representing the currently disabled modules.
+ *
  * @return
  *   An HTML string representing the table.
  */
-function theme_system_modules_uninstall($form) {
+function theme_system_modules_uninstall($variables) {
+  $form = $variables['form'];
+
   // No theming for the confirm form.
   if (isset($form['confirm'])) {
     return drupal_render($form);
@@ -2240,7 +2272,7 @@ function theme_system_modules_uninstall($form) {
     $rows[] = array(array('data' => t('No modules are available to uninstall.'), 'colspan' => '3', 'align' => 'center', 'class' => array('message')));
   }
 
-  $output  = theme('table', $header, $rows);
+  $output  = theme('table', array('header' => $header, 'rows' => $rows));
   $output .= drupal_render_children($form);
 
   return $output;
@@ -2249,11 +2281,15 @@ function theme_system_modules_uninstall($form) {
 /**
  * Theme function for the system themes form.
  *
- * @param $form
- *   An associative array containing the structure of the form.
+ * @param $variables
+ *   An associative array containing:
+ *   - form: An associative array containing the structure of the form.
+ *
  * @ingroup themeable
  */
-function theme_system_themes_form($form) {
+function theme_system_themes_form($variables) {
+  $form = $variables['form'];
+
   foreach (element_children($form) as $key) {
     // Only look for themes
     if (!isset($form[$key]['info'])) {
@@ -2267,12 +2303,12 @@ function theme_system_themes_form($form) {
     // Make sure it is compatible and render the checkbox if so.
     if (isset($form['status']['#incompatible_themes_core'][$key])) {
       unset($form['status'][$key]);
-      $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of Drupal core'));
+      $status = theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('incompatible'), 'title' => t('Incompatible with this version of Drupal core')));
       $description .= '<div class="incompatible">' . t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) . '</div>';
     }
     elseif (isset($form['status']['#incompatible_themes_php'][$key])) {
       unset($form['status'][$key]);
-      $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of PHP'));
+      $status = theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('incompatible'), 'title' => t('Incompatible with this version of PHP')));
       $php_required = $form['status']['#incompatible_themes_php'][$key];
       if (substr_count($php_required, '.') < 2) {
         $php_required .= '.*';
@@ -2300,7 +2336,7 @@ function theme_system_themes_form($form) {
   }
 
   $header = array(t('Screenshot'), t('Name'), t('Version'), t('Enabled'), t('Default'), t('Operations'));
-  $output = theme('table', $header, $rows);
+  $output = theme('table', array('header' => $header, 'rows' => $rows));
   $output .= drupal_render_children($form);
   return $output;
 }
@@ -2348,12 +2384,12 @@ function system_actions_manage() {
   }
 
   if ($row) {
-    $pager = theme('pager', NULL);
+    $pager = theme('pager', array('tags' => NULL));
     if (!empty($pager)) {
       $row[] = array(array('data' => $pager, 'colspan' => '3'));
     }
     $build['system_actions_header'] = array('#markup' => '<h3>' . t('Actions available to Drupal:') . '</h3>');
-    $build['system_actions_table'] = array('#markup' => theme('table', $header, $row));
+    $build['system_actions_table'] = array('#markup' => theme('table', array('header' => $header, 'rows' => $row)));
   }
 
   if ($actions_map) {

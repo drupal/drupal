@@ -16,11 +16,11 @@ function dblog_overview() {
     WATCHDOG_DEBUG    => '',
     WATCHDOG_INFO     => '',
     WATCHDOG_NOTICE   => '',
-    WATCHDOG_WARNING  => theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning')),
-    WATCHDOG_ERROR    => theme('image', 'misc/watchdog-error.png', t('error'), t('error')),
-    WATCHDOG_CRITICAL => theme('image', 'misc/watchdog-error.png', t('critical'), t('critical')),
-    WATCHDOG_ALERT    => theme('image', 'misc/watchdog-error.png', t('alert'), t('alert')),
-    WATCHDOG_EMERG    => theme('image', 'misc/watchdog-error.png', t('emergency'), t('emergency')),
+    WATCHDOG_WARNING  => theme('image', array('path' => 'misc/watchdog-warning.png', 'alt' => t('warning'), 'title' => t('warning'))),
+    WATCHDOG_ERROR    => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('error'), 'title' => t('error'))),
+    WATCHDOG_CRITICAL => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('critical'), 'title' => t('critical'))),
+    WATCHDOG_ALERT    => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('alert'), 'title' => t('alert'))),
+    WATCHDOG_EMERG    => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('emergency'), 'title' => t('emergency'))),
   );
   $classes = array(
     WATCHDOG_DEBUG    => 'dblog-debug',
@@ -66,7 +66,7 @@ function dblog_overview() {
         t($dblog->type),
         format_date($dblog->timestamp, 'short'),
         l(truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE), 'admin/reports/event/' . $dblog->wid, array('html' => TRUE)),
-        theme('username', $dblog),
+        theme('username', array('account' => $dblog)),
         $dblog->link,
       ),
       // Attributes for tr
@@ -152,7 +152,7 @@ function dblog_event($id) {
       ),
       array(
         array('data' => t('User'), 'header' => TRUE),
-        theme('username', $dblog),
+        theme('username', array('account' => $dblog)),
       ),
       array(
         array('data' => t('Location'), 'header' => TRUE),

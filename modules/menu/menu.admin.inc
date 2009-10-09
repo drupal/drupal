@@ -14,22 +14,22 @@ function menu_overview_page() {
   $header = array(t('Title'), array('data' => t('Operations'), 'colspan' => '3'));
   $rows = array();
   foreach ($result as $menu) {
-    $row = array(theme('menu_admin_overview', $menu['title'], $menu['menu_name'], $menu['description']));
+    $row = array(theme('menu_admin_overview', array('title' => $menu['title'], 'name' => $menu['menu_name'], 'description' => $menu['description'])));
     $row[] = array('data' => l(t('list links'), 'admin/structure/menu/manage/' . $menu['menu_name']));
     $row[] = array('data' => l(t('edit menu'), 'admin/structure/menu/manage/' . $menu['menu_name'] . '/edit'));
     $row[] = array('data' => l(t('add link'), 'admin/structure/menu/manage/' . $menu['menu_name'] . '/add'));
     $rows[] = $row;
   }
 
-  return theme('table', $header, $rows);
+  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**
  * Theme the menu title and description for admin page
  */
-function theme_menu_admin_overview($title, $name, $description) {
-  $output = check_plain($title);
-  $output .= '<div class="description">' . filter_xss_admin($description) . '</div>';
+function theme_menu_admin_overview($variables) {
+  $output = check_plain($variables['title']);
+  $output .= '<div class="description">' . filter_xss_admin($variables['description']) . '</div>';
 
   return $output;
 }
@@ -186,7 +186,9 @@ function menu_overview_form_submit($form, &$form_state) {
  *
  * @ingroup themeable
  */
-function theme_menu_overview_form($form) {
+function theme_menu_overview_form($variables) {
+  $form = $variables['form'];
+
   drupal_add_tabledrag('menu-overview', 'match', 'parent', 'menu-plid', 'menu-plid', 'menu-mlid', TRUE, MENU_MAX_DEPTH - 1);
   drupal_add_tabledrag('menu-overview', 'order', 'sibling', 'menu-weight');
 
@@ -220,7 +222,7 @@ function theme_menu_overview_form($form) {
       $element['plid']['#type'] = 'hidden';
 
       $row = array();
-      $row[] = theme('indentation', $element['#item']['depth'] - 1) . drupal_render($element['title']);
+      $row[] = theme('indentation', array('size' => $element['#item']['depth'] - 1)) . drupal_render($element['title']);
       $row[] = array('data' => drupal_render($element['hidden']), 'class' => array('checkbox'));
       $row[] = array('data' => drupal_render($element['expanded']), 'class' => array('checkbox'));
       $row[] = drupal_render($element['weight']) . drupal_render($element['plid']) . drupal_render($element['mlid']);
@@ -235,7 +237,7 @@ function theme_menu_overview_form($form) {
   if (empty($rows)) {
     $rows[] = array(array('data' => $form['#empty_text'], 'colspan' => '7'));
   }
-  $output .= theme('table', $header, $rows, array('id' => 'menu-overview'));
+  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'menu-overview')));
   $output .= drupal_render_children($form);
   return $output;
 }

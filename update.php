@@ -66,7 +66,7 @@ function update_script_selection_form() {
         '#value' => $update['start'],
       );
       $form['start'][$module . '_updates'] = array(
-        '#markup' => theme('item_list', $update['pending'], $module . ' module'),
+        '#markup' => theme('item_list', array('items' => $update['pending'], 'title' => $module . ' module')),
       );
     }
     if (isset($update['pending'])) {
@@ -78,7 +78,7 @@ function update_script_selection_form() {
     drupal_set_message(t('No pending updates.'));
     unset($form);
     $form['links'] = array(
-      '#markup' => theme('item_list', update_helpful_links()),
+      '#markup' => theme('item_list', array('items' => update_helpful_links())),
     );
   }
   else {
@@ -136,7 +136,7 @@ function update_results_page() {
     $output .= "<p><strong>Reminder: don't forget to set the <code>\$update_free_access</code> value in your <code>settings.php</code> file back to <code>FALSE</code>.</strong></p>";
   }
 
-  $output .= theme('item_list', $links);
+  $output .= theme('item_list', array('items' => $links));
 
   // Output a list of queries executed
   if (!empty($_SESSION['update_results'])) {
@@ -224,7 +224,7 @@ function update_task_list($active = NULL) {
     'finished' => 'Review log',
   );
 
-  drupal_add_region_content('sidebar_first', theme('task_list', $tasks, $active));
+  drupal_add_region_content('sidebar_first', theme('task_list', array('items' => $tasks, 'active' => $active)));
 }
 
 /**
@@ -252,9 +252,9 @@ function update_check_requirements() {
   if ($severity == REQUIREMENT_ERROR) {
     update_task_list('requirements');
     drupal_set_title('Requirements problem');
-    $status_report = theme('status_report', $requirements);
+    $status_report = theme('status_report', array('requirements' => $requirements));
     $status_report .= 'Please check the error messages and <a href="' . request_uri() . '">try again</a>.';
-    print theme('update_page', $status_report);
+    print theme('update_page', array('content' => $status_report));
     exit();
   }
 }
@@ -363,5 +363,5 @@ else {
 if (isset($output) && $output) {
   // We defer the display of messages until all updates are done.
   $progress_page = ($batch = batch_get()) && isset($batch['running']);
-  print theme('update_page', $output, !$progress_page);
+  print theme('update_page', array('content' => $output, 'show_messages' => !$progress_page));
 }

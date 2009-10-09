@@ -656,7 +656,7 @@ function locale_block_view($delta = '') {
     drupal_alter('translation_link', $links, $path);
 
     $block['subject'] = t('Languages');
-    $block['content'] = theme('links', $links, array());
+    $block['content'] = theme('links', array('links' => $links, 'attributes' => array()));
     return $block;
   }
 }
@@ -666,8 +666,10 @@ function locale_block_view($delta = '') {
  *
  * @ingroup themeable
  */
-function theme_locale_translation_filters($form) {
+function theme_locale_translation_filters($variables) {
+  $form = $variables['form'];
   $output = '';
+
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);
   }

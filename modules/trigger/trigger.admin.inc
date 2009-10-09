@@ -255,14 +255,18 @@ function trigger_assign_form_submit($form, $form_state) {
 /**
  * Displays actions assigned to this hook in a table.
  *
- * @param array $element
- *   The fieldset including all assigned actions.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: The fieldset including all assigned actions.
+ *
  * @return
  *   The rendered form with the table prepended.
  *
  * @ingroup themeable
  */
-function theme_trigger_display($element) {
+function theme_trigger_display($variables) {
+  $element = $variables['element'];
+
   $header = array();
   $rows = array();
   if (isset($element['assigned']) && count($element['assigned']['#value'])) {
@@ -277,7 +281,7 @@ function theme_trigger_display($element) {
   }
 
   if (count($rows)) {
-    $output = theme('table', $header, $rows) . drupal_render_children($element);
+    $output = theme('table', array('header' => $header, 'rows' => $rows)) . drupal_render_children($element);
   }
   else {
     $output = drupal_render_children($element);

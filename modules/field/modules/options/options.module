@@ -21,7 +21,7 @@ function options_theme() {
       'arguments' => array('element' => NULL),
     ),
     'options_none' => array(
-      'arguments' => array('widget_type' => NULL, 'field_name' => NULL, 'node_type' => NULL),
+      'arguments' => array('instance' => NULL),
       ),
   );
 }
@@ -375,7 +375,7 @@ function options_options($field, $instance) {
   if (!$instance['required']) {
     if ((in_array($instance['widget']['type'], array('options_buttons', 'node_reference_buttons', 'user_reference_buttons')) && !$field['cardinality'])
       || (in_array($instance['widget']['type'], array('options_select', 'node_reference_select', 'user_reference_select')))) {
-      $options = array('' => theme('options_none', $instance)) + $options;
+      $options = array('' => theme('options_none', array('instance' => $instance))) + $options;
     }
   }
   return $options;
@@ -385,7 +385,8 @@ function options_options($field, $instance) {
  *  Theme the label for the empty value for options that are not required.
  *  The default theme will display N/A for a radio list and blank for a select.
  */
-function theme_options_none($instance) {
+function theme_options_none($variables) {
+  $instance = $variables['instance'];
   switch ($instance['widget']['type']) {
     case 'options_buttons':
     case 'node_reference_buttons':
@@ -405,20 +406,23 @@ function theme_options_none($instance) {
  *
  * The select, checkboxes or radios are already rendered by the
  * select, checkboxes, or radios themes and the HTML output
- * lives in $element['#children']. Override this theme to
+ * lives in $variables['element']['#children']. Override this theme to
  * make custom changes to the output.
  *
- * $element['#field_name'] contains the field name
- * $element['#delta] is the position of this element in the group
+ * $variables['element']['#field_name'] contains the field name
+ * $variables['element']['#delta] is the position of this element in the group
  */
-function theme_options_select($element) {
+function theme_options_select($variables) {
+  $element = $variables['element'];
   return $element['#children'];
 }
 
-function theme_options_onoff($element) {
+function theme_options_onoff($variables) {
+  $element = $variables['element'];
   return $element['#children'];
 }
 
-function theme_options_buttons($element) {
+function theme_options_buttons($variables) {
+  $element = $variables['element'];
   return $element['#children'];
 }

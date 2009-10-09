@@ -1549,10 +1549,12 @@ function form_options_flatten($array, $reset = TRUE) {
 /**
  * Theme select form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #value, #options, #description, #extra, #multiple,
- *   #required, #name, #attributes, #size.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #options, #description, #extra,
+ *     #multiple, #required, #name, #attributes, #size.
+ *
  * @return
  *   A themed HTML string representing the form element.
  *
@@ -1562,7 +1564,8 @@ function form_options_flatten($array, $reset = TRUE) {
  * $options to an associative array in which the keys are group labels, and the
  * values are associative arrays in the normal $options format.
  */
-function theme_select($element) {
+function theme_select($variables) {
+  $element = $variables['element'];
   $select = '';
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
   _form_set_class($element, array('form-select'));
@@ -1667,16 +1670,19 @@ function form_get_options($element, $key) {
 /**
  * Theme a fieldset form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #attributes, #children, #collapsed, #collapsible,
- *   #description, #id, #title, #value.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #attributes, #children, #collapsed, #collapsible,
+ *     #description, #id, #title, #value.
+ *
  * @return
  *   A themed HTML string representing the group of items.
  *
  * @ingroup themeable
  */
-function theme_fieldset($element) {
+function theme_fieldset($variables) {
+  $element = $variables['element'];
   if (!empty($element['#collapsible'])) {
 
     if (!isset($element['#attributes']['class'])) {
@@ -1696,16 +1702,19 @@ function theme_fieldset($element) {
 /**
  * Theme a radio button form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #required, #return_value, #value, #attributes, #title,
- *   #description
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #required, #return_value, #value, #attributes, #title,
+ *     #description
+ *
  * @return
  *   A themed HTML string representing the form item group.
  *
  * @ingroup themeable
  */
-function theme_radio($element) {
+function theme_radio($variables) {
+  $element = $variables['element'];
   _form_set_class($element, array('form-radio'));
   $output = '<input type="radio" ';
   $output .= 'id="' . $element['#id'] . '" ';
@@ -1723,16 +1732,19 @@ function theme_radio($element) {
 /**
  * Theme a set of radio button form elements.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #value, #options, #description, #required,
- *   #attributes, #children.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #options, #description, #required,
+ *     #attributes, #children.
+ *
  * @return
  *   A themed HTML string representing the radio button set.
  *
  * @ingroup themeable
  */
-function theme_radios($element) {
+function theme_radios($variables) {
+  $element = $variables['element'];
   $class = 'form-radios';
   if (!empty($element['#attributes']['class'])) {
     $class .= ' ' . implode(' ', $element['#attributes']['class']);
@@ -1798,16 +1810,19 @@ function password_confirm_validate($element, &$element_state) {
 /**
  * Theme a date selection form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #value, #options, #description, #required,
- *   #attributes.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #options, #description, #required,
+ *     #attributes.
+ *
  * @return
  *   A themed HTML string representing the date selection boxes.
  *
  * @ingroup themeable
  */
-function theme_date($element) {
+function theme_date($variables) {
+  $element = $variables['element'];
   return '<div class="container-inline">' . drupal_render_children($element) . '</div>';
 }
 
@@ -2007,15 +2022,18 @@ function form_process_text_format($element) {
 /**
  * Theme a text format form element.
  *
- * @param element
- *   An associative array containing the properties of the element.
- *   Properties used: #children, #description
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #children, #description
+ *
  * @return
  *   A string representing the form element.
  *
  * @ingroup themeable
  */
-function theme_text_format_wrapper($element) {
+function theme_text_format_wrapper($variables) {
+  $element = $variables['element'];
   $output = '<div class="text-format-wrapper">' . "\n";
 
   $output .= $element['#children'] . "\n";
@@ -2032,16 +2050,19 @@ function theme_text_format_wrapper($element) {
 /**
  * Theme a checkbox form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #value, #return_value, #description, #required,
- *   #attributes.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #return_value, #description, #required,
+ *     #attributes.
+ *
  * @return
  *   A themed HTML string representing the checkbox.
  *
  * @ingroup themeable
  */
-function theme_checkbox($element) {
+function theme_checkbox($variables) {
+  $element = $variables['element'];
   _form_set_class($element, array('form-checkbox'));
   $checkbox = '<input ';
   $checkbox .= 'type="checkbox" ';
@@ -2061,15 +2082,18 @@ function theme_checkbox($element) {
 /**
  * Theme a set of checkbox form elements.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #children, #attributes.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #children, #attributes.
+ *
  * @return
  *   A themed HTML string representing the checkbox set.
  *
  * @ingroup themeable
  */
-function theme_checkboxes($element) {
+function theme_checkboxes($variables) {
+  $element = $variables['element'];
   $class = 'form-checkboxes';
   if (!empty($element['#attributes']['class'])) {
     $class .= ' ' . implode(' ', $element['#attributes']['class']);
@@ -2119,13 +2143,15 @@ function form_process_checkboxes($element) {
 /**
  * Format a table with radio buttons or checkboxes.
  *
- * @param $element
- *   An associative array containing the properties and children of the
- *   tableselect element.
- *   Each option in $element['#options'] can contain an array keyed by
- *   '#attributes' which is added to the row's HTML attributes.
- *   @see theme_table
- *   Properties used: header, options, empty, js_select.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and children of
+ *     the tableselect element.
+ *     Each option in $variables['element']['#options'] can contain an array
+ *     keyed by '#attributes' which is added to the row's HTML attributes.
+ *     @see theme_table
+ *     Properties used: header, options, empty, js_select.
+ *
  * @return
  *   A themed HTML string representing the table.
  *
@@ -2145,7 +2171,8 @@ function form_process_checkboxes($element) {
  * );
  * @ingroup themeable
  */
-function theme_tableselect($element) {
+function theme_tableselect($variables) {
+  $element = $variables['element'];
   $rows = array();
   if (!empty($element['#options'])) {
     // Generate a table row for each selectable item in #options.
@@ -2177,7 +2204,7 @@ function theme_tableselect($element) {
     $header = $element['#header'];
     $rows[] = array(array('data' => $element['#empty'], 'colspan' => count($header)));
   }
-  return theme('table', $header, $rows);
+  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**
@@ -2375,16 +2402,21 @@ function form_process_vertical_tabs($element, &$form_state) {
 /**
  * Makes the element's children fieldsets be vertical tabs.
  *
- * @param $element
- *   An associative array containing the properties and children of the
- *   fieldset.
- *   Properties used: #children.
+ * @param $variables
+ *   An associative array containing:
+ *
+ *   - element
+ *     An associative array containing the properties and children of the
+ *     fieldset.
+ *     Properties used: #children.
+ *
  * @return
  *   A themed HTML string representing the form element.
  *
  * @ingroup themeable
  */
-function theme_vertical_tabs($element) {
+function theme_vertical_tabs($variables) {
+  $element = $variables['element'];
   // Add required JavaScript and Stylesheet.
   drupal_add_library('system', 'vertical-tabs');
 
@@ -2394,30 +2426,36 @@ function theme_vertical_tabs($element) {
 /**
  * Theme a submit button form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #attributes, #button_type, #name, #value.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #attributes, #button_type, #name, #value.
+ *
  * @return
  *   A themed HTML string representing the form element.
  *
  * @ingroup themeable
  */
-function theme_submit($element) {
+function theme_submit($variables) {
+  $element = $variables['element'];
   return theme('button', $element);
 }
 
 /**
  * Theme a button form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #attributes, #button_type, #name, #value.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #attributes, #button_type, #name, #value.
+ *
  * @return
  *   A themed HTML string representing the form element.
  *
  * @ingroup themeable
  */
-function theme_button($element) {
+function theme_button($variables) {
+  $element = $variables['element'];
   $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
 
   return '<input type="submit" ' . (empty($element['#name']) ? '' : 'name="' . $element['#name'] . '" ') . 'id="' . $element['#id'] . '" value="' . check_plain($element['#value']) . '" ' . drupal_attributes($element['#attributes']) . " />\n";
@@ -2426,14 +2464,17 @@ function theme_button($element) {
 /**
  * Theme a image button form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #attributes, #button_type, #name, #value, #title, #src.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #attributes, #button_type, #name, #value, #title, #src.
+ *
  * @return
  *   A themed HTML string representing the form element.
  * @ingroup themeable
  */
-function theme_image_button($element) {
+function theme_image_button($variables) {
+  $element = $variables['element'];
   $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
 
   return '<input type="image" name="' . $element['#name'] . '" ' .
@@ -2448,31 +2489,37 @@ function theme_image_button($element) {
 /**
  * Theme a hidden form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #name, #value, #attributes.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #name, #value, #attributes.
+ *
  * @return
  *   A themed HTML string representing the form element.
  *
  * @ingroup themeable
  */
-function theme_hidden($element) {
+function theme_hidden($variables) {
+  $element = $variables['element'];
   return '<input type="hidden" name="' . $element['#name'] . '" id="' . $element['#id'] . '" value="' . check_plain($element['#value']) . "\" " . drupal_attributes($element['#attributes']) . " />\n";
 }
 
 /**
  * Theme a textfield form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #value, #description, #size, #maxlength,
- *   #required, #attributes, #autocomplete_path.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #maxlength,
+ *     #required, #attributes, #autocomplete_path.
+ *
  * @return
  *   A themed HTML string representing the textfield.
  *
  * @ingroup themeable
  */
-function theme_textfield($element) {
+function theme_textfield($variables) {
+  $element = $variables['element'];
   $size = empty($element['#size']) ? '' : ' size="' . $element['#size'] . '"';
   $maxlength = empty($element['#maxlength']) ? '' : ' maxlength="' . $element['#maxlength'] . '"';
   $class = array('form-text');
@@ -2501,15 +2548,18 @@ function theme_textfield($element) {
 /**
  * Theme a form.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #action, #method, #attributes, #children
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #action, #method, #attributes, #children
+ *
  * @return
  *   A themed HTML string representing the form.
  *
  * @ingroup themeable
  */
-function theme_form($element) {
+function theme_form($variables) {
+  $element = $variables['element'];
   // Anonymous div to satisfy XHTML compliance.
   $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
   return '<form ' . $action . ' accept-charset="UTF-8" method="' . $element['#method'] . '" id="' . $element['#id'] . '"' . drupal_attributes($element['#attributes']) . ">\n<div>" . $element['#children'] . "\n</div></form>\n";
@@ -2518,16 +2568,19 @@ function theme_form($element) {
 /**
  * Theme a textarea form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #value, #description, #rows, #cols, #required,
- *   #attributes
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #rows, #cols, #required,
+ *     #attributes
+ *
  * @return
  *   A themed HTML string representing the textarea.
  *
  * @ingroup themeable
  */
-function theme_textarea($element) {
+function theme_textarea($variables) {
+  $element = $variables['element'];
   $class = array('form-textarea');
 
   // Add resizable behavior
@@ -2543,32 +2596,37 @@ function theme_textarea($element) {
 /**
  * Theme HTML markup for use in forms.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #markup, #children.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #markup, #children.
+ *
  * @return
  *   A themed HTML string representing the HTML markup.
  *
  * @ingroup themeable
  */
-
-function theme_markup($element) {
+function theme_markup($variables) {
+  $element = $variables['element'];
   return (!empty($element['#markup']) ? $element['#markup'] : '') . drupal_render_children($element);
 }
 
 /**
  * Theme a password form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #value, #description, #size, #maxlength,
- *   #required, #attributes.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #maxlength,
+ *     #required, #attributes.
+ *
  * @return
- *   A themed HTML string representing the form.
+ *   A themed HTML string representing the form element.
  *
  * @ingroup themeable
  */
-function theme_password($element) {
+function theme_password($variables) {
+  $element = $variables['element'];
   $size = $element['#size'] ? ' size="' . $element['#size'] . '" ' : '';
   $maxlength = $element['#maxlength'] ? ' maxlength="' . $element['#maxlength'] . '" ' : '';
 
@@ -2594,9 +2652,12 @@ function form_process_weight($element) {
 /**
  * Theme a file upload form element.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #name, #size, #description, #required, $attributes.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #name, #size, #description, #required,
+ *     #attributes.
+ *
  * @return
  *   A themed HTML string representing the field.
  *
@@ -2605,7 +2666,8 @@ function form_process_weight($element) {
  * For assistance with handling the uploaded file correctly, see the API
  * provided by file.inc.
  */
-function theme_file($element) {
+function theme_file($variables) {
+  $element = $variables['element'];
   _form_set_class($element, array('form-file'));
   return '<input type="file" name="' . $element['#name'] . '"' . ($element['#attributes'] ? ' ' . drupal_attributes($element['#attributes']) : '') . ' id="' . $element['#id'] . '" size="' . $element['#size'] . "\" />\n";
 }
@@ -2613,15 +2675,18 @@ function theme_file($element) {
 /**
  * Theme a form element.
  *
- * @param element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #description, #id, #required, #children
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #description, #id, #required, #children
+ *
  * @return
  *   A string representing the form element.
  *
  * @ingroup themeable
  */
-function theme_form_element($element) {
+function theme_form_element($variables) {
+  $element = $variables['element'];
   // This is also used in the installer, pre-database setup.
   $t = get_t();
 

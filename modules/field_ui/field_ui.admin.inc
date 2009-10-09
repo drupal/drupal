@@ -34,7 +34,7 @@ function field_ui_fields_list() {
   else {
     // Sort rows by field name.
     ksort($rows);
-    $output = theme('table', $header, $rows);
+    $output = theme('table', array('header' => $header, 'rows' => $rows));
   }
   return $output;
 }
@@ -56,7 +56,7 @@ function field_ui_inactive_message($bundle) {
       '%widget_module' => $instance['widget']['module'],
       ));
     }
-    drupal_set_message(t('Inactive fields are not shown unless their providing modules are enabled. The following fields are not enabled: !list', array('!list' => theme('item_list', $list))), 'error');
+    drupal_set_message(t('Inactive fields are not shown unless their providing modules are enabled. The following fields are not enabled: !list', array('!list' => theme('item_list', array('items' => $list)))), 'error');
   }
 }
 

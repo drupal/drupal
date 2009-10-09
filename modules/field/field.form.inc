@@ -221,7 +221,8 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
  * Combine multiple values into a table with drag-n-drop reordering.
  * TODO : convert to a template.
  */
-function theme_field_multiple_value_form($element) {
+function theme_field_multiple_value_form($variables) {
+  $element = $variables['element'];
   $output = '';
 
   if ($element['#cardinality'] > 1 || $element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
@@ -268,7 +269,7 @@ function theme_field_multiple_value_form($element) {
     }
 
     $output = '<div class="form-item">';
-    $output .= theme('table', $header, $rows, array('id' => $table_id, 'class' => array('field-multiple-table')));
+    $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => $table_id, 'class' => array('field-multiple-table'))));
     $output .= $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '';
     $output .= '<div class="clearfix">' . drupal_render($add_more_button) . '</div>';
     $output .= '</div>';

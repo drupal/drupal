@@ -77,7 +77,7 @@ function syslog_watchdog(array $log_entry) {
     openlog('drupal', LOG_NDELAY, variable_get('syslog_facility', $default_facility));
   }
 
-  syslog($log_entry['severity'], theme('syslog_format', $log_entry));
+  syslog($log_entry['severity'], theme('syslog_format', array('entry' => $log_entry)));
 }
 
 function syslog_theme() {
@@ -93,7 +93,8 @@ function syslog_theme() {
  *
  * @ingroup themeable
  */
-function theme_syslog_format($entry) {
+function theme_syslog_format($variables) {
+  $entry = $variables['entry'];
   global $base_url;
 
   $message  = $base_url;

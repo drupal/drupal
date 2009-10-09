@@ -38,7 +38,7 @@ function help_page($name) {
     $admin_tasks = system_get_module_admin_tasks($name);
     if (!empty($admin_tasks)) {
       ksort($admin_tasks);
-      $output .= theme('item_list', $admin_tasks, t('@module administration pages', array('@module' => $module['name'])));
+      $output .= theme('item_list', array('items' => $admin_tasks, 'title' => t('@module administration pages', array('@module' => $module['name']))));
     }
 
   }

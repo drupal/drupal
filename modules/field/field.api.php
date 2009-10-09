@@ -778,21 +778,22 @@ function hook_field_formatter_info_alter(&$info) {
  * value (the hook_field_formatter_info() entry uses
  * 'multiple values' = FIELD_BEHAVIOR_DEFAULT).
  *
- * @param $element
- *   A render structure sub-array, containing the following keys:
- *   - #item: The field value being displayed.
- *   - #delta: The index of the value being displayed within the object(s values
- *     for the field.
- *   - #field_name: The name of the field being displayed.
- *   - #bundle: The bundle of the object being displayed.
- *   - #object: The object being displayed.
- *   - #object_type: The type of the object being displayed.
- *   - #formatter: The name of the formatter being used.
- *   - #settings: The array of formatter settings.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render structure sub-array, containing the following keys:
+ *     - #item: The field value being displayed.
+ *     - #delta: The index of the value being displayed within the object's
+ *       values for the field.
+ *     - #field_name: The name of the field being displayed.
+ *     - #bundle: The bundle of the object being displayed.
+ *     - #object: The object being displayed.
+ *     - #object_type: The type of the object being displayed.
+ *     - #formatter: The name of the formatter being used.
+ *     - #settings: The array of formatter settings.
  */
-function theme_field_formatter_FORMATTER_SINGLE($element) {
+function theme_field_formatter_FORMATTER_SINGLE($variables) {
   // This relies on a 'safe' element being prepared in hook_field_sanitize().
-  return $element['#item']['safe'];
+  return $variables['element']['#item']['safe'];
 }
 
 /**
@@ -802,17 +803,20 @@ function theme_field_formatter_FORMATTER_SINGLE($element) {
  * (the hook_field_formatter_info() entry uses
  * 'multiple values' = FIELD_BEHAVIOR_CUSTOM).
  *
- * @param $element
- *   A render structure sub-array, containing the following keys:
- *   - #field_name: The name of the field being displayed.
- *   - #bundle: The bundle of the object being displayed.
- *   - #object: The object being displayed.
- *   - #object_type: The type of the object being displayed.
- *   - #formatter: The name of the formatter being used.
- *   - #settings: The array of formatter settings.
- *   - numeric indexes: the field values being displayed.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render structure sub-array, containing the following keys:
+ *     - #field_name: The name of the field being displayed.
+ *     - #bundle: The bundle of the object being displayed.
+ *     - #object: The object being displayed.
+ *     - #object_type: The type of the object being displayed.
+ *     - #formatter: The name of the formatter being used.
+ *     - #settings: The array of formatter settings.
+ *     - numeric indexes: the field values being displayed.
  */
-function theme_field_formatter_FORMATTER_MULTIPLE($element) {
+function theme_field_formatter_FORMATTER_MULTIPLE($variables) {
+  $element = $variables['element'];
+
   $items = array();
   foreach (element_children($element) as $key) {
     $items[$key] = $key .':'. $element[$key]['#item']['value'];

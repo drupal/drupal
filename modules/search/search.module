@@ -965,7 +965,7 @@ function search_data($keys = NULL, $type = 'node') {
           return module_invoke($type, 'search_page', $results);
         }
         else {
-          return theme('search_results', $results, $type);
+          return theme('search_results', array('results' => $results, 'type' => $type));
         }
       }
     }

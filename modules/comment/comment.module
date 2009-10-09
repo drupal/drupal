@@ -142,7 +142,7 @@ function comment_theme() {
       'arguments' => array('elements' => NULL),
     ),
     'comment_post_forbidden' => array(
-      'arguments' => array('nid' => NULL),
+      'arguments' => array('node' => NULL),
     ),
     'comment_wrapper' => array(
       'template' => 'comment-wrapper',
@@ -466,7 +466,7 @@ function theme_comment_block() {
   }
 
   if ($items) {
-    return theme('item_list', $items);
+    return theme('item_list', array('items' => $items));
   }
 }
 
@@ -522,7 +522,7 @@ function comment_node_view($node, $build_mode) {
               );
             }
             else {
-              $links['comment_forbidden']['title'] = theme('comment_post_forbidden', $node);
+              $links['comment_forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
             }
           }
         }
@@ -547,7 +547,7 @@ function comment_node_view($node, $build_mode) {
           }
         }
         else {
-          $links['comment_forbidden']['title'] = theme('comment_post_forbidden', $node);
+          $links['comment_forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
         }
       }
     }
@@ -901,7 +901,7 @@ function comment_links($comment, $node) {
       );
     }
     else {
-      $links['comment_forbidden']['title'] = theme('comment_post_forbidden', $node);
+      $links['comment_forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
       $links['comment_forbidden']['html'] = TRUE;
     }
   }
@@ -1736,7 +1736,7 @@ function comment_form($form, &$form_state, $comment) {
       $form['_author'] = array(
         '#type' => 'item',
         '#title' => t('Your name'),
-        '#markup' => theme('username', $user),
+        '#markup' => theme('username', array('account' => $user)),
       );
       $form['author'] = array(
         '#type' => 'value',
@@ -2093,19 +2093,19 @@ function template_preprocess_comment(&$variables) {
   $node = $variables['elements']['#node'];
   $variables['comment']   = $comment;
   $variables['node']      = $node;
-  $variables['author']    = theme('username', $comment);
+  $variables['author']    = theme('username', array('account' => $comment));
   $variables['date']      = format_date($comment->timestamp);
   $variables['new']       = !empty($comment->new) ? t('new') : '';
-  $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '';
+  $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
   $variables['signature'] = $comment->signature;
   $variables['title']     = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
   $variables['template_files'][] = 'comment-' . $variables['node']->type;
-  
+
   // Helpful $content variable for templates.
   foreach (element_children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
-  
+
   // Set status to a string representation of comment->status.
   if (isset($comment->in_preview)) {
     $variables['status']  = 'comment-preview';
@@ -2137,11 +2137,14 @@ function template_preprocess_comment(&$variables) {
 /**
  * Theme a "you can't post comments" notice.
  *
- * @param $node
- *   The comment node.
+ * @param $variables
+ *   An associative array containing:
+ *   - node: The comment node.
+ *
  * @ingroup themeable
  */
-function theme_comment_post_forbidden($node) {
+function theme_comment_post_forbidden($variables) {
+  $node = $variables['node'];
   global $user;
 
   if (!$user->uid) {

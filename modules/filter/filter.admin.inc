@@ -23,8 +23,8 @@ function filter_admin_overview($form) {
     // to all roles and cannot be deleted via the admin interface.
     $form['formats'][$id]['#is_fallback'] = ($id == $fallback_format);
     if ($form['formats'][$id]['#is_fallback']) {
-      $form['formats'][$id]['name'] = array('#markup' => theme('placeholder', $format->name));
-      $roles_markup = theme('placeholder', t('All roles may use this format'));
+      $form['formats'][$id]['name'] = array('#markup' => theme('placeholder', array('text' => $format->name)));
+      $roles_markup = theme('placeholder', array('text' => t('All roles may use this format')));
     }
     else {
       $form['formats'][$id]['name'] = array('#markup' => check_plain($format->name));
@@ -59,7 +59,9 @@ function filter_admin_overview_submit($form, &$form_state) {
  *
  * @ingroup themeable
  */
-function theme_filter_admin_overview($form) {
+function theme_filter_admin_overview($variables) {
+  $form = $variables['form'];
+
   $rows = array();
   foreach (element_children($form['formats']) as $id) {
     $form['formats'][$id]['weight']['#attributes']['class'] = array('text-format-order-weight');
@@ -75,7 +77,7 @@ function theme_filter_admin_overview($form) {
     );
   }
   $header = array(t('Name'), t('Roles'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
-  $output = theme('table', $header, $rows, array('id' => 'text-format-order'));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'text-format-order')));
   $output .= drupal_render_children($form);
 
   drupal_add_tabledrag('text-format-order', 'order', 'sibling', 'text-format-order-weight');
@@ -153,7 +155,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
 
     // Composition tips (guidelines)
     $tips = _filter_tips($format->format, FALSE);
-    $tiplist = theme('filter_tips', $tips, FALSE);
+    $tiplist = theme('filter_tips', array('tips' => $tips, 'long' => FALSE));
     if (!$tiplist) {
       $tiplist = '<p>' . t('No guidelines available.') . '</p>';
     }
@@ -342,7 +344,9 @@ function filter_admin_order($form, &$form_state, $format = NULL) {
  *
  * @ingroup themeable
  */
-function theme_filter_admin_order($form) {
+function theme_filter_admin_order($variables) {
+  $form = $variables['form'];
+
   $header = array(t('Name'), t('Weight'));
   $rows = array();
   foreach (element_children($form['names']) as $id) {
@@ -356,7 +360,7 @@ function theme_filter_admin_order($form) {
     }
   }
 
-  $output = theme('table', $header, $rows, array('id' => 'filter-order'));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'filter-order')));
   $output .= drupal_render_children($form);
 
   drupal_add_tabledrag('filter-order', 'order', 'sibling', 'filter-order-weight', NULL, NULL, FALSE);

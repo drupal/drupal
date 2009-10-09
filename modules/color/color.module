@@ -60,7 +60,7 @@ function _color_theme_select_form_alter(&$form, &$form_state) {
   foreach (element_children($form) as $theme) {
     if ($screenshot = variable_get('color_' . $theme . '_screenshot')) {
       if (isset($form[$theme]['screenshot'])) {
-        $form[$theme]['screenshot']['#markup'] = theme('image', $screenshot, '', '', array('class' => array('screenshot')), FALSE);
+        $form[$theme]['screenshot']['#markup'] = theme('image', array('path' => $screenshot, 'alt' => '', 'title' => '', 'attributes' => array('class' => array('screenshot')), 'getsize' => FALSE));
       }
     }
   }
@@ -207,7 +207,9 @@ function color_scheme_form($form, &$form_state, $theme) {
  *
  * @ingroup themeable
  */
-function theme_color_scheme_form($form) {
+function theme_color_scheme_form($variables) {
+  $form = $variables['form'];
+
   $theme = $form['theme']['#value'];
   $info = $form['info']['#value'];
   $path = drupal_get_path('theme', $theme) . '/';

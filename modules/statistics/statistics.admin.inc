@@ -31,7 +31,7 @@ function statistics_recent_hits() {
     $rows[] = array(
       array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
       _statistics_format_item($log->title, $log->path),
-      theme('username', $log),
+      theme('username', array('account' => $log)),
       l(t('details'), "admin/reports/access/$log->aid"));
   }
 
@@ -133,7 +133,7 @@ function statistics_top_visitors() {
   $destination = drupal_get_destination();
   foreach ($result as $account) {
     $ban_link = $account->iid ? l(t('unblock IP address'), "admin/config/people/ip-blocking/delete/$account->iid", array('query' => $destination)) : l(t('block IP address'), "admin/config/people/ip-blocking/$account->hostname", array('query' => $destination));
-    $rows[] = array($account->hits, ($account->uid ? theme('username', $account) : $account->hostname), format_interval(round($account->total / 1000)), (user_access('block IP addresses') && !$account->uid) ? $ban_link : '');
+    $rows[] = array($account->hits, ($account->uid ? theme('username', array('account' => $account)) : $account->hostname), format_interval(round($account->total / 1000)), (user_access('block IP addresses') && !$account->uid) ? $ban_link : '');
   }
 
   if (empty($rows)) {
@@ -225,7 +225,7 @@ function statistics_access_log($aid) {
     );
     $rows[] = array(
       array('data' => t('User'), 'header' => TRUE),
-      theme('username', $access)
+      theme('username', array('account' => $access))
     );
     $rows[] = array(
       array('data' => t('Hostname'), 'header' => TRUE),

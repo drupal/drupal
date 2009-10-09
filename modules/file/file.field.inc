@@ -523,7 +523,7 @@ function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $
     // If there's only one field, return it as delta 0.
     $element['#title'] = $instance['label'];
     if (empty($element['#default_value']['fid'])) {
-      $element['#description'] = theme('file_upload_help', $instance['description'], $element['#upload_validators']);
+      $element['#description'] = theme('file_upload_help', array('description' => $instance['description'], 'upload_validators' => $element['#upload_validators']));
     }
     $elements = array($element);
   }
@@ -557,7 +557,7 @@ function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $
     // field. These are added here so that they may be referenced easily through
     // a hook_form_alter().
     $elements['#file_upload_title'] = t('Add a new file');
-    $elements['#file_upload_description'] = theme('file_upload_help', '', $elements[0]['#upload_validators']);
+    $elements['#file_upload_description'] = theme('file_upload_help', array('description' => '', 'upload_validators' => $elements[0]['#upload_validators']));
   }
 
   return $elements;
@@ -746,8 +746,10 @@ function file_field_widget_process_multiple($element, &$form_state, $form) {
 /**
  * Theme an individual file upload widget.
  */
-function theme_file_widget($element) {
+function theme_file_widget($variables) {
+  $element = $variables['element'];
   $output = '';
+
   // The "form-managed-file" class is required for proper AJAX functionality.
   $output .= '<div class="file-widget form-managed-file clearfix">';
   if ($element['fid']['#value'] != 0) {
@@ -763,7 +765,9 @@ function theme_file_widget($element) {
 /**
  * Theme a group of file upload widgets.
  */
-function theme_file_widget_multiple($element) {
+function theme_file_widget_multiple($variables) {
+  $element = $variables['element'];
+
   $field = field_info_field($element['#field_name']);
 
   // Get our list of widgets in order.
@@ -840,7 +844,7 @@ function theme_file_widget_multiple($element) {
   drupal_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
 
   $output = '';
-  $output = empty($rows) ? '' : theme('table', $headers, $rows, array('id' => $table_id));
+  $output = empty($rows) ? '' : theme('table', array('header' => $headers, 'rows' => $rows, 'attributes' => array('id' => $table_id)));
   $output .= drupal_render_children($element);
   return $output;
 }
@@ -848,14 +852,20 @@ function theme_file_widget_multiple($element) {
 /**
  * Generate help text based on upload validators.
  *
- * @param $description
- *   The normal description for this field, specified by the user.
- * @param $upload_validators
- *   An array of upload validators as used in $element['#upload_validators'].
+ * @param $variables
+ *   An associative array containing:
+ *   - description: The normal description for this field, specified by the
+ *     user.
+ *   - upload_validators: An array of upload validators as used in
+ *     $element['#upload_validators'].
+ *
  * @return
  *   A string suitable for a file field description.
  */
-function theme_file_upload_help($description, $upload_validators) {
+function theme_file_upload_help($variables) {
+  $description = $variables['description'];
+  $upload_validators = $variables['upload_validators'];
+
   $descriptions = array();
 
   if (strlen($description)) {
@@ -890,29 +900,33 @@ function theme_file_upload_help($description, $upload_validators) {
 /**
  * Theme function for 'default' file field formatter.
  */
-function theme_field_formatter_file_default($element) {
-  return theme('file_link', (object) $element['#item']);
+function theme_field_formatter_file_default($variables) {
+  $element = $variables['element'];
+  return theme('file_link', array('file' => (object) $element['#item']));
 }
 
 /**
  * Theme function for 'url_plain' file field formatter.
  */
-function theme_field_formatter_file_url_plain($element) {
+function theme_field_formatter_file_url_plain($variables) {
+  $element = $variables['element'];
   return empty($element['#item']['uri']) ? '' : file_create_url($element['#item']['uri']);
 }
 
 /**
  * Theme function for the 'table' formatter.
  */
-function theme_field_formatter_file_table($element) {
+function theme_field_formatter_file_table($variables) {
+  $element = $variables['element'];
+
   $header = array(t('Attachment'), t('Size'));
   $rows = array();
   foreach (element_children($element) as $key) {
     $rows[] = array(
-      theme('file_link', (object) $element[$key]['#item']),
+      theme('file_link', array('file' => (object) $element[$key]['#item'])),
       format_size($element[$key]['#item']['filesize']),
     );
   }
 
-  return empty($rows) ? '' : theme('table', $header, $rows);
+  return empty($rows) ? '' : theme('table', array('header' => $header, 'rows' => $rows));
 }

@@ -570,7 +570,9 @@ function field_test_theme() {
 /**
  * Theme function for 'field_test_default' formatter.
  */
-function theme_field_formatter_field_test_default($element) {
+function theme_field_formatter_field_test_default($variables) {
+  $element = $variables['element'];
+
   $value = $element['#item']['value'];
   $settings = $element['#settings'];
 
@@ -580,7 +582,9 @@ function theme_field_formatter_field_test_default($element) {
 /**
  * Theme function for 'field_test_multiple' formatter.
  */
-function theme_field_formatter_field_test_multiple($element) {
+function theme_field_formatter_field_test_multiple($variables) {
+  $element = $variables['element'];
+
   $settings = $element['#settings'];
 
   $items = array();

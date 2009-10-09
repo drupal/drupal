@@ -180,7 +180,7 @@ function trigger_get_assigned_actions($hook) {
 function trigger_theme() {
   return array(
     'trigger_display' => array(
-      'arguments' => array('element'),
+      'arguments' => array('element' => NULL),
       'file' => 'trigger.admin.inc',
     ),
   );

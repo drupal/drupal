@@ -69,9 +69,17 @@ function locale_languages_overview_form() {
 /**
  * Theme the language overview form.
  *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: @todo: document
+ *
+ * @return
+ *   A themed HTML string representing the form.
+ *
  * @ingroup themeable
  */
-function theme_locale_languages_overview_form($form) {
+function theme_locale_languages_overview_form($variables) {
+  $form = $variables['form'];
   $default = language_default();
   foreach ($form['name'] as $key => $element) {
     // Do not take form control structures.
@@ -96,7 +104,7 @@ function theme_locale_languages_overview_form($form) {
     }
   }
   $header = array(array('data' => t('English name')), array('data' => t('Native name')), array('data' => t('Code')), array('data' => t('Direction')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Weight')), array('data' => t('Operations')));
-  $output = theme('table', $header, $rows, array('id' => 'language-order'));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'language-order')));
   $output .= drupal_render_children($form);
 
   drupal_add_tabledrag('language-order', 'order', 'sibling', 'language-order-weight');
@@ -543,7 +551,7 @@ function locale_translate_overview_screen() {
     $rows[$data->language][$data->textgroup] = $data->translation . '/' . $groupsums[$data->textgroup] . " ($ratio%)";
   }
 
-  return theme('table', $headers, $rows);
+  return theme('table', array('header' => $headers, 'rows' => $rows));
 }
 /**
  * @} End of "locale-translate-overview"
@@ -2305,8 +2313,8 @@ function _locale_translate_seek() {
   }
 
   if (count($rows)) {
-    $output .= theme('table', $header, $rows);
-    if ($pager = theme('pager', NULL)) {
+    $output .= theme('table', array('header' => $header, 'rows' => $rows));
+    if ($pager = theme('pager', array('tags' => NULL))) {
       $output .= $pager;
     }
   }

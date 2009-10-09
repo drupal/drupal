@@ -49,15 +49,16 @@ function search_view($type = 'node') {
 /**
  * Theme the listing of search results
  *
- * @param $title
- *   The subject of the listing.
- * @param $content
- *   The content of the listing.
+ * @param $variables
+ *   An associative array containing:
+ *   - title: The subject of the listing.
+ *   - content: The content of the listing.
+ *
  * @return
  *   A string containing the listing output.
  */
-function theme_search_results_listing($title, $content) {
-  $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
+function theme_search_results_listing($variables) {
+  $output = '<h2 class="title">' . $variables['title'] . '</h2><div>' . $variables['content'] . '</div>';
   return $output;
 }
 
@@ -73,9 +74,9 @@ function theme_search_results_listing($title, $content) {
 function template_preprocess_search_results(&$variables) {
   $variables['search_results'] = '';
   foreach ($variables['results'] as $result) {
-    $variables['search_results'] .= theme('search_result', $result, $variables['type']);
+    $variables['search_results'] .= theme('search_result', array('result' => $result, 'type' => $variables['type']));
   }
-  $variables['pager'] = theme('pager', NULL);
+  $variables['pager'] = theme('pager', array('tags' => NULL));
   // Provide alternate search results template.
   $variables['template_files'][] = 'search-results-' . $variables['type'];
 }

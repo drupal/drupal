@@ -14,7 +14,7 @@ function image_style_list() {
 
   $styles = image_styles();
   $page['image_style_list'] = array(
-    '#markup' => theme('image_style_list', $styles),
+    '#markup' => theme('image_style_list', array('styles' => $styles)),
     '#attached' => array(
       'css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
     ),
@@ -64,7 +64,7 @@ function image_style_form($form, &$form_state, $style) {
       '#markup' => $effect['label'],
     );
     $form['effects'][$ieid]['summary'] = array(
-      '#markup' => isset($effect['summary theme']) ? theme($effect['summary theme'], $effect['data']) : '',
+      '#markup' => isset($effect['summary theme']) ? theme($effect['summary theme'], array('data' => $effect['data'])) : '',
     );
     $form['effects'][$ieid]['weight'] = array(
       '#type' => 'weight',
@@ -106,7 +106,7 @@ function image_style_form($form, &$form_state, $style) {
   $form['preview'] = array(
     '#type' => 'item',
     '#title' => t('Preview'),
-    '#markup' => theme('image_style_preview', $style),
+    '#markup' => theme('image_style_preview', array('style' => $style)),
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -555,12 +555,16 @@ function image_rotate_form($data) {
 /**
  * Display the page containing the list of image styles.
  *
- * @param $styles
- *   An array of all the image styles returned by image_get_styles().
+ * @param $variables
+ *   An associative array containing:
+ *   - styles: An array of all the image styles returned by image_get_styles().
+ *
  * @see image_get_styles()
  * @ingroup themeable
  */
-function theme_image_style_list($styles) {
+function theme_image_style_list($variables) {
+  $styles = $variables['styles'];
+
   $header = array(t('Style name'), array('data' => t('Operations'), 'colspan' => 3));
   $rows = array();
   foreach ($styles as $style) {
@@ -583,17 +587,21 @@ function theme_image_style_list($styles) {
     ));
   }
 
-  return theme('table', $header, $rows);
+  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**
  * Theme callback for listing the effects within a specific image style.
  *
- * @param $form
- *   An associative array containing the structure of the effects group.
+ * @param $variables
+ *   An associative array containing:
+ *   - form: An associative array containing the structure of the effects group.
+ *
  * @ingroup themeable
  */
-function theme_image_style_effects($form) {
+function theme_image_style_effects($variables) {
+  $form = $variables['form'];
+
   $rows = array();
 
   foreach (element_children($form) as $key) {
@@ -634,7 +642,7 @@ function theme_image_style_effects($form) {
     )));
   }
 
-  $output = theme('table', $header, $rows, array('id' => 'image-style-effects'));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'image-style-effects')));
   drupal_add_tabledrag('image-style-effects', 'order', 'sibling', 'image-effect-order-weight');
   return $output;
 }
@@ -642,11 +650,15 @@ function theme_image_style_effects($form) {
 /**
  * Theme callback for displaying a preview of an image style.
  *
- * @param $style
- *   The image style array being previewed.
+ * @param $variables
+ *   An associative array containing:
+ *   - style: The image style array being previewed.
+ *
  * @ingroup themeable
  */
-function theme_image_style_preview($style) {
+function theme_image_style_preview($variables) {
+  $style = $variables['style'];
+
   $sample_image = variable_get('image_style_preview_image', drupal_get_path('module', 'image') . '/sample.png');
   $sample_width = 160;
   $sample_height = 160;
@@ -690,7 +702,7 @@ function theme_image_style_preview($style) {
   $output .= '<div class="preview-image-wrapper">';
   $output .= t('original') . ' (' . l(t('view actual size'), $original_path) . ')';
   $output .= '<div class="preview-image original-image" style="' . $original_attributes['style'] . '">';
-  $output .= '<a href="' . url($original_path) . '?' . time() . '">' . theme('image', $original_path . '?' . time(), t('Sample original image'), '', $original_attributes, FALSE) . '</a>';
+  $output .= '<a href="' . url($original_path) . '?' . time() . '">' . theme('image', array('path' => $original_path . '?' . time(), 'alt' => t('Sample original image'), 'title' => '', 'attributes' => $original_attributes, 'getsize' => FALSE)) . '</a>';
   $output .= '<div class="height" style="height: ' . $original_height . 'px"><span>' . $original_image['height'] . 'px</span></div>';
   $output .= '<div class="width" style="width: ' . $original_width . 'px"><span>' . $original_image['width'] . 'px</span></div>';
   $output .= '</div>'; // End preview-image.
@@ -700,7 +712,7 @@ function theme_image_style_preview($style) {
   $output .= '<div class="preview-image-wrapper">';
   $output .= check_plain($style['name']) . ' (' . l(t('view actual size'), file_create_url($preview_file) . '?' . time()) . ')';
   $output .= '<div class="preview-image modified-image" style="' . $preview_attributes['style'] . '">';
-  $output .= '<a href="' . file_create_url($preview_file) . '?' . time() . '">' . theme('image', file_create_url($preview_file) . '?' . time(), t('Sample modified image'), '', $preview_attributes, FALSE) . '</a>';
+  $output .= '<a href="' . file_create_url($preview_file) . '?' . time() . '">' . theme('image', array('path' => file_create_url($preview_file) . '?' . time(), 'alt' => t('Sample modified image'), 'title' => '', 'attributes' => $preview_attributes, 'getsize' => FALSE)) . '</a>';
   $output .= '<div class="height" style="height: ' . $preview_height . 'px"><span>' . $preview_image['height'] . 'px</span></div>';
   $output .= '<div class="width" style="width: ' . $preview_width . 'px"><span>' . $preview_image['width'] . 'px</span></div>';
   $output .= '</div>'; // End preview-image.
@@ -714,11 +726,15 @@ function theme_image_style_preview($style) {
 /**
  * Theme callback for displaying a grid of checkboxes.
  *
- * @param $element
- *   A Form API element containing radio buttons.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A Form API element containing radio buttons.
+ *
  * @ingroup themeable
  */
-function theme_image_anchor($element) {
+function theme_image_anchor($variables) {
+  $element = $variables['element'];
+
   $rows = array();
   $row = array();
   foreach (element_children($element) as $n => $key) {
@@ -731,17 +747,21 @@ function theme_image_anchor($element) {
     }
   }
 
-  return theme('table', array(), $rows, array('class' => array('image-anchor')));
+  return theme('table', array('header' => array(), 'rows' => $rows, 'attributes' => array('class' => array('image-anchor'))));
 }
 
 /**
  * Theme callback for image resize effect summary output.
  *
- * @param $data
- *   The current configuration for this resize effect.
+ * @param $variables
+ *   An associative array containing:
+ *   - data: The current configuration for this resize effect.
+ *
  * @ingroup themeable
  */
-function theme_image_resize_summary($data) {
+function theme_image_resize_summary($variables) {
+  $data = $variables['data'];
+
   if ($data['width'] && $data['height']) {
     return check_plain($data['width']) . 'x' . check_plain($data['height']);
   }
@@ -753,32 +773,40 @@ function theme_image_resize_summary($data) {
 /**
  * Theme callback for image scale effect summary output.
  *
- * @param $data
- *   The current configuration for this scale effect.
+ * @param $variables
+ *   An associative array containing:
+ *   - data: The current configuration for this scale effect.
+ *
  * @ingroup themeable
  */
-function theme_image_scale_summary($data) {
-  return theme('image_resize_summary', $data) . ' ' . ($data['upscale'] ? '(' . t('upscaling allowed') . ')' : '');
+function theme_image_scale_summary($variables) {
+  $data = $variables['data'];
+  return theme('image_resize_summary', array('data' => $data)) . ' ' . ($data['upscale'] ? '(' . t('upscaling allowed') . ')' : '');
 }
 
 /**
  * Theme callback for image crop effect summary output.
  *
- * @param $data
- *   The current configuration for this crop effect.
+ * @param $variables
+ *   An associative array containing:
+ *   - data: The current configuration for this crop effect.
+ *
  * @ingroup themeable
  */
-function theme_image_crop_summary($data) {
-  return theme('image_resize_summary', $data);
+function theme_image_crop_summary($variables) {
+  return theme('image_resize_summary', $variables);
 }
 
 /**
  * Theme callback for image rotate effect summary output.
  *
- * @param $data
- *   The current configuration for this rotate effect.
+ * @param $variables
+ *   An associative array containing:
+ *   - data: The current configuration for this rotate effect.
+ *
  * @ingroup themeable
  */
-function theme_image_rotate_summary($data) {
+function theme_image_rotate_summary($variables) {
+  $data = $variables['data'];
   return ($data['random']) ? t('random between -@degrees&deg and @degrees&deg', array('@degrees' => str_replace('-', '', $data['degrees']))) : t('@degrees&deg', array('@degrees' => $data['degrees']));
 }

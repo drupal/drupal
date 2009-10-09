@@ -270,7 +270,7 @@ function node_title_list($result, $title = NULL) {
     $num_rows = TRUE;
   }
 
-  return $num_rows ? theme('node_list', $items, $title) : FALSE;
+  return $num_rows ? theme('node_list', array('items' => $items, 'title' => $title)) : FALSE;
 }
 
 /**
@@ -278,8 +278,8 @@ function node_title_list($result, $title = NULL) {
  *
  * @ingroup themeable
  */
-function theme_node_list($items, $title = NULL) {
-  return theme('item_list', $items, $title);
+function theme_node_list($variables) {
+  return theme('item_list', $variables);
 }
 
 /**
@@ -1162,7 +1162,7 @@ function template_preprocess_node(&$variables) {
   $node = $variables['node'];
 
   $variables['date']      = format_date($node->created);
-  $variables['name']      = theme('username', $node);
+  $variables['name']      = theme('username', array('account' => $node));
   $variables['node_url']  = url('node/' . $node->nid);
   $variables['title']     = check_plain($node->title);
   $variables['page']      = (bool)menu_get_object();
@@ -1185,7 +1185,7 @@ function template_preprocess_node(&$variables) {
   // Display post information only on certain node types.
   if (variable_get('node_submitted_' . $node->type, TRUE)) {
     $variables['display_submitted'] = TRUE;
-    $variables['user_picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
+    $variables['user_picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', array('account' => $node)) : '';
   }
   else {
     $variables['display_submitted'] = FALSE;
@@ -1220,8 +1220,8 @@ function template_preprocess_node(&$variables) {
  *
  * @ingroup themeable
  */
-function theme_node_log_message($log) {
-  return '<div class="log"><div class="title">' . t('Log') . ':</div>' . $log . '</div>';
+function theme_node_log_message($variables) {
+  return '<div class="log"><div class="title">' . t('Log') . ':</div>' . $variables['log'] . '</div>';
 }
 
 /**
@@ -1411,7 +1411,7 @@ function node_search_execute($keys = NULL) {
       'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
       'type' => check_plain(node_type_get_name($node)),
       'title' => $node->title,
-      'user' => theme('username', $node),
+      'user' => theme('username', array('account' => $node)),
       'date' => $node->changed,
       'node' => $node,
       'extra' => $extra,
@@ -1520,7 +1520,9 @@ function node_user_cancel($edit, $account, $method) {
  *
  * @ingroup themeable
  */
-function theme_node_search_admin($form) {
+function theme_node_search_admin($variables) {
+  $form = $variables['form'];
+
   $output = drupal_render($form['info']);
 
   $header = array(t('Factor'), t('Weight'));
@@ -1531,7 +1533,7 @@ function theme_node_search_admin($form) {
     $row[] = drupal_render($form['factors'][$key]);
     $rows[] = $row;
   }
-  $output .= theme('table', $header, $rows);
+  $output .= theme('table', array('header' => $header, 'rows' => $rows));
 
   $output .= drupal_render_children($form);
   return $output;
@@ -1819,7 +1821,7 @@ function node_block_info() {
  */
 function node_block_view($delta = '') {
   $block['subject'] = t('Syndicate');
-  $block['content'] = theme('feed_icon', url('rss.xml'), t('Syndicate'));
+  $block['content'] = theme('feed_icon', array('url' => url('rss.xml'), 'title' => t('Syndicate')));
 
   return $block;
 }
@@ -1967,7 +1969,7 @@ function node_page_default() {
       $default_links[] = l(t('Change the default front page'), 'admin/config/system/site-information');
     }
     if (!empty($default_links)) {
-      $default_message .= theme('item_list', $default_links);
+      $default_message .= theme('item_list', array('items' => $default_links));
     }
 
     $build['default_message'] = array(

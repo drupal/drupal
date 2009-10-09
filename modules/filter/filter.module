@@ -265,7 +265,7 @@ function filter_permission() {
     if (!empty($permission)) {
       // Only link to the text format configuration page if the user who is
       // viewing this will have access to that page.
-      $format_name_replacement = user_access('administer filters') ? l($format->name, 'admin/config/content/formats/' . $format->format) : theme('placeholder', $format->name);
+      $format_name_replacement = user_access('administer filters') ? l($format->name, 'admin/config/content/formats/' . $format->format) : theme('placeholder', array('text' => $format->name));
       $perms[$permission] = array(
         'title' => t("Use the %text_format text format", array('%text_format' => $format->name)),
         'description' => t('Use !text_format in forms when entering or editing content. %warning', array('!text_format' => $format_name_replacement, '%warning' => t('Warning: This permission may have security implications depending on how the text format is configured.'))),
@@ -371,7 +371,7 @@ function _filter_html_tips($filter, $format, $long = FALSE) {
           );
         }
       }
-      $output .= theme('table', $header, $rows);
+      $output .= theme('table', array('header' => $header, 'rows' => $rows));
 
       $output .= '<p>' . t('Most unusual characters can be directly entered without any problems.') . '</p>';
       $output .= '<p>' . t('If you do encounter problems, try using HTML character entities. A common example looks like &amp;amp; for an ampersand &amp; character. For a full list of entities see HTML\'s <a href="@html-entities">entities</a> page. Some of the available characters include:', array('@html-entities' => 'http://www.w3.org/TR/html4/sgml/entities.html')) . '</p>';
@@ -391,7 +391,7 @@ function _filter_html_tips($filter, $format, $long = FALSE) {
           array('data' => $entity[1], 'class' => array('get'))
         );
       }
-      $output .= theme('table', $header, $rows);
+      $output .= theme('table', array('header' => $header, 'rows' => $rows));
       return $output;
     }
 
@@ -761,7 +761,7 @@ function filter_form($selected_format = NULL, $weight = NULL, $parents = array('
   foreach ($formats as $format) {
     $options[$format->format] = $format->name;
     $form['format_guidelines'][$format->format] = array(
-      '#markup' => theme('filter_guidelines', $format),
+      '#markup' => theme('filter_guidelines', array('format' => $format)),
     );
   }
   $form['format'] = array(
@@ -906,9 +906,11 @@ function theme_filter_tips_more_info() {
  *
  * @ingroup themeable
  */
-function theme_filter_guidelines($format) {
+function theme_filter_guidelines($variables) {
+  $format = $variables['format'];
+
   $name = isset($format->name) ? '<label>' . $format->name . ':</label>' : '';
-  return '<div id="filter-guidelines-' . $format->format . '" class="filter-guidelines-item">' . $name . theme('filter_tips', _filter_tips($format->format, FALSE)) . '</div>';
+  return '<div id="filter-guidelines-' . $format->format . '" class="filter-guidelines-item">' . $name . theme('filter_tips', array('tips' => _filter_tips($format->format, FALSE))) . '</div>';
 }
 
 /**

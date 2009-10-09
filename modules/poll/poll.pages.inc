@@ -42,7 +42,7 @@ function poll_page() {
     $output .= '<li>' . l($node->title, "node/$node->nid") . ' - ' . format_plural($node->votes, '1 vote', '@count votes') . ' - ' . ($node->active ? t('open') : t('closed')) . '</li>';
   }
   $output .= '</ul>';
-  $output .= theme("pager", NULL);
+  $output .= theme("pager", array('tags' => NULL));
   return $output;
 }
 
@@ -72,14 +72,14 @@ function poll_votes($node) {
   $rows = array();
   foreach ($queried_votes as $vote) {
     $rows[] = array(
-      $vote->name ? theme('username', $vote) : check_plain($vote->hostname),
+      $vote->name ? theme('username', array('account' => $vote)) : check_plain($vote->hostname),
       check_plain($vote->chtext),
       format_date($vote->timestamp),
     );
   }
   $build['poll_votes_table'] = array(
-    '#theme' => 'table', 
-    '#header' => $header, 
+    '#theme' => 'table',
+    '#header' => $header,
     '#rows' => $rows,
     '#prefix' => t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.'),
   );

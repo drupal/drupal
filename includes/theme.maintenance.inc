@@ -85,7 +85,10 @@ function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine 
  *
  * @ingroup themeable
  */
-function theme_task_list($items, $active = NULL) {
+function theme_task_list($variables) {
+  $items = $variables['items'];
+  $active = $variables['active'];
+
   $done = isset($items[$active]) || $active == NULL;
   $output = '<h2 class="element-invisible">Installation tasks</h2>';
   $output .= '<ol class="task-list">';
@@ -115,14 +118,13 @@ function theme_task_list($items, $active = NULL) {
  *
  * Note: this function is not themeable.
  *
- * @param $content
- *   The page content to show.
+ * @param $variables
+ *   An associative array containing:
+ *   - content: The page content to show.
  */
-function theme_install_page($content) {
+function theme_install_page($variables) {
   drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
 
-  // Assign content.
-  $variables['content'] = $content;
   // Delay setting the message variable so it can be processed below.
   $variables['show_messages'] = FALSE;
   // Variable processors invoked manually since this function and theme_update_page()
@@ -136,7 +138,7 @@ function theme_install_page($content) {
   if (isset($messages['error'])) {
     $title = count($messages['error']) > 1 ? st('The following errors must be resolved before you can continue the installation process') : st('The following error must be resolved before you can continue the installation process');
     $variables['messages'] .= '<h3>' . $title . ':</h3>';
-    $variables['messages'] .= theme('status_messages', 'error');
+    $variables['messages'] .= theme('status_messages', array('display' => 'error'));
     $variables['content'] .= '<p>' . st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri())) . '</p>';
   }
 
@@ -144,14 +146,14 @@ function theme_install_page($content) {
   if (isset($messages['warning'])) {
     $title = count($messages['warning']) > 1 ? st('The following installation warnings should be carefully reviewed') : st('The following installation warning should be carefully reviewed');
     $variables['messages'] .= '<h4>' . $title . ':</h4>';
-    $variables['messages'] .= theme('status_messages', 'warning');
+    $variables['messages'] .= theme('status_messages', array('display' => 'warning'));
   }
 
   // Special handling of status messages
   if (isset($messages['status'])) {
     $title = count($messages['status']) > 1 ? st('The following installation warnings should be carefully reviewed, but in most cases may be safely ignored') : st('The following installation warning should be carefully reviewed, but in most cases may be safely ignored');
     $variables['messages'] .= '<h4>' . $title . ':</h4>';
-    $variables['messages'] .= theme('status_messages', 'status');
+    $variables['messages'] .= theme('status_messages', array('display' => 'status'));
   }
 
   // This was called as a theme hook (not template), so we need to
@@ -168,19 +170,16 @@ function theme_install_page($content) {
  *
  * Note: this function is not themeable.
  *
- * @param $content
- *   The page content to show.
- * @param $show_messages
- *   Whether to output status and error messages.
- *   FALSE can be useful to postpone the messages to a subsequent page.
+ * @param $variables
+ *   An associative array containing:
+ *   - content: The page content to show.
+ *   - show_messages: Whether to output status and error messages.
+ *     FALSE can be useful to postpone the messages to a subsequent page.
  */
-function theme_update_page($content, $show_messages = TRUE) {
+function theme_update_page($variables) {
   // Set required headers.
   drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
 
-  // Assign content and show message flag.
-  $variables['content'] = $content;
-  $variables['show_messages'] = $show_messages;
   // Variable processors invoked manually since this function and theme_install_page()
   // are exceptions in how it works within the theme system.
   template_preprocess($variables, 'update_page');
@@ -192,7 +191,7 @@ function theme_update_page($content, $show_messages = TRUE) {
   if (isset($messages['warning'])) {
     $title = count($messages['warning']) > 1 ? 'The following update warnings should be carefully reviewed before continuing' : 'The following update warning should be carefully reviewed before continuing';
     $variables['messages'] .= '<h4>' . $title . ':</h4>';
-    $variables['messages'] .= theme('status_messages', 'warning');
+    $variables['messages'] .= theme('status_messages', array('display' => 'warning'));
   }
 
   // This was called as a theme hook (not template), so we need to

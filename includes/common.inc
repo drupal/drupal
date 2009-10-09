@@ -320,7 +320,7 @@ function drupal_add_feed($url = NULL, $title = '') {
   $stored_feed_links = &drupal_static(__FUNCTION__, array());
 
   if (!is_null($url) && !isset($stored_feed_links[$url])) {
-    $stored_feed_links[$url] = theme('feed_icon', $url, $title);
+    $stored_feed_links[$url] = theme('feed_icon', array('url' => $url, 'title' => $title));
 
     drupal_add_link(array('rel' => 'alternate',
                           'type' => 'application/rss+xml',
@@ -650,8 +650,8 @@ function drupal_site_offline() {
   drupal_maintenance_theme();
   drupal_add_http_header('503 Service unavailable');
   drupal_set_title(t('Site under maintenance'));
-  print theme('maintenance_page', filter_xss_admin(variable_get('maintenance_mode_message',
-    t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))))));
+  print theme('maintenance_page', array('content' => filter_xss_admin(variable_get('maintenance_mode_message',
+    t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))))));
 }
 
 /**
@@ -1174,7 +1174,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       drupal_set_title(t('Error'));
       // We fallback to a maintenance page at this point, because the page generation
       // itself can generate errors.
-      print theme('maintenance_page', t('The website encountered an unexpected error. Please try again later.'));
+      print theme('maintenance_page', array('content' => t('The website encountered an unexpected error. Please try again later.')));
       exit;
     }
   }
@@ -1499,7 +1499,7 @@ function t($string, array $args = array(), array $options = array()) {
         case '%':
         default:
           // Escaped and placeholder.
-          $args[$key] = theme('placeholder', $value);
+          $args[$key] = theme('placeholder', array('text' => $value));
           break;
 
         case '!':
@@ -3683,7 +3683,7 @@ function drupal_get_library($module, $name) {
  * themed into a table. The table must have an id attribute set. If using
  * theme_table(), the id may be set as such:
  * @code
- * $output = theme('table', $header, $rows, array('id' => 'my-module-table'));
+ * $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'my-module-table')));
  * return $output;
  * @endcode
  *
@@ -4860,7 +4860,7 @@ function drupal_common_theme() {
       'arguments' => array('region' => NULL),
     ),
     'username' => array(
-      'arguments' => array('object' => NULL),
+      'arguments' => array('account' => NULL),
     ),
     'progress_bar' => array(
       'arguments' => array('percent' => NULL, 'message' => NULL),

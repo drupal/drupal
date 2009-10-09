@@ -1308,21 +1308,33 @@ function template_preprocess_menu_tree(&$variables) {
 /**
  * Theme wrapper for the HTML output for a menu sub-tree.
  *
+ * @param $variables
+ *   An associative array containing:
+ *   - tree: @todo: document
+ *
+ * @return
+ *   A themed HTML string.
+ *
  * @ingroup themeable
  */
-function theme_menu_tree($tree) {
-  return '<ul class="menu">' . $tree . '</ul>';
+function theme_menu_tree($variables) {
+  return '<ul class="menu">' . $variables['tree'] . '</ul>';
 }
 
 /**
  * Generate the HTML output for a menu link and submenu.
  *
- * @param $element
- *   Structured array data for a menu link.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: Structured array data for a menu link.
+ *
+ * @return
+ *   A themed HTML string.
  *
  * @ingroup themeable
  */
-function theme_menu_link(array $element) {
+function theme_menu_link(array $variables) {
+  $element = $variables['element'];
   $sub_menu = '';
 
   if ($element['#below']) {
@@ -1335,26 +1347,31 @@ function theme_menu_link(array $element) {
 /**
  * Generate the HTML output for a single local task link.
  *
- * @param $link
- *   A menu link array with 'title', 'href', and 'localized_options' keys.
- * @param $active
- *   A boolean indicating whether the local task is active.
+ * @param $variables
+ *   An associative array containing:
+ *   - link: A menu link array with 'title', 'href', and 'localized_options'
+ *     keys.
+ *   - active: A boolean indicating whether the local task is active.
  *
  * @ingroup themeable
  */
-function theme_menu_local_task($link, $active = FALSE) {
-  return '<li ' . ($active ? 'class="active" ' : '') . '>' . l($link['title'], $link['href'], $link['localized_options']) . "</li>\n";
+function theme_menu_local_task($variables) {
+  $link = $variables['link'];
+  return '<li ' . ($variables['active'] ? 'class="active" ' : '') . '>' . l($link['title'], $link['href'], $link['localized_options']) . "</li>\n";
 }
 
 /**
  * Generate the HTML output for a single local action link.
  *
- * @param $link
- *   A menu link array with 'title', 'href', and 'localized_options' keys.
+ * @param $variables
+ *   An associative array containing:
+ *   - link: A menu link array with 'title', 'href', and 'localized_options'
+ *     keys.
  *
  * @ingroup themeable
  */
-function theme_menu_local_action($link) {
+function theme_menu_local_action($variables) {
+  $link = $variables['link'];
   return '<li>' . l($link['title'], $link['href'], $link['localized_options']) . "</li>\n";
 }
 
@@ -1389,7 +1406,7 @@ function menu_get_active_help() {
     // Add "more help" link on admin pages if the module provides a
     // standalone help page.
     if ($arg[0] == "admin" && user_access('access administration pages') && module_exists('help') && $function('admin/help#' . $arg[2], $empty_arg) && $help) {
-      $output .= theme("more_help_link", url('admin/help/' . $arg[2]));
+      $output .= theme("more_help_link", array('url' => url('admin/help/' . $arg[2])));
     }
   }
   return $output;
@@ -1597,17 +1614,17 @@ function menu_local_tasks($level = 0) {
             for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
             // Use the path of the parent instead.
             $link['href'] = $tasks[$p]['href'];
-            $tabs_current .= theme('menu_local_task', $link, TRUE);
+            $tabs_current .= theme('menu_local_task', array('link' => $link, 'active' => TRUE));
             $next_path = $item['path'];
             $tab_count++;
           }
           else {
             if ($item['type'] == MENU_LOCAL_TASK) {
-              $tabs_current .= theme('menu_local_task', $link);
+              $tabs_current .= theme('menu_local_task', array('link' => $link));
               $tab_count++;
             }
             else {
-              $actions_current .= theme('menu_local_action', $link);
+              $actions_current .= theme('menu_local_action', array('link' => $link));
               $action_count++;
             }
           }
@@ -1649,14 +1666,14 @@ function menu_local_tasks($level = 0) {
           }
           // We check for the active tab.
           if ($item['path'] == $path) {
-            $tabs_current .= theme('menu_local_task', $link, TRUE);
+            $tabs_current .= theme('menu_local_task', array('link' => $link, 'active' => TRUE));
             $next_path = $item['tab_parent'];
             if (isset($tasks[$next_path])) {
               $next_parent = $tasks[$next_path]['tab_parent'];
             }
           }
           else {
-            $tabs_current .= theme('menu_local_task', $link);
+            $tabs_current .= theme('menu_local_task', array('link' => $link));
           }
         }
       }

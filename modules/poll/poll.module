@@ -744,11 +744,11 @@ function poll_view_results($node, $build_mode, $block = FALSE) {
   foreach ($node->choice as $i => $choice) {
     if (!empty($choice['chtext'])) {
       $chvotes = isset($choice['chvotes']) ? $choice['chvotes'] : NULL;
-      $poll_results .= theme('poll_bar', $choice['chtext'], $chvotes, $total_votes, isset($node->vote) && $node->vote == $i, $block);
+      $poll_results .= theme('poll_bar', array('title' => $choice['chtext'], 'votes' => $chvotes, 'total_votes' => $total_votes, 'vote' => isset($node->vote) && $node->vote == $i, 'block' => $block));
     }
   }
 
-  return theme('poll_results', $node->title, $poll_results, $total_votes, isset($node->links) ? $node->links : array(), $block, $node->nid, isset($node->vote) ? $node->vote : NULL);
+  return theme('poll_results', array('raw_title' => $node->title, 'results' => $poll_results, 'votes' => $total_votes, 'raw_links' => isset($node->links) ? $node->links : array(), 'block' => $block, 'nid' => $node->nid, 'vote' => isset($node->vote) ? $node->vote : NULL));
 }
 
 
@@ -757,7 +757,9 @@ function poll_view_results($node, $build_mode, $block = FALSE) {
  *
  * @ingroup themeable
  */
-function theme_poll_choices($form) {
+function theme_poll_choices($variables) {
+  $form = $variables['form'];
+
   drupal_add_tabledrag('poll-choice-table', 'order', 'sibling', 'poll-weight');
 
   $delta = 0;
@@ -793,7 +795,7 @@ function theme_poll_choices($form) {
     $rows[] = $row;
   }
 
-  $output = theme('table', $headers, $rows, array('id' => 'poll-choice-table'));
+  $output = theme('table', array('header' => $headers, 'rows' => $rows, 'attributes' => array('id' => 'poll-choice-table')));
   $output .= drupal_render_children($form);
   return $output;
 }
@@ -812,7 +814,7 @@ function theme_poll_choices($form) {
  * @see theme_poll_results()
  */
 function template_preprocess_poll_results(&$variables) {
-  $variables['links'] = theme('links', $variables['raw_links']);
+  $variables['links'] = theme('links', array('links' => $variables['raw_links']));
   if (isset($variables['vote']) && $variables['vote'] > -1 && user_access('cancel own vote')) {
     $variables['cancel_form'] = drupal_render(drupal_get_form('poll_cancel_form', $variables['nid']));
   }

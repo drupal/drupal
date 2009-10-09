@@ -20,5 +20,5 @@ function forum_page($tid = 0) {
     $topics = forum_get_topics($tid, $sortby, $forum_per_page);
   }
 
-  return theme('forums', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
+  return theme('forums', array('forums' => $forums, 'topics' => $topics, 'parents' => $parents, 'tid' => $tid, 'sortby' => $sortby, 'forums_per_page' => $forum_per_page));
 }

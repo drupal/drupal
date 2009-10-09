@@ -8,7 +8,9 @@
  *   An array containing the breadcrumb links.
  * @return a string containing the breadcrumb output.
  */
-function garland_breadcrumb($breadcrumb) {
+function garland_breadcrumb($variables) {
+  $breadcrumb = $variables['breadcrumb'];
+
   if (!empty($breadcrumb)) {
     // Provide a navigational heading to give context for breadcrumb links to
     // screen-reader users. Make the heading invisible with .element-invisible.
@@ -36,31 +38,33 @@ function garland_process_html(&$vars) {
 function garland_preprocess_page(&$vars) {
   $vars['tabs2'] = menu_secondary_local_tasks();
   if (isset($vars['main_menu'])) {
-    $vars['primary_nav'] = theme('links', $vars['main_menu'],
-      array(
+    $vars['primary_nav'] = theme('links', array(
+      'links' => $vars['main_menu'],
+      'attributes' => array(
         'class' => array('links', 'main-menu'),
       ),
-      array(
+      'heading' => array(
         'text' => t('Main menu'),
         'level' => 'h2',
         'class' => array('element-invisible'),
       )
-    );
+    ));
   }
   else {
     $vars['primary_nav'] = FALSE;
   }
   if (isset($vars['secondary_menu'])) {
-    $vars['secondary_nav'] = theme('links', $vars['secondary_menu'],
-      array(
+    $vars['secondary_nav'] = theme('links', array(
+      'links' => $vars['secondary_menu'],
+      'attributes' => array(
         'class' => array('links', 'secondary-menu'),
       ),
-      array(
+      'heading' => array(
         'text' => t('Secondary menu'),
         'level' => 'h2',
         'class' => array('element-invisible'),
       )
-    );
+    ));
   }
   else {
     $vars['secondary_nav'] = FALSE;

@@ -13,10 +13,10 @@
 function filter_tips_long() {
   $format = arg(2);
   if ($format) {
-    $output = theme('filter_tips', _filter_tips($format, TRUE), TRUE);
+    $output = theme('filter_tips', array('tips' => _filter_tips($format, TRUE), 'long' => TRUE));
   }
   else {
-    $output = theme('filter_tips', _filter_tips(-1, TRUE), TRUE);
+    $output = theme('filter_tips', array('tips' => _filter_tips(-1, TRUE), 'long' => TRUE));
   }
   return $output;
 }
@@ -25,30 +25,32 @@ function filter_tips_long() {
 /**
  * Render HTML for a set of filter tips.
  *
- * @param $tips
- *   An array containing descriptions and a CSS id in the form of
- *   'module-name/filter-id' (only used when $long is TRUE) for each
- *   filter in one or more text formats. Example:
- *   @code
- *     array(
- *       'Full HTML' => array(
- *         0 => array(
- *           'tip' => 'Web page addresses and e-mail addresses turn into links automatically.',
- *           'id' => 'filter/2',
+ * @param $variables
+ *   An associative array containing:
+ *   - tips: An array containing descriptions and a CSS id in the form of
+ *     'module-name/filter-id' (only used when $long is TRUE) for each
+ *     filter in one or more text formats. Example:
+ *     @code
+ *       array(
+ *         'Full HTML' => array(
+ *           0 => array(
+ *             'tip' => 'Web page addresses and e-mail addresses turn into links automatically.',
+ *             'id' => 'filter/2',
+ *           ),
  *         ),
- *       ),
- *     );
- *   @endcode
- * @param $long
- *   (optional) Whether the passed in filter tips contain extended explanations,
- *   i.e. intended to be output on the path 'filter/tips' (TRUE), or are in a
- *   short format, i.e. suitable to be displayed below a form element. Defaults
- *   to FALSE.
+ *       );
+ *     @endcode
+ *   - long: (optional) Whether the passed in filter tips contain extended
+ *     explanations, i.e. intended to be output on the path 'filter/tips'
+ *     (TRUE), or are in a short format, i.e. suitable to be displayed below a
+ *     form element. Defaults to FALSE.
  *
  * @see _filter_tips()
  * @ingroup themeable
  */
-function theme_filter_tips($tips, $long = FALSE) {
+function theme_filter_tips($variables) {
+  $tips = $variables['tips'];
+  $long = $variables['long'];
   $output = '';
 
   $multiple = count($tips) > 1;

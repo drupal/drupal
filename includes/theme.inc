@@ -609,12 +609,10 @@ function list_themes($refresh = FALSE) {
  * registry is checked to determine which implementation to use, which may
  * be a function or a template.
  *
- * If the implementation is a template, the arguments are converted to a
- * $variables array. This array is then modified by the module implementing
- * the hook, theme engine (if applicable) and the theme. The following
- * functions may be used to modify the $variables array. They are processed in
- * two distinct phases; "preprocess" and "process" functions. The order it is
- * listed here is the order in which it will execute.
+ * If the implementation is a template, the following functions may be used to
+ * modify the $variables array. They are processed in two distinct phases;
+ * "preprocess" and "process" functions. The order listed here is the order in
+ * which they execute.
  *
  * - template_preprocess(&$variables)
  *   This sets a default set of variables for all template implementations.
@@ -705,21 +703,9 @@ function list_themes($refresh = FALSE) {
  *
  * If the implementation is a function, only the hook-specific preprocess
  * and process functions (the ones ending in _HOOK) are called from the
- * above list. There are two reasons why the non-hook-specific preprocess
- * and process functions (the ones not ending in _HOOK) are not called for
- * function-implemented theme hooks:
- *
- * - Function-implemented theme hooks need to be fast, and calling the
- *   non-hook-specific preprocess and process functions on them would incur
- *   a noticeable performance penalty.
- *
- * - Function-implemented theme hooks can only make use of variables
- *   declared as arguments within the hook_theme() function that registers
- *   the theme hook, and cannot make use of additional generic variables.
- *   For the most part, non-hook-specific preprocess and process functions
- *   add/modify variables other than the theme hook's arguments, variables
- *   that are potentially useful in template files, but unavailable to
- *   function implementations.
+ * above list. This is because theme hooks with function implementations
+ * need to be fast, and calling the non-hook-specific preprocess and process
+ * functions for them would incur a noticeable performance penalty.
  *
  * For template-implemented theme hooks, there are two special variables that
  * these preprocess and process functions can set:
@@ -746,21 +732,26 @@ function list_themes($refresh = FALSE) {
  *   so that if the specific theme hook isn't implemented anywhere, a more
  *   generic one will be used. This can allow themes to create specific theme
  *   implementations for named objects.
- * @param ...
- *   Additional arguments to pass along to the theme function.
+ *
+ * @param $variables
+ *   An associative array of variables to merge with defaults from the theme
+ *   registry, pass to preprocess and process functions for modification, and
+ *   finally, pass to the function or template implementing the theme hook.
+ *   Alternatively, this can be a renderable array, in which case, its properties
+ *   are mapped to variables expected by the theme hook implementations.
+ *
  * @return
  *   An HTML string that generates the themed output.
  */
-function theme() {
-  $args = func_get_args();
-  $hook = array_shift($args);
-
+function theme($hook, $variables = array()) {
   static $hooks = NULL;
   if (!isset($hooks)) {
     drupal_theme_initialize();
     $hooks = theme_get_registry();
   }
 
+  // If an array of hook candidates were passed, use the first one that has an
+  // implementation.
   if (is_array($hook)) {
     foreach ($hook as $candidate) {
       if (isset($hooks[$candidate])) {
@@ -786,99 +777,78 @@ function theme() {
       include_once DRUPAL_ROOT . '/' . $include_file;
     }
   }
-  if (isset($info['function'])) {
-    // The theme call is a function.
 
-    // If a theme function that does not expect a renderable array is called
-    // with a renderable array as the only argument (via drupal_render), then
-    // we take the arguments from the properties of the renderable array. If
-    // missing, use hook_theme() defaults.
-    if (isset($args[0]) && is_array($args[0]) && isset($args[0]['#theme']) && count($info['arguments']) > 1) {
-      $new_args = array();
+  // If a renderable array is passed as $variables, then set $variables to
+  // what's expected by the theme hook. If the theme hook expects a single
+  // argument, set the renderable array as that argument. If the theme hook
+  // expects multiple arguments, set the properties of the renderable array as
+  // those arguments.
+  if (isset($variables['#theme']) || isset($variables['#theme_wrappers'])) {
+    $element = $variables;
+    $variables = array();
+    $n = count($info['arguments']);
+    if ($n == 1) {
+      $arg_keys = array_keys($info['arguments']);
+      $variables[$arg_keys[0]] = $element;
+    }
+    elseif ($n > 1) {
       foreach ($info['arguments'] as $name => $default) {
-        $new_args[] = isset($args[0]["#$name"]) ? $args[0]["#$name"] : $default;
-      }
-      $args = $new_args;
-    }
-
-    // Invoke the variable processors, if any.
-    // We minimize the overhead for theming hooks that have no processors and
-    // are called many times per page request by caching '_no_processors'. If
-    // we do have processors, then the overhead of calling them overshadows the
-    // overhead of calling empty().
-    if (!isset($info['_no_processors'])) {
-      if (!empty($info['preprocess functions']) || !empty($info['process functions'])) {
-        $variables = array(
-          'theme_functions' => array(),
-        );
-        if (!empty($info['arguments'])) {
-          $count = 0;
-          foreach ($info['arguments'] as $name => $default) {
-            $variables[$name] = isset($args[$count]) ? $args[$count] : $default;
-            $count++;
-          }
+        if (isset($element["#$name"])) {
+          $variables[$name] = $element["#$name"];
         }
-        // We don't want a poorly behaved process function changing $hook.
-        $hook_clone = $hook;
-        foreach (array('preprocess functions', 'process functions') as $phase) {
-          if (!empty($info[$phase])) {
-            foreach ($info[$phase] as $processor_function) {
-              if (function_exists($processor_function)) {
-                $processor_function($variables, $hook_clone);
-              }
-            }
-          }
-        }
-        if (!empty($info['arguments'])) {
-          $count = 0;
-          foreach ($info['arguments'] as $name => $default) {
-            $args[$count] = $variables[$name];
-            $count++;
-          }
-        }
-
-        // Get suggestions for alternate functions out of the variables that
-        // were set. This lets us dynamically choose a function from a list.
-        // The order is FILO, so this array is ordered from least appropriate
-        // functions to most appropriate last.
-        $suggestions = array();
-        if (isset($variables['theme_functions'])) {
-          $suggestions = $variables['theme_functions'];
-        }
-        if (isset($variables['theme_function'])) {
-          $suggestions[] = $variables['theme_function'];
-        }
-        foreach (array_reverse($suggestions) as $suggestion) {
-          if (function_exists($suggestion)) {
-            $info['function'] = $suggestion;
-            break;
-          }
-        }
-      }
-      else {
-        $hooks[$hook]['_no_processors'] = TRUE;
       }
     }
+  }
 
-    // Call the function.
+  // Merge in argument defaults.
+  if (!empty($info['arguments'])) {
+    $variables += $info['arguments'];
+  }
+
+  // Invoke the variable processors, if any. The processors may specify
+  // alternate suggestions for which function/template should be used.
+  if (isset($info['preprocess functions']) || isset($info['process functions'])) {
+    $variables['theme_functions'] = array();
+    $variables['template_files'] = array();
+    foreach (array('preprocess functions', 'process functions') as $phase) {
+      if (!empty($info[$phase])) {
+        foreach ($info[$phase] as $processor_function) {
+          if (function_exists($processor_function)) {
+            // We don't want a poorly behaved process function changing $hook.
+            $hook_clone = $hook;
+            $processor_function($variables, $hook_clone);
+          }
+        }
+      }
+    }
+    // Function suggestion takes priority over template suggestion.
+    // theme_function takes priority over theme_functions.
+    // theme_functions are in FILO order (least appropriate to most appropriate).
+    // Here, just look for function suggestions. Deal with template
+    // suggestions only after determining that the theme call is a template.
+    $suggestions = array();
+    if (!empty($variables['theme_functions'])) {
+      $suggestions = $variables['theme_functions'];
+    }
+    if (!empty($variables['theme_function'])) {
+      $suggestions[] = $variables['theme_function'];
+    }
+    foreach (array_reverse($suggestions) as $suggestion) {
+      if (function_exists($suggestion)) {
+        $info['function'] = $suggestion;
+        break;
+      }
+    }
+  }
+
+  // Generate the output using either a function or a template.
+  if (isset($info['function'])) {
     if (function_exists($info['function'])) {
-      $output = call_user_func_array($info['function'], $args);
+      $output = $info['function']($variables);
     }
   }
   else {
-    // The theme call is a template.
-    $variables = array(
-      'template_files' => array()
-    );
-    if (!empty($info['arguments'])) {
-      $count = 0;
-      foreach ($info['arguments'] as $name => $default) {
-        $variables[$name] = isset($args[$count]) ? $args[$count] : $default;
-        $count++;
-      }
-    }
-
-    // default render function and extension.
+    // Default render function and extension.
     $render_function = 'theme_render_template';
     $extension = '.tpl.php';
 
@@ -898,44 +868,32 @@ function theme() {
       }
     }
 
-    // This construct ensures that we can keep a reference through
-    // call_user_func_array.
-    $args = array(&$variables, $hook);
-    foreach (array('preprocess functions', 'process functions') as $phase) {
-      if (!empty($info[$phase])) {
-        foreach ($info[$phase] as $processor_function) {
-          if (function_exists($processor_function)) {
-            call_user_func_array($processor_function, $args);
-          }
-        }
-      }
-    }
-
-    // Get suggestions for alternate templates out of the variables
-    // that were set. This lets us dynamically choose a template
-    // from a list. The order is FILO, so this array is ordered from
-    // least appropriate first to most appropriate last.
+    // Find which template file exists and can be used. Priority order is:
+    // 1. $variables['template_file'].
+    // 2. $variables['template_files'] in FILO order (later in array is higher
+    //    priority).
+    // 3. $info['template'].
     $suggestions = array();
-
     if (isset($variables['template_files'])) {
       $suggestions = $variables['template_files'];
     }
     if (isset($variables['template_file'])) {
       $suggestions[] = $variables['template_file'];
     }
-
     if ($suggestions) {
       $template_file = drupal_discover_template($info['theme paths'], $suggestions, $extension);
     }
-
     if (empty($template_file)) {
       $template_file = $info['template'] . $extension;
       if (isset($info['path'])) {
         $template_file = $info['path'] . '/' . $template_file;
       }
     }
+
+    // Render the output using the found template file.
     $output = $render_function($template_file, $variables);
   }
+
   // restore path_to_theme()
   $theme_path = $temp;
   return $output;
@@ -1288,11 +1246,12 @@ function theme_render_template($template_file, $variables) {
  *
  * Inside Drupal, the theme layer is utilized by the use of the theme()
  * function, which is passed the name of a component (the theme hook)
- * and several arguments. For example, theme('table', $header, $rows);
+ * and an array of variables. For example,
+ * theme('table', array('header' => $header, 'rows' => $rows));
  * Additionally, the theme() function can take an array of theme
  * hooks, which can be used to provide 'fallback' implementations to
  * allow for more specific control of output. For example, the function:
- * theme(array('table__foo', 'table'), $header, $rows) would look to see if
+ * theme(array('table__foo', 'table'), $variables) would look to see if
  * 'table__foo' is registered anywhere; if it is not, it would 'fall back'
  * to the generic 'table' implementation. This can be used to attach specific
  * theme functions to named objects, allowing the themer more control over
@@ -1344,30 +1303,37 @@ function theme_render_template($template_file, $variables) {
  * Formats text for emphasized display in a placeholder inside a sentence.
  * Used automatically by t().
  *
- * @param $text
- *   The text to format (plain-text).
+ * @param $variables
+ *   An associative array containing:
+ *   - text: The text to format (plain-text).
+ *
  * @return
  *   The formatted text (html).
  */
-function theme_placeholder($text) {
-  return '<em>' . check_plain($text) . '</em>';
+function theme_placeholder($variables) {
+  return '<em>' . check_plain($variables['text']) . '</em>';
 }
 
 /**
  * Return a themed set of status and/or error messages. The messages are grouped
  * by type.
  *
- * An invisible heading identifies the messages for assistive technology. Sighted
- * users see a colored box. See http://www.w3.org/TR/WCAG-TECHS/H69.html for info.
+ * An invisible heading identifies the messages for assistive technology.
+ * Sighted users see a colored box. See http://www.w3.org/TR/WCAG-TECHS/H69.html
+ * for info.
  *
- * @param $display
- *   (optional) Set to 'status' or 'error' to display only messages of that type.
+ * @param $variables
+ *   An associative array containing:
+ *   - display: (optional) Set to 'status' or 'error' to display only messages
+ *     of that type.
  *
  * @return
  *   A string containing the messages.
  */
-function theme_status_messages($display = NULL) {
+function theme_status_messages($variables) {
+  $display = $variables['display'];
   $output = '';
+
   $status_heading = array(
     'status' => t('Status message'),
     'error' => t('Error message'),
@@ -1396,34 +1362,41 @@ function theme_status_messages($display = NULL) {
 /**
  * Return a themed set of links.
  *
- * @param $links
- *   A keyed array of links to be themed. The key for each link is used as its css class.
- *   Each link should be itself an array, with the following keys:
- *    - title: the link text
- *    - href: the link URL. If omitted, the 'title' is shown as a plain text item in the links list.
- *    - html: (optional) set this to TRUE if 'title' is HTML so it will be escaped.
- *   Array items are passed on to the l() function's $options parameter when creating the link.
- * @param $attributes
- *   A keyed array of attributes.
- * @param $heading
- *   An optional keyed array or a string for a heading to precede the links.
- *   When using an array the following keys can be used:
- *    - text: the heading text
- *    - level: the heading level (e.g. 'h2', 'h3')
- *    - class: (optional) an array of the CSS classes for the heading
- *   When using a string it will be used as the text of the heading and the
- *   level will default to 'h2'.
- *   Headings should be used on navigation menus and any list of links that
- *   consistently appears on multiple pages. To make the heading invisible
- *   use the 'element-invisible' CSS class. Do not use 'display:none', which
- *   removes it from screen-readers and assistive technology. Headings allow
- *   screen-reader and keyboard only users to navigate to or skip the links.
- *   See http://juicystudio.com/article/screen-readers-display-none.php
- *   and http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
+ * @param $variables
+ *   An associative array containing:
+ *   - links: A keyed array of links to be themed. The key for each link is used
+ *     as its css class. Each link should be itself an array, with the following
+ *     keys:
+ *      - title: the link text
+ *      - href: the link URL. If omitted, the 'title' is shown as a plain text
+ *        item in the links list.
+ *      - html: (optional) set this to TRUE if 'title' is HTML so it will be
+ *        escaped.
+ *     Array items are passed on to the l() function's $options parameter when
+ *     creating the link.
+ *   - attributes: A keyed array of attributes.
+ *   - heading: An optional keyed array or a string for a heading to precede the
+ *     links. When using an array the following keys can be used:
+ *      - text: the heading text
+ *      - level: the heading level (e.g. 'h2', 'h3')
+ *      - class: (optional) an array of the CSS classes for the heading
+ *     When using a string it will be used as the text of the heading and the
+ *     level will default to 'h2'.
+ *     Headings should be used on navigation menus and any list of links that
+ *     consistently appears on multiple pages. To make the heading invisible
+ *     use the 'element-invisible' CSS class. Do not use 'display:none', which
+ *     removes it from screen-readers and assistive technology. Headings allow
+ *     screen-reader and keyboard only users to navigate to or skip the links.
+ *     See http://juicystudio.com/article/screen-readers-display-none.php
+ *     and http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
+ *
  * @return
  *   A string containing an unordered list of links.
  */
-function theme_links($links, $attributes = array('class' => array('links')), $heading = array()) {
+function theme_links($variables) {
+  $links = $variables['links'];
+  $attributes = $variables['attributes'];
+  $heading = $variables['heading'];
   global $language;
   $output = '';
 
@@ -1499,20 +1472,27 @@ function theme_links($links, $attributes = array('class' => array('links')), $he
 /**
  * Return a themed image.
  *
- * @param $path
- *   Either the path of the image file (relative to base_path()) or a full URL.
- * @param $alt
- *   The alternative text for text-based browsers.
- * @param $title
- *   The title text is displayed when the image is hovered in some popular browsers.
- * @param $attributes
- *   Associative array of attributes to be placed in the img tag.
- * @param $getsize
- *   If set to TRUE, the image's dimension are fetched and added as width/height attributes.
+ * @param $variables
+ *   An associative array containing:
+ *   - path: Either the path of the image file (relative to base_path()) or a
+ *     full URL.
+ *   - alt: The alternative text for text-based browsers.
+ *   - title: The title text is displayed when the image is hovered in some
+ *     popular browsers.
+ *   - attributes: Associative array of attributes to be placed in the img tag.
+ *   - getsize: If set to TRUE, the image's dimension are fetched and added as
+ *     width/height attributes.
+ *
  * @return
  *   A string containing the image tag.
  */
-function theme_image($path, $alt = '', $title = '', $attributes = array(), $getsize = TRUE) {
+function theme_image($variables) {
+  $path = $variables['path'];
+  $alt = $variables['alt'];
+  $title = $variables['title'];
+  $attributes = $variables['attributes'];
+  $getsize = $variables['getsize'];
+
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
     $url = file_create_url($path);
@@ -1523,11 +1503,16 @@ function theme_image($path, $alt = '', $title = '', $attributes = array(), $gets
 /**
  * Return a themed breadcrumb trail.
  *
- * @param $breadcrumb
- *   An array containing the breadcrumb links.
- * @return a string containing the breadcrumb output.
+ * @param $variables
+ *   An associative array containing:
+ *   - breadcrumb: An array containing the breadcrumb links.
+ *
+ * @return
+ *   A string containing the breadcrumb output.
  */
-function theme_breadcrumb($breadcrumb) {
+function theme_breadcrumb($variables) {
+  $breadcrumb = $variables['breadcrumb'];
+
   if (!empty($breadcrumb)) {
     // Provide a navigational heading to give context for breadcrumb links to
     // screen-reader users. Make the heading invisible with .element-invisible.
@@ -1541,89 +1526,97 @@ function theme_breadcrumb($breadcrumb) {
 /**
  * Return a themed submenu, typically displayed under the tabs.
  *
- * @param $links
- *   An array of links.
+ * @param $variables
+ *   An associative array containing:
+ *   - links: An array of links.
  */
-function theme_submenu($links) {
+function theme_submenu($variables) {
+  $links = $variables['links'];
+
   return '<div class="submenu">' . implode(' | ', $links) . '</div>';
 }
 
 /**
  * Return a themed table.
  *
- * @param $header
- *   An array containing the table headers. Each element of the array can be
- *   either a localized string or an associative array with the following keys:
- *   - "data": The localized title of the table column.
- *   - "field": The database field represented in the table column (required if
- *     user is to be able to sort on this column).
- *   - "sort": A default sort order for this column ("asc" or "desc").
- *   - Any HTML attributes, such as "colspan", to apply to the column header cell.
- * @param $rows
- *   An array of table rows. Every row is an array of cells, or an associative
- *   array with the following keys:
- *   - "data": an array of cells
- *   - Any HTML attributes, such as "class", to apply to the table row.
- *
- *   Each cell can be either a string or an associative array with the following keys:
- *   - "data": The string to display in the table cell.
- *   - "header": Indicates this cell is a header.
- *   - Any HTML attributes, such as "colspan", to apply to the table cell.
- *
- *   Here's an example for $rows:
- *   @verbatim
- *   $rows = array(
- *     // Simple row
- *     array(
- *       'Cell 1', 'Cell 2', 'Cell 3'
- *     ),
- *     // Row with attributes on the row and some of its cells.
- *     array(
- *       'data' => array('Cell 1', array('data' => 'Cell 2', 'colspan' => 2)), 'class' => array('funky')
- *     )
- *   );
- *   @endverbatim
- *
- * @param $attributes
- *   An array of HTML attributes to apply to the table tag.
- * @param $caption
- *   A localized string to use for the <caption> tag.
- * @param $colgroups
- *   An array of column groups. Each element of the array can be either:
- *   - An array of columns, each of which is an associative array of HTML attributes
- *     applied to the COL element.
- *   - An array of attributes applied to the COLGROUP element, which must include a
- *     "data" attribute. To add attributes to COL elements, set the "data" attribute
- *     with an array of columns, each of which is an associative array of HTML attributes.
- *   Here's an example for $colgroup:
- *   @verbatim
- *   $colgroup = array(
- *     // COLGROUP with one COL element.
- *     array(
+ * @param $variables
+ *   An associative array containing:
+ *   - header: An array containing the table headers. Each element of the array
+ *     can be either a localized string or an associative array with the
+ *     following keys:
+ *     - "data": The localized title of the table column.
+ *     - "field": The database field represented in the table column (required
+ *       if user is to be able to sort on this column).
+ *     - "sort": A default sort order for this column ("asc" or "desc").
+ *     - Any HTML attributes, such as "colspan", to apply to the column header
+ *       cell.
+ *   - rows: An array of table rows. Every row is an array of cells, or an
+ *     associative array with the following keys:
+ *     - "data": an array of cells
+ *     - Any HTML attributes, such as "class", to apply to the table row.
+ *     Each cell can be either a string or an associative array with the
+ *     following keys:
+ *     - "data": The string to display in the table cell.
+ *     - "header": Indicates this cell is a header.
+ *     - Any HTML attributes, such as "colspan", to apply to the table cell.
+ *     Here's an example for $rows:
+ *     @verbatim
+ *     $rows = array(
+ *       // Simple row
  *       array(
- *         'class' => array('funky'), // Attribute for the COL element.
+ *         'Cell 1', 'Cell 2', 'Cell 3'
  *       ),
- *     ),
- *     // Colgroup with attributes and inner COL elements.
- *     array(
- *       'data' => array(
+ *       // Row with attributes on the row and some of its cells.
+ *       array(
+ *         'data' => array('Cell 1', array('data' => 'Cell 2', 'colspan' => 2)), 'class' => array('funky')
+ *       )
+ *     );
+ *     @endverbatim
+ *   - attributes: An array of HTML attributes to apply to the table tag.
+ *   - caption: A localized string to use for the <caption> tag.
+ *   - colgroups: An array of column groups. Each element of the array can be
+ *     either:
+ *     - An array of columns, each of which is an associative array of HTML
+ *       attributes applied to the COL element.
+ *     - An array of attributes applied to the COLGROUP element, which must
+ *       include a "data" attribute. To add attributes to COL elements, set the
+ *       "data" attribute with an array of columns, each of which is an
+ *       associative array of HTML attributes.
+ *     Here's an example for $colgroup:
+ *     @verbatim
+ *     $colgroup = array(
+ *       // COLGROUP with one COL element.
+ *       array(
  *         array(
  *           'class' => array('funky'), // Attribute for the COL element.
  *         ),
  *       ),
- *       'class' => array('jazzy'), // Attribute for the COLGROUP element.
- *     ),
- *   );
- *   @endverbatim
- *   These optional tags are used to group and set properties on columns
- *   within a table. For example, one may easily group three columns and
- *   apply same background style to all.
- * @param $sticky
- *   Use a "sticky" table header.
+ *       // Colgroup with attributes and inner COL elements.
+ *       array(
+ *         'data' => array(
+ *           array(
+ *             'class' => array('funky'), // Attribute for the COL element.
+ *           ),
+ *         ),
+ *         'class' => array('jazzy'), // Attribute for the COLGROUP element.
+ *       ),
+ *     );
+ *     @endverbatim
+ *     These optional tags are used to group and set properties on columns
+ *     within a table. For example, one may easily group three columns and
+ *     apply same background style to all.
+ *   - sticky: Use a "sticky" table header.
+ *
  * @return
  *   An HTML string representing the table.
  */
-function theme_table($header, $rows, $attributes = array(), $caption = NULL, $colgroups = array(), $sticky = TRUE) {
+function theme_table($variables) {
+  $header = $variables['header'];
+  $rows = $variables['rows'];
+  $attributes = $variables['attributes'];
+  $caption = $variables['caption'];
+  $colgroups = $variables['colgroups'];
+  $sticky = $variables['sticky'];
 
   // Add sticky headers, if applicable.
   if (count($header) && $sticky) {
@@ -1747,17 +1740,19 @@ function theme_table_select_header_cell() {
 /**
  * Return a themed sort icon.
  *
- * @param $style
- *   Set to either asc or desc. This sets which icon to show.
+ * @param $variables
+ *   An associative array containing:
+ *   - style: Set to either asc or desc. This sets which icon to show.
+ *
  * @return
  *   A themed sort icon.
  */
-function theme_tablesort_indicator($style) {
-  if ($style == "asc") {
-    return theme('image', 'misc/arrow-asc.png', t('sort icon'), t('sort ascending'));
+function theme_tablesort_indicator($variables) {
+  if ($variables['style'] == "asc") {
+    return theme('image', array('path' => 'misc/arrow-asc.png', 'alt' => t('sort icon'), 'title' => t('sort ascending')));
   }
   else {
-    return theme('image', 'misc/arrow-desc.png', t('sort icon'), t('sort descending'));
+    return theme('image', array('path' => 'misc/arrow-desc.png', 'alt' => t('sort icon'), 'title' => t('sort descending')));
   }
 }
 
@@ -1765,13 +1760,16 @@ function theme_tablesort_indicator($style) {
  * Return a themed marker, useful for marking new or updated
  * content.
  *
- * @param $type
- *   Number representing the marker type to display
- * @see MARK_NEW, MARK_UPDATED, MARK_READ
+ * @param $variables
+ *   An associative array containing:
+ *   - type: Number representing the marker type to display.
+ *     @see MARK_NEW, MARK_UPDATED, MARK_READ
+ *
  * @return
  *   A string containing the marker.
  */
-function theme_mark($type = MARK_NEW) {
+function theme_mark($variables) {
+  $type = $variables['type'];
   global $user;
   if ($user->uid) {
     if ($type == MARK_NEW) {
@@ -1786,22 +1784,27 @@ function theme_mark($type = MARK_NEW) {
 /**
  * Return a themed list of items.
  *
- * @param $items
- *   An array of items to be displayed in the list. If an item is a string,
- *   then it is used as is. If an item is an array, then the "data" element of
- *   the array is used as the contents of the list item. If an item is an array
- *   with a "children" element, those children are displayed in a nested list.
- *   All other elements are treated as attributes of the list item element.
- * @param $title
- *   The title of the list.
- * @param $type
- *   The type of list to return (e.g. "ul", "ol")
- * @param $attributes
- *   The attributes applied to the list element.
+ * @param $variables
+ *   An associative array containing:
+ *   - items: An array of items to be displayed in the list. If an item is a
+ *     string, then it is used as is. If an item is an array, then the "data"
+ *     element of the array is used as the contents of the list item. If an item
+ *     is an array with a "children" element, those children are displayed in a
+ *     nested list. All other elements are treated as attributes of the list
+ *     item element.
+ *   - title: The title of the list.
+ *   - type: The type of list to return (e.g. "ul", "ol").
+ *   - attributes: The attributes applied to the list element.
+ *
  * @return
  *   A string containing the list output.
  */
-function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attributes = array()) {
+function theme_item_list($variables) {
+  $items = $variables['items'];
+  $title = $variables['title'];
+  $type = $variables['type'];
+  $attributes = $variables['attributes'];
+
   $output = '<div class="item-list">';
   if (isset($title)) {
     $output .= '<h3>' . $title . '</h3>';
@@ -1849,92 +1852,89 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
 /**
  * Returns code that emits the 'more help'-link.
  */
-function theme_more_help_link($url) {
-  return '<div class="more-help-link">' . t('<a href="@link">More help</a>', array('@link' => check_url($url))) . '</div>';
+function theme_more_help_link($variables) {
+  return '<div class="more-help-link">' . t('<a href="@link">More help</a>', array('@link' => check_url($variables['url']))) . '</div>';
 }
 
 /**
  * Return code that emits an feed icon.
  *
- * @param $url
- *   The url of the feed.
- * @param $title
- *   A descriptive title of the feed.
+ * @param $variables
+ *   An associative array containing:
+ *   - url: The url of the feed.
+ *   - title: A descriptive title of the feed.
  */
-function theme_feed_icon($url, $title) {
-  $text = t('Subscribe to @feed-title', array('@feed-title' => $title));
-  if ($image = theme('image', 'misc/feed.png', $text)) {
-    return '<a href="' . check_url($url) . '" title="' . $text . '" class="feed-icon">' . $image . '</a>';
+function theme_feed_icon($variables) {
+  $text = t('Subscribe to @feed-title', array('@feed-title' => $variables['title']));
+  if ($image = theme('image', array('path' => 'misc/feed.png', 'alt' => $text))) {
+    return '<a href="' . check_url($variables['url']) . '" title="' . $text . '" class="feed-icon">' . $image . '</a>';
   }
 }
 
 /**
  * Returns code that emits the 'more' link used on blocks.
  *
- * @param $url
- *   The url of the main page
- * @param $title
- *   A descriptive verb for the link, like 'Read more'
+ * @param $variables
+ *   An associative array containing:
+ *   - url: The url of the main page
+ *   - title: A descriptive verb for the link, like 'Read more'
  */
-function theme_more_link($url, $title) {
-  return '<div class="more-link">' . t('<a href="@link" title="@title">more</a>', array('@link' => check_url($url), '@title' => $title)) . '</div>';
+function theme_more_link($variables) {
+  return '<div class="more-link">' . t('<a href="@link" title="@title">more</a>', array('@link' => check_url($variables['url']), '@title' => $variables['title'])) . '</div>';
 }
 
 /**
  * Preprocess variables for theme_username().
  *
- * Modules that make any changes to the $variables['object'] properties like
- * 'name' or 'extra' must insure that the final string is safe to include
- * directly in the ouput by using check_plain() or filter_xss().
+ * Modules that make any changes to variables like 'name' or 'extra' must insure
+ * that the final string is safe to include directly in the ouput by using
+ * check_plain() or filter_xss().
  *
  * @see theme_username().
  */
 function template_preprocess_username(&$variables) {
-  $account = $variables['object'];
-  // Create a new empty object to populate with standardized data.
-  $variables['object'] = new stdClass;
-  // Keep a reference to the original data.
-  $variables['object']->account = $account;
-  $variables['object']->extra = '';
+  $account = $variables['account'];
+
+  $variables['extra'] = '';
   if (empty($account->uid)) {
-    $variables['object']->uid = 0;
-    if (theme_get_setting('toggle_comment_user_verification')) {
-      $variables['object']->extra = ' (' . t('not verified') . ')';
-    }
+   $variables['uid'] = 0;
+   if (theme_get_setting('toggle_comment_user_verification')) {
+     $variables['extra'] = ' (' . t('not verified') . ')';
+   }
   }
   else {
-    $variables['object']->uid = (int)$account->uid;
+    $variables['uid'] = (int)$account->uid;
   }
   if (empty($account->name)) {
-    $variables['object']->name = variable_get('anonymous', t('Anonymous'));
+    $variables['name'] = variable_get('anonymous', t('Anonymous'));
   }
   else {
-    $variables['object']->name = $account->name;
+    $variables['name'] = $account->name;
   }
 
-  $variables['object']->profile_access = user_access('access user profiles');
-  $variables['object']->link_attributes = array();
+  $variables['profile_access'] = user_access('access user profiles');
+  $variables['link_attributes'] = array();
   // Populate link path and attributes if appropriate.
-  if ($variables['object']->uid && $variables['object']->profile_access) {
+  if ($variables['uid'] && $variables['profile_access']) {
     // We are linking to a local user.
-    $variables['object']->link_attributes = array('title' => t('View user profile.'));
-    $variables['object']->link_path = 'user/' . $variables['object']->uid;
+    $variables['link_attributes'] = array('title' => t('View user profile.'));
+    $variables['link_path'] = 'user/' . $variables['uid'];
   }
   elseif (!empty($account->homepage)) {
-    $variables['object']->link_attributes = array('rel' => 'nofollow');
-    $variables['object']->link_path = $account->homepage;
-    $variables['object']->homepage = $account->homepage;
+    $variables['link_attributes'] = array('rel' => 'nofollow');
+    $variables['link_path'] = $account->homepage;
+    $variables['homepage'] = $account->homepage;
   }
   // We do not want the l() function to check_plain() a second time.
-  $variables['object']->link_options['html'] = TRUE;
+  $variables['link_options']['html'] = TRUE;
   // Set a default class.
-  $variables['object']->attributes = array('class' => array('username'));
+  $variables['attributes_array'] = array('class' => array('username'));
   // Shorten the name when it is too long or it will break many tables.
-  if (drupal_strlen($variables['object']->name) > 20) {
-    $variables['object']->name = drupal_substr($variables['object']->name, 0, 15) . '...';
+  if (drupal_strlen($variables['name']) > 20) {
+    $variables['name'] = drupal_substr($variables['name'], 0, 15) . '...';
   }
   // Make sure name is safe for use in the theme function.
-  $variables['object']->name = check_plain($variables['object']->name);
+  $variables['name'] = check_plain($variables['name']);
 }
 
 /**
@@ -1946,38 +1946,45 @@ function template_process_username(&$variables) {
   // Finalize the link_options array for passing to the l() function.
   // This is done in the process phase so that attributes may be added by
   // modules or the theme during the preprocess phase.
-  if (isset($variables['object']->link_path)) {
-    $variables['object']->link_options['attributes'] = $variables['object']->link_attributes + $variables['object']->attributes;
+  if (isset($variables['link_path'])) {
+    $variables['link_options']['attributes'] = $variables['link_attributes'] + $variables['attributes_array'];
   }
 }
 
 /**
  * Format a username.
  *
- * @param $object
- *   The user object to format, which has been processed to provide safe and
- *   standarized elements. The object keys 'name', and 'extra' are safe strings
- *   that can be used directly.
+ * @param $variables
+ *   An associative array containing:
+ *   - account: The user object to format.
+ *   - name: The user's name, sanitized.
+ *   - extra: Additional text to append to the user's name, sanitized.
+ *   - link_path: The path or URL of the user's profile page, home page, or
+ *     other desired page to link to for more information about the user.
+ *   - link_options: An array of options to pass to the l() function's $options
+ *     parameter if linking the user's name to the user's page.
+ *   - attributes_array: An array of attributes to pass to the
+ *     drupal_attributes() function if not linking to the user's page.
  *
  * @return
- *   A string containing an HTML link to the user's page if the passed object
- *   suggests that this is a site user. Otherwise, only the username is returned.
+ *   A themed HTML string containing the user's name, potentially linked to the
+ *   user's page.
  *
  * @see template_preprocess_username()
  * @see template_process_username()
  */
-function theme_username($object) {
-  if (isset($object->link_path)) {
+function theme_username($variables) {
+  if (isset($variables['link_path'])) {
     // We have a link path, so we should generate a link using l().
     // Additional classes may be added as array elements like
-    // $object->link_options['attributes']['class'][] = 'myclass';
-    $output = l($object->name . $object->extra, $object->link_path, $object->link_options);
+    // $variables['link_options']['attributes']['class'][] = 'myclass';
+    $output = l($variables['name'] . $variables['extra'], $variables['link_path'], $variables['link_options']);
   }
   else {
     // Modules may have added important attributes so they must be included
     // in the output. Additional classes may be added as array elements like
-    // $object->attributes['class'][] = 'myclass';
-    $output = '<span' . drupal_attributes($object->attributes) . '>' . $object->name . $object->extra . '</span>';
+    // $variables['attributes_array']['class'][] = 'myclass';
+    $output = '<span' . drupal_attributes($variables['attributes_array']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
   }
   return $output;
 }
@@ -1985,18 +1992,19 @@ function theme_username($object) {
 /**
  * Return a themed progress bar.
  *
- * @param $percent
- *   The percentage of the progress.
- * @param $message
- *   A string containing information to be displayed.
+ * @param $variables
+ *   An associative array containing:
+ *   - percent: The percentage of the progress.
+ *   - message: A string containing information to be displayed.
+ *
  * @return
  *   A themed HTML string representing the progress bar.
  */
-function theme_progress_bar($percent, $message) {
+function theme_progress_bar($variables) {
   $output = '<div id="progress" class="progress">';
-  $output .= '<div class="bar"><div class="filled" style="width: ' . $percent . '%"></div></div>';
-  $output .= '<div class="percentage">' . $percent . '%</div>';
-  $output .= '<div class="message">' . $message . '</div>';
+  $output .= '<div class="bar"><div class="filled" style="width: ' . $variables['percent'] . '%"></div></div>';
+  $output .= '<div class="percentage">' . $variables['percent'] . '%</div>';
+  $output .= '<div class="message">' . $variables['message'] . '</div>';
   $output .= '</div>';
 
   return $output;
@@ -2005,14 +2013,16 @@ function theme_progress_bar($percent, $message) {
 /**
  * Create a standard indentation div. Used for drag and drop tables.
  *
- * @param $size
- *   Optional. The number of indentations to create.
+ * @param $variables
+ *   An associative array containing:
+ *   - size: Optional. The number of indentations to create.
+ *
  * @return
  *   A string containing indentations.
  */
-function theme_indentation($size = 1) {
+function theme_indentation($variables) {
   $output = '';
-  for ($n = 0; $n < $size; $n++) {
+  for ($n = 0; $n < $variables['size']; $n++) {
     $output .= '<div class="indentation">&nbsp;</div>';
   }
   return $output;
@@ -2217,7 +2227,7 @@ function template_preprocess_page(&$variables) {
 
   $variables['base_path']         = base_path();
   $variables['front_page']        = url();
-  $variables['breadcrumb']        = theme('breadcrumb', drupal_get_breadcrumb());
+  $variables['breadcrumb']        = theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb()));
   $variables['feed_icons']        = drupal_get_feeds();
   $variables['language']          = $GLOBALS['language'];
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';

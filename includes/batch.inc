@@ -170,7 +170,7 @@ function _batch_progress_page_nojs() {
     // the error message.
     ob_start();
     $fallback = $current_set['error_message'] . '<br />' . $batch['error_message'];
-    $fallback = theme('maintenance_page', $fallback, FALSE);
+    $fallback = theme('maintenance_page', array('content' => $fallback, 'show_messages' => FALSE));
 
     // We strip the end of the page using a marker in the template, so any
     // additional HTML output by PHP shows up inside the page rather than below
@@ -192,7 +192,7 @@ function _batch_progress_page_nojs() {
   $url = url($batch['url'], array('query' => array('id' => $batch['id'], 'op' => $new_op)));
   drupal_add_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
 
-  return theme('progress_bar', $percentage, $message);
+  return theme('progress_bar', array('percent' => $percentage, 'message' => $message));
 }
 
 /**

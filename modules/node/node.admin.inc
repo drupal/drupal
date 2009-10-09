@@ -192,8 +192,10 @@ function node_filter_form() {
  *
  * @ingroup themeable
  */
-function theme_node_filter_form($form) {
+function theme_node_filter_form($variables) {
+  $form = $variables['form'];
   $output = '';
+
   $output .= '<div id="node-admin-filter">';
   $output .= drupal_render($form['filters']);
   $output .= '</div>';
@@ -206,8 +208,10 @@ function theme_node_filter_form($form) {
  *
  * @ingroup themeable
  */
-function theme_node_filters($form) {
+function theme_node_filters($variables) {
+  $form = $variables['form'];
   $output = '';
+
   $output .= '<ul class="clearfix">';
   if (!empty($form['current'])) {
     foreach (element_children($form['current']) as $key) {
@@ -358,7 +362,7 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
   else {
     drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
     $message = format_plural(count($results), '1 item successfully processed:', '@count items successfully processed:');
-    $message .= theme('item_list', $results);
+    $message .= theme('item_list', array('items' => $results));
     drupal_set_message($message);
   }
 }
@@ -373,7 +377,7 @@ function node_admin_content($form, $form_state) {
   // Show the 'add new content' link.
   $form['add_content'] = array(
     '#access' => _node_add_access(),
-    '#markup' => theme('links', array(array('title' => t('Add new content'), 'href' => 'node/add')), array('class' => array('action-links'))),
+    '#markup' => theme('links', array('links' => array(array('title' => t('Add new content'), 'href' => 'node/add')), 'attributes' => array('class' => array('action-links')))),
   );
   $form[] = node_filter_form();
   $form['#submit'][] = 'node_filter_form_submit';
@@ -443,9 +447,9 @@ function node_admin_nodes() {
   foreach ($result as $node) {
     $l_options = empty($node->language) ? array() : array('language' => $languages[$node->language]);
     $options[$node->nid] = array(
-      'title' => l($node->title, 'node/' . $node->nid, $l_options) . ' ' . theme('mark', node_mark($node->nid, $node->changed)),
+      'title' => l($node->title, 'node/' . $node->nid, $l_options) . ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
       'type' =>  check_plain(node_type_get_name($node)),
-      'author' => theme('username', $node),
+      'author' => theme('username', array('account' => $node)),
       'status' =>  $node->status ? t('published') : t('not published'),
       'changed' => format_date($node->changed, 'short'),
     );
@@ -460,7 +464,7 @@ function node_admin_nodes() {
     '#options' => $options,
     '#empty' => t('No content available.'),
   );
-  $form['pager'] = array('#markup' => theme('pager', NULL));
+  $form['pager'] = array('#markup' => theme('pager', array('tags' => NULL)));
   return $form;
 }
 

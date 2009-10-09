@@ -264,7 +264,7 @@ function book_block_view($delta = '') {
       $tree = menu_tree_all_data($node->book['menu_name'], $node->book);
       // There should only be one element at the top level.
       $data = array_shift($tree);
-      $block['subject'] = theme('book_title_link', $data['link']);
+      $block['subject'] = theme('book_title_link', array('link' => $data['link']));
       $block['content'] = ($data['below']) ? menu_tree_output($data['below']) : '';
     }
   }
@@ -305,7 +305,9 @@ function book_block_save($delta = '', $edit = array()) {
  *
  * @ingroup themeable
  */
-function theme_book_title_link($link) {
+function theme_book_title_link($variables) {
+  $link = $variables['link'];
+
   $link['options']['attributes']['class'] = array('book-title');
 
   return l($link['title'], $link['href'], $link['options']);
@@ -737,7 +739,7 @@ function book_node_view($node, $build_mode) {
   if ($build_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
       $node->content['book_navigation'] = array(
-        '#markup' => theme('book_navigation', $node->book),
+        '#markup' => theme('book_navigation', array('book_link' => $node->book)),
         '#weight' => 100,
       );
     }
@@ -1087,7 +1089,7 @@ function book_node_export($node, $children = '') {
   node_build_content($node, 'print');
   $node->rendered = drupal_render($node->content);
 
-  return theme('book_node_export_html', $node, $children);
+  return theme('book_node_export_html', array('node' => $node, 'children' => $children));
 }
 
 /**

@@ -263,7 +263,8 @@ function list_field_formatter_info() {
 /**
  * Theme function for 'default' list field formatter.
  */
-function theme_field_formatter_list_default($element) {
+function theme_field_formatter_list_default($variables) {
+  $element = $variables['element'];
   $field = field_info_field($element['#field_name']);
   if (($allowed_values = list_allowed_values($field)) && isset($allowed_values[$element['#item']['value']])) {
     return $allowed_values[$element['#item']['value']];
@@ -275,6 +276,7 @@ function theme_field_formatter_list_default($element) {
 /**
  * Theme function for 'key' list field formatter.
  */
-function theme_field_formatter_list_key($element) {
+function theme_field_formatter_list_key($variables) {
+  $element = $variables['element'];
   return $element['#item']['safe'];
 }

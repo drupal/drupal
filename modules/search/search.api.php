@@ -192,7 +192,7 @@ function hook_search_execute($keys = NULL) {
       'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
       'type' => check_plain(node_type_get_name($node)),
       'title' => $node->title,
-      'user' => theme('username', $node),
+      'user' => theme('username', array('account' => $node)),
       'date' => $node->changed,
       'node' => $node,
       'extra' => $extra,

@@ -95,7 +95,9 @@ function profile_admin_overview_submit($form, &$form_state) {
  * @ingroup themeable
  * @see profile_admin_overview()
  */
-function theme_profile_admin_overview($form) {
+function theme_profile_admin_overview($variables) {
+  $form = $variables['form'];
+
   drupal_add_css(drupal_get_path('module', 'profile') . '/profile.css');
   // Add javascript if there's more than one field.
   if (isset($form['submit'])) {
@@ -156,7 +158,7 @@ function theme_profile_admin_overview($form) {
   }
   $header[] = array('data' => t('Operations'), 'colspan' => 2);
 
-  $output = theme('table', $header, $rows, array('id' => 'profile-fields'));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'profile-fields')));
   $output .= drupal_render_children($form);
 
   return $output;

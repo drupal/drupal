@@ -15,7 +15,7 @@ function book_render() {
     $book_list[] = l($book['title'], $book['href'], $book['options']);
   }
 
-  return theme('item_list', $book_list);
+  return theme('item_list', array('items' => $book_list));
 }
 
 /**
@@ -79,7 +79,7 @@ function book_export_html($nid) {
       $contents = book_export_traverse($tree, 'book_node_export');
     }
 
-    return theme('book_export_html', $node->title, $contents, $node->book['depth']);
+    return theme('book_export_html', array('title' => $node->title, 'contents' => $contents, 'depth' => $node->book['depth']));
   }
   else {
     drupal_access_denied();

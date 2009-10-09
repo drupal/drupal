@@ -33,7 +33,7 @@ function contact_admin_categories() {
     $rows[] = array(array('data' => t('No categories available. <a href="@link">Add category</a>.', array('@link' => url('admin/structure/contact/add'))), 'colspan' => 5));
   }
 
-  return theme('table', $header, $rows);
+  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**

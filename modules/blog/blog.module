@@ -177,7 +177,7 @@ function blog_block_view($delta = '') {
 
     if ($node_title_list = node_title_list($result)) {
       $block['content'] = $node_title_list;
-      $block['content'] .= theme('more_link', url('blog'), t('Read the latest blog entries.'));
+      $block['content'] .= theme('more_link', array('url' => url('blog'), 'title' => t('Read the latest blog entries.')));
       $block['subject'] = t('Recent blog posts');
       return $block;
     }

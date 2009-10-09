@@ -20,7 +20,7 @@
 ?>
 <?php if ($forums_defined): ?>
 <div id="forum">
-  <?php print theme('links', $links); ?>
+  <?php print theme('links', array('links' => $links)); ?>
   <?php print $forums; ?>
   <?php print $topics; ?>
 </div>
