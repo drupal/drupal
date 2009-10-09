@@ -434,7 +434,7 @@ function node_admin_nodes() {
     '#options' => $options,
     '#default_value' => 'approve',
   );
-  unset($options);
+  $options = array();
   $form['options']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),
