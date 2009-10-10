@@ -866,7 +866,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $edit['pass']   = user_password();
     $edit['status'] = 1;
 
-    $account = user_save('', $edit);
+    $account = user_save(drupal_anonymous_user(), $edit);
 
     $this->assertTrue(!empty($account->uid), t('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), t('User login'));
     if (empty($account->uid)) {

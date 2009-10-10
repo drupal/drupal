@@ -338,7 +338,7 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
   if (variable_get('language_count', 1) > 1) {
     // Display language selector when either creating a user on the admin
     // interface or editing a user account.
-    if (($form_id == 'user_register' && user_access('administer users')) || ($form_id == 'user_profile_form' && $form['#user_category'] == 'account')) {
+    if (($form_id == 'user_register_form' && user_access('administer users')) || ($form_id == 'user_profile_form' && $form['#user_category'] == 'account')) {
       locale_language_selector_form($form, $form_state, $form['#user']);
     }
   }

@@ -210,17 +210,12 @@ function template_preprocess_user_profile_category(&$variables) {
 }
 
 /**
- * Menu callback; Present the form to edit a given user or profile category.
- */
-function user_edit($account, $category = 'account') {
-  drupal_set_title($account->name);
-  return drupal_get_form('user_profile_form', $account, $category);
-}
-
-/**
  * Form builder; edit a user account or one of their profile categories.
  *
  * @ingroup forms
+ * @see user_account_form()
+ * @see user_account_form_validate()
+ * @see user_account_form_submit()
  * @see user_profile_form_validate()
  * @see user_profile_form_submit()
  * @see user_cancel_confirm_form_submit()
@@ -232,22 +227,30 @@ function user_profile_form($form, &$form_state, $account, $category = 'account')
   $form['#user_category'] = $category;
 
   if ($category == 'account') {
-    user_edit_form($form, $form_state);
+    user_account_form($form, $form_state);
   }
 
   // Attach field widgets.
   field_attach_form('user', $account, $form, $form_state);
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'), '#weight' => 30);
-
-  if (($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users')) {
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#weight' => 30,
+  );
+  if ($category == 'account') {
     $form['cancel'] = array(
       '#type' => 'submit',
       '#value' => t('Cancel account'),
       '#weight' => 31,
       '#submit' => array('user_edit_cancel_submit'),
+      '#access' => ($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users'),
     );
   }
+
+  $form['#validate'][] = 'user_profile_form_validate';
+  // Add the final user profile form submit handler.
+  $form['#submit'][] = 'user_profile_form_submit';
 
   return $form;
 }
@@ -258,14 +261,6 @@ function user_profile_form($form, &$form_state, $account, $category = 'account')
 function user_profile_form_validate($form, &$form_state) {
   $edit = (object)$form_state['values'];
   field_attach_form_validate('user', $edit, $form, $form_state);
-  $edit = (array)$edit;
-  user_module_invoke('validate', $edit, $form['#user'], $form['#user_category']);
-  // Validate input to ensure that non-privileged users can't alter protected data.
-  if ((!user_access('administer users') && array_intersect(array_keys($edit), array('uid', 'init', 'session'))) || (!user_access('administer permissions') && isset($form_state['values']['roles']))) {
-    watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
-    // set this to a value type field
-    form_set_error('category', t('Detected malicious attempt to alter protected user fields.'));
-  }
 }
 
 /**
@@ -279,7 +274,7 @@ function user_profile_form_submit($form, &$form_state) {
   $edit = (object)$form_state['values'];
   field_attach_submit('user', $edit, $form, $form_state);
   $edit = (array)$edit;
-  user_module_invoke('submit', $edit, $account, $category);
+
   user_save($account, $edit, $category);
 
   // Clear the page cache because pages can contain usernames and/or profile information:

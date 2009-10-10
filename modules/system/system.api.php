@@ -555,7 +555,7 @@ function hook_form_alter(&$form, &$form_state, $form_id) {
  */
 function hook_form_FORM_ID_alter(&$form, &$form_state) {
   // Modification for the form with the given form ID goes here. For example, if
-  // FORM_ID is "user_register" this code would run only on the user
+  // FORM_ID is "user_register_form" this code would run only on the user
   // registration form.
 
   // Add a checkbox to registration form about agreeing to terms of use.

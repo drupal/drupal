@@ -1224,7 +1224,7 @@ class UserSaveTestCase extends DrupalWebTestCase {
       'pass' => user_password(),
       'status' => 1,
     );
-    $user_by_return = user_save('', $user);
+    $user_by_return = user_save(drupal_anonymous_user(), $user);
     $this->assertTrue($user_by_return, t('Loading user by return of user_save().'));
 
     // Test if created user exists.

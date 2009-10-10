@@ -12,7 +12,7 @@ function user_admin($callback_arg = '') {
   switch ($op) {
     case t('Create new account'):
     case 'create':
-      $build['user_register'] = drupal_get_form('user_register');
+      $build['user_register'] = drupal_get_form('user_register_form');
       break;
     default:
       if (!empty($_POST['accounts']) && isset($_POST['operation']) && ($_POST['operation'] == 'cancel')) {

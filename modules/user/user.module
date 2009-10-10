@@ -336,8 +336,10 @@ function user_save($account, $edit = array(), $category = 'account') {
   if (!isset($account->is_new)) {
     $account->is_new = empty($account->uid);
   }
+
+  user_module_invoke('presave', $edit, $account, $category);
+
   if (is_object($account) && !$account->is_new) {
-    user_module_invoke('update', $edit, $account, $category);
     $data = unserialize(db_query('SELECT data FROM {users} WHERE uid = :uid', array(':uid' => $account->uid))->fetchField());
     // Consider users edited by an administrator as logged in, if they haven't
     // already, so anonymous users can view the profile (if allowed).
@@ -384,15 +386,10 @@ function user_save($account, $edit = array(), $category = 'account') {
     $edit['uid'] = $account->uid;
     // Save changes to the user table.
     $success = drupal_write_record('users', $edit, 'uid');
-    if (!$success) {
+    if ($success === FALSE) {
       // The query failed - better to abort the save than risk further
       // data loss.
-
-      // TODO: Fields change: I think this is a bug.  If no columns in
-      // the user table are changed, drupal_write_record returns
-      // FALSE because rowCount() (rows changed) is 0.  However,
-      // non-users data may have been changed, e.g. fields.
-      // return FALSE;
+      return FALSE;
     }
 
     // If the picture changed or was unset, remove the old one. This step needs
@@ -448,7 +445,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       _user_mail_notify($op, $user);
     }
 
-    user_module_invoke('after_update', $edit, $user, $category);
+    user_module_invoke('update', $edit, $user, $category);
   }
   else {
     // Allow 'created' to be set by the caller.
@@ -463,7 +460,7 @@ function user_save($account, $edit = array(), $category = 'account') {
 
     $edit['mail'] = trim($edit['mail']);
     $success = drupal_write_record('users', $edit);
-    if (!$success) {
+    if ($success === FALSE) {
       // On a failed INSERT some other existing user's uid may be returned.
       // We must abort to avoid overwriting their account.
       return FALSE;
@@ -856,40 +853,184 @@ function user_user_view($account) {
 }
 
 /**
- * Implement hook_user_validate().
+ * Helper function to add default user account fields to user registration and edit form.
  */
-function user_user_validate(&$edit, $account, $category) {
-  if ($category == 'account') {
-    $uid = isset($account->uid) ? $account->uid : FALSE;
-    // Validate the username when: new user account; or user is editing own account and can change username; or an admin user.
-    if (!$uid || ($GLOBALS['user']->uid == $uid && user_access('change own username')) || user_access('administer users')) {
-      if ($error = user_validate_name($edit['name'])) {
+function user_account_form(&$form, &$form_state) {
+  global $user;
+
+  $account = $form['#user'];
+  $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
+
+  _user_password_dynamic_validation();
+  $admin = user_access('administer users');
+
+  $form['#validate'][] = 'user_account_form_validate';
+
+  // Account information.
+  $form['account'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Account information'),
+    '#weight' => -10,
+  );
+  // Only show name field on registration form or user can change own username.
+  $form['account']['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Username'),
+    '#maxlength' => USERNAME_MAX_LENGTH,
+    '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
+    '#required' => TRUE,
+    '#attributes' => array('class' => array('username')),
+    '#default_value' => (!$register ? $account->name : ''),
+    '#access' => ($register || ($user->uid == $account->uid && user_access('change own username')) || $admin),
+  );
+
+  $form['account']['mail'] = array(
+    '#type' => 'textfield',
+    '#title' => t('E-mail address'),
+    '#maxlength' => EMAIL_MAX_LENGTH,
+    '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
+    '#required' => TRUE,
+    '#default_value' => (!$register ? $account->mail : ''),
+  );
+
+  // Display password field only for existing users or when user is allowed to
+  // assign a password during registration.
+  if (!$register) {
+    $form['account']['pass'] = array(
+      '#type' => 'password_confirm',
+      '#size' => 25,
+      '#description' => t('To change the current user password, enter the new password in both fields.'),
+    );
+  }
+  elseif (!variable_get('user_email_verification', TRUE) || $admin) {
+    $form['account']['pass'] = array(
+      '#type' => 'password_confirm',
+      '#size' => 25,
+      '#description' => t('Provide a password for the new account in both fields.'),
+      '#required' => TRUE,
+    );
+  }
+
+  if ($admin) {
+    $status = (isset($account->status) ? $account->status : 1);
+  }
+  else {
+    $status = (variable_get('user_register', 1) == 1);
+  }
+  $form['account']['status'] = array(
+    '#type' => 'radios',
+    '#title' => t('Status'),
+    '#default_value' => $status,
+    '#options' => array(t('Blocked'), t('Active')),
+    '#access' => $admin,
+  );
+
+  $roles = user_roles(TRUE);
+  // The disabled checkbox subelement for the 'authenticated user' role
+  // must be generated separately and added to the checkboxes element,
+  // because of a limitation in Form API not supporting a single disabled
+  // checkbox within a set of checkboxes.
+  // @todo This should be solved more elegantly. See issue #119038.
+  $checkbox_authenticated = array(
+    '#type' => 'checkbox',
+    '#title' => $roles[DRUPAL_AUTHENTICATED_RID],
+    '#default_value' => TRUE,
+    '#disabled' => TRUE,
+  );
+  unset($roles[DRUPAL_AUTHENTICATED_RID]);
+  $form['account']['roles'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Roles'),
+    '#default_value' => (!$register && isset($account->roles) ? array_keys($account->roles) : array()),
+    '#options' => $roles,
+    '#access' => $roles && user_access('administer permissions'),
+    DRUPAL_AUTHENTICATED_RID => $checkbox_authenticated,
+  );
+
+  $form['account']['notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Notify user of new account'),
+    '#access' => $register && $admin,
+  );
+
+  // Signature.
+  $form['signature_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Signature settings'),
+    '#weight' => 1,
+    '#access' => (!$register && variable_get('user_signatures', 0)),
+  );
+  $form['signature_settings']['signature'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Signature'),
+    '#default_value' => isset($account->signature) ? $account->signature : '',
+    '#description' => t('Your signature will be publicly displayed at the end of your comments.'),
+  );
+
+  // Picture/avatar.
+  $form['picture'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Picture'),
+    '#weight' => 1,
+    '#access' => (!$register && variable_get('user_pictures', 0)),
+  );
+  $form['picture']['picture'] = array(
+    '#type' => 'value',
+    '#value' => isset($account->picture) ? $account->picture : NULL,
+  );
+  $form['picture']['picture_current'] = array(
+    '#markup' => theme('user_picture', array('account' => $account)),
+  );
+  $form['picture']['picture_delete'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Delete picture'),
+    '#access' => !empty($account->picture->fid),
+    '#description' => t('Check this box to delete your current picture.'),
+  );
+  $form['picture']['picture_upload'] = array(
+    '#type' => 'file',
+    '#title' => t('Upload picture'),
+    '#size' => 48,
+    '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions pixels and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . variable_get('user_picture_guidelines', ''),
+  );
+  $form['#validate'][] = 'user_validate_picture';
+}
+
+/**
+ * Form validation handler for user_account_form().
+ */
+function user_account_form_validate($form, &$form_state) {
+  if ($form['#user_category'] == 'account' || $form['#user_category'] == 'register') {
+    $account = $form['#user'];
+    // Validate new or changing username.
+    if (isset($form_state['values']['name'])) {
+      if ($error = user_validate_name($form_state['values']['name'])) {
         form_set_error('name', $error);
       }
-      elseif ((bool) db_query_range("SELECT 1 FROM {users} WHERE uid <> :uid AND LOWER(name) = LOWER(:name)", 0, 1, array(':uid' => $uid, ':name' => $edit['name']))->fetchField()) {
-        form_set_error('name', t('The name %name is already taken.', array('%name' => $edit['name'])));
+      elseif ((bool) db_query_range("SELECT 1 FROM {users} WHERE uid <> :uid AND LOWER(name) = LOWER(:name)", 0, 1, array(':uid' => $account->uid, ':name' => $form_state['values']['name']))->fetchField()) {
+        form_set_error('name', t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
       }
     }
 
     // Validate the e-mail address, and check if it is taken by an existing user.
-    if ($error = user_validate_mail($edit['mail'])) {
+    if ($error = user_validate_mail($form_state['values']['mail'])) {
       form_set_error('mail', $error);
     }
-    elseif ((bool) db_query_range("SELECT 1 FROM {users} WHERE uid <> :uid AND LOWER(mail) = LOWER(:mail)", 0, 1, array(':uid' => $uid, ':mail' => $edit['mail']))->fetchField()) {
+    elseif ((bool) db_query_range("SELECT 1 FROM {users} WHERE uid <> :uid AND LOWER(mail) = LOWER(:mail)", 0, 1, array(':uid' => $account->uid, ':mail' => $form_state['values']['mail']))->fetchField()) {
       // Format error message dependent on whether the user is logged in or not.
       if ($GLOBALS['user']->uid) {
-        form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $edit['mail'])));
+        form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $form_state['values']['mail'])));
       }
       else {
-        form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $edit['mail'], '@password' => url('user/password'))));
+        form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $form_state['values']['mail'], '@password' => url('user/password'))));
       }
     }
 
     // Make sure the signature isn't longer than the size of the database field.
     // Signatures are disabled by default, so make sure it exists first.
-    if (isset($edit['signature'])) {
+    if (isset($form_state['values']['signature'])) {
       $user_schema = drupal_get_schema('users');
-      if (strlen($edit['signature']) > $user_schema['fields']['signature']['length']) {
+      if (drupal_strlen($form_state['values']['signature']) > $user_schema['fields']['signature']['length']) {
         form_set_error('signature', t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
       }
     }
@@ -897,10 +1038,10 @@ function user_user_validate(&$edit, $account, $category) {
 }
 
 /**
- * Implement hook_user_submit().
+ * Implement hook_user_presave().
  */
-function user_user_submit(&$edit, $account, $category) {
-  if ($category == 'account') {
+function user_user_presave(&$edit, $account, $category) {
+  if ($category == 'account' || $category == 'register') {
     if (!empty($edit['picture_upload'])) {
       $edit['picture'] = $edit['picture_upload'];
     }
@@ -912,6 +1053,7 @@ function user_user_submit(&$edit, $account, $category) {
     $edit['picture_upload'] = NULL;
     $edit['picture_delete'] = NULL;
 
+    // Prepare user roles.
     if (isset($edit['roles'])) {
       $edit['roles'] = array_filter($edit['roles']);
     }
@@ -1235,7 +1377,7 @@ function user_menu() {
   $items['user/register'] = array(
     'title' => 'Create new account',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_register'),
+    'page arguments' => array('user_register_form'),
     'access callback' => 'user_register_access',
     'type' => MENU_LOCAL_TASK,
   );
@@ -1376,8 +1518,10 @@ function user_menu() {
 
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'user_edit',
-    'page arguments' => array(1),
+    'title callback' => 'user_page_title',
+    'title arguments' => array(1),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_profile_form', 1),
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
@@ -1397,8 +1541,8 @@ function user_menu() {
         $items['user/%user_category/edit/' . $category['name']] = array(
           'title callback' => 'check_plain',
           'title arguments' => array($category['title']),
-          'page callback' => 'user_edit',
-          'page arguments' => array(1, 3),
+          'page callback' => 'drupal_get_form',
+          'page arguments' => array('user_profile_form', 1, 3),
           'access callback' => isset($category['access callback']) ? $category['access callback'] : 'user_edit_access',
           'access arguments' => isset($category['access arguments']) ? $category['access arguments'] : array(1),
           'type' => MENU_LOCAL_TASK,
@@ -1760,7 +1904,7 @@ function user_external_login_register($name, $module) {
       'status' => 1,
       'access' => REQUEST_TIME
     );
-    $account = user_save('', $userinfo);
+    $account = user_save(drupal_anonymous_user(), $userinfo);
     // Terminate if an error occurred during user_save().
     if (!$account) {
       drupal_set_message(t("Error saving user account."), 'error');
@@ -1792,142 +1936,6 @@ function user_cancel_url($account) {
 
 function user_pass_rehash($password, $timestamp, $login) {
   return md5($timestamp . $password . $login);
-}
-
-function user_edit_form(&$form, &$form_state) {
-  global $user;
-
-  $account = $form['#user'];
-  $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
-
-  _user_password_dynamic_validation();
-  $admin = user_access('administer users');
-
-  // Account information:
-  $form['account'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Account information'),
-    '#weight' => -10,
-  );
-  // Only show name field when: registration page; or user is editing own
-  // account and can change username; or an admin user.
-  if ($register || ($user->uid == $account->uid && user_access('change own username')) || $admin) {
-    $form['account']['name'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Username'),
-      '#maxlength' => USERNAME_MAX_LENGTH,
-      '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
-      '#required' => TRUE,
-      '#attributes' => array('class' => array('username')),
-    );
-    if (!$register) {
-      $form['account']['name']['#default_value'] = $account->name;
-    }
-  }
-  $form['account']['mail'] = array(
-    '#type' => 'textfield',
-    '#title' => t('E-mail address'),
-    '#maxlength' => EMAIL_MAX_LENGTH,
-    '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
-    '#required' => TRUE,
-  );
-  if (!$register) {
-    $form['account']['mail']['#default_value'] = $account->mail;
-  }
-  if (!$register) {
-    $form['account']['pass'] = array(
-      '#type' => 'password_confirm',
-      '#description' => t('To change the current user password, enter the new password in both fields.'),
-      '#size' => 25,
-    );
-  }
-  elseif (!variable_get('user_email_verification', TRUE) || $admin) {
-    $form['account']['pass'] = array(
-      '#type' => 'password_confirm',
-      '#description' => t('Provide a password for the new account in both fields.'),
-      '#required' => TRUE,
-      '#size' => 25,
-    );
-  }
-  if ($admin) {
-    $form['account']['status'] = array(
-      '#type' => 'radios',
-      '#title' => t('Status'),
-      '#default_value' => isset($account->status) ? $account->status : 1,
-      '#options' => array(t('Blocked'), t('Active'))
-    );
-  }
-  if (user_access('administer permissions')) {
-    $roles = user_roles(TRUE);
-
-    // The disabled checkbox subelement for the 'authenticated user' role
-    // must be generated separately and added to the checkboxes element,
-    // because of a limitation in D6 FormAPI not supporting a single disabled
-    // checkbox within a set of checkboxes.
-    // TODO: This should be solved more elegantly. See issue #119038.
-    $checkbox_authenticated = array(
-      '#type' => 'checkbox',
-      '#title' => $roles[DRUPAL_AUTHENTICATED_RID],
-      '#default_value' => TRUE,
-      '#disabled' => TRUE,
-    );
-
-    unset($roles[DRUPAL_AUTHENTICATED_RID]);
-    if ($roles) {
-      $form['account']['roles'] = array(
-        '#type' => 'checkboxes',
-        '#title' => t('Roles'),
-        '#default_value' => isset($account->roles) ? array_keys($account->roles) : array(),
-        '#options' => $roles,
-        DRUPAL_AUTHENTICATED_RID => $checkbox_authenticated,
-      );
-    }
-  }
-
-  // Signature:
-  if (variable_get('user_signatures', 0) && module_exists('comment') && !$register) {
-    $form['signature_settings'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Signature settings'),
-      '#weight' => 1,
-    );
-    $form['signature_settings']['signature'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Signature'),
-      '#default_value' => isset($account->signature) ? $account->signature : '',
-      '#description' => t('Your signature will be publicly displayed at the end of your comments.'),
-    );
-  }
-
-  // Picture/avatar:
-  if (variable_get('user_pictures', 0) && !$register) {
-    $form['picture'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Picture'),
-      '#weight' => 1,
-    );
-    $form['picture']['picture'] = array(
-      '#type' => 'value',
-      '#value' => isset($account->picture) ? $account->picture : NULL,
-    );
-    $form['picture']['picture_current'] = array(
-      '#markup' => theme('user_picture', array('account' => $account)),
-    );
-    $form['picture']['picture_delete'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Delete picture'),
-      '#access' => !empty($account->picture->fid),
-      '#description' => t('Check this box to delete your current picture.'),
-    );
-    $form['picture']['picture_upload'] = array(
-      '#type' => 'file',
-      '#title' => t('Upload picture'),
-      '#size' => 48,
-      '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions pixels and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . variable_get('user_picture_guidelines', ''),
-    );
-    $form['#validate'][] = 'user_profile_form_validate';
-    $form['#validate'][] = 'user_validate_picture';
-  }
 }
 
 /**
@@ -3034,104 +3042,15 @@ function user_block_user_action(&$object, $context = array()) {
 }
 
 /**
- * Submit handler for the user registration form.
- *
- * This function is shared by the installation form and the normal registration form,
- * which is why it can't be in the user.pages.inc file.
- */
-function user_register_submit($form, &$form_state) {
-  global $base_url;
-  $admin = user_access('administer users');
-
-  $mail = $form_state['values']['mail'];
-  $name = $form_state['values']['name'];
-  if (!variable_get('user_email_verification', TRUE) || $admin) {
-    $pass = $form_state['values']['pass'];
-  }
-  else {
-    $pass = user_password();
-  };
-  $notify = isset($form_state['values']['notify']) ? $form_state['values']['notify'] : NULL;
-  $from = variable_get('site_mail', ini_get('sendmail_from'));
-  if (isset($form_state['values']['roles'])) {
-    // Remove unset roles.
-    $roles = array_filter($form_state['values']['roles']);
-  }
-  else {
-    $roles = array();
-  }
-
-  if (!$admin && array_intersect(array_keys($form_state['values']), array('uid', 'roles', 'init', 'session', 'status'))) {
-    watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
-    $form_state['redirect'] = 'user/register';
-    return;
-  }
-  // The unset below is needed to prevent these form values from being saved as
-  // user data.
-  unset($form_state['values']['form_token'], $form_state['values']['submit'], $form_state['values']['op'], $form_state['values']['notify'], $form_state['values']['form_id'], $form_state['values']['affiliates'], $form_state['values']['destination'], $form_state['values']['form_build_id']);
-
-  $merge_data = array('pass' => $pass, 'init' => $mail, 'roles' => $roles);
-  if (!$admin) {
-    // Set the user's status because it was not displayed in the form.
-    $merge_data['status'] = variable_get('user_register', 1) == 1;
-  }
-  $account = user_save('', array_merge($form_state['values'], $merge_data));
-  // Terminate if an error occurred during user_save().
-  if (!$account) {
-    drupal_set_message(t("Error saving user account."), 'error');
-    $form_state['redirect'] = '';
-    return;
-  }
-  $form_state['user'] = $account;
-
-  watchdog('user', 'New user: %name (%email).', array('%name' => $name, '%email' => $mail), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
-
-  // Add plain text password into user account to generate mail tokens.
-  $account->password = $pass;
-  if ($admin && !$notify) {
-    drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
-  }
-  elseif (!variable_get('user_email_verification', TRUE) && $account->status && !$admin) {
-    // No e-mail verification is required, create new user account, and login
-    // user immediately.
-    _user_mail_notify('register_no_approval_required', $account);
-    $form_state['uid'] = $account->uid;
-    user_login_submit(array(), $form_state);
-    drupal_set_message(t('Registration successful. You are now logged in.'));
-    $form_state['redirect'] = '';
-    return;
-  }
-  elseif ($account->status || $notify) {
-    // Create new user account, no administrator approval required.
-    $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
-    _user_mail_notify($op, $account);
-    if ($notify) {
-      drupal_set_message(t('Password and further instructions have been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
-    }
-    else {
-      drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
-      $form_state['redirect'] = '';
-      return;
-    }
-  }
-  else {
-    // Create new user account, administrator approval required.
-    _user_mail_notify('register_pending_approval', $account);
-    drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your e-mail address.'));
-    $form_state['redirect'] = '';
-    return;
-
-  }
-}
-
-/**
- * Form builder; The user registration form.
+ * Form builder; the user registration form.
  *
  * @ingroup forms
- * @see user_register_validate()
+ * @see user_account_form()
+ * @see user_account_form_validate()
+ * @see user_account_form_submit()
  * @see user_register_submit()
  */
-function user_register($form, &$form_state) {
+function user_register_form($form, &$form_state) {
   global $user;
 
   $admin = user_access('administer users');
@@ -3145,12 +3064,9 @@ function user_register($form, &$form_state) {
   $form['#user_category'] = 'register';
 
   // Start with the default user account fields.
-  user_edit_form($form, $form_state);
+  user_account_form($form, $form_state);
+
   if ($admin) {
-    $form['account']['notify'] = array(
-     '#type' => 'checkbox',
-     '#title' => t('Notify user of new account')
-    );
     // Redirect back to page which initiated the create request;
     // usually admin/people/create.
     $form_state['redirect'] = $_GET['q'];
@@ -3164,14 +3080,89 @@ function user_register($form, &$form_state) {
     $form['account']['#type'] = 'markup';
   }
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Create new account'), '#weight' => 30);
-  $form['#validate'][] = 'user_register_validate';
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Create new account'),
+    '#weight' => 30,
+  );
+
+  // Add the final user registration form submit handler.
+  $form['#submit'][] = 'user_register_submit';
 
   return $form;
 }
 
-function user_register_validate($form, &$form_state) {
-  user_module_invoke('validate', $form_state['values'], $form_state['values'], 'account');
+/**
+ * Submit handler for the user registration form.
+ *
+ * This function is shared by the installation form and the normal registration form,
+ * which is why it can't be in the user.pages.inc file.
+ *
+ * @see user_register_form()
+ */
+function user_register_submit($form, &$form_state) {
+  $admin = user_access('administer users');
+
+  if (!variable_get('user_email_verification', TRUE) || $admin) {
+    $pass = $form_state['values']['pass'];
+  }
+  else {
+    $pass = user_password();
+  }
+  $notify = !empty($form_state['values']['notify']);
+
+  // The unset below is needed to prevent these form values from being saved as
+  // user data.
+  unset($form_state['values']['form_token'], $form_state['values']['submit'], $form_state['values']['op'], $form_state['values']['notify'], $form_state['values']['form_id'], $form_state['values']['affiliates'], $form_state['values']['destination'], $form_state['values']['form_build_id']);
+
+  $form_state['values']['pass'] = $pass;
+  $form_state['values']['init'] = $form_state['values']['mail'];
+
+  $account = $form['#user'];
+  $account = user_save($account, $form_state['values']);
+  // Terminate if an error occurred during user_save().
+  if (!$account) {
+    drupal_set_message(t("Error saving user account."), 'error');
+    $form_state['redirect'] = '';
+    return;
+  }
+  $form_state['user'] = $account;
+
+  watchdog('user', 'New user: %name (%email).', array('%name' => $form_state['values']['name'], '%email' => $form_state['values']['mail']), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
+
+  // Add plain text password into user account to generate mail tokens.
+  $account->password = $pass;
+
+  // New administrative account without notification.
+  if ($admin && !$notify) {
+    drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
+  }
+  // No e-mail verification required; login user immediately.
+  elseif (!$admin && !variable_get('user_email_verification', TRUE) && $account->status) {
+    _user_mail_notify('register_no_approval_required', $account);
+    $form_state['uid'] = $account->uid;
+    user_login_submit(array(), $form_state);
+    drupal_set_message(t('Registration successful. You are now logged in.'));
+    $form_state['redirect'] = '';
+  }
+  // No administrator approval required.
+  elseif ($account->status || $notify) {
+    $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
+    _user_mail_notify($op, $account);
+    if ($notify) {
+      drupal_set_message(t('Password and further instructions have been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
+    }
+    else {
+      drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
+      $form_state['redirect'] = '';
+    }
+  }
+  // Administrator approval required.
+  else {
+    _user_mail_notify('register_pending_approval', $account);
+    drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your e-mail address.'));
+    $form_state['redirect'] = '';
+  }
 }
 
 /**

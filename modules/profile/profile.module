@@ -210,17 +210,19 @@ function profile_block_view($delta = '') {
 }
 
 /**
- * Implement hook_user_update().
+ * Implement hook_user_presave().
  */
-function profile_user_update(&$edit, $account, $category) {
-  return profile_save_profile($edit, $account, $category);
+function profile_user_presave(&$edit, $account, $category) {
+  if ($account->uid) {
+    profile_save_profile($edit, $account, $category);
+  }
 }
 
 /**
  * Implement hook_user_insert().
  */
 function profile_user_insert(&$edit, $account, $category) {
-  return profile_save_profile($edit, $account, $category, TRUE);
+  profile_save_profile($edit, $account, $category, TRUE);
 }
 
 /**
@@ -368,25 +370,23 @@ function _profile_form_explanation($field) {
  * Implement hook_form_alter().
  */
 function profile_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'user_register' || $form_id == 'user_profile_form') {
-    $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
-    $form = array_merge($form, profile_form_profile($form['#user'], $form['#user_category'], $register));
+  if (!($form_id == 'user_register_form' || $form_id == 'user_profile_form')) {
+    return;
   }
-}
-
-function profile_form_profile($account, $category, $register = FALSE) {
-  $result = _profile_get_fields($category, $register);
+  $form['#validate'][] = 'profile_user_form_validate';
+  $account = $form['#user'];
+  $result = _profile_get_fields($form['#user_category'], $form['#user_category'] == 'register');
   $weight = 1;
-  $fields = array();
   foreach ($result as $field) {
     $category = $field->category;
-    if (!isset($fields[$category])) {
-      $fields[$category] = array('#type' => 'fieldset', '#title' => check_plain($category), '#weight' => $weight++);
+    if (!isset($form[$category])) {
+      $form[$category] = array('#type' => 'fieldset', '#title' => check_plain($category), '#weight' => $weight++);
     }
     switch ($field->type) {
       case 'textfield':
       case 'url':
-        $fields[$category][$field->name] = array('#type' => 'textfield',
+        $form[$category][$field->name] = array(
+          '#type' => 'textfield',
           '#title' => check_plain($field->title),
           '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#maxlength' => 255,
@@ -394,33 +394,40 @@ function profile_form_profile($account, $category, $register = FALSE) {
           '#required' => $field->required,
         );
         if ($field->autocomplete) {
-          $fields[$category][$field->name]['#autocomplete_path'] = "profile/autocomplete/" . $field->fid;
+          $form[$category][$field->name]['#autocomplete_path'] = "profile/autocomplete/" . $field->fid;
         }
         break;
+
       case 'textarea':
-        $fields[$category][$field->name] = array('#type' => 'textarea',
+        $form[$category][$field->name] = array(
+          '#type' => 'textarea',
           '#title' => check_plain($field->title),
           '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
         break;
+
       case 'list':
-        $fields[$category][$field->name] = array('#type' => 'textarea',
+        $form[$category][$field->name] = array(
+          '#type' => 'textarea',
           '#title' => check_plain($field->title),
           '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
         break;
+
       case 'checkbox':
-        $fields[$category][$field->name] = array('#type' => 'checkbox',
+        $form[$category][$field->name] = array(
+          '#type' => 'checkbox',
           '#title' => check_plain($field->title),
           '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
         break;
+
       case 'selection':
         $options = $field->required ? array() : array('--');
         $lines = preg_split("/[\n\r]/", $field->options);
@@ -429,7 +436,8 @@ function profile_form_profile($account, $category, $register = FALSE) {
             $options[$line] = $line;
           }
         }
-        $fields[$category][$field->name] = array('#type' => 'select',
+        $form[$category][$field->name] = array(
+          '#type' => 'select',
           '#title' => check_plain($field->title),
           '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#options' => $options,
@@ -437,8 +445,10 @@ function profile_form_profile($account, $category, $register = FALSE) {
           '#required' => $field->required,
         );
         break;
+
       case 'date':
-        $fields[$category][$field->name] = array('#type' => 'date',
+        $form[$category][$field->name] = array(
+          '#type' => 'date',
           '#title' => check_plain($field->title),
           '#default_value' => isset($account->{$field->name}) ? $account->{$field->name} : '',
           '#description' => _profile_form_explanation($field),
@@ -447,7 +457,6 @@ function profile_form_profile($account, $category, $register = FALSE) {
         break;
     }
   }
-  return $fields;
 }
 
 /**
@@ -461,25 +470,24 @@ function _profile_update_user_fields($fields, $account) {
 }
 
 /**
- * Implement hook_user_validate().
+ * Form validation handler for the user register/profile form.
+ *
+ * @see profile_form_alter()
  */
-function profile_user_validate(&$edit, $account, $category) {
-  $result = _profile_get_fields($category);
+function profile_user_form_validate($form, &$form_state) {
+  $result = _profile_get_fields($form['#user_category'], $form['#user_category'] == 'register');
   foreach ($result as $field) {
-    if ($edit[$field->name]) {
-      if ($field->type == 'url') {
-        if (!valid_url($edit[$field->name], TRUE)) {
-          form_set_error($field->name, t('The value provided for %field is not a valid URL.', array('%field' => $field->title)));
-        }
+    if (!empty($form_state['values'][$field->name])) {
+      if ($field->type == 'url' && !valid_url($form_state['values'][$field->name], TRUE)) {
+        form_set_error($field->name, t('The value provided for %field is not a valid URL.', array('%field' => $field->title)));
       }
     }
     elseif ($field->required && !user_access('administer users')) {
       form_set_error($field->name, t('The field %field is required.', array('%field' => $field->title)));
     }
   }
-
-  return $edit;
 }
+
 /**
  * Implement hook_user_categories().
  */

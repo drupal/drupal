@@ -425,40 +425,31 @@ function block_form_user_profile_form_alter(&$form, &$form_state) {
     $account = $form['#user'];
     $rids = array_keys($account->roles);
     $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom <> 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
-    $form['block'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Personalize blocks'),
-      '#description' => t('Blocks consist of content or information that complements the main content of the page. Enable or disable optional blocks using the checkboxes below.'),
-      '#weight' => 3,
-      '#collapsible' => TRUE,
-      '#tree' => TRUE
-    );
+
+    $blocks = array();
     foreach ($result as $block) {
       $data = module_invoke($block->module, 'block_info');
       if ($data[$block->delta]['info']) {
-        $return = TRUE;
-        $form['block'][$block->module][$block->delta] = array(
+        $blocks[$block->module][$block->delta] = array(
           '#type' => 'checkbox',
           '#title' => check_plain($data[$block->delta]['info']),
           '#default_value' => isset($account->block[$block->module][$block->delta]) ? $account->block[$block->module][$block->delta] : ($block->custom == 1),
         );
       }
     }
-
-    if (!isset($return)) {
-      $form['block']['#access'] = FALSE;
+    // Only display the fieldset if there are any personalizable blocks.
+    if ($blocks) {
+      $form['block'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Personalize blocks'),
+        '#description' => t('Blocks consist of content or information that complements the main content of the page. Enable or disable optional blocks using the checkboxes below.'),
+        '#weight' => 3,
+        '#collapsible' => TRUE,
+        '#tree' => TRUE,
+      );
+      $form['block'] += $blocks;
     }
   }
-}
-
-/**
- * Implement hook_user_validate().
- */
-function block_user_validate(&$edit, $account, $category) {
-  if (empty($edit['block'])) {
-    $edit['block'] = array();
-  }
-  return $edit;
 }
 
 /**

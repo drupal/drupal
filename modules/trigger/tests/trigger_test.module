@@ -35,6 +35,7 @@ function trigger_test_action_info() {
         'comment_insert',
         'comment_update',
         'comment_delete',
+        'user_presave',
         'user_insert',
         'user_update',
         'user_delete',

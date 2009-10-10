@@ -136,11 +136,14 @@ function trigger_trigger_info() {
        ),
      ),
      'user' => array(
+       'user_presave' => array(
+         'label' => t('When either creating a new user account or updating an existing'),
+       ),
        'user_insert' => array(
-         'label' => t('After a user account has been created'),
+         'label' => t('After creating a new user account'),
        ),
        'user_update' => array(
-         'label' => t("After a user's profile has been updated"),
+         'label' => t('After updating a user account'),
        ),
        'user_delete' => array(
          'label' => t('After a user has been deleted'),
@@ -467,6 +470,13 @@ function trigger_user_login(&$edit, $account, $category) {
  */
 function trigger_user_logout($account) {
   _trigger_user('user_logout', $edit = NULL, $account);
+}
+
+/**
+ * Implement hook_user_presave().
+ */
+function trigger_user_presave(&$edit, $account, $category) {
+  _trigger_user('user_presave', $edit, $account, $category);
 }
 
 /**

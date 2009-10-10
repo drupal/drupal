@@ -33,8 +33,8 @@
  * form for modules automatically. For example:
  *
  * @code
- * // Display the user registration form.
- * $output = drupal_get_form('user_register');
+ *   // Display the user registration form.
+ *   $output = drupal_get_form('user_register_form');
  * @endcode
  *
  * Forms can also be built and submitted programmatically without any user input
@@ -389,7 +389,7 @@ function form_set_cache($form_build_id, $form, $form_state) {
  * $form_state['values']['mail'] = 'robouser@example.com';
  * $form_state['values']['pass'] = 'password';
  * $form_state['values']['op'] = t('Create new account');
- * drupal_form_submit('user_register', $form_state);
+ * drupal_form_submit('user_register_form', $form_state);
  *
  * // Create a new node
  * $form_state = array();

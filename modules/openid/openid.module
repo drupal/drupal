@@ -129,7 +129,7 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
  *
  * Adds OpenID login to the login forms.
  */
-function openid_form_user_register_alter(&$form, &$form_state) {
+function openid_form_user_register_form_alter(&$form, &$form_state) {
   if (isset($_SESSION['openid']['values'])) {
     // We were unable to auto-register a new user. Prefill the registration
     // form with the values we have.
@@ -437,9 +437,9 @@ function openid_authentication($response) {
     $form_state['values']['pass']  = user_password();
     $form_state['values']['status'] = variable_get('user_register', 1) == 1;
     $form_state['values']['response'] = $response;
-    $form = drupal_retrieve_form('user_register', $form_state);
-    drupal_prepare_form('user_register', $form, $form_state);
-    drupal_validate_form('user_register', $form, $form_state);
+    $form = drupal_retrieve_form('user_register_form', $form_state);
+    drupal_prepare_form('user_register_form', $form, $form_state);
+    drupal_validate_form('user_register_form', $form, $form_state);
     if (form_get_errors()) {
       // We were unable to register a valid new user, redirect to standard
       // user/register and prefill with the values we received.
@@ -452,7 +452,7 @@ function openid_authentication($response) {
     }
     else {
       unset($form_state['values']['response']);
-      $account = user_save('', $form_state['values']);
+      $account = user_save(drupal_anonymous_user(), $form_state['values']);
       // Terminate if an error occurred during user_save().
       if (!$account) {
         drupal_set_message(t("Error saving user account."), 'error');

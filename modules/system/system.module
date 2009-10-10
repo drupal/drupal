@@ -1492,7 +1492,7 @@ function system_form_user_profile_form_alter(&$form, &$form_state) {
 /**
  * Implement hook_form_FORM_ID_alter().
  */
-function system_form_user_register_alter(&$form, &$form_state) {
+function system_form_user_register_form_alter(&$form, &$form_state) {
   if (variable_get('configurable_timezones', 1)) {
     if (variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) == DRUPAL_USER_TIMEZONE_SELECT) {
       system_user_timezone($form, $form_state);
