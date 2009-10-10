@@ -279,7 +279,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
 
     // Define the initial state for core and the subtheme.
     $system_info = array(
-      // We want core to be version 7.0.    
+      // We want core to be version 7.0.
       '#all' => array(
         'version' => '7.0',
       ),
@@ -321,7 +321,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
 
     // Define the initial state for core and the test contrib themes.
     $system_info = array(
-      // We want core to be version 7.0.    
+      // We want core to be version 7.0.
       '#all' => array(
         'version' => '7.0',
       ),
