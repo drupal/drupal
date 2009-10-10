@@ -198,21 +198,21 @@ function tracker_comment_update($comment) {
  * comment_save() calls hook_comment_publish() for all published comments.
  */
 function tracker_comment_publish($comment) {
-  _tracker_add($comment->nid, $comment->uid, $comment->timestamp);
+  _tracker_add($comment->nid, $comment->uid, $comment->changed);
 }
 
 /**
  * Implement hook_comment_unpublish().
  */
 function tracker_comment_unpublish($comment) {
-  _tracker_remove($comment->nid, $comment->uid, $comment->timestamp);
+  _tracker_remove($comment->nid, $comment->uid, $comment->changed);
 }
 
 /**
  * Implement hook_comment_delete().
  */
 function tracker_comment_delete($comment) {
-  _tracker_remove($comment->nid, $comment->uid, $comment->timestamp);
+  _tracker_remove($comment->nid, $comment->uid, $comment->changed);
 }
 
 /**
@@ -266,12 +266,12 @@ function _tracker_add($nid, $uid, $changed) {
  */
 function _tracker_calculate_changed($nid) {
   $changed = db_query('SELECT changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
-  $latest_comment = db_query_range('SELECT cid, timestamp FROM {comment} WHERE nid = :nid AND status = :status ORDER BY timestamp DESC', 0, 1, array(
+  $latest_comment = db_query_range('SELECT cid, changed FROM {comment} WHERE nid = :nid AND status = :status ORDER BY changed DESC', 0, 1, array(
     ':nid' => $nid,
     ':status' => COMMENT_PUBLISHED,
   ))->fetchObject();
-  if ($latest_comment && $latest_comment->timestamp > $changed) {
-    $changed = $latest_comment->timestamp;
+  if ($latest_comment && $latest_comment->changed > $changed) {
+    $changed = $latest_comment->changed;
   }
   return $changed;
 }

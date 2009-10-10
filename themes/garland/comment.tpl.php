@@ -5,7 +5,7 @@
 
   <div class="clearfix">
 
-    <span class="submitted"><?php print $date; ?> — <?php print $author; ?></span>
+    <span class="submitted"><?php print $created; ?> — <?php print $author; ?></span>
 
   <?php if ($new) : ?>
     <span class="new"><?php print drupal_ucfirst($new) ?></span>

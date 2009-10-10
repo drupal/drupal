@@ -200,7 +200,11 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'created':
-          $replacements[$original] = format_date($comment->timestamp, 'medium', '', NULL, $language_code);
+          $replacements[$original] = format_date($comment->created, 'medium', '', NULL, $language_code);
+          break;
+
+        case 'changed':
+          $replacements[$original] = format_date($comment->changed, 'medium', '', NULL, $language_code);
           break;
 
         case 'node':
@@ -217,7 +221,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
     }
 
     if ($date_tokens = token_find_with_prefix($tokens, 'created')) {
-      $replacements += token_generate('date', $date_tokens, array('date' => $comment->timestamp), $options);
+      $replacements += token_generate('date', $date_tokens, array('date' => $comment->created), $options);
     }
 
     if (($parent_tokens = token_find_with_prefix($tokens, 'parent')) && $parent = comment_load($comment->pid)) {

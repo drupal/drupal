@@ -382,9 +382,9 @@ function comment_permalink($comment) {
  * @param integer $number
  *   (optional) The maximum number of comments to find.
  * @return
- *   An array of comment objects each containing a nid,
- *   subject, cid, and timestamp, or an empty array if there are no recent
- *   comments visible to the current user.
+ *   An array of comment objects each containing a nid, subject, cid, created
+ *   and changed, or an empty array if there are no recent comments visible
+ *   to the current user.
  */
 function comment_get_recent($number = 10) {
   // Step 1: Select a $number of nodes which have new comments,
@@ -399,7 +399,7 @@ function comment_get_recent($number = 10) {
     $query = db_select('comment', 'c');
     $query->innerJoin('node', 'n', 'n.nid = c.nid');
     return $query
-      ->fields('c', array('nid', 'subject', 'cid', 'timestamp'))
+      ->fields('c', array('nid', 'subject', 'cid', 'created', 'changed'))
       ->condition('c.nid', $nids, 'IN')
       ->condition('c.status', COMMENT_PUBLISHED)
       ->condition('n.status', 1)
@@ -445,7 +445,7 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
       FROM {comment}
       WHERE nid = :nid
         AND status = 0
-      ORDER BY timestamp DESC) AS thread
+      ORDER BY changed DESC) AS thread
       ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 0, $new_replies, array(':nid' => $node->nid))->fetchField();
     $thread = substr($result, 0, -1);
     $count = db_query('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
@@ -473,7 +473,7 @@ function theme_comment_block() {
   $items = array();
   $number = variable_get('comment_block_count', 10);
   foreach (comment_get_recent($number) as $comment) {
-    $items[] = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)) . '<br />' . t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->timestamp)));
+    $items[] = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)) . '<br />' . t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->changed)));
   }
 
   if ($items) {
@@ -1277,7 +1277,8 @@ function comment_save($comment) {
     db_update('comment')
       ->fields(array(
         'status' => $comment->status,
-        'timestamp' => $comment->timestamp,
+        'created' => $comment->created,
+        'changed' => $comment->changed,
         'subject' => $comment->subject,
         'comment' => $comment->comment,
         'format' => $comment->comment_format,
@@ -1336,8 +1337,12 @@ function comment_save($comment) {
       }
     }
 
-    if (empty($comment->timestamp)) {
-      $comment->timestamp = REQUEST_TIME;
+    if (empty($comment->created)) {
+      $comment->created = REQUEST_TIME;
+    }
+
+    if (empty($comment->changed)) {
+      $comment->changed = $comment->created;
     }
 
     if ($comment->uid === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
@@ -1353,7 +1358,8 @@ function comment_save($comment) {
         'comment' => $comment->comment,
         'format' => $comment->comment_format,
         'hostname' => ip_address(),
-        'timestamp' => $comment->timestamp,
+        'created' => $comment->created,
+        'changed' => $comment->changed,
         'status' => $comment->status,
         'thread' => $thread,
         'name' => $comment->name,
@@ -1501,7 +1507,7 @@ class CommentController extends DrupalDefaultEntityController {
     foreach ($comments as $key => $comment) {
       $comment = drupal_unpack($comment);
       $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-      $comment->new = node_mark($comment->nid, $comment->timestamp);
+      $comment->new = node_mark($comment->nid, $comment->changed);
       $comment->node_type = 'comment_node_' . $comment->node_type;
       $comments[$key] = $comment;
     }
@@ -1550,9 +1556,9 @@ function comment_num_new($nid, $timestamp = 0) {
     $timestamp = ($timestamp > NODE_NEW_LIMIT ? $timestamp : NODE_NEW_LIMIT);
 
     // Use the timestamp to retrieve the number of new comments.
-    return db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid  AND timestamp > :timestamp AND status = :status', array(
+    return db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid  AND changed > :changed AND status = :status', array(
       ':nid' => $nid,
-      ':timestamp' => $timestamp,
+      ':changed' => $timestamp,
       ':status' => COMMENT_PUBLISHED,
       ))->fetchField();
   }
@@ -1676,7 +1682,7 @@ function comment_form($form, &$form_state, $comment) {
         $date = $comment->date;
       }
       else {
-        $date = format_date($comment->timestamp, 'custom', 'Y-m-d H:i O');
+        $date = format_date($comment->changed, 'custom', 'Y-m-d H:i O');
       }
 
       $form['admin'] = array(
@@ -1921,7 +1927,8 @@ function comment_preview($comment) {
       $comment->name = variable_get('anonymous', t('Anonymous'));
     }
 
-    $comment->timestamp = !empty($comment->timestamp) ? $comment->timestamp : REQUEST_TIME;
+    $comment->created = !empty($comment->created) ? $comment->created : REQUEST_TIME;
+    $comment->changed = REQUEST_TIME;
     $comment->in_preview = TRUE;
     $comment_build = comment_build($comment, $node);
     $comment_build += array(
@@ -2017,7 +2024,9 @@ function comment_submit($comment) {
     $comment['date'] = 'now';
   }
 
-  $comment['timestamp'] = strtotime($comment['date']);
+  $comment['created'] = strtotime($comment['date']);
+  $comment['changed'] = REQUEST_TIME;
+
   if (isset($comment['author'])) {
     $account = user_load_by_name($comment['author']);
     $comment['uid'] = $account->uid;
@@ -2105,7 +2114,9 @@ function template_preprocess_comment(&$variables) {
   $variables['comment']   = $comment;
   $variables['node']      = $node;
   $variables['author']    = theme('username', array('account' => $comment));
-  $variables['date']      = format_date($comment->timestamp);
+  $variables['created']   = format_date($comment->created);
+  $variables['changed']   = format_date($comment->changed);
+
   $variables['new']       = !empty($comment->new) ? t('new') : '';
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
   $variables['signature'] = $comment->signature;
@@ -2237,14 +2248,14 @@ function _comment_update_node_statistics($nid) {
 
   if ($count > 0) {
     // Comments exist.
-    $last_reply = db_query_range('SELECT cid, name, timestamp, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', 0, 1, array(
+    $last_reply = db_query_range('SELECT cid, name, changed, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', 0, 1, array(
       ':nid' => $nid,
       ':status' => COMMENT_PUBLISHED,
     ))->fetchObject();
     db_update('node_comment_statistics')
       ->fields( array(
         'comment_count' => $count,
-        'last_comment_timestamp' => $last_reply->timestamp,
+        'last_comment_timestamp' => $last_reply->changed,
         'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
         'last_comment_uid' => $last_reply->uid,
       ))

@@ -69,7 +69,7 @@ function hook_comment_load($comments) {
  */
 function hook_comment_view($comment) {
   // how old is the comment
-  $comment->time_ago = time() - $comment->timestamp;
+  $comment->time_ago = time() - $comment->changed;
 }
 
 /**

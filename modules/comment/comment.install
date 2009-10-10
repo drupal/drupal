@@ -130,6 +130,35 @@ function comment_update_7006() {
 }
 
 /**
+ * Split {comment}.timestamp into {comment}.created and {comment}.changed.
+ */
+function comment_update_7007() {
+  // Drop the index associated to timestamp.
+  db_drop_index('comment', 'comment_num_new');
+
+  // Create a created column.
+  db_add_field('comment', 'created', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+  ));
+
+  // Rename the timestamp column to changed.
+  db_change_field('comment', 'timestamp', 'changed', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+  ));
+
+  // Recreate the index.
+  db_add_index('comment', 'comment_num_new', array('nid', 'changed', 'status'));
+
+  // Migrate the data.
+  // @todo db_update() should support this.
+  db_query('UPDATE {comment} SET created = changed');
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
@@ -184,11 +213,17 @@ function comment_schema() {
         'default' => '',
         'description' => "The author's host name.",
       ),
-      'timestamp' => array(
+      'created' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The time that the comment was created, or last edited by its author, as a Unix timestamp.',
+        'description' => 'The time that the comment was created, as a Unix timestamp.',
+      ),
+      'changed' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The time that the comment was last edited, as a Unix timestamp.',
       ),
       'status' => array(
         'type' => 'int',
@@ -232,7 +267,7 @@ function comment_schema() {
     ),
     'indexes' => array(
       'comment_status_pid' => array('pid', 'status'),
-      'comment_num_new' => array('nid', 'timestamp', 'status'),
+      'comment_num_new' => array('nid', 'changed', 'status'),
       'comment_uid' => array('uid'),
     ),
     'primary key' => array('cid'),
