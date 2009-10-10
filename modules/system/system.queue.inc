@@ -30,7 +30,7 @@
  * metadata depending on the implementation. Systems using the interface should
  * only rely on the data property which will contain the information passed to
  * DrupalQueueInterface::createItem(). The full queue item returned by
- * DrupalQueueInterface::createItem() needs to be passed to
+ * DrupalQueueInterface::claimItem() needs to be passed to
  * DrupalQueueInterface::deleteItem() once processing is completed.
  *
  * While the queue system makes a best effort to preserve order in messages,
@@ -131,7 +131,7 @@ interface DrupalQueueInterface {
    * Delete a finished item from the queue.
    *
    * @param $item
-   *   The item returned by claimItem().
+   *   The item returned by DrupalQueueInterface::claimItem().
    */
   public function deleteItem($item);
 
