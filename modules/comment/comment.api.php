@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.api.php,v 1.11 2009/08/17 13:10:45 webchick Exp $
+// $Id: comment.api.php,v 1.12 2009/10/10 13:37:09 dries Exp $
 
 /**
  * @file
@@ -69,7 +69,7 @@ function hook_comment_load($comments) {
  */
 function hook_comment_view($comment) {
   // how old is the comment
-  $comment->time_ago = time() - $comment->timestamp;
+  $comment->time_ago = time() - $comment->changed;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tpl.php,v 1.12 2009/09/11 06:48:02 dries Exp $
+// $Id: comment.tpl.php,v 1.13 2009/10/10 13:37:10 dries Exp $
 
 /**
  * @file
@@ -11,7 +11,8 @@
  *   print a subset such as render($content['field_example']). Use
  *   hide($content['field_example']) to temporarily suppress the printing of a
  *   given element.
- * - $date: Date and time of posting.
+ * - $created: Date and time this comment was created.
+ * - $changed: Date and time this comment was changed.
  * - $new: New comment marker.
  * - $picture: Authors picture.
  * - $signature: Authors signature.
@@ -56,7 +57,7 @@
   <div class="submitted">
     <?php
       print t('Submitted by !username on @datetime.',
-        array('!username' => $author, '@datetime' => $date));
+        array('!username' => $author, '@datetime' => $created));
     ?>
   </div>
 
