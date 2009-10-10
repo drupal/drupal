@@ -1,5 +1,5 @@
 <?php
-// $Id: iso.inc,v 1.5 2009/09/05 05:41:55 dries Exp $
+// $Id: iso.inc,v 1.6 2009/10/10 18:21:45 dries Exp $
 
 /**
  * @file
@@ -99,6 +99,7 @@ function _country_get_predefined_list() {
     'FO' => $t('Faroe Islands'),
     'FR' => $t('France'),
     'GA' => $t('Gabon'),
+    'GB' => $t('United Kingdom'),
     'GD' => $t('Grenada'),
     'GE' => $t('Georgia'),
     'GF' => $t('French Guiana'),
@@ -251,7 +252,6 @@ function _country_get_predefined_list() {
     'TZ' => $t('Tanzania'),
     'UA' => $t('Ukraine'),
     'UG' => $t('Uganda'),
-    'UK' => $t('United Kingdom'),
     'UM' => $t('United States Minor Outlying Islands'),
     'US' => $t('United States'),
     'UY' => $t('Uruguay'),
