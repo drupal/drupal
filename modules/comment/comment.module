@@ -2306,9 +2306,17 @@ function vancode2int($c = '00') {
 
 /**
  * Implement hook_action_info().
+ *
+ * @ingroup actions
  */
 function comment_action_info() {
   return array(
+    'comment_publish_action' => array(
+      'label' => t('Publish comment'),
+      'type' => 'comment',
+      'configurable' => FALSE,
+      'triggers' => array('comment_insert', 'comment_update'),
+    ),
     'comment_unpublish_action' => array(
       'label' => t('Unpublish comment'),
       'type' => 'comment',
@@ -2320,17 +2328,45 @@ function comment_action_info() {
       'type' => 'comment',
       'configurable' => TRUE,
       'triggers' => array('comment_insert', 'comment_update'),
-    )
+    ),
   );
 }
 
 /**
- * Drupal action to unpublish a comment.
+ * Action to publish a comment.
  *
- * @param $context
- *   Keyed array. Must contain the id of the comment if $comment is not passed.
  * @param $comment
  *   An optional comment object.
+ * @param $context
+ *   Keyed array. Must contain the id of the comment if $comment is not passed.
+ *
+ * @ingroup actions
+ */
+function comment_publish_action($comment, $context = array()) {
+  if (isset($comment->cid)) {
+    $cid = $comment->cid;
+    $subject = $comment->subject;
+  }
+  else {
+    $cid = $context['cid'];
+    $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid', $cid))->fetchField();
+  }
+  db_update('comment')
+    ->fields(array('status' => COMMENT_PUBLISHED))
+    ->condition('cid', $cid)
+    ->execute();
+  watchdog('action', 'Published comment %subject.', array('%subject' => $subject));
+}
+
+/**
+ * Action to unpublish a comment.
+ *
+ * @param $comment
+ *   An optional comment object.
+ * @param $context
+ *   Keyed array. Must contain the id of the comment if $comment is not passed.
+ *
+ * @ingroup actions
  */
 function comment_unpublish_action($comment, $context = array()) {
   if (isset($comment->cid)) {
@@ -2349,9 +2385,38 @@ function comment_unpublish_action($comment, $context = array()) {
 }
 
 /**
+ * Action to unpublish a comment if it contains a certain string.
+ *
+ * @param $comment
+ *   A comment object.
+ * @param $context
+ *   An array providing more information about the context of the call to this action.
+ *   Unused here, since this action currently only supports the insert and update ops of
+ *   the comment hook, both of which provide a complete $comment object.
+ *
+ * @ingroup actions
+ * @see comment_unpublish_by_keyword_action_form()
+ * @see comment_unpublish_by_keyword_action_submit()
+ */
+function comment_unpublish_by_keyword_action($comment, $context) {
+  foreach ($context['keywords'] as $keyword) {
+    if (strpos($comment->comment, $keyword) !== FALSE || strpos($comment->subject, $keyword) !== FALSE) {
+      db_update('comment')
+        ->fields(array('status' => COMMENT_NOT_PUBLISHED))
+        ->condition('cid', $comment->cid)
+        ->execute();
+      watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject));
+      break;
+    }
+  }
+}
+
+/**
  * Form builder; Prepare a form for blacklisted keywords.
  *
  * @ingroup forms
+ * @see comment_unpublish_by_keyword_action()
+ * @see comment_unpublish_by_keyword_action_submit()
  */
 function comment_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(
@@ -2366,34 +2431,11 @@ function comment_unpublish_by_keyword_action_form($context) {
 
 /**
  * Process comment_unpublish_by_keyword_action_form form submissions.
+ *
+ * @see comment_unpublish_by_keyword_action()
  */
 function comment_unpublish_by_keyword_action_submit($form, $form_state) {
   return array('keywords' => drupal_explode_tags($form_state['values']['keywords']));
-}
-
-/**
- * Implement a configurable Drupal action.
- *
- * Unpublish a comment if it contains a certain string.
- *
- * @param $context
- *   An array providing more information about the context of the call to this action.
- *   Unused here, since this action currently only supports the insert and update ops of
- *   the comment hook, both of which provide a complete $comment object.
- * @param $comment
- *   A comment object.
- */
-function comment_unpublish_by_keyword_action($comment, $context) {
-  foreach ($context['keywords'] as $keyword) {
-    if (strpos($comment->comment, $keyword) !== FALSE || strpos($comment->subject, $keyword) !== FALSE) {
-      db_update('comment')
-        ->fields(array('status' => COMMENT_NOT_PUBLISHED))
-        ->condition('cid', $comment->cid)
-        ->execute();
-      watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject));
-      break;
-    }
-  }
 }
 
 /**
