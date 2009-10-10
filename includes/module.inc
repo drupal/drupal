@@ -240,7 +240,7 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
   }
 
   if (!empty($invoke_modules)) {
-    // Invoke the hook_module_enable after all the modules have been
+    // Invoke hook_modules_enabled after all the modules have been
     // enabled.
     module_invoke_all('modules_enabled', $invoke_modules);
   }
@@ -277,7 +277,7 @@ function module_disable($module_list) {
     // Refresh the module list to exclude the disabled modules.
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
-    // Invoke hook_module_disable before disabling modules,
+    // Invoke hook_modules_disabled before disabling modules,
     // so we can still call module hooks to get information.
     module_invoke_all('modules_disabled', $invoke_modules);
     // Force to regenerate the stored list of hook implementations.
