@@ -831,8 +831,8 @@ class TaxonomyTermController extends DrupalDefaultEntityController {
     $this->query->addField('v', 'machine_name', 'vocabulary_machine_name');
   }
 
-  protected function cacheGet($ids) {
-    $terms = parent::cacheGet($ids);
+  protected function cacheGet($ids, $conditions = array()) {
+    $terms = parent::cacheGet($ids, $conditions);
     // Name matching is case insensitive, note that with some collations
     // LOWER() and drupal_strtolower() may return different results.
     foreach ($terms as $term) {
