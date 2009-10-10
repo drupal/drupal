@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tokens.inc,v 1.3 2009/10/10 13:37:10 dries Exp $
+// $Id: comment.tokens.inc,v 1.4 2009/10/10 21:39:02 webchick Exp $
 
 /**
  * @file
@@ -175,7 +175,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'body':
-          $replacements[$original] = $sanitize ? check_markup($comment->comment, $comment->format) : $replacements[$original] = $comment->comment;
+          $replacements[$original] = $sanitize ? check_markup($comment->comment, $comment->format, '', TRUE) : $comment->comment;
           break;
 
         // Comment related URLs.

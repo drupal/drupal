@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1061 2009/10/10 19:54:15 dries Exp $
+// $Id: user.module,v 1.1062 2009/10/10 21:39:03 webchick Exp $
 
 /**
  * @file
@@ -2852,7 +2852,7 @@ function user_forms() {
  */
 function user_comment_view($comment) {
   if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
-    $comment->signature = check_markup($comment->signature, $comment->format);
+    $comment->signature = check_markup($comment->signature, $comment->format, '', TRUE);
   }
   else {
     $comment->signature = '';
