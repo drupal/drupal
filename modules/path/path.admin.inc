@@ -66,8 +66,8 @@ function path_admin_overview($keys = NULL) {
   }
 
   $build['path_table'] = array(
-    '#theme' => 'table', 
-    '#header' => $header, 
+    '#theme' => 'table',
+    '#header' => $header,
     '#rows' => $rows
   );
   $build['path_pager'] = array('#theme' => 'pager');
@@ -249,14 +249,4 @@ function path_admin_filter_form_submit_filter($form, &$form_state) {
  */
 function path_admin_filter_form_submit_reset($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/search/path/list';
-}
-
-
-/**
- * Helper function for grabbing filter keys.
- */
-function path_admin_filter_get_keys() {
-  // Extract keys as remainder of path
-  $path = explode('/', $_GET['q'], 5);
-  return count($path) == 5 ? $path[4] : '';
 }
