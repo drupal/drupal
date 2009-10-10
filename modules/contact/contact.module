@@ -105,19 +105,39 @@ function contact_menu() {
 }
 
 /**
- * Determine permission to a user's personal contact form.
+ * Menu access callback for a user's personal contact form.
+ *
+ * @param $account
+ *   A user account object.
+ * @return
+ *   TRUE if the current user has access to the requested user's contact form,
+ *   or FALSE otherwise.
  */
 function _contact_personal_tab_access(stdClass $account) {
   global $user;
-  if (!isset($account->contact)) {
-    $account->contact = FALSE;
+
+  // Anonymous users cannot use or have contact forms.
+  if (!$user->uid || !$account->uid) {
+    return FALSE;
   }
-  return
-    $account && $user->uid &&
-    (
-      ($user->uid != $account->uid && $account->contact) ||
-      user_access('administer users')
-    );
+
+  // User administrators should always have access to personal contact forms.
+  if (user_access('administer users')) {
+    return TRUE;
+  }
+
+  // Users may not contact themselves.
+  if ($user->uid == $account->uid) {
+    return FALSE;
+  }
+
+  // If the requested user has disabled their contact form, or this preference
+  // has not yet been saved, do not allow users to contact them.
+  if (empty($account->contact)) {
+    return FALSE;
+  }
+
+  return TRUE;
 }
 
 /**

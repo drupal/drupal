@@ -1557,12 +1557,30 @@ function user_menu() {
   return $items;
 }
 
+/**
+ * Implement hook_init().
+ */
 function user_init() {
   drupal_add_css(drupal_get_path('module', 'user') . '/user.css');
 }
 
-function user_uid_optional_load($arg) {
-  return user_load(isset($arg) ? $arg : $GLOBALS['user']->uid);
+/**
+ * Load a either a specified or the current user account.
+ *
+ * @param $uid
+ *   An optional user ID of the user to load. If not provided, the current
+ *   user's ID will be used.
+ * @return
+ *   A fully-loaded $user object upon successful user load, FALSE if user
+ *   cannot be loaded.
+ *
+ * @see user_load()
+ */
+function user_uid_optional_load($uid = NULL) {
+  if (!isset($uid)) {
+    $uid = $GLOBALS['user']->uid;
+  }
+  return user_load($uid);
 }
 
 /**

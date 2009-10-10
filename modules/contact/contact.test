@@ -274,6 +274,10 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
  * Test the personal contact form.
  */
 class ContactPersonalTestCase extends DrupalWebTestCase {
+  private $admin_user;
+  private $web_user;
+  private $contact_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Personal contact form',
@@ -284,78 +288,99 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('contact');
+
+    // Create an admin user.
+    $this->admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users'));
+
+    // Create some normal users with their contact forms enabled by default.
+    variable_set('contact_default_status', TRUE);
+    $this->web_user = $this->drupalCreateUser();
+    $this->contact_user = $this->drupalCreateUser();
+    variable_set('contact_default_status', FALSE);
   }
 
   /**
-   * Test personal contact form.
+   * Test personal contact form access.
    */
-  function testPersonalContact() {
-    $admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users'));
-    $this->drupalLogin($admin_user);
+  function testPersonalContactAccess() {
+    // Test allowed access to user with contact form enabled.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(200);
 
-    $flood_limit = 3;
-    variable_set('contact_threshold_limit', $flood_limit);
+    // Test denied access to the user's own contact form.
+    $this->drupalGet('user/' . $this->web_user->uid . '/contact');
+    $this->assertResponse(403);
 
-    // Enable the personal contact form.
-    $edit = array();
-    $edit['contact_default_status'] = TRUE;
+    // Test always denied access to the anonymous user contact form.
+    $this->drupalGet('user/0/contact');
+    $this->assertResponse(403);
+
+    // Disable the personal contact form.
+    $this->drupalLogin($this->admin_user);
+    $edit = array('contact_default_status' => FALSE);
     $this->drupalPost('admin/config/people/accounts', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
-
-    // Reload variables.
     $this->drupalLogout();
 
-    // Create web users and attempt to use personal contact forms with default set to true.
-    $web_user1 = $this->drupalCreateUser(array());
-    $web_user2 = $this->drupalCreateUser(array());
+    // Re-create our contacted user with personal contact forms disabled by
+    // default.
+    $this->contact_user = $this->drupalCreateUser();
 
-    $this->drupalLogin($web_user1);
+    // Test denied access to a user with contact form disabled.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(403);
 
-    $this->drupalGet('user/' . $web_user2->uid . '/contact');
-    $this->assertResponse(200, t('Access to personal contact form granted.'));
+    // Test allowed access for admin user to a user with contact form disabled.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(200);
+  }
 
-    $edit = array();
-    $edit['subject'] = $this->randomName(16);
-    $edit['message'] = $this->randomName(64);
-    $this->drupalPost(NULL, $edit, t('Send message'));
-    $this->assertText(t('Your message has been sent.'), t('Message sent.'));
+  /**
+   * Test the personal contact form flood protection.
+   */
+  function testPersonalContactFlood() {
+    $flood_limit = 3;
+    variable_set('contact_threshold_limit', $flood_limit);
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
     db_delete('flood')->execute();
     $num_records_flood = db_query("SELECT COUNT(*) FROM {flood}")->fetchField();
-    $this->assertIdentical($num_records_flood, '0', t('Flood table emptied.'));
+    $this->assertIdentical($num_records_flood, '0', 'Flood table emptied.');
+
+    $this->drupalLogin($this->web_user);
 
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_limit; $i++) {
-      $this->drupalGet('user/' . $web_user2->uid . '/contact');
-      $this->drupalPost(NULL, $edit, t('Send message'));
-      $this->assertText(t('Your message has been sent.'), t('Message sent.'));
+      $this->submitPersonalContact($this->contact_user);
+      $this->assertText(t('Your message has been sent.'), 'Message sent.');
     }
 
     // Submit contact form one over limit.
-    $this->drupalGet('user/' . $web_user2->uid . '/contact');
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Please try again later.', array('%number' => $flood_limit, '@interval' => format_interval(variable_get('contact_threshold_window', 3600)))), t('Message threshold reached.'));
+    $this->drupalGet('user/' . $this->contact_user->uid. '/contact');
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Please try again later.', array('%number' => $flood_limit, '@interval' => format_interval(variable_get('contact_threshold_window', 3600)))), 'Normal user denied access to flooded contact form.');
 
-    $this->drupalLogout();
+    // Test that the admin user can still access the contact form even though
+    // the flood limit was reached.
+    $this->drupalLogin($this->admin_user);
+    $this->assertNoText('Please try again later.', 'Admin user not denied access to flooded contact form.');
+  }
 
-    $this->drupalLogin($admin_user);
-
-    // Disable the personal contact form.
-    $edit = array();
-    $edit['contact_default_status'] = FALSE;
-    $this->drupalPost('admin/config/people/accounts', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
-
-    // Reload variables.
-    $this->drupalLogout();
-
-    // Create web users and attempt to use personal contact forms with default set to false.
-    $web_user3 = $this->drupalCreateUser(array());
-    $web_user4 = $this->drupalCreateUser(array());
-
-    $this->drupalLogin($web_user3);
-
-    $this->drupalGet('user/' . $web_user4->uid . '/contact');
-    $this->assertResponse(403, t('Access to personal contact form denied.'));
+  /**
+   * Fill out a user's personal contact form and submit.
+   *
+   * @param $account
+   *   A user object of the user being contacted.
+   * @param $message
+   *   An optional array with the form fields being used.
+   */
+  protected function submitPersonalContact($account, array $message = array()) {
+    $message += array(
+      'subject' => $this->randomName(16),
+      'message' => $this->randomName(64),
+    );
+    $this->drupalPost('user/' . $account->uid . '/contact', $message, t('Send message'));
   }
 }
