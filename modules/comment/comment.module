@@ -841,7 +841,7 @@ function comment_build_content($comment, $node, $build_mode = 'full') {
 
   // Build comment body.
   $comment->content['comment_body'] = array(
-    '#markup' => check_markup($comment->comment, $comment->format),
+    '#markup' => check_markup($comment->comment, $comment->format, '', TRUE),
   );
 
   $comment->content += field_attach_view('comment', $comment, $build_mode);
@@ -1158,7 +1158,7 @@ function comment_node_update_index($node) {
       ':status' => COMMENT_PUBLISHED
     ));
     foreach ($comments as $comment) {
-      $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format);
+      $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', TRUE);
     }
   }
   return $text;

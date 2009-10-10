@@ -175,7 +175,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'body':
-          $replacements[$original] = $sanitize ? check_markup($comment->comment, $comment->format) : $replacements[$original] = $comment->comment;
+          $replacements[$original] = $sanitize ? check_markup($comment->comment, $comment->format, '', TRUE) : $comment->comment;
           break;
 
         // Comment related URLs.

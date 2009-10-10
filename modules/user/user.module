@@ -2852,7 +2852,7 @@ function user_forms() {
  */
 function user_comment_view($comment) {
   if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
-    $comment->signature = check_markup($comment->signature, $comment->format);
+    $comment->signature = check_markup($comment->signature, $comment->format, '', TRUE);
   }
   else {
     $comment->signature = '';

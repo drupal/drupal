@@ -278,9 +278,9 @@ function hook_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
         // handled by hook_field_sanitize().
         $format = $item['format'];
         if (filter_format_allowcache($format)) {
-          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode, FALSE) : '';
+          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode) : '';
           if ($field['type'] == 'text_with_summary') {
-            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode, FALSE) : '';
+            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode) : '';
           }
         }
       }
@@ -322,9 +322,9 @@ function hook_field_sanitize($obj_type, $object, $field, $instance, $langcode, &
     if (!isset($items[$delta]['safe'])) {
       if (!empty($instance['settings']['text_processing'])) {
         $format = $item['format'];
-        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode) : '';
+        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode, TRUE) : '';
         if ($field['type'] == 'text_with_summary') {
-          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode) : '';
+          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode, TRUE) : '';
         }
       }
       else {

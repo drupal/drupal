@@ -195,7 +195,7 @@ function block_block_save($delta = 0, $edit = array()) {
  */
 function block_block_view($delta = 0, $edit = array()) {
   $block = db_query('SELECT body, format FROM {block_custom} WHERE bid = :bid', array(':bid' => $delta))->fetchObject();
-  $data['content'] = check_markup($block->body, $block->format);
+  $data['content'] = check_markup($block->body, $block->format, '', TRUE);
   return $data;
 }
 
