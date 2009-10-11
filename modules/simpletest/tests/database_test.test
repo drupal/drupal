@@ -990,13 +990,15 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
   function testMergeInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
-    db_merge('test_people')
+    $result = db_merge('test_people')
       ->key(array('job' => 'Presenter'))
       ->fields(array(
         'age' => 31,
         'name' => 'Tiffany',
       ))
       ->execute();
+
+    $this->assertEqual($result, MergeQuery::STATUS_INSERT, t('Insert status returned.'));
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
     $this->assertEqual($num_records_before + 1, $num_records_after, t('Merge inserted properly.'));
@@ -1013,13 +1015,15 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
   function testMergeUpdate() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
-    db_merge('test_people')
+    $result = db_merge('test_people')
       ->key(array('job' => 'Speaker'))
       ->fields(array(
         'age' => 31,
         'name' => 'Tiffany',
       ))
       ->execute();
+
+    $this->assertEqual($result, MergeQuery::STATUS_UPDATE, t('Update status returned.'));
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
     $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));

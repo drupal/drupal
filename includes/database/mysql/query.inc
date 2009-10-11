@@ -133,9 +133,14 @@ class MergeQuery_mysql extends MergeQuery {
       $values[':db_update_placeholder_' . ($max_placeholder++)] = $value;
     }
 
-    $last_insert_id = $this->connection->query((string)$this, $values, $this->queryOptions);
 
-    return $last_insert_id;
+    // MySQL's INSERT ... ON DUPLICATE KEY UPDATE queries return 1
+    // (MergeQuery::STATUS_INSERT) for an INSERT operation or 2
+    // (MergeQuery::STATUS_UPDATE) for an UPDATE operation.
+    //
+    // @link http ://dev.mysql.com/doc/refman/5.0/en/mysql-affected-rows.html
+    $this->queryOptions['return'] = Database::RETURN_AFFECTED;
+    return $this->connection->query((string)$this, $values, $this->queryOptions);
   }
 
 
