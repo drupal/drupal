@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.132 2009/10/10 19:54:15 dries Exp $
+// $Id: contact.module,v 1.133 2009/10/11 01:06:27 dries Exp $
 
 /**
  * @file
@@ -86,15 +86,16 @@ function contact_menu() {
   );
   $items['contact'] = array(
     'title' => 'Contact',
-    'page callback' => 'contact_site_page',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contact_site_form'),
     'access arguments' => array('access site-wide contact form'),
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'contact.pages.inc',
   );
   $items['user/%user/contact'] = array(
     'title' => 'Contact',
-    'page callback' => 'contact_personal_page',
-    'page arguments' => array(1),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contact_personal_form', 1),
     'type' => MENU_LOCAL_TASK,
     'access callback' => '_contact_personal_tab_access',
     'access arguments' => array(1),
