@@ -1363,7 +1363,7 @@ function theme_menu_local_task($variables) {
 /**
  * Generate the HTML output for a single local action link.
  *
- * @param $element
+ * @param $variables
  *   An associative array containing:
  *   - #link: A menu link array with 'title', 'href', and 'localized_options'
  *     keys.
