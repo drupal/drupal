@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.351 2009/10/11 06:05:53 webchick Exp $
+// $Id: menu.inc,v 1.352 2009/10/11 19:39:30 dries Exp $
 
 /**
  * @file
@@ -1363,7 +1363,7 @@ function theme_menu_local_task($variables) {
 /**
  * Generate the HTML output for a single local action link.
  *
- * @param $element
+ * @param $variables
  *   An associative array containing:
  *   - #link: A menu link array with 'title', 'href', and 'localized_options'
  *     keys.
