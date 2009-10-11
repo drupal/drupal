@@ -31,14 +31,14 @@
  * - $secondary_menu (array): An array containing the Secondary menu links for
  *   the site, if they have been configured.
  * - $breadcrumb: The breadcrumb trail for the current page.
- * - $action_links: Actions local to the page, such as 'Add menu' on the menu
- *   administration interface.
  *
  * Page content (in order of occurrence in the default page.tpl.php):
  * - $title: The page title, for use in the actual HTML content.
  * - $messages: HTML for status and error messages. Should be displayed prominently.
- * - $tabs: Tabs linking to any sub-pages beneath the current page (e.g., the view
- *   and edit tabs when displaying a node).
+ * - $tabs (array): Tabs linking to any sub-pages beneath the current page
+ *   (e.g., the view and edit tabs when displaying a node).
+ * - $action_links (array): Actions local to the page, such as 'Add menu' on the
+ *   menu administration interface.
  * - $feed_icons: A string of all feed icons for the current page.
  *
  * Regions:
@@ -107,9 +107,9 @@
       <div id="content" class="column"><div class="section">
         <?php if ($page['highlight']): ?><div id="highlight"><?php print render($page['highlight']); ?></div><?php endif; ?>
         <?php if ($title): ?><h1 class="title" id="page-title"><?php print $title; ?></h1><?php endif; ?>
-        <?php if ($tabs): ?><div class="tabs"><?php print $tabs; ?></div><?php endif; ?>
+        <?php if ($tabs): ?><div class="tabs"><?php print render($tabs); ?></div><?php endif; ?>
         <?php print render($page['help']); ?>
-        <?php if ($action_links): ?><ul class="action-links"><?php print $action_links; ?></ul><?php endif; ?>
+        <?php if ($action_links): ?><ul class="action-links"><?php print render($action_links); ?></ul><?php endif; ?>
         <?php print render($page['content']); ?>
         <?php print $feed_icons; ?>
       </div></div> <!-- /.section, /#content -->

@@ -4939,10 +4939,10 @@ function drupal_common_theme() {
       'arguments' => array('tree' => NULL),
     ),
     'menu_local_task' => array(
-      'arguments' => array('link' => NULL, 'active' => FALSE),
+      'arguments' => array('element' => NULL),
     ),
     'menu_local_action' => array(
-      'arguments' => array('link' => NULL),
+      'arguments' => array('element' => NULL),
     ),
     'menu_local_tasks' => array(
       'arguments' => array(),
