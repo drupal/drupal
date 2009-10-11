@@ -6,40 +6,33 @@
  * User page callbacks for the contact module.
  */
 
-
-/**
- * Site-wide contact page.
- */
-function contact_site_page() {
-  $limit = variable_get('contact_threshold_limit', 5);
-  $window = variable_get('contact_threshold_window', 3600);
-
-  if (!flood_is_allowed('contact', $limit, $window) && !user_access('administer contact forms')) {
-    $output = t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window)));
-  }
-  elseif (!db_query("SELECT 1 FROM {contact}")->fetchField()) {
-    if (user_access('administer contact forms')) {
-      $output = t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array('@add' => url('admin/structure/contact/add')));
-    }
-    else {
-      return drupal_not_found();
-    }
-  }
-  else {
-    $output = drupal_get_form('contact_site_form');
-  }
-
-  return $output;
-}
-
 /**
  * Form builder; the site-wide contact form.
  */
 function contact_site_form($form, &$form_state) {
   global $user;
 
+  // Check if flood control has been activated for sending e-mails.
+  $limit = variable_get('contact_threshold_limit', 5);
+  $window = variable_get('contact_threshold_window', 3600);
+  if (!flood_is_allowed('contact', $limit, $window) && !user_access('administer contact forms')) {
+    drupal_set_message(t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window))), 'error');
+    return drupal_access_denied();
+  }
+  
+  // Get an array of the categories and the current default category.
   $categories = db_query("SELECT cid, category FROM {contact} ORDER BY weight, category")->fetchAllKeyed();
   $default_category = db_query("SELECT cid FROM {contact} WHERE selected = 1")->fetchField();
+
+  // If there are no categories, do not display the form.
+  if (!$categories) {
+    if (user_access('administer contact forms')) {
+      drupal_set_message(t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array('@add' => url('admin/structure/contact/add'))), 'error');
+    }
+    else {
+      return drupal_not_found();
+    }
+  }
 
   // If there is more than one category available and no default category has
   // been selected, prepend a default placeholder value.
@@ -162,57 +155,54 @@ function contact_site_form_submit($form, &$form_state) {
 }
 
 /**
- * Personal contact page.
- */
-function contact_personal_page(stdClass $recipient) {
-  global $user;
-
-  $limit = variable_get('contact_threshold_limit', 5);
-  $window = variable_get('contact_threshold_window', 3600);
-
-  if (!valid_email_address($user->mail)) {
-    $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit", array('query' => drupal_get_destination()))));
-  }
-  elseif (!flood_is_allowed('contact', $limit, $window) && !user_access('administer contact forms') && !user_access('administer users')) {
-    $output = t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window)));
-  }
-  else {
-    drupal_set_title(t('Contact @username', array('@username' => $recipient->name)), PASS_THROUGH);
-    $output = drupal_get_form('contact_personal_form', $recipient);
-  }
-
-  return $output;
-}
-
-/**
  * Form builder; the personal contact form.
  */
 function contact_personal_form($form, &$form_state, stdClass $recipient) {
   global $user;
+
+  // Check if flood control has been activated for sending e-mails.
+  $limit = variable_get('contact_threshold_limit', 5);
+  $window = variable_get('contact_threshold_window', 3600);
+  if (!flood_is_allowed('contact', $limit, $window) && !user_access('administer contact forms') && !user_access('administer users')) {
+    drupal_set_message(t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window))), 'error');
+    return drupal_access_denied();
+  }
+  
+  drupal_set_title(t('Contact @username', array('@username' => $recipient->name)), PASS_THROUGH);
+  
   $form['#token'] = $user->name . $user->mail;
-  $form['recipient'] = array('#type' => 'value', '#value' => $recipient);
-  $form['from'] = array('#type' => 'item',
+  $form['recipient'] = array(
+    '#type' => 'value',
+    '#value' => $recipient,
+  );
+  $form['from'] = array(
+    '#type' => 'item',
     '#title' => t('From'),
     '#markup' => theme('username', array('account' => $user)) . ' &lt;' . check_plain($user->mail) . '&gt;',
   );
-  $form['to'] = array('#type' => 'item',
+  $form['to'] = array(
+    '#type' => 'item',
     '#title' => t('To'),
     '#markup' => theme('username', array('account' => $recipient)),
   );
-  $form['subject'] = array('#type' => 'textfield',
+  $form['subject'] = array(
+    '#type' => 'textfield',
     '#title' => t('Subject'),
     '#maxlength' => 50,
     '#required' => TRUE,
   );
-  $form['message'] = array('#type' => 'textarea',
+  $form['message'] = array(
+    '#type' => 'textarea',
     '#title' => t('Message'),
     '#rows' => 15,
     '#required' => TRUE,
   );
-  $form['copy'] = array('#type' => 'checkbox',
+  $form['copy'] = array(
+    '#type' => 'checkbox',
     '#title' => t('Send yourself a copy.'),
   );
-  $form['submit'] = array('#type' => 'submit',
+  $form['submit'] = array(
+    '#type' => 'submit',
     '#value' => t('Send message'),
   );
   return $form;
