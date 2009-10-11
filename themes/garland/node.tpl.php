@@ -1,12 +1,12 @@
 <?php
-// $Id: node.tpl.php,v 1.16 2009/09/11 06:48:03 dries Exp $
+// $Id: node.tpl.php,v 1.17 2009/10/11 03:07:21 webchick Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
   <?php print $user_picture; ?>
 
   <?php if (!$page): ?>
-    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
+    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $node_title; ?></a></h2>
   <?php endif; ?>
 
   <?php if ($display_submitted): ?>

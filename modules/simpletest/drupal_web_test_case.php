@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.157 2009/10/10 16:48:38 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.158 2009/10/11 03:07:19 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -694,7 +694,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Populate defaults array.
     $settings += array(
       'body'      => array(FIELD_LANGUAGE_NONE => array(array())),
-      'title'     => $this->randomName(8),
+      'title'     => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
       'comment'   => 2,
       'changed'   => REQUEST_TIME,
       'moderate'  => 0,

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.34 2009/09/29 15:31:13 dries Exp $
+// $Id: aggregator.test,v 1.35 2009/10/11 03:07:16 webchick Exp $
 
 /**
  * @file
@@ -253,7 +253,7 @@ EOF;
     // Post 5 articles.
     for ($i = 0; $i < 5; $i++) {
       $edit = array();
-      $edit['title'] = $this->randomName();
+      $edit["title[$langcode][0][value]"] = $this->randomName();
       $edit["body[$langcode][0][value]"] = $this->randomName();
       $this->drupalPost('node/add/article', $edit, t('Save'));
     }

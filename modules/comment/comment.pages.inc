@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.25 2009/09/11 13:37:52 webchick Exp $
+// $Id: comment.pages.inc,v 1.26 2009/10/11 03:07:17 webchick Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@
  */
 function comment_reply($node, $pid = NULL) {
   // Set the breadcrumb trail.
-  drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->title, 'node/' . $node->nid)));
+  drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->title[FIELD_LANGUAGE_NONE][0]['value'], 'node/' . $node->nid)));
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $build = array();
 

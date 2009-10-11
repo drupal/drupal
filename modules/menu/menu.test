@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.23 2009/10/09 08:02:24 webchick Exp $
+// $Id: menu.test,v 1.24 2009/10/11 03:07:18 webchick Exp $
 
 /**
  * @file
@@ -315,7 +315,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
       // Verify menu link link.
       $this->clickLink($title);
-      $title = $parent_node->title;
+      $title = $parent_node->title[FIELD_LANGUAGE_NONE][0]['value'];
       $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Parent menu link link target was correct'));
     }
 
@@ -325,7 +325,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Verify menu link link.
     $this->clickLink($title);
-    $title = $item_node->title;
+    $title = $item_node->title[FIELD_LANGUAGE_NONE][0]['value'];
     $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Menu link link target was correct'));
   }
 

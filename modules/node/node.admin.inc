@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.70 2009/10/09 01:31:17 dries Exp $
+// $Id: node.admin.inc,v 1.71 2009/10/11 03:07:18 webchick Exp $
 
 /**
  * @file
@@ -339,7 +339,7 @@ function _node_mass_update_batch_process($nodes, $updates, &$context) {
     $node = _node_mass_update_helper($nid, $updates);
 
     // Store result for post-processing in the finished callback.
-    $context['results'][] = l($node->title, 'node/' . $node->nid);
+    $context['results'][] = l($node->title[FIELD_LANGUAGE_NONE][0]['value'], 'node/' . $node->nid);
 
     // Update our progress information.
     $context['sandbox']['progress']++;

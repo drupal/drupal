@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.81 2009/10/10 16:48:38 webchick Exp $
+// $Id: system.api.php,v 1.82 2009/10/11 03:07:20 webchick Exp $
 
 /**
  * @file
@@ -1099,7 +1099,7 @@ function hook_mail($key, &$message, $params) {
       '%uid' => $node->uid,
       '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
       '%node_type' => node_type_get_name($node),
-      '%title' => $node->title,
+      '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'],
       '%teaser' => $node->teaser,
       '%body' => $node->body,
     );

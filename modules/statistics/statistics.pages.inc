@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.pages.inc,v 1.17 2009/10/09 01:00:04 dries Exp $
+// $Id: statistics.pages.inc,v 1.18 2009/10/11 03:07:20 webchick Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@ function statistics_node_tracker() {
       $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
     }
 
-    drupal_set_title($node->title);
+    drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
     $build['statistics_table'] = array(
       '#theme' => 'table', 
       '#header' => $header, 

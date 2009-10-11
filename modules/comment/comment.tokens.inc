@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tokens.inc,v 1.4 2009/10/10 21:39:02 webchick Exp $
+// $Id: comment.tokens.inc,v 1.5 2009/10/11 03:07:18 webchick Exp $
 
 /**
  * @file
@@ -209,7 +209,8 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
         case 'node':
           $node = node_load($comment->nid);
-          $replacements[$original] = $sanitize ? filter_xss($node->title) : $node->title;
+          $title = $node->title[FIELD_LANGUAGE_NONE][0]['value'];
+          $replacements[$original] = $sanitize ? filter_xss($title) : $title;
           break;
       }
     }
