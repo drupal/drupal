@@ -59,11 +59,11 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Attempt a resubmission of the form - this emulates using the back button
     // to return to the page then resubmitting the form without a refresh.
     $edit = array();
-    $edit['title'] = $this->randomName();
     $langcode = FIELD_LANGUAGE_NONE;
+    $edit["title[$langcode][0][value]"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $this->drupalPost('node/add/page', $edit, t('Save'), array('query' => array('translation' => $node->nid, 'language' => 'es')));
-    $duplicate = $this->drupalGetNodeByTitle($edit['title']);
+    $duplicate = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
     $this->assertEqual($duplicate->tnid, 0, t('The node does not have a tnid.'));
 
     // Update original and mark translation as outdated.
@@ -128,15 +128,15 @@ class TranslationTestCase extends DrupalWebTestCase {
    */
   function createPage($title, $body, $language) {
     $edit = array();
-    $edit['title'] = $title;
     $langcode = FIELD_LANGUAGE_NONE;
+    $edit["title[$langcode][0][value]"] = $title;
     $edit["body[$langcode][0][value]"] = $body;
     $edit['language'] = $language;
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Page created.'));
+    $this->assertRaw(t('Page %title has been created.', array('%title' => $edit["title[$langcode][0][value]"])), t('Page created.'));
 
     // Check to make sure the node was created.
-    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
     $this->assertTrue($node, t('Node found in database.'));
 
     return $node;
@@ -154,14 +154,14 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/add/page', array('query' => array('translation' => $nid, 'language' => $language)));
 
     $edit = array();
-    $edit['title'] = $title;
     $langcode = FIELD_LANGUAGE_NONE;
+    $edit["title[$langcode][0][value]"] = $title;
     $edit["body[$langcode][0][value]"] = $body;
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Translation created.'));
+    $this->assertRaw(t('Page %title has been created.', array('%title' => $edit["title[$langcode][0][value]"])), t('Translation created.'));
 
     // Check to make sure that translation was successful.
-    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
     $this->assertTrue($node, t('Node found in database.'));
 
     return $node;

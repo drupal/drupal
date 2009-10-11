@@ -51,7 +51,7 @@ function poll_page() {
  */
 function poll_votes($node) {
   $votes_per_page = 20;
-  drupal_set_title($node->title);
+  drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
 
   $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
   $header[] = array('data' => t('Vote'), 'field' => 'pc.chtext');
@@ -91,7 +91,7 @@ function poll_votes($node) {
  * Callback for the 'results' tab for polls you can vote on
  */
 function poll_results($node) {
-  drupal_set_title($node->title);
+  drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
   $node->show_results = TRUE;
   return node_show($node);
 }

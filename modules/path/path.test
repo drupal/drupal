@@ -66,7 +66,7 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Confirm that the alias works.
     $this->drupalGet($edit['dst']);
-    $this->assertText($node1->title, 'Alias works.');
+    $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], 'Alias works.');
 
     // Change alias.
     $pid = $this->getPID($edit['dst']);
@@ -77,7 +77,7 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Confirm that the alias works.
     $this->drupalGet($edit['dst']);
-    $this->assertText($node1->title, 'Changed alias works.');
+    $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], 'Changed alias works.');
 
     // Confirm that previous alias no longer works.
     $this->drupalGet($previous);
@@ -117,7 +117,7 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path']);
-    $this->assertText($node1->title, 'Alias works.');
+    $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], 'Alias works.');
 
     // Change alias.
     $previous = $edit['path'];
@@ -126,11 +126,11 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path']);
-    $this->assertText($node1->title, 'Changed alias works.');
+    $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], 'Changed alias works.');
 
     // Make sure that previous alias no longer works.
     $this->drupalGet($previous);
-    $this->assertNoText($node1->title, 'Previous alias no longer works.');
+    $this->assertNoText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], 'Previous alias no longer works.');
     $this->assertResponse(404);
 
     // Create second test node.
@@ -208,14 +208,14 @@ class PathLanguageTestCase extends DrupalWebTestCase {
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path']);
-    $this->assertText($english_node->title, 'Alias works.');
+    $this->assertText($english_node->title[FIELD_LANGUAGE_NONE][0]['value'], 'Alias works.');
 
     // Translate the node into French.
     $this->drupalGet('node/' . $english_node->nid . '/translate');
     $this->clickLink(t('add translation'));
     $edit = array();
-    $edit['title'] = $this->randomName();
     $langcode = FIELD_LANGUAGE_NONE;
+    $edit["title[$langcode][0][value]"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit['path'] = $this->randomName();
     $this->drupalPost(NULL, $edit, t('Save'));
@@ -225,12 +225,12 @@ class PathLanguageTestCase extends DrupalWebTestCase {
 
     // Ensure the node was created.
     // Check to make sure the node was created.
-    $french_node = $this->drupalGetNodeByTitle($edit['title']);
+    $french_node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
     $this->assertTrue(($french_node), 'Node found in database.');
 
     // Confirm that the alias works.
     $this->drupalGet('fr/' . $edit['path']);
-    $this->assertText($french_node->title, 'Alias for French translation works.');
+    $this->assertText($french_node->title[FIELD_LANGUAGE_NONE][0]['value'], 'Alias for French translation works.');
 
     // Confirm that the alias is returned by url().
     $languages = language_list();

@@ -1285,11 +1285,11 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);
-    $this->assertText($node->title, t('English alias works.'));
+    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('English alias works.'));
 
     // Confirm custom language path alias works.
     $this->drupalGet($prefix . '/' . $custom_language_path);
-    $this->assertText($node->title, t('Custom language alias works.'));
+    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Custom language alias works.'));
 
     $this->drupalLogout();
   }
@@ -1395,7 +1395,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $node_body =  $this->randomName();
     $edit = array(
       'type' => 'page',
-      'title' => $node_title,
+      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $node_title))),
       'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => $node_body))),
       'language' => $langcode,
     );

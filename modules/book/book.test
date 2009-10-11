@@ -110,7 +110,7 @@ class BookTestCase extends DrupalWebTestCase {
 
     // Check previous, up, and next links.
     if ($previous) {
-      $this->assertRaw(l('‹ ' . $previous->title, 'node/' . $previous->nid, array('attributes' => array('class' => array('page-previous'), 'title' => t('Go to previous page')))), t('Previous page link found.'));
+      $this->assertRaw(l('‹ ' . $previous->title[FIELD_LANGUAGE_NONE][0]['value'], 'node/' . $previous->nid, array('attributes' => array('class' => array('page-previous'), 'title' => t('Go to previous page')))), t('Previous page link found.'));
     }
 
     if ($up) {
@@ -118,7 +118,7 @@ class BookTestCase extends DrupalWebTestCase {
     }
 
     if ($next) {
-      $this->assertRaw(l($next->title . ' ›', 'node/' . $next->nid, array('attributes' => array('class' => array('page-next'), 'title' => t('Go to next page')))), t('Next page link found.'));
+      $this->assertRaw(l($next->title[FIELD_LANGUAGE_NONE][0]['value'] . ' ›', 'node/' . $next->nid, array('attributes' => array('class' => array('page-next'), 'title' => t('Go to next page')))), t('Next page link found.'));
     }
 
     // Compute the expected breadcrumb.
@@ -140,7 +140,7 @@ class BookTestCase extends DrupalWebTestCase {
 
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->nid);
-    $this->assertText($node->title, t('Printer friendly title found.'));
+    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Printer friendly title found.'));
     $this->assertRaw(check_markup($node->body[FIELD_LANGUAGE_NONE][0]['value'], $node->body[FIELD_LANGUAGE_NONE][0]['format']), t('Printer friendly body found.'));
 
     $number++;
@@ -154,7 +154,7 @@ class BookTestCase extends DrupalWebTestCase {
   function generateOutlinePattern($nodes) {
     $outline = '';
     foreach ($nodes as $node) {
-      $outline .= '(node\/' . $node->nid . ')(.*?)(' . $node->title . ')(.*?)';
+      $outline .= '(node\/' . $node->nid . ')(.*?)(' . $node->title[FIELD_LANGUAGE_NONE][0]['value'] . ')(.*?)';
     }
 
     return '/<div id="book-navigation-' . $this->book->nid . '"(.*?)<ul(.*?)' . $outline . '<\/ul>/s';
@@ -172,8 +172,8 @@ class BookTestCase extends DrupalWebTestCase {
     static $number = 0; // Used to ensure that when sorted nodes stay in same order.
 
     $edit = array();
-    $edit['title'] = $number . ' - SimpleTest test node ' . $this->randomName(10);
     $langcode = FIELD_LANGUAGE_NONE;
+    $edit["title[$langcode][0][value]"] = $number . ' - SimpleTest test node ' . $this->randomName(10);
     $edit["body[$langcode][0][value]"] = 'SimpleTest test body ' . $this->randomName(32) . ' ' . $this->randomName(32);
     $edit['book[bid]'] = $book_nid;
 
@@ -188,7 +188,7 @@ class BookTestCase extends DrupalWebTestCase {
     }
 
     // Check to make sure the book node was created.
-    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
     $this->assertNotNull(($node === FALSE ? NULL : $node), t('Book node found in database.'));
     $number++;
 

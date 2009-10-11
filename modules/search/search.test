@@ -280,17 +280,17 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
     $this->assertNoText($this->node->title, t('Page node is not found with dummy title.'));
 
     // Search for the title of the node with a GET query.
-    $this->drupalGet('search/node/' . $this->node->title);
-    $this->assertText($this->node->title, t('Page node is found with GET query.'));
+    $this->drupalGet('search/node/' . $this->node->title[FIELD_LANGUAGE_NONE][0]['value']);
+    $this->assertText($this->node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Page node is found with GET query.'));
 
     // Search for the title of the node with a POST query.
-    $edit = array('or' => $this->node->title);
+    $edit = array('or' => $this->node->title[FIELD_LANGUAGE_NONE][0]['value']);
     $this->drupalPost('search/node', $edit, t('Advanced search'));
-    $this->assertText($this->node->title, t('Page node is found with POST query.'));
+    $this->assertText($this->node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Page node is found with POST query.'));
 
     // Advanced search type option.
     $this->drupalPost('search/node', array_merge($edit, array('type[page]' => 'page')), t('Advanced search'));
-    $this->assertText($this->node->title, t('Page node is found with POST query and type:page.'));
+    $this->assertText($this->node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Page node is found with POST query and type:page.'));
 
     $this->drupalPost('search/node', array_merge($edit, array('type[article]' => 'article')), t('Advanced search'));
     $this->assertText('bike shed', t('Article node is not found with POST query and type:article.'));
@@ -322,7 +322,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
     // Create nodes for testing.
     foreach ($node_ranks as $node_rank) {
-      $settings = array('type' => 'page', 'title' => 'Drupal rocks', 'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))));
+      $settings = array('type' => 'page', 'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => 'Drupal rocks'))), 'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))));
       foreach (array(0, 1) as $num) {
         if ($num == 1) {
           switch ($node_rank) {
@@ -506,7 +506,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
       'search_block_form' => $comment_body,
     );
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText($node->title, t('Node found in search results.'));
+    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Node found in search results.'));
 
     // Verify that comment is rendered using proper format.
     $this->assertText($edit_comment['subject'], t('Comment subject found in search results.'));

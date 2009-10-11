@@ -57,8 +57,9 @@ class PollTestCase extends DrupalWebTestCase {
     $already_submitted_choices = array_slice($choices, 0, $index);
     $new_choices = array_values(array_slice($choices, $index, $max_new_choices));
 
+    $langcode = FIELD_LANGUAGE_NONE;
     $edit = array(
-      'title' => $title
+      "title[$langcode][0][value]" => $title
     );
     foreach ($already_submitted_choices as $k => $text) {
       $edit['choice[chid:' . $k . '][chtext]'] = $text;
@@ -331,8 +332,9 @@ class PollJSAddChoice extends DrupalWebTestCase {
     $web_user = $this->drupalCreateUser(array('create poll content', 'access content'));
     $this->drupalLogin($web_user);
     $this->drupalGet('node/add/poll');
+    $langcode = FIELD_LANGUAGE_NONE;
     $edit = array(
-      'title' => $this->randomName(),
+      "title[$langcode][0][value]" => $this->randomName(),
       'choice[new:0][chtext]' => $this->randomName(),
       'choice[new:1][chtext]' => $this->randomName(),
     );

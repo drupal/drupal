@@ -399,7 +399,7 @@ function menu_node_insert($node) {
       $item['link_title'] = trim($item['link_title']);
       $item['link_path'] = "node/$node->nid";
       if (!$item['customized']) {
-        $item['options']['attributes']['title'] = trim($node->title);
+        $item['options']['attributes']['title'] = trim($node->title[FIELD_LANGUAGE_NONE][0]['value']);
       }
       if (!menu_link_save($item)) {
         drupal_set_message(t('There was an error saving the menu link.'), 'error');
@@ -421,7 +421,7 @@ function menu_node_update($node) {
       $item['link_title'] = trim($item['link_title']);
       $item['link_path'] = "node/$node->nid";
       if (!$item['customized']) {
-        $item['options']['attributes']['title'] = trim($node->title);
+        $item['options']['attributes']['title'] = trim($node->title[FIELD_LANGUAGE_NONE][0]['value']);
       }
       if (!menu_link_save($item)) {
         drupal_set_message(t('There was an error saving the menu link.'), 'error');

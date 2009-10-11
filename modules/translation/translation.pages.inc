@@ -33,7 +33,7 @@ function translation_node_overview($node) {
       // Existing translation in the translation set: display status.
       // We load the full node to check whether the user can edit it.
       $translation_node = node_load($translations[$language->language]->nid);
-      $title = l($translation_node->title, 'node/' . $translation_node->nid);
+      $title = l($translation_node->title[FIELD_LANGUAGE_NONE][0]['value'], 'node/' . $translation_node->nid);
       if (node_access('update', $translation_node)) {
         $options[] = l(t('edit'), "node/$translation_node->nid/edit");
       }
@@ -54,7 +54,7 @@ function translation_node_overview($node) {
     $rows[] = array($language_name, $title, $status, implode(" | ", $options));
   }
 
-  drupal_set_title(t('Translations of %title', array('%title' => $node->title)), PASS_THROUGH);
+  drupal_set_title(t('Translations of %title', array('%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'])), PASS_THROUGH);
   
   $build['translation_node_overview'] = array(
     '#theme' => 'table', 

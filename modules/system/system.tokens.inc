@@ -283,7 +283,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
         case 'node':
           if ($nid = $file->nid) {
             $node = node_load($file->nid);
-            $replacements[$original] = $sanitize ? filter_xss($node->title) : $node->title;
+            $replacements[$original] = $sanitize ? filter_xss($node->title[FIELD_LANGUAGE_NONE][0]['value']) : $node->title[FIELD_LANGUAGE_NONE][0]['value'];
           }
           break;
 

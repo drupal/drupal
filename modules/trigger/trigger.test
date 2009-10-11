@@ -37,15 +37,15 @@ class TriggerContentTestCase extends DrupalWebTestCase {
       $web_user = $this->drupalCreateUser(array('create page content', 'access content', 'administer nodes'));
       $this->drupalLogin($web_user);
       $edit = array();
-      $edit['title'] = '!SimpleTest test node! ' . $this->randomName(10);
       $langcode = FIELD_LANGUAGE_NONE;
+      $edit["title[$langcode][0][value]"] = '!SimpleTest test node! ' . $this->randomName(10);
       $edit["body[$langcode][0][value]"] = '!SimpleTest test body! ' . $this->randomName(32) . ' ' . $this->randomName(32);
       $edit[$info['property']] = !$info['expected'];
       $this->drupalPost('node/add/page', $edit, t('Save'));
       // Make sure the text we want appears.
-      $this->assertRaw(t('!post %title has been created.', array('!post' => 'Page', '%title' => $edit['title'])), t('Make sure the page has actually been created'));
+      $this->assertRaw(t('!post %title has been created.', array('!post' => 'Page', '%title' => $edit["title[$langcode][0][value]"])), t('Make sure the page has actually been created'));
       // Action should have been fired.
-      $loaded_node = $this->drupalGetNodeByTitle($edit['title']);;
+      $loaded_node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);;
       $this->assertTrue($loaded_node->$info['property'] == $info['expected'], t('Make sure the @action action fired.', array('@action' => $info['name'])));
       // Leave action assigned for next test
 

@@ -42,7 +42,7 @@ function statistics_node_tracker() {
       $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
     }
 
-    drupal_set_title($node->title);
+    drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
     $build['statistics_table'] = array(
       '#theme' => 'table', 
       '#header' => $header, 

@@ -234,25 +234,6 @@ function node_field_build_modes($obj_type) {
 }
 
 /**
- * Implement hook_field_extra_fields().
- */
-function node_field_extra_fields($bundle) {
-  $extra = array();
-
-  if ($type = node_type_get_type($bundle)) {
-    if ($type->has_title) {
-      $extra['title'] = array(
-        'label' => $type->title_label,
-        'description' => t('Node module element.'),
-        'weight' => -5,
-      );
-    }
-  }
-
-  return $extra;
-}
-
-/**
  * Gather a listing of links to nodes.
  *
  * @param $result
@@ -588,6 +569,50 @@ function node_configure_fields($type) {
     field_delete_instance($instance);
   }
 
+  if ($type->has_title) {
+    // Add the title field if not present.
+    $field = field_info_field('title');
+    $instance = field_info_instance('title', $type->type);
+
+    if (empty($field)) {
+      $field = array(
+        'field_name' => 'title',
+        'type' => 'text',
+      );
+      $field = field_create_field($field);
+    }
+    if (empty($instance)) {
+      $weight = -5;
+      $instance = array(
+        'field_name' => 'title',
+        'bundle' => $type->type,
+        'label' => $type->title_label,
+        'widget_type' => 'text',
+        'widget' => array(
+          'weight' => $weight,
+        ),
+        'required' => TRUE,
+        'locked' => TRUE,
+        'display' => array(
+          'full' => array(
+            'label' => 'hidden',
+            'type' => 'text_default',
+            'weight' => $weight,
+          ),
+          'teaser' => array(
+            'label' => 'hidden',
+            'type' => 'text_default',
+            'weight' => $weight,
+          ),
+        ),
+      );
+      field_create_instance($instance);
+    }
+    else {
+      $instance['label'] = $type->title_label;
+      field_update_instance($instance);
+    }
+  }
 }
 
 /**
@@ -905,6 +930,14 @@ function node_save($node) {
   $node->timestamp = REQUEST_TIME;
   $update_node = TRUE;
 
+  // When converting the title property to fields we preserved the {node}.title
+  // db column for performance, setting the default language value into this
+  // column. After this we restore the field data structure to the previous node
+  // title field.
+  $title_field = $node->title;
+  $langcode = FIELD_LANGUAGE_NONE;
+  $node->title = $title_field[$langcode][0]['value'];
+
   // Generate the node table query and the node_revisions table query.
   if ($node->is_new) {
     drupal_write_record('node', $node);
@@ -928,6 +961,9 @@ function node_save($node) {
       ->condition('nid', $node->nid)
       ->execute();
   }
+
+  // Restore the title field data structure after db storage.
+  $node->title = $title_field;
 
   // Call the node specific callback (if any). This can be
   // node_invoke($node, 'insert') or
@@ -1121,7 +1157,7 @@ function node_build_content($node, $build_mode = 'full') {
     $links['node_readmore'] = array(
       'title' => t('Read more'),
       'href' => 'node/' . $node->nid,
-      'attributes' => array('rel' => 'tag', 'title' => strip_tags($node->title))
+      'attributes' => array('rel' => 'tag', 'title' => strip_tags($node->title[FIELD_LANGUAGE_NONE][0]['value']))
     );
   }
   $node->content['links']['node'] = array(
@@ -1195,7 +1231,7 @@ function node_language_provider($languages) {
  */
 function node_show($node, $message = FALSE) {
   if ($message) {
-    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
+    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'], '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
   }
 
   // Update the history table, stating that this user viewed this node.
@@ -1229,7 +1265,7 @@ function template_preprocess_node(&$variables) {
   $variables['date']      = format_date($node->created);
   $variables['name']      = theme('username', array('account' => $node));
   $variables['node_url']  = url('node/' . $node->nid);
-  $variables['title']     = check_plain($node->title);
+  $variables['node_title'] = check_plain($node->title[FIELD_LANGUAGE_NONE][0]['value']);
   $variables['page']      = (bool)menu_get_object();
 
   if (!empty($node->in_preview)) {
@@ -1246,6 +1282,10 @@ function template_preprocess_node(&$variables) {
 
   // Make the field variables available with the appropriate language.
   field_attach_preprocess('node', $node, $variables['content'], $variables);
+
+  if (isset($variables['content']['title'])) {
+    unset($variables['content']['title']);
+  }
 
   // Display post information only on certain node types.
   if (variable_get('node_submitted_' . $node->type, TRUE)) {
@@ -1475,7 +1515,7 @@ function node_search_execute($keys = NULL) {
     $results[] = array(
       'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
       'type' => check_plain(node_type_get_name($node)),
-      'title' => $node->title,
+      'title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'],
       'user' => theme('username', array('account' => $node)),
       'date' => $node->changed,
       'node' => $node,
@@ -1758,8 +1798,6 @@ function node_menu() {
     );
   }
   $items['node/%node'] = array(
-    'title callback' => 'node_page_title',
-    'title arguments' => array(1),
     'page callback' => 'node_page_view',
     'page arguments' => array(1),
     'access callback' => 'node_access',
@@ -1959,7 +1997,7 @@ function node_feed($nids = FALSE, $channel = array()) {
       $item_text .= drupal_render($node->content) . $links;
     }
 
-    $items .= format_rss_item($node->title, $node->link, $item_text, $node->rss_elements);
+    $items .= format_rss_item($node->title[FIELD_LANGUAGE_NONE][0]['value'], $node->link, $item_text, $node->rss_elements);
   }
 
   $channel_defaults = array(
@@ -2060,8 +2098,11 @@ function node_page_default() {
  * Menu callback; view a single node.
  */
 function node_page_view($node) {
-  drupal_set_title($node->title);
-  return node_show($node);
+  $return = node_show($node);
+  if (isset($return['nodes'][$node->nid]['title'])) {
+    drupal_set_title($return['nodes'][$node->nid]['title']['items'][0]['#item']['value']);
+  }
+  return $return;
 }
 
 /**
@@ -2094,7 +2135,7 @@ function _node_index_node($node) {
   node_build_content($node, 'search_index');
   $node->rendered = drupal_render($node->content);
 
-  $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->rendered;
+  $text = '<h1>' . check_plain($node->title[FIELD_LANGUAGE_NONE][0]['value']) . '</h1>' . $node->rendered;
 
   // Fetch extra data normally not visible
   $extra = module_invoke_all('node_update_index', $node);
@@ -2819,20 +2860,10 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
  * Implement hook_form().
  */
 function node_content_form($node, $form_state) {
-  $type = node_type_get_type($node);
-
-  if ($type->has_title) {
-    $form['title'] = array(
-      '#type' => 'textfield',
-      '#title' => check_plain($type->title_label),
-      '#required' => TRUE,
-      '#default_value' => $node->title,
-      '#maxlength' => 255,
-      '#weight' => -5,
-    );
-  }
-
-  return $form;
+  // It is impossible to define a content type without implementing hook_form()
+  // so simply return an empty array().
+  // @todo: remove this requirement.
+  return array();
 }
 
 /**
@@ -2948,7 +2979,7 @@ function node_action_info() {
  */
 function node_publish_action($node, $context = array()) {
   $node->status = NODE_PUBLISHED;
-  watchdog('action', 'Set @type %title to published.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to published.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
 
 /**
@@ -2957,7 +2988,7 @@ function node_publish_action($node, $context = array()) {
  */
 function node_unpublish_action($node, $context = array()) {
   $node->status = NODE_NOT_PUBLISHED;
-  watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
 
 /**
@@ -2966,7 +2997,7 @@ function node_unpublish_action($node, $context = array()) {
  */
 function node_make_sticky_action($node, $context = array()) {
   $node->sticky = NODE_STICKY;
-  watchdog('action', 'Set @type %title to sticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to sticky.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
 
 /**
@@ -2975,7 +3006,7 @@ function node_make_sticky_action($node, $context = array()) {
  */
 function node_make_unsticky_action($node, $context = array()) {
   $node->sticky = NODE_NOT_STICKY;
-  watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
 
 /**
@@ -2984,7 +3015,7 @@ function node_make_unsticky_action($node, $context = array()) {
  */
 function node_promote_action($node, $context = array()) {
   $node->promote = NODE_PROMOTED;
-  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
 
 /**
@@ -2993,7 +3024,7 @@ function node_promote_action($node, $context = array()) {
  */
 function node_unpromote_action($node, $context = array()) {
   $node->promote = NODE_NOT_PROMOTED;
-  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
 
 /**
@@ -3002,7 +3033,7 @@ function node_unpromote_action($node, $context = array()) {
  */
 function node_save_action($node) {
   node_save($node);
-  watchdog('action', 'Saved @type %title', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Saved @type %title', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
 
 /**
@@ -3012,7 +3043,7 @@ function node_save_action($node) {
 function node_assign_owner_action($node, $context) {
   $node->uid = $context['owner_uid'];
   $owner_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['owner_uid']))->fetchField();
-  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_type($node), '%title' => $node->title, '%name' => $owner_name));
+  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_type($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'], '%name' => $owner_name));
 }
 
 function node_assign_owner_action_form($context) {
@@ -3093,7 +3124,7 @@ function node_unpublish_by_keyword_action($node, $context) {
   foreach ($context['keywords'] as $keyword) {
     if (strpos(drupal_render(node_build(clone $node)), $keyword) !== FALSE || strpos($node->title, $keyword) !== FALSE) {
       $node->status = NODE_NOT_PUBLISHED;
-      watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+      watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
       break;
     }
   }
@@ -3137,6 +3168,9 @@ class NodeController extends DrupalDefaultEntityController {
     // object type specific callback.
     $typed_nodes = array();
     foreach ($nodes as $id => $object) {
+      if (isset($object->title)) {
+        $object->title = array(FIELD_LANGUAGE_NONE => array(array('value' => $object->title)));
+      }
       $typed_nodes[$object->type][$id] = $object;
     }
 

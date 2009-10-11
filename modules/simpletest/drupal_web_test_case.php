@@ -694,7 +694,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Populate defaults array.
     $settings += array(
       'body'      => array(FIELD_LANGUAGE_NONE => array(array())),
-      'title'     => $this->randomName(8),
+      'title'     => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
       'comment'   => 2,
       'changed'   => REQUEST_TIME,
       'moderate'  => 0,
