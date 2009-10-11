@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.23 2009/10/11 03:07:18 webchick Exp $
+// $Id: node.tpl.php,v 1.24 2009/10/11 06:43:33 webchick Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@
   <?php print $user_picture; ?>
 
   <?php if (!$page): ?>
-    <h2<?php print $title_attributes; ?>>a href="<?php print $node_url; ?>"><?php print $node_title; ?></a></h2>
+    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $node_title; ?></a></h2>
   <?php endif; ?>
 
   <?php if ($display_submitted || !empty($content['links']['terms'])): ?>
