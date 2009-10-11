@@ -294,9 +294,8 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
 
     // Create some normal users with their contact forms enabled by default.
     variable_set('contact_default_status', TRUE);
-    $this->web_user = $this->drupalCreateUser();
+    $this->web_user = $this->drupalCreateUser(array('access user contact forms'));
     $this->contact_user = $this->drupalCreateUser();
-    variable_set('contact_default_status', FALSE);
   }
 
   /**
@@ -314,6 +313,17 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
 
     // Test always denied access to the anonymous user contact form.
     $this->drupalGet('user/0/contact');
+    $this->assertResponse(403);
+
+    // Test that anonymous users can access the contact form.
+    $this->drupalLogout();
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(200);
+
+    // Revoke the personal contact permission for the anonymous user.
+    user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
     $this->assertResponse(403);
 
     // Disable the personal contact form.

@@ -8,6 +8,9 @@
 
 /**
  * Form builder; the site-wide contact form.
+ *
+ * @see contact_site_form_validate()
+ * @see contact_site_form_submit()
  */
 function contact_site_form($form, &$form_state) {
   global $user;
@@ -19,7 +22,7 @@ function contact_site_form($form, &$form_state) {
     drupal_set_message(t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window))), 'error');
     return drupal_access_denied();
   }
-  
+
   // Get an array of the categories and the current default category.
   $categories = db_query("SELECT cid, category FROM {contact} ORDER BY weight, category")->fetchAllKeyed();
   $default_category = db_query("SELECT cid FROM {contact} WHERE selected = 1")->fetchField();
@@ -118,22 +121,22 @@ function contact_site_form_submit($form, &$form_state) {
   global $user, $language;
 
   $values = $form_state['values'];
+  $values['sender'] = $user;
+  $values['sender']->name = $values['name'];
+  $values['sender']->mail = $values['mail'];
+  $values['category'] = contact_load($values['cid']);
 
   // Save the anonymous user information to a cookie for reuse.
   if (!$user->uid) {
     user_cookie_save($values);
   }
 
-  // E-mail address of the sender: as the form field is a text field,
-  // all instances of \r and \n have been automatically stripped from it.
-  $from = $values['mail'];
-
-  // Load category properties and save form values for email composition.
-  $contact = contact_load($values['cid']);
-  $values['contact'] = $contact;
+  // Get the to and from e-mail addresses.
+  $to = $values['category']['recipients'];
+  $from = $values['sender']->mail;
 
   // Send the e-mail to the recipients using the site default language.
-  drupal_mail('contact', 'page_mail', $contact['recipients'], language_default(), $values, $from);
+  drupal_mail('contact', 'page_mail', $to, language_default(), $values, $from);
 
   // If the user requests it, send a copy using the current language.
   if ($values['copy']) {
@@ -141,21 +144,24 @@ function contact_site_form_submit($form, &$form_state) {
   }
 
   // Send an auto-reply if necessary using the current language.
-  if ($contact['reply']) {
-    drupal_mail('contact', 'page_autoreply', $from, $language, $values, $contact['recipients']);
+  if ($values['category']['reply']) {
+    drupal_mail('contact', 'page_autoreply', $from, $language, $values, $to);
   }
 
   flood_register_event('contact');
-  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $values['name'] . " [$from]", '%category' => $contact['category']));
-  drupal_set_message(t('Your message has been sent.'));
+  watchdog('mail', '%sender-name (@sender-from) sent an e-mail regarding %category.', array('%sender-name' => $values['name'], '@sender-from' => $from, '%category' => $values['category']['category']));
 
   // Jump to home page rather than back to contact page to avoid
   // contradictory messages if flood control has been activated.
+  drupal_set_message(t('Your message has been sent.'));
   $form_state['redirect'] = '';
 }
 
 /**
  * Form builder; the personal contact form.
+ *
+ * @see contact_personal_form_validate()
+ * @see contact_personal_form_submit()
  */
 function contact_personal_form($form, &$form_state, stdClass $recipient) {
   global $user;
@@ -167,18 +173,32 @@ function contact_personal_form($form, &$form_state, stdClass $recipient) {
     drupal_set_message(t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window))), 'error');
     return drupal_access_denied();
   }
-  
+
   drupal_set_title(t('Contact @username', array('@username' => $recipient->name)), PASS_THROUGH);
-  
-  $form['#token'] = $user->name . $user->mail;
+
+  if (!$user->uid) {
+    $form['#attached']['library'][] = array('system', 'cookie');
+    $form['#attached']['js'][] = drupal_get_path('module', 'contact') . '/contact.js';
+  }
+
+  $form['#token'] = $user->uid ? $user->name . $user->mail : '';
   $form['recipient'] = array(
     '#type' => 'value',
     '#value' => $recipient,
   );
-  $form['from'] = array(
-    '#type' => 'item',
-    '#title' => t('From'),
-    '#markup' => theme('username', array('account' => $user)) . ' &lt;' . check_plain($user->mail) . '&gt;',
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Your name'),
+    '#maxlength' => 255,
+    '#default_value' => $user->uid ? $user->name : '',
+    '#required' => TRUE,
+  );
+  $form['mail'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Your e-mail address'),
+    '#maxlength' => 255,
+    '#default_value' => $user->uid ? $user->mail : '',
+    '#required' => TRUE,
   );
   $form['to'] = array(
     '#type' => 'item',
@@ -197,9 +217,12 @@ function contact_personal_form($form, &$form_state, stdClass $recipient) {
     '#rows' => 15,
     '#required' => TRUE,
   );
+  // We do not allow anonymous users to send themselves a copy
+  // because it can be abused to spam people.
   $form['copy'] = array(
     '#type' => 'checkbox',
     '#title' => t('Send yourself a copy.'),
+    '#access' => $user->uid,
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -209,34 +232,50 @@ function contact_personal_form($form, &$form_state, stdClass $recipient) {
 }
 
 /**
+ * Form validation handler for contact_personal_form().
+ *
+ * @see contact_personal_form()
+ */
+function contact_personal_form_validate($form, &$form_state) {
+  if (!valid_email_address($form_state['values']['mail'])) {
+    form_set_error('mail', t('You must enter a valid e-mail address.'));
+  }
+}
+
+/**
  * Form submission handler for contact_personal_form().
+ *
+ * @see contact_personal_form()
  */
 function contact_personal_form_submit($form, &$form_state) {
   global $user, $language;
 
-  $account = $form_state['values']['recipient'];
-
-  // Send from the current user to the requested user.
-  $to = $account->mail;
-  $from = $user->mail;
-
-  // Save both users and all form values for email composition.
   $values = $form_state['values'];
-  $values['account'] = $account;
-  $values['user'] = $user;
+  $values['sender'] = $user;
+  $values['sender']->name = $values['name'];
+  $values['sender']->mail = $values['mail'];
+
+  // Save the anonymous user information to a cookie for reuse.
+  if (!$user->uid) {
+    user_cookie_save($values);
+  }
+
+  // Get the to and from e-mail addresses.
+  $to = $values['recipient']->mail;
+  $from = $values['sender']->mail;
 
   // Send the e-mail in the requested user language.
-  drupal_mail('contact', 'user_mail', $to, user_preferred_language($account), $values, $from);
+  drupal_mail('contact', 'user_mail', $to, user_preferred_language($values['recipient']), $values, $from);
 
   // Send a copy if requested, using current page language.
-  if ($form_state['values']['copy']) {
+  if ($values['copy']) {
     drupal_mail('contact', 'user_copy', $from, $language, $values, $from);
   }
 
   flood_register_event('contact');
-  watchdog('mail', '%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name));
-  drupal_set_message(t('Your message has been sent.'));
+  watchdog('mail', '%sender-name (@sender-from) sent %recipient-name an e-mail.', array('%sender-name' => $values['name'], '@sender-from' => $from, '%recipient-name' => $values['recipient']->name));
 
-  // Back to the requested users profile page.
-  $form_state['redirect'] = "user/$account->uid";
+  // Jump to the contacted user's profile page.
+  drupal_set_message(t('Your message has been sent.'));
+  $form_state['redirect'] = user_access('access user profiles') ? 'user/' . $values['recipient']->uid : '';
 }
