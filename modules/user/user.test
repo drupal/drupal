@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.63 2009/10/10 16:48:39 webchick Exp $
+// $Id: user.test,v 1.64 2009/10/12 18:37:31 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1169,7 +1169,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
     // Test block output.
     $block = user_block_view('online');
     $this->drupalSetContent($block['content']);
-    $this->assertRaw(t('%members and %visitors', array('%members' => '2 users', '%visitors' => '2 guests')), t('Correct number of online users (2 users and 2 guests).'));
+    $this->assertRaw(t('2 users'), t('Correct number of online users (2 users).'));
     $this->assertText($user1->name, t('Active user 1 found in online list.'));
     $this->assertText($user2->name, t('Active user 2 found in online list.'));
     $this->assertNoText($user3->name, t("Inactive user not found in online list."));
