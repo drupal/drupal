@@ -1138,7 +1138,6 @@ function user_block_configure($delta = '') {
       $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
       $form['user_block_seconds_online'] = array('#type' => 'select', '#title' => t('User activity'), '#default_value' => variable_get('user_block_seconds_online', 900), '#options' => $period, '#description' => t('A user is considered online for this long after they have last viewed a page.'));
       $form['user_block_max_list_count'] = array('#type' => 'select', '#title' => t('User list length'), '#default_value' => variable_get('user_block_max_list_count', 10), '#options' => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), '#description' => t('Maximum number of currently online users to display.'));
-      $form['user_block_cache'] = array('#markup' => '<p>If page caching is disabled, the block shows the number of anonymous and authenticated users, respectively. If page caching is enabled, only the number of authenticated users is displayed.</p>');
       return $form;
   }
 }
@@ -1199,27 +1198,13 @@ function user_block_view($delta = '') {
         // rather than u.access because it is much faster.
         $authenticated_count = db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s WHERE s.timestamp >= :timestamp AND s.uid > 0", array(':timestamp' => $interval))->fetchField();
 
-        // When page caching is enabled, sessions are only created for
-        // anonymous users when needed.
-        if (variable_get('cache', CACHE_DISABLED) == CACHE_DISABLED) {
-          $anonymous_count = drupal_session_count($interval);
-          // Format the output with proper grammar.
-          if ($anonymous_count == 1 && $authenticated_count == 1) {
-            $output = t('There is currently %members and %visitors online.', array('%members' => format_plural($authenticated_count, '1 user', '@count users'), '%visitors' => format_plural($anonymous_count, '1 guest', '@count guests')));
-          }
-          else {
-            $output = t('There are currently %members and %visitors online.', array('%members' => format_plural($authenticated_count, '1 user', '@count users'), '%visitors' => format_plural($anonymous_count, '1 guest', '@count guests')));
-          }
-        }
-        else {
-          $output = format_plural($authenticated_count, 'There is currently 1 user online.', 'There are currently @count users online.');
-        }
+        $output = format_plural($authenticated_count, 'There is currently 1 user online.', 'There are currently @count users online.');
 
         // Display a list of currently online users.
         $max_users = variable_get('user_block_max_list_count', 10);
         if ($authenticated_count && $max_users) {
           $items = db_query_range('SELECT u.uid, u.name, MAX(s.timestamp) AS max_timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= :interval AND s.uid > 0 GROUP BY u.uid, u.name ORDER BY max_timestamp DESC', 0, $max_users, array(':interval' => $interval))->fetchAll();
-          $output .= theme('user_list', array('users' => $items, 'titles' => t('Online users')));
+          $output .= theme('user_list', array('users' => $items));
         }
 
         $block['subject'] = t('Who\'s online');

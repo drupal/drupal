@@ -1169,7 +1169,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
     // Test block output.
     $block = user_block_view('online');
     $this->drupalSetContent($block['content']);
-    $this->assertRaw(t('%members and %visitors', array('%members' => '2 users', '%visitors' => '2 guests')), t('Correct number of online users (2 users and 2 guests).'));
+    $this->assertRaw(t('2 users'), t('Correct number of online users (2 users).'));
     $this->assertText($user1->name, t('Active user 1 found in online list.'));
     $this->assertText($user2->name, t('Active user 2 found in online list.'));
     $this->assertNoText($user3->name, t("Inactive user not found in online list."));
