@@ -87,8 +87,11 @@ function file_theme() {
 
 /**
  * Implement hook_file_download().
+ *
+ * This function takes an extra parameter $field_type so that it may
+ * be re-used by other File-like modules, such as Image.
  */
-function file_file_download($uri) {
+function file_file_download($uri, $field_type = 'file') {
   global $user;
 
   // Get the file record based on the URI. If not in the database just return.
@@ -101,11 +104,11 @@ function file_file_download($uri) {
   }
 
   // Find out which (if any) file fields contain this file.
-  $references = file_get_file_references($file);
+  $references = file_get_file_references($file, NULL, FIELD_LOAD_REVISION, $field_type);
 
   // TODO: Check field-level access if available here.
 
-  $denied = NULL;
+  $denied = $file->status ? NULL : FALSE;
   // Check access to content containing the file fields. If access is allowed
   // to any of this content, allow the download.
   foreach ($references as $field_name => $field_references) {
@@ -610,11 +613,11 @@ function theme_file_link($variables) {
   );
 
   // Use the description as the link text if available.
-  if (empty($file->data['description'])) {
+  if (empty($file->description)) {
     $link_text = check_plain($file->filename);
   }
   else {
-    $link_text = check_plain($file->data['description']);
+    $link_text = check_plain($file->description);
     $options['attributes']['title'] = check_plain($file->filename);
   }
 
@@ -838,62 +841,28 @@ function file_icon_map($file) {
  */
 
 /**
- * Return an array of file fields in an bundle or by field name.
- *
- * @param $bundle_type
- *   (optional) The bundle type on which to filter the list of fields. In the
- *   case of nodes, this is the node type.
- * @param $field
- *   (optional) A field array or name on which to filter the list.
- */
-function file_get_field_list($bundle_type = NULL, $field = NULL) {
-  // Build the list of fields to be used for retrieval.
-  if (isset($field)) {
-    if (is_string($field)) {
-      $field = field_info_field($field);
-    }
-    $fields = array($field['field_name'] => $field);
-  }
-  elseif (isset($bundle_type)) {
-    $instances = field_info_instances($bundle_type);
-    $fields = array();
-    foreach ($instances as $field_name => $instance) {
-      $fields[$field_name] = field_info_field($field_name);
-    }
-  }
-  else {
-    $fields = field_info_fields();
-  }
-
-  // Filter down the list to just file fields.
-  foreach ($fields as $key => $field) {
-    if ($field['type'] != 'file') {
-      unset($fields[$key]);
-    }
-  }
-
-  return $fields;
-}
-
-/**
- * Count the number of times the file is referenced within a field.
+ * Count the number of times the file is referenced.
  *
  * @param $file
  *   A file object.
  * @param $field
- *   Optional. The CCK field array or field name as a string.
+ *   (optional) A CCK field array or field name as a string. If provided,
+ *   limits the reference check to the given field.
+ * @param $field_type
+ *   (optional) The name of a field type. If provided, limits the reference
+ *   check to fields of the given type.
  * @return
  *   An integer value.
  */
-function file_get_file_reference_count($file, $field = NULL) {
-  $fields = file_get_field_list(NULL, $field);
+function file_get_file_reference_count($file, $field = NULL, $field_type = 'file') {
+  $fields = field_info_fields(NULL, $field, $field_type);
   $types = field_info_fieldable_types();
   $reference_count = 0;
 
   foreach ($fields as $field) {
     // TODO: Use a more efficient mechanism rather than actually retrieving
     // all the references themselves, such as using a COUNT() query.
-    $references = file_get_file_references($file, $field);
+    $references = file_get_file_references($file, $field, FIELD_LOAD_REVISION, $field_type);
     foreach ($references as $obj_type => $type_references) {
       $reference_count += count($type_references);
     }
@@ -925,22 +894,26 @@ function file_get_file_reference_count($file, $field = NULL) {
 
 
 /**
- * Get a list of references to a file by bundle and ID.
+ * Get a list of references to a file.
  *
  * @param $file
  *   A file object.
  * @param $field
- *   (optional) A field array to be used for this check.
+ *   (optional) A field array to be used for this check. If given, limits the
+ *   reference check to the given field.
  * @param $age
  *   (optional) A constant that specifies which references to count. Use
  *   FIELD_LOAD_REVISION to retrieve all references within all revisions or
  *   FIELD_LOAD_CURRENT to retrieve references only in the current revisions.
+ * @param $field_type
+ *   Optional. The name of a field type. If given, limits the reference check to
+ *   fields of the given type.
  * @return
  *   An integer value.
  */
-function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISION) {
+function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISION, $field_type = 'file') {
   $references = drupal_static(__FUNCTION__, array());
-  $fields = file_get_field_list(NULL, $field);
+  $fields = field_info_fields(NULL, $field, $field_type);
 
   foreach ($fields as $field_name => $file_field) {
     if (!isset($references[$field_name])) {

@@ -170,9 +170,12 @@ function field_theme() {
   );
   $field_formatters = field_info_formatter_types(NULL);
   foreach ($field_formatters as $key => $field_formatter) {
-	$items["field_formatter_$key"] = array(
+    $items['field_formatter_' . $key] = array(
       'arguments' => array('element' => NULL),
     );
+    if (isset($field_formatter['theme'])) {
+      $items['field_formatter_' . $key] += $field_formatter['theme'];
+    }
   }
   return $items;
 }

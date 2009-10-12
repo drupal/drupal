@@ -288,10 +288,10 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
       'display_field' => '1',
       'display_default' => '1',
     );
-    $instance_settings = array();
-    $widget_settings = array(
+    $instance_settings = array(
       'description_field' => '1',
     );
+    $widget_settings = array();
     $this->createFileField($field_name, $type_name, $field_settings, $instance_settings, $widget_settings);
     $field = field_info_field($field_name);
     $instance = field_info_instance($field_name, $type_name);

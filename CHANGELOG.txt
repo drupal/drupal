@@ -127,11 +127,15 @@ Drupal 7.0, xxxx-xx-xx (development version)
       hook_file_mimetype_mapping_alter().
     * Added the hook_file_url_alter() hook, which makes it possible to serve
       files from a CDN.
+    * Added a field specifically for uploading files, previously provided by
+      the contributed module FileField. 
 - Image handling:
     * Improved image handling, including better support for add-on image
       libraries.
     * Added API and interface for creating advanced image thumbnails.
     * Inclusion of additional effects such as rotate and desaturate.
+    * Added a field specifically for uploading images, previously provided by
+      the contributed module ImageField. 
 - Added aliased multi-site support:
     * Added support for mapping domain names to sites directories.
 - Added RDF support:

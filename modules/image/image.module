@@ -6,6 +6,9 @@
  * Exposes global functionality for creating image styles.
  */
 
+// Load all Field module hooks for Image.
+require_once DRUPAL_ROOT . '/modules/image/image.field.inc';
+
 /**
  * Implement of hook_help().
  */
@@ -126,6 +129,7 @@ function image_menu() {
  */
 function image_theme() {
   return array(
+    // Theme functions in image.module.
     'image_style' => array(
       'arguments' => array(
         'style_name' => NULL,
@@ -136,6 +140,8 @@ function image_theme() {
         'getsize' => TRUE,
       ),
     ),
+
+    // Theme functions in image.admin.inc.
     'image_style_list' => array(
       'arguments' => array('styles' => NULL),
     ),
@@ -159,6 +165,20 @@ function image_theme() {
     ),
     'image_rotate_summary' => array(
       'arguments' => array('data' => NULL),
+    ),
+
+    // Theme functions in image.field.inc.
+    'image_widget' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'field_formatter_image' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'field_formatter_image_link_content' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'field_formatter_image_link_file' => array(
+      'arguments' => array('element' => NULL),
     ),
   );
 }
@@ -187,9 +207,12 @@ function image_flush_caches() {
  *
  * Control the access to files underneath the styles directory.
  */
-function image_file_download($filepath) {
-  if (strpos($filepath, 'styles/') === 0) {
-    $args = explode('/', $filepath);
+function image_file_download($uri) {
+  $path = file_uri_target($uri);
+
+  // Private file access for image style derivatives.
+  if (strpos($path, 'styles/') === 0) {
+    $args = explode('/', $path);
     // Discard the first part of the path (styles).
     array_shift($args);
     // Get the style name from the second part.
@@ -198,7 +221,7 @@ function image_file_download($filepath) {
     $original_path = implode('/', $args);
 
     // Check that the file exists and is an image.
-    if ($info = image_get_info($filepath)) {
+    if ($info = image_get_info($uri)) {
       // Check the permissions of the original to grant access to this image.
       $headers = module_invoke_all('file_download', $original_path);
       if (!in_array(-1, $headers)) {
@@ -217,6 +240,17 @@ function image_file_download($filepath) {
     }
     return -1;
   }
+
+  // Private file access for the original files. Note that we only
+  // check access for non-temporary images, since file.module will
+  // grant access for all temporary files.
+  $files = file_load_multiple(array(), array('uri' => $uri));
+  if (count($files)) {
+    $file = reset($files);
+    if ($file->status) {
+      return file_file_download($uri, 'image');
+    }
+  }
 }
 
 /**
@@ -233,6 +267,14 @@ function image_file_move($file, $source) {
 function image_file_delete($file) {
   // Delete any image derivatives of this image.
   image_path_flush($file->uri);
+}
+
+/**
+ * Implement hook_file_references().
+ */
+function image_file_references($file) {
+  $count = file_get_file_reference_count($file, NULL, 'image');
+  return $count ? array('image' => $count) : NULL;
 }
 
 /**
@@ -464,7 +506,7 @@ function image_style_generate() {
   // acquiring the lock.
   $success = file_exists($destination) || image_style_create_derivative($style, $path, $destination);
 
-  if ($lock_acquired) {
+  if (!empty($lock_acquired)) {
     lock_release($lock_name);
   }
 
@@ -600,17 +642,16 @@ function image_style_url($style_name, $path) {
  *
  * @param $style_name
  *   The name of the style to be used with this image.
- * @param $path
- *   The path to the image.
+ * @param $uri
+ *   The URI or path to the image.
  * @return
  *   The path to an image style image relative to Drupal's root.
  * @see image_style_url()
  */
-function image_style_path($style_name, $path) {
-  if ($target = file_uri_target($path)) {
-    $path = $target;
-  }
-  return variable_get('file_default_scheme', 'public') . '://styles/' . $style_name . '/' . $path;
+function image_style_path($style_name, $uri) {
+  $path = ($path = file_uri_target($uri)) ? $path : $uri;
+  $scheme = ($scheme = file_uri_scheme($uri)) ? $scheme : variable_get('file_default_scheme', 'public');
+  return $scheme . '://styles/' . $style_name . '/' . $path;
 }
 
 /**
@@ -773,6 +814,7 @@ function image_effect_delete($effect) {
  *   TRUE on success. FALSE if unable to perform the image effect on the image.
  */
 function image_effect_apply($image, $effect) {
+  module_load_include('inc', 'image', 'image.effects');
   if (function_exists($effect['effect callback'])) {
     return call_user_func($effect['effect callback'], $image, $effect['data']);
   }
@@ -811,6 +853,7 @@ function theme_image_style($variables) {
     $style_path = image_style_url($style_name, $path);
   }
   $variables['path'] = file_create_url($style_path);
+  $variables['getsize'] = FALSE;
   return theme('image', $variables);
 }
 

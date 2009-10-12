@@ -335,6 +335,7 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
     // Edit effect form.
 
     // Revisit each form to make sure the effect was saved.
+    drupal_static_reset('image_styles');
     $style = image_style_load($style_name);
 
     foreach ($style['effects'] as $ieid => $effect) {

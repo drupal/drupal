@@ -7,5 +7,6 @@ core = 7.x
 files[] = image.module
 files[] = image.admin.inc
 files[] = image.effects.inc
+files[] = image.field.inc
 files[] = image.install
 files[] = image.test

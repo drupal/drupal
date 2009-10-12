@@ -18,12 +18,12 @@ function file_field_info() {
         'display_field' => 0,
         'display_default' => 0,
         'uri_scheme' => 'public',
-        'default_file' => 0,
       ),
       'instance_settings' => array(
         'file_extensions' => 'txt',
         'file_directory' => '',
         'max_filesize' => '',
+        'description_field' => 0,
       ),
       'default_widget' => 'file_file',
       'default_formatter' => 'file_default',
@@ -51,11 +51,10 @@ function file_field_schema($field) {
         'not null' => TRUE,
         'default' => 1,
       ),
-      'data' => array(
-        'description' => 'Serialized additional data about the file, such as a description.',
+      'description' => array(
+        'description' => 'A description of the file.',
         'type' => 'text',
         'not null' => FALSE,
-        'serialize' => TRUE,
       ),
     ),
     'indexes' => array(
@@ -101,14 +100,6 @@ function file_field_settings_form($field, $instance, $has_data) {
     '#disabled' => $has_data,
   );
 
-  $form['default_file'] = array(
-    '#title' => t('Default file'),
-    '#type' => 'managed_file',
-    '#description' => t('If no file is uploaded, this file will be used on display.'),
-    '#default_value' => $field['settings']['default_file'],
-    '#upload_location' => 'public://default_files/',
-  );
-
   return $form;
 }
 
@@ -118,15 +109,12 @@ function file_field_settings_form($field, $instance, $has_data) {
 function file_field_instance_settings_form($field, $instance) {
   $settings = $instance['settings'];
 
-  $form['#attached']['js'][] = drupal_get_path('module', 'file') . '/file.js';
-
-  $form['max_filesize'] = array(
+  $form['file_directory'] = array(
     '#type' => 'textfield',
-    '#title' => t('Maximum upload size'),
-    '#default_value' => $settings['max_filesize'],
-    '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', array('%limit' => format_size(file_upload_max_size()))),
-    '#size' => 10,
-    '#element_validate' => array('_file_generic_settings_max_filesize'),
+    '#title' => t('File directory'),
+    '#default_value' => $settings['file_directory'],
+    '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.', array('%directory' => variable_get('file_directory_path', 'files') . '/')),
+    '#element_validate' => array('_file_generic_settings_file_directory_validate'),
     '#weight' => 3,
   );
 
@@ -136,26 +124,28 @@ function file_field_instance_settings_form($field, $instance) {
     '#type' => 'textfield',
     '#title' => t('Allowed file extensions'),
     '#default_value' => $extensions,
-    '#size' => 64,
     '#description' => t('Separate extensions with a space or comma and do not include the leading dot. Leaving this blank will allow users to upload a file with any extension.'),
     '#element_validate' => array('_file_generic_settings_extensions'),
-    '#weight' => 4,
+    '#weight' => 1,
   );
 
-  $form['destination'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Upload destination'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+  $form['max_filesize'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum upload size'),
+    '#default_value' => $settings['max_filesize'],
+    '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', array('%limit' => format_size(file_upload_max_size()))),
+    '#size' => 10,
+    '#element_validate' => array('_file_generic_settings_max_filesize'),
     '#weight' => 5,
   );
-  $form['destination']['file_directory'] = array(
-    '#type' => 'textfield',
-    '#title' => t('File directory'),
-    '#default_value' => $settings['file_directory'],
-    '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.', array('%directory' => variable_get('file_directory_path', 'files') . '/')),
-    '#element_validate' => array('_file_generic_settings_file_directory_validate'),
-    '#parents' => array('instance', 'settings', 'file_directory'),
+
+  $form['description_field'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable <em>Description</em> field'),
+    '#default_value' => isset($settings['description_field']) ? $settings['description_field'] : '',
+    '#description' => t('The description field allows users to enter a description about the uploaded file.'),
+    '#parents' => array('instance', 'settings', 'description_field'),
+    '#weight' => 11,
   );
 
   return $form;
@@ -230,9 +220,7 @@ function file_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
       if (empty($item['fid']) || !isset($files[$item['fid']])) {
         $items[$obj_id][$delta] = NULL;
       }
-      // Unserialize the data column.
       else {
-        $item['data'] = unserialize($item['data']);
         $items[$obj_id][$delta] = array_merge($item, (array) $files[$item['fid']]);
       }
     }
@@ -243,19 +231,10 @@ function file_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
  * Implement hook_field_sanitize().
  */
 function file_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
-  // If there are no files specified at all, use the default.
-  if (empty($items) && $field['settings']['default_file']) {
-    if ($file = file_load($field['settings']['default_file'])) {
-      $items[0] = (array) $file;
-      $items[0]['is_default'] = TRUE;
-    }
-  }
   // Remove files from being displayed if they're not displayed.
-  else {
-    foreach ($items as $delta => $item) {
-      if (!file_field_displayed($item, $field)) {
-        unset($items[$delta]);
-      }
+  foreach ($items as $delta => $item) {
+    if (!file_field_displayed($item, $field)) {
+      unset($items[$delta]);
     }
   }
 
@@ -274,11 +253,6 @@ function file_field_insert($obj_type, $object, $field, $instance, $langcode, &$i
  * Implement hook_field_update().
  */
 function file_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
-  // Serialize the data column before storing.
-  foreach ($items as $delta => $item) {
-    $items[$delta]['data'] = serialize($item['data']);
-  }
-
   // Check for files that have been removed from the object.
 
   // On new revisions, old files are always maintained in the previous revision.
@@ -416,11 +390,10 @@ function file_field_formatter_info() {
 function file_field_widget_info() {
   return array(
     'file_generic' => array(
-      'label' => t('Generic file'),
+      'label' => t('File'),
       'field types' => array('file'),
       'settings' => array(
         'progress_indicator' => 'throbber',
-        'description_field' => 0,
       ),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
@@ -446,24 +419,8 @@ function file_field_widget_settings_form($field, $instance) {
     ),
     '#default_value' => $settings['progress_indicator'],
     '#description' => t('The throbber display does not show the status of uploads but takes up space. The progress bar is helpful for monitoring progress on large uploads.'),
-    '#weight' => 2,
+    '#weight' => 16,
     '#access' => file_progress_implementation(),
-  );
-
-  $form['additional'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Additional fields'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#weight' => 10,
-  );
-
-  $form['additional']['description_field'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable <em>Description</em> field'),
-    '#default_value' => $settings['description_field'],
-    '#description' => t('The description field allows users to enter a description about the uploaded file.'),
-    '#parents' => array('instance', 'widget', 'settings', 'description_field'),
   );
 
   return $form;
@@ -477,8 +434,8 @@ function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $
 
   $defaults = array(
     'fid' => 0,
-    'display' => $field['settings']['display_default'],
-    'data' => array('description' => ''),
+    'display' => !empty($field['settings']['display_default']),
+    'description' => '',
   );
 
   // Retrieve any values set in $form_state, as will be the case during AJAX
@@ -632,7 +589,7 @@ function file_field_widget_value($element, $input = FALSE, $form_state) {
   $return += array(
     'fid' => 0,
     'display' => 1,
-    'data' => array(),
+    'description' => '',
   );
 
   return $return;
@@ -653,17 +610,8 @@ function file_field_widget_process($element, &$form_state, $form) {
 
   $element['#theme'] = 'file_widget';
 
-  // Data placeholder for widgets to store additional data.
-  $element['data'] = array(
-    '#tree' => TRUE,
-    '#title' => t('File data'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#access' => (bool) $item['fid'],
-  );
-
   // Add the display field if enabled.
-  if ($field['settings']['display_field'] && $item['fid']) {
+  if (!empty($field['settings']['display_field']) && $item['fid']) {
     $element['display'] = array(
       '#type' => empty($item['fid']) ? 'hidden' : 'checkbox',
       '#title' => t('Include file in display'),
@@ -679,11 +627,11 @@ function file_field_widget_process($element, &$form_state, $form) {
   }
 
   // Add the description field if enabled.
-  if ($settings['description_field'] && $item['fid']) {
-    $element['data']['description'] = array(
+  if (!empty($instance['settings']['description_field']) && $item['fid']) {
+    $element['description'] = array(
       '#type' => 'textfield',
       '#title' => t('Description'),
-      '#value' => isset($item['data']['description']) ? $item['data']['description'] : '',
+      '#value' => isset($item['description']) ? $item['description'] : '',
       '#type' => variable_get('file_description_type', 'textfield'),
       '#maxlength' => variable_get('file_description_length', 128),
       '#description' => t('The description may be used as the label of the link to the file.'),
@@ -769,6 +717,7 @@ function theme_file_widget_multiple($variables) {
   $element = $variables['element'];
 
   $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
 
   // Get our list of widgets in order.
   $widgets = array();
@@ -784,7 +733,7 @@ function theme_file_widget_multiple($variables) {
   // Build up a table of applicable fields.
   $headers = array();
   $headers[] = t('File information');
-  if ($field['settings']['display_field']) {
+  if (!empty($field['settings']['display_field'])) {
     $headers[] = array(
       'data' => t('Display'),
       'class' => array('checkbox'),
@@ -812,7 +761,7 @@ function theme_file_widget_multiple($variables) {
 
     // Render the "Display" option in its own own column.
     $display = '';
-    if ($field['settings']['display_field']) {
+    if (!empty($field['settings']['display_field'])) {
       unset($element[$key]['display']['#title']);
       $display = array(
         'data' => drupal_render($element[$key]['display']),
@@ -830,7 +779,7 @@ function theme_file_widget_multiple($variables) {
 
     $row = array();
     $row[] = $information;
-    if ($field['settings']['display_field']) {
+    if (!empty($field['settings']['display_field'])) {
       $row[] = $display;
     }
     $row[] = $weight;
