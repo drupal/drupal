@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.8 2009/08/26 03:20:39 webchick Exp $
+// $Id: image.test,v 1.9 2009/10/12 05:22:57 webchick Exp $
 
 /**
  * @file
@@ -335,6 +335,7 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
     // Edit effect form.
 
     // Revisit each form to make sure the effect was saved.
+    drupal_static_reset('image_styles');
     $style = image_style_load($style_name);
 
     foreach ($style['effects'] as $ieid => $effect) {

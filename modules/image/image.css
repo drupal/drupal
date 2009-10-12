@@ -1,0 +1,15 @@
+/* $Id: image.css,v 1.1 2009/10/12 05:22:57 webchick Exp $ */
+
+/**
+ * Image upload widget.
+ */
+div.image-preview {
+  float: left; /* RTL */
+  padding: 0 10px 10px 0; /* RTL */
+}
+div.image-widget-data {
+  float: left; /* RTL */
+}
+div.image-widget-data input.text-field {
+  width: auto;
+}
