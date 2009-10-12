@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.fetcher.inc,v 1.9 2009/09/25 23:53:26 dries Exp $
+// $Id: aggregator.fetcher.inc,v 1.10 2009/10/12 15:54:59 dries Exp $
 
 /**
  * @file
@@ -45,7 +45,6 @@ function aggregator_aggregator_fetch($feed) {
       break;
     case 301:
       $feed->url = $result->redirect_url;
-      $feed->redirected = TRUE;
       // Do not break here.
     case 200:
     case 302:
