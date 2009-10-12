@@ -113,6 +113,13 @@ function contact_update_7001() {
 }
 
 /**
+ * Enable the 'access user contact forms' for registered users by default.
+ */
+function contact_update_7002() {
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access user contact forms'));
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
