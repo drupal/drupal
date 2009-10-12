@@ -954,6 +954,10 @@ function install_database_errors($database, $settings_file) {
     // Run tasks associated with the database type. Any errors are caught in the
     // calling function
     $databases['default']['default'] = $database;
+    // Just changing the global doesn't get the new information processed.
+    // We tell tell the Database class to re-parse $databases.
+    Database::parseConnectionInfo();
+
     try {
       db_run_tasks($database['driver']);
     } 
