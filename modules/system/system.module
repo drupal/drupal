@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.804 2009/10/10 16:48:38 webchick Exp $
+// $Id: system.module,v 1.805 2009/10/12 15:40:04 dries Exp $
 
 /**
  * @file
@@ -2426,7 +2426,6 @@ function system_cron() {
   // not used, this will simply be a no-op.
   db_update('queue')
     ->fields(array(
-      'consumer_id' => 0,
       'expire' => 0,
     ))
     ->condition('expire', REQUEST_TIME, '<')
