@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.212 2009/10/09 00:59:53 dries Exp $
+// $Id: install.php,v 1.213 2009/10/12 02:00:04 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -954,6 +954,10 @@ function install_database_errors($database, $settings_file) {
     // Run tasks associated with the database type. Any errors are caught in the
     // calling function
     $databases['default']['default'] = $database;
+    // Just changing the global doesn't get the new information processed.
+    // We tell tell the Database class to re-parse $databases.
+    Database::parseConnectionInfo();
+
     try {
       db_run_tasks($database['driver']);
     } 

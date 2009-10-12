@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.79 2009/10/06 00:03:12 webchick Exp $
+// $Id: database.inc,v 1.80 2009/10/12 02:00:04 webchick Exp $
 
 /**
  * @file
@@ -1246,7 +1246,7 @@ abstract class Database {
   /**
    * Process the configuration file for database information.
    */
-  final protected static function parseConnectionInfo() {
+  final public static function parseConnectionInfo() {
     global $databases;
 
     _db_check_install_needed();
@@ -1263,7 +1263,20 @@ abstract class Database {
       }
     }
 
-    self::$databaseInfo = $databaseInfo;
+    if (!is_array(self::$databaseInfo)) {
+      self::$databaseInfo = $databaseInfo;
+    }
+
+    // Merge the new $databaseInfo into the existing.
+    // array_merge_recursive() cannot be used, as it would make multiple
+    // database, user, and password keys in the same database array.
+    else {
+      foreach ($databaseInfo as $database_key => $database_values) {
+        foreach ($database_values as $target => $target_values) {
+          self::$databaseInfo[$database_key][$target] = $target_values;
+        }
+      }
+    }
   }
 
   /**
