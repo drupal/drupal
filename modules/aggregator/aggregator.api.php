@@ -82,6 +82,14 @@ function hook_aggregator_fetch_info() {
  *   $feed->source_string contains the raw feed data as a string. Parse data
  *   from $feed->source_string and expose it to other modules as an array of
  *   data items on $feed->items.
+ * 
+ *   Feed format:
+ *   - $feed->description (string) - description of the feed
+ *   - $feed->image (string) - image for the feed
+ *   - $feed->etag (string) - value of feed's entity tag header field
+ *   - $feed->modified (UNIX timestamp) - value of feed's last modified header 
+ *     field
+ *   - $feed->items (Array) - array of feed items.
  *
  *   By convention, the common format for a single feed item is:
  *   $item[key-name] = value;
@@ -93,6 +101,9 @@ function hook_aggregator_fetch_info() {
  *   AUTHOR (string) - the feed item's author
  *   GUID (string) - RSS/Atom global unique identifier
  *   LINK (string) - the feed item's URL
+ * 
+ * @return 
+ *   TRUE if parsing was successful, FALSE otherwise.
  *
  * @see hook_aggregator_parse_info()
  * @see hook_aggregator_fetch()
@@ -101,7 +112,11 @@ function hook_aggregator_fetch_info() {
  * @ingroup aggregator
  */
 function hook_aggregator_parse($feed) {
-  $feed->items = mymodule_parse($feed->source_string);
+  if ($items = mymodule_parse($feed->source_string)) {
+    $feed->items = $items;
+    return TRUE;
+  }
+  return FALSE;  
 }
 
 /**

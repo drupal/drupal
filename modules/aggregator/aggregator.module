@@ -585,20 +585,49 @@ function _aggregator_get_variables() {
  *   An object describing the feed to be refreshed.
  */
 function aggregator_refresh($feed) {
+  // Store feed URL to track changes.
+  $feed_url = $feed->url;
+
+  // Fetch the feed.
   list($fetcher, $parser, $processors) = _aggregator_get_variables();
   module_invoke($fetcher, 'aggregator_fetch', $feed);
 
   if ($feed->source_string !== FALSE) {
     // Parse the feed.
-    module_invoke($parser, 'aggregator_parse', $feed);
+    if (module_invoke($parser, 'aggregator_parse', $feed)) {
+      // Update feed with parsed data.
+      db_merge('aggregator_feed')
+        ->key(array('fid' => $feed->fid))
+        ->fields(array(
+          'url' => $feed->url,
+          'checked' => REQUEST_TIME,
+          'link' => empty($feed->link) ? $feed->url : $feed->link,
+          'description' => empty($feed->description) ? '' : $feed->description,
+          'image' => empty($feed->image) ? '' : $feed->image,
+          'hash' => md5($feed->source_string),
+          'etag' => empty($feed->etag) ? '' : $feed->etag,
+          'modified' => empty($feed->modified) ? '' : $feed->modified,
+        ))
+        ->execute();
 
-    // If there are items on the feed, let all enabled processors do their work on it.
-    if (@count($feed->items)) {
-      foreach ($processors as $processor) {
-        module_invoke($processor, 'aggregator_process', $feed);
+      // Log if feed URL has changed.
+      if ($feed->url != $feed_url) {
+        watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->title, '%url' => $feed->url));
+      }
+
+      watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed->title));
+      drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed->title)));
+
+      // If there are items on the feed, let all enabled processors do their work on it.
+      if (@count($feed->items)) {
+        $processors = variable_get('aggregator_processors', array('aggregator'));
+        foreach ($processors as $processor) {
+          module_invoke($processor, 'aggregator_process', $feed);
+        }
       }
     }
   }
+
   // Expire old feed items.
   if (function_exists('aggregator_expire')) {
     aggregator_expire($feed);

@@ -44,32 +44,21 @@ function aggregator_aggregator_parse($feed) {
     }
 
     $etag = empty($feed->http_headers['ETag']) ? '' : $feed->http_headers['ETag'];
-    // Update the feed data.
-    db_merge('aggregator_feed')
-      ->key(array('fid' => $feed->fid))
-      ->fields(array(
-        'url' => $feed->url,
-        'checked' => REQUEST_TIME,
-        'link' => !empty($channel['link']) ? $channel['link'] : '',
-        'description' => !empty($channel['description']) ? $channel['description'] : '',
-        'image' => $image,
-        'hash' => md5($feed->source_string),
-        'etag' => $etag,
-        'modified' => $modified,
-      ))
-      ->execute();
+
+    // Add parsed data to the feed object.
+    $feed->link = !empty($channel['LINK']) ? $channel['LINK'] : '';
+    $feed->description = !empty($channel['DESCRIPTION']) ? $channel['DESCRIPTION'] : '';
+    $feed->image = $image;
+    $feed->etag = $etag;
+    $feed->modified = $modified;
 
     // Clear the cache.
     cache_clear_all();
 
-    if (isset($feed->redirected)) {
-      watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->title, '%url' => $feed->url));
-    }
-
-    watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed->title));
-    drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed->title)));
-
+    return TRUE;
   }
+
+  return FALSE;
 }
 
 /**

@@ -45,7 +45,6 @@ function aggregator_aggregator_fetch($feed) {
       break;
     case 301:
       $feed->url = $result->redirect_url;
-      $feed->redirected = TRUE;
       // Do not break here.
     case 200:
     case 302:
