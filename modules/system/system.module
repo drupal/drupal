@@ -2426,7 +2426,6 @@ function system_cron() {
   // not used, this will simply be a no-op.
   db_update('queue')
     ->fields(array(
-      'consumer_id' => 0,
       'expire' => 0,
     ))
     ->condition('expire', REQUEST_TIME, '<')

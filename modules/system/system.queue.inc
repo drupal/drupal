@@ -182,7 +182,6 @@ class SystemQueue implements DrupalQueueInterface {
     $record = new stdClass();
     $record->name = $this->name;
     $record->data = $data;
-    $record->consumer_id = 0;
     // We cannot rely on REQUEST_TIME because many items might be created by a
     // single request which takes longer than 1 second.
     $record->created = time();
@@ -194,30 +193,25 @@ class SystemQueue implements DrupalQueueInterface {
   }
 
   public function claimItem($lease_time = 30) {
-    if (!isset($this->consumerId)) {
-      $this->consumerId = db_insert('queue_consumer_id')
-        ->useDefaults(array('consumer_id'))
-        ->execute();
-    }
-    // Claim an item by updating its consumer_id and expire fields. If claim
-    // is not successful another thread may have claimed the item in the
-    // meantime. Therefore loop until an item is successfully claimed or we are
-    // reasonably sure there are no unclaimed items left.
+    // Claim an item by updating its expire fields. If claim is not successful
+    // another thread may have claimed the item in the meantime. Therefore loop
+    // until an item is successfully claimed or we are reasonably sure there
+    // are no unclaimed items left.
     while (TRUE) {
-      $item = db_query_range('SELECT data, item_id FROM {queue} q WHERE consumer_id = 0 AND name = :name ORDER BY created ASC', 0, 1, array(':name' => $this->name))->fetchObject();
+      $item = db_query_range('SELECT data, item_id FROM {queue} q WHERE name = :name ORDER BY created ASC', 0, 1, array(':name' => $this->name))->fetchObject();
       if ($item) {
-        // Try to mark the item as ours. We cannot rely on REQUEST_TIME
-        // because items might be claimed by a single consumer which runs
-        // longer than 1 second. If we continue to use REQUEST_TIME instead of
-        // the current time(), we steal time from the lease, and will tend to
-        // reset items before the lease should really expire.
+        // Try to update the item. Only one thread can succeed in UPDATEing the
+        // same row. We cannot rely on REQUEST_TIME because items might be
+        // claimed by a single consumer which runs longer than 1 second. If we
+        // continue to use REQUEST_TIME instead of the current time(), we steal
+        // time from the lease, and will tend to reset items before the lease
+        // should really expire.
         $update = db_update('queue')
           ->fields(array(
-            'consumer_id' => $this->consumerId,
             'expire' => time() + $lease_time,
           ))
           ->condition('item_id', $item->item_id)
-          ->condition('consumer_id', 0);
+          ->condition('expire', 0);
         // If there are affected rows, this update succeeded.
         if ($update->execute()) {
           $item->data = unserialize($item->data);

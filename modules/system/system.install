@@ -1226,12 +1226,6 @@ function system_schema() {
         'default' => '',
         'description' => 'The queue name.',
       ),
-      'consumer_id' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The ID of the dequeuing consumer.',
-      ),
       'data' => array(
         'type' => 'text',
         'not null' => FALSE,
@@ -1254,21 +1248,9 @@ function system_schema() {
     ),
     'primary key' => array('item_id'),
     'indexes' => array(
-      'consumer_queue' => array('consumer_id', 'name', 'created'),
-      'consumer_expire' => array('consumer_id', 'expire'),
+      'name_created' => array('name', 'created'),
+      'expire' => array('expire'),
     ),
-  );
-
-  $schema['queue_consumer_id'] = array(
-    'description' => 'Stores queue consumer IDs, used to auto-increment the consumer ID so that a unique consumer ID is used.',
-    'fields' => array(
-      'consumer_id'  => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique consumer ID used to make sure only one consumer gets one item.',
-      ),
-    ),
-    'primary key' => array('consumer_id'),
   );
 
   $schema['registry'] = array(
@@ -2253,12 +2235,6 @@ function system_update_7022() {
         'default' => '',
         'description' => 'The queue name.',
       ),
-      'consumer_id' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The ID of the dequeuing consumer.',
-      ),
       'data' => array(
         'type' => 'text',
         'not null' => FALSE,
@@ -2281,25 +2257,12 @@ function system_update_7022() {
     ),
     'primary key' => array('item_id'),
     'indexes' => array(
-      'consumer_queue' => array('consumer_id', 'name', 'created'),
-      'consumer_expire' => array('consumer_id', 'expire'),
+      'name_created' => array('name', 'created'),
+      'expire' => array('expire'),
     ),
-  );
-
-  $schema['queue_consumer_id'] = array(
-    'description' => 'Stores queue consumer IDs, used to auto-incrament the consumer ID so that a unique consumer ID is used.',
-    'fields' => array(
-      'consumer_id'  => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique consumer ID used to make sure only one consumer gets one item.',
-      ),
-    ),
-    'primary key' => array('consumer_id'),
   );
 
   db_create_table('queue', $schema['queue']);
-  db_create_table('queue_consumer_id', $schema['queue_consumer_id']);
 }
 
 /**
