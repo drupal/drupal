@@ -1404,24 +1404,20 @@ function _system_filetransfer_backend_form_common() {
     '#title' => t('Host'),
     '#default_value' => 'localhost',
   );
-
-  $form['port'] = array (
+  $form['port'] = array(
     '#type' => 'textfield',
     '#title' => t('Port'),
     '#default_value' => NULL,
   );
-
-  $form['username'] = array (
+  $form['username'] = array(
     '#type' => 'textfield',
     '#title' => t('Username'),
   );
-
-  $form['password'] = array (
+  $form['password'] = array(
     '#type' => 'password',
     '#title' => t('Password'),
     '#description' => t('This is not saved in the database and is only used to test the connection'),
   );
-
   return $form;
 }
 
