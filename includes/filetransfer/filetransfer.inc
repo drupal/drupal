@@ -263,10 +263,13 @@ abstract class FileTransfer {
   abstract public function isFile($path);
 
   /**
-   * Gets the chroot property for this connection.  It does this by moving up
-   * the tree until it finds itself.  If successful, it will return a chroot.
+   * Return the chroot property for this connection.
    *
-   * @return string chroot
+   * It does this by moving up the tree until it finds itself. If successful,
+   * it will return the chroot, otherwise FALSE.
+   *
+   * @return
+   *   The chroot path for this connection or FALSE.
    */
   function findChroot() {
     // If the file exists as is, there is no chroot.
