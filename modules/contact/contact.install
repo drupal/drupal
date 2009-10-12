@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.19 2009/10/09 02:54:10 dries Exp $
+// $Id: contact.install,v 1.20 2009/10/12 15:17:51 dries Exp $
 
 /**
  * @file
@@ -110,6 +110,13 @@ function contact_update_7001() {
     ->fields(array('permission' => 'administer contact forms'))
     ->condition('permission', 'administer site-wide contact form')
     ->execute();
+}
+
+/**
+ * Enable the 'access user contact forms' for registered users by default.
+ */
+function contact_update_7002() {
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access user contact forms'));
 }
 
 /**
