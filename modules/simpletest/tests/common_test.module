@@ -10,7 +10,6 @@
  * Implement hook_menu().
  */
 function common_test_menu() {
-  $items = array();
   $items['common-test/drupal_goto'] = array(
     'title' => 'Drupal Goto',
     'page callback' => 'common_test_drupal_goto_land',
@@ -67,6 +66,37 @@ function common_test_drupal_goto_land_fail() {
 function common_test_drupal_goto_alter(&$args) {
   if ($args['path'] == 'common-test/drupal_goto/fail') {
     $args['path'] = 'common-test/drupal_goto/redirect';
+  }
+}
+
+/**
+ * Implement hook_TYPE_alter().
+ */
+function common_test_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+  // Alter first argument.
+  if (is_array($data)) {
+    $data['foo'] = 'Drupal';
+  }
+  elseif (is_object($data)) {
+    $data->foo = 'Drupal';
+  }
+  // Alter second argument, if present.
+  if (isset($arg2)) {
+    if (is_array($arg2)) {
+      $arg2['foo'] = 'Drupal';
+    }
+    elseif (is_object($arg2)) {
+      $arg2->foo = 'Drupal';
+    }
+  }
+  // Try to alter third argument, if present.
+  if (isset($arg3)) {
+    if (is_array($arg3)) {
+      $arg3['foo'] = 'Drupal';
+    }
+    elseif (is_object($arg3)) {
+      $arg3->foo = 'Drupal';
+    }
   }
 }
 

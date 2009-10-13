@@ -692,8 +692,9 @@ function upload_js() {
     '#tree' => FALSE,
     '#parents' => array(),
   );
-  drupal_alter('form', $form, array(), 'upload_js');
   $form_state = array('submitted' => FALSE, 'programmed' => FALSE);
+  $form_id = 'upload_js';
+  drupal_alter('form', $form, $form_state, $form_id);
   $form = form_builder('upload_js', $form, $form_state);
   $output = theme('status_messages') . drupal_render($form);
 

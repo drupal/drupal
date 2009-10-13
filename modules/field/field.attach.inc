@@ -1193,7 +1193,13 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
   $output['#extra_fields'] = field_extra_fields($bundle);
 
   // Let other modules make changes after rendering the view.
-  drupal_alter('field_attach_view', $output, $obj_type, $object, $build_mode, $langcode);
+  $context = array(
+    'obj_type' => $obj_type,
+    'object' => $object,
+    'build_mode' => $build_mode,
+    'langcode' => $langcode,
+  );
+  drupal_alter('field_attach_view', $output, $context);
 
   return $output;
 }
@@ -1228,7 +1234,12 @@ function field_attach_preprocess($obj_type, $object, $element, &$variables) {
   }
 
   // Let other modules make changes to the $variables array.
-  drupal_alter('field_attach_preprocess', $variables, $obj_type, $object, $element);
+  $context = array(
+    'obj_type' => $obj_type,
+    'object' => $object,
+    'element' => $element,
+  );
+  drupal_alter('field_attach_preprocess', $variables, $context);
 }
 
 /**

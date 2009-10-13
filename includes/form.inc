@@ -670,20 +670,11 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     }
   }
 
-  // Normally, we would call drupal_alter($form_id, $form, $form_state).
-  // However, drupal_alter() normally supports just one byref parameter. Using
-  // the __drupal_alter_by_ref key, we can store any additional parameters
-  // that need to be altered, and they'll be split out into additional params
-  // for the hook_form_alter() implementations.
-  // @todo: Remove this in Drupal 7.
-  $data = &$form;
-  $data['__drupal_alter_by_ref'] = array(&$form_state);
-  drupal_alter('form_' . $form_id, $data);
+  // Invoke hook_form_FORM_ID_alter() implementations.
+  drupal_alter('form_' . $form_id, $form, $form_state);
 
-  // __drupal_alter_by_ref is unset in the drupal_alter() function, we need
-  // to repopulate it to ensure both calls get the data.
-  $data['__drupal_alter_by_ref'] = array(&$form_state);
-  drupal_alter('form', $data, $form_id);
+  // Invoke hook_form_alter() implementations.
+  drupal_alter('form', $form, $form_state, $form_id);
 }
 
 

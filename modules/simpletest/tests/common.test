@@ -2,6 +2,59 @@
 // $Id$
 
 /**
+ * @file
+ * Tests for common.inc functionality.
+ */
+
+/**
+ * Tests for URL generation functions.
+ */
+class DrupalAlterTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'drupal_alter() tests',
+      'description' => 'Confirm that alteration of arguments passed to drupal_alter() works correctly.',
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('common_test');
+  }
+
+  function testDrupalAlter() {
+    $array = array('foo' => 'bar');
+    $object = new stdClass;
+    $object->foo = 'bar';
+
+    // Verify alteration of a single argument.
+    $array_copy = $array;
+    $array_expected = array('foo' => 'Drupal');
+    drupal_alter('drupal_alter', $array_copy);
+    $this->assertEqual($array_copy, $array_expected, t('Single array was altered.'));
+
+    $object_copy = clone $object;
+    $object_expected = clone $object;
+    $object_expected->foo = 'Drupal';
+    drupal_alter('drupal_alter', $object_copy);
+    $this->assertEqual($object_copy, $object_expected, t('Single object was altered.'));
+
+    // Verify alteration of multiple arguments.
+    $array_copy = $array;
+    $array_expected = array('foo' => 'Drupal');
+    $object_copy = clone $object;
+    $object_expected = clone $object;
+    $object_expected->foo = 'Drupal';
+    $array2_copy = $array;
+    $array2_expected = array('foo' => 'Drupal');
+    drupal_alter('drupal_alter', $array_copy, $object_copy, $array2_copy);
+    $this->assertEqual($array_copy, $array_expected, t('First argument to drupal_alter() was altered.'));
+    $this->assertEqual($object_copy, $object_expected, t('Second argument to drupal_alter() was altered.'));
+    $this->assertEqual($array2_copy, $array2_expected, t('Third argument to drupal_alter() was altered.'));
+  }
+}
+
+/**
  * Tests for URL generation functions.
  */
 class CommonURLUnitTest extends DrupalUnitTestCase {

@@ -1916,7 +1916,8 @@ function _system_rebuild_module_data() {
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info files if necessary.
-    drupal_alter('system_info', $modules[$key]->info, $modules[$key], 'module');
+    $type = 'module';
+    drupal_alter('system_info', $modules[$key]->info, $modules[$key], $type);
   }
 
   // The install profile is required.
@@ -2009,7 +2010,8 @@ function _system_rebuild_theme_data() {
 
       // Invoke hook_system_info_alter() to give installed modules a chance to
       // modify the data in the .info files if necessary.
-      drupal_alter('system_info', $themes[$key]->info, $themes[$key], 'theme');
+      $type = 'theme';
+      drupal_alter('system_info', $themes[$key]->info, $themes[$key], $type);
 
       if (!empty($themes[$key]->info['base theme'])) {
         $sub_themes[] = $key;
