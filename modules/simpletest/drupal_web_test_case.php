@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.159 2009/10/13 05:37:46 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.160 2009/10/13 07:14:26 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -31,7 +31,7 @@ abstract class DrupalTestCase {
   /**
    * Time limit for the test.
    */
-  protected $timeLimit = 180;
+  protected $timeLimit = 500;
 
   /**
    * Current results of this test case.
