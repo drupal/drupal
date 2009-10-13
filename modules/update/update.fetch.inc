@@ -357,25 +357,31 @@ function update_parse_xml($raw_xml) {
     // were detected. Catch any exception and return failure (NULL).
     return;
   }
+  // If there is no valid project data, the XML is invalid, so return failure.
+  if (!isset($xml->short_name)) {
+    return;
+  }
   $short_name = (string)$xml->short_name;
   $data = array();
   foreach ($xml as $k => $v) {
     $data[$k] = (string)$v;
   }
   $data['releases'] = array();
-  foreach ($xml->releases->children() as $release) {
-    $version = (string)$release->version;
-    $data['releases'][$version] = array();
-    foreach ($release->children() as $k => $v) {
-      $data['releases'][$version][$k] = (string)$v;
-    }
-    $data['releases'][$version]['terms'] = array();
-    if ($release->terms) {
-      foreach ($release->terms->children() as $term) {
-        if (!isset($data['releases'][$version]['terms'][(string)$term->name])) {
-          $data['releases'][$version]['terms'][(string)$term->name] = array();
+  if (isset($xml->releases)) {
+    foreach ($xml->releases->children() as $release) {
+      $version = (string)$release->version;
+      $data['releases'][$version] = array();
+      foreach ($release->children() as $k => $v) {
+        $data['releases'][$version][$k] = (string)$v;
+      }
+      $data['releases'][$version]['terms'] = array();
+      if ($release->terms) {
+        foreach ($release->terms->children() as $term) {
+          if (!isset($data['releases'][$version]['terms'][(string)$term->name])) {
+            $data['releases'][$version]['terms'][(string)$term->name] = array();
+          }
+          $data['releases'][$version]['terms'][(string)$term->name][] = (string)$term->value;
         }
-        $data['releases'][$version]['terms'][(string)$term->name][] = (string)$term->value;
       }
     }
   }

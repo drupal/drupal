@@ -212,6 +212,34 @@ class UpdateTestContribCase extends UpdateTestHelper {
   }
 
   /**
+   * Tests when there is no available release data for a contrib module.
+   */
+  function testNoReleasesAvailable() {
+    $system_info = array(
+      '#all' => array(
+        'version' => '7.0',
+      ),
+      'aaa_update_test' => array(
+        'project' => 'aaa_update_test',
+        'version' => '7.x-1.0',
+        'hidden' => FALSE,
+      ),
+    );
+    variable_set('update_test_system_info', $system_info);
+    $this->refreshUpdateStatus(array('drupal' => '0', 'aaa_update_test' => 'no-releases'));
+    $this->drupalGet('admin/reports/updates');
+    // Cannot use $this->standardTests() because we need to check for the
+    // 'No available releases found' string.
+    $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
+    $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'));
+    $this->assertText(t('Up to date'));
+    $this->assertRaw('<h3>' . t('Modules') . '</h3>');
+    $this->assertNoText(t('Update available'));
+    $this->assertText(t('No available releases found'));
+    $this->assertNoRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'));
+  }
+
+  /**
    * Test the basic functionality of a contrib module on the status report.
    */
   function testUpdateContribBasic() {
