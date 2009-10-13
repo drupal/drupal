@@ -406,7 +406,7 @@ function update_calculate_project_data($available) {
             break;
           case 'not-fetched':
             $projects[$project]['status'] = UPDATE_NOT_FETCHED;
-            $projects[$project]['reason'] = t('Failed to fetch available update data');
+            $projects[$project]['reason'] = t('Failed to get available update data.');
             break;
 
           default:
@@ -468,6 +468,17 @@ function update_calculate_project_data($available) {
 
       $version_patch_changed = '';
       $patch = '';
+
+      // If the project is marked as UPDATE_FETCH_PENDING, it means that the
+      // data we currently have (if any) is stale, and we've got a task queued
+      // up to (re)fetch the data. In that case, we mark it as such, merge in
+      // whatever data we have (e.g. project title and link), and move on.
+      if (!empty($available[$project]['fetch_status']) && $available[$project]['fetch_status'] == UPDATE_FETCH_PENDING) {
+        $projects[$project]['status'] = UPDATE_FETCH_PENDING;
+        $projects[$project]['reason'] = t('No available update data');
+        $projects[$project] += $available[$project];
+        continue;
+      }
 
       // Defend ourselves from XML history files that contain no releases.
       if (empty($available[$project]['releases'])) {

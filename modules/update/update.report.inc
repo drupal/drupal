@@ -59,6 +59,7 @@ function theme_update_report($variables) {
         $icon = theme('image', array('path' => 'misc/watchdog-ok.png', 'alt' => t('ok'), 'title' => t('ok')));
         break;
       case UPDATE_UNKNOWN:
+      case UPDATE_FETCH_PENDING:
       case UPDATE_NOT_FETCHED:
         $class = 'unknown';
         $icon = theme('image', array('path' => 'misc/watchdog-warning.png', 'alt' => t('warning'), 'title' => t('warning')));

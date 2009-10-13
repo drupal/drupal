@@ -10,21 +10,184 @@
  * Callback to manually check the update status without cron.
  */
 function update_manual_status() {
-  if (_update_refresh()) {
-    drupal_set_message(t('Attempted to fetch information about all available new releases and updates.'));
-  }
-  else {
-    drupal_set_message(t('Unable to fetch any information about available new releases and updates.'), 'error');
-  }
-  drupal_goto('admin/reports/updates');
+  _update_refresh();
+  $batch = array(
+    'operations' => array(
+      array('update_fetch_data_batch', array()),
+    ),
+    'finished' => 'update_fetch_data_finished',
+    'title' => t('Checking available update data'),
+    'progress_message' => t('Trying to check available update data ...'),
+    'error_message' => t('Error checking available update data.'),
+    'file' => drupal_get_path('module', 'update') . '/update.fetch.inc',
+  );
+  batch_set($batch);
+  batch_process('admin/reports/updates');
 }
 
 /**
- * Fetch project info via XML from a central server.
+ * Process a step in the batch for fetching available update data.
  */
-function _update_refresh() {
+function update_fetch_data_batch(&$context) {
+  $queue = DrupalQueue::get('update_fetch_tasks');
+  if (empty($context['sandbox']['max'])) {
+    $context['finished'] = 0;
+    $context['sandbox']['max'] = $queue->numberOfItems();
+    $context['sandbox']['progress'] = 0;
+    $context['message'] = t('Checking available update data ...');
+    $context['results']['updated'] = 0;
+    $context['results']['failures'] = 0;
+    $context['results']['processed'] = 0;
+  }
+
+  // Grab another item from the fetch queue.
+  for ($i = 0; $i < 5; $i++) {
+    if ($item = $queue->claimItem()) {
+      if (_update_process_fetch_task($item->data)) {
+        $context['results']['updated']++;
+        $context['message'] = t('Checked available update data for %title.', array('%title' => $item->data['info']['name']));
+      }
+      else {
+        $context['message'] = t('Failed to check available update data for %title.', array('%title' => $item->data['info']['name']));
+        $context['results']['failures']++;
+      }
+      $context['sandbox']['progress']++;
+      $context['results']['processed']++;
+      $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+      $queue->deleteItem($item);
+    }
+    else {
+      // If the queue is currently empty, we're done. It's possible that
+      // another thread might have added new fetch tasks while we were
+      // processing this batch. In that case, the usual 'finished' math could
+      // get confused, since we'd end up processing more tasks that we thought
+      // we had when we started and initialized 'max' with numberOfItems(). By
+      // forcing 'finished' to be exactly 1 here, we ensure that batch
+      // processing is terminated.
+      $context['finished'] = 1;
+      return;
+    }
+  }
+}
+
+/**
+ * Batch API callback when all fetch tasks have been completed.
+ *
+ * @param $success
+ *   Boolean indicating the success of the batch.
+ * @param $results
+ *   Associative array holding the results of the batch, including the key
+ *   'updated' which holds the total number of projects we fetched available
+ *   update data for.
+ */
+function update_fetch_data_finished($success, $results) {
+  if ($success) {
+    if (!empty($results)) {
+      if (!empty($results['updated'])) {
+        drupal_set_message(format_plural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
+      }
+      if (!empty($results['failures'])) {
+        drupal_set_message(format_plural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'), 'error');
+      }
+    }
+  }
+  else {
+    drupal_set_message(t('An error occurred trying to get available update data.'), 'error');
+  }
+}
+
+/**
+ * Attempt to drain the queue of tasks for release history data to fetch.
+ */
+function _update_fetch_data() {
+  $queue = DrupalQueue::get('update_fetch_tasks');
+  $end = time() + variable_get('update_max_fetch_time', UPDATE_MAX_FETCH_TIME);
+  while (time() < $end && ($item = $queue->claimItem())) {
+    _update_process_fetch_task($item->data);
+    $queue->deleteItem($item);
+  }
+}
+
+/**
+ * Process a task to fetch available update data for a single project.
+ *
+ * Once the release history XML data is downloaded, it is parsed and saved
+ * into the {cache_update} table in an entry just for that project.
+ *
+ * @param $project
+ *   Associative array of information about the project to fetch data for.
+ * @return
+ *   TRUE if we fetched parsable XML, otherwise FALSE.
+ */
+function _update_process_fetch_task($project) {
   global $base_url;
   $fail = &drupal_static(__FUNCTION__, array());
+  // This can be in the middle of a long-running batch, so REQUEST_TIME won't
+  // necessarily be valid.
+  $now = time();
+  if (empty($fail)) {
+    // If we have valid data about release history XML servers that we have
+    // failed to fetch from on previous attempts, load that from the cache.
+    if (($cache = _update_cache_get('fetch_failures')) && ($cache->expire > $now)) {
+      $fail = $cache->data;
+    }
+  }
+
+  $max_fetch_attempts = variable_get('update_max_fetch_attempts', UPDATE_MAX_FETCH_ATTEMPTS);
+
+  $success = FALSE;
+  $available = array();
+  $site_key = md5($base_url . drupal_get_private_key());
+  $url = _update_build_fetch_url($project, $site_key);
+  $fetch_url_base = _update_get_fetch_url_base($project);
+  $project_name = $project['name'];
+
+  if (empty($fail[$fetch_url_base]) || $fail[$fetch_url_base] < $max_fetch_attempts) {
+    $xml = drupal_http_request($url);
+    if (isset($xml->data)) {
+      $data = $xml->data;
+    }
+  }
+
+  if (!empty($data)) {
+    $available = update_parse_xml($data);
+    // @todo: Purge release data we don't need (http://drupal.org/node/238950).
+    if (!empty($available)) {
+      // Only if we fetched and parsed something sane do we return success.
+      $success = TRUE;
+    }
+  }
+  else {
+    $available['project_status'] = 'not-fetched';
+    if (empty($fail[$fetch_url_base])) {
+      $fail[$fetch_url_base] = 1;
+    }
+    else {
+      $fail[$fetch_url_base]++;
+    }
+  }
+
+  $frequency = variable_get('update_check_frequency', 1);
+  $cid = 'available_releases::' . $project_name;
+  _update_cache_set($cid, $available, $now + (60 * 60 * 24 * $frequency));
+
+  // Stash the $fail data back in the DB for the next 5 minutes.
+  _update_cache_set('fetch_failures', $fail, $now + (60 * 5));
+
+  // Whether this worked or not, we did just (try to) check for updates.
+  variable_set('update_last_check', $now);
+
+  // Now that we processed the fetch task for this project, clear out the
+  // record in {cache_update} for this task so we're willing to fetch again.
+  _update_cache_clear('fetch_task::' . $project_name);
+
+  return $success;
+}
+
+/**
+ * Clear out all the cached available update data and initiate re-fetching.
+ */
+function _update_refresh() {
   module_load_include('inc', 'update', 'update.compare');
 
   // Since we're fetching new available update data, we want to clear
@@ -36,57 +199,53 @@ function _update_refresh() {
   _update_cache_clear('update_project_projects');
   _update_cache_clear('update_project_data');
 
-  $available = array();
-  $data = array();
-  $site_key = md5($base_url . drupal_get_private_key());
   $projects = update_get_projects();
 
   // Now that we have the list of projects, we should also clear our cache of
   // available release data, since even if we fail to fetch new data, we need
   // to clear out the stale data at this point.
-  _update_cache_clear('update_available_releases');
-
-   $max_fetch_attempts = variable_get('update_max_fetch_attempts', UPDATE_MAX_FETCH_ATTEMPTS);
+  _update_cache_clear('available_releases::', TRUE);
 
   foreach ($projects as $key => $project) {
-    $url = _update_build_fetch_url($project, $site_key);
-    $fetch_url_base = _update_get_fetch_url_base($project);
-    if (empty($fail[$fetch_url_base]) || count($fail[$fetch_url_base]) < $max_fetch_attempts) {
-      $xml = drupal_http_request($url);
-      if (isset($xml->data)) {
-        $data[] = $xml->data;
-      }
-      else {
-        // Connection likely broken; prepare to give up.
-        $fail[$fetch_url_base][$key] = 1;
-      }
-    }
-    else {
-      // Didn't bother trying to fetch.
-      $fail[$fetch_url_base][$key] = 1;
-    }
+    update_create_fetch_task($project);
   }
+}
 
-  if ($data) {
-    $available = update_parse_xml($data);
+/**
+ * Add a task to the queue for fetching release history data for a project.
+ *
+ * We only create a new fetch task if there's no task already in the queue for
+ * this particular project (based on 'fetch_task::' entries in the
+ * {cache_update} table).
+ *
+ * @param $project
+ *   Associative array of information about a project as created by
+ *   update_get_projects(), including keys such as 'name' (short name),
+ *   and the 'info' array with data from a .info file for the project.
+ *
+ * @see update_get_projects()
+ * @see update_get_available()
+ * @see update_refresh()
+ * @see update_fetch_data()
+ * @see _update_process_fetch_task()
+ */
+function _update_create_fetch_task($project) {
+  $fetch_tasks = &drupal_static(__FUNCTION__, array());
+  if (empty($fetch_tasks)) {
+    $fetch_tasks = _update_get_cache_multiple('fetch_task');
   }
-  if (!empty($available) && is_array($available)) {
-    // Record the projects where we failed to fetch data.
-    foreach ($fail as $fetch_url_base => $failures) {
-      foreach ($failures as $key => $value) {
-        $available[$key]['project_status'] = 'not-fetched';
-      }
-    }
-    $frequency = variable_get('update_check_frequency', 1);
-    _update_cache_set('update_available_releases', $available, REQUEST_TIME + (60 * 60 * 24 * $frequency));
-    watchdog('update', 'Attempted to fetch information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l(t('view'), 'admin/reports/updates'));
+  $cid = 'fetch_task::' . $project['name'];
+  if (empty($fetch_tasks[$cid])) {
+    $queue = DrupalQueue::get('update_fetch_tasks');
+    $queue->createItem($project);
+    db_insert('cache_update')
+      ->fields(array(
+        'cid' => $cid,
+        'created' => REQUEST_TIME,
+      ))
+      ->execute();
+    $fetch_tasks[$cid] = REQUEST_TIME;
   }
-  else {
-    watchdog('update', 'Unable to fetch any information about available new releases and updates.', array(), WATCHDOG_ERROR, l(t('view'), 'admin/reports/updates'));
-  }
-  // Whether this worked or not, we did just (try to) check for updates.
-  variable_set('update_last_check', REQUEST_TIME);
-  return $available;
 }
 
 /**
@@ -101,7 +260,8 @@ function _update_refresh() {
  * @param $site_key
  *   The anonymous site key hash (optional).
  *
- * @see update_refresh()
+ * @see update_fetch_data()
+ * @see _update_process_fetch_task()
  * @see update_get_projects()
  */
 function _update_build_fetch_url($project, $site_key = '') {
@@ -180,44 +340,42 @@ function _update_cron_notify() {
 /**
  * Parse the XML of the Drupal release history info files.
  *
- * @param $raw_xml_list
- *   Array of raw XML strings, one for each fetched project.
+ * @param $raw_xml
+ *   A raw XML string of available release data for a given project.
  *
  * @return
- *   Nested array of parsed data about projects and releases.
+ *   Array of parsed data about releases for a given project, or NULL if there
+ *   was an error parsing the string.
  */
-function update_parse_xml($raw_xml_list) {
+function update_parse_xml($raw_xml) {
+  try {
+    $xml = new SimpleXMLElement($raw_xml);
+  }
+  catch (Exception $e) {
+    // SimpleXMLElement::__construct produces an E_WARNING error message for
+    // each error found in the XML data and throws an exception if errors
+    // were detected. Catch any exception and return failure (NULL).
+    return;
+  }
+  $short_name = (string)$xml->short_name;
   $data = array();
-  foreach ($raw_xml_list as $raw_xml) {
-    try {
-      $xml = new SimpleXMLElement($raw_xml);
+  foreach ($xml as $k => $v) {
+    $data[$k] = (string)$v;
+  }
+  $data['releases'] = array();
+  foreach ($xml->releases->children() as $release) {
+    $version = (string)$release->version;
+    $data['releases'][$version] = array();
+    foreach ($release->children() as $k => $v) {
+      $data['releases'][$version][$k] = (string)$v;
     }
-    catch (Exception $e) {
-      // SimpleXMLElement::__construct produces an E_WARNING error message for
-      // each error found in the XML data and throws an exception if errors
-      // were detected. Catch any exception and break to the next XML string.
-      break;
-    }
-    $short_name = (string)$xml->short_name;
-    $data[$short_name] = array();
-    foreach ($xml as $k => $v) {
-      $data[$short_name][$k] = (string)$v;
-    }
-    $data[$short_name]['releases'] = array();
-    foreach ($xml->releases->children() as $release) {
-      $version = (string)$release->version;
-      $data[$short_name]['releases'][$version] = array();
-      foreach ($release->children() as $k => $v) {
-        $data[$short_name]['releases'][$version][$k] = (string)$v;
-      }
-      $data[$short_name]['releases'][$version]['terms'] = array();
-      if ($release->terms) {
-        foreach ($release->terms->children() as $term) {
-          if (!isset($data[$short_name]['releases'][$version]['terms'][(string)$term->name])) {
-            $data[$short_name]['releases'][$version]['terms'][(string)$term->name] = array();
-          }
-          $data[$short_name]['releases'][$version]['terms'][(string)$term->name][] = (string)$term->value;
+    $data['releases'][$version]['terms'] = array();
+    if ($release->terms) {
+      foreach ($release->terms->children() as $term) {
+        if (!isset($data['releases'][$version]['terms'][(string)$term->name])) {
+          $data['releases'][$version]['terms'][(string)$term->name] = array();
         }
+        $data['releases'][$version]['terms'][(string)$term->name][] = (string)$term->value;
       }
     }
   }

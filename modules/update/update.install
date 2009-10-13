@@ -7,6 +7,14 @@
  */
 
 /**
+ * Implement hook_install().
+ */
+function update_install() {
+  $queue = DrupalQueue::get('update_fetch_tasks');
+  $queue->createQueue();
+}
+
+/**
  * Implement hook_uninstall().
  */
 function update_uninstall() {
@@ -17,11 +25,15 @@ function update_uninstall() {
     'update_last_check',
     'update_notification_threshold',
     'update_notify_emails',
+    'update_max_fetch_attempts',
+    'update_max_fetch_time',
   );
   foreach ($variables as $variable) {
     variable_del($variable);
   }
   menu_rebuild();
+  $queue = DrupalQueue::get('update_fetch_tasks');
+  $queue->deleteQueue();
 }
 
 /**
@@ -32,3 +44,13 @@ function update_schema() {
   $schema['cache_update']['description'] = 'Cache table for the Update module to store information about available releases, fetched from central server.';
   return $schema;
 }
+
+/**
+ * Create a queue to store tasks for requests to fetch available update data. 
+ */
+function update_update_7000() {
+  module_load_include('inc', 'system', 'system.queue');
+  $queue = DrupalQueue::get('update_fetch_tasks');
+  $queue->createQueue();
+}
+

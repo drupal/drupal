@@ -57,9 +57,19 @@ define('UPDATE_UNKNOWN', -2);
 define('UPDATE_NOT_FETCHED', -3);
 
 /**
+ * We need to (re)fetch available update data for this project.
+ */
+define('UPDATE_FETCH_PENDING', -4);
+
+/**
  * Maximum number of attempts to fetch available update data from a given host.
  */
 define('UPDATE_MAX_FETCH_ATTEMPTS', 2);
+
+/**
+ * Maximum number of seconds to try fetching available update data at a time.
+ */
+define('UPDATE_MAX_FETCH_TIME', 5);
 
 /**
  * Implement hook_help().
@@ -298,11 +308,17 @@ function _update_requirement_check($project, $type) {
 function update_cron() {
   $frequency = variable_get('update_check_frequency', 1);
   $interval = 60 * 60 * 24 * $frequency;
-  // Cron should check for updates if there is no update data cached or if the
-  // configured update interval has elapsed.
-  if (!_update_cache_get('update_available_releases') || ((REQUEST_TIME - variable_get('update_last_check', 0)) > $interval)) {
+  if ((REQUEST_TIME - variable_get('update_last_check', 0)) > $interval) {
+    // If the configured update interval has elapsed, we want to invalidate
+    // the cached data for all projects, attempt to re-fetch, and trigger any
+    // configured notifications about the new status.
     update_refresh();
     _update_cron_notify();
+  }
+  else {
+    // Otherwise, see if any individual projects are now stale or still
+    // missing data, and if so, try to fetch the data.
+    update_get_available(TRUE);
   }
 }
 
@@ -370,37 +386,102 @@ function _update_no_data() {
  */
 function update_get_available($refresh = FALSE) {
   module_load_include('inc', 'update', 'update.compare');
-  $available = array();
-
-  // First, make sure that none of the .info files have a change time
-  // newer than the last time we checked for available updates.
   $needs_refresh = FALSE;
-  $last_check = variable_get('update_last_check', 0);
+
+  // Grab whatever data we currently have cached in the DB.
+  $available = _update_get_cached_available_releases();
   $projects = update_get_projects();
   foreach ($projects as $key => $project) {
-    if ($project['info']['_info_file_ctime'] > $last_check) {
+    // If there's no data at all, we clearly need to fetch some.
+    if (empty($available[$key])) {
+      update_create_fetch_task($project);
       $needs_refresh = TRUE;
-      break;
+      continue;
+    }
+
+    // See if the .info file is newer than the last time we checked for data,
+    // and if so, mark this project's data as needing to be re-fetched. Any
+    // time an admin upgrades their local installation, the .info file will
+    // be changed, so this is the only way we can be sure we're not showing
+    // bogus information right after they upgrade.
+    if ($project['info']['_info_file_ctime'] > $available[$key]['last_fetch']) {
+      $available[$key]['fetch_status'] = UPDATE_FETCH_PENDING;
+    }
+
+    // If we have project data but no release data, we need to fetch. This
+    // can be triggered when we fail to contact a release history server.
+    if (empty($available[$key]['releases'])) {
+      $available[$key]['fetch_status'] = UPDATE_FETCH_PENDING;
+    }
+
+    // If we think this project needs to fetch, actually create the task now
+    // and remember that we think we're missing some data.
+    if (!empty($available[$key]['fetch_status']) && $available[$key]['fetch_status'] == UPDATE_FETCH_PENDING) {
+      update_create_fetch_task($project);
+      $needs_refresh = TRUE;
     }
   }
-  if (!$needs_refresh && ($cache = _update_cache_get('update_available_releases')) && $cache->expire > REQUEST_TIME) {
-    $available = $cache->data;
+
+  if ($needs_refresh && $refresh) {
+    // Attempt to drain the queue of fetch tasks.
+    update_fetch_data();
+    // After processing the queue, we've (hopefully) got better data, so pull
+    // the latest from the cache again and use that directly.
+    $available = _update_get_cached_available_releases();
   }
-  elseif ($needs_refresh || $refresh) {
-    // If we need to refresh due to a newer .info file, ignore the argument
-    // and force the refresh (e.g., even for update_requirements()) to prevent
-    // bogus results.
-    $available = update_refresh();
-  }
+
   return $available;
 }
 
 /**
+ * Wrapper to load the include file and then create a new fetch task.
+ *
+ * @see _update_create_fetch_task()
+ */
+function update_create_fetch_task($project) {
+  module_load_include('inc', 'update', 'update.fetch');
+  return _update_create_fetch_task($project);
+}
+
+/**
  * Wrapper to load the include file and then refresh the release data.
+ *
+ * @see _update_refresh();
  */
 function update_refresh() {
   module_load_include('inc', 'update', 'update.fetch');
   return _update_refresh();
+}
+
+/**
+ * Wrapper to load the include file and then attempt to fetch update data.
+ */
+function update_fetch_data() {
+  module_load_include('inc', 'update', 'update.fetch');
+  return _update_fetch_data();
+}
+
+/**
+ * Return all currently cached data about available releases for all projects.
+ *
+ * @return
+ *   Array of data about available releases, keyed by project shortname.
+ */
+function _update_get_cached_available_releases() {
+  $data = array();
+  $cache_items = _update_get_cache_multiple('available_releases');
+  foreach ($cache_items as $cid => $cache) {
+    $cache->data['last_fetch'] = $cache->created;
+    if ($cache->expire < REQUEST_TIME) {
+      $cache->data['fetch_status'] = UPDATE_FETCH_PENDING;
+    }
+    // The project shortname is embedded in the cache ID, even if there's no
+    // data for this project in the DB at all, so use that for the indexes in
+    // the array.
+    $parts = explode('::', $cid, 2);
+    $data[$parts[1]] = $cache->data;
+  }
+  return $data;
 }
 
 /**
@@ -503,6 +584,7 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
     case UPDATE_UNKNOWN:
     case UPDATE_NOT_CHECKED:
     case UPDATE_NOT_FETCHED:
+    case UPDATE_FETCH_PENDING:
       if ($msg_type == 'core') {
         $text = t('There was a problem determining the status of available updates for your version of Drupal.', array(), array('langcode' => $langcode));
       }
@@ -611,18 +693,52 @@ function _update_cache_get($cid) {
 }
 
 /**
+ * Return an array of cache items with a given cache ID prefix.
+ *
+ * @return
+ *   Associative array of cache items, keyed by cache ID.
+ */
+function _update_get_cache_multiple($cid_prefix) {
+  $data = array();
+  $result = db_select('cache_update')
+    ->fields('cache_update', array('cid', 'data', 'created', 'expire', 'serialized'))
+    ->condition('cache_update.cid', $cid_prefix . '::%', 'LIKE')
+    ->execute();
+  foreach ($result as $cache) {
+    if ($cache) {
+      if ($cache->serialized) {
+        $cache->data = unserialize($cache->data);
+      }
+      $data[$cache->cid] = $cache;
+    }
+  }
+  return $data;
+}
+
+/**
  * Invalidates cached data relating to update status.
  *
  * @param $cid
  *   Optional cache ID of the record to clear from the private update module
  *   cache. If empty, all records will be cleared from the table.
+ * @param $wildcard
+ *   If $wildcard is TRUE, cache IDs starting with $cid are deleted in
+ *   addition to the exact cache ID specified by $cid.
  */
-function _update_cache_clear($cid = NULL) {
-  $query = db_delete('cache_update');
-  if (!empty($cid)) {
-    $query->condition('cid', $cid);
+function _update_cache_clear($cid = NULL, $wildcard = FALSE) {
+  if (empty($cid)) {
+    db_truncate('cache_update')->execute();
   }
-  $query->execute();
+  else {
+    $query = db_delete('cache_update');
+    if ($wildcard) {
+      $query->condition('cid', $cid . '%', 'LIKE');
+    }
+    else {
+      $query->condition('cid', $cid);
+    }
+    $query->execute();
+  }
 }
 
 /**
