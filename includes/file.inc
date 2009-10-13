@@ -19,19 +19,19 @@ require_once DRUPAL_ROOT . '/includes/stream_wrappers.inc';
  * Common file handling functions.
  *
  * Fields on the file object:
- * - fid - File ID
- * - uid - The {users}.uid of the user who is associated with the file.
- * - filename - Name of the file with no path components. This may differ from
+ * - fid: File ID
+ * - uid: The {users}.uid of the user who is associated with the file.
+ * - filename: Name of the file with no path components. This may differ from
  *   the basename of the filepath if the file is renamed to avoid overwriting
  *   an existing file.
- * - uri - URI of the file.
- * - filemime - The file's MIME type.
- * - filesize - The size of the file in bytes.
- * - status - A bitmapped field indicating the status of the file. The first 8
+ * - uri: URI of the file.
+ * - filemime: The file's MIME type.
+ * - filesize: The size of the file in bytes.
+ * - status: A bitmapped field indicating the status of the file. The first 8
  *   bits are reserved for Drupal core. The least sigifigant bit indicates
  *   temporary (0) or permanent (1). Temporary files older than
  *   DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during cron runs.
- * - timestamp - UNIX timestamp for the date the file was added to the database.
+ * - timestamp: UNIX timestamp for the date the file was added to the database.
  */
 
 /**
@@ -436,6 +436,7 @@ function file_create_htaccess($directory, $private = TRUE) {
  * @param $conditions
  *   An array of conditions to match against the {files} table. These
  *   should be supplied in the form array('field_name' => 'field_value').
+ *
  * @return
  *  An array of file objects, indexed by fid.
  *
@@ -1063,7 +1064,13 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
  * @return
  *   An object containing the file information if the upload succeeded, FALSE
- *   in the event of an error, or NULL if no file was uploaded.
+ *   in the event of an error, or NULL if no file was uploaded. The
+ *   documentation for the "File interface" group, which you can find under
+ *   Related topics, or the header at the top of this file, documents the
+ *   components of a file object. In addition to the standard components,
+ *   this function adds:
+ *   - source: Path to the file before it is moved.
+ *   - destination: Path to the file after it is moved (same as 'uri').
  */
 function file_save_upload($source, $validators = array(), $destination = FALSE, $replace = FILE_EXISTS_RENAME) {
   global $user;
