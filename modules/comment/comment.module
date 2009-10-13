@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.783 2009/10/10 21:39:02 webchick Exp $
+// $Id: comment.module,v 1.784 2009/10/13 05:17:15 webchick Exp $
 
 /**
  * @file
@@ -1511,6 +1511,7 @@ class CommentController extends DrupalDefaultEntityController {
       $comment->node_type = 'comment_node_' . $comment->node_type;
       $comments[$key] = $comment;
     }
+    parent::attachLoad($comments);
   }
 }
 
