@@ -1442,9 +1442,9 @@ function install_finished(&$install_state) {
   // need to modify it via hook_system_info_alter(). We need to clear the
   // theme static cache first, to make sure that the theme data is actually
   // rebuilt.
-  drupal_static_reset('_system_get_theme_data');
-  system_get_module_data();
-  system_get_theme_data();
+  drupal_static_reset('_system_rebuild_theme_data');
+  system_rebuild_module_data();
+  system_rebuild_theme_data();
 
   // Rebuild menu and registry to get content type links registered by the
   // profile, and possibly any other menu items created through the tasks.
