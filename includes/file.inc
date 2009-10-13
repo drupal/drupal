@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.195 2009/10/13 15:46:03 dries Exp $
+// $Id: file.inc,v 1.196 2009/10/13 21:16:43 dries Exp $
 
 /**
  * @file
@@ -1527,7 +1527,7 @@ function file_transfer($uri, $headers) {
   else {
     drupal_not_found();
   }
-  exit();
+  drupal_exit();
 }
 
 /**

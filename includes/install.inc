@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.114 2009/10/13 05:26:57 webchick Exp $
+// $Id: install.inc,v 1.115 2009/10/13 21:16:43 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -925,7 +925,7 @@ function install_goto($path) {
   global $base_url;
   header('Location: ' . $base_url . '/' . $path);
   header('Cache-Control: no-cache'); // Not a permanent redirect.
-  exit();
+  drupal_exit();
 }
 
 /**

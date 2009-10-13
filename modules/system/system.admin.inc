@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.210 2009/10/13 05:26:57 webchick Exp $
+// $Id: system.admin.inc,v 1.211 2009/10/13 21:16:43 dries Exp $
 
 /**
  * @file
@@ -1922,7 +1922,7 @@ function system_run_cron() {
  */
 function system_php() {
   phpinfo();
-  exit();
+  drupal_exit();
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.808 2009/10/13 16:38:43 dries Exp $
+// $Id: system.module,v 1.809 2009/10/13 21:16:43 dries Exp $
 
 /**
  * @file
@@ -2888,7 +2888,7 @@ function system_run_cron_image() {
     }
   }
 
-  exit;
+  drupal_exit();
 }
 
 /**

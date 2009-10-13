@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.32 2009/09/30 18:36:01 dries Exp $
+// $Id: xmlrpcs.inc,v 1.33 2009/10/13 21:16:43 dries Exp $
 
 /**
  * The main entry point for XML-RPC requests.
@@ -109,7 +109,7 @@ function xmlrpc_server_output($xml) {
   drupal_add_http_header('Content-Length', strlen($xml));
   drupal_add_http_header('Content-Type', 'text/xml');
   echo $xml;
-  exit;
+  drupal_exit();
 }
 
 /**

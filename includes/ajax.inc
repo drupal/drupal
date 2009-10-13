@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.13 2009/10/05 02:16:32 webchick Exp $
+// $Id: ajax.inc,v 1.14 2009/10/13 21:16:42 dries Exp $
 
 /**
  * @file
@@ -162,7 +162,7 @@ function ajax_render($commands = array(), $header = TRUE) {
   else {
     print drupal_json_encode($commands);
   }
-  exit;
+  drupal_exit();
 }
 
 /**
@@ -207,7 +207,7 @@ function ajax_get_form() {
     // This is likely a hacking attempt as it never happens under normal
     // circumstances, so we just do nothing.
     watchdog('ajax', 'Invalid form POST data.', array(), WATCHDOG_WARNING);
-    exit;
+    drupal_exit();
   }
 
   // Since some of the submit handlers are run, redirects need to be disabled.

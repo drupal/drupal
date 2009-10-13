@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.20 2009/09/18 00:12:47 webchick Exp $
+// $Id: openid.inc,v 1.21 2009/10/13 21:16:43 dries Exp $
 
 /**
  * @file
@@ -62,10 +62,7 @@ function openid_redirect_http($url, $message) {
   $sep = (strpos($url, '?') === FALSE) ? '?' : '&';
   header('Location: ' . $url . $sep . implode('&', $query), TRUE, 302);
 
-  // Commit session data before redirecting.
-  drupal_session_commit();
-
-  exit;
+  drupal_exit();
 }
 
 /**
@@ -78,10 +75,7 @@ function openid_redirect($url, $message) {
   $output .= "</body></html>\n";
   print $output;
 
-  // Commit session data before redirecting.
-  drupal_session_commit();
-
-  exit;
+  drupal_exit();
 }
 
 function openid_redirect_form($form, &$form_state, $url, $message) {
