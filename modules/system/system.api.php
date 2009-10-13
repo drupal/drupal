@@ -2175,7 +2175,7 @@ function hook_registry_files_alter(&$files, $module_cache) {
  * @see install_state_defaults()
  * @see batch_set()
  */
-function hook_profile_tasks() {
+function hook_install_tasks() {
   // Here, we define a variable to allow tasks to indicate that a particular,
   // processor-intensive batch process needs to be triggered later on in the
   // installation.
@@ -2254,6 +2254,23 @@ function hook_profile_tasks() {
 function hook_drupal_goto_alter(array $args) {
   // A good addition to misery module.
   $args['http_response_code'] = 500;
+}
+
+/**
+ * Alter the full list of installation tasks.
+ *
+ * @param $tasks
+ *   An array of all available installation tasks, including those provided by
+ *   Drupal core. You can modify this array to change or replace any part of
+ *   the Drupal installation process that occurs after the installation profile
+ *   is selected.
+ * @param $install_state
+ *   An array of information about the current installation state. 
+ */
+function hook_install_tasks_alter(&$tasks, $install_state) {
+  // Replace the "Choose language" installation task provided by Drupal core
+  // with a custom callback function defined by this installation profile.
+  $tasks['install_select_locale']['function'] = 'myprofile_locale_selection';
 }
 
 /**

@@ -567,7 +567,7 @@ function install_tasks($install_state) {
 
   // Now add any tasks defined by the installation profile.
   if (!empty($install_state['parameters']['profile'])) {
-    $function = $install_state['parameters']['profile'] . '_profile_tasks';
+    $function = $install_state['parameters']['profile'] . '_install_tasks';
     if (function_exists($function)) {
       $result = $function($install_state);
       if (is_array($result)) {
@@ -588,6 +588,18 @@ function install_tasks($install_state) {
       'display_name' => st('Finished'),
     ),
   );
+
+  // Allow the installation profile to modify the full list of tasks.
+  if (!empty($install_state['parameters']['profile'])) {
+    $profile_file = DRUPAL_ROOT . '/profiles/' . $install_state['parameters']['profile'] . '/' . $install_state['parameters']['profile'] . '.profile';
+    if (is_file($profile_file)) {
+      include_once $profile_file;
+      $function = $install_state['parameters']['profile'] . '_install_tasks_alter';
+      if (function_exists($function)) {
+        $function($tasks, $install_state);
+      }
+    }
+  }
 
   // Fill in default parameters for each task before returning the list.
   foreach ($tasks as $task_name => &$task) {
