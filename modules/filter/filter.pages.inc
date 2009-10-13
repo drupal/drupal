@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.pages.inc,v 1.8 2009/10/09 00:59:58 dries Exp $
+// $Id: filter.pages.inc,v 1.9 2009/10/13 15:39:41 dries Exp $
 
 /**
  * @file
@@ -11,9 +11,9 @@
  * Menu callback; show a page with long filter tips.
  */
 function filter_tips_long() {
-  $format = arg(2);
-  if ($format) {
-    $output = theme('filter_tips', array('tips' => _filter_tips($format, TRUE), 'long' => TRUE));
+  $format_id = arg(2);
+  if ($format_id) {
+    $output = theme('filter_tips', array('tips' => _filter_tips($format_id, TRUE), 'long' => TRUE));
   }
   else {
     $output = theme('filter_tips', array('tips' => _filter_tips(-1, TRUE), 'long' => TRUE));
