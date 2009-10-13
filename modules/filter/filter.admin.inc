@@ -90,8 +90,8 @@ function theme_filter_admin_overview($variables) {
  */
 function filter_admin_format_page($format = NULL) {
   if (!isset($format->name)) {
-    drupal_set_title(t('Add text format'), PASS_THROUGH);
-    $format = (object)array('name' => '', 'format' => 0);
+    drupal_set_title(t('Add text format'));
+    $format = (object) array('name' => '', 'format' => 0);
   }
   return drupal_get_form('filter_admin_format_form', $format);
 }

@@ -11,9 +11,9 @@
  * Menu callback; show a page with long filter tips.
  */
 function filter_tips_long() {
-  $format = arg(2);
-  if ($format) {
-    $output = theme('filter_tips', array('tips' => _filter_tips($format, TRUE), 'long' => TRUE));
+  $format_id = arg(2);
+  if ($format_id) {
+    $output = theme('filter_tips', array('tips' => _filter_tips($format_id, TRUE), 'long' => TRUE));
   }
   else {
     $output = theme('filter_tips', array('tips' => _filter_tips(-1, TRUE), 'long' => TRUE));

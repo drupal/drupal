@@ -120,20 +120,20 @@ function filter_update_7000() {
  * Break out "escape HTML filter" option to its own filter.
  */
 function filter_update_7001() {
-  $result = db_query("SELECT format FROM {filter_formats}");
+  $result = db_query("SELECT format FROM {filter_formats}")->fetchCol();
   $insert = db_insert('filters')->fields(array('format', 'module', 'delta', 'weight'));
 
-  foreach ($result as $format) {
+  foreach ($result as $format_id) {
     // Deprecated constants FILTER_HTML_STRIP = 1 and FILTER_HTML_ESCAPE = 2.
-    if (variable_get('filter_html_' . $format->format, 1) == 2) {
-    	$insert->values(array(
-    	  'format' => $format->format,
-    	  'filter' => 'filter',
-    	  'delta' => 4,
-    	  'weight' => 0,
-    	));
+    if (variable_get('filter_html_' . $format_id, 1) == 2) {
+      $insert->values(array(
+        'format' => $format_id,
+        'filter' => 'filter',
+        'delta' => 4,
+        'weight' => 0,
+      ));
     }
-    variable_del('filter_html_' . $format->format);
+    variable_del('filter_html_' . $format_id);
   }
 
   $insert->execute();

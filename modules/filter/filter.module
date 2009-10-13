@@ -150,15 +150,15 @@ function _filter_delete_format_access($format) {
 /**
  * Load a text format object from the database.
  *
- * @param $format
+ * @param $format_id
  *   The format ID.
  *
  * @return
  *   A fully-populated text format object.
  */
-function filter_format_load($format) {
+function filter_format_load($format_id) {
   $formats = filter_formats();
-  return isset($formats[$format]) ? $formats[$format] : FALSE;
+  return isset($formats[$format_id]) ? $formats[$format_id] : FALSE;
 }
 
 /**
@@ -242,7 +242,7 @@ function filter_format_save(&$format) {
  * Delete a text format.
  *
  * @param $format
- *   The format to be deleted.
+ *   The text format object to be deleted.
  */
 function filter_format_delete($format) {
   db_delete('filter_format')
@@ -317,128 +317,6 @@ function filter_permission_name($format) {
 function filter_cron() {
   cache_clear_all(NULL, 'cache_filter');
 }
-
-/**
- * @name Tips callbacks for filters.
- * @{
- * Filters implemented by the filter.module.
- */
-function _filter_html_tips($filter, $format, $long = FALSE) {
-  global $base_url;
-  if ($allowed_html = $filter->settings['allowed_html']) {
-    if ($long) {
-      $output = '<p>' . t('Allowed HTML tags: @tags', array('@tags' => $allowed_html)) . '</p>';
-      if (!$filter->settings['filter_html_help']) {
-        return $output;
-      }
-
-      $output .= '<p>' . t('This site allows HTML content. While learning all of HTML may feel intimidating, learning how to use a very small number of the most basic HTML "tags" is very easy. This table provides examples for each tag that is enabled on this site.') . '</p>';
-      $output .= '<p>' . t('For more information see W3C\'s <a href="@html-specifications">HTML Specifications</a> or use your favorite search engine to find other sites that explain HTML.', array('@html-specifications' => 'http://www.w3.org/TR/html/')) . '</p>';
-      $tips = array(
-        'a' => array( t('Anchors are used to make links to other pages.'), '<a href="' . $base_url . '">' . variable_get('site_name', 'Drupal') . '</a>'),
-        'br' => array( t('By default line break tags are automatically added, so use this tag to add additional ones. Use of this tag is different because it is not used with an open/close pair like all the others. Use the extra " /" inside the tag to maintain XHTML 1.0 compatibility'), t('Text with <br />line break')),
-        'p' => array( t('By default paragraph tags are automatically added, so use this tag to add additional ones.'), '<p>' . t('Paragraph one.') . '</p> <p>' . t('Paragraph two.') . '</p>'),
-        'strong' => array( t('Strong'), '<strong>' . t('Strong') . '</strong>'),
-        'em' => array( t('Emphasized'), '<em>' . t('Emphasized') . '</em>'),
-        'cite' => array( t('Cited'), '<cite>' . t('Cited') . '</cite>'),
-        'code' => array( t('Coded text used to show programming source code'), '<code>' . t('Coded') . '</code>'),
-        'b' => array( t('Bolded'), '<b>' . t('Bolded') . '</b>'),
-        'u' => array( t('Underlined'), '<u>' . t('Underlined') . '</u>'),
-        'i' => array( t('Italicized'), '<i>' . t('Italicized') . '</i>'),
-        'sup' => array( t('Superscripted'), t('<sup>Super</sup>scripted')),
-        'sub' => array( t('Subscripted'), t('<sub>Sub</sub>scripted')),
-        'pre' => array( t('Preformatted'), '<pre>' . t('Preformatted') . '</pre>'),
-        'abbr' => array( t('Abbreviation'), t('<abbr title="Abbreviation">Abbrev.</abbr>')),
-        'acronym' => array( t('Acronym'), t('<acronym title="Three-Letter Acronym">TLA</acronym>')),
-        'blockquote' => array( t('Block quoted'), '<blockquote>' . t('Block quoted') . '</blockquote>'),
-        'q' => array( t('Quoted inline'), '<q>' . t('Quoted inline') . '</q>'),
-        // Assumes and describes tr, td, th.
-        'table' => array( t('Table'), '<table> <tr><th>' . t('Table header') . '</th></tr> <tr><td>' . t('Table cell') . '</td></tr> </table>'),
-        'tr' => NULL, 'td' => NULL, 'th' => NULL,
-        'del' => array( t('Deleted'), '<del>' . t('Deleted') . '</del>'),
-        'ins' => array( t('Inserted'), '<ins>' . t('Inserted') . '</ins>'),
-         // Assumes and describes li.
-        'ol' => array( t('Ordered list - use the &lt;li&gt; to begin each list item'), '<ol> <li>' . t('First item') . '</li> <li>' . t('Second item') . '</li> </ol>'),
-        'ul' => array( t('Unordered list - use the &lt;li&gt; to begin each list item'), '<ul> <li>' . t('First item') . '</li> <li>' . t('Second item') . '</li> </ul>'),
-        'li' => NULL,
-        // Assumes and describes dt and dd.
-        'dl' => array( t('Definition lists are similar to other HTML lists. &lt;dl&gt; begins the definition list, &lt;dt&gt; begins the definition term and &lt;dd&gt; begins the definition description.'), '<dl> <dt>' . t('First term') . '</dt> <dd>' . t('First definition') . '</dd> <dt>' . t('Second term') . '</dt> <dd>' . t('Second definition') . '</dd> </dl>'),
-        'dt' => NULL, 'dd' => NULL,
-        'h1' => array( t('Heading'), '<h1>' . t('Title') . '</h1>'),
-        'h2' => array( t('Heading'), '<h2>' . t('Subtitle') . '</h2>'),
-        'h3' => array( t('Heading'), '<h3>' . t('Subtitle three') . '</h3>'),
-        'h4' => array( t('Heading'), '<h4>' . t('Subtitle four') . '</h4>'),
-        'h5' => array( t('Heading'), '<h5>' . t('Subtitle five') . '</h5>'),
-        'h6' => array( t('Heading'), '<h6>' . t('Subtitle six') . '</h6>')
-      );
-      $header = array(t('Tag Description'), t('You Type'), t('You Get'));
-      preg_match_all('/<([a-z0-9]+)[^a-z0-9]/i', $allowed_html, $out);
-      foreach ($out[1] as $tag) {
-        if (array_key_exists($tag, $tips)) {
-          if ($tips[$tag]) {
-            $rows[] = array(
-              array('data' => $tips[$tag][0], 'class' => array('description')),
-              array('data' => '<code>' . check_plain($tips[$tag][1]) . '</code>', 'class' => array('type')),
-              array('data' => $tips[$tag][1], 'class' => array('get'))
-            );
-          }
-        }
-        else {
-          $rows[] = array(
-            array('data' => t('No help provided for tag %tag.', array('%tag' => $tag)), 'class' => array('description'), 'colspan' => 3),
-          );
-        }
-      }
-      $output .= theme('table', array('header' => $header, 'rows' => $rows));
-
-      $output .= '<p>' . t('Most unusual characters can be directly entered without any problems.') . '</p>';
-      $output .= '<p>' . t('If you do encounter problems, try using HTML character entities. A common example looks like &amp;amp; for an ampersand &amp; character. For a full list of entities see HTML\'s <a href="@html-entities">entities</a> page. Some of the available characters include:', array('@html-entities' => 'http://www.w3.org/TR/html4/sgml/entities.html')) . '</p>';
-
-      $entities = array(
-        array( t('Ampersand'), '&amp;'),
-        array( t('Greater than'), '&gt;'),
-        array( t('Less than'), '&lt;'),
-        array( t('Quotation mark'), '&quot;'),
-      );
-      $header = array(t('Character Description'), t('You Type'), t('You Get'));
-      unset($rows);
-      foreach ($entities as $entity) {
-        $rows[] = array(
-          array('data' => $entity[0], 'class' => array('description')),
-          array('data' => '<code>' . check_plain($entity[1]) . '</code>', 'class' => array('type')),
-          array('data' => $entity[1], 'class' => array('get'))
-        );
-      }
-      $output .= theme('table', array('header' => $header, 'rows' => $rows));
-      return $output;
-    }
-
-    else {
-      return t('Allowed HTML tags: @tags', array('@tags' => $allowed_html));
-    }
-  }
-}
-
-function _filter_autop_tips($filter, $format, $long = FALSE) {
-  if ($long) {
-    return t('Lines and paragraphs are automatically recognized. The &lt;br /&gt; line break, &lt;p&gt; paragraph and &lt;/p&gt; close paragraph tags are inserted automatically. If paragraphs are not recognized simply add a couple blank lines.');
-  }
-  else {
-    return t('Lines and paragraphs break automatically.');
-  }
-}
-
-function _filter_url_tips($filter, $format, $long = FALSE) {
-  return t('Web page addresses and e-mail addresses turn into links automatically.');
-}
-
-function _filter_html_escape_tips($filter, $format, $long = FALSE) {
-  return t('No HTML tags allowed.');
-}
-
-/**
- * @} End of "Tips callback for filters".
- */
 
 /**
  * Retrieve a list of text formats, ordered by weight.
@@ -612,40 +490,35 @@ function _filter_list_cmp($a, $b) {
 /**
  * Check if text in a certain text format is allowed to be cached.
  */
-function filter_format_allowcache($format) {
+function filter_format_allowcache($format_id) {
   static $cache = array();
-  if (!isset($cache[$format])) {
-    $cache[$format] = db_query('SELECT cache FROM {filter_format} WHERE format = :format', array(':format' => $format))->fetchField();
+  if (!isset($cache[$format_id])) {
+    $cache[$format_id] = db_query('SELECT cache FROM {filter_format} WHERE format = :format', array(':format' => $format_id))->fetchField();
   }
-  return $cache[$format];
+  return $cache[$format_id];
 }
 
 /**
  * Retrieve a list of filters for a given text format.
  *
- * @param $format
+ * @param $format_id
  *   The format ID.
- * @param $include_disabled
- *   (optional) Boolean whether to retrieve all filters associated with the
- *   given format, including those that are disabled. Defaults to FALSE.
+ *
  * @return
  *   An array of filter objects assosiated to the given format.
  */
-function filter_list_format($format, $include_disabled = FALSE) {
+function filter_list_format($format_id) {
   $filters = &drupal_static(__FUNCTION__, array());
   $filter_info = filter_get_filters();
 
-  if (!isset($filters[$format]) || $include_disabled) {
+  if (!isset($filters[$format_id])) {
     $format_filters = array();
     $query = db_select('filter', 'filter')
       ->fields('filter')
-      ->condition('format', $format)
+      ->condition('format', $format_id)
       ->orderBy('weight')
       ->orderBy('module')
       ->orderBy('name');
-    if (!$include_disabled) {
-      $query->condition('status', 1);
-    }
     $result = $query->execute()->fetchAllAssoc('name');
     foreach ($result as $name => $filter) {
       if (isset($filter_info[$name])) {
@@ -659,29 +532,25 @@ function filter_list_format($format, $include_disabled = FALSE) {
         $format_filters[$name] = $filter;
       }
     }
-    // Prevent statically caching of disabled filters.
-    if ($include_disabled) {
-      return $format_filters;
-    }
-    $filters[$format] = $format_filters;
+    $filters[$format_id] = $format_filters;
   }
 
-  return isset($filters[$format]) ? $filters[$format] : array();
+  return isset($filters[$format_id]) ? $filters[$format_id] : array();
 }
 
 /**
  * Run all the enabled filters on a piece of text.
  *
  * Note: Because filters can inject JavaScript or execute PHP code, security is
- * vital here. When a user supplies a $format, you should validate it using
- * filter_access($format) before accepting/using it. This is normally done in
- * the validation stage of the Form API. You should for example never make a
- * preview of content in a disallowed format.
+ * vital here. When a user supplies a text format, you should validate it using
+ * filter_access() before accepting/using it. This is normally done in the
+ * validation stage of the Form API. You should for example never make a preview
+ * of content in a disallowed format.
  *
  * @param $text
  *   The text to be filtered.
- * @param $format
- *   The format of the text to be filtered. If no format is assigned, the
+ * @param $format_id
+ *   The format id of the text to be filtered. If no format is assigned, the
  *   fallback format will be used.
  * @param $langcode
  *   Optional: the language code of the text to be filtered, e.g. 'en' for
@@ -692,16 +561,17 @@ function filter_list_format($format, $include_disabled = FALSE) {
  *   The caller may set this to FALSE when the output is already cached
  *   elsewhere to avoid duplicate cache lookups and storage.
  */
-function check_markup($text, $format = NULL, $langcode = '', $cache = FALSE) {
-  if (empty($format)) {
-    $format = filter_fallback_format();
+function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) {
+  if (empty($format_id)) {
+    $format_id = filter_fallback_format();
   }
-  $cache = $cache && filter_format_allowcache($format);
-  $cache_id = '';
+  $format = filter_format_load($format_id);
 
   // Check for a cached version of this piece of text.
+  $cache = $cache && filter_format_allowcache($format->format);
+  $cache_id = '';
   if ($cache) {
-    $cache_id = $format . ':' . $langcode . ':' . md5($text);
+    $cache_id = $format->format . ':' . $langcode . ':' . md5($text);
     if ($cached = cache_get($cache_id, 'cache_filter')) {
       return $cached->data;
     }
@@ -712,20 +582,22 @@ function check_markup($text, $format = NULL, $langcode = '', $cache = FALSE) {
   $text = str_replace(array("\r\n", "\r"), "\n", $text);
 
   // Get a complete list of filters, ordered properly.
-  $filters = filter_list_format($format);
+  $filters = filter_list_format($format->format);
   $filter_info = filter_get_filters();
 
   // Give filters the chance to escape HTML-like data such as code or formulas.
   foreach ($filters as $name => $filter) {
-    if (isset($filter_info[$name]['prepare callback']) && function_exists($filter_info[$name]['prepare callback'])) {
-      $text = $filter_info[$name]['prepare callback']($text, $filter, $format, $langcode, $cache, $cache_id);
+    if ($filter->status && isset($filter_info[$name]['prepare callback']) && function_exists($filter_info[$name]['prepare callback'])) {
+      $function = $filter_info[$name]['prepare callback'];
+      $text = $function($text, $filter, $format, $langcode, $cache, $cache_id);
     }
   }
 
   // Perform filtering.
   foreach ($filters as $name => $filter) {
-    if (isset($filter_info[$name]['process callback']) && function_exists($filter_info[$name]['process callback'])) {
-      $text = $filter_info[$name]['process callback']($text, $filter, $format, $langcode, $cache, $cache_id);
+    if ($filter->status && isset($filter_info[$name]['process callback']) && function_exists($filter_info[$name]['process callback'])) {
+      $function = $filter_info[$name]['process callback'];
+      $text = $function($text, $filter, $format, $langcode, $cache, $cache_id);
     }
   }
 
@@ -832,7 +704,7 @@ function filter_access($format, $account = NULL) {
 /**
  * Helper function for fetching filter tips.
  */
-function _filter_tips($format, $long = FALSE) {
+function _filter_tips($format_id, $long = FALSE) {
   global $user;
 
   $formats = filter_formats($user);
@@ -841,8 +713,8 @@ function _filter_tips($format, $long = FALSE) {
   $tips = array();
 
   // If only listing one format, extract it from the $formats array.
-  if ($format != -1) {
-    $formats = array($formats[$format]);
+  if ($format_id != -1) {
+    $formats = array($formats[$format_id]);
   }
 
   foreach ($formats as $format) {
@@ -915,6 +787,10 @@ function theme_filter_tips_more_info() {
 
 /**
  * Format guidelines for a text format.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - format: An object representing a text format.
  *
  * @ingroup themeable
  */
@@ -1024,6 +900,106 @@ function _filter_html($text, $filter) {
 }
 
 /**
+ * Filter tips callback for HTML filter.
+ */
+function _filter_html_tips($filter, $format, $long = FALSE) {
+  global $base_url;
+
+  if (!($allowed_html = $filter->settings['allowed_html'])) {
+    return;
+  }
+  $output = t('Allowed HTML tags: @tags', array('@tags' => $allowed_html));
+  if (!$long) {
+    return $output;
+  }
+
+  $output = '<p>' . $output . '</p>';
+  if (!$filter->settings['filter_html_help']) {
+    return $output;
+  }
+
+  $output .= '<p>' . t('This site allows HTML content. While learning all of HTML may feel intimidating, learning how to use a very small number of the most basic HTML "tags" is very easy. This table provides examples for each tag that is enabled on this site.') . '</p>';
+  $output .= '<p>' . t('For more information see W3C\'s <a href="@html-specifications">HTML Specifications</a> or use your favorite search engine to find other sites that explain HTML.', array('@html-specifications' => 'http://www.w3.org/TR/html/')) . '</p>';
+  $tips = array(
+    'a' => array(t('Anchors are used to make links to other pages.'), '<a href="' . $base_url . '">' . variable_get('site_name', 'Drupal') . '</a>'),
+    'br' => array(t('By default line break tags are automatically added, so use this tag to add additional ones. Use of this tag is different because it is not used with an open/close pair like all the others. Use the extra " /" inside the tag to maintain XHTML 1.0 compatibility'), t('Text with <br />line break')),
+    'p' => array(t('By default paragraph tags are automatically added, so use this tag to add additional ones.'), '<p>' . t('Paragraph one.') . '</p> <p>' . t('Paragraph two.') . '</p>'),
+    'strong' => array(t('Strong'), '<strong>' . t('Strong') . '</strong>'),
+    'em' => array(t('Emphasized'), '<em>' . t('Emphasized') . '</em>'),
+    'cite' => array(t('Cited'), '<cite>' . t('Cited') . '</cite>'),
+    'code' => array(t('Coded text used to show programming source code'), '<code>' . t('Coded') . '</code>'),
+    'b' => array(t('Bolded'), '<b>' . t('Bolded') . '</b>'),
+    'u' => array(t('Underlined'), '<u>' . t('Underlined') . '</u>'),
+    'i' => array(t('Italicized'), '<i>' . t('Italicized') . '</i>'),
+    'sup' => array(t('Superscripted'), t('<sup>Super</sup>scripted')),
+    'sub' => array(t('Subscripted'), t('<sub>Sub</sub>scripted')),
+    'pre' => array(t('Preformatted'), '<pre>' . t('Preformatted') . '</pre>'),
+    'abbr' => array(t('Abbreviation'), t('<abbr title="Abbreviation">Abbrev.</abbr>')),
+    'acronym' => array(t('Acronym'), t('<acronym title="Three-Letter Acronym">TLA</acronym>')),
+    'blockquote' => array(t('Block quoted'), '<blockquote>' . t('Block quoted') . '</blockquote>'),
+    'q' => array(t('Quoted inline'), '<q>' . t('Quoted inline') . '</q>'),
+    // Assumes and describes tr, td, th.
+    'table' => array(t('Table'), '<table> <tr><th>' . t('Table header') . '</th></tr> <tr><td>' . t('Table cell') . '</td></tr> </table>'),
+    'tr' => NULL, 'td' => NULL, 'th' => NULL,
+    'del' => array(t('Deleted'), '<del>' . t('Deleted') . '</del>'),
+    'ins' => array(t('Inserted'), '<ins>' . t('Inserted') . '</ins>'),
+     // Assumes and describes li.
+    'ol' => array(t('Ordered list - use the &lt;li&gt; to begin each list item'), '<ol> <li>' . t('First item') . '</li> <li>' . t('Second item') . '</li> </ol>'),
+    'ul' => array(t('Unordered list - use the &lt;li&gt; to begin each list item'), '<ul> <li>' . t('First item') . '</li> <li>' . t('Second item') . '</li> </ul>'),
+    'li' => NULL,
+    // Assumes and describes dt and dd.
+    'dl' => array(t('Definition lists are similar to other HTML lists. &lt;dl&gt; begins the definition list, &lt;dt&gt; begins the definition term and &lt;dd&gt; begins the definition description.'), '<dl> <dt>' . t('First term') . '</dt> <dd>' . t('First definition') . '</dd> <dt>' . t('Second term') . '</dt> <dd>' . t('Second definition') . '</dd> </dl>'),
+    'dt' => NULL, 'dd' => NULL,
+    'h1' => array(t('Heading'), '<h1>' . t('Title') . '</h1>'),
+    'h2' => array(t('Heading'), '<h2>' . t('Subtitle') . '</h2>'),
+    'h3' => array(t('Heading'), '<h3>' . t('Subtitle three') . '</h3>'),
+    'h4' => array(t('Heading'), '<h4>' . t('Subtitle four') . '</h4>'),
+    'h5' => array(t('Heading'), '<h5>' . t('Subtitle five') . '</h5>'),
+    'h6' => array(t('Heading'), '<h6>' . t('Subtitle six') . '</h6>')
+  );
+  $header = array(t('Tag Description'), t('You Type'), t('You Get'));
+  preg_match_all('/<([a-z0-9]+)[^a-z0-9]/i', $allowed_html, $out);
+  foreach ($out[1] as $tag) {
+    if (array_key_exists($tag, $tips)) {
+      if ($tips[$tag]) {
+        $rows[] = array(
+          array('data' => $tips[$tag][0], 'class' => array('description')),
+          array('data' => '<code>' . check_plain($tips[$tag][1]) . '</code>', 'class' => array('type')),
+          array('data' => $tips[$tag][1], 'class' => array('get'))
+        );
+      }
+    }
+    else {
+      $rows[] = array(
+        array('data' => t('No help provided for tag %tag.', array('%tag' => $tag)), 'class' => array('description'), 'colspan' => 3),
+      );
+    }
+  }
+  $output .= theme('table', array('header' => $header, 'rows' => $rows));
+
+  $output .= '<p>' . t('Most unusual characters can be directly entered without any problems.') . '</p>';
+  $output .= '<p>' . t('If you do encounter problems, try using HTML character entities. A common example looks like &amp;amp; for an ampersand &amp; character. For a full list of entities see HTML\'s <a href="@html-entities">entities</a> page. Some of the available characters include:', array('@html-entities' => 'http://www.w3.org/TR/html4/sgml/entities.html')) . '</p>';
+
+  $entities = array(
+    array(t('Ampersand'), '&amp;'),
+    array(t('Greater than'), '&gt;'),
+    array(t('Less than'), '&lt;'),
+    array(t('Quotation mark'), '&quot;'),
+  );
+  $header = array(t('Character Description'), t('You Type'), t('You Get'));
+  unset($rows);
+  foreach ($entities as $entity) {
+    $rows[] = array(
+      array('data' => $entity[0], 'class' => array('description')),
+      array('data' => '<code>' . check_plain($entity[1]) . '</code>', 'class' => array('type')),
+      array('data' => $entity[1], 'class' => array('get'))
+    );
+  }
+  $output .= theme('table', array('header' => $header, 'rows' => $rows));
+  return $output;
+}
+
+/**
  * Settings callback for URL filter.
  */
 function _filter_url_settings($form, &$form_state, $filter, $defaults) {
@@ -1061,13 +1037,6 @@ function _filter_url($text, $filter) {
 }
 
 /**
- * Scan input and make sure that all HTML tags are properly closed and nested.
- */
-function _filter_htmlcorrector($text) {
-  return filter_dom_serialize(filter_dom_load($text));
-}
-
-/**
  * Make links out of absolute URLs.
  */
 function _filter_url_parse_full_links($match) {
@@ -1102,6 +1071,20 @@ function _filter_url_trim($text, $length = NULL) {
   }
 
   return $text;
+}
+
+/**
+ * Filter tips callback for URL filter.
+ */
+function _filter_url_tips($filter, $format, $long = FALSE) {
+  return t('Web page addresses and e-mail addresses turn into links automatically.');
+}
+
+/**
+ * Scan input and make sure that all HTML tags are properly closed and nested.
+ */
+function _filter_htmlcorrector($text) {
+  return filter_dom_serialize(filter_dom_load($text));
 }
 
 /**
@@ -1164,10 +1147,29 @@ function _filter_autop($text) {
 }
 
 /**
+ * Filter tips callback for auto-paragraph filter.
+ */
+function _filter_autop_tips($filter, $format, $long = FALSE) {
+  if ($long) {
+    return t('Lines and paragraphs are automatically recognized. The &lt;br /&gt; line break, &lt;p&gt; paragraph and &lt;/p&gt; close paragraph tags are inserted automatically. If paragraphs are not recognized simply add a couple blank lines.');
+  }
+  else {
+    return t('Lines and paragraphs break automatically.');
+  }
+}
+
+/**
  * Escapes all HTML tags, so they will be visible instead of being effective.
  */
 function _filter_html_escape($text) {
   return trim(check_plain($text));
+}
+
+/**
+ * Filter tips callback for HTML escaping filter.
+ */
+function _filter_html_escape_tips($filter, $format, $long = FALSE) {
+  return t('No HTML tags allowed.');
 }
 
 /**

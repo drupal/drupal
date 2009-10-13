@@ -165,7 +165,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save configuration'));
 
     // Edit text format.
-    $format = $this->getFilter($edit['name']);
+    $format = $this->getFormat($edit['name']);
     $this->drupalGet('admin/config/content/formats');
     $this->assertRaw('admin/config/content/formats/' . $format->format);
     $this->drupalGet('admin/config/content/formats/' . $format->format);
@@ -240,7 +240,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), t('New filter created.'));
 
-    $format = $this->getFilter($edit['name']);
+    $format = $this->getFormat($edit['name']);
     $this->assertNotNull($format, t('Format found in database.'));
 
     if ($format !== NULL) {
@@ -347,14 +347,14 @@ class FilterAdminTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get filter by name.
+   * Retrieve a text format object by name.
    *
    * @param $name
-   *   Name of filter to find.
+   *   The name of a text format.
    * @return
-   *   A filter object.
+   *   A text format object.
    */
-  function getFilter($name) {
+  function getFormat($name) {
     return db_query("SELECT * FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchObject();
   }
 }
@@ -540,7 +540,7 @@ class FilterNoFormatTestCase extends DrupalWebTestCase {
 /**
  * Unit tests for core filters.
  */
-class FilterUnitTestCase extends DrupalWebTestCase {
+class FilterUnitTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Core filters',
@@ -1148,12 +1148,12 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Added text format %format.', array('%format' => $name)), t('New format created.'));
     $this->assertText('hook_filter_format_insert invoked.', t('hook_filter_format_insert was invoked.'));
 
-    $format = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchField();
+    $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchField();
 
     // Update text format.
     $edit = array();
     $edit['roles[2]'] = 1;
-    $this->drupalPost('admin/config/content/formats/' . $format, $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $format_id, $edit, t('Save configuration'));
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $name)), t('Format successfully updated.'));
     $this->assertText('hook_filter_format_update invoked.', t('hook_filter_format_update() was invoked.'));
 
@@ -1163,7 +1163,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $custom_block['title'] = $this->randomName(8);
     $custom_block['body'] = $this->randomName(32);
     // Use the format created.
-    $custom_block['body_format'] = $format;
+    $custom_block['body_format'] = $format_id;
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
     $this->assertText(t('The block has been created.'), t('New block successfully created.'));
 
@@ -1172,7 +1172,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $this->assertNotNull($bid, t('New block found in database'));
 
     // Delete the text format.
-    $this->drupalPost('admin/config/content/formats/' . $format . '/delete', array(), t('Delete'));
+    $this->drupalPost('admin/config/content/formats/' . $format_id . '/delete', array(), t('Delete'));
     $this->assertRaw(t('Deleted text format %format.', array('%format' => $name)), t('Format successfully deleted.'));
     $this->assertText('hook_filter_format_delete invoked.', t('hook_filter_format_delete() was invoked.'));
 
