@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.213 2009/10/12 02:00:04 webchick Exp $
+// $Id: install.php,v 1.214 2009/10/13 05:26:57 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1296,7 +1296,7 @@ function install_bootstrap_full(&$install_state) {
  */
 function install_profile_modules(&$install_state) {
   $modules = variable_get('install_profile_modules', array());
-  $files = system_get_module_data();
+  $files = system_rebuild_module_data();
   variable_del('install_profile_modules');
   $operations = array();
   foreach ($modules as $module) {

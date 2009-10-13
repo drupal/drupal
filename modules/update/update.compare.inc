@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.34 2009/10/13 02:14:05 dries Exp $
+// $Id: update.compare.inc,v 1.35 2009/10/13 05:26:57 webchick Exp $
 
 /**
  * @file
@@ -36,8 +36,8 @@ function update_get_projects() {
     $projects = update_project_cache('update_project_projects');
     if (empty($projects)) {
       // Still empty, so we have to rebuild the cache.
-      $module_data = system_get_module_data();
-      $theme_data = system_get_theme_data();
+      $module_data = system_rebuild_module_data();
+      $theme_data = system_rebuild_theme_data();
       _update_process_info_list($projects, $module_data, 'module', TRUE);
       _update_process_info_list($projects, $theme_data, 'theme', TRUE);
       if (variable_get('update_check_disabled', FALSE)) {

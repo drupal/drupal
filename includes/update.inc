@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.12 2009/10/03 20:17:46 dries Exp $
+// $Id: update.inc,v 1.13 2009/10/13 05:26:57 webchick Exp $
 
 /**
  * @file
@@ -37,8 +37,8 @@ function update_check_incompatibility($name, $type = 'module') {
 
   // Store values of expensive functions for future use.
   if (empty($themes) || empty($modules)) {
-    $themes = _system_get_theme_data();
-    $modules = system_get_module_data();
+    $themes = _system_rebuild_theme_data();
+    $modules = system_rebuild_module_data();
   }
 
   if ($type == 'module' && isset($modules[$name])) {

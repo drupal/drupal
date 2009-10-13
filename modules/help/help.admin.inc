@@ -1,5 +1,5 @@
 <?php
-// $Id: help.admin.inc,v 1.10 2009/10/09 00:59:59 dries Exp $
+// $Id: help.admin.inc,v 1.11 2009/10/13 05:26:57 webchick Exp $
 
 /**
  * @file
@@ -47,7 +47,7 @@ function help_page($name) {
 
 function help_links_as_list() {
   $empty_arg = drupal_help_arg();
-  $module_info = system_get_module_data();
+  $module_info = system_rebuild_module_data();
 
   $modules = array();
   foreach (module_implements('help', TRUE) as $module) {

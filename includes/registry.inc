@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.24 2009/08/24 00:14:18 webchick Exp $
+// $Id: registry.inc,v 1.25 2009/10/13 05:26:57 webchick Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function _registry_rebuild() {
   require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/query.inc';
 
   // Get current list of modules and their files.
-  $modules = system_get_module_data();
+  $modules = system_rebuild_module_data();
   // Get the list of files we are going to parse.
   $files = array();
   foreach ($modules as &$module) {
