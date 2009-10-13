@@ -259,7 +259,7 @@ function hook_element_info_alter(&$type) {
  * Perform cleanup tasks.
  *
  * This hook is run at the end of each page request. It is often used for
- * page logging and printing out debugging information.
+ * page logging and specialized cleanup. This hook MUST NOT print anything.
  *
  * Only use this hook if your code must run even for cached page views.
  * If you have code which must run once on all non cached pages, use
@@ -271,9 +271,6 @@ function hook_element_info_alter(&$type) {
  * @param $destination
  *   If this hook is invoked as part of a drupal_goto() call, then this argument
  *   will be a fully-qualified URL that is the destination of the redirect.
- *   Modules may use this to react appropriately; for example, nothing should
- *   be output in this case, because PHP will then throw a "headers cannot be
- *   modified" error when attempting the redirection.
  */
 function hook_exit($destination = NULL) {
   db_update('counter')

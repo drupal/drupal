@@ -2888,7 +2888,7 @@ function system_run_cron_image() {
     }
   }
 
-  exit;
+  drupal_exit();
 }
 
 /**

@@ -109,7 +109,7 @@ function xmlrpc_server_output($xml) {
   drupal_add_http_header('Content-Length', strlen($xml));
   drupal_add_http_header('Content-Type', 'text/xml');
   echo $xml;
-  exit;
+  drupal_exit();
 }
 
 /**

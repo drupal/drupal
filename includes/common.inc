@@ -656,22 +656,12 @@ function drupal_goto($path = '', array $query = array(), $fragment = NULL, $http
 
   $url = url($path, array('query' => $query, 'fragment' => $fragment, 'absolute' => TRUE));
 
-  // Allow modules to react to the end of the page request before redirecting.
-  // We do not want this while running update.php.
-  if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
-    module_invoke_all('exit', $url);
-  }
-
-  // Commit the session, if necessary. We need all session data written to the
-  // database before redirecting.
-  drupal_session_commit();
-
   header('Location: ' . $url, TRUE, $http_response_code);
 
   // The "Location" header sends a redirect status code to the HTTP daemon. In
   // some cases this can be wrong, so we make sure none of the code below the
   // drupal_goto() call gets executed upon redirection.
-  exit();
+  drupal_exit($url);
 }
 
 /**
@@ -2625,6 +2615,28 @@ function drupal_page_footer() {
   _registry_check_code(REGISTRY_WRITE_LOOKUP_CACHE);
   drupal_cache_system_paths();
   module_implements_write_cache();
+}
+
+/**
+ * Perform end-of-request tasks.
+ *
+ * In some cases page requests need to end without calling drupal_page_footer().
+ * In these cases, call drupal_exit() instead. There should rarely be a reason
+ * to call exit instead of drupal_exit();
+ *
+ * @param $destination
+ *   If this function is called from drupal_goto(), then this argument
+ *   will be a fully-qualified URL that is the destination of the redirect.
+ *   This should be passed along to hook_exit() implementations.
+ */
+function drupal_exit($destination = NULL) {
+  if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+    if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
+      module_invoke_all('exit', $destination);
+    }
+    drupal_session_commit();
+  }
+  exit;
 }
 
 /**

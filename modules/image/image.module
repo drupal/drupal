@@ -484,7 +484,7 @@ function image_style_generate() {
   // image_style_url().
   if (!$style || !cache_get('access:' . $style_name . ':' . $path_md5, 'cache_image')) {
     drupal_access_denied();
-    exit();
+    drupal_exit();
   }
 
   // Don't start generating the image if the derivate already exists or if
@@ -498,7 +498,7 @@ function image_style_generate() {
       drupal_add_http_header('503 Service Unavailable');
       drupal_add_http_header('Retry-After', 3);
       print t('Image generation in progress, please try again shortly.');
-      exit();
+      drupal_exit();
     }
   }
 
@@ -518,7 +518,7 @@ function image_style_generate() {
     watchdog('image', 'Unable to generate the derived image located at %path.', $destination);
     drupal_add_http_header('500 Internal Server Error');
     print t('Error generating image.');
-    exit();
+    drupal_exit();
   }
 }
 

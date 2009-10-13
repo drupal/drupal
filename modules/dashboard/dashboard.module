@@ -242,7 +242,7 @@ function dashboard_show_disabled() {
 
   // Theme the output and end the page request.
   print theme('dashboard_disabled_blocks', array('blocks' => $blocks));
-  exit();
+  drupal_exit();
 }
 
 /**
@@ -270,7 +270,7 @@ function dashboard_show_block_content($module, $delta) {
   $build = _block_get_renderable_array($block_content);
   $rendered_block = drupal_render($build);
   print $rendered_block;
-  exit;
+  drupal_exit();
 }
 
 /**
@@ -318,7 +318,7 @@ function dashboard_update() {
       }
     }
   }
-  exit;
+  drupal_exit();
 }
 
 /**

@@ -925,7 +925,7 @@ function install_goto($path) {
   global $base_url;
   header('Location: ' . $base_url . '/' . $path);
   header('Cache-Control: no-cache'); // Not a permanent redirect.
-  exit();
+  drupal_exit();
 }
 
 /**

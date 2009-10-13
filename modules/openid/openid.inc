@@ -62,10 +62,7 @@ function openid_redirect_http($url, $message) {
   $sep = (strpos($url, '?') === FALSE) ? '?' : '&';
   header('Location: ' . $url . $sep . implode('&', $query), TRUE, 302);
 
-  // Commit session data before redirecting.
-  drupal_session_commit();
-
-  exit;
+  drupal_exit();
 }
 
 /**
@@ -78,10 +75,7 @@ function openid_redirect($url, $message) {
   $output .= "</body></html>\n";
   print $output;
 
-  // Commit session data before redirecting.
-  drupal_session_commit();
-
-  exit;
+  drupal_exit();
 }
 
 function openid_redirect_form($form, &$form_state, $url, $message) {

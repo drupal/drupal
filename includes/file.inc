@@ -1527,7 +1527,7 @@ function file_transfer($uri, $headers) {
   else {
     drupal_not_found();
   }
-  exit();
+  drupal_exit();
 }
 
 /**
