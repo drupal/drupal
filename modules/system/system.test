@@ -386,9 +386,6 @@ class CronRunTestCase extends DrupalWebTestCase {
     $key = variable_get('cron_key', 'drupal');
     $this->drupalGet($base_url . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => $key)));
     $this->assertResponse(200);
-
-    // Execute cron directly.
-    $this->assertTrue(drupal_cron_run(), t('Cron ran successfully.'));
   }
 
   /**
@@ -475,7 +472,7 @@ class CronRunTestCase extends DrupalWebTestCase {
     $this->assertTrue(file_exists($perm_new->uri), t('New permanent file was created correctly.'));
 
     // Run cron and then ensure that only the old, temp file was deleted.
-    $this->assertTrue(drupal_cron_run(), t('Cron ran successfully.'));
+    $this->cronRun();
     $this->assertFalse(file_exists($temp_old->uri), t('Old temp file was correctly removed.'));
     $this->assertTrue(file_exists($temp_new->uri), t('New temp file was correctly ignored.'));
     $this->assertTrue(file_exists($perm_old->uri), t('Old permanent file was correctly ignored.'));

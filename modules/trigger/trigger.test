@@ -165,7 +165,7 @@ class TriggerCronTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/trigger/system', $edit, t('Assign'));
 
     // Force a cron run.
-    drupal_cron_run();
+    $this->cronRun();
 
     // Make sure the non-configurable action has fired.
     $action_run = variable_get('trigger_test_system_cron_action', FALSE);

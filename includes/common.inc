@@ -4098,9 +4098,12 @@ function drupal_page_set_cache() {
 }
 
 /**
- * Executes a cron run when called
+ * Executes a cron run when called.
+ *
+ * Do not call this function from test, use $this->cronRun() instead.
+ *
  * @return
- * Returns TRUE if ran successfully
+ *   Returns TRUE if ran successfully
  */
 function drupal_cron_run() {
   // Allow execution to continue even if the request gets canceled.

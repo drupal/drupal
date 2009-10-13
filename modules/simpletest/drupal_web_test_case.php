@@ -1500,6 +1500,13 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
+   * Runs cron in the Drupal installed by Simpletest.
+   */
+  protected function cronRun() {
+    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))));
+  }
+
+  /**
    * Check for meta refresh tag and if found call drupalGet() recursively. This
    * function looks for the http-equiv attribute to be set to "Refresh"
    * and is case-sensitive.
