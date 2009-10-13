@@ -2377,5 +2377,109 @@ function hook_action_info_alter(&$actions) {
 }
 
 /**
+ * Defines additional date types.
+ *
+ * Next to the 'long', 'medium' and 'short' date types defined in core, any
+ * module can define additional types that can be used when displaying dates. A
+ * date type is a key which can be passed to format_date() to return a date in
+ * the configured display format.
+ *
+ * To avoid namespace collisions with date types defined by other modules, it is
+ * recommended that each date type starts with the module name. A date type
+ * can consist of letters, numbers and underscores.
+ *
+ * @see hook_date_formats()
+ * @see format_date()
+ *
+ * @return
+ *   A list of date types in 'key' => 'label' format.
+ */
+function hook_date_format_types() {
+  return array(
+    'long' => t('Long'),
+    'medium' => t('Medium'),
+    'short' => t('Short'),
+  );
+}
+
+/**
+ * Defines additional date formats.
+ *
+ * Next to the 'long', 'medium' and 'short' date types defined in core, any
+ * module can define additional types that can be used when displaying dates. A
+ * date type is a key which can be passed to format_date() to return a date in
+ * the configured displayed format. A date format is a string defining the date
+ * and time elements to use. For example, a date type could be 
+ * 'mymodule_extra_long', while a date format is like 'Y-m-d'.
+ *
+ * New date types must first be declared using hook_date_format_types(). It is
+ * then possible to define one or more date formats for each.
+ *
+ * A module may also extend the list date formats defined for a date type
+ * provided by another module.
+ *
+ * There may be more than one format for the same locale. For example d/m/Y and
+ * Y/m/d work equally well in some locales. It may also be necessary to define
+ * multiple versions of the same date format, for example, one using AM, one
+ * with PM and one without the time at all.
+ *
+ * However at the same time you may wish to define some additional date formats
+ * that aren't specific to any one locale, for example, "Y m". For these cases
+ * the locales field should be omitted.
+ *
+ * @see hook_date_format_types()
+ *
+ * @return
+ *   A list of date formats. Each date format is a keyed array
+ *   consisting of three elements:
+ *   - 'type': the date type is a key used to identify which date format to
+ *     display. It consists of letters, numbers and underscores, e.g. 'long',
+ *     'short', 'mymodule_extra_long'. It must first be declared in
+ *     hook_date_format_types() unless extending a type provided by another
+ *     module.
+ *   - 'format': a string defining the date and time elements to use. It 
+ *     can contain any of the formatting options described at
+ *     http://php.net/manual/en/function.date.php
+ *   - 'locales': (optional) an array of 2 and 5 character language codes, for
+ *     example, 'en', 'en-us'. The language codes are used to determine which
+ *     date format to display for the user's current language. If more than one
+ *     date format is suggested for the same date type and locale, then the
+ *     first one will be used unless overridden via
+ *     admin/config/regional/date-time/locale. If your date format is not
+ *     language specific, leave this field empty.
+ */
+function hook_date_formats() {
+  return array(
+    array(
+      'type' => 'mymodule_extra_long',
+      'format' => 'l jS F Y H:i:s e',
+      'locales' => array('en-ie'),
+    ),
+    array(
+      'type' => 'mymodule_extra_long',
+      'format' => 'l jS F Y h:i:sa',
+      'locales' => array('en', 'en-us'),
+    ),
+    array(
+      'type' => 'short',
+      'format' => 'F Y',
+      'locales' => array(),
+    ),
+  );
+}
+
+/**
+ * Alters date types and formats declared by another module.
+ *
+ * Called by _system_date_format_types_build() to allow modules to alter the
+ * return values from implementations of hook_date_formats().
+ */
+function hook_date_formats_alter(&$formats) {
+  foreach ($formats as $id => $format) {
+    $formats[$id]['locales'][] = 'en-ca';
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

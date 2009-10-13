@@ -718,6 +718,15 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp();
+
+    // Create admin user and log in admin user.
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+
   /**
    * Test time zones and DST handling.
    */
@@ -747,6 +756,77 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
     $this->assertText('2007-01-31 23:00:00 -0800', t('Date should be two hours ahead, with GMT offset of -8 hours.'));
     $this->drupalGet("node/$node2->nid");
     $this->assertText('2007-08-01 00:00:00 -0700', t('Date should be three hours ahead, with GMT offset of -7 hours.'));
+  }
+
+  /**
+   * Test date type configuration.
+   */
+  function testDateTypeConfiguration() {
+    // Confirm system date types appear.
+    $this->drupalGet('admin/config/regional/date-time');
+    $this->assertText(t('Medium'), 'System date types appear in date type list.');
+    $this->assertNoRaw('href="/admin/config/regional/date-time/types/medium/delete"', 'No delete link appear for system date types.');
+
+    // Add custom date type.
+    $this->clickLink(t('Add date type'));
+    $date_type = $this->randomName(8);
+    $machine_name = 'machine_' . $date_type;
+    $date_format = 'd.m.Y - H:i';
+    $edit = array(
+      'date_type' => $date_type,
+      'machine_name' => $machine_name,
+      'date_format' => $date_format,
+    );
+    $this->drupalPost('admin/config/regional/date-time/types/add', $edit, t('Add date type'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time', array('absolute' => TRUE)), t('Correct page redirection.'));
+    $this->assertText(t('New date type added successfully.'), 'Date type added confirmation message appears.');
+    $this->assertText($date_type, 'Custom date type appears in the date type list.');
+    $this->assertText(t('delete'), 'Delete link for custom date type appears.');
+
+    // Delete custom date type.
+    $this->clickLink(t('delete'));
+    $this->drupalPost('admin/config/regional/date-time/types/' . $machine_name . '/delete', array(), t('Remove'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time', array('absolute' => TRUE)), t('Correct page redirection.'));
+    $this->assertText(t('Removed date type ' . $date_type), 'Custom date type removed.');
+  }
+
+  /**
+   * Test date format configuration.
+   */
+  function testDateFormatConfiguration() {
+    // Confirm 'no custom date formats available' message appears.
+    $this->drupalGet('admin/config/regional/date-time/formats');
+    $this->assertText(t('No custom date formats available.'), 'No custom date formats message appears.');
+
+    // Add custom date format.
+    $this->clickLink(t('Add format'));
+    $edit = array(
+      'date_format' => 'Y',
+    );
+    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time/formats', array('absolute' => TRUE)), t('Correct page redirection.'));
+    $this->assertNoText(t('No custom date formats available.'), 'No custom date formats message does not appear.');
+    $this->assertText(t('Custom date format added.'), 'Custom date format added.');
+
+    // Ensure custom date format appears in date type configuration options.
+    $this->drupalGet('admin/config/regional/date-time');
+    $this->assertRaw('<option value="Y">', 'Custom date format appears in options.');
+
+    // Edit custom date format.
+    $this->drupalGet('admin/config/regional/date-time/formats');
+    $this->clickLink(t('edit'));
+    $edit = array(
+      'date_format' => 'Y m',
+    );
+    $this->drupalPost($this->getUrl(), $edit, t('Save format'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time/formats', array('absolute' => TRUE)), t('Correct page redirection.'));
+    $this->assertText(t('Custom date format updated.'), 'Custom date format successfully updated.');
+
+    // Delete custom date format.
+    $this->clickLink(t('delete'));
+    $this->drupalPost($this->getUrl(), array(), t('Remove'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time/formats', array('absolute' => TRUE)), t('Correct page redirection.'));
+    $this->assertText(t('Removed date format'), 'Custom date format removed successfully.');
   }
 }
 

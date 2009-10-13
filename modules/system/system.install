@@ -741,6 +741,92 @@ function system_schema() {
   $schema['cache_registry'] = $schema['cache'];
   $schema['cache_registry']['description'] = 'Cache table for the code registry system to remember what code files need to be loaded on any given page.';
 
+  $schema['date_format_type'] = array(
+    'description' => 'Stores configured date format types.',
+    'fields' => array(
+      'type' => array(
+        'description' => 'The date format type, e.g. medium.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'The human readable name of the format type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'locked' => array(
+        'description' => 'Whether or not this is a system provided format.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('type'),
+  );
+
+  // This table's name is plural as some versions of MySQL can't create a 
+  // table named 'date_format'.
+  $schema['date_formats'] = array(
+    'description' => 'Stores configured date formats.',
+    'fields' => array(
+      'dfid' => array(
+        'description' => 'The date format identifier.',
+        'type' => 'serial',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+      'format' => array(
+        'description' => 'The date format string.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The date format type, e.g. medium.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ),
+      'locked' => array(
+        'description' => 'Whether or not this format can be modified.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('dfid'),
+    'unique keys' => array('formats' => array('format', 'type')),
+  );
+
+  $schema['date_format_locale'] = array(
+    'description' => 'Stores configured date formats for each locale.',
+    'fields' => array(
+      'format' => array(
+        'description' => 'The date format string.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The date format type, e.g. medium.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ),
+      'language' => array(
+        'description' => 'A {languages}.language for this format to be used with.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('type', 'language'),
+  );
+
   $schema['file'] = array(
     'description' => 'Stores information for uploaded files.',
     'fields' => array(
@@ -2544,6 +2630,99 @@ function system_update_7038() {
 function system_update_7039() {
   db_add_field('menu_router', 'theme_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
   db_add_field('menu_router', 'theme_arguments', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+}
+
+/**
+ * Create new date format tables.
+ */
+function system_update_7040() {
+  $schema['date_format_type'] = array(
+    'description' => 'Stores configured date format types.',
+    'fields' => array(
+      'type' => array(
+        'description' => 'The date format type, e.g. medium.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'The human readable name of the format type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'locked' => array(
+        'description' => 'Whether or not this is a system provided format.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('type'),
+  );
+
+  $schema['date_formats'] = array(
+    'description' => 'Stores configured date formats.',
+    'fields' => array(
+      'dfid' => array(
+        'description' => 'The date format identifier.',
+        'type' => 'serial',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+      'format' => array(
+        'description' => 'The date format string.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The date format type, e.g. medium.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ),
+      'locked' => array(
+        'description' => 'Whether or not this format can be modified.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('dfid'),
+    'unique keys' => array('formats' => array('format', 'type')),
+  );
+
+  $schema['date_format_locale'] = array(
+    'description' => 'Stores configured date formats for each locale.',
+    'fields' => array(
+      'format' => array(
+        'description' => 'The date format string.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The date format type, e.g. medium.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ),
+      'language' => array(
+        'description' => 'A {languages}.language for this format to be used with.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('type', 'language'),
+  );
+
+  db_create_table('date_format_type', $schema['date_format_type']);
+  db_create_table('date_formats', $schema['date_formats']);
+  db_create_table('date_format_locale', $schema['date_format_locale']);
 }
 
 /**

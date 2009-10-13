@@ -101,7 +101,7 @@ function system_help($path, $arg) {
       $output .= '<li>' . t('support for enabling and disabling <a href="@themes">themes</a>, which determine the design and presentation of your site. Drupal comes packaged with several core themes and additional contributed themes are available at the <a href="@drupal-themes">Drupal.org theme page</a>.', array('@themes' => url('admin/appearance'), '@drupal-themes' => 'http://drupal.org/project/themes')) . '</li>';
       $output .= '<li>' . t('a robust <a href="@cache-settings">caching system</a> that allows the efficient re-use of previously-constructed web pages and web page components. Drupal stores the pages requested by anonymous users in a compressed format; depending on your site configuration and the amount of your web traffic tied to anonymous visitors, Drupal\'s caching system may significantly increase the speed of your site.', array('@cache-settings' => url('admin/config/development/performance'))) . '</li>';
       $output .= '<li>' . t('a set of routine administrative operations that rely on a correctly-configured <a href="@cron">cron maintenance task</a> to run automatically. A number of other modules, including the feed aggregator, and search also rely on <a href="@cron">cron maintenance tasks</a>. For more information, see the online handbook entry for <a href="@handbook">configuring cron jobs</a>.', array('@cron' => url('admin/reports/status'), '@handbook' => 'http://drupal.org/cron')) . '</li>';
-      $output .= '<li>' . t('basic configuration options for your site, including <a href="@regional-settings">date and time settings</a>, <a href="@file-system">file system settings</a>, <a href="@clean-url">clean URL support</a>, <a href="@site-info">site name and other information</a>, and a <a href="@maintenance-mode">maintenance mode</a> for taking your site temporarily offline.', array('@regional-settings' => url('admin/config/regional/settings'), '@file-system' => url('admin/config/media/file-system'), '@clean-url' => url('admin/config/search/clean-urls'), '@site-info' => url('admin/config/system/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</li></ul>';
+      $output .= '<li>' . t('basic configuration options for your site, including <a href="@date-time-settings">date and time settings</a>, <a href="@file-system">file system settings</a>, <a href="@clean-url">clean URL support</a>, <a href="@site-info">site name and other information</a>, and a <a href="@maintenance-mode">maintenance mode</a> for taking your site temporarily offline.', array('@date-time-settings' => url('admin/config/regional/date-time'), '@file-system' => url('admin/config/media/file-system'), '@clean-url' => url('admin/config/search/clean-urls'), '@site-info' => url('admin/config/system/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</li></ul>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@system">System module</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) . '</p>';
       return $output;
     case 'admin/by-module':
@@ -203,6 +203,10 @@ function system_theme() {
     'system_compact_link' => array(),
     'system_run_cron_image' => array(
       'arguments' => array('image_path' => NULL),
+    ),
+    'system_date_time_settings' => array(
+      'arguments' => array('form' => NULL),
+      'file' => 'system.admin.inc',
     ),
   ));
 }
@@ -781,6 +785,8 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
+
+  // Regional and date settings.
   $items['admin/config/regional'] = array(
     'title' => 'Regional and language',
     'description' => 'Regional settings, localization and translation.',
@@ -792,20 +798,96 @@ function system_menu() {
   );
   $items['admin/config/regional/settings'] = array(
     'title' => 'Regional settings',
-    'description' => "Settings for how Drupal displays date and time, as well as the system's default time zone.",
+    'description' => "Settings for the site's default time zone and country.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_regional_settings'),
     'access arguments' => array('administer site configuration'),
     'weight' => -10,
     'file' => 'system.admin.inc',
   );
-  $items['admin/config/regional/settings/lookup'] = array(
+  $items['admin/config/regional/date-time'] = array(
+    'title' => 'Date and time',
+    'description' => 'Configure display formats for date and time.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_date_time_settings'),
+    'access arguments' => array('administer site configuration'),
+    'weight' => -9,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/regional/date-time/types'] = array(
+    'title' => 'Types',
+    'description' => 'Configure display formats for date and time.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_date_time_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/regional/date-time/types/add'] = array(
+    'title' => 'Add date type',
+    'description' => 'Add new date type.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_add_date_format_type_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_ACTION,
+    'weight' => -10,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/regional/date-time/types/%/delete'] = array(
+    'title' => 'Delete date type',
+    'description' => 'Allow users to delete a configured date type.',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_delete_date_format_type_form', 5),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/regional/date-time/formats'] = array(
+    'title' => 'Formats',
+    'description' => 'Configure display format strings for date and time.',
+    'page callback' => 'system_date_time_formats',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/regional/date-time/formats/add'] = array(
+    'title' => 'Add format',
+    'description' => 'Allow users to add additional date formats.',
+    'type' => MENU_LOCAL_ACTION,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_configure_date_formats_form'),
+    'access arguments' => array('administer site configuration'),
+    'weight' => -10,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/regional/date-time/formats/%/edit'] = array(
+    'title' => 'Edit date format',
+    'description' => 'Allow users to edit a configured date format.',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_configure_date_formats_form', 5),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/regional/date-time/formats/%/delete'] = array(
+    'title' => 'Delete date format',
+    'description' => 'Allow users to delete a configured date format.',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_date_delete_format_form', 5),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/regional/date-time/formats/lookup'] = array(
     'title' => 'Date and time lookup',
     'type' => MENU_CALLBACK,
     'page callback' => 'system_date_time_lookup',
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
+
   $items['admin/config/search'] = array(
     'title' => 'Search and metadata',
     'description' => 'Local site search, metadata and SEO.',
@@ -2454,6 +2536,14 @@ function system_cron() {
 }
 
 /**
+ * Implements hook_flush_caches().
+ */
+function system_flush_caches() {
+  // Rebuild list of date formats.
+  system_date_formats_rebuild();
+}
+
+/**
  * Implement hook_action_info().
  */
 function system_action_info() {
@@ -2919,5 +3009,355 @@ function system_run_cron_image_access() {
  */
 function theme_system_run_cron_image($variables) {
   return '<noscript><div id="system-cron-image">' . theme('image', array('path' => $variables['image_path'], 'getsize' => FALSE)) . '</div></noscript>';
+}
+
+/**
+ * Get the list of available date types and attributes.
+ *
+ * @param $type
+ *   The date type, e.g. 'short', 'medium', 'long', 'custom'. If empty, then
+ *   all attributes for that type will be returned.
+ * @return
+ *   Array of date types.
+ */
+function system_get_date_types($type = NULL) {
+  $date_format_types = &drupal_static(__FUNCTION__);
+
+  if (!isset($date_format_types)) {
+    $date_format_types = _system_date_format_types_build();
+  }
+
+  return $type ? (isset($date_format_types[$type]) ? $date_format_types[$type] : FALSE) : $date_format_types;
+}
+
+/**
+ * Implements hook_date_format_types().
+ */
+function system_date_format_types() {
+  return array(
+    'long' => t('Long'),
+    'medium' => t('Medium'),
+    'short' => t('Short'),
+  );
+}
+
+/**
+ * Implements hook_date_formats().
+ *
+ * @return
+ *   An array of date formats with attributes 'type' (short, medium or long),
+ *   'format' (the format string) and 'locales'. The 'locales' attribute is an
+ *   array of locales, which can include both 2 character language codes like
+ *   'en', 'fr', but also 5 character language codes like 'en-gb' and 'en-us'.
+ */
+function system_date_formats() {
+  include_once DRUPAL_ROOT . '/includes/date.inc';
+  return system_default_date_formats();
+}
+
+/**
+ * Get the list of date formats for a particular format length.
+ *
+ * @param $type
+ *   The date type: 'short', 'medium', 'long', 'custom'. If empty, then all
+ *   available types will be returned.
+ * @return
+ *   Array of date formats.
+ */
+function system_get_date_formats($type = NULL) {
+  $date_formats = &drupal_static(__FUNCTION__);
+
+  if (!isset($date_formats)) {
+    $date_formats = _system_date_formats_build();
+  }
+
+  return $type ? (isset($date_formats[$type]) ? $date_formats[$type] : FALSE) : $date_formats;
+}
+
+/**
+ * Get the format details for a particular id.
+ *
+ * @param $dfid
+ *   Identifier of a date format string.
+ * @return
+ *   Array of date format details.
+ */
+function system_get_date_format($dfid) {
+  return db_query('SELECT df.dfid, df.format, df.type, df.locked FROM {date_formats} df WHERE df.dfid = :dfid', array(':dfid' => $dfid))->fetch();
+}
+
+/**
+ * Resets the database cache of date formats and saves all new formats.
+ */
+function system_date_formats_rebuild() {
+  drupal_static_reset('system_get_date_formats');
+  $date_formats = system_get_date_formats(NULL);
+
+  foreach ($date_formats as $format_type => $formats) {
+    foreach ($formats as $format => $info) {
+      system_date_format_save($info);
+    }
+  }
+
+  // Rebuild configured date formats locale list.
+  drupal_static_reset('system_date_format_locale');
+  system_date_format_locale();
+
+  _system_date_formats_build();
+}
+
+/**
+ * Get the appropriate date format for a type and locale.
+ *
+ * @param $langcode
+ *   Language code for the current locale. This can be a 2 character language
+ *   code like 'en', 'fr', or a longer 5 character code like 'en-gb'.
+ * @param $type
+ *   Date type: short, medium, long, custom.
+ * @return
+ *   The format string, or NULL if no matching format found.
+ */
+function system_date_format_locale($langcode = NULL, $type = NULL) {
+  $formats = &drupal_static(__FUNCTION__);
+
+  if (empty($formats)) {
+    $formats = array();
+    $result = db_query("SELECT format, type, language FROM {date_format_locale}");
+    foreach ($result as $record) {
+      if (!isset($formats[$record->language])) {
+        $formats[$record->language] = array();
+      }
+      $formats[$record->language][$record->type] = $record->format;
+    }
+  }
+
+  if ($type && $langcode && !empty($formats[$langcode][$type])) {
+    return $formats[$langcode][$type];
+  }
+  elseif ($langcode && !empty($formats[$langcode])) {
+    return $formats[$langcode];
+  }
+
+  return FALSE;
+}
+
+/**
+ * Builds and returns the list of available date types.
+ *
+ * @return
+ *   Array of date types.
+ */
+function _system_date_format_types_build() {
+  $types = array();
+
+  // Get list of modules which implement hook_date_format_types().
+  $modules = module_implements('date_format_types');
+
+  foreach ($modules as $module) {
+    $module_types = module_invoke($module, 'date_format_types');
+    foreach ($module_types as $module_type => $type_title) {
+      $type = array();
+      $type['module'] = $module;
+      $type['type'] = $module_type;
+      $type['title'] = $type_title;
+      $type['locked'] = 1;
+      $type['is_new'] = TRUE; // Will be over-ridden later if in the db.
+      $types[$module_type] = $type;
+    }
+  }
+
+  // Get custom formats added to the database by the end user.
+  $result = db_query('SELECT dft.type, dft.title, dft.locked FROM {date_format_type} dft ORDER BY dft.title');
+  foreach ($result as $record) {
+    if (!in_array($record->type, $types)) {
+      $type = array();
+      $type['is_new'] = FALSE;
+      $type['module'] = '';
+      $type['type'] = $record->type;
+      $type['title'] = $record->title;
+      $type['locked'] = $record->locked;
+      $types[$record->type] = $type;
+    }
+    else {
+      $type = array();
+      $type['is_new'] = FALSE;  // Over-riding previous setting.
+      $types[$record->type] = array_merge($types[$record->type], $type);
+    }
+  }
+
+  // Allow other modules to modify these date types.
+  drupal_alter('date_format_types', $types);
+
+  return $types;
+}
+
+/**
+ * Builds and returns the list of available date formats.
+ *
+ * @return
+ *   Array of date formats.
+ */
+function _system_date_formats_build() {
+  $date_formats = array();
+
+  // First handle hook_date_format_types().
+  $types = _system_date_format_types_build();
+  foreach ($types as $type => $info) {
+    system_date_format_type_save($info);
+  }
+
+  // Get formats supplied by various contrib modules.
+  $module_formats = module_invoke_all('date_formats');
+
+  foreach ($module_formats as $module_format) {
+    $module_format['locked'] = 1; // System types are locked.
+    // If no date type is specified, assign 'custom'.
+    if (!isset($module_format['type'])) {
+      $module_format['type'] = 'custom';
+    }
+    if (!in_array($module_format['type'], array_keys($types))) {
+      continue;
+    }
+    if (!isset($date_formats[$module_format['type']])) {
+      $date_formats[$module_format['type']] = array();
+    }
+
+    // If another module already set this format, merge in the new settings.
+    if (isset($date_formats[$module_format['type']][$module_format['format']])) {
+      $date_formats[$module_format['type']][$module_format['format']] = array_merge_recursive($date_formats[$module_format['type']][$module_format['format']], $format);
+    }
+    else {
+      // This setting will be overridden later if it already exists in the db.
+      $module_format['is_new'] = TRUE;
+      $date_formats[$module_format['type']][$module_format['format']] = $module_format;
+    }
+  }
+
+  // Get custom formats added to the database by the end user.
+  $result = db_query('SELECT df.dfid, df.format, df.type, df.locked, dfl.language FROM {date_formats} df LEFT JOIN {date_format_type} dft ON df.type = dft.type LEFT JOIN {date_format_locale} dfl ON df.format = dfl.format AND df.type = dfl.type ORDER BY df.type, df.format');
+  foreach ($result as $record) {
+    // If this date type isn't set, initialise the array.
+    if (!isset($date_formats[$record->type])) {
+      $date_formats[$record->type] = array();
+    }
+    $format = (array) $record;
+    $format['is_new'] = FALSE; // It's in the db, so override this setting.
+    // If this format not already present, add it to the array.
+    if (!isset($date_formats[$record->type][$record->format])) {
+      $format['module'] = '';
+      $format['locales'] = array($record->language);
+      $date_formats[$record->type][$record->format] = $format;
+    }
+    // Format already present, so merge in settings.
+    else {
+      if (!empty($record->language)) {
+        $format['locales'] = array_merge($date_formats[$record->type][$record->format]['locales'], array($record->language));
+      }
+      $date_formats[$record->type][$record->format] = array_merge($date_formats[$record->type][$record->format], $format);
+    }
+  }
+
+  // Allow other modules to modify these formats.
+  drupal_alter('date_formats', $date_formats);
+
+  return $date_formats;
+}
+
+/**
+ * Save a date type to the database.
+ *
+ * @param $date_format_type
+ *   An array of attributes for a date type.
+ */
+function system_date_format_type_save($date_format_type) {
+  $type = array();
+  $type['type'] = $date_format_type['type'];
+  $type['title'] = $date_format_type['title'];
+  $type['locked'] = $date_format_type['locked'];
+
+  // Update date_format table.
+  if (!empty($date_format_type['is_new'])) {
+    drupal_write_record('date_format_type', $type);
+  }
+  else {
+    drupal_write_record('date_format_type', $type, 'type');
+  }
+}
+
+/**
+ * Delete a date type from the database.
+ *
+ * @param $date_format_type
+ *   The date type name.
+ */
+function system_date_format_type_delete($date_format_type) {
+  db_delete('date_formats')
+    ->condition('type', $date_format_type)
+    ->execute();
+  db_delete('date_format_type')
+    ->condition('type', $date_format_type)
+    ->execute();
+  db_delete('date_format_locale')
+    ->condition('type', $date_format_type)
+    ->execute();
+}
+
+/**
+ * Save a date format to the database.
+ *
+ * @param $date_format
+ *   An array of attributes for a date format.
+ * @param $dfid
+ *   If set, replace an existing date format with a new string using this
+ *   identifier.
+ */
+function system_date_format_save($date_format, $dfid = 0) {
+  $format = array();
+  $format['dfid'] = $dfid;
+  $format['type'] = $date_format['type'];
+  $format['format'] = $date_format['format'];
+  $format['locked'] = $date_format['locked'];
+
+  // Update date_format table.
+  if (!empty($date_format['is_new'])) {
+    drupal_write_record('date_formats', $format);
+  }
+  else {
+    $keys = ($dfid ? array('dfid') : array('format', 'type'));
+    drupal_write_record('date_formats', $format, $keys);
+  }
+
+  $languages = language_list('enabled');
+  $languages = $languages[1];
+
+  $locale_format = array();
+  $locale_format['type'] = $date_format['type'];
+  $locale_format['format'] = $date_format['format'];
+
+  // Check if the suggested language codes are configured and enabled.
+  if (!empty($date_format['locales'])) {
+    foreach ($date_format['locales'] as $langcode) {
+      // Only proceed if language is enabled.
+      if (in_array($langcode, $languages)) {
+        $is_existing = (bool) db_query_range('SELECT 1 FROM {date_format_locale} WHERE type = :type AND language = :language', 0, 1, array(':type' => $date_format['type'], ':language' => $langcode))->fetchField();
+        if (!$is_existing) {
+          $locale_format['language'] = $langcode;
+          drupal_write_record('date_format_locale', $locale_format);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Delete a date format from the database.
+ *
+ * @param $date_format_id
+ *   The date format string identifier.
+ */
+function system_date_format_delete($dfid) {
+  db_delete('date_formats')
+    ->condition('dfid', $dfid)
+    ->execute();
 }
 

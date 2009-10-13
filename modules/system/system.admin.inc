@@ -1592,16 +1592,13 @@ function system_rss_feeds_settings() {
 }
 
 /**
- * Form builder; Configure the site date and time settings.
+ * Form builder; Configure the site regional settings.
  *
  * @ingroup forms
  * @see system_settings_form()
  * @see system_regional_settings_submit()
  */
 function system_regional_settings() {
-  drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
-  drupal_add_js(array('dateTime' => array('lookup' => url('admin/config/regional/settings/lookup'))), 'setting');
-
   include_once DRUPAL_ROOT . '/includes/locale.inc';
   $countries = country_get_list();
   // Add a 'No default country' option to the start of the list.
@@ -1609,31 +1606,6 @@ function system_regional_settings() {
 
   // Date settings:
   $zones = system_time_zones();
-
-  // Date settings: possible date formats
-  $date_short = array('Y-m-d H:i', 'm/d/Y - H:i', 'd/m/Y - H:i', 'Y/m/d - H:i',
-           'd.m.Y - H:i', 'm/d/Y - g:ia', 'd/m/Y - g:ia', 'Y/m/d - g:ia',
-           'M j Y - H:i', 'j M Y - H:i', 'Y M j - H:i',
-           'M j Y - g:ia', 'j M Y - g:ia', 'Y M j - g:ia');
-  $date_medium = array('D, Y-m-d H:i', 'D, m/d/Y - H:i', 'D, d/m/Y - H:i',
-          'D, Y/m/d - H:i', 'F j, Y - H:i', 'j F, Y - H:i', 'Y, F j - H:i',
-          'D, m/d/Y - g:ia', 'D, d/m/Y - g:ia', 'D, Y/m/d - g:ia',
-          'F j, Y - g:ia', 'j F Y - g:ia', 'Y, F j - g:ia', 'j. F Y - G:i');
-  $date_long = array('l, F j, Y - H:i', 'l, j F, Y - H:i', 'l, Y, F j - H:i',
-        'l, F j, Y - g:ia', 'l, j F Y - g:ia', 'l, Y, F j - g:ia', 'l, j. F Y - G:i');
-
-  // Date settings: construct choices for user
-  foreach ($date_short as $f) {
-    $date_short_choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
-  }
-  foreach ($date_medium as $f) {
-    $date_medium_choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
-  }
-  foreach ($date_long as $f) {
-    $date_long_choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
-  }
-
-  $date_long_choices['custom'] = $date_medium_choices['custom'] = $date_short_choices['custom'] = t('Custom format');
 
   $form['locale'] = array(
     '#type' => 'fieldset',
@@ -1699,97 +1671,214 @@ function system_regional_settings() {
     '#description' => t('Only applied if users may set their own time zone.')
   );
 
-  $form['date_formats'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Date formats'),
+  return system_settings_form($form, FALSE);
+}
+
+/**
+ * Form builder; Configure the site date and time settings.
+ *
+ * @ingroup forms
+ * @see system_settings_form()
+ */
+function system_date_time_settings() {
+  // Get list of all available date types.
+  drupal_static_reset('system_get_date_types');
+  $format_types = system_get_date_types();
+
+  // Get list of all available date formats.
+  $all_formats = array();
+  drupal_static_reset('system_get_date_formats');
+  $date_formats = system_get_date_formats(); // Call this to rebuild the list, and to have default list.
+  foreach ($date_formats as $type => $format_info) {
+    $all_formats = array_merge($all_formats, $format_info);
+  }
+  $custom_formats = system_get_date_formats('custom');
+  if (!empty($format_types)) {
+    foreach ($format_types as $type => $type_info) {
+      // If a system type, only show the available formats for that type and
+      // custom ones.
+      if ($type_info['locked'] == 1) {
+        $formats = system_get_date_formats($type);
+        if (empty($formats)) {
+          $formats = $all_formats;
+        }
+        elseif (!empty($custom_formats)) {
+          $formats = array_merge($formats, $custom_formats);
+        }
+      }
+      // If a user configured type, show all available date formats.
+      else {
+        $formats = $all_formats;
+      }
+
+      $choices = array();
+      foreach ($formats as $f => $format) {
+        $choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
+      }
+      $default = variable_get('date_format_' . $type, array_shift(array_keys($formats)));
+
+      // Get date type info for this date type.
+      $type_info = system_get_date_types($type);
+      $form['formats']['#theme'] = 'system_date_time_settings';
+
+      // Show date format select list.
+      $form['formats']['format']['date_format_' . $type] = array(
+        '#type' => 'select',
+        '#title' => check_plain($type_info['title']),
+        '#attributes' => array('class' => array('date-format')),
+        '#default_value' => (isset($choices[$default]) ? $default : 'custom'),
+        '#options' => $choices,
+      );
+
+      // If this isn't a system provided type, allow the user to remove it from
+      // the system.
+      if ($type_info['locked'] == 0) {
+        $form['formats']['delete']['date_format_' . $type . '_delete'] = array(
+          '#markup' => l(t('delete'), 'admin/config/regional/date-time/types/' . $type . '/delete'),
+        );
+      }
+    }
+  }
+
+  // Display a message if no date types configured.
+  $form['#empty_text'] = t('No date types available. <a href="@link">Add date type</a>.', array('@link' => url('admin/config/regional/date-time/types/add')));
+
+  return system_settings_form($form, FALSE);
+}
+
+/**
+ * Theme function for date settings form.
+ *
+ * @ingroup themeable
+ */
+function theme_system_date_time_settings($variables) {
+  $form = $variables['form'];
+  $header = array(
+    t('Date type'),
+    t('Format'),
+    t('Operations'),
   );
 
-  $date_format_short = variable_get('date_format_short', $date_short[1]);
-  $form['date_formats']['date_format_short'] = array(
-    '#prefix' => '<div class="date-container"><div class="select-container">',
-    '#suffix' => '</div>',
-    '#type' => 'select',
-    '#title' => t('Short date format'),
-    '#attributes' => array('class' => array('date-format')),
-    '#default_value' => (isset($date_short_choices[$date_format_short]) ? $date_format_short : 'custom'),
-    '#options' => $date_short_choices,
-  );
+  foreach (element_children($form['format']) as $key) {
+    $delete_key = $key . '_delete';
+    $row = array();
+    $row[] = $form['format'][$key]['#title'];
+    unset($form['format'][$key]['#title']);
+    $row[] = array('data' => drupal_render($form['format'][$key]));
+    $row[] = array('data' => drupal_render($form['delete'][$delete_key]));
+    $rows[] = $row;
+  }
 
-  $default_short_custom = variable_get('date_format_short_custom', (isset($date_short_choices[$date_format_short]) ? $date_format_short : ''));
-  $form['date_formats']['date_format_short_custom'] = array(
-    '#prefix' => '<div class="custom-container">',
-    '#suffix' => '</div></div>',
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'system-date-types')));
+  $output .= drupal_render_children($form);
+
+  return $output;
+}
+
+
+/**
+ * Add new date type.
+ *
+ * @ingroup forms
+ * @ingroup system_add_date_format_type_form_validate()
+ * @ingroup system_add_date_format_type_form_submit()
+ */
+function system_add_date_format_type_form($form, &$form_state) {
+  $form['date_type'] = array(
+    '#title' => t('Date type'),
     '#type' => 'textfield',
-    '#title' => t('Custom short date format'),
-    '#attributes' => array('class' => array('custom-format')),
-    '#default_value' => $default_short_custom,
-    '#description' => t('A user-defined short date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_short_custom))),
+    '#required' => TRUE,
+    '#field_suffix' => ' <small id="edit-date-type-suffix">&nbsp</small>',
   );
-
-  $date_format_medium = variable_get('date_format_medium', $date_medium[1]);
-  $form['date_formats']['date_format_medium'] = array(
-    '#prefix' => '<div class="date-container"><div class="select-container">',
-    '#suffix' => '</div>',
-    '#type' => 'select',
-    '#title' => t('Medium date format'),
-    '#attributes' => array('class' => array('date-format')),
-    '#default_value' => (isset($date_medium_choices[$date_format_medium]) ? $date_format_medium : 'custom'),
-    '#options' => $date_medium_choices,
+  $js_settings = array(
+    'type' => 'setting',
+    'data' => array(
+      'machineReadableValue' => array(
+        'date-type' => array(
+          'text' => t('Machine name'),
+          'target' => 'machine-name',
+          'searchPattern' => '[^a-z0-9]+',
+          'replaceToken' => '_',
+        ),
+      ),
+    ),
   );
-
-  $default_medium_custom = variable_get('date_format_medium_custom', (isset($date_medium_choices[$date_format_medium]) ? $date_format_medium : ''));
-  $form['date_formats']['date_format_medium_custom'] = array(
-    '#prefix' => '<div class="custom-container">',
-    '#suffix' => '</div></div>',
+  $form['machine_name'] = array(
+    '#title' => t('Machine readable name'),
+    '#description' => t('The unique machine readable name for this date type, can only contain lowercase letters, numbers and underscores.'),
     '#type' => 'textfield',
-    '#title' => t('Custom medium date format'),
-    '#attributes' => array('class' => array('custom-format')),
-    '#default_value' => $default_medium_custom,
-    '#description' => t('A user-defined medium date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_medium_custom))),
+    '#required' => TRUE,
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+    ),
   );
 
-  $date_format_long = variable_get('date_format_long', $date_long[0]);
-  $form['date_formats']['date_format_long'] = array(
-    '#prefix' => '<div class="date-container"><div class="select-container">',
-    '#suffix' => '</div>',
+  // Get list of all available date formats.
+  $formats = array();
+  drupal_static_reset('system_get_date_formats');
+  $date_formats = system_get_date_formats(); // Call this to rebuild the list, and to have default list.
+  foreach ($date_formats as $type => $format_info) {
+    $formats = array_merge($formats, $format_info);
+  }
+  $custom_formats = system_get_date_formats('custom');
+  if (!empty($custom_formats)) {
+    $formats = array_merge($formats, $custom_formats);
+  }
+  $choices = array();
+  foreach ($formats as $f => $format) {
+    $choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
+  }
+  // Show date format select list.
+  $form['date_format'] = array(
     '#type' => 'select',
-    '#title' => t('Long date format'),
+    '#title' => t('Date format'),
     '#attributes' => array('class' => array('date-format')),
-    '#default_value' => (isset($date_long_choices[$date_format_long]) ? $date_format_long : 'custom'),
-    '#options' => $date_long_choices,
+    '#options' => $choices,
+    '#required' => TRUE,
   );
 
-  $default_long_custom = variable_get('date_format_long_custom', (isset($date_long_choices[$date_format_long]) ? $date_format_long : ''));
-  $form['date_formats']['date_format_long_custom'] = array(
-    '#prefix' => '<div class="custom-container">',
-    '#suffix' => '</div></div>',
-    '#type' => 'textfield',
-    '#title' => t('Custom long date format'),
-    '#attributes' => array('class' => array('custom-format')),
-    '#default_value' => $default_long_custom,
-    '#description' => t('A user-defined long date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_long_custom))),
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add date type'),
   );
 
-  $form = system_settings_form($form, FALSE);
-  // We will call system_settings_form_submit() manually, so remove it for now.
-  unset($form['#submit']);
+  $form['#validate'][] = 'system_add_date_format_type_form_validate';
+  $form['#submit'][] = 'system_add_date_format_type_form_submit';
+
   return $form;
 }
 
 /**
- * Process system_regional_settings form submissions.
+ * Validate system_add_date_format_type form submissions.
  */
-function system_regional_settings_submit($form, &$form_state) {
-  if ($form_state['values']['date_format_short'] == 'custom') {
-    $form_state['values']['date_format_short'] = $form_state['values']['date_format_short_custom'];
+function system_add_date_format_type_form_validate($form, &$form_state) {
+  if (!empty($form_state['values']['machine_name']) && !empty($form_state['values']['date_type'])) {
+    if (!preg_match("/^[a-zA-Z0-9_]+$/", trim($form_state['values']['machine_name']))) {
+      form_set_error('machine_name', t('The date type must contain only alphanumeric characters and underscores.'));
+    }
+    $types = system_get_date_types();
+    if (in_array(trim($form_state['values']['machine_name']), array_keys($types))) {
+      form_set_error('machine_name', t('This date type already exists. Please enter a unique type.'));
+    }
   }
-  if ($form_state['values']['date_format_medium'] == 'custom') {
-    $form_state['values']['date_format_medium'] = $form_state['values']['date_format_medium_custom'];
-  }
-  if ($form_state['values']['date_format_long'] == 'custom') {
-    $form_state['values']['date_format_long'] = $form_state['values']['date_format_long_custom'];
-  }
-  return system_settings_form_submit($form, $form_state);
+}
+
+/**
+ * Process system_add_date_format_type form submissions.
+ */
+function system_add_date_format_type_form_submit($form, &$form_state) {
+  $machine_name = trim($form_state['values']['machine_name']);
+
+  $format_type = array();
+  $format_type['title'] = trim($form_state['values']['date_type']);
+  $format_type['type'] = $machine_name;
+  $format_type['locked'] = 0;
+  $format_type['is_new'] = 1;
+  system_date_format_type_save($format_type);
+  variable_set('date_format_' . $machine_name, $form_state['values']['date_format']);
+
+  drupal_set_message(t('New date type added successfully.'));
+  $form_state['redirect'] = 'admin/config/regional/date-time';
 }
 
 /**
@@ -1931,7 +2020,7 @@ function system_php() {
 function system_batch_page() {
   require_once DRUPAL_ROOT . '/includes/batch.inc';
   $output = _batch_page();
-  
+
   // Use the same theme that the page that started the batch.
   $batch = &batch_get();
   $GLOBALS['custom_theme'] = $batch['theme'];
@@ -2338,6 +2427,185 @@ function theme_system_themes_form($variables) {
   $output = theme('table', array('header' => $header, 'rows' => $rows));
   $output .= drupal_render_children($form);
   return $output;
+}
+
+/**
+ * Menu callback; present a form for deleting a date format.
+ */
+function system_date_delete_format_form($form, &$form_state, $dfid) {
+  $form['dfid'] = array(
+    '#type' => 'value',
+    '#value' => $dfid,
+  );
+  $format = system_get_date_format($dfid);
+
+  $output = confirm_form($form,
+    t('Are you sure you want to remove the format %format?', array('%format' => format_date(REQUEST_TIME, 'custom', $format->format))),
+    'admin/config/regional/date-time/formats',
+    t('This action cannot be undone.'),
+    t('Remove'), t('Cancel'),
+    'confirm'
+  );
+
+  return $output;
+}
+
+/**
+ * Delete a configured date format.
+ */
+function system_date_delete_format_form_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    $format = system_get_date_format($form_state['values']['dfid']);
+    system_date_format_delete($form_state['values']['dfid']);
+    drupal_set_message(t('Removed date format %format.', array('%format' => format_date(REQUEST_TIME, 'custom', $format->format))));
+    $form_state['redirect'] = 'admin/config/regional/date-time/formats';
+  }
+}
+
+/**
+ * Menu callback; present a form for deleting a date type.
+ */
+function system_delete_date_format_type_form($form, &$form_state, $format_type) {
+  $form['format_type'] = array(
+    '#type' => 'value',
+    '#value' => $format_type,
+  );
+  $type_info = system_get_date_types($format_type);
+
+  $output = confirm_form($form,
+    t('Are you sure you want to remove the date type %type?', array('%type' => $type_info['title'])),
+    'admin/config/regional/date-time',
+    t('This action cannot be undone.'),
+    t('Remove'), t('Cancel'),
+    'confirm'
+  );
+
+  return $output;
+}
+
+/**
+ * Delete a configured date type.
+ */
+function system_delete_date_format_type_form_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    $type_info = system_get_date_types($form_state['values']['format_type']);
+    system_date_format_type_delete($form_state['values']['format_type']);
+    drupal_set_message(t('Removed date type %type.', array('%type' => $type_info['title'])));
+    $form_state['redirect'] = 'admin/config/regional/date-time';
+  }
+}
+
+
+/**
+ * Displays the date format strings overview page.
+ */
+function system_date_time_formats() {
+  $header = array(t('Format'), array('data' => t('Operations'), 'colspan' => '2'));
+  $rows = array();
+
+  drupal_static_reset('system_get_date_formats');
+  $formats = system_get_date_formats('custom');
+  if (!empty($formats)) {
+    foreach ($formats as $format) {
+      $row = array();
+      $row[] = array('data' => format_date(REQUEST_TIME, 'custom', $format['format']));
+      $row[] = array('data' => l(t('edit'), 'admin/config/regional/date-time/formats/' . $format['dfid'] . '/edit'));
+      $row[] = array('data' => l(t('delete'), 'admin/config/regional/date-time/formats/' . $format['dfid'] . '/delete'));
+      $rows[] = $row;
+    }
+  }
+
+  if (empty($rows)) {
+    $rows[] = array(array('data' => t('No custom date formats available. <a href="@link">Add date format</a>.', array('@link' => url('admin/config/regional/date-time/formats/add'))), 'colspan' => '5', 'class' => array('message')));
+  }
+
+  $build['date_formats_table'] = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+  );
+
+  return $build;
+}
+
+/**
+ * Allow users to add additional date formats.
+ */
+function system_configure_date_formats_form($form, &$form_state, $dfid = 0) {
+  $js_settings = array(
+    'type' => 'setting',
+    'data' => array(
+      'dateTime' => array(
+        'date-format' => array(
+          'text' => t('Displayed as'),
+          'lookup' => url('admin/config/regional/date-time/formats/lookup'),
+        ),
+      ),
+    ),
+  );
+
+  if ($dfid) {
+    $form['dfid'] = array(
+      '#type' => 'value',
+      '#value' => $dfid,
+    );
+    $format = system_get_date_format($dfid);
+  }
+
+  $now = ($dfid ? t('Displayed as %date', array('%date' => format_date(REQUEST_TIME, 'custom', $format->format))) : '');
+
+  $form['date_format'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Format string'),
+    '#description' => t('A user-defined date format. See the <a href="@url">PHP manual</a> for available options.', array('@url' => 'http://php.net/manual/function.date.php')),
+    '#default_value' => ($dfid ? $format->format : ''),
+    '#field_suffix' => ' <small id="edit-date-format-suffix">' . $now . '</small>',
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+    ),
+  );
+
+  $form['update'] = array(
+    '#type' => 'submit',
+    '#value' => ($dfid ? t('Save format') : t('Add format')),
+  );
+
+  $form['#validate'][] = 'system_add_date_formats_form_validate';
+  $form['#submit'][] = 'system_add_date_formats_form_submit';
+
+  return $form;
+}
+
+/**
+ * Validate new date format string submission.
+ */
+function system_add_date_formats_form_validate($form, &$form_state) {
+  $formats = system_get_date_formats('custom');
+  $format = trim($form_state['values']['date_format']);
+  if (!empty($formats) && in_array($format, array_keys($formats)) && (!isset($form_state['values']['dfid']) || $form_state['values']['dfid'] != $formats[$format]['dfid'])) {
+    form_set_error('date_format', t('This format already exists. Please enter a unique format string.'));
+  }
+}
+
+/**
+ * Process new date format string submission.
+ */
+function system_add_date_formats_form_submit($form, &$form_state) {
+  $format = array();
+  $format['format'] = trim($form_state['values']['date_format']);
+  $format['type'] = 'custom';
+  $format['locked'] = 0;
+  if (!empty($form_state['values']['dfid'])) {
+    system_date_format_save($format, $form_state['values']['dfid']);
+    drupal_set_message(t('Custom date format updated.'));
+  }
+  else {
+    $format['is_new'] = 1;
+    system_date_format_save($format);
+    drupal_set_message(t('Custom date format added.'));
+  }
+
+  $form_state['redirect'] = 'admin/config/regional/date-time/formats';
 }
 
 /**

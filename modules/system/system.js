@@ -97,22 +97,20 @@ Drupal.behaviors.copyFieldValue = {
  */
 Drupal.behaviors.dateTime = {
   attach: function (context, settings) {
-    // Show/hide custom format depending on the select's value.
-    $('select.date-format', context).once('date-time').change(function () {
-      $(this).parents('div.date-container').children('div.custom-container')[$(this).val() == 'custom' ? 'show' : 'hide']();
-    });
+    for (var value in settings.dateTime) {
+      var settings = settings.dateTime[value];
+      var source = '#edit-' + value;
+      var suffix = source + '-suffix';
 
-    // Attach keyup handler to custom format inputs.
-    $('input.custom-format', context).once('date-time').keyup(function () {
-      var input = $(this);
-      var url = settings.dateTime.lookup + (settings.dateTime.lookup.match(/\?q=/) ? '&format=' : '?format=') + encodeURIComponent(input.val());
-      $.getJSON(url, function (data) {
-        $('div.description span', input.parent()).html(data);
+      // Attach keyup handler to custom format inputs.
+      $('input' + source, context).once('date-time').keyup(function () {
+        var input = $(this);
+        var url = settings.lookup + (settings.lookup.match(/\?q=/) ? '&format=' : '?format=') + encodeURIComponent(input.val());
+        $.getJSON(url, function (data) {
+          $(suffix).empty().append(' ' + settings.text + ': <em>' + data + '</em>');
+        });
       });
-    });
-
-    // Trigger the event handler to show the form input if necessary.
-    $('select.date-format', context).trigger('change');
+    }
   }
 };
 
