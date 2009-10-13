@@ -31,7 +31,7 @@ abstract class DrupalTestCase {
   /**
    * Time limit for the test.
    */
-  protected $timeLimit = 180;
+  protected $timeLimit = 500;
 
   /**
    * Current results of this test case.
