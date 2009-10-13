@@ -6,6 +6,7 @@ core = 7.x
 dependencies[] = block
 dependencies[] = color
 dependencies[] = comment
+dependencies[] = dashboard
 dependencies[] = help
 dependencies[] = image 
 dependencies[] = menu

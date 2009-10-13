@@ -1,0 +1,425 @@
+<?php
+// $Id$
+
+/**
+ * Implement hook_menu().
+ */
+function dashboard_menu() {
+  $items['admin/dashboard'] = array(
+    'title' => 'Dashboard',
+    'page callback' => 'dashboard_admin',
+    'access arguments' => array('access dashboard'),
+    // Make this appear first, so for example, in admin menus, it shows up on
+    // the top corner of the window as a convinient "home link".
+    'weight' => -100,
+  );
+  $items['admin/dashboard/customize'] = array(
+    'title' => 'Dashboard',
+    'page callback' => 'dashboard_admin',
+    'page arguments' => array(TRUE),
+    'access arguments' => array('access dashboard'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/dashboard/drawer'] = array(
+    'page callback' => 'dashboard_show_disabled',
+    'access arguments' => array('administer blocks'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/dashboard/block-content/%/%'] = array(
+    'page callback' => 'dashboard_show_block_content',
+    'page arguments' => array(3, 4),
+    'access arguments' => array('administer blocks'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/dashboard/update'] = array(
+    'page callback' => 'dashboard_update',
+    'access arguments' => array('administer blocks'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implement hook_block_info_alter().
+ *
+ * Skip rendering dashboard blocks when not on the dashboard page itself. This
+ * prevents expensive dashboard blocks from causing performance issues on pages
+ * where they will never be displayed.
+ */
+function dashboard_block_info_alter(&$blocks) {
+  if (!dashboard_is_visible()) {
+    foreach ($blocks as $key => $block) {
+      if (in_array($block->region, dashboard_regions())) {
+        unset($blocks[$key]);
+      }
+    }
+  }
+}
+
+/**
+ * Implement hook_page_alter().
+ *
+ * Display dashboard blocks in the main content region.
+ */
+function dashboard_page_alter(&$page) {
+  global $theme_key;
+
+  if (dashboard_is_visible()) {
+    $block_info = array();
+    
+    // Create a wrapper for the dashboard itself, then insert each dashboard
+    // region into it.
+    $page['content']['dashboard'] = array('#theme_wrappers' => array('dashboard'));
+    foreach (dashboard_regions() as $region) {
+      // Insert regions even when they are empty, so that they will be
+      // displayed when the dashboard is being configured.
+      $page['content']['dashboard'][$region] = !empty($page[$region]) ? $page[$region] : array();
+      $page['content']['dashboard'][$region]['#dashboard_region'] = $region;
+      // Allow each dashboard region to be themed differently, or fall back on
+      // the generic theme wrapper function for dashboard regions.
+      $page['content']['dashboard'][$region]['#theme_wrappers'][] = array($region, 'dashboard_region');
+      unset($page[$region]);
+      $blocks_found = array();
+      foreach ($page['content']['dashboard'][$region] as $item) {
+        if (isset($item['#theme_wrappers']) && is_array($item['#theme_wrappers']) && in_array('block', $item['#theme_wrappers'])) {
+          // If this item is a block, ensure it has a subject.
+          if (empty($item['#block']->subject)) {
+            // Locally cache info data for the object for all blocks, in case
+            // we find a block similarly missing title from the same module.
+            if (!isset($block_info[$item['#block']->module])) {
+              $block_info[$item['#block']->module] = module_invoke($item['#block']->module, 'block_info');
+            }
+            $item['#block']->subject = $block_info[$item['#block']->module][$item['#block']->delta]['info'];
+          }
+          $blocks_found[$item['#block']->module . '_' . $item['#block']->delta] = TRUE;
+        }
+      }
+
+      // Find blocks which were not yet displayed on the page (were empty), and
+      // add placeholder items in their place for rendering.
+      $block_list = db_select('block')
+        ->condition('theme', $theme_key)
+        ->condition('status', 1)
+        ->condition('region', $region)
+        ->fields('block')
+        ->execute();
+      foreach ($block_list as $block) {
+        if (!isset($blocks_found[$block->module . '_' . $block->delta])) {
+          $block->enabled = $block->page_match = TRUE;
+          $block->content = array('#markup' => '<div class="dashboard-block-empty">(empty)</div>');
+          if (!isset($block_info[$block->module])) {
+            $block_info[$block->module] = module_invoke($block->module, 'block_info');
+          }
+          $block->subject = t('@title', array('@title' => $block_info[$block->module][$block->delta]['info']));
+          $block_render = array($block->module . '_' . $block->delta => $block);
+          $build = _block_get_renderable_array($block_render);
+          $page['content']['dashboard'][$block->region][] = $build;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implement hook_permission().
+ */
+function dashboard_permission() {
+  return array(
+    'access dashboard' => array(
+      'title' => t('View the administrative dashboard'),
+      'description' => t('Access the site-wide dashboard. Modifying the dashboard requires the "Administer blocks" permission.'),
+    ),
+  );
+}
+
+/**
+ * Implement hook_system_info_alter().
+ *
+ * Add regions to each theme to store the dashboard blocks.
+ */
+function dashboard_system_info_alter(&$info, $file, $type) {
+  if ($type == 'theme') {
+    $info['regions'] += dashboard_region_descriptions();
+    if (module_exists('overlay')) {
+      $info['overlay_regions'] = !empty($info['overlay_regions']) ? array_merge($info['overlay_regions'], dashboard_regions()) : dashboard_regions();
+    }
+  }
+}
+
+/**
+ * Implement hook_theme().
+ */
+function dashboard_theme() {
+  return array(
+    'dashboard' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'dashboard_region' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'dashboard_disabled_blocks' => array(
+      'arguments' => array('blocks' => NULL),
+    ),
+    'dashboard_disabled_block' => array(
+      'arguments' => array('block' => NULL),
+    ),
+  );
+}
+
+/**
+ * Dashboard page callback.
+ *
+ * @param $launch_customize
+ *   Whether to launch in customization mode right away. TRUE or FALSE.
+ */
+function dashboard_admin($launch_customize = FALSE) {
+  $output = '';
+  if (user_access('administer blocks')) {
+    $output .= '<div class="customize-dashboard js-hide">' . t('To customize the dashboard page, move blocks to the dashboard regions on !block-admin, or enable JavaScript on this page to use the drag-and-drop interface.', array('!block-admin' => l('the block administration page', 'admin/structure/block'))) . '</div>';
+    drupal_add_js(drupal_get_path('module', 'dashboard') . '/dashboard.js');
+    $settings = array(
+      'dashboard' => array(
+        'drawer' => url('admin/dashboard/drawer'),
+        'blockContent' => url('admin/dashboard/block-content'),
+        'updatePath' => url('admin/dashboard/update'),
+        'formToken' => drupal_get_token('dashboard-update'),
+        'launchCustomize' => $launch_customize,
+        'dashboard' => url('admin/dashboard'),
+        'emptyBlockText' => _dashboard_get_default_string('dashboard_empty_block_text'),
+        'emptyRegionTextInactive' => _dashboard_get_default_string('dashboard_empty_region_text_inactive'),
+        'emptyRegionTextActive' => _dashboard_get_default_string('dashboard_empty_region_text_active'),
+      ),
+    );
+    drupal_add_js($settings, array('type' => 'setting'));
+    drupal_add_library('system', 'ui.sortable');
+  }
+  // We do not return any main page content, because the content of the page
+  // will be populated via the dashboard regions in dashboard_page_alter().
+  return $output;
+}
+
+/**
+ * Returns TRUE if the user is currently viewing the dashboard.
+ */
+function dashboard_is_visible() {
+  $menu_item = menu_get_item();
+  return isset($menu_item['page_callback']) && $menu_item['page_callback'] == 'dashboard_admin';
+}
+
+/**
+ * Return an array of dashboard region descriptions, keyed by region name.
+ */
+function dashboard_region_descriptions() {
+  $default_regions = array(
+    'dashboard_main' =>  'Dashboard main',
+    'dashboard_sidebar' => 'Dashboard sidebar',
+  );
+  return variable_get('dashboard_region_descriptions', $default_regions);
+}
+
+/**
+ * Return an array of dashboard region names.
+ */
+function dashboard_regions() {
+  return array_keys(dashboard_region_descriptions());
+}
+
+/**
+ * AJAX callback to show disabled blocks in the dashboard customization mode.
+ */
+function dashboard_show_disabled() {
+  global $theme_key;
+
+  // Blocks are not necessarily initialized at this point.
+  $blocks = _block_rehash();
+
+  // Limit the list to disabled blocks for the current theme.
+  foreach ($blocks as $key => $block) {
+    if ($block['theme'] != $theme_key || (!empty($block['status']) && !empty($block['region']))) {
+      unset($blocks[$key]);
+    }
+  }
+
+  // Theme the output and end the page request.
+  print theme('dashboard_disabled_blocks', array('blocks' => $blocks));
+  exit();
+}
+
+/**
+ * AJAX callback to display the rendered contents of a specific block.
+ * 
+ * @param $module
+ *   The block's module name.
+ * @param $delta 
+ *   The block's delta.
+ */
+function dashboard_show_block_content($module, $delta) {
+  drupal_theme_initialize();
+  global $theme_key;
+
+  $blocks = array();
+  $block_object = db_query("SELECT * FROM {block} WHERE theme = :theme AND module = :module AND delta = :delta", array(
+    ":theme" => $theme_key,
+    ":module" => $module,
+    ":delta" => $delta,
+    ))
+    ->fetchObject();
+  $block_object->enabled = $block_object->page_match = TRUE;
+  $blocks[$module . "_" . $delta] = $block_object;
+  $block_content = _block_render_blocks($blocks);
+  $build = _block_get_renderable_array($block_content);
+  $rendered_block = drupal_render($build);
+  print $rendered_block;
+  exit;
+}
+
+/**
+ * Set the new weight of each region according to the drag-and-drop order.
+ */
+function dashboard_update() {
+  drupal_theme_initialize();
+  global $theme_key;
+  // Check the form token to make sure we have a valid request.
+  if (!empty($_REQUEST['form_token']) && drupal_valid_token($_REQUEST['form_token'], 'dashboard-update')) {
+    parse_str($_REQUEST['regions'], $regions);
+    foreach ($regions as $region_name => $blocks) {
+      if ($region_name == 'disabled_blocks') {
+        $region_name = '';
+      }
+      foreach ($blocks as $weight => $block_string) {
+        // Parse the query string to determine the block's module and delta.
+        preg_match('/block-([^-]+)-(.+)/', $block_string, $matches);
+        $block = new stdClass;
+        $block->module = $matches[1];
+        $block->delta = $matches[2];
+
+        $block->region = $region_name;
+        $block->weight = $weight;
+        if (empty($region_name)) {
+          $block->status = 0;
+        }
+        else {
+          $block->status = 1;
+        }
+
+        db_merge('block')
+          ->key(array(
+            'module' => $block->module,
+            'delta' => $block->delta,
+            'theme' => $theme_key,
+          ))
+          ->fields(array(
+            'status' => $block->status,
+            'weight' => $block->weight,
+            'region' => $block->region,
+            'pages' => '',
+          ))
+          ->execute();
+      }
+    }
+  }
+  exit;
+}
+
+/**
+ * Theme the entire dashboard.
+ *
+ * @param $variables
+ *   - element: An associative array containing the properties of the dashboard region
+ *              element. Properties used: #dashboard_region, #children
+ * @return
+ *   A string representing the themed dashboard.
+ *
+ * @ingroup themeable
+ */
+function theme_dashboard($variables) {
+  extract($variables);
+  drupal_add_css(drupal_get_path('module', 'dashboard') . '/dashboard.css');
+  return '<div id="dashboard">' . $element['#children'] . '</div>';
+}
+
+/**
+ * Theme a generic dashboard region.
+ *
+ * @param $variables
+ *   - element: An associative array containing the properties of the dashboard region
+ *              element. Properties used: #dashboard_region, #children
+ * @return
+ *   A string representing the themed dashboard region.
+ *
+ * @ingroup themeable
+ */
+function theme_dashboard_region($variables) {
+  extract($variables);
+  $output = '<div id="' . $element['#dashboard_region'] . '" class="dashboard-region">';
+  $output .= $element['#children'];
+  if (!$element['#children']) {
+    $output .= "<div class='region'></div>";
+  }
+
+  $output .= '</div>';
+  return $output;
+}
+
+/**
+ * Theme a set of disabled blocks, for display in dashboard customization mode.
+ *
+ * @param $variables
+ *   - blocks: An array of block objects from _block_rehash().
+ * @return
+ *   A string representing the disabled blocks region of the dashboard
+ *   customization page.
+ *
+ * @ingroup themeable
+ */
+function theme_dashboard_disabled_blocks($variables) {
+  extract($variables);
+  $output = '<div class="canvas-content"><p>' . t('Drag and drop dashboard blocks to their place. Changes are automatically saved. You can also <a href="@add-block">add a custom block</a>.', array('@add-block' => url('admin/structure/block/add', array('query' => array('destination' => 'admin/dashboard/customize'))))) . '</p>';
+  $output .= '<div id="disabled-blocks"><div class="section region disabled-blocks clearfix">';
+  foreach ($blocks as $block) {
+    $output .= theme('dashboard_disabled_block', array('block' => $block));
+  }
+  $output .= '</div></div></div>';
+  return $output;
+}
+
+/**
+ * Theme a disabled block, for display in dashboard customization mode.
+ *
+ * @param $variables
+ *   - block: A block object from _block_rehash().
+ * @return
+ *   A string representing the disabled block.
+ *
+ * @ingroup themeable
+ */
+function theme_dashboard_disabled_block($variables) {
+  extract($variables);
+  $output = "";
+  if (isset($block)) {
+    $output .= '<div id="block-' . $block['module'] . '-' . $block['delta']
+    . '" class="disabled-block block block-' . $block['module'] . '-' . $block['delta']
+    . ' module-'.$block['module'].' delta-'.$block['delta'].'">'
+    . '<h2>'.(!empty($block['title']) ? $block['title'] : $block['info']).'</h2>'
+    . '<div class="content"></div>'
+    . '</div>';
+  }
+  return $output;
+}
+
+/**
+ * Central storage for strings.
+ *
+ * @param <type> $key
+ * @return string
+ */
+function _dashboard_get_default_string($key) {
+  $defaults = array(
+    'dashboard_empty_region_text_inactive' => 'This dashboard region is empty, click customize to add blocks to it.',
+    'dashboard_empty_block_text' => '(empty)',
+    'dashboard_empty_region_text_active' => 'DRAG HERE',
+  );
+  return t(variable_get($key, $defaults[$key]));
+
+}
+

@@ -26,7 +26,7 @@ function toolbar_install() {
   $items = array(
     'node/add' => 'Add content',
     'admin/content' => 'Find content',
-    'admin' => 'Dashboard',
+    'admin/dashboard' => 'Dashboard',
   );
   $weight = -20;
   foreach ($items as $path => $title) {

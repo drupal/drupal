@@ -183,7 +183,7 @@ function system_test_exit() {
 /**
  * Implement hook_system_info_alter().
  */
-function system_test_system_info_alter(&$info, $file) {
+function system_test_system_info_alter(&$info, $file, $type) {
   // We need a static otherwise the last test will fail to alter common_test.
   static $test;
   if (($dependencies = variable_get('dependencies', array())) || $test) {

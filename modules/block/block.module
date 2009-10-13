@@ -243,20 +243,34 @@ function block_page_build(&$page) {
  *   The requested region.
  */
 function block_get_blocks_by_region($region) {
-  $weight = 0;
   $build = array();
   if ($list = block_list($region)) {
-    foreach ($list as $key => $block) {
-      $build[$key] = $block->content;
-      unset($block->content);
-      $build[$key] += array(
-        '#block' => $block,
-        '#weight' => ++$weight,
-      );
-      $build[$key]['#theme_wrappers'][] ='block';
-    }
-    $build['#sorted'] = TRUE;
+    $build = _block_get_renderable_array($list);
   }
+  return $build;
+}
+
+/**
+ * Get an array of blocks suitable for drupal_render().
+ *
+ * @param $list
+ *   A list of blocks such as that returned by block_list().
+ * @return
+ *   A renderable array.
+ */
+function _block_get_renderable_array($list = array()) {
+  $weight = 0;
+  $build = array();
+  foreach ($list as $key => $block) {
+    $build[$key] = $block->content;
+    unset($block->content);
+    $build[$key] += array(
+      '#block' => $block,
+      '#weight' => ++$weight,
+    );
+    $build[$key]['#theme_wrappers'][] ='block';
+  }
+  $build['#sorted'] = TRUE;
   return $build;
 }
 
