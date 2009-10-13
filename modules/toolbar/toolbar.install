@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.install,v 1.5 2009/10/09 08:02:25 webchick Exp $
+// $Id: toolbar.install,v 1.6 2009/10/13 13:54:55 dries Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function toolbar_install() {
   $items = array(
     'node/add' => 'Add content',
     'admin/content' => 'Find content',
-    'admin' => 'Dashboard',
+    'admin/dashboard' => 'Dashboard',
   );
   $weight = -20;
   foreach ($items as $path => $title) {

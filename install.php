@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.215 2009/10/13 07:09:26 webchick Exp $
+// $Id: install.php,v 1.216 2009/10/13 13:54:52 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1437,6 +1437,14 @@ function install_finished(&$install_state) {
   if (module_exists('help')) {
     $output .= '<p>' . st('For more information on configuring Drupal, refer to the <a href="@help">help section</a>.', array('@help' => url('admin/help'))) . '</p>';
   }
+
+  // Rebuild the module and theme data, in case any newly-installed modules
+  // need to modify it via hook_system_info_alter(). We need to clear the
+  // theme static cache first, to make sure that the theme data is actually
+  // rebuilt.
+  drupal_static_reset('_system_get_theme_data');
+  system_get_module_data();
+  system_get_theme_data();
 
   // Rebuild menu and registry to get content type links registered by the
   // profile, and possibly any other menu items created through the tasks.

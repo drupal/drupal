@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.17 2009/09/30 18:36:02 dries Exp $
+// $Id: system_test.module,v 1.18 2009/10/13 13:54:55 dries Exp $
 
 /**
  * Implement hook_menu().
@@ -183,7 +183,7 @@ function system_test_exit() {
 /**
  * Implement hook_system_info_alter().
  */
-function system_test_system_info_alter(&$info, $file) {
+function system_test_system_info_alter(&$info, $file, $type) {
   // We need a static otherwise the last test will fail to alter common_test.
   static $test;
   if (($dependencies = variable_get('dependencies', array())) || $test) {
