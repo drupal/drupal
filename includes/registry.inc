@@ -35,7 +35,7 @@ function _registry_rebuild() {
   require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/query.inc';
 
   // Get current list of modules and their files.
-  $modules = system_get_module_data();
+  $modules = system_rebuild_module_data();
   // Get the list of files we are going to parse.
   $files = array();
   foreach ($modules as &$module) {

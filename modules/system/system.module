@@ -1847,12 +1847,35 @@ function system_update_files_database(&$files, $type) {
 }
 
 /**
+ * Returns an array of information about active modules or themes.
+ *
+ * This function returns the information from the {system} table corresponding
+ * to the cached contents of the .info file for each active module or theme.
+ *
+ * @param $type
+ *   Either 'module' or 'theme'.
+ * @return
+ *   An associative array of module or theme information keyed by name.
+ *
+ * @see system_rebuild_module_data()
+ * @see system_rebuild_theme_data()
+ */
+function system_get_info($type) {
+  $info = array();
+  $result = db_query('SELECT name, info FROM {system} WHERE type = :type AND status = 1', array(':type' => $type));
+  foreach ($result as $item) {
+    $info[$item->name] = unserialize($item->info);
+  }
+  return $info;
+}
+
+/**
  * Helper function to scan and collect module .info data.
  *
  * @return
  *   An associative array of module information.
  */
-function _system_get_module_data() {
+function _system_rebuild_module_data() {
   // Find modules
   $modules = drupal_system_listing('/\.module$/', 'modules', 'name', 0);
 
@@ -1903,13 +1926,13 @@ function _system_get_module_data() {
 }
 
 /**
- * Collect data about all currently available modules.
+ * Rebuild, save, and return data about all currently available modules.
  *
  * @return
  *   Array of all available modules and their data.
  */
-function system_get_module_data() {
-  $modules = _system_get_module_data();
+function system_rebuild_module_data() {
+  $modules = _system_rebuild_module_data();
   ksort($modules);
   system_get_files_database($modules, 'module');
   system_update_files_database($modules, 'module');
@@ -1939,7 +1962,7 @@ function system_get_module_data() {
  * @return
  *   An associative array of themes information.
  */
-function _system_get_theme_data() {
+function _system_rebuild_theme_data() {
   $themes_info = &drupal_static(__FUNCTION__, array());
 
   if (empty($themes_info)) {
@@ -2065,13 +2088,13 @@ function _system_get_theme_data() {
 }
 
 /**
- * Collect data about all currently available themes.
+ * Rebuild, save, and return data about all currently available themes.
  *
  * @return
  *   Array of all available themes and their data.
  */
-function system_get_theme_data() {
-  $themes = _system_get_theme_data();
+function system_rebuild_theme_data() {
+  $themes = _system_rebuild_theme_data();
   ksort($themes);
   system_get_files_database($themes, 'theme');
   system_update_files_database($themes, 'theme');

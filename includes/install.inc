@@ -559,7 +559,7 @@ function drupal_verify_profile($install_state) {
  *   Normally just testing wants to set this to TRUE.
  */
 function drupal_install_modules($module_list = array(), $disable_modules_installed_hook = FALSE) {
-  $files = system_get_module_data();
+  $files = system_rebuild_module_data();
   $module_list = array_flip(array_values($module_list));
   do {
     $moved = FALSE;
@@ -654,7 +654,7 @@ function drupal_install_system() {
     ->execute();
   // Now that we've installed things properly, bootstrap the full Drupal environment
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-  system_get_module_data();
+  system_rebuild_module_data();
 }
 
 /**

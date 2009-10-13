@@ -146,12 +146,11 @@ function system_admin_menu_block_page() {
  */
 function system_admin_by_module() {
 
-  $modules = system_get_module_data();
+  $module_info = system_get_info('module');
   $menu_items = array();
   $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
-  foreach ($modules as $file) {
-    $module = $file->name;
+  foreach ($module_info as $module => $info) {
     if ($module == 'help') {
       continue;
     }
@@ -169,7 +168,7 @@ function system_admin_by_module() {
       // Sort.
       ksort($admin_tasks);
 
-      $menu_items[$file->info['name']] = array($file->info['description'], $admin_tasks);
+      $menu_items[$info['name']] = array($info['description'], $admin_tasks);
     }
   }
   return theme('system_admin_by_module', array('menu_items' => $menu_items));
@@ -200,7 +199,7 @@ function system_settings_overview() {
  */
 function system_themes_form() {
   // Get current list of themes.
-  $themes = system_get_theme_data();
+  $themes = system_rebuild_theme_data();
 
   // Remove hidden themes from the display list.
   foreach ($themes as $theme_key => $theme) {
@@ -396,7 +395,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   if ($key) {
     $settings = theme_get_settings($key);
     $var = str_replace('/', '_', 'theme_' . $key . '_settings');
-    $themes = system_get_theme_data();
+    $themes = system_rebuild_theme_data();
     $features = $themes[$key]->info['features'];
   }
   else {
@@ -643,7 +642,7 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  */
 function system_modules($form, $form_state = array()) {
   // Get current list of modules.
-  $files = system_get_module_data();
+  $files = system_rebuild_module_data();
 
   // Remove hidden modules from display list.
   foreach ($files as $filename => $file) {
@@ -834,7 +833,7 @@ function _system_modules_build_row($info, $extra) {
  * Display confirmation form for required modules.
  *
  * @param $modules
- *   Array of module file objects as returned from system_get_module_data().
+ *   Array of module file objects as returned from system_rebuild_module_data().
  * @param $storage
  *   The contents of $form_state['storage']; an array with two
  *   elements: the list of required modules and the list of status
@@ -891,7 +890,7 @@ function system_modules_submit($form, &$form_state) {
 
   // Get a list of all modules, it will be used to find which module requires
   // which.
-  $files = system_get_module_data();
+  $files = system_rebuild_module_data();
 
   // The modules to be enabled.
   $modules_to_be_enabled = array();

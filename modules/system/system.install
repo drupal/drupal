@@ -345,12 +345,12 @@ function system_install() {
   }
 
   // Clear out module list and hook implementation statics before calling
-  // system_get_theme_data().
+  // system_rebuild_theme_data().
   module_list(TRUE);
   module_implements('', FALSE, TRUE);
 
   // Load system theme data appropriately.
-  system_get_theme_data();
+  system_rebuild_theme_data();
 
   // Inserting uid 0 here confuses MySQL -- the next user might be created as
   // uid 2 which is not what we want. So we insert the first user here, the
@@ -2212,7 +2212,7 @@ function system_update_7021() {
   variable_del('site_footer');
 
   // Rebuild theme data, so the new 'help' region is identified.
-  system_get_theme_data();
+  system_rebuild_theme_data();
 }
 
 /**

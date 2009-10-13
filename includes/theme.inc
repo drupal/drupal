@@ -569,7 +569,7 @@ function list_themes($refresh = FALSE) {
     }
     else {
       // Scan the installation when the database should not be read.
-      $themes = _system_get_theme_data();
+      $themes = _system_rebuild_theme_data();
     }
 
     foreach ($themes as $theme) {
@@ -2342,7 +2342,7 @@ function template_preprocess_maintenance_page(&$variables) {
 
   global $theme;
   // Retrieve the theme data to list all available regions.
-  $theme_data = _system_get_theme_data();
+  $theme_data = _system_rebuild_theme_data();
   $regions = $theme_data[$theme]->info['regions'];
 
   // Get all region content set with drupal_add_region_content().

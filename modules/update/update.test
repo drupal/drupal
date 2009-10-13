@@ -250,7 +250,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
    * "CCC Update test" project. We need to make sure that we see the "BBB"
    * project before the "CCC" project, even though "CCC" includes a module
    * that's processed first if you sort alphabetically by module name (which
-   * is the order we see things inside system_get_module_data() for example).
+   * is the order we see things inside system_rebuild_module_data() for example).
    */
   function testUpdateContribOrder() {
     // We want core to be version 7.0.
