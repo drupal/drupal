@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.test,v 1.19 2009/10/11 03:07:21 webchick Exp $
+// $Id: trigger.test,v 1.20 2009/10/13 05:37:46 webchick Exp $
 
 class TriggerContentTestCase extends DrupalWebTestCase {
   var $_cleanup_roles = array();
@@ -165,7 +165,7 @@ class TriggerCronTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/trigger/system', $edit, t('Assign'));
 
     // Force a cron run.
-    drupal_cron_run();
+    $this->cronRun();
 
     // Make sure the non-configurable action has fired.
     $action_run = variable_get('trigger_test_system_cron_action', FALSE);

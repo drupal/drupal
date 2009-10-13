@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.38 2009/10/11 03:07:19 webchick Exp $
+// $Id: search.test,v 1.39 2009/10/13 05:37:45 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -499,7 +499,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Invoke search index update.
     $this->drupalLogout();
-    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))));
+    $this->cronRun();
 
     // Search for $title.
     $edit = array(
@@ -521,7 +521,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Invoke search index update.
     $this->drupalLogout();
-    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))));
+    $this->cronRun();
 
     // Search for $title.
     $this->drupalPost('', $edit, t('Search'));

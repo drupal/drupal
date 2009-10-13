@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1014 2009/10/13 05:26:57 webchick Exp $
+// $Id: common.inc,v 1.1015 2009/10/13 05:37:45 webchick Exp $
 
 /**
  * @file
@@ -4098,9 +4098,12 @@ function drupal_page_set_cache() {
 }
 
 /**
- * Executes a cron run when called
+ * Executes a cron run when called.
+ *
+ * Do not call this function from test, use $this->cronRun() instead.
+ *
  * @return
- * Returns TRUE if ran successfully
+ *   Returns TRUE if ran successfully
  */
 function drupal_cron_run() {
   // Allow execution to continue even if the request gets canceled.

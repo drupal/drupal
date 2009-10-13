@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.158 2009/10/11 03:07:19 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.159 2009/10/13 05:37:46 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1497,6 +1497,13 @@ class DrupalWebTestCase extends DrupalTestCase {
       $this->assertTrue($submit_matches, t('Found the @submit button', array('@submit' => $submit)));
       $this->fail(t('Found the requested form fields at @path', array('@path' => $path)));
     }
+  }
+
+  /**
+   * Runs cron in the Drupal installed by Simpletest.
+   */
+  protected function cronRun() {
+    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))));
   }
 
   /**
