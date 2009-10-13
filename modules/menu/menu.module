@@ -56,6 +56,12 @@ function menu_menu() {
     'access arguments' => array('administer menu'),
     'file' => 'menu.admin.inc',
   );
+  $items['admin/structure/menu/parents'] = array(
+    'title' => 'Parent menu items',
+    'page callback' => 'menu_parent_options_js',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array(TRUE),
+  );
   $items['admin/structure/menu/list'] = array(
     'title' => 'List menus',
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -295,7 +301,7 @@ function menu_delete($menu) {
  * @param $menus
  *   An array of menu names and titles, such as from menu_get_menus().
  * @param $item
- *   The menu item for which to generate a list of parents.
+ *   The menu item or the node type for which to generate a list of parents.
  *   If $item['mlid'] == 0 then the complete tree is returned.
  * @return
  *   An array of menu link titles keyed on the a string containing the menu name
@@ -309,6 +315,45 @@ function menu_parent_options($menus, $item) {
   if (variable_get('menu_override_parent_selector', FALSE)) {
     return array();
   }
+
+  $available_menus = array();
+  if (is_array($item)) {
+    // If $item is an array fill it with all menus given to this function.
+    $available_menus = $menus;
+  }
+  else {
+    // If $item is a node type, get all available menus for this type and
+    // prepare a dummy menu item for _menu_parent_depth_limit().
+    $type_menus = variable_get('menu_options_' . $item, array('main-menu' => 'main-menu'));
+    foreach ($type_menus as $menu) {
+      $available_menus[$menu] = $menu;
+    }
+    $item = array('mlid' => 0);
+  }
+
+  return _menu_get_options($menus, $available_menus, $item);
+}
+
+/**
+ * Page callback.
+ * Get all available menus and menu items as Javascript array.
+ */
+function menu_parent_options_js() {
+  $available_menus = array();
+  if (isset($_POST['menus']) && count($_POST['menus'])) {
+    foreach ($_POST['menus'] as $menu) {
+      $available_menus[$menu] = $menu;
+    }
+  }
+  $options = _menu_get_options(menu_get_menus(), $available_menus, array('mlid' => 0));
+  error_log( var_export( $options, 1) );
+  print drupal_json_output($options);
+}
+
+/**
+ * Helper function to get the items of the given menu.
+ */
+function _menu_get_options($menus, $available_menus, $item) {
   // If the item has children, there is an added limit to the depth of valid parents.
   if (isset($item['parent_depth_limit'])) {
     $limit = $item['parent_depth_limit'];
@@ -317,10 +362,13 @@ function menu_parent_options($menus, $item) {
     $limit = _menu_parent_depth_limit($item);
   }
 
+  $options = array();
   foreach ($menus as $menu_name => $title) {
-    $tree = menu_tree_all_data($menu_name, NULL);
-    $options[$menu_name . ':0'] = '<' . $title . '>';
-    _menu_parents_recurse($tree, $menu_name, '--', $options, $item['mlid'], $limit);
+    if (isset($available_menus[$menu_name])) {
+      $tree = menu_tree_all_data($menu_name, NULL);
+      $options[$menu_name . ':0'] = '<' . $title . '>';
+      _menu_parents_recurse($tree, $menu_name, '--', $options, $item['mlid'], $limit);
+    }
   }
   return $options;
 }
@@ -486,6 +534,15 @@ function _menu_parent_depth_limit($item) {
  */
 function menu_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
+    // Generate a list of possible parents.
+    $type = $form['#node']->type;
+    $options = menu_parent_options(menu_get_menus(), $type);
+    if (count($options) == 0) {
+      // No possible parent menu items found so there is no need to display the
+      // menu options.
+      return;
+    }
+
     // Note - doing this to make sure the delete checkbox stays in the form.
     $form['#cache'] = TRUE;
 
@@ -527,9 +584,8 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       '#description' => t('The link text corresponding to this item that should appear in the menu. Leave blank if you do not wish to add this post to the menu.'),
       '#required' => FALSE,
     );
-    // Generate a list of possible parents (not including this item or descendants).
-    $options = menu_parent_options(menu_get_menus(), $item);
-    $default = $item['menu_name'] . ':' . $item['plid'];
+
+    $default = ($item['mlid'] ? $item['menu_name'] . ':' . $item['plid'] : variable_get('menu_parent_' . $type, 'main-menu:0'));
     if (!isset($options[$default])) {
       $default = 'navigation:0';
     }
@@ -551,6 +607,51 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
     );
   }
+}
+
+/**
+ * Implement hook_form_FORM_ID_alter() for the node type form.
+ * Adds menu options to the node type form.
+ */
+function menu_form_node_type_form_alter(&$form, $form_state) {
+  $menu_options = menu_get_menus();
+  $type = $form['#node_type'];
+  $form['menu'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Menu settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'menu') . '/menu.admin.js'),
+    ),
+    '#group' => 'additional_settings',
+  );
+  $form['menu']['menu_options'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Available menus'),
+    '#default_value' => variable_get('menu_options_' . $type->type, array('main-menu' => 'main-menu')),
+    '#options' => $menu_options,
+    '#description' => t('The menus available to place links in for this content type.'),
+  );
+  // To avoid an 'illegal option' error after saving the form we have to load
+  // all available menu items.
+  // Otherwise it is not possible to dynamically add options to the list.
+  $options = menu_parent_options(menu_get_menus(), array('mlid' => 0));
+  $form['menu']['menu_parent'] = array(
+    '#type' => 'select',
+    '#title' => t('Default parent item'),
+    '#default_value' => variable_get('menu_parent_' . $type->type, 'main-menu:0'),
+    '#options' => $options,
+    '#description' => t('Choose the menu item to be the default parent for a new link in the content authoring form.'),
+    '#attributes' => array('class' => array('menu-title-select')),
+  );
+
+  // Call Drupal.menu_update_parent_list() to filter the list of
+  // available default parent menu items based on the selected menus.
+  drupal_add_js(
+    '(function ($) { Drupal.menu_update_parent_list(); })(jQuery);',
+    array('scope' => 'footer', 'type' => 'inline')
+  );
 }
 
 /**
