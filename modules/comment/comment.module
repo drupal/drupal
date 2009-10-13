@@ -1511,6 +1511,7 @@ class CommentController extends DrupalDefaultEntityController {
       $comment->node_type = 'comment_node_' . $comment->node_type;
       $comments[$key] = $comment;
     }
+    parent::attachLoad($comments);
   }
 }
 
