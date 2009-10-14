@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.32 2009/10/10 20:46:17 dries Exp $
+// $Id: path.admin.inc,v 1.33 2009/10/14 20:42:47 dries Exp $
 
 /**
  * @file
@@ -186,7 +186,7 @@ function path_admin_delete_confirm($form, $form_state, $pid) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
     $output = confirm_form($form,
       t('Are you sure you want to delete path alias %title?', array('%title' => $path['dst'])),
-      isset($_GET['destination']) ? $_GET['destination'] : 'admin/config/search/path');
+      'admin/config/search/path');
   }
   return $output;
 }
