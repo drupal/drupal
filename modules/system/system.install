@@ -2113,7 +2113,7 @@ function system_update_7017() {
   }
 
   // Unset deprecated 'toggle_node_info' theme settings.
-  $theme_settings = theme_get_settings();
+  $theme_settings = variable_get('theme_settings', array());
   foreach ($theme_settings as $setting => $value) {
     if (substr($setting, 0, 16) == 'toggle_node_info') {
       unset($theme_settings[$setting]);

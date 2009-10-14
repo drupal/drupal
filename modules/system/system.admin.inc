@@ -391,15 +391,13 @@ function system_theme_settings($form, &$form_state, $key = '') {
     drupal_set_message(t('The directory %directory does not exist or is not writable.', array('%directory' => $directory_path)), 'warning');
   }
 
-  // Default settings are defined in theme_get_settings() in includes/theme.inc
+  // Default settings are defined in theme_get_setting() in includes/theme.inc
   if ($key) {
-    $settings = theme_get_settings($key);
-    $var = str_replace('/', '_', 'theme_' . $key . '_settings');
+    $var = 'theme_' . $key . '_settings';
     $themes = system_rebuild_theme_data();
     $features = $themes[$key]->info['features'];
   }
   else {
-    $settings = theme_get_settings('');
     $var = 'theme_settings';
   }
 
@@ -408,7 +406,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   // Check for a new uploaded logo, and use that instead.
   if ($file = file_save_upload('logo_upload', array('file_validate_is_image' => array()))) {
     $parts = pathinfo($file->filename);
-    $filename = ($key) ? str_replace('/', '_', $key) . '_logo.' . $parts['extension'] : 'logo.' . $parts['extension'];
+    $filename = ($key) ? $key . '_logo.' . $parts['extension'] : 'logo.' . $parts['extension'];
 
     // The image was saved using file_save_upload() and was added to the
     // files table as a temporary file. We'll make a copy and let the garbage
@@ -423,7 +421,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   // Check for a new uploaded favicon, and use that instead.
   if ($file = file_save_upload('favicon_upload')) {
     $parts = pathinfo($file->filename);
-    $filename = ($key) ? str_replace('/', '_', $key) . '_favicon.' . $parts['extension'] : 'favicon.' . $parts['extension'];
+    $filename = ($key) ? $key . '_favicon.' . $parts['extension'] : 'favicon.' . $parts['extension'];
 
     // The image was saved using file_save_upload() and was added to the
     // files table as a temporary file. We'll make a copy and let the garbage
@@ -466,7 +464,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   );
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
-      $form['theme_settings']['toggle_' . $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings['toggle_' . $name]);
+      $form['theme_settings']['toggle_' . $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => theme_get_setting('toggle_' . $name, $key));
       // Disable checkboxes for features not supported in the current configuration.
       if (isset($disabled['toggle_' . $name])) {
         $form['theme_settings']['toggle_' . $name]['#disabled'] = TRUE;
@@ -491,14 +489,14 @@ function system_theme_settings($form, &$form_state, $key = '') {
     $form['logo']['default_logo'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use the default logo'),
-      '#default_value' => $settings['default_logo'],
+      '#default_value' => theme_get_setting('default_logo', $key),
       '#tree' => FALSE,
       '#description' => t('Check here if you want the theme to use the logo supplied with it.')
     );
     $form['logo']['logo_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to custom logo'),
-      '#default_value' => $settings['logo_path'],
+      '#default_value' => theme_get_setting('logo_path', $key),
       '#description' => t('The path to the file you would like to use as your logo file instead of the default logo.'));
 
     $form['logo']['logo_upload'] = array(
@@ -518,16 +516,15 @@ function system_theme_settings($form, &$form_state, $key = '') {
     $form['favicon']['default_favicon'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use the default shortcut icon.'),
-      '#default_value' => $settings['default_favicon'],
+      '#default_value' => theme_get_setting('default_favicon', $key),
       '#description' => t('Check here if you want the theme to use the default shortcut icon.')
     );
     $form['favicon']['favicon_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to custom icon'),
-      '#default_value' => $settings['favicon_path'],
+      '#default_value' => theme_get_setting('favicon_path', $key),
       '#description' => t('The path to the image file you would like to use as your custom shortcut icon.')
     );
-
     $form['favicon']['favicon_upload'] = array(
       '#type' => 'file',
       '#title' => t('Upload icon image'),
@@ -536,43 +533,60 @@ function system_theme_settings($form, &$form_state, $key = '') {
   }
 
   if ($key) {
-    // Include the theme's theme-settings.php file
-    $filename = DRUPAL_ROOT . '/' . str_replace("/$key.info", '', $themes[$key]->filename) . '/theme-settings.php';
-    if (!file_exists($filename) and !empty($themes[$key]->info['base theme'])) {
-      // If the theme doesn't have a theme-settings.php file, use the base theme's.
-      $base = $themes[$key]->info['base theme'];
-      $filename = DRUPAL_ROOT . '/' . str_replace("/$base.info", '', $themes[$base]->filename) . '/theme-settings.php';
-    }
-    if (file_exists($filename)) {
-      require_once $filename;
-    }
-
     // Call engine-specific settings.
     $function = $themes[$key]->prefix . '_engine_settings';
     if (function_exists($function)) {
-      $group = $function($settings, $form);
-      if (!empty($group)) {
-        $form['engine_specific'] = array('#type' => 'fieldset', '#title' => t('Theme-engine-specific settings'), '#description' => t('These settings only exist for all the templates and styles based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)));
-        $form['engine_specific'] = array_merge($form['engine_specific'], $group);
+      $form['engine_specific'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Theme-engine-specific settings'),
+        '#description' => t('These settings only exist for the themes based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)),
+      );
+      $function($form, $form_state);
+    }
+
+    // Create a list which includes the current theme and all its base themes.
+    if (isset($themes[$key]->base_themes)) {
+      $theme_keys = array_keys($themes[$key]->base_themes);
+      $theme_keys[] = $key;
+    }
+    else {
+      $theme_keys = array($key);
+    }
+
+    // Save the name of the current theme (if any), so that we can temporarily
+    // override the current theme and allow theme_get_setting() to work
+    // without having to pass the theme name to it.
+    $default_theme = !empty($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : NULL;
+    $GLOBALS['theme_key'] = $key;
+
+    // Process the theme and all its base themes.
+    foreach ($theme_keys as $theme) {
+      // Include the theme-settings.php file.
+      $filename = DRUPAL_ROOT . '/' . str_replace("/$theme.info", '', $themes[$theme]->filename) . '/theme-settings.php';
+      if (file_exists($filename)) {
+        require_once $filename;
+      }
+
+      // Call theme-specific settings.
+      $function = $theme . '_form_system_theme_settings_alter';
+      if (function_exists($function)) {
+        $function($form, $form_state);
       }
     }
-    // Call theme-specific settings.
-    $function = $key . '_settings';
-    if (!function_exists($function)) {
-      $function = $themes[$key]->prefix . '_settings';
+
+    // Restore the original current theme.
+    if (!is_null($default_theme)) {
+      $GLOBALS['theme_key'] = $default_theme;
     }
-    if (function_exists($function)) {
-      $group = $function($settings, $form);
-      if (!empty($group)) {
-        $form['theme_specific'] = array('#type' => 'fieldset', '#title' => t('Theme-specific settings'), '#description' => t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->info['name'])));
-        $form['theme_specific'] = array_merge($form['theme_specific'], $group);
-      }
+    else {
+      unset($GLOBALS['theme_key']);
     }
   }
 
   $form = system_settings_form($form, FALSE);
   // We don't want to call system_settings_form_submit(), so change #submit.
-  $form['#submit'] = array('system_theme_settings_submit');
+  array_pop($form['#submit']);
+  $form['#submit'][] = 'system_theme_settings_submit';
   return $form;
 }
 

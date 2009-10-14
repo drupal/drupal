@@ -1105,112 +1105,113 @@ function drupal_find_theme_templates($cache, $extension, $path) {
 }
 
 /**
- * Retrieve an associative array containing the settings for a theme.
+ * Retrieve a setting for the current theme or for a given theme.
  *
- * The final settings are arrived at by merging the default settings,
- * the site-wide settings, and the settings defined for the specific theme.
- * If no $key was specified, only the site-wide theme defaults are retrieved.
+ * The final setting is arrived at by merging the default settings, the custom
+ * theme settings defined in the theme's .info file, the site-wide settings, and
+ * the settings defined for the specific theme. If an empty string is given for
+ * $key, only the site-wide theme defaults are retrieved.
  *
- * The default values for each of settings are also defined in this function.
- * To add new settings, add their default values here, and then add form elements
- * to system_theme_settings() in system.module.
- *
- * @param $key
- *  The template/style value for a given theme.
- *
- * @return
- *   An associative array containing theme settings.
- */
-function theme_get_settings($key = NULL) {
-  $defaults = array(
-    'default_logo'                     =>  1,
-    'logo_path'                        =>  '',
-    'default_favicon'                  =>  1,
-    'favicon_path'                     =>  '',
-    // Use the IANA-registered MIME type for ICO files as default.
-    'favicon_mimetype'                 =>  'image/vnd.microsoft.icon',
-    'main_menu'                        =>  1,
-    'secondary_menu'                   =>  1,
-    'toggle_logo'                      =>  1,
-    'toggle_favicon'                   =>  1,
-    'toggle_name'                      =>  1,
-    'toggle_search'                    =>  0,
-    'toggle_slogan'                    =>  0,
-    'toggle_node_user_picture'         =>  0,
-    'toggle_comment_user_picture'      =>  0,
-    'toggle_comment_user_verification' =>  1,
-    'toggle_main_menu'                 =>  1,
-    'toggle_secondary_menu'            =>  1,
-  );
-
-  $settings = array_merge($defaults, variable_get('theme_settings', array()));
-
-  if ($key) {
-    $settings = array_merge($settings, variable_get(str_replace('/', '_', 'theme_' . $key . '_settings'), array()));
-  }
-
-  // Only offer search box if search.module is enabled.
-  if (!defined('MAINTENANCE_MODE') && module_exists('search') && user_access('search content')) {
-    $settings['toggle_search'] = 1;
-  }
-
-  return $settings;
-}
-
-/**
- * Retrieve a setting for the current theme.
- * This function is designed for use from within themes & engines
- * to determine theme settings made in the admin interface.
- *
- * Caches values for speed (use $refresh = TRUE to refresh cache)
+ * The default values for each setting is defined in this function. To add new
+ * settings, add their default values here, and then add form elements to
+ * system_theme_settings() in system.admin.inc.
  *
  * @param $setting_name
  *  The name of the setting to be retrieved.
- *
- * @param $refresh
- *  Whether to reload the cache of settings.
- *
+ * @param $theme
+ *  The name of a given theme; defaults to the current theme.
  * @return
  *   The value of the requested setting, NULL if the setting does not exist.
  */
-function theme_get_setting($setting_name, $refresh = FALSE) {
-  global $theme_key;
-  static $settings;
+function theme_get_setting($setting_name, $theme = NULL) {
+  $cache = &drupal_static(__FUNCTION__, array());
 
-  if (empty($settings) || $refresh) {
-    $settings = theme_get_settings($theme_key);
+  // If no key is given, use the current theme if we can determine it.
+  if (is_null($theme)) {
+    $theme = !empty($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : (!empty($GLOBALS['custom_theme']) ? $GLOBALS['custom_theme'] : '');
+  }
 
-    $themes = list_themes();
-    $theme_object = $themes[$theme_key];
+  if (empty($cache[$theme])) {
+    // Set the default settings.
+    $cache[$theme] = array(
+      'default_logo'                     =>  1,
+      'logo_path'                        =>  '',
+      'default_favicon'                  =>  1,
+      'favicon_path'                     =>  '',
+      // Use the IANA-registered MIME type for ICO files as default.
+      'favicon_mimetype'                 =>  'image/vnd.microsoft.icon',
+      'main_menu'                        =>  1,
+      'secondary_menu'                   =>  1,
+      'toggle_logo'                      =>  1,
+      'toggle_favicon'                   =>  1,
+      'toggle_name'                      =>  1,
+      'toggle_search'                    =>  1,
+      'toggle_slogan'                    =>  1,
+      'toggle_node_user_picture'         =>  1,
+      'toggle_comment_user_picture'      =>  1,
+      'toggle_comment_user_verification' =>  1,
+      'toggle_main_menu'                 =>  1,
+      'toggle_secondary_menu'            =>  1,
+    );
 
-    if ($settings['toggle_logo']) {
-      if ($settings['default_logo']) {
-        $settings['logo'] = file_create_url(dirname($theme_object->filename) . '/logo.png');
+    // Get the default values for the custom settings from the .info file.
+    if ($theme) {
+      $themes = list_themes();
+      $theme_object = $themes[$theme];
+
+      // Create a list which includes the current theme and all its base themes.
+      if (isset($theme_object->base_themes)) {
+        $theme_keys = array_keys($theme_object->base_themes);
+        $theme_keys[] = $theme;
       }
-      elseif ($settings['logo_path']) {
-        $settings['logo'] = file_create_url($settings['logo_path']);
+      else {
+        $theme_keys = array($theme);
+      }
+      foreach ($theme_keys as $theme_key) {
+        if (!empty($themes[$theme_key]->info['settings'])) {
+          $cache[$theme] = array_merge($cache[$theme], $themes[$theme_key]->info['settings']);
+        }
       }
     }
 
-    if ($settings['toggle_favicon']) {
-      if ($settings['default_favicon']) {
-        if (file_exists($favicon = dirname($theme_object->filename) . '/favicon.ico')) {
-          $settings['favicon'] = file_create_url($favicon);
+    // Get the saved global settings from the database.
+    $cache[$theme] = array_merge($cache[$theme], variable_get('theme_settings', array()));
+
+    if ($theme) {
+      // Get the saved theme settings from the database.
+      $cache[$theme] = array_merge($cache[$theme], variable_get('theme_' . $theme . '_settings', array()));
+
+      // Generate the path to the logo image.
+      if ($cache[$theme]['toggle_logo']) {
+        if ($cache[$theme]['default_logo']) {
+          $cache[$theme]['logo'] = file_create_url(dirname($theme_object->filename) . '/logo.png');
+        }
+        elseif ($cache[$theme]['logo_path']) {
+          $cache[$theme]['logo'] = file_create_url($cache[$theme]['logo_path']);
+        }
+      }
+
+      // Generate the path to the favicon.
+      if ($cache[$theme]['toggle_favicon']) {
+        if ($cache[$theme]['default_favicon']) {
+          if (file_exists($favicon = dirname($theme_object->filename) . '/favicon.ico')) {
+            $cache[$theme]['favicon'] = file_create_url($favicon);
+          }
+          else {
+            $cache[$theme]['favicon'] = file_create_url('misc/favicon.ico');
+          }
+        }
+        elseif ($cache[$theme]['favicon_path']) {
+          $cache[$theme]['favicon'] = file_create_url($cache[$theme]['favicon_path']);
         }
         else {
-          $settings['favicon'] = file_create_url('misc/favicon.ico');
+          $cache[$theme]['toggle_favicon'] = FALSE;
         }
-      }
-      elseif ($settings['favicon_path']) {
-        $settings['favicon'] = file_create_url($settings['favicon_path']);
-      }
-      else {
-        $settings['toggle_favicon'] = FALSE;
       }
     }
   }
 
-  return isset($settings[$setting_name]) ? $settings[$setting_name] : NULL;
+  return isset($cache[$theme][$setting_name]) ? $cache[$theme][$setting_name] : NULL;
 }
 
 /**

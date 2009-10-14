@@ -189,11 +189,6 @@ function default_install() {
   variable_set('user_picture_file_size', '800');
   variable_set('user_picture_style', 'thumbnail');
 
-  $theme_settings = theme_get_settings();
-  $theme_settings['toggle_node_user_picture'] = '1';
-  $theme_settings['toggle_comment_user_picture'] = '1';
-  variable_set('theme_settings', $theme_settings);
-
   // Create a default vocabulary named "Tags", enabled for the 'article' content type.
   $description = st('Use tags to group articles on similar topics into categories.');
   $help = st('Enter a comma-separated list of words to describe your content.');
