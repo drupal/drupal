@@ -979,9 +979,10 @@ class SystemBlockTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['system_powered-by[region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to footer region.'));
 
     // Confirm that the block is being displayed.
+    $this->drupalGet('node');
     $this->assertRaw('id="block-system-powered-by"', t('Block successfully being displayed on the page.'));
 
     // Set the block to the disabled region.

@@ -59,6 +59,7 @@ class BlockTestCase extends DrupalWebTestCase {
     }
 
     // Delete the created custom block & verify that it's been deleted and no longer appearing on the page.
+    $this->drupalGet('admin/structure/block');
     $this->clickLink(t('delete'));
     $this->drupalPost('admin/structure/block/delete/' . $bid, array(), t('Delete'));
     $this->assertRaw(t('The block %title has been removed.', array('%title' => $custom_block['info'])), t('Custom block successfully deleted.'));
@@ -84,6 +85,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the custom block is being displayed using configured text format.
+    $this->drupalGet('node');
     $this->assertRaw('<h1>Full HTML</h1>', t('Custom block successfully being displayed using Full HTML.'));
 
     // Confirm that a user without access to Full HTML can not see the body field,
@@ -96,6 +98,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertNoText(t('Please ensure that each block description is unique.'));
 
     // Confirm that the custom block is still being displayed using configured text format.
+    $this->drupalGet('node');
     $this->assertRaw('<h1>Full HTML</h1>', t('Custom block successfully being displayed using Full HTML.'));
   }
 
@@ -206,6 +209,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to %region_name region.', array( '%region_name' => $region['name'])));
 
     // Confirm that the block is being displayed.
+    $this->drupalGet('node');
     $this->assertText(t($block['title']), t('Block successfully being displayed on the page.'));
 
     // Confirm that the custom block was found at the proper region.
@@ -231,7 +235,6 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
     $this->drupalPost('admin/appearance', array('status[stark]' => 1), t('Save configuration'));
     $this->drupalGet('admin/structure/block/list/stark');
-    $this->assertRaw('stark/layout.css', t('Stark CSS found'));
   }
 }
 

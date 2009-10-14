@@ -7,11 +7,34 @@
  */
 
 /**
+ * Menu callback for admin/structure/block/demo.
+ */
+function block_admin_demo($theme = NULL) {
+  drupal_add_css(drupal_get_path('module', 'block') . '/block.css', array('preprocess' => FALSE));
+  return '';
+}
+
+/**
  * Menu callback for admin/structure/block.
+ *
+ * @param $theme
+ *   The theme to display the administration page for. If not provided, defaults
+ *   to the currently used theme.
  */
 function block_admin_display($theme = NULL) {
+  global $theme_key;
+  
+  drupal_theme_initialize();
+
+  if (!isset($theme)) {
+    // If theme is not specifically set, rehash for the current theme.
+    $theme = $theme_key;
+  }
+
   // Fetch and sort blocks.
-  $blocks = _block_rehash();
+  $blocks = _block_rehash($theme);
+  $compare_theme = &drupal_static('_block_compare:theme');
+  $compare_theme = $theme;
   usort($blocks, '_block_compare');
 
   return drupal_get_form('block_admin_display_form', $blocks, $theme);
@@ -20,12 +43,11 @@ function block_admin_display($theme = NULL) {
 /**
  * Generate main blocks administration form.
  */
-function block_admin_display_form($form, &$form_state, $blocks, $theme = NULL) {
-  global $theme_key;
+function block_admin_display_form($form, &$form_state, $blocks, $theme) {
 
   drupal_add_css(drupal_get_path('module', 'block') . '/block.css', array('preprocess' => FALSE));
 
-  $block_regions = system_region_list($theme_key, REGIONS_VISIBLE) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
+  $block_regions = system_region_list($theme, REGIONS_VISIBLE) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 
   // Weights range from -delta to +delta, so delta should be at least half
   // of the amount of blocks present. This makes sure all blocks in the same
@@ -33,7 +55,8 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme = NULL) {
   $weight_delta = round(count($blocks) / 2);
 
   // Build the form tree.
-  $form['#action'] = arg(4) ? url('admin/structure/block/list/' . $theme_key) : url('admin/structure/block');
+  $form['edited_theme'] = array('#type' => 'value', '#value' => $theme);
+  $form['#action'] = arg(4) ? url('admin/structure/block/list/' . $theme) : url('admin/structure/block');
   $form['#tree'] = TRUE;
 
   foreach ($blocks as $i => $block) {
@@ -51,7 +74,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme = NULL) {
     );
     $form[$key]['theme'] = array(
       '#type' => 'hidden',
-      '#value' => $theme_key,
+      '#value' => $theme,
     );
     $form[$key]['weight'] = array(
       '#type' => 'weight',
@@ -115,11 +138,18 @@ function block_admin_display_form_submit($form, &$form_state) {
  */
 function _block_compare($a, $b) {
   global $theme_key;
-  $regions = &drupal_static(__FUNCTION__);
-
+  
+  // Theme should be set before calling this function, or the current theme
+  // is being used.
+  $theme = &drupal_static(__FUNCTION__ . ':theme');
+  if (!isset($theme)) {
+    $theme = $theme_key;
+  }
+  
+  $regions = &drupal_static(__FUNCTION__ . ':regions');
   // We need the region list to correctly order by region.
   if (!isset($regions)) {
-    $regions = array_flip(array_keys(system_region_list($theme_key)));
+    $regions = array_flip(array_keys(system_region_list($theme)));
     $regions[BLOCK_REGION_NONE] = count($regions);
   }
 
@@ -186,22 +216,22 @@ function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) 
   $theme_default = variable_get('theme_default', 'garland');
 
   // Create a select list for each theme
-  foreach (list_themes() as $theme_key => $theme) {
+  foreach (list_themes() as $key => $theme) {
     // Only display enabled themes
     if ($theme->status) {
       $region = db_query("SELECT region FROM {block} WHERE module = :module AND delta = :delta AND theme = :theme", array(
         ':module' => $module,
         ':delta' => $delta,
-        ':theme' => $theme_key,
+        ':theme' => $key,
       ))->fetchField();
   
-      $form['regions'][$theme_key] = array(
+      $form['regions'][$key] = array(
         '#type' => 'select',
         '#title' => t('!theme region', array('!theme' => $theme->info['name'])),
         '#default_value' => (!empty($region) ? $region : BLOCK_REGION_NONE),
         '#options' => array(BLOCK_REGION_NONE => t('Disabled')) + $theme->info['regions'],
-        '#expandable' => ($theme_key !== $theme_default),
-        '#weight' => ($theme_key == $theme_default ? 9 : 10),
+        '#expandable' => ($key !== $theme_default),
+        '#weight' => ($key == $theme_default ? 9 : 10),
       );
     }
   }
@@ -513,9 +543,8 @@ function block_custom_block_delete_submit($form, &$form_state) {
  * @see theme_block_admin_display()
  */
 function template_preprocess_block_admin_display_form(&$variables) {
-  global $theme_key;
 
-  $block_regions = system_region_list($theme_key, REGIONS_VISIBLE);
+  $block_regions = system_region_list($variables['form']['edited_theme']['#value'], REGIONS_VISIBLE);
   $variables['block_regions'] = $block_regions + array(BLOCK_REGION_NONE => t('Disabled'));
 
   foreach ($block_regions as $key => $value) {
