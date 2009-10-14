@@ -243,6 +243,11 @@ function _field_info_collate_fields($reset = FALSE) {
       // are thus not in $definitions['instances'].
       $info['fields'][$instance['field_name']]['bundles'][] = $instance['bundle'];
       $info['field_ids'][$instance['field_id']]['bundles'][] = $instance['bundle'];
+
+      // Add storage details.
+      $details = (array) module_invoke($field['storage']['module'], 'field_storage_details', $field, $instance);
+      drupal_alter('field_storage_details', $details, $field, $instance);
+      $info['instances'][$instance['bundle']][$instance['field_name']]['storage_details'] = $details;
     }
   }
 

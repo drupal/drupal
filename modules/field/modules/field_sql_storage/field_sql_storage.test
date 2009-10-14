@@ -369,6 +369,34 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
       $this->assertEqual($entity->{$field_name}[FIELD_LANGUAGE_NONE][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
     }
   }
+  
+  /**
+   * Test the storage details.
+   */
+  function testFieldStorageDetails() {
+    $current = _field_sql_storage_tablename($this->field);
+    $revision = _field_sql_storage_revision_tablename($this->field);
+
+    // Retrieve the field and instance with field_info so the storage details are attached.
+    $field = field_info_field($this->field['field_name']);
+    $instance = field_info_instance($this->instance['field_name'], $this->instance['bundle']);
+
+    // The storage details are indexed by a storage engine type.
+    $this->assertTrue(array_key_exists('sql', $instance['storage_details']), t('The storage type is SQL.'));
+
+    // The SQL details are indexed by table name.
+    $details = $instance['storage_details']['sql'];
+    $this->assertTrue(array_key_exists($current, $details[FIELD_LOAD_CURRENT]), t('Table name is available in the instance array.'));
+    $this->assertTrue(array_key_exists($revision, $details[FIELD_LOAD_REVISION]), t('Revision table name is available in the instance array.'));
+
+    // Test current and revision storage details together because the columns
+    // are the same.
+    foreach ((array) $this->field['columns'] as $column_name => $attributes) {
+      $storage_column_name = _field_sql_storage_columnname($this->field['field_name'], $column_name);
+      $this->assertEqual($details[FIELD_LOAD_CURRENT][$current][$column_name], $storage_column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => $current)));
+      $this->assertEqual($details[FIELD_LOAD_REVISION][$revision][$column_name], $storage_column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => $revision)));
+    }
+  }
 
   function getIndexes($table) {
     $indexes = array();

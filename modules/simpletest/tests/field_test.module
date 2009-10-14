@@ -667,6 +667,49 @@ function field_test_field_storage_info() {
 }
 
 /**
+ * Implement hook_field_storage_details().
+ */
+function field_test_field_storage_details($field, $instance) {
+  $details = array();
+
+  // Add field columns.
+  $columns = array();
+  foreach ((array) $field['columns'] as $column_name => $attributes) {
+    $columns[$column_name] = $column_name;
+  }
+  return array(
+    'drupal_variables' => array(
+      'field_test_storage_data[FIELD_LOAD_CURRENT]' => $columns,
+      'field_test_storage_data[FIELD_LOAD_REVISION]' => $columns,
+    ),
+  );
+}
+
+/**
+ * Implement hook_field_storage_details_alter().
+ *
+ * @see FieldAttachStorageTestCase::testFieldStorageDetailsAlter()
+ */
+function field_test_field_storage_details_alter(&$details, $field, $instance) {
+
+  // For testing, storage details are changed only because of the field name.
+  if ($field['field_name'] == 'field_test_change_my_details') {
+    $columns = array();
+    foreach ((array) $field['columns'] as $column_name => $attributes) {
+      $columns[$column_name] = $column_name;
+    }
+    $details['drupal_variables'] = array(
+      FIELD_LOAD_CURRENT => array(
+        'moon' => $columns,
+      ),
+      FIELD_LOAD_REVISION => array(
+        'mars' => $columns,
+      ),
+    );
+  }
+}
+
+/**
  * Helper function: store or retrieve data from the 'storage backend'.
  */
 function _field_test_storage_data($data = NULL) {
