@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.72 2009/10/09 01:00:05 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.73 2009/10/14 14:14:44 dries Exp $
 
 /**
  * @file
@@ -694,7 +694,9 @@ function taxonomy_form_term($form, &$form_state, $vocabulary, $edit = array()) {
   if ($edit['tid']) {
     $form['delete'] = array(
       '#type' => 'submit',
-      '#value' => t('Delete'));
+      '#value' => t('Delete'),
+      '#access' => user_access("delete terms in $vocabulary->vid") || user_access('administer taxonomy'),
+    );
     $form['tid'] = array(
       '#type' => 'value',
       '#value' => $edit['tid']);
