@@ -37,7 +37,7 @@ function node_overview_types() {
   if (empty($rows)) {
     $rows[] = array(array('data' => t('No content types available. <a href="@link">Add content type</a>.', array('@link' => url('admin/structure/types/add'))), 'colspan' => '5', 'class' => array('message')));
   }
-  
+
   $build['node_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
@@ -199,7 +199,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#description' => t('Enable the <em>submitted by Username on date</em> text.'),
   );
   $form['display']['teaser_length'] = array(
-    '#type' => 'select', 
+    '#type' => 'select',
     '#title' => t('Length of trimmed posts'),
     '#default_value' => variable_get('teaser_length_' . $type->type, 600),
     '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), '_node_characters'),
@@ -323,8 +323,6 @@ function node_type_form_submit($form, &$form_state) {
     return;
   }
 
-  $status = node_type_save($type);
-
   $variables = $form_state['values'];
 
   // Remove everything that's been saved already - whatever's left is assumed
@@ -351,6 +349,10 @@ function node_type_form_submit($form, &$form_state) {
       variable_del($variable_old);
     }
   }
+
+  // Saving the content type after saving the variables allows modules to act
+  // on those variables via hook_node_type_insert().
+  $status = node_type_save($type);
 
   node_types_rebuild();
   menu_rebuild();
