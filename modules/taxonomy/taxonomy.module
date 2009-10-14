@@ -10,12 +10,28 @@
  * Implement hook_permission().
  */
 function taxonomy_permission() {
-  return array(
+
+  $permissions = array(
     'administer taxonomy' => array(
       'title' => t('Administer taxonomy'),
       'description' => t('Manage taxonomy vocabularies and terms.'),
     ),
   );
+  foreach (taxonomy_get_vocabularies() as $vocabulary) {
+    $permissions += array(
+      'edit terms in ' . $vocabulary->vid => array(
+        'title' => t('Edit terms in %vocabulary', array('%vocabulary' => $vocabulary->name)),
+        'description' => t('Edit terms in the %vocabulary vocabulary.', array('%vocabulary' => $vocabulary->name)),
+      ),
+    );
+    $permissions += array(
+       'delete terms in ' . $vocabulary->vid => array(
+         'title' => t('Delete terms in %vocabulary', array('%vocabulary' => $vocabulary->name)),
+         'description' => t('Delete terms in the %vocabulary vocabulary.', array('%vocabulary' => $vocabulary->name)),
+      ),
+    );
+  }
+  return $permissions;
 }
 
 /**
@@ -210,7 +226,8 @@ function taxonomy_menu() {
     'title' => 'Edit term',
     'page callback' => 'taxonomy_term_edit',
     'page arguments' => array(2),
-    'access arguments' => array('administer taxonomy'),
+    'access callback' => 'taxonomy_term_edit_access',
+    'access arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
     'file' => 'taxonomy.pages.inc',
@@ -270,6 +287,13 @@ function taxonomy_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Return edit access for a given term.
+ */
+function taxonomy_term_edit_access($term) {
+  return user_access("edit terms in $term->vid") || user_access('administer taxonomy');
 }
 
 /**
