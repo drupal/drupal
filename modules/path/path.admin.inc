@@ -186,7 +186,7 @@ function path_admin_delete_confirm($form, $form_state, $pid) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
     $output = confirm_form($form,
       t('Are you sure you want to delete path alias %title?', array('%title' => $path['dst'])),
-      isset($_GET['destination']) ? $_GET['destination'] : 'admin/config/search/path');
+      'admin/config/search/path');
   }
   return $output;
 }

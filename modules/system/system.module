@@ -2400,14 +2400,17 @@ function _system_sort_requirements($a, $b) {
 function confirm_form($form, $question, $path, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
   $description = isset($description) ? $description : t('This action cannot be undone.');
 
-  // Prepare cancel link
-  $query = $fragment = NULL;
-  if (is_array($path)) {
-    $query = isset($path['query']) ? $path['query'] : NULL;
-    $fragment = isset($path['fragment']) ? $path['fragment'] : NULL;
-    $path = isset($path['path']) ? $path['path'] : NULL;
+  // Prepare cancel link.
+  if (isset($_GET['destination'])) {
+    $options = drupal_parse_url(urldecode($_GET['destination']));
   }
-  $cancel = l($no ? $no : t('Cancel'), $path, array('query' => $query, 'fragment' => $fragment));
+  elseif (is_array($path)) {
+    $options = $path;
+  }
+  else {
+    $options = array('path' => $path);
+  }
+  $cancel = l($no ? $no : t('Cancel'), $options['path'], $options);
 
   drupal_set_title($question, PASS_THROUGH);
 

@@ -462,7 +462,7 @@ function node_delete_confirm($form, &$form_state, $node) {
 
   return confirm_form($form,
     t('Are you sure you want to delete %title?', array('%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'])),
-    isset($_GET['destination']) ? $_GET['destination'] : 'node/' . $node->nid,
+    'node/' . $node->nid,
     t('This action cannot be undone.'),
     t('Delete'),
     t('Cancel')
