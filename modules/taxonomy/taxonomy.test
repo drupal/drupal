@@ -367,7 +367,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     // Edit $term2, setting $term1 as parent.
     $edit = array();
-    $edit['parent'] = $term1->tid;
+    $edit['parent[]'] = array($term1->tid);
     $this->drupalPost('taxonomy/term/' . $term2->tid . '/edit', $edit, t('Save'));
 
     // Check the hierarchy.
@@ -454,7 +454,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     );
     // Explicitly set the parents field to 'root', to ensure that
     // taxonomy_form_term_submit() handles the invalid term ID correctly.
-    $edit['parent'] = 0;
+    $edit['parent[]'] = array(0);
 
     // Create the term to edit.
     $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->vid . '/list/add', $edit, t('Save'));

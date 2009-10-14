@@ -670,7 +670,21 @@ function taxonomy_form_term($form, &$form_state, $vocabulary, $edit = array()) {
     }
     $exclude[] = $edit['tid'];
 
-    $form['advanced']['parent'] = _taxonomy_term_select(t('Parents'), $parent, $vocabulary->vid, t('Parent terms') . '.', '<' . t('root') . '>', $exclude);
+    $tree = taxonomy_get_tree($vocabulary->vid);
+    $options = array('<' . t('root') . '>');
+    foreach ($tree as $term) {
+      if (!in_array($term->tid, $exclude)) {
+        $options[$term->tid] = str_repeat('-', $term->depth) . $term->name;
+      }
+    }
+    $form['advanced']['parent'] = array(
+      '#type' => 'select',
+      '#title' => t('Parent terms'),
+      '#options' => $options,
+      '#default_value' => $parent,
+      '#multiple' => TRUE,
+    );
+    
   }
   $form['advanced']['synonyms'] = array(
     '#type' => 'textarea',

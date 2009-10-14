@@ -146,9 +146,6 @@ function taxonomy_field_build_modes($obj_type) {
  */
 function taxonomy_theme() {
   return array(
-    'taxonomy_term_select' => array(
-      'arguments' => array('element' => NULL),
-    ),
     'taxonomy_overview_vocabularies' => array(
       'arguments' => array('form' => array()),
     ),
@@ -576,33 +573,6 @@ function taxonomy_terms_static_reset() {
 }
 
 /**
- * Generate a form element for selecting terms from a vocabulary.
- *
- * @param $vid
- *   The vocabulary ID to generate a form element for
- * @param $value
- *   The existing value of the term(s) in this vocabulary to use by default.
- * @param $help
- *   Optional help text to use for the form element. If specified, this value
- *   MUST be properly sanitized and filtered (e.g. with filter_xss_admin() or
- *   check_plain() if it is user-supplied) to prevent XSS vulnerabilities. If
- *   omitted, the help text stored with the vocaulary (if any) will be used.
- * @return
- *   An array describing a form element to select terms for a vocabulary.
- *
- * @see _taxonomy_term_select()
- * @see filter_xss_admin()
- */
-function taxonomy_form($vid, $value = 0, $help = NULL) {
-  $vocabulary = taxonomy_vocabulary_load($vid);
-  $help = ($help) ? $help : filter_xss_admin($vocabulary->help);
-
-  $blank = t('- Please choose -');
-
-  return _taxonomy_term_select(check_plain($vocabulary->name), $value, $vid, $help, $blank);
-}
-
-/**
  * Generate a set of options for selecting a term from all vocabularies.
  */
 function taxonomy_form_all() {
@@ -964,70 +934,6 @@ function taxonomy_term_load($tid) {
   }
   $term = taxonomy_term_load_multiple(array($tid), array());
   return $term ? $term[$tid] : FALSE;
-}
-
-/**
- * Create a select form element for a given taxonomy vocabulary.
- *
- * NOTE: This function expects input that has already been sanitized and is
- * safe for display. Callers must properly sanitize the $title and
- * $description arguments to prevent XSS vulnerabilities.
- *
- * @param $title
- *   The title of the vocabulary. This MUST be sanitized by the caller.
- * @param $value
- *   The currently selected terms from this vocabulary, if any.
- * @param $vocabulary_id
- *   The vocabulary ID to build the form element for.
- * @param $description
- *   Help text for the form element. This MUST be sanitized by the caller.
- * @param $multiple
- *   Boolean to control if the form should use a single or multiple select.
- * @param $blank
- *   Optional form choice to use when no value has been selected.
- * @param $exclude
- *   Optional array of term ids to exclude in the selector.
- * @return
- *   A FAPI form array to select terms from the given vocabulary.
- *
- * @see taxonomy_form()
- * @see taxonomy_form_term()
- */
-function _taxonomy_term_select($title, $value, $vocabulary_id, $description, $blank, $exclude = array()) {
-  $tree = taxonomy_get_tree($vocabulary_id);
-  $options = array();
-
-  if ($blank) {
-    $options[0] = $blank;
-  }
-  if ($tree) {
-    foreach ($tree as $term) {
-      if (!in_array($term->tid, $exclude)) {
-        $choice = new stdClass();
-        $choice->option = array($term->tid => str_repeat('-', $term->depth) . $term->name);
-        $options[] = $choice;
-      }
-    }
-  }
-
-  return array('#type' => 'select',
-    '#title' => $title,
-    '#default_value' => $value,
-    '#options' => $options,
-    '#description' => $description,
-    '#weight' => -15,
-    '#theme' => 'taxonomy_term_select',
-  );
-}
-
-/**
- * Format the selection field for choosing terms
- * (by default the default selection field is used).
- *
- * @ingroup themeable
- */
-function theme_taxonomy_term_select($variables) {
-  return theme('select', $variables['element']);
 }
 
 /**
