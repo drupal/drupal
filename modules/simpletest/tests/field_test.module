@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.28 2009/10/09 01:00:03 dries Exp $
+// $Id: field_test.module,v 1.29 2009/10/14 14:55:12 dries Exp $
 
 define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
@@ -664,6 +664,49 @@ function field_test_field_storage_info() {
       'description' => t('Dummy test storage backend. Always fails to create fields.'),
     ),
   );
+}
+
+/**
+ * Implement hook_field_storage_details().
+ */
+function field_test_field_storage_details($field, $instance) {
+  $details = array();
+
+  // Add field columns.
+  $columns = array();
+  foreach ((array) $field['columns'] as $column_name => $attributes) {
+    $columns[$column_name] = $column_name;
+  }
+  return array(
+    'drupal_variables' => array(
+      'field_test_storage_data[FIELD_LOAD_CURRENT]' => $columns,
+      'field_test_storage_data[FIELD_LOAD_REVISION]' => $columns,
+    ),
+  );
+}
+
+/**
+ * Implement hook_field_storage_details_alter().
+ *
+ * @see FieldAttachStorageTestCase::testFieldStorageDetailsAlter()
+ */
+function field_test_field_storage_details_alter(&$details, $field, $instance) {
+
+  // For testing, storage details are changed only because of the field name.
+  if ($field['field_name'] == 'field_test_change_my_details') {
+    $columns = array();
+    foreach ((array) $field['columns'] as $column_name => $attributes) {
+      $columns[$column_name] = $column_name;
+    }
+    $details['drupal_variables'] = array(
+      FIELD_LOAD_CURRENT => array(
+        'moon' => $columns,
+      ),
+      FIELD_LOAD_REVISION => array(
+        'mars' => $columns,
+      ),
+    );
+  }
 }
 
 /**

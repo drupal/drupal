@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.20 2009/10/12 05:22:57 webchick Exp $
+// $Id: field.info.inc,v 1.21 2009/10/14 14:55:12 dries Exp $
 
 /**
  * @file
@@ -243,6 +243,11 @@ function _field_info_collate_fields($reset = FALSE) {
       // are thus not in $definitions['instances'].
       $info['fields'][$instance['field_name']]['bundles'][] = $instance['bundle'];
       $info['field_ids'][$instance['field_id']]['bundles'][] = $instance['bundle'];
+
+      // Add storage details.
+      $details = (array) module_invoke($field['storage']['module'], 'field_storage_details', $field, $instance);
+      drupal_alter('field_storage_details', $details, $field, $instance);
+      $info['instances'][$instance['bundle']][$instance['field_name']]['storage_details'] = $details;
     }
   }
 
