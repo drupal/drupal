@@ -1,5 +1,5 @@
 <?php
-// $Id: default.install,v 1.10 2009/10/13 13:54:55 dries Exp $
+// $Id: default.install,v 1.11 2009/10/14 10:56:35 dries Exp $
 
 /**
  * Implement hook_install().
@@ -188,11 +188,6 @@ function default_install() {
   variable_set('user_picture_dimensions', '1024x1024');
   variable_set('user_picture_file_size', '800');
   variable_set('user_picture_style', 'thumbnail');
-
-  $theme_settings = theme_get_settings();
-  $theme_settings['toggle_node_user_picture'] = '1';
-  $theme_settings['toggle_comment_user_picture'] = '1';
-  variable_set('theme_settings', $theme_settings);
 
   // Create a default vocabulary named "Tags", enabled for the 'article' content type.
   $description = st('Use tags to group articles on similar topics into categories.');
