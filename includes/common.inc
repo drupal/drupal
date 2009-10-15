@@ -5939,3 +5939,53 @@ function xmlrpc($url) {
   return call_user_func_array('_xmlrpc', $args);
 }
 
+/**
+ * Retrieve a list of all available archivers.
+ */
+function archiver_get_info() {
+  $archiver_info = &drupal_static(__FUNCTION__, array());
+
+  if (empty($archiver_info)) {
+    $cache = cache_get('archiver_info');
+    if ($cache === FALSE) {
+      // Rebuild the cache and save it.
+      $archiver_info = module_invoke_all('archiver_info');
+      drupal_alter('archiver_info', $archiver_info);
+      uasort($archiver_info, 'drupal_sort_weight');
+      cache_set('archiver_info', $archiver_info);
+    }
+    else {
+      $archiver_info = $cache->data;
+    }
+  }
+
+  return $archiver_info;
+}
+
+/**
+ * Create the appropriate archiver for the specified file.
+ *
+ * @param $file
+ *   The full path of the archive file.  Note that stream wrapper
+ *   paths are supported.
+ * @return
+ *   A newly created instance of the archiver class appropriate
+ *   for the specified file, already bound to that file.
+ */
+function archiver_get_archiver($file) {
+  $archiver_info = archiver_get_info();
+
+  foreach ($archiver_info as $implementation) {
+   foreach ($implementation['extensions'] as $extension) {
+     // Because extensions may be multi-part, such as .tar.gz,
+     // we cannot use simpler approaches like substr() or pathinfo().
+     // This method isn't quite as clean but gets the job done.
+     // Also note that the file may not yet exist, so we cannot rely
+     // on fileinfo() or other disk-level utilities.
+     if (strrpos($file, '.' . $extension) === strlen($file) - strlen('.' . $extension)) {
+       return new $implementation['class']($file);
+     }
+   }
+  }
+}
+

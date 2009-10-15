@@ -2399,6 +2399,34 @@ function hook_action_info_alter(&$actions) {
 }
 
 /**
+ * Declare archivers to the system.
+ *
+ * An archiver is a class that is able to package and unpackage one or more files
+ * into a single possibly compressed file.  Common examples of such files are
+ * zip files and tar.gz files.  All archiver classes must implement
+ * ArchiverInterface.
+ *
+ * When mapping a
+ *
+ * Each entry should be keyed on a unique value, and specify three
+ * additional keys:
+ *   - class: The name of the PHP class for this archiver.
+ *   - extensions: An array of file extensions that this archiver supports.
+ *   - weight: This optional key specifies the weight of this archiver.
+ *     When mapping file extensions to archivers, the first archiver by
+ *     weight found that supports the requested extension will be used.
+ */
+function system_archiver_info() {
+  return array(
+    'tar' => array(
+      'class' => 'ArchiverTar',
+      'extensions' => array('tar', 'tar.gz', 'tar.bz2'),
+    ),
+  );
+}
+
+
+/**
  * Defines additional date types.
  *
  * Next to the 'long', 'medium' and 'short' date types defined in core, any

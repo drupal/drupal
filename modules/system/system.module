@@ -3380,6 +3380,18 @@ function system_date_format_delete($dfid) {
 }
 
 /**
+ * Implement hook_archiver_info().
+ */
+function system_archiver_info() {
+  return array(
+    'tar' => array(
+      'class' => 'ArchiverTar',
+      'extensions' => array('tar', 'tar.gz', 'tar.bz2'),
+    ),
+  );
+}
+
+/**
  * Theme confirmation forms.
  *
  * By default this does not alter the appearance of a form at all,

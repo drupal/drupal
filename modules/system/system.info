@@ -6,6 +6,7 @@ version = VERSION
 core = 7.x
 files[] = system.module
 files[] = system.admin.inc
+files[] = system.archiver.inc
 files[] = system.queue.inc
 files[] = image.gd.inc
 files[] = system.install
