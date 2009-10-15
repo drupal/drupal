@@ -159,6 +159,13 @@ function system_theme() {
       'arguments' => array('form' => NULL),
       'file' => 'system.admin.inc',
     ),
+    'system_settings_form' => array(
+      'arguments' => array('form' => NULL),
+      'file' => 'system.admin.inc',
+    ),
+    'confirm_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
     'system_modules_fieldset' => array(
       'arguments' => array('form' => NULL),
       'file' => 'system.admin.inc',
@@ -1746,7 +1753,7 @@ function system_admin_menu_block($item) {
   $has_subitems = FALSE;
   $result = db_query("
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.theme_callback, m.theme_arguments, m.type, m.description, m.path, m.weight as router_weight, ml.*
-    FROM {menu_router} m 
+    FROM {menu_router} m
     LEFT JOIN {menu_links} ml ON m.path = ml.router_path
     WHERE (ml.plid = :plid AND ml.menu_name = :name AND hidden = 0) OR (m.tab_parent = :path AND m.type IN (:local_task, :default_task))", array(':plid' => $item['mlid'], ':name' => $item['menu_name'], ':path' => $item['path'], ':local_task' => MENU_LOCAL_TASK, ':default_task' => MENU_DEFAULT_LOCAL_TASK), array('fetch' => PDO::FETCH_ASSOC));
   foreach ($result as $link) {
@@ -1780,7 +1787,7 @@ function system_admin_menu_block($item) {
     }
   }
   if ($has_subitems) {
-    // If we've had at least one non-tab subitem, remove the link for the 
+    // If we've had at least one non-tab subitem, remove the link for the
     // default task, since that is already broken down to subitems.
     unset($content[$default_task]);
   }
@@ -3364,3 +3371,17 @@ function system_date_format_delete($dfid) {
     ->execute();
 }
 
+/**
+ * Theme confirmation forms.
+ *
+ * By default this does not alter the appearance of a form at all,
+ * but is provided as a convenience for themers.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: An associative array containing the structure of the form.
+ * @ingroup themeable
+ */
+function theme_confirm_form($variables) {
+  return drupal_render_children($variables['form']);
+}

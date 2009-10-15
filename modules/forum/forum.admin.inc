@@ -99,6 +99,21 @@ function forum_form_submit($form, &$form_state) {
 }
 
 /**
+ * Theme forum forms.
+ *
+ * By default this does not alter the appearance of a form at all,
+ * but is provided as a convenience for themers.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: An associative array containing the structure of the form.
+ * @ingroup themeable
+ */
+function theme_forum_form($variables) {
+  return drupal_render_children($variables['form']);
+}
+
+/**
  * Returns a form for adding a container to the forum vocabulary
  *
  * @param $edit Associative array containing a container term to be added or edited.

@@ -57,6 +57,10 @@ function forum_theme() {
       'template' => 'forum-submitted',
       'arguments' => array('topic' => NULL),
     ),
+    'forum_form' => array(
+      'arguments' => array('form' => NULL),
+      'file' => 'forum.admin.inc',
+    ),
   );
 }
 

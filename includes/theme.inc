@@ -37,6 +37,12 @@ define('MARK_UPDATED', 2);
  * @} End of "Content markers".
  */
 
+
+/**
+ * An exception to throw when a theme function is requested that does not exist.
+ */
+class ThemeHookNotFoundException extends Exception {}
+
 /**
  * Determines if a theme is available to use.
  *
@@ -256,7 +262,7 @@ function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL) 
   else {
     // If not, build one and cache it.
     $registry = _theme_build_registry($theme, $base_theme, $theme_engine);
-   // Only persist this registry if all modules are loaded. This assures a 
+   // Only persist this registry if all modules are loaded. This assures a
    // complete set of theme hooks.
     if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
       _theme_save_registry($theme, $registry);
@@ -762,7 +768,7 @@ function theme($hook, $variables = array()) {
   }
 
   if (!isset($hooks[$hook])) {
-    return;
+    throw new ThemeHookNotFoundException(t('Theme hook "@hook" not found.', array('@hook' => $hook)));
   }
 
   $info = $hooks[$hook];
@@ -2139,7 +2145,7 @@ function template_preprocess_html(&$variables) {
   else {
     $variables['classes_array'][] = 'no-sidebars';
   }
-  
+
   // Populate the body classes.
   if ($suggestions = template_page_suggestions(arg(), 'page')) {
     foreach ($suggestions as $suggestion) {
@@ -2151,7 +2157,7 @@ function template_preprocess_html(&$variables) {
       }
     }
   }
-  
+
   // If on an individual node page, add the node type to body classes.
   if ($node = menu_get_object()) {
     $variables['classes_array'][] = drupal_html_class('node-type-' . $node->type);
@@ -2183,7 +2189,7 @@ function template_preprocess_html(&$variables) {
     }
   }
   $variables['head_title'] = implode(' | ', $head_title);
-  
+
   // Populate the page template suggestions.
   if ($suggestions = template_page_suggestions(arg(), 'html')) {
     $variables['template_files'] = $suggestions;

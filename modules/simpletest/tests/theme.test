@@ -50,6 +50,23 @@ class TemplateUnitTest extends DrupalWebTestCase {
     $suggestions = array("page\0");
     $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Unsafe template suggestion fixed'));
   }
+
+  /**
+   * Test that not-found theme hook throw a proper exception.
+   */
+  function testThemeHookNotFound() {
+    try {
+      theme('this_does_not_exist');
+
+      $this->fail(t('Exception not thrown for invalid theme hook.'));
+    }
+    catch (ThemeHookNotFoundException $e) {
+      $this->assertEqual($e->getMessage(), t('Theme hook "this_does_not_exist" not found.'), t('Correct exception thrown with correct error message.'));
+    }
+    catch (Exception $e) {
+      $this->fail(t('Exception of type "@type" thrown instead of ThemeHookNotFoundException.', array('@type' => gettype($e))));
+    }
+  }
 }
 
 /**
@@ -63,7 +80,7 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
       'group' => 'Theme',
     );
   }
-  
+
   /**
    * Tableheader.js provides 'sticky' table headers, and is included by default.
    */
