@@ -19,8 +19,8 @@ function path_admin_overview($keys = NULL) {
   $multilanguage = (module_exists('locale') || $alias_exists);
 
   $header = array(
-    array('data' => t('Alias'), 'field' => 'dst', 'sort' => 'asc'),
-    array('data' => t('System'), 'field' => 'src'),
+    array('data' => t('Alias'), 'field' => 'alias', 'sort' => 'asc'),
+    array('data' => t('System'), 'field' => 'source'),
     array('data' => t('Operations'), 'colspan' => '2')
   );
   if ($multilanguage) {
@@ -30,7 +30,7 @@ function path_admin_overview($keys = NULL) {
   $query = db_select('url_alias')->extend('PagerDefault')->extend('TableSort');
   if ($keys) {
     // Replace wildcards with PDO wildcards.
-    $query->condition('dst', '%' . preg_replace('!\*+!', '%', $keys) . '%', 'LIKE');
+    $query->condition('alias', '%' . preg_replace('!\*+!', '%', $keys) . '%', 'LIKE');
   }
   $result = $query
     ->fields('url_alias')
@@ -43,15 +43,15 @@ function path_admin_overview($keys = NULL) {
   foreach ($result as $data) {
     $row = array(
       'data' => array(
-        l($data->dst, $data->src),
-        l($data->src, $data->src, array('alias' => TRUE)),
+        l($data->alias, $data->source),
+        l($data->source, $data->source, array('alias' => TRUE)),
         l(t('edit'), "admin/config/search/path/edit/$data->pid", array('query' => $destination)),
         l(t('delete'), "admin/config/search/path/delete/$data->pid", array('query' => $destination)),
       ),
     );
     // If the system path maps to a different URL alias, highlight this table
     // row to let the user know of old aliases.
-    if ($data->dst != drupal_get_path_alias($data->src, $data->language)) {
+    if ($data->alias != drupal_get_path_alias($data->source, $data->language)) {
       $row['class'] = array('warning');
     }
     if ($multilanguage) {
@@ -78,11 +78,10 @@ function path_admin_overview($keys = NULL) {
 /**
  * Menu callback; handles pages for creating and editing URL aliases.
  */
-function path_admin_edit($pid = 0) {
-  if ($pid) {
-    $alias = path_load($pid);
-    drupal_set_title($alias['dst']);
-    $output = drupal_get_form('path_admin_form', $alias);
+function path_admin_edit($path = array()) {
+  if ($path) {
+    drupal_set_title($path['alias']);
+    $output = drupal_get_form('path_admin_form', $path);
   }
   else {
     $output = drupal_get_form('path_admin_form');
@@ -98,41 +97,48 @@ function path_admin_edit($pid = 0) {
  * @see path_admin_form_validate()
  * @see path_admin_form_submit()
  */
-function path_admin_form($form, &$form_state, $edit = array('src' => '', 'dst' => '', 'language' => '', 'pid' => NULL)) {
-
-  $form['#alias'] = $edit;
-
-  $form['src'] = array(
+function path_admin_form($form, &$form_state, $path = array('source' => '', 'alias' => '', 'language' => '', 'pid' => NULL)) {
+  $form['source'] = array(
     '#type' => 'textfield',
     '#title' => t('Existing system path'),
-    '#default_value' => $edit['src'],
+    '#default_value' => $path['source'],
     '#maxlength' => 255,
     '#size' => 45,
     '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
     '#required' => TRUE,
   );
-  $form['dst'] = array(
+  $form['alias'] = array(
     '#type' => 'textfield',
     '#title' => t('Path alias'),
-    '#default_value' => $edit['dst'],
+    '#default_value' => $path['alias'],
     '#maxlength' => 255,
     '#size' => 45,
     '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
     '#required' => TRUE,
   );
-  // This will be a hidden value unless locale module is enabled
+
+  // This will be a hidden value unless locale module is enabled.
   $form['language'] = array(
     '#type' => 'value',
-    '#value' => $edit['language']
+    '#value' => $path['language']
   );
-  if ($edit['pid']) {
-    $form['pid'] = array('#type' => 'hidden', '#value' => $edit['pid']);
-    $form['submit'] = array('#type' => 'submit', '#value' => t('Update alias'));
+  if ($path['pid']) {
+    $form['pid'] = array(
+      '#type' => 'hidden',
+      '#value' => $path['pid'],
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Update alias'),
+    );
   }
   else {
-    $form['submit'] = array('#type' => 'submit', '#value' => t('Create new alias'));
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Create new alias'),
+    );
   }
 
   return $form;
@@ -140,37 +146,42 @@ function path_admin_form($form, &$form_state, $edit = array('src' => '', 'dst' =
 
 
 /**
- * Verify that a new URL alias is valid
+ * Verify that a URL alias is valid
  */
 function path_admin_form_validate($form, &$form_state) {
-  $src = $form_state['values']['src'];
-  $dst = $form_state['values']['dst'];
+  $source = $form_state['values']['source'];
+  $alias = $form_state['values']['alias'];
   $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
   // Language is only set if locale module is enabled, otherwise save for all languages.
   $language = isset($form_state['values']['language']) ? $form_state['values']['language'] : '';
 
-  $has_alias = db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid <> :pid AND dst = :dst AND language = :language", array(
-    ':pid' => $pid,
-    ':dst' => $dst,
+  $has_alias = db_query("SELECT COUNT(alias) FROM {url_alias} WHERE pid <> :pid AND alias = :alias AND language = :language", array(
+    ':pid'      => $pid,
+    ':alias'    => $alias,
     ':language' => $language,
   ))
   ->fetchField();
 
   if ($has_alias) {
-    form_set_error('dst', t('The alias %alias is already in use in this language.', array('%alias' => $dst)));
+    form_set_error('alias', t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
   }
-  $item = menu_get_item($src);
+  $item = menu_get_item($source);
   if (!$item || !$item['access']) {
-    form_set_error('src', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $src)));
+    form_set_error('source', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $source)));
   }
 }
 
 /**
- * Save a new URL alias to the database.
+ * Save a URL alias to the database.
  */
 function path_admin_form_submit($form, &$form_state) {
-  // Language is only set if locale module is enabled
-  path_set_alias($form_state['values']['src'], $form_state['values']['dst'], isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0, isset($form_state['values']['language']) ? $form_state['values']['language'] : '');
+  $path = array();
+  foreach (array('source', 'alias', 'pid', 'language') as $key) {
+    if (isset($form_state['values'][$key])) {
+      $path[$key] = $form_state['values'][$key];
+    }
+  }
+  path_save($path);
 
   drupal_set_message(t('The alias has been saved.'));
   $form_state['redirect'] = 'admin/config/search/path';
@@ -180,15 +191,17 @@ function path_admin_form_submit($form, &$form_state) {
 /**
  * Menu callback; confirms deleting an URL alias
  */
-function path_admin_delete_confirm($form, $form_state, $pid) {
-  $path = path_load($pid);
+function path_admin_delete_confirm($form, &$form_state, $path) {
   if (user_access('administer url aliases')) {
-    $form['pid'] = array('#type' => 'value', '#value' => $pid);
-    $output = confirm_form($form,
-      t('Are you sure you want to delete path alias %title?', array('%title' => $path['dst'])),
-      'admin/config/search/path');
+    $form_state['path'] = $path;
+    return confirm_form(
+      $form,
+      t('Are you sure you want to delete path alias %title?',
+      array('%title' => $path['alias'])),
+      'admin/config/search/path'
+    );
   }
-  return $output;
+  return array();
 }
 
 /**
@@ -196,7 +209,7 @@ function path_admin_delete_confirm($form, $form_state, $pid) {
  */
 function path_admin_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
-    path_admin_delete($form_state['values']['pid']);
+    path_delete($form_state['path']['pid']);
     $form_state['redirect'] = 'admin/config/search/path';
     return;
   }

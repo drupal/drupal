@@ -35,20 +35,20 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Create alias.
     $edit = array();
-    $edit['src'] = 'node/' . $node1->nid;
-    $edit['dst'] = $this->randomName(8);
+    $edit['source'] = 'node/' . $node1->nid;
+    $edit['alias'] = $this->randomName(8);
     $this->drupalPost('admin/config/search/path/add', $edit, t('Create new alias'));
 
     // Visit the system path for the node and confirm a cache entry is
     // created.
     cache_clear_all('*', 'cache_path', TRUE);
-    $this->drupalGet($edit['src']);
-    $this->assertTrue(cache_get($edit['src'], 'cache_path'), t('Cache entry was created.'));
+    $this->drupalGet($edit['source']);
+    $this->assertTrue(cache_get($edit['source'], 'cache_path'), t('Cache entry was created.'));
 
     // Visit the alias for the node and confirm a cache entry is created.
     cache_clear_all('*', 'cache_path', TRUE);
-    $this->drupalGet($edit['dst']);
-    $this->assertTrue(cache_get($edit['src'], 'cache_path'), t('Cache entry was created.'));
+    $this->drupalGet($edit['alias']);
+    $this->assertTrue(cache_get($edit['source'], 'cache_path'), t('Cache entry was created.'));
   }
 
   /**
@@ -60,25 +60,26 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Create alias.
     $edit = array();
-    $edit['src'] = 'node/' . $node1->nid;
-    $edit['dst'] = $this->randomName(8);
+    $edit['source'] = 'node/' . $node1->nid;
+    $edit['alias'] = $this->randomName(8);
     $this->drupalPost('admin/config/search/path/add', $edit, t('Create new alias'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['dst']);
+    $this->drupalGet($edit['alias']);
     $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], 'Alias works.');
 
     // Change alias.
-    $pid = $this->getPID($edit['dst']);
+    $pid = $this->getPID($edit['alias']);
 
-    $previous = $edit['dst'];
-    $edit['dst'] = $this->randomName(8);
+    $previous = $edit['alias'];
+    $edit['alias'] = $this->randomName(8);
     $this->drupalPost('admin/config/search/path/edit/' . $pid, $edit, t('Update alias'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['dst']);
+    $this->drupalGet($edit['alias']);
     $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], 'Changed alias works.');
 
+    drupal_static_reset('drupal_lookup_path');
     // Confirm that previous alias no longer works.
     $this->drupalGet($previous);
     $this->assertNoText($node1->title, 'Previous alias no longer works.');
@@ -88,18 +89,18 @@ class PathTestCase extends DrupalWebTestCase {
     $node2 = $this->drupalCreateNode();
 
     // Set alias to second test node.
-    $edit['src'] = 'node/' . $node2->nid;
-    // leave $edit['dst'] the same
+    $edit['source'] = 'node/' . $node2->nid;
+    // leave $edit['alias'] the same
     $this->drupalPost('admin/config/search/path/add', $edit, t('Create new alias'));
 
     // Confirm no duplicate was created.
-    $this->assertRaw(t('The alias %alias is already in use in this language.', array('%alias' => $edit['dst'])), 'Attempt to move alias was rejected.');
+    $this->assertRaw(t('The alias %alias is already in use in this language.', array('%alias' => $edit['alias'])), 'Attempt to move alias was rejected.');
 
     // Delete alias.
     $this->drupalPost('admin/config/search/path/delete/' . $pid, array(), t('Confirm'));
 
     // Confirm that the alias no longer works.
-    $this->drupalGet($edit['dst']);
+    $this->drupalGet($edit['alias']);
     $this->assertNoText($node1->title, 'Alias was successfully deleted.');
   }
 
@@ -151,8 +152,8 @@ class PathTestCase extends DrupalWebTestCase {
     $this->assertNoText($node1->title, 'Alias was successfully deleted.');
   }
 
-  function getPID($dst) {
-    return db_query("SELECT pid FROM {url_alias} WHERE dst = :dst", array(':dst' => $dst))->fetchField();
+  function getPID($alias) {
+    return db_query("SELECT pid FROM {url_alias} WHERE alias = :alias", array(':alias' => $alias))->fetchField();
   }
 }
 

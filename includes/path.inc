@@ -47,7 +47,7 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
   global $language;
   $cache = &drupal_static(__FUNCTION__, array(
     'map' => array(),
-    'no_src' => array(),
+    'no_source' => array(),
     'whitelist' => NULL,
     'system_paths' => array(),
     'no_aliases' => array(),
@@ -83,7 +83,7 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
           // Now fetch the aliases corresponding to these system paths.
           // We order by ASC and overwrite array keys to ensure the correct
           // alias is used when there are multiple aliases per path.
-          $cache['map'][$path_language] = db_query("SELECT src, dst FROM {url_alias} WHERE src IN (:system) AND language IN (:language, '') ORDER BY language ASC, pid ASC", array(
+          $cache['map'][$path_language] = db_query("SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language IN (:language, '') ORDER BY language ASC, pid ASC", array(
             ':system' => $cache['system_paths'],
             ':language' => $path_language
           ))->fetchAllKeyed();
@@ -104,35 +104,35 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
       // For system paths which were not cached, query aliases individually.
       else if (!isset($cache['no_aliases'][$path_language][$path])) {
         // Get the most fitting result falling back with alias without language
-        $alias = db_query("SELECT dst FROM {url_alias} WHERE src = :src AND language IN (:language, '') ORDER BY language DESC, pid DESC", array(
-          ':src' => $path,
+        $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language IN (:language, '') ORDER BY language DESC, pid DESC", array(
+          ':source' => $path,
           ':language' => $path_language
         ))->fetchField();
         $cache['map'][$path_language][$path] = $alias;
         return $alias;
       }
     }
-    // Check $no_src for this $path in case we've already determined that there
+    // Check $no_source for this $path in case we've already determined that there
     // isn't a path that has this alias
-    elseif ($action == 'source' && !isset($cache['no_src'][$path_language][$path])) {
+    elseif ($action == 'source' && !isset($cache['no_source'][$path_language][$path])) {
       // Look for the value $path within the cached $map
-      $src = '';
-      if (!isset($cache['map'][$path_language]) || !($src = array_search($path, $cache['map'][$path_language]))) {
+      $source = '';
+      if (!isset($cache['map'][$path_language]) || !($source = array_search($path, $cache['map'][$path_language]))) {
         // Get the most fitting result falling back with alias without language
-        if ($src = db_query("SELECT src FROM {url_alias} WHERE dst = :dst AND language IN (:language, '') ORDER BY language DESC, pid DESC", array(
-                     ':dst' => $path,
+        if ($source = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language IN (:language, '') ORDER BY language DESC, pid DESC", array(
+                     ':alias' => $path,
                      ':language' => $path_language))
             ->fetchField()) {
-          $cache['map'][$path_language][$src] = $path;
+          $cache['map'][$path_language][$source] = $path;
         }
         else {
           // We can't record anything into $map because we do not have a valid
           // index and there is no need because we have not learned anything
-          // about any Drupal path. Thus cache to $no_src.
-          $cache['no_src'][$path_language][$path] = TRUE;
+          // about any Drupal path. Thus cache to $no_source.
+          $cache['no_source'][$path_language][$path] = TRUE;
         }
       }
-      return $src;
+      return $source;
     }
   }
 
@@ -205,8 +205,8 @@ function drupal_get_path_alias($path = NULL, $path_language = '') {
  */
 function drupal_get_normal_path($path, $path_language = '') {
   $result = $path;
-  if ($src = drupal_lookup_path('source', $path, $path_language)) {
-    $result = $src;
+  if ($source = drupal_lookup_path('source', $path, $path_language)) {
+    $result = $source;
   }
   if (function_exists('custom_url_rewrite_inbound')) {
     // Modules may alter the inbound request path by reference.
@@ -367,7 +367,7 @@ function drupal_path_alias_whitelist_rebuild() {
   // path it corresponds to. This is the portion of the path before the first /
   // if present, otherwise the whole path itself.
   $whitelist = array();
-  $result = db_query("SELECT SUBSTRING_INDEX(src, '/', 1) AS path FROM {url_alias} GROUP BY path");
+  $result = db_query("SELECT SUBSTRING_INDEX(source, '/', 1) AS path FROM {url_alias} GROUP BY path");
   foreach ($result as $row) {
     $whitelist[$row->path] = TRUE;
   }

@@ -1268,8 +1268,8 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $path = 'admin/config/search/path/add';
     $english_path = $this->randomName(8);
     $edit = array(
-      'src' => 'node/' . $node->nid,
-      'dst' => $english_path,
+      'source'   => 'node/' . $node->nid,
+      'alias'    => $english_path,
       'language' => 'en',
     );
     $this->drupalPost($path, $edit, t('Create new alias'));
@@ -1277,8 +1277,8 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     // Create a path alias in new custom language.
     $custom_language_path = $this->randomName(8);
     $edit = array(
-      'src' => 'node/' . $node->nid,
-      'dst' => $custom_language_path,
+      'source'   => 'node/' . $node->nid,
+      'alias'    => $custom_language_path,
       'language' => $langcode,
     );
     $this->drupalPost($path, $edit, t('Create new alias'));

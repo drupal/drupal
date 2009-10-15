@@ -1583,14 +1583,14 @@ function system_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-      'src' => array(
+      'source' => array(
         'description' => 'The Drupal path this alias is for; e.g. node/12.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
-      'dst' => array(
+      'alias' => array(
         'description' => 'The alias for this path; e.g. title-of-the-story.',
         'type' => 'varchar',
         'length' => 255,
@@ -1606,11 +1606,11 @@ function system_schema() {
       ),
     ),
     'unique keys' => array(
-      'dst_language_pid' => array('dst', 'language', 'pid'),
+      'alias_language_pid' => array('alias', 'language', 'pid'),
     ),
     'primary key' => array('pid'),
     'indexes' => array(
-      'src_language_pid' => array('src', 'language', 'pid'),
+      'source_language_pid' => array('source', 'language', 'pid'),
     ),
   );
 
@@ -1943,7 +1943,6 @@ function system_update_7007() {
 
   return implode(', ', $messages);
 }
-
 
 /**
  * Use the poll_choice primary key to record votes in poll_votes rather than
@@ -2738,6 +2737,21 @@ function system_update_7040() {
  */
 function system_update_7041() {
   db_add_field('menu_router', 'delivery_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+}
+
+/**
+ * Rename dst and src to source and alias.
+ */
+function system_update_7042() {
+  // Drop indexes.
+  db_drop_index('url_alias', 'src_language_pid');
+  db_drop_unique_key('url_alias', 'dst_language_pid');
+  // Rename fields.
+  db_change_field('url_alias', 'src', 'source', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+  db_change_field('url_alias', 'dst', 'alias', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+  // Add indexes back.
+  db_add_index('url_alias', 'source_language_pid', array('source', 'language', 'pid'));
+  db_add_unique_key('url_alias', 'alias_language_pid', array('alias', 'language', 'pid'));
 }
 
 /**
