@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.74 2009/10/14 20:22:04 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.75 2009/10/15 12:13:45 dries Exp $
 
 /**
  * @file
@@ -596,7 +596,11 @@ function theme_taxonomy_overview_terms($variables) {
  * @ingroup forms
  * @see taxonomy_form_term_submit()
  */
-function taxonomy_form_term($form, &$form_state, $vocabulary, $edit = array()) {
+function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = NULL) {
+  if (!isset($vocabulary) && is_object($edit)) {
+    $vocabulary = taxonomy_vocabulary_load($edit->vid);
+    $edit = (array)$edit;
+  }
   $edit += array(
     'name' => '',
     'description' => '',

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.38 2009/10/09 01:00:06 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.39 2009/10/15 12:13:45 dries Exp $
 
 /**
  * @file
@@ -73,18 +73,6 @@ function taxonomy_term_feed($term) {
   $nids = taxonomy_select_nodes(array($term->tid, FALSE));
 
   node_feed($nids, $channel);
-}
-
-/**
- * Page to edit a vocabulary term.
- */
-function taxonomy_term_edit($term) {
-  if (isset($term)) {
-    drupal_set_title($term->name);
-    include_once DRUPAL_ROOT . '/'. drupal_get_path('module', 'taxonomy') . '/taxonomy.admin.inc';
-    return drupal_get_form('taxonomy_form_term', taxonomy_vocabulary_load($term->vid), (array)$term);
-  }
-  return drupal_not_found();
 }
 
 /**
