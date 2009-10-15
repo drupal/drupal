@@ -2262,21 +2262,17 @@ function hook_install_tasks() {
 /**
  * Change the page the user is sent to by drupal_goto().
  *
- * @param $args
- *   The array keys are the same as drupal_goto() arguments and the array can
- *   be changed.
- *   <code>
- *     $args = array(
- *       'path' => &$path,
- *       'query' => &$query,
- *       'fragment' => &$fragment,
- *       'http_response_code' => &$http_response_code,
- *     );
- *   </code>
+ * @param &$path
+ *   A Drupal path or a full URL.
+ * @param &$options
+ *   An associative array of additional URL options to pass to url().
+ * @param &$http_response_code
+ *   The HTTP status code to use for the redirection. See drupal_goto() for more
+ *   information.
  */
-function hook_drupal_goto_alter(array $args) {
+function hook_drupal_goto_alter(&$path, &$options, &$http_response_code) {
   // A good addition to misery module.
-  $args['http_response_code'] = 500;
+  $http_response_code = 500;
 }
 
 /**

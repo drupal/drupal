@@ -156,7 +156,7 @@ function session_test_form_user_login_alter(&$form) {
  * Force the redirection to go to a non-secure page after being on a secure
  * page through https.php.
  */
-function session_test_drupal_goto_alter(&$args) {
+function session_test_drupal_goto_alter(&$path, &$options, &$http_response_code) {
   global $base_insecure_url;
-  $args['path'] = $base_insecure_url . '/' . $args['path'];
+  $path = $base_insecure_url . '/' . $path;
 }

@@ -447,7 +447,7 @@ function _batch_finished() {
     $_SESSION['batch_form_state'] = $_batch['form_state'];
     $function = $_batch['redirect_callback'];
     if (function_exists($function)) {
-      $function($_batch['source_url'], array('op' => 'finish', 'id' => $_batch['id']));
+      $function($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));
     }
   }
 }

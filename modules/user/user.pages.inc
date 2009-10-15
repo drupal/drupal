@@ -294,7 +294,7 @@ function user_edit_cancel_submit($form, &$form_state) {
     unset($_GET['destination']);
   }
   // Note: We redirect from user/uid/edit to user/uid/cancel to make the tabs disappear.
-  $form_state['redirect'] = array("user/" . $form['#user']->uid . "/cancel", $destination);
+  $form_state['redirect'] = array("user/" . $form['#user']->uid . "/cancel", array('query' => $destination));
 }
 
 /**

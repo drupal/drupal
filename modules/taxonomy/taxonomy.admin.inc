@@ -391,7 +391,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
       '#type' => 'submit',
       '#value' => t('Reset to alphabetical')
     );
-    $form_state['redirect'] = array($_GET['q'], (isset($_GET['page']) ? array('page' => $_GET['page']) : ''));
+    $form_state['redirect'] = array($_GET['q'], (isset($_GET['page']) ? array('query' => array('page' => $_GET['page'])) : array()));
   }
 
   return $form;

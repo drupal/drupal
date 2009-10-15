@@ -63,9 +63,9 @@ function common_test_drupal_goto_land_fail() {
 /**
  * Implement hook_drupal_goto_alter().
  */
-function common_test_drupal_goto_alter(&$args) {
-  if ($args['path'] == 'common-test/drupal_goto/fail') {
-    $args['path'] = 'common-test/drupal_goto/redirect';
+function common_test_drupal_goto_alter(&$path, &$options, &$http_response_code) {
+  if ($path == 'common-test/drupal_goto/fail') {
+    $path = 'common-test/drupal_goto/redirect';
   }
 }
 

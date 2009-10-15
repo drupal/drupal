@@ -2092,7 +2092,7 @@ function comment_form_submit($form, &$form_state) {
       $query['page'] = $page;
     }
     // Redirect to the newly posted comment.
-    $redirect = array('node/' . $node->nid, $query, 'comment-' . $comment->cid);
+    $redirect = array('node/' . $node->nid, array('query' => $query, 'fragment' => 'comment-' . $comment->cid));
   }
   else {
     watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), WATCHDOG_WARNING);

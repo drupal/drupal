@@ -448,7 +448,7 @@ function openid_authentication($response) {
       // We'll want to redirect back to the same place.
       $destination = drupal_get_destination();
       unset($_GET['destination']);
-      drupal_goto('user/register', $destination);
+      drupal_goto('user/register', array('query' => $destination));
     }
     else {
       unset($form_state['values']['response']);

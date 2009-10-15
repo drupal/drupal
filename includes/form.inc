@@ -3065,7 +3065,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
 
       $function = $batch['redirect_callback'];
       if (function_exists($function)) {
-        $function($batch['url'], array('op' => 'start', 'id' => $batch['id']));
+        $function($batch['url'], array('query' => array('op' => 'start', 'id' => $batch['id'])));
       }
     }
     else {

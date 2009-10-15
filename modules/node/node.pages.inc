@@ -302,7 +302,7 @@ function node_form_delete_submit($form, &$form_state) {
     unset($_GET['destination']);
   }
   $node = $form['#node'];
-  $form_state['redirect'] = array('node/' . $node->nid . '/delete', $destination);
+  $form_state['redirect'] = array('node/' . $node->nid . '/delete', array('query' => $destination));
 }
 
 

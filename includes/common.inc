@@ -620,14 +620,13 @@ function drupal_encode_path($path) {
  * Drupal will ensure that messages set by drupal_set_message() and other
  * session data are written to the database before the user is redirected.
  *
- * This function ends the request; use it instead of a return in your menu callback.
+ * This function ends the request; use it instead of a return in your menu
+ * callback.
  *
  * @param $path
  *   A Drupal path or a full URL.
- * @param $query
- *   A query string component, if any.
- * @param $fragment
- *   A destination fragment identifier (named anchor).
+ * @param $options
+ *   An associative array of additional URL options to pass to url().
  * @param $http_response_code
  *   Valid values for an actual "goto" as per RFC 2616 section 10.3 are:
  *   - 301 Moved Permanently (the recommended value for most redirects)
@@ -639,22 +638,25 @@ function drupal_encode_path($path) {
  *   - 307 Temporary Redirect (alternative to "503 Site Down for Maintenance")
  *   Note: Other values are defined by RFC 2616, but are rarely used and poorly
  *   supported.
+ *
  * @see drupal_get_destination()
+ * @see url()
  */
-function drupal_goto($path = '', array $query = array(), $fragment = NULL, $http_response_code = 302) {
+function drupal_goto($path = '', array $options = array(), $http_response_code = 302) {
+  // A destination in $_GET always overrides the function arguments.
   if (isset($_GET['destination'])) {
-    extract(drupal_parse_url(urldecode($_GET['destination'])));
+    $destination = drupal_parse_url(urldecode($_GET['destination']));
+    $path = $destination['path'];
+    $options['query'] = $destination['query'];
+    $options['fragment'] = $destination['fragment'];
   }
 
-  $args = array(
-    'path' => &$path,
-    'query' => &$query,
-    'fragment' => &$fragment,
-    'http_response_code' => &$http_response_code,
-  );
-  drupal_alter('drupal_goto', $args);
+  drupal_alter('drupal_goto', $path, $options, $http_response_code);
 
-  $url = url($path, array('query' => $query, 'fragment' => $fragment, 'absolute' => TRUE));
+  // The 'Location' HTTP header must be absolute.
+  $options['absolute'] = TRUE;
+
+  $url = url($path, $options);
 
   header('Location: ' . $url, TRUE, $http_response_code);
 
