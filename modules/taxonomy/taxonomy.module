@@ -1153,7 +1153,7 @@ function theme_field_formatter_taxonomy_term_link($variables) {
  */
 function theme_field_formatter_taxonomy_term_plain($variables) {
   $term = $variables['element']['#item']['taxonomy_term'];
-  return $term->name;
+  return check_plain($term->name);
 }
 
 /**
