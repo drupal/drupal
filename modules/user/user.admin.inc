@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.84 2009/10/10 16:48:39 webchick Exp $
+// $Id: user.admin.inc,v 1.85 2009/10/15 13:35:06 dries Exp $
 
 /**
  * @file
@@ -637,7 +637,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
         $form['permission'][$perm] = array(
           '#type' => 'item',
           '#markup' => $perm_item['title'],
-          '#description' => $hide_descriptions ? $perm_item['description'] : NULL,
+          '#description' => $hide_descriptions && isset($perm_item['description']) ? $perm_item['description'] : NULL,
         );
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
