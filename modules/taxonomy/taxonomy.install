@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.24 2009/10/08 07:58:47 webchick Exp $
+// $Id: taxonomy.install,v 1.25 2009/10/15 12:44:36 dries Exp $
 
 /**
  * @file
@@ -256,7 +256,7 @@ function taxonomy_update_7002() {
       ->fields(array('machine_name' => 'vocabulary_' . $vid))
       ->condition('vid', $vid)
       ->execute();
-    field_attach_create_bundle($machine_name);
+    field_attach_create_bundle('taxonomy_term', $machine_name);
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: default.install,v 1.11 2009/10/14 10:56:35 dries Exp $
+// $Id: default.install,v 1.12 2009/10/15 12:44:36 dries Exp $
 
 /**
  * Implement hook_install().
@@ -202,6 +202,7 @@ function default_install() {
   taxonomy_vocabulary_save($vocabulary);
   $instance = array(
     'field_name' => 'taxonomy_' . $vocabulary->machine_name,
+    'object_type' => 'taxonomy_term',
     'label' => $vocabulary->name,
     'bundle' => 'article',
     'description' => $vocabulary->help,

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.75 2009/10/15 12:13:45 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.76 2009/10/15 12:44:36 dries Exp $
 
 /**
  * @file
@@ -207,7 +207,7 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
   }
   $vocabulary = (object) $form_state['values'];
   if ($vocabulary->machine_name != $old_vocabulary->machine_name) {
-    field_attach_rename_bundle($old_vocabulary->machine_name, $vocabulary->machine_name);
+    field_attach_rename_bundle('taxonomy_term', $old_vocabulary->machine_name, $vocabulary->machine_name);
   }
   switch (taxonomy_vocabulary_save($vocabulary)) {
     case SAVED_NEW:

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.default.inc,v 1.19 2009/10/09 19:22:55 dries Exp $
+// $Id: field.default.inc,v 1.20 2009/10/15 12:44:34 dries Exp $
 
 /**
  * @file
@@ -75,9 +75,9 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
 
     $info = array(
       '#field_name' => $field['field_name'],
+      '#object_type' => $obj_type,
       '#bundle' => $bundle,
       '#object' => $object,
-      '#object_type' => $obj_type,
     );
 
     $element = $info + array(

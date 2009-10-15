@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.28 2009/10/09 19:22:56 dries Exp $
+// $Id: field.form.inc,v 1.29 2009/10/15 12:44:34 dries Exp $
 
 /**
  * @file
@@ -66,6 +66,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
           '#delta' => $delta,
           '#field_name' => $field['field_name'],
           '#bundle' => $instance['bundle'],
+          '#object_type' => $instance['object_type'],
         );
         $element = array_merge($element, $defaults);
         // If we're processing a specific delta value for a field where the
@@ -168,6 +169,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
           '#delta' => $delta,
           '#columns' => array_keys($field['columns']),
           '#field_name' => $field_name,
+          '#object_type' => $instance['object_type'],
           '#bundle' => $instance['bundle'],
         );
 
