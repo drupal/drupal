@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.59 2009/10/15 11:47:25 dries Exp $
+// $Id: user.pages.inc,v 1.60 2009/10/15 14:07:30 dries Exp $
 
 /**
  * @file
@@ -500,7 +500,7 @@ function user_page() {
   global $user;
   if ($user->uid) {
     menu_set_active_item('user/' . $user->uid);
-    return menu_execute_active_handler();
+    return menu_execute_active_handler(NULL, FALSE);
   }
   else {
     return drupal_get_form('user_login');

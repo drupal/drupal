@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.18 2009/10/11 03:07:17 webchick Exp $
+// $Id: book.pages.inc,v 1.19 2009/10/15 14:07:27 dries Exp $
 
 /**
  * @file
@@ -255,5 +255,8 @@ function book_form_update() {
     $commands[] = ajax_command_replace(NULL, drupal_render($form['book']['plid']));
   }
 
-  ajax_render($commands);
+  // @todo: We could and should just return $form['book']['plid'] and skip the
+  // ajax_command_replace() above. But for now, this provides a test case of
+  // returning an AJAX commands array.
+  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
 }
