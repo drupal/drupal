@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.51 2009/10/15 12:44:36 dries Exp $
+// $Id: taxonomy.test,v 1.52 2009/10/15 14:34:07 dries Exp $
 
 /**
  * @file
@@ -336,25 +336,6 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
       ),
     );
     field_create_instance($this->instance);
-  }
-
-  /**
-   * Test synonyms.
-   */
-  function testTaxonomySynonyms() {
-    // Create a taxonomy term with one synonym.
-    $term = $this->createTerm($this->vocabulary);
-    $term->synonyms = $this->randomName();
-    taxonomy_term_save($term);
-
-    // Fetch the synonyms.
-    $synonyms = taxonomy_get_synonyms($term->tid);
-    $count = count($synonyms);
-    $this->assertEqual($count, 1, t('@count synonyms were found.', array('@count' => $count)));
-
-    // Fetch the term using the synonyms.
-    $returned_term = taxonomy_get_synonym_root($synonyms[0]);
-    $this->assertEqual($term->tid, $returned_term->tid, t('Term ID returned correctly'));
   }
 
   /**

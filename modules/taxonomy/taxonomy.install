@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.25 2009/10/15 12:44:36 dries Exp $
+// $Id: taxonomy.install,v 1.26 2009/10/15 14:34:07 dries Exp $
 
 /**
  * @file
@@ -91,39 +91,6 @@ function taxonomy_schema() {
       'tid' => array('taxonomy_term_data' => 'tid'),
     ),
     'primary key' => array('tid', 'parent'),
-  );
-
-  $schema['taxonomy_term_synonym'] = array(
-    'description' => 'Stores term synonyms.',
-    'fields' => array(
-      'tsid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique term synonym ID.',
-      ),
-      'tid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {taxonomy_term_data}.tid of the term.',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The name of the synonym.',
-      ),
-    ),
-    'indexes' => array(
-      'tid' => array('tid'),
-      'name_tid' => array('name', 'tid'),
-    ),
-    'foreign keys' => array(
-      'tid' => array('taxonomy_term_data' => 'tid'),
-    ),
-    'primary key' => array('tsid'),
   );
 
   $schema['taxonomy_vocabulary'] = array(
