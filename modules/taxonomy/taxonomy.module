@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.519 2009/10/15 12:13:45 dries Exp $
+// $Id: taxonomy.module,v 1.520 2009/10/15 12:19:57 dries Exp $
 
 /**
  * @file
@@ -1153,7 +1153,7 @@ function theme_field_formatter_taxonomy_term_link($variables) {
  */
 function theme_field_formatter_taxonomy_term_plain($variables) {
   $term = $variables['element']['#item']['taxonomy_term'];
-  return $term->name;
+  return check_plain($term->name);
 }
 
 /**
