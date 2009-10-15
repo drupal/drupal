@@ -10,7 +10,6 @@
  * Implement hook_permission().
  */
 function taxonomy_permission() {
-
   $permissions = array(
     'administer taxonomy' => array(
       'title' => t('Administer taxonomy'),
@@ -187,13 +186,11 @@ function taxonomy_menu() {
     'access arguments' => array('administer taxonomy'),
     'file' => 'taxonomy.admin.inc',
   );
-
   $items['admin/structure/taxonomy/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-
   $items['admin/structure/taxonomy/add'] = array(
     'title' => 'Add vocabulary',
     'page callback' => 'drupal_get_form',
@@ -213,21 +210,21 @@ function taxonomy_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'taxonomy.pages.inc',
   );
-
   $items['taxonomy/term/%taxonomy_term/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
     'title' => 'Edit term',
-    'page callback' => 'taxonomy_term_edit',
-    'page arguments' => array(2),
+    'title callback' => 'taxonomy_term_title',
+    'title arguments' => array(2),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_form_term', 2),
     'access callback' => 'taxonomy_term_edit_access',
     'access arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
-    'file' => 'taxonomy.pages.inc',
+    'file' => 'taxonomy.admin.inc',
   );
   $items['taxonomy/term/%taxonomy_term/feed'] = array(
     'title' => 'Taxonomy term',
@@ -257,13 +254,11 @@ function taxonomy_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'taxonomy.admin.inc',
   );
-
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/edit'] = array(
     'title' => 'Edit vocabulary',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -20,
   );
-
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/list'] = array(
     'title' => 'List terms',
     'page callback' => 'drupal_get_form',
@@ -273,11 +268,10 @@ function taxonomy_menu() {
     'weight' => -10,
     'file' => 'taxonomy.admin.inc',
   );
-
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/list/add'] = array(
     'title' => 'Add term',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_form_term', 3),
+    'page arguments' => array('taxonomy_form_term', array(), 3),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'taxonomy.admin.inc',

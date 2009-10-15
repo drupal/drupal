@@ -76,18 +76,6 @@ function taxonomy_term_feed($term) {
 }
 
 /**
- * Page to edit a vocabulary term.
- */
-function taxonomy_term_edit($term) {
-  if (isset($term)) {
-    drupal_set_title($term->name);
-    include_once DRUPAL_ROOT . '/'. drupal_get_path('module', 'taxonomy') . '/taxonomy.admin.inc';
-    return drupal_get_form('taxonomy_form_term', taxonomy_vocabulary_load($term->vid), (array)$term);
-  }
-  return drupal_not_found();
-}
-
-/**
  * Helper function for autocompletion
  */
 function taxonomy_autocomplete($field_name, $bundle, $tags_typed = '') {

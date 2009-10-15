@@ -596,7 +596,11 @@ function theme_taxonomy_overview_terms($variables) {
  * @ingroup forms
  * @see taxonomy_form_term_submit()
  */
-function taxonomy_form_term($form, &$form_state, $vocabulary, $edit = array()) {
+function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = NULL) {
+  if (!isset($vocabulary) && is_object($edit)) {
+    $vocabulary = taxonomy_vocabulary_load($edit->vid);
+    $edit = (array)$edit;
+  }
   $edit += array(
     'name' => '',
     'description' => '',
