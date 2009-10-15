@@ -1005,6 +1005,13 @@ function system_schema() {
         'type' => 'text',
         'not null' => FALSE,
       ),
+      'delivery_callback' => array(
+        'description' => 'The name of the function that sends the result of the page_callback function to the browser.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'fit' => array(
         'description' => 'A numeric representation of how specific the path is.',
         'type' => 'int',
@@ -2723,6 +2730,14 @@ function system_update_7040() {
   db_create_table('date_format_type', $schema['date_format_type']);
   db_create_table('date_formats', $schema['date_formats']);
   db_create_table('date_format_locale', $schema['date_format_locale']);
+}
+
+/**
+ * Adds 'delivery_callback' field to the {menu_router} table to allow a custom
+ * function to be used for final page rendering and sending to browser.
+ */
+function system_update_7041() {
+  db_add_field('menu_router', 'delivery_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
 }
 
 /**

@@ -382,9 +382,7 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
  * Menu callback for AHAH additions. Render the new poll choices.
  */
 function poll_choice_js($form, $form_state) {
-  $choice_form = $form['choice_wrapper']['choice'];
-
-  return drupal_render($choice_form);
+  return $form['choice_wrapper']['choice'];
 }
 
 /**

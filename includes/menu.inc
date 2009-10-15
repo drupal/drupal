@@ -401,29 +401,56 @@ function menu_get_item($path = NULL, $router_item = NULL) {
 }
 
 /**
- * Execute the page callback associated with the current path
+ * Execute the page callback associated with the current path.
+ * 
+ * @param $path
+ *   The drupal path whose handler is to be be executed. If set to NULL, then
+ *   the current path is used.
+ * @param $deliver
+ *   (optional) A boolean to indicate whether the content should be sent to the
+ *   browser using the appropriate delivery callback (TRUE) or whether to return
+ *   the result to the caller (FALSE).
  */
-function menu_execute_active_handler($path = NULL) {
+function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
   if (_menu_site_is_offline()) {
-    return MENU_SITE_OFFLINE;
+    $page_callback_result = MENU_SITE_OFFLINE;
   }
-  // Rebuild if we know it's needed, or if the menu masks are missing which
-  // occurs rarely, likely due to a race condition of multiple rebuilds.
-  if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
-    menu_rebuild();
-  }
-  if ($router_item = menu_get_item($path)) {
-    if ($router_item['access']) {
-      if ($router_item['file']) {
-        require_once DRUPAL_ROOT . '/' . $router_item['file'];
+  else {
+    // Rebuild if we know it's needed, or if the menu masks are missing which
+    // occurs rarely, likely due to a race condition of multiple rebuilds.
+    if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
+      menu_rebuild();
+    }
+    if ($router_item = menu_get_item($path)) {
+      // hook_menu_alter() lets modules control menu router information that
+      // doesn't depend on the details of a particular page request.
+      // Here, we want to give modules a chance to use request-time information
+      // to make alterations just for this request.
+      drupal_alter('menu_active_handler', $router_item, $path);
+      if ($router_item['access']) {
+        if ($router_item['file']) {
+          require_once DRUPAL_ROOT . '/' . $router_item['file'];
+        }
+        $page_callback_result = call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
       }
-      return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
+      else {
+        $page_callback_result = MENU_ACCESS_DENIED;
+      }
     }
     else {
-      return MENU_ACCESS_DENIED;
+      $page_callback_result = MENU_NOT_FOUND;
     }
   }
-  return MENU_NOT_FOUND;
+
+  // Deliver the result of the page callback to the browser, or if requested,
+  // return it raw, so calling code can do more processing.
+  if ($deliver) {
+    $default_delivery_callback = (isset($router_item) && $router_item) ? $router_item['delivery_callback'] : NULL;
+    drupal_deliver_page($page_callback_result, $default_delivery_callback);
+  }
+  else {
+    return $page_callback_result;
+  }
 }
 
 /**
@@ -935,6 +962,7 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
         'access_arguments',
         'page_callback',
         'page_arguments',
+        'delivery_callback',
         'title',
         'title_callback',
         'title_arguments',
@@ -1118,6 +1146,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL) {
           'access_arguments',
           'page_callback',
           'page_arguments',
+          'delivery_callback',
           'title',
           'title_callback',
           'title_arguments',
@@ -2833,6 +2862,10 @@ function _menu_router_build($callbacks) {
             $item['file path'] = $parent['file path'];
           }
         }
+        // Same for delivery callbacks.
+        if (!isset($item['delivery callback']) && isset($parent['delivery callback'])) {
+          $item['delivery callback'] = $parent['delivery callback'];
+        }
         // Same for theme callbacks.
         if (!isset($item['theme callback']) && isset($parent['theme callback'])) {
           $item['theme callback'] = $parent['theme callback'];
@@ -2858,6 +2891,7 @@ function _menu_router_build($callbacks) {
       'access callback' => '',
       'page arguments' => array(),
       'page callback' => '',
+      'delivery callback' => '',
       'block callback' => '',
       'title arguments' => array(),
       'title callback' => 't',
@@ -2905,6 +2939,7 @@ function _menu_router_save($menu, $masks) {
       'access_arguments',
       'page_callback',
       'page_arguments',
+      'delivery_callback',
       'fit',
       'number_parts',
       'tab_parent',
@@ -2932,6 +2967,7 @@ function _menu_router_save($menu, $masks) {
       'access_arguments' => serialize($item['access arguments']),
       'page_callback' => $item['page callback'],
       'page_arguments' => serialize($item['page arguments']),
+      'delivery_callback' => $item['delivery callback'],
       'fit' => $item['_fit'],
       'number_parts' => $item['_number_parts'],
       'tab_parent' => $item['tab_parent'],

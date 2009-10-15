@@ -163,6 +163,10 @@
  *     instead.
  *   - "page arguments": An array of arguments to pass to the page callback
  *     function, with path component substitution as described above.
+ *   - "delivery callback": The function to call to package the result of the 
+ *     page callback function and send it to the browser. Defaults to
+ *     drupal_deliver_html_page() unless a value is inherited from a parent menu
+ *     item.
  *   - "access callback": A function returning a boolean value that determines
  *     whether the user has access rights to this menu item. Defaults to
  *     user_access() unless a value is inherited from a parent menu item.

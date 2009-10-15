@@ -314,6 +314,13 @@ function system_element_info() {
     '#attributes' => array(),
     '#items' => array(),
   );
+  // By default, we don't want AJAX commands being rendered in the context of an
+  // HTML page, so we don't provide defaults for #theme or #theme_wrappers.
+  // However, modules can set these properties (for example, to provide an HTML
+  // debugging page that displays rather than executes AJAX commands).
+  $types['ajax_commands'] = array(
+    '#ajax_commands' => array(),
+  );
 
   // Input elements.
   $types['submit'] = array(
@@ -499,6 +506,7 @@ function system_menu() {
   $items['system/ajax'] = array(
     'title' => 'AHAH callback',
     'page callback' => 'ajax_form_callback',
+    'delivery callback' => 'ajax_deliver',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
     'file path' => 'includes',
@@ -1752,7 +1760,7 @@ function system_admin_menu_block($item) {
   $default_task = NULL;
   $has_subitems = FALSE;
   $result = db_query("
-    SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.theme_callback, m.theme_arguments, m.type, m.description, m.path, m.weight as router_weight, ml.*
+    SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.delivery_callback, m.title, m.title_callback, m.title_arguments, m.theme_callback, m.theme_arguments, m.type, m.description, m.path, m.weight as router_weight, ml.*
     FROM {menu_router} m
     LEFT JOIN {menu_links} ml ON m.path = ml.router_path
     WHERE (ml.plid = :plid AND ml.menu_name = :name AND hidden = 0) OR (m.tab_parent = :path AND m.type IN (:local_task, :default_task))", array(':plid' => $item['mlid'], ':name' => $item['menu_name'], ':path' => $item['path'], ':local_task' => MENU_LOCAL_TASK, ':default_task' => MENU_DEFAULT_LOCAL_TASK), array('fetch' => PDO::FETCH_ASSOC));
@@ -2468,7 +2476,7 @@ function system_get_module_admin_tasks($module) {
 
   if (empty($items)) {
     $result = db_query("
-       SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.theme_callback, m.theme_arguments, m.type, ml.*
+       SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.delivery_callback, m.title, m.title_callback, m.title_arguments, m.theme_callback, m.theme_arguments, m.type, ml.*
        FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.link_path LIKE 'admin/%' AND hidden >= 0 AND module = 'system' AND m.number_parts > 2", array(), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $item) {
       _menu_link_translate($item);

@@ -364,7 +364,7 @@ function comment_permalink($comment) {
     drupal_add_link(array('rel' => 'canonical', 'href' => url('node/' . $node->nid)));
 
     // Return the node view, this will show the correct comment in context.
-    return menu_execute_active_handler('node/' . $node->nid);
+    return menu_execute_active_handler('node/' . $node->nid, FALSE);
   }
   drupal_not_found();
 }

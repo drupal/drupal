@@ -665,75 +665,39 @@ function drupal_goto($path = '', array $query = array(), $fragment = NULL, $http
 }
 
 /**
- * Generates a site offline message.
+ * Deliver a "site is under maintenance" message to the browser.
+ *
+ * Page callback functions wanting to report a "site offline" message should
+ * return MENU_SITE_OFFLINE instead of calling drupal_site_offline(). However,
+ * functions that are invoked in contexts where that return value might not
+ * bubble up to menu_execute_active_handler() should call drupal_site_offline().
  */
 function drupal_site_offline() {
-  drupal_maintenance_theme();
-  drupal_add_http_header('503 Service unavailable');
-  drupal_set_title(t('Site under maintenance'));
-  print theme('maintenance_page', array('content' => filter_xss_admin(variable_get('maintenance_mode_message',
-    t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))))));
+  drupal_deliver_page(MENU_SITE_OFFLINE);
 }
 
 /**
- * Generates a 404 error if the request can not be handled.
+ * Deliver a "page not found" error to the browser.
+ *
+ * Page callback functions wanting to report a "page not found" message should
+ * return MENU_NOT_FOUND instead of calling drupal_not_found(). However,
+ * functions that are invoked in contexts where that return value might not
+ * bubble up to menu_execute_active_handler() should call drupal_not_found().
  */
 function drupal_not_found() {
-  drupal_add_http_header('404 Not Found');
-
-  watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
-
-  // Keep old path for reference, and to allow forms to redirect to it.
-  if (!isset($_GET['destination'])) {
-    $_GET['destination'] = $_GET['q'];
-  }
-
-  $path = drupal_get_normal_path(variable_get('site_404', ''));
-  if ($path && $path != $_GET['q']) {
-    // Custom 404 handler. Set the active item in case there are tabs to
-    // display, or other dependencies on the path.
-    menu_set_active_item($path);
-    $return = menu_execute_active_handler($path);
-  }
-
-  if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
-    // Standard 404 handler.
-    drupal_set_title(t('Page not found'));
-    $return = t('The requested page could not be found.');
-  }
-
-  drupal_set_page_content($return);
-  $page = element_info('page');
-  print drupal_render_page($page);
+  drupal_deliver_page(MENU_NOT_FOUND);
 }
 
 /**
- * Generates a 403 error if the request is not allowed.
+ * Deliver a "access denied" error to the browser.
+ *
+ * Page callback functions wanting to report an "access denied" message should
+ * return MENU_ACCESS_DENIED instead of calling drupal_access_denied(). However,
+ * functions that are invoked in contexts where that return value might not
+ * bubble up to menu_execute_active_handler() should call drupal_access_denied().
  */
 function drupal_access_denied() {
-  drupal_add_http_header('403 Forbidden');
-  watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
-
-  // Keep old path for reference, and to allow forms to redirect to it.
-  if (!isset($_GET['destination'])) {
-    $_GET['destination'] = $_GET['q'];
-  }
-
-  $path = drupal_get_normal_path(variable_get('site_403', ''));
-  if ($path && $path != $_GET['q']) {
-    // Custom 403 handler. Set the active item in case there are tabs to
-    // display or other dependencies on the path.
-    menu_set_active_item($path);
-    $return = menu_execute_active_handler($path);
-  }
-
-  if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
-    // Standard 403 handler.
-    drupal_set_title(t('Access denied'));
-    $return = t('You are not authorized to access this page.');
-  }
-
-  print drupal_render_page($return);
+  drupal_deliver_page(MENU_ACCESS_DENIED);
 }
 
 /**
@@ -2589,6 +2553,182 @@ function l($text, $path, array $options = array()) {
   }
 
   return '<a href="' . check_plain(url($path, $options)) . '"' . drupal_attributes($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
+}
+
+/**
+ * Deliver a page callback result to the browser in the format appropriate.
+ *
+ * This function is most commonly called by menu_execute_active_handler(), but
+ * can also be called by error conditions such as drupal_not_found(),
+ * drupal_access_denied(), and drupal_site_offline().
+ *
+ * When a user requests a page, index.php calls menu_execute_active_handler()
+ * which calls the 'page callback' function registered in hook_menu(). The page
+ * callback function can return one of:
+ * - NULL: to indicate no content
+ * - an integer menu status constant: to indicate an error condition
+ * - a string of HTML content
+ * - a renderable array of content
+ * Returning a renderable array rather than a string of HTML is preferred,
+ * because that provides modules with more flexibility in customizing the final
+ * result.
+ *
+ * When the page callback returns its constructed content to
+ * menu_execute_active_handler(), this functions gets called. The purpose of
+ * this function is to determine the most appropriate 'delivery callback'
+ * function to route the content to. The delivery callback function then
+ * sends the content to the browser in the needed format. The default delivery
+ * callback is drupal_deliver_html_page() which delivers the content as an HTML
+ * page, complete with blocks in addition to the content. This default can be
+ * overridden on a per menu item basis by setting 'delivery callback' in
+ * hook_menu(), hook_menu_alter(), or hook_menu_active_handler_alter().
+ * Additionally, modules may use hook_page_delivery_callback_alter() to specify
+ * a different delivery callback to use for the page request.
+ *
+ * For example, the same page callback function can be used for an HTML
+ * version of the page and an AJAX version of the page. The page callback
+ * function just needs to decide what content is to be returned and the
+ * delivery callback function will send it as an HTML page or an AJAX
+ * response, as appropriate.
+ *
+ * In order for page callbacks to be reusable in different delivery formats,
+ * they should not issue any "print" or "echo" statements, but instead just
+ * return content. 
+ *
+ * @param $page_callback_result
+ *   The result of a page callback. Can be one of:
+ *   - NULL: to indicate no content.
+ *   - An integer menu status constant: to indicate an error condition.
+ *   - A string of HTML content.
+ *   - A renderable array of content.
+ * @param $default_delivery_callback
+ *   (Optional) If given, it is the name of a delivery function most likely
+ *   to be appropriate for the page request as determined by the calling
+ *   function (e.g., menu_execute_active_handler()). If not given, it is
+ *   determined from the menu router information of the current page. In either
+ *   case, modules have a final chance to alter which function is called. 
+ *
+ * @see menu_execute_active_handler()
+ * @see hook_menu()
+ * @see hook_menu_alter()
+ * @see hook_menu_active_handler_alter()
+ * @see hook_page_delivery_callback_alter()
+ */
+function drupal_deliver_page($page_callback_result, $default_delivery_callback = NULL) {
+  if (!isset($default_delivery_callback) && ($router_item = menu_get_item())) {
+    drupal_alter('menu_active_handler', $router_item);
+    $default_delivery_callback = $router_item['delivery_callback'];
+  }
+  $delivery_callback = !empty($default_delivery_callback) ? $default_delivery_callback : 'drupal_deliver_html_page';
+  // Give modules a final chance to alter the delivery callback used. This is
+  // for modules that need to decide which delivery callback to use based on
+  // information made available during page callback execution and for pages
+  // without router items.
+  drupal_alter('page_delivery_callback', $delivery_callback);
+  if (function_exists($delivery_callback)) {
+    $delivery_callback($page_callback_result);
+  }
+  else {
+    // If a delivery callback is specified, but doesn't exist as a function,
+    // something is wrong, but don't print anything, since it's not known
+    // what format the response needs to be in.
+    watchdog('delivery callback not found', check_plain($delivery_callback) . ': ' . check_plain($_GET['q']), NULL, WATCHDOG_ERROR);
+  }
+}
+
+/**
+ * Package and send the result of a page callback to the browser as a normal
+ * HTML page.
+ *
+ * @param $page_callback_result
+ *   The result of a page callback. Can be one of:
+ *   - NULL: to indicate no content.
+ *   - An integer menu status constant: to indicate an error condition.
+ *   - A string of HTML content.
+ *   - A renderable array of content.
+ *
+ * @see drupal_deliver_page
+ */
+function drupal_deliver_html_page($page_callback_result) {
+  // Menu status constants are integers; page content is a string or array.
+  if (is_int($page_callback_result)) {
+    // @todo: Break these up into separate functions?
+    switch ($page_callback_result) {   
+      case MENU_NOT_FOUND:
+        // Print a 404 page.
+        drupal_add_http_header('404 Not Found');
+
+        watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+
+        // Keep old path for reference, and to allow forms to redirect to it.
+        if (!isset($_GET['destination'])) {
+          $_GET['destination'] = $_GET['q'];
+        }
+
+        $path = drupal_get_normal_path(variable_get('site_404', ''));
+        if ($path && $path != $_GET['q']) {
+          // Custom 404 handler. Set the active item in case there are tabs to
+          // display, or other dependencies on the path.
+          menu_set_active_item($path);
+          $return = menu_execute_active_handler($path, FALSE);
+        }
+
+        if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
+          // Standard 404 handler.
+          drupal_set_title(t('Page not found'));
+          $return = t('The requested page could not be found.');
+        }
+
+        drupal_set_page_content($return);
+        $page = element_info('page');
+        print drupal_render_page($page);
+        break;
+
+      case MENU_ACCESS_DENIED:
+        // Print a 403 page.
+        drupal_add_http_header('403 Forbidden');
+        watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+
+        // Keep old path for reference, and to allow forms to redirect to it.
+        if (!isset($_GET['destination'])) {
+          $_GET['destination'] = $_GET['q'];
+        }
+
+        $path = drupal_get_normal_path(variable_get('site_403', ''));
+        if ($path && $path != $_GET['q']) {
+          // Custom 403 handler. Set the active item in case there are tabs to
+          // display or other dependencies on the path.
+          menu_set_active_item($path);
+          $return = menu_execute_active_handler($path, FALSE);
+        }
+
+        if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
+          // Standard 403 handler.
+          drupal_set_title(t('Access denied'));
+          $return = t('You are not authorized to access this page.');
+        }
+
+        print drupal_render_page($return);
+        break;
+
+      case MENU_SITE_OFFLINE:
+        // Print a 503 page.
+        drupal_maintenance_theme();
+        drupal_add_http_header('503 Service unavailable');
+        drupal_set_title(t('Site under maintenance'));
+        print theme('maintenance_page', array('content' => filter_xss_admin(variable_get('maintenance_mode_message',
+          t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))))));    
+        break;
+    }
+  }
+  elseif (isset($page_callback_result)) {
+    // Print anything besides a menu constant, assuming it's not NULL or
+    // undefined.
+    print drupal_render_page($page_callback_result);
+  }
+
+  // Perform end-of-request tasks.
+  drupal_page_footer();
 }
 
 /**

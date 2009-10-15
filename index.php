@@ -19,25 +19,4 @@ define('DRUPAL_ROOT', getcwd());
 
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-$return = menu_execute_active_handler();
-
-// Menu status constants are integers; page content is a string or array.
-if (is_int($return)) {
-  switch ($return) {
-    case MENU_NOT_FOUND:
-      drupal_not_found();
-      break;
-    case MENU_ACCESS_DENIED:
-      drupal_access_denied();
-      break;
-    case MENU_SITE_OFFLINE:
-      drupal_site_offline();
-      break;
-  }
-}
-elseif (isset($return)) {
-  // Print anything besides a menu constant, assuming it's not NULL or undefined.
-  print drupal_render_page($return);
-}
-
-drupal_page_footer();
+menu_execute_active_handler();

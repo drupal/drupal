@@ -165,6 +165,7 @@ function book_menu() {
   );
   $items['book/js/form'] = array(
     'page callback' => 'book_form_update',
+    'delivery callback' => 'ajax_deliver',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'book.pages.inc',
@@ -1214,7 +1215,7 @@ function book_menu_subtree_data($link) {
       $menu_router_alias = $query->join('menu_router', 'm', 'm.path = ml.router_path');
       $book_alias = $query->join('book', 'b', 'ml.mlid = b.mlid');
       $query->fields($book_alias);
-      $query->fields($menu_router_alias, array('load_functions', 'to_arg_functions', 'access_callback', 'access_arguments', 'page_callback', 'page_arguments', 'title', 'title_callback', 'title_arguments', 'type'));
+      $query->fields($menu_router_alias, array('load_functions', 'to_arg_functions', 'access_callback', 'access_arguments', 'page_callback', 'page_arguments', 'delivery_callback', 'title', 'title_callback', 'title_arguments', 'type'));
       $query->fields('ml');
       $query->condition('menu_name', $link['menu_name']);
       for ($i = 1; $i <= MENU_MAX_DEPTH && $link["p$i"]; ++$i) {

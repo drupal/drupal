@@ -2507,5 +2507,79 @@ function hook_date_formats_alter(&$formats) {
 }
 
 /**
+ * Alters the router item for the active menu handler.
+ *
+ * Called by menu_execute_active_handler() to allow modules to alter the
+ * information that will be used to handle the page request. Only use this
+ * hook if an alteration specific to the page request is needed. Otherwise
+ * use hook_menu_alter().
+ *
+ * @param $router_item
+ *   An array with the following keys:
+ *   - access: Boolean. Whether the user is allowed to see this page.
+ *   - file: A path to a file to include prior to invoking the page callback.
+ *   - page_callback: The function to call to build the page content.
+ *   - page_arguments: Arguments to pass to the page callback.
+ *   - delivery_callback: The function to call to deliver the result of the
+ *     page callback to the browser.
+ * @param $path
+ *   The drupal path that was used for retrieving the router item.
+ *
+ * @see menu_execute_active_handler()
+ * @see hook_menu()
+ * @see hook_menu_alter()
+ */
+function hook_menu_active_handler_alter(&$router_item, $path = NULL) {
+  // Turn off access for all pages for all users.
+  $router_item['access'] = FALSE;
+}
+
+/**
+ * Alters the delivery callback used to send the result of the page callback to the browser.
+ *
+ * Called by drupal_deliver_page() to allow modules to alter how the
+ * page is delivered to the browser.
+ *
+ * This hook is intended for altering the delivery callback based on
+ * information unrelated to the path of the page accessed. For example,
+ * it can be used to set the delivery callback based on a HTTP request
+ * header (as shown in the code sample). To specify a delivery callback
+ * based on path information, use hook_menu(), hook_menu_alter() or
+ * hook_menu_active_handler_alter().
+ *
+ * This hook can also be used as an API function that can be used to explicitly
+ * set the delivery callback from some other function. For example, for a module
+ * named MODULE:
+ * @code
+ * function MODULE_page_delivery_callback_alter(&$callback, $set = FALSE) {
+ *   static $stored_callback;
+ *   if ($set) {
+ *     $stored_callback = $callback;
+ *   }
+ *   elseif (isset($stored_callback)) {
+ *     $callback = $stored_callback;
+ *   }
+ * }
+ * function SOMEWHERE_ELSE() {
+ *   $desired_delivery_callback = 'foo';
+ *   MODULE_page_delivery_callback_alter($desired_delivery_callback, TRUE);
+ * }
+ * @endcode
+ *
+ * @param $callback
+ *   The name of a function.
+ *
+ * @see drupal_deliver_page()
+ */
+function hook_page_delivery_callback_alter(&$callback) {
+  // jQuery sets a HTTP_X_REQUESTED_WITH header of 'XMLHttpRequest'.
+  // If a page would normally be delivered as an html page, and it is called
+  // from jQuery, deliver it instead as an AJAX response.
+  if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' && $callback == 'drupal_deliver_html_page') {
+    $callback = 'ajax_deliver';
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

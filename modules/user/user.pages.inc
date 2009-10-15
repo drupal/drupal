@@ -500,7 +500,7 @@ function user_page() {
   global $user;
   if ($user->uid) {
     menu_set_active_item('user/' . $user->uid);
-    return menu_execute_active_handler();
+    return menu_execute_active_handler(NULL, FALSE);
   }
   else {
     return drupal_get_form('user_login');
