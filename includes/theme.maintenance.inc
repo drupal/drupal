@@ -202,3 +202,48 @@ function theme_update_page($variables) {
 
   return theme_render_template('themes/garland/maintenance-page.tpl.php', $variables);
 }
+
+/**
+ * Generate a report of the results from an operation run via authorize.php.
+ *
+ * @param array $variables
+ *   - messages: An array of result messages.
+ */
+function theme_authorize_report($variables) {
+  $messages = $variables['messages'];
+  $output = '';
+  if (!empty($messages)) {
+    $output .= '<div id="authorize-results">';
+    foreach ($messages as $heading => $logs) {
+      $output .= '<h3>' . check_plain($heading) . '</h3>';
+      foreach ($logs as $number => $log_message) {
+        if ($number === '#abort') {
+          continue;
+        }
+        $output .= theme('authorize_message', array('message' => $log_message['message'], 'success' => $log_message['success']));
+      }
+    }
+    $output .= '</div>';
+  }
+  return $output;
+}
+
+/**
+ * Render a single log message from the authorize.php batch operation.
+ *
+ * @param $variables
+ *   - message: The log message.
+ *   - success: A boolean indicating failure or success.
+ */
+function theme_authorize_message($variables) {
+  $output = '';
+  $message = $variables['message'];
+  $success = $variables['success'];
+  if ($success) {
+    $output .= '<li class="success">' . $message . '</li>';
+  }
+  else {
+    $output .= '<li class="failure"><strong>' . t('Failed') . ':</strong> ' . $message . '</li>';
+  }
+  return $output;
+}

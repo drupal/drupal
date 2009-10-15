@@ -4993,22 +4993,9 @@ function drupal_common_theme() {
       'arguments' => array('page' => NULL),
       'template' => 'page',
     ),
-    'maintenance_page' => array(
-      'arguments' => array('content' => NULL, 'show_messages' => TRUE),
-      'template' => 'maintenance-page',
-    ),
-    'update_page' => array(
-      'arguments' => array('content' => NULL, 'show_messages' => TRUE),
-    ),
-    'install_page' => array(
-      'arguments' => array('content' => NULL),
-    ),
     'region' => array(
       'arguments' => array('elements' => NULL),
       'template' => 'region',
-    ),
-    'task_list' => array(
-      'arguments' => array('items' => NULL, 'active' => NULL),
     ),
     'status_messages' => array(
       'arguments' => array('display' => NULL),
@@ -5063,6 +5050,26 @@ function drupal_common_theme() {
     ),
     'indentation' => array(
       'arguments' => array('size' => 1),
+    ),
+    // from theme.maintenance.inc
+    'maintenance_page' => array(
+      'arguments' => array('content' => NULL, 'show_messages' => TRUE),
+      'template' => 'maintenance-page',
+    ),
+    'update_page' => array(
+      'arguments' => array('content' => NULL, 'show_messages' => TRUE),
+    ),
+    'install_page' => array(
+      'arguments' => array('content' => NULL),
+    ),
+    'task_list' => array(
+      'arguments' => array('items' => NULL, 'active' => NULL),
+    ),
+    'authorize_message' => array(
+      'arguments' => array('message' => NULL, 'success' => TRUE),
+    ),
+    'authorize_report' => array(
+      'arguments' => array('messages' => array()),
     ),
     // from pager.inc
     'pager' => array(
@@ -5987,5 +5994,28 @@ function archiver_get_archiver($file) {
      }
    }
   }
+}
+
+/**
+ * Drupal Updater registry.
+ *
+ * An Updater is a class that knows how to update various parts of the Drupal
+ * file system, for example to update modules that have newer releases, or to
+ * install a new theme.
+ *
+ * @return
+ *   Returns the Drupal Updater class registry.
+ *
+ * @see hook_updater_info()
+ * @see hook_updater_info_alter()
+ */
+function drupal_get_updaters() {
+  $updaters = &drupal_static(__FUNCTION__);
+  if (!isset($updaters)) {
+    $updaters = module_invoke_all('updater_info');
+    drupal_alter('updater_info', $updaters);
+    uasort($updaters, 'drupal_sort_weight');
+  }
+  return $updaters;
 }
 

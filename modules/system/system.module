@@ -1416,6 +1416,70 @@ function _system_themes_access($theme) {
 }
 
 /**
+ * Invoke a given callback via authorize.php to run with elevated privileges.
+ *
+ * To use authorize.php, certain variables must be stashed into
+ * $_SESSION. This function sets up all the necessary $_SESSION variables,
+ * then redirects to authorize.php to initiate the workflow that will
+ * eventually lead to the callback being invoked. The callback will be invoked
+ * at a low bootstrap level, without all modules being invoked, so it needs to
+ * be careful not to assume any code exists.
+ *
+ * @param $callback
+ *   The name of the function to invoke one the user authorizes the operation.
+ * @param $file
+ *   The full path to the file where the callback function is implemented.
+ * @param $arguments
+ *   Optional array of arguments to pass into the callback when it is invoked.
+ *   Note that the first argument to the callback is always the FileTransfer
+ *   object created by authorize.php when the user authorizes the operation.
+ * @param $page_title
+ *   Optional string to use as the page title once redirected to authorize.php.
+ * @return
+ *   Nothing. This function redirects to authorize.php and does not return.
+ */
+function system_run_authorized($callback, $file, $arguments = array(), $page_title = NULL) {
+  global $base_url;
+
+  // First, figure out what file transfer backends the site supports, and put
+  // all of those in the SESSION so that authorize.php has access to all of
+  // them via the class autoloader, even without a full bootstrap.
+  $_SESSION['authorize_filetransfer_backends'] = module_invoke_all('filetransfer_backends');
+
+  // Now, define the callback to invoke.
+  $_SESSION['authorize_operation'] = array(
+    'callback' => $callback,
+    'file' => $file,
+    'arguments' => $arguments,
+  );
+
+  if (isset($page_title)) {
+    $_SESSION['authorize_operation']['page_title'] = $page_title;
+  }
+
+  // Finally, redirect to authorize.php.
+  drupal_goto($base_url . '/authorize.php');
+}
+
+/**
+ * Implement hook_updater_info().
+ */
+function system_updater_info() {
+  return array(
+    'module' => array(
+      'class' => 'ModuleUpdater',
+      'name' => t('Update modules'),
+      'weight' => 0,
+    ),
+    'theme' => array(
+      'class' => 'ThemeUpdater',
+      'name' => t('Update themes'),
+      'weight' => 0,
+    ),
+  );
+}
+
+/**
  * Implement hook_filetransfer_backends().
  */
 function system_filetransfer_backends() {

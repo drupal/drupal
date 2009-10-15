@@ -45,7 +45,6 @@ class UpdateTestHelper extends DrupalWebTestCase {
    */
   protected function standardTests() {
     $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
-    $this->assertRaw(l(t('Check manually'), 'admin/reports/updates/check'), t('Link to check available updates manually appears.'));
     $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'), t('Link to the Drupal project appears.'));
     $this->assertNoText(t('No available releases found'));
   }

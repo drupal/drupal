@@ -77,11 +77,13 @@ define('UPDATE_MAX_FETCH_TIME', 5);
 function update_help($path, $arg) {
   switch ($path) {
     case 'admin/reports/updates':
-      global $base_url;
-      $output = '<p>' . t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') . '</p>';
-      $output .= '<p>' . t('To extend the functionality or to change the look of your site, a number of contributed <a href="@modules">modules</a> and <a href="@themes">themes</a> are available.', array('@modules' => 'http://drupal.org/project/modules', '@themes' => 'http://drupal.org/project/themes')) . '</p>';
-      $output .= '<p>' . t('Each time Drupal core or a contributed module or theme is updated, it is important that <a href="@update-php">update.php</a> is run.', array('@update-php' => url($base_url . '/update.php', array('external' => TRUE)))) . '</p>';
-      return $output;
+      return '<p>' . t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') . '</p>';
+
+    case 'admin/appearance/install':
+    case 'admin/config/modules/install':
+    case 'admin/reports/updates/install':
+      return '<p>' . t('To install a new module or theme, either upload the .tar.gz file that you have downloaded, or paste the URL of a .tar.gz you wish to install. You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> at <a href="@drupal_org_url">http://drupal.org</a>.', array('@module_url' => 'http://drupal.org/project/modules', '@theme_url' => 'http://drupal.org/project/themes', '@drupal_org_url' => 'http://drupal.org')) . '</p>';
+
     case 'admin/appearance':
     case 'admin/config/modules':
       include_once DRUPAL_ROOT . '/includes/install.inc';
@@ -98,9 +100,13 @@ function update_help($path, $arg) {
         }
       }
 
+    case 'admin/appearance/update':
+    case 'admin/config/modules/update':
+    case 'admin/reports/updates/update':
     case 'admin/reports/updates/settings':
     case 'admin/reports/status':
-      // These two pages don't need additional nagging.
+    case 'admin/update/confirm':
+      // These pages don't need additional nagging.
       break;
 
     case 'admin/help#update':
@@ -156,6 +162,7 @@ function update_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'update.settings.inc',
     'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
   );
   $items['admin/reports/updates/check'] = array(
     'title' => 'Manual update check',
@@ -165,16 +172,84 @@ function update_menu() {
     'file' => 'update.fetch.inc',
   );
 
+  // We want action links for updating projects at a few different locations:
+  // both the module and theme administration pages, and on the available
+  // updates report itself. The menu items will be mostly identical, except the
+  // paths and titles, so we just define them in a loop. We pass in a string
+  // indicating what context we're entering the action from, so that can
+  // customize the appearance as needed.
+  $paths = array(
+    'report' => 'admin/reports/updates',
+    'module' => 'admin/config/modules',
+    'theme' => 'admin/appearance',
+  );
+  foreach ($paths as $context => $path) {
+    $items[$path . '/install'] = array(
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('update_manager_install_form', $context),
+      'access callback' => 'update_manager_access',
+      'access arguments' => array(),
+      'weight' => 25,
+      'type' => MENU_LOCAL_ACTION,
+      'file' => 'update.manager.inc',
+    );
+    $items[$path . '/update'] = array(
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('update_manager_update_form', $context),
+      'access callback' => 'update_manager_access',
+      'access arguments' => array(),
+      'weight' => 20,
+      'type' => MENU_LOCAL_ACTION,
+      'file' => 'update.manager.inc',
+    );
+  }
+  // Customize the titles of the action links depending on where they appear.
+  $items['admin/reports/updates/install']['title'] = 'Install new module or theme';
+  $items['admin/reports/updates/update']['title'] = 'Update existing modules and themes';
+  $items['admin/config/modules/install']['title'] = 'Install new module';
+  $items['admin/config/modules/update']['title'] = 'Update existing modules';
+  $items['admin/appearance/install']['title'] = 'Install new theme';
+  $items['admin/appearance/update']['title'] = 'Update existing themes';
+
+  // Menu callback used for the confirmation page after all the releases
+  // have been downloaded, asking you to backup before installing updates.
+  $items['admin/update/confirm'] = array(
+    'title' => 'Confirm update',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('update_manager_confirm_update_form'),
+    'access callback' => 'update_manager_access',
+    'access arguments' => array(),
+    'type' => MENU_CALLBACK,
+    'file' => 'update.manager.inc',
+  );
+
   return $items;
 }
 
 /**
- * Implement the hook_theme() registry.
+ * Determine if the current user can access the updater menu items.
+ *
+ * This is used as a menu system access callback. It both enforces the
+ * 'administer software updates' permission and the global killswitch for the
+ * authorize.php script.
+ *
+ * @see update_menu()
+ */
+function update_manager_access() {
+  return variable_get('allow_authorize_operations', TRUE) && user_access('administer software updates');
+}
+
+/**
+ * Implement hook_theme().
  */
 function update_theme() {
   return array(
-    'update_settings' => array(
+    'update_manager_update_form' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'update.manager.inc',
+    ),
+    'update_last_check' => array(
+      'arguments' => array('last' => NULL),
     ),
     'update_report' => array(
       'arguments' => array('data' => NULL),
@@ -390,6 +465,8 @@ function update_get_available($refresh = FALSE) {
 
   // Grab whatever data we currently have cached in the DB.
   $available = _update_get_cached_available_releases();
+  $num_avail = count($available);
+
   $projects = update_get_projects();
   foreach ($projects as $key => $project) {
     // If there's no data at all, we clearly need to fetch some.
@@ -615,6 +692,30 @@ function _update_project_status_sort($a, $b) {
   $a_status = $a['status'] > 0 ? $a['status'] : (-10 * $a['status']);
   $b_status = $b['status'] > 0 ? $b['status'] : (-10 * $b['status']);
   return $a_status - $b_status;
+}
+
+/**
+ * Render the HTML to display the last time we checked for update data.
+ *
+ * In addition to properly formating the given timestamp, this function also
+ * provides a "Check manually" link that refreshes the available update and
+ * redirects back to the same page.
+ *
+ * @param $variables
+ *   'last': The timestamp when the site last checked for available updates.
+ *
+ * @see theme_update_report()
+ * @see theme_update_available_updates_form()
+ *
+ * @ingroup themeable
+ */
+function theme_update_last_check($variables) {
+  $last = $variables['last'];
+  $output = '<div class="update checked">';
+  $output .= $last ? t('Last checked: @time ago', array('@time' => format_interval(REQUEST_TIME - $last))) : t('Last checked: never');
+  $output .= ' <span class="check-manually">(' . l(t('Check manually'), 'admin/reports/updates/check', array('query' => drupal_get_destination())) . ')</span>';
+  $output .= "</div>\n";
+  return $output;
 }
 
 /**

@@ -108,3 +108,17 @@ table.update,
 .update .check-manually {
   padding-left: 1em; /* LTR */
 }
+
+.update-major-version-warning {
+  color: #ff0000;
+}
+
+table tbody tr.update-security,
+table tbody tr.update-unsupported {
+  background: #fcc;
+}
+
+th.update-project-name {
+  width: 50%;
+}
+

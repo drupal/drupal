@@ -5,6 +5,15 @@
  * Connection class using the FTP URL wrapper.
  */
 class FileTransferFTPWrapper extends FileTransfer {
+
+  public function __construct($jail, $username, $password, $hostname, $port) {
+    $this->username = $username;
+    $this->password = $password;
+    $this->hostname = $hostname;
+    $this->port = $port;
+    parent::__construct($jail);
+  }
+  
   function connect() {
     $this->connection = 'ftp://' . urlencode($this->username) . ':' . urlencode($this->password) . '@' . $this->hostname . ':' . $this->port . '/';
     if (!is_dir($this->connection)) {
@@ -19,29 +28,29 @@ class FileTransferFTPWrapper extends FileTransfer {
   }
 
   function createDirectoryJailed($directory) {
-    if (!@drupal_mkdir($directory)) {
+    if (!@drupal_mkdir($this->connection . $directory)) {
       $exception = new FileTransferException('Cannot create directory @directory.', NULL, array('@directory' => $directory));
       throw $exception;
     }
   }
 
   function removeDirectoryJailed($directory) {
-    if (is_dir($directory)) {
-      $dh = opendir($directory);
+    if (is_dir($this->connection . $directory)) {
+      $dh = opendir($this->connection . $directory);
       while (($resource = readdir($dh)) !== FALSE) {
         if ($resource == '.' || $resource == '..') {
           continue;
         }
         $full_path = $directory . DIRECTORY_SEPARATOR . $resource;
-        if (is_file($full_path)) {
+        if (is_file($this->connection . $full_path)) {
           $this->removeFile($full_path);
         }
-        elseif (is_dir($full_path)) {
+        elseif (is_dir($this->connection . $full_path)) {
           $this->removeDirectory($full_path . '/');
         }
       }
       closedir($dh);
-      if (!rmdir($directory)) {
+      if (!rmdir($this->connection . $directory)) {
         $exception = new FileTransferException('Cannot remove @directory.', NULL, array('@directory' => $directory));
         throw $exception;
       }
@@ -70,15 +79,18 @@ class FileTransferFTPWrapper extends FileTransfer {
   }
 
   /**
-   * This is impossible with the stream wrapper,
-   * So we cheat and use the other implementation
+   * This is impossible with the stream wrapper, so an exception is thrown.
    *
-   * @staticvar FileTransferFTPExtension $ftp_ext_file_transfer
+   * If the ftp extenstion is available, we will cheat and use it.
+   *
    * @param string $path
    * @param long $mode
    * @param bool $recursive
    */
   function chmodJailed($path, $mode, $recursive) {
+    if (!function_exists('ftp_connect')) {
+      throw new FileTransferException('Unable to set permissions on @path.  Change umask settings on server to be world executable.', array('@path' => $path));
+    }
     static $ftp_ext_file_transfer;
 
     if (!$ftp_ext_file_transfer) {

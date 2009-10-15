@@ -29,9 +29,7 @@ function theme_update_report($variables) {
   $data = $variables['data'];
 
   $last = variable_get('update_last_check', 0);
-  $output = '<div class="update checked">' . ($last ? t('Last checked: @timestamp (@time ago)', array('@time' => format_interval(REQUEST_TIME - $last), '@timestamp' => format_date($last))) : t('Last checked: never'));
-  $output .= ' <span class="check-manually">(' . l(t('Check manually'), 'admin/reports/updates/check') . ')</span>';
-  $output .= "</div>\n";
+  $output = theme('update_last_check', array('last' => $last));
 
   if (!is_array($data)) {
     $output .= '<p>' . $data . '</p>';
