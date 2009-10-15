@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.20 2009/10/13 21:16:43 dries Exp $
+// $Id: image.module,v 1.21 2009/10/15 14:40:44 dries Exp $
 
 /**
  * @file
@@ -583,6 +583,10 @@ function image_style_flush($style) {
   cache_clear_all('image_effects', 'cache');
   drupal_static_reset('image_styles');
   drupal_static_reset('image_effects');
+
+  // Clear field caches so that formatters may be added for this style.
+  field_info_cache_clear();
+  drupal_theme_rebuild();
 
   // Clear page caches when flushing.
   if (module_exists('block')) {
