@@ -93,39 +93,6 @@ function taxonomy_schema() {
     'primary key' => array('tid', 'parent'),
   );
 
-  $schema['taxonomy_term_synonym'] = array(
-    'description' => 'Stores term synonyms.',
-    'fields' => array(
-      'tsid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique term synonym ID.',
-      ),
-      'tid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {taxonomy_term_data}.tid of the term.',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The name of the synonym.',
-      ),
-    ),
-    'indexes' => array(
-      'tid' => array('tid'),
-      'name_tid' => array('name', 'tid'),
-    ),
-    'foreign keys' => array(
-      'tid' => array('taxonomy_term_data' => 'tid'),
-    ),
-    'primary key' => array('tsid'),
-  );
-
   $schema['taxonomy_vocabulary'] = array(
     'description' => 'Stores vocabulary information.',
     'fields' => array(

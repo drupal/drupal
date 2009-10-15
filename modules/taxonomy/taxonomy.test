@@ -339,25 +339,6 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
   }
 
   /**
-   * Test synonyms.
-   */
-  function testTaxonomySynonyms() {
-    // Create a taxonomy term with one synonym.
-    $term = $this->createTerm($this->vocabulary);
-    $term->synonyms = $this->randomName();
-    taxonomy_term_save($term);
-
-    // Fetch the synonyms.
-    $synonyms = taxonomy_get_synonyms($term->tid);
-    $count = count($synonyms);
-    $this->assertEqual($count, 1, t('@count synonyms were found.', array('@count' => $count)));
-
-    // Fetch the term using the synonyms.
-    $returned_term = taxonomy_get_synonym_root($synonyms[0]);
-    $this->assertEqual($term->tid, $returned_term->tid, t('Term ID returned correctly'));
-  }
-
-  /**
    * Test terms in a single and multiple hierarchy.
    */
   function testTaxonomyTermHierarchy() {

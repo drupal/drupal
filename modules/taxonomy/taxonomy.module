@@ -483,23 +483,6 @@ function taxonomy_term_save($term) {
   }
   $query->execute();
 
-  db_delete('taxonomy_term_synonym')
-    ->condition('tid', $term->tid)
-    ->execute();
-  if (!empty($term->synonyms)) {
-    $query = db_insert('taxonomy_term_synonym')
-      ->fields(array('tid', 'name'));
-    foreach (explode ("\n", str_replace("\r", '', $term->synonyms)) as $synonym) {
-      if ($synonym) {
-        $query->values(array(
-          'tid' => $term->tid,
-          'name' => rtrim($synonym)
-        ));
-      }
-    }
-    $query->execute();
-  }
-
   cache_clear_all();
   taxonomy_terms_static_reset();
 
@@ -538,9 +521,6 @@ function taxonomy_term_delete($tid) {
       db_delete('taxonomy_term_hierarchy')
         ->condition('tid', $tid)
         ->execute();
-      db_delete('taxonomy_term_synonym')
-        ->condition('tid', $tid)
-        ->execute();
 
       field_attach_delete('taxonomy_term', $term);
       _taxonomy_clean_field_cache($term);
@@ -562,7 +542,6 @@ function taxonomy_term_delete($tid) {
 function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_term_count_nodes');
   drupal_static_reset('taxonomy_get_tree');
-  drupal_static_reset('taxonomy_get_synonym_root');
   entity_get_controller('taxonomy_term')->resetCache();
 }
 
@@ -742,36 +721,6 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
 }
 
 /**
- * Return an array of synonyms of the given term ID.
- */
-function taxonomy_get_synonyms($tid) {
-  if ($tid) {
-    $synonyms = array();
-    return db_query('SELECT name FROM {taxonomy_term_synonym} WHERE tid = :tid', array(':tid' => $tid))->fetchCol();
-  }
-  else {
-    return array();
-  }
-}
-
-/**
- * Return the term object that has the given string as a synonym.
- *
- * @param $synonym
- *   The string to compare against.
- * @return
- *   A term object, or FALSE if no matching term is found.
- */
-function taxonomy_get_synonym_root($synonym) {
-  $synonyms = &drupal_static(__FUNCTION__, array());
-
-  if (!isset($synonyms[$synonym])) {
-    $synonyms[$synonym] = db_query("SELECT * FROM {taxonomy_term_synonym} s, {taxonomy_term_data} t WHERE t.tid = s.tid AND s.name = :name", array(':name' => $synonym))->fetch();
-  }
-  return $synonyms[$synonym];
-}
-
-/**
  * Try to map a string to an existing term, as for glossary use.
  *
  * Provides a case-insensitive and trimmed mapping, to maximize the
@@ -942,7 +891,6 @@ function taxonomy_help($path, $arg) {
       $output .= '<p>' . t('Preparation Time: <em>0-30mins, 30-60mins, 1-2 hrs, 2hrs+</em>') . '</p>';
       $output .= '<p>' . t("Each taxonomy term (often called a 'category' or 'tag' in other systems) automatically provides lists of posts and a corresponding RSS feed. These taxonomy/term URLs can be manipulated to generate AND and OR lists of posts classified with terms. In our recipe site example, it then becomes easy to create pages displaying 'Main courses', '30 minute recipes', or '30 minute main courses and appetizers' by using terms on their own or in combination with others. There are a significant number of contributed modules which you to alter and extend the behavior of the core module for both display and organization of terms.") . '</p>';
       $output .= '<p>' . t("Terms can also be organized in parent/child relationships from the admin interface. An example would be a vocabulary grouping countries under their parent geo-political regions. The taxonomy module also enables advanced implementations of hierarchy, for example placing Turkey in both the 'Middle East' and 'Europe'.") . '</p>';
-      $output .= '<p>' . t('The taxonomy module supports the use of both synonyms and related terms, but does not directly use this functionality. However, optional contributed or custom modules may make full use of these advanced features.') . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@taxonomy">Taxonomy module</a>.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) . '</p>';
       return $output;
     case 'admin/structure/taxonomy':
