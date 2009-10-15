@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.26 2009/10/08 07:58:45 webchick Exp $
+// $Id: forum.admin.inc,v 1.27 2009/10/15 12:27:33 dries Exp $
 
 /**
  * @file
@@ -96,6 +96,21 @@ function forum_form_submit($form, &$form_state) {
   }
   $form_state['redirect'] = 'admin/structure/forum';
   return;
+}
+
+/**
+ * Theme forum forms.
+ *
+ * By default this does not alter the appearance of a form at all,
+ * but is provided as a convenience for themers.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: An associative array containing the structure of the form.
+ * @ingroup themeable
+ */
+function theme_forum_form($variables) {
+  return drupal_render_children($variables['form']);
 }
 
 /**

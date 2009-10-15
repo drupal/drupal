@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.522 2009/10/11 03:07:18 webchick Exp $
+// $Id: forum.module,v 1.523 2009/10/15 12:27:33 dries Exp $
 
 /**
  * @file
@@ -56,6 +56,10 @@ function forum_theme() {
     'forum_submitted' => array(
       'template' => 'forum-submitted',
       'arguments' => array('topic' => NULL),
+    ),
+    'forum_form' => array(
+      'arguments' => array('form' => NULL),
+      'file' => 'forum.admin.inc',
     ),
   );
 }

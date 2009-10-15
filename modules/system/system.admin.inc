@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.213 2009/10/14 10:56:35 dries Exp $
+// $Id: system.admin.inc,v 1.214 2009/10/15 12:27:33 dries Exp $
 
 /**
  * @file
@@ -2378,6 +2378,21 @@ function theme_system_modules_uninstall($variables) {
   $output .= drupal_render_children($form);
 
   return $output;
+}
+
+/**
+ * Theme function for the system settings form.
+ *
+ * By default this does not alter the appearance of a form at all,
+ * but is provided as a convenience for themers.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: An associative array containing the structure of the form.
+ * @ingroup themeable
+ */
+function theme_system_settings_form($variables) {
+  return drupal_render_children($variables['form']);
 }
 
 /**
