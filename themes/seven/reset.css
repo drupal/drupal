@@ -1,4 +1,4 @@
-/* $Id: reset.css,v 1.1 2009/07/31 19:35:57 dries Exp $ */
+/* $Id: reset.css,v 1.2 2009/10/15 20:33:46 dries Exp $ */
 
 /**
  * Reset CSS styles. 
@@ -150,7 +150,6 @@ ul.secondary a.active,
   vertical-align: baseline;
   background: transparent;
   line-height: inherit;
-  text-align: left;
 }
 
 
