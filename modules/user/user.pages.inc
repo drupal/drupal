@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.60 2009/10/15 14:07:30 dries Exp $
+// $Id: user.pages.inc,v 1.61 2009/10/15 16:18:46 webchick Exp $
 
 /**
  * @file
@@ -294,7 +294,7 @@ function user_edit_cancel_submit($form, &$form_state) {
     unset($_GET['destination']);
   }
   // Note: We redirect from user/uid/edit to user/uid/cancel to make the tabs disappear.
-  $form_state['redirect'] = array("user/" . $form['#user']->uid . "/cancel", $destination);
+  $form_state['redirect'] = array("user/" . $form['#user']->uid . "/cancel", array('query' => $destination));
 }
 
 /**

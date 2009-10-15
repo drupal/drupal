@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.384 2009/10/15 11:47:25 dries Exp $
+// $Id: form.inc,v 1.385 2009/10/15 16:18:44 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3065,7 +3065,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
 
       $function = $batch['redirect_callback'];
       if (function_exists($function)) {
-        $function($batch['url'], array('op' => 'start', 'id' => $batch['id']));
+        $function($batch['url'], array('query' => array('op' => 'start', 'id' => $batch['id'])));
       }
     }
     else {

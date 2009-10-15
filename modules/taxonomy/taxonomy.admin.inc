@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.77 2009/10/15 14:34:07 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.78 2009/10/15 16:18:46 webchick Exp $
 
 /**
  * @file
@@ -391,7 +391,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
       '#type' => 'submit',
       '#value' => t('Reset to alphabetical')
     );
-    $form_state['redirect'] = array($_GET['q'], (isset($_GET['page']) ? array('page' => $_GET['page']) : ''));
+    $form_state['redirect'] = array($_GET['q'], (isset($_GET['page']) ? array('query' => array('page' => $_GET['page'])) : array()));
   }
 
   return $form;

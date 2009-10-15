@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.12 2009/10/09 01:00:00 dries Exp $
+// $Id: image.admin.inc,v 1.13 2009/10/15 16:18:45 webchick Exp $
 
 /**
  * @file
@@ -137,7 +137,7 @@ function image_style_form_add_submit($form, &$form_state) {
   // Load the configuration form for this option.
   if (isset($effect['form callback'])) {
     $path = 'admin/config/media/image-styles/edit/' . $form_state['image_style']['name'] . '/add/' . $form_state['values']['new'];
-    $form_state['redirect'] = array($path, array('weight' => $form_state['values']['weight']));
+    $form_state['redirect'] = array($path, array('query' => array('weight' => $form_state['values']['weight'])));
   }
   // If there's no form, immediately add the image effect.
   else {

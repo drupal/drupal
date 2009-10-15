@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.63 2009/10/10 16:48:38 webchick Exp $
+// $Id: openid.module,v 1.64 2009/10/15 16:18:45 webchick Exp $
 
 /**
  * @file
@@ -448,7 +448,7 @@ function openid_authentication($response) {
       // We'll want to redirect back to the same place.
       $destination = drupal_get_destination();
       unset($_GET['destination']);
-      drupal_goto('user/register', $destination);
+      drupal_goto('user/register', array('query' => $destination));
     }
     else {
       unset($form_state['values']['response']);

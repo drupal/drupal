@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.41 2009/10/09 00:59:54 dries Exp $
+// $Id: batch.inc,v 1.42 2009/10/15 16:18:44 webchick Exp $
 
 
 /**
@@ -447,7 +447,7 @@ function _batch_finished() {
     $_SESSION['batch_form_state'] = $_batch['form_state'];
     $function = $_batch['redirect_callback'];
     if (function_exists($function)) {
-      $function($_batch['source_url'], array('op' => 'finish', 'id' => $_batch['id']));
+      $function($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));
     }
   }
 }
