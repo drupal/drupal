@@ -3116,7 +3116,8 @@ function user_register_submit($form, &$form_state) {
 
   // The unset below is needed to prevent these form values from being saved as
   // user data.
-  unset($form_state['values']['form_token'], $form_state['values']['submit'], $form_state['values']['op'], $form_state['values']['notify'], $form_state['values']['form_id'], $form_state['values']['affiliates'], $form_state['values']['destination'], $form_state['values']['form_build_id']);
+  form_state_values_clean($form_state);
+  unset($form_state['values']['notify']);
 
   $form_state['values']['pass'] = $pass;
   $form_state['values']['init'] = $form_state['values']['mail'];

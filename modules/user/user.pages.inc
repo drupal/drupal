@@ -269,7 +269,8 @@ function user_profile_form_validate($form, &$form_state) {
 function user_profile_form_submit($form, &$form_state) {
   $account = $form['#user'];
   $category = $form['#user_category'];
-  unset($form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['cancel'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['form_build_id']);
+  // Remove unneeded values.
+  form_state_values_clean($form_state);
 
   $edit = (object)$form_state['values'];
   field_attach_submit('user', $edit, $form, $form_state);

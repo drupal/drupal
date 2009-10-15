@@ -62,6 +62,14 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form_test/form-state-values-clean'] = array(
+    'title' => 'Form state values clearance test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_form_state_values_clean_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -361,3 +369,27 @@ function form_test_wrapper_callback_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Form builder for form_state_values_clean() test.
+ */
+function form_test_form_state_values_clean_form($form, &$form_state) {
+  // Build an example form containing multiple submit and button elements; not
+  // only on the top-level.
+  $form = array('#tree' => TRUE);
+  $form['foo'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['bar'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['beer'] = array('#type' => 'value', '#value' => 1000);
+  $form['baz']['foo'] = array('#type' => 'button', '#value' => t('Submit'));
+  $form['baz']['baz'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['baz']['beer'] = array('#type' => 'value', '#value' => 2000);
+  return $form;
+}
+
+/**
+ * Form submit handler for form_state_values_clean() test form.
+ */
+function form_test_form_state_values_clean_form_submit($form, &$form_state) {
+  form_state_values_clean($form_state);
+  drupal_json_output($form_state['values']);
+  exit;
+}

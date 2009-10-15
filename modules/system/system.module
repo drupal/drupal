@@ -2332,7 +2332,7 @@ function system_settings_form($form, $automatic_defaults = TRUE) {
  */
 function system_settings_form_submit($form, &$form_state) {
   // Exclude unnecessary elements.
-  unset($form_state['values']['submit'], $form_state['values']['reset'], $form_state['values']['form_id'], $form_state['values']['op'], $form_state['values']['form_token'], $form_state['values']['form_build_id']);
+  form_state_values_clean($form_state);
 
   foreach ($form_state['values'] as $key => $value) {
     if (is_array($value) && isset($form_state['values']['array_filter'])) {
