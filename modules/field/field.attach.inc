@@ -184,10 +184,10 @@ function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $options
   list(, , $bundle) = field_extract_ids($obj_type, $object);
 
   if ($options['deleted']) {
-    $instances = field_read_instances(array('bundle' => $bundle), array('include_deleted' => $options['deleted']));
+    $instances = field_read_instances(array('object_type' => $obj_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
   }
   else {
-    $instances = field_info_instances($bundle);
+    $instances = field_info_instances($obj_type, $bundle);
   }
 
   foreach ($instances as $instance) {
@@ -304,7 +304,7 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
       $instances = field_read_field(array('bundle' => $bundle, array('include_deleted' => $options['deleted'])));
     }
     else {
-      $instances = field_info_instances($bundle);
+      $instances = field_info_instances($obj_type, $bundle);
     }
 
     foreach ($instances as $instance) {
@@ -593,10 +593,10 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
     foreach ($queried_objects as $obj) {
       list($id, $vid, $bundle) = field_extract_ids($obj_type, $obj);
       if ($options['deleted']) {
-        $instances = field_read_instances(array('bundle' => $bundle), array('include_deleted' => $options['deleted']));
+        $instances = field_read_instances(array('object_type' => $obj_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
       }
       else {
-        $instances = field_info_instances($bundle);
+        $instances = field_info_instances($obj_type, $bundle);
       }
 
       foreach ($instances as $instance) {
@@ -637,7 +637,7 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
       foreach ($queried_objects as $id => $object) {
         $data = array();
         list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
-        $instances = field_info_instances($bundle);
+        $instances = field_info_instances($obj_type, $bundle);
         foreach ($instances as $instance) {
           $data[$instance['field_name']] = $queried_objects[$id]->{$instance['field_name']};
         }
@@ -831,7 +831,7 @@ function field_attach_insert($obj_type, $object) {
 
   // Collect the storage backends used by the remaining fields in the objects.
   $storages = array();
-  foreach (field_info_instances($bundle) as $instance) {
+  foreach (field_info_instances($obj_type, $bundle) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     $field_id = $field['id'];
     $field_name = $field['field_name'];
@@ -877,7 +877,7 @@ function field_attach_update($obj_type, $object) {
 
   // Collect the storage backends used by the remaining fields in the objects.
   $storages = array();
-  foreach (field_info_instances($bundle) as $instance) {
+  foreach (field_info_instances($obj_type, $bundle) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     $field_id = $field['id'];
     $field_name = $field['field_name'];
@@ -920,7 +920,7 @@ function field_attach_delete($obj_type, $object) {
 
   // Collect the storage backends used by the fields in the objects.
   $storages = array();
-  foreach (field_info_instances($bundle) as $instance) {
+  foreach (field_info_instances($obj_type, $bundle) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     $field_id = $field['id'];
     $storages[$field['storage']['type']][$field_id] = $field_id;
@@ -959,7 +959,7 @@ function field_attach_delete_revision($obj_type, $object) {
 
   // Collect the storage backends used by the fields in the objects.
   $storages = array();
-  foreach (field_info_instances($bundle) as $instance) {
+  foreach (field_info_instances($obj_type, $bundle) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     $field_id = $field['id'];
     $storages[$field['storage']['type']][$field_id] = $field_id;
@@ -1225,7 +1225,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
 function field_attach_preprocess($obj_type, $object, $element, &$variables) {
   list(, , $bundle) = field_extract_ids($obj_type, $object);
 
-  foreach (field_info_instances($bundle) as $instance) {
+  foreach (field_info_instances($obj_type, $bundle) as $instance) {
     $field_name = $instance['field_name'];
     if (isset($element[$field_name]['#language'])) {
       $langcode = $element[$field_name]['#language'];
@@ -1283,33 +1283,38 @@ function field_attach_prepare_translation($node) {
 /**
  * Notify field.module that a new bundle was created.
  *
- * The default SQL-based storage doesn't need to do anytrhing about it, but
+ * The default SQL-based storage doesn't need to do anything about it, but
  * others might.
  *
+ * @param $obj_type
+ *   The object type to which the bundle is bound.
  * @param $bundle
  *   The name of the newly created bundle.
  */
-function field_attach_create_bundle($bundle) {
+function field_attach_create_bundle($obj_type, $bundle) {
   // Clear the cache.
   field_cache_clear();
 
   foreach (module_implements('field_attach_create_bundle') as $module) {
     $function = $module . '_field_attach_create_bundle';
-    $function($bundle);
+    $function($obj_type, $bundle);
   }
 }
 
 /**
  * Notify field.module that a bundle was renamed.
  *
+ * @param $obj_type
+ *   The object type to which the bundle is bound.
  * @param $bundle_old
  *   The previous name of the bundle.
  * @param $bundle_new
  *   The new name of the bundle.
  */
-function field_attach_rename_bundle($bundle_old, $bundle_new) {
+function field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new) {
   db_update('field_config_instance')
     ->fields(array('bundle' => $bundle_new))
+    ->condition('object_type', $obj_type)
     ->condition('bundle', $bundle_old)
     ->execute();
 
@@ -1318,7 +1323,7 @@ function field_attach_rename_bundle($bundle_old, $bundle_new) {
 
   foreach (module_implements('field_attach_rename_bundle') as $module) {
     $function = $module . '_field_attach_rename_bundle';
-    $function($bundle_old, $bundle_new);
+    $function($obj_type, $bundle_old, $bundle_new);
   }
 }
 
@@ -1332,12 +1337,14 @@ function field_attach_rename_bundle($bundle_old, $bundle_new) {
  * (particularly since for some field types, the deletion is more than just a
  * simple DELETE query).
  *
+ * @param $obj_type
+ *   The object type to which the bundle is bound.
  * @param $bundle
  *   The bundle to delete.
  */
-function field_attach_delete_bundle($bundle) {
+function field_attach_delete_bundle($obj_type, $bundle) {
   // First, delete the instances themseves.
-  $instances = field_info_instances($bundle);
+  $instances = field_info_instances($obj_type, $bundle);
   foreach ($instances as $instance) {
     field_delete_instance($instance);
   }
@@ -1348,7 +1355,7 @@ function field_attach_delete_bundle($bundle) {
   // Let other modules act on deleting the bundle.
   foreach (module_implements('field_attach_delete_bundle') as $module) {
     $function = $module . '_field_attach_delete_bundle';
-    $function($bundle, $instances);
+    $function($obj_type, $bundle, $instances);
   }
 }
 

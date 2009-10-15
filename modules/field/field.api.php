@@ -1061,7 +1061,7 @@ function hook_field_attach_view_alter(&$output, $context) {
  *
  * See field_attach_create_bundle() for details and arguments.
  */
-function hook_field_attach_create_bundle($bundle) {
+function hook_field_attach_create_bundle($obj_type, $bundle) {
 }
 
 /**
@@ -1071,7 +1071,7 @@ function hook_field_attach_create_bundle($bundle) {
  *
  * See field_attach_rename_bundle() for details and arguments.
  */
-function hook_field_attach_rename_bundle($bundle_old, $bundle_new) {
+function hook_field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new) {
 }
 
 /**
@@ -1079,13 +1079,15 @@ function hook_field_attach_rename_bundle($bundle_old, $bundle_new) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
+ * @param $obj_type
+ *   The type of object; e.g. 'node' or 'user'.
  * @param $bundle
  *   The bundle that was just deleted.
  * @param $instances
- *   An array of all instances that existed for $bundle before it was
+ *   An array of all instances that existed for the bundle before it was
  *   deleted.
  */
-function hook_field_attach_delete_bundle($bundle, $instances) {
+function hook_field_attach_delete_bundle($obj_type, $bundle, $instances) {
 }
 
 /**

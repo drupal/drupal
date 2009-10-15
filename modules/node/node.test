@@ -871,7 +871,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types'));
     $this->drupalLogin($web_user);
 
-    $instance = field_info_instance('body', 'page');
+    $instance = field_info_instance('node', 'body', 'page');
     $this->assertEqual($instance['label'], 'Body', t('Body field was found.'));
 
     // Verify that title and body fields are displayed.
@@ -887,7 +887,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     field_info_cache_clear();
 
-    $this->assertFalse(field_info_instance('body', 'page'), t('Body field was removed.'));
+    $this->assertFalse(field_info_instance('node', 'body', 'page'), t('Body field was removed.'));
     $this->drupalGet('node/add/page');
     $this->assertRaw('Foo', t('New title label was displayed.'));
     $this->assertNoRaw('Title', t('Old title label was not displayed.'));
@@ -903,7 +903,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     field_info_cache_clear();
 
-    $instance = field_info_instance('body', 'bar');
+    $instance = field_info_instance('node', 'body', 'bar');
     $this->assertEqual($instance['label'], 'Baz', t('Body field was added.'));
     $this->drupalGet('node/add');
     $this->assertRaw('Bar', t('New name was displayed.'));

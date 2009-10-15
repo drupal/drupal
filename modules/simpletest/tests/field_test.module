@@ -101,18 +101,21 @@ function field_test_entity_info_alter(&$entity_info) {
 /**
  * Create a new bundle for test_entity objects.
  *
- * @param $bundle_name
+ * @param $bundle
  *   The machine-readable name of the bundle.
  * @param $text
  *   The human-readable name of the bundle. If none is provided, the machine
  *   name will be used.
  */
-function field_test_create_bundle($bundle_name, $text = NULL) {
+function field_test_create_bundle($bundle, $text = NULL) {
   $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
-  $bundles += array($bundle_name => array('label' => $text ? $text : $bundle_name));
+  $bundles += array($bundle => array('label' => $text ? $text : $bundle));
   variable_set('field_test_bundles', $bundles);
 
-  field_attach_create_bundle($bundle_name);
+  $info = field_test_entity_info();
+  foreach ($info as $type => $type_info) {
+    field_attach_create_bundle($type, $bundle);
+  }
 }
 
 /**
@@ -129,21 +132,27 @@ function field_test_rename_bundle($bundle_old, $bundle_new) {
   unset($bundles[$bundle_old]);
   variable_set('field_test_bundles', $bundles);
 
-  field_attach_rename_bundle($bundle_old, $bundle_new);
+  $info = field_test_entity_info();
+  foreach ($info as $type => $type_info) {
+    field_attach_rename_bundle($type, $bundle_old, $bundle_new);
+  }
 }
 
 /**
  * Delete a bundle for test_entity objects.
  *
- * @param $bundle_name
+ * @param $bundle
  *   The machine-readable name of the bundle to delete.
  */
-function field_test_delete_bundle($bundle_name) {
+function field_test_delete_bundle($bundle) {
   $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
-  unset($bundles[$bundle_name]);
+  unset($bundles[$bundle]);
   variable_set('field_test_bundles', $bundles);
 
-  field_attach_delete_bundle($bundle_name);
+  $info = field_test_entity_info();
+  foreach ($info as $type => $type_info) {
+    field_attach_delete_bundle($type, $bundle);
+  }
 }
 
 /**

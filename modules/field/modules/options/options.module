@@ -284,8 +284,8 @@ function options_validate($element, &$form_state) {
 function options_data2form($element, $items, $field) {
   $field_key  = $element['#columns'][0];
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
-  $options    = options_options($field, $instance);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
+  $options = options_options($field, $instance);
 
   $items_transposed = options_transpose_array_rows_cols($items);
   $values = (isset($items_transposed[$field_key]) && is_array($items_transposed[$field_key])) ? $items_transposed[$field_key] : array();
@@ -312,7 +312,7 @@ function options_data2form($element, $items, $field) {
 function options_form2data($element, $field) {
   $field_key = $element['#columns'][0];
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
   $items = (array) $element[$field_key]['#value'];
   $options = options_options($field, $instance);
 

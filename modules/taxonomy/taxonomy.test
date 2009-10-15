@@ -665,7 +665,6 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
 
     $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer taxonomy'));
     $this->drupalLogin($web_user);
-
     $this->vocabulary = $this->createVocabulary();
   }
 
@@ -691,6 +690,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
+      'object_type' => 'test_entity',
       'bundle' => FIELD_TEST_BUNDLE,
       'widget' => array(
         'type' => 'options_select',
@@ -749,6 +749,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
+      'object_type' => 'test_entity',
       'bundle' => FIELD_TEST_BUNDLE,
       'label' => $this->randomName() . '_label',
       'widget' => array(

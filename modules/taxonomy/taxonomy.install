@@ -256,7 +256,7 @@ function taxonomy_update_7002() {
       ->fields(array('machine_name' => 'vocabulary_' . $vid))
       ->condition('vid', $vid)
       ->execute();
-    field_attach_create_bundle($machine_name);
+    field_attach_create_bundle('taxonomy_term', $machine_name);
   }
 }
 

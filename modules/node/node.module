@@ -491,7 +491,7 @@ function node_type_save($info) {
       ->execute();
 
     if (!empty($type->old_type) && $type->old_type != $type->type) {
-      field_attach_rename_bundle($type->old_type, $type->type);
+      field_attach_rename_bundle('node', $type->old_type, $type->type);
     }
     node_configure_fields($type);
     module_invoke_all('node_type_update', $type);
@@ -503,7 +503,7 @@ function node_type_save($info) {
       ->fields($fields)
       ->execute();
 
-    field_attach_create_bundle($type->type);
+    field_attach_create_bundle('node', $type->type);
     node_configure_fields($type);
     module_invoke_all('node_type_insert', $type);
     $status = SAVED_NEW;
@@ -528,7 +528,7 @@ function node_type_save($info) {
 function node_configure_fields($type) {
    // Add or remove the body field, as needed.
   $field = field_info_field('body');
-  $instance = field_info_instance('body', $type->type);
+  $instance = field_info_instance('node', 'body', $type->type);
   if ($type->has_body) {
     if (empty($field)) {
       $field = array(
@@ -540,6 +540,7 @@ function node_configure_fields($type) {
     if (empty($instance)) {
       $instance = array(
         'field_name' => 'body',
+        'object_type' => 'node',
         'bundle' => $type->type,
         'label' => $type->body_label,
         'widget_type' => 'text_textarea_with_summary',
@@ -572,7 +573,7 @@ function node_configure_fields($type) {
   if ($type->has_title) {
     // Add the title field if not present.
     $field = field_info_field('title');
-    $instance = field_info_instance('title', $type->type);
+    $instance = field_info_instance('node', 'title', $type->type);
 
     if (empty($field)) {
       $field = array(
@@ -585,6 +586,7 @@ function node_configure_fields($type) {
       $weight = -5;
       $instance = array(
         'field_name' => 'title',
+        'object_type' => 'node',
         'bundle' => $type->type,
         'label' => $type->title_label,
         'widget_type' => 'text',

@@ -474,6 +474,7 @@ function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $
     // Add extra Field properties.
     '#field_name' => $field['field_name'],
     '#bundle' => $instance['bundle'],
+    '#object_type' => $instance['object_type'],
   );
 
   if ($field['cardinality'] == 1) {
@@ -605,7 +606,7 @@ function file_field_widget_process($element, &$form_state, $form) {
   $item['fid'] = $element['fid']['#value'];
 
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
   $settings = $instance['widget']['settings'];
 
   $element['#theme'] = 'file_widget';
@@ -717,7 +718,7 @@ function theme_file_widget_multiple($variables) {
   $element = $variables['element'];
 
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
 
   // Get our list of widgets in order.
   $widgets = array();

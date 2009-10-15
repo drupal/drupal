@@ -507,7 +507,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
 
     // We need $field, $instance, $obj_type, $object to be able to display a value...
     list(, , $bundle) = field_extract_ids($obj_type, $object);
-    $instance = field_info_instance($field['field_name'], $bundle);
+    $instance = field_info_instance($obj_type, $field['field_name'], $bundle);
 
     $display = array(
       'type' => $formatter_type ? $formatter_type : $field_type['default_formatter'],
@@ -521,6 +521,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
       $element = array(
         '#theme' => $theme,
         '#field_name' => $field['field_name'],
+        '#object_type' => $obj_type,
         '#bundle' => $bundle,
         '#formatter' => $display['type'],
         '#settings' => $display['settings'],
@@ -741,7 +742,7 @@ function field_create_stub_entity($obj_type, $ids) {
 function template_preprocess_field(&$variables) {
   $element = $variables['element'];
   list(, , $bundle) = field_extract_ids($element['#object_type'], $element['#object']);
-  $instance = field_info_instance($element['#field_name'], $bundle);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $bundle);
   $field = field_info_field($element['#field_name']);
 
   $field_type_css = strtr($field['type'], '_', '-');

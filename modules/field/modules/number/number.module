@@ -253,7 +253,7 @@ function theme_field_formatter_number_unformatted($variables) {
 function theme_field_formatter_number($variables) {
   $element = $variables['element'];
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
   $value = $element['#item']['value'];
   $settings = $element['#settings'];
   $formatter_type = $element['#formatter'];
@@ -368,7 +368,7 @@ function number_field_widget_error($element, $error) {
 function number_elements_process($element, $form_state, $form) {
   $field_name = $element['#field_name'];
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
   $field_key  = $element['#columns'][0];
 
   $value = isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : '';
@@ -390,6 +390,7 @@ function number_elements_process($element, $form_state, $form) {
     '#description' => $element['#description'],
     '#required' => $element['#required'],
     '#field_name' => $element['#field_name'],
+    '#object_type' => $element['#object_type'],
     '#bundle' => $element['#bundle'],
     '#delta' => $element['#delta'],
     '#columns' => $element['#columns'],
@@ -428,7 +429,7 @@ function number_elements_process($element, $form_state, $form) {
  */
 function number_float_validate($element, &$form_state) {
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
   $field_key = $element['#columns'][0];
   $value = $element['#value'][$field_key];
 
@@ -450,7 +451,7 @@ function number_float_validate($element, &$form_state) {
  */
 function number_integer_validate($element, &$form_state) {
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
   $field_key = $element['#columns'][0];
   $value = $element['#value'][$field_key];
 
@@ -472,7 +473,7 @@ function number_integer_validate($element, &$form_state) {
  */
 function number_decimal_validate($element, &$form_state) {
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
   $field_key = $element['#columns'][0];
   $value = $element['#value'][$field_key];
 

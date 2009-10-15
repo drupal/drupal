@@ -233,7 +233,7 @@ function comment_count_unpublished() {
  * Implement hook_node_type_insert().
  */
 function comment_node_type_insert($info) {
-  field_attach_create_bundle('comment_node_' . $info->type);
+  field_attach_create_bundle('comment', 'comment_node_' . $info->type);
 }
 
 /**
@@ -241,7 +241,7 @@ function comment_node_type_insert($info) {
  */
 function comment_node_type_update($info) {
   if (!empty($info->old_type) && $info->type != $info->old_type) {
-    field_attach_rename_bundle('comment_node_' . $info->old_type, 'comment_node_' . $info->type);
+    field_attach_rename_bundle('comment', 'comment_node_' . $info->old_type, 'comment_node_' . $info->type);
   }
 }
 
@@ -249,7 +249,7 @@ function comment_node_type_update($info) {
  * Implement hook_node_type_delete().
  */
 function comment_node_type_delete($info) {
-  field_attach_delete_bundle('comment_node_' . $info->type);
+  field_attach_delete_bundle('comment', 'comment_node_' . $info->type);
   $settings = array(
     'comment',
     'comment_default_mode',

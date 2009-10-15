@@ -159,7 +159,7 @@ function forum_init() {
  */
 function _forum_node_check_node_type($node) {
   // Fetch information about the forum field.
-  $field = field_info_instance('taxonomy_forums', $node->type);
+  $field = field_info_instance('node', 'taxonomy_forums', $node->type);
 
   return is_array($field);
 }
@@ -850,7 +850,7 @@ function template_preprocess_forums(&$variables) {
 
     // Loop through all bundles for forum taxonomy vocabulary field.
     $field = field_info_field('taxonomy_' . $vocabulary->machine_name);
-    foreach ($field['bundles'] as $type) {
+    foreach ($field['bundles']['node'] as $type) {
       // Check if the current user has the 'create' permission for this node type.
       if (node_access('create', $type)) {
         // Fetch the "General" name of the content type;

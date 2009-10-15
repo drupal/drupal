@@ -15,19 +15,21 @@
  * Instance, and the concept of a Bundle. A Field defines a
  * particular type of data that can be attached to objects. A Field
  * Instance is a Field attached to a single Bundle. A Bundle is a set
- * of fields that are treated as a group by the Field Attach API.
+ * of fields that are treated as a group by the Field Attach API and
+ * is related to a single fieldable entity type.
  *
  * For example, suppose a site administrator wants Article nodes to
- * have a subtitle and photo. Using the Field API or some UI module,
+ * have a subtitle and photo. Using the Field API or Field UI module,
  * the administrator creates a field named 'subtitle' of type 'text'
  * and a field named 'photo' of type 'image'. The administrator
  * (again, via a UI) creates two Field Instances, one attaching the
- * field 'subtitle' to the bundle 'article' and one attaching the field
- * 'photo' to the bundle 'article'. When the node system uses the
- * Field Attach API to load all fields for an Article node, it passes
- * the node's content type (which is 'article') as the node's bundle.
+ * field 'subtitle' to the 'node' bundle 'article' and one attaching
+ * the field 'photo' to the 'node' bundle 'article'. When the node
+ * system uses the Field Attach API to load all fields for an Article
+ * node, it passes the node's entity type (which is 'node') and
+ * content type (which is 'article') as the node's bundle.
  * field_attach_load() then loads the 'subtitle' and 'photo' fields
- * because they are both attached to the bundle 'article'.
+ * because they are both attached to the 'node' bundle 'article'.
  *
  * Field objects are (currently) represented as an array of key/value
  * pairs. The object properties are:
@@ -103,6 +105,8 @@
  *     It is populated automatically by field_create_instance().
  * - field_name (string)
  *     The name of the field attached to the bundle by this instance.
+ * - object_type (string)
+ *     The name of the object type the instance is attached to.
  * - bundle (string)
  *     The name of the bundle that the field is attached to.
  * - label (string)
@@ -167,6 +171,8 @@
  *         - ...
  *     - other_build_mode
  *        - ...
+ *
+ * Bundles are represented by two strings, an entity type and a bundle name.
  *
  * TODO D7 : document max length for field types, widget types,
  * formatter names...
@@ -540,9 +546,11 @@ function field_delete_field($field_name) {
   // Delete all non-deleted instances.
   $field = field_info_field($field_name);
   if (isset($field['bundles'])) {
-    foreach ($field['bundles'] as $bundle) {
-      $instance = field_info_instance($field_name, $bundle);
-      field_delete_instance($instance);
+    foreach ($field['bundles'] as $obj_type => $bundles) {
+      foreach ($bundles as $bundle) {
+        $instance = field_info_instance($obj_type, $field_name, $bundle);
+        field_delete_instance($instance);
+      }
     }
   }
 
@@ -565,9 +573,9 @@ function field_delete_field($field_name) {
  * Creates an instance of a field, binding it to a bundle.
  *
  * @param $instance
- *   A field instance structure. The field_name and bundle properties are
- *   required.
- *   Other properties, if omitted, will be given the following default values:
+ *   A field instance structure. The field_name, object_type and
+ *   bundle properties are required. Other properties, if omitted,
+ *   will be given the following default values:
  *   - label: the field name
  *   - description: empty string
  *   - weight: 0
@@ -592,10 +600,16 @@ function field_delete_field($field_name) {
  *   FieldException
  */
 function field_create_instance($instance) {
-  // Check that the specified field exists.
   $field = field_read_field($instance['field_name']);
   if (empty($field)) {
     throw new FieldException("Attempt to create an instance of a field that doesn't exist or is currently inactive.");
+  }
+  // Check that the required properties exists.
+  if (empty($instance['object_type'])) {
+    throw new FieldException(t('Attempt to create an instance of field @field_name without an object type.', array('@field_name' => $instance['field_name'])));
+  }
+  if (empty($instance['bundle'])) {
+    throw new FieldException(t('Attempt to create an instance of field @field_name without a bundle.', array('@field_name' => $instance['field_name'])));
   }
 
   // Set the field id.
@@ -614,7 +628,7 @@ function field_create_instance($instance) {
   // Ensure the field instance is unique within the bundle.
   // We only check for instances of active fields, since adding an instance of
   // a disabled field is not supported.
-  $prior_instance = field_read_instance($instance['field_name'], $instance['bundle']);
+  $prior_instance = field_read_instance($instance['object_type'], $instance['field_name'], $instance['bundle']);
   if (!empty($prior_instance)) {
     $message = t('Attempt to create a field instance that already exists.');
     throw new FieldException($message);
@@ -655,7 +669,7 @@ function field_update_instance($instance) {
 
   // Check that the field instance exists (even if it is inactive, since we
   // want to be able to replace inactive widgets with new ones).
-  $prior_instance = field_read_instance($instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE));
+  $prior_instance = field_read_instance($instance['object_type'], $instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE));
   if (empty($prior_instance)) {
     throw new FieldException("Attempt to update a field instance that doesn't exist.");
   }
@@ -736,6 +750,7 @@ function _field_write_instance($instance, $update = FALSE) {
   $record = array(
     'field_id' => $instance['field_id'],
     'field_name' => $instance['field_name'],
+    'object_type' => $instance['object_type'],
     'bundle' => $instance['bundle'],
     'data' => $data,
     'deleted' => $instance['deleted'],
@@ -759,6 +774,8 @@ function _field_write_instance($instance, $update = FALSE) {
  * This function will not return deleted instances. Use
  * field_read_instances() instead for this purpose.
  *
+ * @param $obj_type
+ *   The type of object to which the field is bound.
  * @param $field_name
  *   The field name to read.
  * @param $bundle
@@ -772,8 +789,8 @@ function _field_write_instance($instance, $update = FALSE) {
  * @return
  *   An instance structure, or FALSE.
  */
-function field_read_instance($field_name, $bundle, $include_additional = array()) {
-  $instances = field_read_instances(array('field_name' => $field_name, 'bundle' => $bundle), $include_additional);
+function field_read_instance($obj_type, $field_name, $bundle, $include_additional = array()) {
+  $instances = field_read_instances(array('object_type' => $obj_type, 'field_name' => $field_name, 'bundle' => $bundle), $include_additional);
   return $instances ? current($instances) : FALSE;
 }
 
@@ -820,6 +837,7 @@ function field_read_instances($params = array(), $include_additional = array()) 
     $instance['id'] = $record['id'];
     $instance['field_id'] = $record['field_id'];
     $instance['field_name'] = $record['field_name'];
+    $instance['object_type'] = $record['object_type'];
     $instance['bundle'] = $record['bundle'];
     $instance['deleted'] = $record['deleted'];
 
@@ -841,6 +859,7 @@ function field_delete_instance($instance) {
   db_update('field_config_instance')
     ->fields(array('deleted' => 1))
     ->condition('field_name', $instance['field_name'])
+    ->condition('object_type', $instance['object_type'])
     ->condition('bundle', $instance['bundle'])
     ->execute();
 

@@ -202,6 +202,7 @@ function default_install() {
   taxonomy_vocabulary_save($vocabulary);
   $instance = array(
     'field_name' => 'taxonomy_' . $vocabulary->machine_name,
+    'object_type' => 'taxonomy_term',
     'label' => $vocabulary->name,
     'bundle' => 'article',
     'description' => $vocabulary->help,

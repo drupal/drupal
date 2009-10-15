@@ -75,9 +75,9 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
 
     $info = array(
       '#field_name' => $field['field_name'],
+      '#object_type' => $obj_type,
       '#bundle' => $bundle,
       '#object' => $object,
-      '#object_type' => $obj_type,
     );
 
     $element = $info + array(

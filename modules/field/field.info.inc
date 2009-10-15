@@ -190,8 +190,8 @@ function _field_info_collate_types($reset = FALSE) {
  *   - fields_id: Array of existing fields, keyed by field id. This entry lists
  *     both deleted and non-deleted fields. The bundles element is the same as
  *     for 'fields'.
- *   - instances: Array of existing instances, keyed by bundle name and field
- *     name. This entry only lists non-deleted instances.
+ *   - instances: Array of existing instances, keyed by object type, bundle
+ *     name and field name. This entry only lists non-deleted instances. 
  */
 function _field_info_collate_fields($reset = FALSE) {
   static $info;
@@ -236,18 +236,18 @@ function _field_info_collate_fields($reset = FALSE) {
     foreach ($definitions['instances'] as $instance) {
       $field = $info['fields'][$instance['field_name']];
       $instance = _field_info_prepare_instance($instance, $field);
-      $info['instances'][$instance['bundle']][$instance['field_name']] = $instance;
+      $info['instances'][$instance['object_type']][$instance['bundle']][$instance['field_name']] = $instance;
       // Enrich field definitions with the list of bundles where they have
       // instances. NOTE: Deleted fields in $info['field_ids'] are not
       // enriched because all of their instances are deleted, too, and
       // are thus not in $definitions['instances'].
-      $info['fields'][$instance['field_name']]['bundles'][] = $instance['bundle'];
-      $info['field_ids'][$instance['field_id']]['bundles'][] = $instance['bundle'];
+      $info['fields'][$instance['field_name']]['bundles'][$instance['object_type']][] = $instance['bundle'];
+      $info['field_ids'][$instance['field_id']]['bundles'][$instance['object_type']][] = $instance['bundle'];
 
       // Add storage details.
       $details = (array) module_invoke($field['storage']['module'], 'field_storage_details', $field, $instance);
       drupal_alter('field_storage_details', $details, $field, $instance);
-      $info['instances'][$instance['bundle']][$instance['field_name']]['storage_details'] = $details;
+      $info['instances'][$instance['object_type']][$instance['bundle']][$instance['field_name']]['storage_details'] = $details;
     }
   }
 
@@ -313,8 +313,7 @@ function _field_info_prepare_instance($instance, $field) {
   }
 
   // Fallback to 'full' display settings for unspecified build modes.
-  $obj_type = field_info_bundle_entity($instance['bundle']);
-  foreach (field_build_modes($obj_type) as $build_mode => $label) {
+  foreach (field_build_modes($instance['object_type']) as $build_mode => $label) {
     if (!isset($instance['display'][$build_mode])) {
       $instance['display'][$build_mode] = $instance['display']['full'];
     }
@@ -480,33 +479,27 @@ function field_info_fieldable_types($obj_type = NULL) {
 }
 
 /**
- * Return an array of fieldable bundle names and labels, for an individual
- * object type or for all object types.
+ * Return information about existing bundles.
+ *
+ * @param $obj_type
+ *   The type of object; e.g. 'node' or 'user'.
+ * @return
+ *   An array of bundles for the $obj_type keyed by bundle name,
+ *   or, if no $obj_type was provided, the array of all existing bundles,
+ *   keyed by object type.
  */
 function field_info_bundles($obj_type = NULL) {
   $info = _field_info_collate_types();
+
+  if ($obj_type) {
+    return isset($info['fieldable types'][$obj_type]['bundles']) ? $info['fieldable types'][$obj_type]['bundles'] : array();
+  }
+
   $bundles = array();
   foreach ($info['fieldable types'] as $type => $fieldable_info) {
-    if (empty($obj_type) || $obj_type == $type) {
-      $bundles += $fieldable_info['bundles'];
-    }
+    $bundles[$type] = $fieldable_info['bundles'];
   }
   return $bundles;
-}
-
-/**
- * Identify the type of entity that created a bundle.
- * // TODO : might not be needed depending on how we solve
- * // the 'namespace bundle names' issue
- */
-function field_info_bundle_entity($bundle) {
-  $info = _field_info_collate_types();
-  foreach ($info['fieldable types'] as $type => $fieldable_info) {
-    if (isset($fieldable_info['bundles'][$bundle])) {
-      return $type;
-    }
-  }
-  return FALSE;
 }
 
 /**
@@ -593,30 +586,46 @@ function field_info_field_by_id($field_id) {
 }
 
 /**
- * Return an array of instance data for a given bundle,
- * or for all known bundles, keyed by bundle name and field name.
+ * Retrieve instances.
  *
+ * @param $obj_type
+ *   The object type for which to return instances.
  * @param $bundle_name
- *   If set, return information on just this bundle.
+ *   The bundle name for which to return instances.
+ * @return
+ *   If $obj_type is not set, return all instances keyed by object type and
+ *   bundle name. If $obj_type is set, return all instances for that object
+ *   type, keyed by bundle name. If $obj_type and $bundle_name are set, return
+ *   all instances for that bundle.
  */
-function field_info_instances($bundle_name = NULL) {
+function field_info_instances($obj_type, $bundle_name = NULL) {
   $info = _field_info_collate_fields();
-  if (!isset($bundle_name)) {
+  if (!isset($obj_type)) {
     return $info['instances'];
   }
-  if (isset($info['instances'][$bundle_name])) {
-    return $info['instances'][$bundle_name];
+  if (!isset($bundle_name)) {
+    return $info['instances'][$obj_type];
+  }
+  if (isset($info['instances'][$obj_type][$bundle_name])) {
+    return $info['instances'][$obj_type][$bundle_name];
   }
   return array();
 }
 
 /**
  * Return an array of instance data for a specific field and bundle.
+ *
+ * @param $obj_type
+ *   The object type for the instance.
+ * @param $field_name
+ *   The field name for the instance.
+ * @param $bundle_name
+ *   The bundle name for the instance.
  */
-function field_info_instance($field_name, $bundle_name) {
+function field_info_instance($obj_type, $field_name, $bundle_name) {
   $info = _field_info_collate_fields();
-  if (isset($info['instances'][$bundle_name][$field_name])) {
-    return $info['instances'][$bundle_name][$field_name];
+  if (isset($info['instances'][$obj_type][$bundle_name][$field_name])) {
+    return $info['instances'][$obj_type][$bundle_name][$field_name];
   }
 }
 

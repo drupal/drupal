@@ -117,7 +117,7 @@ function comment_update_7004() {
  */
 function comment_update_7005() {
   foreach (node_type_get_types() as $info) {
-    field_attach_create_bundle('comment_node_' . $info->type);
+    field_attach_create_bundle('comment', 'comment_node_' . $info->type);
   }
 }
 

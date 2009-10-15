@@ -314,7 +314,7 @@ function taxonomy_vocabulary_save($vocabulary) {
   }
   elseif (empty($vocabulary->vid)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary);
-    field_attach_create_bundle($vocabulary->machine_name);
+    field_attach_create_bundle('taxonomy_term', $vocabulary->machine_name);
     taxonomy_vocabulary_create_field($vocabulary);
     module_invoke_all('taxonomy_vocabulary_insert', $vocabulary);
   }
@@ -344,7 +344,7 @@ function taxonomy_vocabulary_delete($vid) {
     taxonomy_term_delete($tid);
   }
 
-  field_attach_delete_bundle($vocabulary['machine_name']);
+  field_attach_delete_bundle('taxonomy_term', $vocabulary['machine_name']);
   module_invoke_all('taxonomy', 'delete', 'vocabulary', $vocabulary);
 
   cache_clear_all();

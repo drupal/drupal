@@ -57,6 +57,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
 
     $instance = array(
       'field_name' => $field['field_name'],
+      'object_type' => 'node',
       'label' => $name,
       'bundle' => $type_name,
       'required' => !empty($instance_settings['required']),
@@ -76,7 +77,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
    */
   function updateFileField($name, $type_name, $instance_settings = array(), $widget_settings = array()) {
     $field = field_info_field($name);
-    $instance = field_info_instance($name, $type_name);
+    $instance = field_info_instance('node', $name, $type_name);
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
     $instance['widget']['settings'] = array_merge($instance['widget']['settings'], $widget_settings);
 
@@ -201,7 +202,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     $field_name = 'field_' . strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
     $field = field_info_field($field_name);
-    $instance = field_info_instance($field_name, $type_name);
+    $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
 
@@ -294,7 +295,7 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
     $widget_settings = array();
     $this->createFileField($field_name, $type_name, $field_settings, $instance_settings, $widget_settings);
     $field = field_info_field($field_name);
-    $instance = field_info_instance($field_name, $type_name);
+    $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
 
@@ -340,7 +341,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     $field_name = 'field_' . strtolower($this->randomName());
     $this->createFileField($field_name, $type_name, array(), array('required' => '1'));
     $field = field_info_field($field_name);
-    $instance = field_info_instance($field_name, $type_name);
+    $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
 
@@ -386,7 +387,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     $field_name = 'field_' . strtolower($this->randomName());
     $this->createFileField($field_name, $type_name, array(), array('required' => '1'));
     $field = field_info_field($field_name);
-    $instance = field_info_instance($field_name, $type_name);
+    $instance = field_info_instance('node', $field_name, $type_name);
 
     $small_file = $this->getTestFile('text', 131072); // 128KB.
     $large_file = $this->getTestFile('text', 1310720); // 1.2MB
@@ -401,7 +402,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     foreach ($sizes as $max_filesize => $file_limit) {
       // Set the max file upload size.
       $this->updateFileField($field_name, $type_name, array('max_filesize' => $max_filesize));
-      $instance = field_info_instance($field_name, $type_name);
+      $instance = field_info_instance('node', $field_name, $type_name);
 
       // Create a new node with the small file, which should pass.
       $nid = $this->uploadNodeFile($small_file, $field_name, $type_name);
@@ -438,7 +439,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     $field_name = 'field_' . strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
     $field = field_info_field($field_name);
-    $instance = field_info_instance($field_name, $type_name);
+    $instance = field_info_instance('node', $field_name, $type_name);
 
     // Get the test file (a GIF image).
     $test_file = $this->getTestFile('image');

@@ -67,7 +67,7 @@ function field_ui_menu() {
         $items["$path/fields/%field_ui_menu"] = array(
           'title callback' => 'field_ui_menu_label',
           'title arguments' => array($instance_position),
-          'load arguments' => array($bundle_arg),
+          'load arguments' => array($obj_type, $bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
@@ -75,7 +75,7 @@ function field_ui_menu() {
         ) + $access;
         $items["$path/fields/%field_ui_menu/edit"] = array(
           'title' => 'Edit instance settings',
-          'load arguments' => array($bundle_arg),
+          'load arguments' => array($obj_type, $bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -83,7 +83,7 @@ function field_ui_menu() {
         ) + $access;
         $items["$path/fields/%field_ui_menu/field-settings"] = array(
           'title' => 'Edit field settings',
-          'load arguments' => array($bundle_arg),
+          'load arguments' => array($obj_type, $bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_settings_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
@@ -91,7 +91,7 @@ function field_ui_menu() {
         ) + $access;
         $items["$path/fields/%field_ui_menu/widget-type"] = array(
           'title' => 'Change widget type',
-          'load arguments' => array($bundle_arg),
+          'load arguments' => array($obj_type, $bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_widget_type_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
@@ -99,7 +99,7 @@ function field_ui_menu() {
         ) + $access;
         $items["$path/fields/%field_ui_menu/delete"] = array(
           'title' => 'Delete instance',
-          'load arguments' => array($bundle_arg),
+          'load arguments' => array($obj_type, $bundle_arg),
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_delete_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
@@ -134,8 +134,8 @@ function field_ui_menu() {
 /**
  * Menu loader; Load a field instance based on its name.
  */
-function field_ui_menu_load($field_name, $bundle_name) {
-  if ($instance = field_info_instance($field_name, $bundle_name)) {
+function field_ui_menu_load($field_name, $obj_type, $bundle_name) {
+  if ($instance = field_info_instance($obj_type, $field_name, $bundle_name)) {
     return $instance;
   }
   return FALSE;
@@ -270,8 +270,8 @@ function field_ui_field_attach_delete_bundle($bundle) {
 /**
  * Helper function to create the right administration path for a bundle.
  */
-function _field_ui_bundle_admin_path($bundle_name) {
-  $bundles = field_info_bundles();
+function _field_ui_bundle_admin_path($obj_type, $bundle_name) {
+  $bundles = field_info_bundles($obj_type);
   $bundle_info = $bundles[$bundle_name];
   return isset($bundle_info['admin']['real path']) ? $bundle_info['admin']['real path'] : $bundle_info['admin']['path'];
 }
@@ -279,7 +279,7 @@ function _field_ui_bundle_admin_path($bundle_name) {
 /**
  * Helper function to identify inactive fields within a bundle.
  */
-function field_ui_inactive_instances($bundle_name = NULL) {
+function field_ui_inactive_instances($obj_type, $bundle_name = NULL) {
   if (!empty($bundle_name)) {
     $inactive = array($bundle_name => array());
     $params = array('bundle' => $bundle_name);
@@ -288,7 +288,9 @@ function field_ui_inactive_instances($bundle_name = NULL) {
     $inactive = array();
     $params = array();
   }
-  $active_instances = field_info_instances();
+  $params['object_type'] = $obj_type;
+
+  $active_instances = field_info_instances($obj_type);
   $all_instances = field_read_instances($params, array('include_inactive' => TRUE));
   foreach ($all_instances as $instance) {
     if (!isset($active_instances[$instance['bundle']][$instance['field_name']])) {

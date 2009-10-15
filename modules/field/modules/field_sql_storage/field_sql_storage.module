@@ -436,7 +436,7 @@ function field_sql_storage_field_storage_delete($obj_type, $object, $fields) {
   list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
   $etid = _field_sql_storage_etid($obj_type);
 
-  foreach (field_info_instances($bundle) as $instance) {
+  foreach (field_info_instances($obj_type, $bundle) as $instance) {
     if (isset($fields[$instance['field_id']])) {
       $field = field_info_field_by_id($instance['field_id']);
       field_sql_storage_field_storage_purge($obj_type, $object, $field, $instance);
@@ -609,15 +609,18 @@ function field_sql_storage_field_storage_delete_revision($obj_type, $object, $fi
  * This function simply marks for deletion all data associated with the field.
  */
 function field_sql_storage_field_storage_delete_instance($instance) {
+  $etid = _field_sql_storage_etid($instance['object_type']);
   $field = field_info_field($instance['field_name']);
   $table_name = _field_sql_storage_tablename($field);
   $revision_name = _field_sql_storage_revision_tablename($field);
   db_update($table_name)
     ->fields(array('deleted' => 1))
+    ->condition('etid', $etid)
     ->condition('bundle', $instance['bundle'])
     ->execute();
   db_update($revision_name)
     ->fields(array('deleted' => 1))
+    ->condition('etid', $etid)
     ->condition('bundle', $instance['bundle'])
     ->execute();
 }
@@ -625,9 +628,10 @@ function field_sql_storage_field_storage_delete_instance($instance) {
 /**
  * Implement hook_field_attach_rename_bundle().
  */
-function field_sql_storage_field_attach_rename_bundle($bundle_old, $bundle_new) {
+function field_sql_storage_field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new) {
+  $etid = _field_sql_storage_etid($obj_type);
   // We need to account for deleted or inactive fields and instances.
-  $instances = field_read_instances(array('bundle' => $bundle_new), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
+  $instances = field_read_instances(array('object_type' => $obj_type, 'bundle' => $bundle_new), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
   foreach ($instances as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     if ($field['storage']['type'] == 'field_sql_storage') {
@@ -635,10 +639,12 @@ function field_sql_storage_field_attach_rename_bundle($bundle_old, $bundle_new) 
       $revision_name = _field_sql_storage_revision_tablename($field);
       db_update($table_name)
         ->fields(array('bundle' => $bundle_new))
+        ->condition('etid', $etid)
         ->condition('bundle', $bundle_old)
         ->execute();
       db_update($revision_name)
         ->fields(array('bundle' => $bundle_new))
+        ->condition('etid', $etid)
         ->condition('bundle', $bundle_old)
         ->execute();
     }

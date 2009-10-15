@@ -318,7 +318,7 @@ function theme_field_formatter_text_plain($variables) {
 function theme_field_formatter_text_trimmed($variables) {
   $element = $variables['element'];
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
   return text_summary($element['#item']['safe'], $instance['settings']['text_processing'] ? $element['#item']['format'] : NULL);
 }
 
@@ -331,7 +331,7 @@ function theme_field_formatter_text_trimmed($variables) {
 function theme_field_formatter_text_summary_or_trimmed($variables) {
   $element = $variables['element'];
   $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
 
   if (!empty($element['#item']['safe_summary'])) {
     return $element['#item']['safe_summary'];

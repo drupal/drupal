@@ -40,6 +40,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field['field_name'],
+      'object_type' => 'test_entity',
       'bundle' => FIELD_TEST_BUNDLE,
       'widget' => array(
         'type' => 'text_textfield',
@@ -85,6 +86,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
+      'object_type' => 'test_entity',
       'bundle' => FIELD_TEST_BUNDLE,
       'label' => $this->randomName() . '_label',
       'settings' => array(
@@ -138,6 +140,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
+      'object_type' => 'test_entity',
       'bundle' => FIELD_TEST_BUNDLE,
       'label' => $this->randomName() . '_label',
       'settings' => array(

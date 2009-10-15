@@ -207,7 +207,7 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
   }
   $vocabulary = (object) $form_state['values'];
   if ($vocabulary->machine_name != $old_vocabulary->machine_name) {
-    field_attach_rename_bundle($old_vocabulary->machine_name, $vocabulary->machine_name);
+    field_attach_rename_bundle('taxonomy_term', $old_vocabulary->machine_name, $vocabulary->machine_name);
   }
   switch (taxonomy_vocabulary_save($vocabulary)) {
     case SAVED_NEW:
