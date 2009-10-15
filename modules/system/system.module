@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.814 2009/10/15 14:07:30 dries Exp $
+// $Id: system.module,v 1.815 2009/10/15 17:55:55 dries Exp $
 
 /**
  * @file
@@ -3377,6 +3377,18 @@ function system_date_format_delete($dfid) {
   db_delete('date_formats')
     ->condition('dfid', $dfid)
     ->execute();
+}
+
+/**
+ * Implement hook_archiver_info().
+ */
+function system_archiver_info() {
+  return array(
+    'tar' => array(
+      'class' => 'ArchiverTar',
+      'extensions' => array('tar', 'tar.gz', 'tar.bz2'),
+    ),
+  );
 }
 
 /**
