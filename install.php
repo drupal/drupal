@@ -275,11 +275,6 @@ function install_begin_request(&$install_state) {
   $install_state['settings_verified'] = install_verify_settings();
 
   if ($install_state['settings_verified']) {
-    // Since we have a database connection, we use the normal cache system.
-    // This is important, as the installer calls into the Drupal system for
-    // the clean URL checks, so we should maintain the cache properly.
-    unset($conf['cache_default_class']);
-
     // Initialize the database system. Note that the connection
     // won't be initialized until it is actually requested.
     require_once DRUPAL_ROOT . '/includes/database/database.inc';
@@ -1446,21 +1441,13 @@ function install_finished(&$install_state) {
   system_rebuild_module_data();
   system_rebuild_theme_data();
 
-  // Rebuild menu and registry to get content type links registered by the
-  // profile, and possibly any other menu items created through the tasks.
-  menu_rebuild();
-
-  // Rebuild the database cache of node types, so that any node types added
-  // by newly installed modules are registered correctly and initialized with
-  // the necessary fields.
-  node_types_rebuild();
+  // Flush all caches to ensure that any full bootstraps during the installer
+  // do not leave stale cached data, and that any content types or other items
+  // registered by the install profile are registered correctly.
+  drupal_flush_all_caches();
 
   // Register actions declared by any modules.
   actions_synchronize();
-
-  // Randomize query-strings on css/js files, to hide the fact that this is a
-  // new install, not upgraded yet.
-  _drupal_flush_css_js();
 
   // Remember the profile which was used.
   variable_set('install_profile', drupal_get_profile());
