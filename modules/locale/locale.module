@@ -386,13 +386,23 @@ function locale_form_node_type_form_alter(&$form, &$form_state) {
 }
 
 /**
+ * Return whether the given content type has multilingual support.
+ *
+ * @return
+ *   True if multilingual support is enabled.
+ */
+function locale_multilingual_node_type($type_name) {
+  return (bool) variable_get('language_content_type_' . $type_name, 0);
+}
+
+/**
  * Implement hook_form_alter().
  *
  * Adds language fields to forms.
  */
 function locale_form_alter(&$form, &$form_state, $form_id) {
   // Only alter user forms if there is more than one language.
-  if (variable_get('language_count', 1) > 1) {
+  if (drupal_multilingual()) {
     // Display language selector when either creating a user on the admin
     // interface or editing a user account.
     if (($form_id == 'user_register_form' && user_access('administer users')) || ($form_id == 'user_profile_form' && $form['#user_category'] == 'account')) {
@@ -400,7 +410,7 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
     }
   }
   if (isset($form['#id']) && $form['#id'] == 'node-form') {
-    if (isset($form['#node']->type) && variable_get('language_content_type_' . $form['#node']->type, 0)) {
+    if (isset($form['#node']->type) && locale_multilingual_node_type($form['#node']->type)) {
       $form['language'] = array(
         '#type' => 'select',
         '#title' => t('Language'),
@@ -416,6 +426,20 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
         '#value' => $default->language
       );
     }
+    $form['#submit'][] = 'locale_field_node_form_submit';
+  }
+}
+
+/**
+ * Form submit handler for node_form().
+ *
+ * Check if Locale is registered as a translation handler and handle possible
+ * node language changes.
+ */
+function locale_field_node_form_submit($form, &$form_state) {
+  if (field_multilingual_check_translation_handlers('node', 'locale')) {
+    module_load_include('inc', 'locale', 'locale.field');
+    locale_field_node_form_update_field_language($form, $form_state);
   }
 }
 
@@ -437,6 +461,34 @@ function locale_theme() {
       'arguments' => array('form' => array()),
     ),
   );
+}
+
+/**
+ * Implement hook_field_attach_view_alter().
+ */
+function locale_field_attach_view_alter(&$output, $context) {
+  // In locale_field_fallback_view() we might call field_attach_view(). The
+  // static variable avoids unnecessary recursion. 
+  static $recursion;
+
+  // Do not apply fallback rules if disabled or if Locale is not registered as a
+  // translation handler.
+  if (!$recursion && variable_get('locale_field_fallback_view', TRUE) && field_multilingual_check_translation_handlers($context['obj_type'], 'locale')) {
+    $recursion = TRUE;
+    module_load_include('inc', 'locale', 'locale.field');
+    locale_field_fallback_view($output, $context);
+    $recursion = FALSE;
+  }
+}
+
+/**
+ * Implement hook_entity_info_alter().
+ */
+function locale_entity_info_alter(&$entity_info) {
+  $enabled = drupal_multilingual();
+  foreach ($entity_info as $type => $info) {
+    $entity_info[$type]['translation']['locale'] = $enabled;
+  }
 }
 
 /**
@@ -829,7 +881,7 @@ function locale_block_info() {
  * Displays a language switcher. Only show if we have at least two languages.
  */
 function locale_block_view($type) {
-  if (variable_get('language_count', 1) > 1) {
+  if (drupal_multilingual()) {
     $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
     $links = language_negotiation_get_switch_links($type, $path);
 

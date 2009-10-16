@@ -16,6 +16,7 @@
  *  - a functional test for configuring a different path alias per language;
  *  - a functional test for configuring a different path alias per language;
  *  - a functional test for multilingual support by content type and on nodes.
+ *  - a functional test for multilingual fields.
  */
 
 
@@ -986,6 +987,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     $this->assertEqual($language_count, 1, t('Language count: %count', array('%count' => $language_count)));
 
     // Check language negotiation.
+    require_once DRUPAL_ROOT . '/includes/language.inc';
     $this->assertTrue(count(language_types()) == count(drupal_language_types()), t('Language types reset'));
     $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_DEFAULT;
     $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
@@ -1396,7 +1398,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'type' => 'page',
       'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $node_title))),
-      'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => $node_body))),
+      'body' => array($langcode => array(array('value' => $node_body))),
       'language' => $langcode,
     );
     $node = $this->drupalCreateNode($edit);
@@ -1616,6 +1618,73 @@ class UILanguageNegotiationTest extends DrupalWebTestCase {
     }
     $this->drupalGet($test['path'], array(), $test['http_header']);
     $this->assertText($test['expect'], $test['message']);
+  }
+}
+
+class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Multilingual fields',
+      'description' => 'Test multilingual support for fields.',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale');
+  }
+
+  function testMultilingualNodeForm() {
+    // Setup users.
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'create page content', 'edit own page content'));
+    $this->drupalLogin($admin_user);
+
+    // Add a new language.
+    require_once DRUPAL_ROOT . '/includes/locale.inc';
+    locale_add_language('it', 'Italian', 'Italiano', LANGUAGE_LTR, '', '', TRUE, FALSE);
+
+    // Set page content type to use multilingual support.
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
+    $edit = array(
+      'language_content_type' => 1,
+    );
+    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Page')), t('Page content type has been updated.'));
+
+    // Create page content.
+    $langcode = FIELD_LANGUAGE_NONE;
+    $title_key = "title[$langcode][0][value]";
+    $title_value = $this->randomName(8);
+    $body_key = "body[$langcode][0][value]";
+    $body_value = $this->randomName(16);
+
+    // Create node to edit.
+    $edit = array();
+    $edit[$title_key] = $title_value;
+    $edit[$body_key] = $body_value;
+    $edit['language'] = 'en';
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+
+    // Check that the node exists in the database.
+    $node = $this->drupalGetNodeByTitle($edit[$title_key]);
+    $this->assertTrue($node, t('Node found in database.'));
+
+    $assert = isset($node->body['en']) && !isset($node->body[FIELD_LANGUAGE_NONE]) && $node->body['en'][0]['value'] == $body_value;
+    $this->assertTrue($assert, t('Field language correctly set.'));
+
+    // Change node language.
+    $this->drupalGet("node/$node->nid/edit");
+    $edit = array(
+      $title_key => $this->randomName(8),
+      'language' => 'it'
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $node = $this->drupalGetNodeByTitle($edit[$title_key]);
+    $this->assertTrue($node, t('Node found in database.'));
+
+    $assert = isset($node->body['it']) && !isset($node->body['en']) && $node->body['it'][0]['value'] == $body_value;
+    $this->assertTrue($assert, t('Field language correctly changed.'));
   }
 }
 

@@ -1627,7 +1627,7 @@ function drupal_language_initialize() {
 
   // Ensure the language is correctly returned, even without multilanguage support.
   // Useful for eg. XML/HTML 'lang' attributes.
-  if (variable_get('language_count', 1) == 1) {
+  if (!drupal_multilingual()) {
     $default = language_default();
     foreach ($types as $type) {
       $GLOBALS[$type] = $default;
@@ -1657,6 +1657,17 @@ function drupal_language_types() {
 }
 
 /**
+ * Return true if there is more than one language enabled.
+ */
+function drupal_multilingual() {
+  static $multilingual;
+  if (!isset($multilingual)) {
+    $multilingual = variable_get('language_count', 1) > 1;
+  }
+  return $multilingual;
+}
+
+/**
  * Return an array of the available language types.
  */
 function language_types() {
@@ -1672,7 +1683,7 @@ function language_list($field = 'language') {
   $languages = &drupal_static(__FUNCTION__);
   // Init language list
   if (!isset($languages)) {
-    if (variable_get('language_count', 1) > 1 || module_exists('locale')) {
+    if (drupal_multilingual() || module_exists('locale')) {
       $languages['language'] = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
     }
     else {

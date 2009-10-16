@@ -147,7 +147,7 @@ function _field_info_collate_types($reset = FALSE) {
             // Provide defaults.
             $entity_info += array(
               'cacheable' => TRUE,
-              'translation_handlers' => array(),
+              'translation' => array(),
               'bundles' => array(),
             );
             $entity_info['object keys'] += array(

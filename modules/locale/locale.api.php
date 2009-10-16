@@ -137,5 +137,12 @@ function hook_language_negotiation_info_alter(array &$language_providers) {
 }
 
 /**
+ * Allow modules to react to language settings changes.
+ */
+function hook_multilingual_settings_changed() {
+  cache_clear_all('field_info_types', 'cache_field');
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

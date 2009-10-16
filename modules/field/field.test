@@ -2272,11 +2272,12 @@ class FieldTranslationsTestCase extends FieldTestCase {
    */
   function testFieldAvailableLanguages() {
     // Test 'translatable' fieldable info.
+    field_test_entity_info_translatable('test_entity', FALSE);
     $field = $this->field;
     $field['field_name'] .= '_untranslatable';
     $langcode = language_default();
     $suggested_languages = array($langcode->language);
-    $available_languages = field_multilingual_available_languages($this->obj_type, $field);
+    $available_languages = field_multilingual_available_languages($this->obj_type, $field, $suggested_languages);
     $this->assertTrue(count($available_languages) == 1 && $available_languages[0] === FIELD_LANGUAGE_NONE, t('Untranslatable entity: suggested language ignored.'));
 
     // Enable field translations for the entity.
@@ -2411,7 +2412,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     // Enable field translations for nodes.
     field_test_entity_info_translatable('node', TRUE);
     $obj_info = field_info_fieldable_types('node');
-    $this->assertTrue(count($obj_info['translation_handlers']), t('Nodes are translatable.'));
+    $this->assertTrue(count($obj_info['translation']), t('Nodes are translatable.'));
 
     // Prepare the field translations.
     $eid = $evid = 1;

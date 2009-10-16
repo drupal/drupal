@@ -6,4 +6,5 @@ version = VERSION
 core = 7.x
 files[] = locale.module
 files[] = locale.install
+files[] = locale.field.inc
 files[] = locale.test

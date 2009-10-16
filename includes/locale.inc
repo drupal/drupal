@@ -161,6 +161,7 @@ function locale_languages_overview_form_submit($form, &$form_state) {
 
   // Changing the language settings impacts the interface.
   cache_clear_all('*', 'cache_page', TRUE);
+  module_invoke_all('multilingual_settings_changed');
 
   $form_state['redirect'] = 'admin/config/regional/language';
   return;
@@ -362,6 +363,8 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
     batch_set($batch);
   }
 
+  module_invoke_all('multilingual_settings_changed');
+
   $form_state['redirect'] = 'admin/config/regional/language';
   return;
 }
@@ -469,7 +472,8 @@ function locale_languages_delete_form_submit($form, &$form_state) {
       ->fields(array('language' => ''))
       ->condition('language', $form_state['values']['langcode'])
       ->execute();
-    $variables = array('%locale' => $languages[$form_state['values']['langcode']]->name);
+    module_invoke_all('multilingual_settings_changed');
+    $variables = array('%locale' => $languages[$form_state['values']['langcode']]->name);    
     drupal_set_message(t('The language %locale has been removed.', $variables));
     watchdog('locale', 'The language %locale has been removed.', $variables);
   }

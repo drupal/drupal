@@ -7,6 +7,13 @@
  */
 
 /**
+ * Implement hook_multilingual_settings_changed().
+ */
+function field_multilingual_settings_changed() {
+  cache_clear_all('field_info_types', 'cache_field');
+}
+
+/**
  * Collect the available languages for the given entity type and field.
  *
  * If an entity has a translation handler and the given field is translatable,
@@ -31,12 +38,14 @@ function field_multilingual_available_languages($obj_type, $field, $suggested_la
   $field_name = $field['field_name'];
 
   if (!isset($field_languages[$field_name]) || !empty($suggested_languages)) {
-    $obj_info = field_info_fieldable_types($obj_type);
-    if (!empty($obj_info['translation_handlers']) && $field['translatable']) {
-      $available_languages = field_multilingual_content_languages();
+    $translation_handlers = field_multilingual_check_translation_handlers($obj_type);
+
+    if ($translation_handlers && $field['translatable']) {
       // The returned languages are a subset of the intersection of enabled ones
       // and suggested ones.
+      $available_languages = field_multilingual_content_languages();
       $languages = !empty($suggested_languages) ? $available_languages = array_intersect($available_languages, $suggested_languages) : $available_languages;
+
       foreach (module_implements('field_languages') as $module) {
         $function = $module . '_field_languages';
         $function($obj_type, $field, $languages);
@@ -71,20 +80,36 @@ function field_multilingual_content_languages() {
   return array_keys(language_list() + array(FIELD_LANGUAGE_NONE => NULL));
 }
 
-
 /**
  * Check if a module is registered as a translation handler for a given entity.
+ *
+ * If no handler is passed, simply check if there is any translation handler
+ * enabled for the given entity type.
  *
  * @param $obj_type
  *   The type of the entity whose fields are to be translated.
  * @param $handler
  *   The name of the handler to be checked.
+ *
  * @return
  *   TRUE, if the handler is allowed to manage field translations.
  */
-function field_multilingual_check_translation_handler($obj_type, $handler) {
+function field_multilingual_check_translation_handlers($obj_type, $handler = NULL) {
   $obj_info = field_info_fieldable_types($obj_type);
-  return isset($obj_info['translation_handlers'][$handler]);
+
+  if (isset($handler)) {
+    return isset($obj_info['translation'][$handler]) && !empty($obj_info['translation'][$handler]);
+  }
+  elseif (isset($obj_info['translation'])) {
+    foreach ($obj_info['translation'] as $handler_info) {
+      // The translation handler must use a non-empty data structure.
+      if (!empty($handler_info)) {
+        return TRUE;
+      }
+    }
+  }
+
+  return FALSE;
 }
 
 /**

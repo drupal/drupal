@@ -396,3 +396,36 @@ function language_url_split_prefix($path, $languages) {
 
   return array(FALSE, $path);
 }
+
+/**
+ * Return the possible fallback languages ordered by language weight.
+ *
+ * @param
+ *   The language type.
+ *
+ * @return
+ *   An array of language codes.
+ */
+function language_fallback_get_candidates($type = LANGUAGE_TYPE_CONTENT) {
+  $fallback_candidates = &drupal_static(__FUNCTION__);
+
+  if (!isset($fallback_candidates)) {
+    $fallback_candidates = array();
+
+    // Get languages ordered by weight.
+    // Use array keys to avoid duplicated entries.
+    foreach (language_list('weight') as $languages) {
+      foreach ($languages as $language) {
+        $fallback_candidates[$language->language] = NULL;
+      }
+    }
+
+    $fallback_candidates = array_keys($fallback_candidates);
+    $fallback_candidates[] = FIELD_LANGUAGE_NONE;
+
+    // Let other modules hook in and add/change candidates.
+    drupal_alter('language_get_fallback_candidates', $fallback_candidates);
+  }
+
+  return $fallback_candidates;
+}

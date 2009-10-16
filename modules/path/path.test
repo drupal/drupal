@@ -181,7 +181,6 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $edit['langcode'] = 'fr';
 
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    drupal_static_reset('language_list');
 
     // Set language negotiation to "Path prefix with fallback".
     include_once DRUPAL_ROOT . '/includes/locale.inc';
@@ -215,9 +214,10 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $english_node->nid . '/translate');
     $this->clickLink(t('add translation'));
     $edit = array();
+    $langcode = 'fr';
+    $edit["body[$langcode][0][value]"] = $this->randomName();
     $langcode = FIELD_LANGUAGE_NONE;
     $edit["title[$langcode][0][value]"] = $this->randomName();
-    $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit['path'] = $this->randomName();
     $this->drupalPost(NULL, $edit, t('Save'));
 
@@ -234,9 +234,9 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->assertText($french_node->title[FIELD_LANGUAGE_NONE][0]['value'], 'Alias for French translation works.');
 
     // Confirm that the alias is returned by url().
+    drupal_static_reset('language_list');
     $languages = language_list();
     $url = url('node/' . $french_node->nid, array('language' => $languages[$french_node->language]));
     $this->assertTrue(strpos($url, $edit['path']), t('URL contains the path alias.'));
   }
 }
-

@@ -534,6 +534,7 @@ function node_configure_fields($type) {
       $field = array(
         'field_name' => 'body',
         'type' => 'text_with_summary',
+        'translatable' => TRUE,
       );
       $field = field_create_field($field);
     }

@@ -93,8 +93,13 @@ function field_test_entity_info() {
  * Implement hook_entity_info_alter().
  */
 function field_test_entity_info_alter(&$entity_info) {
+  // Enable/disable field_test as a translation handler.
   foreach (field_test_entity_info_translatable() as $obj_type => $translatable) {
-    $entity_info[$obj_type]['translation_handlers']['field_test'] = TRUE;
+    $entity_info[$obj_type]['translation']['field_test'] = $translatable;
+  }
+  // Disable locale as a translation handler.
+  foreach (field_info_fieldable_types() as $obj_type => $info) {
+    $entity_info[$obj_type]['translation']['locale'] = FALSE;
   }
 }
 
@@ -646,7 +651,7 @@ function field_test_field_languages($obj_type, $field, &$languages) {
  */
 function field_test_entity_info_translatable($obj_type = NULL, $translatable = NULL) {
   $stored_value = &drupal_static(__FUNCTION__, array());
-  if (isset($obj_type) && isset($translatable)) {
+  if (isset($obj_type)) {
     $stored_value[$obj_type] = $translatable;
     _field_info_collate_types(TRUE);
   }
