@@ -490,6 +490,12 @@ function system_element_info() {
     '#default_tab' => '',
     '#process' => array('form_process_vertical_tabs'),
   );
+
+  $types['container'] = array(
+    '#theme_wrappers' => array('container'),
+    '#process' => array('form_process_container'),
+  );
+
   $types['token'] = array(
     '#input' => TRUE,
     '#theme' => array('hidden'),

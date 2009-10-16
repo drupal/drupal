@@ -342,15 +342,14 @@ function user_admin_settings() {
     '#default_value' => $picture_support,
   );
   drupal_add_js(drupal_get_path('module', 'user') . '/user.js');
-  // If JS is enabled, and the checkbox defaults to off, hide all the settings
-  // on page load via CSS using the js-hide class so there's no flicker.
-  $css_class = 'user-admin-picture-settings';
-  if (!$picture_support) {
-    $css_class .= ' js-hide';
-  }
   $form['personalization']['pictures'] = array(
-    '#prefix' => '<div class="' . $css_class . '">',
-    '#suffix' => '</div>',
+    '#type' => 'container',
+    '#states' => array(
+      // Hide the additional picture settings when user pictures are disabled.
+      'invisible' => array(
+        'input[name="user_pictures"]' => array('checked' => FALSE),
+      ),
+    ),
   );
   $form['personalization']['pictures']['user_picture_path'] = array(
     '#type' => 'textfield',
@@ -511,13 +510,22 @@ function user_admin_settings() {
     '#title' => t('Notify user when account is activated.'),
     '#default_value' => variable_get('user_mail_status_activated_notify', TRUE),
   );
-  $form['email_activated']['user_mail_status_activated_subject'] = array(
+  $form['email_activated']['settings'] = array(
+    '#type' => 'container',
+    '#states' => array(
+      // Hide the additional settings when this email is disabled.
+      'invisible' => array(
+        'input[name="user_mail_status_activated_notify"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+  $form['email_activated']['settings']['user_mail_status_activated_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
     '#default_value' => _user_mail_text('status_activated_subject'),
     '#maxlength' => 180,
   );
-  $form['email_activated']['user_mail_status_activated_body'] = array(
+  $form['email_activated']['settings']['user_mail_status_activated_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
     '#default_value' => _user_mail_text('status_activated_body'),
@@ -537,13 +545,22 @@ function user_admin_settings() {
     '#title' => t('Notify user when account is blocked.'),
     '#default_value' => variable_get('user_mail_status_blocked_notify', FALSE),
   );
-  $form['email_blocked']['user_mail_status_blocked_subject'] = array(
+  $form['email_blocked']['settings'] = array(
+    '#type' => 'container',
+    '#states' => array(
+      // Hide the additional settings when the blocked email is disabled.
+      'invisible' => array(
+        'input[name="user_mail_status_blocked_notify"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+  $form['email_blocked']['settings']['user_mail_status_blocked_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
     '#default_value' => _user_mail_text('status_blocked_subject'),
     '#maxlength' => 180,
   );
-  $form['email_blocked']['user_mail_status_blocked_body'] = array(
+  $form['email_blocked']['settings']['user_mail_status_blocked_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
     '#default_value' => _user_mail_text('status_blocked_body'),
@@ -584,13 +601,22 @@ function user_admin_settings() {
     '#title' => t('Notify user when account is canceled.'),
     '#default_value' => variable_get('user_mail_status_canceled_notify', FALSE),
   );
-  $form['email_canceled']['user_mail_status_canceled_subject'] = array(
+  $form['email_canceled']['settings'] = array(
+    '#type' => 'container',
+    '#states' => array(
+      // Hide the settings when the cancel notify checkbox is disabled. 
+      'invisible' => array(
+        'input[name="user_mail_status_canceled_notify"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+  $form['email_canceled']['settings']['user_mail_status_canceled_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
     '#default_value' => _user_mail_text('status_canceled_subject'),
     '#maxlength' => 180,
   );
-  $form['email_canceled']['user_mail_status_canceled_body'] = array(
+  $form['email_canceled']['settings']['user_mail_status_canceled_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
     '#default_value' => _user_mail_text('status_canceled_body'),

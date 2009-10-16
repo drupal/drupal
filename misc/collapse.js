@@ -9,7 +9,9 @@ Drupal.toggleFieldset = function (fieldset) {
     // Action div containers are processed separately because of a IE bug
     // that alters the default submit button behavior.
     var content = $('> div:not(.action)', fieldset);
-    $(fieldset).removeClass('collapsed');
+    $(fieldset)
+      .removeClass('collapsed')
+      .trigger({ type: 'collapsed', value: false });
     content.hide();
     content.slideDown({
       duration: 'fast',
@@ -27,6 +29,7 @@ Drupal.toggleFieldset = function (fieldset) {
   }
   else {
     $('div.action', fieldset).hide();
+    $(fieldset).trigger({ type: 'collapsed', value: true });
     var content = $('> div:not(.action)', fieldset).slideUp('fast', function () {
       $(this.parentNode).addClass('collapsed');
       this.parentNode.animating = false;

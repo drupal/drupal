@@ -493,13 +493,22 @@ function system_theme_settings($form, &$form_state, $key = '') {
       '#tree' => FALSE,
       '#description' => t('Check here if you want the theme to use the logo supplied with it.')
     );
-    $form['logo']['logo_path'] = array(
+    $form['logo']['settings'] = array(
+      '#type' => 'container',
+      '#states' => array(
+        // Hide the logo settings when using the default logo.
+        'invisible' => array(
+          'input[name="default_logo"]' => array('checked' => TRUE),
+        ),
+      ),
+    );
+    $form['logo']['settings']['logo_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to custom logo'),
       '#default_value' => theme_get_setting('logo_path', $key),
-      '#description' => t('The path to the file you would like to use as your logo file instead of the default logo.'));
-
-    $form['logo']['logo_upload'] = array(
+      '#description' => t('The path to the file you would like to use as your logo file instead of the default logo.'),
+    );
+    $form['logo']['settings']['logo_upload'] = array(
       '#type' => 'file',
       '#title' => t('Upload logo image'),
       '#maxlength' => 40,
@@ -519,13 +528,22 @@ function system_theme_settings($form, &$form_state, $key = '') {
       '#default_value' => theme_get_setting('default_favicon', $key),
       '#description' => t('Check here if you want the theme to use the default shortcut icon.')
     );
-    $form['favicon']['favicon_path'] = array(
+    $form['favicon']['settings'] = array(
+      '#type' => 'container',
+      '#states' => array(
+        // Hide the favicon settings when using the default favicon.
+        'invisible' => array(
+          'input[name="default_favicon"]' => array('checked' => TRUE),
+        ),
+      ),
+    );
+    $form['favicon']['settings']['favicon_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to custom icon'),
       '#default_value' => theme_get_setting('favicon_path', $key),
       '#description' => t('The path to the image file you would like to use as your custom shortcut icon.')
     );
-    $form['favicon']['favicon_upload'] = array(
+    $form['favicon']['settings']['favicon_upload'] = array(
       '#type' => 'file',
       '#title' => t('Upload icon image'),
       '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon.")
@@ -1660,12 +1678,16 @@ function system_regional_settings() {
     '#default_value' => $configurable_timezones,
   );
 
-  $js_hide = !$configurable_timezones ? ' class="js-hide"' : '';
   $form['timezone']['configurable_timezones_wrapper'] =  array(
-    '#prefix' => '<div id="empty-timezone-message-wrapper"' . $js_hide . '>',
-    '#suffix' => '</div>',
+    '#type' => 'container',
+    '#states' => array(
+      // Hide the user configured timezone settings when users are forced to use
+      // the default setting.
+      'invisible' => array(
+        'input[name="configurable_timezones"]' => array('checked' => FALSE),
+      ),
+    ),
   );
-
   $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = array(
     '#type' => 'checkbox',
     '#title' => t('Remind users at login if their time zone is not set.'),

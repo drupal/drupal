@@ -3770,6 +3770,53 @@ function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_ch
 }
 
 /**
+ * Adds JavaScript to the element to allow it to have different active states.
+ *
+ * @param $elements
+ *   The structured array that may contain an array item named states. This
+ *   array describes the different JavaScript states that can be applied to the
+ *   element when certain contitions are met. The #states array is first keyed
+ *   by one of the following states:
+ *   - enabled
+ *   - invisible
+ *   - invalid
+ *   - untouched
+ *   - optional
+ *   - filled
+ *   - unchecked
+ *   - irrelevant
+ *   - expanded
+ *   - readwrite
+ *
+ *   Each of these states is an array containing conditions that must be met in
+ *   order for this state to be active. The key to this conditioning array is
+ *   a jQuery selector for the element that is checked. The value of the
+ *   conditioning array are the states that are checked on the element (empty,
+ *   checked, value, collapsed, etc) and the expected value of that condition.
+ *
+ *   @code
+ *   $form['email_canceled']['settings'] = array(
+ *     '#type' => 'container',
+ *     '#states' => array(
+ *       // Hide the settings when the cancel notify checkbox is disabled.
+ *       'invisible' => array(
+ *         'input[name="email_canceled_toggle"]' => array('checked' => FALSE),
+ *       ),
+ *     ),
+ *   );
+ *   @endcode
+ */
+function drupal_process_states(&$elements) {
+  if (!empty($elements['#states'])) {
+    $elements['#attached']['js']['misc/states.js'] = array('weight' => JS_LIBRARY + 1);
+    $elements['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array('states' => array('#' . $elements['#id'] => $elements['#states'])),
+    );
+  }
+}
+
+/**
  * Adds multiple JavaScript or CSS files at the same time.
  *
  * A library defines a set of JavaScript and/or CSS files, optionally using
@@ -4646,6 +4693,9 @@ function drupal_render(&$elements) {
     }
   }
 
+  // Add any JavaScript state information associated with the element.
+  drupal_process_states($elements);
+
   // Add additional libraries, CSS, JavaScript an other custom
   // attached data associated with this element.
   drupal_process_attached($elements);
@@ -5169,6 +5219,9 @@ function drupal_common_theme() {
       'arguments' => array('element' => NULL),
     ),
     'vertical_tabs' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'container' => array(
       'arguments' => array('element' => NULL),
     ),
   );

@@ -2182,6 +2182,39 @@ function form_process_checkboxes($element) {
 }
 
 /**
+ * Processes a container element.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   container.
+ * @param $form_state
+ *   The $form_state array for the form this element belongs to.
+ * @return
+ *   The processed element.
+ */
+function form_process_container($element, &$form_state) {
+  $element['#id'] = drupal_html_id(implode('-', $element['#parents']) . '-wrapper');
+  return $element;
+}
+
+/**
+ * Adds a container for grouped items
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   group.
+ *   Properties used: #children.
+ * @return
+ *   A themed HTML string representing the form element.
+ *
+ * @ingroup themeable
+ */
+function theme_container($variables) {
+  $element = $variables['element'];
+  return '<div class="form-wrapper" id="' . $element['#id'] . '">' . $element['#children'] . '</div>';
+}
+
+/**
  * Format a table with radio buttons or checkboxes.
  *
  * @param $variables

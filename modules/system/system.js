@@ -115,19 +115,6 @@ Drupal.behaviors.dateTime = {
 };
 
 /**
- * Show/hide settings for user configurable time zones depending on whether
- * users are able to set their own time zones or not.
- */
-Drupal.behaviors.userTimeZones = {
-  attach: function (context, settings) {
-    $('#empty-timezone-message-wrapper .description').hide();
-    $('#edit-configurable-timezones', context).change(function () {
-      $('#empty-timezone-message-wrapper').toggle();
-    });
-  }
-};
-
-/**
  * Show the powered by Drupal image preview
  */
 Drupal.behaviors.poweredByPreview = {

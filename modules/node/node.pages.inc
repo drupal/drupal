@@ -178,6 +178,12 @@ function node_form($form, &$form_state, $node) {
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $node->revision,
+      '#states' => array(
+        // Check the revision log checkbox when the log textarea is filled in.
+        'checked' => array(
+          'textarea[name="log"]' => array('empty' => FALSE),
+        ),
+      ),
     );
     $form['revision_information']['log'] = array(
       '#type' => 'textarea',
