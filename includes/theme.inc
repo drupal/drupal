@@ -37,12 +37,6 @@ define('MARK_UPDATED', 2);
  * @} End of "Content markers".
  */
 
-
-/**
- * An exception to throw when a theme function is requested that does not exist.
- */
-class ThemeHookNotFoundException extends Exception {}
-
 /**
  * Determines if a theme is available to use.
  *
@@ -768,7 +762,7 @@ function theme($hook, $variables = array()) {
   }
 
   if (!isset($hooks[$hook])) {
-    throw new ThemeHookNotFoundException(t('Theme hook "@hook" not found.', array('@hook' => $hook)));
+    watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
   }
 
   $info = $hooks[$hook];
