@@ -598,7 +598,7 @@ function field_info_field_by_id($field_id) {
  *   type, keyed by bundle name. If $obj_type and $bundle_name are set, return
  *   all instances for that bundle.
  */
-function field_info_instances($obj_type, $bundle_name = NULL) {
+function field_info_instances($obj_type = NULL, $bundle_name = NULL) {
   $info = _field_info_collate_fields();
   if (!isset($obj_type)) {
     return $info['instances'];
