@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.91 2009/10/16 03:01:54 dries Exp $
+// $Id: system.api.php,v 1.92 2009/10/16 03:47:14 webchick Exp $
 
 /**
  * @file
@@ -147,6 +147,23 @@ function hook_entity_info_alter(&$entity_info) {
   // Set the controller class for nodes to an alternate implementation of the
   // DrupalEntityController interface.
   $entity_info['node']['controller class'] = 'MyCustomNodeController';
+}
+
+/**
+ * Act on entities when loaded.
+ *
+ * This is a generic load hook called for all entity types loaded via the
+ * entity API.
+ *
+ * @param $entities
+ *   The entities keyed by entity ID.
+ * @param $type
+ *   The type of entities being loaded (i.e. node, user, comment).
+ */
+function hook_entity_load($entities, $type) {
+  foreach ($entities as $entity) {
+    $entity->foo = mymodule_add_something($entity, $entity_type);
+  }
 }
 
 /**

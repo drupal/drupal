@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.1 2009/08/25 21:53:47 dries Exp $
+// $Id: entity.inc,v 1.2 2009/10/16 03:47:13 webchick Exp $
 
 /**
  * Interface for entity controller classes.
@@ -223,8 +223,9 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   /**
    * Attach data to entities upon loading.
    *
-   * This will attach fields, if the entity is fieldable. It also calls
-   * hook_TYPE_load() on the loaded entities. For example
+   * This will attach fields, if the entity is fieldable. It calls
+   * hook_entity_load() for modules which need to add data to all entities.
+   * It also calls hook_TYPE_load() on the loaded entities. For example
    * hook_node_load() or hook_user_load(). If your hook_TYPE_load()
    * expects special parameters apart from the queried entities, you can set
    * $this->hookLoadArguments prior to calling the method.
@@ -241,6 +242,11 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
       }
     }
 
+    // Call hook_entity_load().
+    foreach (module_implements('entity_load') as $module) {
+      $function = $module . '_entity_load';
+      $function($queried_entities, $this->entityType);
+    }
     // Call hook_TYPE_load(). The first argument for hook_TYPE_load() are
     // always the queried entities, followed by additional arguments set in
     // $this->hookLoadArguments.
