@@ -730,7 +730,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'value' => $this->randomName(32),
       'format' => filter_default_format(),
     );
-    $langcode = isset($settings['language']) ? $settings['language'] : FIELD_LANGUAGE_NONE;
+    $langcode = !empty($settings['language']) ? $settings['language'] : FIELD_LANGUAGE_NONE;
     $settings['body'][$langcode][0] += $body;
 
     $node = (object) $settings;
