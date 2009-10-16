@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.32 2009/10/11 18:34:10 dries Exp $
+// $Id: contact.pages.inc,v 1.33 2009/10/16 15:54:33 dries Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@ function contact_site_form($form, &$form_state) {
 
   if (!$user->uid) {
     $form['#attached']['library'][] = array('system', 'cookie');
-    $form['#attached']['js'][] = drupal_get_path('module', 'contact') . '/contact.js';
+    $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
   $form['#token'] = $user->uid ? $user->name . $user->mail : '';
@@ -178,7 +178,7 @@ function contact_personal_form($form, &$form_state, stdClass $recipient) {
 
   if (!$user->uid) {
     $form['#attached']['library'][] = array('system', 'cookie');
-    $form['#attached']['js'][] = drupal_get_path('module', 'contact') . '/contact.js';
+    $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
   $form['#token'] = $user->uid ? $user->name . $user->mail : '';

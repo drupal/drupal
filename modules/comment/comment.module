@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.790 2009/10/16 13:20:15 dries Exp $
+// $Id: comment.module,v 1.791 2009/10/16 15:54:33 dries Exp $
 
 /**
  * @file
@@ -1645,7 +1645,7 @@ function comment_form($form, &$form_state, $comment) {
 
   if (!$user->uid && variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
     $form['#attached']['library'][] = array('system', 'cookie');
-    $form['#attached']['js'][] = drupal_get_path('module', 'comment') . '/comment.js';
+    $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
   $comment = (array) $comment;

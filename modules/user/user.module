@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1066 2009/10/16 03:21:23 webchick Exp $
+// $Id: user.module,v 1.1067 2009/10/16 15:54:33 dries Exp $
 
 /**
  * @file
@@ -3067,6 +3067,9 @@ function user_register_form($form, &$form_state) {
 
   $form['#user'] = drupal_anonymous_user();
   $form['#user_category'] = 'register';
+
+  $form['#attached']['library'][] = array('system', 'cookie');
+  $form['#attributes']['class'][] = 'user-info-from-cookie';
 
   // Start with the default user account fields.
   user_account_form($form, $form_state);
