@@ -355,6 +355,8 @@ function node_preview($node) {
     }
 
     $node->changed = REQUEST_TIME;
+    $nodes = array($node->nid => $node);
+    field_attach_prepare_view('node', $nodes, 'full');
 
     // Display a preview of the node.
     // Previewing alters $node so it needs to be cloned.

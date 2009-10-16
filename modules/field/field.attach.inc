@@ -1110,6 +1110,13 @@ function field_attach_query_revisions($field_id, $conditions, $count, &$cursor =
 }
 
 /**
+ * Allow formatters to act on fieldable objects prior to rendering.
+ */
+function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
+  _field_invoke_multiple_default('prepare_view', $obj_type, $objects, $build_mode);
+}
+
+/**
  * Generate and return a structured content array tree suitable for
  * drupal_render() for all of the fields on an object. The format of
  * each field's rendered content depends on the display formatter and

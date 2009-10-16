@@ -564,6 +564,13 @@ function field_test_field_formatter_info() {
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
       ),
     ),
+    'field_test_needs_additional_data' => array(
+      'label' => t('Tests hook_field_formatter_prepare_view()'),
+      'field types' => array('test_field'),
+      'settings' => array(
+        'test_formatter_setting_additional' => 'dummy test string',
+      ),
+    ),
   );
 }
 
@@ -578,7 +585,28 @@ function field_test_theme() {
     'field_formatter_field_test_multiple' => array(
       'arguments' => array('element' => NULL),
     ),
+    'field_formatter_field_test_needs_additional_data' => array(
+      'arguments' => array('element' => NULL),
+    ),
   );
+}
+
+/**
+ * Implement hook_field_formatter_prepare_view().
+ */
+function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $build_mode) {
+  foreach ($items as $id => $item) {
+    // To keep the test non-intrusive, only act on the
+    // 'field_test_needs_additional_data' formatter.
+    if ($instances[$id]['display'][$build_mode]['type'] == 'field_test_needs_additional_data') {
+      foreach ($item as $delta => $value) {
+        // Don't add anything on empty values.
+        if ($value) {
+          $items[$id][$delta]['additional_formatter_value'] = $value['value'] + 1;
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -607,6 +635,18 @@ function theme_field_formatter_field_test_multiple($variables) {
   }
   $output = implode('|', $items);
   return $settings['test_formatter_setting_multiple'] . '|' . $output;
+}
+
+/**
+ * Theme function for 'field_test_needs_additional_data' formatter.
+ */
+function theme_field_formatter_field_test_needs_additional_data($variables) {
+  $element = $variables['element'];
+  $value = $element['#item']['value'];
+  $additional = $element['#item']['additional_formatter_value'];
+  $settings = $element['#settings'];
+
+  return $settings['test_formatter_setting_additional'] . '|' . $value . '|' . $additional;
 }
 
 /**

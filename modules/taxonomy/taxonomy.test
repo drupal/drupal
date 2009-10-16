@@ -758,6 +758,8 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
 
     // Display the object.
     $entity = field_test_entity_load($id);
+    $entities = array($id => $entity);
+    field_attach_prepare_view($entity_type, $entities, 'full');
     $entity->content = field_attach_view($entity_type, $entity);
     $this->content = drupal_render($entity->content);
     $this->assertText($term->name, t('Term name is displayed'));

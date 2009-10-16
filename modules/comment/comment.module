@@ -844,6 +844,7 @@ function comment_build_content($comment, $node, $build_mode = 'full') {
     '#markup' => check_markup($comment->comment, $comment->format, '', TRUE),
   );
 
+  field_attach_prepare_view('comment', array($comment->cid => $comment), $build_mode);
   $comment->content += field_attach_view('comment', $comment, $build_mode);
 
   if (empty($comment->in_preview)) {
@@ -937,6 +938,8 @@ function comment_links($comment, $node) {
  *   An array in the format expected by drupal_render().
  */
 function comment_build_multiple($comments, $node, $build_mode = 'full', $weight = 0) {
+  field_attach_prepare_view('comment', $comments, $build_mode);
+
   $build = array(
     '#sorted' => TRUE,
   );

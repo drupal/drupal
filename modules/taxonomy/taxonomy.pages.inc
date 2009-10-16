@@ -30,6 +30,7 @@ function taxonomy_term_page($term) {
   drupal_add_feed(url('taxonomy/term/' . $term->tid . '/feed'), 'RSS - ' . $term->name);
   drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
 
+  field_attach_prepare_view('taxonomy_term', array($term->tid => $term), 'full');
   $build = array();
   $build += field_attach_view('taxonomy_term', $term);
   if (!empty($term->description)) {

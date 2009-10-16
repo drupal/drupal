@@ -1241,7 +1241,7 @@ function node_show($node, $message = FALSE) {
   node_tag_new($node->nid);
 
   // For markup consistency with other pages, use node_build_multiple() rather than node_build().
-  return node_build_multiple(array($node), 'full');
+  return node_build_multiple(array($node->nid => $node), 'full');
 }
 
 /**
@@ -2034,6 +2034,7 @@ function node_feed($nids = FALSE, $channel = array()) {
  *   An array in the format expected by drupal_render().
  */
 function node_build_multiple($nodes, $build_mode = 'teaser', $weight = 0) {
+  field_attach_prepare_view('node', $nodes, $build_mode);
   $build = array();
   foreach ($nodes as $node) {
     $build['nodes'][$node->nid] = node_build($node, $build_mode);

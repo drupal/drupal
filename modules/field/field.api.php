@@ -248,8 +248,11 @@ function hook_field_schema($field) {
  * For performance reasons, information for all available objects should be
  * loaded in a single query where possible.
  *
- * Note that the changes made to the field values get cached by the
- * field cache for subsequent loads.
+ * Note that the changes made to the field values get cached by the field cache
+ * for subsequent loads. You should never use this hook to load fieldable
+ * entities, since this is likely to cause infinite recursions when
+ * hook_field_load() is run on those as well. Use
+ * hook_field_formatter_prepare_view() instead.
  *
  * @param $obj_type
  *   The type of $object.
@@ -826,6 +829,34 @@ function theme_field_formatter_FORMATTER_MULTIPLE($variables) {
 }
 
 /**
+ * Allow formatters to load information for multiple objects.
+ *
+ * This should be used when a formatter needs to load additional information
+ * from the database in order to render a field, for example a reference field
+ * which displays properties of the referenced objects such as name or type.
+ *
+ * @param $obj_type
+ *   The type of $object.
+ * @param $objects
+ *   Array of objects being displayed, keyed by object id.
+ * @param $field
+ *   The field structure for the operation.
+ * @param $instances
+ *   Array of instance structures for $field for each object, keyed by object id.
+ * @param $langcode
+ *   The language the field values are to be shown in. If no language is
+ *   provided the current language is used.
+ * @param $items
+ *   Array of field values for the objects, keyed by object id.
+ * @return
+ *   Changes or additions to field values are done by altering the $items
+ *   parameter by reference.
+ */
+function hook_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $build_mode) {
+
+}
+
+/**
  * @} End of "ingroup field_type"
  */
 
@@ -842,6 +873,41 @@ function theme_field_formatter_FORMATTER_MULTIPLE($variables) {
  * See field_attach_form() for details and arguments.
  */
 function hook_field_attach_form($obj_type, $object, &$form, &$form_state, $langcode) {
+  $tids = array();
+
+  // Collect every possible term attached to any of the fieldable entities.
+  foreach ($objects as $id => $object) {
+    foreach ($items[$id] as $delta => $item) {
+      // Force the array key to prevent duplicates.
+      $tids[$item['value']] = $item['value'];
+    }
+  }
+  if ($tids) {
+    $terms = array();
+
+    // Avoid calling taxonomy_term_load_multiple because it could lead to
+    // circular references.
+    $query = db_select('taxonomy_term_data', 't');
+    $query->fields('t');
+    $query->condition('t.tid', $tids, 'IN');
+    $query->addTag('term_access');
+    $terms = $query->execute()->fetchAllAssoc('tid');
+
+    // Iterate through the fieldable entities again to attach the loaded term data.
+    foreach ($objects as $id => $object) {
+      foreach ($items[$id] as $delta => $item) {
+        // Check whether the taxonomy term field instance value could be loaded.
+        if (isset($terms[$item['value']])) {
+          // Replace the instance value with the term data.
+          $items[$id][$delta]['taxonomy_term'] = $terms[$item['value']];
+        }
+        // Otherwise, unset the instance value, since the term does not exist.
+        else {
+          unset($items[$id][$delta]);
+        }
+      }
+    }
+  }
 }
 
 /**

@@ -1131,7 +1131,7 @@ function taxonomy_allowed_values($field) {
  * This preloads all taxonomy terms for multiple loaded objects at once and
  * unsets values for invalid terms that do not exist.
  */
-function taxonomy_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
+function taxonomy_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
   $tids = array();
 
   // Collect every possible term attached to any of the fieldable entities.

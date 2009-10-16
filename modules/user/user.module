@@ -2102,6 +2102,9 @@ function user_build($account) {
 function user_build_content($account) {
   $account->content = array();
 
+  $accounts = array($account->uid, $account);
+  field_attach_prepare_view('user', $accounts, 'full');
+
   // Build fields content.
   $account->content += field_attach_view('user', $account);
 
