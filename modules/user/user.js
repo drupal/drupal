@@ -1,4 +1,4 @@
-// $Id: user.js,v 1.18 2009/09/21 08:52:41 dries Exp $
+// $Id: user.js,v 1.19 2009/10/16 19:20:34 dries Exp $
 (function ($) {
 
 /**
@@ -174,18 +174,6 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
   msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
   return { strength: strength, message: msg, indicatorText: indicatorText }
 
-};
-
-/**
- * Show all of the picture-related form elements at admin/config/people/accounts
- * depending on whether user pictures are enabled or not.
- */
-Drupal.behaviors.userSettings = {
-  attach: function (context, settings) {
-    $('#edit-user-pictures', context).change(function () {
-      $('div.user-admin-picture-settings', context).toggle();
-    });
-  }
 };
 
 })(jQuery);

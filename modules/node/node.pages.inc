@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.91 2009/10/16 13:20:16 dries Exp $
+// $Id: node.pages.inc,v 1.92 2009/10/16 19:20:34 dries Exp $
 
 /**
  * @file
@@ -178,6 +178,12 @@ function node_form($form, &$form_state, $node) {
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $node->revision,
+      '#states' => array(
+        // Check the revision log checkbox when the log textarea is filled in.
+        'checked' => array(
+          'textarea[name="log"]' => array('empty' => FALSE),
+        ),
+      ),
     );
     $form['revision_information']['log'] = array(
       '#type' => 'textarea',

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.817 2009/10/16 03:01:54 dries Exp $
+// $Id: system.module,v 1.818 2009/10/16 19:20:34 dries Exp $
 
 /**
  * @file
@@ -490,6 +490,12 @@ function system_element_info() {
     '#default_tab' => '',
     '#process' => array('form_process_vertical_tabs'),
   );
+
+  $types['container'] = array(
+    '#theme_wrappers' => array('container'),
+    '#process' => array('form_process_container'),
+  );
+
   $types['token'] = array(
     '#input' => TRUE,
     '#theme' => array('hidden'),

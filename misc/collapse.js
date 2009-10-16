@@ -1,4 +1,4 @@
-// $Id: collapse.js,v 1.25 2009/09/11 02:01:26 webchick Exp $
+// $Id: collapse.js,v 1.26 2009/10/16 19:20:34 dries Exp $
 (function ($) {
 
 /**
@@ -9,7 +9,9 @@ Drupal.toggleFieldset = function (fieldset) {
     // Action div containers are processed separately because of a IE bug
     // that alters the default submit button behavior.
     var content = $('> div:not(.action)', fieldset);
-    $(fieldset).removeClass('collapsed');
+    $(fieldset)
+      .removeClass('collapsed')
+      .trigger({ type: 'collapsed', value: false });
     content.hide();
     content.slideDown({
       duration: 'fast',
@@ -27,6 +29,7 @@ Drupal.toggleFieldset = function (fieldset) {
   }
   else {
     $('div.action', fieldset).hide();
+    $(fieldset).trigger({ type: 'collapsed', value: true });
     var content = $('> div:not(.action)', fieldset).slideUp('fast', function () {
       $(this.parentNode).addClass('collapsed');
       this.parentNode.animating = false;
