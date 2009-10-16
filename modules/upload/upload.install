@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.install,v 1.15 2009/09/29 15:13:57 dries Exp $
+// $Id: upload.install,v 1.16 2009/10/16 19:06:25 dries Exp $
 
 /**
  * @file
@@ -45,6 +45,7 @@ function upload_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Description of the uploaded file.',
+        'translatable' => TRUE,
       ),
       'list' => array(
         'type' => 'int',

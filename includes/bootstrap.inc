@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.310 2009/10/16 02:04:42 webchick Exp $
+// $Id: bootstrap.inc,v 1.311 2009/10/16 19:06:21 dries Exp $
 
 /**
  * @file
@@ -1638,6 +1638,9 @@ function drupal_language_initialize() {
     foreach ($types as $type) {
       $GLOBALS[$type] = language_initialize($type);
     }
+    // Allow modules to react on language system initialization in multilingual
+    // environments.
+    module_invoke_all('language_init', $types);
   }
 }
 

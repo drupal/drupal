@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.install,v 1.26 2009/09/29 15:13:56 dries Exp $
+// $Id: poll.install,v 1.27 2009/10/16 19:06:24 dries Exp $
 
 /**
  * @file
@@ -62,6 +62,7 @@ function poll_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'The text for this choice.',
+        'translatable' => TRUE,
       ),
       'chvotes' => array(
         'type' => 'int',

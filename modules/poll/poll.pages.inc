@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.pages.inc,v 1.22 2009/10/11 03:07:19 webchick Exp $
+// $Id: poll.pages.inc,v 1.23 2009/10/16 19:06:24 dries Exp $
 
 /**
  * @file
@@ -61,6 +61,7 @@ function poll_votes($node) {
   $select->join('poll_choice', 'pc', 'pv.chid = pc.chid');
   $select->join('users', 'u', 'pv.uid = u.uid');
   $queried_votes = $select
+    ->addTag('translatable')
     ->fields('pv', array('chid', 'uid', 'hostname', 'timestamp', 'nid'))
     ->fields('pc', array('chtext'))
     ->fields('u', array('name'))

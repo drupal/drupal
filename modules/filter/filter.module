@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.297 2009/10/13 15:39:41 dries Exp $
+// $Id: filter.module,v 1.298 2009/10/16 19:06:23 dries Exp $
 
 /**
  * @file
@@ -335,7 +335,12 @@ function filter_formats($account = NULL) {
 
   // Statically cache all existing formats upfront.
   if (!isset($formats['all'])) {
-    $formats['all'] = db_query('SELECT * FROM {filter_format} ORDER BY weight')->fetchAllAssoc('format');
+    $formats['all'] = db_select('filter_format', 'ff')
+      ->addTag('translatable')
+      ->fields('ff')
+      ->orderBy('weight')
+      ->execute()
+      ->fetchAllAssoc('format');
   }
 
   // Build a list of user-specific formats.

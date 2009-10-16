@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.218 2009/10/15 20:29:27 dries Exp $
+// $Id: install.php,v 1.219 2009/10/16 19:06:21 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -242,12 +242,13 @@ function install_begin_request(&$install_state) {
   require_once DRUPAL_ROOT . '/includes/file.inc';
   require_once DRUPAL_ROOT . '/includes/path.inc';
 
-  // Set up $language, so t() caller functions will still work.
-  drupal_language_initialize();
-
   // Load module basics (needed for hook invokes).
   include_once DRUPAL_ROOT . '/includes/module.inc';
   include_once DRUPAL_ROOT . '/includes/session.inc';
+
+  // Set up $language, so t() caller functions will still work.
+  drupal_language_initialize();
+
   include_once DRUPAL_ROOT . '/includes/entity.inc';
   $module_list['system']['filename'] = 'modules/system/system.module';
   $module_list['filter']['filename'] = 'modules/filter/filter.module';

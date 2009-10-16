@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.209 2009/10/13 01:24:07 dries Exp $
+// $Id: menu.module,v 1.210 2009/10/16 19:06:23 dries Exp $
 
 /**
  * @file
@@ -674,6 +674,7 @@ function menu_node_form_submit($form, &$form_state) {
 function menu_get_menus($all = TRUE) {
   $system_menus = array_keys(menu_list_system_menus());
   $query = db_select('menu_custom');
+  $query->addTag('translatable');
   $query->addField('menu_custom', 'menu_name', 'menu_name');
   $query->addField('menu_custom', 'title', 'title');
   if (!$all) {

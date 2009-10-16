@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.install,v 1.22 2009/10/13 18:36:25 dries Exp $
+// $Id: menu.install,v 1.23 2009/10/16 19:06:23 dries Exp $
 
 /**
  * @file
@@ -26,11 +26,13 @@ function menu_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Menu title; displayed at top of block.',
+        'translatable' => TRUE,
       ),
       'description' => array(
         'type' => 'text',
         'not null' => FALSE,
         'description' => 'Menu description.',
+        'translatable' => TRUE,
       ),
     ),
     'primary key' => array('menu_name'),

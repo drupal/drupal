@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.40 2009/10/16 03:21:23 webchick Exp $
+// $Id: taxonomy.pages.inc,v 1.41 2009/10/16 19:06:25 dries Exp $
 
 /**
  * @file
@@ -97,6 +97,7 @@ function taxonomy_autocomplete($field_name, $bundle, $tags_typed = '') {
     }
 
     $query = db_select('taxonomy_term_data', 't');
+    $query->addTag('translatable');
     $query->addTag('term_access');
 
     // Do not select already entered terms.

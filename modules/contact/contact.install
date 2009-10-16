@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.20 2009/10/12 15:17:51 dries Exp $
+// $Id: contact.install,v 1.21 2009/10/16 19:06:22 dries Exp $
 
 /**
  * @file
@@ -25,6 +25,7 @@ function contact_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Category name.',
+        'translatable' => TRUE,
       ),
       'recipients' => array(
         'type' => 'text',

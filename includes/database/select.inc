@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.24 2009/09/18 00:04:21 webchick Exp $
+// $Id: select.inc,v 1.25 2009/10/16 19:06:22 dries Exp $
 
 /**
  * @ingroup database
@@ -1285,6 +1285,11 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
     // FIELDS and EXPRESSIONS
     $fields = array();
+    foreach ($this->tables as $alias => $table) {
+      if (!empty($table['all_fields'])) {
+        $fields[] = $alias . '.*';
+      }
+    }
     foreach ($this->fields as $alias => $field) {
       // Always use the AS keyword for field aliases, as some
       // databases require it (e.g., PostgreSQL).
@@ -1292,11 +1297,6 @@ class SelectQuery extends Query implements SelectQueryInterface {
     }
     foreach ($this->expressions as $alias => $expression) {
       $fields[] = $expression['expression'] . ' AS ' . $expression['alias'];
-    }
-    foreach ($this->tables as $alias => $table) {
-      if (!empty($table['all_fields'])) {
-        $fields[] = $alias . '.*';
-      }
     }
     $query .= implode(', ', $fields);
 
