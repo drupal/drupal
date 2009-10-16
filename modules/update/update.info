@@ -1,6 +1,6 @@
-; $Id: update.info,v 1.7 2009/10/15 21:19:31 webchick Exp $
-name = Update status
-description = Checks the status of available updates for Drupal and your installed modules and themes.
+; $Id: update.info,v 1.8 2009/10/16 21:02:23 dries Exp $
+name = Update manager
+description = Checks for available updates, and can securely install or update modules and themes via a web interface.
 version = VERSION
 package = Core
 core = 7.x
