@@ -2595,7 +2595,7 @@ function l($text, $path, array $options = array()) {
  *
  * In order for page callbacks to be reusable in different delivery formats,
  * they should not issue any "print" or "echo" statements, but instead just
- * return content. 
+ * return content.
  *
  * @param $page_callback_result
  *   The result of a page callback. Can be one of:
@@ -2608,7 +2608,7 @@ function l($text, $path, array $options = array()) {
  *   to be appropriate for the page request as determined by the calling
  *   function (e.g., menu_execute_active_handler()). If not given, it is
  *   determined from the menu router information of the current page. In either
- *   case, modules have a final chance to alter which function is called. 
+ *   case, modules have a final chance to alter which function is called.
  *
  * @see menu_execute_active_handler()
  * @see hook_menu()
@@ -2655,7 +2655,7 @@ function drupal_deliver_html_page($page_callback_result) {
   // Menu status constants are integers; page content is a string or array.
   if (is_int($page_callback_result)) {
     // @todo: Break these up into separate functions?
-    switch ($page_callback_result) {   
+    switch ($page_callback_result) {
       case MENU_NOT_FOUND:
         // Print a 404 page.
         drupal_add_http_header('404 Not Found');
@@ -2719,7 +2719,7 @@ function drupal_deliver_html_page($page_callback_result) {
         drupal_add_http_header('503 Service unavailable');
         drupal_set_title(t('Site under maintenance'));
         print theme('maintenance_page', array('content' => filter_xss_admin(variable_get('maintenance_mode_message',
-          t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))))));    
+          t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))))));
         break;
     }
   }
@@ -5983,16 +5983,16 @@ function archiver_get_archiver($file) {
   $archiver_info = archiver_get_info();
 
   foreach ($archiver_info as $implementation) {
-   foreach ($implementation['extensions'] as $extension) {
-     // Because extensions may be multi-part, such as .tar.gz,
-     // we cannot use simpler approaches like substr() or pathinfo().
-     // This method isn't quite as clean but gets the job done.
-     // Also note that the file may not yet exist, so we cannot rely
-     // on fileinfo() or other disk-level utilities.
-     if (strrpos($file, '.' . $extension) === strlen($file) - strlen('.' . $extension)) {
-       return new $implementation['class']($file);
-     }
-   }
+    foreach ($implementation['extensions'] as $extension) {
+      // Because extensions may be multi-part, such as .tar.gz,
+      // we cannot use simpler approaches like substr() or pathinfo().
+      // This method isn't quite as clean but gets the job done.
+      // Also note that the file may not yet exist, so we cannot rely
+      // on fileinfo() or other disk-level utilities.
+      if (strrpos($file, '.' . $extension) === strlen($file) - strlen('.' . $extension)) {
+        return new $implementation['class']($file);
+      }
+    }
   }
 }
 

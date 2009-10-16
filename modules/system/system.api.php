@@ -2333,7 +2333,7 @@ function hook_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  *   the Drupal installation process that occurs after the installation profile
  *   is selected.
  * @param $install_state
- *   An array of information about the current installation state. 
+ *   An array of information about the current installation state.
  */
 function hook_install_tasks_alter(&$tasks, $install_state) {
   // Replace the "Choose language" installation task provided by Drupal core
@@ -2455,17 +2455,15 @@ function hook_action_info_alter(&$actions) {
  * zip files and tar.gz files.  All archiver classes must implement
  * ArchiverInterface.
  *
- * When mapping a
- *
  * Each entry should be keyed on a unique value, and specify three
  * additional keys:
- *   - class: The name of the PHP class for this archiver.
- *   - extensions: An array of file extensions that this archiver supports.
- *   - weight: This optional key specifies the weight of this archiver.
- *     When mapping file extensions to archivers, the first archiver by
- *     weight found that supports the requested extension will be used.
+ * - class: The name of the PHP class for this archiver.
+ * - extensions: An array of file extensions that this archiver supports.
+ * - weight: This optional key specifies the weight of this archiver.
+ *   When mapping file extensions to archivers, the first archiver by
+ *   weight found that supports the requested extension will be used.
  */
-function system_archiver_info() {
+function hook_archiver_info() {
   return array(
     'tar' => array(
       'class' => 'ArchiverTar',
@@ -2508,7 +2506,7 @@ function hook_date_format_types() {
  * module can define additional types that can be used when displaying dates. A
  * date type is a key which can be passed to format_date() to return a date in
  * the configured displayed format. A date format is a string defining the date
- * and time elements to use. For example, a date type could be 
+ * and time elements to use. For example, a date type could be
  * 'mymodule_extra_long', while a date format is like 'Y-m-d'.
  *
  * New date types must first be declared using hook_date_format_types(). It is
@@ -2536,7 +2534,7 @@ function hook_date_format_types() {
  *     'short', 'mymodule_extra_long'. It must first be declared in
  *     hook_date_format_types() unless extending a type provided by another
  *     module.
- *   - 'format': a string defining the date and time elements to use. It 
+ *   - 'format': a string defining the date and time elements to use. It
  *     can contain any of the formatting options described at
  *     http://php.net/manual/en/function.date.php
  *   - 'locales': (optional) an array of 2 and 5 character language codes, for
