@@ -591,9 +591,9 @@ function taxonomy_get_parents($tid, $key = 'tid') {
   if ($tid) {
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
-    $query->addTag('term_access');
-
     $result = $query
+      ->addTag('translatable')
+      ->addTag('term_access')
       ->fields('t')
       ->condition('h.tid', $tid)
       ->orderBy('weight')
@@ -632,9 +632,9 @@ function taxonomy_get_parents_all($tid) {
 function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
   $query = db_select('taxonomy_term_data', 't');
   $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
-  $query->addTag('term_access');
-
   $query
+    ->addTag('translatable')
+    ->addTag('term_access')
     ->fields('t')
     ->condition('parent', $tid)
     ->orderBy('weight')
@@ -685,9 +685,9 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
 
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
-    $query->addTag('term_access');
-
     $result = $query
+      ->addTag('translatable')
+      ->addTag('term_access')
       ->fields('t')
       ->fields('h', array('parent'))
       ->condition('t.vid', $vid)
@@ -754,6 +754,8 @@ class TaxonomyTermController extends DrupalDefaultEntityController {
 
   protected function buildQuery() {
     parent::buildQuery();
+    $this->query->addTag('translatable');
+    $this->query->addTag('term_access');
     // When name is passed as a condition use LIKE.
     if (isset($this->conditions['name'])) {
       $conditions = &$this->query->conditions();
@@ -791,6 +793,7 @@ class TaxonomyTermController extends DrupalDefaultEntityController {
 class TaxonomyVocabularyController extends DrupalDefaultEntityController {
   protected function buildQuery() {
     parent::buildQuery();
+    $this->query->addTag('translatable');
     $this->query->orderBy('base.weight');
     $this->query->orderBy('base.name');
   }
@@ -1149,6 +1152,7 @@ function taxonomy_field_formatter_prepare_view($obj_type, $objects, $field, $ins
     $query = db_select('taxonomy_term_data', 't');
     $query->fields('t');
     $query->condition('t.tid', $tids, 'IN');
+    $query->addTag('translatable');
     $query->addTag('term_access');
     $terms = $query->execute()->fetchAllAssoc('tid');
 

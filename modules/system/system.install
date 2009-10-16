@@ -568,6 +568,7 @@ function system_schema() {
         'type' => 'text',
         'not null' => TRUE,
         'size' => 'big',
+        'translatable' => TRUE,
       ),
     ),
     'primary key' => array('name'),
@@ -1162,11 +1163,13 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'translatable' => TRUE,
       ),
       'options' => array(
         'description' => 'A serialized array of options to be passed to the url() or l() function, such as a query string or HTML attributes.',
         'type' => 'text',
         'not null' => FALSE,
+        'translatable' => TRUE,
       ),
       'module' => array(
         'description' => 'The name of the module that generated this link.',

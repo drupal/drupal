@@ -45,6 +45,7 @@ function upload_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Description of the uploaded file.',
+        'translatable' => TRUE,
       ),
       'list' => array(
         'type' => 'int',

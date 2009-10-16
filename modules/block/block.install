@@ -85,6 +85,7 @@ function block_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
+        'translatable' => TRUE,
       ),
       'cache' => array(
         'type' => 'int',
@@ -173,6 +174,7 @@ function block_schema() {
         'not null' => FALSE,
         'size' => 'big',
         'description' => 'Block contents.',
+        'translatable' => TRUE,
       ),
       'info' => array(
         'type' => 'varchar',

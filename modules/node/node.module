@@ -674,9 +674,10 @@ function _node_types_build() {
     $_node_types->names[$type] = $info['name'];
   }
   $type_result = db_select('node_type', 'nt')
+    ->addTag('translatable')
+    ->addTag('node_type_access')
     ->fields('nt')
     ->orderBy('nt.type', 'ASC')
-    ->addTag('node_type_access')
     ->execute();
   foreach ($type_result as $type_object) {
     // Check for node types from disabled modules and mark their types for removal.

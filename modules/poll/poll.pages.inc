@@ -61,6 +61,7 @@ function poll_votes($node) {
   $select->join('poll_choice', 'pc', 'pv.chid = pc.chid');
   $select->join('users', 'u', 'pv.uid = u.uid');
   $queried_votes = $select
+    ->addTag('translatable')
     ->fields('pv', array('chid', 'uid', 'hostname', 'timestamp', 'nid'))
     ->fields('pc', array('chtext'))
     ->fields('u', array('name'))

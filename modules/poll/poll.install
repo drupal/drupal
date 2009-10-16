@@ -62,6 +62,7 @@ function poll_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'The text for this choice.',
+        'translatable' => TRUE,
       ),
       'chvotes' => array(
         'type' => 'int',

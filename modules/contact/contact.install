@@ -25,6 +25,7 @@ function contact_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Category name.',
+        'translatable' => TRUE,
       ),
       'recipients' => array(
         'type' => 'text',

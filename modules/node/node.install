@@ -269,6 +269,7 @@ function node_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'translatable' => TRUE,
       ),
       'base' => array(
         'description' => 'The base string used to construct callbacks corresponding to this node type.',
@@ -281,12 +282,14 @@ function node_schema() {
         'type' => 'text',
         'not null' => TRUE,
         'size' => 'medium',
+        'translatable' => TRUE,
       ),
       'help' => array(
         'description' => 'Help information shown to the user when creating a {node} of this type.',
         'type' => 'text',
         'not null' => TRUE,
         'size' => 'medium',
+        'translatable' => TRUE,
       ),
       'has_title' => array(
         'description' => 'Boolean indicating whether this type uses the {node}.title field.',
@@ -301,6 +304,7 @@ function node_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'translatable' => TRUE,
       ),
       'has_body' => array(
         'description' => 'Boolean indicating whether this type has the body field attached.',
@@ -315,6 +319,7 @@ function node_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'translatable' => TRUE,
       ),
       'custom' => array(
         'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',

@@ -24,7 +24,13 @@ function contact_site_form($form, &$form_state) {
   }
 
   // Get an array of the categories and the current default category.
-  $categories = db_query("SELECT cid, category FROM {contact} ORDER BY weight, category")->fetchAllKeyed();
+  $categories = db_select('contact', 'c')
+    ->addTag('translatable')
+    ->fields('c', array('cid', 'category'))
+    ->orderBy('weight')
+    ->orderBy('category')
+    ->execute()
+    ->fetchAllKeyed();
   $default_category = db_query("SELECT cid FROM {contact} WHERE selected = 1")->fetchField();
 
   // If there are no categories, do not display the form.

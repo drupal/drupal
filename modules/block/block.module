@@ -601,6 +601,7 @@ function _block_load_blocks() {
     ->orderBy('b.weight')
     ->orderBy('b.module')
     ->addTag('block_load')
+    ->addTag('translatable')
     ->execute();
 
   $block_info = $result->fetchAllAssoc('bid');

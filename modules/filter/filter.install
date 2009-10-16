@@ -76,6 +76,7 @@ function filter_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Name of the text format (Filtered HTML).',
+        'translatable' => TRUE,
       ),
       'cache' => array(
         'type' => 'int',

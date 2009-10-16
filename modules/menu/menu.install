@@ -26,11 +26,13 @@ function menu_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Menu title; displayed at top of block.',
+        'translatable' => TRUE,
       ),
       'description' => array(
         'type' => 'text',
         'not null' => FALSE,
         'description' => 'Menu description.',
+        'translatable' => TRUE,
       ),
     ),
     'primary key' => array('menu_name'),

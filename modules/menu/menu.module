@@ -674,6 +674,7 @@ function menu_node_form_submit($form, &$form_state) {
 function menu_get_menus($all = TRUE) {
   $system_menus = array_keys(menu_list_system_menus());
   $query = db_select('menu_custom');
+  $query->addTag('translatable');
   $query->addField('menu_custom', 'menu_name', 'menu_name');
   $query->addField('menu_custom', 'title', 'title');
   if (!$all) {
