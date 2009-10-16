@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.162 2009/10/16 03:01:54 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.163 2009/10/16 15:52:33 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -730,7 +730,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'value' => $this->randomName(32),
       'format' => filter_default_format(),
     );
-    $langcode = isset($settings['language']) ? $settings['language'] : FIELD_LANGUAGE_NONE;
+    $langcode = !empty($settings['language']) ? $settings['language'] : FIELD_LANGUAGE_NONE;
     $settings['body'][$langcode][0] += $body;
 
     $node = (object) $settings;
