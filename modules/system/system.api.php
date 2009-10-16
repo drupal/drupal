@@ -150,6 +150,23 @@ function hook_entity_info_alter(&$entity_info) {
 }
 
 /**
+ * Act on entities when loaded.
+ *
+ * This is a generic load hook called for all entity types loaded via the
+ * entity API.
+ *
+ * @param $entities
+ *   The entities keyed by entity ID.
+ * @param $type
+ *   The type of entities being loaded (i.e. node, user, comment).
+ */
+function hook_entity_load($entities, $type) {
+  foreach ($entities as $entity) {
+    $entity->foo = mymodule_add_something($entity, $entity_type);
+  }
+}
+
+/**
  * Perform periodic actions.
  *
  * This hook will only be called if cron.php is run (e.g. by crontab).

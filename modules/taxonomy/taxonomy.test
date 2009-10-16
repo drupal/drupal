@@ -757,7 +757,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
 
     // Display the object.
-    $entity = field_test_entity_load($id);
+    $entity = field_test_entity_test_load($id);
     $entities = array($id => $entity);
     field_attach_prepare_view($entity_type, $entities, 'full');
     $entity->content = field_attach_view($entity_type, $entity);

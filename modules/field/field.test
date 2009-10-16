@@ -1373,7 +1373,7 @@ class FieldFormTestCase extends FieldTestCase {
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
-    $entity = field_test_entity_load($id);
+    $entity = field_test_entity_test_load($id);
     $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was saved');
 
     // Display edit form.
@@ -1386,7 +1386,7 @@ class FieldFormTestCase extends FieldTestCase {
     $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
-    $entity = field_test_entity_load($id);
+    $entity = field_test_entity_test_load($id);
     $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was updated');
 
     // Empty the field.
@@ -1394,7 +1394,7 @@ class FieldFormTestCase extends FieldTestCase {
     $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost('test-entity/' . $id . '/edit', $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
-    $entity = field_test_entity_load($id);
+    $entity = field_test_entity_test_load($id);
     $this->assertIdentical($entity->{$this->field_name}, array(), 'Field was emptied');
 
   }
@@ -1420,7 +1420,7 @@ class FieldFormTestCase extends FieldTestCase {
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
-    $entity = field_test_entity_load($id);
+    $entity = field_test_entity_test_load($id);
     $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was saved');
 
     // Edit with missing required value.
@@ -1500,7 +1500,7 @@ class FieldFormTestCase extends FieldTestCase {
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
-    $entity = field_test_entity_load($id);
+    $entity = field_test_entity_test_load($id);
     ksort($field_values);
     $field_values = array_values($field_values);
     $this->assertIdentical($entity->{$this->field_name}[$langcode], $field_values, 'Field values were saved in the correct order');
