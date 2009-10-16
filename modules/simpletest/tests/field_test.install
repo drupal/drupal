@@ -1,10 +1,21 @@
 <?php
-// $Id: field_test.install,v 1.5 2009/09/10 06:38:19 dries Exp $
+// $Id: field_test.install,v 1.6 2009/10/16 02:04:44 webchick Exp $
 
 /**
  * @file
  * Install, update and uninstall functions for the field_test module.
  */
+
+/**
+ * Implement hook_install().
+ */
+function field_test_install() {
+  // hook_entity_info_alter() needs to be executed as last.
+  db_update('system')
+    ->fields(array('weight' => 1))
+    ->condition('name', 'field_test')
+    ->execute();
+}
 
 /**
  * Implement hook_schema().

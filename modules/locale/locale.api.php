@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.api.php,v 1.5 2009/10/09 16:33:13 webchick Exp $
+// $Id: locale.api.php,v 1.6 2009/10/16 02:04:42 webchick Exp $
 
 /**
  * @file
@@ -134,6 +134,13 @@ function hook_language_negotiation_info_alter(array &$language_providers) {
   if (isset($language_providers['custom_language_provider'])) {
     $language_providers['custom_language_provider']['config'] = 'admin/config/regional/language/configure/custom-language-provider';
   }
+}
+
+/**
+ * Allow modules to react to language settings changes.
+ */
+function hook_multilingual_settings_changed() {
+  cache_clear_all('field_info_types', 'cache_field');
 }
 
 /**
