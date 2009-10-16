@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.89 2009/10/15 16:18:45 webchick Exp $
+// $Id: node.pages.inc,v 1.90 2009/10/16 03:21:23 webchick Exp $
 
 /**
  * @file
@@ -355,6 +355,8 @@ function node_preview($node) {
     }
 
     $node->changed = REQUEST_TIME;
+    $nodes = array($node->nid => $node);
+    field_attach_prepare_view('node', $nodes, 'full');
 
     // Display a preview of the node.
     // Previewing alters $node so it needs to be cloned.

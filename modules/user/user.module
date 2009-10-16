@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1065 2009/10/16 03:01:55 dries Exp $
+// $Id: user.module,v 1.1066 2009/10/16 03:21:23 webchick Exp $
 
 /**
  * @file
@@ -2101,6 +2101,9 @@ function user_build($account) {
  */
 function user_build_content($account) {
   $account->content = array();
+
+  $accounts = array($account->uid, $account);
+  field_attach_prepare_view('user', $accounts, 'full');
 
   // Build fields content.
   $account->content += field_attach_view('user', $account);

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.53 2009/10/15 12:44:34 dries Exp $
+// $Id: field.attach.inc,v 1.54 2009/10/16 03:21:23 webchick Exp $
 
 /**
  * @file
@@ -1107,6 +1107,13 @@ function field_attach_query($field_id, $conditions, $count, &$cursor = NULL, $ag
  */
 function field_attach_query_revisions($field_id, $conditions, $count, &$cursor = NULL) {
   return field_attach_query($field_id, $conditions, $count, $cursor, FIELD_LOAD_REVISION);
+}
+
+/**
+ * Allow formatters to act on fieldable objects prior to rendering.
+ */
+function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
+  _field_invoke_multiple_default('prepare_view', $obj_type, $objects, $build_mode);
 }
 
 /**
