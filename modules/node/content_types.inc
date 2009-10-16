@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.97 2009/10/14 01:01:54 dries Exp $
+// $Id: content_types.inc,v 1.98 2009/10/16 13:20:16 dries Exp $
 
 /**
  * @file
@@ -160,7 +160,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
       DRUPAL_OPTIONAL => t('Optional'),
       DRUPAL_REQUIRED => t('Required'),
     ),
-    );
+  );
   $form['submission']['help']  = array(
     '#type' => 'textarea',
     '#title' => t('Explanation or submission guidelines'),

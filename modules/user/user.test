@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.64 2009/10/12 18:37:31 dries Exp $
+// $Id: user.test,v 1.65 2009/10/16 13:20:16 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -525,7 +525,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
 
     // Create comment.
     module_load_include('test', 'comment');
-    $comment = CommentHelperCase::postComment($node, '', $this->randomName(32), FALSE, TRUE);
+    $comment = CommentHelperCase::postComment($node, $this->randomName(32), '', TRUE);
     $this->assertTrue(comment_load($comment->id), t('Comment found.'));
 
     // Create a node with two revisions, the initial one belonging to the
