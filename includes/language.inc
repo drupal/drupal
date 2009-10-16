@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.21 2009/10/16 02:04:42 webchick Exp $
+// $Id: language.inc,v 1.22 2009/10/16 15:47:46 webchick Exp $
 
 /**
  * @file
@@ -424,7 +424,7 @@ function language_fallback_get_candidates($type = LANGUAGE_TYPE_CONTENT) {
     $fallback_candidates[] = FIELD_LANGUAGE_NONE;
 
     // Let other modules hook in and add/change candidates.
-    drupal_alter('language_get_fallback_candidates', $fallback_candidates);
+    drupal_alter('language_fallback_candidates', $fallback_candidates);
   }
 
   return $fallback_candidates;

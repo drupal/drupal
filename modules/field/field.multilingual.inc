@@ -1,5 +1,5 @@
 <?php
-// $Id: field.multilingual.inc,v 1.2 2009/10/16 02:04:42 webchick Exp $
+// $Id: field.multilingual.inc,v 1.3 2009/10/16 15:47:46 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Implement hook_multilingual_settings_changed().
  */
 function field_multilingual_settings_changed() {
-  cache_clear_all('field_info_types', 'cache_field');
+  field_info_cache_clear();
 }
 
 /**
