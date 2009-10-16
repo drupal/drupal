@@ -138,9 +138,26 @@ function hook_language_negotiation_info_alter(array &$language_providers) {
 
 /**
  * Allow modules to react to language settings changes.
+ *
+ * Every module needing to act when the number of enabled languages changes
+ * should implement this. This is an "internal" hook and should not be invoked
+ * elsewhere. The typical implementation would trigger some kind of rebuilding,
+ * this way system components could properly react to the change of the enabled
+ * languages number.
  */
 function hook_multilingual_settings_changed() {
-  cache_clear_all('field_info_types', 'cache_field');
+  field_info_cache_clear();
+}
+
+/**
+ * Perform alterations on the language fallback candidates.
+ *
+ * @param $fallback_candidates
+ *   An array of language codes whose order will determine the language fallback
+ *   order.
+ */
+function hook_language_fallback_candidates_alter(array &$fallback_candidates) {
+  $fallback_candidates = array_reverse($fallback_candidates);
 }
 
 /**

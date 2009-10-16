@@ -1296,6 +1296,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $this->drupalLogout();
   }
 }
+
 /**
  * Functional tests for multilingual support on nodes.
  */
@@ -1416,8 +1417,6 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $this->drupalLogout();
   }
 }
-
-
 
 /**
  * Test UI language negotiation
@@ -1621,6 +1620,9 @@ class UILanguageNegotiationTest extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Functional test for multilingual fields.
+ */
 class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -1634,6 +1636,9 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     parent::setUp('locale');
   }
 
+  /**
+   * Test if field languages are correctly set through the node form.
+   */
   function testMultilingualNodeForm() {
     // Setup users.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'create page content', 'edit own page content'));

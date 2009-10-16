@@ -10,7 +10,7 @@
  * Implement hook_multilingual_settings_changed().
  */
 function field_multilingual_settings_changed() {
-  cache_clear_all('field_info_types', 'cache_field');
+  field_info_cache_clear();
 }
 
 /**
