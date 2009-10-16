@@ -1,4 +1,4 @@
-// $Id: form.js,v 1.11 2009/08/31 05:51:07 dries Exp $
+// $Id: form.js,v 1.12 2009/10/16 16:37:00 dries Exp $
 (function ($) {
 
 /**
@@ -68,7 +68,6 @@ Drupal.behaviors.multiselectSelector = {
   }
 };
 
-
 /**
  * Automatically display the guidelines of the selected text format.
  */
@@ -83,6 +82,24 @@ Drupal.behaviors.filterGuidelines = {
           .siblings('#filter-guidelines-' + this.value).show();
       })
       .change();
+  }
+};
+
+/**
+ * Prepopulate form fields with information from the visitor cookie.
+ */
+Drupal.behaviors.fillUserInfoFromCookie = {
+  attach: function (context, settings) {
+    $('form.user-info-from-cookie').once('user-info-from-cookie', function () {
+      var formContext = this;
+      $.each(['name', 'mail', 'homepage'], function () {
+        var $element = $('[name=' + this + ']', formContext);
+        var cookie = $.cookie('Drupal.visitor.' + this);
+        if ($element.length && cookie) {
+          $element.val(cookie);
+        }
+      });
+    });
   }
 };
 
