@@ -14,7 +14,7 @@
  * appropriate places in the template. Processed e-mail templates are
  * requested from hook_mail() from the module sending the e-mail. Any module
  * can modify the composed e-mail message array using hook_mail_alter().
- * Finally drupal_mail_sending_system()->mail() sends the e-mail, which can
+ * Finally drupal_mail_system()->mail() sends the e-mail, which can
  * be reused if the exact same composed e-mail is to be sent to multiple
  * recipients.
  *
@@ -78,8 +78,8 @@
  * @param $from
  *   Sets From to this value, if given.
  * @param $send
- *   Send the message directly, without calling
- *   drupal_mail_sending_system()->mail() manually.
+ *   Send the message directly, without calling drupal_mail_system()->mail()
+ *   manually.
  * @return
  *   The $message array structure containing all details of the
  *   message. If already sent ($send = TRUE), then the 'result' element
@@ -93,6 +93,8 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
   // Bundle up the variables into a structured array for altering.
   $message = array(
     'id'       => $module . '_' . $key,
+    'module'   => $module,
+    'key'      => $key,
     'to'       => $to,
     'from'     => isset($from) ? $from : $default_from,
     'language' => $language,
@@ -129,12 +131,15 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
   // Invoke hook_mail_alter() to allow all modules to alter the resulting e-mail.
   drupal_alter('mail', $message);
 
-  // Concatenate and wrap the e-mail body.
-  $message['body'] = is_array($message['body']) ? drupal_wrap_mail(implode("\n\n", $message['body'])) : drupal_wrap_mail($message['body']);
+  // Retrieve the responsible implementation for this message.
+  $system = drupal_mail_system($module, $key);
+
+  // Format the message body.
+  $message = $system->format($message);
 
   // Optionally send e-mail.
   if ($send) {
-    $message['result'] = drupal_mail_sending_system($module, $key)->mail($message);
+    $message['result'] = $system->mail($message);
 
     // Log errors
     if (!$message['result']) {
@@ -149,11 +154,23 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 /**
  * Returns an object that implements the MailSystemInterface.
  *
- * Allows for one or more custom mail backends to send mail messages
+ * Allows for one or more custom mail backends to format and send mail messages
  * composed using drupal_mail().
  *
+ * An implementation needs to implement the following methods:
+ * - format: Allows to preprocess, format, and postprocess a mail
+ *   message before it is passed to the sending system. By default, all messages
+ *   may contain HTML and are converted to plain-text by the DefaultMailSystem
+ *   implementation. For example, an alternative implementation could override
+ *   the default implementation and additionally sanitize the HTML for usage in
+ *   a MIME-encoded e-mail, but still invoking the DefaultMailSystem
+ *   implementation to generate an alternate plain-text version for sending.
+ * - mail: Sends a message through a custom mail sending engine.
+ *   By default, all messages are sent via PHP's mail() function by the
+ *   DefaultMailSystem implementation.
+ *
  * The selection of a particular implementation is controlled via the variable
- * 'mail_sending_system', which is a keyed array.  The default implementation
+ * 'mail_system', which is a keyed array.  The default implementation
  * is the class whose name is the value of 'default-system' key. A more specific
  * match first to key and then to module will be used in preference to the
  * default. To specificy a different class for all mail sent by one module, set
@@ -195,11 +212,12 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
  *   A key to identify the e-mail sent. The final e-mail ID for the e-mail
  *   alter hook in drupal_mail() would have been {$module}_{$key}.
  */
-function drupal_mail_sending_system($module, $key) {
+function drupal_mail_system($module, $key) {
   $instances = &drupal_static(__FUNCTION__, array());
 
   $id = $module . '_' . $key;
-  $configuration = variable_get('mail_sending_system', array('default-system' => 'DefaultMailSystem'));
+
+  $configuration = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
 
   // Look for overrides for the default class, starting from the most specific
   // id, and falling back to the module name.
@@ -230,7 +248,18 @@ function drupal_mail_sending_system($module, $key) {
  */
 interface MailSystemInterface {
   /**
-   * Send an e-mail message composed by drupal_mail().
+   * Format a message composed by drupal_mail() prior sending.
+   *
+   * @param $message
+   *   A message array, as described in hook_mail_alter().
+   *
+   * @return
+   *   The formatted $message.
+   */
+   public function format(array $message);
+
+  /**
+   * Send a message composed by drupal_mail().
    *
    * @param $message
    *   Message array with at least the following elements:
@@ -452,9 +481,10 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
     }
     // Process blocks of text.
     else {
-      // Convert inline HTML text to plain text.
-      $value = trim(preg_replace('/\s+/', ' ', decode_entities($value)));
-      if (strlen($value)) {
+      // Convert inline HTML text to plain text; not removing line-breaks or
+      // white-space, since that breaks newlines when sanitizing plain-text.
+      $value = trim(decode_entities($value));
+      if (drupal_strlen($value)) {
         $chunk = $value;
       }
     }
@@ -466,7 +496,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
         $chunk = $casing($chunk);
       }
       // Format it and apply the current indentation.
-      $output .= drupal_wrap_mail($chunk, implode('', $indent)) . "\n";
+      $output .= drupal_wrap_mail($chunk, implode('', $indent));
       // Remove non-quotation markers from indentation.
       $indent = array_map('_drupal_html_to_text_clean', $indent);
     }

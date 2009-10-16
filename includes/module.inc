@@ -361,6 +361,8 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   if ($reset) {
     $implementations = array();
     cache_set('module_implements', array());
+    drupal_static_reset('module_hook_info');
+    cache_clear_all('hook_info', 'cache');
     return;
   }
 
@@ -376,18 +378,25 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   }
 
   if (!isset($implementations[$hook])) {
+    $hook_info = module_hook_info();
     $implementations[$hook] = array();
     $list = module_list(FALSE, FALSE, $sort);
     foreach ($list as $module) {
-      if (module_hook($module, $hook)) {
-        $implementations[$hook][$module] = $module;
+      $include_file = FALSE;
+      if (module_hook($module, $hook) || (isset($hook_info[$hook]['group']) && $include_file = module_load_include('inc', $module, $module . '.' . $hook_info[$hook]['group']) && module_hook($module, $hook))) {
+        $implementations[$hook][$module] = $include_file ? $hook_info[$hook]['group'] : FALSE;
         // We added something to the cache, so write it when we are done.
         $implementations['#write_cache'] = TRUE;
       }
     }
   }
   else {
-    foreach ($implementations[$hook] as $module) {
+    foreach ($implementations[$hook] as $module => $group) {
+      // If this hook implementation is stored in a lazy-loaded file, so include
+      // that file first.
+      if ($group) {
+        module_load_include('inc', $module, "$module.$group");
+      }
       // It is possible that a module removed a hook implementation without the
       // implementations cache being rebuilt yet, so we check module_hook() on
       // each request to avoid undefined function errors.
@@ -400,13 +409,45 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
     }
   }
 
-  // The explicit cast forces a copy to be made. This is needed because
-  // $implementations[$hook] is only a reference to an element of
-  // $implementations and if there are nested foreaches (due to nested node
-  // API calls, for example), they would both manipulate the same array's
-  // references, which causes some modules' hooks not to be called.
-  // See also http://www.zend.com/zend/art/ref-count.php.
-  return (array)$implementations[$hook];
+  return array_keys($implementations[$hook]);
+}
+
+/**
+ * Retrieve a list of what hooks are explicitly declared.
+ */
+function module_hook_info() {
+  $hook_info = &drupal_static(__FUNCTION__, array());
+
+  if (empty($hook_info)) {
+    $cache = cache_get('hook_info');
+    if ($cache === FALSE) {
+      // Rebuild the cache and save it.
+      // We can't use module_invoke_all() here or it would cause an infinite
+      // loop.
+      foreach (module_list() as $module) {
+        $function = $module . '_hook_info';
+        if (function_exists($function)) {
+          $result = $function();
+          if (isset($result) && is_array($result)) {
+            $hook_info = array_merge_recursive($hook_info, $result);
+          }
+        }
+      }
+      // We can't use drupal_alter() for the same reason as above.
+      foreach (module_list() as $module) {
+        $function = $module . '_hook_info_alter';
+        if (function_exists($function)) {
+          $function($hook_info);
+        }
+      }
+      cache_set('hook_info', $hook_info);
+    }
+    else {
+      $hook_info = $cache->data;
+    }
+  }
+
+  return $hook_info;
 }
 
 /**

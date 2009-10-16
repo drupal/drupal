@@ -3,21 +3,40 @@
 
 /**
  * @file
- * Drupal core implementations of the DrupalMailSendingInterface.
+ * Drupal core implementations of MailSystemInterface.
  */
 
 /**
- * The default Drupal mail sending library using PHP's mail function.
+ * The default Drupal mail backend using PHP's mail function.
  */
 class DefaultMailSystem implements MailSystemInterface {
   /**
-   * Send an e-mail message, using Drupal variables and default settings.
-   * @see http://php.net/manual/en/function.mail.php the PHP function reference
-   *   for mail().
-   * @see drupal_mail() for information on how $message is composed.
+   * Concatenate and wrap the e-mail body for plain-text mails.
    *
    * @param $message
-   *   Message array as described by DrupalMailSendingInterface.
+   *   A message array, as described in hook_mail_alter().
+   *
+   * @return
+   *   The formatted $message.
+   */
+  public function format(array $message) {
+    // Join the body array into one string.
+    $message['body'] = implode("\n\n", $message['body']);
+    // Convert any HTML to plain-text.
+    $message['body'] = drupal_html_to_text($message['body']);
+    // Wrap the mail body for sending.
+    $message['body'] = drupal_wrap_mail($message['body']);
+    return $message;
+  }
+
+  /**
+   * Send an e-mail message, using Drupal variables and default settings.
+   *
+   * @see http://php.net/manual/en/function.mail.php
+   * @see drupal_mail()
+   *
+   * @param $message
+   *   A message array, as described in hook_mail_alter().
    * @return
    *   TRUE if the mail was successfully accepted, otherwise FALSE.
    */
@@ -44,8 +63,7 @@ class DefaultMailSystem implements MailSystemInterface {
  *
  * This class is for running tests or for development.
  */
-class TestingMailSystem implements MailSystemInterface {
-
+class TestingMailSystem extends DefaultMailSystem implements MailSystemInterface {
   /**
    * Accept an e-mail message and store it in a variable.
    *

@@ -1107,7 +1107,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $language = language_default();
 
     // Use the test mail class instead of the default mail handler class.
-    variable_set('mail_sending_system', array('default-system' => 'TestingMailSystem'));
+    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
 
     // Use temporary files directory with the same prefix as the database.
     $public_files_directory  = $this->originalFileDirectory . '/' . $db_prefix;

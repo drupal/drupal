@@ -25,7 +25,7 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
     parent::setUp();
 
     // Set MailTestCase (i.e. this class) as the SMTP library
-    variable_set('mail_sending_system', array('default-system' => 'MailTestCase'));
+    variable_set('mail_system', array('default-system' => 'MailTestCase'));
   }
 
   /**
@@ -39,6 +39,21 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
 
     // Assert whether the message was sent through the send function.
     $this->assertEqual(self::$sent_message['to'], 'testing@drupal.org', t('Pluggable mail system is extendable.'));
+  }
+
+  /**
+   * Concatenate and wrap the e-mail body for plain-text mails.
+   *
+   * @see DefaultMailSystem
+   */
+  public function format(array $message) {
+    // Join the body array into one string.
+    $message['body'] = implode("\n\n", $message['body']);
+    // Convert any HTML to plain-text.
+    $message['body'] = drupal_html_to_text($message['body']);
+    // Wrap the mail body for sending.
+    $message['body'] = drupal_wrap_mail($message['body']);
+    return $message;
   }
 
   /**

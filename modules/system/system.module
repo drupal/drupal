@@ -278,6 +278,19 @@ function system_rdf_namespaces() {
 }
 
 /**
+ * Implement hook_hook_info().
+ */
+function system_hook_info() {
+  $hooks['token_info'] = array(
+    'group' => 'tokens',
+  );
+  $hooks['tokens'] = array(
+    'group' => 'tokens',
+  );
+  return $hooks;
+}
+
+/**
  * Implement hook_entity_info().
  */
 function system_entity_info() {
@@ -2762,7 +2775,7 @@ function system_mail($key, &$message, $params) {
   $body = token_replace($context['message'], $context);
 
   $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
-  $message['body'][] = drupal_html_to_text($body);
+  $message['body'][] = $body;
 }
 
 function system_message_action_form($context) {

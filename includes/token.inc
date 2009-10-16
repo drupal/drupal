@@ -153,7 +153,6 @@ function token_scan($text) {
 function token_generate($type, array $tokens, array $data = array(), array $options = array()) {
   $results = array();
   $options += array('sanitize' => TRUE);
-  _token_initialize();
 
   $result = module_invoke_all('tokens', $type, $tokens, $data, $options);
   foreach ($result as $original => $replacement) {
@@ -227,25 +226,8 @@ function token_find_with_prefix(array $tokens, $prefix, $delimiter = ':') {
 function token_info() {
   $data = &drupal_static(__FUNCTION__);
   if (!isset($data)) {
-    _token_initialize();
     $data = module_invoke_all('token_info');
     drupal_alter('token_info', $data);
   }
   return $data;
-}
-
-/**
- * Load modulename.tokens.inc for all enabled modules.
- */
-function _token_initialize() {
-  $initialized = &drupal_static(__FUNCTION__);
-  if (!$initialized) {
-    foreach (module_list() as $module) {
-      $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$module.tokens.inc";
-      if (file_exists($filename)) {
-        include_once $filename;
-      }
-    }
-    $initialized = TRUE;
-  }
 }

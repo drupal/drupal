@@ -2910,8 +2910,7 @@ function user_preferred_language($account, $default = NULL) {
  * @param $language
  *  Optional language to use for the notification, overriding account language.
  * @return
- *  The return value from drupal_mail_sending_system()->mail(), if ends up
- *  being called.
+ *  The return value from drupal_mail_system()->mail(), if ends up being called.
  */
 function _user_mail_notify($op, $account, $language = NULL) {
   // By default, we always notify except for canceled and blocked.

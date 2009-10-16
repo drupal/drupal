@@ -174,7 +174,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     // We are testing the auto-reply, so there should be one e-mail going to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'foo@example.com'));
     $this->assertEqual(count($captured_emails), 1, t('Auto-reply e-mail was sent to the sender for category "foo".'), t('Contact'));
-    $this->assertEqual($captured_emails[0]['body'], $foo_autoreply, t('Auto-reply e-mail body is correct for category "foo".'), t('Contact'));
+    $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($foo_autoreply), t('Auto-reply e-mail body is correct for category "foo".'), t('Contact'));
 
     // Test the auto-reply for category 'bar'.
     $email = $this->randomName(32) . '@example.com';
@@ -183,7 +183,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     // Auto-reply for category 'bar' should result in one auto-reply e-mail to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'bar@example.com'));
     $this->assertEqual(count($captured_emails), 1, t('Auto-reply e-mail was sent to the sender for category "bar".'), t('Contact'));
-    $this->assertEqual($captured_emails[0]['body'], $bar_autoreply, t('Auto-reply e-mail body is correct for category "bar".'), t('Contact'));
+    $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($bar_autoreply), t('Auto-reply e-mail body is correct for category "bar".'), t('Contact'));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomName(32) . '@example.com';
