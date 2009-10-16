@@ -88,12 +88,12 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
     );
     $form[$key]['configure'] = array(
       '#markup' => l(t('configure'),
-      'admin/structure/block/configure/' . $block['module'] . '/' . $block['delta']),
+      'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure'),
     );
     if ($block['module'] == 'block') {
       $form[$key]['delete'] = array(
         '#markup' => l(t('delete'),
-        'admin/structure/block/delete/' . $block['delta']),
+        'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/delete'),
       );
     }
   }
@@ -174,20 +174,15 @@ function _block_compare($a, $b) {
 /**
  * Menu callback; displays the block configuration form.
  */
-function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) {
+function block_admin_configure($form, &$form_state, $block) {
   $form['module'] = array(
     '#type' => 'value',
-    '#value' => $module,
+    '#value' => $block->module,
   );
   $form['delta'] = array(
     '#type' => 'value',
-    '#value' => $delta,
+    '#value' => $block->delta,
   );
-
-  $edit = db_query("SELECT pages, visibility, custom, title FROM {block} WHERE module = :module AND delta = :delta", array(
-    ':module' => $module,
-    ':delta' => $delta,
-  ))->fetchAssoc();
 
   $form['block_settings'] = array(
     '#type' => 'fieldset',
@@ -198,8 +193,8 @@ function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) 
     '#type' => 'textfield',
     '#title' => t('Block title'),
     '#maxlength' => 64,
-    '#description' => $module == 'block' ? t('The title of the block as shown to the user.') : t('Override the default title for the block. Use <em>&lt;none&gt;</em> to display no title, or leave blank to use the default block title.'),
-    '#default_value' => $edit['title'],
+    '#description' => $block->module == 'block' ? t('The title of the block as shown to the user.') : t('Override the default title for the block. Use <em>&lt;none&gt;</em> to display no title, or leave blank to use the default block title.'),
+    '#default_value' => isset($block->title) ? $block->title : '',
     '#weight' => -18,
   );
 
@@ -220,8 +215,8 @@ function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) 
     // Only display enabled themes
     if ($theme->status) {
       $region = db_query("SELECT region FROM {block} WHERE module = :module AND delta = :delta AND theme = :theme", array(
-        ':module' => $module,
-        ':delta' => $delta,
+        ':module' => $block->module,
+        ':delta' => $block->delta,
         ':theme' => $key,
       ))->fetchField();
   
@@ -237,16 +232,16 @@ function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) 
   }
 
   // Module-specific block configurations.
-  if ($settings = module_invoke($module, 'block_configure', $delta)) {
+  if ($settings = module_invoke($block->module, 'block_configure', $block->delta)) {
     foreach ($settings as $k => $v) {
       $form['block_settings'][$k] = $v;
     }
   }
 
   // Get the block subject for the page title.
-  $info = module_invoke($module, 'block_info');
-  if (isset($info[$delta])) {
-    drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])), PASS_THROUGH);
+  $info = module_invoke($block->module, 'block_info');
+  if (isset($info[$block->delta])) {
+    drupal_set_title(t("'%name' block", array('%name' => $info[$block->delta]['info'])), PASS_THROUGH);
   }
 
   $form['page_vis_settings'] = array(
@@ -257,10 +252,13 @@ function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) 
   );
 
   $access = user_access('use PHP for settings');
-  if ($edit['visibility'] == 2 && !$access) {
+  if (isset($block->visibility) && $block->visibility == 2 && !$access) {
     $form['page_vis_settings'] = array();
     $form['page_vis_settings']['visibility'] = array('#type' => 'value', '#value' => 2);
-    $form['page_vis_settings']['pages'] = array('#type' => 'value', '#value' => $edit['pages']);
+    $form['page_vis_settings']['pages'] = array(
+      '#type' => 'value',
+      '#value' => isset($block->pages) ? $block->pages : '',
+    );
   }
   else {
     $options = array(t('Every page except those specified below.'), t('Only the pages specified below.'));
@@ -274,20 +272,20 @@ function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) 
       '#type' => 'radios',
       '#title' => t('Show block on specific pages'),
       '#options' => $options,
-      '#default_value' => $edit['visibility'],
+      '#default_value' => isset($block->visibility) ? $block->visibility : '',
     );
     $form['page_vis_settings']['pages'] = array(
       '#type' => 'textarea',
       '#title' => t('Pages'),
-      '#default_value' => $edit['pages'],
+      '#default_value' => isset($block->pages) ? $block->pages : '',
       '#description' => $description,
     );
   }
 
   // Role-based visibility settings.
   $default_role_options = db_query("SELECT rid FROM {block_role} WHERE module = :module AND delta = :delta", array(
-    ':module' => $module,
-    ':delta' => $delta,
+    ':module' => $block->module,
+    ':delta' => $block->delta,
   ))->fetchCol();
   $role_options = db_query('SELECT rid, name FROM {role} ORDER BY name')->fetchAllKeyed();
   $form['role_vis_settings'] = array(
@@ -306,8 +304,8 @@ function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) 
 
   // Content type specific configuration.
   $default_type_options = db_query("SELECT type FROM {block_node_type} WHERE module = :module AND delta = :delta", array(
-    ':module' => $module,
-    ':delta' => $delta,
+    ':module' => $block->module,
+    ':delta' => $block->delta,
   ))->fetchCol();
   $form['content_type_vis_settings'] = array(
     '#type' => 'fieldset',
@@ -339,7 +337,7 @@ function block_admin_configure($form, &$form_state, $module = NULL, $delta = 0) 
       t('Hide this block by default but let individual users show it.')
     ),
     '#description' => t('Allow individual users to customize the visibility of this block in their account settings.'),
-    '#default_value' => $edit['custom'],
+    '#default_value' => isset($block->custom) ? $block->custom : '',
   );
 
   $form['submit'] = array(
@@ -426,7 +424,10 @@ function block_admin_configure_submit($form, &$form_state) {
  * Menu callback: display the custom block addition form.
  */
 function block_add_block_form($form, &$form_state) {
-  return block_admin_configure($form, $form_state, 'block', NULL);
+  $block = new stdClass;
+  $block->module = 'block';
+  $block->delta = NULL;
+  return block_admin_configure($form, $form_state, $block);
 }
 
 function block_add_block_form_validate($form, &$form_state) {
@@ -508,10 +509,10 @@ function block_add_block_form_submit($form, &$form_state) {
 /**
  * Menu callback; confirm deletion of custom blocks.
  */
-function block_custom_block_delete($form, &$form_state, $bid = 0) {
-  $custom_block = block_custom_block_get($bid);
+function block_custom_block_delete($form, &$form_state, $block) {
+  $custom_block = block_custom_block_get($block->delta);
   $form['info'] = array('#type' => 'hidden', '#value' => $custom_block['info'] ? $custom_block['info'] : $custom_block['title']);
-  $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
+  $form['bid'] = array('#type' => 'hidden', '#value' => $block->delta);
 
   return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $custom_block['info'])), 'admin/structure/block', '', t('Delete'), t('Cancel'));
 }

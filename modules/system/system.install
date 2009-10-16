@@ -2223,7 +2223,7 @@ function system_update_7021() {
         'cache' => -1,
       ));
     }
-    drupal_set_message('The contact form information setting was migrated to <a href="' . url('admin/structure/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the site-wide contact page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
+    drupal_set_message('The contact form information setting was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the site-wide contact page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
   }
   $insert->execute();
 
@@ -2246,7 +2246,7 @@ function system_update_7021() {
         'cache' => -1,
       ));
     }
-    drupal_set_message('The user registration guidelines were migrated to <a href="' . url('admin/structure/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the user registration page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
+    drupal_set_message('The user registration guidelines were migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the user registration page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
     $insert->execute();
   }
 
@@ -2269,7 +2269,7 @@ function system_update_7021() {
         'cache' => -1,
       ));
     }
-    drupal_set_message('The site mission was migrated to <a href="' . url('admin/structure/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the front page in the highlighted content region. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a highlighted content region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
+    drupal_set_message('The site mission was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the front page in the highlighted content region. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a highlighted content region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
     $insert->execute();
     // Migrate mission to RSS site description.
     variable_set('feed_description', $mission);
@@ -2295,7 +2295,7 @@ function system_update_7021() {
         'cache' => -1,
       ));
     }
-    drupal_set_message('The footer message was migrated to <a href="' . url('admin/structure/block/configure/block/' . $bid) . '">a custom block</a> and set up to appear in the footer. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a footer region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
+    drupal_set_message('The footer message was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to appear in the footer. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a footer region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
     $insert->execute();
   }
 

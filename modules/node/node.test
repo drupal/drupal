@@ -490,7 +490,7 @@ class NodeBlockTestCase extends DrupalWebTestCase {
 
   function testSearchFormBlock() {
     // Set block title to confirm that the interface is availble.
-    $this->drupalPost('admin/structure/block/configure/node/syndicate', array('title' => $this->randomName(8)), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/node/syndicate/configure', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
     // Set the block to a region to confirm block is availble.

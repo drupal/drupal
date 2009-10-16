@@ -95,18 +95,20 @@ function block_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
   );
-  $items['admin/structure/block/configure'] = array(
+  $items['admin/structure/block/manage/%block/%/configure'] = array(
     'title' => 'Configure block',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_admin_configure'),
+    'page arguments' => array('block_admin_configure', 4),
+    'load arguments' => array(5),
     'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
   );
-  $items['admin/structure/block/delete'] = array(
+  $items['admin/structure/block/manage/%block/%/delete'] = array(
     'title' => 'Delete block',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_custom_block_delete'),
+    'page arguments' => array('block_custom_block_delete', 4),
+    'load arguments' => array(5),
     'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
@@ -584,6 +586,36 @@ function block_list($region) {
   $blocks[$region] = _block_render_blocks($blocks[$region]);
 
   return $blocks[$region];
+}
+
+/**
+ * Load a block object from the database.
+ *
+ * @param $module
+ *   Name of the module that implements the block to load.
+ * @param $delta
+ *   Unique ID of the block within the context of $module.
+ *
+ * @return
+ *   A block object.
+ */
+function block_load($module, $delta) {
+  $block = db_query('SELECT * FROM {block} WHERE module = :module AND delta = :delta',
+    array(
+      ':module' => $module,
+      ':delta' => $delta
+    ))
+    ->fetchObject();
+
+  // If the block does not exist in the database yet return a stub block
+  // object.
+  if (!$block) {
+    $block = new stdClass;
+    $block->module = $module;
+    $block->delta = $delta;
+  }
+
+  return $block;
 }
 
 /**

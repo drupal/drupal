@@ -972,7 +972,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
    */
   function testPoweredByBlock() {
     // Set block title and some settings to confirm that the interface is availble.
-    $this->drupalPost('admin/structure/block/configure/system/powered-by', array('title' => $this->randomName(8), 'color' => 'powered-black', 'size' => '135x42'), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/system/powered-by/configure', array('title' => $this->randomName(8), 'color' => 'powered-black', 'size' => '135x42'), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
     // Set the powered-by block to the footer region.
@@ -997,7 +997,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['system_powered-by[region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->drupalPost('admin/structure/block/configure/system/powered-by', array('title' => '', 'color' => 'powered-blue', 'size' => '80x15'), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/system/powered-by/configure', array('title' => '', 'color' => 'powered-blue', 'size' => '80x15'), t('Save block'));
   }
 
 }

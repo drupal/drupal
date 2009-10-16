@@ -58,10 +58,14 @@ class BlockTestCase extends DrupalWebTestCase {
       $this->moveBlockToRegion($custom_block, $region);
     }
 
-    // Delete the created custom block & verify that it's been deleted and no longer appearing on the page.
+    // Verify presence of configure and delete links for custom block.
     $this->drupalGet('admin/structure/block');
+    $this->assertRaw(l(t('configure'), 'admin/structure/block/manage/block/' . $bid . '/configure'), t('Custom block configure link found.'));
+    $this->assertRaw(l(t('delete'), 'admin/structure/block/manage/block/' . $bid . '/delete'), t('Custom block delete link found.'));
+
+    // Delete the created custom block & verify that it's been deleted and no longer appearing on the page.
     $this->clickLink(t('delete'));
-    $this->drupalPost('admin/structure/block/delete/' . $bid, array(), t('Delete'));
+    $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/delete', array(), t('Delete'));
     $this->assertRaw(t('The block %title has been removed.', array('%title' => $custom_block['info'])), t('Custom block successfully deleted.'));
     $this->assertNoText(t($custom_block['title']), t('Custom block no longer appears on page.'));
   }
@@ -92,9 +96,9 @@ class BlockTestCase extends DrupalWebTestCase {
     // but can still submit the form without errors.
     $block_admin = $this->drupalCreateUser(array('administer blocks'));
     $this->drupalLogin($block_admin);
-    $this->drupalGet('admin/structure/block/configure/block/' . $bid);
+    $this->drupalGet('admin/structure/block/manage/block/' . $bid . '/configure');
     $this->assertNoText(t('Block body'));
-    $this->drupalPost('admin/structure/block/configure/block/' . $bid, array(), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/configure', array(), t('Save block'));
     $this->assertNoText(t('Please ensure that each block description is unique.'));
 
     // Confirm that the custom block is still being displayed using configured text format.
@@ -128,7 +132,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['pages'] = 'user*';
     $edit['roles[2]'] = TRUE;
-    $this->drupalPost('admin/structure/block/configure/' . $block['module'] . '/' . $block['delta'], $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', $edit, t('Save block'));
 
     // Move block to the first sidebar.
     $this->moveBlockToRegion($block, $this->regions[1]);
@@ -156,7 +160,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $block['title'] = $this->randomName(8);
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalPost('admin/structure/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => $block['title']), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', array('title' => $block['title']), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
     $bid = db_query("SELECT bid FROM {block} WHERE module = :module AND delta = :delta", array(
       ':module' => $block['module'],
@@ -190,7 +194,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to first sidebar region.'));
 
-    $this->drupalPost('admin/structure/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => 'Navigation'), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', array('title' => 'Navigation'), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
   }
 
