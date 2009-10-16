@@ -184,7 +184,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'edit-url':
-          $replacements[$original] = url('comment/edit/' . $comment->cid, array('absolute' => TRUE));
+          $replacements[$original] = url('comment/' . $comment->cid . '/edit', array('absolute' => TRUE));
           break;
 
         // Default values for the chained tokens handled below.

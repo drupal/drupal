@@ -166,20 +166,44 @@ function comment_menu() {
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['comment/delete'] = array(
-    'title' => 'Delete comment',
-    'page callback' => 'comment_delete_page',
-    'access arguments' => array('administer comments'),
+  $items['comment/%comment'] = array(
+    'title' => 'Comment permalink',
+    'page callback' => 'comment_permalink',
+    'page arguments' => array(1),
+    'access arguments' => array('access comments'),
     'type' => MENU_CALLBACK,
-    'file' => 'comment.admin.inc',
   );
-  $items['comment/edit/%comment'] = array(
-    'title' => 'Edit comment',
+  $items['comment/%comment/view'] = array(
+    'title' => 'View comment',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['comment/%comment/edit'] = array(
+    'title' => 'Edit',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('comment_form', 2),
+    'page arguments' => array('comment_form', 1),
     'access callback' => 'comment_access',
-    'access arguments' => array('edit', 2),
-    'type' => MENU_CALLBACK,
+    'access arguments' => array('edit', 1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
+  );
+  $items['comment/%comment/approve'] = array(
+    'title' => 'Approve',
+    'page callback' => 'comment_approve',
+    'page arguments' => array(1),
+    'access arguments' => array('administer comments'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'comment.pages.inc',
+    'weight' => 1,
+  );
+  $items['comment/%comment/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('comment_confirm_delete', 1),
+    'access arguments' => array('administer comments'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'comment.admin.inc',
+    'weight' => 2,
   );
   $items['comment/reply/%node'] = array(
     'title' => 'Add new comment',
@@ -189,21 +213,6 @@ function comment_menu() {
     'access arguments' => array('view', 2),
     'type' => MENU_CALLBACK,
     'file' => 'comment.pages.inc',
-  );
-  $items['comment/approve'] = array(
-    'title' => 'Approve a comment',
-    'page callback' => 'comment_approve',
-    'page arguments' => array(2),
-    'access arguments' => array('administer comments'),
-    'type' => MENU_CALLBACK,
-    'file' => 'comment.pages.inc',
-  );
-  $items['comment/%comment'] = array(
-    'title' => 'Comment permalink',
-    'page callback' => 'comment_permalink',
-    'page arguments' => array(1),
-    'access arguments' => array('access comments'),
-    'type' => MENU_CALLBACK,
   );
 
   return $items;
@@ -870,12 +879,12 @@ function comment_links($comment, $node) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment_delete'] = array(
         'title' => t('delete'),
-        'href' => "comment/delete/$comment->cid",
+        'href' => "comment/$comment->cid/delete",
         'html' => TRUE,
       );
       $links['comment_edit'] = array(
         'title' => t('edit'),
-        'href' => "comment/edit/$comment->cid",
+        'href' => "comment/$comment->cid/edit",
         'html' => TRUE,
       );
       $links['comment_reply'] = array(
@@ -886,7 +895,7 @@ function comment_links($comment, $node) {
       if ($comment->status == COMMENT_NOT_PUBLISHED) {
         $links['comment_approve'] = array(
           'title' => t('approve'),
-          'href' => "comment/approve/$comment->cid",
+          'href' => "comment/$comment->cid/approve",
           'html' => TRUE,
         );
       }
@@ -895,7 +904,7 @@ function comment_links($comment, $node) {
       if (comment_access('edit', $comment)) {
         $links['comment_edit'] = array(
           'title' => t('edit'),
-          'href' => "comment/edit/$comment->cid",
+          'href' => "comment/$comment->cid/edit",
           'html' => TRUE,
         );
       }

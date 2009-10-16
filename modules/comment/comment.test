@@ -111,7 +111,7 @@ class CommentHelperCase extends DrupalWebTestCase {
    *   Comment to delete.
    */
   function deleteComment($comment) {
-    $this->drupalPost('comment/delete/' . $comment->id, array(), t('Delete'));
+    $this->drupalPost('comment/' . $comment->id . '/delete', array(), t('Delete'));
     $this->assertText(t('The comment and all its replies have been deleted.'), t('Comment deleted.'));
   }
 
@@ -320,7 +320,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.01/', $reply_loaded->thread, t('Thread of second reply grows correctly.'));
 
     // Edit reply.
-    $this->drupalGet('comment/edit/' . $reply->id);
+    $this->drupalGet('comment/' . $reply->id . '/edit');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     $this->assertTrue($this->commentExists($reply, TRUE), t('Modified reply found.'));
 
@@ -444,7 +444,7 @@ class CommentPreviewTest extends CommentHelperCase {
     $edit['date'] = '2008-03-02 17:23 +0300';
     $expected_date = format_date(strtotime($edit['date']));
     $comment = $this->postComment($this->node, $edit['subject'], $edit['comment'], TRUE);
-    $this->drupalPost('comment/edit/' . $comment->id, $edit, t('Preview'));
+    $this->drupalPost('comment/' . $comment->id . '/edit', $edit, t('Preview'));
 
     // Check that the preview is displaying the subject, comment, author and date correctly.
     $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
@@ -494,7 +494,7 @@ class CommentAnonymous extends CommentHelperCase {
     $this->setCommentAnonymous('1');
 
     // Attempt to edit anonymous comment.
-    $this->drupalGet('comment/edit/' . $anonymous_comment1->id);
+    $this->drupalGet('comment/' . $anonymous_comment1->id . '/edit');
     $edited_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($edited_comment, FALSE), t('Modified reply found.'));
     $this->drupalLogout();
