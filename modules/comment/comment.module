@@ -1289,6 +1289,7 @@ function comment_save($comment) {
         'name' => $comment->name,
         'mail' => $comment->mail,
         'homepage' => $comment->homepage,
+        'language' => $comment->language,
       ))
       ->condition('cid', $comment->cid)
       ->execute();
@@ -1368,6 +1369,7 @@ function comment_save($comment) {
         'name' => $comment->name,
         'mail' => $comment->mail,
         'homepage' => $comment->homepage,
+        'language' => $comment->language,
       ))
       ->execute();
 
@@ -1641,7 +1643,7 @@ function comment_get_display_page($cid, $node_type) {
  * @see comment_form_submit()
  */
 function comment_form($form, &$form_state, $comment) {
-  global $user;
+  global $user, $language;
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $node = node_load($comment->nid);
@@ -1854,6 +1856,10 @@ function comment_form($form, &$form_state, $comment) {
   $form['nid'] = array(
     '#type' => 'value',
     '#value' => $comment->nid,
+  );
+  $form['language'] = array(
+    '#type' => 'value',
+    '#value' => isset($comment->language) ? $comment->language : $language->language,
   );
   $form['uid'] = array(
     '#type' => 'value',

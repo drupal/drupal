@@ -159,6 +159,22 @@ function comment_update_7007() {
 }
 
 /**
+ * Add language column to the {comment} table.
+ */
+function comment_update_7008() {
+  // Create a language column.
+  db_add_field('comment', 'language', array(
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  ));
+
+  // Create the index.
+  db_add_index('comment', 'comment_nid_language', array('nid', 'language'));
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
@@ -263,12 +279,20 @@ function comment_schema() {
         'length' => 255,
         'not null' => FALSE,
         'description' => "The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
-      )
+      ),
+      'language' => array(
+        'description' => 'The {languages}.language of this comment.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
     ),
     'indexes' => array(
       'comment_status_pid' => array('pid', 'status'),
       'comment_num_new' => array('nid', 'changed', 'status'),
       'comment_uid' => array('uid'),
+      'comment_nid_language' => array('nid', 'language'),
     ),
     'primary key' => array('cid'),
     'foreign keys' => array(
