@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1064 2009/10/15 11:47:25 dries Exp $
+// $Id: user.module,v 1.1065 2009/10/16 03:01:55 dries Exp $
 
 /**
  * @file
@@ -2910,8 +2910,7 @@ function user_preferred_language($account, $default = NULL) {
  * @param $language
  *  Optional language to use for the notification, overriding account language.
  * @return
- *  The return value from drupal_mail_sending_system()->mail(), if ends up
- *  being called.
+ *  The return value from drupal_mail_system()->mail(), if ends up being called.
  */
 function _user_mail_notify($op, $account, $language = NULL) {
   // By default, we always notify except for canceled and blocked.
