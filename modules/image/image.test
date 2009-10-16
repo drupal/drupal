@@ -134,17 +134,6 @@ class ImageEffectsUnitTest extends ImageToolkitTestCase {
   }
 
   /**
-   * Test the image_effects() and image_effect_definitions() functions.
-   */
-  function testEffects() {
-    $effects = image_effects();
-    $this->assertEqual(count($effects), 1, t("Found core's image effect."));
-
-    $effect_definitions = image_effect_definitions();
-    $this->assertEqual(count($effect_definitions), 6, t("Found core's image effects."));
-  }
-
-  /**
    * Test the image_resize_effect() function.
    */
   function testResizeEffect() {
@@ -428,4 +417,65 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
     $this->assertFalse(image_style_load($style_name), t('Image style %style successfully deleted.', array('%style' => $style['name'])));
 
   }
+
+  /**
+   * Test to override, edit, then revert a style.
+   */
+  function testDefaultStyle() {
+    // Setup a style to be created and effects to add to it.
+    $style_name = 'thumbnail';
+    $edit_path = 'admin/config/media/image-styles/edit/' . $style_name;
+    $delete_path = 'admin/config/media/image-styles/delete/' . $style_name;
+    $revert_path = 'admin/config/media/image-styles/revert/' . $style_name;
+
+    // Ensure deleting a default is not possible.
+    $this->drupalGet($delete_path);
+    $this->assertText(t('Page not found'), t('Default styles may not be deleted.'));
+
+    // Ensure that editing a default is not possible (without overriding).
+    $this->drupalGet($edit_path);
+    $this->assertNoField('edit-name', t('Default styles may not be renamed.'));
+    $this->assertNoField('edit-submit', t('Default styles may not be edited.'));
+    $this->assertNoField('edit-add', t('Default styles may not have new effects added.'));
+
+    // Create an image to make sure the default works before overriding.
+    drupal_static_reset('image_styles');
+    $style = image_style_load($style_name);
+    $image_path = $this->createSampleImage($style);
+    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
+
+    // Override the default.
+    $this->drupalPost($edit_path, array(), t('Override defaults'));
+    $this->assertRaw(t('The %style style has been overridden, allowing you to change its settings.', array('%style' => $style_name)), t('Default image style may be overridden.'));
+
+    // Add sample effect to the overridden style.
+    $this->drupalPost($edit_path, array('new' => 'image_desaturate'), t('Add'));
+    drupal_static_reset('image_styles');
+    $style = image_style_load($style_name);
+
+    // The style should now have 2 effect, the original scale provided by core
+    // and the desaturate effect we added in the override.
+    $effects = array_values($style['effects']);
+    $this->assertEqual($effects[0]['name'], 'image_scale', t('The default effect still exists in the overridden style.'));
+    $this->assertEqual($effects[1]['name'], 'image_desaturate', t('The added effect exists in the overridden style.'));
+
+    // Check that we are unable to rename an overridden style.
+    $this->drupalGet($edit_path);
+    $this->assertNoField('edit-name', t('Overridden styles may not be renamed.'));
+
+    // Create an image to ensure the override works properly.
+    $image_path = $this->createSampleImage($style);
+    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
+
+    // Revert the image style.
+    $this->drupalPost($revert_path, array(), t('Revert'));
+    drupal_static_reset('image_styles');
+    $style = image_style_load($style_name);
+
+    // The style should now have the single effect for scale.
+    $effects = array_values($style['effects']);
+    $this->assertEqual($effects[0]['name'], 'image_scale', t('The default effect still exists in the reverted style.'));
+    $this->assertFalse(array_key_exists(1, $effects), t('The added effect has been removed in the reverted style.'));
+  }
+
 }

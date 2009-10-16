@@ -6,6 +6,31 @@
  * Exposes global functionality for creating image styles.
  */
 
+/**
+ * Image style constant for user presets in the database.
+ */
+define('IMAGE_STORAGE_NORMAL', 1);
+
+/**
+ * Image style constant for user presets that override module-defined presets.
+ */
+define('IMAGE_STORAGE_OVERRIDE', 2);
+
+/**
+ * Image style constant for module-defined presets in code.
+ */
+define('IMAGE_STORAGE_DEFAULT', 4);
+
+/**
+ * Image style constant to represent an editable preset.
+ */
+define('IMAGE_STORAGE_EDITABLE', IMAGE_STORAGE_NORMAL | IMAGE_STORAGE_OVERRIDE);
+
+/**
+ * Image style constant to represent any module-based preset.
+ */
+define('IMAGE_STORAGE_MODULE', IMAGE_STORAGE_OVERRIDE | IMAGE_STORAGE_DEFAULT);
+
 // Load all Field module hooks for Image.
 require_once DRUPAL_ROOT . '/modules/image/image.field.inc';
 
@@ -31,7 +56,7 @@ function image_help($path, $arg) {
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
     case 'admin/config/media/image-styles/edit/%/add/%':
     case 'admin/config/media/image-styles/edit/%/effects/%':
-      $effect = ($arg[5] == 'add') ? image_effect_definition_load($arg[6]) : image_effect_load($arg[6]);
+      $effect = ($arg[5] == 'add') ? image_effect_definition_load($arg[6]) : image_effect_load($arg[6], $arg[4]);
       return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
   }
 }
@@ -87,8 +112,19 @@ function image_menu() {
   $items['admin/config/media/image-styles/delete/%image_style'] = array(
     'title' => 'Delete style',
     'description' => 'Delete an image style.',
+    'load arguments' => array(NULL, (string) IMAGE_STORAGE_NORMAL),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_style_delete_form', 5, TRUE),
+    'page arguments' => array('image_style_delete_form', 5),
+    'access arguments' => array('administer image styles'),
+    'type' => MENU_CALLBACK,
+    'file' => 'image.admin.inc',
+  );
+  $items['admin/config/media/image-styles/revert/%image_style'] = array(
+    'title' => 'Revert style',
+    'description' => 'Revert an image style.',
+    'load arguments' => array(NULL, (string) IMAGE_STORAGE_OVERRIDE),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('image_style_revert_form', 5),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
     'file' => 'image.admin.inc',
@@ -96,6 +132,7 @@ function image_menu() {
   $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect'] = array(
     'title' => 'Edit image effect',
     'description' => 'Edit an exiting effect within a style.',
+    'load arguments' => array(5, (string) IMAGE_STORAGE_EDITABLE),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_effect_form', 5, 7),
     'access arguments' => array('administer image styles'),
@@ -105,6 +142,7 @@ function image_menu() {
   $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect/delete'] = array(
     'title' => 'Delete image effect',
     'description' => 'Delete an exiting effect from a style.',
+    'load arguments' => array(5, (string) IMAGE_STORAGE_EDITABLE),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_effect_delete_form', 5, 7),
     'access arguments' => array('administer image styles'),
@@ -114,6 +152,7 @@ function image_menu() {
   $items['admin/config/media/image-styles/edit/%image_style/add/%image_effect_definition'] = array(
     'title' => 'Add image effect',
     'description' => 'Add a new effect to a style.',
+    'load arguments' => array(5),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_effect_form', 5, 7),
     'access arguments' => array('administer image styles'),
@@ -278,6 +317,45 @@ function image_file_references($file) {
 }
 
 /**
+ * Implement hook_image_default_styles().
+ */
+function image_image_default_styles() {
+  $styles = array();
+
+  $styles['thumbnail'] = array(
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array('width' => 100, 'height' => 100, 'upscale' => 1),
+        'weight' => 0,
+      ),
+    )
+  );
+
+  $styles['medium'] = array(
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array('width' => 220, 'height' => 220, 'upscale' => 1),
+        'weight' => 0,
+      ),
+    )
+  );
+
+  $styles['large'] = array(
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array('width' => 640, 'height' => 640, 'upscale' => 1),
+        'weight' => 0,
+      ),
+    )
+  );
+
+  return $styles;
+}
+
+/**
  * Clear cached versions of a specific file in all styles.
  *
  * @param $path
@@ -310,15 +388,44 @@ function image_styles() {
     }
     else {
       $styles = array();
-      $result = db_select('image_styles', NULL, array('fetch' => PDO::FETCH_ASSOC))
-        ->fields('image_styles')
-        ->orderBy('name')
-        ->execute();
-      foreach ($result as $style) {
-        $styles[$style['name']] = $style;
-        $styles[$style['name']]['effects'] = image_style_effects($style);
+
+      // Select the module-defined styles.
+      foreach (module_implements('image_default_styles') as $module) {
+        $module_styles = module_invoke($module, 'image_default_styles');
+        foreach ($module_styles as $style_name => $style) {
+          $style['name'] = $style_name;
+          $style['module'] = $module;
+          $style['storage'] = IMAGE_STORAGE_DEFAULT;
+          foreach ($style['effects'] as $ieid => $effect) {
+            $definition = image_effect_definition_load($effect['name']);
+            $effect = array_merge($definition, $effect);
+            $effect['ieid'] = $ieid;
+            $style['effects'][$ieid] = $effect;
+          }
+          $styles[$style_name] = $style;
+        }
       }
 
+      // Select all the user-defined styles.
+      $user_styles = db_select('image_styles', NULL, array('fetch' => PDO::FETCH_ASSOC))
+        ->fields('image_styles')
+        ->orderBy('name')
+        ->execute()
+        ->fetchAllAssoc('name', PDO::FETCH_ASSOC);
+
+      // Allow the user styles to override the module styles.
+      foreach ($user_styles as $style_name => $style) {
+        $style['module'] = NULL;
+        $style['storage'] = IMAGE_STORAGE_NORMAL;
+        $style['effects'] = image_style_effects($style);
+        if (isset($styles[$style_name]['module'])) {
+          $style['module'] = $styles[$style_name]['module'];
+          $style['storage'] = IMAGE_STORAGE_OVERRIDE;
+        }
+        $styles[$style_name] = $style;
+      }
+
+      drupal_alter('image_styles', $styles);
       cache_set('image_styles', $styles);
     }
   }
@@ -333,6 +440,9 @@ function image_styles() {
  *   The name of the style.
  * @param $isid
  *   Optional. The numeric id of a style if the name is not known.
+ * @param $include
+ *   If set, this loader will restrict to a specific type of image style, may be
+ *   one of the defined Image style storage constants.
  * @return
  *   An image style array containing the following keys:
  *   - "isid": The unique image style ID.
@@ -341,21 +451,27 @@ function image_styles() {
  *   If the image style name or ID is not valid, an empty array is returned.
  * @see image_effect_load()
  */
-function image_style_load($name = NULL, $isid = NULL) {
+function image_style_load($name = NULL, $isid = NULL, $include = NULL) {
   $styles = image_styles();
 
   // If retrieving by name.
   if (isset($name) && isset($styles[$name])) {
-    return $styles[$name];
+    $style = $styles[$name];
   }
 
   // If retrieving by image style id.
-  if (isset($isid)) {
-    foreach ($styles as $name => $style) {
-      if ($style['isid'] == $isid) {
-        return $style;
+  if (!isset($name) && isset($isid)) {
+    foreach ($styles as $name => $database_style) {
+      if (isset($database_style['isid']) && $database_style['isid'] == $isid) {
+        break;
       }
     }
+  }
+
+  // Restrict to the specific type of flag. This bitwise operation basically
+  // states "if the storage is X, then allow".
+  if (isset($style) && (!isset($include) || ($style['storage'] & (int) $include))) {
+    return $style;
   }
 
   // Otherwise the style was not found.
@@ -659,6 +775,44 @@ function image_style_path($style_name, $uri) {
 }
 
 /**
+ * Save a default image style to the database.
+ *
+ * @param style
+ *   An image style array provided by a module.
+ * @return
+ *   An image style array. The returned style array will include the new 'isid'
+ *   assigned to the style.
+ */
+function image_default_style_save($style) {
+  $style = image_style_save($style);
+  $effects = array();
+  foreach ($style['effects'] as $effect) {
+    $effect['isid'] = $style['isid'];
+    image_effect_save($effect);
+    $effects[$effect['ieid']] = $effect;
+  }
+  $style['effects'] = $effects;
+  return $style;
+}
+
+/**
+ * Revert the changes made by users to a default image style.
+ *
+ * @param style
+ *   An image style array.
+ * @return
+ *   Boolean TRUE if the operation succeeded.
+ */
+function image_default_style_revert($style) {
+  image_style_flush($style);
+
+  db_delete('image_effects')->condition('isid', $style['isid'])->execute();
+  db_delete('image_styles')->condition('isid', $style['isid'])->execute();
+
+  return TRUE;
+}
+
+/**
  * Pull in image effects exposed by modules implementing hook_image_effect_info().
  *
  * @return
@@ -704,6 +858,8 @@ function image_effect_definitions() {
  *
  * @param $effect
  *   The name of the effect definition to load.
+ * @param $style
+ *   An image style array to which this effect will be added.
  * @return
  *   An array containing the image effect definition with the following keys:
  *   - "effect": The unique name for the effect being performed. Usually prefixed
@@ -711,12 +867,22 @@ function image_effect_definitions() {
  *   - "module": The module providing the effect.
  *   - "help": A description of the effect.
  *   - "function": The name of the function that will execute the effect.
- *   - "form": i'm (optional) The name of a function to configure the effect.
+ *   - "form": (optional) The name of a function to configure the effect.
  *   - "summary": (optional) The name of a theme function that will display a
  *     one-line summary of the effect. Does not include the "theme_" prefix.
  */
-function image_effect_definition_load($effect) {
+function image_effect_definition_load($effect, $style_name = NULL) {
   $definitions = image_effect_definitions();
+
+  // If a style is specified, do not allow loading of default style
+  // effects.
+  if (isset($style_name)) {
+    $style = image_style_load($style_name, NULL);
+    if ($style['storage'] == IMAGE_STORAGE_DEFAULT) {
+      return FALSE;
+    }
+  }
+
   return isset($definitions[$effect]) ? $definitions[$effect] : FALSE;
 }
 
@@ -757,6 +923,11 @@ function image_effects() {
  *
  * @param $ieid
  *   The image effect ID.
+ * @param $style_name
+ *   The image style name.
+ * @param $include
+ *   If set, this loader will restrict to a specific type of image style, may be
+ *   one of the defined Image style storage constants.
  * @return
  *   An image effect array, consisting of the following keys:
  *   - "ieid": The unique image effect ID.
@@ -770,9 +941,11 @@ function image_effects() {
  * @see image_style_load()
  * @see image_effect_definition_load()
  */
-function image_effect_load($ieid) {
-  $effects = image_effects();
-  return isset($effects[$ieid]) ? $effects[$ieid] : FALSE;
+function image_effect_load($ieid, $style_name, $include = NULL) {
+  if (($style = image_style_load($style_name, NULL, $include)) && isset($style['effects'][$ieid])) {
+    return $style['effects'][$ieid];
+  }
+  return FALSE;
 }
 
 /**
