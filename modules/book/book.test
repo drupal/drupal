@@ -1,5 +1,5 @@
 <?php
-// $Id: book.test,v 1.17 2009/10/11 03:07:17 webchick Exp $
+// $Id: book.test,v 1.18 2009/10/16 23:48:37 webchick Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
@@ -215,7 +215,7 @@ class BookBlockTestCase extends DrupalWebTestCase {
 
   function testBookNavigationBlock() {
     // Set block title to confirm that the interface is availble.
-    $this->drupalPost('admin/structure/block/configure/book/navigation', array('title' => $this->randomName(8)), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/book/navigation/configure', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
     // Set the block to a region to confirm block is availble.

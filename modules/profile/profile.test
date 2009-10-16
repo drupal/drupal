@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.test,v 1.21 2009/10/05 01:18:25 webchick Exp $
+// $Id: profile.test,v 1.22 2009/10/16 23:48:38 webchick Exp $
 
 /**
  * A class for common methods for testing profile fields.
@@ -314,7 +314,7 @@ class ProfileBlockTestCase extends DrupalWebTestCase {
 
   function testAuthorInformationBlock() {
     // Set block title to confirm that the interface is availble.
-    $this->drupalPost('admin/structure/block/configure/profile/author-information', array('title' => $this->randomName(8)), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
     // Set the block to a region to confirm block is availble.
