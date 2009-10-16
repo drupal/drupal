@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.536 2009/10/15 12:27:34 dries Exp $
+// $Id: theme.inc,v 1.537 2009/10/16 08:27:40 webchick Exp $
 
 /**
  * @file
@@ -36,12 +36,6 @@ define('MARK_UPDATED', 2);
 /**
  * @} End of "Content markers".
  */
-
-
-/**
- * An exception to throw when a theme function is requested that does not exist.
- */
-class ThemeHookNotFoundException extends Exception {}
 
 /**
  * Determines if a theme is available to use.
@@ -768,7 +762,7 @@ function theme($hook, $variables = array()) {
   }
 
   if (!isset($hooks[$hook])) {
-    throw new ThemeHookNotFoundException(t('Theme hook "@hook" not found.', array('@hook' => $hook)));
+    watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
   }
 
   $info = $hooks[$hook];
