@@ -1,5 +1,5 @@
 <?php
-// $Id: default.install,v 1.12 2009/10/15 12:44:36 dries Exp $
+// $Id: default.install,v 1.13 2009/10/16 00:52:46 webchick Exp $
 
 /**
  * Implement hook_install().
@@ -172,16 +172,6 @@ function default_install() {
 
   // Don't display date and author information for page nodes by default.
   variable_set('node_submitted_page', FALSE);
-
-  // Create an image style.
-  $style = array('name' => 'thumbnail');
-  $style = image_style_save($style);
-  $effect = array(
-    'isid' => $style['isid'],
-    'name' => 'image_scale_and_crop',
-    'data' => array('width' => '85', 'height' => '85'),
-  );
-  image_effect_save($effect);
 
   // Enable user picture support and set the default to a square thumbnail option.
   variable_set('user_pictures', '1');
