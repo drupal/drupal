@@ -525,7 +525,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
 
     // Create comment.
     module_load_include('test', 'comment');
-    $comment = CommentHelperCase::postComment($node, '', $this->randomName(32), FALSE, TRUE);
+    $comment = CommentHelperCase::postComment($node, $this->randomName(32), '', TRUE);
     $this->assertTrue(comment_load($comment->id), t('Comment found.'));
 
     // Create a node with two revisions, the initial one belonging to the

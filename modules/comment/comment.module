@@ -71,16 +71,6 @@ define('COMMENT_NODE_CLOSED', 1);
 define('COMMENT_NODE_OPEN', 2);
 
 /**
- * Comment preview is optional.
- */
-define('COMMENT_PREVIEW_OPTIONAL', 0);
-
-/**
- * Comment preview is required.
- */
-define('COMMENT_PREVIEW_REQUIRED', 1);
-
-/**
  * Implement hook_help().
  */
 function comment_help($path, $arg) {
@@ -1010,9 +1000,14 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
       '#default_value' => variable_get('comment_form_location_' . $form['#node_type']->type, COMMENT_FORM_BELOW),
     );
     $form['comment']['comment_preview'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Require preview'),
-      '#default_value' => variable_get('comment_preview_' . $form['#node_type']->type, COMMENT_PREVIEW_OPTIONAL),
+      '#type' => 'radios',
+      '#title' => t('Preview comment'),
+      '#default_value' => variable_get('comment_preview_' . $form['#node_type']->type, DRUPAL_OPTIONAL),
+      '#options' => array(
+        DRUPAL_DISABLED => t('Disabled'),
+        DRUPAL_OPTIONAL => t('Optional'),
+        DRUPAL_REQUIRED => t('Required'),
+      ),
     );
   }
 }
@@ -1874,16 +1869,16 @@ function comment_form($form, &$form_state, $comment) {
   // already previewing the submission. However, if there are form errors,
   // we hide the save button no matter what, so that optional form elements
   // (e.g., captchas) can be updated.
-  if (!form_get_errors() && ((variable_get('comment_preview_' . $node->type, COMMENT_PREVIEW_OPTIONAL) == COMMENT_PREVIEW_OPTIONAL) || ($op == t('Preview')) || ($op == t('Save')))) {
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save'),
-      '#weight' => 19,
-    );
-  }
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#access' => variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['comment_preview'])),
+    '#weight' => 19,
+  );
   $form['preview'] = array(
     '#type' => 'submit',
     '#value' => t('Preview'),
+    '#access' => (variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_DISABLED),
     '#weight' => 20,
     '#submit' => array('comment_form_build_preview'),
   );

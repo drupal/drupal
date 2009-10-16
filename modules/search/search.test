@@ -468,7 +468,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
   function testSearchResultsComment() {
     $comment_body = $this->randomName(5);
 
-    variable_set('comment_preview_article', COMMENT_PREVIEW_OPTIONAL);
+    variable_set('comment_preview_article', DRUPAL_OPTIONAL);
     // Enable check_plain() for 'Filtered HTML' text format.
     $edit = array(
       'filters[filter_html_escape][status]' => 1,

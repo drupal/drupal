@@ -160,7 +160,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
       DRUPAL_OPTIONAL => t('Optional'),
       DRUPAL_REQUIRED => t('Required'),
     ),
-    );
+  );
   $form['submission']['help']  = array(
     '#type' => 'textarea',
     '#title' => t('Explanation or submission guidelines'),
