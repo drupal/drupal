@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tokens.inc,v 1.5 2009/10/11 03:07:18 webchick Exp $
+// $Id: comment.tokens.inc,v 1.6 2009/10/16 20:40:05 dries Exp $
 
 /**
  * @file
@@ -184,7 +184,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'edit-url':
-          $replacements[$original] = url('comment/edit/' . $comment->cid, array('absolute' => TRUE));
+          $replacements[$original] = url('comment/' . $comment->cid . '/edit', array('absolute' => TRUE));
           break;
 
         // Default values for the chained tokens handled below.

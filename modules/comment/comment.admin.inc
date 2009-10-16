@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.34 2009/10/10 13:37:07 dries Exp $
+// $Id: comment.admin.inc,v 1.35 2009/10/16 20:40:05 dries Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
       'author' => theme('username', array('account' => $comment)),
       'posted_in' => l($comment->node_title, 'node/' . $comment->nid),
       'changed' => format_date($comment->changed, 'short'),
-      'operations' => l(t('edit'), 'comment/edit/' . $comment->cid, array('query' => $destination)),
+      'operations' => l(t('edit'), 'comment/' . $comment->cid .'/edit', array('query' => $destination)),
     );
   }
 
@@ -203,27 +203,6 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
     drupal_set_message(t('Deleted @count comments.', array('@count' => $count)));
   }
   $form_state['redirect'] = 'admin/content/comment';
-}
-
-/**
- * Menu callback; delete a comment.
- *
- * @param $cid
- *   The comment to be deleted.
- */
-function comment_delete_page($cid = NULL) {
-  $comment = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = :cid', array(':cid' => $cid))->fetch();
-  $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-  $output = '';
-
-  if (is_object($comment) && is_numeric($comment->cid)) {
-    $output = drupal_get_form('comment_confirm_delete', $comment);
-  }
-  else {
-    drupal_set_message(t('The comment no longer exists.'));
-  }
-
-  return $output;
 }
 
 /**
