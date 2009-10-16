@@ -3068,6 +3068,9 @@ function user_register_form($form, &$form_state) {
   $form['#user'] = drupal_anonymous_user();
   $form['#user_category'] = 'register';
 
+  $form['#attached']['library'][] = array('system', 'cookie');
+  $form['#attributes']['class'][] = 'user-info-from-cookie';
+
   // Start with the default user account fields.
   user_account_form($form, $form_state);
 
