@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.41 2009/10/16 19:06:25 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.42 2009/10/17 12:08:21 dries Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function taxonomy_term_page($term) {
       '#suffix' => '</div>',
     );
   }
-  if ($nids = taxonomy_select_nodes($term)) {
+  if ($nids = taxonomy_select_nodes($term->tid, TRUE, variable_get('default_nodes_main', 10))) {
     $nodes = node_load_multiple($nids);
     $build += node_build_multiple($nodes);
     $build['pager'] = array(
@@ -71,7 +71,7 @@ function taxonomy_term_feed($term) {
   // Only display the description if we have a single term, to avoid clutter and confusion.
   // HTML will be removed from feed description, so no need to filter here.
   $channel['description'] = $term->description;
-  $nids = taxonomy_select_nodes(array($term->tid, FALSE));
+  $nids = taxonomy_select_nodes($term->tid, FALSE, variable_get('feed_default_items', 10));
 
   node_feed($nids, $channel);
 }
