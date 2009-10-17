@@ -19,6 +19,9 @@ Drupal 7.0, xxxx-xx-xx (development version)
       improved the flood control API to allow variable time windows and
       identifiers for limiting user access to resources.
 - Usability:
+    * Added contextual links (a.k.a. local tasks) to page elements, such as
+      blocks, nodes, or comments, which allows to perform the most common tasks
+      with a single click only.
     * Improved installer requirements check.
     * Improved support for integration of WYSIWYG editors.
     * Implemented drag-and-drop positioning for input format listings.

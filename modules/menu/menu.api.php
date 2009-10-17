@@ -199,12 +199,11 @@
  *     this alone; the default alphabetical order is usually best.
  *   - "menu_name": Optional. Set this to a custom menu if you don't want your
  *     item to be placed in Navigation.
- *   - "context": (optional) Defines the type of a tab to control its placement
- *     depending on the requested context. By default, all tabs are only
- *     displayed as local tasks when being rendered in a page context. All tabs
- *     that should be accessible as contextual links in page region containers
- *     outside of the parent menu item's primary page context should be
- *     registered using one of the following contexts:
+ *   - "context": (optional) Defines the context a tab may appear in. By
+ *     default, all tabs are only displayed as local tasks when being rendered
+ *     in a page context. All tabs that should be accessible as contextual links
+ *     in page region containers outside of the parent menu item's primary page
+ *     context should be registered using one of the following contexts:
  *     - MENU_CONTEXT_PAGE: (default) The tab is displayed as local task for the
  *       page context only.
  *     - MENU_CONTEXT_INLINE: The tab is displayed as contextual link outside of
@@ -536,6 +535,8 @@ function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  *   'node/123' became 'node/%'.
  *
  * @see menu_contextual_links()
+ * @see hook_menu()
+ * @see system_preprocess()
  */
 function hook_menu_contextual_links_alter(&$links, $router_item, $root_path) {
   // Add a link to all contextual links for nodes.

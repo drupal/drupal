@@ -1782,8 +1782,8 @@ function menu_local_tasks($level = 0) {
  * Retrieve contextual links for a system object based on registered local tasks.
  *
  * This leverages the menu system to retrieve the first layer of registered
- * local tasks for a given system path. All local tasks of the tab type 'task'
- * or 'context' are taken into account.
+ * local tasks for a given system path. All local tasks of the tab type
+ * MENU_CONTEXT_INLINE are taken into account.
  *
  * @see hook_menu()
  *
