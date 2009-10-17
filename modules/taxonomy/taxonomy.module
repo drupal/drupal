@@ -84,17 +84,20 @@ function taxonomy_entity_info() {
  * and will return an empty array if it is not. If using other field storage
  * methods alternatives methods for listing terms will need to be used.
  *
- * @param $term
- *   The term object.
+ * @param $tid
+ *   The term ID.
  * @param $pager
  *   Boolean to indicate whether a pager should be used.
+ * @param $limit
+ *   Integer. The maximum number of nodes to find.
+ *   Set to FALSE for no limit.
  * @order
  *   An array of fields and directions.
  *
  * @return
  *   An array of nids matching the query.
  */
-function taxonomy_select_nodes($term, $pager = TRUE, $order = array('t.sticky' => 'DESC', 't.created' => 'DESC')) {
+function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = array('t.sticky' => 'DESC', 't.created' => 'DESC')) {
   if (!variable_get('taxonomy_maintain_index_table', TRUE)) {
     return array();
   }
@@ -104,15 +107,18 @@ function taxonomy_select_nodes($term, $pager = TRUE, $order = array('t.sticky' =
     $count_query = clone $query;
     $count_query->addExpression('COUNT(t.nid)');
 
-    $query = $query
-      ->extend('PagerDefault')
-      ->limit(variable_get('default_nodes_main', 10));
+    $query = $query->extend('PagerDefault');
+    if ($limit !== FALSE) {
+      $query = $query->limit($limit);
+    }
     $query->setCountQuery($count_query);
   }
   else {
-    $query->range(0, variable_get('feed_default_items', 10));
+    if ($limit !== FALSE) {
+      $query->range(0, $limit);
+    }
   }
-  $query->condition('tid', $term->tid );
+  $query->condition('tid', $tid);
   $query->addField('t', 'nid');
   $query->addField('t', 'tid');
   foreach ($order as $field => $direction) {
