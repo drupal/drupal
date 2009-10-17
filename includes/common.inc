@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1023 2009/10/16 19:20:33 dries Exp $
+// $Id: common.inc,v 1.1024 2009/10/17 05:50:27 webchick Exp $
 
 /**
  * @file
@@ -3292,7 +3292,7 @@ function drupal_clear_css_cache() {
  * @return
  *   The cleaned identifier.
  */
-function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '[' => '-', ']' => '')) {
+function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '/' => '-', '[' => '-', ']' => '')) {
   // By default, we filter using Drupal's coding standards.
   $identifier = strtr($identifier, $filter);
 

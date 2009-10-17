@@ -1,0 +1,38 @@
+/* $Id: contextual_links.css,v 1.1 2009/10/17 05:50:27 webchick Exp $ */
+
+/**
+ * Contextual links regions.
+ */
+.contextual-links-region {
+  outline: none;
+  position: relative;
+}
+.contextual-links-region-active {
+  outline: #000 dashed 1px;
+}
+
+/**
+ * Contextual links.
+ */
+ul.contextual-links {
+  float: right;
+  font-size: 90%;
+  margin: 0;
+  padding: 0;
+}
+ul.contextual-links li {
+  border-left: 1px solid #ccc;
+  display: inline;
+  line-height: 100%;
+  list-style: none;
+  margin: 0 0 0 0.3em;
+  padding: 0 0 0 0.6em;
+}
+ul.contextual-links li.first {
+  border-left: 0;
+  margin: 0;
+  padding: 0;
+}
+ul.contextual-links li a {
+  text-decoration: none;
+}

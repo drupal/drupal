@@ -1,7 +1,11 @@
 <?php
-// $Id: node.tpl.php,v 1.17 2009/10/11 03:07:21 webchick Exp $
+// $Id: node.tpl.php,v 1.18 2009/10/17 05:50:29 webchick Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+
+  <?php if (!$page && $contextual_links): ?>
+    <?php print render($contextual_links); ?>
+  <?php endif; ?>
 
   <?php print $user_picture; ?>
 
