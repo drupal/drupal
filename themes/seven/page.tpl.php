@@ -1,9 +1,10 @@
 <?php
-// $Id: page.tpl.php,v 1.5 2009/10/11 06:05:53 webchick Exp $
+// $Id: page.tpl.php,v 1.6 2009/10/17 01:15:40 webchick Exp $
 ?>
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>
     <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
+    <?php if (isset($add_to_shortcuts)): ?><?php print $add_to_shortcuts; ?><?php endif; ?>
     <?php if ($primary_local_tasks): ?><ul class="tabs primary"><?php print render($primary_local_tasks); ?></ul><?php endif; ?>
   </div>
 
