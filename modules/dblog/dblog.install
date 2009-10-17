@@ -93,11 +93,33 @@ function dblog_schema() {
 }
 
 /**
- * Allow NULL values for links and longer referers.
+ * @defgroup updates-6.x-extra Extra database logging updates for 6.x
+ * @{
+ */
+
+/**
+ * Allow longer referrers.
+ */
+function dblog_update_6000() {
+  db_change_field('watchdog', 'referer', 'referer', array('type' => 'text', 'not null' => FALSE));
+}
+
+/**
+ * @} End of "defgroup updates-6.x-extra"
+ * The next series of updates should start at 7000.
+ */
+
+
+/**
+ * @defgroup updates-6.x-to-7.x database logging updates from 6.x to 7.x
+ * @{
+ */
+
+/**
+ * Allow NULL values for links.
  */
 function dblog_update_7001() {
   db_change_field('watchdog', 'link', 'link', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
-  db_change_field('watchdog', 'referer', 'referer', array('type' => 'text', 'not null' => FALSE));
 }
 
 /**
@@ -113,3 +135,8 @@ function dblog_update_7002() {
 function dblog_update_7003() {
   db_change_field('watchdog', 'type', 'type', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
 }
+
+/**
+ * @} End of "defgroup updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
+ */
