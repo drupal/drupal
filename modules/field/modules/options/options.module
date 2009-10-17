@@ -1,5 +1,5 @@
 <?php
-// $Id: options.module,v 1.12 2009/10/15 12:44:34 dries Exp $
+// $Id: options.module,v 1.13 2009/10/17 01:20:00 dries Exp $
 
 /**
  * @file
@@ -131,13 +131,20 @@ function options_buttons_elements_process($element, &$form_state, $form) {
   $options = options_options($field, $instance);
   $multiple = isset($element['#multiple']) ? $element['#multiple'] : $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
 
-  $value = array();
-  foreach ($element['#value'][$field_key] as $key) {
-    // Multiple (checkboxes) need the default value in the form of an array.
+  // Incoming #value is an array (checkboxes) or integer (radios).
+  $keys = $element['#value'][$field_key];
+  if (!is_array($keys)) {
+    $keys = array($keys);
+  }
+
+  // Multiple (checkboxes) need #default_value to be an array, and
+  // non-multiple (radios) need a single default value. If #value is
+  // empty we loop won't run, so initialize $value to the right type.
+  $value = $multiple ? array() : '';
+  foreach ($keys as $key) {
     if ($multiple) {
-      $value[$key] = 1;
+      $value[] = $key;
     }
-    // Non-multiple (radios) need single default value.
     else {
       $value = $key;
       break;
