@@ -735,3 +735,10 @@ body.overlay #page {
 body.overlay #block-system-main {
   padding: 20px;
 }
+
+/* Shortcut theming */
+div.add-to-shortcuts {
+  float: left;
+  margin-left: 6px;
+  margin-top: 6px;
+}

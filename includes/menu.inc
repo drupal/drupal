@@ -2259,6 +2259,75 @@ function _menu_navigation_links_rebuild($menu) {
 }
 
 /**
+ * Clone an array of menu links.
+ *
+ * @param $links
+ *   An array of menu links to clone.
+ * @param $menu_name
+ *   (optional) The name of a menu that the links will be cloned for. If not
+ *   set, the cloned links will be in the same menu as the original set of
+ *   links that were passed in.
+ * @return
+ *   An array of menu links with the same properties as the passed-in array,
+ *   but with the link identifiers removed so that a new link will be created
+ *   when any of them is passed in to menu_link_save().
+ *
+ * @see menu_link_save()
+ */
+function menu_links_clone($links, $menu_name = NULL) {
+  foreach ($links as &$link) {
+    unset($link['mlid']);
+    unset($link['plid']);
+    if (isset($menu_name)) {
+      $link['menu_name'] = $menu_name;
+    }
+  }
+  return $links;
+}
+
+/**
+ * Returns an array containing all links for a menu.
+ *
+ * @param $menu_name
+ *   The name of the menu whose links should be returned.
+ * @return
+ *   An array of menu links.
+ */
+function menu_load_links($menu_name) {
+  $links = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('ml')
+    ->condition('ml.menu_name', $menu_name)
+    // Order by weight so as to be helpful for menus that are only one level
+    // deep.
+    ->orderBy('weight')
+    ->execute()
+    ->fetchAll();
+
+  foreach ($links as &$link) {
+    $link['options'] = unserialize($link['options']);
+  }
+  return $links;
+}
+
+/**
+ * Deletes all links for a menu.
+ *
+ * @param $menu_name
+ *   The name of the menu whose links will be deleted.
+ */
+function menu_delete_links($menu_name) {
+  $links = menu_load_links($menu_name);
+  foreach ($links as $link) {
+    // To speed up the deletion process, we reset some link properties that
+    // would trigger re-parenting logic in _menu_delete_item() and
+    // _menu_update_parental_status().
+    $link['has_children'] = FALSE;
+    $link['plid'] = 0;
+    _menu_delete_item($link);
+  }
+}
+
+/**
  * Delete one or several menu links.
  *
  * @param $mlid

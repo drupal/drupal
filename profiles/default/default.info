@@ -14,6 +14,7 @@ dependencies[] = path
 dependencies[] = taxonomy
 dependencies[] = dblog
 dependencies[] = search
+dependencies[] = shortcut
 dependencies[] = toolbar
 dependencies[] = field_ui
 dependencies[] = file

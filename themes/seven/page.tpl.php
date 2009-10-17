@@ -4,6 +4,7 @@
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>
     <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
+    <?php if (isset($add_to_shortcuts)): ?><?php print $add_to_shortcuts; ?><?php endif; ?>
     <?php if ($primary_local_tasks): ?><ul class="tabs primary"><?php print render($primary_local_tasks); ?></ul><?php endif; ?>
   </div>
 
