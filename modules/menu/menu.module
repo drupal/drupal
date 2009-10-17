@@ -271,21 +271,13 @@ function menu_save($menu) {
  *
  * @see menu_load()
  *
- * _menu_delete_item() will take care of clearing the page cache. Other modules
+ * menu_delete_links() will take care of clearing the page cache. Other modules
  * should take care of their menu-related data by implementing
  * hook_menu_delete().
  */
 function menu_delete($menu) {
   // Delete all links from the menu.
-  $links = db_query("SELECT * FROM {menu_links} WHERE menu_name = :menu_name", array(':menu_name' => $menu['menu_name']));
-  foreach ($links as $link) {
-    // To speed up the deletion process, we reset some link properties that
-    // would trigger re-parenting logic in _menu_delete_item() and
-    // _menu_update_parental_status().
-    $link['has_children'] = FALSE;
-    $link['plid'] = 0;
-    _menu_delete_item($link);
-  }
+  menu_delete_links($menu['menu_name']);
 
   // Delete the custom menu.
   db_delete('menu_custom')

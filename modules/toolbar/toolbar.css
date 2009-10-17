@@ -4,7 +4,7 @@ body.toolbar {
   padding-top: 30px;
 }
 
-body.toolbar-shortcuts {
+body.toolbar-drawer {
   padding-top: 80px;
 }
 
@@ -118,47 +118,11 @@ div#toolbar div.toolbar-menu ul li a.active {
 }
 
 /**
- * Administration shortcuts.
+ * Collapsed drawer of additional toolbar content.
  */
-div#toolbar div.toolbar-shortcuts {
+div#toolbar div.toolbar-drawer {
   position: relative;
   padding: 0 10px;
-}
-
-div#toolbar div.toolbar-shortcuts ul {
-  padding: 5px 0;
-  height: 40px;
-  line-height: 30px;
-  overflow: hidden;
-  float: left;
-}
-
-div#toolbar div.toolbar-shortcuts ul li a {
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  padding: 5px 10px 5px 5px;
-  margin-right: 5px;
-}
-
-div#toolbar div.toolbar-shortcuts ul li a:focus,
-div#toolbar div.toolbar-shortcuts ul li a:hover,
-div#toolbar div.toolbar-shortcuts ul li a.active:focus {
-  background: #555;
-}
-
-div#toolbar div.toolbar-shortcuts ul li a.active:hover,
-div#toolbar div.toolbar-shortcuts ul li a.active {
-  background: url(toolbar.png) 0 -20px repeat-x;
-}
-
-div#toolbar div.toolbar-shortcuts span.icon {
-  float: left;
-  background: #444;
-  width: 30px;
-  height: 30px;
-  margin-right: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
 }
 
 /**
@@ -168,7 +132,7 @@ div#toolbar div.toolbar-shortcuts span.icon {
  * the behavior of the admin toolbar entirely to static positioning.
  */
 * html body.toolbar,
-* html body.toolbar-shortcuts {
+* html body.toolbar-drawer {
   padding-top: 0;
 }
 

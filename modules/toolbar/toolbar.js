@@ -10,7 +10,7 @@ Drupal.behaviors.admin = {
     // Set the intial state of the toolbar.
     $('#toolbar', context).once('toolbar', Drupal.admin.toolbar.init);
 
-    // Toggling of admin shortcuts visibility.
+    // Toggling toolbar drawer.
     $('#toolbar span.toggle', context).once('toolbar-toggle').click(function() {
       Drupal.admin.toolbar.toggle();
       return false;
@@ -44,9 +44,9 @@ Drupal.admin.toolbar.init = function() {
  * Collapse the admin toolbar.
  */
 Drupal.admin.toolbar.collapse = function() {
-  $('#toolbar div.toolbar-shortcuts').addClass('collapsed');
+  $('#toolbar div.toolbar-drawer').addClass('collapsed');
   $('#toolbar span.toggle').removeClass('toggle-active');
-  $('body').removeClass('toolbar-shortcuts');
+  $('body').removeClass('toolbar-drawer');
   $.cookie(
     'Drupal.admin.toolbar.collapsed', 
     1, 
@@ -58,9 +58,9 @@ Drupal.admin.toolbar.collapse = function() {
  * Expand the admin toolbar.
  */
 Drupal.admin.toolbar.expand = function() {
-  $('#toolbar div.toolbar-shortcuts').removeClass('collapsed');
+  $('#toolbar div.toolbar-drawer').removeClass('collapsed');
   $('#toolbar span.toggle').addClass('toggle-active');
-  $('body').addClass('toolbar-shortcuts');
+  $('body').addClass('toolbar-drawer');
   $.cookie(
     'Drupal.admin.toolbar.collapsed', 
     0, 
@@ -72,7 +72,7 @@ Drupal.admin.toolbar.expand = function() {
  * Toggle the admin toolbar.
  */
 Drupal.admin.toolbar.toggle = function() {
-  if ($('#toolbar div.toolbar-shortcuts').is('.collapsed')) {
+  if ($('#toolbar .toolbar-drawer').is('.collapsed')) {
     Drupal.admin.toolbar.expand();
   }
   else {

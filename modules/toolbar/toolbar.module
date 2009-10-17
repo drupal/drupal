@@ -38,17 +38,18 @@ function toolbar_theme($existing, $type, $theme, $path) {
 function toolbar_page_build(&$page) {
   if (user_access('access toolbar')) {
     $page['page_top']['toolbar'] = toolbar_build();
+    $page['page_top']['toolbar']['toolbar_drawer'] = isset($page['toolbar_drawer']) ? $page['toolbar_drawer'] : array();
   }
 }
 
 /**
- * Implement hook_preprocess_page().
+ * Implement hook_preprocess_html().
  *
  * Add some page classes, so global page theming can adjust to the toolbar.
  */
 function toolbar_preprocess_html(&$vars) {
   if (user_access('access toolbar')) {
-    $vars['classes_array'][] = 'toolbar toolbar-shortcuts';
+    $vars['classes_array'][] = 'toolbar toolbar-drawer';
   }
 }
 
@@ -100,16 +101,6 @@ function toolbar_build() {
     ),
     '#attributes' => array('id' => 'toolbar-user'),
   );
-
-  // Add convenience shortcut links.
-  $shortcuts = menu_tree_all_data('admin_shortcuts');
-  $shortcuts = toolbar_menu_navigation_links($shortcuts);
-  $build['toolbar_shortcuts'] = array(
-    '#theme' => 'links',
-    '#links' => $shortcuts,
-    '#attributes' => array('id' => 'toolbar-shortcuts'),
-  );
-
   return $build;
 }
 

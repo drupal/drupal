@@ -159,7 +159,7 @@ class MenuIncTestCase extends DrupalWebTestCase {
   function testMenuGetNames() {
     // The main-menu is there but has no items by default, so not returned by
     // menu_get_names(). Therefore we cannot check for that.
-    $this->assertEqual(menu_get_names(), array('admin_shortcuts', 'management', 'navigation', 'original', 'user-menu'), t('Expected menu names were returned.'));
+    $this->assertEqual(menu_get_names(), array('management', 'navigation', 'original', 'shortcut-set-1', 'user-menu'), t('Expected menu names were returned.'));
   }
 
   /**

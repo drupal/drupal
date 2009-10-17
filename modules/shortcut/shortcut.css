@@ -1,0 +1,75 @@
+/* $Id$ */
+div#toolbar a#toolbar-customize {
+  float: right;
+}
+
+div#toolbar div.toolbar-shortcuts ul {
+  padding: 5px 0;
+  height: 40px;
+  line-height: 30px;
+  overflow: hidden;
+  float: left;
+  margin-left:5px;
+}
+
+div#toolbar div.toolbar-shortcuts ul li a {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding: 5px 10px 5px 5px;
+  margin-right: 5px;
+}
+
+div#toolbar div.toolbar-shortcuts ul li a:focus,
+div#toolbar div.toolbar-shortcuts ul li a:hover,
+div#toolbar div.toolbar-shortcuts ul li a.active:focus {
+  background: #555;
+}
+
+div#toolbar div.toolbar-shortcuts ul li a.active:hover,
+div#toolbar div.toolbar-shortcuts ul li a.active {
+  background: url(../toolbar/toolbar.png) 0 -20px repeat-x;
+}
+
+div#toolbar div.toolbar-shortcuts span.icon {
+  float: left;
+  background: #444;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+div.add-to-shortcuts a span.icon {
+  display: block;
+  width: 12px;
+  background: url(../toolbar/toolbar.png) no-repeat -50px -60px;
+  height: 12px;
+  float: left;
+  margin-left:8px;
+}
+
+div.add-to-shortcuts a:hover span.icon {
+  background-position: -50px -72px;
+}
+
+div.add-to-shortcuts a span.text {
+  float: left;
+  padding-left:10px;
+  display: none;
+}
+
+div.add-to-shortcuts a:hover span.text {
+  font-size: 10px;
+  line-height: 12px;
+  color: #fff;
+  background-color: #5f605b;
+  display: block;
+  padding-right: 6px;
+  cursor: pointer;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+}
+
