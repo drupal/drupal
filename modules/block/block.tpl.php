@@ -11,6 +11,7 @@
  * - $block->module: Module that generated the block.
  * - $block->delta: An ID for the block, unique within each module.
  * - $block->region: The block region embedding the current block.
+ * - $contextual_links (array): An array of contextual links for the block.
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
  *   preprocess functions. The default values can be one or more of the following:
@@ -36,6 +37,11 @@
  */
 ?>
 <div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+ 
+<?php if ($contextual_links): ?>
+  <?php print render($contextual_links); ?>
+<?php endif; ?>
+ 
 <?php if ($block->subject): ?>
   <h2<?php print $title_attributes; ?>><?php print $block->subject ?></h2>
 <?php endif;?>

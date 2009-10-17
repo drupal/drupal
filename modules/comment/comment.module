@@ -185,6 +185,7 @@ function comment_menu() {
     'access callback' => 'comment_access',
     'access arguments' => array('edit', 1),
     'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => 0,
   );
   $items['comment/%comment/approve'] = array(
@@ -193,6 +194,7 @@ function comment_menu() {
     'page arguments' => array(1),
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_INLINE,
     'file' => 'comment.pages.inc',
     'weight' => 1,
   );
@@ -202,6 +204,7 @@ function comment_menu() {
     'page arguments' => array('comment_confirm_delete', 1),
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'comment.admin.inc',
     'weight' => 2,
   );
@@ -794,6 +797,8 @@ function comment_build($comment, $node, $build_mode = 'full') {
     '#node' => $node,
     '#build_mode' => $build_mode,
   );
+  // Add contextual links for this comment.
+  $build['#contextual_links']['comment'] = menu_contextual_links('comment', array($comment->cid));
 
   $prefix = '';
   $is_threaded = isset($comment->divs) && variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED) == COMMENT_MODE_THREADED;

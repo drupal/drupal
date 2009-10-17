@@ -3292,7 +3292,7 @@ function drupal_clear_css_cache() {
  * @return
  *   The cleaned identifier.
  */
-function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '[' => '-', ']' => '')) {
+function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '/' => '-', '[' => '-', ']' => '')) {
   // By default, we filter using Drupal's coding standards.
   $identifier = strtr($identifier, $filter);
 

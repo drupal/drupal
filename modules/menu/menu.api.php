@@ -199,6 +199,21 @@
  *     this alone; the default alphabetical order is usually best.
  *   - "menu_name": Optional. Set this to a custom menu if you don't want your
  *     item to be placed in Navigation.
+ *   - "context": (optional) Defines the type of a tab to control its placement
+ *     depending on the requested context. By default, all tabs are only
+ *     displayed as local tasks when being rendered in a page context. All tabs
+ *     that should be accessible as contextual links in page region containers
+ *     outside of the parent menu item's primary page context should be
+ *     registered using one of the following contexts:
+ *     - MENU_CONTEXT_PAGE: (default) The tab is displayed as local task for the
+ *       page context only.
+ *     - MENU_CONTEXT_INLINE: The tab is displayed as contextual link outside of
+ *       the primary page context only.
+ *     Contexts can be combined. For example, to display a tab both on a page
+ *     and inline, a menu router item may specify:
+ *     @code
+ *       'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+ *     @endcode
  *   - "tab_parent": For local task menu items, the path of the task's parent
  *     item; defaults to the same path without the last component (e.g., the
  *     default parent for 'admin/people/create' is 'admin/people').
@@ -494,6 +509,47 @@ function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
     // context.
     '#active' => ($router_item['path'] == $root_path),
   );
+}
+
+/**
+ * Alter contextual links before they are rendered.
+ *
+ * This hook is invoked by menu_contextual_links(). The system-determined
+ * contextual links are passed in by reference. Additional links may be added
+ * or existing links can be altered.
+ *
+ * Each contextual link must at least contain:
+ * - title: The localized title of the link.
+ * - href: The system path to link to.
+ * - localized_options: An array of options to pass to url().
+ *
+ * @param $links
+ *   An associative array containing contextual links for the given $root_path,
+ *   as described above. The array keys are used to build CSS class names for
+ *   contextual links and must therefore be unique for each set of contextual
+ *   links.
+ * @param $router_item
+ *   The menu router item belonging to the $root_path being requested.
+ * @param $root_path
+ *   The (parent) path that has been requested to build contextual links for.
+ *   This is a normalized path, which means that an originally passed path of
+ *   'node/123' became 'node/%'.
+ *
+ * @see menu_contextual_links()
+ */
+function hook_menu_contextual_links_alter(&$links, $router_item, $root_path) {
+  // Add a link to all contextual links for nodes.
+  if ($root_path == 'node/%') {
+    $links['foo'] = array(
+      'title' => t('Do fu'),
+      'href' => 'foo/do',
+      'localized_options' => array(
+        'query' => array(
+          'foo' => 'bar',
+        ),
+      ),
+    );
+  }
 }
 
 /**

@@ -1089,7 +1089,7 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     $this->assertText(t('Languages'), t('Language switcher block found.'));
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id="block-locale-language"]');
+    list($language_switcher) = $this->xpath('//div[@id="block-locale-language"]/div[@class="content"]');
     $links = array(
       'active' => array(),
       'inactive' => array(),
@@ -1098,7 +1098,7 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
       'active' => array(),
       'inactive' => array(),
     );
-    foreach ($language_switcher->div->ul->li as $link) {
+    foreach ($language_switcher->ul->li as $link) {
       $classes = explode(" ", (string) $link['class']);
       list($language) = array_intersect($classes, array('en', 'fr'));
       if (in_array('active', $classes)) {

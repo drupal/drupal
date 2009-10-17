@@ -1112,6 +1112,9 @@ function node_build($node, $build_mode = 'full') {
     '#node' => $node,
     '#build_mode' => $build_mode,
   );
+  // Add contextual links for this node.
+  $build['#contextual_links']['node'] = menu_contextual_links('node', array($node->nid));
+
   return $build;
 }
 
@@ -1806,11 +1809,13 @@ function node_menu() {
     'page arguments' => array(1),
     'access callback' => 'node_access',
     'access arguments' => array('view', 1),
-    'type' => MENU_CALLBACK);
+    'type' => MENU_CALLBACK,
+  );
   $items['node/%node/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10);
+    'weight' => -10,
+  );
   $items['node/%node/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'node_page_edit',
@@ -1818,8 +1823,9 @@ function node_menu() {
     'access callback' => 'node_access',
     'access arguments' => array('update', 1),
     'theme callback' => '_node_custom_theme',
-    'weight' => 1,
+    'weight' => 0,
     'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'node.pages.inc',
   );
   $items['node/%node/delete'] = array(
@@ -1829,7 +1835,8 @@ function node_menu() {
     'access callback' => 'node_access',
     'access arguments' => array('delete', 1),
     'weight' => 1,
-    'type' => MENU_CALLBACK,
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_INLINE,
     'file' => 'node.pages.inc',
   );
   $items['node/%node/revisions'] = array(

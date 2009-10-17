@@ -1026,6 +1026,12 @@ function system_schema() {
         'default' => 0,
         'size' => 'small',
       ),
+      'context' => array(
+        'description' => 'Only for local tasks (tabs) - the context of a local task to control its placement.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'tab_parent' => array(
         'description' => 'Only for local tasks (tabs) - the router path of the parent page (which may also be a local task).',
         'type' => 'varchar',
@@ -2755,6 +2761,18 @@ function system_update_7042() {
   // Add indexes back.
   db_add_index('url_alias', 'source_language_pid', array('source', 'language', 'pid'));
   db_add_unique_key('url_alias', 'alias_language_pid', array('alias', 'language', 'pid'));
+}
+
+/**
+ * Add a 'context' field to {menu_router} to control contextual placement of local tasks.
+ */
+function system_update_7043() {
+  db_add_field('menu_router', 'context', array(
+    'description' => 'Only for local tasks (tabs) - the context of a local task to control its placement.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+  ));
 }
 
 /**

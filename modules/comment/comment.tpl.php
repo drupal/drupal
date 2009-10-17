@@ -19,6 +19,7 @@
  * - $status: Comment status. Possible values are:
  *   comment-unpublished, comment-published or comment-preview.
  * - $title: Linked title.
+ * - $contextual_links (array): An array of contextual links for the comment.
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
  *   preprocess functions. The default values can be one or more of the following:
@@ -46,6 +47,10 @@
  */
 ?>
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
+  <?php if ($contextual_links): ?>
+    <?php print render($contextual_links); ?>
+  <?php endif; ?>
+
   <?php print $picture ?>
 
   <?php if ($new): ?>

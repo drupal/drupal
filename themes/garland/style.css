@@ -650,8 +650,8 @@ ul.secondary li.active a {
  */
 .node {
   border-bottom: 1px solid #e9eff3;
-  margin: 0 -26px 1.5em;
-  padding: 1.5em 26px;
+  margin: 0 -16px 1.5em;
+  padding: 1.5em 16px;
 }
 
 ul.links li, ul.inline li {
@@ -806,6 +806,17 @@ tr.even td.menu-disabled {
   cursor: default;
   padding: 2px;
   margin: 0;
+}
+
+/**
+ * Contextual links.
+ */
+.contextual-links-region-active {
+  outline: #027AC6 dashed 1px;
+}
+.block ul.contextual-links {
+  margin: 0;
+  padding: 0;
 }
 
 /**

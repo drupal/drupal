@@ -98,6 +98,7 @@ function menu_menu() {
     'title' => 'List links',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
   $items['admin/structure/menu/manage/%menu/add'] = array(
     'title' => 'Add link',
@@ -113,6 +114,7 @@ function menu_menu() {
     'page arguments' => array('menu_edit_menu', 'edit', 4),
     'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'menu.admin.inc',
   );
   $items['admin/structure/menu/manage/%menu/delete'] = array(
@@ -423,7 +425,24 @@ function menu_block_view($delta = '') {
   $menus = menu_get_menus(FALSE);
   $data['subject'] = check_plain($menus[$delta]);
   $data['content'] = menu_tree($delta);
+  // Add contextual links for this block.
+  if (!empty($data['content'])) {
+    $data['content']['#contextual_links']['menu'] = menu_contextual_links('admin/structure/menu/manage', array($delta));
+  }
   return $data;
+}
+
+/**
+ * Implement hook_block_view_alter().
+ */
+function menu_block_view_alter(&$data, $block) {
+  // Add contextual links for system menu blocks.
+  if ($block->module == 'system' && !empty($data['content'])) {
+    $system_menus = menu_list_system_menus();
+    if (isset($system_menus[$block->delta])) {
+      $data['content']['#contextual_links']['menu'] = menu_contextual_links('admin/structure/menu/manage', array($block->delta));
+    }
+  }
 }
 
 /**

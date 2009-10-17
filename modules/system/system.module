@@ -3488,3 +3488,83 @@ function system_archiver_info() {
 function theme_confirm_form($variables) {
   return drupal_render_children($variables['form']);
 }
+
+/**
+ * Template variable preprocessor for contextual links.
+ */
+function system_preprocess(&$variables, $hook) {
+  static $hooks;
+
+  if (!isset($hooks)) {
+    $hooks = theme_get_registry();
+  }
+
+  // Initialize contextual links template variable.
+  $variables['contextual_links'] = array();
+
+  // Determine the primary theme function argument.
+  $keys = array_keys($hooks[$hook]['arguments']);
+  $key = $keys[0];
+  if (isset($variables[$key])) {
+    $element = $variables[$key];
+  }
+
+  if (isset($element) && is_array($element) && isset($element['#contextual_links'])) {
+    $variables['contextual_links'] = system_build_contextual_links($element);
+    if (!empty($variables['contextual_links'])) {
+      $variables['classes_array'][] = 'contextual-links-region';
+    }
+  }
+}
+
+/**
+ * Build a renderable array for contextual links.
+ *
+ * @param $element
+ *   A renderable array containing a #contextual_links property.
+ *
+ * @return
+ *   A renderable array representing contextual links.
+ */
+function system_build_contextual_links($element) {
+  static $destination;
+
+  // Transform contextual links into parameters suitable for theme_link().
+  $items = call_user_func_array('array_merge_recursive', $element['#contextual_links']);
+  $build = array();
+  if (empty($items)) {
+    return $build;
+  }
+
+  if (!isset($destination)) {
+    $destination = drupal_get_destination();
+  }
+
+  $links = array();
+  foreach ($items as $class => $item) {
+    $class = drupal_html_class($class);
+    $links[$class] = array(
+      'title' => $item['title'],
+      'href' => $item['href'],
+    );
+    // @todo theme_links() should *really* use the same parameters as l()...
+    if (!isset($item['localized_options']['query'])) {
+      $item['localized_options']['query'] = array();
+    }
+    $item['localized_options']['query'] += $destination;
+    $links[$class] += $item['localized_options'];
+  }
+  if ($links) {
+    $build = array(
+      '#theme' => 'links',
+      '#links' => $links,
+      '#attributes' => array('class' => array('contextual-links')),
+      '#attached' => array(
+        'js' => array('misc/contextual_links.js'),
+        'css' => array('misc/contextual_links.css'),
+      ),
+    );
+  }
+  return $build;
+}
+
