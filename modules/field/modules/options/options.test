@@ -1,0 +1,199 @@
+<?php
+// $Id$
+
+class OptionsWidgetsTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Options widgets',
+      'description'  => "Test the Options widgets.",
+      'group' => 'Field'
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field_test');
+
+    $this->list_values = array(1 => 'One', 2 => 'Two', 3 => 'Three');
+    $this->card_1 = array(
+      'field_name' => 'card_1',
+      'type' => 'list',
+      'cardinality' => 1,
+      'settings' => array(
+        'allowed_values' => "1|One\n2|Two\n3|Three\n",
+      ),
+    );
+    $this->card_1 = field_create_field($this->card_1);
+
+    $this->card_2 = array(
+      'field_name' => 'card_2',
+      'type' => 'list',
+      'cardinality' => 2,
+      'settings' => array(
+        'allowed_values' => "1|One\n2|Two\n3|Three\n",
+      ),
+    );
+    $this->card_2 = field_create_field($this->card_2);
+  }
+
+  /**
+   * Test widgets
+   */
+
+  /**
+   * Return an element from rendered HTML by id, or '' if id is not found.
+   */
+  function getTagById($html, $id) {
+    // @todo: ids sometimes have an extra -n after them; why?
+    if (preg_match('@(<[^>]*id="' . $id . '(?:-\d+)?"[^>]*/>)@i', $html, $m)) {
+      return $m[0];
+    }
+    return '';
+  }
+
+  /**
+   * Assert that a checkbox identified by $id is checked.
+   */
+  function assertIsChecked($html, $id) {
+    $input = $this->getTagById($html, $id);
+    $this->assertTrue(preg_match('@checked="checked"@', $input), t('Checkbox %id is checked', array('%id' => $id)));
+  }
+
+  /**
+   * Assert that a checkbox identified by $id is not checked.
+   */
+  function assertIsNotChecked($html, $id) {
+    $input = $this->getTagById($html, $id);
+    if (!empty($input)) {
+      $this->assertFalse(preg_match('@checked@', $input), t('Checkbox %id is not checked', array('%id' => $id)));
+    }
+    else {
+      $this->fail(t('Checkbox %id is not found', array('%id' => $id)));
+    }
+  }
+
+  /**
+   * Return an <option> element by value from rendered HTML, or
+   * '' if it is not found. 
+   */
+  function getOptionByValue($html, $value) {
+    if (preg_match('@(<option[^>]*value="' . $value . '"[^>]*>[^<]*</option>)@i', $html, $m)) {
+      return $m[0];
+    }
+    return '';
+  }
+
+  /**
+   * Assert that an <option> for value $value is selected.
+   */
+  function assertIsSelected($html, $value) {
+    $input = $this->getOptionByValue($html, $value);
+    $this->assertTrue(preg_match('@selected="selected"@', $input), t('Option %value is selected', array('%value' => $value)));
+  }
+
+  /**
+   * Assert that an <option> for value $value is not selected.
+   */
+  function assertIsNotSelected($html, $value) {
+    $input = $this->getOptionByValue($html, $value);
+    if (!empty($input)) {
+      $this->assertFalse(preg_match('@selected@', $input), t('Option %value is not selected', array('%value' => $value)));
+    }
+    else {
+      $this->fail(t('Option %value is not found', array('%value' => $value)));
+    }
+  }
+
+  function testRadioButtons() {
+    $instance = array(
+      'field_name' => $this->card_1['field_name'],
+      'object_type' => 'test_entity',
+      'bundle' => FIELD_TEST_BUNDLE,
+      'widget' => array(
+        'type' => 'options_buttons',
+      ),
+    );
+    $instance = field_create_instance($instance);
+
+    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+
+    // With no field data, no buttons are checked.
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $render = drupal_render($form);
+    $this->assertIsNotChecked($render, 'edit-card-1-zxx-value-1');
+    $this->assertIsNotChecked($render, 'edit-card-1-zxx-value-2');
+    $this->assertIsNotChecked($render, 'edit-card-1-zxx-value-3');
+
+    // With field data, the selected button is checked.
+    $entity->card_1[FIELD_LANGUAGE_NONE][0]['value'] = '2';
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $render = drupal_render($form);
+    $this->assertIsNotChecked($render, 'edit-card-1-zxx-value-1');
+    $this->assertIsChecked($render, 'edit-card-1-zxx-value-2');
+    $this->assertIsNotChecked($render, 'edit-card-1-zxx-value-3');
+  }
+
+  function testCheckBoxes() {
+    $instance = array(
+      'field_name' => $this->card_2['field_name'],
+      'object_type' => 'test_entity',
+      'bundle' => FIELD_TEST_BUNDLE,
+      'widget' => array(
+        'type' => 'options_buttons',
+      ),
+    );
+    $instance = field_create_instance($instance);
+
+    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+
+    // With no field data, nothing is checked.
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $render = drupal_render($form);
+    $this->assertIsNotChecked($render, 'edit-card-2-zxx-value-1');
+    $this->assertIsNotChecked($render, 'edit-card-2-zxx-value-2');
+    $this->assertIsNotChecked($render, 'edit-card-2-zxx-value-3');
+
+    // With field data, the specified items are checked.
+    $entity->card_2[FIELD_LANGUAGE_NONE][0]['value'] = '2';
+    $entity->card_2[FIELD_LANGUAGE_NONE][1]['value'] = '3';
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $render = drupal_render($form);
+    $this->assertIsNotChecked($render, 'edit-card-2-zxx-value-1');
+    $this->assertIsChecked($render, 'edit-card-2-zxx-value-2');
+    $this->assertIsChecked($render, 'edit-card-2-zxx-value-3');
+  }
+
+  function testSelectList() {
+    $instance = array(
+      'field_name' => $this->card_2['field_name'],
+      'object_type' => 'test_entity',
+      'bundle' => FIELD_TEST_BUNDLE,
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+    );
+    $instance = field_create_instance($instance);
+
+    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+
+    // With no field data, no options are selected.
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $render = drupal_render($form);
+    $this->assertIsNotSelected($render, 1);
+    $this->assertIsNotSelected($render, 2);
+    $this->assertIsNotSelected($render, 3);
+
+    // With field data, the specified options are selected.
+    $entity->card_2[FIELD_LANGUAGE_NONE][0]['value'] = '2';
+    $entity->card_2[FIELD_LANGUAGE_NONE][1]['value'] = '1';
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $render = drupal_render($form);
+    $this->assertIsSelected($render, 1);
+    $this->assertIsSelected($render, 2);
+    $this->assertIsNotSelected($render, 3);
+  }
+
+  /**
+   * @todo: Test formatters.
+   */
+}
+
