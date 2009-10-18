@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.30 2009/09/29 15:13:57 dries Exp $
+// $Id: user.install,v 1.31 2009/10/18 06:56:24 webchick Exp $
 
 /**
  * @file
@@ -102,10 +102,11 @@ function user_schema() {
     'description' => 'Stores user data.',
     'fields' => array(
       'uid' => array(
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'Primary Key: Unique user ID.',
+        'default' => 0,
       ),
       'name' => array(
         'type' => 'varchar',
