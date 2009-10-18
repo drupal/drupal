@@ -88,13 +88,6 @@ function block_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['admin/structure/block/list/js'] = array(
-    'title' => 'JavaScript List Form',
-    'page callback' => 'block_admin_display_js',
-    'access arguments' => array('administer blocks'),
-    'type' => MENU_CALLBACK,
-    'file' => 'block.admin.inc',
-  );
   $items['admin/structure/block/manage/%block/%'] = array(
     'title' => 'Configure block',
     'page callback' => 'drupal_get_form',
