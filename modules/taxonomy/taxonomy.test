@@ -326,6 +326,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->instance = array(
       'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
       'bundle' => 'article',
+      'object_type' => 'node',
       'widget' => array(
         'type' => 'options_select',
       ),
