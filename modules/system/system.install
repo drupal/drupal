@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.406 2009/10/18 06:56:24 webchick Exp $
+// $Id: system.install,v 1.407 2009/10/18 07:10:23 webchick Exp $
 
 /**
  * @file
@@ -2851,7 +2851,7 @@ function system_update_7043() {
 /**
  * Reuse the actions_aid table as sequences.
  */
-function system_update_7043() {
+function system_update_7044() {
   db_drop_primary_key('actions_aid');
   db_change_field('actions_aid', 'aid', 'value', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('value')));
   db_rename_table('actions_aid', 'sequences');
