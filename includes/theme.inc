@@ -2211,19 +2211,19 @@ function template_preprocess_page(&$variables) {
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['show_messages'] = $variables['page']['#show_messages'];
 
+  foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
+    if (!isset($variables['page'][$region_key])) {
+      $variables['page'][$region_key] = array();
+    }
+  }
+
   // Set up layout variable.
   $variables['layout'] = 'none';
   if (!empty($variables['page']['sidebar_first'])) {
     $variables['layout'] = 'first';
   }
-  else {
-    $variables['page']['sidebar_first'] = array();
-  }
   if (!empty($variables['page']['sidebar_second'])) {
     $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
-  }
-  else {
-    $variables['page']['sidebar_second'] = array();
   }
 
   $variables['base_path']         = base_path();

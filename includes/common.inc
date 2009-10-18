@@ -4513,10 +4513,17 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
  */
 function drupal_set_page_content($content = NULL) {
   $content_block = &drupal_static(__FUNCTION__, NULL);
+  $main_content_display = &drupal_static('system_main_content_added', FALSE);
+
   if (!empty($content)) {
     $content_block = (is_array($content) ? $content : array('main' => array('#markup' => $content)));
   }
   else {
+    // Indicate that the main content has been requested. We assume that
+    // the module requesting the content will be adding it to the page.
+    // A module can indicate that it does not handle the content by setting
+    // the static variable back to FALSE after calling this function.
+    $main_content_display = TRUE;
     return $content_block;
   }
 }
@@ -4534,6 +4541,8 @@ function drupal_set_page_content($content = NULL) {
  * @see element_info('page')
  */
 function drupal_render_page($page) {
+  $main_content_display = &drupal_static('system_main_content_added', FALSE);
+
   // Allow menu callbacks to return strings or arbitrary arrays to render.
   // If the array returned is not of #type page directly, we need to fill
   // in the page with defaults.
@@ -4550,6 +4559,13 @@ function drupal_render_page($page) {
   // Modules alter the $page as needed. Blocks are populated into regions like
   // 'sidebar_first', 'footer', etc.
   drupal_alter('page', $page);
+
+  // If no module has taken care of the main content, add it to the page now.
+  // This allows the site to still be usable even if no modules that
+  // control page regions (for example, the Block module) are enabled.
+  if (!$main_content_display) {
+    $page['content']['system_main'] = drupal_set_page_content();
+  }
 
   return drupal_render($page);
 }

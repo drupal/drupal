@@ -73,6 +73,27 @@ function system_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['system-test/main-content-handling'] = array(
+    'title' => 'Test main content handling',
+    'page callback' => 'system_test_main_content_fallback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/main-content-fallback'] = array(
+    'title' => 'Test main content fallback',
+    'page callback' => 'system_test_main_content_fallback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/main-content-duplication'] = array(
+    'title' => 'Test main content duplication',
+    'page callback' => 'system_test_main_content_fallback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -226,3 +247,31 @@ function system_test_lock_exit() {
     return 'FALSE: Lock not acquired in system_test_lock_exit()';
   }
 }
+
+/**
+ * Implement hook_page_build().
+ */
+function system_test_page_build(&$page) {
+  $menu_item = menu_get_item();
+  $main_content_display = &drupal_static('system_main_content_added', FALSE);
+
+  if ($menu_item['path'] == 'system-test/main-content-handling') {
+    $page['footer'] = drupal_set_page_content();
+    $page['footer']['main']['#markup'] = '<div id="system-test-content">' . $page['footer']['main']['#markup'] . '</div>';
+  }
+  else if ($menu_item['path'] == 'system-test/main-content-fallback') {
+    drupal_set_page_content();
+    $main_content_display = FALSE;
+  }
+  else if ($menu_item['path'] == 'system-test/main-content-duplication') {
+    drupal_set_page_content();
+  }
+}
+
+/**
+ * Menu callback to test main content fallback().
+ */
+function system_test_main_content_fallback() {
+  return t('Content to test main content fallback');
+}
+
