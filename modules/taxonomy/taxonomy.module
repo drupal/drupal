@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.525 2009/10/17 12:08:21 dries Exp $
+// $Id: taxonomy.module,v 1.526 2009/10/18 04:50:08 webchick Exp $
 
 /**
  * @file
@@ -1151,16 +1151,7 @@ function taxonomy_field_formatter_prepare_view($obj_type, $objects, $field, $ins
     }
   }
   if ($tids) {
-    $terms = array();
-
-    // Avoid calling taxonomy_term_load_multiple because it could lead to
-    // circular references.
-    $query = db_select('taxonomy_term_data', 't');
-    $query->fields('t');
-    $query->condition('t.tid', $tids, 'IN');
-    $query->addTag('translatable');
-    $query->addTag('term_access');
-    $terms = $query->execute()->fetchAllAssoc('tid');
+    $terms = taxonomy_term_load_multiple($tids);
 
     // Iterate through the fieldable entities again to attach the loaded term data.
     foreach ($objects as $id => $object) {
