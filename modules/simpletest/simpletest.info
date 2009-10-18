@@ -12,6 +12,7 @@ files[] = drupal_web_test_case.php
 
 ; Tests in tests directory.
 files[] = tests/actions.test
+files[] = tests/ajax.test
 files[] = tests/batch.test
 files[] = tests/bootstrap.test
 files[] = tests/browser.test

@@ -1,0 +1,59 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Helper module for AJAX framework tests.
+ */
+
+/**
+ * Implement hook_menu().
+ */
+function ajax_test_menu() {
+  $items['ajax-test/render'] = array(
+    'title' => 'ajax_render',
+    'page callback' => 'ajax_test_render',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['ajax-test/render-error'] = array(
+    'title' => 'ajax_render_error',
+    'page callback' => 'ajax_test_render_error',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Menu callback; Copies $_GET['commands'] into $commands and ajax_render()s that.
+ *
+ * Additionally ensures that ajax_render() incorporates JavaScript settings
+ * by invoking drupal_add_js() with a dummy setting.
+ */
+function ajax_test_render() {
+  // Prepare AJAX commands.
+  $commands = array();
+  if (!empty($_GET['commands'])) {
+    $commands = $_GET['commands'];
+  }
+  // Add a dummy JS setting.
+  drupal_add_js(array('ajax' => 'test'), 'setting');
+
+  // Output AJAX commands and end the request.
+  ajax_render($commands);
+}
+
+/**
+ * Menu callback; Invokes ajax_render_error().
+ *
+ * Optionally passes $_GET['message'] to ajax_render_error().
+ */
+function ajax_test_render_error() {
+  $message = '';
+  if (!empty($_GET['message'])) {
+    $message = $_GET['message'];
+  }
+  ajax_render_error($message);
+}
+

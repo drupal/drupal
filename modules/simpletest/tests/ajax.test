@@ -1,0 +1,80 @@
+<?php
+// $Id$
+
+class AJAXTestCase extends DrupalWebTestCase {
+  function setUp() {
+    parent::setUp('ajax_test');
+  }
+
+  function drupalGetAJAX($path, $query = array()) {
+    $this->drupalGet($path, array('query' => $query));
+    return json_decode($this->content, TRUE);
+  }
+}
+
+/**
+ * Tests primary AJAX framework functions.
+ */
+class AJAXFrameworkTestCase extends AJAXTestCase {
+  function getInfo() {
+    return array(
+      'name' => 'AJAX framework',
+      'description' => 'Performs tests on AJAX framework functions.',
+      'group' => 'AJAX',
+    );
+  }
+
+  /**
+   * Test proper passing of JavaScript settings via ajax_render().
+   */
+  function testAJAXRender() {
+    $result = $this->drupalGetAJAX('ajax-test/render');
+    // Verify that JavaScript settings are contained (always first).
+    $this->assertIdentical($result[0]['command'], 'settings', t('drupal_add_js() settings are contained first.'));
+    // Verify that basePath is contained in JavaScript settings.
+    $this->assertEqual($result[0]['settings']['basePath'], base_path(), t('Base path is contained in JavaScript settings.'));
+  }
+
+  /**
+   * Test behavior of ajax_render_error().
+   */
+  function testAJAXRenderError() {
+    $result = $this->drupalGetAJAX('ajax-test/render-error');
+    // Verify default error message.
+    $this->assertEqual($result[0]['command'], 'alert', t('ajax_render_error() invokes alert command.'));
+    $this->assertEqual($result[0]['text'], t('An error occurred while handling the request: The server received invalid input.'), t('Default error message is output.'));
+    // Verify custom error message.
+    $edit = array(
+      'message' => 'Custom error message.',
+    );
+    $result = $this->drupalGetAJAX('ajax-test/render-error', $edit);
+    $this->assertEqual($result[0]['text'], $edit['message'], t('Custom error message is output.'));
+  }
+}
+
+/**
+ * Tests AJAX framework commands.
+ */
+class AJAXCommandsTestCase extends AJAXTestCase {
+  function getInfo() {
+    return array(
+      'name' => 'AJAX commands',
+      'description' => 'Performs tests on AJAX framework commands.',
+      'group' => 'AJAX',
+    );
+  }
+
+  /**
+   * Test ajax_command_settings().
+   */
+  function testAJAXRender() {
+    $commands = array();
+    $commands[] = ajax_command_settings(array('foo' => 42));
+    $result = $this->drupalGetAJAX('ajax-test/render', array('commands' => $commands));
+    // Verify that JavaScript settings are contained (always first).
+    $this->assertIdentical($result[0]['command'], 'settings', t('drupal_add_js() settings are contained first.'));
+    // Verify that the custom setting is contained.
+    $this->assertEqual($result[1]['settings']['foo'], 42, t('Custom setting is output.'));
+  }
+}
+

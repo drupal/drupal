@@ -142,7 +142,7 @@ function ajax_render($commands = array(), $header = TRUE) {
   // them the first command.
   $scripts = drupal_add_js(NULL, NULL);
   if (!empty($scripts['settings'])) {
-    array_unshift($commands, ajax_command_settings($scripts['settings']['data']));
+    array_unshift($commands, ajax_command_settings(call_user_func_array('array_merge_recursive', $scripts['settings']['data'])));
   }
 
   // Allow modules to alter any AJAX response.
@@ -156,7 +156,7 @@ function ajax_render($commands = array(), $header = TRUE) {
     // http://malsup.com/jquery/form/#code-samples
     print '<textarea>' . drupal_json_encode($commands) . '</textarea>';
   }
-  else if ($header) {
+  elseif ($header) {
     drupal_json_output($commands);
   }
   else {
@@ -773,7 +773,7 @@ function ajax_command_css($selector, $argument) {
 function ajax_command_settings($argument) {
   return array(
     'command' => 'settings',
-    'argument' => $argument,
+    'settings' => $argument,
   );
 }
 
