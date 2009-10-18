@@ -1401,12 +1401,19 @@ function user_menu() {
   // User listing pages.
   $items['admin/people'] = array(
     'title' => 'People',
-    'description' => 'Find and manage people interacting with your site.',
     'page callback' => 'user_admin',
     'page arguments' => array('list'),
     'access arguments' => array('administer users'),
     'position' => 'left',
     'weight' => -4,
+    'file' => 'user.admin.inc',
+  );
+  $items['admin/people/people'] = array(
+    'title' => 'List',
+    'description' => 'Find and manage people interacting with your site.',
+    'access arguments' => array('administer users'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
     'file' => 'user.admin.inc',
   );
   $items['admin/people/create'] = array(
