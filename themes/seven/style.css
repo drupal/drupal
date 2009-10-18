@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.19 2009/10/17 01:15:40 webchick Exp $ */
+/* $Id: style.css,v 1.20 2009/10/18 04:35:30 webchick Exp $ */
 
 /**
  * Generic elements
@@ -111,9 +111,9 @@ legend {
 }
 
 /**
- * Console.
+ * Messages.
  */
-#console div.messages {
+div.messages {
   padding: 9px;
   margin: 1em 0;
   color: #036;
@@ -121,19 +121,19 @@ legend {
   border: 1px solid #ace;
 }
 
-#console div.warning {
+div.warning {
   color: #840;
   background: #fe6;
   border-color: #ed5;
 }
 
-#console div.error {
+div.error {
   color: #fff;
   background: #e63;
   border-color: #d52;
 }
 
-#console div.status {
+div.status {
   color: #360;
   background: #cf8;
   border-color: #be7;
