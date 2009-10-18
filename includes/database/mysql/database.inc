@@ -68,6 +68,42 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     // We don't want to override any of the defaults.
     return NULL;
   }
+
+  public function nextId($existing_id = 0) {
+    static $shutdown_registered = FALSE;
+    $new_id = $this->query('INSERT INTO {sequences} () VALUES ()', array(), array('return' => Database::RETURN_INSERT_ID));
+    // This should only happen after an import or similar event.
+    if ($existing_id >= $new_id) {
+      // If we INSERT a value manually into the sequences table, on the next
+      // INSERT, MySQL will generate a larger value. However, there is no way
+      // of knowing whether this value already exists in the table. MySQL
+      // provides an INSERT IGNORE which would work, but that can mask problems
+      // other than duplicate keys. Instead, we use INSERT ... ON DUPLICATE KEY
+      // UPDATE in such a way that the UPDATE does not do anything. This way,
+      // duplicate keys do not generate errors but everything else does.
+      $this->query('INSERT INTO {sequences} (value) VALUES (:value) ON DUPLICATE KEY UPDATE value = value', array(':value' => $existing_id));
+      $new_id = $this->query('INSERT INTO {sequences} () VALUES ()', array(), array('return' => Database::RETURN_INSERT_ID));
+    }
+    if (!$shutdown_registered) {
+      register_shutdown_function(array(get_class($this), 'nextIdDelete'));
+      $shutdown_registered = TRUE;
+    }
+    return $new_id;
+  }
+
+  public static function nextIdDelete() {
+    // While we want to clean up the table to keep it up from occupying too
+    // much storage and memory, we must keep the highest value in the table
+    // because InnoDB  uses an in-memory auto-increment counter as long as the
+    // server runs. When the server is stopped and restarted, InnoDB
+    // reinitializes the counter for each table for the first INSERT to the
+    // table based solely on values from the table so deleting all values would
+    // be a problem in this case. Also, TRUNCATE resets the auto increment
+    // counter.
+    $max_id = db_select('SELECT MAX(value) FROM {sequences}')->fetchField();
+    // We know we are using MySQL here, so need for the slower db_delete().
+    db_query('DELETE FROM {sequences} WHERE value < :value', array(':value' => $max_id));
+  }
 }
 
 

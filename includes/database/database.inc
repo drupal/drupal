@@ -1047,6 +1047,44 @@ abstract class DatabaseConnection extends PDO {
   public function commit() {
     throw new ExplicitTransactionsNotSupportedException();
   }
+
+  /**
+   * Retrieves an unique id from a given sequence.
+   *
+   * Use this function if for some reason you can't use a serial field. For
+   * example, MySQL has no ways of reading of the current value of a sequence
+   * and PostgreSQL can not advance the sequence to be larger than a given
+   * value. Or sometimes you just need a unique integer.
+   *
+   * @param $existing_id
+   *   After a database import, it might be that the sequences table is behind,
+   *   so by passing in the maximum existing id, it can be assured that we
+   *   never issue the same id.
+   * @return
+   *   An integer number larger than any number returned by earlier calls and
+   *   also larger than the $existing_id if one was passed in.
+   */
+  public function nextId($existing_id = 0) {
+    $transaction = $this->startTransaction();
+    // We can safely use literal queries here instead of the slower query
+    // builder because if a given database breaks here then it can simply
+    // override nextId. However, this is unlikely as we deal with short
+    // strings and integers and no known databases require special handling
+    // for those simple cases.
+    // If another transaction wants to write the same row, it will wait until
+    // this transaction commits.
+    $stmt = $this->query('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', array(
+      ':existing_id' => $existing_id,
+    ));
+    if (!$stmt->rowCount()) {
+      $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', array(
+        ':existing_id' => $existing_id,
+      ));
+    }
+    // The transaction gets committed when the transaction object gets
+    // destructed because it gets out of scope.
+    return $new_value;
+  }
 }
 
 /**
@@ -2076,6 +2114,24 @@ function db_close(array $options = array()) {
     $options['target'] = NULL;
   }
   Database::closeConnection($options['target']);
+}
+
+/**
+ * Retrieves a unique id.
+ *
+ * Use this function if for some reason you can't use a serial field,
+ * normally a serial field with db_last_insert_id is preferred.
+ *
+ * @param $existing_id
+ *   After a database import, it might be that the sequences table is behind,
+ *   so by passing in a minimum id, it can be assured that we never issue the
+ *   same id.
+ * @return
+ *   An integer number larger than any number returned before for this
+ *   sequence.
+ */
+function db_next_id($existing_id = 0) {
+  return Database::getConnection()->nextId($existing_id);
 }
 
 /**

@@ -37,11 +37,13 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
 
     // Make another POST request to the action edit page.
     $this->clickLink(t('configure'));
+    preg_match('|admin/config/system/actions/configure/(\d+)|', $this->getUrl(), $matches);
+    $aid = $matches[1];
     $edit = array();
     $new_action_label = $this->randomName();
     $edit['actions_label'] = $new_action_label;
     $edit['url'] = 'admin';
-    $this->drupalPost('admin/config/system/actions/configure/1', $edit, t('Save'));
+    $this->drupalPost(NULL, $edit, t('Save'));
 
     // Make sure that the action updated properly.
     $this->assertText(t('The action has been successfully saved.'), t("Make sure we get a confirmation that we've successfully updated the complex action."));
@@ -51,7 +53,7 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
     // Make sure that deletions work properly.
     $this->clickLink(t('delete'));
     $edit = array();
-    $this->drupalPost('admin/config/system/actions/delete/1', $edit, t('Delete'));
+    $this->drupalPost("admin/config/system/actions/delete/$aid", $edit, t('Delete'));
 
     // Make sure that the action was actually deleted.
     $this->assertRaw(t('Action %action was deleted', array('%action' => $new_action_label)), t('Make sure that we get a delete confirmation message.'));

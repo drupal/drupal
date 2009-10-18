@@ -448,6 +448,11 @@ function user_save($account, $edit = array(), $category = 'account') {
     user_module_invoke('update', $edit, $user, $category);
   }
   else {
+    // Allow 'uid' to be set by the caller. There is no danger of writing an
+    // existing user as drupal_write_record will do an INSERT.
+    if (empty($edit['uid'])) {
+      $edit['uid'] = db_next_id(db_query('SELECT MAX(uid) FROM {users}')->fetchField());
+    }
     // Allow 'created' to be set by the caller.
     if (!isset($edit['created'])) {
       $edit['created'] = REQUEST_TIME;

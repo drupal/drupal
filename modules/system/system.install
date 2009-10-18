@@ -352,23 +352,19 @@ function system_install() {
   // Load system theme data appropriately.
   system_rebuild_theme_data();
 
-  // Inserting uid 0 here confuses MySQL -- the next user might be created as
-  // uid 2 which is not what we want. So we insert the first user here, the
-  // anonymous user. uid is 1 here for now, but very soon it will be changed
-  // to 0.
   db_insert('users')
     ->fields(array(
+      'uid' => 0,
       'name' => '',
       'mail' => '',
     ))
     ->execute();
   // We need some placeholders here as name and mail are uniques and data is
-  // presumed to be a serialized array. Install will change uid 1 immediately
-  // anyways. So we insert the superuser here, the uid is 2 here for now, but
-  // very soon it will be changed to 1.
-
+  // presumed to be a serialized array. This will be changed by the settings
+  // form.
   db_insert('users')
     ->fields(array(
+      'uid' => 1,
       'name' => 'placeholder-for-uid-1',
       'mail' => 'placeholder-for-uid-1',
       'created' => REQUEST_TIME,
@@ -376,19 +372,6 @@ function system_install() {
       'data' => serialize(array()),
     ))
     ->execute();
-  // This sets the above two users uid 0 (anonymous). We avoid an explicit 0
-  // otherwise MySQL might insert the next auto_increment value.
-  db_update('users')
-    ->expression('uid', 'uid - uid')
-    ->condition('name', '')
-    ->execute();
-
-  // This sets uid 1 (superuser). We skip uid 2 but that's not a big problem.
-  db_update('users')
-    ->fields(array('uid' => 1))
-    ->condition('name', 'placeholder-for-uid-1')
-    ->execute();
-
   // Built-in roles.
   $rid_anonymous = db_insert('role')
     ->fields(array('name' => 'anonymous user'))
@@ -610,19 +593,6 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '0',
-      ),
-    ),
-    'primary key' => array('aid'),
-  );
-
-  $schema['actions_aid'] = array(
-    'description' => 'Stores action IDs for non-default actions.',
-    'fields' => array(
-      'aid' => array(
-        'description' => 'Primary Key: Unique actions ID.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
       ),
     ),
     'primary key' => array('aid'),
@@ -1449,6 +1419,19 @@ function system_schema() {
     ),
     'indexes' => array('value' => array('value')),
     'primary key' => array('name'),
+  );
+
+  $schema['sequences'] = array(
+    'description' => 'Stores IDs.',
+    'fields' => array(
+      'value' => array(
+        'description' => 'The value of the sequence.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+     ),
+    'primary key' => array('value'),
   );
 
   $schema['sessions'] = array(
@@ -2863,6 +2846,22 @@ function system_update_7043() {
     'not null' => TRUE,
     'default' => 0,
   ));
+}
+
+/**
+ * Reuse the actions_aid table as sequences.
+ */
+function system_update_7043() {
+  db_drop_primary_key('actions_aid');
+  db_change_field('actions_aid', 'aid', 'value', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('value')));
+  db_rename_table('actions_aid', 'sequences');
+  $max = db_query('SELECT MAX(value) FROM {sequences}')->fetchField();
+  $max_uid = db_query('SELECT MAX(uid) FROM {users}')->fetchField();
+  if ($max_uid > $max) {
+    db_update('sequences')->fields(array('value' => $max_uid))->execute();
+  }
+  $max = db_query('SELECT MAX(value) FROM {sequences}')->fetchField();
+  db_delete('sequences')->condition('value', $max, '<');
 }
 
 /**

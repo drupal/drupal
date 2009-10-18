@@ -324,7 +324,7 @@ function actions_save($function, $type, $params, $label, $aid = NULL) {
   // aid is the callback for singleton actions so we need to keep a separate
   // table for numeric aids.
   if (!$aid) {
-    $aid = db_insert('actions_aid')->useDefaults(array('aid'))->execute();
+    $aid = db_next_id();
   }
 
   db_merge('actions')

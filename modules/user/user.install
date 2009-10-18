@@ -102,10 +102,11 @@ function user_schema() {
     'description' => 'Stores user data.',
     'fields' => array(
       'uid' => array(
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'Primary Key: Unique user ID.',
+        'default' => 0,
       ),
       'name' => array(
         'type' => 'varchar',

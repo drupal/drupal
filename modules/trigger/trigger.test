@@ -151,7 +151,10 @@ class TriggerCronTestCase extends DrupalWebTestCase {
       'subject' => $action_label,
     );
     $this->drupalPost('admin/config/system/actions/configure/' . $hash, $edit, t('Save'));
-    $edit = array('aid' => md5('1'));
+    $aid = db_query('SELECT aid FROM {actions} WHERE callback = :callback', array(':callback' => 'trigger_test_system_cron_conf_action'))->fetchField();
+    // $aid is likely 3 but if we add more uses for the sequences table in
+    // core it might break, so it is easier to get the value from the database.
+    $edit = array('aid' => md5($aid));
     $this->drupalPost('admin/structure/trigger/system', $edit, t('Assign'));
 
     // Add a second configurable action to the cron trigger.
@@ -161,7 +164,7 @@ class TriggerCronTestCase extends DrupalWebTestCase {
       'subject' => $action_label,
     );
     $this->drupalPost('admin/config/system/actions/configure/' . $hash, $edit, t('Save'));
-    $edit = array('aid' => md5('2'));
+    $edit = array('aid' => md5($aid + 1));
     $this->drupalPost('admin/structure/trigger/system', $edit, t('Assign'));
 
     // Force a cron run.
