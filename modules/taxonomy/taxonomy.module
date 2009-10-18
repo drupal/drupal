@@ -1151,16 +1151,7 @@ function taxonomy_field_formatter_prepare_view($obj_type, $objects, $field, $ins
     }
   }
   if ($tids) {
-    $terms = array();
-
-    // Avoid calling taxonomy_term_load_multiple because it could lead to
-    // circular references.
-    $query = db_select('taxonomy_term_data', 't');
-    $query->fields('t');
-    $query->condition('t.tid', $tids, 'IN');
-    $query->addTag('translatable');
-    $query->addTag('term_access');
-    $terms = $query->execute()->fetchAllAssoc('tid');
+    $terms = taxonomy_term_load_multiple($tids);
 
     // Iterate through the fieldable entities again to attach the loaded term data.
     foreach ($objects as $id => $object) {
