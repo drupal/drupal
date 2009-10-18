@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1026 2009/10/18 11:34:44 dries Exp $
+// $Id: common.inc,v 1.1027 2009/10/18 18:32:27 dries Exp $
 
 /**
  * @file
@@ -2277,6 +2277,22 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
 
   // Translate the marked sequences.
   return preg_replace_callback('/\xEF([AaeDlMTF]?)(.*?)\xFF/', '_format_date_callback', $format);
+}
+
+/**
+ * Returns an ISO8601 formatted date based on the given date.
+ *
+ * Can be used as a callback for RDF mappings.
+ *
+ * @param $date
+ *   A UNIX timestamp.
+ * @return string
+ *   An ISO8601 formatted date.
+ */
+function date_iso8601($date) {
+  // The DATE_ISO8601 constant cannot be used here because it does not match
+  // date('c') and produces invalid RDF markup.
+  return date('c', $date);
 }
 
 /**
