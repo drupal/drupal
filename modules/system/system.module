@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.820 2009/10/17 05:50:29 webchick Exp $
+// $Id: system.module,v 1.821 2009/10/18 11:34:44 dries Exp $
 
 /**
  * @file
@@ -2597,7 +2597,7 @@ function system_get_module_admin_tasks($module) {
 function system_cron() {
   // Cleanup the flood.
   db_delete('flood')
-    ->condition('timestamp', REQUEST_TIME - 3600, '<')
+    ->condition('expiration', REQUEST_TIME, '<')
     ->execute();
   // Cleanup the batch table.
   db_delete('batch')
