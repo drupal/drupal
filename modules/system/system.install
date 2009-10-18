@@ -2874,7 +2874,7 @@ function system_update_7044() {
 /**
  * Add expiration field to the {flood} table.
  */
-function system_update_7044() {
+function system_update_7045() {
   db_add_field('flood', 'expiration', array('description' => 'Expiration timestamp. Expired events are purged on cron run.', 'type' => 'int', 'not null' => TRUE, 'default' => 0));
   db_add_index('flood', 'purge', array('expiration'));
 }
