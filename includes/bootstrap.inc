@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.311 2009/10/16 19:06:21 dries Exp $
+// $Id: bootstrap.inc,v 1.312 2009/10/18 11:36:49 dries Exp $
 
 /**
  * @file
@@ -248,6 +248,7 @@ function timer_read($name) {
     }
     return $diff;
   }
+  return $timers[$name]['time'];
 }
 
 /**
@@ -262,7 +263,12 @@ function timer_read($name) {
 function timer_stop($name) {
   global $timers;
 
-  $timers[$name]['time'] = timer_read($name);
+  if (isset($timers[$name]['time'])) {
+    $timers[$name]['time'] += timer_read($name);
+  }
+  else {
+    $timers[$name]['time'] = timer_read($name);
+  }
   unset($timers[$name]['start']);
 
   return $timers[$name];
