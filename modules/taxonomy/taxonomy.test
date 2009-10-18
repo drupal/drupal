@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.54 2009/10/16 03:47:14 webchick Exp $
+// $Id: taxonomy.test,v 1.55 2009/10/18 07:50:45 webchick Exp $
 
 /**
  * @file
@@ -326,6 +326,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->instance = array(
       'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
       'bundle' => 'article',
+      'object_type' => 'node',
       'widget' => array(
         'type' => 'options_select',
       ),
