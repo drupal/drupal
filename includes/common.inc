@@ -1563,10 +1563,15 @@ function valid_url($url, $absolute = FALSE) {
  *
  * @param $name
  *   The name of an event.
+ * @param $window
+ *   Optional number of seconds before this event expires. Defaults to 3600 (1
+ *   hour). Typically uses the same value as the flood_is_allowed() $window
+ *   parameter. Expired events are purged on cron run to prevent the flood table
+ *   from growing indefinitely.
  * @param $identifier
  *   Optional identifier (defaults to the current user's IP address).
  */
-function flood_register_event($name, $identifier = NULL) {
+function flood_register_event($name, $window = 3600, $identifier = NULL) {
   if (!isset($identifier)) {
     $identifier = ip_address();
   }
@@ -1575,6 +1580,7 @@ function flood_register_event($name, $identifier = NULL) {
       'event' => $name,
       'identifier' => $identifier,
       'timestamp' => REQUEST_TIME,
+      'expiration' => REQUEST_TIME + $window,
     ))
     ->execute();
 }

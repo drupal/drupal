@@ -2597,7 +2597,7 @@ function system_get_module_admin_tasks($module) {
 function system_cron() {
   // Cleanup the flood.
   db_delete('flood')
-    ->condition('timestamp', REQUEST_TIME - 3600, '<')
+    ->condition('expiration', REQUEST_TIME, '<')
     ->execute();
   // Cleanup the batch table.
   db_delete('batch')

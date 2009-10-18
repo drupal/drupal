@@ -154,7 +154,7 @@ function contact_site_form_submit($form, &$form_state) {
     drupal_mail('contact', 'page_autoreply', $from, $language, $values, $to);
   }
 
-  flood_register_event('contact');
+  flood_register_event('contact', variable_get('contact_threshold_window', 3600));
   watchdog('mail', '%sender-name (@sender-from) sent an e-mail regarding %category.', array('%sender-name' => $values['name'], '@sender-from' => $from, '%category' => $values['category']['category']));
 
   // Jump to home page rather than back to contact page to avoid
@@ -278,7 +278,7 @@ function contact_personal_form_submit($form, &$form_state) {
     drupal_mail('contact', 'user_copy', $from, $language, $values, $from);
   }
 
-  flood_register_event('contact');
+  flood_register_event('contact', variable_get('contact_threshold_window', 3600));
   watchdog('mail', '%sender-name (@sender-from) sent %recipient-name an e-mail.', array('%sender-name' => $values['name'], '@sender-from' => $from, '%recipient-name' => $values['recipient']->name));
 
   // Jump to the contacted user's profile page.

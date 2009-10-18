@@ -1801,10 +1801,10 @@ function user_login_authenticate_validate($form, &$form_state) {
 function user_login_final_validate($form, &$form_state) {
   if (empty($form_state['uid'])) {
     // Always register an IP-based failed login event.
-    flood_register_event('failed_login_attempt_ip');
+    flood_register_event('failed_login_attempt_ip', variable_get('user_failed_login_ip_window', 3600));
     // Register a per-user failed login event.
     if (isset($form_state['flood_control_user_identifier'])) {
-      flood_register_event('failed_login_attempt_user', $form_state['flood_control_user_identifier']);
+      flood_register_event('failed_login_attempt_user', variable_get('user_failed_login_user_window', 21600), $form_state['flood_control_user_identifier']);
     }
 
     if (isset($form_state['flood_control_triggered'])) {
