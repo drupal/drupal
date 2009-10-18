@@ -57,16 +57,16 @@ function dashboard_block_info_alter(&$blocks) {
 }
 
 /**
- * Implement hook_page_alter().
+ * Implement hook_page_build().
  *
  * Display dashboard blocks in the main content region.
  */
-function dashboard_page_alter(&$page) {
+function dashboard_page_build(&$page) {
   global $theme_key;
 
   if (dashboard_is_visible()) {
     $block_info = array();
-    
+
     // Create a wrapper for the dashboard itself, then insert each dashboard
     // region into it.
     $page['content']['dashboard'] = array('#theme_wrappers' => array('dashboard'));
@@ -154,6 +154,9 @@ function dashboard_theme() {
     'dashboard' => array(
       'arguments' => array('element' => NULL),
     ),
+    'dashboard_admin' => array(
+      'arguments' => array('element' => NULL),
+    ),
     'dashboard_region' => array(
       'arguments' => array('element' => NULL),
     ),
@@ -173,29 +176,32 @@ function dashboard_theme() {
  *   Whether to launch in customization mode right away. TRUE or FALSE.
  */
 function dashboard_admin($launch_customize = FALSE) {
-  $output = '';
-  if (user_access('administer blocks')) {
-    $output .= '<div class="customize-dashboard js-hide">' . t('To customize the dashboard page, move blocks to the dashboard regions on !block-admin, or enable JavaScript on this page to use the drag-and-drop interface.', array('!block-admin' => l('the block administration page', 'admin/structure/block'))) . '</div>';
-    drupal_add_js(drupal_get_path('module', 'dashboard') . '/dashboard.js');
-    $settings = array(
-      'dashboard' => array(
-        'drawer' => url('admin/dashboard/drawer'),
-        'blockContent' => url('admin/dashboard/block-content'),
-        'updatePath' => url('admin/dashboard/update'),
-        'formToken' => drupal_get_token('dashboard-update'),
-        'launchCustomize' => $launch_customize,
-        'dashboard' => url('admin/dashboard'),
-        'emptyBlockText' => _dashboard_get_default_string('dashboard_empty_block_text'),
-        'emptyRegionTextInactive' => _dashboard_get_default_string('dashboard_empty_region_text_inactive'),
-        'emptyRegionTextActive' => _dashboard_get_default_string('dashboard_empty_region_text_active'),
+  $js_settings = array(
+    'dashboard' => array(
+      'drawer' => url('admin/dashboard/drawer'),
+      'blockContent' => url('admin/dashboard/block-content'),
+      'updatePath' => url('admin/dashboard/update'),
+      'formToken' => drupal_get_token('dashboard-update'),
+      'launchCustomize' => $launch_customize,
+      'dashboard' => url('admin/dashboard'),
+      'emptyBlockText' => _dashboard_get_default_string('dashboard_empty_block_text'),
+      'emptyRegionTextInactive' => _dashboard_get_default_string('dashboard_empty_region_text_inactive'),
+      'emptyRegionTextActive' => _dashboard_get_default_string('dashboard_empty_region_text_active'),
+    ),
+  );
+  $build = array(
+    '#theme' => 'dashboard_admin',
+    '#message' => t('To customize the dashboard page, move blocks to the dashboard regions on !block-admin, or enable JavaScript on this page to use the drag-and-drop interface.', array('!block-admin' => l('the block administration page', 'admin/structure/block'))),
+    '#access' => user_access('administer blocks'),
+    '#attached' => array(
+      'js' => array(
+        drupal_get_path('module', 'dashboard') . '/dashboard.js',
+        array('data' => $js_settings, 'type' => 'setting'),
       ),
-    );
-    drupal_add_js($settings, array('type' => 'setting'));
-    drupal_add_library('system', 'ui.sortable');
-  }
-  // We do not return any main page content, because the content of the page
-  // will be populated via the dashboard regions in dashboard_page_alter().
-  return $output;
+      'library' => array(array('system', 'ui.sortable')),
+    ),
+  );
+  return $build;
 }
 
 /**
@@ -210,11 +216,9 @@ function dashboard_is_visible() {
  * Return an array of dashboard region descriptions, keyed by region name.
  */
 function dashboard_region_descriptions() {
-  $default_regions = array(
-    'dashboard_main' =>  'Dashboard main',
-    'dashboard_sidebar' => 'Dashboard sidebar',
-  );
-  return variable_get('dashboard_region_descriptions', $default_regions);
+  $regions = module_invoke_all('dashboard_regions');
+  drupal_alter('dashboard_regions', $regions);
+  return $regions;
 }
 
 /**
@@ -222,6 +226,16 @@ function dashboard_region_descriptions() {
  */
 function dashboard_regions() {
   return array_keys(dashboard_region_descriptions());
+}
+
+/**
+ * Implement hook_dashboard_regions().
+ */
+function dashboard_dashboard_regions() {
+  return array(
+    'dashboard_main' =>  'Dashboard main',
+    'dashboard_sidebar' => 'Dashboard sidebar',
+  );
 }
 
 /**
@@ -247,10 +261,10 @@ function dashboard_show_disabled() {
 
 /**
  * AJAX callback to display the rendered contents of a specific block.
- * 
+ *
  * @param $module
  *   The block's module name.
- * @param $delta 
+ * @param $delta
  *   The block's delta.
  */
 function dashboard_show_block_content($module, $delta) {
@@ -339,6 +353,25 @@ function theme_dashboard($variables) {
 }
 
 /**
+ * Theme the page containing the dashboard.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the properties of the element.
+ *     Properties used: #message
+ * @return
+ *   A themed HTML string representing the non-customizable part of the
+ *   dashboard page.
+ *
+ * @ingroup themeable
+ */
+function theme_dashboard_admin($variables) {
+  // We only return a simple help message, since the actual content of the page
+  // will be populated via the dashboard regions in dashboard_page_build().
+  return '<div class="customize-dashboard js-hide">' . $variables['element']['#message'] . '</div>';
+}
+
+/**
  * Theme a generic dashboard region.
  *
  * @param $variables
@@ -352,11 +385,11 @@ function theme_dashboard($variables) {
 function theme_dashboard_region($variables) {
   extract($variables);
   $output = '<div id="' . $element['#dashboard_region'] . '" class="dashboard-region">';
+  $output .= '<div class="region clearfix">';
   $output .= $element['#children'];
-  if (!$element['#children']) {
-    $output .= "<div class='region'></div>";
-  }
-
+  // Closing div.region
+  $output .= '</div>';
+  // Closing div.dashboard-region
   $output .= '</div>';
   return $output;
 }

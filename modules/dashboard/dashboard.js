@@ -20,14 +20,15 @@ Drupal.behaviors.dashboard = {
   addPlaceholders: function() {
     $('#dashboard .dashboard-region .region').each(function () {
       var empty_text = "";
+      // If the region is empty
       if ($('.block', this).length == 0) {
-        // We need a placeholder.
+        // Check if we are in customize mode and grab the correct empty text
         if ($('#dashboard').hasClass('customize_mode')) {
           empty_text = Drupal.settings.dashboard.emptyRegionTextActive;
         } else {
           empty_text = Drupal.settings.dashboard.emptyRegionTextInactive;
         }
-        
+        // We need a placeholder.
         if ($('.placeholder', this).length == 0) {
           $(this).append('<div class="placeholder"></div>');
         }
@@ -45,7 +46,9 @@ Drupal.behaviors.dashboard = {
   enterCustomizeMode: function () {
     $('#dashboard').addClass('customize_mode');
     Drupal.behaviors.dashboard.addPlaceholders();
+    // Hide the customize link
     $('#dashboard .customize .action-links').hide();
+    // Load up the disabled blocks
     $('div.customize .canvas').load(Drupal.settings.dashboard.drawer, Drupal.behaviors.dashboard.setupDrawer);
   },
 
@@ -128,11 +131,11 @@ Drupal.behaviors.dashboard = {
           if (block) {
             blockContent = $("div.content", $(block));
           }
-          
+
           if (!blockContent) {
             blockContent = $('<div class="content">' + Drupal.settings.dashboard.emptyBlockText + '</div>');
           }
-          
+
           $("div.content", item).after(blockContent).remove();
         },
         'html'
@@ -161,10 +164,9 @@ Drupal.behaviors.dashboard = {
     $('#dashboard div.region').each(function () {
       var region = $(this).parent().attr('id').replace(/-/g, '_');
       var blocks = $(this).sortable('toArray');
-      var i;
-      for (i = 0; i < blocks.length; i++) {
-        order.push(region + '[]=' + blocks[i]);
-      }
+      $.each(blocks, function() {
+        order.push(region + '[]=' + this);
+      });
     });
     order = order.join('&');
     return order;
