@@ -1,0 +1,89 @@
+<?php
+// $Id$
+
+class ListFieldTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'List field',
+      'description'  => "Test the List field type.",
+      'group' => 'Field'
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field_test');
+
+    $this->card_1 = array(
+      'field_name' => 'card_1',
+      'type' => 'list',
+      'cardinality' => 1,
+      'settings' => array(
+        'allowed_values' => "1|One\n2|Two\n3|Three\n",
+      ),
+    );
+    $this->card_1 = field_create_field($this->card_1);
+
+    $this->instance_1 = array(
+      'field_name' => $this->card_1['field_name'],
+      'object_type' => 'test_entity',
+      'bundle' => FIELD_TEST_BUNDLE,
+      'widget' => array(
+        'type' => 'options_buttons',
+      ),
+    );
+    $this->instance_1 = field_create_instance($this->instance_1);
+  }
+
+  /**
+   * Test that allowed values can be updated and that the updates are
+   * reflected in generated forms.
+   */
+  function testUpdateAllowedValues() {
+    // All three options appear.
+    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][1]), t('Option 1 exists'));
+    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][2]), t('Option 2 exists'));
+    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][3]), t('Option 3 exists'));
+
+    // Removed options do not appear.
+    $this->card_1['settings']['allowed_values'] = "2|Two";
+    field_update_field($this->card_1);
+    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][1]), t('Option 1 does not exist'));
+    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][2]), t('Option 2 exists'));
+    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][3]), t('Option 3 does not exist'));
+
+    // Completely new options appear.
+    $this->card_1['settings']['allowed_values'] = "10|Update\n20|Twenty";
+    field_update_field($this->card_1);
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][1]), t('Option 1 does not exist'));
+    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][2]), t('Option 2 does not exist'));
+    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][3]), t('Option 3 does not exist'));
+    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][10]), t('Option 10 exists'));
+    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][20]), t('Option 20 exists'));
+
+    // Options are reset when a new field with the same name is created.
+    field_delete_field($this->card_1['field_name']);
+    unset($this->card_1['id']);
+    $this->card_1['settings']['allowed_values'] = "1|One\n2|Two\n3|Three\n";
+    $this->card_1 = field_create_field($this->card_1);
+    $this->instance_1 = array(
+      'field_name' => $this->card_1['field_name'],
+      'object_type' => 'test_entity',
+      'bundle' => FIELD_TEST_BUNDLE,
+      'widget' => array(
+        'type' => 'options_buttons',
+      ),
+    );
+    $this->instance_1 = field_create_instance($this->instance_1);
+    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][1]), t('Option 1 exists'));
+    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][2]), t('Option 2 exists'));
+    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE]['value'][3]), t('Option 3 exists'));
+  }
+}
+

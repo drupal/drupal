@@ -131,9 +131,35 @@ function list_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
+ * Implement hook_field_create_field().
+ */
+function list_field_create_field($field) {
+  if (array_key_exists($field['type'], list_field_info())) {
+    // Clear the static cache of allowed values for $field.
+    $allowed_values = &drupal_static('list_allowed_values', array());
+    unset($allowed_values[$field['field_name']]);
+  }
+}
+
+/**
+ * Implement hook_field_update_field().
+ */
+function list_field_update_field($field, $prior_field, $has_data) {
+  if (array_key_exists($field['type'], list_field_info())) {
+    // Clear the static cache of allowed values for $field.
+    $allowed_values = &drupal_static('list_allowed_values', array());
+    unset($allowed_values[$field['field_name']]);
+  }
+}
+
+/**
  * Create an array of allowed values for this field.
  */
 function list_allowed_values($field) {
+  // This static cache must be cleared whenever $field['field_name']
+  // changes. This includes when it is created because a different
+  // field with the same name may have previously existed, as well
+  // as when it is updated.
   $allowed_values = &drupal_static(__FUNCTION__, array());
 
   if (isset($allowed_values[$field['field_name']])) {

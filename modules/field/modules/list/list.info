@@ -5,4 +5,5 @@ package = Core - fields
 version = VERSION
 core = 7.x
 files[]=list.module
+files[]=list.test
 required = TRUE
