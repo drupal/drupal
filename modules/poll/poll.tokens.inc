@@ -42,6 +42,7 @@ function poll_token_info() {
 function poll_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);
   $sanitize = !empty($options['sanitize']);
+  $replacements = array();
 
   if ($type == 'node' && !empty($data['node']) && $data['node']->type == 'poll') {
     $node = $data['node'];

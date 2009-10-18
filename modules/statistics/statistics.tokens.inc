@@ -34,6 +34,7 @@ function statistics_token_info() {
  */
 function statistics_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);
+  $replacements = array();
 
   if ($type == 'node' & !empty($data['node'])) {
     $node = $data['node'];
