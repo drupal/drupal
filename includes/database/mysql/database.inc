@@ -100,7 +100,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     // table based solely on values from the table so deleting all values would
     // be a problem in this case. Also, TRUNCATE resets the auto increment
     // counter.
-    $max_id = db_select('SELECT MAX(value) FROM {sequences}')->fetchField();
+    $max_id = db_query('SELECT MAX(value) FROM {sequences}')->fetchField();
     // We know we are using MySQL here, so need for the slower db_delete().
     db_query('DELETE FROM {sequences} WHERE value < :value', array(':value' => $max_id));
   }
