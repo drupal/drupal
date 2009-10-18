@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.392 2009/10/17 05:50:28 webchick Exp $
+// $Id: block.module,v 1.393 2009/10/18 11:42:29 dries Exp $
 
 /**
  * @file
@@ -87,13 +87,6 @@ function block_menu() {
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
-  );
-  $items['admin/structure/block/list/js'] = array(
-    'title' => 'JavaScript List Form',
-    'page callback' => 'block_admin_display_js',
-    'access arguments' => array('administer blocks'),
-    'type' => MENU_CALLBACK,
-    'file' => 'block.admin.inc',
   );
   $items['admin/structure/block/manage/%block/%'] = array(
     'title' => 'Configure block',
