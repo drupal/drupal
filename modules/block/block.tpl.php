@@ -46,7 +46,7 @@
   <h2<?php print $title_attributes; ?>><?php print $block->subject ?></h2>
 <?php endif;?>
 
-  <div class="content">
+  <div class="content"<?php print $content_attributes; ?>>
     <?php print $content ?>
   </div>
 </div>

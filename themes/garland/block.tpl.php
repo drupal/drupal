@@ -11,5 +11,5 @@
   <h2 class="title"<?php print $title_attributes; ?>><?php print $block->subject ?></h2>
 <?php endif;?>
 
-  <div class="content"><?php print $content ?></div>
+  <div class="content"<?php print $content_attributes; ?>><?php print $content ?></div>
 </div>

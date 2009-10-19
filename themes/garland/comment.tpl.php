@@ -19,7 +19,7 @@
 
     <h3<?php print $title_attributes; ?>><?php print $title ?></h3>
 
-    <div class="content">
+    <div class="content"<?php print $content_attributes; ?>>
       <?php hide($content['links']); print render($content); ?>
       <?php if ($signature): ?>
       <div class="clearfix">
