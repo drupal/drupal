@@ -144,6 +144,9 @@ Drupal 7.0, xxxx-xx-xx (development version)
 - Added RDF support:
     * Modules can declare RDF namespaces which are serialized in the <html> tag
       for RDFa support.
+    * Modules can specify how their data structure maps to RDF.
+    * Added support for RDFa export of nodes, comments, terms, users, etc. and
+      their fields.
 - Field API:
     * Custom data fields may be attached to nodes, users, comments and taxonomy
       terms.
