@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tpl.php,v 1.15 2009/10/19 01:30:06 dries Exp $
+// $Id: comment.tpl.php,v 1.16 2009/10/19 20:33:21 dries Exp $
 
 /**
  * @file
@@ -11,8 +11,12 @@
  *   print a subset such as render($content['field_example']). Use
  *   hide($content['field_example']) to temporarily suppress the printing of a
  *   given element.
- * - $created: Date and time this comment was created.
- * - $changed: Date and time this comment was changed.
+ * - $created: Formatted date and time for when the comment was created.
+ *   Preprocess functions can reformat it by calling format_date() with the
+ *   desired parameters on the $comment->created variable.
+ * - $changed: Formatted date and time for when the comment was last changed.
+ *   Preprocess functions can reformat it by calling format_date() with the
+ *   desired parameters on the $comment->changed variable.
  * - $new: New comment marker.
  * - $picture: Authors picture.
  * - $signature: Authors signature.
@@ -61,8 +65,8 @@
 
   <div class="submitted">
     <?php
-      print t('Submitted by !username on @datetime.',
-        array('!username' => $author, '@datetime' => $created));
+      print t('Submitted by !username on !datetime.',
+        array('!username' => $author, '!datetime' => $created));
     ?>
   </div>
 
