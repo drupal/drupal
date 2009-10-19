@@ -439,9 +439,9 @@ function poll_load($nodes) {
     $poll->choice = db_select('poll_choice', 'c')
       ->addTag('translatable')
       ->fields('c', array('chid', 'chtext', 'chvotes', 'weight'))
-      ->condition('c', 'nid', $node->nid)
+      ->condition('c.nid', $node->nid)
       ->orderBy('weight')
-      ->fetchAllAssoc('chid', PDO::FETCH_ASSOC);
+      ->execute()->fetchAllAssoc('chid', PDO::FETCH_ASSOC);
 
     // Determine whether or not this user is allowed to vote.
     $poll->allowvotes = FALSE;
