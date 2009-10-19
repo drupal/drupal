@@ -1,5 +1,5 @@
 <?php
-// $Id: block.tpl.php,v 1.5 2009/10/17 05:50:28 webchick Exp $
+// $Id: block.tpl.php,v 1.6 2009/10/19 01:30:06 dries Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@
   <h2<?php print $title_attributes; ?>><?php print $block->subject ?></h2>
 <?php endif;?>
 
-  <div class="content">
+  <div class="content"<?php print $content_attributes; ?>>
     <?php print $content ?>
   </div>
 </div>

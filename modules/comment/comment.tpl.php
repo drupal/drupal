@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tpl.php,v 1.14 2009/10/17 05:50:28 webchick Exp $
+// $Id: comment.tpl.php,v 1.15 2009/10/19 01:30:06 dries Exp $
 
 /**
  * @file
@@ -66,7 +66,7 @@
     ?>
   </div>
 
-  <div class="content">
+  <div class="content"<?php print $content_attributes; ?>>
     <?php
       // We hide the comments and links now so that we can render them later.
       hide($content['links']);

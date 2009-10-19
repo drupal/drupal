@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.18 2009/10/17 05:50:29 webchick Exp $
+// $Id: node.tpl.php,v 1.19 2009/10/19 01:30:07 dries Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
@@ -17,7 +17,7 @@
     <span class="submitted"><?php print $date; ?> — <?php print $name; ?></span>
   <?php endif; ?>
 
-  <div class="content clearfix">
+  <div class="content clearfix"<?php print $content_attributes; ?>>
     <?php
       // We hide the comments and links now so that we can render them later.
       hide($content['comments']);
