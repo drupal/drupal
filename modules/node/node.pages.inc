@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.92 2009/10/16 19:20:34 dries Exp $
+// $Id: node.pages.inc,v 1.93 2009/10/19 02:00:55 dries Exp $
 
 /**
  * @file
@@ -413,8 +413,6 @@ function theme_node_preview($variables) {
 }
 
 function node_form_submit($form, &$form_state) {
-  global $user;
-
   $node = node_form_submit_build_node($form, $form_state);
   $insert = empty($node->nid);
   node_save($node);
