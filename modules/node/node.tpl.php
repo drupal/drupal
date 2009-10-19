@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.26 2009/10/19 01:30:07 dries Exp $
+// $Id: node.tpl.php,v 1.27 2009/10/19 18:28:15 dries Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
  *   given element.
  * - $user_picture: The node author's picture from user-picture.tpl.php.
  * - $date: Formatted creation date (use $created to reformat with
- *   format_date()).
+ *   format_date()). This data is excepted to be sanitized beforehand.
  * - $name: Themed username of node author output from theme_username().
  * - $node_url: Direct url of the current node.
  * - $terms: the themed list of taxonomy term links output from theme_links().
@@ -88,8 +88,8 @@
       <?php if ($display_submitted): ?>
         <span class="submitted">
           <?php
-            print t('Submitted by !username on @datetime',
-              array('!username' => $name, '@datetime' => $date));
+            print t('Submitted by !username on !datetime',
+              array('!username' => $name, '!datetime' => $date));
           ?>
         </span>
       <?php endif; ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: default.install,v 1.14 2009/10/18 07:50:45 webchick Exp $
+// $Id: default.install,v 1.15 2009/10/19 18:28:16 dries Exp $
 
 /**
  * Implement hook_install().
@@ -164,6 +164,28 @@ function default_install() {
   foreach ($types as $type) {
     $type = node_type_set_defaults($type);
     node_type_save($type);
+  }
+
+  // Insert default user-defined RDF mapping into the database.
+  $rdf_mappings = array(
+    array(
+      'type' => 'node',
+      'bundle' => 'page',
+      'mapping' => array(
+        'rdftype' => array('foaf:Document'),
+      ),
+    ),
+    array(
+      'type' => 'node',
+      'bundle' => 'article',
+      'mapping' => array(
+        'rdftype' => array('sioc:Item', 'foaf:Document'),
+      ),
+    ),
+  );
+
+  foreach ($rdf_mappings as $rdf_mapping) {
+    rdf_save_mapping($rdf_mapping);
   }
 
   // Default page to not be promoted and have comments disabled.

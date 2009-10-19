@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.336 2009/10/09 00:59:55 dries Exp $
+// $Id: blog.module,v 1.337 2009/10/19 18:28:15 dries Exp $
 
 /**
  * @file
@@ -184,3 +184,17 @@ function blog_block_view($delta = '') {
   }
 }
 
+/**
+ * Implementation of hook_rdf_mapping().
+ */
+function blog_rdf_mapping() {
+  return array(
+    array(
+      'type' => 'node',
+      'bundle' => 'blog',
+      'mapping' => array(
+        'rdftype' => array('sioct:Weblog'),
+      )
+    ),
+  );
+} 

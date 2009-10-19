@@ -1,0 +1,26 @@
+<?php
+// $Id: rdf_test.install,v 1.1 2009/10/19 18:28:15 dries Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the rdf module.
+ */
+
+/**
+ * Implement hook_install().
+ */
+function rdf_test_install() {
+  $rdf_mappings = array(
+    array(
+      'type' => 'node',
+      'bundle' => 'test_bundle_hook_install',
+      'mapping' => array(
+        'rdftype' => array('foo:mapping_install1', 'bar:mapping_install2'),
+      ),
+    ),
+  );
+
+  foreach ($rdf_mappings as $rdf_mapping) {
+    rdf_save_mapping($rdf_mapping);
+  }
+}

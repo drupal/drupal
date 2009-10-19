@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1070 2009/10/18 11:34:45 dries Exp $
+// $Id: user.module,v 1.1071 2009/10/19 18:28:16 dries Exp $
 
 /**
  * @file
@@ -3254,4 +3254,22 @@ function user_cookie_save(array $values, array $fields = array('name', 'mail', '
       setrawcookie('Drupal.visitor.' . $field, rawurlencode($values[$field]), REQUEST_TIME + 31536000, '/');
     }
   }
+}
+
+/**
+ * Implementation of hook_rdf_mapping().
+ */
+function user_rdf_mapping() {
+  return array(
+    array(
+      'type' => 'user',
+      'bundle' => RDF_DEFAULT_BUNDLE,
+      'mapping' => array(
+        'rdftype' => array('sioc:User'),
+        'name' => array(
+          'predicates' => array('foaf:name'),
+        ),
+      ),
+    ),
+  );
 }

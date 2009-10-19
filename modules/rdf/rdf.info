@@ -1,0 +1,9 @@
+; $Id: rdf.info,v 1.1 2009/10/19 18:28:15 dries Exp $
+name = RDF
+description = Allows to map the site data structure to RDF and export it in RDFa.
+package = Core
+version = VERSION
+core = 7.x
+files[] = rdf.install
+files[] = rdf.module
+files[] = rdf.test

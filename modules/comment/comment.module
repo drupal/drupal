@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.793 2009/10/17 05:50:28 webchick Exp $
+// $Id: comment.module,v 1.794 2009/10/19 18:28:15 dries Exp $
 
 /**
  * @file
@@ -2493,4 +2493,39 @@ function comment_filter_format_delete($format, $fallback) {
     ->fields(array('format' => $fallback->format))
     ->condition('format', $format->format)
     ->execute();
+}
+
+/**
+ * Implementation of hook_rdf_mapping().
+ */
+function comment_rdf_mapping() {
+  return array(
+    array(
+      'type' => 'comment',
+      'bundle' => RDF_DEFAULT_BUNDLE,
+      'mapping' => array(
+        'rdftype' => array('sioct:Post'),
+        'title'   => array(
+          'predicates' => array('dc:title'),
+        ),
+        'created' => array(
+          'predicates' => array('dc:date', 'dc:created'),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body'    => array(
+          'predicates' => array('content:encoded'),
+        ),
+        'pid'     => array(
+          'predicates' => array('sioc:reply_of'),
+        ),
+        'uid'     => array(
+          'predicates' => array('sioc:has_creator'),
+        ),
+        'name'    => array(
+          'predicates' => array('foaf:name'),
+        ),
+      ),
+    ),
+  );
 }

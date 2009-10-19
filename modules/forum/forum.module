@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.524 2009/10/15 12:44:36 dries Exp $
+// $Id: forum.module,v 1.525 2009/10/19 18:28:15 dries Exp $
 
 /**
  * @file
@@ -1131,4 +1131,30 @@ function _forum_update_forum_index($nid) {
       ->condition('nid', $nid)
       ->execute();
   }
+}
+
+/**
+ * Implementation of hook_rdf_mapping().
+ */
+function forum_rdf_mapping() {
+  return array(
+    array(
+      'type' => 'node',
+      'bundle' => 'forum',
+      'mapping' => array(
+        'rdftype' => array('sioct:Post', 'sioct:ForumTopic'),
+        'taxonomy_forums'   => array(
+          'predicates' => array('sioc:has_container'),
+          'type' => 'rel',
+        ),
+      ),
+    ),
+    array(
+      'type' => 'taxonomy_term',
+      'bundle' => 'forums',
+      'mapping' => array(
+        'rdftype' => array('sioct:Container'),
+      ),
+    ),
+  );
 }
