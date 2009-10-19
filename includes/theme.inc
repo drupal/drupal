@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.540 2009/10/19 02:06:52 webchick Exp $
+// $Id: theme.inc,v 1.541 2009/10/19 23:28:40 dries Exp $
 
 /**
  * @file
@@ -1146,7 +1146,6 @@ function theme_get_setting($setting_name, $theme = NULL) {
       'toggle_logo'                      =>  1,
       'toggle_favicon'                   =>  1,
       'toggle_name'                      =>  1,
-      'toggle_search'                    =>  1,
       'toggle_slogan'                    =>  1,
       'toggle_node_user_picture'         =>  1,
       'toggle_comment_user_picture'      =>  1,
