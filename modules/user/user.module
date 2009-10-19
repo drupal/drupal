@@ -3255,3 +3255,21 @@ function user_cookie_save(array $values, array $fields = array('name', 'mail', '
     }
   }
 }
+
+/**
+ * Implementation of hook_rdf_mapping().
+ */
+function user_rdf_mapping() {
+  return array(
+    array(
+      'type' => 'user',
+      'bundle' => RDF_DEFAULT_BUNDLE,
+      'mapping' => array(
+        'rdftype' => array('sioc:User'),
+        'name' => array(
+          'predicates' => array('foaf:name'),
+        ),
+      ),
+    ),
+  );
+}

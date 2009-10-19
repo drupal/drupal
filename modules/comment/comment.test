@@ -864,3 +864,52 @@ class CommentRSSUnitTest extends CommentHelperCase {
     $this->assertNoRaw($raw, t('Hidden comments is not a part of RSS feed.'));
   }
 }
+
+class RdfaCommentTestCase extends CommentHelperCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'RDFa comment markup',
+      'description' => 'Test RDFa markup in comments.',
+      'group' => 'RDF',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('comment', 'rdf');
+
+    $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer permissions', 'administer blocks'));
+    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content'));
+
+    $this->drupalLogin($this->web_user);
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $this->drupalLogout();
+  }
+
+  function testAttributesInMarkup() {
+    // Set comments to not have subject.
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentPreview(FALSE);
+    $this->setCommentForm(TRUE);
+    $this->setCommentSubject(TRUE);
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
+    $this->drupalLogout();
+
+    // Post comment.
+    $this->drupalLogin($this->web_user);
+    $subject_text = 'foo';
+    $comment_text = 'bar';
+    $comment = $this->postComment($this->node, $comment_text, $subject_text, FALSE);
+    $this->drupalGet('node/' . $this->node->nid);
+
+    $comment_container = $this->xpath("//div[contains(@class, 'comment') and @typeof='sioct:Post']");
+    $this->assertFalse(empty($comment_container));
+    $comment_title = $this->xpath("//h3[@property='dc:title']");
+    $this->assertEqual((string)$comment_title[0]->a, 'foo');
+    $comment_date = $this->xpath("//div[@typeof='sioct:Post']//*[contains(@property, 'dc:date') and contains(@property, 'dc:created')]");
+    $this->assertFalse(empty($comment_date));
+    $comment_author = $this->xpath("//div[@typeof='sioct:Post']//*[contains(@property, 'foaf:name')]");
+    $this->assertEqual((string)$comment_author[0], $this->web_user->name);
+  }
+
+}

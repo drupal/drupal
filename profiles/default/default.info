@@ -18,4 +18,5 @@ dependencies[] = shortcut
 dependencies[] = toolbar
 dependencies[] = field_ui
 dependencies[] = file
+dependencies[] = rdf
 files[] = default.profile

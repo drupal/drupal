@@ -1,0 +1,193 @@
+<?php
+// $Id$
+
+class RdfMappingHookTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'RDF mapping hook',
+      'description' => 'Test hook_rdf_mapping().',
+      'group' => 'RDF',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('rdf', 'rdf_test', 'field_test');
+    // We need to trigger rdf_modules_installed() because
+    // hook_modules_installed() is not automatically invoked during testing.
+    rdf_modules_installed(array('rdf_test'));
+  }
+
+  /**
+   * Test that hook_rdf_mapping() correctly returns and processes mapping.
+   */
+  function testMapping() {
+    // Test that the mapping is returned correctly by the hook.
+    $mapping = rdf_get_mapping('test_entity', 'test_bundle');
+    $this->assertIdentical($mapping['rdftype'], array('sioc:Post'), t('Mapping for rdftype is sioc:Post.'));
+    $this->assertIdentical($mapping['title'], array('predicates' => array('dc:title')), t('Mapping for title is dc:title.'));
+    $this->assertIdentical($mapping['created'], array(
+      'predicates' => array('dc:created'),
+      'datatype' => 'xsd:dateTime',
+      'callback' => 'date_iso8601',
+    ), t('Mapping for created is dc:created with datatype xsd:dateTime and callback date_iso8601.'));
+    $this->assertIdentical($mapping['uid'], array('predicates' => array('sioc:has_creator', 'dc:creator')), t('Mapping for uid is sioc:has_creator and dc:creator.'));
+
+    $mapping = rdf_get_mapping('test_entity', 'test_bundle_no_mapping');
+    $this->assertEqual($mapping, array(), t('Empty array returned when an entity type, bundle pair has no mapping.'));
+  }
+}
+
+class RdfMarkupTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'RDFa markup',
+      'description' => 'Test RDFa markup generation.',
+      'group' => 'RDF',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('rdf', 'field_test', 'rdf_test');
+    rdf_modules_installed(array('field_test', 'rdf_test'));
+  }
+
+  /**
+   * Test drupal_rdfa_attributes().
+   */
+  function testDrupalRdfaAtributes() {
+    $date = 1252750327;
+    $isoDate = date('c', $date);
+
+    $expected_type = 'xsd:dateTime';
+    $expected_property = array('dc:created');
+    $expected_value = $isoDate;
+
+    $mapping = rdf_get_mapping('test_entity', 'test_bundle');
+    $attributes = drupal_rdfa_attributes($mapping['created'], $date);
+
+    $this->assertEqual($expected_type, $attributes['datatype']);
+    $this->assertEqual($expected_property, $attributes['property']);
+    $this->assertEqual($expected_value, $attributes['content']);
+  }
+
+}
+
+class RdfCrudTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'RDF mapping CRUD functions',
+      'description' => 'Test the RDF mapping CRUD functions.',
+      'group' => 'RDF',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('rdf', 'rdf_test');
+  }
+
+  function testCreateReadUpdateWrite() {
+    $test_mapping = rdf_test_rdf_mapping();
+
+    $this->assertTrue(is_array(rdf_read_mapping('test_entity', 'test_bundle')));
+    $this->assertEqual(count(rdf_read_mapping('test_entity', 'test_bundle')), 0);
+    $this->assertEqual(
+      rdf_create_mapping('test_entity', 'test_bundle', $test_mapping[0]['mapping']),
+      $test_mapping[0]['mapping']
+    );
+
+    try {
+      rdf_create_mapping('test_entity', 'test_bundle', $test_mapping[0]['mapping']);
+      $this->fail('No Exception thrown when attempting to insert the same mapping another time.');
+    }
+    catch (Exception $e) {
+      $this->pass('Exception thrown when attempting to insert the same mapping another time.');
+    }
+
+    $this->assertEqual($test_mapping[0]['mapping'],
+      rdf_read_mapping('test_entity', 'test_bundle'));
+    $this->assertTrue(rdf_update_mapping('test_entity', 'test_bundle',
+      $test_mapping[1]['mapping']));
+    $this->assertEqual($test_mapping[1]['mapping'],
+      rdf_read_mapping('test_entity', 'test_bundle'));
+    $this->assertTrue(rdf_delete_mapping('test_entity', 'test_bundle'));
+    $this->assertFalse(rdf_read_mapping('test_entity', 'test_bundle'));
+  }
+
+  function testSaveMapping() {
+    $test_mapping = rdf_test_rdf_mapping();
+    rdf_save_mapping($test_mapping[0]);
+
+    $this->assertEqual($test_mapping[0]['mapping'],
+      rdf_read_mapping('test_entity', 'test_bundle'));
+  }
+
+}
+
+class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'RDF mapping definition functionality',
+      'description' => 'Test the different types of RDF mappings and ensure the proper RDFa markup in included in node pages.',
+      'group' => 'RDF',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('rdf', 'rdf_test', 'blog');
+    // We need to trigger rdf_modules_installed() because
+    // hook_modules_installed() is not automatically invoked during testing.
+    rdf_modules_installed(array('rdf_test', 'node'));
+    // entity_info caches must be cleared during testing. This is done
+    // automatically during the manual installation.
+    cache_clear_all('entity_info', 'cache');
+    drupal_static_reset('entity_get_info');
+  }
+
+  /**
+   * Create a node of type blog and test whether the RDF mapping defined for
+   * this node type in rdf_test.module is used in the node page.
+   */
+  function testAttributesInMarkup1() {
+    $node = $this->drupalCreateNode(array('type' => 'blog'));
+    $this->drupalGet('node/' . $node->nid);
+
+    $this->assertRaw('typeof="sioct:Weblog"');
+    // Ensure the default bundle mapping for node is used. These attributes come
+    // from the node default bundle definition.
+    $this->assertRaw('property="dc:title"');
+    $this->assertRaw('property="dc:date dc:created"');
+
+  }
+
+  /**
+   * Create a content type and a node of type test_bundle_hook_install and test
+   * whether the RDF mapping defined in rdf_test.install is used.
+   */
+  function testAttributesInMarkup2() {
+    $type = $this->drupalCreateContentType(array('type' => 'test_bundle_hook_install'));
+    $node = $this->drupalCreateNode(array('type' => 'test_bundle_hook_install'));
+    $this->drupalGet('node/' . $node->nid);
+
+    $this->assertRaw('typeof="foo:mapping_install1 bar:mapping_install2"');
+    // Ensure the default bundle mapping for node is used. These attributes come
+    // from the node default bundle definition.
+    $this->assertRaw('property="dc:title"');
+    $this->assertRaw('property="dc:date dc:created"');
+  }
+
+  /**
+   * Create a random content type and node and ensure the default mapping for
+   * node is used.
+   */
+  function testAttributesInMarkup3() {
+    $type = $this->drupalCreateContentType();
+    $node = $this->drupalCreateNode(array('type' => $type->type));
+    $this->drupalGet('node/' . $node->nid);
+
+    $this->assertRaw('typeof="sioc:Item foaf:Document"');
+    // Ensure the default bundle mapping for node is used. These attributes come
+    // from the node default bundle definition.
+    $this->assertRaw('property="dc:title"');
+    $this->assertRaw('property="dc:date dc:created"');
+  }
+}

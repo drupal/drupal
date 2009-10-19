@@ -754,6 +754,47 @@ function node_type_set_defaults($info = array()) {
 }
 
 /**
+ * Define the default RDF mapping for the node entity type.
+ *
+ * These default mapping properties are used by rdf_save_mapping() to populate
+ * non-existing properties before they are saved to the database.
+ *
+ * @return
+ *   A list of default mapping properties for the node entity type.
+ */
+function node_rdf_mapping() {
+  return array(
+    array(
+      'type' => 'node',
+      'bundle' => RDF_DEFAULT_BUNDLE,
+      'mapping' => array(
+        'rdftype' => array('sioc:Item', 'foaf:Document'),
+        'title'   => array(
+          'predicates' => array('dc:title'),
+        ),
+        'created' => array(
+          'predicates' => array('dc:date', 'dc:created'),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array('dc:modified'),
+        ),
+        'body'    => array(
+          'predicates' => array('content:encoded'),
+        ),
+        'uid'     => array(
+          'predicates' => array('sioc:has_creator'),
+        ),
+        'name'    => array(
+          'predicates' => array('foaf:name'),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
  * Determine whether a node hook exists.
  *
  * @param $node

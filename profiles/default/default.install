@@ -166,6 +166,28 @@ function default_install() {
     node_type_save($type);
   }
 
+  // Insert default user-defined RDF mapping into the database.
+  $rdf_mappings = array(
+    array(
+      'type' => 'node',
+      'bundle' => 'page',
+      'mapping' => array(
+        'rdftype' => array('foaf:Document'),
+      ),
+    ),
+    array(
+      'type' => 'node',
+      'bundle' => 'article',
+      'mapping' => array(
+        'rdftype' => array('sioc:Item', 'foaf:Document'),
+      ),
+    ),
+  );
+
+  foreach ($rdf_mappings as $rdf_mapping) {
+    rdf_save_mapping($rdf_mapping);
+  }
+
   // Default page to not be promoted and have comments disabled.
   variable_set('node_options_page', array('status'));
   variable_set('comment_page', COMMENT_NODE_HIDDEN);

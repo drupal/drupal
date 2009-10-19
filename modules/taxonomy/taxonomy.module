@@ -1102,7 +1102,8 @@ function taxonomy_field_formatter_info() {
  */
 function theme_field_formatter_taxonomy_term_link($variables) {
   $term = $variables['element']['#item']['taxonomy_term'];
-  return l($term->name, taxonomy_term_path($term));
+  $attributes = empty($variables['link_options']) ? array() : $variables['link_options'];
+  return l($term->name, taxonomy_term_path($term), $attributes);
 }
 
 /**
@@ -1406,6 +1407,47 @@ function taxonomy_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
+ * Implement hook_rdf_mapping().
+ *
+ * @return array
+ *   The rdf mapping for vocabularies and terms.
+ */
+function taxonomy_rdf_mapping() {
+  return array(
+    array(
+      'type' => 'taxonomy_term',
+      'bundle' => RDF_DEFAULT_BUNDLE,
+      'mapping' => array(
+        'rdftype' => array('skos:Concept'),
+        'name'   => array(
+          'predicates' => array('skos:prefLabel'),
+        ),
+        'description'   => array(
+          'predicates' => array('skos:definition'),
+        ),
+        // The vocabulary this term belongs to.
+        'vid'   => array(
+          'predicates' => array('skos:member'),
+        ),
+      ),
+    ),
+    array(
+      'type' => 'taxonomy_vocabulary',
+      'bundle' => RDF_DEFAULT_BUNDLE,
+      'mapping' => array(
+        'rdftype' => array('skos:Collection'),
+        'name'   => array(
+          'predicates' => array('rdfs:label'),
+        ),
+        'description'   => array(
+          'predicates' => array('rdfs:comment'),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
  * @defgroup taxonomy indexing Taxonomy functions maintaining {taxonomy_index}.
  *
  * Taxonomy uses default field storage to store canonical relationships
@@ -1495,4 +1537,3 @@ function taxonomy_taxonomy_term_delete($term) {
 /**
  * @} End of "defgroup taxonomy indexing"
  */
-

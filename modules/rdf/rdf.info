@@ -1,0 +1,9 @@
+; $Id$
+name = RDF
+description = Allows to map the site data structure to RDF and export it in RDFa.
+package = Core
+version = VERSION
+core = 7.x
+files[] = rdf.install
+files[] = rdf.module
+files[] = rdf.test
