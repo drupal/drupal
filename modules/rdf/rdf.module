@@ -61,8 +61,60 @@ function rdf_theme() {
   );
 }
 
- /**
+/**
  * Wraps a template variable in an HTML element with the desired attributes.
+ *
+ * This is called by rdf_process() shortly before the theme system renders
+ * a template file. It is called once for each template variable for which
+ * additional attributes are needed. While template files are responsible for
+ * rendering the attributes for the template's primary object (via the
+ * $attributes variable), title (via the $title_attributes variable), and
+ * content (via the $content_attributes variable), additional template variables
+ * that need containing attributes are routed through this function, allowing
+ * the template file to receive properly wrapped variables.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - content: A string of content to be wrapped with attributes.
+ *   - attributes: An array of attributes desired on the wrapping element.
+ *   - context: An array of context information about the content to be wrapped:
+ *     - 'hook': The theme hook that will use the wrapped content. This
+ *       corresponds to the key within the theme registry for this template.
+ *       For example, if this content is about to be used in node.tpl.php or
+ *       node-TYPE.tpl.php, then the 'hook' is 'node'.
+ *     - 'variable_name': The name of the variable, by which the template will
+ *       refer to this content. Each template file has documentation about
+ *       the variables it uses. For example, if this function is called in
+ *       preparing the $author variable for comment.tpl.php, then the
+ *       'variable_name' is 'author'.
+ *     - 'variables': The full array of variables about to be passed to the
+ *       template.
+ *   - inline: TRUE if the content contains only inline HTML elements and
+ *     therefore can be validly wrapped by a 'span' tag. FALSE if the content
+ *     might contain block level HTML elements and therefore cannot be validly
+ *     wrapped by a 'span' tag. Modules implementing preprocess functions that
+ *     set 'rdf_template_variable_attributes_array' for a particular template
+ *     variable that might contain block level HTML must also implement
+ *     hook_preprocess_rdf_template_variable_wrapper() and set 'inline' to FALSE
+ *     for that context. Themes that render normally inline content with block
+ *     level HTML must similarly implement
+ *     hook_preprocess_rdf_template_variable_wrapper() and set 'inline'
+ *     accordingly.
+ *
+ * @return
+ *   A string containing the wrapped content. The template receives the for its
+ *   variable instead of the original content.
+ *
+ * Tip for themers: if you're already outputting a wrapper element around a
+ * particular template variable in your template file and if you don't want
+ * an extra wrapper element, you can override this function to not wrap that
+ * variable and instead print:
+ * @code
+ * drupal_attributes($rdf_template_variable_attributes_array[$variable_name])
+ * @endcode
+ * inside your template file.
+ *
+ * @see rdf_process()
  *
  * @ingroup themeable
  */
@@ -75,7 +127,7 @@ function theme_rdf_template_variable_wrapper($variables) {
   return $output;
 }
 
- /**
+/**
  * Outputs a series of empty spans for exporting RDF metadata in RDFa.
  *
  * Sometimes it is useful to export data which is not semantically present in
@@ -83,6 +135,23 @@ function theme_rdf_template_variable_wrapper($variables) {
  * but not for machines because this hiearchy is not present in the DOM tree.
  * We can express it in RDFa via empty span tags. These won't be visible and
  * will give machines extra information about the content and its structure.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - metadata: An array of attribute arrays. Each item in the array
+ *     corresponds to its own set of attributes, and therefore, needs its own
+ *     element.
+ *
+ * @return
+ *   A string of HTML containing markup that can be understood by an RDF parser.
+ *
+ * Tip for themers: while this default implementation results in valid markup
+ * for the XHTML+RDFa doctype, you may need to override this in your theme to be
+ * valid for doctypes that don't support empty spans. Or, if empty spans create
+ * visual problems in your theme, you may want to override this to set a
+ * class on them, and apply a CSS rule of display:none for that class.
+ *
+ * @see rdf_process()
  *
  * @ingroup themeable
  */
@@ -94,25 +163,36 @@ function theme_rdf_metadata($variables) {
   return $output;
 }
 
- /**
- * Process function for wrapping some content with an extra tag.
+/**
+ * Template process function for adding extra tags to hold RDFa attributes.
+ *
+ * Since template files already have built-in support for $attributes,
+ * $title_attributes, and $content_attributes, and field templates have support
+ * for $item_attributes, we try to leverage those as much as possible. However,
+ * in some cases additional attributes are needed not covered by these. We deal
+ * with those here.
  */
 function rdf_process(&$variables, $hook) {
-  if (!empty($variables['rdf_variable_attributes_array'])) {
-    foreach ($variables['rdf_variable_attributes_array'] as $variable_name => $attributes) {
+  // Handle attributes needed for content not covered by title, content,
+  // and field items. Do this by adjusting the variable sent to the template
+  // so that the template doesn't have to worry about it.
+  // @see theme_rdf_template_variable_wrapper()
+  if (!empty($variables['rdf_template_variable_attributes_array'])) {
+    foreach ($variables['rdf_template_variable_attributes_array'] as $variable_name => $attributes) {
       $context = array('hook' => $hook, 'variable_name' => $variable_name, 'variables' => $variables);
       $variables[$variable_name] = theme('rdf_template_variable_wrapper', array('content' => $variables[$variable_name], 'attributes' => $attributes, 'context' => $context));
     }
   }
-
-  if (!empty($variables['metadata_attributes_array'])) {
+  // Handle additional attributes about a template entity that for RDF parsing
+  // reasons, can't be placed into that template's $attributes variable. This
+  // is "meta" information that is related to particular content, so render it
+  // close to that content.
+  if (!empty($variables['rdf_metadata_attributes_array'])) {
     if (!isset($variables['content']['#prefix'])) {
       $variables['content']['#prefix'] = '';
     }
-    $variables['content']['#prefix'] = theme('rdf_metadata', array('metadata' => $variables['metadata_attributes_array'])) . $variables['content']['#prefix'];
+    $variables['content']['#prefix'] = theme('rdf_metadata', array('metadata' => $variables['rdf_metadata_attributes_array'])) . $variables['content']['#prefix'];
   }
-
-
 }
 
 /**
@@ -318,7 +398,7 @@ function rdf_preprocess_node(&$variables) {
   // Add RDFa markup for the date.
   if (!empty($variables['rdf_mapping']['created'])) {
     $date_attributes_array = drupal_rdfa_attributes($variables['rdf_mapping']['created'], $variables['created']);
-    $variables['rdf_variable_attributes_array']['date'] = $date_attributes_array;
+    $variables['rdf_template_variable_attributes_array']['date'] = $date_attributes_array;
   }
 }
 
@@ -420,7 +500,7 @@ function rdf_preprocess_comment(&$variables) {
   // RDFa markup for the date of the comment.
   if (!empty($comment->rdf_mapping['created'])) {
     $date_attributes_array = drupal_rdfa_attributes($comment->rdf_mapping['created'], $comment->created);
-    $variables['rdf_variable_attributes_array']['created'] = $date_attributes_array;
+    $variables['rdf_template_variable_attributes_array']['created'] = $date_attributes_array;
   }
   if (!empty($comment->rdf_mapping['title'])) {
     // Add RDFa markup to the subject of the comment. Because the RDFa markup is
@@ -444,13 +524,13 @@ function rdf_preprocess_comment(&$variables) {
     // Relation to parent node.
     $parent_node_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
     $parent_node_attributes['resource'] = url('node/' . $comment->nid);
-    $variables['metadata_attributes_array'][] = $parent_node_attributes;
+    $variables['rdf_metadata_attributes_array'][] = $parent_node_attributes;
 
     // Relation to parent comment if it exists.
     if ($comment->pid != 0) {
       $parent_comment_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
       $parent_comment_attributes['resource'] = url('comment/' . $comment->pid, array('fragment' => 'comment-' . $comment->pid));
-      $variables['metadata_attributes_array'][] = $parent_comment_attributes;
+      $variables['rdf_metadata_attributes_array'][] = $parent_comment_attributes;
     }
   }
 }
