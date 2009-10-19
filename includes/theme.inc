@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.539 2009/10/19 01:30:06 dries Exp $
+// $Id: theme.inc,v 1.540 2009/10/19 02:06:52 webchick Exp $
 
 /**
  * @file
@@ -763,6 +763,7 @@ function theme($hook, $variables = array()) {
 
   if (!isset($hooks[$hook])) {
     watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
+    return '';
   }
 
   $info = $hooks[$hook];
