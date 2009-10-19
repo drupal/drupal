@@ -1407,50 +1407,63 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
   /**
    * Test that random ordering of queries works.
    *
-   * This is a non-deterministic query. That is, it is not guaranteed to pass
-   * 100% of the time.  Random numbers are like that. Instead, we take two sets
-   * of random selects.  By the laws of probability, the average of each set
-   * should be roughly the average of the data set being selected from and
-   * roughly the same each time through, provided that the original data set
-   * is evenly distributed. Because we know that ours is, this test should pass
-   * correctly 99% of the time. It is not possible to unit test for that other
-   * 1% successfully, so that will have to do.
+   * We take the approach of testing the Drupal layer only, rather than trying
+   * to test that the database's random number generator actually produces
+   * random queries (which is very difficult to do without an unacceptable risk
+   * of the test failing by accident).
+   *
+   * Therefore, in this test we simply run the same query twice and assert that
+   * the two results are reordered versions of each other (as well as of the
+   * same query without the random ordering). It is reasonable to assume that
+   * if we run the same select query twice and the results are in a different
+   * order each time, the only way this could happen is if we have successfully
+   * triggered the database's random ordering functionality.
    */
   function testRandomOrder() {
-    $sets = 2;
-    $runs = 50;
-
-    $ids = array();
-    $ids = array();
-
-    $max = db_query("SELECT MAX(id) FROM {test}")->fetchField();
-    $min = db_query("SELECT MIN(id) FROM {test}")->fetchField();
-
-    $ideal_average = ($min + $max) / 2;
-    $allowed_deviation = ($max - $min) / 4;
-
-    for ($i = 0; $i < $sets; ++$i) {
-      for ($j = 0; $j < $runs; ++$j) {
-        $ids[$i][] = db_select('test', 't')
-          ->fields('t', array('id'))
-          ->range(0, 1)
-          ->orderRandom()
-          ->orderBy('id')
-          ->execute()
-          ->fetchField();
-      }
+    // Use 52 items, so the chance that this test fails by accident will be the
+    // same as the chance that a deck of cards will come out in the same order
+    // after shuffling it (in other words, nearly impossible).
+    $number_of_items = 52;
+    while (db_query("SELECT MAX(id) FROM {test}")->fetchField() < $number_of_items) {
+      db_insert('test')->fields(array('name' => $this->randomName()))->execute();
     }
 
-    for ($i = 0; $i < $sets; ++$i) {
-      $found_average[$i] = array_sum($ids[$i]) / count($ids[$i]);
-      $deviation = abs($found_average[$i] - $ideal_average);
-      $this->assertTrue($deviation <= $allowed_deviation, t('Random ids are within allowed deviation.'));
-    }
+    // First select the items in order and make sure we get an ordered list.
+    $expected_ids = range(1, $number_of_items);
+    $ordered_ids = db_select('test', 't')
+      ->fields('t', array('id'))
+      ->range(0, $number_of_items)
+      ->orderBy('id')
+      ->execute()
+      ->fetchCol();
+    $this->assertEqual($ordered_ids, $expected_ids, t('A query without random ordering returns IDs in the correct order.'));
 
-    for ($i = 1; $i < $sets; ++$i) {
-      $deviation = abs($found_average[$i] - $found_average[$i-1]);
-      $this->assertTrue($deviation <= $allowed_deviation, t('Random ids are within allowed deviation from each other.'));
-    }
+    // Now perform the same query, but instead choose a random ordering. We
+    // expect this to contain a differently ordered version of the original
+    // result.
+    $randomized_ids = db_select('test', 't')
+      ->fields('t', array('id'))
+      ->range(0, $number_of_items)
+      ->orderRandom()
+      ->execute()
+      ->fetchCol();
+    $this->assertNotEqual($randomized_ids, $ordered_ids, t('A query with random ordering returns an unordered set of IDs.'));
+    $sorted_ids = $randomized_ids;
+    sort($sorted_ids);
+    $this->assertEqual($sorted_ids, $ordered_ids, t('After sorting the random list, the result matches the original query.'));
+
+    // Now perform the exact same query again, and make sure the order is
+    // different.
+    $randomized_ids_second_set = db_select('test', 't')
+      ->fields('t', array('id'))
+      ->range(0, $number_of_items)
+      ->orderRandom()
+      ->execute()
+      ->fetchCol();
+    $this->assertNotEqual($randomized_ids_second_set, $randomized_ids, t('Performing the query with random ordering a second time returns IDs in a different order.'));
+    $sorted_ids_second_set = $randomized_ids_second_set;
+    sort($sorted_ids_second_set);
+    $this->assertEqual($sorted_ids_second_set, $sorted_ids, t('After sorting the second random list, the result matches the sorted version of the first random list.'));
   }
 }
 
