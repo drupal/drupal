@@ -413,8 +413,6 @@ function theme_node_preview($variables) {
 }
 
 function node_form_submit($form, &$form_state) {
-  global $user;
-
   $node = node_form_submit_build_node($form, $form_state);
   $insert = empty($node->nid);
   node_save($node);
