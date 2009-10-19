@@ -453,9 +453,6 @@ function system_theme_settings($form, &$form_state, $key = '') {
     $disabled['toggle_node_user_picture'] = TRUE;
     $disabled['toggle_comment_user_picture'] = TRUE;
   }
-  if (!module_exists('search')) {
-    $disabled['toggle_search'] = TRUE;
-  }
 
   $form['theme_settings'] = array(
     '#type' => 'fieldset',

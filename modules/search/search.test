@@ -395,11 +395,6 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     // Create and login user
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'search content'));
     $this->drupalLogin($admin_user);
-
-    // Disable the theme form to avoid confusion.
-    $settings = theme_get_settings();
-    $settings['toggle_search'] = FALSE;
-    variable_set('theme_settings', $settings);
   }
 
   function testSearchFormBlock() {

@@ -1146,7 +1146,6 @@ function theme_get_setting($setting_name, $theme = NULL) {
       'toggle_logo'                      =>  1,
       'toggle_favicon'                   =>  1,
       'toggle_name'                      =>  1,
-      'toggle_search'                    =>  1,
       'toggle_slogan'                    =>  1,
       'toggle_node_user_picture'         =>  1,
       'toggle_comment_user_picture'      =>  1,
