@@ -185,7 +185,7 @@ function blog_block_view($delta = '') {
 }
 
 /**
- * Implementation of hook_rdf_mapping().
+ * Implements hook_rdf_mapping().
  */
 function blog_rdf_mapping() {
   return array(
@@ -194,7 +194,7 @@ function blog_rdf_mapping() {
       'bundle' => 'blog',
       'mapping' => array(
         'rdftype' => array('sioct:Weblog'),
-      )
+      ),
     ),
   );
-} 
+}

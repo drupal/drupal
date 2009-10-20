@@ -865,8 +865,10 @@ class CommentRSSUnitTest extends CommentHelperCase {
   }
 }
 
-class RdfaCommentTestCase extends CommentHelperCase {
-
+/**
+ * Test RDFa markup for comments.
+ */
+class CommentRdfaTestCase extends CommentHelperCase {
   public static function getInfo() {
     return array(
       'name' => 'RDFa comment markup',
@@ -911,5 +913,4 @@ class RdfaCommentTestCase extends CommentHelperCase {
     $comment_author = $this->xpath("//div[@typeof='sioct:Post']//*[contains(@property, 'foaf:name')]");
     $this->assertEqual((string)$comment_author[0], $this->web_user->name);
   }
-
 }

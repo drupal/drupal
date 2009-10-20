@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for RDF functionality.
+ */
+
 class RdfMappingHookTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -52,7 +57,7 @@ class RdfMarkupTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test drupal_rdfa_attributes().
+   * Test rdf_rdfa_attributes().
    */
   function testDrupalRdfaAtributes() {
     $date = 1252750327;
@@ -63,7 +68,7 @@ class RdfMarkupTestCase extends DrupalWebTestCase {
     $expected_value = $isoDate;
 
     $mapping = rdf_get_mapping('test_entity', 'test_bundle');
-    $attributes = drupal_rdfa_attributes($mapping['created'], $date);
+    $attributes = rdf_rdfa_attributes($mapping['created'], $date);
 
     $this->assertEqual($expected_type, $attributes['datatype']);
     $this->assertEqual($expected_property, $attributes['property']);
@@ -85,42 +90,36 @@ class RdfCrudTestCase extends DrupalWebTestCase {
     parent::setUp('rdf', 'rdf_test');
   }
 
-  function testCreateReadUpdateWrite() {
+  /**
+   * Test inserting, loading, updating, and deleting RDF mappings.
+   */
+  function testCRUD() {
     $test_mapping = rdf_test_rdf_mapping();
 
-    $this->assertTrue(is_array(rdf_read_mapping('test_entity', 'test_bundle')));
-    $this->assertEqual(count(rdf_read_mapping('test_entity', 'test_bundle')), 0);
-    $this->assertEqual(
-      rdf_create_mapping('test_entity', 'test_bundle', $test_mapping[0]['mapping']),
-      $test_mapping[0]['mapping']
+    // Verify loading of a default mapping.
+    $this->assertFalse(count(rdf_mapping_load('test_entity', 'test_bundle')), t('Default mapping was found.'));
+
+    // Verify saving a mapping.
+    $mapping = (array) $test_mapping;
+    rdf_mapping_save($mapping[0]);
+    $this->assertEqual($mapping[0]['mapping'], $test_mapping[0]['mapping'], t('Saved mapping equals default mapping.'));
+    $this->assertTrue(rdf_mapping_save($mapping[1]) === SAVED_NEW, t('Second mapping was inserted.'));
+    $this->assertEqual($mapping[1]['mapping'], rdf_mapping_load($test_mapping[1]['type'], $test_mapping[1]['bundle']), t('Second mapping equals default mapping.'));
+
+    // Verify loading of saved mapping.
+    $this->assertEqual($mapping[0]['mapping'], rdf_mapping_load($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Saved mapping equals loaded default mapping.'));
+
+    // Verify updating of mapping.
+    $mapping[0]['mapping']['boofar'] = array(
+      'predicates' => array('foo:bar'),
     );
+    $this->assertTrue(rdf_mapping_save($mapping[0]) === SAVED_UPDATED, t('Mapping was updated.'));
+    $this->assertEqual($mapping[0]['mapping'], rdf_mapping_load($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Updated and loaded mapping are equal.'));
 
-    try {
-      rdf_create_mapping('test_entity', 'test_bundle', $test_mapping[0]['mapping']);
-      $this->fail('No Exception thrown when attempting to insert the same mapping another time.');
-    }
-    catch (Exception $e) {
-      $this->pass('Exception thrown when attempting to insert the same mapping another time.');
-    }
-
-    $this->assertEqual($test_mapping[0]['mapping'],
-      rdf_read_mapping('test_entity', 'test_bundle'));
-    $this->assertTrue(rdf_update_mapping('test_entity', 'test_bundle',
-      $test_mapping[1]['mapping']));
-    $this->assertEqual($test_mapping[1]['mapping'],
-      rdf_read_mapping('test_entity', 'test_bundle'));
-    $this->assertTrue(rdf_delete_mapping('test_entity', 'test_bundle'));
-    $this->assertFalse(rdf_read_mapping('test_entity', 'test_bundle'));
+    // Verify deleting of mapping.
+    $this->assertTrue(rdf_mapping_delete($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Mapping was deleted.'));
+    $this->assertFalse(rdf_mapping_load($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Deleted mapping is no longer found.'));
   }
-
-  function testSaveMapping() {
-    $test_mapping = rdf_test_rdf_mapping();
-    rdf_save_mapping($test_mapping[0]);
-
-    $this->assertEqual($test_mapping[0]['mapping'],
-      rdf_read_mapping('test_entity', 'test_bundle'));
-  }
-
 }
 
 class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
@@ -156,7 +155,6 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     // from the node default bundle definition.
     $this->assertRaw('property="dc:title"');
     $this->assertRaw('property="dc:date dc:created"');
-
   }
 
   /**

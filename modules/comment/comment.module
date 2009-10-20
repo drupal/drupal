@@ -2496,7 +2496,7 @@ function comment_filter_format_delete($format, $fallback) {
 }
 
 /**
- * Implementation of hook_rdf_mapping().
+ * Implements hook_rdf_mapping().
  */
 function comment_rdf_mapping() {
   return array(
@@ -2505,7 +2505,7 @@ function comment_rdf_mapping() {
       'bundle' => RDF_DEFAULT_BUNDLE,
       'mapping' => array(
         'rdftype' => array('sioct:Post'),
-        'title'   => array(
+        'title' => array(
           'predicates' => array('dc:title'),
         ),
         'created' => array(
@@ -2513,16 +2513,16 @@ function comment_rdf_mapping() {
           'datatype' => 'xsd:dateTime',
           'callback' => 'date_iso8601',
         ),
-        'body'    => array(
+        'body' => array(
           'predicates' => array('content:encoded'),
         ),
-        'pid'     => array(
+        'pid' => array(
           'predicates' => array('sioc:reply_of'),
         ),
-        'uid'     => array(
+        'uid' => array(
           'predicates' => array('sioc:has_creator'),
         ),
-        'name'    => array(
+        'name' => array(
           'predicates' => array('foaf:name'),
         ),
       ),

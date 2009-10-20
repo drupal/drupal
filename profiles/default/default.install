@@ -183,9 +183,8 @@ function default_install() {
       ),
     ),
   );
-
   foreach ($rdf_mappings as $rdf_mapping) {
-    rdf_save_mapping($rdf_mapping);
+    rdf_mapping_save($rdf_mapping);
   }
 
   // Default page to not be promoted and have comments disabled.

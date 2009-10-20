@@ -412,7 +412,7 @@ function forum_comment_update($comment) {
 }
 
 /**
- * Implement forum_comment_unpublish() {
+ * Implements forum_comment_unpublish().
  */
 function forum_comment_unpublish($comment) {
   _forum_update_forum_index($comment->nid);
@@ -1134,7 +1134,7 @@ function _forum_update_forum_index($nid) {
 }
 
 /**
- * Implementation of hook_rdf_mapping().
+ * Implements hook_rdf_mapping().
  */
 function forum_rdf_mapping() {
   return array(
@@ -1143,7 +1143,7 @@ function forum_rdf_mapping() {
       'bundle' => 'forum',
       'mapping' => array(
         'rdftype' => array('sioct:Post', 'sioct:ForumTopic'),
-        'taxonomy_forums'   => array(
+        'taxonomy_forums' => array(
           'predicates' => array('sioc:has_container'),
           'type' => 'rel',
         ),
