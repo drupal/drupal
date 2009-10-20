@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.163 2009/10/16 15:52:33 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.164 2009/10/20 00:55:29 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1175,7 +1175,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     if (preg_match('/simpletest\d+/', $db_prefix)) {
       // Delete temporary files directory.
-      file_unmanaged_delete_recursive(file_directory_path());
+      file_unmanaged_delete_recursive($this->originalFileDirectory . '/' . $db_prefix);
 
       // Remove all prefixed tables (all the tables in the schema).
       $schema = drupal_get_schema(NULL, TRUE);

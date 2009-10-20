@@ -1,5 +1,5 @@
 <?php
-// $Id: file_test.module,v 1.17 2009/09/18 00:12:48 webchick Exp $
+// $Id: file_test.module,v 1.18 2009/10/20 00:55:29 dries Exp $
 
 /**
  * @file
@@ -221,8 +221,8 @@ function file_test_file_validate($file) {
 /**
  * Implement hook_file_download().
  */
-function file_test_file_download($file) {
-  _file_test_log_call('download', array($file));
+function file_test_file_download($uri) {
+  _file_test_log_call('download', array($uri));
   return _file_test_get_return('download');
 }
 
