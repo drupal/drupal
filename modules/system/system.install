@@ -2859,16 +2859,23 @@ function system_update_7043() {
  * Reuse the actions_aid table as sequences.
  */
 function system_update_7044() {
-  db_drop_primary_key('actions_aid');
-  db_change_field('actions_aid', 'aid', 'value', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('value')));
-  db_rename_table('actions_aid', 'sequences');
-  $max = db_query('SELECT MAX(value) FROM {sequences}')->fetchField();
+  $schema['sequences'] = array(
+    'description' => 'Stores IDs.',
+    'fields' => array(
+      'value' => array(
+        'description' => 'The value of the sequence.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+     ),
+    'primary key' => array('value'),
+  );
+  db_create_table('sequences', $schema['sequences']);
+  $max_aid = db_query('SELECT MAX(aid) FROM {actions_aid}')->fetchField();
   $max_uid = db_query('SELECT MAX(uid) FROM {users}')->fetchField();
-  if ($max_uid > $max) {
-    db_update('sequences')->fields(array('value' => $max_uid))->execute();
-  }
-  $max = db_query('SELECT MAX(value) FROM {sequences}')->fetchField();
-  db_delete('sequences')->condition('value', $max, '<');
+  db_insert('sequences')->fields(array('value' => max($max_aid, $max_uid)))->execute();
+  db_drop_table('actions_aid');
 }
 
 /**
