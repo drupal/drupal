@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.25 2009/10/16 19:06:22 dries Exp $
+// $Id: select.inc,v 1.26 2009/10/20 00:28:16 dries Exp $
 
 /**
  * @ingroup database
@@ -902,7 +902,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
   /* Implementations of QueryConditionInterface for the WHERE clause. */
 
-  public function condition($field, $value = NULL, $operator = '=') {
+  public function condition($field, $value = NULL, $operator = NULL) {
     if (!isset($num_args)) {
       $num_args = func_num_args();
     }

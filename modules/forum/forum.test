@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.34 2009/10/11 03:07:18 webchick Exp $
+// $Id: forum.test,v 1.35 2009/10/20 00:28:16 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -68,6 +68,13 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->drupalGet('forum');
     $this->assertRaw("<td class=\"topics\">\n          6                  </td>");
     $this->assertRaw('<td class="posts">6</td>');
+
+    // Test loading multiple forum nodes on the front page.
+    $this->drupalLogin($this->drupalCreateUser(array('administer content types', 'create forum content')));
+    $this->drupalPost('admin/structure/types/manage/forum', array('node_options[promote]' => 'promote'), t('Save content type'));
+    $this->createForumTopic($this->forum, FALSE);
+    $this->createForumTopic($this->forum, FALSE);
+    $this->drupalGet('node');
   }
 
   /**
