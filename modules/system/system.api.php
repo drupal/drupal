@@ -1547,8 +1547,8 @@ function hook_file_delete($file) {
  * private file download method is selected. Modules can also provide headers
  * to specify information like the file's name or MIME type.
  *
- * @param $filepath
- *   String of the file's path.
+ * @param $uri
+ *   The URI of the file.
  * @return
  *   If the user does not have permission to access the file, return -1. If the
  *   user has permission, return an array with the appropriate headers. If the
@@ -1558,12 +1558,12 @@ function hook_file_delete($file) {
  * @see file_download()
  * @see upload_file_download()
  */
-function hook_file_download($filepath) {
+function hook_file_download($uri) {
   // Check if the file is controlled by the current module.
-  if (!file_prepare_directory($filepath)) {
-    $filepath = FALSE;
+  if (!file_prepare_directory($uri)) {
+    $uri = FALSE;
   }
-  $result = db_query("SELECT f.* FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :filepath", array('filepath' => $filepath));
+  $result = db_query("SELECT f.* FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :uri", array('uri' => $uri));
   foreach ($result as $file) {
     if (!user_access('view uploaded files')) {
       return -1;

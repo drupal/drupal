@@ -257,12 +257,12 @@ function image_file_download($uri) {
     // Get the style name from the second part.
     $style_name = array_shift($args);
     // Then the remaining parts are the path to the image.
-    $original_path = implode('/', $args);
+    $original_uri = file_uri_scheme($uri) . '://' . implode('/', $args);
 
     // Check that the file exists and is an image.
     if ($info = image_get_info($uri)) {
       // Check the permissions of the original to grant access to this image.
-      $headers = module_invoke_all('file_download', $original_path);
+      $headers = module_invoke_all('file_download', $original_uri);
       if (!in_array(-1, $headers)) {
         return array(
           // Send headers describing the image's size, and MIME-type...
@@ -272,7 +272,7 @@ function image_file_download($uri) {
           // value we/ use for the mod_expires settings in .htaccess) and
           // ensure that caching proxies do not share the image with other
           // users.
-          'Expires' => gmdate(DATE_RFC1123, time() + 1209600),
+          'Expires' => gmdate(DATE_RFC1123, REQUEST_TIME + 1209600),
           'Cache-Control' => 'max-age=1209600, private, must-revalidate',
         );
       }
@@ -755,7 +755,7 @@ function image_style_url($style_name, $path) {
 }
 
 /**
- * Return a relative path to an image when using a style.
+ * Return the URI of an image when using a style.
  *
  * The path returned by this function may not exist. The default generation
  * method only creates images when they are requested by a user's browser.
@@ -765,12 +765,18 @@ function image_style_url($style_name, $path) {
  * @param $uri
  *   The URI or path to the image.
  * @return
- *   The path to an image style image relative to Drupal's root.
+ *   The URI to an image style image.
  * @see image_style_url()
  */
 function image_style_path($style_name, $uri) {
-  $path = ($path = file_uri_target($uri)) ? $path : $uri;
-  $scheme = ($scheme = file_uri_scheme($uri)) ? $scheme : variable_get('file_default_scheme', 'public');
+  $scheme = file_uri_scheme($uri);
+  if ($scheme) {
+    $path = file_uri_target($uri);
+  }
+  else {
+    $path = $uri;
+    $scheme = variable_get('file_default_scheme', 'public');
+  }
   return $scheme . '://styles/' . $style_name . '/' . $path;
 }
 

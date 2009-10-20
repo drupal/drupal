@@ -150,8 +150,8 @@ function _upload_file_limits($user) {
 /**
  * Implement hook_file_download().
  */
-function upload_file_download($filepath) {
-  $file = db_query("SELECT f.*, u.nid FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :path", array(':path' => $filepath))->fetchObject();
+function upload_file_download($uri) {
+  $file = db_query("SELECT f.*, u.nid FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :uri", array(':uri' => $uri))->fetchObject();
 
   if ($file && user_access('view uploaded files') && ($node = node_load($file->nid)) && node_access('view', $node)) {
     return array(

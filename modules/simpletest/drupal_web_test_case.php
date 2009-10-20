@@ -1175,7 +1175,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     if (preg_match('/simpletest\d+/', $db_prefix)) {
       // Delete temporary files directory.
-      file_unmanaged_delete_recursive(file_directory_path());
+      file_unmanaged_delete_recursive($this->originalFileDirectory . '/' . $db_prefix);
 
       // Remove all prefixed tables (all the tables in the schema).
       $schema = drupal_get_schema(NULL, TRUE);

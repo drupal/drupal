@@ -747,9 +747,9 @@ function user_permission() {
  *
  * Ensure that user pictures (avatars) are always downloadable.
  */
-function user_file_download($filepath) {
-  if (strpos(file_uri_target($filepath), variable_get('user_picture_path', 'pictures') . '/picture-') === 0) {
-    $info = image_get_info($filepath);
+function user_file_download($uri) {
+  if (strpos(file_uri_target($uri), variable_get('user_picture_path', 'pictures') . '/picture-') === 0) {
+    $info = image_get_info($uri);
     return array('Content-Type' => $info['mime_type']);
   }
 }

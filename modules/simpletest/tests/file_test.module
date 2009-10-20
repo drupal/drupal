@@ -221,8 +221,8 @@ function file_test_file_validate($file) {
 /**
  * Implement hook_file_download().
  */
-function file_test_file_download($file) {
-  _file_test_log_call('download', array($file));
+function file_test_file_download($uri) {
+  _file_test_log_call('download', array($uri));
   return _file_test_get_return('download');
 }
 
