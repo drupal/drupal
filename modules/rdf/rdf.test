@@ -27,7 +27,7 @@ class RdfMappingHookTestCase extends DrupalWebTestCase {
    */
   function testMapping() {
     // Test that the mapping is returned correctly by the hook.
-    $mapping = rdf_get_mapping('test_entity', 'test_bundle');
+    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
     $this->assertIdentical($mapping['rdftype'], array('sioc:Post'), t('Mapping for rdftype is sioc:Post.'));
     $this->assertIdentical($mapping['title'], array('predicates' => array('dc:title')), t('Mapping for title is dc:title.'));
     $this->assertIdentical($mapping['created'], array(
@@ -37,7 +37,7 @@ class RdfMappingHookTestCase extends DrupalWebTestCase {
     ), t('Mapping for created is dc:created with datatype xsd:dateTime and callback date_iso8601.'));
     $this->assertIdentical($mapping['uid'], array('predicates' => array('sioc:has_creator', 'dc:creator')), t('Mapping for uid is sioc:has_creator and dc:creator.'));
 
-    $mapping = rdf_get_mapping('test_entity', 'test_bundle_no_mapping');
+    $mapping = rdf_mapping_load('test_entity', 'test_bundle_no_mapping');
     $this->assertEqual($mapping, array(), t('Empty array returned when an entity type, bundle pair has no mapping.'));
   }
 }
@@ -67,7 +67,7 @@ class RdfMarkupTestCase extends DrupalWebTestCase {
     $expected_property = array('dc:created');
     $expected_value = $isoDate;
 
-    $mapping = rdf_get_mapping('test_entity', 'test_bundle');
+    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
     $attributes = rdf_rdfa_attributes($mapping['created'], $date);
 
     $this->assertEqual($expected_type, $attributes['datatype']);
@@ -97,28 +97,28 @@ class RdfCrudTestCase extends DrupalWebTestCase {
     $test_mapping = rdf_test_rdf_mapping();
 
     // Verify loading of a default mapping.
-    $this->assertFalse(count(rdf_mapping_load('test_entity', 'test_bundle')), t('Default mapping was found.'));
+    $this->assertFalse(count(_rdf_mapping_load('test_entity', 'test_bundle')), t('Default mapping was found.'));
 
     // Verify saving a mapping.
     $mapping = (array) $test_mapping;
     rdf_mapping_save($mapping[0]);
     $this->assertEqual($mapping[0]['mapping'], $test_mapping[0]['mapping'], t('Saved mapping equals default mapping.'));
     $this->assertTrue(rdf_mapping_save($mapping[1]) === SAVED_NEW, t('Second mapping was inserted.'));
-    $this->assertEqual($mapping[1]['mapping'], rdf_mapping_load($test_mapping[1]['type'], $test_mapping[1]['bundle']), t('Second mapping equals default mapping.'));
+    $this->assertEqual($mapping[1]['mapping'], _rdf_mapping_load($test_mapping[1]['type'], $test_mapping[1]['bundle']), t('Second mapping equals default mapping.'));
 
     // Verify loading of saved mapping.
-    $this->assertEqual($mapping[0]['mapping'], rdf_mapping_load($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Saved mapping equals loaded default mapping.'));
+    $this->assertEqual($mapping[0]['mapping'], _rdf_mapping_load($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Saved mapping equals loaded default mapping.'));
 
     // Verify updating of mapping.
     $mapping[0]['mapping']['boofar'] = array(
       'predicates' => array('foo:bar'),
     );
     $this->assertTrue(rdf_mapping_save($mapping[0]) === SAVED_UPDATED, t('Mapping was updated.'));
-    $this->assertEqual($mapping[0]['mapping'], rdf_mapping_load($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Updated and loaded mapping are equal.'));
+    $this->assertEqual($mapping[0]['mapping'], _rdf_mapping_load($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Updated and loaded mapping are equal.'));
 
     // Verify deleting of mapping.
     $this->assertTrue(rdf_mapping_delete($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Mapping was deleted.'));
-    $this->assertFalse(rdf_mapping_load($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Deleted mapping is no longer found.'));
+    $this->assertFalse(_rdf_mapping_load($test_mapping[0]['type'], $test_mapping[0]['bundle']), t('Deleted mapping is no longer found.'));
   }
 }
 

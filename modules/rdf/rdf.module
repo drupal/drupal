@@ -58,7 +58,7 @@
 define('RDF_DEFAULT_BUNDLE', '');
 
 /**
- * Returns the mapping for the attributes of the given type, bundle pair.
+ * Returns the mapping for attributes of a given type/bundle pair.
  *
  * @param $type
  *   An entity type.
@@ -69,7 +69,7 @@ define('RDF_DEFAULT_BUNDLE', '');
  *   The mapping corresponding to the requested type/bundle pair or an empty
  *   array.
  */
-function rdf_get_mapping($type, $bundle = RDF_DEFAULT_BUNDLE) {
+function rdf_mapping_load($type, $bundle = RDF_DEFAULT_BUNDLE) {
   // Retrieve the mapping from the entity info.
   $entity_info = entity_get_info($type);
   if (!empty($entity_info['bundles'][$bundle]['rdf_mapping'])) {
@@ -111,7 +111,7 @@ function _rdf_get_default_mapping($type) {
 }
 
 /**
- * Reads an RDF mapping record directly from the database.
+ * Helper function to retrieve a RDF mapping from the database.
  *
  * @param $type
  *   The entity type the mapping refers to.
@@ -119,9 +119,9 @@ function _rdf_get_default_mapping($type) {
  *   The bundle the mapping refers to.
  *
  * @return
- *   An RDF mapping structure or FALSE if the mapping could not be found.
+ *   A RDF mapping structure or FALSE if no record was found.
  */
-function rdf_mapping_load($type, $bundle) {
+function _rdf_mapping_load($type, $bundle) {
   $mapping = db_select('rdf_mapping')
     ->fields(NULL, array('mapping'))
     ->condition('type', $type)
@@ -291,7 +291,7 @@ function rdf_entity_info_alter(&$entity_info) {
   foreach ($entity_info as $entity_type => $entity_type_info) {
     if (isset($entity_type_info['bundles'])) {
       foreach ($entity_type_info['bundles'] as $bundle => $bundle_info) {
-        if ($mapping = rdf_mapping_load($entity_type, $bundle)) {
+        if ($mapping = _rdf_mapping_load($entity_type, $bundle)) {
           $entity_info[$entity_type]['bundles'][$bundle]['rdf_mapping'] = $mapping;
         }
         else {
@@ -311,7 +311,7 @@ function rdf_entity_load($entities, $type) {
   foreach ($entities as $entity) {
     // Extracts the bundle of the entity being loaded.
     list($id, $vid, $bundle) = field_extract_ids($type, $entity);
-    $entity->rdf_mapping = rdf_get_mapping($type, $bundle);
+    $entity->rdf_mapping = rdf_mapping_load($type, $bundle);
   }
 }
 
@@ -403,7 +403,7 @@ function rdf_preprocess_node(&$variables) {
 function rdf_preprocess_field(&$variables) {
   $entity_type = $variables['element']['#object_type'];
   $instance = $variables['instance'];
-  $mapping = rdf_get_mapping($entity_type, $instance['bundle']);
+  $mapping = rdf_mapping_load($entity_type, $instance['bundle']);
   $field_name = $instance['field_name'];
 
   if (!empty($mapping) && !empty($mapping[$field_name])) {
