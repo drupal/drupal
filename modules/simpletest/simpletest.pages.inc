@@ -133,7 +133,7 @@ function theme_simpletest_test_table($variables) {
       $test = $element[$test_name];
       $row = array();
 
-      $current_js['testNames'][] = 'edit-' . $test_name;
+      $current_js['testNames'][] = $test['#id'];
 
       // Store test title and description so that checkbox won't render them.
       $title = $test['#title'];
@@ -146,7 +146,7 @@ function theme_simpletest_test_table($variables) {
       $test['#name'] = $test_name;
 
       $row[] = drupal_render($test);
-      $row[] = theme('indentation', array('size' => 1)) . '<label for="edit-' . $test_name . '">' . $title . '</label>';
+      $row[] = theme('indentation', array('size' => 1)) . '<label for="' . $test['#id'] . '">' . $title . '</label>';
       $row[] = '<div class="description">' . $description . '</div>';
 
       $rows[] = array('data' => $row, 'class' => array($test_class . '-test', ($collapsed ? 'js-hide' : '')));
