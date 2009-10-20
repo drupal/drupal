@@ -902,7 +902,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
   /* Implementations of QueryConditionInterface for the WHERE clause. */
 
-  public function condition($field, $value = NULL, $operator = '=') {
+  public function condition($field, $value = NULL, $operator = NULL) {
     if (!isset($num_args)) {
       $num_args = func_num_args();
     }

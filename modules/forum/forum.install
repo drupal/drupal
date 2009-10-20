@@ -254,9 +254,7 @@ function forum_update_7001() {
       'taxonomy_term_data' => 'tid',
     ),
   );
-  db_create_table($ret, 'forum_index', $forum_index);
+  db_create_table('forum_index', $forum_index);
 
   db_query('INSERT INTO {forum_index} (SELECT n.nid, n.title, f.tid, n.sticky, n.created, ncs.last_comment_timestamp, ncs.comment_count FROM {node} n INNER JOIN {forum} f on n.vid = f.vid INNER JOIN {node_comment_statistics} ncs ON n.nid = ncs.nid)');
-
-  return $ret;
 }
