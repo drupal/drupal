@@ -1,11 +1,11 @@
-// $Id: path.js,v 1.2 2009/04/27 20:19:37 webchick Exp $
+// $Id: path.js,v 1.3 2009/10/20 01:24:34 dries Exp $
 
 (function ($) {
 
 Drupal.behaviors.pathFieldsetSummaries = {
   attach: function (context) {
     $('fieldset#edit-path', context).setSummary(function (context) {
-      var path = $('#edit-path-1').val();
+      var path = $('#edit-path-alias').val();
 
       return path ?
         Drupal.t('Alias: @alias', { '@alias': path }) :
