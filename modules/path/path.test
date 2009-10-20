@@ -15,9 +15,6 @@ class PathTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Create user, setup permissions, log user in, and create a node.
-   */
   function setUp() {
     parent::setUp('path');
 
@@ -113,20 +110,20 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Create alias.
     $edit = array();
-    $edit['path'] = $this->randomName(8);
+    $edit['path[alias]'] = $this->randomName(8);
     $this->drupalPost('node/' . $node1->nid . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['path']);
+    $this->drupalGet($edit['path[alias]']);
     $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], 'Alias works.');
 
     // Change alias.
-    $previous = $edit['path'];
-    $edit['path'] = $this->randomName(8);
+    $previous = $edit['path[alias]'];
+    $edit['path[alias]'] = $this->randomName(8);
     $this->drupalPost('node/' . $node1->nid . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['path']);
+    $this->drupalGet($edit['path[alias]']);
     $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], 'Changed alias works.');
 
     // Make sure that previous alias no longer works.
@@ -138,22 +135,84 @@ class PathTestCase extends DrupalWebTestCase {
     $node2 = $this->drupalCreateNode();
 
     // Set alias to second test node.
-    // Leave $edit['path'] the same.
+    // Leave $edit['path[alias]'] the same.
     $this->drupalPost('node/' . $node2->nid . '/edit', $edit, t('Save'));
 
     // Confirm that the alias didn't make a duplicate.
-    $this->assertText(t('The path is already in use.'), 'Attempt to moved alias was rejected.');
+    $this->assertText(t('The alias is already in use.'), 'Attempt to moved alias was rejected.');
 
     // Delete alias.
-    $this->drupalPost('node/' . $node1->nid . '/edit', array('path' => ''), t('Save'));
+    $this->drupalPost('node/' . $node1->nid . '/edit', array('path[alias]' => ''), t('Save'));
 
     // Confirm that the alias no longer works.
-    $this->drupalGet($edit['path']);
+    $this->drupalGet($edit['path[alias]']);
     $this->assertNoText($node1->title, 'Alias was successfully deleted.');
   }
 
   function getPID($alias) {
     return db_query("SELECT pid FROM {url_alias} WHERE alias = :alias", array(':alias' => $alias))->fetchField();
+  }
+}
+
+/**
+ * Test URL aliases for taxonomy terms.
+ */
+class PathTaxonomyTermTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Taxonomy term URL aliases',
+      'description' => 'Tests URL aliases for taxonomy terms.',
+      'group' => 'Path',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('path', 'taxonomy');
+
+    // Create and login user.
+    $web_user = $this->drupalCreateUser(array('administer url aliases', 'administer taxonomy', 'access administration pages'));
+    $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Test alias functionality through the admin interfaces.
+   */
+  function testTermAlias() {
+    // Create a term in the default 'Tags' vocabulary with URL alias.
+    $edit = array();
+    $edit['name'] = $this->randomName();
+    $edit['description'] = $this->randomName();
+    $edit['path[alias]'] = $this->randomName();
+    $this->drupalPost('admin/structure/taxonomy/1/list/add', $edit, t('Save'));
+
+    // Confirm that the alias works.
+    $this->drupalGet($edit['path[alias]']);
+    $this->assertText($edit['description'], 'Term can be accessed on URL alias.');
+
+    // Change the term's URL alias.
+    $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
+    $edit2 = array();
+    $edit2['path[alias]'] = $this->randomName();
+    $this->drupalPost('taxonomy/term/' . $tid . '/edit', $edit2, t('Save'));
+
+    // Confirm that the changed alias works.
+    $this->drupalGet($edit2['path[alias]']);
+    $this->assertText($edit['description'], 'Term can be accessed on changed URL alias.');
+
+    // Confirm that the old alias no longer works.
+    $this->drupalGet($edit['path[alias]']);
+    $this->assertNoText($edit['description'], 'Old URL alias has been removed after altering.');
+    $this->assertResponse(404, 'Old URL alias returns 404.');
+
+    // Remove the term's URL alias.
+    $edit3 = array();
+    $edit3['path[alias]'] = '';
+    $this->drupalPost('taxonomy/term/' . $tid . '/edit', $edit3, t('Save'));
+
+    // Confirm that the alias no longer works.
+    $this->drupalGet($edit2['path[alias]']);
+    $this->assertNoText($edit['description'], 'Old URL alias has been removed after altering.');
+    $this->assertResponse(404, 'Old URL alias returns 404.');
   }
 }
 
@@ -166,9 +225,6 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Create user, setup permissions, log user in, and create a node.
-   */
   function setUp() {
     parent::setUp('path', 'locale', 'translation');
 
@@ -203,11 +259,11 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     // Edit the node to set language and path.
     $edit = array();
     $edit['language'] = 'en';
-    $edit['path'] = $this->randomName();
+    $edit['path[alias]'] = $this->randomName();
     $this->drupalPost('node/' . $english_node->nid . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['path']);
+    $this->drupalGet($edit['path[alias]']);
     $this->assertText($english_node->title[FIELD_LANGUAGE_NONE][0]['value'], 'Alias works.');
 
     // Translate the node into French.
@@ -218,25 +274,24 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $langcode = FIELD_LANGUAGE_NONE;
     $edit["title[$langcode][0][value]"] = $this->randomName();
-    $edit['path'] = $this->randomName();
+    $edit['path[alias]'] = $this->randomName();
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Clear the path lookup cache.
     drupal_lookup_path('wipe');
 
     // Ensure the node was created.
-    // Check to make sure the node was created.
     $french_node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
     $this->assertTrue(($french_node), 'Node found in database.');
 
     // Confirm that the alias works.
-    $this->drupalGet('fr/' . $edit['path']);
+    $this->drupalGet('fr/' . $edit['path[alias]']);
     $this->assertText($french_node->title[FIELD_LANGUAGE_NONE][0]['value'], 'Alias for French translation works.');
 
     // Confirm that the alias is returned by url().
     drupal_static_reset('language_list');
     $languages = language_list();
     $url = url('node/' . $french_node->nid, array('language' => $languages[$french_node->language]));
-    $this->assertTrue(strpos($url, $edit['path']), t('URL contains the path alias.'));
+    $this->assertTrue(strpos($url, $edit['path[alias]']), t('URL contains the path alias.'));
   }
 }

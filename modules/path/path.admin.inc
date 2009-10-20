@@ -8,6 +8,7 @@
 
 /**
  * Return a listing of all defined URL aliases.
+ *
  * When filter key passed, perform a standard search on the given key,
  * and return the list of matching URL aliases.
  */
@@ -156,11 +157,11 @@ function path_admin_form_validate($form, &$form_state) {
   $language = isset($form_state['values']['language']) ? $form_state['values']['language'] : '';
 
   $has_alias = db_query("SELECT COUNT(alias) FROM {url_alias} WHERE pid <> :pid AND alias = :alias AND language = :language", array(
-    ':pid'      => $pid,
-    ':alias'    => $alias,
-    ':language' => $language,
-  ))
-  ->fetchField();
+      ':pid' => $pid,
+      ':alias' => $alias,
+      ':language' => $language,
+    ))
+    ->fetchField();
 
   if ($has_alias) {
     form_set_error('alias', t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
@@ -175,17 +176,13 @@ function path_admin_form_validate($form, &$form_state) {
  * Save a URL alias to the database.
  */
 function path_admin_form_submit($form, &$form_state) {
-  $path = array();
-  foreach (array('source', 'alias', 'pid', 'language') as $key) {
-    if (isset($form_state['values'][$key])) {
-      $path[$key] = $form_state['values'][$key];
-    }
-  }
-  path_save($path);
+  // Remove unnecessary values.
+  form_state_values_clean($form_state);
+
+  path_save($form_state['values']);
 
   drupal_set_message(t('The alias has been saved.'));
   $form_state['redirect'] = 'admin/config/search/path';
-  return;
 }
 
 /**
@@ -211,7 +208,6 @@ function path_admin_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     path_delete($form_state['path']['pid']);
     $form_state['redirect'] = 'admin/config/search/path';
-    return;
   }
 }
 

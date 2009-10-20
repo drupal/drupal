@@ -1258,7 +1258,7 @@ function node_language_provider($languages) {
   // We cannot use args now.
   $path = explode('/', $path);
   // Act only if we are in a node page.
-  if ($path[0] == 'node' && $nid = intval($path[1])) {
+  if (isset($path[0]) && isset($path[1]) && $path[0] == 'node' && $nid = intval($path[1])) {
     // We cannot perform a node load here.
     $result = db_query('SELECT n.language FROM {node} n WHERE n.nid = :nid', array(':nid' => $nid))->fetchAssoc();
     return $result['language'];
