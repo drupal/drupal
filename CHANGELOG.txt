@@ -18,6 +18,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Rate limited login attempts to prevent brute-force password guessing, and
       improved the flood control API to allow variable time windows and
       identifiers for limiting user access to resources.
+    * Transformed the "Update status" module into the "Update manager" which
+      can securely install or update modules and themes via a web interface.
 - Usability:
     * Added contextual links (a.k.a. local tasks) to page elements, such as
       blocks, nodes, or comments, which allows to perform the most common tasks
@@ -39,8 +41,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       visitors.
     * Added an administrator role which is assigned all permisions for
       installed modules automatically.
-    * Image toolkits are now provided by modules (rather than requiring a manual
-      file copy to the includes directory).
+    * Image toolkits are now provided by modules (rather than requiring a
+      manual file copy to the includes directory).
     * Added an edit tab to taxonomy term pages.
     * Redesigned password strength validator.
     * Redesigned the add content type screen.
@@ -48,8 +50,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Renamed "input formats" to "text formats".
     * Moved text format permissions to the main permissions page.
     * Added configurable ability for users to cancel their own accounts.
-    * Added "vertical tabs", a reusable interface component that features automatic
-      summaries and increases usability.
+    * Added "vertical tabs", a reusable interface component that features
+      automatic summaries and increases usability.
     * Replaced fieldsets on node edit and add pages with vertical tabs.
 - Performance:
     * Improved performance on uncached page views by loading multiple core
