@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tokens.inc,v 1.4 2009/10/11 03:07:18 webchick Exp $
+// $Id: node.tokens.inc,v 1.5 2009/10/21 19:13:08 dries Exp $
 
 /**
  * @file
@@ -154,7 +154,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'type-name':
-          $type_name = node_get_types('name', $node->type);
+          $type_name = node_type_get_name($node);
           $replacements[$original] = $sanitize ? check_plain($type_name) : $type_name;
           break;
 
