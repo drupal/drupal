@@ -372,7 +372,7 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
  */
 function node_admin_content($form, $form_state) {
   if (isset($form_state['values']['operation']) && $form_state['values']['operation'] == 'delete') {
-    return node_multiple_delete_confirm($form_state, array_filter($form_state['values']['nodes']));
+    return node_multiple_delete_confirm($form, $form_state, array_filter($form_state['values']['nodes']));
   }
   // Show the 'add new content' link.
   $form['add_content'] = array(
