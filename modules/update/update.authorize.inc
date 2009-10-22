@@ -19,7 +19,7 @@
  * @param $projects
  *   A nested array of projects to install into the live webroot, keyed by
  *   project name. Each subarray contains the following keys:
- *   - 'project': The cannonical project short name.
+ *   - 'project': The canonical project short name.
  *   - 'updater_name': The name of the Updater class to use for this project.
  *   - 'local_url': The locally installed location of new code to update with.
  */
@@ -99,7 +99,7 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
  * Copy a project to its proper place when authorized with elevated privileges.
  *
  * @param string $project
- *   The cannonical short name of the project being installed.
+ *   The canonical short name of the project being installed.
  * @param string $updater_name
  *   The name of the Updater class to use for installing this project.
  * @param string $local_url
@@ -151,8 +151,8 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
       $tasks = $updater->install($filetransfer);
     }
   }
-  catch (UpdaterError $e) {
-    _update_batch_create_message($context['results']['log'][$project], t("Error installing / updating"), FALSE);
+  catch (UpdaterException $e) {
+    _update_batch_create_message($context['results']['log'][$project], t('Error installing / updating'), FALSE);
     _update_batch_create_message($context['results']['log'][$project], $e->getMessage(), FALSE);
     $context['results']['log'][$project]['#abort'] = TRUE;
     return;

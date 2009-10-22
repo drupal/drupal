@@ -81,7 +81,7 @@ class FileTransferFTPWrapper extends FileTransfer {
   /**
    * This is impossible with the stream wrapper, so an exception is thrown.
    *
-   * If the ftp extenstion is available, we will cheat and use it.
+   * If the ftp extenstion is available, we will cheat and use that instead.
    *
    * @param string $path
    * @param long $mode

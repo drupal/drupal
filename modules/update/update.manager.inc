@@ -89,7 +89,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
   module_load_include('inc', 'update', 'update.compare');
   $project_data = update_calculate_project_data($available);
   foreach ($project_data as $name => $project) {
-    // Filter out projects which are up2date already.
+    // Filter out projects which are up to date already.
     if ($project['status'] == UPDATE_CURRENT) {
       continue;
     }
@@ -164,9 +164,9 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     $needs_manual = $project['project_type'] == 'core' || ($project['install_type'] == 'dev' && $recommended_release['version_extra'] == 'dev');
 
     if ($needs_manual) {
-      // Since it won't be tableselect, #weight will confuse the table if it's
-      // defined, so just unset it (since the order doesn't really matter that
-      // much in the manual updates table, anyway).
+      // Since it won't be tableselect, #weight will add an extra column to the
+      // table if it's defined, so just unset it. The order doesn't matter that
+      // much in the manual updates table, anyway.
       unset($entry['#weight']);
     }
     else {
@@ -361,6 +361,17 @@ function update_manager_download_batch_finished($success, $results) {
   }
 }
 
+/**
+ * Build the form to confirm that an update should proceed (after downloading).
+ *
+ * This form is an intermediary step in the automated update workflow. It is
+ * presented to the site administrator after all the required updates have
+ * been downloaded and verified. The point of this page is to encourage the
+ * user to backup their site, gives them the opportunity to put the site
+ * offline, and then asks them to confirm that the update should continue.
+ * After this step, the user is redirected to authorize.php to enter their
+ * file transfer credentials and attempt to complete the update.
+ */
 function update_manager_confirm_update_form($form, &$form_state) {
   $form['information']['#weight'] = -100;
   $form['information']['backup_header'] = array(
@@ -402,6 +413,17 @@ function update_manager_confirm_update_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Submit handler for the form to confirm that an update should continue.
+ *
+ * If the site administrator requested that the site is put offline during the
+ * update, do so now. Otherwise, pull information about all the required
+ * updates out of the SESSION, figure out what Updater class is needed for
+ * each one, generate an array of update operations to perform, and hand it
+ * all off to system_run_authorized() where we redirect to authorize.php.
+ *
+ * @see system_run_authorized()
+ */
 function update_manager_confirm_update_form_submit($form, &$form_state) {
   if ($form_state['values']['site_offline'] == TRUE) {
     variable_set('site_offline', TRUE);

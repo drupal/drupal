@@ -37,7 +37,7 @@ function authorize_filetransfer_form($form_state) {
 
   $form['information']['main_header'] = array(
     '#prefix' => '<h3>',
-    '#markup' => t('To continue please provide your server connection details'),
+    '#markup' => t('To continue, please provide your server connection details'),
     '#suffix' => '</h3>',
   );
 
@@ -52,15 +52,15 @@ function authorize_filetransfer_form($form_state) {
   /*
    * Here we create two submit buttons. For a JS enabled client, they will
    * only ever see submit_process. However, if a client doesn't have JS
-   * enabled, they will see submit_connection on the first form (whden picking
+   * enabled, they will see submit_connection on the first form (when picking
    * what filetranfer type to use, and submit_process on the second one (which
-   * leads to the actual operation)
+   * leads to the actual operation).
    */
   $form['submit_connection'] = array(
     '#prefix' => "<br style='clear:both'/>",
-    '#name' => 'enter_connection_settings', // This is later changed in JS.
+    '#name' => 'enter_connection_settings',
     '#type' => 'submit',
-    '#value' => t('Enter connetion settings'), // As is this. @see authorize.js.
+    '#value' => t('Enter connection settings'),
     '#weight' => 100,
   );
 
@@ -81,7 +81,7 @@ function authorize_filetransfer_form($form_state) {
       '#title' => t('@backend connection settings', array('@backend' => $backend['title'])),
     );
 
-    $current_settings = variable_get("authorize_filetransfer_connection_settings_" . $name, array());
+    $current_settings = variable_get('authorize_filetransfer_connection_settings_' . $name, array());
     $form['connection_settings'][$name] += system_get_filetransfer_settings_form($name, $current_settings);
 
     // Start non-JS code.
@@ -126,7 +126,7 @@ function authorize_filetransfer_form_validate($form, &$form_state) {
     $filetransfer = authorize_get_filetransfer($backend, $form_state['values']['connection_settings'][$backend]);
     try {
       if (!$filetransfer) {
-        throw new Exception(t("Error, this type of connection protocol (%backend) doesn't exist.", array('%backend' => $backend)));
+        throw new Exception(t('Error, this type of connection protocol (%backend) does not exist.', array('%backend' => $backend)));
       }
       $filetransfer->connect();
     }
@@ -173,7 +173,7 @@ function authorize_filetransfer_form_submit($form, &$form_state) {
         // Set this one as the default authorize method.
         variable_set('authorize_filetransfer_default', $filetransfer_backend);
         // Save the connection settings minus the password.
-        variable_set("authorize_filetransfer_connection_settings_" . $filetransfer_backend, $connection_settings);
+        variable_set('authorize_filetransfer_connection_settings_' . $filetransfer_backend, $connection_settings);
 
         $filetransfer = authorize_get_filetransfer($filetransfer_backend, $form_state['values']['connection_settings'][$filetransfer_backend]);
         

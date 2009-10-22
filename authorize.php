@@ -38,7 +38,7 @@ function authorize_access_denied_page() {
   drupal_add_http_header('403 Forbidden');
   watchdog('access denied', 'authorize.php', NULL, WATCHDOG_WARNING);
   drupal_set_title('Access denied');
-  return t("You are not allowed to access this page.");
+  return t('You are not allowed to access this page.');
 }
 
 /**
@@ -141,7 +141,7 @@ if (authorize_access_allowed()) {
   }
   else {
     if (empty($_SESSION['authorize_operation']) || empty($_SESSION['authorize_filetransfer_backends'])) {
-      $output = t("It appears you have reached this page in error.");
+      $output = t('It appears you have reached this page in error.');
     }
     elseif (!$batch = batch_get()) {
       // We have a batch to process, show the filetransfer form.
