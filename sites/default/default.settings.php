@@ -343,3 +343,19 @@ $conf = array(
 # $conf['blocked_ips'] = array(
 #   'a.b.c.d',
 # );
+
+/**
+ * Authorized file system operations:
+ *
+ * The Update manager module included with Drupal provides a mechanism for
+ * site administrators to securely install missing updates for the site
+ * directly through the web user interface by providing either SSH or FTP
+ * credentials. This allows the site to update the new files as the user who
+ * owns all the Drupal files, instead of as the user the webserver is running
+ * as. However, some sites might wish to disable this functionality, and only
+ * update the code directly via SSH or FTP themselves. This setting completely
+ * disables all functionality related to these authorized file operations.
+ *
+ * Remove the leading hash signs to disable.
+ */
+# $conf['allow_authorize_operations'] = FALSE;
