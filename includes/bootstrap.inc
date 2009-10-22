@@ -1924,8 +1924,8 @@ function _registry_check_code($type, $name = NULL) {
     return;
   }
 
-  // $type can be one of 'function', 'interface' or 'class', so we only need the
-  // first letter to keep the cache key unique.
+  // $type is either 'interface' or 'class', so we only need the first letter to
+  // keep the cache key unique.
   $cache_key = $type[0] . $name;
   if (isset($lookup_cache[$cache_key])) {
     if ($lookup_cache[$cache_key]) {
