@@ -2510,7 +2510,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function verbose($message) {
     if ($id = simpletest_verbose($message)) {
       $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . get_class($this) . '-' . $id . '.html');
-      $this->pass(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'Debug');
+      $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
     }
   }
 
