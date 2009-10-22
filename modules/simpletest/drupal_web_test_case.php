@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.164 2009/10/20 00:55:29 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.165 2009/10/22 01:09:05 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -2510,7 +2510,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function verbose($message) {
     if ($id = simpletest_verbose($message)) {
       $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . get_class($this) . '-' . $id . '.html');
-      $this->pass(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'Debug');
+      $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
     }
   }
 
