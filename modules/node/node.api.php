@@ -379,7 +379,7 @@ function hook_node_load($nodes, $types) {
 function hook_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : (is_array($node) ? $node['type'] : $node->type);
 
-  if (in_array($type, nodeperms_get_configured_types())) {
+  if (in_array($type, node_permissions_get_configured_types())) {
     if ($op == 'create' && user_access('create ' . $type . ' content', $account)) {
       return NODE_ACCESS_ALLOW;
     }
@@ -576,7 +576,7 @@ function hook_node_build_alter($node, $build_mode) {
  * example, the blog module uses it to define a blog node-type named "Blog
  * entry." The name and attributes of each desired node type are specified in
  * an array returned by the hook.
- * 
+ *
  * Only module-provided node types should be defined through this hook. User-
  * provided (or 'custom') node types should be defined only in the 'node_type'
  * database table, and should be maintained by using the node_type_save() and
