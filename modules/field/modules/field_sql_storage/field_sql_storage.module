@@ -469,8 +469,8 @@ function field_sql_storage_field_storage_purge($obj_type, $object, $field, $inst
 /**
  * Implement hook_field_storage_query().
  */
-function field_sql_storage_field_storage_query($field_id, $conditions, $count, &$cursor, $age) {
-  $load_current = $age == FIELD_LOAD_CURRENT;
+function field_sql_storage_field_storage_query($field_id, $conditions, $options) {
+  $load_current = $options['age'] == FIELD_LOAD_CURRENT;
 
   $field = field_info_field_by_id($field_id);
   $field_name = $field['field_name'];
@@ -480,14 +480,6 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $count, &
   // Build the query.
   $query = db_select($table, 't');
   $query->join('field_config_entity_type', 'e', 't.etid = e.etid');
-
-  $query
-    ->fields('t', array('bundle', 'entity_id', 'revision_id'))
-    ->fields('e', array('type'))
-    // We need to ensure objects arrive in a consistent order for the
-    // range() operation to work.
-    ->orderBy('t.etid')
-    ->orderBy('t.entity_id');
 
   // Add conditions.
   foreach ($conditions as $condition) {
@@ -542,6 +534,21 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $count, &
     $query->condition('deleted', 0);
   }
 
+  // For a count query, return the count now.
+  if ($options['count']) {
+    $query->addExpression('COUNT(DISTINCT e.type,t.entity_id,t.revision_id)');
+    return $query->execute()->fetchField();
+  }
+
+  // For a data query, add fields.
+  $query
+    ->fields('t', array('bundle', 'entity_id', 'revision_id'))
+    ->fields('e', array('type'))
+    // We need to ensure objects arrive in a consistent order for the
+    // range() operation to work.
+    ->orderBy('t.etid')
+    ->orderBy('t.entity_id');
+
   // Initialize results array
   $return = array();
 
@@ -551,15 +558,15 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $count, &
   // less rows than asked for.
   $obj_count = 0;
   do {
-    if ($count != FIELD_QUERY_NO_LIMIT) {
-      $query->range($cursor, $count);
+    if ($options['limit'] != FIELD_QUERY_NO_LIMIT) {
+      $query->range($options['cursor'], $options['limit']);
     }
     $results = $query->execute();
 
     $row_count = 0;
     foreach ($results as $row) {
       $row_count++;
-      $cursor++;
+      $options['cursor']++;
       // If querying all revisions and the entity type has revisions, we need
       // to key the results by revision_ids.
       $entity_type = field_info_fieldable_types($row->type);
@@ -570,12 +577,12 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $count, &
         $obj_count++;
       }
     }
-  } while ($count != FIELD_QUERY_NO_LIMIT && $row_count == $count && $obj_count < $count);
+  } while ($options['limit'] != FIELD_QUERY_NO_LIMIT && $row_count == $options['limit'] && $obj_count < $options['limit']);
 
   // The query is complete when the last batch returns less rows than asked
   // for.
-  if ($row_count < $count) {
-    $cursor = FIELD_QUERY_COMPLETE;
+  if ($row_count < $options['limit']) {
+    $options['cursor'] = FIELD_QUERY_COMPLETE;
   }
 
   return $return;

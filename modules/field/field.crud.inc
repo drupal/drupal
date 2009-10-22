@@ -965,7 +965,7 @@ function field_purge_batch($batch_size) {
     $field = field_info_field_by_id($instance['field_id']);
 
     // Retrieve some pseudo-objects.
-    $obj_types = field_attach_query($instance['field_id'], array(array('bundle', $instance['bundle']), array('deleted', 1)), $batch_size);
+    $obj_types = field_attach_query($instance['field_id'], array(array('bundle', $instance['bundle']), array('deleted', 1)), array('limit' => $batch_size));
 
     if (count($obj_types) > 0) {
       // Field data for the instance still exists.

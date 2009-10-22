@@ -605,6 +605,10 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     $instance2['object_type'] = 'test_cacheable_entity';
     field_create_instance($instance2);
 
+    // Unconditional count query returns 0.
+    $count = field_attach_query($this->field_id, array(), array('count' => TRUE));
+    $this->assertEqual($count, 0, t('With no objects, count query returns 0.'));
+
     // Create two test objects, using two different types and bundles.
     $entity_types = array(1 => 'test_entity', 2 => 'test_cacheable_entity');
     $entities = array(1 => field_test_create_stub_entity(1, 1, 'test_bundle'), 2 => field_test_create_stub_entity(2, 2, 'test_bundle_1'));
@@ -620,6 +624,10 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     }
     field_attach_insert($entity_types[1], $entities[1]);
 
+    // Unconditional count query returns 1.
+    $count = field_attach_query($this->field_id, array(), array('count' => TRUE));
+    $this->assertEqual($count, 1, t('With one object, count query returns @count.', array('@count' => $count)));
+
     // Create second test object, sharing a value with the first one.
     $common_value = $values[$cardinality - 1];
     $entities[2]->{$this->field_name} = array($langcode => array(array('value' => $common_value)));
@@ -628,8 +636,11 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     // Query on the object's values.
     for ($delta = 0; $delta < $cardinality; $delta++) {
       $conditions = array(array('value', $values[$delta]));
-      $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+      $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
       $this->assertTrue(isset($result[$entity_types[1]][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
+
+      $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
+      $this->assertEqual($count, ($values[$delta] == $common_value) ? 2 : 1, t('Count query on value %delta counts %count objects', array('%delta' => $delta, '%count' => $count)));
     }
 
     // Query on a value that is not in the object.
@@ -637,31 +648,41 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
       $different_value = mt_rand(1, 127);
     } while (in_array($different_value, $values));
     $conditions = array(array('value', $different_value));
-    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertFalse(isset($result[$entity_types[1]][1]), t("Query on a value that is not in the object doesn't return the object"));
+    $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
+    $this->assertEqual($count, 0, t("Count query on a value that is not in the object doesn't count the object"));
 
     // Query on the value shared by both objects, and discriminate using
     // additional conditions.
 
     $conditions = array(array('value', $common_value));
-    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertTrue(isset($result[$entity_types[1]][1]) && isset($result[$entity_types[2]][2]), t('Query on a value common to both objects returns both objects'));
+    $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
+    $this->assertEqual($count, 2, t('Count query on a value common to both objects counts both objects'));
 
     $conditions = array(array('type', $entity_types[1]), array('value', $common_value));
-    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'type' condition only returns the relevant object"));
+    $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
+    $this->assertEqual($count, 1, t("Count query on a value common to both objects and a 'type' condition only returns the relevant object"));
 
     $conditions = array(array('bundle', $entities[1]->fttype), array('value', $common_value));
-    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'bundle' condition only returns the relevant object"));
+    $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
+    $this->assertEqual($count, 1, t("Count query on a value common to both objects and a 'bundle' condition only counts the relevant object"));
 
     $conditions = array(array('entity_id', $entities[1]->ftid), array('value', $common_value));
-    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and an 'entity_id' condition only returns the relevant object"));
+    $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
+    $this->assertEqual($count, 1, t("Count query on a value common to both objects and an 'entity_id' condition only counts the relevant object"));
 
     // Test result format.
     $conditions = array(array('value', $values[0]));
-    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $expected = array(
       $entity_types[1] => array(
         $entities[1]->ftid => field_test_create_stub_entity($entities[1]->ftid, $entities[1]->ftvid),
@@ -694,7 +715,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     // back the right ones.
     $cursor = 0;
     foreach (array(1 => 1, 3 => 3, 5 => 5, 8 => 8, 13 => 3) as $count => $expect) {
-      $found = field_attach_query($this->field_id, array(array('bundle', 'offset_bundle')), $count, $cursor);
+      $found = field_attach_query($this->field_id, array(array('bundle', 'offset_bundle')), array('limit' => $count, 'cursor' => &$cursor));
       if (isset($found['test_entity'])) {
         $this->assertEqual(count($found['test_entity']), $expect, t('Requested @count, expected @expect, got @found, cursor @cursor', array('@count' => $count, '@expect' => $expect, '@found' => count($found['test_entity']), '@cursor' => $cursor)));
         foreach ($found['test_entity'] as $id => $entity) {
@@ -738,7 +759,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     // Query on the object's values.
     for ($delta = 0; $delta < $cardinality; $delta++) {
       $conditions = array(array('value', $values[$delta]));
-      $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+      $result = field_attach_query_revisions($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
       $this->assertTrue(isset($result[$entity_type][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
     }
 
@@ -747,23 +768,23 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
       $different_value = mt_rand(1, 127);
     } while (in_array($different_value, $values));
     $conditions = array(array('value', $different_value));
-    $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query_revisions($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertFalse(isset($result[$entity_type][1]), t("Query on a value that is not in the object doesn't return the object"));
 
     // Query on the value shared by both objects, and discriminate using
     // additional conditions.
 
     $conditions = array(array('value', $common_value));
-    $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query_revisions($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertTrue(isset($result[$entity_type][1]) && isset($result[$entity_type][2]), t('Query on a value common to both objects returns both objects'));
 
     $conditions = array(array('revision_id', $entities[1]->ftvid), array('value', $common_value));
-    $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query_revisions($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertTrue(isset($result[$entity_type][1]) && !isset($result[$entity_type][2]), t("Query on a value common to both objects and a 'revision_id' condition only returns the relevant object"));
 
     // Test FIELD_QUERY_RETURN_IDS result format.
     $conditions = array(array('value', $values[0]));
-    $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query_revisions($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
     $expected = array(
       $entity_type => array(
         $entities[1]->ftid => field_test_create_stub_entity($entities[1]->ftid, $entities[1]->ftvid),
@@ -2579,7 +2600,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $field = reset($this->fields);
 
     // There are 10 objects of this bundle.
-    $found = field_attach_query($field['id'], array(array('bundle', $bundle)), FIELD_QUERY_NO_LIMIT);
+    $found = field_attach_query($field['id'], array(array('bundle', $bundle)), array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertEqual(count($found['test_entity']), 10, 'Correct number of objects found before deleting');
 
     // Delete the instance.
@@ -2592,12 +2613,12 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $this->assertEqual($instances[0]['bundle'], $bundle, 'The deleted instance is for the correct bundle');
 
     // There are 0 objects of this bundle with non-deleted data.
-    $found = field_attach_query($field['id'], array(array('bundle', $bundle)), FIELD_QUERY_NO_LIMIT);
+    $found = field_attach_query($field['id'], array(array('bundle', $bundle)), array('limit' => FIELD_QUERY_NO_LIMIT));
     $this->assertTrue(!isset($found['test_entity']), 'No objects found after deleting');
 
     // There are 10 objects of this bundle when deleted fields are allowed, and
     // their values are correct.
-    $found = field_attach_query($field['id'], array(array('bundle', $bundle), array('deleted', 1)), FIELD_QUERY_NO_LIMIT);
+    $found = field_attach_query($field['id'], array(array('bundle', $bundle), array('deleted', 1)), array('limit' => FIELD_QUERY_NO_LIMIT));
     field_attach_load($this->entity_type, $found[$this->entity_type], FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
     $this->assertEqual(count($found['test_entity']), 10, 'Correct number of objects found after deleting');
     foreach ($found['test_entity'] as $id => $obj) {
@@ -2629,7 +2650,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
       field_purge_batch($batch_size);
 
       // There are $count deleted objects left.
-      $found = field_attach_query($field['id'], array(array('bundle', $bundle), array('deleted', 1)), FIELD_QUERY_NO_LIMIT);
+      $found = field_attach_query($field['id'], array(array('bundle', $bundle), array('deleted', 1)), array('limit' => FIELD_QUERY_NO_LIMIT));
       $this->assertEqual($count ? count($found['test_entity']) : count($found), $count, 'Correct number of objects found after purging 2');
     }
 

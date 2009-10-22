@@ -1026,26 +1026,28 @@ function field_attach_delete_revision($obj_type, $object) {
  *     array('value', 12, '>'),
  *   );
  *   @endcode
- * @param $count
- *   The number of results that is requested. This is only a
+ * @param $options
+ *   An associative array of additional options:
+ *   - limit: The number of results that is requested. This is only a
  *   hint to the storage engine(s); callers should be prepared to
  *   handle fewer or more results. Specify FIELD_QUERY_NO_LIMIT to retrieve
- *   all available objects. This parameter has no default value so
+ *   all available objects. This option has a default value of 0 so
  *   callers must make an explicit choice to potentially retrieve an
  *   enormous result set.
- * @param &$cursor
- *   An opaque cursor that allows a caller to iterate through multiple
- *   result sets. On the first call, pass 0; the correct value to pass
- *   on the next call will be written into $cursor on return. When
- *   there is no more query data available, $cursor will be filled in
- *   with FIELD_QUERY_COMPLETE. If $cursor is passed as NULL,
- *   the first result set is returned and no next cursor is returned.
- * @param $age
- *   Internal use only. Use field_attach_query_revisions() instead of passing
- *   FIELD_LOAD_REVISION.
- *   - FIELD_LOAD_CURRENT (default): query the most recent revisions for all
+ *   - cursor: A reference to an opaque cursor that allows a caller to
+ *   iterate through multiple result sets. On the first call, pass 0;
+ *   the correct value to pass on the next call will be written into
+ *   the value on return. When there is no more query data available,
+ *   the value will be filled in with FIELD_QUERY_COMPLETE. If cursor
+ *   is passed as NULL, the first result set is returned and no next
+ *   cursor is returned.
+ *   - count: If TRUE, return a single count of all matching objects;
+ *   limit and cursor are ignored.
+ *   - age: Internal use only. Use field_attach_query_revisions()
+ *   instead of passing FIELD_LOAD_REVISION.
+ *     - FIELD_LOAD_CURRENT (default): query the most recent revisions for all
  *     objects. The results will be keyed by object type and object id.
- *   - FIELD_LOAD_REVISION: query all revisions. The results will be keyed by
+ *     - FIELD_LOAD_REVISION: query all revisions. The results will be keyed by
  *     object type and object revision id.
  * @return
  *   An array keyed by object type (e.g. 'node', 'user'...), then by object id
@@ -1056,17 +1058,22 @@ function field_attach_delete_revision($obj_type, $object) {
  *   Throws a FieldQueryException if the field's storage doesn't support the
  *   specified conditions.
  */
-function field_attach_query($field_id, $conditions, $count, &$cursor = NULL, $age = FIELD_LOAD_CURRENT) {
-  if (!isset($cursor)) {
-    $cursor = 0;
-  }
+function field_attach_query($field_id, $conditions, $options = array()) {
+  // Merge in default options.
+  $default_options = array(
+    'limit' => 0,
+    'cursor' => 0,
+    'count' => FALSE,
+    'age' => FIELD_LOAD_CURRENT,
+  );
+  $options += $default_options;
 
   // Give a chance to 3rd party modules that bypass the storage engine to
   // handle the query.
   $skip_field = FALSE;
   foreach (module_implements('field_attach_pre_query') as $module) {
     $function = $module . '_field_attach_pre_query';
-    $results = $function($field_id, $conditions, $count, $cursor, $age, $skip_field);
+    $results = $function($field_id, $conditions, $options, $skip_field);
     // Stop as soon as a module claims it handled the query.
     if ($skip_field) {
       break;
@@ -1076,7 +1083,7 @@ function field_attach_query($field_id, $conditions, $count, &$cursor = NULL, $ag
   if (!$skip_field) {
     $field = field_info_field_by_id($field_id);
     $function = $field['storage']['module'] . '_field_storage_query';
-    $results = $function($field_id, $conditions, $count, $cursor, $age);
+    $results = $function($field_id, $conditions, $options);
   }
 
   return $results;
@@ -1091,22 +1098,14 @@ function field_attach_query($field_id, $conditions, $count, &$cursor = NULL, $ag
  *   The id of the field to query.
  * @param $conditions
  *   See field_attach_query().
- * @param $count
- *   The number of results that is requested. This is only a
- *   hint to the storage engine(s); callers should be prepared to
- *   handle fewer or more results. Specify FIELD_QUERY_NO_LIMIT to retrieve
- *   all available objects. This parameter has no default value so
- *   callers must make an explicit choice to potentially retrieve an
- *   enormous result set.
- * @param &$cursor
- *   An opaque cursor that allows a caller to iterate through multiple
- *   result sets. On the first call, pass 0; the correct value to pass
- *   on the next call will be written into $cursor on return.
+ * @param $options
+ *   An associative array of additional options. See field_attach_query().
  * @return
  *   See field_attach_query().
  */
-function field_attach_query_revisions($field_id, $conditions, $count, &$cursor = NULL) {
-  return field_attach_query($field_id, $conditions, $count, $cursor, FIELD_LOAD_REVISION);
+function field_attach_query_revisions($field_id, $conditions, $options = array()) {
+  $options['age'] = FIELD_LOAD_REVISION;
+  return field_attach_query($field_id, $conditions, $options);
 }
 
 /**

@@ -615,7 +615,7 @@ function field_view_field($obj_type, $object, $field, $instance, $build_mode = '
  *   TRUE if the field has data for any object; FALSE otherwise.
  */
 function field_has_data($field) {
-  $results = field_attach_query($field['id'], array(), 1);
+  $results = field_attach_query($field['id'], array(), array('limit' => 1));
   return !empty($results);
 }
 

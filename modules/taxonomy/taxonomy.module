@@ -1200,7 +1200,7 @@ function _taxonomy_clean_field_cache($term) {
       if ($obj_types) {
         $conditions[] = array('type', $obj_types, 'NOT IN');
       }
-      $results = field_attach_query($field['id'], $conditions, FIELD_QUERY_NO_LIMIT);
+      $results = field_attach_query($field['id'], $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
       foreach ($results as $obj_type => $objects) {
         foreach (array_keys($objects) as $id) {
           $cids[] = "field:$obj_type:$id";

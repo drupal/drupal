@@ -921,7 +921,7 @@ function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISI
     if (!isset($references[$field_name])) {
       // Get each time this file is used within a field.
       $cursor = 0;
-      $references[$field_name] = field_attach_query($file_field['id'], array(array('fid', $file->fid)), FIELD_QUERY_NO_LIMIT, $cursor, $age);
+      $references[$field_name] = field_attach_query($file_field['id'], array(array('fid', $file->fid)), array('limit' => FIELD_QUERY_NO_LIMIT, 'cursor' => &$cursor, 'age'=> $age));
     }
   }
 
