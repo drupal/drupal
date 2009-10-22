@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.44 2009/10/16 03:21:23 webchick Exp $
+// $Id: field.api.php,v 1.45 2009/10/22 00:49:12 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -1064,15 +1064,8 @@ function hook_field_attach_pre_update($obj_type, $object, &$skip_fields) {
  *   A storage module that doesn't support querying a given column should raise
  *   a FieldQueryException. Incompatibilities should be mentioned on the module
  *   project page.
- * @param $count
- *   See field_attach_query().
- * @param $cursor
- *   See field_attach_query().
- * @param $age
- *   - FIELD_LOAD_CURRENT: query the most recent revisions for all
- *     objects. The results will be keyed by object type and object id.
- *   - FIELD_LOAD_REVISION: query all revisions. The results will be keyed by
- *     object type and object revision id.
+ * @param $options
+ *   See field_attach_query(). All option keys are guaranteed to be specified.
  * @param $skip_field
  *   Boolean, always coming as FALSE.
  * @return
@@ -1080,7 +1073,7 @@ function hook_field_attach_pre_update($obj_type, $object, &$skip_fields) {
  *   The $skip_field parameter should be set to TRUE if the query has been
  *   handled.
  */
-function hook_field_attach_pre_query($field_name, $conditions, $count, &$cursor = NULL, $age, &$skip_field) {
+function hook_field_attach_pre_query($field_name, $conditions, $options, &$skip_field) {
 }
 
 /**
@@ -1331,16 +1324,12 @@ function hook_field_storage_delete_revision($obj_type, $object, $fields) {
  *   A storage module that doesn't support querying a given column should raise
  *   a FieldQueryException. Incompatibilities should be mentioned on the module
  *   project page.
- * @param $count
- *   See field_attach_query().
- * @param $cursor
- *   See field_attach_query().
- * @param $age
- *   See field_attach_query().
+ * @param $options
+ *   See field_attach_query(). All option keys are guaranteed to be specified.
  * @return
  *   See field_attach_query().
  */
-function hook_field_storage_query($field_name, $conditions, $count, &$cursor = NULL, $age) {
+function hook_field_storage_query($field_name, $conditions, $options) {
 }
 
 /**

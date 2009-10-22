@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.42 2009/10/18 01:55:13 dries Exp $
+// $Id: field.module,v 1.43 2009/10/22 00:49:12 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -615,7 +615,7 @@ function field_view_field($obj_type, $object, $field, $instance, $build_mode = '
  *   TRUE if the field has data for any object; FALSE otherwise.
  */
 function field_has_data($field) {
-  $results = field_attach_query($field['id'], array(), 1);
+  $results = field_attach_query($field['id'], array(), array('limit' => 1));
   return !empty($results);
 }
 
