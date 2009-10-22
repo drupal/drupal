@@ -374,3 +374,87 @@ function drupal_path_alias_whitelist_rebuild() {
   variable_set('path_alias_whitelist', $whitelist);
   return $whitelist;
 }
+
+/**
+ * Fetch a specific URL alias from the database.
+ *
+ * @param $conditions
+ *   A string representing the source, a number representing the pid, or an
+ *   array of query conditions.
+ *
+ * @return
+ *   FALSE if no alias was found or an associative array containing the
+ *   following keys:
+ *   - source: The internal system path.
+ *   - alias: The URL alias.
+ *   - pid: Unique path alias identifier.
+ *   - language: The language of the alias.
+ */
+function path_load($conditions) {
+  if (is_numeric($conditions)) {
+    $conditions = array('pid' => $conditions);
+  }
+  elseif (is_string($conditions)) {
+    $conditions = array('source' => $conditions);
+  }
+  elseif (!is_array($conditions)) {
+    return FALSE;
+  }
+  $select = db_select('url_alias');
+  foreach ($conditions as $field => $value) {
+    $select->condition($field, $value);
+  }
+  return $select
+    ->fields('url_alias')
+    ->execute()
+    ->fetchAssoc();
+}
+
+/**
+ * Save a path alias to the database.
+ *
+ * @param $path
+ *   An associative array containing the following keys:
+ *   - source: The internal system path.
+ *   - alias: The URL alias.
+ *   - pid: (optional) Unique path alias identifier.
+ *   - language: (optional) The language of the alias.
+ */
+function path_save(&$path) {
+  $path += array('pid' => NULL, 'language' => '');
+
+  // Insert or update the alias.
+  $status = drupal_write_record('url_alias', $path, (!empty($path['pid']) ? 'pid' : NULL));
+
+  // Verify that a record was written.
+  if (isset($status) && $status) {
+    if ($status === SAVED_NEW) {
+      module_invoke_all('path_insert', $path);
+    }
+    else {
+      module_invoke_all('path_update', $path);
+    }
+    drupal_clear_path_cache();
+  }
+}
+
+/**
+ * Delete a URL alias.
+ *
+ * @param $criteria
+ *   A number representing the pid or an array of criteria.
+ */
+function path_delete($criteria) {
+  if (!is_array($criteria)) {
+    $criteria = array('pid' => $criteria);
+  }
+  $path = path_load($criteria);
+  $query = db_delete('url_alias');
+  foreach ($criteria as $field => $value) {
+    $query->condition($field, $value);
+  }
+  $query->execute();
+  module_invoke_all('path_delete', $path);
+  drupal_clear_path_cache();
+}
+
