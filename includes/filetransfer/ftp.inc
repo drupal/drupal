@@ -1,5 +1,5 @@
 <?php
-// $Id: ftp.inc,v 1.7 2009/10/15 21:19:31 webchick Exp $
+// $Id: ftp.inc,v 1.8 2009/10/22 00:52:03 dries Exp $
 
 /**
  * Connection class using the FTP URL wrapper.
@@ -81,7 +81,7 @@ class FileTransferFTPWrapper extends FileTransfer {
   /**
    * This is impossible with the stream wrapper, so an exception is thrown.
    *
-   * If the ftp extenstion is available, we will cheat and use it.
+   * If the ftp extenstion is available, we will cheat and use that instead.
    *
    * @param string $path
    * @param long $mode
