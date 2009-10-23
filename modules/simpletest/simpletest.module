@@ -406,6 +406,10 @@ function simpletest_clean_environment() {
   else {
     drupal_set_message(t('Clear results is disabled and the test results table will not be cleared.'), 'warning');
   }
+
+  // Detect test classes that have been added, renamed or deleted.
+  registry_rebuild();
+  cache_clear_all('simpletest', 'cache');
 }
 
 /**
