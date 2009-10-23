@@ -657,7 +657,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
  * Given a relative path, construct a URI into Drupal's default files location.
  */
 function file_build_uri($path) {
-  $uri = variable_get('file_scheme_default', 'public') . '://' . $path;
+  $uri = variable_get('file_default_scheme', 'public') . '://' . $path;
   return file_stream_wrapper_uri_normalize($uri);
 }
 

@@ -2118,17 +2118,17 @@ class FileMimeTypeTest extends DrupalWebTestCase {
 }
 
 /**
- * Tests stream wrapper registry.
+ * Tests stream wrapper functions.
  */
-class StreamWrapperRegistryTest extends DrupalWebTestCase {
+class StreamWrapperTest extends DrupalWebTestCase {
 
   protected $scheme = 'dummy';
   protected $classname = 'DrupalDummyStreamWrapper';
 
   public static function getInfo() {
     return array(
-      'name' => 'Stream Wrapper Registry',
-      'description' => 'Tests stream wrapper registry.',
+      'name' => 'Stream wrappers',
+      'description' => 'Tests stream wrapper functions.',
       'group' => 'File API',
     );
   }
@@ -2167,21 +2167,33 @@ class StreamWrapperRegistryTest extends DrupalWebTestCase {
   /**
    * Test the URI and target functions.
    */
-  function testGetInstanceByUri() {
+  function testUriFunctions() {
     $instance = file_stream_wrapper_get_instance_by_uri($this->scheme . '://foo');
     $this->assertEqual($this->classname, get_class($instance), t('Got correct class type for dummy URI.'));
 
     $instance = file_stream_wrapper_get_instance_by_uri('public://foo');
     $this->assertEqual('DrupalPublicStreamWrapper', get_class($instance), t('Got correct class type for public URI.'));
 
-    // Test file_stream_wrapper_uri_normalize.
+    // Test file_stream_wrapper_uri_normalize().
     $uri = 'public:///' . file_directory_path() . '/foo/bar/';
     $uri = file_stream_wrapper_uri_normalize($uri);
     $this->assertEqual('public://foo/bar', $uri, t('Got a properly normalized URI @uri', array('@uri' => $uri)));
 
-    // Test file_uri_taget().
-    $this->assertEqual('foo/bar.txt', file_uri_target('public://foo/bar.txt'), t('Got a valid stream target from public://foo/bar.txt'));
+    // Test file_uri_target().
+    $this->assertEqual(file_uri_target('public://foo/bar.txt'), 'foo/bar.txt', t('Got a valid stream target from public://foo/bar.txt.'));
     $this->assertFalse(file_uri_target('foo/bar.txt'), t('foo/bar.txt is not a valid stream.'));
+
+    // Test file_build_uri() and file_directory_path().
+    $this->assertEqual(file_build_uri('foo/bar.txt'), 'public://foo/bar.txt', t('Expected scheme was added.'));
+    $this->assertEqual(file_directory_path(), variable_get('file_public_path'), t('Expected default directory path was returned.'));
+    $this->assertEqual(file_directory_path('public'), variable_get('file_public_path'), t('Expected public directory path was returned.'));
+    $this->assertEqual(file_directory_path('temporary'), conf_path() . '/private/temp', t('Expected temporary directory path was returned.'));
+    $this->assertEqual(file_directory_path($this->scheme), variable_get('stream_public_path', 'sites/default/files'), t('Expected dummy directory path was returned.'));
+    $this->assertFalse(file_directory_path('non-existent'), t('No directory path returned for invalid scheme.'));
+    variable_set('file_default_scheme', 'private');
+    $this->assertEqual(file_build_uri('foo/bar.txt'), 'private://foo/bar.txt', t('Got a valid URI from foo/bar.txt.'));
+    $this->assertEqual(file_directory_path(), variable_get('file_private_path'), t('Expected default directory path was returned.'));
+    $this->assertEqual(file_directory_path('private'), variable_get('file_private_path'), t('Expected private directory path was returned.'));
   }
 
   /**
