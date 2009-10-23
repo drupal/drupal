@@ -106,7 +106,7 @@ function common_test_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
 function common_test_theme() {
   return array(
     'common_test_foo' => array(
-      'arguments' => array('foo' => 'foo', 'bar' => 'bar'),
+      'variables' => array('foo' => 'foo', 'bar' => 'bar'),
     ),
   );
 }

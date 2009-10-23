@@ -12,16 +12,16 @@
 function options_theme() {
   return array(
     'options_select' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'options_buttons' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'options_onoff' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'options_none' => array(
-      'arguments' => array('instance' => NULL),
+      'variables' => array('instance' => NULL),
       ),
   );
 }

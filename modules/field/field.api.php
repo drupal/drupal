@@ -676,7 +676,7 @@ function hook_field_widget_error($element, $error) {
  *
  * @code
  *   'field_formatter_FORMATTER_NAME' => array(
- *     'arguments' => array('element' => NULL),
+ *     'render_element' => 'element',
  *   )
  * @code
  *

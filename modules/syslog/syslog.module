@@ -83,7 +83,7 @@ function syslog_watchdog(array $log_entry) {
 function syslog_theme() {
   return array(
     'syslog_format' => array(
-      'arguments' => array('entry' => NULL),
+      'variables' => array('entry' => NULL),
     ),
   );
 }

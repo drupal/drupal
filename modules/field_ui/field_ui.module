@@ -154,12 +154,12 @@ function field_ui_menu_label($instance) {
 function field_ui_theme() {
   return array(
     'field_ui_field_overview_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'field_ui.admin.inc',
       'template' => 'field_ui-field-overview-form',
     ),
     'field_ui_display_overview_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'field_ui.admin.inc',
       'template' => 'field_ui-display-overview-form',
     ),

@@ -152,19 +152,19 @@ function dashboard_system_info_alter(&$info, $file, $type) {
 function dashboard_theme() {
   return array(
     'dashboard' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'dashboard_admin' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'dashboard_region' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'dashboard_disabled_blocks' => array(
-      'arguments' => array('blocks' => NULL),
+      'variables' => array('blocks' => NULL),
     ),
     'dashboard_disabled_block' => array(
-      'arguments' => array('block' => NULL),
+      'variables' => array('block' => NULL),
     ),
   );
 }

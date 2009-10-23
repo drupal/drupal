@@ -47,13 +47,13 @@ function block_help($path, $arg) {
 function block_theme() {
   return array(
     'block' => array(
-      'arguments' => array('elements' => NULL),
+      'render element' => 'elements',
       'template' => 'block',
     ),
     'block_admin_display_form' => array(
       'template' => 'block-admin-display-form',
       'file' => 'block.admin.inc',
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
   );
 }

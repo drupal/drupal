@@ -33,7 +33,7 @@ function dblog_help($path, $arg) {
 function dblog_theme() {
   return array(
     'dblog_filters' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
   );
 }

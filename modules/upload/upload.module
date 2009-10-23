@@ -28,13 +28,13 @@ function upload_help($path, $arg) {
 function upload_theme() {
   return array(
     'upload_attachments' => array(
-      'arguments' => array('elements' => NULL),
+      'render element' => 'elements',
     ),
     'upload_form_current' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
     'upload_form_new' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
   );
 }

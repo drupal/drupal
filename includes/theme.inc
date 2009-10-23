@@ -299,11 +299,15 @@ function drupal_theme_rebuild() {
  *   - 'template': The filename of the template generating output for this
  *     theme hook. The template is in the directory defined by the 'path' key of
  *     hook_theme() or defaults to $path.
- *   - 'arguments': The arguments for this theme hook as defined in
- *     hook_theme(). If there is more than one implementation and 'arguments' is
+ *   - 'variables': The variables for this theme hook as defined in
+ *     hook_theme(). If there is more than one implementation and 'variables' is
  *     not specified in a later one, then the previous definition is kept.
+ *   - 'render element': The renderable element for this theme hook as defined
+ *     in hook_theme(). If there is more than one implementation and
+ *     'render element' is not specified in a later one, then the previous
+ *     definition is kept.
  *   - 'theme paths': The paths where implementations of a theme hook can be
- *     found. Its definition is similarly inherited like 'arguments'. Each time
+ *     found. Its definition is similarly inherited like 'variables'. Each time
  *     _theme_process_registry() is called for this theme hook, either the
  *     'path' key from hook_theme() (if defined) or $path is added.
  *   - 'preprocess functions': See theme() for detailed documentation.
@@ -365,11 +369,15 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         $result[$hook]['includes'][] = $include_file;
       }
 
-      // If 'arguments' have been defined previously, carry them forward.
+      // If 'variables' have been defined previously, carry them forward.
       // This should happen if a theme overrides a Drupal defined theme
       // function, for example.
-      if (!isset($info['arguments']) && isset($cache[$hook])) {
-        $result[$hook]['arguments'] = $cache[$hook]['arguments'];
+      if (!isset($info['variables']) && isset($cache[$hook]['variables'])) {
+        $result[$hook]['variables'] = $cache[$hook]['variables'];
+      }
+      // Same for 'render element'.
+      if (!isset($info['render element']) && isset($cache[$hook]['render element'])) {
+        $result[$hook]['render element'] = $cache[$hook]['render element'];
       }
 
       // The following apply only to theming hooks implemented as templates.
@@ -780,30 +788,28 @@ function theme($hook, $variables = array()) {
   }
 
   // If a renderable array is passed as $variables, then set $variables to
-  // what's expected by the theme hook. If the theme hook expects a single
-  // argument, set the renderable array as that argument. If the theme hook
-  // expects multiple arguments, set the properties of the renderable array as
-  // those arguments.
+  // the arguments expected by the theme function.
   if (isset($variables['#theme']) || isset($variables['#theme_wrappers'])) {
     $element = $variables;
     $variables = array();
-    $n = count($info['arguments']);
-    if ($n == 1) {
-      $arg_keys = array_keys($info['arguments']);
-      $variables[$arg_keys[0]] = $element;
-    }
-    elseif ($n > 1) {
-      foreach ($info['arguments'] as $name => $default) {
+    if (isset($info['variables'])) {
+      foreach (array_keys($info['variables']) as $name) {
         if (isset($element["#$name"])) {
           $variables[$name] = $element["#$name"];
         }
       }
     }
+    else {
+      $variables[$info['render element']] = $element;
+    }
   }
 
   // Merge in argument defaults.
-  if (!empty($info['arguments'])) {
-    $variables += $info['arguments'];
+  if (!empty($info['variables'])) {
+    $variables += $info['variables'];
+  }
+  elseif (!empty($info['render element'])) {
+    $variables += array($info['render element'] => array());
   }
 
   // Invoke the variable processors, if any. The processors may specify
@@ -968,8 +974,7 @@ function path_to_theme() {
 }
 
 /**
- * Find overridden theme functions. Called by themes and/or theme engines to
- * easily discover theme functions.
+ * Allow themes and/or theme engines to easily discover overridden theme functions.
  *
  * @param $cache
  *   The existing cache of theme hooks to test against.
@@ -990,9 +995,10 @@ function drupal_find_theme_functions($cache, $prefixes) {
         if ($matches) {
           foreach ($matches as $match) {
             $new_hook = str_replace($prefix . '_', '', $match);
+            $arg_name = isset($info['variables']) ? 'variables' : 'render element';
             $templates[$new_hook] = array(
               'function' => $match,
-              'arguments' => $info['arguments'],
+              $arg_name => $info[$arg_name],
             );
           }
         }
@@ -1015,8 +1021,7 @@ function drupal_find_theme_functions($cache, $prefixes) {
 }
 
 /**
- * Find overridden theme templates. Called by themes and/or theme engines to
- * easily discover templates.
+ * Allow themes and/or theme engines to easily discover overridden templates.
  *
  * @param $cache
  *   The existing cache of theme hooks to test against.
@@ -1093,10 +1098,11 @@ function drupal_find_theme_templates($cache, $extension, $path) {
         foreach ($matches as $match) {
           $file = substr($match, 0, strpos($match, '.'));
           // Put the underscores back in for the hook name and register this pattern.
+          $arg_name = isset($info['variables']) ? 'variables' : 'render element';
           $templates[strtr($file, '-', '_')] = array(
             'template' => $file,
             'path' => dirname($files[$match]->uri),
-            'arguments' => $info['arguments'],
+            $arg_name => $info[$arg_name],
           );
         }
       }

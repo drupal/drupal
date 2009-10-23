@@ -54,19 +54,19 @@ function profile_help($path, $arg) {
 function profile_theme() {
   return array(
     'profile_block' => array(
-      'arguments' => array('account' => NULL, 'fields' => array()),
+      'variables' => array('account' => NULL, 'fields' => array()),
       'template' => 'profile-block',
     ),
     'profile_listing' => array(
-      'arguments' => array('account' => NULL, 'fields' => array()),
+      'variables' => array('account' => NULL, 'fields' => array()),
       'template' => 'profile-listing',
     ),
     'profile_wrapper' => array(
-      'arguments' => array('content' => NULL),
+      'variables' => array('content' => NULL),
       'template' => 'profile-wrapper',
     ),
     'profile_admin_overview' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'profile.admin.inc',
     )
   );

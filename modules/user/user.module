@@ -36,45 +36,45 @@ function user_module_invoke($type, &$edit, $account, $category = NULL) {
 function user_theme() {
   return array(
     'user_picture' => array(
-      'arguments' => array('account' => NULL),
+      'variables' => array('account' => NULL),
       'template' => 'user-picture',
     ),
     'user_profile' => array(
-      'arguments' => array('elements' => NULL),
+      'render element' => 'elements',
       'template' => 'user-profile',
       'file' => 'user.pages.inc',
     ),
     'user_profile_category' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
       'template' => 'user-profile-category',
       'file' => 'user.pages.inc',
     ),
     'user_profile_item' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
       'template' => 'user-profile-item',
       'file' => 'user.pages.inc',
     ),
     'user_list' => array(
-      'arguments' => array('users' => NULL, 'title' => NULL),
+      'variables' => array('users' => NULL, 'title' => NULL),
     ),
     'user_admin_permissions' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'user.admin.inc',
     ),
     'user_admin_new_role' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'user.admin.inc',
     ),
     'user_filter_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'user.admin.inc',
     ),
     'user_filters' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'user.admin.inc',
     ),
     'user_signature' => array(
-      'arguments' => array('signature' => NULL),
+      'variables' => array('signature' => NULL),
     ),
   );
 }

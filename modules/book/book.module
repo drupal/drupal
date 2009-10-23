@@ -12,25 +12,25 @@
 function book_theme() {
   return array(
     'book_navigation' => array(
-      'arguments' => array('book_link' => NULL),
+      'variables' => array('book_link' => NULL),
       'template' => 'book-navigation',
     ),
     'book_export_html' => array(
-      'arguments' => array('title' => NULL, 'contents' => NULL, 'depth' => NULL),
+      'variables' => array('title' => NULL, 'contents' => NULL, 'depth' => NULL),
       'template' => 'book-export-html',
     ),
     'book_admin_table' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
     'book_title_link' => array(
-      'arguments' => array('link' => NULL),
+      'variables' => array('link' => NULL),
     ),
     'book_all_books_block' => array(
-      'arguments' => array('book_menus' => array()),
+      'render element' => 'book_menus',
       'template' => 'book-all-books-block',
     ),
     'book_node_export_html' => array(
-      'arguments' => array('node' => NULL, 'children' => NULL),
+      'variables' => array('node' => NULL, 'children' => NULL),
       'template' => 'book-node-export-html',
     ),
   );

@@ -109,11 +109,11 @@ function shortcut_menu() {
 function shortcut_theme() {
   return array(
     'shortcut_set_switch' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'shortcut.admin.inc',
     ),
     'shortcut_set_customize' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'shortcut.admin.inc',
     ),
   );

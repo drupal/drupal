@@ -22,7 +22,7 @@ function color_help($path, $arg) {
 function color_theme() {
   return array(
     'color_scheme_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
   );
 }

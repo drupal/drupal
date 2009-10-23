@@ -199,7 +199,7 @@ function theme_update_report($variables) {
             break;
             
           default:
-            $base_themes[] = theme('placeholder', $base_theme);
+            $base_themes[] = theme('placeholder', array('text' => $base_theme));
         }
       }
       $row .= t('Depends on: !basethemes', array('!basethemes' => implode(', ', $base_themes)));

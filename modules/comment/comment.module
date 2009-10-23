@@ -122,21 +122,21 @@ function comment_entity_info() {
 function comment_theme() {
   return array(
     'comment_block' => array(
-      'arguments' => array(),
+      'variables' => array(),
     ),
     'comment_preview' => array(
-      'arguments' => array('comment' => NULL),
+      'variables' => array('comment' => NULL),
     ),
     'comment' => array(
       'template' => 'comment',
-      'arguments' => array('elements' => NULL),
+      'render element' => 'elements',
     ),
     'comment_post_forbidden' => array(
-      'arguments' => array('node' => NULL),
+      'variables' => array('node' => NULL),
     ),
     'comment_wrapper' => array(
       'template' => 'comment-wrapper',
-      'arguments' => array('content' => NULL),
+      'render element' => 'content',
     ),
   );
 }

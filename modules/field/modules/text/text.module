@@ -12,10 +12,10 @@
 function text_theme() {
   return array(
     'text_textarea' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'text_textfield' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
   );
 }

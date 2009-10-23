@@ -11,7 +11,7 @@
  */
 function number_theme() {
   return array(
-    'number' => array('arguments' => array('element' => NULL)),
+    'number' => array('render element' => 'element'),
   );
 }
 

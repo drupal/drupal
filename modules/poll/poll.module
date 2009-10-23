@@ -34,18 +34,18 @@ function poll_theme() {
   return array(
     'poll_vote' => array(
       'template' => 'poll-vote',
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
     'poll_choices' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
     'poll_results' => array(
       'template' => 'poll-results',
-      'arguments' => array('raw_title' => NULL, 'results' => NULL, 'votes' => NULL, 'raw_links' => NULL, 'block' => NULL, 'nid' => NULL, 'vote' => NULL),
+      'variables' => array('raw_title' => NULL, 'results' => NULL, 'votes' => NULL, 'raw_links' => NULL, 'block' => NULL, 'nid' => NULL, 'vote' => NULL),
     ),
     'poll_bar' => array(
       'template' => 'poll-bar',
-      'arguments' => array('title' => NULL, 'votes' => NULL, 'total_votes' => NULL, 'vote' => NULL, 'block' => NULL),
+      'variables' => array('title' => NULL, 'votes' => NULL, 'total_votes' => NULL, 'vote' => NULL, 'block' => NULL),
     ),
   );
 }

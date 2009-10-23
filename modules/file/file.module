@@ -65,24 +65,24 @@ function file_theme() {
   return array(
     // file.module.
     'file_link' => array(
-      'arguments' => array('file' => NULL),
+      'variables' => array('file' => NULL),
     ),
     'file_icon' => array(
-      'arguments' => array('file' => NULL),
+      'variables' => array('file' => NULL),
     ),
     'file_managed_file' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
 
     // file.field.inc.
     'file_widget' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'file_widget_multiple' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'file_upload_help' => array(
-      'arguments' => array('description' => NULL, 'upload_validators' => NULL),
+      'variables' => array('description' => NULL, 'upload_validators' => NULL),
     ),
   );
 }

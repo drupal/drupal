@@ -580,13 +580,13 @@ function field_test_field_formatter_info() {
 function field_test_theme() {
   return array(
     'field_formatter_field_test_default' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'field_formatter_field_test_multiple' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'field_formatter_field_test_needs_additional_data' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
   );
 }

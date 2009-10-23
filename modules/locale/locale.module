@@ -449,16 +449,16 @@ function locale_field_node_form_submit($form, &$form_state) {
 function locale_theme() {
   return array(
     'locale_languages_overview_form' => array(
-      'arguments' => array('form' => array()),
+      'render element' => 'form',
     ),
     'locale_languages_configure_form' => array(
-      'arguments' => array('form' => array()),
+      'render element' => 'form',
     ),
     'locale_translation_filters' => array(
-      'arguments' => array('form' => array()),
+      'render element' => 'form',
     ),
     'locale_date_format_form' => array(
-      'arguments' => array('form' => array()),
+      'render element' => 'form',
     ),
   );
 }

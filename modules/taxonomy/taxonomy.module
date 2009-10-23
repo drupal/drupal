@@ -152,13 +152,13 @@ function taxonomy_field_build_modes($obj_type) {
 function taxonomy_theme() {
   return array(
     'taxonomy_overview_vocabularies' => array(
-      'arguments' => array('form' => array()),
+      'render element' => 'form',
     ),
     'taxonomy_overview_terms' => array(
-      'arguments' => array('form' => array()),
+      'render element' => 'form',
     ),
     'taxonomy_autocomplete' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
   );
 }

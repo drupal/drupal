@@ -849,12 +849,19 @@ function hook_permission() {
  * to each sub-array is the internal name of the hook, and the array contains
  * info about the hook. Each array may contain the following items:
  *
- * - arguments: (required) An array of arguments that this theme hook uses. This
- *   value allows the theme layer to properly utilize templates. The
- *   array keys represent the name of the variable, and the value will be
- *   used as the default value if not specified to the theme() function.
- *   These arguments must be in the same order that they will be given to
- *   the theme() function.
+ * - variables: (required if "render element" not present) An array of
+ *   variables that this theme hook uses. This value allows the theme layer to
+ *   properly utilize templates. Each array key represents the name of the
+ *   variable and the value will be used as the default value if it is not given
+ *   when theme() is called. Template implementations receive these arguments as
+ *   variables in the template file. Function implementations are passed this
+ *   array data in the $variables parameter.
+ * - render element: (required if "variables" not present) A string that is the
+ *   name of the sole renderable element to pass to the theme function. The
+ *   string represents the name of the "variable" that will hold the renderable
+ *   array inside any optional preprocess or process functions. Cannot be used
+ *   with the "variables" item; only one or the other, not both, can be present
+ *   in a hook's info array.
  * - file: The file the implementation resides in. This file will be included
  *   prior to the theme being rendered, to make sure that the function or
  *   preprocess function (as needed) is actually loaded; this makes it possible
@@ -929,16 +936,24 @@ function hook_permission() {
 function hook_theme($existing, $type, $theme, $path) {
   return array(
     'forum_display' => array(
-      'arguments' => array('forums' => NULL, 'topics' => NULL, 'parents' => NULL, 'tid' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
+      'variables' => array('forums' => NULL, 'topics' => NULL, 'parents' => NULL, 'tid' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
     ),
     'forum_list' => array(
-      'arguments' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
+      'variables' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
     ),
     'forum_topic_list' => array(
-      'arguments' => array('tid' => NULL, 'topics' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
+      'variables' => array('tid' => NULL, 'topics' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
     ),
     'forum_icon' => array(
-      'arguments' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
+      'variables' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
+    ),
+    'status_report' => array(
+      'render element' => 'requirements',
+      'file' => 'system.admin.inc',
+    ),
+    'system_date_time_settings' => array(
+      'render element' => 'form',
+      'file' => 'system.admin.inc',
     ),
   );
 }
@@ -960,7 +975,7 @@ function hook_theme($existing, $type, $theme, $path) {
  * For example:
  * @code
  *  $theme_registry['user_profile'] = array(
- *    'arguments' => array(
+ *    'variables' => array(
  *      'account' => NULL,
  *    ),
  *    'template' => 'modules/user/user-profile',

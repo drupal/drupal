@@ -245,20 +245,20 @@ function update_manager_access() {
 function update_theme() {
   return array(
     'update_manager_update_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'update.manager.inc',
     ),
     'update_last_check' => array(
-      'arguments' => array('last' => NULL),
+      'variables' => array('last' => NULL),
     ),
     'update_report' => array(
-      'arguments' => array('data' => NULL),
+      'variables' => array('data' => NULL),
     ),
     'update_version' => array(
-      'arguments' => array('version' => NULL, 'tag' => NULL, 'class' => array()),
+      'variables' => array('version' => NULL, 'tag' => NULL, 'class' => array()),
     ),
     'update_status_label' => array(
-      'arguments' => array('status' => NULL),
+      'variables' => array('status' => NULL),
     ),
   );
 }

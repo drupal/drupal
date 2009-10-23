@@ -75,11 +75,11 @@ function simpletest_permission() {
 function simpletest_theme() {
   return array(
     'simpletest_test_table' => array(
-      'arguments' => array('table' => NULL),
+      'render element' => 'table',
       'file' => 'simpletest.pages.inc',
     ),
     'simpletest_result_summary' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'simpletest.pages.inc',
     ),
   );

@@ -156,63 +156,65 @@ function system_help($path, $arg) {
 function system_theme() {
   return array_merge(drupal_common_theme(), array(
     'system_themes_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'system.admin.inc',
     ),
     'system_settings_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'system.admin.inc',
     ),
     'confirm_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
     'system_modules_fieldset' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'system.admin.inc',
     ),
     'system_modules_incompatible' => array(
-      'arguments' => array('message' => NULL),
+      'variables' => array('message' => NULL),
       'file' => 'system.admin.inc',
     ),
     'system_modules_uninstall' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'system.admin.inc',
     ),
     'status_report' => array(
-      'arguments' => array('requirements' => NULL),
+      'render element' => 'requirements',
       'file' => 'system.admin.inc',
     ),
     'admin_page' => array(
-      'arguments' => array('blocks' => NULL),
+      'variables' => array('blocks' => NULL),
       'file' => 'system.admin.inc',
     ),
     'admin_block' => array(
-      'arguments' => array('block' => NULL),
+      'variables' => array('block' => NULL),
       'file' => 'system.admin.inc',
     ),
     'admin_block_content' => array(
-      'arguments' => array('content' => NULL),
+      'variables' => array('content' => NULL),
       'file' => 'system.admin.inc',
     ),
     'system_admin_by_module' => array(
-      'arguments' => array('menu_items' => NULL),
+      'variables' => array('menu_items' => NULL),
       'file' => 'system.admin.inc',
     ),
     'system_powered_by' => array(
-      'arguments' => NULL,
+      'variables' => array(),
     ),
     'meta_generator_html' => array(
-      'arguments' => array('version' => NULL),
+      'variables' => array('version' => NULL),
     ),
     'meta_generator_header' => array(
-      'arguments' => array('version' => NULL),
+      'variables' => array('version' => NULL),
     ),
-    'system_compact_link' => array(),
+    'system_compact_link' => array(
+      'variables' => array(),
+    ),
     'system_run_cron_image' => array(
-      'arguments' => array('image_path' => NULL),
+      'variables' => array('image_path' => NULL),
     ),
     'system_date_time_settings' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'system.admin.inc',
     ),
   ));
@@ -3464,8 +3466,13 @@ function system_preprocess(&$variables, $hook) {
   $variables['contextual_links'] = array();
 
   // Determine the primary theme function argument.
-  $keys = array_keys($hooks[$hook]['arguments']);
-  $key = $keys[0];
+  if (isset($hooks[$hook]['variables'])) {
+    $keys = array_keys($hooks[$hook]['variables']);
+    $key = $keys[0];
+  }
+  else {
+    $key = $hooks[$hook]['render element'];
+  }
   if (isset($variables[$key])) {
     $element = $variables[$key];
   }

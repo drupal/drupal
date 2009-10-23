@@ -183,7 +183,7 @@ function trigger_get_assigned_actions($hook) {
 function trigger_theme() {
   return array(
     'trigger_display' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
       'file' => 'trigger.admin.inc',
     ),
   );

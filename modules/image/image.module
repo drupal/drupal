@@ -170,7 +170,7 @@ function image_theme() {
   return array(
     // Theme functions in image.module.
     'image_style' => array(
-      'arguments' => array(
+      'variables' => array(
         'style_name' => NULL,
         'path' => NULL,
         'alt' => '',
@@ -182,42 +182,42 @@ function image_theme() {
 
     // Theme functions in image.admin.inc.
     'image_style_list' => array(
-      'arguments' => array('styles' => NULL),
+      'variables' => array('styles' => NULL),
     ),
     'image_style_effects' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
     'image_style_preview' => array(
-      'arguments' => array('style' => NULL),
+      'variables' => array('style' => NULL),
     ),
     'image_anchor' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'image_resize_summary' => array(
-      'arguments' => array('data' => NULL),
+      'variables' => array('data' => NULL),
     ),
     'image_scale_summary' => array(
-      'arguments' => array('data' => NULL),
+      'variables' => array('data' => NULL),
     ),
     'image_crop_summary' => array(
-      'arguments' => array('data' => NULL),
+      'variables' => array('data' => NULL),
     ),
     'image_rotate_summary' => array(
-      'arguments' => array('data' => NULL),
+      'variables' => array('data' => NULL),
     ),
 
     // Theme functions in image.field.inc.
     'image_widget' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'field_formatter_image' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'field_formatter_image_link_content' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'field_formatter_image_link_file' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
   );
 }

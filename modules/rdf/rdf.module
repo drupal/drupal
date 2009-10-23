@@ -321,10 +321,10 @@ function rdf_entity_load($entities, $type) {
 function rdf_theme() {
   return array(
     'rdf_template_variable_wrapper' => array(
-      'arguments' => array('content' => NULL, 'attributes' => array(), 'context' => array(), 'inline' => TRUE),
+      'variables' => array('content' => NULL, 'attributes' => array(), 'context' => array(), 'inline' => TRUE),
     ),
     'rdf_metadata' => array(
-      'arguments' => array('metadata' => array()),
+      'variables' => array('metadata' => array()),
     ),
   );
 }

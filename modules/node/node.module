@@ -122,40 +122,40 @@ function node_help($path, $arg) {
 function node_theme() {
   return array(
     'node' => array(
-      'arguments' => array('elements' => NULL),
+      'render element' => 'elements',
       'template' => 'node',
     ),
     'node_list' => array(
-      'arguments' => array('items' => NULL, 'title' => NULL),
+      'variables' => array('items' => NULL, 'title' => NULL),
     ),
     'node_search_admin' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
     'node_filter_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'node.admin.inc',
     ),
     'node_filters' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'node.admin.inc',
     ),
     'node_add_list' => array(
-      'arguments' => array('content' => NULL),
+      'variables' => array('content' => NULL),
       'file' => 'node.pages.inc',
     ),
     'node_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'node.pages.inc',
     ),
     'node_preview' => array(
-      'arguments' => array('node' => NULL),
+      'variables' => array('node' => NULL),
       'file' => 'node.pages.inc',
     ),
     'node_log_message' => array(
-      'arguments' => array('log' => NULL),
+      'variables' => array('log' => NULL),
     ),
     'node_admin_overview' => array(
-      'arguments' => array('name' => NULL, 'type' => NULL),
+      'variables' => array('name' => NULL, 'type' => NULL),
     ),
   );
 }

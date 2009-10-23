@@ -161,17 +161,17 @@ function field_theme() {
   $items = array(
     'field' => array(
       'template' => 'field',
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
       'path' => $path,
     ),
     'field_multiple_value_form' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
   );
   $field_formatters = field_info_formatter_types(NULL);
   foreach ($field_formatters as $key => $field_formatter) {
     $items['field_formatter_' . $key] = array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     );
     if (isset($field_formatter['theme'])) {
       $items['field_formatter_' . $key] += $field_formatter['theme'];

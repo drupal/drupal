@@ -118,21 +118,21 @@ function search_help($path, $arg) {
 function search_theme() {
   return array(
     'search_block_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'template' => 'search-block-form',
     ),
     'search_result' => array(
-      'arguments' => array('result' => NULL, 'type' => NULL),
+      'variables' => array('result' => NULL, 'type' => NULL),
       'file' => 'search.pages.inc',
       'template' => 'search-result',
     ),
     'search_results' => array(
-      'arguments' => array('results' => NULL, 'type' => NULL),
+      'variables' => array('results' => NULL, 'type' => NULL),
       'file' => 'search.pages.inc',
       'template' => 'search-results',
     ),
     'search_results_listing' => array(
-      'arguments' => array('title' => NULL, 'content' => NULL),
+      'variables' => array('title' => NULL, 'content' => NULL),
     ),
   );
 }
