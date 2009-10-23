@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.33 2009/10/15 12:44:34 dries Exp $
+// $Id: text.module,v 1.34 2009/10/23 22:24:13 webchick Exp $
 
 /**
  * @file
@@ -12,10 +12,10 @@
 function text_theme() {
   return array(
     'text_textarea' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'text_textfield' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
   );
 }

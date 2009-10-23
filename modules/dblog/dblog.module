@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.43 2009/10/09 00:59:56 dries Exp $
+// $Id: dblog.module,v 1.44 2009/10/23 22:24:13 webchick Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ function dblog_help($path, $arg) {
 function dblog_theme() {
   return array(
     'dblog_filters' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
   );
 }

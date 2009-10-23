@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.50 2009/10/10 16:48:38 webchick Exp $
+// $Id: trigger.module,v 1.51 2009/10/23 22:24:19 webchick Exp $
 
 /**
  * @file
@@ -183,7 +183,7 @@ function trigger_get_assigned_actions($hook) {
 function trigger_theme() {
   return array(
     'trigger_display' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
       'file' => 'trigger.admin.inc',
     ),
   );

@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.73 2009/10/09 00:59:55 dries Exp $
+// $Id: color.module,v 1.74 2009/10/23 22:24:12 webchick Exp $
 
 /**
  * Implement hook_help().
@@ -22,7 +22,7 @@ function color_help($path, $arg) {
 function color_theme() {
   return array(
     'color_scheme_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
   );
 }

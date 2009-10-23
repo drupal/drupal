@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.393 2009/10/18 11:42:29 dries Exp $
+// $Id: block.module,v 1.394 2009/10/23 22:24:11 webchick Exp $
 
 /**
  * @file
@@ -47,13 +47,13 @@ function block_help($path, $arg) {
 function block_theme() {
   return array(
     'block' => array(
-      'arguments' => array('elements' => NULL),
+      'render element' => 'elements',
       'template' => 'block',
     ),
     'block_admin_display_form' => array(
       'template' => 'block-admin-display-form',
       'file' => 'block.admin.inc',
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
   );
 }

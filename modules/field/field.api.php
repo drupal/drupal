@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.45 2009/10/22 00:49:12 dries Exp $
+// $Id: field.api.php,v 1.46 2009/10/23 22:24:13 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -676,7 +676,7 @@ function hook_field_widget_error($element, $error) {
  *
  * @code
  *   'field_formatter_FORMATTER_NAME' => array(
- *     'arguments' => array('element' => NULL),
+ *     'render_element' => 'element',
  *   )
  * @code
  *

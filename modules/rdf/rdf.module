@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.module,v 1.4 2009/10/20 19:54:15 webchick Exp $
+// $Id: rdf.module,v 1.5 2009/10/23 22:24:17 webchick Exp $
 
 /**
  * @file
@@ -321,10 +321,10 @@ function rdf_entity_load($entities, $type) {
 function rdf_theme() {
   return array(
     'rdf_template_variable_wrapper' => array(
-      'arguments' => array('content' => NULL, 'attributes' => array(), 'context' => array(), 'inline' => TRUE),
+      'variables' => array('content' => NULL, 'attributes' => array(), 'context' => array(), 'inline' => TRUE),
     ),
     'rdf_metadata' => array(
-      'arguments' => array('metadata' => array()),
+      'variables' => array('metadata' => array()),
     ),
   );
 }

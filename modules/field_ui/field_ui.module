@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.module,v 1.10 2009/10/15 12:44:35 dries Exp $
+// $Id: field_ui.module,v 1.11 2009/10/23 22:24:13 webchick Exp $
 
 /**
  * @file
@@ -154,12 +154,12 @@ function field_ui_menu_label($instance) {
 function field_ui_theme() {
   return array(
     'field_ui_field_overview_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'field_ui.admin.inc',
       'template' => 'field_ui-field-overview-form',
     ),
     'field_ui_display_overview_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
       'file' => 'field_ui.admin.inc',
       'template' => 'field_ui-display-overview-form',
     ),

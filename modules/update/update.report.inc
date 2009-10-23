@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.26 2009/10/15 21:19:31 webchick Exp $
+// $Id: update.report.inc,v 1.27 2009/10/23 22:24:19 webchick Exp $
 
 /**
  * @file
@@ -199,7 +199,7 @@ function theme_update_report($variables) {
             break;
             
           default:
-            $base_themes[] = theme('placeholder', $base_theme);
+            $base_themes[] = theme('placeholder', array('text' => $base_theme));
         }
       }
       $row .= t('Depends on: !basethemes', array('!basethemes' => implode(', ', $base_themes)));

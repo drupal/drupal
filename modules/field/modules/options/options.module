@@ -1,5 +1,5 @@
 <?php
-// $Id: options.module,v 1.13 2009/10/17 01:20:00 dries Exp $
+// $Id: options.module,v 1.14 2009/10/23 22:24:13 webchick Exp $
 
 /**
  * @file
@@ -12,16 +12,16 @@
 function options_theme() {
   return array(
     'options_select' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'options_buttons' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'options_onoff' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'options_none' => array(
-      'arguments' => array('instance' => NULL),
+      'variables' => array('instance' => NULL),
       ),
   );
 }
