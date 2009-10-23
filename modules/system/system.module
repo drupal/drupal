@@ -199,7 +199,7 @@ function system_theme() {
       'file' => 'system.admin.inc',
     ),
     'system_powered_by' => array(
-      'arguments' => array('image_path' => NULL),
+      'arguments' => NULL,
     ),
     'meta_generator_html' => array(
       'arguments' => array('version' => NULL),
@@ -1753,46 +1753,6 @@ function system_block_info() {
 }
 
 /**
- * Implement hook_block_configure().
- */
-function system_block_configure($delta = '') {
-  if ($delta == 'powered-by') {
-    $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
-    drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
-    // Compile a list of fields to show
-    $form['wrapper']['color'] = array(
-      '#type' => 'select',
-      '#title' => t('Badge color'),
-      '#default_value' => variable_get('drupal_badge_color', 'powered-blue'),
-      '#options' => array('powered-black' => t('Black'), 'powered-blue' => t('Blue'), 'powered-gray' => t('Gray')),
-    );
-    $form['wrapper']['size'] = array(
-      '#type' => 'select',
-      '#title' => t('Badge size'),
-      '#default_value' => variable_get('drupal_badge_size', '80x15'),
-      '#options' => array('80x15' => t('Small'), '88x31' => t('Medium'), '135x42' => t('Large')),
-    );
-    $form['wrapper']['preview'] = array(
-      '#type' => 'item',
-      '#title' => 'Preview',
-      '#markup' => theme('image', array('path' => $image_path, 'alt' => t('Powered by Drupal, an open source content management system'), 'title' => t('Powered by Drupal, an open source content management system'), 'attributes' => array('class' => array('powered-by-preview')), 'getsize' => FALSE)),
-    );
-    return $form;
-  }
-}
-
-/**
- * Implement hook_block_save().
- */
-function system_block_save($delta = '', $edit = NULL) {
-  if ($delta == 'powered-by') {
-    $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
-    variable_set('drupal_badge_color', $edit['color']);
-    variable_set('drupal_badge_size', $edit['size']);
-  }
-}
-
-/**
  * Implement hook_block_view().
  *
  * Generate a block with a promotional link to Drupal.org and
@@ -1806,9 +1766,8 @@ function system_block_view($delta = '') {
       $block['content'] = drupal_set_page_content();
       return $block;
     case 'powered-by':
-      $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
       $block['subject'] = NULL;
-      $block['content'] = theme('system_powered_by', array('image_path' => $image_path));
+      $block['content'] = theme('system_powered_by');
       return $block;
     case 'help':
       $block['subject'] = NULL;
@@ -2910,8 +2869,7 @@ function system_timezone($abbreviation = '', $offset = -1, $is_daylight_saving_t
  * @ingroup themeable
  */
 function theme_system_powered_by($variables) {
-  $image = theme('image', array('path' => $variables['image_path'], 'alt' => t('Powered by Drupal, an open source content management system'), 'title' => t('Powered by Drupal, an open source content management system')));
-  return l($image, 'http://drupal.org', array('html' => TRUE, 'absolute' => TRUE, 'external' => TRUE));
+  return '<span>' . t('Powered by <a href="@poweredby">Drupal</a>', array('@poweredby' => 'http://drupal.org')) . '</span>';
 }
 
 /**
