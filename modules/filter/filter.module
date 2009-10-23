@@ -615,17 +615,21 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
 }
 
 /**
- * Generate a selector for choosing a format in a form.
+ * Generates a selector for choosing a format in a form.
+ *
+ * @param $selected_format
+ *   The ID of the format that is currently selected; uses the default format
+ *   for the current user if not provided.
+ * @param $weight
+ *   The weight of the form element within the form.
+ * @param $parents
+ *   The parents array of the element. Required when defining multiple text
+ *   formats on a single form or having a different parent than 'format'.
+ *
+ * @return
+ *   Form API array for the form element.
  *
  * @ingroup forms
- * @param $selected_format
- *   The ID of the format that is currently selected.
- * @param $weight
- *   The weight of the text format.
- * @param $parents
- *   Required when defining multiple text formats on a single node or having a different parent than 'format'.
- * @return
- *   HTML for the form element.
  */
 function filter_form($selected_format = NULL, $weight = NULL, $parents = array('format')) {
   global $user;
