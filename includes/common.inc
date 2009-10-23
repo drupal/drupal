@@ -6065,12 +6065,18 @@ function archiver_get_info() {
  *
  * @param $file
  *   The full path of the archive file.  Note that stream wrapper
- *   paths are supported.
+ *   paths are supported, but not remote ones.
  * @return
  *   A newly created instance of the archiver class appropriate
  *   for the specified file, already bound to that file.
+ *   If no appropriate archiver class was found, will return FALSE.
  */
 function archiver_get_archiver($file) {
+  // Archivers can only work on local paths
+  $filepath = drupal_realpath($file);
+  if (!is_file($filepath)) {
+    throw new Exception(t('Archivers can only operate on local files: %file not supported', array('%file' => $file)));
+  }
   $archiver_info = archiver_get_info();
 
   foreach ($archiver_info as $implementation) {
@@ -6080,8 +6086,8 @@ function archiver_get_archiver($file) {
       // This method isn't quite as clean but gets the job done.
       // Also note that the file may not yet exist, so we cannot rely
       // on fileinfo() or other disk-level utilities.
-      if (strrpos($file, '.' . $extension) === strlen($file) - strlen('.' . $extension)) {
-        return new $implementation['class']($file);
+      if (strrpos($filepath, '.' . $extension) === strlen($filepath) - strlen('.' . $extension)) {
+        return new $implementation['class']($filepath);
       }
     }
   }
