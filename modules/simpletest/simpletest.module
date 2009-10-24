@@ -418,16 +418,18 @@ function simpletest_clean_environment() {
 function simpletest_clean_database() {
   $tables = db_find_tables(Database::getConnection()->prefixTables('{simpletest}') . '%');
   $schema = drupal_get_schema_unprocessed('simpletest');
+  $count = 0;
   foreach (array_diff_key($tables, $schema) as $table) {
     // Strip the prefix and skip tables without digits following "simpletest",
     // e.g. {simpletest_test_id}.
     if (preg_match('/simpletest\d+.*/', $table, $matches)) {
       db_drop_table($matches[0]);
+      $count++;
     }
   }
 
-  if (count($ret) > 0) {
-    drupal_set_message(format_plural(count($ret), 'Removed 1 leftover table.', 'Removed @count leftover tables.'));
+  if ($count > 0) {
+    drupal_set_message(format_plural($count, 'Removed 1 leftover table.', 'Removed @count leftover tables.'));
   }
   else {
     drupal_set_message(t('No leftover tables to remove.'));
