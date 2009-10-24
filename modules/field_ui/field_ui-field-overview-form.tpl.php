@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui-field-overview-form.tpl.php,v 1.1 2009/08/19 13:31:13 webchick Exp $
+// $Id: field_ui-field-overview-form.tpl.php,v 1.2 2009/10/24 17:26:16 webchick Exp $
 
 /**
  * @file
@@ -68,9 +68,9 @@
             </div>
           </td>
           <td><div class="new">&nbsp;</div><?php print $row->weight . $row->hidden_name; ?></td>
-          <td colspan="2"><div class="new">&nbsp;</div><?php print $row->field_name; ?></td>
+          <td><div class="new">&nbsp;</div><?php print $row->field_name; ?></td>
           <td><div class="new">&nbsp;</div><?php print $row->type; ?></td>
-          <td colspan="2"><div class="new">&nbsp;</div><?php print $row->widget_type; ?></td>
+          <td colspan="3"><div class="new">&nbsp;</div><?php print $row->widget_type; ?></td>
           <?php break;
 
         case 'add_existing_field': ?>
@@ -81,8 +81,8 @@
             </div>
           </td>
           <td><div class="new">&nbsp;</div><?php print $row->weight . $row->hidden_name; ?></td>
-          <td colspan="3"><div class="new">&nbsp;</div><?php print $row->field_name; ?></td>
-          <td colspan="2"><div class="new">&nbsp;</div><?php print $row->widget_type; ?></td>
+          <td colspan="2"><div class="new">&nbsp;</div><?php print $row->field_name; ?></td>
+          <td colspan="3"><div class="new">&nbsp;</div><?php print $row->widget_type; ?></td>
           <?php break;
       endswitch; ?>
       </tr>
