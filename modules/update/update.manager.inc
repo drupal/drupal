@@ -441,10 +441,24 @@ function update_manager_confirm_update_form_submit($form, &$form_state) {
 function update_manager_install_form(&$form_state) {
   $form = array();
 
+  // Collect all the supported archive file extensions for the UI text.
+  $extensions = array();
+  $archiver_info = archiver_get_info();
+  foreach ($archiver_info as $info) {
+    if (!empty($info['extensions'])) {
+      $extensions += $info['extensions'];
+    }
+  }
+  $form['help_text'] = array(
+    '#prefix' => '<p>',
+    '#markup' => t('To install a new module or theme, either paste the URL of an archive file you wish to install, or upload the archive file that you have downloaded. You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> at <a href="@drupal_org_url">http://drupal.org</a>. The following archive extensions are supported: %extensions', array('@module_url' => 'http://drupal.org/project/modules', '@theme_url' => 'http://drupal.org/project/themes', '@drupal_org_url' => 'http://drupal.org', '%extensions' => implode(', ', $extensions))),
+    '#suffix' => '</p>',
+  );
+
   $form['project_url'] = array(
     '#type' => 'textfield',
     '#title' => t('URL'),
-    '#description' => t('Paste the URL to a Drupal module or theme archive (.tar.gz) to install it. (e.g http://ftp.drupal.org/files/projects/projectname.tar.gz)'),
+    '#description' => t('Paste the URL to a Drupal module or theme archive to install it (e.g http://ftp.drupal.org/files/projects/projectname.tar.gz).'),
   );
 
   $form['information'] = array(
@@ -456,7 +470,7 @@ function update_manager_install_form(&$form_state) {
   $form['project_upload'] = array(
     '#type' => 'file',
     '#title' => t('Upload a module or theme'),
-    '#description' => t('Upload a Drupal module or theme (in .tar.gz format) to install it.'),
+    '#description' => t('Upload a Drupal module or theme archive to install it.'),
   );
 
   $form['submit'] = array(
@@ -473,6 +487,12 @@ function update_manager_install_form(&$form_state) {
 function update_manager_install_form_validate($form, &$form_state) {
   if (!($form_state['values']['project_url'] XOR !empty($_FILES['files']['name']['project_upload']))) {
     form_set_error('project_url', t('You must either provide a URL or upload an archive file to install.'));
+  }
+
+  if ($form_state['values']['project_url']) {
+    if (!valid_url($form_state['values']['project_url'], TRUE)) {
+      form_set_error('project_url', t('The provided URL is invalid.'));
+    }
   }
 }
 
@@ -513,7 +533,7 @@ function update_manager_install_form_submit($form, &$form_state) {
     return;
   }
 
-  $files = $archive->listContent();
+  $files = $archive->listContents();
   if (!$files) {
     form_set_error($field, t('Provided archive contains no files.'));
     return;
@@ -591,21 +611,18 @@ function _update_manager_extract_directory() {
  * @param string $file
  *   The filename of the archive you wish to extract.
  * @param string $directory
- *   The directory you wish to extract the archive info.
- *
- * @return
- *    The Archive_Tar class used to extract the archive.
+ *   The directory you wish to extract the archive into.
+ * @return Archiver
+ *   The Archiver object used to extract the archive.
  * @throws Exception on failure.
- *
- * @todo Currently, this is hard-coded to only support .tar.gz. This is an API
- * bug, and should be fixed. See http://drupal.org/node/604618.
  */
 function update_manager_archive_extract($file, $directory) {
-  $archive_tar = new Archive_Tar(drupal_realpath($file));
-  if (!$archive_tar->extract($directory)) {
-    throw new Exception(t('Unable to extract %file', array('%file' => $file)));
+  $archiver = archiver_get_archiver($file);
+  if (!$archiver) {
+    throw new Exception(t('Cannot extract %file, not a valid archive.', array ('%file' => $file)));
   }
-  return $archive_tar;
+  $archiver->extract($directory);
+  return $archiver;
 }
 
 /**
