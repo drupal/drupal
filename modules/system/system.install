@@ -2701,8 +2701,7 @@ function system_update_7038() {
  * page.
  */
 function system_update_7039() {
-  db_add_field('menu_router', 'theme_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
-  db_add_field('menu_router', 'theme_arguments', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+  // Moved to update_fix_d7_requirements().
 }
 
 /**
@@ -2836,12 +2835,7 @@ function system_update_7042() {
  * Add a 'context' field to {menu_router} to control contextual placement of local tasks.
  */
 function system_update_7043() {
-  db_add_field('menu_router', 'context', array(
-    'description' => 'Only for local tasks (tabs) - the context of a local task to control its placement.',
-    'type' => 'int',
-    'not null' => TRUE,
-    'default' => 0,
-  ));
+  // Moved to update_fix_d7_requirements().
 }
 
 /**

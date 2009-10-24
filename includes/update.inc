@@ -132,8 +132,16 @@ function update_fix_d7_requirements() {
     db_add_field('url_alias', 'source', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
     db_add_field('url_alias', 'alias', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
 
-    // Add the deliver_callback column to {menu_router}.
+    // Add new columns to {menu_router}.
     db_add_field('menu_router', 'delivery_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+    db_add_field('menu_router', 'context', array(
+      'description' => 'Only for local tasks (tabs) - the context of a local task to control its placement.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
+    db_add_field('menu_router', 'theme_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+    db_add_field('menu_router', 'theme_arguments', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
 
     // Add the role_permisson table.
     $schema['role_permission'] = array(
@@ -156,6 +164,37 @@ function update_fix_d7_requirements() {
       ),
     );
     db_create_table('role_permission', $schema['role_permission']);
+
+    // Add the {semaphore} table in case menu_rebuild() gets called during
+    // an update.
+    $schema['semaphore'] = array(
+      'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as Drupal variables since they must not be cached.',
+      'fields' => array(
+        'name' => array(
+          'description' => 'Primary Key: Unique name.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => ''
+        ),
+        'value' => array(
+          'description' => 'A value for the semaphore.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => ''
+        ),
+        'expire' => array(
+          'description' => 'A Unix timestamp with microseconds indicating when the semaphore should expire.',
+          'type' => 'float',
+          'size' => 'big',
+          'not null' => TRUE
+        ),
+      ),
+      'indexes' => array('value' => array('value')),
+      'primary key' => array('name'),
+    );
+    db_create_table('semaphore', $schema['semaphore']);
 
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
