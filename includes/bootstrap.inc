@@ -127,15 +127,10 @@ define('DRUPAL_BOOTSTRAP_PAGE_HEADER', 5);
 define('DRUPAL_BOOTSTRAP_LANGUAGE', 6);
 
 /**
- * Eighth bootstrap phase: set $_GET['q'] to Drupal path of request.
- */
-define('DRUPAL_BOOTSTRAP_PATH', 7);
-
-/**
  * Final bootstrap phase: Drupal is fully loaded; validate and fix
  * input data.
  */
-define('DRUPAL_BOOTSTRAP_FULL', 8);
+define('DRUPAL_BOOTSTRAP_FULL', 7);
 
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
@@ -1405,7 +1400,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
     DRUPAL_BOOTSTRAP_SESSION,
     DRUPAL_BOOTSTRAP_PAGE_HEADER,
     DRUPAL_BOOTSTRAP_LANGUAGE,
-    DRUPAL_BOOTSTRAP_PATH,
     DRUPAL_BOOTSTRAP_FULL,
   ));
   $completed_phase = &drupal_static(__FUNCTION__ . '_completed_phase', -1);
@@ -1539,12 +1533,6 @@ function _drupal_bootstrap($phase) {
 
     case DRUPAL_BOOTSTRAP_LANGUAGE:
       drupal_language_initialize();
-      break;
-
-    case DRUPAL_BOOTSTRAP_PATH:
-      require_once DRUPAL_ROOT . '/includes/path.inc';
-      // Initialize $_GET['q'] prior to loading modules and invoking hook_init().
-      drupal_path_initialize();
       break;
 
     case DRUPAL_BOOTSTRAP_FULL:

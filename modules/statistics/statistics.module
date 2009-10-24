@@ -45,7 +45,7 @@ function statistics_help($path, $arg) {
 function statistics_exit() {
   global $user;
 
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_PATH);
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
   if (variable_get('statistics_count_content_views', 0)) {
     // We are counting content views.

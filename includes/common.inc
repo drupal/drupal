@@ -2379,6 +2379,7 @@ function url($path = NULL, array $options = array()) {
     'https' => FALSE,
     'prefix' => ''
   );
+
   if (!isset($options['external'])) {
     // Return an external link if $path contains an allowed absolute URL.
     // Only call the slow filter_xss_bad_protocol if $path contains a ':' before
@@ -2387,10 +2388,12 @@ function url($path = NULL, array $options = array()) {
     $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path));
   }
 
-  // May need language dependent rewriting if language.inc is present.
-  if (function_exists('language_url_rewrite')) {
-    language_url_rewrite($path, $options);
-  }
+  // Preserve the original path before altering or aliasing.
+  $original_path = $path;
+
+  // Allow other modules to alter the outbound URL and options.
+  drupal_alter('url_outbound', $path, $options, $original_path);
+
   if ($options['fragment']) {
     $options['fragment'] = '#' . $options['fragment'];
   }
@@ -2439,21 +2442,16 @@ function url($path = NULL, array $options = array()) {
     }
   }
 
-  // Preserve the original path before aliasing.
-  $original_path = $path;
-
   // The special path '<front>' links to the default front page.
   if ($path == '<front>') {
     $path = '';
   }
   elseif (!empty($path) && !$options['alias']) {
     $language = isset($options['language']) && isset($options['language']->language) ? $options['language']->language : '';
-    $path = drupal_get_path_alias($path, $language);
-  }
-
-  if (function_exists('custom_url_rewrite_outbound')) {
-    // Modules may alter outbound links by reference.
-    custom_url_rewrite_outbound($path, $options, $original_path);
+    $alias = drupal_get_path_alias($original_path, $language);
+    if ($alias != $original_path) {
+      $path = $alias;
+    }
   }
 
   $base = $options['absolute'] ? $options['base_url'] . '/' : base_path();
@@ -4223,6 +4221,7 @@ function _drupal_bootstrap_full() {
     return;
   }
   $called = 1;
+  require_once DRUPAL_ROOT . '/includes/path.inc';
   require_once DRUPAL_ROOT . '/includes/theme.inc';
   require_once DRUPAL_ROOT . '/includes/pager.inc';
   require_once DRUPAL_ROOT . '/includes/menu.inc';
@@ -4256,6 +4255,8 @@ function _drupal_bootstrap_full() {
     ini_set('log_errors', 1);
     ini_set('error_log', file_directory_path() . '/error.log');
   }
+  // Initialize $_GET['q'] prior to invoking hook_init().
+  drupal_path_initialize();
   // Set a custom theme for the current page, if there is one. We need to run
   // this before invoking hook_init(), since any modules which initialize the
   // theme system will prevent a custom theme from being correctly set later.
@@ -6115,4 +6116,3 @@ function drupal_get_updaters() {
   }
   return $updaters;
 }
-

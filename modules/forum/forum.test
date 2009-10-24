@@ -211,7 +211,7 @@ class ForumTestCase extends DrupalWebTestCase {
   function deleteForum($tid) {
     // Delete the forum.
     $this->drupalPost('admin/structure/forum/edit/forum/' . $tid, array(), t('Delete'));
-    $this->drupalPost(NULL, NULL, t('Delete'));
+    $this->drupalPost(NULL, array(), t('Delete'));
 
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);

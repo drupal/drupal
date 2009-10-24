@@ -119,7 +119,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'url':
-          $replacements[$original] = url(taxonomy_term_path($term), array('absolute' => TRUE));
+          $replacements[$original] = url('taxonomy/term/' . $term, array('absolute' => TRUE));
           break;
 
         case 'node-count':

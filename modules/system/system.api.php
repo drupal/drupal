@@ -2667,5 +2667,61 @@ function hook_page_delivery_callback_alter(&$callback) {
 }
 
 /**
+ * Alters inbound URL requests.
+ *
+ * @param $path
+ *   The path being constructed, which, if a path alias, has been resolved to a
+ *   Drupal path by the database, and which also may have been altered by other
+ *   modules before this one.
+ * @param $original_path
+ *   The original path, before being checked for path aliases or altered by any
+ *   modules.
+ * @param $path_language
+ *   The language of the path.
+ *
+ * @see drupal_get_normal_path()
+ */
+function hook_url_inbound_alter(&$path, $original_path, $path_language) {
+  // Create the path user/me/edit, which allows a user to edit their account.
+  if (preg_match('|^user/me/edit(/.*)?|', $path, $matches)) {
+    global $user;
+    $path = 'user/' . $user->uid . '/edit' . $matches[1];
+  }
+}
+
+/**
+ * Alters outbound URLs.
+ *
+ * @param $path
+ *   The outbound path to alter, not adjusted for path aliases yet. It won't be
+ *   adjusted for path aliases until all modules are finished altering it, thus
+ *   being consistent with hook_url_alter_inbound(), which adjusts for all path
+ *   aliases before allowing modules to alter it. This may have been altered by
+ *   other modules before this one.
+ * @param $options
+ *   A set of URL options for the URL so elements such as a fragment or a query
+ *   string can be added to the URL.
+ * @param $original_path
+ *   The original path, before being altered by any modules.
+ *
+ * @see url()
+ */
+function hook_url_outbound_alter(&$path, &$options, $original_path) {
+  // Use an external RSS feed rather than the Drupal one.
+  if ($path == 'rss.xml') {
+    $path = 'http://example.com/rss.xml';
+    $options['external'] = TRUE;
+  }
+
+  // Instead of pointing to user/[uid]/edit, point to user/me/edit.
+  if (preg_match('|^user/([0-9]*)/edit(/.*)?|', $path, $matches)) {
+    global $user;
+    if ($user->uid == $matches[1]) {
+      $path = 'user/me/edit' . $matches[2];
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

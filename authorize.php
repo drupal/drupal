@@ -96,8 +96,16 @@ if (authorize_access_allowed()) {
   // Load the code that drives the authorize process.
   require_once DRUPAL_ROOT . '/includes/authorize.inc';
 
-  // Initialize the URL path, but not via raising our bootstrap level.
-  drupal_path_initialize();
+  // For the sake of Batch API and a few other low-level functions, we need to
+  // initialize the URL path into $_GET['q']. However, we do not want to raise
+  // our bootstrap level, nor do we want to call drupal_initialize_path(),
+  // since that is assuming that modules are loaded and invoking hooks.
+  // However, all we really care is if we're in the middle of a batch, in which
+  // case $_GET['q'] will already be set, we just initialize it to an empty
+  // string if it's not already defined.
+  if (!isset($_GET['q'])) {
+    $_GET['q'] = '';
+  }
 
   if (isset($_SESSION['authorize_operation']['page_title'])) {
     drupal_set_title(check_plain($_SESSION['authorize_operation']['page_title']));

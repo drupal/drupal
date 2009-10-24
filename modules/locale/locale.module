@@ -1067,3 +1067,41 @@ function locale_date_format_reset_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/regional/date-time/locale';
 }
 
+/**
+ * Implement hook_url_outbound_alter().
+ *
+ * Rewrite outbound URLs with language based prefixes.
+ */
+function locale_url_outbound_alter(&$path, &$options, $original_path) {
+  // Only modify internal URLs.
+  if (!$options['external']) {
+    static $callbacks;
+
+    if (!isset($callbacks)) {
+      $callbacks = array();
+      include_once DRUPAL_ROOT . '/includes/language.inc';
+
+      foreach (language_types_configurable() as $type) {
+        // Get url rewriter callbacks only from enabled language providers.
+        $negotiation = variable_get("language_negotiation_$type", array());
+
+        foreach ($negotiation as $id => $provider) {
+          if (isset($provider['file'])) {
+            require_once DRUPAL_ROOT . '/' . $provider['file'];
+          }
+
+          // Avoid duplicate callback entries.
+          if (isset($provider['callbacks']['url_rewrite'])) {
+            $callbacks[$provider['callbacks']['url_rewrite']] = NULL;
+          }
+        }
+      }
+
+      $callbacks = array_keys($callbacks);
+    }
+
+    foreach ($callbacks as $callback) {
+      $callback($path, $options);
+    }
+  }
+}

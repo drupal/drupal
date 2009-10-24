@@ -6,8 +6,8 @@
  * Functions to handle paths in Drupal, including path aliasing.
  *
  * These functions are not loaded for cached pages, but modules that need
- * to use them in hook_init() or hook exit() can make them available, by
- * executing "drupal_bootstrap(DRUPAL_BOOTSTRAP_PATH);".
+ * to use them in hook_boot() or hook exit() can make them available, by
+ * executing "drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);".
  */
 
 /**
@@ -204,15 +204,22 @@ function drupal_get_path_alias($path = NULL, $path_language = '') {
  *   internal path was found.
  */
 function drupal_get_normal_path($path, $path_language = '') {
-  $result = $path;
+  $original_path = $path;
+
+  // Lookup the path alias first.
   if ($source = drupal_lookup_path('source', $path, $path_language)) {
-    $result = $source;
+    $path = $source;
   }
-  if (function_exists('custom_url_rewrite_inbound')) {
-    // Modules may alter the inbound request path by reference.
-    custom_url_rewrite_inbound($result, $path, $path_language);
+
+  // Allow other modules to alter the inbound URL. We cannot use drupal_alter()
+  // here because we need to run hook_url_inbound_alter() in the reverse order
+  // of hook_url_outbound_alter().
+  foreach (array_reverse(module_implements('url_inbound_alter')) as $module) {
+    $function = $module . '_url_inbound_alter';
+    $function($path, $original_path, $path_language);
   }
-  return $result;
+
+  return $path;
 }
 
 /**
@@ -347,7 +354,7 @@ function drupal_match_path($path, $patterns) {
  * This function is not available in hook_boot() so use $_GET['q'] instead.
  * However, be careful when doing that because in the case of Example #3
  * $_GET['q'] will contain "path/alias". If "node/306" is needed, calling
- * drupal_bootstrap(DRUPAL_BOOTSTRAP_PATH) makes this function available.
+ * drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL) makes this function available.
  *
  * @return
  *   The current Drupal URL path.

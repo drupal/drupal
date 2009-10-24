@@ -325,47 +325,6 @@ function language_from_default() {
 }
 
 /**
- * Rewrite URLs allowing modules to hook in.
- *
- * @param $path
- *   The path to rewrite.
- * @param $options
- *   An associative array of additional options as in url().
- */
-function language_url_rewrite(&$path, &$options) {
-  // Only modify relative (insite) URLs.
-  if (!$options['external']) {
-    static $callbacks;
-
-    if (!isset($callbacks)) {
-      $callbacks = array();
-
-      foreach (language_types_configurable() as $type) {
-        // Get url rewriter callbacks only from enabled language providers.
-        $negotiation = variable_get("language_negotiation_$type", array());
-
-        foreach ($negotiation as $id => $provider) {
-          if (isset($provider['file'])) {
-            require_once DRUPAL_ROOT . '/' . $provider['file'];
-          }
-
-          // Avoid duplicate callback entries.
-          if (isset($provider['callbacks']['url_rewrite'])) {
-            $callbacks[$provider['callbacks']['url_rewrite']] = NULL;
-          }
-        }
-      }
-
-      $callbacks = array_keys($callbacks);
-    }
-
-    foreach ($callbacks as $callback) {
-      $callback($path, $options);
-    }
-  }
-}
-
-/**
  * Split the given path into prefix and actual path.
  *
  * Parse the given path and return the language object identified by the

@@ -164,23 +164,6 @@ function taxonomy_theme() {
 }
 
 /**
- * For vocabularies not maintained by taxonomy.module, give the maintaining
- * module a chance to provide a path for terms in that vocabulary.
- *
- * @param $term
- *   A term object.
- * @return
- *   An internal Drupal path.
- */
-function taxonomy_term_path($term) {
-  $vocabulary = taxonomy_vocabulary_load($term->vid);
-  if ($vocabulary->module != 'taxonomy' && $path = module_invoke($vocabulary->module, 'term_path', $term)) {
-    return $path;
-  }
-  return 'taxonomy/term/' . $term->tid;
-}
-
-/**
  * Implement hook_menu().
  */
 function taxonomy_menu() {
@@ -1103,7 +1086,7 @@ function taxonomy_field_formatter_info() {
 function theme_field_formatter_taxonomy_term_link($variables) {
   $term = $variables['element']['#item']['taxonomy_term'];
   $attributes = empty($variables['link_options']) ? array() : $variables['link_options'];
-  return l($term->name, taxonomy_term_path($term), $attributes);
+  return l($term->name, 'taxonomy/term/' . $term->tid, $attributes);
 }
 
 /**

@@ -105,7 +105,7 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
     '#default_value' => $path['source'],
     '#maxlength' => 255,
     '#size' => 45,
-    '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'),
+    '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
     '#required' => TRUE,
   );
@@ -150,7 +150,8 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
  * Verify that a URL alias is valid
  */
 function path_admin_form_validate($form, &$form_state) {
-  $source = $form_state['values']['source'];
+  $source = &$form_state['values']['source'];
+  $source = drupal_get_normal_path($source);
   $alias = $form_state['values']['alias'];
   $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
   // Language is only set if locale module is enabled, otherwise save for all languages.

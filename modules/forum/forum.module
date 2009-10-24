@@ -115,12 +115,6 @@ function forum_menu() {
     'parent' => 'admin/structure/forum',
     'file' => 'forum.admin.inc',
   );
-  $items['admin/structure/forum/edit/%taxonomy_term'] = array(
-    'page callback' => 'forum_form_main',
-    'access arguments' => array('administer forums'),
-    'type' => MENU_CALLBACK,
-    'file' => 'forum.admin.inc',
-  );
   $items['admin/structure/forum/edit/container/%taxonomy_term'] = array(
     'title' => 'Edit container',
     'page callback' => 'forum_form_main',
@@ -610,7 +604,7 @@ function forum_block_view_pre_render($elements) {
  */
 function forum_form($node, $form_state) {
   $type = node_type_get_type($node);
-  
+
   if (!empty($node->nid)) {
     $forum_terms = $node->taxonomy_forums;
     // If editing, give option to leave shadows
@@ -626,10 +620,15 @@ function forum_form($node, $form_state) {
 }
 
 /**
- * Implement hook_term_path().
+ * Implement hook_url_outbound_alter().
  */
-function forum_term_path($term) {
-  return 'forum/' . $term->tid;
+function forum_url_outbound_alter(&$path, &$options, $original_path) {
+  if (preg_match('!^taxonomy/term/(\d+)!', $path, $matches)) {
+    $term = taxonomy_term_load($matches[1]);
+    if ($term && $term->vocabulary_machine_name == 'forums') {
+      $path = 'forum/' . $matches[1];
+    }
+  }
 }
 
 /**
