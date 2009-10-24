@@ -1,10 +1,10 @@
 <?php
-// $Id: ssh.inc,v 1.3 2009/08/28 07:51:55 dries Exp $
+// $Id: ssh.inc,v 1.4 2009/10/24 05:38:27 webchick Exp $
 
 /**
  * The SSH connection class for the update module.
  */
-class FileTransferSSH extends FileTransfer {
+class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface {
 
   function __construct($jail, $username, $password, $hostname = "localhost", $port = 22) {
     $this->username = $username;
