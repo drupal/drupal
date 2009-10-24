@@ -2803,7 +2803,7 @@ function system_update_7040() {
  * function to be used for final page rendering and sending to browser.
  */
 function system_update_7041() {
-  db_add_field('menu_router', 'delivery_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+  // Moved to update_fix_d7_requirements().
 }
 
 /**

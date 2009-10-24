@@ -132,6 +132,9 @@ function update_fix_d7_requirements() {
     db_add_field('url_alias', 'source', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
     db_add_field('url_alias', 'alias', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
 
+    // Add the deliver_callback column to {menu_router}.
+    db_add_field('menu_router', 'delivery_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+
     // Add the role_permisson table.
     $schema['role_permission'] = array(
       'fields' => array(
