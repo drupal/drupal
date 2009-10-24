@@ -439,6 +439,7 @@ function node_admin_nodes() {
     '#type' => 'submit',
     '#value' => t('Update'),
     '#submit' => array('node_admin_nodes_submit'),
+    '#validate' => array('node_admin_nodes_validate'),
   );
 
   $languages = language_list();
@@ -475,8 +476,8 @@ function node_admin_nodes() {
  * 'Update option' on.
  */
 function node_admin_nodes_validate($form, &$form_state) {
-  $nodes = array_filter($form_state['values']['nodes']);
-  if (count($nodes) == 0) {
+  // Error if there are no items to select.
+  if (!is_array($form_state['values']['nodes']) || !count(array_filter($form_state['values']['nodes']))) {
     form_set_error('', t('No items selected.'));
   }
 }

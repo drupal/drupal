@@ -967,12 +967,18 @@ class NodeAdminTestCase extends DrupalWebTestCase {
    * Create 3 nodes and test if they are listed on the node admistration page.
    */
   function testNodeAdmin() {
+    $this->drupalPost('admin/content', array(), t('Update'));
+    $this->assertText(t('No items selected.'), t('Clicking update with no nodes displays error message on the node administration listing.'));
+
     $node1 = $this->drupalCreateNode(array('type' => 'article', 'status' => 1));
     $node2 = $this->drupalCreateNode(array('type' => 'article', 'status' => 0));
     $node3 = $this->drupalCreateNode(array('type' => 'page'));
 
     $this->drupalGet('admin/content');
     $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], t('Node appears on the node administration listing.'));
+
+    $this->drupalPost('admin/content', array(), t('Update'));
+    $this->assertText(t('No items selected.'), t('Clicking update with no selected nodes displays error message on the node administration listing.'));
 
     // Filter the node listing by status.
     $edit = array(
