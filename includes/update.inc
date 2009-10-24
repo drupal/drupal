@@ -196,6 +196,94 @@ function update_fix_d7_requirements() {
     );
     db_create_table('semaphore', $schema['semaphore']);
 
+    $schema['date_format_type'] = array(
+      'description' => 'Stores configured date format types.',
+      'fields' => array(
+        'type' => array(
+          'description' => 'The date format type, e.g. medium.',
+          'type' => 'varchar',
+          'length' => 64,
+          'not null' => TRUE,
+        ),
+        'title' => array(
+          'description' => 'The human readable name of the format type.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ),
+        'locked' => array(
+          'description' => 'Whether or not this is a system provided format.',
+          'type' => 'int',
+          'size' => 'tiny',
+          'default' => 0,
+          'not null' => TRUE,
+        ),
+      ),
+      'primary key' => array('type'),
+    );
+
+    $schema['date_formats'] = array(
+      'description' => 'Stores configured date formats.',
+      'fields' => array(
+        'dfid' => array(
+          'description' => 'The date format identifier.',
+          'type' => 'serial',
+          'not null' => TRUE,
+          'unsigned' => TRUE,
+        ),
+        'format' => array(
+          'description' => 'The date format string.',
+          'type' => 'varchar',
+          'length' => 100,
+          'not null' => TRUE,
+        ),
+        'type' => array(
+          'description' => 'The date format type, e.g. medium.',
+          'type' => 'varchar',
+          'length' => 64,
+          'not null' => TRUE,
+        ),
+        'locked' => array(
+          'description' => 'Whether or not this format can be modified.',
+          'type' => 'int',
+          'size' => 'tiny',
+          'default' => 0,
+          'not null' => TRUE,
+        ),
+      ),
+      'primary key' => array('dfid'),
+      'unique keys' => array('formats' => array('format', 'type')),
+    );
+
+    $schema['date_format_locale'] = array(
+      'description' => 'Stores configured date formats for each locale.',
+      'fields' => array(
+        'format' => array(
+          'description' => 'The date format string.',
+          'type' => 'varchar',
+          'length' => 100,
+          'not null' => TRUE,
+        ),
+        'type' => array(
+          'description' => 'The date format type, e.g. medium.',
+          'type' => 'varchar',
+          'length' => 64,
+          'not null' => TRUE,
+        ),
+        'language' => array(
+          'description' => 'A {languages}.language for this format to be used with.',
+          'type' => 'varchar',
+          'length' => 12,
+          'not null' => TRUE,
+        ),
+      ),
+      'primary key' => array('type', 'language'),
+    );
+
+    db_create_table('date_format_type', $schema['date_format_type']);
+    db_create_table('date_formats', $schema['date_formats']);
+    db_create_table('date_format_locale', $schema['date_format_locale']);
+
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
       db_add_field('locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));
