@@ -14,15 +14,16 @@
 /**
  * Inform the node access system what permissions the user has.
  *
- * This hook is for implementation by node access modules. In addition to
- * managing access rights for nodes, the node access module must tell
- * the node access system what 'grant IDs' the current user has. In many
- * cases, the grant IDs will simply be role IDs, but grant IDs can be
- * arbitrary based upon the module.
+ * This hook is for implementation by node access modules. In this hook,
+ * the module grants a user different "grant IDs" within one or more
+ * "realms". In hook_node_access_records(), the realms and grant IDs are
+ * associated with permission to view, edit, and delete individual nodes.
  *
- * For example, modules can maintain their own lists of users, where each
- * list has an ID. In that case, the module could return a list of all
- * IDs of all lists that the current user is a member of.
+ * The realms and grant IDs can be arbitrarily defined by your node access
+ * module; it is common to use role IDs as grant IDs, but that is not
+ * required. Your module could instead maintain its own list of users, where
+ * each list has an ID. In that case, the return value of this hook would be
+ * an array of the list IDs that this user is a member of.
  *
  * A node access module may implement as many realms as necessary to
  * properly define the access privileges for the nodes.
@@ -31,9 +32,10 @@
  *   The user object whose grants are requested.
  * @param $op
  *   The node operation to be performed, such as "view", "update", or "delete".
+ *
  * @return
- *   An array whose keys are "realms" of grants such as "user" or "role", and
- *   whose values are linear lists of grant IDs.
+ *   An array whose keys are "realms" of grants, and whose values are arrays of
+ *   the grant IDs within this realm that this user is being granted.
  *
  * For a detailed example, see node_access_example.module.
  *
@@ -50,29 +52,25 @@ function hook_node_grants($account, $op) {
 /**
  * Set permissions for a node to be written to the database.
  *
- * When a node is saved, a module implementing node access will be asked
- * if it is interested in the access permissions to a node. If it is
- * interested, it must respond with an array of array of permissions for that
+ * When a node is saved, a module implementing hook_node_access_records() will
+ * be asked if it is interested in the access permissions for a node. If it is
+ * interested, it must respond with an array of permissions arrays for that
  * node.
  *
- * Each item in the array should contain:
- *
- * 'realm'
- *    This should only be realms for which the module has returned
- *    grant IDs in hook_node_grants.
- * 'gid'
- *    This is a 'grant ID', which can have an arbitrary meaning per realm.
- * 'grant_view'
- *    If set to TRUE a user with the gid in the realm can view this node.
- * 'grant_edit'
- *    If set to TRUE a user with the gid in the realm can edit this node.
- * 'grant_delete'
- *    If set to TRUE a user with the gid in the realm can delete this node.
- * 'priority'
- *    If multiple modules seek to set permissions on a node, the realms
- *    that have the highest priority will win out, and realms with a lower
- *    priority will not be written. If there is any doubt, it is best to
- *    leave this 0.
+ * Each permissions item in the array is an array with the following elements:
+ * - 'realm': The name of a realm that the module has defined in
+ *   hook_node_grants().
+ * - 'gid': A 'grant ID' from hook_node_grants().
+ * - 'grant_view': If set to TRUE a user that has been identified as a member
+ *   of this gid within this realm can view this node.
+ * - 'grant_edit': If set to TRUE a user that has been identified as a member
+ *   of this gid within this realm can edit this node.
+ * - 'grant_delete': If set to TRUE a user that has been identified as a member
+ *   of this gid within this realm can delete this node.
+ * - 'priority': If multiple modules seek to set permissions on a node, the
+ *   realms that have the highest priority will win out, and realms with a lower
+ *   priority will not be written. If there is any doubt, it is best to
+ *   leave this 0.
  *
  * @ingroup node_access
  */
