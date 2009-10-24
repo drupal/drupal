@@ -395,6 +395,8 @@ else {
   $output = update_access_denied_page();
 }
 if (isset($output) && $output) {
+  // Explictly start a session so that the update.php token will be accepted.
+  drupal_session_start();
   // We defer the display of messages until all updates are done.
   $progress_page = ($batch = batch_get()) && isset($batch['running']);
   print theme('update_page', array('content' => $output, 'show_messages' => !$progress_page));
