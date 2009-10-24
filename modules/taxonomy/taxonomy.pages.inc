@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.42 2009/10/17 12:08:21 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.43 2009/10/24 05:13:44 webchick Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@ function taxonomy_term_page($term) {
   $breadcrumb = array();
   while ($parents = taxonomy_get_parents($current->tid)) {
     $current = array_shift($parents);
-    $breadcrumb[] = l($current->name, taxonomy_term_path($current));
+    $breadcrumb[] = l($current->name, 'taxonomy/term/' . $current->tid);
   }
   $breadcrumb[] = l(t('Home'), NULL);
   $breadcrumb = array_reverse($breadcrumb);

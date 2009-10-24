@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.35 2009/10/20 00:28:16 dries Exp $
+// $Id: forum.test,v 1.36 2009/10/24 05:13:44 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -211,7 +211,7 @@ class ForumTestCase extends DrupalWebTestCase {
   function deleteForum($tid) {
     // Delete the forum.
     $this->drupalPost('admin/structure/forum/edit/forum/' . $tid, array(), t('Delete'));
-    $this->drupalPost(NULL, NULL, t('Delete'));
+    $this->drupalPost(NULL, array(), t('Delete'));
 
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);
