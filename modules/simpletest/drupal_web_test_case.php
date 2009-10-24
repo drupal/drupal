@@ -1581,6 +1581,7 @@ class DrupalWebTestCase extends DrupalTestCase {
         switch ($type) {
           case 'text':
           case 'textarea':
+          case 'hidden':
           case 'password':
             $post[$name] = $edit[$name];
             unset($edit[$name]);

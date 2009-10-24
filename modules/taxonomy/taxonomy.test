@@ -479,6 +479,69 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
   }
 
   /**
+   * Save, edit and delete a term using the user interface.
+   */
+  function testTermReorder() {
+    $this->createTerm($this->vocabulary);
+    $this->createTerm($this->vocabulary);
+    $this->createTerm($this->vocabulary);
+
+    // Fetch the created terms in the default alphabetical order, i.e. term1
+    // precedes term2 alphabetically, and term2 precedes term3.
+    drupal_static_reset('taxonomy_get_tree');
+    drupal_static_reset('taxonomy_get_treeparent');
+    drupal_static_reset('taxonomy_get_treeterms');
+    list($term1, $term2, $term3) = taxonomy_get_tree($this->vocabulary->vid);
+
+    // Change the order to term2, term3, term1. Emulate the reordering done by
+    // tabledrag.js by changing the page HTML source. Each term has three hidden
+    // fields, "tid:1:0[tid]", "tid:1:0[parent]", and "tid:1:0[depth]". The
+    // order of the input fields in the page is used when the form is processed.
+    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->vid . '/list');
+    $reorder = array(
+      'tid:' . $term1->tid . ':0' => 'tid:' . $term2->tid . ':0',
+      'tid:' . $term2->tid . ':0' => 'tid:' . $term3->tid . ':0',
+      'tid:' . $term3->tid . ':0' => 'tid:' . $term1->tid . ':0',
+      );
+    $this->drupalSetContent(strtr($this->drupalGetContent(), $reorder));
+
+    // Make term3 a child of term2, and update all hidden fields.
+    $edit = array(
+      'tid:' . $term2->tid . ':0[tid]' => $term2->tid,
+      'tid:' . $term2->tid . ':0[parent]' => 0,
+      'tid:' . $term2->tid . ':0[depth]' => 0,
+      'tid:' . $term3->tid . ':0[tid]' => $term3->tid,
+      'tid:' . $term3->tid . ':0[parent]' => $term2->tid,
+      'tid:' . $term3->tid . ':0[depth]' => 1,
+      'tid:' . $term1->tid . ':0[tid]' => $term1->tid,
+      'tid:' . $term1->tid . ':0[parent]' => 0,
+      'tid:' . $term1->tid . ':0[depth]' => 0,
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    drupal_static_reset('taxonomy_get_tree');
+    drupal_static_reset('taxonomy_get_treeparent');
+    drupal_static_reset('taxonomy_get_treeterms');
+    $terms = taxonomy_get_tree($this->vocabulary->vid);
+    $this->assertEqual($terms[0]->tid, $term2->tid, t('Term 2 was moved above term 1.'));
+    $this->assertEqual($terms[1]->parents, array($term2->tid), t('Term 3 was made a child of term 2.'));
+    $this->assertEqual($terms[2]->tid, $term1->tid, t('Term 1 was moved below term 2.'));
+
+    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->vid . '/list', array(), t('Reset to alphabetical'));
+    // Submit confirmation form.
+    $this->drupalPost(NULL, array(), t('Reset to alphabetical'));
+
+    drupal_static_reset('taxonomy_get_tree');
+    drupal_static_reset('taxonomy_get_treeparent');
+    drupal_static_reset('taxonomy_get_treeterms');
+    $terms = taxonomy_get_tree($this->vocabulary->vid);
+    $this->assertEqual($terms[0]->tid, $term1->tid, t('Term 1 was moved to back above term 2.'));
+    $this->assertEqual($terms[1]->tid, $term2->tid, t('Term 2 was moved to back below term 1.'));
+    $this->assertEqual($terms[2]->tid, $term3->tid, t('Term 3 is still below term 2.'));
+    $this->assertEqual($terms[2]->parents, array($term2->tid), t('Term 3 is still a child of term 2.').var_export($terms[1]->tid,1));
+  }
+
+  /**
    * Test taxonomy_get_term_by_name().
    */
   function testTaxonomyGetTermByName() {

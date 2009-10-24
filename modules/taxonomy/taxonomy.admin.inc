@@ -240,7 +240,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
 
   // Check for confirmation forms.
   if (isset($form_state['confirm_reset_alphabetical'])) {
-    return taxonomy_vocabulary_confirm_reset_alphabetical($form_state, $vocabulary->vid);
+    return taxonomy_vocabulary_confirm_reset_alphabetical($form, $form_state, $vocabulary->vid);
   }
 
   $form['#vocabulary'] = $vocabulary;
