@@ -1992,28 +1992,6 @@ function system_update_7006() {
  * all modules can use the updated permission scheme during their updates.
  */
 function system_update_7007() {
-  $schema['role_permission'] = array(
-    'fields' => array(
-      'rid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'permission' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-    ),
-    'primary key' => array('rid', 'permission'),
-    'indexes' => array(
-      'permission' => array('permission'),
-    ),
-  );
-
-  db_create_table('role_permission', $schema['role_permission']);
-
   // Copy the permissions from the old {permission} table to the new {role_permission} table.
   $messages = array();
   $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid ASC");

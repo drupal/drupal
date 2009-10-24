@@ -128,9 +128,31 @@ function update_fix_d7_requirements() {
     $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
 
     // system_update_7042() renames columns, but these are needed to bootstrap.
-    // add empty columns for now.
+    // Add empty columns for now.
     db_add_field('url_alias', 'source', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
     db_add_field('url_alias', 'alias', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+
+    // Add the role_permisson table.
+    $schema['role_permission'] = array(
+      'fields' => array(
+        'rid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'permission' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('rid', 'permission'),
+    'indexes' => array(
+      'permission' => array('permission'),
+      ),
+    );
+    db_create_table('role_permission', $schema['role_permission']);
 
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
