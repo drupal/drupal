@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.78 2009/10/15 16:18:46 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.79 2009/10/24 04:23:51 webchick Exp $
 
 /**
  * @file
@@ -240,7 +240,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
 
   // Check for confirmation forms.
   if (isset($form_state['confirm_reset_alphabetical'])) {
-    return taxonomy_vocabulary_confirm_reset_alphabetical($form_state, $vocabulary->vid);
+    return taxonomy_vocabulary_confirm_reset_alphabetical($form, $form_state, $vocabulary->vid);
   }
 
   $form['#vocabulary'] = $vocabulary;
