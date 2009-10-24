@@ -15,14 +15,14 @@ function field_ui_fields_list() {
   $bundles = field_info_bundles();
   $header = array(t('Field name'), t('Field type'), t('Used in'));
   $rows = array();
-  foreach ($instances as $obj_type => $bundles) {
-    foreach ($bundles as $bundle => $info) {
-      foreach ($info as $field_name => $instance) {
+  foreach ($instances as $obj_type => $type_bundles) {
+    foreach ($type_bundles as $bundle => $bundle_instances) {
+      foreach ($bundle_instances as $field_name => $instance) {
         $field = field_info_field($field_name);
         $admin_path = _field_ui_bundle_admin_path($obj_type, $bundle);
         $rows[$field_name]['data'][0] = $field['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
         $rows[$field_name]['data'][1] = t($field_types[$field['type']]['label']);
-        $rows[$field_name]['data'][2][] = l($bundles[$bundle]['label'], $admin_path . '/fields');
+        $rows[$field_name]['data'][2][] = l($bundles[$obj_type][$bundle]['label'], $admin_path . '/fields');
         $rows[$field_name]['class'] = $field['locked'] ? array('menu-disabled') : array('');
       }
     }
@@ -837,7 +837,7 @@ function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $
     '#options' => array(TRUE => t('Translatable field'), FALSE => t('Language neutral field')),
     '#default_value' => $field['translatable'],
     '#description' => t("Translatable fields can have a different value for each available language. An example of a translatable field is an article's <em>body</em>. Language neutral fields will retain the same value across all translations. An example of a language neutral field is a user profile's <em>first name</em>."),
-  ); 
+  );
 
   // Add settings provided by the field module. The field module is
   // responsible for not returning settings that cannot be changed if
@@ -898,7 +898,7 @@ function field_ui_widget_type_form($form, &$form_state, $obj_type, $bundle, $ins
   $field_type = field_info_field_types($field['type']);
   $widget_type = field_info_widget_types($instance['widget']['type']);
   $bundles = field_info_bundles();
-  $bundle_label = $bundles[$bundle]['label'];
+  $bundle_label = $bundles[$obj_type][$bundle]['label'];
 
   $form['basic'] = array(
     '#type' => 'fieldset',
