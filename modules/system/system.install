@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.412 2009/10/24 01:46:13 webchick Exp $
+// $Id: system.install,v 1.413 2009/10/24 02:22:53 webchick Exp $
 
 /**
  * @file
@@ -2803,7 +2803,7 @@ function system_update_7040() {
  * function to be used for final page rendering and sending to browser.
  */
 function system_update_7041() {
-  db_add_field('menu_router', 'delivery_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+  // Moved to update_fix_d7_requirements().
 }
 
 /**
