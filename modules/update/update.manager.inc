@@ -74,12 +74,10 @@ function update_manager_update_form($form, $form_state = array(), $context) {
   $form['#attached']['css'][] = drupal_get_path('module', 'update') . '/update.css';
 
   // This will be a nested array. The first key is the kind of project, which
-  // can be either 'enabled', 'disabled', 'manual-enabled' (enabled add-ons
-  // which require manual updates, such as core or -dev projects) or
-  // 'manual-disabled' (disabled add-ons that need a manual update). Then,
-  // each subarray is an array of projects of that type, indexed by project
-  // short name, and containing an array of data for cells in that project's
-  // row in the appropriate table.
+  // can be either 'enabled', 'disabled', 'manual' (projects which require
+  // manual updates, such as core). Then, each subarray is an array of
+  // projects of that type, indexed by project short name, and containing an
+  // array of data for cells in that project's row in the appropriate table.
   $projects = array();
 
   // This stores the actual download link we're going to update from for each
@@ -159,9 +157,8 @@ function update_manager_update_form($form, $form_state = array(), $context) {
 
     $entry['#attributes'] = array('class' => array('update-' . $type));
 
-    // Drupal core and projects which are dev versions with no stable release
-    // need to be upgraded manually.
-    $needs_manual = $project['project_type'] == 'core' || ($project['install_type'] == 'dev' && $recommended_release['version_extra'] == 'dev');
+    // Drupal core needs to be upgraded manually.
+    $needs_manual = $project['project_type'] == 'core';
 
     if ($needs_manual) {
       // Since it won't be tableselect, #weight will add an extra column to the
@@ -180,28 +177,18 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     // appropriate subarray.
     switch ($project['project_type']) {
       case 'core':
-        // Core is always enabled, but need manual updates at this time.
-        $projects['manual-enabled'][$name] = $entry;
+        // Core needs manual updates at this time.
+        $projects['manual'][$name] = $entry;
         break;
         
       case 'module':
       case 'theme':
-        if ($needs_manual) {
-          $projects['manual-enabled'][$name] = $entry;
-        }
-        else {
-          $projects['enabled'][$name] = $entry;
-        }
+        $projects['enabled'][$name] = $entry;
         break;
 
       case 'module-disabled':
       case 'theme-disabled':
-        if ($needs_manual) {
-          $projects['manual-disabled'][$name] = $entry;
-        }
-        else {
-          $projects['disabled'][$name] = $entry;
-        }
+        $projects['disabled'][$name] = $entry;
         break;
     }
   }
@@ -256,25 +243,14 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     $form['#validate'][] = 'update_manager_update_form_validate';
   }
 
-  if (!empty($projects['manual-enabled'])) {
-    $prefix = '<h2>' . t('Add-ons requiring manual updates') . '</h2>';
-    $prefix .= '<p>' . t('Updates of Drupal core or development releases are not supported at this time.') . '</p>';
+  if (!empty($projects['manual'])) {
+    $prefix = '<h2>' . t('Manual updates required') . '</h2>';
+    $prefix .= '<p>' . t('Updates of Drupal core are not supported at this time.') . '</p>';
     $form['manual_updates'] = array(
       '#type' => 'markup',
-      '#markup' => theme('table', array('header' => $headers, 'rows' => $projects['manual-enabled'])),
+      '#markup' => theme('table', array('header' => $headers, 'rows' => $projects['manual'])),
       '#prefix' => $prefix,
       '#weight' => 20,
-    );
-  }
-
-  if (!empty($projects['manual-disabled'])) {
-    $prefix = '<h2>' . t('Disabled add-ons requiring manual updates') . '</h2>';
-    $prefix .= '<p>' . t('Updates of Drupal core or development releases are not supported at this time.') . '</p>';
-    $form['manual_disabled'] = array(
-      '#type' => 'markup',
-      '#markup' => theme('table', array('header' => $headers, 'rows' => $projects['manual-disabled'])),
-      '#prefix' => $prefix,
-      '#weight' => 25,
     );
   }
 
