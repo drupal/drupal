@@ -126,7 +126,11 @@ function update_fix_d7_requirements() {
     // Add the cache_path table.
     $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
     $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
-    db_create_table('cache_path', $schema['cache_path']);
+
+    // system_update_7042() renames columns, but these are needed to bootstrap.
+    // add empty columns for now.
+    db_add_field('url_alias', 'source', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+    db_add_field('url_alias', 'alias', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
 
     // Add column for locale context.
     if (db_table_exists('locales_source')) {

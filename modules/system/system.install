@@ -2832,6 +2832,16 @@ function system_update_7041() {
  * Rename dst and src to source and alias.
  */
 function system_update_7042() {
+  // update_fix_d7_requirements() adds 'fake' source and alias columns to
+  // allow bootstrap to run without fatal errors. Remove those columns now
+  // so that we can rename properly.
+  db_drop_field('url_alias', 'source');
+  db_drop_field('url_alias', 'alias');
+
+  // Add the cache_path table.
+  $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
+  db_create_table('cache_path', $schema['cache_path']);
   // Drop indexes.
   db_drop_index('url_alias', 'src_language_pid');
   db_drop_unique_key('url_alias', 'dst_language_pid');
@@ -2841,6 +2851,7 @@ function system_update_7042() {
   // Add indexes back.
   db_add_index('url_alias', 'source_language_pid', array('source', 'language', 'pid'));
   db_add_unique_key('url_alias', 'alias_language_pid', array('alias', 'language', 'pid'));
+
 }
 
 /**
