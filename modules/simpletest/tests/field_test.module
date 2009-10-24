@@ -354,8 +354,6 @@ function field_test_entity_form_submit_builder($form, &$form_state) {
 
 /**
  * Implement hook_field_info().
- *
- * This field provides a textfield which only accepts the value 1.
  */
 function field_test_field_info() {
   return array(
@@ -570,23 +568,6 @@ function field_test_field_formatter_info() {
       'settings' => array(
         'test_formatter_setting_additional' => 'dummy test string',
       ),
-    ),
-  );
-}
-
-/**
- * Implement hook_theme().
- */
-function field_test_theme() {
-  return array(
-    'field_formatter_field_test_default' => array(
-      'render element' => 'element',
-    ),
-    'field_formatter_field_test_multiple' => array(
-      'render element' => 'element',
-    ),
-    'field_formatter_field_test_needs_additional_data' => array(
-      'render element' => 'element',
     ),
   );
 }
@@ -1069,7 +1050,7 @@ function field_test_field_storage_create_field($field) {
   if ($field['storage']['type'] == 'field_test_storage_failure') {
     throw new Exception('field_test_storage_failure engine always fails to create fields');
   }
-    
+
   $data = _field_test_storage_data();
 
   $data[$field['id']] = array(
