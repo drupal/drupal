@@ -68,9 +68,9 @@
             </div>
           </td>
           <td><div class="new">&nbsp;</div><?php print $row->weight . $row->hidden_name; ?></td>
-          <td colspan="2"><div class="new">&nbsp;</div><?php print $row->field_name; ?></td>
+          <td><div class="new">&nbsp;</div><?php print $row->field_name; ?></td>
           <td><div class="new">&nbsp;</div><?php print $row->type; ?></td>
-          <td colspan="2"><div class="new">&nbsp;</div><?php print $row->widget_type; ?></td>
+          <td colspan="3"><div class="new">&nbsp;</div><?php print $row->widget_type; ?></td>
           <?php break;
 
         case 'add_existing_field': ?>
@@ -81,8 +81,8 @@
             </div>
           </td>
           <td><div class="new">&nbsp;</div><?php print $row->weight . $row->hidden_name; ?></td>
-          <td colspan="3"><div class="new">&nbsp;</div><?php print $row->field_name; ?></td>
-          <td colspan="2"><div class="new">&nbsp;</div><?php print $row->widget_type; ?></td>
+          <td colspan="2"><div class="new">&nbsp;</div><?php print $row->field_name; ?></td>
+          <td colspan="3"><div class="new">&nbsp;</div><?php print $row->widget_type; ?></td>
           <?php break;
       endswitch; ?>
       </tr>
