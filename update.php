@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.307 2009/10/09 07:48:06 webchick Exp $
+// $Id: update.php,v 1.308 2009/10/24 01:22:28 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -334,6 +334,16 @@ if (empty($op) && update_access_allowed()) {
   install_goto('update.php?op=info');
 }
 
+// update_fix_d7_requirements() needs to run before bootstrapping beyond path.
+// So bootstrap to DRUPAL_BOOTSTRAP_LANGUAGE then include unicode.inc.
+
+drupal_bootstrap(DRUPAL_BOOTSTRAP_LANGUAGE);
+include_once DRUPAL_ROOT . '/includes/unicode.inc';
+
+update_fix_d7_requirements();
+
+// Now proceed with a full bootstrap.
+
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 
@@ -348,7 +358,6 @@ if (update_access_allowed()) {
   include_once DRUPAL_ROOT . '/includes/batch.inc';
   drupal_load_updates();
 
-  update_fix_d7_requirements();
   update_fix_compatibility();
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
