@@ -1509,22 +1509,13 @@ function system_updater_info() {
 function system_filetransfer_backends() {
   $backends = array();
 
-  //This is the default, will be available on most systems
-  if (function_exists('ftp_connect')) {
-    $backends['ftp_extension'] = array(
+  // This is the default, will be available on most systems.
+  if (function_exists('ftp_connect') || ini_get('allow_url_fopen')) {
+    $backends['ftp'] = array(
       'title' => t('FTP'),
-      'class' => 'FileTransferFTPExtension',
+      'class' => 'FileTransferFTP',
       'settings_form' => 'system_filetransfer_backend_form_ftp',
       'weight' => 0,
-    );
-  }
-
-  if (ini_get('allow_url_fopen')) {
-    $backends['ftp_wrapper'] = array(
-      'title' => t('FTP using file streams'),
-      'class' => 'FileTransferFTPWrapper',
-      'settings_form' => 'system_filetransfer_backend_form_ftp',
-      'weight' => 10,
     );
   }
 

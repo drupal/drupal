@@ -72,14 +72,15 @@ abstract class FileTransfer {
    * @param bool $recursive
    */
   public final function chmod($path, $mode, $recursive = FALSE) {
+    if (!in_array('FileTransferChmodInterface', class_implements(get_class($this)))) {
+      throw new FileTransferException('Unable to change file permissions');
+    }
     $path = $this->sanitizePath($path);
     $path = $this->fixRemotePath($path);
     $this->checkPath($path);
     $this->chmodJailed($path, $mode, $recursive);
   }
-
-  protected abstract function chmodJailed($path, $mode, $recursive);
-
+  
   /**
    * Creates a directory.
    *
@@ -314,4 +315,23 @@ class FileTransferException extends Exception {
     parent::__construct($message, $code);
     $this->arguments = $arguments;
   }
+}
+
+
+/**
+ * A FileTransfer Class implementing this interface can be used to chmod files.
+ */
+interface FileTransferChmodInterface {
+
+  /**
+   * Changes the permissions of the file / directory specified in $path
+   *
+   * @param string $path
+   *   Path to change permissions of.
+   * @param long $mode
+   *   @see http://php.net/chmod
+   * @param boolean $recursive
+   *   Pass TRUE to recursively chmod the entire directory specified in $path.
+   */
+  function chmodJailed($path, $mode, $recursive);
 }

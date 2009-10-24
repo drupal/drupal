@@ -4,7 +4,7 @@
 /**
  * The SSH connection class for the update module.
  */
-class FileTransferSSH extends FileTransfer {
+class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface {
 
   function __construct($jail, $username, $password, $hostname = "localhost", $port = 22) {
     $this->username = $username;
