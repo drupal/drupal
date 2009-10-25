@@ -119,7 +119,17 @@ function system_help($path, $arg) {
     case 'admin/config/modules':
       $output = '<p>' . t('Modules are plugins that extend Drupal\'s core functionality. To further extend your site\'s functionality, a number of <a href="@modules">contributed modules</a> are available for download.', array('@permissions' => url('admin/config/people/permissions'), '@modules' => 'http://drupal.org/project/modules')) . '</p>';
       $output .= '<p>' . t('Module-related tasks can be located on the <a href="@by-module">administration by module page</a>. New <a href="@permissions">module-related permissions</a> may also become available as new modules are enabled.', array('@by-module' => url('admin/by-module'), '@permissions' => url('admin/config/people/permissions'))) . '</p>';
-      $output .= '<p>' . t('Each time a module is updated, it is important that <a href="@update-php">update.php</a> is run. To help manage the update process, the <em>Update status</em> module, if enabled, provides <a href="@updates">information on new versions of modules (and themes)</a> as they are released. Regular review of the <a href="@updates">available updates page</a> is essential to maintaining a secure and current site.', array('@update-php' => $base_url . '/update.php', '@updates' => url('admin/reports/updates'))) . '</p>';
+      if (module_exists('update')) {
+        if (update_manager_access()) {
+          $output .= '<p>' . t('Each time a module is updated, it is important that <a href="@update-php">update.php</a> is run. To help manage the update process, the <em>Update manager</em> module provides <a href="@updates">information on new versions of modules (and themes)</a> as they are released, and allows you to <a href="@update-manager-update">upgrade any missing updates</a> or <a href="@update-manager-install">install new modules and themes</a>. Regular review of the <a href="@updates">available updates page</a> is essential to maintaining a secure and current site.', array('@update-php' => $base_url . '/update.php', '@updates' => url('admin/reports/updates'), '@update-manager-update' => url('admin/config/modules/update'), '@update-manager-install' => url('admin/config/modules/install'))) . '</p>';
+        }
+        else {
+          $output .= '<p>' . t('Each time a module is updated, it is important that <a href="@update-php">update.php</a> is run. To help manage the update process, the <em>Update manager</em> module provides <a href="@updates">information on new versions of modules (and themes)</a> as they are released. Regular review of the <a href="@updates">available updates page</a> is essential to maintaining a secure and current site.', array('@update-php' => $base_url . '/update.php', '@updates' => url('admin/reports/updates'))) . '</p>';
+        }
+      }
+      else {
+        $output .= '<p>' . t('Each time a module is updated, it is important that <a href="@update-php">update.php</a> is run. If you enable the <em>Update manager</em> module, it will provide a report about new versions of modules (and themes) as they are released, can notify you via e-mail if your site is out of date, and let you install missing updates. Regular review of available updates is essential to maintaining a secure and current site.', array('@update-php' => $base_url . '/update.php')) . '</p>';
+      }
       return $output;
     case 'admin/config/modules/uninstall':
       return '<p>' . t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it on the main <a href="@modules">modules page</a>. Not all modules support this feature.', array('@modules' => url('admin/config/modules'))) . '</p>';

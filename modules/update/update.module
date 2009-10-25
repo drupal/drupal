@@ -371,7 +371,7 @@ function _update_requirement_check($project, $type) {
   if ($status != UPDATE_CURRENT && $type == 'core' && isset($project['recommended'])) {
     $requirement_label .= ' ' . t('(version @version available)', array('@version' => $project['recommended']));
   }
-  $requirement['value'] = l($requirement_label, 'admin/reports/updates');
+  $requirement['value'] = l($requirement_label, update_manager_access() ? 'admin/reports/updates/update' : 'admin/reports/updates');
   return $requirement;
 }
 
@@ -586,7 +586,9 @@ function update_mail($key, &$message, $params) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $language);
   }
   $message['body'][] = t('See the available updates page for more information:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates', array('absolute' => TRUE, 'language' => $language));
-
+  if (update_manager_access()) {
+    $message['body'][] = t('You can automatically install your missing updates using the Update manager:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates/update', array('absolute' => TRUE, 'language' => $language));
+  }
   $settings_url = url('admin/reports/updates/settings', array('absolute' => TRUE));
   if (variable_get('update_notification_threshold', 'all') == 'all') {
     $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, please visit !url.', array('!url' => $settings_url));
@@ -670,7 +672,12 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
   }
 
   if ($report_link) {
-    $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/reports/updates', array('language' => $language))), array('langcode' => $langcode));
+    if (update_manager_access()) {
+      $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information and to install your missing updates.', array('@available_updates' => url('admin/reports/updates/update', array('language' => $language))), array('langcode' => $langcode));
+    }
+    else {
+      $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/reports/updates', array('language' => $language))), array('langcode' => $langcode));
+    }
   }
 
   return $text;
