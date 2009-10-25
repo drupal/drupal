@@ -191,7 +191,7 @@ function _field_info_collate_types($reset = FALSE) {
  *     both deleted and non-deleted fields. The bundles element is the same as
  *     for 'fields'.
  *   - instances: Array of existing instances, keyed by object type, bundle
- *     name and field name. This entry only lists non-deleted instances. 
+ *     name and field name. This entry only lists non-deleted instances.
  */
 function _field_info_collate_fields($reset = FALSE) {
   static $info;
@@ -230,8 +230,10 @@ function _field_info_collate_fields($reset = FALSE) {
 
     // Populate 'instances'. Only non-deleted instances are considered.
     $info['instances'] = array();
-    foreach (field_info_bundles() as $bundle => $bundle_info) {
-      $info['instances'][$bundle] = array();
+    foreach (field_info_bundles() as $obj_type => $bundles) {
+      foreach ($bundles as $bundle => $bundle_info) {
+        $info['instances'][$obj_type][$bundle] = array();
+      }
     }
     foreach ($definitions['instances'] as $instance) {
       $field = $info['fields'][$instance['field_name']];
