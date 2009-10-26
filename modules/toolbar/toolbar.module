@@ -36,10 +36,22 @@ function toolbar_theme($existing, $type, $theme, $path) {
  * Add admin toolbar to the page_top region automatically.
  */
 function toolbar_page_build(&$page) {
-  if (user_access('access toolbar')) {
-    $page['page_top']['toolbar'] = toolbar_build();
-    $page['page_top']['toolbar']['toolbar_drawer'] = isset($page['toolbar_drawer']) ? $page['toolbar_drawer'] : array();
-  }
+  $page['page_top']['toolbar'] = array(
+    '#pre_render' => array('toolbar_pre_render'),
+    '#access' => user_access('access toolbar'),
+    'toolbar_drawer' => isset($page['toolbar_drawer']) ? $page['toolbar_drawer'] : array(),
+  );
+}
+
+/**
+ * Prerender function for the toolbar.
+ *
+ * Since building the toolbar takes some time, it is done just prior to
+ * rendering to ensure that it is built only if it will be displayed.
+ */
+function toolbar_pre_render($toolbar) {
+  $toolbar = array_merge($toolbar, toolbar_build());
+  return $toolbar;
 }
 
 /**
@@ -85,10 +97,9 @@ function toolbar_build() {
     '#attributes' => array('id' => 'toolbar-menu'),
   );
 
-  // Add logout & user account links
-  $build['toolbar_user'] = array(
-    '#theme' => 'links',
-    '#links' => array(
+  // Add logout & user account links or login link
+  if ($user->uid) {
+    $links = array(
       'account' => array(
         'title' => t('Hello <strong>@username</strong>', array('@username' => $user->name)),
         'href' => 'user',
@@ -98,7 +109,19 @@ function toolbar_build() {
         'title' => t('Log out'),
         'href' => 'user/logout',
       ),
-    ),
+    );
+  }
+  else {
+     $links = array(
+      'login' => array(
+        'title' => t('Log in'),
+        'href' => 'user',
+      ),
+    );
+  }
+  $build['toolbar_user'] = array(
+    '#theme' => 'links',
+    '#links' => $links,
     '#attributes' => array('id' => 'toolbar-user'),
   );
   return $build;
