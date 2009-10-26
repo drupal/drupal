@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.71 2009/10/19 01:55:28 dries Exp $
+// $Id: database_test.test,v 1.72 2009/10/26 04:46:38 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -790,9 +790,11 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
    * Test WHERE NOT IN clauses.
    */
   function testNotInConditionUpdate() {
+    // The o is lowercase in the 'NoT IN' operator, to make sure the operators
+    // work in mixed case.
     $num_updated = db_update('test')
       ->fields(array('job' => 'Musician'))
-      ->condition('name', array('John', 'Paul', 'George'), 'NOT IN')
+      ->condition('name', array('John', 'Paul', 'George'), 'NoT IN')
       ->execute();
     $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
 
