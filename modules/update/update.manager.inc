@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.4 2009/10/24 11:43:42 dries Exp $
+// $Id: update.manager.inc,v 1.5 2009/10/26 13:03:10 dries Exp $
 
 /**
  * @file
@@ -438,7 +438,21 @@ function update_manager_confirm_update_form_submit($form, &$form_state) {
  * @{
  */
 
-function update_manager_install_form(&$form_state) {
+/**
+ * Build the form for the update manager page to install new projects.
+ *
+ * This presents a place to enter a URL or upload an archive file to use to
+ * install a new module or theme.
+ *
+ * @param $form
+ * @param $form_state
+ * @param $context
+ *   String representing the context from which we're trying to install, can
+ *   be: 'module', 'theme' or 'report'.
+ * @return
+ *   The form array for selecting which project to install.
+ */
+function update_manager_install_form($form, &$form_state, $context) {
   $form = array();
 
   // Collect all the supported archive file extensions for the UI text.
