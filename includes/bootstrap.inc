@@ -1888,6 +1888,10 @@ function drupal_autoload_class($class) {
 function _registry_check_code($type, $name = NULL) {
   static $lookup_cache, $cache_update_needed;
 
+  if ($type == 'class' && class_exists($name) || $type == 'interface' && interface_exists($name)) {
+    return TRUE;
+  }
+
   if (!isset($lookup_cache)) {
     $lookup_cache = array();
     if ($cache = cache_get('lookup_cache', 'cache_registry')) {
@@ -1917,9 +1921,9 @@ function _registry_check_code($type, $name = NULL) {
   $cache_key = $type[0] . $name;
   if (isset($lookup_cache[$cache_key])) {
     if ($lookup_cache[$cache_key]) {
-      require_once DRUPAL_ROOT . '/' . $lookup_cache[$cache_key];
+      require DRUPAL_ROOT . '/' . $lookup_cache[$cache_key];
     }
-    return $lookup_cache[$cache_key];
+    return (bool)$lookup_cache[$cache_key];
   }
 
   // This function may get called when the default database is not active, but
@@ -1939,7 +1943,7 @@ function _registry_check_code($type, $name = NULL) {
   $lookup_cache[$cache_key] = $file;
 
   if ($file) {
-    require_once DRUPAL_ROOT . '/' . $file;
+    require DRUPAL_ROOT . '/' . $file;
     return TRUE;
   }
   else {
