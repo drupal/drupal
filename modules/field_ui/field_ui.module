@@ -106,9 +106,9 @@ function field_ui_menu() {
           'file' => 'field_ui.admin.inc',
         ) + $access;
 
-        // 'Display fields' tab and context secondary tabs.
+        // 'Manage display' tab and context secondary tabs.
         $items["$path/display"] = array(
-          'title' => 'Display fields',
+          'title' => 'Manage display',
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_display_overview_form', $obj_type, $bundle_arg),
           'type' => MENU_LOCAL_TASK,
@@ -167,7 +167,7 @@ function field_ui_theme() {
 }
 
 /**
- * Group available build modes on tabs on the 'Display fields' page.
+ * Group available build modes on tabs on the 'Manage display' page.
  *
  * @todo Remove this completely and use vertical tabs?
  */

@@ -478,7 +478,7 @@ function _field_filter_xss_display_allowed_tags() {
  *
  * Used to display a field's values outside the context of the $node, as
  * when fields are displayed in Views, or to display a field in a template
- * using a different formatter than the one set up on the Display Fields tab
+ * using a different formatter than the one set up on the 'Manage display' tab
  * for the node's context.
  *
  * @param $field
