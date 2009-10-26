@@ -1321,12 +1321,26 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
       'BETWEEN' => array('delimiter' => ' AND '),
       'IN' => array('delimiter' => ', ', 'prefix' => ' (', 'postfix' => ')'),
       'NOT IN' => array('delimiter' => ', ', 'prefix' => ' (', 'postfix' => ')'),
-      'LIKE' => array('operator' => 'LIKE'),
       'IS NULL' => array('use_value' => FALSE),
       'IS NOT NULL' => array('use_value' => FALSE),
+      // These ones are here for performance reasons.
+      '=' => array(),
+      '<' => array(),
+      '>' => array(),
+      '>=' => array(),
+      '<=' => array(),
+      'LIKE' => array(),
     );
+    if (isset($specials[$operator])) {
+      $return = $specials[$operator];
+    }
+    else {
+      // We need to upper case because PHP index matches are case sensitive but
+      // do not need the more expensive drupal_strtoupper because SQL statements are ASCII.
+      $operator = strtoupper($operator);
+      $return = isset($specials[$operator]) ? $specials[$operator] : array();
+    }
 
-    $return = isset($specials[$operator]) ? $specials[$operator] : array();
     $return += array('operator' => $operator);
 
     return $return;

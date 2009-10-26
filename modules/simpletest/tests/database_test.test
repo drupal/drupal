@@ -790,9 +790,11 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
    * Test WHERE NOT IN clauses.
    */
   function testNotInConditionUpdate() {
+    // The o is lowercase in the 'NoT IN' operator, to make sure the operators
+    // work in mixed case.
     $num_updated = db_update('test')
       ->fields(array('job' => 'Musician'))
-      ->condition('name', array('John', 'Paul', 'George'), 'NOT IN')
+      ->condition('name', array('John', 'Paul', 'George'), 'NoT IN')
       ->execute();
     $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
 
