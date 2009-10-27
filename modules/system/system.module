@@ -1568,7 +1568,7 @@ function system_get_filetransfer_settings_form($filetransfer_backend_name, $defa
  */
 function system_filetransfer_backend_form_ftp() {
   $form = _system_filetransfer_backend_form_common();
-  $form['port']['#default_value'] = 21;
+  $form['advanced']['port']['#default_value'] = 21;
   return $form;
 }
 
@@ -1577,7 +1577,7 @@ function system_filetransfer_backend_form_ftp() {
  */
 function system_filetransfer_backend_form_ssh() {
   $form = _system_filetransfer_backend_form_common();
-  $form['port']['#default_value'] = 22;
+  $form['advanced']['port']['#default_value'] = 22;
   return $form;
 }
 
@@ -1585,16 +1585,6 @@ function system_filetransfer_backend_form_ssh() {
  * Helper function because SSH and FTP backends share the same elements
  */
 function _system_filetransfer_backend_form_common() {
-  $form['hostname'] = array (
-    '#type' => 'textfield',
-    '#title' => t('Host'),
-    '#default_value' => 'localhost',
-  );
-  $form['port'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Port'),
-    '#default_value' => NULL,
-  );
   $form['username'] = array(
     '#type' => 'textfield',
     '#title' => t('Username'),
@@ -1602,7 +1592,24 @@ function _system_filetransfer_backend_form_common() {
   $form['password'] = array(
     '#type' => 'password',
     '#title' => t('Password'),
-    '#description' => t('This is not saved in the database and is only used to test the connection'),
+    '#description' => t('Your password is not saved in the database and is only used to establish a connection.'),
+  );
+  $form['advanced'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Advanced settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['advanced']['hostname'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Host'),
+    '#default_value' => 'localhost',
+    '#description' => t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
+  );
+  $form['advanced']['port'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Port'),
+    '#default_value' => NULL,
   );
   return $form;
 }
