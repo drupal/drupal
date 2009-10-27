@@ -1,5 +1,5 @@
 <?php
-// $Id: common_test.module,v 1.7 2009/10/23 22:24:17 webchick Exp $
+// $Id: common_test.module,v 1.8 2009/10/27 19:29:12 webchick Exp $
 
 /**
  * @file
@@ -96,6 +96,40 @@ function common_test_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
     }
     elseif (is_object($arg3)) {
       $arg3->foo = 'Drupal';
+    }
+  }
+}
+
+/**
+ * Implement hook_TYPE_alter() on behalf of Garland theme.
+ *
+ * Same as common_test_drupal_alter_alter(), but here, we verify that themes
+ * can also alter and come last.
+ */
+function garland_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+  // Alter first argument.
+  if (is_array($data)) {
+    $data['foo'] .= ' theme';
+  }
+  elseif (is_object($data)) {
+    $data->foo .= ' theme';
+  }
+  // Alter second argument, if present.
+  if (isset($arg2)) {
+    if (is_array($arg2)) {
+      $arg2['foo'] .= ' theme';
+    }
+    elseif (is_object($arg2)) {
+      $arg2->foo .= ' theme';
+    }
+  }
+  // Try to alter third argument, if present.
+  if (isset($arg3)) {
+    if (is_array($arg3)) {
+      $arg3['foo'] .= ' theme';
+    }
+    elseif (is_object($arg3)) {
+      $arg3->foo .= ' theme';
     }
   }
 }
