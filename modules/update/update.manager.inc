@@ -132,7 +132,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     switch ($project['status']) {
       case UPDATE_NOT_SECURE:
       case UPDATE_REVOKED:
-        $entry['title'] .= ' ' . t('(Security Update)');
+        $entry['title'] .= ' ' . t('(Security update)');
         $entry['#weight'] = -2;
         $type = 'security';
         break;
