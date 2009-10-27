@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.73 2009/10/24 21:39:40 webchick Exp $
+// $Id: node.admin.inc,v 1.74 2009/10/27 04:06:44 webchick Exp $
 
 /**
  * @file
@@ -416,6 +416,7 @@ function node_admin_nodes() {
     ->fields('n')
     ->fields('u', array('name'))
     ->limit(50)
+    ->orderByHeader($header)
     ->execute();
 
   // Build the 'Update options' form.
