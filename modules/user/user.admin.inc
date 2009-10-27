@@ -650,12 +650,12 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
   );
   // Render role/permission overview:
   $options = array();
+  $module_info = system_get_info('module');
   $hide_descriptions = !system_admin_compact_mode();
   foreach (module_implements('permission') as $module) {
     if ($permissions = module_invoke($module, 'permission')) {
-      $info = drupal_parse_info_file(drupal_get_path('module', $module) . "/$module.info");
       $form['permission'][] = array(
-        '#markup' => $info['name'],
+        '#markup' => $module_info[$module]['name'],
         '#id' => $module,
       );
       foreach ($permissions as $perm => $perm_item) {
