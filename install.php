@@ -258,13 +258,20 @@ function install_begin_request(&$install_state) {
   drupal_load('module', 'filter');
   drupal_load('module', 'user');
 
-  // Load the cache infrastructure with the Fake Cache. Switch to the database cache
-  // later if possible.
+  // Load the cache infrastructure using a "fake" cache implementation that
+  // does not attempt to write to the database. We need this during the initial
+  // part of the installer because the database is not available yet. We
+  // continue to use it even when the database does become available, in order
+  // to preserve consistency between interactive and command-line installations
+  // (the latter complete in one page request and therefore are forced to
+  // continue using the cache implementation they started with) and also
+  // because any data put in the cache during the installer is inherently
+  // suspect, due to the fact that Drupal is not fully set up yet.
   require_once DRUPAL_ROOT . '/includes/cache.inc';
   require_once DRUPAL_ROOT . '/includes/cache-install.inc';
   $conf['cache_inc'] = 'includes/cache.inc';
   $conf['cache_default_class'] = 'DrupalFakeCache';
-   
+
   // Prepare for themed output, if necessary. We need to run this at the
   // beginning of the page request to avoid a different theme accidentally
   // getting set.
