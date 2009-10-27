@@ -426,12 +426,22 @@ function update_manager_confirm_update_form_submit($form, &$form_state) {
       );
     }
 
-    // Finally, trigger the next step in the workflow, which will either
-    // redirect to authorize.php to prompt for FTP/SSH credentials, or to
-    // directly trigger the updates via Batch API if the install location
-    // (e.g. sites/default) is already owned by the same UID that the web
-    // server is running as.
-    _update_manager_run_authorized('update_authorize_run_update', $updates, $project_real_location);
+    // If the owner of the last directory we extracted is the same as the
+    // owner of our configuration directory (e.g. sites/default) where we're
+    // trying to install the code, there's no need to prompt for FTP/SSH
+    // credentials. Instead, we instantiate a FileTransferLocal and invoke
+    // update_authorize_run_update() directly.
+    if (fileowner($project_real_location) == fileowner(conf_path())) {
+      module_load_include('inc', 'update', 'update.authorize');
+      $filetransfer = new FileTransferLocal(DRUPAL_ROOT);
+      update_authorize_run_update($filetransfer, $updates);
+    }
+    // Otherwise, go through the regular workflow to prompt for FTP/SSH
+    // credentials and invoke update_authorize_run_update() indirectly with
+    // whatever FileTransfer object authorize.php creates for us.
+    else {
+      system_run_authorized('update_authorize_run_update', drupal_get_path('module', 'update') . '/update.authorize.inc', array($updates));
+    }
   }
 }
 
@@ -592,12 +602,22 @@ function update_manager_install_form_submit($form, &$form_state) {
     'local_url' => $project_real_location,
   );
 
-  // Finally, trigger the next step in the workflow, which will either
-  // redirect to authorize.php to prompt for FTP/SSH credentials, or to
-  // directly trigger the updates via Batch API if the install location
-  // (e.g. sites/default) is already owned by the same UID that the web
-  // server is running as.
-  _update_manager_run_authorized('update_authorize_run_install', $arguments, $project_real_location);
+  // If the owner of the directory we extracted is the same as the
+  // owner of our configuration directory (e.g. sites/default) where we're
+  // trying to install the code, there's no need to prompt for FTP/SSH
+  // credentials. Instead, we instantiate a FileTransferLocal and invoke
+  // update_authorize_run_install() directly.
+  if (fileowner($project_real_location) == fileowner(conf_path())) {
+    module_load_include('inc', 'update', 'update.authorize');
+    $filetransfer = new FileTransferLocal(DRUPAL_ROOT);
+    call_user_func_array('update_authorize_run_install', array_merge(array($filetransfer), $arguments));
+  }
+  // Otherwise, go through the regular workflow to prompt for FTP/SSH
+  // credentials and invoke update_authorize_run_install() indirectly with
+  // whatever FileTransfer object authorize.php creates for us.
+  else {
+    system_run_authorized('update_authorize_run_install', drupal_get_path('module', 'update') . '/update.authorize.inc', $arguments);
+  }
 }
 
 /**
@@ -608,51 +628,6 @@ function update_manager_install_form_submit($form, &$form_state) {
  * @defgroup update_manager_file Update manager file management functions.
  * @{
  */
-
-/**
- * Run a given Update manager operation with elevated file access permissions.
- *
- * If the files we just extracted are owned by the same UID as the owner of
- * our configuration directory (e.g. sites/default) where we're trying to
- * install the code, there's no need to prompt for FTP/SSH credentials.
- * Instead, we instantiate a FileTransferLocal and invoke the operation
- * directly.
- *
- * Otherwise, we go through the regular authorize.php workflow to prompt for
- * FTP/SSH credentials and invoke the operation indirectly with whatever
- * FileTransfer object authorize.php creates for us.
- *
- * @param $operation
- *   The name of the operation callback to invoke.
- * @param $arguments
- *   Arguments to pass to the operation callback.
- * @param $extracted_path
- *   The full path to a project we just extracted to compare ownership.
- */
-function _update_manager_run_authorized($operation, $arguments, $extracted_path) {
-  if (fileowner($extracted_path) == fileowner(conf_path())) {
-    module_load_include('inc', 'update', 'update.authorize');
-    $filetransfer = new FileTransferLocal(DRUPAL_ROOT);
-    switch ($operation) {
-      case 'update_authorize_run_update':
-        update_authorize_run_update($filetransfer, $arguments);
-        break;
-
-      case 'update_authorize_run_install':
-        call_user_func_array('update_authorize_run_install', array_merge(array($filetransfer), $arguments));
-        break;
-    }
-  }
-  else {
-    // update_authorize_run_update() expects a nested array, and the way
-    // authorize.php invokes our callback we need to wrap our arguments in an
-    // array here.
-    if ($operation == 'update_authorize_run_update') {
-      $arguments = array($arguments);
-    }
-    system_run_authorized($operation, drupal_get_path('module', 'update') . '/update.authorize.inc', $arguments);
-  }
-}
 
 /**
  * Return the directory where update archive files should be extracted.

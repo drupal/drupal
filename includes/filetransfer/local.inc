@@ -7,7 +7,7 @@
 class FileTransferLocal extends FileTransfer implements FileTransferChmodInterface {
 
   function connect() {
-    // No-op.
+    // No-op
   }
 
   static function factory($jail, $settings) {
