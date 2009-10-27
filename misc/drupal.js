@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.58 2009/08/31 05:51:07 dries Exp $
+// $Id: drupal.js,v 1.59 2009/10/27 04:12:39 webchick Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
@@ -343,5 +343,16 @@ Drupal.theme.prototype = {
     return '<em>' + Drupal.checkPlain(str) + '</em>';
   }
 };
+
+/**
+ * Return whether the given variable is an object.
+ *
+ * The HEAD version of jQuery (http://code.jquery.com/jquery-nightly.js)
+ * includes an isObject() function, so when that gets released and incorporated
+ * into Drupal, this can be removed.
+ */
+$.extend({isObject: function(value) {
+  return (value !== null && typeof value === 'object');
+}});
 
 })(jQuery);

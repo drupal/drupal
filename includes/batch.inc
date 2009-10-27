@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.42 2009/10/15 16:18:44 webchick Exp $
+// $Id: batch.inc,v 1.43 2009/10/27 04:12:39 webchick Exp $
 
 
 /**
@@ -109,11 +109,15 @@ function _batch_progress_page_js() {
   $current_set = _batch_current_set();
   drupal_set_title($current_set['title'], PASS_THROUGH);
 
+  // Merge required query parameters for batch processing into those provided by
+  // batch_set() or hook_batch_alter().
+  $batch['url_options']['query']['id'] = $batch['id'];
+
   $js_setting = array(
     'batch' => array(
       'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
       'initMessage' => $current_set['init_message'],
-      'uri' => url($batch['url'], array('query' => array('id' => $batch['id']))),
+      'uri' => url($batch['url'], $batch['url_options']),
     ),
   );
   drupal_add_js($js_setting, 'setting');
@@ -189,7 +193,12 @@ function _batch_progress_page_nojs() {
     ob_end_clean();
   }
 
-  $url = url($batch['url'], array('query' => array('id' => $batch['id'], 'op' => $new_op)));
+  // Merge required query parameters for batch processing into those provided by
+  // batch_set() or hook_batch_alter().
+  $batch['url_options']['query']['id'] = $batch['id'];
+  $batch['url_options']['query']['op'] = $new_op;
+
+  $url = url($batch['url'], $batch['url_options']);
   drupal_add_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
 
   return theme('progress_bar', array('percent' => $percentage, 'message' => $message));
