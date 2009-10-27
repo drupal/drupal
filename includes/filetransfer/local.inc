@@ -1,5 +1,5 @@
 <?php
-// $Id: local.inc,v 1.1 2009/10/27 03:31:21 webchick Exp $
+// $Id: local.inc,v 1.2 2009/10/27 03:34:01 webchick Exp $
 
 /**
  * The local connection class for copying files as the httpd user.
@@ -7,7 +7,7 @@
 class FileTransferLocal extends FileTransfer implements FileTransferChmodInterface {
 
   function connect() {
-    // No-op.
+    // No-op
   }
 
   static function factory($jail, $settings) {
