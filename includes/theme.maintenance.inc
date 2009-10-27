@@ -33,7 +33,7 @@ function _drupal_maintenance_theme() {
 
   // Install and update pages are treated differently to prevent theming overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
-    $theme = 'minnelli';
+    $custom_theme = 'minnelli';
   }
   else {
     if (!db_is_active()) {
@@ -46,10 +46,15 @@ function _drupal_maintenance_theme() {
       drupal_load('module', 'filter');
     }
 
-    $theme = variable_get('maintenance_theme', 'minnelli');
+    $custom_theme = variable_get('maintenance_theme', 'minnelli');
   }
 
   $themes = list_themes();
+
+  // list_themes() triggers a drupal_alter() in maintenance mode, but we can't
+  // let themes alter the .info data until we know a theme's base themes. So
+  // don't set global $theme until after list_themes() builds its cache.
+  $theme = $custom_theme;
 
   // Store the identifier for retrieving theme settings with.
   $theme_key = $theme;

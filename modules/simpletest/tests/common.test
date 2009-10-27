@@ -29,24 +29,24 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
 
     // Verify alteration of a single argument.
     $array_copy = $array;
-    $array_expected = array('foo' => 'Drupal');
+    $array_expected = array('foo' => 'Drupal theme');
     drupal_alter('drupal_alter', $array_copy);
     $this->assertEqual($array_copy, $array_expected, t('Single array was altered.'));
 
     $object_copy = clone $object;
     $object_expected = clone $object;
-    $object_expected->foo = 'Drupal';
+    $object_expected->foo = 'Drupal theme';
     drupal_alter('drupal_alter', $object_copy);
     $this->assertEqual($object_copy, $object_expected, t('Single object was altered.'));
 
     // Verify alteration of multiple arguments.
     $array_copy = $array;
-    $array_expected = array('foo' => 'Drupal');
+    $array_expected = array('foo' => 'Drupal theme');
     $object_copy = clone $object;
     $object_expected = clone $object;
-    $object_expected->foo = 'Drupal';
+    $object_expected->foo = 'Drupal theme';
     $array2_copy = $array;
-    $array2_expected = array('foo' => 'Drupal');
+    $array2_expected = array('foo' => 'Drupal theme');
     drupal_alter('drupal_alter', $array_copy, $object_copy, $array2_copy);
     $this->assertEqual($array_copy, $array_expected, t('First argument to drupal_alter() was altered.'));
     $this->assertEqual($object_copy, $object_expected, t('Second argument to drupal_alter() was altered.'));

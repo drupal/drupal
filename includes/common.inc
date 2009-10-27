@@ -4520,6 +4520,22 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
     $function = $module . '_' . $hook;
     $function($data, $context1, $context2);
   }
+  // Allow the theme to alter variables after the theme system has been
+  // initialized.
+  global $theme, $base_theme_info;
+  if (isset($theme)) {
+    $theme_keys = array();
+    foreach ($base_theme_info as $base) {
+      $theme_keys[] = $base->name;
+    }
+    $theme_keys[] = $theme;
+    foreach ($theme_keys as $theme_key) {
+      $function = $theme_key . '_' . $hook;
+      if (function_exists($function)) {
+        $function($data, $context1, $context2);
+      }
+    }
+  }
 }
 
 /**
