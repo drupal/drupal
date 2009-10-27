@@ -416,6 +416,7 @@ function node_admin_nodes() {
     ->fields('n')
     ->fields('u', array('name'))
     ->limit(50)
+    ->orderByHeader($header)
     ->execute();
 
   // Build the 'Update options' form.
