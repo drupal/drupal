@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.inc,v 1.2 2009/10/22 00:52:03 dries Exp $
+// $Id: authorize.inc,v 1.3 2009/10/27 03:27:00 webchick Exp $
 
 /**
  * @file
@@ -65,9 +65,9 @@ function authorize_filetransfer_form($form_state) {
   );
 
   $form['submit_process'] = array(
-    '#name' => 'process_updates', // This is later changed in JS.
+    '#name' => 'process_updates',
     '#type' => 'submit',
-    '#value' => t('Process Updates'), // As is this. @see authorize.js
+    '#value' => t('Continue'),
     '#weight' => 100,
     '#attributes' => array('style' => 'display:none'),
   );

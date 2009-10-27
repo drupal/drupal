@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.5 2009/10/26 13:03:10 dries Exp $
+// $Id: update.manager.inc,v 1.6 2009/10/27 03:27:00 webchick Exp $
 
 /**
  * @file
@@ -132,7 +132,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     switch ($project['status']) {
       case UPDATE_NOT_SECURE:
       case UPDATE_REVOKED:
-        $entry['title'] .= ' ' . t('(Security Update)');
+        $entry['title'] .= ' ' . t('(Security update)');
         $entry['#weight'] = -2;
         $type = 'security';
         break;
