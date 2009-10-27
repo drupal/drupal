@@ -18,8 +18,9 @@ Drupal.behaviors.tableHeader = {
     var headers = [];
 
     $('table.sticky-enabled thead', context).once('tableheader', function () {
-      // Clone thead so it inherits original jQuery properties.
-      var headerClone = $(this).clone(true).insertBefore(this.parentNode).wrap('<table class="sticky-header"></table>').parent().css({
+      // Clone the table header so it inherits original jQuery properties. Hide
+      // the table to avoid a flash of the header clone upon page load.
+      var headerClone = $(this).clone(true).hide().insertBefore(this.parentNode).wrap('<table class="sticky-header"></table>').parent().css({
         position: 'fixed',
         top: '0px'
       });
@@ -32,6 +33,9 @@ Drupal.behaviors.tableHeader = {
       headerClone.table = table;
       // Finish initializing header positioning.
       tracker(headerClone);
+      // We hid the header to avoid it showing up erroneously on page load;
+      // we need to unhide it now so that it will show up when expected.
+      $(headerClone).children('thead').show();
 
       $(table).addClass('sticky-table');
     });

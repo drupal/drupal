@@ -2963,7 +2963,9 @@ function _form_set_class(&$element, $class = array()) {
  *       'operations' and 'finished' functions, for instance if they don't
  *       reside in the original '.module' file. The path should be relative to
  *       the base_path(), and thus should be built using drupal_get_path().
- *     'css' : an array of paths to CSS files to be used on the progress page.
+ *     'css': an array of paths to CSS files to be used on the progress page.
+ *     'url_options': options passed to url() when constructing redirect
+ *       URLs for the batch.
  *
  * Operations are added as new batch sets. Batch sets are used to ensure
  * clean code independence, ensuring that several batches submitted by
@@ -3051,6 +3053,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
       'current_set' => 0,
       'progressive' => TRUE,
       'url' => $url,
+      'url_options' => array(),
       'source_page' => $_GET['q'],
       'redirect' => $redirect,
       'theme' => $GLOBALS['theme_key'],

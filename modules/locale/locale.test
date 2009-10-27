@@ -237,7 +237,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $this->clickLink(t('edit'));
     // We save the lid from the path.
     $matches = array();
-    preg_match('!admin/config/regional/translate/edit/(\d)+!', $this->getUrl(), $matches);
+    preg_match('!admin/config/regional/translate/edit/(\d+)!', $this->getUrl(), $matches);
     $lid = $matches[1];
     // No t() here, it's surely not translated yet.
     $this->assertText($name, t('name found on edit screen.'));
