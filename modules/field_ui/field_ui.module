@@ -135,6 +135,7 @@ function field_ui_menu() {
  * Menu loader; Load a field instance based on its name.
  */
 function field_ui_menu_load($field_name, $obj_type, $bundle_name) {
+  $bundle_name = strtr($bundle_name, array('-' => '_'));
   if ($instance = field_info_instance($obj_type, $field_name, $bundle_name)) {
     return $instance;
   }
