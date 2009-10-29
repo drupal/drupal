@@ -215,8 +215,8 @@ function update_manager_update_form($form, $form_state = array(), $context) {
       '#header' => $headers,
       '#options' => $projects['enabled'],
     );
-    if (count($projects) > 1) {
-      $form['projects']['#prefix'] = '<h2>' . t('Enabled add-ons') . '</h2>';
+    if (!empty($projects['disabled'])) {
+      $form['projects']['#prefix'] = '<h2>' . t('Enabled') . '</h2>';
     }
   }
 
@@ -226,10 +226,8 @@ function update_manager_update_form($form, $form_state = array(), $context) {
       '#header' => $headers,
       '#options' => $projects['disabled'],
       '#weight' => 1,
+      '#prefix' => '<h2>' . t('Disabled') . '</h2>',
     );
-    if (count($projects) > 1) {
-      $form['disabled_projects']['#prefix'] = '<h2>' . t('Disabled add-ons') . '</h2>';
-    }
   }
 
   // If either table has been printed yet, we need a submit button and to
