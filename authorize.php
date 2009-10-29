@@ -3,10 +3,12 @@
 
 /**
  * @file
- * Administrative script where the site owner (the user actually owning the
- * files on the webserver) can authorize certain file-related operations to
- * proceed with elevated privileges, for example to deploy and upgrade modules
- * or themes. Users should not visit this page directly, but instead use an
+ * Administrative script for running authorized file operations.
+ *
+ * Using this script, the site owner (the user actually owning the files on
+ * the webserver) can authorize certain file-related operations to proceed
+ * with elevated privileges, for example to deploy and upgrade modules or
+ * themes. Users should not visit this page directly, but instead use an
  * administrative user interface which knows how to redirect the user to this
  * script as part of a multistep process. This script actually performs the
  * selected operations without loading all of Drupal, to be able to more
@@ -14,7 +16,9 @@
  * global killswitch in settings.php ('allow_authorize_operations') and via
  * the 'administer software updates' permission.
  *
- * @see system_run_authorized()
+ * There are helper functions for setting up an operation to run via this
+ * system in modules/system/system.module. For more information, see:
+ * @link authorize Authorized operation helper functions @endlink
  */
 
 /**

@@ -396,9 +396,11 @@ function update_manager_confirm_update_form($form, &$form_state) {
  * update, do so now. Otherwise, pull information about all the required
  * updates out of the SESSION, figure out what Updater class is needed for
  * each one, generate an array of update operations to perform, and hand it
- * all off to system_run_authorized() where we redirect to authorize.php.
+ * all off to system_authorized_init(), then redirect to authorize.php.
  *
- * @see system_run_authorized()
+ * @see update_authorize_run_update()
+ * @see system_authorized_init()
+ * @see system_authorized_get_url()
  */
 function update_manager_confirm_update_form_submit($form, &$form_state) {
   if ($form_state['values']['site_offline'] == TRUE) {
@@ -440,7 +442,8 @@ function update_manager_confirm_update_form_submit($form, &$form_state) {
     // credentials and invoke update_authorize_run_update() indirectly with
     // whatever FileTransfer object authorize.php creates for us.
     else {
-      system_run_authorized('update_authorize_run_update', drupal_get_path('module', 'update') . '/update.authorize.inc', array($updates));
+      system_authorized_init('update_authorize_run_update', drupal_get_path('module', 'update') . '/update.authorize.inc', array($updates));
+      $form_state['redirect'] = system_authorized_get_url();
     }
   }
 }
@@ -536,6 +539,10 @@ function update_manager_install_form_validate($form, &$form_state) {
  * the live webroot. If everything is successful, setup an operation to run
  * via authorize.php which will copy the extracted files from the temporary
  * location into the live site.
+ *
+ * @see update_authorize_run_install()
+ * @see system_authorized_init()
+ * @see system_authorized_get_url()
  */
 function update_manager_install_form_submit($form, &$form_state) {
   if ($form_state['values']['project_url']) {
@@ -616,7 +623,8 @@ function update_manager_install_form_submit($form, &$form_state) {
   // credentials and invoke update_authorize_run_install() indirectly with
   // whatever FileTransfer object authorize.php creates for us.
   else {
-    system_run_authorized('update_authorize_run_install', drupal_get_path('module', 'update') . '/update.authorize.inc', $arguments);
+    system_authorized_init('update_authorize_run_install', drupal_get_path('module', 'update') . '/update.authorize.inc', $arguments);
+    $form_state['redirect'] = system_authorized_get_url();
   }
 }
 
