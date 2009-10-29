@@ -1327,7 +1327,7 @@ function field_ui_get_destinations($destinations) {
   if ($destinations) {
     $query['destinations'] = $destinations;
   }
-  return array($path, $query);
+  return array($path, array('query' => $query));
 }
 
 /**
