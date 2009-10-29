@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.25 2009/10/29 07:14:58 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.26 2009/10/29 07:21:04 webchick Exp $
 
 /**
  * @file
@@ -1327,7 +1327,7 @@ function field_ui_get_destinations($destinations) {
   if ($destinations) {
     $query['destinations'] = $destinations;
   }
-  return array($path, $query);
+  return array($path, array('query' => $query));
 }
 
 /**
