@@ -523,6 +523,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     else {
       $instance = array(
         'field_name' => $field['field_name'],
+        'object_type' => $obj_type,
         'bundle' => $bundle,
         'label' => $values['label'],
         'widget' => array(
