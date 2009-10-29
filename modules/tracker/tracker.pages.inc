@@ -23,7 +23,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     }
   }
   else {
-    $query = db_select('tracker_node', 't')->extend('PagerDefault');
+    $query = db_select('tracker_node', 't', array('target' => 'slave'))->extend('PagerDefault');
   }
 
   // This array acts as a placeholder for the data selected later
@@ -39,7 +39,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
 
   if (!empty($nodes)) {
     // Now, get the data and put into the placeholder array
-    $result = db_query('SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.nid IN (:nids)', array(':nids' => array_keys($nodes)));
+    $result = db_query('SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.nid IN (:nids)', array(':nids' => array_keys($nodes)), array('target' => 'slave'));
     foreach ($result as $node) {
       $node->last_activity = $nodes[$node->nid]->changed;
       $nodes[$node->nid] = $node;

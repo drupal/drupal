@@ -69,7 +69,7 @@ function tracker_cron() {
   $batch_size = variable_get('tracker_batch_size', 1000);
   if ($max_nid > 0) {
     $last_nid = FALSE;
-    $result = db_query_range('SELECT nid, uid, status FROM {node} WHERE nid <= :max_nid ORDER BY nid DESC', 0, $batch_size, array(':max_nid' => $max_nid));
+    $result = db_query_range('SELECT nid, uid, status FROM {node} WHERE nid <= :max_nid ORDER BY nid DESC', 0, $batch_size, array(':max_nid' => $max_nid), array('target' => 'slave'));
 
     $count = 0;
 
@@ -104,7 +104,7 @@ function tracker_cron() {
         ))
         ->execute();
 
-      $query = db_select('comment', 'c');
+      $query = db_select('comment', 'c', array('target' => 'slave'));
       // Force PostgreSQL to do an implicit cast by adding 0.
       $query->addExpression('0 + :changed', 'changed', array(':changed' => $changed));
       $query->addField('c', 'status', 'published');
@@ -265,11 +265,11 @@ function _tracker_add($nid, $uid, $changed) {
  *  is the greatest.
  */
 function _tracker_calculate_changed($nid) {
-  $changed = db_query('SELECT changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
+  $changed = db_query('SELECT changed FROM {node} WHERE nid = :nid', array(':nid' => $nid), array('target' => 'slave'))->fetchField();
   $latest_comment = db_query_range('SELECT cid, changed FROM {comment} WHERE nid = :nid AND status = :status ORDER BY changed DESC', 0, 1, array(
     ':nid' => $nid,
     ':status' => COMMENT_PUBLISHED,
-  ))->fetchObject();
+  ), array('target' => 'slave'))->fetchObject();
   if ($latest_comment && $latest_comment->changed > $changed) {
     $changed = $latest_comment->changed;
   }
