@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.161 2009/10/16 03:01:54 dries Exp $
+// $Id: module.inc,v 1.162 2009/10/30 21:41:45 dries Exp $
 
 /**
  * @file
@@ -221,6 +221,8 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
     module_implements('', FALSE, TRUE);
     // Force to regenerate the stored list of hook implementations.
     registry_rebuild();
+    // Refresh the schema to include the new enabled module.
+    drupal_get_schema(NULL, TRUE);
 
     // If any modules were newly installed, execute the hook for them.
     if (!$disable_modules_installed_hook && !empty($modules_installed)) {
