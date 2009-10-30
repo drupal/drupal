@@ -221,6 +221,8 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
     module_implements('', FALSE, TRUE);
     // Force to regenerate the stored list of hook implementations.
     registry_rebuild();
+    // Refresh the schema to include the new enabled module.
+    drupal_get_schema(NULL, TRUE);
 
     // If any modules were newly installed, execute the hook for them.
     if (!$disable_modules_installed_hook && !empty($modules_installed)) {
