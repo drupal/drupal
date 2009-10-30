@@ -62,6 +62,11 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
       }
       foreach ($result as $module) {
         if (file_exists($module->filename)) {
+          // First call drupal_get_filename() to prime the static cache for
+          // later lookups of the module path. Since we've already queried for
+          // the filename and can pass that in as an argument, this avoids a
+          // database hit for every module when drupal_get_filename() is
+          // subsequently called by drupal_load().
           drupal_get_filename('module', $module->name, $module->filename);
           $list[$module->name] = $module->name;
         }
