@@ -134,14 +134,12 @@ function toolbar_get_menu_tree() {
   $tree = array();
   $admin_link = db_query("SELECT * FROM {menu_links} WHERE menu_name = 'management' AND module = 'system' AND link_path = 'admin'")->fetchAssoc();
   if ($admin_link) {
-    $tree = menu_tree_all_data('management', $admin_link);
+    // @todo Use a function like book_menu_subtree_data().
+    $tree = menu_tree_all_data('management', $admin_link, $admin_link['depth'] + 1);
     // The tree will be a sub-tree with the admin link as a single root item.
+    // @todo It is wrong to assume it's the last.
     $admin_link = array_pop($tree);
     $tree = $admin_link['below'] ? $admin_link['below'] : array();
-    foreach ($tree as $key => $item) {
-      // Get rid of subitems to have a leaner data structure.
-      unset($tree[$key]['below']);
-    }
   }
   return $tree;
 }
