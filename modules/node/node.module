@@ -1993,7 +1993,9 @@ function node_block_view($delta = '') {
  *   generated with passing an empty array, if no items are to be added
  *   to the feed.
  * @param $channel
- *   An associative array containing title, link, description and other keys.
+ *   An associative array containing title, link, description and other keys,
+ *   to be parsed by format_rss_channel() and format_xml_elements().
+ *   A list of channel elements can be found at the @link http://cyber.law.harvard.edu/rss/rss.html RSS 2.0 Specification. @endlink
  *   The link should be an absolute URL.
  */
 function node_feed($nids = FALSE, $channel = array()) {
@@ -2053,11 +2055,12 @@ function node_feed($nids = FALSE, $channel = array()) {
     'description' => variable_get('feed_description', ''),
     'language'    => $language->language
   );
+  $channel_extras = array_diff_key($channel, $channel_defaults);
   $channel = array_merge($channel_defaults, $channel);
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<rss version=\"" . $channel["version"] . "\" xml:base=\"" . $base_url . "\" " . drupal_attributes($namespaces) . ">\n";
-  $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language']);
+  $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language'], $channel_extras);
   $output .= "</rss>\n";
 
   drupal_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');

@@ -7,6 +7,36 @@
  */
 
 /**
+ * The current system version.
+ */
+define('VERSION', '7.0-dev');
+
+/**
+ * Core API compatibility.
+ */
+define('DRUPAL_CORE_COMPATIBILITY', '7.x');
+
+/**
+ * Minimum supported version of PHP.
+ */
+define('DRUPAL_MINIMUM_PHP',    '5.2.0');
+
+/**
+ * Minimum recommended value of PHP memory_limit.
+ */
+define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT',    '16M');
+
+/**
+ * Minimum supported version of MySQL, if it is used.
+ */
+define('DRUPAL_MINIMUM_MYSQL',  '5.0');
+
+/**
+ * Minimum supported version of PostgreSQL, if it is used.
+ */
+define('DRUPAL_MINIMUM_PGSQL',  '8.3');
+
+/**
  * Indicates that the item should never be removed unless explicitly told to
  * using cache_clear_all() with a cache ID.
  */
