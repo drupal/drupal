@@ -426,21 +426,11 @@ function _field_extra_weights_pre_render($elements) {
 }
 
 /**
- * Clear the cached information; called in several places when field
- * information is changed.
+ * Clear the field info and field date caches.
  */
-function field_cache_clear($rebuild_schema = FALSE) {
+function field_cache_clear() {
   cache_clear_all('*', 'cache_field', TRUE);
-
-  module_load_include('inc', 'field', 'field.info');
   field_info_cache_clear();
-
-  // Refresh the schema to pick up new information.
-  // TODO : if db storage gets abstracted out, we'll need to revisit how and when
-  // we refresh the schema...
-  if ($rebuild_schema) {
-    $schema = drupal_get_schema(NULL, TRUE);
-  }
 }
 
 /**

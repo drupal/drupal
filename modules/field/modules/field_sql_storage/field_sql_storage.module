@@ -213,6 +213,7 @@ function field_sql_storage_field_storage_create_field($field) {
   foreach ($schema as $name => $table) {
     db_create_table($name, $table);
   }
+  drupal_get_schema(NULL, TRUE);
 }
 
 /**
@@ -269,6 +270,7 @@ function field_sql_storage_field_storage_update_field($field, $prior_field, $has
       }
     }
   }
+  drupal_get_schema(NULL, TRUE);
 }
 
 /**
