@@ -1,5 +1,5 @@
 <?php
-// $Id: system.queue.inc,v 1.6 2009/10/14 10:59:15 dries Exp $
+// $Id: system.queue.inc,v 1.7 2009/10/31 13:53:48 dries Exp $
 
 /**
  * @file
@@ -158,15 +158,6 @@ interface DrupalQueueInterface {
  * Default queue implementation.
  */
 class SystemQueue implements DrupalQueueInterface {
-  /**
-   * Our internal consumer ID for this queue instance.
-   *
-   * This is created lazily when we start consuming items with claimItem().
-   *
-   * @var integer
-   */
-  protected $consumerId;
-
   /**
    * The name of the queue this instance is working with.
    *
