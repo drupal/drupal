@@ -27,6 +27,9 @@ Addison Berry 'add1sun' <http://drupal.org/user/65088>
 FILE MANAGEMENT SYSTEM
 Andrew Morton 'drewish' <http://drupal.org/user/34869>
 
+FILTER SYSTEM
+Daniel F. Kudwien 'sun' <http://drupal.org/user/54136>
+
 FORM SYSTEM
 Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
