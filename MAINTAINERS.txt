@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.35 2009/10/09 07:58:16 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.36 2009/10/31 07:42:57 webchick Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -26,6 +26,9 @@ Addison Berry 'add1sun' <http://drupal.org/user/65088>
 
 FILE MANAGEMENT SYSTEM
 Andrew Morton 'drewish' <http://drupal.org/user/34869>
+
+FILTER SYSTEM
+Daniel F. Kudwien 'sun' <http://drupal.org/user/54136>
 
 FORM SYSTEM
 Károly Négyesi 'chx' <http://drupal.org/user/9446>
