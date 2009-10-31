@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1073 2009/10/23 22:24:19 webchick Exp $
+// $Id: user.module,v 1.1074 2009/10/31 18:04:01 dries Exp $
 
 /**
  * @file
@@ -721,7 +721,7 @@ function user_permission() {
     ),
     'administer users' => array(
       'title' => t('Administer users'),
-      'description' => t('Manage or block users, and manage their role assignments.'),
+      'description' => t('Manage or block users, and manage their role assignments. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'access user profiles' => array(
       'title' => t('Access user profiles'),
