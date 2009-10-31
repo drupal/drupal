@@ -477,7 +477,7 @@ function theme_field_formatter_image($variables) {
  */
 function theme_field_formatter_image_link_content($variables) {
   $element = $variables['element'];
-  list($id, $vid, $bundle) = field_extract_ids($element['#object_type'], $element['#object']);
+  list($id, $vid, $bundle) = entity_extract_ids($element['#object_type'], $element['#object']);
   return l(theme('field_formatter_image', $variables), $element['#object_type'] . '/' . $id, array('html' => TRUE));
 }
 

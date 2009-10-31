@@ -258,7 +258,7 @@ function field_create_field($field) {
   // Disallow reserved field names. This can't prevent all field name
   // collisions with existing object properties, but some is better
   // than none.
-  foreach (field_info_fieldable_types() as $type => $info) {
+  foreach (entity_get_info() as $type => $info) {
     if (in_array($field['field_name'], $info['object keys'])) {
       throw new FieldException(t('Attempt to create field name %name which is reserved by entity type %type.', array('%name' => $field['field_name'], '%type' => $type)));
     }
@@ -387,7 +387,7 @@ function field_update_field($field) {
     throw new FieldException('Attempt to update a non-existent field.');
   }
 
-  // Use the prior field values for anything not specifically set by the new 
+  // Use the prior field values for anything not specifically set by the new
   // field to be sure that all values are set.
   $field += $prior_field;
   $field['settings'] += $prior_field['settings'];
@@ -441,9 +441,9 @@ function field_update_field($field) {
 
   // Clear caches
   field_cache_clear(TRUE);
-  
+
   // Invoke external hooks after the cache is cleared for API consistency.
-  module_invoke_all('field_update_field', $field, $prior_field, $has_data);  
+  module_invoke_all('field_update_field', $field, $prior_field, $has_data);
 }
 
 /**

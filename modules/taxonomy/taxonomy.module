@@ -1162,7 +1162,7 @@ function _taxonomy_clean_field_cache($term) {
 
   // Determine object types that are not cacheable.
   $obj_types = array();
-  foreach (field_info_fieldable_types() as $obj_type => $info) {
+  foreach (entity_get_info() as $obj_type => $info) {
     if (isset($info['cacheable']) && !$info['cacheable']) {
       $obj_types[] = $obj_type;
     }

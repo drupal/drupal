@@ -95,7 +95,7 @@ function field_multilingual_content_languages() {
  *   TRUE, if the handler is allowed to manage field translations.
  */
 function field_multilingual_check_translation_handlers($obj_type, $handler = NULL) {
-  $obj_info = field_info_fieldable_types($obj_type);
+  $obj_info = entity_get_info($obj_type);
 
   if (isset($handler)) {
     return isset($obj_info['translation'][$handler]) && !empty($obj_info['translation'][$handler]);

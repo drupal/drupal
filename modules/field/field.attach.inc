@@ -181,7 +181,7 @@ function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $options
 
   // Iterate through the object's field instances.
   $return = array();
-  list(, , $bundle) = field_extract_ids($obj_type, $object);
+  list(, , $bundle) = entity_extract_ids($obj_type, $object);
 
   if ($options['deleted']) {
     $instances = field_read_instances(array('object_type' => $obj_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
@@ -298,7 +298,7 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
   // is deleted, so we reference field data via the
   // $object->$field_name property.
   foreach ($objects as $object) {
-    list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+    list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
 
     if ($options['deleted']) {
       $instances = field_read_field(array('bundle' => $bundle, array('include_deleted' => $options['deleted'])));
@@ -488,7 +488,7 @@ function field_attach_form($obj_type, $object, &$form, &$form_state, $langcode =
   $form += (array) _field_invoke_default('form', $obj_type, $object, $form, $form_state, $options);
 
   // Add custom weight handling.
-  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
   $form['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $form['#pre_render'][] = '_field_extra_weights_pre_render';
   $form['#extra_fields'] = field_extra_fields($bundle);
@@ -536,7 +536,7 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
   );
   $options += $default_options;
 
-  $info = field_info_fieldable_types($obj_type);
+  $info = entity_get_info($obj_type);
   // Only the most current revision of non-deleted fields for
   // cacheable fieldable types can be cached.
   $cache_read = $load_current && $info['cacheable'] && empty($options['deleted']);
@@ -591,7 +591,7 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
     // Collect the storage backends used by the remaining fields in the objects.
     $storages = array();
     foreach ($queried_objects as $obj) {
-      list($id, $vid, $bundle) = field_extract_ids($obj_type, $obj);
+      list($id, $vid, $bundle) = entity_extract_ids($obj_type, $obj);
       if ($options['deleted']) {
         $instances = field_read_instances(array('object_type' => $obj_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
       }
@@ -636,7 +636,7 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
     if ($cache_write) {
       foreach ($queried_objects as $id => $object) {
         $data = array();
-        list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+        list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
         $instances = field_info_instances($obj_type, $bundle);
         foreach ($instances as $instance) {
           $data[$instance['field_name']] = $queried_objects[$id]->{$instance['field_name']};
@@ -819,7 +819,7 @@ function field_attach_insert($obj_type, $object) {
   _field_invoke_default('insert', $obj_type, $object);
   _field_invoke('insert', $obj_type, $object);
 
-  list($id, $vid, $bundle, $cacheable) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle, $cacheable) = entity_extract_ids($obj_type, $object);
 
   // Let other modules act on inserting the object, accumulating saved
   // fields along the way.
@@ -865,7 +865,7 @@ function field_attach_insert($obj_type, $object) {
 function field_attach_update($obj_type, $object) {
   _field_invoke('update', $obj_type, $object);
 
-  list($id, $vid, $bundle, $cacheable) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle, $cacheable) = entity_extract_ids($obj_type, $object);
 
   // Let other modules act on updating the object, accumulating saved
   // fields along the way.
@@ -916,7 +916,7 @@ function field_attach_update($obj_type, $object) {
 function field_attach_delete($obj_type, $object) {
   _field_invoke('delete', $obj_type, $object);
 
-  list($id, $vid, $bundle, $cacheable) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle, $cacheable) = entity_extract_ids($obj_type, $object);
 
   // Collect the storage backends used by the fields in the objects.
   $storages = array();
@@ -955,7 +955,7 @@ function field_attach_delete($obj_type, $object) {
 function field_attach_delete_revision($obj_type, $object) {
   _field_invoke('delete_revision', $obj_type, $object);
 
-  list($id, $vid, $bundle, $cacheable) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle, $cacheable) = entity_extract_ids($obj_type, $object);
 
   // Collect the storage backends used by the fields in the objects.
   $storages = array();
@@ -1193,7 +1193,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
   $output = _field_invoke_default('view', $obj_type, $object, $build_mode, $null, $options);
 
   // Add custom weight handling.
-  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
   $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $output['#pre_render'][] = '_field_extra_weights_pre_render';
   $output['#extra_fields'] = field_extra_fields($bundle);
@@ -1229,7 +1229,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
  *   values.
  */
 function field_attach_preprocess($obj_type, $object, $element, &$variables) {
-  list(, , $bundle) = field_extract_ids($obj_type, $object);
+  list(, , $bundle) = entity_extract_ids($obj_type, $object);
 
   foreach (field_info_instances($obj_type, $bundle) as $instance) {
     $field_name = $instance['field_name'];

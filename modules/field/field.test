@@ -1789,7 +1789,7 @@ class FieldCrudTestCase extends FieldTestCase {
     $count = $query->execute()->fetchField();
     $this->assertEqual($count, 0, 'A field_config row for the field does not exist.');
   }
-    
+
   /**
    * Test reading back a field definition.
    */
@@ -1943,7 +1943,7 @@ class FieldCrudTestCase extends FieldTestCase {
   function testUpdateFieldType() {
     $field = array('field_name' => 'field_type', 'type' => 'number_decimal');
     $field = field_create_field($field);
-    
+
     $test_field = array('field_name' => 'field_type', 'type' => 'number_integer');
     try {
       field_update_field($test_field);
@@ -2463,7 +2463,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
   function testTranslatableFieldSaveLoad() {
     // Enable field translations for nodes.
     field_test_entity_info_translatable('node', TRUE);
-    $obj_info = field_info_fieldable_types('node');
+    $obj_info = entity_get_info('node');
     $this->assertTrue(count($obj_info['translation']), t('Nodes are translatable.'));
 
     // Prepare the field translations.
@@ -2472,7 +2472,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     $object = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
     $field_translations = array();
     $available_languages = field_multilingual_available_languages($obj_type, $this->field);
-    $this->assertTrue(count($available_languages) > 1, t('Field is translatable.')); 
+    $this->assertTrue(count($available_languages) > 1, t('Field is translatable.'));
     foreach ($available_languages as $langcode) {
       $field_translations[$langcode] = $this->_generateTestFieldValues($this->field['cardinality']);
     }
@@ -2529,7 +2529,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
   function _generateStubObjects($obj_type, $objects, $field_name = NULL) {
     $stubs = array();
     foreach ($objects as $obj) {
-      $stub = field_create_stub_entity($obj_type, field_extract_ids($obj_type, $obj));
+      $stub = entity_create_stub_entity($obj_type, entity_extract_ids($obj_type, $obj));
       if (isset($field_name)) {
         $stub->{$field_name} = $obj->{$field_name};
       }

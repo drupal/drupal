@@ -98,7 +98,7 @@ function field_test_entity_info_alter(&$entity_info) {
     $entity_info[$obj_type]['translation']['field_test'] = $translatable;
   }
   // Disable locale as a translation handler.
-  foreach (field_info_fieldable_types() as $obj_type => $info) {
+  foreach ($entity_info as $obj_type => $info) {
     $entity_info[$obj_type]['translation']['locale'] = FALSE;
   }
 }
@@ -674,7 +674,8 @@ function field_test_entity_info_translatable($obj_type = NULL, $translatable = N
   $stored_value = &drupal_static(__FUNCTION__, array());
   if (isset($obj_type)) {
     $stored_value[$obj_type] = $translatable;
-    _field_info_collate_types(TRUE);
+    drupal_static_reset('entity_get_info');
+    cache_clear_all('entity_info', 'cache');
   }
   return $stored_value;
 }
@@ -798,7 +799,7 @@ function field_test_field_storage_load($obj_type, $objects, $age, $fields, $opti
 function field_test_field_storage_write($obj_type, $object, $op, $fields) {
   $data = _field_test_storage_data();
 
-  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
 
   foreach ($fields as $field_id) {
     $field = field_info_field_by_id($field_id);
@@ -866,7 +867,7 @@ function field_test_field_storage_write($obj_type, $object, $op, $fields) {
  * Implement hook_field_storage_delete().
  */
 function field_test_field_storage_delete($obj_type, $object, $fields) {
-  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
 
   // Note: reusing field_test_storage_purge(), like field_sql_storage.module
   // does, is highly inefficient in our case...
@@ -884,7 +885,7 @@ function field_test_field_storage_delete($obj_type, $object, $fields) {
 function field_test_field_storage_purge($obj_type, $object, $field, $instance) {
   $data = _field_test_storage_data();
 
-  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
 
   $field_data = &$data[$field['id']];
   foreach (array('current', 'revisions') as $sub_table) {
@@ -904,7 +905,7 @@ function field_test_field_storage_purge($obj_type, $object, $field, $instance) {
 function field_test_field_storage_delete_revision($obj_type, $object, $fields) {
   $data = _field_test_storage_data();
 
-  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
   foreach ($fields as $field_id) {
     $field_data = &$data[$field_id];
     foreach (array('current', 'revisions') as $sub_table) {
@@ -1000,11 +1001,11 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
           $cursor++;
           // If querying all revisions and the entity type has revisions, we need
           // to key the results by revision_ids.
-          $entity_type = field_info_fieldable_types($row->type);
+          $entity_type = entity_get_info($row->type);
           $id = ($load_current || empty($entity_type['object keys']['revision'])) ? $row->entity_id : $row->revision_id;
 
           if (!isset($return[$row->type][$id])) {
-            $return[$row->type][$id] = field_create_stub_entity($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
+            $return[$row->type][$id] = entity_create_stub_entity($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
             $obj_count++;
           }
         }

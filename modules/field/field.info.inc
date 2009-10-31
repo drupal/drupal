@@ -24,6 +24,11 @@
  * are affected.
  */
 function field_info_cache_clear() {
+  // @todo: Remove this when field_attach_*_bundle() bundle management
+  // functions are moved to the entity API.
+  drupal_static_reset('entity_get_info');
+  cache_clear_all('entity_info', 'cache');
+
   _field_info_collate_types(TRUE);
   drupal_static_reset('field_build_modes');
   _field_info_collate_fields(TRUE);
@@ -53,12 +58,6 @@ function field_info_cache_clear() {
  * formatter_type.
  *   * label, field types, behaviors: from hook_field_formatter_info()
  *   * module: module that exposes the formatter type
-
- * fieldable types: array of hook_entity_info() results, keyed by entity_type.
- *   * name, id key, revision key, bundle key, cacheable, bundles: from
- *     hook_entity_info()
- *   * module: module that exposes the entity type
- * @TODO use entity_get_info().
  */
 function _field_info_collate_types($reset = FALSE) {
   static $info;
@@ -79,7 +78,6 @@ function _field_info_collate_types($reset = FALSE) {
         'widget types' => array(),
         'formatter types' => array(),
         'storage types' => array(),
-        'fieldable types' => array(),
       );
 
       // Populate field types.
@@ -138,34 +136,6 @@ function _field_info_collate_types($reset = FALSE) {
         }
       }
       drupal_alter('field_storage_info', $info['storage types']);
-
-      // Populate information about 'fieldable' entities.
-      foreach (module_implements('entity_info') as $module) {
-        $entities = (array) module_invoke($module, 'entity_info');
-        foreach ($entities as $name => $entity_info) {
-          if (!empty($entity_info['fieldable'])) {
-            // Provide defaults.
-            $entity_info += array(
-              'cacheable' => TRUE,
-              'translation' => array(),
-              'bundles' => array(),
-            );
-            $entity_info['object keys'] += array(
-              'revision' => '',
-              'bundle' => '',
-            );
-            // If no bundle key provided, then we assume a single bundle, named
-            // after the type of the object. Make sure the bundle created
-            // has the human-readable name we need for bundle messages.
-            if (empty($entity_info['object keys']['bundle']) && empty($entity_info['bundles'])) {
-              $entity_info['bundles'] = array($name => array('label' => $entity_info['label']));
-            }
-            $info['fieldable types'][$name] = $entity_info;
-            $info['fieldable types'][$name]['module'] = $module;
-          }
-        }
-      }
-      drupal_alter('entity_info', $info['fieldable types']);
 
       cache_set('field_info_types', $info, 'cache_field');
     }
@@ -458,29 +428,6 @@ function field_info_storage_types($storage_type = NULL) {
 }
 
 /**
- * Return hook_fieldable_info() data.
- *
- * @param $obj_type
- *   (optional) A fieldable type name. If ommitted, all fieldable types will be
- *   returned.
- * @return
- *   Either a fieldable type description, as provided by hook_fieldable_info(),
- *   or an array of all existing fieldable types, keyed by fieldable type name.
- */
-function field_info_fieldable_types($obj_type = NULL) {
-  $info = _field_info_collate_types();
-  $fieldable_types = $info['fieldable types'];
-  if ($obj_type) {
-    if (isset($fieldable_types[$obj_type])) {
-      return $fieldable_types[$obj_type];
-    }
-  }
-  else {
-    return $fieldable_types;
-  }
-}
-
-/**
  * Return information about existing bundles.
  *
  * @param $obj_type
@@ -491,15 +438,15 @@ function field_info_fieldable_types($obj_type = NULL) {
  *   keyed by object type.
  */
 function field_info_bundles($obj_type = NULL) {
-  $info = _field_info_collate_types();
+  $info = entity_get_info();
 
   if ($obj_type) {
-    return isset($info['fieldable types'][$obj_type]['bundles']) ? $info['fieldable types'][$obj_type]['bundles'] : array();
+    return isset($info[$obj_type]['bundles']) ? $info[$obj_type]['bundles'] : array();
   }
 
   $bundles = array();
-  foreach ($info['fieldable types'] as $type => $fieldable_info) {
-    $bundles[$type] = $fieldable_info['bundles'];
+  foreach ($info as $type => $entity_info) {
+    $bundles[$type] = $entity_info['bundles'];
   }
   return $bundles;
 }

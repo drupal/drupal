@@ -267,7 +267,7 @@ function file_field_update($obj_type, $object, $field, $instance, $langcode, &$i
   }
 
   // Delete items from original object.
-  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
   $load_function = $obj_type . '_load';
 
   $original = $load_function($id);
@@ -287,7 +287,7 @@ function file_field_update($obj_type, $object, $field, $instance, $langcode, &$i
  * Implement hook_field_delete().
  */
 function file_field_delete($obj_type, $object, $field, $instance, $langcode, &$items) {
-  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
   foreach ($items as $delta => $item) {
     // For hook_file_references(), remember that this is being deleted.
     $item['file_field_name'] = $field['field_name'];

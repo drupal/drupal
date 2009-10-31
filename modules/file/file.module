@@ -858,7 +858,7 @@ function file_icon_map($file) {
  */
 function file_get_file_reference_count($file, $field = NULL, $field_type = 'file') {
   $fields = field_info_fields(NULL, $field, $field_type);
-  $types = field_info_fieldable_types();
+  $types = entity_get_info();
   $reference_count = 0;
 
   foreach ($fields as $field) {
@@ -875,7 +875,7 @@ function file_get_file_reference_count($file, $field = NULL, $field_type = 'file
       // If deleting the entire piece of content, decrement references.
       if (isset($file->file_field_type) && isset($file->file_field_id)) {
         if ($file->file_field_type == $obj_type) {
-          $info = field_info_fieldable_types($obj_type);
+          $info = entity_get_info($obj_type);
           $id = $types[$obj_type]['object keys']['id'];
           foreach ($type_references as $reference) {
             if ($file->file_field_id == $reference->$id) {

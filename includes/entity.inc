@@ -68,7 +68,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
     $this->idKey = $this->entityInfo['object keys']['id'];
 
     // Check if the entity type supports revisions.
-    if (isset($this->entityInfo['object keys']['revision'])) {
+    if (!empty($this->entityInfo['object keys']['revision'])) {
       $this->revisionKey = $this->entityInfo['object keys']['revision'];
       $this->revisionTable = $this->entityInfo['revision table'];
     }

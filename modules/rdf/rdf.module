@@ -310,7 +310,7 @@ function rdf_entity_info_alter(&$entity_info) {
 function rdf_entity_load($entities, $type) {
   foreach ($entities as $entity) {
     // Extracts the bundle of the entity being loaded.
-    list($id, $vid, $bundle) = field_extract_ids($type, $entity);
+    list($id, $vid, $bundle) = entity_extract_ids($type, $entity);
     $entity->rdf_mapping = rdf_mapping_load($type, $bundle);
   }
 }

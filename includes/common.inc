@@ -5964,7 +5964,20 @@ function entity_get_info($entity_type = NULL) {
           'controller class' => 'DrupalDefaultEntityController',
           'static cache' => TRUE,
           'load hook' => $name . '_load',
+          'bundles' => array(),
+          'object keys' => array(),
+          'cacheable' => TRUE,
+          'translation' => array(),
         );
+        $entity_info[$name]['object keys'] += array(
+          'revision' => '',
+          'bundle' => '',
+        );
+        // If no bundle key is provided, assume a single bundle, named after
+        // the entity type.
+        if (empty($entity_info[$name]['object keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
+          $entity_info[$name]['bundles'] = array($name => array('label' => $entity_info[$name]['label']));
+        }
       }
       // Let other modules alter the entity info.
       drupal_alter('entity_info', $entity_info);
@@ -5973,6 +5986,63 @@ function entity_get_info($entity_type = NULL) {
   }
 
   return empty($entity_type) ? $entity_info : $entity_info[$entity_type];
+}
+
+/**
+ * Helper function to extract id, vid, and bundle name from an entity.
+ *
+ * @param $entity_type
+ *   The entity type; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The entity from which to extract values.
+ * @return
+ *   A numerically indexed array (not a hash table) containing these
+ *   elements:
+ *
+ *   0: primary id of the entity
+ *   1: revision id of the entity, or NULL if $entity_type is not versioned
+ *   2: bundle name of the entity
+ *   3: whether $entity_type's fields should be cached (TRUE/FALSE)
+ */
+function entity_extract_ids($entity_type, $entity) {
+  $info = entity_get_info($entity_type);
+  // Objects being created might not have id/vid yet.
+  $id = isset($entity->{$info['object keys']['id']}) ? $entity->{$info['object keys']['id']} : NULL;
+  $vid = ($info['object keys']['revision'] && isset($entity->{$info['object keys']['revision']})) ? $entity->{$info['object keys']['revision']} : NULL;
+  // If no bundle key provided, then we assume a single bundle, named after the
+  // entity type.
+  $bundle = $info['object keys']['bundle'] ? $entity->{$info['object keys']['bundle']} : $entity_type;
+  $cacheable = $info['cacheable'];
+  return array($id, $vid, $bundle, $cacheable);
+}
+
+/**
+ * Helper function to assemble an object structure with initial ids.
+ *
+ * This function can be seen as reciprocal to entity_extract_ids().
+ *
+ * @param $entity_type
+ *   The entity type; e.g. 'node' or 'user'.
+ * @param $ids
+ *   A numerically indexed array, as returned by entity_extract_ids(),
+ *   containing these elements:
+ *   0: primary id of the entity
+ *   1: revision id of the entity, or NULL if $entity_type is not versioned
+ *   2: bundle name of the entity
+ * @return
+ *   An entity structure, initialized with the ids provided.
+ */
+function entity_create_stub_entity($entity_type, $ids) {
+  $entity = new stdClass();
+  $info = entity_get_info($entity_type);
+  $entity->{$info['object keys']['id']} = $ids[0];
+  if (isset($info['object keys']['revision']) && !is_null($ids[1])) {
+    $entity->{$info['object keys']['revision']} = $ids[1];
+  }
+  if ($info['object keys']['bundle']) {
+    $entity->{$info['object keys']['bundle']} = $ids[2];
+  }
+  return $entity;
 }
 
 /**

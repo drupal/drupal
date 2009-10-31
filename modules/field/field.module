@@ -506,7 +506,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
     $field_type = field_info_field_types($field['type']);
 
     // We need $field, $instance, $obj_type, $object to be able to display a value...
-    list(, , $bundle) = field_extract_ids($obj_type, $object);
+    list(, , $bundle) = entity_extract_ids($obj_type, $object);
     $instance = field_info_instance($obj_type, $field['field_name'], $bundle);
 
     $display = array(
@@ -655,36 +655,7 @@ function field_access($op, $field, $obj_type, $object = NULL, $account = NULL) {
 }
 
 /**
- * Helper function to extract id, vid, and bundle name from an object.
- *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
- *   The object from which to extract values.
- * @return
- *   A numerically indexed array (not a hash table) containing these
- *   elements:
- *
- *   0: primary id of the object
- *   1: revision id of the object, or NULL if $obj_type is not versioned
- *   2: bundle name of the object
- *   3: whether $obj_type's fields should be cached (TRUE/FALSE)
- */
-function field_extract_ids($obj_type, $object) {
-  // TODO D7 : prevent against broken 3rd party $node without 'type'.
-  $info = field_info_fieldable_types($obj_type);
-  // Objects being created might not have id/vid yet.
-  $id = isset($object->{$info['object keys']['id']}) ? $object->{$info['object keys']['id']} : NULL;
-  $vid = ($info['object keys']['revision'] && isset($object->{$info['object keys']['revision']})) ? $object->{$info['object keys']['revision']} : NULL;
-  // If no bundle key provided, then we assume a single bundle, named after the
-  // type of the object.
-  $bundle = $info['object keys']['bundle'] ? $object->{$info['object keys']['bundle']} : $obj_type;
-  $cacheable = $info['cacheable'];
-  return array($id, $vid, $bundle, $cacheable);
-}
-
-/**
- * Helper function to extract id, vid, and bundle name from an object.
+ * Helper function to extract the bundle name of from a bundle object.
  *
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
@@ -699,39 +670,10 @@ function field_extract_bundle($obj_type, $bundle) {
     return $bundle;
   }
 
-  $info = field_info_fieldable_types($obj_type);
+  $info = entity_get_info($obj_type);
   if (is_object($bundle) && isset($info['bundle keys']['bundle']) && isset($bundle->{$info['bundle keys']['bundle']})) {
     return $bundle->{$info['bundle keys']['bundle']};
   }
-}
-
-/**
- * Helper function to assemble an object structure with initial ids.
- *
- * This function can be seen as reciprocal to field_extract_ids().
- *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $ids
- *   A numerically indexed array, as returned by field_extract_ids(),
- *   containing these elements:
- *   0: primary id of the object
- *   1: revision id of the object, or NULL if $obj_type is not versioned
- *   2: bundle name of the object
- * @return
- *   An $object structure, initialized with the ids provided.
- */
-function field_create_stub_entity($obj_type, $ids) {
-  $object = new stdClass();
-  $info = field_info_fieldable_types($obj_type);
-  $object->{$info['object keys']['id']} = $ids[0];
-  if (isset($info['object keys']['revision']) && !is_null($ids[1])) {
-    $object->{$info['object keys']['revision']} = $ids[1];
-  }
-  if ($info['object keys']['bundle']) {
-    $object->{$info['object keys']['bundle']} = $ids[2];
-  }
-  return $object;
 }
 
 /**
@@ -741,7 +683,7 @@ function field_create_stub_entity($obj_type, $ids) {
  */
 function template_preprocess_field(&$variables) {
   $element = $variables['element'];
-  list(, , $bundle) = field_extract_ids($element['#object_type'], $element['#object']);
+  list(, , $bundle) = entity_extract_ids($element['#object_type'], $element['#object']);
   $instance = field_info_instance($element['#object_type'], $element['#field_name'], $bundle);
   $field = field_info_field($element['#field_name']);
 
