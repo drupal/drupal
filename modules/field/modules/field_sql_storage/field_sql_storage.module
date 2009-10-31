@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.30 2009/10/31 16:06:35 dries Exp $
+// $Id: field_sql_storage.module,v 1.31 2009/10/31 18:00:48 dries Exp $
 
 /**
  * @file
@@ -213,6 +213,7 @@ function field_sql_storage_field_storage_create_field($field) {
   foreach ($schema as $name => $table) {
     db_create_table($name, $table);
   }
+  drupal_get_schema(NULL, TRUE);
 }
 
 /**
@@ -269,6 +270,7 @@ function field_sql_storage_field_storage_update_field($field, $prior_field, $has
       }
     }
   }
+  drupal_get_schema(NULL, TRUE);
 }
 
 /**
