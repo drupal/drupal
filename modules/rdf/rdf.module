@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.module,v 1.5 2009/10/23 22:24:17 webchick Exp $
+// $Id: rdf.module,v 1.6 2009/10/31 16:06:36 dries Exp $
 
 /**
  * @file
@@ -310,7 +310,7 @@ function rdf_entity_info_alter(&$entity_info) {
 function rdf_entity_load($entities, $type) {
   foreach ($entities as $entity) {
     // Extracts the bundle of the entity being loaded.
-    list($id, $vid, $bundle) = field_extract_ids($type, $entity);
+    list($id, $vid, $bundle) = entity_extract_ids($type, $entity);
     $entity->rdf_mapping = rdf_mapping_load($type, $bundle);
   }
 }

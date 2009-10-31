@@ -1,5 +1,5 @@
 <?php
-// $Id: field.default.inc,v 1.21 2009/10/16 03:21:23 webchick Exp $
+// $Id: field.default.inc,v 1.22 2009/10/31 16:06:35 dries Exp $
 
 /**
  * @file
@@ -83,7 +83,7 @@ function field_default_prepare_view($obj_type, $objects, $field, $instances, $la
  * @see field_attach_view()
  */
 function field_default_view($obj_type, $object, $field, $instance, $langcode, $items, $build_mode) {
-  list($id, $vid, $bundle) = field_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
 
   $addition = array();
   $display = $instance['display'][$build_mode];

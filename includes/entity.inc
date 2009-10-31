@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.2 2009/10/16 03:47:13 webchick Exp $
+// $Id: entity.inc,v 1.3 2009/10/31 16:06:35 dries Exp $
 
 /**
  * Interface for entity controller classes.
@@ -68,7 +68,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
     $this->idKey = $this->entityInfo['object keys']['id'];
 
     // Check if the entity type supports revisions.
-    if (isset($this->entityInfo['object keys']['revision'])) {
+    if (!empty($this->entityInfo['object keys']['revision'])) {
       $this->revisionKey = $this->entityInfo['object keys']['revision'];
       $this->revisionTable = $this->entityInfo['revision table'];
     }

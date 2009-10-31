@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.2 2009/10/17 02:14:52 dries Exp $
+// $Id: image.field.inc,v 1.3 2009/10/31 16:06:36 dries Exp $
 
 /**
  * @file
@@ -477,7 +477,7 @@ function theme_field_formatter_image($variables) {
  */
 function theme_field_formatter_image_link_content($variables) {
   $element = $variables['element'];
-  list($id, $vid, $bundle) = field_extract_ids($element['#object_type'], $element['#object']);
+  list($id, $vid, $bundle) = entity_extract_ids($element['#object_type'], $element['#object']);
   return l(theme('field_formatter_image', $variables), $element['#object_type'] . '/' . $id, array('html' => TRUE));
 }
 
