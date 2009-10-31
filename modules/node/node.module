@@ -90,7 +90,7 @@ function node_help($path, $arg) {
       return ' '; // Return a non-null value so that the 'more help' link is shown.
 
     case 'admin/structure/types/add':
-      return '<p>' . t('Each piece of content is of a specific content type. Each <em>content type</em> can have different fields, behaviors, and permissions assigned to it.') . '</p>';
+      return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to it.') . '</p>';
 
     case 'admin/structure/types/manage/' . $arg[3] . '/fields':
       return '<p>' . t('This form lets you add, edit, and arrange fields within the %type content type.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
