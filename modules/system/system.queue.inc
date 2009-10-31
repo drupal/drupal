@@ -159,15 +159,6 @@ interface DrupalQueueInterface {
  */
 class SystemQueue implements DrupalQueueInterface {
   /**
-   * Our internal consumer ID for this queue instance.
-   *
-   * This is created lazily when we start consuming items with claimItem().
-   *
-   * @var integer
-   */
-  protected $consumerId;
-
-  /**
    * The name of the queue this instance is working with.
    *
    * @var string
