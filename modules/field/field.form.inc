@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.29 2009/10/15 12:44:34 dries Exp $
+// $Id: field.form.inc,v 1.30 2009/10/31 14:58:41 webchick Exp $
 
 /**
  * @file
@@ -119,7 +119,6 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
  * - drag-n-drop value reordering
  */
 function field_multiple_value_form($field, $instance, $langcode, $items, &$form, &$form_state) {
-  $field = field_info_field($instance['field_name']);
   $field_name = $field['field_name'];
 
   switch ($field['cardinality']) {
