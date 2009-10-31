@@ -631,7 +631,9 @@ function drupal_settings_initialize() {
  *   The filename of the requested item.
  */
 function drupal_get_filename($type, $name, $filename = NULL) {
-  $files = &drupal_static(__FUNCTION__, array());
+  // The location of files will not change during the request, so do not use
+  // drupal_static().
+  static $files = array();
 
   if (!isset($files[$type])) {
     $files[$type] = array();
@@ -834,7 +836,9 @@ function bootstrap_invoke_all($hook) {
  *   TRUE if the item is loaded or has already been loaded.
  */
 function drupal_load($type, $name) {
-  $files = &drupal_static(__FUNCTION__, array());
+  // Once a file is included this can't be reversed during a request so do not
+  // use drupal_static() here.
+  static $files = array();
 
   if (isset($files[$type][$name])) {
     return TRUE;
