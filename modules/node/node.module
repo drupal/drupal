@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1155 2009/10/30 22:33:35 dries Exp $
+// $Id: node.module,v 1.1156 2009/10/31 17:57:49 dries Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@ function node_help($path, $arg) {
       return ' '; // Return a non-null value so that the 'more help' link is shown.
 
     case 'admin/structure/types/add':
-      return '<p>' . t('Each piece of content is of a specific content type. Each <em>content type</em> can have different fields, behaviors, and permissions assigned to it.') . '</p>';
+      return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to it.') . '</p>';
 
     case 'admin/structure/types/manage/' . $arg[3] . '/fields':
       return '<p>' . t('This form lets you add, edit, and arrange fields within the %type content type.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
