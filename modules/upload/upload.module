@@ -692,7 +692,7 @@ function upload_js() {
     '#tree' => FALSE,
     '#parents' => array(),
   );
-  $form_state = array('submitted' => FALSE, 'programmed' => FALSE);
+  $form_state = array('submitted' => FALSE, 'programmed' => FALSE, 'process_input' => FALSE, 'complete form' => FALSE);
   $form_id = 'upload_js';
   drupal_alter('form', $form, $form_state, $form_id);
   $form = form_builder('upload_js', $form, $form_state);
