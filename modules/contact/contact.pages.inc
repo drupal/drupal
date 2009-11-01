@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.35 2009/10/18 11:34:44 dries Exp $
+// $Id: contact.pages.inc,v 1.36 2009/11/01 21:26:44 webchick Exp $
 
 /**
  * @file
@@ -64,7 +64,7 @@ function contact_site_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Your name'),
     '#maxlength' => 255,
-    '#default_value' => $user->uid ? $user->name : '',
+    '#default_value' => $user->uid ? format_username($user) : '',
     '#required' => TRUE,
   );
   $form['mail'] = array(
@@ -180,7 +180,7 @@ function contact_personal_form($form, &$form_state, stdClass $recipient) {
     return drupal_access_denied();
   }
 
-  drupal_set_title(t('Contact @username', array('@username' => $recipient->name)), PASS_THROUGH);
+  drupal_set_title(t('Contact @username', array('@username' => format_username($recipient))), PASS_THROUGH);
 
   if (!$user->uid) {
     $form['#attached']['library'][] = array('system', 'cookie');
@@ -196,7 +196,7 @@ function contact_personal_form($form, &$form_state, stdClass $recipient) {
     '#type' => 'textfield',
     '#title' => t('Your name'),
     '#maxlength' => 255,
-    '#default_value' => $user->uid ? $user->name : '',
+    '#default_value' => $user->uid ? format_username($user) : '',
     '#required' => TRUE,
   );
   $form['mail'] = array(

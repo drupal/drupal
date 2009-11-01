@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.23 2009/10/09 00:59:55 dries Exp $
+// $Id: blog.pages.inc,v 1.24 2009/11/01 21:26:44 webchick Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function blog_page_user($account) {
   global $user;
 
-  drupal_set_title($title = t("@name's blog", array('@name' => $account->name)), PASS_THROUGH);
+  drupal_set_title($title = t("@name's blog", array('@name' => format_username($account))), PASS_THROUGH);
 
   $items = array();
 
@@ -123,7 +123,7 @@ function blog_feed_user($account) {
     ->execute()
     ->fetchCol();
 
-  $channel['title'] = t("!name's blog", array('!name' => $account->name));
+  $channel['title'] = t("!name's blog", array('!name' => format_username($account)));
   $channel['link'] = url('blog/' . $account->uid, array('absolute' => TRUE));
 
   node_feed($nids, $channel);

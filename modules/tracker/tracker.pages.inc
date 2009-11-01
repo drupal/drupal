@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.27 2009/10/29 07:18:55 webchick Exp $
+// $Id: tracker.pages.inc,v 1.28 2009/11/01 21:26:44 webchick Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
       // When viewed from user/%user/track, display the name of the user
       // as page title -- the tab title remains Track so this needs to be done
       // here and not in the menu definition.
-      drupal_set_title($account->name);
+      drupal_set_title(format_username($account));
     }
   }
   else {

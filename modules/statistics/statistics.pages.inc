@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.pages.inc,v 1.19 2009/10/29 07:17:22 webchick Exp $
+// $Id: statistics.pages.inc,v 1.20 2009/11/01 21:26:44 webchick Exp $
 
 /**
  * @file
@@ -83,7 +83,7 @@ function statistics_user_tracker() {
       $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 3));
     }
 
-    drupal_set_title($account->name);
+    drupal_set_title(format_username($account));
     $build['statistics_table'] = array(
       '#theme' => 'table',
       '#header' => $header,

@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.21 2009/09/28 22:22:54 dries Exp $
+// $Id: php.module,v 1.22 2009/11/01 21:26:44 webchick Exp $
 
 /**
  * @file
@@ -105,7 +105,7 @@ print t(\'Welcome visitor! Thank you for visiting.\');
 <pre>
 global $user;
 if ($user->uid) {
-  print t(\'Welcome @name! Thank you for visiting.\', array(\'@name\' => $user->name));
+  print t(\'Welcome @name! Thank you for visiting.\', array(\'@name\' => format_username($user)));
 }
 else {
   print t(\'Welcome visitor! Thank you for visiting.\');
