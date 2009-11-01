@@ -606,7 +606,7 @@ function aggregator_refresh($feed) {
           'image' => empty($feed->image) ? '' : $feed->image,
           'hash' => md5($feed->source_string),
           'etag' => empty($feed->etag) ? '' : $feed->etag,
-          'modified' => empty($feed->modified) ? '' : $feed->modified,
+          'modified' => empty($feed->modified) ? 0 : $feed->modified,
         ))
         ->execute();
 
