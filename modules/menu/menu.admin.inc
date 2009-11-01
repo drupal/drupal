@@ -355,7 +355,7 @@ function menu_edit_item_validate($form, &$form_state) {
     drupal_set_message(t('The menu system stores system paths only, but will use the URL alias for display. %link_path has been stored as %normal_path', array('%link_path' => $item['link_path'], '%normal_path' => $normal_path)));
     $item['link_path'] = $normal_path;
   }
-  if (!menu_path_is_external($item['link_path'])) {
+  if (!url_is_external($item['link_path'])) {
     $parsed_link = parse_url($item['link_path']);
     if (isset($parsed_link['query'])) {
       $item['options']['query'] = $parsed_link['query'];

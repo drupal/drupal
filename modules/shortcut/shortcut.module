@@ -482,7 +482,7 @@ function shortcut_valid_link($path) {
     $path = $normal_path;
   }
   // Only accept links that correspond to valid paths on the site itself.
-  return !menu_path_is_external($path) && menu_get_item($path);
+  return !url_is_external($path) && menu_get_item($path);
 }
 
 /**

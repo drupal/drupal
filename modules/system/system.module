@@ -1504,10 +1504,19 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
 
 /**
  * Return the URL for the authorize.php script.
+ *
+ * @param array $options
+ *   Optional array of options to pass to url().
+ * @return
+ *   The full URL to authorize.php, using https if available.
  */
-function system_authorized_get_url() {
+function system_authorized_get_url(array $options = array()) {
   global $base_url;
-  return $base_url . '/authorize.php';
+  // Force https if available, regardless of what the caller specifies.
+  $options['https'] = TRUE;
+  // We prefix with $base_url so we get a full path even if clean URLs are
+  // disabled.
+  return url($base_url . '/authorize.php', $options);
 }
 
 /**
@@ -1518,6 +1527,17 @@ function system_authorized_get_url() {
 function system_authorized_run($callback, $file, $arguments = array(), $page_title = NULL) {
   system_authorized_init($callback, $file, $arguments, $page_title);
   drupal_goto(system_authorized_get_url());
+}
+
+/**
+ * Use authorize.php to run batch_process().
+ *
+ * @see batch_process()
+ */
+function system_authorized_batch_process() {
+  $finish_url = system_authorized_get_url();
+  $process_url = system_authorized_get_url(array('query' => array('batch' => '1')));
+  batch_process($finish_url, $process_url);
 }
 
 /**

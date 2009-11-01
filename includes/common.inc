@@ -2375,10 +2375,10 @@ function format_username($account) {
  *   - 'alias': Defaults to FALSE. Whether the given path is a URL alias
  *     already.
  *   - 'external': Whether the given path is an external URL.
- *   - 'language': An optional language object. Used to build the URL to link to
- *     and look up the proper alias for the link.
+ *   - 'language': An optional language object. Used to build the URL to link
+ *     to and look up the proper alias for the link.
  *   - 'https': Whether this URL should point to a secure location. If not
- *     specified, the current scheme is used, so the user stays on http or https
+ *     defined, the current scheme is used, so the user stays on http or https
  *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
  *     only be enforced when the variable 'https' is set to TRUE.
  *   - 'base_url': Only used internally, to modify the base URL when a language
@@ -2401,14 +2401,15 @@ function url($path = NULL, array $options = array()) {
     'query' => array(),
     'absolute' => FALSE,
     'alias' => FALSE,
-    'https' => FALSE,
     'prefix' => ''
   );
 
   if (!isset($options['external'])) {
     // Return an external link if $path contains an allowed absolute URL.
-    // Only call the slow filter_xss_bad_protocol if $path contains a ':' before
-    // any / ? or #.
+    // Only call the slow filter_xss_bad_protocol if $path contains a ':'
+    // before any / ? or #.
+    // Note: we could use url_is_external($path) here, but that would
+    // requre another function call, and performance inside url() is critical.
     $colonpos = strpos($path, ':');
     $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path));
   }
@@ -2442,6 +2443,14 @@ function url($path = NULL, array $options = array()) {
     // Append the query.
     if ($options['query']) {
       $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($options['query']);
+    }
+    if (isset($options['https']) && variable_get('https', FALSE)) {
+      if ($options['https'] === TRUE) {
+        $path = str_replace('http://', 'https://', $path);
+      }
+      elseif ($options['https'] === FALSE) {
+        $path = str_replace('https://', 'http://', $path);
+      }
     }
     // Reassemble.
     return $path . $options['fragment'];
@@ -2518,6 +2527,16 @@ function url($path = NULL, array $options = array()) {
       return $base . $options['fragment'];
     }
   }
+}
+
+/**
+ * Return TRUE if a path is external (e.g. http://example.com).
+ */
+function url_is_external($path) {
+  $colonpos = strpos($path, ':');
+  // Only call the slow filter_xss_bad_protocol if $path contains a ':'
+  // before any / ? or #.
+  return $colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path);
 }
 
 /**

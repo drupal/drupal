@@ -24,8 +24,6 @@
  *   - 'local_url': The locally installed location of new code to update with.
  */
 function update_authorize_run_update($filetransfer, $projects) {
-  global $base_url;
-
   $operations = array();
   foreach ($projects as $project => $project_info) {
     $operations[] = array(
@@ -49,7 +47,7 @@ function update_authorize_run_update($filetransfer, $projects) {
 
   batch_set($batch);
   // Invoke the batch via authorize.php.
-  batch_process($base_url . '/authorize.php', $base_url . '/authorize.php?batch=1');
+  system_authorized_batch_process();
 }
 
 /**
@@ -67,8 +65,6 @@ function update_authorize_run_update($filetransfer, $projects) {
  *   already been downloaded and extracted into.
  */
 function update_authorize_run_install($filetransfer, $project, $updater_name, $local_url) {
-  global $base_url;
-
   $operations[] = array(
     'update_authorize_batch_copy_project',
     array(
@@ -91,8 +87,7 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
   batch_set($batch);
 
   // Invoke the batch via authorize.php.
-  batch_process($base_url . '/authorize.php', $base_url . '/authorize.php?batch=1');
-
+  system_authorized_batch_process();
 }
 
 /**

@@ -1017,7 +1017,7 @@ function form_builder($form_id, $element, &$form_state) {
   // Special handling if we're on the top level form element.
   if (isset($element['#type']) && $element['#type'] == 'form') {
     if (!empty($element['#https']) && variable_get('https', FALSE) &&
-        !menu_path_is_external($element['#action'])) {
+        !url_is_external($element['#action'])) {
       global $base_root;
 
       // Not an external URL so ensure that it is secure.

@@ -2517,7 +2517,7 @@ function menu_link_save(&$item) {
 
   // This is the easiest way to handle the unique internal path '<front>',
   // since a path marked as external does not need to match a router path.
-  $item['external'] = (menu_path_is_external($item['link_path'])  || $item['link_path'] == '<front>') ? 1 : 0;
+  $item['external'] = (url_is_external($item['link_path'])  || $item['link_path'] == '<front>') ? 1 : 0;
   // Load defaults.
   $item += array(
     'menu_name' => 'navigation',
@@ -3187,14 +3187,6 @@ function _menu_router_save($menu, $masks) {
 }
 
 /**
- * Returns TRUE if a path is external (e.g. http://example.com).
- */
-function menu_path_is_external($path) {
-  $colonpos = strpos($path, ':');
-  return $colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path);
-}
-
-/**
  * Checks whether the site is in maintenance mode.
  *
  * This function will log the current user out and redirect to front page
@@ -3254,7 +3246,7 @@ function menu_valid_path($form_item) {
   $path = $form_item['link_path'];
   // We indicate that a menu administrator is running the menu access check.
   $menu_admin = TRUE;
-  if ($path == '<front>' || menu_path_is_external($path)) {
+  if ($path == '<front>' || url_is_external($path)) {
     $item = array('access' => TRUE);
   }
   elseif (preg_match('/\/\%/', $path)) {
