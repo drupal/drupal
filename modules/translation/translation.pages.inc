@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.pages.inc,v 1.10 2009/10/11 03:07:21 webchick Exp $
+// $Id: translation.pages.inc,v 1.11 2009/11/01 12:11:10 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
  * @param $node
  *   Node object.
  */
-function translation_node_overview($node) {
+function translation_node_overview(stdClass $node) {
   if ($node->tnid) {
     // Already part of a set, grab that set.
     $tnid = $node->tnid;

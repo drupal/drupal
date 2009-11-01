@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.165 2009/10/29 07:18:55 webchick Exp $
+// $Id: tracker.module,v 1.166 2009/11/01 12:11:10 dries Exp $
 
 /**
  * @file
@@ -158,21 +158,21 @@ function _tracker_user_access($account) {
 /**
  * Implement hook_nodeapi_insert().
  */
-function tracker_node_insert($node, $arg = 0) {
+function tracker_node_insert(stdClass $node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
 }
 
 /**
  * Implement hook_nodeapi_update().
  */
-function tracker_node_update($node, $arg = 0) {
+function tracker_node_update(stdClass $node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
 }
 
 /**
  * Implement hook_nodeapi_delete().
  */
-function tracker_node_delete($node, $arg = 0) {
+function tracker_node_delete(stdClass $node, $arg = 0) {
   _tracker_remove($node->nid, $node->uid, $node->changed);
 }
 

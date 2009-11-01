@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.24 2009/10/11 03:07:16 webchick Exp $
+// $Id: book.admin.inc,v 1.25 2009/11/01 12:11:10 dries Exp $
 
 /**
  * @file
@@ -77,7 +77,7 @@ function book_admin_settings_validate($form, &$form_state) {
  *
  * @ingroup forms.
  */
-function book_admin_edit($form, $form_state, $node) {
+function book_admin_edit($form, $form_state, stdClass $node) {
   drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
   $form['#node'] = $node;
   _book_admin_table($node, $form);
@@ -151,7 +151,7 @@ function book_admin_edit_submit($form, &$form_state) {
  *
  * @see book_admin_edit()
  */
-function _book_admin_table($node, &$form) {
+function _book_admin_table(stdClass $node, &$form) {
   $form['table'] = array(
     '#theme' => 'book_admin_table',
     '#tree' => TRUE,

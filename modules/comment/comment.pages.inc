@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.27 2009/10/16 20:40:05 dries Exp $
+// $Id: comment.pages.inc,v 1.28 2009/11/01 12:11:10 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@
  * @return
  *   The rendered parent node or comment plus the new comment form.
  */
-function comment_reply($node, $pid = NULL) {
+function comment_reply(stdClass $node, $pid = NULL) {
   // Set the breadcrumb trail.
   drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->title[FIELD_LANGUAGE_NONE][0]['value'], 'node/' . $node->nid)));
   $op = isset($_POST['op']) ? $_POST['op'] : '';
