@@ -1500,7 +1500,7 @@ function taxonomy_field_update($obj_type, $object, $field, $instance, $langcode,
 /**
  * Implement hook_node_delete().
  */
-function taxonomy_node_delete($node) {
+function taxonomy_node_delete(stdClass $node) {
   if (variable_get('taxonomy_maintain_index_table', TRUE)) {
     // Clean up the {taxonomy_index} table when nodes are deleted.
     db_delete('taxonomy_index')->condition('nid', $node->nid)->execute();

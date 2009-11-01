@@ -448,7 +448,7 @@ function menu_block_view_alter(&$data, $block) {
 /**
  * Implement hook_node_insert().
  */
-function menu_node_insert($node) {
+function menu_node_insert(stdClass $node) {
   if (isset($node->menu)) {
     $item = &$node->menu;
     if (!empty($item['delete'])) {
@@ -470,7 +470,7 @@ function menu_node_insert($node) {
 /**
  * Implement hook_node_update().
  */
-function menu_node_update($node) {
+function menu_node_update(stdClass $node) {
   if (isset($node->menu)) {
     $item = &$node->menu;
     if (!empty($item['delete'])) {
@@ -492,7 +492,7 @@ function menu_node_update($node) {
 /**
  * Implement hook_node_delete().
  */
-function menu_node_delete($node) {
+function menu_node_delete(stdClass $node) {
   // Delete all menu module links that point to this node.
   $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/' . $node->nid), array('fetch' => PDO::FETCH_ASSOC));
   foreach ($result as $m) {
@@ -503,7 +503,7 @@ function menu_node_delete($node) {
 /**
  * Implement hook_node_prepare().
  */
-function menu_node_prepare($node) {
+function menu_node_prepare(stdClass $node) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
     $menu_name = variable_get('menu_default_node_menu', 'navigation');

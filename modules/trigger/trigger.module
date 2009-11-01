@@ -223,7 +223,7 @@ function trigger_forms() {
  * @return
  *   The object expected by the action that is about to be called.
  */
-function _trigger_normalize_node_context($type, $node) {
+function _trigger_normalize_node_context($type, stdClass $node) {
   // Note that comment-type actions are not supported in node contexts,
   // because we wouldn't know which comment to choose.
   switch ($type) {
@@ -246,7 +246,7 @@ function _trigger_normalize_node_context($type, $node) {
  * @param $a4
  *   Additional argument to action function.
  */
-function _trigger_node($node, $hook, $a3 = NULL, $a4 = NULL) {
+function _trigger_node(stdClass $node, $hook, $a3 = NULL, $a4 = NULL) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
   // Prevent recursion by tracking which operations have already been called.
@@ -287,35 +287,35 @@ function _trigger_node($node, $hook, $a3 = NULL, $a4 = NULL) {
 /**
  * Implement hook_node_view().
  */
-function trigger_node_view($node, $build_mode) {
+function trigger_node_view(stdClass $node, $build_mode) {
   _trigger_node($node, 'node_view', $build_mode);
 }
 
 /**
  * Implement hook_node_update().
  */
-function trigger_node_update($node) {
+function trigger_node_update(stdClass $node) {
   _trigger_node($node, 'node_update');
 }
 
 /**
  * Implement hook_node_presave().
  */
-function trigger_node_presave($node) {
+function trigger_node_presave(stdClass $node) {
   _trigger_node($node, 'node_presave');
 }
 
 /**
  * Implement hook_node_insert().
  */
-function trigger_node_insert($node) {
+function trigger_node_insert(stdClass $node) {
   _trigger_node($node, 'node_insert');
 }
 
 /**
  * Implement hook_node_delete().
  */
-function trigger_node_delete($node) {
+function trigger_node_delete(stdClass $node) {
   _trigger_node($node, 'node_delete');
 }
 

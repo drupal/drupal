@@ -74,7 +74,7 @@ function hook_node_grants($account, $op) {
  *
  * @ingroup node_access
  */
-function hook_node_access_records($node) {
+function hook_node_access_records(stdClass $node) {
   if (node_access_example_disabling()) {
     return;
   }
@@ -138,7 +138,7 @@ function hook_node_access_records($node) {
  *
  * @ingroup node_access
  */
-function hook_node_access_records_alter(&$grants, $node) {
+function hook_node_access_records_alter(&$grants, stdClass $node) {
   // Our module allows editors to tag specific articles as 'preview'
   // content using the taxonomy system. If the node being saved
   // contains one of the preview terms defined in our variable
@@ -265,7 +265,7 @@ function hook_node_operations() {
  * @param $node
  *   The node that is being deleted.
  */
-function hook_node_delete($node) {
+function hook_node_delete(stdClass $node) {
   db_delete('mytable')
     ->condition('nid', $node->nid)
     ->execute();
@@ -279,7 +279,7 @@ function hook_node_delete($node) {
  * @param $node
  *   The node the action is being performed on.
  */
-function hook_node_revision_delete($node) {
+function hook_node_revision_delete(stdClass $node) {
   db_delete('upload')->condition('vid', $node->vid)->execute();
   if (!is_array($node->files)) {
     return;
@@ -297,7 +297,7 @@ function hook_node_revision_delete($node) {
  * @param $node
  *   The node the action is being performed on.
  */
-function hook_node_insert($node) {
+function hook_node_insert(stdClass $node) {
   db_insert('mytable')
     ->fields(array(
       'nid' => $node->nid,
@@ -375,7 +375,7 @@ function hook_node_load($nodes, $types) {
  *   NODE_ACCESSS_IGNORE to not affect this operation at all.
  */
 function hook_node_access($node, $op, $account) {
-  $type = is_string($node) ? $node : (is_array($node) ? $node['type'] : $node->type);
+  $type = is_string($node) ? $node : $node->type;
 
   if (in_array($type, node_permissions_get_configured_types())) {
     if ($op == 'create' && user_access('create ' . $type . ' content', $account)) {
@@ -406,7 +406,7 @@ function hook_node_access($node, $op, $account) {
  * @param $node
  *   The node the action is being performed on.
  */
-function hook_node_prepare($node) {
+function hook_node_prepare(stdClass $node) {
   if (!isset($node->comment)) {
     $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
   }
@@ -421,7 +421,7 @@ function hook_node_prepare($node) {
  * @param $node
  *   The node the action is being performed on.
  */
-function hook_node_prepare_translation($node) {
+function hook_node_prepare_translation(stdClass $node) {
 }
 
 /**
@@ -434,7 +434,7 @@ function hook_node_prepare_translation($node) {
  * @return
  *   Extra information to be displayed with search result.
  */
-function hook_node_search_result($node) {
+function hook_node_search_result(stdClass $node) {
   $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
   return format_plural($comments, '1 comment', '@count comments');
 }
@@ -447,7 +447,7 @@ function hook_node_search_result($node) {
  * @param $node
  *   The node the action is being performed on.
  */
-function hook_node_presave($node) {
+function hook_node_presave(stdClass $node) {
   if ($node->nid && $node->moderate) {
     // Reset votes when node is updated:
     $node->score = 0;
@@ -462,7 +462,7 @@ function hook_node_presave($node) {
  * @param $node
  *   The node the action is being performed on.
  */
-function hook_node_update($node) {
+function hook_node_update(stdClass $node) {
   db_update('mytable')
     ->fields(array('extra' => $node->extra))
     ->condition('nid', $node->nid)
@@ -480,7 +480,7 @@ function hook_node_update($node) {
  * @return
  *   Array of additional information to be indexed.
  */
-function hook_node_update_index($node) {
+function hook_node_update_index(stdClass $node) {
   $text = '';
   $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
   foreach ($comments as $comment) {
@@ -500,7 +500,7 @@ function hook_node_update_index($node) {
  * @param $form
  *   The $form parameter from node_validate().
  */
-function hook_node_validate($node, $form) {
+function hook_node_validate(stdClass $node, $form) {
   if (isset($node->end) && isset($node->start)) {
     if ($node->start > $node->end) {
       form_set_error('time', t('An event may not end before it starts.'));
@@ -531,7 +531,7 @@ function hook_node_validate($node, $form) {
  * @param $build_mode
  *   The $build_mode parameter from node_build().
  */
-function hook_node_view($node, $build_mode) {
+function hook_node_view(stdClass $node, $build_mode) {
   $node->content['my_additional_field'] = array(
     '#value' => $additional_field,
     '#weight' => 10,
@@ -556,7 +556,7 @@ function hook_node_view($node, $build_mode) {
  * @param $build_mode
  *   The $build_mode parameter from node_build().
  */
-function hook_node_build_alter($node, $build_mode) {
+function hook_node_build_alter(stdClass $node, $build_mode) {
   // Check for the existence of a field added by another module.
   if (isset($node->content['an_additional_field'])) {
     // Change its weight.
@@ -741,7 +741,7 @@ function hook_node_type_delete($info) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_delete($node) {
+function hook_delete(stdClass $node) {
   db_delete('mytable')
     ->condition('nid', $nid->nid)
     ->execute();
@@ -756,7 +756,7 @@ function hook_delete($node) {
  *
  * For a usage example, see image.module.
  */
-function hook_prepare($node) {
+function hook_prepare(stdClass $node) {
   if ($file = file_check_upload($field_name)) {
     $file = file_save_upload($field_name, _image_filename($file->filename, NULL, TRUE));
     if ($file) {
@@ -796,7 +796,7 @@ function hook_prepare($node) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_form($node, $form_state) {
+function hook_form(stdClass $node, $form_state) {
   $type = node_type_get_type($node);
 
   $form['title'] = array(
@@ -846,7 +846,7 @@ function hook_form($node, $form_state) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_insert($node) {
+function hook_insert(stdClass $node) {
   db_insert('mytable')
     ->fields(array(
       'nid' => $node->nid,
@@ -892,7 +892,7 @@ function hook_load($nodes) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_update($node) {
+function hook_update(stdClass $node) {
   db_update('mytable')
     ->fields(array('extra' => $node->extra))
     ->condition('nid', $node->nid)
@@ -921,7 +921,7 @@ function hook_update($node) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_validate($node, &$form) {
+function hook_validate(stdClass $node, &$form) {
   if (isset($node->end) && isset($node->start)) {
     if ($node->start > $node->end) {
       form_set_error('time', t('An event may not end before it starts.'));
@@ -954,7 +954,7 @@ function hook_validate($node, &$form) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_view($node, $build_mode = 'full') {
+function hook_view(stdClass $node, $build_mode = 'full') {
   if ((bool)menu_get_object()) {
     $breadcrumb = array();
     $breadcrumb[] = array('path' => 'example', 'title' => t('example'));

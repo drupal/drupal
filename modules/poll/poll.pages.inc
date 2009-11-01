@@ -49,7 +49,7 @@ function poll_page() {
 /**
  * Callback for the 'votes' tab for polls you can see other votes on
  */
-function poll_votes($node) {
+function poll_votes(stdClass $node) {
   $votes_per_page = 20;
   drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
 
@@ -91,7 +91,7 @@ function poll_votes($node) {
 /**
  * Callback for the 'results' tab for polls you can vote on
  */
-function poll_results($node) {
+function poll_results(stdClass $node) {
   drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
   $node->show_results = TRUE;
   return node_show($node);

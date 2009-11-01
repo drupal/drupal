@@ -112,7 +112,7 @@ function poll_menu() {
 /**
  * Callback function to see if a node is acceptable for poll menu items.
  */
-function _poll_menu_access($node, $perm, $inspect_allowvotes) {
+function _poll_menu_access(stdClass $node, $perm, $inspect_allowvotes) {
   return user_access($perm) && ($node->type == 'poll') && ($node->allowvotes || !$inspect_allowvotes);
 }
 
@@ -211,7 +211,7 @@ function poll_field_extra_fields($bundle) {
 /**
  * Implement hook_form().
  */
-function poll_form($node, $form_state) {
+function poll_form(stdClass $node, $form_state) {
   global $user;
 
   $admin = user_access('administer nodes') || user_access('edit any poll content') || (user_access('edit own poll content') && $user->uid == $node->uid);
@@ -397,7 +397,7 @@ function poll_node_form_submit(&$form, &$form_state) {
 /**
  * Implement hook_validate().
  */
-function poll_validate($node, $form) {
+function poll_validate(stdClass $node, $form) {
   if (isset($node->title)) {
     // Check for at least two options and validate amount of votes:
     $realchoices = 0;
@@ -421,7 +421,7 @@ function poll_validate($node, $form) {
 /**
  * Implement hook_node_prepare_translation().
  */
-function poll_node_prepare_translation($node) {
+function poll_node_prepare_translation(stdClass $node) {
   if ($node->type == 'poll') {
     $node->choice = $node->translation_source->choice;
   }
@@ -469,7 +469,7 @@ function poll_load($nodes) {
 /**
  * Implement hook_insert().
  */
-function poll_insert($node) {
+function poll_insert(stdClass $node) {
   if (!user_access('administer nodes')) {
     // Make sure all votes are 0 initially
     foreach ($node->choice as $i => $choice) {
@@ -503,7 +503,7 @@ function poll_insert($node) {
 /**
  * Implement hook_update().
  */
-function poll_update($node) {
+function poll_update(stdClass $node) {
   // Update poll settings.
   db_update('poll')
     ->fields(array(
@@ -540,7 +540,7 @@ function poll_update($node) {
 /**
  * Implement hook_delete().
  */
-function poll_delete($node) {
+function poll_delete(stdClass $node) {
   db_delete('poll')
     ->condition('nid', $node->nid)
     ->execute();
@@ -558,7 +558,7 @@ function poll_delete($node) {
  * @param $node
  *   The node object to load.
  */
-function poll_block_latest_poll_view($node) {
+function poll_block_latest_poll_view(stdClass $node) {
   global $user;
   $output = '';
 
@@ -596,7 +596,7 @@ function poll_block_latest_poll_view($node) {
 /**
  * Implement hook_view().
  */
-function poll_view($node, $build_mode = 'full') {
+function poll_view(stdClass $node, $build_mode = 'full') {
   global $user;
   $output = '';
 
@@ -614,7 +614,7 @@ function poll_view($node, $build_mode = 'full') {
  *
  * This is primarily used for RSS.
  */
-function poll_teaser($node) {
+function poll_teaser(stdClass $node) {
   $teaser = NULL;
   if (is_array($node->choice)) {
     foreach ($node->choice as $k => $choice) {
@@ -633,7 +633,7 @@ function poll_teaser($node) {
  * @see poll_vote()
  * @see phptemplate_preprocess_poll_vote()
  */
-function poll_view_voting($form, &$form_state, $node, $block = FALSE) {
+function poll_view_voting($form, &$form_state, stdClass $node, $block = FALSE) {
   if ($node->choice) {
     $list = array();
     foreach ($node->choice as $i => $choice) {
@@ -724,7 +724,7 @@ function template_preprocess_poll_vote(&$variables) {
 /**
  * Generates a graphical representation of the results of a poll.
  */
-function poll_view_results($node, $build_mode, $block = FALSE) {
+function poll_view_results(stdClass $node, $build_mode, $block = FALSE) {
   // Count the votes and find the maximum
   $total_votes = 0;
   $max_votes = 0;

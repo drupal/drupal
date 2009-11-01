@@ -10,7 +10,7 @@
 /**
  * Menu callback; presents the node editing form, or redirects to delete confirmation.
  */
-function node_page_edit($node) {
+function node_page_edit(stdClass $node) {
   $type_name = node_type_get_name($node);
   drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => $type_name, '@title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'])), PASS_THROUGH);
   return drupal_get_form($node->type . '_node_form', $node);
@@ -80,7 +80,7 @@ function node_form_validate($form, &$form_state) {
   field_attach_form_validate('node', $node, $form, $form_state);
 }
 
-function node_object_prepare($node) {
+function node_object_prepare(stdClass $node) {
   // Set up default values, if required.
   $node_options = variable_get('node_options_' . $node->type, array('status', 'promote'));
   // If this is a new node, fill in the default values.
@@ -107,7 +107,7 @@ function node_object_prepare($node) {
 /**
  * Generate the node add/edit form array.
  */
-function node_form($form, &$form_state, $node) {
+function node_form($form, &$form_state, stdClass $node) {
   global $user;
 
   if (isset($form_state['node'])) {
@@ -339,7 +339,7 @@ function theme_node_form($variables) {
 /**
  * Generate a node preview.
  */
-function node_preview($node) {
+function node_preview(stdClass $node) {
   if (node_access('create', $node) || node_access('update', $node)) {
     _field_invoke_multiple('load', 'node', array($node->nid => $node));
     // Load the user's name when needed.
@@ -460,7 +460,7 @@ function node_form_submit_build_node($form, &$form_state) {
 /**
  * Menu callback -- ask for confirmation of node deletion
  */
-function node_delete_confirm($form, &$form_state, $node) {
+function node_delete_confirm($form, &$form_state, stdClass $node) {
   $form['nid'] = array(
     '#type' => 'value',
     '#value' => $node->nid,
@@ -492,7 +492,7 @@ function node_delete_confirm_submit($form, &$form_state) {
 /**
  * Generate an overview table of older revisions of a node.
  */
-function node_revision_overview($node) {
+function node_revision_overview(stdClass $node) {
   drupal_set_title(t('Revisions for %title', array('%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'])), PASS_THROUGH);
 
   $header = array(t('Revision'), array('data' => t('Operations'), 'colspan' => 2));

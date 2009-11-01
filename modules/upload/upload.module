@@ -58,7 +58,7 @@ function upload_permission() {
 /**
  * Inject links into $node for attachments.
  */
-function upload_node_links($node, $build_mode) {
+function upload_node_links(stdClass $node, $build_mode) {
   $links = array();
 
   // Display a link with the number of attachments
@@ -337,7 +337,7 @@ function upload_node_load($nodes, $types) {
 /**
  * Implement hook_node_view().
  */
-function upload_node_view($node, $build_mode) {
+function upload_node_view(stdClass $node, $build_mode) {
   if (!isset($node->files)) {
     return;
   }
@@ -383,7 +383,7 @@ function upload_node_view($node, $build_mode) {
 /**
  * Implement hook_node_insert().
  */
-function upload_node_insert($node) {
+function upload_node_insert(stdClass $node) {
   if (user_access('upload files')) {
     upload_save($node);
   }
@@ -392,7 +392,7 @@ function upload_node_insert($node) {
 /**
  * Implement hook_node_update().
  */
-function upload_node_update($node) {
+function upload_node_update(stdClass $node) {
   if (user_access('upload files')) {
     upload_save($node);
   }
@@ -401,7 +401,7 @@ function upload_node_update($node) {
 /**
  * Implement hook_node_delete().
  */
-function upload_node_delete($node) {
+function upload_node_delete(stdClass $node) {
   db_delete('upload')->condition('nid', $node->nid)->execute();
   if (!is_array($node->files)) {
     return;
@@ -414,7 +414,7 @@ function upload_node_delete($node) {
 /**
  * Implement hook_node_revision_delete().
  */
-function upload_node_revision_delete($node) {
+function upload_node_revision_delete(stdClass $node) {
   db_delete('upload')->condition('vid', $node->vid)->execute();
   if (!is_array($node->files)) {
     return;
@@ -427,7 +427,7 @@ function upload_node_revision_delete($node) {
 /**
  * Implement hook_node_search_result().
  */
-function upload_node_search_result($node) {
+function upload_node_search_result(stdClass $node) {
   return isset($node->files) && is_array($node->files) ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
 }
 
@@ -476,7 +476,7 @@ function upload_total_space_used() {
   return db_query('SELECT SUM(f.filesize) FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid')->fetchField();
 }
 
-function upload_save($node) {
+function upload_save(stdClass $node) {
   if (empty($node->files) || !is_array($node->files)) {
     return;
   }
@@ -529,7 +529,7 @@ function upload_save($node) {
   }
 }
 
-function _upload_form($node) {
+function _upload_form(stdClass $node) {
   global $user;
 
   $form = array(

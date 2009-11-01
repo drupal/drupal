@@ -301,7 +301,7 @@ class ForumTestCase extends DrupalWebTestCase {
    * @param $response
    *   The exptected HTTP response code.
    */
-  private function verifyForums($node_user, $node, $admin, $response = 200) {
+  private function verifyForums($node_user, stdClass $node, $admin, $response = 200) {
     $crumb = '›';
     $quote = '&#039;';
 
