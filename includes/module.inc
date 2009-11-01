@@ -6,15 +6,29 @@
  * API for loading and interacting with Drupal modules.
  */
 
-
 /**
  * Load all the modules that have been enabled in the system table.
+ * 
+ * @param $bootstrap
+ *   Whether to load only the reduced set of modules loaded in "bootstrap mode"
+ *   for cached pages. See bootstrap.inc.
+ * @return
+ *   If $bootstrap is NULL, return a boolean indicating whether all modules
+ *   have been loaded.
  */
 function module_load_all($bootstrap = FALSE) {
-  foreach (module_list(TRUE, $bootstrap) as $module) {
-    drupal_load('module', $module);
+  static $has_run = FALSE;
+
+  if (isset($bootstrap)) {
+    foreach (module_list(TRUE, $bootstrap) as $module) {
+      drupal_load('module', $module);
+    }
+    // $has_run will be TRUE if $bootstrap is FALSE.
+    $has_run = !$bootstrap;
   }
+  return $has_run;
 }
+
 
 /**
  * Collect a list of all loaded modules. During the bootstrap, return only

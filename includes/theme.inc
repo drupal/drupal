@@ -258,7 +258,7 @@ function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL) 
     $registry = _theme_build_registry($theme, $base_theme, $theme_engine);
    // Only persist this registry if all modules are loaded. This assures a
    // complete set of theme hooks.
-    if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+    if (module_load_all(NULL)) {
       _theme_save_registry($theme, $registry);
       _theme_set_registry($registry);
     }
