@@ -101,7 +101,7 @@ function toolbar_build() {
   if ($user->uid) {
     $links = array(
       'account' => array(
-        'title' => t('Hello <strong>@username</strong>', array('@username' => $user->name)),
+        'title' => t('Hello <strong>@username</strong>', array('@username' => format_username($user))),
         'href' => 'user',
         'html' => TRUE,
       ),

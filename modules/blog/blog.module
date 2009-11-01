@@ -27,7 +27,7 @@ function blog_user_view($account) {
     $account->content['summary']['blog'] =  array(
       '#type' => 'user_profile_item',
       '#title' => t('Blog'),
-      '#markup' => l(t('View recent blog entries'), "blog/$account->uid", array('attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => $account->name))))),
+      '#markup' => l(t('View recent blog entries'), "blog/$account->uid", array('attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => format_username($account)))))),
       '#attributes' => array('class' => array('blog')),
     );
   }
@@ -60,7 +60,7 @@ function blog_form(stdClass $node, $form_state) {
 function blog_view(stdClass $node, $build_mode) {
   if ((bool)menu_get_object()) {
     // Breadcrumb navigation.
-    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("!name's blog", array('!name' => $node->name)), 'blog/' . $node->uid)));
+    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("!name's blog", array('!name' => format_username($node))), 'blog/' . $node->uid)));
   }
   return $node;
 }
@@ -72,9 +72,9 @@ function blog_node_view(stdClass $node, $build_mode = 'full') {
   if ($build_mode != 'rss') {
     if ($node->type == 'blog' && arg(0) != 'blog' || arg(1) != $node->uid) {
       $links['blog_usernames_blog'] = array(
-        'title' => t("!username's blog", array('!username' => $node->name)),
+        'title' => t("!username's blog", array('!username' => format_username($node))),
         'href' => "blog/$node->uid",
-        'attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => $node->name))),
+        'attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => format_username($node)))),
       );
       $node->content['links']['blog'] = array(
         '#theme' => 'links',

@@ -83,7 +83,7 @@ function statistics_user_tracker() {
       $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 3));
     }
 
-    drupal_set_title($account->name);
+    drupal_set_title(format_username($account));
     $build['statistics_table'] = array(
       '#theme' => 'table',
       '#header' => $header,

@@ -1251,7 +1251,7 @@ function template_preprocess_user_picture(&$variables) {
       $filepath = variable_get('user_picture_default', '');
     }
     if (isset($filepath)) {
-      $alt = t("@user's picture", array('@user' => $account->name ? $account->name : variable_get('anonymous', t('Anonymous'))));
+      $alt = t("@user's picture", array('@user' => format_username($account)));
       if (module_exists('image') && $style = variable_get('user_picture_style', '')) {
         $variables['user_picture'] = theme('image_style', array('style_name' => $style, 'path' => $filepath, 'alt' => $alt, 'title' => $alt, 'attributes' => array(), 'getsize' => FALSE));
       }
@@ -1632,7 +1632,7 @@ function user_uid_optional_to_arg($arg) {
  * Menu item title callback - use the user name.
  */
 function user_page_title($account) {
-  return $account->name;
+  return format_username($account);
 }
 
 /**

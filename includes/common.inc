@@ -1289,14 +1289,14 @@ function fix_gpc_magic() {
  *   check_plain, to escape HTML characters. Use this for any output that's
  *   displayed within a Drupal page.
  *   @code
- *     drupal_set_title($title = t("@name's blog", array('@name' => $account->name)), PASS_THROUGH);
+ *     drupal_set_title($title = t("@name's blog", array('@name' => format_username($account))), PASS_THROUGH);
  *   @endcode
  *
  * - %variable, which indicates that the string should be HTML escaped and
  *   highlighted with theme_placeholder() which shows up by default as
  *   <em>emphasized</em>.
  *   @code
- *     $message = t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name));
+ *     $message = t('%name-from sent %name-to an e-mail.', array('%name-from' => format_username($user), '%name-to' => format_username($account)));
  *   @endcode
  *
  * When using t(), try to put entire sentences and strings in one t() call.
@@ -2327,6 +2327,29 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
     }
   }
   return $cache[$langcode][$code][$string];
+}
+
+/**
+ * Format a username.
+ *
+ * By default, the passed in object's 'name' property is used if it exists, or
+ * else, the site-defined value for the 'anonymous' variable. However, a module
+ * may override this by implementing hook_username_alter(&$name, $account).
+ *
+ * @see hook_username_alter()
+ *
+ * @param $account
+ *   The account object for the user whose name is to be formatted.
+ *
+ * @return
+ *   An unsanitized string with the username to display. The code receiving
+ *   this result must ensure that check_plain() is called on it before it is
+ *   printed to the page.
+ */
+function format_username($account) {
+  $name = !empty($account->name) ? $account->name : variable_get('anonymous', t('Anonymous'));
+  drupal_alter('username', $name, $account);
+  return $name;
 }
 
 /**

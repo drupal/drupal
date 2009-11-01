@@ -701,7 +701,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         // user's profile page.
         $text = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', array('%dimensions' => $test_dim));
         $this->assertRaw($text, t('Image was resized.'));
-        $alt = t("@user's picture", array('@user' => $this->user->name));
+        $alt = t("@user's picture", array('@user' => format_username($this->user)));
         $style = variable_get('user_picture_style', '');
         $this->assertRaw(image_style_url($style, $pic_path), t("Image is displayed in user's edit page"));
 

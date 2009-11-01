@@ -202,7 +202,7 @@ function profile_block_view($delta = '') {
     }
 
     if ($output) {
-      $block['subject'] = t('About %name', array('%name' => $account->name));
+      $block['subject'] = t('About %name', array('%name' => format_username($account)));
       $block['content'] = $output;
       return $block;
     }

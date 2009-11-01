@@ -38,7 +38,7 @@ class BlogTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('blog/' . $this->big_user->uid);
     $this->assertResponse(200);
-    $this->assertTitle(t("@name's blog", array('@name' => $this->big_user->name)) . ' | Drupal', t('Blog title was displayed'));
+    $this->assertTitle(t("@name's blog", array('@name' => format_username($this->big_user))) . ' | Drupal', t('Blog title was displayed'));
     $this->assertText(t('You are not allowed to post a new blog entry.'), t('No new entries can be posted without the right permission'));
   }
 
@@ -50,8 +50,8 @@ class BlogTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('blog/' . $this->own_user->uid);
     $this->assertResponse(200);
-    $this->assertTitle(t("@name's blog", array('@name' => $this->own_user->name)) . ' | Drupal', t('Blog title was displayed'));
-    $this->assertText(t('!author has not created any blog entries.', array('!author' => $this->own_user->name)), t('Users blog displayed with no entries'));
+    $this->assertTitle(t("@name's blog", array('@name' => format_username($this->own_user))) . ' | Drupal', t('Blog title was displayed'));
+    $this->assertText(t('@author has not created any blog entries.', array('@author' => format_username($this->own_user))), t('Users blog displayed with no entries'));
   }
 
   /**
@@ -139,7 +139,7 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(200);
     $this->assertTitle($node->title[FIELD_LANGUAGE_NONE][0]['value'] . ' | Drupal', t('Blog node was displayed'));
-    $this->assertText(t('Home ' . $crumb . ' Blogs ' . $crumb . ' @name' . $quote . 's blog', array('@name' => $node_user->name)), t('Breadcrumbs were displayed'));
+    $this->assertText(t('Home ' . $crumb . ' Blogs ' . $crumb . ' @name' . $quote . 's blog', array('@name' => format_username($node_user))), t('Breadcrumbs were displayed'));
 
     // View blog edit node.
     $this->drupalGet('node/' . $node->nid . '/edit');
@@ -180,7 +180,7 @@ class BlogTestCase extends DrupalWebTestCase {
 
     // Confirm the recent blog entries link goes to the user's blog page.
     $this->clickLink('View recent blog entries');
-    $this->assertTitle(t("@name's blog | Drupal", array('@name' => $user->name)), t('View recent blog entries link target was correct'));
+    $this->assertTitle(t("@name's blog | Drupal", array('@name' => format_username($user))), t('View recent blog entries link target was correct'));
 
     // Confirm a blog page was displayed.
     $this->drupalGet('blog');
@@ -191,7 +191,7 @@ class BlogTestCase extends DrupalWebTestCase {
 
     // Confirm a blog page was displayed per user.
     $this->drupalGet('blog/' . $user->uid);
-    $this->assertTitle(t("@name's blog | Drupal", array('@name' => $user->name)), t('User blog node was displayed'));
+    $this->assertTitle(t("@name's blog | Drupal", array('@name' => format_username($user))), t('User blog node was displayed'));
 
     // Confirm a blog feed was displayed.
     $this->drupalGet('blog/feed');
@@ -199,6 +199,6 @@ class BlogTestCase extends DrupalWebTestCase {
 
     // Confirm a blog feed was displayed per user.
     $this->drupalGet('blog/' . $user->uid . '/feed');
-    $this->assertTitle(t("@name's blog", array('@name' => $user->name)), t('User blog feed was displayed'));
+    $this->assertTitle(t("@name's blog", array('@name' => format_username($user))), t('User blog feed was displayed'));
   }
 }

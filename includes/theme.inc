@@ -1912,12 +1912,17 @@ function template_preprocess_username(&$variables) {
   else {
     $variables['uid'] = (int)$account->uid;
   }
-  if (empty($account->name)) {
-    $variables['name'] = variable_get('anonymous', t('Anonymous'));
+
+  // Set the name to a formatted name that is safe for printing and
+  // that won't break tables by being too long. Keep an unshortened,
+  // unsanitized version, in case other preproces functions want to implement
+  // their own shortening logic or add markup. If they do so, they must ensure
+  // that $variables['name'] is safe for printing.
+  $name = $variables['name_raw'] = format_username($account);
+  if (drupal_strlen($name) > 20) {
+    $name = drupal_substr($name, 0, 15) . '...';
   }
-  else {
-    $variables['name'] = $account->name;
-  }
+  $variables['name'] = check_plain($name);
 
   $variables['profile_access'] = user_access('access user profiles');
   $variables['link_attributes'] = array();
@@ -1936,12 +1941,6 @@ function template_preprocess_username(&$variables) {
   $variables['link_options']['html'] = TRUE;
   // Set a default class.
   $variables['attributes_array'] = array('class' => array('username'));
-  // Shorten the name when it is too long or it will break many tables.
-  if (drupal_strlen($variables['name']) > 20) {
-    $variables['name'] = drupal_substr($variables['name'], 0, 15) . '...';
-  }
-  // Make sure name is safe for use in the theme function.
-  $variables['name'] = check_plain($variables['name']);
 }
 
 /**
