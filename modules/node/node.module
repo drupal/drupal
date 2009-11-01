@@ -1141,7 +1141,7 @@ function node_build($node, $build_mode = 'full') {
   $build = $node->content;
   // We don't need duplicate rendering info in node->content.
   unset($node->content);
-  
+
   $build += array(
     '#theme' => 'node',
     '#node' => $node,
@@ -1316,7 +1316,7 @@ function template_preprocess_node(&$variables) {
 
   // Flatten the node object's member fields.
   $variables = array_merge((array)$node, $variables);
-  
+
   // Helpful $content variable for templates.
   foreach (element_children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
@@ -1490,7 +1490,7 @@ function node_search_admin() {
   $form['content_ranking']['info'] = array(
     '#value' => '<em>' . t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em>'
   );
-  
+
   // Note: reversed to reflect that higher number = higher ranking.
   $options = drupal_map_assoc(range(0, 10));
   foreach (module_invoke_all('ranking') as $var => $values) {
@@ -1509,13 +1509,13 @@ function node_search_admin() {
  */
 function node_search_execute($keys = NULL) {
   // Build matching conditions
-  $query = db_select('search_index', 'i')->extend('SearchQuery')->extend('PagerDefault');
+  $query = db_select('search_index', 'i', array('target' => 'slave'))->extend('SearchQuery')->extend('PagerDefault');
   $query->join('node', 'n', 'n.nid = i.sid');
   $query
     ->condition('n.status', 1)
     ->addTag('node_access')
     ->searchExpression($keys, 'node');
-  
+
   // Insert special keywords.
   $query->setOption('type', 'n.type');
   $query->setOption('language', 'n.language');
@@ -1526,19 +1526,19 @@ function node_search_execute($keys = NULL) {
   if (!$query->executeFirstPass()) {
     return array();
   }
-  
+
   // Add the ranking expressions.
   _node_rankings($query);
-  
+
   // Add a count query.
   $inner_query = clone $query;
-  $count_query = db_select($inner_query->fields('i', array('sid')));
+  $count_query = db_select($inner_query->fields('i', array('sid')), NULL, array('target' => 'slave'));
   $count_query->addExpression('COUNT(*)');
   $query->setCountQuery($count_query);
   $find = $query
     ->limit(10)
     ->execute();
-  
+
   // Load results.
   $results = array();
   foreach ($find as $item) {
@@ -1546,14 +1546,14 @@ function node_search_execute($keys = NULL) {
     $node = node_load($item->sid);
     node_build_content($node, 'search_result');
     $node->rendered = drupal_render($node->content);
-  
+
     // Fetch comments for snippet.
     $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node);
     // Fetch terms for snippet.
     $node->rendered .= ' ' . module_invoke('taxonomy', 'node_update_index', $node);
-  
+
     $extra = module_invoke_all('node_search_result', $node);
-  
+
     $results[] = array(
       'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
       'type' => check_plain(node_type_get_name($node)),
@@ -2161,7 +2161,7 @@ function node_page_view(stdClass $node) {
 function node_update_index() {
   $limit = (int)variable_get('search_cron_limit', 100);
 
-  $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit);
+  $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit, array(), array('target' => 'slave'));
 
   foreach ($result as $node) {
     _node_index_node($node);

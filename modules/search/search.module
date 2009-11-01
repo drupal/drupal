@@ -327,7 +327,7 @@ function search_update_totals() {
   // Update word IDF (Inverse Document Frequency) counts for new/changed words.
   foreach (search_dirty() as $word => $dummy) {
     // Get total count
-    $total = db_query("SELECT SUM(score) FROM {search_index} WHERE word = :word", array(':word' => $word))->fetchField();
+    $total = db_query("SELECT SUM(score) FROM {search_index} WHERE word = :word", array(':word' => $word), array('target' => 'slave'))->fetchField();
     // Apply Zipf's law to equalize the probability distribution.
     $total = log10(1 + 1/(max(1, $total)));
     db_merge('search_total')
@@ -338,7 +338,7 @@ function search_update_totals() {
   // Find words that were deleted from search_index, but are still in
   // search_total. We use a LEFT JOIN between the two tables and keep only the
   // rows which fail to join.
-  $result = db_query("SELECT t.word AS realword, i.word FROM {search_total} t LEFT JOIN {search_index} i ON t.word = i.word WHERE i.word IS NULL");
+  $result = db_query("SELECT t.word AS realword, i.word FROM {search_total} t LEFT JOIN {search_index} i ON t.word = i.word WHERE i.word IS NULL", array(), array('target' => 'slave'));
   $or = db_or();
   foreach ($result as $word) {
     $or->condition('word', $word->realword);
@@ -553,7 +553,7 @@ function search_index($sid, $type, $text) {
               $linknid = $match[1];
               if ($linknid > 0) {
                 // Note: ignore links to uncacheable nodes to avoid redirect bugs.
-                $node = db_query('SELECT title, nid, vid FROM {node} WHERE nid = :nid', array(':nid' => $linknid))->fetchObject();
+                $node = db_query('SELECT title, nid, vid FROM {node} WHERE nid = :nid', array(':nid' => $linknid), array('target' => 'slave'))->fetchObject();
                 $link = TRUE;
                 $linktitle = $node->title;
               }
@@ -650,7 +650,7 @@ function search_index($sid, $type, $text) {
   $result = db_query("SELECT nid, caption FROM {search_node_links} WHERE sid = :sid AND type = :type", array(
     ':sid' => $sid,
     ':type' => $type
-  ));
+  ), array('target' => 'slave'));
   $links = array();
   foreach ($result as $link) {
     $links[$link->nid] = $link->caption;
@@ -716,7 +716,7 @@ function search_touch_node($nid) {
  */
 function search_node_update_index(stdClass $node) {
   // Transplant links to a node into the target node.
-  $result = db_query("SELECT caption FROM {search_node_links} WHERE nid = :nid", array(':nid' => $node->nid));
+  $result = db_query("SELECT caption FROM {search_node_links} WHERE nid = :nid", array(':nid' => $node->nid), array('target' => 'slave'));
   $output = array();
   foreach ($result as $link) {
     $output[] = $link->caption;

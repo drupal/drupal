@@ -1228,7 +1228,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
       case '':
         $type = 'UNION';
         break;
-      
+
       case 'ALL':
         $type = 'UNION ALL';
       default:
