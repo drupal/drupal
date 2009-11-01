@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.26 2009/10/20 00:28:16 dries Exp $
+// $Id: select.inc,v 1.27 2009/11/01 21:46:16 webchick Exp $
 
 /**
  * @ingroup database
@@ -1228,7 +1228,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
       case '':
         $type = 'UNION';
         break;
-      
+
       case 'ALL':
         $type = 'UNION ALL';
       default:
