@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.3 2009/10/31 16:06:36 dries Exp $
+// $Id: image.field.inc,v 1.4 2009/11/01 14:05:32 dries Exp $
 
 /**
  * @file
@@ -305,8 +305,8 @@ function image_field_widget_settings_form($field, $instance) {
 /**
  * Implementation of hook_field_widget().
  */
-function image_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = 0) {
-  $elements = file_field_widget($form, $form_state, $field, $instance, $items, $delta);
+function image_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $elements = file_field_widget($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
   $settings = $instance['settings'];
 
   foreach (element_children($elements) as $delta) {

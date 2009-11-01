@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.532 2009/11/01 12:11:10 dries Exp $
+// $Id: taxonomy.module,v 1.533 2009/11/01 14:05:32 dries Exp $
 
 /**
  * @file
@@ -1211,8 +1211,8 @@ function taxonomy_term_title($term) {
 /**
  * Implement hook_field_widget().
  */
-function taxonomy_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = NULL) {
-  $element = array(
+function taxonomy_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $element += array(
     '#type' => $instance['widget']['type'],
     '#default_value' => !empty($items) ? $items : array(),
   );

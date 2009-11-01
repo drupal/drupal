@@ -1,5 +1,5 @@
 <?php
-// $Id: options.module,v 1.14 2009/10/23 22:24:13 webchick Exp $
+// $Id: options.module,v 1.15 2009/11/01 14:05:31 dries Exp $
 
 /**
  * @file
@@ -94,8 +94,8 @@ function options_element_info() {
 /**
  * Implement hook_field_widget().
  */
-function options_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = NULL) {
-  $element = array(
+function options_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $element += array(
     '#type' => $instance['widget']['type'],
     '#default_value' => !empty($items) ? $items : array(),
   );
