@@ -178,7 +178,7 @@ function number_field_instance_settings_form($field, $instance) {
  * - 'number_min': The value is smaller than the allowed minimum value.
  * - 'number_max': The value is larger than the allowed maximum value.
  */
-function number_field_validate($obj_type, $node, $field, $instance, $langcode, $items, &$errors) {
+function number_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
     if ($item['value'] != '') {
       if (is_numeric($instance['settings']['min']) && $item['value'] < $instance['settings']['min']) {
