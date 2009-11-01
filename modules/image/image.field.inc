@@ -305,8 +305,8 @@ function image_field_widget_settings_form($field, $instance) {
 /**
  * Implementation of hook_field_widget().
  */
-function image_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = 0) {
-  $elements = file_field_widget($form, $form_state, $field, $instance, $items, $delta);
+function image_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $elements = file_field_widget($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
   $settings = $instance['settings'];
 
   foreach (element_children($elements) as $delta) {

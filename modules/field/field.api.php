@@ -632,11 +632,15 @@ function hook_field_widget_info_alter(&$info) {
  *   Array of default values for this field.
  * @param $delta
  *   The order of this item in the array of subelements (0, 1, 2, etc).
+ * @param $element
+ *   A form element array containing basic properties for the widget: #title,
+ *   #description, #required, #field, #field_instance, #field_name, #delta,
+ *   #columns.
  * @return
  *   The form item for a single element for this field.
  */
-function hook_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = 0) {
-  $element = array(
+function hook_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $element += array(
     '#type' => $instance['widget']['type'],
     '#default_value' => isset($items[$delta]) ? $items[$delta] : '',
   );

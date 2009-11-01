@@ -1211,8 +1211,8 @@ function taxonomy_term_title($term) {
 /**
  * Implement hook_field_widget().
  */
-function taxonomy_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = NULL) {
-  $element = array(
+function taxonomy_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $element += array(
     '#type' => $instance['widget']['type'],
     '#default_value' => !empty($items) ? $items : array(),
   );

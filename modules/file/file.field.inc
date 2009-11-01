@@ -429,7 +429,7 @@ function file_field_widget_settings_form($field, $instance) {
 /**
  * Implementation of hook_field_widget().
  */
-function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = 0) {
+function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
   $defaults = array(
@@ -461,27 +461,21 @@ function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $
 
   // Essentially we use the managed_file type, extended with some enhancements.
   $element_info = element_info('managed_file');
-  $element = array(
+  $element += array(
     '#type' => 'managed_file',
     '#default_value' => isset($items[$delta]) ? $items[$delta] : $defaults,
-    '#required' => $instance['required'],
     '#upload_location' => file_field_widget_uri($field, $instance),
     '#upload_validators' => file_field_widget_upload_validators($field, $instance),
     '#value_callback' => 'file_field_widget_value',
     '#process' => array_merge($element_info['#process'], array('file_field_widget_process')),
     // Allows this field to return an array instead of a single value.
     '#extended' => TRUE,
-    // Add extra Field properties.
-    '#field_name' => $field['field_name'],
-    '#bundle' => $instance['bundle'],
-    '#object_type' => $instance['object_type'],
   );
 
   if ($field['cardinality'] == 1) {
     // If there's only one field, return it as delta 0.
-    $element['#title'] = $instance['label'];
     if (empty($element['#default_value']['fid'])) {
-      $element['#description'] = theme('file_upload_help', array('description' => $instance['description'], 'upload_validators' => $element['#upload_validators']));
+      $element['#description'] = theme('file_upload_help', array('description' => $element['#description'], 'upload_validators' => $element['#upload_validators']));
     }
     $elements = array($element);
   }
@@ -499,7 +493,7 @@ function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $
       $elements[$delta] = $element;
       $elements[$delta]['#default_value'] = $defaults;
       $elements[$delta]['#weight'] = $delta;
-      $elements[$delta]['#required'] = ($instance['required'] && $delta == 0);
+      $elements[$delta]['#required'] = ($element['#required'] && $delta == 0);
     }
     // The group of elements all-together need some extra functionality
     // after building up the full list (like draggable table rows).
@@ -508,8 +502,11 @@ function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $
     $elements['#theme_wrappers'] = array('fieldset');
     $elements['#attributes']['class'] = array('file-widget');
     $elements['#process'] = array('file_field_widget_process_multiple');
-    $elements['#title'] = $instance['label'];
-    $elements['#description'] = $instance['description'];
+    $elements['#title'] = $element['#title'];
+    $elements['#description'] = $element['#description'];
+    $elements['#object_type'] = $element['#object_type'];
+    $elements['#bundle'] = $element['#bundle'];
+    $elements['#field_name'] = $element['#field_name'];
 
     // Add some properties that will eventually be added to the file upload
     // field. These are added here so that they may be referenced easily through

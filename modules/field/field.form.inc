@@ -57,18 +57,18 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
     $delta = isset($get_delta) ? $get_delta : 0;
     $function = $instance['widget']['module'] . '_field_widget';
     if (function_exists($function)) {
-      if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta)) {
-        $defaults = array(
-          '#required' => $get_delta > 0 ? FALSE : $instance['required'],
-          '#columns'  => array_keys($field['columns']),
-          '#title' => check_plain(t($instance['label'])),
-          '#description' => field_filter_xss($instance['description']),
-          '#delta' => $delta,
-          '#field_name' => $field['field_name'],
-          '#bundle' => $instance['bundle'],
-          '#object_type' => $instance['object_type'],
-        );
-        $element = array_merge($element, $defaults);
+      $element = array(
+        '#object_type' => $instance['object_type'],
+        '#bundle' => $instance['bundle'],
+        '#field_name' => $field['field_name'],
+        '#columns' => array_keys($field['columns']),
+        '#title' => check_plain(t($instance['label'])),
+        '#description' => field_filter_xss($instance['description']),
+        // Only the first widget should be required.
+        '#required' => $delta == 0 && $instance['required'],
+        '#delta' => $delta,
+      );
+      if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta, $element)) {
         // If we're processing a specific delta value for a field where the
         // field module handles multiples, set the delta in the result.
         // For fields that handle their own processing, we can't make assumptions
@@ -84,14 +84,6 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
   }
 
   if ($form_element) {
-    $defaults = array(
-      '#field_name' => $field['field_name'],
-      '#tree' => TRUE,
-      '#weight' => $instance['widget']['weight'],
-    );
-
-    $form_element = array_merge($form_element, $defaults);
-
     // Add the field form element as a child keyed by language code to match the
     // field data structure: $object->{$field_name}[$langcode][$delta][$column].
     // The '#language' key can be used to access the field's form element when
@@ -99,7 +91,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
     // form element.
     $addition[$field['field_name']] = array(
       '#tree' => TRUE,
-      '#weight' => $form_element['#weight'],
+      '#weight' => $instance['widget']['weight'],
       '#language' => $langcode,
       $langcode => $form_element,
     );
@@ -145,6 +137,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
 
   $form_element = array(
     '#theme' => 'field_multiple_value_form',
+    '#field_name' => $field['field_name'],
     '#cardinality' => $field['cardinality'],
     '#title' => $title,
     '#required' => $instance['required'],
@@ -157,21 +150,21 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
   $function = $instance['widget']['module'] . '_field_widget';
   if (function_exists($function)) {
     for ($delta = 0; $delta <= $max; $delta++) {
-      if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta)) {
-        $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
-        $defaults = array(
-          // For multiple fields, title and description are handled by the wrapping table.
-          '#title' => $multiple ? '' : $title,
-          '#description' => $multiple ? '' : $description,
-          '#required' => $delta == 0 && $instance['required'],
-          '#weight' => $delta,
-          '#delta' => $delta,
-          '#columns' => array_keys($field['columns']),
-          '#field_name' => $field_name,
-          '#object_type' => $instance['object_type'],
-          '#bundle' => $instance['bundle'],
-        );
-
+      $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
+      $element = array(
+        '#object_type' => $instance['object_type'],
+        '#bundle' => $instance['bundle'],
+        '#field_name' => $field_name,
+        '#columns' => array_keys($field['columns']),
+        // For multiple fields, title and description are handled by the wrapping table.
+        '#title' => $multiple ? '' : $title,
+        '#description' => $multiple ? '' : $description,
+        // Only the first widget should be required.
+        '#required' => $delta == 0 && $instance['required'],
+        '#delta' => $delta,
+        '#weight' => $delta,
+      );
+      if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta, $element)) {
         // Input field for the delta (drag-n-drop reordering).
         if ($multiple) {
           // We name the element '_weight' to avoid clashing with elements
@@ -184,14 +177,12 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
             '#weight' => 100,
           );
         }
-
-        $form_element[$delta] = array_merge($element, $defaults);
+        $form_element[$delta] = $element;
       }
     }
 
     // Add 'add more' button, if not working with a programmed form.
     if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
-
       $form_element[$field_name . '_add_more'] = array(
         '#type' => 'submit',
         '#name' => $field_name . '_add_more',

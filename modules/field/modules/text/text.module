@@ -563,40 +563,9 @@ function text_element_info() {
 
 /**
  * Implement hook_field_widget().
- *
- * Attach a single form element to the form. It will be built out and
- * validated in the callback(s) listed in hook_element_info(). We build it
- * out in the callbacks rather than here in hook_field_widget so it can be
- * plugged into any module that can provide it with valid
- * $field information.
- *
- * Field module will set the weight, field name and delta values
- * for each form element.
- *
- * If there are multiple values for this field, the field module will
- * call this function as many times as needed.
- *
- * @param $form
- *   the entire form array, $form['#node'] holds node information
- * @param $form_state
- *   the form_state, $form_state['values'][$field['field_name']]
- *   holds the field's form values.
- * @param $field
- *   The field structure.
- * @param $instance
- *   the field instance array
- * @param $langcode
- *   The language associated to $items.
- * @param $items
- *   array of default values for this field
- * @param $delta
- *   the order of this item in the array of subelements (0, 1, 2, etc)
- *
- * @return
- *   the form item for a single element for this field
  */
-function text_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta = 0) {
-  $element = array(
+function text_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $element += array(
     '#type' => $instance['widget']['type'],
     '#default_value' => isset($items[$delta]) ? $items[$delta] : '',
   );
@@ -721,7 +690,6 @@ function text_textarea_with_summary_process($element, $form_state, $form) {
     '#weight' => 0,
     '#title' => t('Summary'),
     '#description' => t('Leave blank to use trimmed value of full text as the summary.'),
-    '#required' => $element['#required'],
     '#display' => $display,
     '#attached' => array('js' => array(drupal_get_path('module', 'text') . '/text.js')),
     '#attributes' => array('class' => array('text-textarea-summary')),
@@ -738,7 +706,6 @@ function text_textarea_with_summary_process($element, $form_state, $form) {
     '#title' => $display ? t('Full text') : $element['#title'],
     '#description' => $element['#description'],
     '#required' => $element['#required'],
-    '#required' => $instance['required'],
     '#attributes' => array('class' => array('text-full-textarea')),
     '#prefix' => '<div class="text-full-wrapper">',
     '#suffix' => '</div>',
