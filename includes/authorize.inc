@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.inc,v 1.3 2009/10/27 03:27:00 webchick Exp $
+// $Id: authorize.inc,v 1.4 2009/11/01 23:02:13 webchick Exp $
 
 /**
  * @file
@@ -10,10 +10,12 @@
  * Build the form for choosing a FileTransfer type and supplying credentials.
  */
 function authorize_filetransfer_form($form_state) {
-  global $base_url;
+  global $base_url, $is_https;
   $form = array();
 
-  $form['#action'] = $base_url . '/authorize.php';
+  // If possible, we want to post this form securely via https.
+  $form['#https'] = TRUE;
+
   // CSS we depend on lives in modules/system/maintenance.css, which is loaded
   // via the default maintenance theme.
   $form['#attached']['js'][] = $base_url . '/misc/authorize.js';
@@ -25,6 +27,10 @@ function authorize_filetransfer_form($form_state) {
   }
   $available_backends = $_SESSION['authorize_filetransfer_backends'];
   uasort($available_backends, 'drupal_sort_weight');
+
+  if (!$is_https) {
+    drupal_set_message(t('WARNING: You are not using an encrypted connection, so your password will be sent in plain text. <a href="@https-link">Learn more</a>.', array('@https-link' => 'http://drupal.org/https-information')), 'error');
+  }
 
   // Decide on a default backend.
   if (isset($form_state['values']['connection_settings']['authorize_filetransfer_default'])) {

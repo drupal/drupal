@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.387 2009/10/27 04:12:39 webchick Exp $
+// $Id: form.inc,v 1.388 2009/11/01 23:02:13 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1017,7 +1017,7 @@ function form_builder($form_id, $element, &$form_state) {
   // Special handling if we're on the top level form element.
   if (isset($element['#type']) && $element['#type'] == 'form') {
     if (!empty($element['#https']) && variable_get('https', FALSE) &&
-        !menu_path_is_external($element['#action'])) {
+        !url_is_external($element['#action'])) {
       global $base_root;
 
       // Not an external URL so ensure that it is secure.

@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.module,v 1.2 2009/10/23 22:24:17 webchick Exp $
+// $Id: shortcut.module,v 1.3 2009/11/01 23:02:13 webchick Exp $
 
 /**
  * @file
@@ -482,7 +482,7 @@ function shortcut_valid_link($path) {
     $path = $normal_path;
   }
   // Only accept links that correspond to valid paths on the site itself.
-  return !menu_path_is_external($path) && menu_get_item($path);
+  return !url_is_external($path) && menu_get_item($path);
 }
 
 /**
