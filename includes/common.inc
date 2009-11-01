@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1032 2009/10/31 16:06:35 dries Exp $
+// $Id: common.inc,v 1.1033 2009/11/01 14:08:17 dries Exp $
 
 /**
  * @file
@@ -2370,6 +2370,8 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  * alternative than url().
  */
 function url($path = NULL, array $options = array()) {
+  static $url_outbound;
+
   // Merge in defaults.
   $options += array(
     'fragment' => '',
@@ -2392,7 +2394,14 @@ function url($path = NULL, array $options = array()) {
   $original_path = $path;
 
   // Allow other modules to alter the outbound URL and options.
-  drupal_alter('url_outbound', $path, $options, $original_path);
+  // Since PHP code cannot be unloaded, we statically cache the implementations
+  // of hook_url_outbound_alter() and only invoke them in case there are any.
+  if (!isset($url_outbound)) {
+    $url_outbound = (bool) module_implements('url_outbound_alter');
+  }
+  if ($url_outbound) {
+    drupal_alter('url_outbound', $path, $options, $original_path);
+  }
 
   if ($options['fragment']) {
     $options['fragment'] = '#' . $options['fragment'];
