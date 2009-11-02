@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.97 2009/11/02 04:44:24 webchick Exp $
+// $Id: node.pages.inc,v 1.98 2009/11/02 04:45:02 webchick Exp $
 
 /**
  * @file
@@ -60,7 +60,7 @@ function node_add($type) {
   $types = node_type_get_types();
   $type = isset($type) ? str_replace('-', '_', $type) : NULL;
   // If a node type has been specified, validate its existence.
-  if (isset($types[$type])) {
+  if (isset($types[$type]) && node_access('create', $type)) {
     // Initialize settings:
     $node = (object)array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => '');
 
