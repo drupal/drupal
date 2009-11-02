@@ -5321,6 +5321,9 @@ function drupal_common_theme() {
     'form_element' => array(
       'render element' => 'element',
     ),
+    'form_required_marker' => array(
+      'arguments' => array('element' => NULL),
+    ),
     'text_format_wrapper' => array(
       'render element' => 'element',
     ),

@@ -2774,7 +2774,7 @@ function theme_form_element($variables) {
   }
 
   $output = '<div class="' . implode(' ', $class) . '">' . "\n";
-  $required = !empty($element['#required']) ? '<span class="form-required" title="' . $t('This field is required.') . '">*</span>' : '';
+  $required = !empty($element['#required']) ? theme('form_required_marker', array('element' => $element)) : '';
 
   if (!empty($element['#title']) && empty($element['#form_element_skip_title'])) {
     $title = $element['#title'];
@@ -2795,6 +2795,27 @@ function theme_form_element($variables) {
   $output .= "</div>\n";
 
   return $output;
+}
+
+/**
+ * Theme the marker for required form elements.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ * @return
+ *   A string representing the marker to identify required form elements.
+ *
+ * @ingroup themeable
+ */
+function theme_form_required_marker($variables) {
+  // This is also used in the installer, pre-database setup.
+  $t = get_t();
+  $attributes = array(
+    'class' => 'form-required',
+    'title' => $t('This field is required.'),
+  );
+  return '<span' . drupal_attributes($attributes) . '>*</span>';
 }
 
 /**

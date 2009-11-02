@@ -51,6 +51,9 @@ class FormsTestCase extends DrupalWebTestCase {
     $elements['file']['element'] = array('#title' => $this->randomName(), '#type' => 'file');
     $elements['file']['empty_values'] = $empty_strings;
 
+    // Regular expression to find the expected marker on required elements.
+    $required_marker_preg = '@<label.*<span class="form-required" title="This field is required\.">\*</span></label>@';
+
     // Go through all the elements and all the empty values for them
     foreach ($elements as $type => $data) {
       foreach ($data['empty_values'] as $key => $empty) {
@@ -69,19 +72,34 @@ class FormsTestCase extends DrupalWebTestCase {
           drupal_prepare_form($form_id, $form, $form_state);
           drupal_process_form($form_id, $form, $form_state);
           $errors = form_get_errors();
+          // Form elements of type 'radios' throw all sorts of PHP notices
+          // when you try to render them like this, so we ignore those for
+          // testing the required marker.
+          // @todo Fix this work-around (http://drupal.org/node/588438).
+          $form_output = ($type == 'radios') ? '' : drupal_render($form);
           if ($required) {
             // Make sure we have a form error for this element.
             $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");
-          }
-          elseif ($type == 'select') {
-            // Select elements are going to have validation errors with empty
-            // input, since those are illegal choices. Just make sure the
-            // error is not "field is required".
-            $this->assertTrue((empty($errors[$element]) || strpos('field is required', $errors[$element]) === FALSE), "Optional '$type' field '$element' is not treated as a required element");
+            if (!empty($form_output)) {
+              // Make sure the form element is marked as required.
+              $this->assertTrue(preg_match($required_marker_preg, $form_output), "Required '$type' field is marked as required");
+            }
           }
           else {
-            // Make sure there is *no* form error for this element.
-            $this->assertTrue(empty($errors[$element]), "Optional '$type' field '$element' has no errors with empty input");
+            if (!empty($form_output)) {
+              // Make sure the form element is *not* marked as required.
+              $this->assertFalse(preg_match($required_marker_preg, $form_output), "Optional '$type' field is not marked as required");
+            }
+            if ($type == 'select') {
+              // Select elements are going to have validation errors with empty
+              // input, since those are illegal choices. Just make sure the
+              // error is not "field is required".
+              $this->assertTrue((empty($errors[$element]) || strpos('field is required', $errors[$element]) === FALSE), "Optional '$type' field '$element' is not treated as a required element");
+            }
+            else {
+              // Make sure there is *no* form error for this element.
+              $this->assertTrue(empty($errors[$element]), "Optional '$type' field '$element' has no errors with empty input");
+            }
           }
         }
       }
