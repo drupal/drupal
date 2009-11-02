@@ -52,7 +52,7 @@ function locale_field_fallback_view(&$output, $context) {
 
     // If the items array is empty then we have a missing field translation.
     // @todo: Verify this assumption.
-    if (empty($output[$field_name]['items'])) {
+    if (isset($output[$field_name]) && empty($output[$field_name]['items'])) {
       if (!isset($fallback_candidates)) {
         require_once DRUPAL_ROOT . '/includes/language.inc';
         $fallback_candidates = language_fallback_get_candidates();

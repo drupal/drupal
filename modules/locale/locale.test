@@ -1634,12 +1634,6 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('locale');
-  }
-
-  /**
-   * Test if field languages are correctly set through the node form.
-   */
-  function testMultilingualNodeForm() {
     // Setup users.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'create page content', 'edit own page content'));
     $this->drupalLogin($admin_user);
@@ -1656,7 +1650,12 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Page')), t('Page content type has been updated.'));
+  }
 
+  /**
+   * Test if field languages are correctly set through the node form.
+   */
+  function testMultilingualNodeForm() {
     // Create page content.
     $langcode = FIELD_LANGUAGE_NONE;
     $title_key = "title[$langcode][0][value]";
@@ -1690,6 +1689,43 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 
     $assert = isset($node->body['it']) && !isset($node->body['en']) && $node->body['it'][0]['value'] == $body_value;
     $this->assertTrue($assert, t('Field language correctly changed.'));
+  }
+  
+  /*
+   * Test multilingual field display settings.
+   */
+  function testMultilingualDisplaySettings() {
+    // Create page content.
+    $langcode = FIELD_LANGUAGE_NONE;
+    $title_key = "title[$langcode][0][value]";
+    $title_value = $this->randomName(8);
+    $body_key = "body[$langcode][0][value]";
+    $body_value = $this->randomName(16);
+
+    // Create node to edit.
+    $edit = array();
+    $edit[$title_key] = $title_value;
+    $edit[$body_key] = $body_value;
+    $edit['language'] = 'en';
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+    
+    // Check that the node exists in the database.
+    $node = $this->drupalGetNodeByTitle($edit[$title_key]);
+    $this->assertTrue($node, t('Node found in database.'));
+    
+    // Check if node body is showed.
+    $this->drupalGet("node/$node->nid");
+    $body_xpath = '//div[@id="node-' . $node->nid . '"]//div[@property="content:encoded"]/p';
+    $this->assertEqual(current($this->xpath($body_xpath)), $node->body['en'][0]['value'], 'Node body is correctly showed.', 'Node');
+
+    $settings['body[full][type]'] = 'hidden';
+    $this->drupalPost('admin/structure/types/manage/page/display', $settings, t('Save'));
+    $select_xpath = '//select[@id="edit-body-full-type"]/option[@selected="selected"]';
+    // Check if body display is actually "hidden" for the "full" build mode.
+    $this->assertEqual(current($this->xpath($select_xpath)), '<Hidden>', 'Body display is actually "hidden" for the "full" build mode');
+    $this->drupalGet("node/$node->nid");
+    // Check if node body is not showed.
+    $this->assertFalse(is_array($this->xpath($body_xpath)), 'Body correctly not showed.');
   }
 }
 
