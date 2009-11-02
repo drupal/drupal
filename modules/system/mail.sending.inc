@@ -45,12 +45,13 @@ class DefaultMailSystem implements MailSystemInterface {
     foreach ($message['headers'] as $name => $value) {
       $mimeheaders[] = $name . ': ' . mime_header_encode($value);
     }
+    $line_endings = variable_get('mail_line_endings', MAIL_LINE_ENDINGS);
     return mail(
       $message['to'],
       mime_header_encode($message['subject']),
-      // Note: e-mail uses CRLF for line-endings, but PHP's API requires LF.
-      // They will appear correctly in the actual e-mail that is sent.
-      str_replace("\r", '', $message['body']),
+      // Note: e-mail uses CRLF for line-endings. PHP's API requires LF
+      // on Unix and CRLF on Windows. See mail_line_endings in settings.php.
+      preg_replace('@\r?\n@', $line_endings, $message['body']),
       // For headers, PHP's API suggests that we use CRLF normally,
       // but some MTAs incorrectly replace LF with CRLF. See #234403.
       join("\n", $mimeheaders)

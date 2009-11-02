@@ -167,6 +167,15 @@ $db_prefix = '';
 $update_free_access = FALSE;
 
 /**
+ * Line endings for e-mail messages
+ * 
+ * Drupal automatically guesses the line-ending format appropriate for your 
+ * system. If you need to override this, uncomment the statement below and set
+ * it to the line-ending string of your choice.
+ */
+# $conf['mail_line_endings'] = "\r\n";
+
+/**
  * Base URL (optional).
  *
  * If you are experiencing issues with different site domains,
