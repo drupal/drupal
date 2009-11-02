@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.318 2009/11/01 23:10:14 webchick Exp $
+// $Id: bootstrap.inc,v 1.319 2009/11/02 03:12:05 webchick Exp $
 
 /**
  * @file
@@ -1104,6 +1104,9 @@ function drupal_serve_page_from_cache(stdClass $cache) {
     header('Vary: Accept-Encoding', FALSE);
     // If page_compression is enabled, the cache contains gzipped data.
     if ($return_compressed) {
+      // $cache->data is already gzip'ed, so make sure zlib.output_compression
+      // does not compress it once more.
+      ini_set('zlib.output_compression', '0');
       header('Content-Encoding: gzip');
     }
     else {

@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.167 2009/11/02 01:49:02 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.168 2009/11/02 03:12:05 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1516,7 +1516,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   Either the new page content or FALSE.
    */
   protected function checkForMetaRefresh() {
-    if ($this->drupalGetContent() != '' && $this->parse()) {
+    if (strpos($this->drupalGetContent(), '<meta ') && $this->parse()) {
       $refresh = $this->xpath('//meta[@http-equiv="Refresh"]');
       if (!empty($refresh)) {
         // Parse the content attribute of the meta tag for the format:
