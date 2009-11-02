@@ -92,18 +92,15 @@ class UpdateQuery_sqlite extends UpdateQuery {
       if (is_array($data)) {
         // The field is an expression.
         $condition->condition($field, $data['expression'], '<>');
-        // The IS NULL operator is badly managed by DatabaseCondition.
-        $condition->where($field . ' IS NULL');
+        $condition->isNull($field);
       }
       elseif (is_null($data)) {
         // The field will be set to NULL.
-        // The IS NULL operator is badly managed by DatabaseCondition.
-        $condition->where($field . ' IS NOT NULL');
+        $condition->isNull($field);
       }
       else {
         $condition->condition($field, $data, '<>');
-        // The IS NULL operator is badly managed by DatabaseCondition.
-        $condition->where($field . ' IS NULL');
+        $condition->isNull($field);
       }
     }
     if (count($condition)) {
