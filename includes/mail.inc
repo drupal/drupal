@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.27 2009/11/02 02:37:36 webchick Exp $
+// $Id: mail.inc,v 1.28 2009/11/02 04:10:51 webchick Exp $
 
 /**
  * @file
@@ -8,6 +8,7 @@
 
 /**
  * Auto-detect appropriate line endings for e-mails.
+ *
  * $conf['mail_line_endings'] will override this setting.
  */
 define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') !== FALSE ? "\r\n" : "\n");

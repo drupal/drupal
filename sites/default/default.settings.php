@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.34 2009/11/02 02:37:36 webchick Exp $
+// $Id: default.settings.php,v 1.35 2009/11/02 04:10:51 webchick Exp $
 
 /**
  * @file
@@ -165,15 +165,6 @@ $db_prefix = '';
  * TRUE back to a FALSE!
  */
 $update_free_access = FALSE;
-
-/**
- * Line endings for e-mail messages
- * 
- * Drupal automatically guesses the line-ending format appropriate for your 
- * system. If you need to override this, uncomment the statement below and set
- * it to the line-ending string of your choice.
- */
-# $conf['mail_line_endings'] = "\r\n";
 
 /**
  * Base URL (optional).
