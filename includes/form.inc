@@ -3054,7 +3054,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
       'progressive' => TRUE,
       'url' => $url,
       'url_options' => array(),
-      'source_page' => $_GET['q'],
+      'source_url' => $_GET['q'],
       'redirect' => $redirect,
       'theme' => $GLOBALS['theme_key'],
       'redirect_callback' => $redirect_callback,

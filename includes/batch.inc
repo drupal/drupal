@@ -444,7 +444,7 @@ function _batch_finished() {
         $_batch['form_state']['redirect'] = $_batch['redirect'];
       }
       else {
-        $_batch['form_state']['redirect'] = $_batch['source_page'];
+        $_batch['form_state']['redirect'] = $_batch['source_url'];
       }
     }
 
