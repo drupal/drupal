@@ -140,7 +140,6 @@ function system_theme() {
     ),
     'system_settings_form' => array(
       'render element' => 'form',
-      'file' => 'system.admin.inc',
     ),
     'confirm_form' => array(
       'render element' => 'form',
@@ -2455,7 +2454,10 @@ function system_settings_form($form, $automatic_defaults = TRUE) {
     drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
   }
   $form['#submit'][] = 'system_settings_form_submit';
-  $form['#theme'] = 'system_settings_form';
+  // By default, render the form using theme_system_settings_form().
+  if (!isset($form['#theme'])) {
+    $form['#theme'] = 'system_settings_form';
+  }
   return $form;
 }
 
@@ -3525,6 +3527,21 @@ function system_archiver_info() {
  * @ingroup themeable
  */
 function theme_confirm_form($variables) {
+  return drupal_render_children($variables['form']);
+}
+
+/**
+ * Theme function for the system settings form.
+ *
+ * By default this does not alter the appearance of a form at all,
+ * but is provided as a convenience for themers.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: An associative array containing the structure of the form.
+ * @ingroup themeable
+ */
+function theme_system_settings_form($variables) {
   return drupal_render_children($variables['form']);
 }
 

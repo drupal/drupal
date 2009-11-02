@@ -2396,21 +2396,6 @@ function theme_system_modules_uninstall($variables) {
 }
 
 /**
- * Theme function for the system settings form.
- *
- * By default this does not alter the appearance of a form at all,
- * but is provided as a convenience for themers.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: An associative array containing the structure of the form.
- * @ingroup themeable
- */
-function theme_system_settings_form($variables) {
-  return drupal_render_children($variables['form']);
-}
-
-/**
  * Theme function for the system themes form.
  *
  * @param $variables
