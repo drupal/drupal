@@ -4322,13 +4322,13 @@ function _drupal_bootstrap_full() {
 /**
  * Store the current page in the cache.
  *
- * We try to store a gzipped version of the cache. This requires the
- * PHP zlib extension (http://php.net/manual/en/ref.zlib.php).
- * Presence of the extension is checked by testing for the function
- * gzencode. There are two compression algorithms: gzip and deflate.
- * The majority of all modern browsers support gzip or both of them.
- * We thus only deal with the gzip variant and unzip the cache in case
- * the browser does not accept gzip encoding.
+ * If page_compression is enabled, a gzipped version of the page is stored in
+ * the cache to avoid compressing the output on each request. The cache entry
+ * is unzipped in the relatively rare event that the page is requested by a
+ * client without gzip support.
+ *
+ * Page compression requires the PHP zlib extension
+ * (http://php.net/manual/en/ref.zlib.php).
  *
  * @see drupal_page_header
  */
@@ -4336,8 +4336,6 @@ function drupal_page_set_cache() {
   global $base_root;
 
   if (drupal_page_is_cacheable()) {
-    $cache_page = TRUE;
-
     $cache = (object) array(
       'cid' => $base_root . request_uri(),
       'data' => ob_get_clean(),
@@ -4353,19 +4351,10 @@ function drupal_page_set_cache() {
       $cache->headers[$header_names[$name_lower]] = $value;
     }
 
-    if (variable_get('page_compression', TRUE) && function_exists('gzencode')) {
-      // We do not store the data in case the zlib mode is deflate. This should
-      // be rarely happening.
-      if (zlib_get_coding_type() == 'deflate') {
-        $cache_page = FALSE;
-      }
-      elseif (zlib_get_coding_type() == FALSE) {
+    if ($cache->data) {
+      if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
         $cache->data = gzencode($cache->data, 9, FORCE_GZIP);
       }
-      // The remaining case is 'gzip' which means the data is already
-      // compressed and nothing left to do but to store it.
-    }
-    if ($cache_page && $cache->data) {
       cache_set($cache->cid, $cache->data, 'cache_page', $cache->expire, $cache->headers);
     }
     return $cache;

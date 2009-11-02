@@ -91,7 +91,7 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Page cache test',
-      'description' => 'Enable the page cache and test it with conditional HTTP requests.',
+      'description' => 'Enable the page cache and test it with various HTTP requests.',
       'group' => 'Bootstrap'
     );
   }
@@ -176,6 +176,37 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', t('Custom header was sent.'));
 
+  }
+
+  /**
+   * Test page compression.
+   * 
+   * The test should pass even if zlib.output_compression is enabled in php.ini,
+   * .htaccess or similar, or if compression is done outside PHP, e.g. by the
+   * mod_deflate Apache module.
+   */
+  function testPageCompression() {
+    variable_set('cache', CACHE_NORMAL);
+
+    // Fill the cache and verify that output is compressed.
+    $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', t('Page was not cached.'));
+    $this->drupalSetContent(gzinflate(substr($this->drupalGetContent(), 10, -8)));
+    $this->assertRaw('</html>', t('Page was gzip compressed.'));
+
+    // Verify that cached output is compressed.
+    $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
+    $this->assertEqual($this->drupalGetHeader('Content-Encoding'), 'gzip', t('A Content-Encoding header was sent.'));
+    $this->drupalSetContent(gzinflate(substr($this->drupalGetContent(), 10, -8)));
+    $this->assertRaw('</html>', t('Page was gzip compressed.'));
+
+    // Verify that a client without compression support gets an uncompressed page.
+    $this->drupalGet('');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
+    $this->assertFalse($this->drupalGetHeader('Content-Encoding'), t('A Content-Encoding header was not sent.'));
+    $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))), t('Site title matches.'));
+    $this->assertRaw('</html>', t('Page was not compressed.'));
   }
 }
 
