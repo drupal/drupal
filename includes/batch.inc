@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.43 2009/10/27 04:12:39 webchick Exp $
+// $Id: batch.inc,v 1.44 2009/11/02 00:42:06 webchick Exp $
 
 
 /**
@@ -444,7 +444,7 @@ function _batch_finished() {
         $_batch['form_state']['redirect'] = $_batch['redirect'];
       }
       else {
-        $_batch['form_state']['redirect'] = $_batch['source_page'];
+        $_batch['form_state']['redirect'] = $_batch['source_url'];
       }
     }
 

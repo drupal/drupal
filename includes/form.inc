@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.388 2009/11/01 23:02:13 webchick Exp $
+// $Id: form.inc,v 1.389 2009/11/02 00:42:06 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3054,7 +3054,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
       'progressive' => TRUE,
       'url' => $url,
       'url_options' => array(),
-      'source_page' => $_GET['q'],
+      'source_url' => $_GET['q'],
       'redirect' => $redirect,
       'theme' => $GLOBALS['theme_key'],
       'redirect_callback' => $redirect_callback,
