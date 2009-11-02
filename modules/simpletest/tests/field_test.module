@@ -104,6 +104,59 @@ function field_test_entity_info_alter(&$entity_info) {
 }
 
 /**
+ * Implement hook_field_widget_settings_form().
+ */
+function field_test_field_widget_settings_form($field, $instance) {
+  $widget = $instance['widget'];
+  $settings = $widget['settings'];
+
+  $form['test_widget_setting'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Field test field widget setting'),
+    '#default_value' => $settings['test_widget_setting'],
+    '#required' => FALSE,
+    '#description' => t('A dummy form element to simulate field widget setting.'),
+  );
+
+  return $form;
+}
+
+/**
+ * Implement hook_field_instance_settings_form().
+ */
+function field_test_field_instance_settings_form($field, $instance) {
+  $settings = $instance['settings'];
+
+  $form['test_instance_setting'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Field test field instance setting'),
+    '#default_value' => $settings['test_instance_setting'],
+    '#required' => FALSE,
+    '#description' => t('A dummy form element to simulate field instance setting.'),
+  );
+
+  return $form;
+}
+
+/**
+ * Implement hook_field_settings_form().
+ */
+function field_test_field_settings_form($field, $instance, $has_data) {
+  $settings = $field['settings'];
+
+  $form['test_field_setting'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Field test field setting'),
+    '#default_value' => $settings['test_field_setting'],
+    '#required' => FALSE,
+    '#description' => t('A dummy form element to simulate field setting.'),
+  );
+
+  return $form;
+}
+
+
+/**
  * Create a new bundle for test_entity objects.
  *
  * @param $bundle
@@ -359,6 +412,7 @@ function field_test_field_info() {
   return array(
     'test_field' => array(
       'label' => t('Test Field'),
+      'description' => t('Dummy field type used for tests.'),
       'settings' => array(
         'test_field_setting' => 'dummy test string',
         'changeable' => 'a changeable field setting',

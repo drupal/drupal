@@ -1,0 +1,198 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Unit test file for fields in core UI.
+ */
+
+/**
+ * Field UI tests.
+ */
+class FieldUITestCase extends DrupalWebTestCase {
+    public static function getInfo() {
+    return array(
+      'name' => 'Field UI tests',
+      'description' => 'Test the filed UI functionality.',
+      'group' => 'Field UI',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field_test');
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types'));
+    $this->drupalLogin($admin_user);
+    // Create content type, with underscores.
+    $type_name =  strtolower($this->randomName(8)) . '_' .'test';
+    $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
+    $this->type = $type->type;
+    // Store a valid URL name, with hyphens instead of underscores.
+    $this->hyphen_type = str_replace('_', '-', $this->type);
+
+    // Create random field name.
+    $this->field_label = $this->randomName(8);
+    $this->field_name = 'field_' . strtolower($this->randomName(8));
+  }
+
+  function testCRUDFields() {
+    $this->manageFieldsPage();
+    $this->createField();
+    $this->updateField();
+    $this->addExistingField();
+    $this->deleteField();
+  }
+
+  /**
+   * Test the manage fields page.
+   */
+  function manageFieldsPage() {
+    $this->drupalGet(('admin/structure/types/manage/' . $this->hyphen_type . '/fields'));
+    // Check all table columns.
+    $table_headers = array(
+      t('Label'),
+      t('Name'),
+      t('Field'),
+      t('Widget'),
+      t('Operations'),
+    );
+    foreach ($table_headers as $table_header) {
+      // We check that the label appear in the table headings.
+      $this->assertRaw($table_header . '</th>', t('%table_header table header was found.', array('%table_header' => $table_header)));
+    }
+
+    // "Add new field" and "Add existing field" aren't a table heading so just
+    // test the text.
+    foreach (array('Add new field', 'Add existing field') as $element) {
+      $this->assertText($element, t('"@element" was found.', array('@element' => $element)));
+    }
+  }
+
+  /**
+   * Test adding a new field.
+   *
+   * @todo Assert properties can bet set in the form and read back in $field and
+   * $insatnces.
+   */
+  function createField() {
+    // Create a test field.
+    $edit['_add_new_field[label]'] =  $this->field_label;
+    $edit['_add_new_field[field_name]'] =  $this->field_name;
+    $edit['_add_new_field[type]'] = 'test_field';
+    $edit['_add_new_field[widget_type]'] = 'test_field_widget';
+    $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '/fields',  $edit, t('Save'));
+
+    $this->assertText(t('@label field settings', array('@label' => $this->field_label)), t('Field settings page was displayed.'));
+
+    $this->drupalPost(NULL, array(), t('Save field settings'));
+
+    // Assert redirection to instance and widget settings page.
+    $this->assertText(t('Updated field @label field settings.', array('@label' => $this->field_label)), t('Redirected to instance and widget settings page.'));
+
+    // Assert the field settings.
+    $this->assertFieldSettings($this->type, $this->field_name);
+
+    $this->drupalPost(NULL, array(), t('Save settings'));
+
+    // Assert redirection back the to "manage fields" page.
+    $this->assertText(t('Saved @label configuration.', array('@label' => $this->field_label)), t('Redirected to "Manage fields" page.'));
+    $this->assertText($this->field_name, t('Field was created and appears in overview page.'));
+  }
+
+  /**
+   * Test editing an existing field.
+   */
+  function updateField() {
+    // Go to the field edit page.
+    $this->drupalGet('admin/structure/types/manage/' . $this->hyphen_type . '/fields/' . $this->field_name);
+
+    // Populate the field settings with new settings.
+    $string = 'updated dummy test string';
+    $edit = array();
+    $edit['field[settings][test_field_setting]'] = $string;
+    $edit['instance[settings][test_instance_setting]'] = $string;
+    $edit['instance[widget][settings][test_widget_setting]'] = $string;
+    $this->drupalPost(NULL, $edit, t('Save settings'));
+
+    // Assert the field settings.
+    $this->assertFieldSettings($this->type, $this->field_name, $string);
+
+    // Assert redirection back to the "manage fields" page.
+    $this->assertText(t('Saved @label configuration.', array('@label' => $this->field_label)), t('Redirected to "Manage fields" page.'));
+  }
+
+  /**
+   * Test adding an existing field in another content type.
+   */
+  function addExistingField() {
+    // Check "Add existing field" appears.
+    $this->drupalGet(('admin/structure/types/manage/page/fields'));
+    $this->assertRaw(t('Add existing field'), t('"Add existing field" was found.'));
+
+    // Add a new field based on an existing field.
+    $edit = array();
+    $edit['_add_existing_field[label]'] = $this->field_label . '_2';
+    $edit['_add_existing_field[field_name]'] =  $this->field_name;
+    $edit['_add_existing_field[widget_type]'] = 'test_field_widget';
+    $this->drupalPost("admin/structure/types/manage/page/fields", $edit, t('Save'));
+    $this->drupalPost(NULL, array(), t('Save settings'));
+
+    // Assert redirection back the to "manage fields" page.
+    $this->assertText(t('Saved @label-2 configuration.', array('@label-2' => $this->field_label . '_2')), t('Redirected to "Manage fields" page.'));
+    $this->assertText($this->field_name, t('Field was created and appears in overview page.'));
+  }
+
+  /**
+   * Test deleting an existing field.
+   */
+  function deleteField() {
+    $this->drupalGet('admin/structure/types/manage/' . $this->hyphen_type . '/fields/body/delete');
+    $this->assertText(t('Are you sure you want to delete the field Body'), t('Delete confirmation was found.'));
+
+    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertText(t('The field Body has been deleted from the @type content type.', array('@type' => $this->type)), t('Delete message was found.'));
+
+    // Reset the fields info.
+    _field_info_collate_fields(TRUE);
+    // Assert fields instance were deleted.
+    $this->assertNull(field_info_instance('node', 'body', $this->type), t('Field instance settings were deleted.'));
+
+    // Re-load the manage fields page.
+    $this->drupalGet('admin/structure/types/manage/' . $this->hyphen_type . '/fields/');
+    $this->assertNoText(t('Body'), t('Body field was deleted.'));
+
+    // Re-add body field by visiting the content type edit page.
+    $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '', array('body_label' => 'New body field'), t('Save content type'));
+    $this->drupalGet('admin/structure/types/manage/' . $this->hyphen_type . '/fields/');
+    $this->assertText(t('New body field'), t('New body field was found.'));
+
+    // Reset the fields info.
+    _field_info_collate_fields(TRUE);
+    // Assert fields instance are back.
+    $this->assertNotNull(field_info_instance('node', 'body', $this->type), t('Field instance settings were re-created.'));
+  }
+
+  /**
+   * Assert the field settings.
+   *
+   * @param $bundle
+   *   The bundle name for the instance.
+   * @param $field_name
+   *   The field name for the instance.
+   * @param $string
+   *   The settings text.
+   * @param $obj_type
+   *   The object type for the instance.
+   */
+  function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $obj_type = 'node') {
+    // Reset the fields info.
+    _field_info_collate_fields(TRUE);
+    // Assert field settings.
+    $field = field_info_field($field_name);
+    $this->assertTrue($field['settings']['test_field_setting'] == $string, t('Field settings were found.'));
+
+    // Assert instance and widget settings.
+    $instance = field_info_instance($obj_type, $field_name, $bundle);
+    $this->assertTrue($instance['settings']['test_instance_setting'] == $string, t('Field instance settings were found.'));
+    $this->assertTrue($instance['widget']['settings']['test_widget_setting'] == $string, t('Field widget settings were found.'));
+  }
+}
