@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.216 2009/10/19 23:28:40 dries Exp $
+// $Id: system.admin.inc,v 1.217 2009/11/02 15:57:33 webchick Exp $
 
 /**
  * @file
@@ -2053,10 +2053,6 @@ function system_php() {
 function system_batch_page() {
   require_once DRUPAL_ROOT . '/includes/batch.inc';
   $output = _batch_page();
-
-  // Use the same theme that the page that started the batch.
-  $batch = &batch_get();
-  $GLOBALS['custom_theme'] = $batch['theme'];
 
   if ($output === FALSE) {
     drupal_access_denied();
