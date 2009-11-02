@@ -143,8 +143,10 @@ function trigger_assign_form($form, $form_state, $module, $hook, $label) {
 
   $form[$hook] = array(
     '#type' => 'fieldset',
-    '#title' => t('Trigger: ') . $label,
-    '#theme' => 'trigger_display'
+    // !description is correct, since these labels are passed through t() in
+    // hook_trigger_info().
+    '#title' => t('Trigger: !description', array('!description' => $label)),
+    '#theme' => 'trigger_display',
   );
 
   // Retrieve actions that are already assigned to this hook combination.
