@@ -2188,10 +2188,16 @@ function theme_comment_post_forbidden($variables) {
   $node = $variables['node'];
   global $user;
 
+  // Since this is expensive to compute, we cache it so that a page with many
+  // comments only has to query the database once for all the links.
+  $authenticated_post_comments = &drupal_static(__FUNCTION__, NULL);
+
   if (!$user->uid) {
-    // We only output any link if we are certain, that users get permission
-    // to post comments by logging in. We also locally cache this information.
-    $authenticated_post_comments = &drupal_static(__FUNCTION__, array_key_exists(DRUPAL_AUTHENTICATED_RID, user_roles(TRUE, 'post comments') + user_roles(TRUE, 'post comments without approval')));
+    if (!isset($authenticated_post_comments)) {
+      // We only output a link if we are certain that users will get permission
+      // to post comments by logging in.
+      $authenticated_post_comments = array_key_exists(DRUPAL_AUTHENTICATED_RID, user_roles(TRUE, 'post comments') + user_roles(TRUE, 'post comments without approval'));
+    }
 
     if ($authenticated_post_comments) {
       // We cannot use drupal_get_destination() because these links
