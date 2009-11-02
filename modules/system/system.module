@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.831 2009/11/02 01:02:47 webchick Exp $
+// $Id: system.module,v 1.832 2009/11/02 03:27:20 webchick Exp $
 
 /**
  * @file
@@ -2542,7 +2542,10 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
   $form['actions']['cancel'] = array('#markup' => $cancel);
-  $form['#theme'] = 'confirm_form';
+  // By default, render the form using theme_confirm_form().
+  if (!isset($form['#theme'])) {
+    $form['#theme'] = 'confirm_form';
+  }
   return $form;
 }
 
