@@ -493,7 +493,17 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
   // Save all updated terms.
   foreach ($changed_terms as $changed) {
     $term = (object)$changed;
-    taxonomy_term_save($term);
+    // Update term_hierachy and term_data directly since we don't have a
+    // fully populated term object to save.
+    db_update('taxonomy_term_hierarchy')
+      ->fields(array('parent' => $term->parent))
+      ->condition('tid', $term->tid, '=')
+      ->execute();
+
+    db_update('taxonomy_term_data')
+      ->fields(array('weight' => $term->weight))
+      ->condition('tid', $term->tid, '=')
+      ->execute();
   }
 
   // Update the vocabulary hierarchy to flat or single hierarchy.
