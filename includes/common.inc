@@ -4499,13 +4499,10 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
     $searchdir[] = "$config/$directory";
   }
 
-  // If the database is not available, we can't use function_exists(), so
-  // we load the file_scan_directory function definition manually.
+  // Get current list of items
   if (!function_exists('file_scan_directory')) {
     require_once DRUPAL_ROOT . '/includes/file.inc';
   }
-
-  // Get current list of items
   foreach ($searchdir as $dir) {
     $files = array_merge($files, file_scan_directory($dir, $mask, array('key' => $key, 'min_depth' => $min_depth)));
   }
