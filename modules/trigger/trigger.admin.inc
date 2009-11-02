@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.19 2009/10/09 01:00:06 dries Exp $
+// $Id: trigger.admin.inc,v 1.20 2009/11/02 04:36:25 webchick Exp $
 
 /**
  * @file
@@ -143,8 +143,10 @@ function trigger_assign_form($form, $form_state, $module, $hook, $label) {
 
   $form[$hook] = array(
     '#type' => 'fieldset',
-    '#title' => t('Trigger: ') . $label,
-    '#theme' => 'trigger_display'
+    // !description is correct, since these labels are passed through t() in
+    // hook_trigger_info().
+    '#title' => t('Trigger: !description', array('!description' => $label)),
+    '#theme' => 'trigger_display',
   );
 
   // Retrieve actions that are already assigned to this hook combination.
