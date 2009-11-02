@@ -60,7 +60,7 @@ function node_add($type) {
   $types = node_type_get_types();
   $type = isset($type) ? str_replace('-', '_', $type) : NULL;
   // If a node type has been specified, validate its existence.
-  if (isset($types[$type]) && node_access('create', $type)) {
+  if (isset($types[$type])) {
     // Initialize settings:
     $node = (object)array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => '');
 
