@@ -7,6 +7,40 @@
  */
 
 /**
+ * Tests for the batch API progress page theme.
+ */
+class BatchAPIThemeTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Batch API progress page theme',
+      'description' => 'Tests that while a progressive batch is running, it correctly uses the theme of the page that started the batch.',
+      'group' => 'Batch API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('system_test');
+    // Make sure that the page which starts the batch (an administrative page)
+    // is using a different theme than would normally be used by the batch API.
+    variable_set('theme_default', 'garland');
+    variable_set('admin_theme', 'seven');
+  }
+
+  /**
+   * Tests that the batch API progress page uses the correct theme.
+   */
+  function testBatchAPIProgressPageTheme() {
+    // Visit an administrative page that runs a test batch, and check that the
+    // theme that was used during batch execution (which the batch callback
+    // function saved as a variable) matches the theme used on the
+    // administrative page.
+    $this->drupalGet('admin/system-test/batch-theme');
+    $batch_theme_used = variable_get('system_test_batch_theme_used', 'garland');
+    $this->assertEqual($batch_theme_used, 'seven', t('A progressive batch correctly uses the theme of the page that started the batch.'));
+  }
+}
+
+/**
  * Tests the function _batch_api_percentage() to make sure that the rounding
  * works properly in all cases.
  */

@@ -993,10 +993,27 @@ function system_menu() {
   $items['batch'] = array(
     'page callback' => 'system_batch_page',
     'access callback' => TRUE,
+    'theme callback' => '_system_batch_theme',
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   return $items;
+}
+
+/**
+ * Theme callback for the default batch page.
+ */
+function _system_batch_theme() {
+  // Retrieve the current state of the batch.
+  $batch = &batch_get();
+  if (!$batch && isset($_REQUEST['id'])) {
+    require_once DRUPAL_ROOT . '/includes/batch.inc';
+    $batch = batch_load($_REQUEST['id']);
+  }
+  // Use the same theme as the page that started the batch.
+  if (!empty($batch['theme'])) {
+    return $batch['theme'];
+  }
 }
 
 /**

@@ -2054,10 +2054,6 @@ function system_batch_page() {
   require_once DRUPAL_ROOT . '/includes/batch.inc';
   $output = _batch_page();
 
-  // Use the same theme that the page that started the batch.
-  $batch = &batch_get();
-  $GLOBALS['custom_theme'] = $batch['theme'];
-
   if ($output === FALSE) {
     drupal_access_denied();
   }

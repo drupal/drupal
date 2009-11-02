@@ -5,6 +5,11 @@
  * Implement hook_menu().
  */
 function system_test_menu() {
+  $items['admin/system-test/batch-theme'] = array(
+    'page callback' => 'system_test_batch_theme',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );    
   $items['system-test/sleep/%'] = array(
     'page callback' => 'system_test_sleep',
     'page arguments' => array(2),
@@ -95,6 +100,34 @@ function system_test_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Menu callback; start a new batch for testing the batch progress page theme.
+ */
+function system_test_batch_theme() {
+  $batch = array(
+    'operations' => array(
+      array('system_test_batch_theme_callback', array()),
+    ),
+  );
+  batch_set($batch);
+  // Force the batch to redirect to some page other than this one (to avoid an
+  // infinite loop).
+  batch_process('node');
+}
+
+/**
+ * Batch callback function for testing the theme used by a batch.
+ */
+function system_test_batch_theme_callback() {
+  // Because drupalGet() steps through the full progressive batch before
+  // returning control to the test function, we cannot test that the correct
+  // theme is being used on the batch processing page by viewing that page
+  // directly. Instead, we save the theme being used in a variable here, so
+  // that it can be loaded and inspected in the thread running the test.
+  global $theme;
+  variable_set('system_test_batch_theme_used', $theme);
 }
 
 function system_test_sleep($seconds) {

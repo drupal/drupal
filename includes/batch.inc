@@ -17,6 +17,26 @@
  */
 
 /**
+ * Loads a batch from the database.
+ *
+ * @param $id
+ *   The ID of the batch to load. When a progressive batch is being processed,
+ *   the relevant ID is found in $_REQUEST['id'].
+ * @return
+ *   An array representing the batch, or FALSE if no batch was found.
+ */
+function batch_load($id) {
+  $batch = db_query("SELECT batch FROM {batch} WHERE bid = :bid AND token = :token", array(
+    ':bid' => $id,
+    ':token' => drupal_get_token($id),
+  ))->fetchField();
+  if ($batch) {
+    return unserialize($batch);
+  }
+  return FALSE;
+}
+
+/**
  * State-based dispatcher for the batch processing page.
  *
  * @see _batch_shutdown()
@@ -28,18 +48,14 @@ function _batch_page() {
     return FALSE;
   }
 
-  // Retrieve the current state of batch from db.
-  $batch = db_query("SELECT batch FROM {batch} WHERE bid = :bid AND token = :token", array(
-    ':bid' => $_REQUEST['id'],
-    ':token' => drupal_get_token($_REQUEST['id']))
-  )->fetchField();
-
+  // Retrieve the current state of the batch.
   if (!$batch) {
-    drupal_set_message(t('No active batch.'), 'error');
-    drupal_goto();
+    $batch = batch_load($_REQUEST['id']);
+    if (!$batch) {
+      drupal_set_message(t('No active batch.'), 'error');
+      drupal_goto();
+    }
   }
-
-  $batch = unserialize($batch);
 
   // Register database update for the end of processing.
   register_shutdown_function('_batch_shutdown');
