@@ -8,6 +8,7 @@
 
 /**
  * Auto-detect appropriate line endings for e-mails.
+ *
  * $conf['mail_line_endings'] will override this setting.
  */
 define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') !== FALSE ? "\r\n" : "\n");

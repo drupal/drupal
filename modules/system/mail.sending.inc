@@ -50,7 +50,9 @@ class DefaultMailSystem implements MailSystemInterface {
       $message['to'],
       mime_header_encode($message['subject']),
       // Note: e-mail uses CRLF for line-endings. PHP's API requires LF
-      // on Unix and CRLF on Windows. See mail_line_endings in settings.php.
+      // on Unix and CRLF on Windows. Drupal automatically guesses the
+      // line-ending format appropriate for your system. If you need to
+      // override this, adjust $conf['mail_line_endings'] in settings.php.
       preg_replace('@\r?\n@', $line_endings, $message['body']),
       // For headers, PHP's API suggests that we use CRLF normally,
       // but some MTAs incorrectly replace LF with CRLF. See #234403.
