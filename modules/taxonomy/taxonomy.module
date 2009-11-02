@@ -892,11 +892,11 @@ function taxonomy_help($path, $arg) {
       $vocabulary = taxonomy_vocabulary_load($arg[3]);
       switch ($vocabulary->hierarchy) {
         case 0:
-          return '<p>' . t('%capital_name is a flat vocabulary. You may organize the terms in the %name vocabulary by using the handles on the left side of the table. To change the name or description of a term, click the <em>edit</em> link next to the term.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
+          return '<p>' . t('You can reorganize the terms in %capital_name using their drag and drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
         case 1:
-          return '<p>' . t('%capital_name is a single hierarchy vocabulary. You may organize the terms in the %name vocabulary by using the handles on the left side of the table. To change the name or description of a term, click the <em>edit</em> link next to the term.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
+          return '<p>' . t('%capital_name contains terms grouped with parent terms. You can reorganize the terms in %capital_name using their drag and drop handles.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
         case 2:
-          return '<p>' . t('%capital_name is a multiple hierarchy vocabulary. To change the name or description of a term, click the <em>edit</em> link next to the term. Drag and drop of multiple hierarchies is not supported, but you can re-enable drag and drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
+          return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag and drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
       }
     case 'admin/structure/taxonomy/add':
       return '<p>' . t('Define how your vocabulary will be presented to administrators and users, and which content types to categorize with it. Tags allows users to create terms when submitting posts by typing a comma separated list. Otherwise terms are chosen from a select list and can only be created by users with the "administer taxonomy" permission.') . '</p>';
