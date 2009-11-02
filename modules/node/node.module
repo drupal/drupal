@@ -1180,6 +1180,9 @@ function node_build($node, $build_mode = 'full') {
  *
  */
 function node_build_content(stdClass $node, $build_mode = 'full') {
+  // Remove previously built content, if exists.
+  $node->content = array();
+
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
   if (node_hook($node, 'view')) {
@@ -1187,9 +1190,6 @@ function node_build_content(stdClass $node, $build_mode = 'full') {
   }
 
   // Build fields content.
-  if (empty($node->content)) {
-    $node->content = array();
-  };
   $node->content += field_attach_view('node', $node, $build_mode);
 
   // Always display a read more link on teasers because we have no way

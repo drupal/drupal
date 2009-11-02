@@ -839,9 +839,8 @@ function comment_build($comment, stdClass $node, $build_mode = 'full') {
  *   Build mode, e.g. 'full', 'teaser'...
  */
 function comment_build_content($comment, stdClass $node, $build_mode = 'full') {
-  if (empty($comment->content)) {
-    $comment->content = array();
-  }
+  // Remove previously built content, if exists.
+  $comment->content = array();
 
   // Build comment body.
   $comment->content['comment_body'] = array(
