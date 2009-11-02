@@ -13,7 +13,6 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('field_test');
 
-    $this->list_values = array(1 => 'One', 2 => 'Two', 3 => 'Three');
     $this->card_1 = array(
       'field_name' => 'card_1',
       'type' => 'list',
@@ -59,7 +58,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assert that a checkbox identified by $id is not checked.
+   * Assert that a checkbox identified by $id is found but is not checked.
    */
   function assertIsNotChecked($html, $id) {
     $input = $this->getTagById($html, $id);
@@ -91,7 +90,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assert that an <option> for value $value is not selected.
+   * Assert that an <option> for value $value is found but is not selected.
    */
   function assertIsNotSelected($html, $value) {
     $input = $this->getOptionByValue($html, $value);
@@ -130,6 +129,15 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     $this->assertIsNotChecked($render, 'edit-card-1-zxx-value-1');
     $this->assertIsChecked($render, 'edit-card-1-zxx-value-2');
     $this->assertIsNotChecked($render, 'edit-card-1-zxx-value-3');
+
+    // Required radios with one option is auto-selected.
+    $instance['required'] = TRUE;
+    field_update_instance($instance);
+    $this->card_1['settings']['allowed_values'] = '99|Only allowed value for radios';
+    field_update_field($this->card_1);
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $render = drupal_render($form);
+    $this->assertIsChecked($render, 'edit-card-1-zxx-value-99');
   }
 
   function testCheckBoxes() {
@@ -160,6 +168,16 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     $this->assertIsNotChecked($render, 'edit-card-2-zxx-value-1');
     $this->assertIsChecked($render, 'edit-card-2-zxx-value-2');
     $this->assertIsChecked($render, 'edit-card-2-zxx-value-3');
+
+    // Required checkbox with one option is auto-selected.
+    $instance['required'] = TRUE;
+    field_update_instance($instance);
+    $this->card_2['settings']['allowed_values'] = '99|Only allowed value for checkboxes';
+    field_update_field($this->card_2);
+    unset($entity->card_2);
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $render = drupal_render($form);
+    $this->assertIsChecked($render, 'edit-card-2-zxx-value-99');
   }
 
   function testSelectList() {
@@ -190,6 +208,19 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     $this->assertIsSelected($render, 1);
     $this->assertIsSelected($render, 2);
     $this->assertIsNotSelected($render, 3);
+
+    // A non-required select list has an empty key.
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(isset($form['card_2'][FIELD_LANGUAGE_NONE]['value']['#options']['']), 'A non-required select list has an empty key.');
+
+    // A required select list does not have an empty key.
+    $instance['required'] = TRUE;
+    field_update_instance($instance);
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(!isset($form['card_2'][FIELD_LANGUAGE_NONE]['value']['#options']['']), 'A required select list does not have an empty key.');
+
+    // We don't have to test that a required select list with one
+    // option is auto-selected because the browser does it for us.
   }
 
   /**

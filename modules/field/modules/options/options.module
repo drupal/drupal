@@ -129,6 +129,7 @@ function options_buttons_elements_process($element, &$form_state, $form) {
     $element['#value'] = options_data2form($element, $element['#default_value'], $field);
   }
   $options = options_options($field, $instance);
+  $required = isset($element['#required']) ? $element['#required'] : $instance['required'];
   $multiple = isset($element['#multiple']) ? $element['#multiple'] : $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
 
   // Incoming #value is an array (checkboxes) or integer (radios).
@@ -150,12 +151,23 @@ function options_buttons_elements_process($element, &$form_state, $form) {
       break;
     }
   }
+  
+  // If required and there is one option, make it the default.
+  if ($required && count($options) == 1) {
+    $keys = array_keys($options);
+    if ($multiple) {
+      $value = $keys;
+    }
+    else {
+      $value = $keys[0];
+    }
+  }
 
   $element[$field_key] = array(
     '#type' => $multiple ? 'checkboxes' : 'radios',
     '#title' => $element['#title'],
     '#description' => $element['#description'],
-    '#required' => isset($element['#required']) ? $element['#required'] : $instance['required'],
+    '#required' => $required,
     '#multiple' => $multiple,
     '#options' => $options,
     '#default_value' => $value,
