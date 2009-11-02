@@ -24,6 +24,10 @@ Larry Garfield 'Crell' <http://drupal.org/user/26398>
 DOCUMENTATION COORDINATOR
 Addison Berry 'add1sun' <http://drupal.org/user/65088>
 
+FIELD SYSTEM
+Barry Jaspan 'bjaspan' <http://drupal.org/user/46413>
+Yves Chedemois 'yched' <http://drupal.org/user/39567>
+
 FILE MANAGEMENT SYSTEM
 Andrew Morton 'drewish' <http://drupal.org/user/34869>
 
