@@ -7,14 +7,6 @@
  */
 
 /**
- * Implement hook_install().
- */
-function trigger_install() {
-  // Do initial synchronization of actions in code and the database.
-  actions_synchronize();
-}
-
-/**
  * Implement hook_schema().
  */
 function trigger_schema() {
@@ -48,6 +40,14 @@ function trigger_schema() {
     ),
   );
   return $schema;
+}
+
+/**
+ * Implement hook_install().
+ */
+function trigger_install() {
+  // Do initial synchronization of actions in code and the database.
+  actions_synchronize();
 }
 
 /**
