@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.7 2009/10/09 01:00:08 dries Exp $
+// $Id: template.php,v 1.8 2009/11/02 00:25:32 webchick Exp $
 
 /**
  * Override or insert variables into the page template.
@@ -63,10 +63,10 @@ function seven_tablesort_indicator($variables) {
   $style = $variables['style'];
   $theme_path = drupal_get_path('theme', 'seven');
   if ($style == "asc") {
-    return theme('image', array('path' => $theme_path . '/images/arrow-asc.png', 'alt' => t('sort icon'), 'title' => t('sort ascending')));
+    return theme('image', array('path' => $theme_path . '/images/arrow-asc.png', 'alt' => t('sort ascending'), 'title' => t('sort ascending')));
   }
   else {
-    return theme('image', array('path' => $theme_path . '/images/arrow-desc.png', 'alt' => t('sort icon'), 'title' => t('sort descending')));
+    return theme('image', array('path' => $theme_path . '/images/arrow-desc.png', 'alt' => t('sort descending'), 'title' => t('sort descending')));
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.544 2009/11/01 22:10:07 webchick Exp $
+// $Id: theme.inc,v 1.545 2009/11/02 00:25:32 webchick Exp $
 
 /**
  * @file
@@ -1756,10 +1756,10 @@ function theme_table_select_header_cell() {
  */
 function theme_tablesort_indicator($variables) {
   if ($variables['style'] == "asc") {
-    return theme('image', array('path' => 'misc/arrow-asc.png', 'alt' => t('sort icon'), 'title' => t('sort ascending')));
+    return theme('image', array('path' => 'misc/arrow-asc.png', 'alt' => t('sort ascending'), 'title' => t('sort ascending')));
   }
   else {
-    return theme('image', array('path' => 'misc/arrow-desc.png', 'alt' => t('sort icon'), 'title' => t('sort descending')));
+    return theme('image', array('path' => 'misc/arrow-desc.png', 'alt' => t('sort descending'), 'title' => t('sort descending')));
   }
 }
 
