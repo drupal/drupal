@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.319 2009/11/02 03:12:05 webchick Exp $
+// $Id: bootstrap.inc,v 1.320 2009/11/02 03:46:43 webchick Exp $
 
 /**
  * @file
@@ -677,11 +677,12 @@ function drupal_get_filename($type, $name, $filename = NULL) {
         $mask = "/$name\.$type$/";
       }
 
-      if (function_exists('drupal_system_listing')) {
-        $matches = drupal_system_listing($mask, $dir, 'name', 0);
-        if (!empty($matches[$name]->uri)) {
-          $files[$type][$name] = $matches[$name]->uri;
-        }
+      if (!function_exists('drupal_system_listing')) {
+        require_once DRUPAL_ROOT . '/includes/common.inc';
+      }
+      $matches = drupal_system_listing($mask, $dir, 'name', 0);
+      if (!empty($matches[$name]->uri)) {
+        $files[$type][$name] = $matches[$name]->uri;
       }
     }
   }
