@@ -2542,7 +2542,10 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
   $form['actions']['cancel'] = array('#markup' => $cancel);
-  $form['#theme'] = 'confirm_form';
+  // By default, render the form using theme_confirm_form().
+  if (!isset($form['#theme'])) {
+    $form['#theme'] = 'confirm_form';
+  }
   return $form;
 }
 
