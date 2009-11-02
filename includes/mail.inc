@@ -1,10 +1,16 @@
 <?php
-// $Id: mail.inc,v 1.26 2009/10/16 03:01:54 dries Exp $
+// $Id: mail.inc,v 1.27 2009/11/02 02:37:36 webchick Exp $
 
 /**
  * @file
  * API functions for processing and sending e-mail.
  */
+
+/**
+ * Auto-detect appropriate line endings for e-mails.
+ * $conf['mail_line_endings'] will override this setting.
+ */
+define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') !== FALSE ? "\r\n" : "\n");
 
 /**
  * Compose and optionally send an e-mail message.
