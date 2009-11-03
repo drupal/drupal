@@ -215,7 +215,14 @@ function _batch_progress_page_nojs() {
   $batch['url_options']['query']['op'] = $new_op;
 
   $url = url($batch['url'], $batch['url_options']);
-  drupal_add_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
+  $element = array(
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'http-equiv' => 'Refresh',
+      'content' => '0; URL=' . $url,
+    ),
+  );
+  drupal_add_html_head($element, 'batch_progress_meta_refresh');
 
   return theme('progress_bar', array('percent' => $percentage, 'message' => $message));
 }

@@ -362,9 +362,6 @@ function comment_permalink($comment) {
     $_GET['q'] = 'node/' . $node->nid;
     $_GET['page'] = $page;
 
-    // Set the node path as the canonical URL to prevent duplicate content.
-    drupal_add_link(array('rel' => 'canonical', 'href' => url('node/' . $node->nid)));
-
     // Return the node view, this will show the correct comment in context.
     return menu_execute_active_handler('node/' . $node->nid, FALSE);
   }

@@ -97,7 +97,14 @@ function openid_test_yadis_x_xrds_location() {
  * Menu callback; regular HTML page with <meta> element.
  */
 function openid_test_yadis_http_equiv() {
-  drupal_add_html_head('<meta http-equiv="X-XRDS-Location" content="' . url('openid-test/yadis/xrds', array('absolute' => TRUE)) . '" />');
+  $element = array(
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'http-equiv' => 'X-XRDS-Location',
+      'content' => url('openid-test/yadis/xrds', array('absolute' => TRUE)),
+    ),
+  );
+  drupal_add_html_head($element, 'openid_test_yadis_http_equiv');
   return t('This page includes a &lt;meta equiv=...&gt; element containing the URL of an XRDS document.');
 }
 
@@ -105,7 +112,7 @@ function openid_test_yadis_http_equiv() {
  * Menu callback; regular HTML page with OpenID 1.0 <link> element.
  */
 function openid_test_html_openid1() {
-  drupal_add_html_head('<link rel="openid.server" href="' . url('openid-test/endpoint', array('absolute' => TRUE)) . '" />');
+  drupal_add_html_head_link(array('rel' => 'openid.server', 'href' => url('openid-test/endpoint', array('absolute' => TRUE))));
   return t('This page includes a &lt;link rel=...&gt; element containing the URL of an OpenID Provider Endpoint.');
 }
 
@@ -113,7 +120,7 @@ function openid_test_html_openid1() {
  * Menu callback; regular HTML page with OpenID 2.0 <link> element.
  */
 function openid_test_html_openid2() {
-  drupal_add_html_head('<link rel="openid2.provider" href="' . url('openid-test/endpoint', array('absolute' => TRUE)) . '" />');
+  drupal_add_html_head_link(array('rel' => 'openid2.provider', 'href' => url('openid-test/endpoint', array('absolute' => TRUE))));
   return t('This page includes a &lt;link rel=...&gt; element containing the URL of an OpenID Provider Endpoint.');
 }
 

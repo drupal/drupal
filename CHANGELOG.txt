@@ -149,6 +149,12 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Modules can specify how their data structure maps to RDF.
     * Added support for RDFa export of nodes, comments, terms, users, etc. and
       their fields.
+- Search engine optimization and web linking:
+    * Added a rel="canonical" link on node and comment pages to prevent
+      duplicate content indexing by search engines.
+    * Added a default rel="shortlink" link on node and comment pages that
+      advertises a short link as an alternative URL to third-party services.
+    * Meta information is now alterable by all modules before rendering.
 - Field API:
     * Custom data fields may be attached to nodes, users, comments and taxonomy
       terms.

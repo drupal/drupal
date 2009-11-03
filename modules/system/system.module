@@ -179,12 +179,6 @@ function system_theme() {
     'system_powered_by' => array(
       'variables' => array(),
     ),
-    'meta_generator_html' => array(
-      'variables' => array('version' => NULL),
-    ),
-    'meta_generator_header' => array(
-      'variables' => array('version' => NULL),
-    ),
     'system_compact_link' => array(
       'variables' => array(),
     ),
@@ -316,6 +310,12 @@ function system_element_info() {
   // debugging page that displays rather than executes AJAX commands).
   $types['ajax_commands'] = array(
     '#ajax_commands' => array(),
+  );
+
+  $types['html_tag'] = array(
+    '#theme' => 'html_tag',
+    '#attributes' => array(),
+    '#value' => NULL,
   );
 
   // Input elements.
@@ -1718,22 +1718,6 @@ function system_init() {
 }
 
 /**
- * Implement MODULE_preprocess_HOOK().
- */
-function system_preprocess_page(&$variables) {
-  // Get the major version
-  list($version, ) = explode('.', VERSION);
-
-  // Emit the META tag in the HTML HEAD section
-  theme('meta_generator_html', array('version' => $version));
-
-  // Emit the HTTP Header too
-  theme('meta_generator_header', array('version' => $version));
-
-  $variables['head'] = drupal_get_html_head();
-}
-
-/**
  * Implement hook_form_FORM_ID_alter().
  */
 function system_form_user_profile_form_alter(&$form, &$form_state) {
@@ -2971,24 +2955,6 @@ function theme_system_compact_link() {
   $output .= '</div>';
 
   return $output;
-}
-
-/**
- * Send Drupal and the major version number in the META GENERATOR HTML.
- *
- * @ingroup themeable
- */
-function theme_meta_generator_html($variables) {
-  drupal_add_html_head('<meta name="Generator" content="Drupal ' . $variables['version'] . ' (http://drupal.org)" />');
-}
-
-/**
- * Send Drupal and the major version number in the HTTP headers.
- *
- * @ingroup themeable
- */
-function theme_meta_generator_header($variables) {
-  drupal_add_http_header('X-Generator', 'Drupal ' . $variables['version'] . ' (http://drupal.org)');
 }
 
 /**

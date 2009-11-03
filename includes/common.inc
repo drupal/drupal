@@ -280,23 +280,78 @@ function drupal_get_rdf_namespaces() {
 /**
  * Add output to the head tag of the HTML page.
  *
- * This function can be called as long the headers aren't sent.
+ * This function can be called as long the headers aren't sent. Pass no
+ * arguments (or NULL for both) to retrieve the currently stored elements.
+ *
+ * @param $data
+ *   A renderable array. If the '#type' key is not set then 'html_tag' will be
+ *   added as the default '#type'.
+ * @param $key
+ *   A unique string key to allow implementations of hook_html_head_alter() to
+ *   identify the element in $data. Required if $data is not NULL.
+ *
+ * @return
+ *   An array of all stored HEAD elements.
+ *
+ * @see theme_html_tag()
  */
-function drupal_add_html_head($data = NULL) {
-  $stored_head = &drupal_static(__FUNCTION__, '');
+function drupal_add_html_head($data = NULL, $key = NULL) {
+  $stored_head = &drupal_static(__FUNCTION__);
 
-  if (!is_null($data)) {
-    $stored_head .= $data . "\n";
+  if (!isset($stored_head)) {
+    // Make sure the defaults, including Content-Type, come first.
+    $stored_head = _drupal_default_html_head();
+  }
+
+  if (isset($data) && isset($key)) {
+    if (!isset($data['#type'])) {
+      $data['#type'] = 'html_tag';
+    }
+    $stored_head[$key] = $data;
   }
   return $stored_head;
 }
 
 /**
- * Retrieve output to be displayed in the head tag of the HTML page.
+ * Returns elements that are always displayed in the HEAD tag of the HTML page.
+ */
+function _drupal_default_html_head() {
+  // Add default elements. Make sure the Content-Type comes first because the
+  // IE browser may be vulnerable to XSS via encoding attacks from any content
+  // that comes before this META tag, such as a TITLE tag.
+  $elements['system_meta_content_type'] = array(
+    '#type' => 'html_tag',
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'http-equiv' => 'Content-Type',
+      'content' => 'text/html; charset=utf-8',
+    ),
+    // Security: This always has to be output first.
+    '#weight' => -1000,
+  );
+  // Show Drupal and the major version number in the META GENERATOR tag.
+  // Get the major version.
+  list($version, ) = explode('.', VERSION);
+  $elements['system_meta_generator'] = array(
+    '#type' => 'html_tag',
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'name' => 'Generator',
+      'content' => 'Drupal ' . $version . ' (http://drupal.org)',
+    ),
+  );
+  // Also send the generator in the HTTP header.
+  $elements['system_meta_generator']['#attached']['drupal_add_http_header'][] = array('X-Generator', $elements['system_meta_generator']['#attributes']['content']);
+  return $elements;
+}
+
+/**
+ * Retrieve output to be displayed in the HEAD tag of the HTML page.
  */
 function drupal_get_html_head() {
-  $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-  return $output . drupal_add_html_head();
+  $elements = drupal_add_html_head();
+  drupal_alter('html_head', $elements);
+  return drupal_render($elements);
 }
 
 /**
@@ -319,10 +374,10 @@ function drupal_clear_path_cache() {
 function drupal_add_feed($url = NULL, $title = '') {
   $stored_feed_links = &drupal_static(__FUNCTION__, array());
 
-  if (!is_null($url) && !isset($stored_feed_links[$url])) {
+  if (isset($url)) {
     $stored_feed_links[$url] = theme('feed_icon', array('url' => $url, 'title' => $title));
 
-    drupal_add_link(array('rel' => 'alternate',
+    drupal_add_html_head_link(array('rel' => 'alternate',
                           'type' => 'application/rss+xml',
                           'title' => $title,
                           'href' => $url));
@@ -2540,6 +2595,28 @@ function url_is_external($path) {
 }
 
 /**
+ * Format an attribute string for a HTTP header.
+ *
+ * @param $attributes
+ *   An associative array of attributes such as 'rel'.
+ *
+ * @return
+ *   A ; separated string ready for insertion in a HTTP header. No escaping is
+ *   performed for HTML entities, so this string is not safe to be printed.
+ *
+ * @see drupal_add_http_header()
+ */
+function drupal_http_header_attributes(array $attributes = array()) {
+  foreach ($attributes as $attribute => &$data) {
+    if (is_array($data)) {
+      $data = implode(' ', $data);
+    }
+    $data = $attribute . '="' . $data . '"';
+  }
+  return $attributes ? ' ' . implode('; ', $attributes) : '';
+}
+
+/**
  * Format an attribute string to insert in a tag.
  *
  * Each array key and its value will be formatted into an HTML attribute string.
@@ -2949,12 +3026,33 @@ function base_path() {
 }
 
 /**
- * Add a <link> tag to the page's HEAD.
+ * Add a LINK tag with a distinct 'rel' attribute to the page's HEAD.
  *
- * This function can be called as long the HTML header hasn't been sent.
+ * This function can be called as long the HTML header hasn't been sent,
+ * which on normal pages is up through the preprocess step of theme('html').
+ * Adding a link will overwrite a prior link with the exact same 'rel' and
+ * 'href' attributes.
+ * 
+ * @param $attributes
+ *   Associative array of element attributes including 'href' and 'rel'.
+ * @param $header
+ *   Optional flag to determine if a HTTP 'Link:' header should be sent.
  */
-function drupal_add_link($attributes) {
-  drupal_add_html_head('<link' . drupal_attributes($attributes) . " />\n");
+function drupal_add_html_head_link($attributes, $header = FALSE) {
+  $element = array(
+    '#tag' => 'link',
+    '#attributes' => $attributes,
+  );
+  $href = $attributes['href'];
+
+  if ($header) {
+    // Also add a HTTP header "Link:".
+    $href = '<' . check_plain($attributes['href']) . '>;';
+    unset($attributes['href']);
+    $element['#attached']['drupal_add_http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
+  }
+
+  drupal_add_html_head($element, 'drupal_add_html_head_link:' . $attributes['rel'] . ':' . $href);
 }
 
 /**
@@ -3140,7 +3238,15 @@ function drupal_get_css($css = NULL) {
   }
 
   // If CSS preprocessing is off, we still need to output the styles.
-  // Additionally, go through any remaining styles if CSS preprocessing is on and output the non-cached ones.
+  // Additionally, go through any remaining styles if CSS preprocessing is on
+  // and output the non-cached ones.
+  $css_element = array(
+    '#tag' => 'link',
+    '#attributes' => array(
+      'type' => 'text/css',
+      'rel' => 'stylesheet',
+    ),
+  );
   $rendered_css = array();
   $inline_css = '';
   $external_css = '';
@@ -3152,7 +3258,10 @@ function drupal_get_css($css = NULL) {
       case 'file':
         // Depending on whether aggregation is desired, include the file.
         if (!$item['preprocess'] || !($is_writable && $preprocess_css)) {
-          $rendered_css[] = '<link type="text/css" rel="stylesheet" media="' . $item['media'] . '" href="' . file_create_url($item['data']) . $query_string . '" />';
+          $element = $css_element;
+          $element['#attributes']['media'] = $item['media'];
+          $element['#attributes']['href'] = file_create_url($item['data']) . $query_string;
+          $rendered_css[] = theme('html_tag', array('element' => $element));
         }
         else {
           $preprocess_items[$item['media']][] = $item;
@@ -3167,7 +3276,10 @@ function drupal_get_css($css = NULL) {
         break;
       case 'external':
         // Preprocessing for external CSS files is ignored.
-        $external_css .= '<link type="text/css" rel="stylesheet" media="' . $item['media'] . '" href="' . $item['data'] . '" />' . "\n";
+        $element = $css_element;
+        $element['#attributes']['media'] = $item['media'];
+        $element['#attributes']['href'] = $item['data'];
+        $external_css .= theme('html_tag', array('element' => $element));
         break;
     }
   }
@@ -3176,18 +3288,24 @@ function drupal_get_css($css = NULL) {
     foreach ($preprocess_items as $media => $items) {
       // Prefix filename to prevent blocking by firewalls which reject files
       // starting with "ad*".
+      $element = $css_element;
+      $element['#attributes']['media'] = $media;
       $filename = 'css_' . md5(serialize($items) . $query_string) . '.css';
-      $preprocess_file = file_create_url(drupal_build_css_cache($items, $filename));
-      $rendered_css['preprocess'] .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . $preprocess_file . '" />' . "\n";
+      $element['#attributes']['href'] = file_create_url(drupal_build_css_cache($items, $filename));
+      $rendered_css['preprocess'] .= theme('html_tag', array('element' => $element));
     }
   }
   // Enclose the inline CSS with the style tag if required.
   if (!empty($inline_css)) {
-    $inline_css = "\n" . '<style type="text/css">' . $inline_css .'</style>';
+    $element = $css_element;
+    $element['#tag'] = 'style';
+    $element['#value'] = $inline_css;
+    unset($element['#attributes']['rel']);
+    $inline_css = "\n" . theme('html_tag', array('element' => $element));
   }
 
   // Output all the CSS files with the inline stylesheets showing up last.
-  return implode("\n", $rendered_css) . $external_css . $inline_css;
+  return implode($rendered_css) . $external_css . $inline_css;
 }
 
 /**
@@ -3668,7 +3786,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
   $output = '';
   $preprocessed = '';
-  $no_preprocess = '';
+  $no_preprocess = "\n";
   $files = array();
   $preprocess_js = (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
   $directory = file_directory_path('public');
@@ -3692,19 +3810,42 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   uasort($items, 'drupal_sort_weight');
 
   // Loop through the JavaScript to construct the rendered output.
+  $element = array(
+    '#tag' => 'script',
+    '#value' => '',
+    '#attributes' => array(
+      'type' => 'text/javascript',
+    ),
+  );
   foreach ($items as $item) {
     switch ($item['type']) {
       case 'setting':
-        $output .= '<script type="text/javascript">' . $embed_prefix . 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(call_user_func_array('array_merge_recursive', $item['data'])) . ");" . $embed_suffix . "</script>\n";
+        $js_element = $element;
+        $js_element['#value_prefix'] = $embed_prefix;
+        $js_element['#value'] = 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(call_user_func_array('array_merge_recursive', $item['data'])) . ");";
+        $js_element['#value_suffix'] = $embed_suffix;
+        $output .= theme('html_tag', array('element' => $js_element));
         break;
 
       case 'inline':
-        $output .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . '>' . $embed_prefix . $item['data'] . $embed_suffix . "</script>\n";
+        $js_element = $element;
+        if ($item['defer']) {
+          $js_element['#attributes']['defer'] = 'defer';
+        }
+        $js_element['#value_prefix'] = $embed_prefix;
+        $js_element['#value'] = $item['data'];
+        $js_element['#value_suffix'] = $embed_suffix;
+        $output .= theme('html_tag', array('element' => $js_element));
         break;
 
       case 'file':
+        $js_element = $element;
         if (!$item['preprocess'] || !$is_writable || !$preprocess_js) {
-          $no_preprocess .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . file_create_url($item['data']) . ($item['cache'] ? $query_string : '?' . REQUEST_TIME) . "\"></script>\n";
+          if ($item['defer']) {
+            $js_element['#attributes']['defer'] = 'defer';
+          }
+          $js_element['#attributes']['src'] = file_create_url($item['data']) . ($item['cache'] ? $query_string : '?' . REQUEST_TIME);
+          $no_preprocess .= theme('html_tag', array('element' => $js_element));
         }
         else {
           $files[$item['data']] = $item;
@@ -3712,8 +3853,13 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
         break;
 
       case 'external':
+        $js_element = $element;
         // Preprocessing for external JavaScript files is ignored.
-        $output .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . check_plain($item['data']) . "\"></script>\n";
+        if ($item['defer']) {
+          $js_element['#attributes']['defer'] = 'defer';
+        }
+        $js_element['#attributes']['src'] = $item['data'];
+        $output .= theme('html_tag', array('element' => $js_element));
         break;
     }
   }
@@ -3724,7 +3870,9 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
     // starting with "ad*".
     $filename = 'js_' . md5(serialize($files) . $query_string) . '.js';
     $preprocess_file = file_create_url(drupal_build_js_cache($files, $filename));
-    $preprocessed .= '<script type="text/javascript" src="' . $preprocess_file . '"></script>' . "\n";
+    $js_element = $element;
+    $js_element['#attributes']['src'] = $preprocess_file;
+    $preprocessed .= theme('html_tag', array('element' => $js_element)) . "\n";
   }
 
   // Keep the order of JS files consistent as some are preprocessed and others are not.
@@ -5237,6 +5385,9 @@ function drupal_common_theme() {
     ),
     'indentation' => array(
       'variables' => array('size' => 1),
+    ),
+    'html_tag' => array(
+      'render element' => 'element',
     ),
     // from theme.maintenance.inc
     'maintenance_page' => array(

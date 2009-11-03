@@ -530,7 +530,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     $css_preprocessed = '<style type="text/css">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
     drupal_add_css($css, 'inline');
     $styles = drupal_get_css();
-    $this->assertEqual($styles, "\n" . $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
+    $this->assertEqual($styles, "\n" . $css_preprocessed . "\n", t('Rendering preprocessed inline CSS adds it to the page.'));
   }
 
   /**

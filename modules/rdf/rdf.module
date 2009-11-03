@@ -384,10 +384,17 @@ function rdf_preprocess_node(&$variables) {
   // In full node mode, the title is not displayed by node.tpl.php so it is
   // added in the head tag of the HTML page.
   if ($variables['page']) {
-    $title_attributes['property'] = empty($variables['node']->rdf_mapping['title']['predicates']) ? NULL : $variables['node']->rdf_mapping['title']['predicates'];
-    $title_attributes['content'] = $variables['node_title'];
-    $title_attributes['about'] = $variables['node_url'];
-    drupal_add_html_head('<meta' . drupal_attributes($title_attributes) . ' />');
+    $element = array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'content' => $variables['node_title'],
+        'about' => $variables['node_url'],
+      ),
+    );
+    if (!empty($variables['node']->rdf_mapping['title']['predicates'])) {
+      $element['#attributes']['property'] = $variables['node']->rdf_mapping['title']['predicates'];
+    }
+    drupal_add_html_head($element, 'rdf_node');
   }
 
   // Adds RDFa markup for the date.

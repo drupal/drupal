@@ -1879,6 +1879,48 @@ function theme_feed_icon($variables) {
 }
 
 /**
+ * Generate the output for a generic HTML tag with attributes.
+ *
+ * This theme function should be used for tags appearing in the HTML HEAD of a
+ * document (specified via the #tag property in the passed $element):
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array describing the tag:
+ *     - #tag: The tag name to output.  Typical tags added to the HTML HEAD:
+ *       - meta: To provide meta information, such as a page refresh.
+ *       - link: To refer to stylesheets and other contextual information.
+ *       - script: To load JavaScript.
+ *     - #attributes: (optional) An array of HTML attributes to apply to the
+ *       tag.
+ *     - #value: (optional) A string containing tag content, such as inline CSS.
+ *     - #value_prefix: (optional) A string to prepend to #value, e.g. a CDATA
+ *       wrapper prefix.
+ *     - #value_suffix: (optional) A string to append to #value, e.g. a CDATA
+ *       wrapper suffix.
+ *
+ * @ingroup themeable
+ */
+function theme_html_tag($variables) {
+  $element = $variables['element'];
+  if (!isset($element['#value'])) {
+    return '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . " />\n";
+  }
+  else {
+    $output = '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . '>';
+    if (isset($element['#value_prefix'])) {
+      $output .= $element['#value_prefix'];
+    }
+    $output .= $element['#value'];
+    if (isset($element['#value_suffix'])) {
+      $output .= $element['#value_suffix'];
+    }
+    $output .= '</' . $element['#tag'] . ">\n";
+    return $output;
+  }
+}
+
+/**
  * Returns code that emits the 'more' link used on blocks.
  *
  * @param $variables
@@ -2181,7 +2223,7 @@ function template_preprocess_html(&$variables) {
   if (theme_get_setting('toggle_favicon')) {
     $favicon = theme_get_setting('favicon');
     $type = theme_get_setting('favicon_mimetype');
-    drupal_add_html_head('<link rel="shortcut icon" href="' . check_url($favicon) . '" type="' . check_plain($type) . '" />');
+    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => check_url($favicon), 'type' => $type));
   }
 
   // Construct page title.
@@ -2350,7 +2392,7 @@ function template_preprocess_maintenance_page(&$variables) {
   if (theme_get_setting('toggle_favicon')) {
     $favicon = theme_get_setting('favicon');
     $type = theme_get_setting('favicon_mimetype');
-    drupal_add_html_head('<link rel="shortcut icon" href="' . check_url($favicon) . '" type="' . check_plain($type) . '" />');
+    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => check_url($favicon), 'type' => $type));
   }
 
   global $theme;
