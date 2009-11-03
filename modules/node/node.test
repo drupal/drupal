@@ -982,7 +982,6 @@ class NodeAdminTestCase extends DrupalWebTestCase {
 
     // Filter the node listing by status.
     $edit = array(
-      'filter' => 'status',
       'status' => 'status-1',
     );
     $this->drupalPost('admin/content', $edit, t('Filter'));
@@ -992,7 +991,6 @@ class NodeAdminTestCase extends DrupalWebTestCase {
 
     // Filter the node listing by content type.
     $edit = array(
-      'filter' => 'type',
       'type' => 'article',
     );
     $this->drupalPost('admin/content', $edit, t('Refine'));
