@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.31 2009/09/20 19:14:40 dries Exp $
+// $Id: tabledrag.js,v 1.32 2009/11/03 05:34:37 webchick Exp $
 (function ($) {
 
 /**
@@ -903,7 +903,9 @@ Drupal.tableDrag.prototype.row.prototype.isValidSwap = function (row) {
  *   DOM element what will be swapped with the row group.
  */
 Drupal.tableDrag.prototype.row.prototype.swap = function (position, row) {
+  Drupal.detachBehaviors(this.group, Drupal.settings, 'move');
   $(row)[position](this.group);
+  Drupal.attachBehaviors(this.group, Drupal.settings);
   this.changed = true;
   this.onSwap(row);
 };
