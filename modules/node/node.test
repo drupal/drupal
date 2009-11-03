@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.51 2009/10/30 22:33:35 dries Exp $
+// $Id: node.test,v 1.52 2009/11/03 04:35:01 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -982,7 +982,6 @@ class NodeAdminTestCase extends DrupalWebTestCase {
 
     // Filter the node listing by status.
     $edit = array(
-      'filter' => 'status',
       'status' => 'status-1',
     );
     $this->drupalPost('admin/content', $edit, t('Filter'));
@@ -992,7 +991,6 @@ class NodeAdminTestCase extends DrupalWebTestCase {
 
     // Filter the node listing by content type.
     $edit = array(
-      'filter' => 'type',
       'type' => 'article',
     );
     $this->drupalPost('admin/content', $edit, t('Refine'));

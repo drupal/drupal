@@ -1,4 +1,11 @@
-/* $Id: node-rtl.css,v 1.3 2007/11/27 12:09:26 goba Exp $ */
+/* $Id: node-rtl.css,v 1.4 2009/11/03 04:35:01 webchick Exp $ */
+
+#node-admin-content dl.multiselect dd.b .form-item label {
+  display: block;
+  float: right;
+  width: 6em;
+  font-weight: normal;
+}
 
 #node-admin-buttons {
   float: right;
