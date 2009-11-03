@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.545 2009/11/02 00:25:32 webchick Exp $
+// $Id: theme.inc,v 1.546 2009/11/03 05:27:18 webchick Exp $
 
 /**
  * @file
@@ -2043,6 +2043,10 @@ function _theme_table_cell($cell, $header = FALSE) {
 
   if (is_array($cell)) {
     $data = isset($cell['data']) ? $cell['data'] : '';
+    // Cell's data property can be a string or a renderable array.
+    if (is_array($data)) {
+      $data = drupal_render($data);
+    }
     $header |= isset($cell['header']);
     unset($cell['data']);
     unset($cell['header']);

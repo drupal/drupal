@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.49 2009/10/13 15:39:41 dries Exp $
+// $Id: filter.admin.inc,v 1.50 2009/11/03 05:27:18 webchick Exp $
 
 /**
  * @file
@@ -32,8 +32,8 @@ function filter_admin_overview($form) {
       $roles_markup = $roles ? implode(', ', $roles) : t('No roles may use this format');
     }
     $form['formats'][$id]['roles'] = array('#markup' => $roles_markup);
-    $form['formats'][$id]['configure'] = array('#markup' => l(t('configure'), 'admin/config/content/formats/' . $id));
-    $form['formats'][$id]['delete'] = array('#markup' => $form['formats'][$id]['#is_fallback'] ? '' : l(t('delete'), 'admin/config/content/formats/' . $id . '/delete'));
+    $form['formats'][$id]['configure'] = array('#type' => 'link', '#title' => t('configure'), '#href' => 'admin/config/content/formats/' . $id);
+    $form['formats'][$id]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/config/content/formats/' . $id . '/delete', '#access' => !$form['formats'][$id]['#is_fallback']);
     $form['formats'][$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));

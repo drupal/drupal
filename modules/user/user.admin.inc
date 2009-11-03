@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.87 2009/10/27 04:08:42 webchick Exp $
+// $Id: user.admin.inc,v 1.88 2009/11/03 05:27:18 webchick Exp $
 
 /**
  * @file
@@ -192,7 +192,7 @@ function user_admin_account() {
       'roles' => theme('item_list', array('items' => $users_roles)),
       'member_for' => format_interval(REQUEST_TIME - $account->created),
       'access' =>  $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
-      'operations' => l(t('edit'), "user/$account->uid/edit", array('query' => $destination)),
+      'operations' => array('data' => array('#link' => array('title' => t('edit'), 'href' => "user/$account->uid/edit", 'query' => $destination))),
     );
   }
   

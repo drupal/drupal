@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.66 2009/11/01 23:02:13 webchick Exp $
+// $Id: menu.admin.inc,v 1.67 2009/11/03 05:27:18 webchick Exp $
 
 /**
  * @file
@@ -109,20 +109,16 @@ function _menu_overview_tree_form($tree) {
       );
       // Build a list of operations.
       $operations = array();
-      $operations['edit'] = l(t('edit'), 'admin/structure/menu/item/' . $item['mlid'] . '/edit');
+      $operations['edit'] = array('#type' => 'link', '#title' => t('edit'), '#href' => 'admin/structure/menu/item/' . $item['mlid'] . '/edit');
       // Only items created by the menu module can be deleted.
       if ($item['module'] == 'menu' || $item['updated'] == 1) {
-        $operations['delete'] = l(t('delete'), 'admin/structure/menu/item/' . $item['mlid'] . '/delete');
+        $operations['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/structure/menu/item/' . $item['mlid'] . '/delete');
       }
       // Set the reset column.
       elseif ($item['module'] == 'system' && $item['customized']) {
-        $operations['reset'] = l(t('reset'), 'admin/structure/menu/item/' . $item['mlid'] . '/reset');
+        $operations['reset'] = array('#type' => 'link', '#title' => t('reset'), '#href' => 'admin/structure/menu/item/' . $item['mlid'] . '/reset');
       }
-
-      $form[$mlid]['operations'] = array();
-      foreach ($operations as $op => $value) {
-        $form[$mlid]['operations'][$op] = array('#markup' => $value);
-      }
+      $form[$mlid]['operations'] = $operations;
     }
 
     if ($data['below']) {

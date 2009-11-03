@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.14 2009/10/16 00:52:46 webchick Exp $
+// $Id: image.admin.inc,v 1.15 2009/11/03 05:27:18 webchick Exp $
 
 /**
  * @file
@@ -97,11 +97,15 @@ function image_style_form($form, &$form_state, $style) {
       '#access' => $editable,
     );
     $form['effects'][$ieid]['configure'] = array(
-      '#markup' => isset($effect['form callback']) ? l(t('edit'), 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] ) : '',
-      '#access' => $editable,
+      '#type' => 'link',
+      '#title' => t('edit'),
+      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'],
+      '#access' => $editable && isset($effect['form callback']),
     );
     $form['effects'][$ieid]['remove'] = array(
-      '#markup' => l(t('delete'), 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete'),
+      '#type' => 'link',
+      '#title' => t('delete'),
+      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete',
       '#access' => $editable,
     );
   }

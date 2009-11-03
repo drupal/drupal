@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.390 2009/11/02 03:00:28 webchick Exp $
+// $Id: form.inc,v 1.391 2009/11/03 05:27:18 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2665,24 +2665,6 @@ function theme_textarea($variables) {
 
   _form_set_class($element, $class);
   return '<textarea cols="' . $element['#cols'] . '" rows="' . $element['#rows'] . '" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
-}
-
-/**
- * Theme HTML markup for use in forms.
- *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #markup, #children.
- *
- * @return
- *   A themed HTML string representing the HTML markup.
- *
- * @ingroup themeable
- */
-function theme_markup($variables) {
-  $element = $variables['element'];
-  return (!empty($element['#markup']) ? $element['#markup'] : '') . drupal_render_children($element);
 }
 
 /**
