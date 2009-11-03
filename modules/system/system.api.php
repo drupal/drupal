@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.98 2009/11/01 21:26:44 webchick Exp $
+// $Id: system.api.php,v 1.99 2009/11/03 06:47:23 webchick Exp $
 
 /**
  * @file
@@ -2279,6 +2279,27 @@ function hook_install_tasks() {
 function hook_drupal_goto_alter(&$path, &$options, &$http_response_code) {
   // A good addition to misery module.
   $http_response_code = 500;
+}
+
+/**
+ * Alter XHTML HEAD tags before they are rendered by drupal_get_html_head().
+ *
+ * Elements available to be altered are only those added using
+ * drupal_add_html_head_link() or drupal_add_html_head(). CSS and JS files
+ * are handled using drupal_add_css() and drupal_add_js(), so the head links
+ * for those files will not appear in the $head_elements array.
+ *
+ * @param $head_elements
+ *   An array of renderable elements. Generally the values of the #attributes
+ *   array will be the most likely target for changes.
+ */
+function hook_html_head_alter(&$head_elements) {
+  foreach($head_elements as $key => $element) {
+    if (isset($element['#attributes']['rel']) && $element['#attributes']['rel'] == 'canonical') {
+      // I want a custom canonical url.
+      $head_elements[$key]['#attributes']['href'] = mymodule_canonical_url();
+    }
+  }
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: browser_test.module,v 1.4 2009/09/30 18:36:02 dries Exp $
+// $Id: browser_test.module,v 1.5 2009/11/03 06:47:23 webchick Exp $
 
 /**
  * @file
@@ -57,7 +57,14 @@ function browser_test_print_post_form_submit($form, &$form_state) {
 function browser_test_refresh_meta() {
   if (!isset($_GET['refresh'])) {
     $url = url('browser_test/refresh/meta', array('absolute' => TRUE, 'query' => array('refresh' => 'true')));
-    drupal_add_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
+    $element = array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'http-equiv' => 'Refresh',
+        'content' => '0; URL=' . $url,
+      ),
+    );
+    drupal_add_html_head($element, 'browser_test_refresh_meta');
     return '';
   }
   echo 'Refresh successful';
