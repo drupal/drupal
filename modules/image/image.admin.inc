@@ -97,11 +97,15 @@ function image_style_form($form, &$form_state, $style) {
       '#access' => $editable,
     );
     $form['effects'][$ieid]['configure'] = array(
-      '#markup' => isset($effect['form callback']) ? l(t('edit'), 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] ) : '',
-      '#access' => $editable,
+      '#type' => 'link',
+      '#title' => t('edit'),
+      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'],
+      '#access' => $editable && isset($effect['form callback']),
     );
     $form['effects'][$ieid]['remove'] = array(
-      '#markup' => l(t('delete'), 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete'),
+      '#type' => 'link',
+      '#title' => t('delete'),
+      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete',
       '#access' => $editable,
     );
   }

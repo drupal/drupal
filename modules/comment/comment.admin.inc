@@ -86,11 +86,31 @@ function comment_admin_overview($form, &$form_state, $arg) {
 
   foreach ($result as $comment) {
     $options[$comment->cid] = array(
-      'subject' => l($comment->subject, 'comment/' . $comment->cid, array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid)),
+      'subject' => array(
+        'data' => array(
+          '#type' => 'link',
+          '#title' => $comment->subject,
+          '#href' => 'comment/' . $comment->cid,
+          '#options' => array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid),
+        ),
+      ),
       'author' => theme('username', array('account' => $comment)),
-      'posted_in' => l($comment->node_title, 'node/' . $comment->nid),
+      'posted_in' => array(
+        'data' => array(
+          '#type' => 'link',
+          '#title' => $comment->node_title,
+          '#href' => 'node/' . $comment->nid,
+        ),
+      ),
       'changed' => format_date($comment->changed, 'short'),
-      'operations' => l(t('edit'), 'comment/' . $comment->cid .'/edit', array('query' => $destination)),
+      'operations' => array(
+        'data' => array(
+          '#type' => 'link',
+          '#title' => t('edit'),
+          '#href' => 'comment/' . $comment->cid . '/edit',
+          '#options' => array('query' => $destination),
+        ),
+      ),
     );
   }
 

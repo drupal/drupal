@@ -87,14 +87,16 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
       '#options' => $block_regions,
     );
     $form[$key]['configure'] = array(
-      '#markup' => l(t('configure'),
-      'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure'),
+      '#type' => 'link',
+      '#title' => t('configure'),
+      '#href' => 'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure',
     );
     if ($block['module'] == 'block') {
       $form[$key]['delete'] = array(
-        '#markup' => l(t('delete'),
-        'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/delete'),
-      );
+        '#type' => 'link',
+        '#title' => t('delete'),
+        '#href' => 'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/delete',
+     );
     }
   }
   // Do not allow disabling the main system content block.

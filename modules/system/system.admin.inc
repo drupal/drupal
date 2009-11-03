@@ -240,13 +240,8 @@ function system_themes_form() {
     );
     $options[$theme->name] = $theme->info['name'];
 
-    if (drupal_theme_access($theme)) {
-      $form[$theme->name]['operations'] = array('#markup' => l(t('configure'), 'admin/appearance/settings/' . $theme->name) );
-    }
-    else {
-      // Dummy element for drupal_render. Cleaner than adding a check in the theme function.
-      $form[$theme->name]['operations'] = array();
-    }
+    $form[$theme->name]['operations'] = drupal_theme_access($theme) ? array('#type' => 'link', '#title' => t('configure'), '#href' => 'admin/appearance/settings/' . $theme->name) : array();
+
     if (!empty($theme->status)) {
       $status[] = $theme->name;
     }

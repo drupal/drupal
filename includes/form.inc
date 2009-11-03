@@ -2668,24 +2668,6 @@ function theme_textarea($variables) {
 }
 
 /**
- * Theme HTML markup for use in forms.
- *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #markup, #children.
- *
- * @return
- *   A themed HTML string representing the HTML markup.
- *
- * @ingroup themeable
- */
-function theme_markup($variables) {
-  $element = $variables['element'];
-  return (!empty($element['#markup']) ? $element['#markup'] : '') . drupal_render_children($element);
-}
-
-/**
  * Theme a password form element.
  *
  * @param $variables

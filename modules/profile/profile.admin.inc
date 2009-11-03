@@ -26,8 +26,8 @@ function profile_admin_overview($form) {
     $form[$field->fid]['type'] = array('#markup' => $field->type);
     $form[$field->fid]['category'] = array('#type' => 'select', '#default_value' => $field->category, '#options' => array());
     $form[$field->fid]['weight'] = array('#type' => 'weight', '#default_value' => $field->weight);
-    $form[$field->fid]['edit'] = array('#markup' => l(t('edit'), "admin/config/people/profile/edit/$field->fid"));
-    $form[$field->fid]['delete'] = array('#markup' => l(t('delete'), "admin/config/people/profile/delete/$field->fid"));
+    $form[$field->fid]['edit'] = array('#type' => 'link', '#title' => t('edit'), '#href' => "admin/config/people/profile/edit/$field->fid");
+    $form[$field->fid]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => "admin/config/people/profile/delete/$field->fid");
   }
 
   // Add the category combo boxes
@@ -51,6 +51,7 @@ function profile_admin_overview($form) {
   }
   $form['#tree'] = TRUE;
 
+  // @todo: Any reason this isn't done using an element with #theme = 'links'?
   $addnewfields = '<h2>' . t('Add new field') . '</h2>';
   $addnewfields .= '<ul>';
   foreach (_profile_field_types() as $key => $value) {

@@ -4605,6 +4605,47 @@ function drupal_set_page_content($content = NULL) {
 }
 
 /**
+ * #pre_render callback to render a link into #markup.
+ *
+ * Doing so during pre_render gives modules a chance to alter the link parts.
+ *
+ * @param $elements
+ *   A structured array whose keys form the arguments to l():
+ *   - #title: The link text to pass as argument to l().
+ *   - #href: The URL path component to pass as argument to l().
+ *   - #options: (optional) An array of options to pass to l().
+ *
+ * @return
+ *   The passed in elements containing a rendered link in '#markup'.
+ */
+function drupal_pre_render_link($elements) {
+  $options = isset($elements['#options']) ? $elements['#options'] : array();
+  $elements['#markup'] = l($elements['#title'], $elements['#href'], $options);
+  return $elements;
+}
+
+/**
+ * #pre_render callback to append contents in #markup to #children.
+ *
+ * This needs to be a #pre_render callback, because eventually assigned
+ * #theme_wrappers will expect the element's rendered content in #children.
+ * Note that if also a #theme is defined for the element, then the result of
+ * the theme callback will override #children.
+ *
+ * @see drupal_render()
+ *
+ * @param $elements
+ *   A structured array using the #markup key.
+ *
+ * @return
+ *   The passed in elements, but #markup appended to #children.
+ */
+function drupal_pre_render_markup($elements) {
+  $elements['#children'] = $elements['#markup'];
+  return $elements;
+}
+
+/**
  * Renders the page, including all theming.
  *
  * @param $page
@@ -4721,6 +4762,12 @@ function drupal_render(&$elements) {
   if (isset($elements['#cache']) && $cached_output = drupal_render_cache_get($elements)) {
     return $cached_output;
   }
+  
+  // If #markup is not empty, set #type. This allows to specify just #markup on
+  // an element without setting #type.
+  if (!empty($elements['#markup']) && !isset($elements['#type'])) {
+    $elements['#type'] = 'markup';
+  }
 
   // If the default values for this element have not been loaded yet, populate
   // them.
@@ -4732,12 +4779,6 @@ function drupal_render(&$elements) {
       $defaults = element_basic_defaults();
     }
     $elements += $defaults;
-  }
-
-  // If #markup is not empty and no theme function is set, use theme_markup.
-  // This allows to specify just #markup on an element without setting the #type.
-  if (!empty($elements['#markup']) && empty($elements['#theme'])) {
-    $elements['#theme'] = 'markup';
   }
 
   // Make any final changes to the element before it is rendered. This means
@@ -4754,7 +4795,11 @@ function drupal_render(&$elements) {
   // Get the children of the element, sorted by weight.
   $children = element_children($elements, TRUE);
 
-  $elements['#children'] = '';
+  // Initialize this element's #children, unless a #pre_render callback already
+  // preset #children.
+  if (!isset($elements['#children'])) {
+    $elements['#children'] = '';
+  }
   // Call the element's #theme function if it is set. Then any children of the
   // element have to be rendered there.
   if (isset($elements['#theme'])) {
@@ -5290,9 +5335,6 @@ function drupal_common_theme() {
       'render element' => 'element',
     ),
     'textarea' => array(
-      'render element' => 'element',
-    ),
-    'markup' => array(
       'render element' => 'element',
     ),
     'password' => array(

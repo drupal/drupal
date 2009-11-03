@@ -579,13 +579,13 @@ function _locale_languages_configure_form_language_table(&$form, $type) {
 
       $table_form['description'][$id] = array('#markup' => filter_xss_admin($provider['description']));
 
-      $config_op = '';
+      $config_op = array();
       if (isset($provider['config'])) {
-        $config_op = l(t('Configure'), $provider['config']);
+        $config_op = array('#type' => 'link', '#title' => t('Configure'), '#href' => $provider['config']);
         // If there is at least one operation enabled show the operation column.
         $table_form['#show_operations'] = TRUE;
       }
-      $table_form['operation'][$id] = array('#markup' => $config_op);
+      $table_form['operation'][$id] = $config_op;
     }
   }
 

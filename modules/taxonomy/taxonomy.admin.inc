@@ -20,9 +20,9 @@ function taxonomy_overview_vocabularies($form) {
     $form[$vocabulary->vid]['#vocabulary'] = $vocabulary;
     $form[$vocabulary->vid]['name'] = array('#markup' => check_plain($vocabulary->name));
     $form[$vocabulary->vid]['weight'] = array('#type' => 'weight', '#delta' => 10, '#default_value' => $vocabulary->weight);
-    $form[$vocabulary->vid]['edit'] = array('#markup' => l(t('edit vocabulary'), "admin/structure/taxonomy/$vocabulary->vid"));
-    $form[$vocabulary->vid]['list'] = array('#markup' => l(t('list terms'), "admin/structure/taxonomy/$vocabulary->vid/list"));
-    $form[$vocabulary->vid]['add'] = array('#markup' => l(t('add terms'), "admin/structure/taxonomy/$vocabulary->vid/list/add"));
+    $form[$vocabulary->vid]['edit'] = array('#type' => 'link', '#title' => t('edit vocabulary'), '#href' => "admin/structure/taxonomy/$vocabulary->vid");
+    $form[$vocabulary->vid]['list'] = array('#type' => 'link', '#title' => t('list terms'), '#href' => "admin/structure/taxonomy/$vocabulary->vid/list");
+    $form[$vocabulary->vid]['add'] = array('#type' => 'link', '#title' => t('add terms'), '#href' => "admin/structure/taxonomy/$vocabulary->vid/list/add");
   }
 
   // Only make this form include a submit button and weight if more than one
@@ -354,7 +354,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
       unset($form[$key]['#term']['parents'], $term->parents);
     }
 
-    $form[$key]['view'] = array('#markup' => l($term->name, "taxonomy/term/$term->tid"));
+    $form[$key]['view'] = array('#type' => 'link', '#title' => $term->name, '#href' => "taxonomy/term/$term->tid");
     if ($vocabulary->hierarchy < 2 && count($tree) > 1) {
       $form['#parent_fields'] = TRUE;
       $form[$key]['tid'] = array(
@@ -372,7 +372,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
         '#default_value' => $term->depth,
       );
     }
-    $form[$key]['edit'] = array('#markup' => l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit', array('query' => drupal_get_destination())));
+    $form[$key]['edit'] = array('#type' => 'link', '#title' => t('edit'), '#href' => 'taxonomy/term/' . $term->tid . '/edit', '#options' => array('query' => drupal_get_destination()));
   }
 
   $form['#total_entries'] = $total_entries;

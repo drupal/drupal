@@ -466,7 +466,15 @@ function node_admin_nodes() {
   foreach ($result as $node) {
     $l_options = empty($node->language) ? array() : array('language' => $languages[$node->language]);
     $options[$node->nid] = array(
-      'title' => l($node->title, 'node/' . $node->nid, $l_options) . ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
+      'title' => array(
+        'data' => array(
+          '#type' => 'link',
+          '#title' => $node->title,
+          '#href' => 'node/' . $node->nid,
+          '#options' => $l_options,
+          '#suffix' => ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
+        ),
+      ),
       'type' =>  check_plain(node_type_get_name($node)),
       'author' => theme('username', array('account' => $node)),
       'status' =>  $node->status ? t('published') : t('not published'),
@@ -475,7 +483,14 @@ function node_admin_nodes() {
     if ($multilanguage) {
       $options[$node->nid]['language'] = empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name);
     }
-    $options[$node->nid]['operations'] = l(t('edit'), 'node/' . $node->nid . '/edit', array('query' => $destination));
+    $options[$node->nid]['operations'] = array(
+      'data' => array(
+        '#type' => 'link',
+        '#title' => t('edit'),
+        '#href' => 'node/' . $node->nid . '/edit',
+        '#options' => array('query' => $destination),
+      ),
+    );
   }
   $form['nodes'] = array(
     '#type' => 'tableselect',
