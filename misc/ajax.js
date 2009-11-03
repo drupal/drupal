@@ -120,6 +120,9 @@ Drupal.ajax = function (base, element, element_settings) {
   var options = {
     url: ajax.url,
     data: ajax.button,
+    beforeSerialize: function (element_settings, options) {
+      return ajax.beforeSerialize(element_settings, options);
+    },
     beforeSubmit: function (form_values, element_settings, options) {
       return ajax.beforeSubmit(form_values, element_settings, options);
     },
@@ -177,6 +180,18 @@ Drupal.ajax = function (base, element, element_settings) {
 };
 
 /**
+ * Handler for the form serialization.
+ *
+ * Runs before the beforeSubmit() handler (see below), and unlike that one, runs
+ * before field data is collected.
+ */
+Drupal.ajax.prototype.beforeSerialize = function (element, options) {
+  // Allow detaching behaviors to update field values before collecting them.
+  var settings = this.settings || Drupal.settings;
+  Drupal.detachBehaviors(this.form, settings, 'serialize');
+};
+
+/**
  * Handler for the form redirection submission.
  */
 Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
@@ -230,6 +245,13 @@ Drupal.ajax.prototype.success = function (response, status) {
     }
   }
 
+  // Reattach behaviors that were detached in beforeSerialize(). The
+  // attachBehaviors() called on the new content from processing the response
+  // commands is not sufficient, because behaviors from the entire form need
+  // to be reattached.
+  var settings = this.settings || Drupal.settings;
+  Drupal.attachBehaviors(this.form, settings);
+
   Drupal.unfreezeHeight();
 
   // Remove any response-specific settings so they don't get used on the next
@@ -280,6 +302,9 @@ Drupal.ajax.prototype.error = function (response, uri) {
   $(this.wrapper).show();
   // Re-enable the element.
   $(this.element).removeClass('progress-disabled').attr('disabled', false);
+  // Reattach behaviors that were detached in beforeSerialize().
+  var settings = response.settings || this.settings || Drupal.settings;
+  Drupal.attachBehaviors(this.form, settings);
 };
 
 /**
@@ -299,6 +324,17 @@ Drupal.ajax.prototype.commands = {
     // Manually insert HTML into the jQuery object, using $() directly crashes
     // Safari with long string lengths. http://dev.jquery.com/ticket/3178
     var new_content = $('<div></div>').html(response.data);
+
+    // If removing content from the wrapper, detach behaviors first.
+    switch (method) {
+      case 'html':
+      case 'replaceWith':
+      case 'replaceAll':
+      case 'empty':
+      case 'remove':
+        var settings = response.settings || ajax.settings || Drupal.settings;
+        Drupal.detachBehaviors(wrapper, settings);
+    }
 
     // Add the new content to the page.
     wrapper[method](new_content);
@@ -333,6 +369,8 @@ Drupal.ajax.prototype.commands = {
    * Command to remove a chunk from the page.
    */
   remove: function (ajax, response, status) {
+    var settings = response.settings || ajax.settings || Drupal.settings;
+    Drupal.detachBehaviors($(response.selector), settings);
     $(response.selector).remove();
   },
 

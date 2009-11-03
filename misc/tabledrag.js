@@ -903,7 +903,9 @@ Drupal.tableDrag.prototype.row.prototype.isValidSwap = function (row) {
  *   DOM element what will be swapped with the row group.
  */
 Drupal.tableDrag.prototype.row.prototype.swap = function (position, row) {
+  Drupal.detachBehaviors(this.group, Drupal.settings, 'move');
   $(row)[position](this.group);
+  Drupal.attachBehaviors(this.group, Drupal.settings);
   this.changed = true;
   this.onSwap(row);
 };

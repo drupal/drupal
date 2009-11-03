@@ -22,10 +22,10 @@ if ($ === undefined) {
  * object using the method 'attach' and optionally also 'detach' as follows:
  * @code
  *    Drupal.behaviors.behaviorName = {
- *      attach: function (context) {
+ *      attach: function (context, settings) {
  *        ...
  *      },
- *      detach: function (context) {
+ *      detach: function (context, settings, trigger) {
  *        ...
  *      }
  *    };
@@ -81,16 +81,38 @@ Drupal.attachBehaviors = function (context, settings) {
  * @param context
  *   An element to detach behaviors from. If none is given, the document element
  *   is used.
+ * @param settings
+ *   An object containing settings for the current context. If none given, the
+ *   global Drupal.settings object is used.
+ * @param trigger
+ *   A string containing what's causing the behaviors to be detached. The
+ *   possible triggers are:
+ *   - unload: (default) The context element is being removed from the DOM.
+ *   - move: The element is about to be moved within the DOM (for example,
+ *     during a tabledrag row swap). After the move is completed,
+ *     Drupal.attachBehaviors() is called, so that the behavior can undo
+ *     whatever it did in response to the move. Many behaviors won't need to
+ *     do anything simply in response to the element being moved, but because
+ *     IFRAME elements reload their "src" when being moved within the DOM,
+ *     behaviors bound to IFRAME elements (like WYSIWYG editors) may need to
+ *     take some action.
+ *   - serialize: When an AJAX form is submitted, this is called with the
+ *     form as the context. This provides every behavior within the form an
+ *     opportunity to ensure that the field elements have correct content
+ *     in them before the form is serialized. The canonical use-case is so
+ *     that WYSIWYG editors can update the hidden textarea to which they are
+ *     bound.
  *
  * @see Drupal.attachBehaviors
  */
-Drupal.detachBehaviors = function (context, settings) {
+Drupal.detachBehaviors = function (context, settings, trigger) {
   context = context || document;
   settings = settings || Drupal.settings;
+  trigger = trigger || 'unload';
   // Execute all of them.
   $.each(Drupal.behaviors, function () {
     if ($.isFunction(this.detach)) {
-      this.detach(context, settings);
+      this.detach(context, settings, trigger);
     }
   });
 };
