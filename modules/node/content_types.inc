@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.98 2009/10/16 13:20:16 dries Exp $
+// $Id: content_types.inc,v 1.99 2009/11/03 05:32:07 webchick Exp $
 
 /**
  * @file
@@ -120,6 +120,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#title' => t('Description'),
     '#type' => 'textarea',
     '#default_value' => $type->description,
+    '#description' => t('Describe this content type. It will be displayed on the <em>Add new content</em> page.'),    
   );
 
   $form['additional_settings'] = array(
