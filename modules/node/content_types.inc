@@ -120,6 +120,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#title' => t('Description'),
     '#type' => 'textarea',
     '#default_value' => $type->description,
+    '#description' => t('Describe this content type. It will be displayed on the <em>Add new content</em> page.'),    
   );
 
   $form['additional_settings'] = array(
