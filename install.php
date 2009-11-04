@@ -394,7 +394,7 @@ function install_run_task($task, &$install_state) {
         // We need to pass $install_state by reference in order for forms to
         // modify it, since the form API will use it in call_user_func_array(),
         // which requires that referenced variables be passed explicitly.
-        'args' => array(&$install_state),
+        'build_info' => array('args' => array(&$install_state)),
         'no_redirect' => TRUE,
       );
       $form = drupal_build_form($function, $form_state);

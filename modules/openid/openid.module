@@ -430,7 +430,7 @@ function openid_authentication($response) {
   }
   elseif (variable_get('user_register', 1)) {
     // Register new user
-    $form_state['args'] = array();
+    $form_state['build_info']['args'] = array();
     $form_state['redirect'] = NULL;
     $form_state['values']['name'] = (empty($response['openid.sreg.nickname'])) ? $identity : $response['openid.sreg.nickname'];
     $form_state['values']['mail'] = (empty($response['openid.sreg.email'])) ? '' : $response['openid.sreg.email'];

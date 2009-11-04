@@ -104,12 +104,12 @@ function openid_user_delete_form($form, $form_state, $account, $aid = 0) {
 
 function openid_user_delete_form_submit($form, &$form_state) {
   $query = db_delete('authmap')
-    ->condition('uid', $form_state['args'][0]->uid)
-    ->condition('aid', $form_state['args'][1])
+    ->condition('uid', $form_state['build_info']['args'][0]->uid)
+    ->condition('aid', $form_state['build_info']['args'][1])
     ->condition('module', 'openid')
     ->execute();
   if ($query) {
     drupal_set_message(t('OpenID deleted.'));
   }
-  $form_state['redirect'] = 'user/' . $form_state['args'][0]->uid . '/openid';
+  $form_state['redirect'] = 'user/' . $form_state['build_info']['args'][0]->uid . '/openid';
 }

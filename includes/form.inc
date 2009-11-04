@@ -72,7 +72,7 @@ function drupal_get_form($form_id) {
   $args = func_get_args();
   // Remove $form_id from the arguments.
   array_shift($args);
-  $form_state['args'] = $args;
+  $form_state['build_info']['args'] = $args;
 
   return drupal_build_form($form_id, $form_state);
 }
@@ -93,11 +93,17 @@ function drupal_get_form($form_id) {
  *   search_forms(), and user_forms().
  * @param &$form_state
  *   An array which stores information about the form. This is passed as a
- *   reference so that the caller can use it to examine what the form changed
+ *   reference so that the caller can use it to examine what in the form changed
  *   when the form submission process is complete.
  *   The following parameters may be set in $form_state to affect how the form
  *   is rendered:
- *   - args: An array of arguments to pass to the form builder.
+ *   - build_info: A keyed array of build information that is necessary to
+ *     rebuild the form from cache when the original context may no longer be
+ *     available:
+ *     - args: An array of arguments to pass to the form builder.
+ *     - file: An optional include file that contains the form and is
+ *       automatically loaded by form_get_cache(). Defaults to the current menu
+ *       router item's 'file' definition, if existent.
  *   - input: An array of input that corresponds to $_POST or $_GET, depending
  *     on the 'method' chosen (see below).
  *   - method: The HTTP form method to use for finding the input for this form.
@@ -161,22 +167,21 @@ function drupal_build_form($form_id, &$form_state) {
     // object, we're hitting the form for the first time and we need
     // to build it from scratch.
     if (!isset($form)) {
+      // Record the filepath of the include file containing the original form,
+      // so the form builder callbacks can be loaded when the form is being
+      // rebuilt from cache on a different path (such as 'system/ajax').
+      // @see form_get_cache()
+      // menu_get_item() is not available at installation time.
+      if (!isset($form_state['build_info']['file']) && !defined('MAINTENANCE_MODE')) {
+        $item = menu_get_item();
+        if (!empty($item['file'])) {
+          $form_state['build_info']['file'] = $item['file'];
+        }
+      }
+
       $form = drupal_retrieve_form($form_id, $form_state);
       $form_build_id = 'form-' . md5(uniqid(mt_rand(), TRUE));
       $form['#build_id'] = $form_build_id;
-
-      // Record the filepath of the include file containing the original form,
-      // so the form builder callbacks can be loaded when the form is being
-      // rebuilt on a different path (such as 'system/ajax').
-      // @see form_get_cache()
-      // @see drupal_retrieve_form()
-      // menu_get_item() is not available at installation time.
-      if (!defined('MAINTENANCE_MODE')) {
-        $item = menu_get_item();
-        if (!empty($item['file'])) {
-          $form['#include_file'] = $item['file'];
-        }
-      }
 
       // Fix the form method, if it is 'get' in $form_state, but not in $form.
       if ($form_state['method'] == 'get' && !isset($form['#method'])) {
@@ -217,7 +222,6 @@ function drupal_build_form($form_id, &$form_state) {
   // complete. We need to construct a fresh copy of the form, passing
   // in the latest $form_state in addition to any other variables passed
   // into drupal_get_form().
-
   if ((!empty($form_state['storage']) || $form_state['rebuild']) && $form_state['submitted'] && !form_get_errors()) {
     $form = drupal_rebuild_form($form_id, $form_state);
   }
@@ -242,6 +246,7 @@ function form_state_defaults() {
     'args' => array(),
     'rebuild' => FALSE,
     'redirect' => NULL,
+    'build_info' => array(),
     'storage' => NULL,
     'submitted' => FALSE,
     'programmed' => FALSE,
@@ -264,9 +269,6 @@ function form_state_defaults() {
  * back a part of the returned form.
  * $form_state['clicked_button']['#array_parents'] will help you to find which
  * part.
- *
- * When getting a form from the cache, the $form_id must be shifted off from
- * $form['#args'], so the resulting array can be given to $form_state['args'].
  *
  * @param $form_id
  *   The unique string identifying the desired form. If a function
@@ -323,19 +325,19 @@ function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
 function form_get_cache($form_build_id, &$form_state) {
   if ($cached = cache_get('form_' . $form_build_id, 'cache_form')) {
     $form = $cached->data;
-    // If the original form is contained in an optional include file, load the
-    // file and re-populate $form_state for subsequent rebuilds.
-    // @see drupal_build_form()
-    // @see drupal_retrieve_form()
-    if (!empty($form['#include_file']) && file_exists($form['#include_file'])) {
-      require_once DRUPAL_ROOT . '/' . $form['#include_file'];
-      $form_state['include_file'] = $form['#include_file'];
-    }
 
     global $user;
     if ((isset($form['#cache_token']) && drupal_valid_token($form['#cache_token'])) || (!isset($form['#cache_token']) && !$user->uid)) {
-      if ($cached = cache_get('storage_' . $form_build_id, 'cache_form')) {
-        $form_state['storage'] = $cached->data;
+      if ($cached = cache_get('form_state_' . $form_build_id, 'cache_form')) {
+        // Re-populate $form_state for subsequent rebuilds.
+        $form_state['build_info'] = $cached->data['build_info'];
+        $form_state['storage'] = $cached->data['storage'];
+
+        // If the original form is contained in an include file, load the file.
+        // @see drupal_build_form()
+        if (!empty($form_state['build_info']['file']) && file_exists($form_state['build_info']['file'])) {
+          require_once DRUPAL_ROOT . '/' . $form_state['build_info']['file'];
+        }
       }
       return $form;
     }
@@ -343,7 +345,7 @@ function form_get_cache($form_build_id, &$form_state) {
 }
 
 /**
- * Store a form in the cache
+ * Store a form in the cache.
  */
 function form_set_cache($form_build_id, $form, $form_state) {
   // 6 hours cache life time for forms should be plenty.
@@ -353,8 +355,12 @@ function form_set_cache($form_build_id, $form, $form_state) {
     $form['#cache_token'] = drupal_get_token();
   }
   cache_set('form_' . $form_build_id, $form, 'cache_form', REQUEST_TIME + $expire);
-  if (!empty($form_state['storage'])) {
-    cache_set('storage_' . $form_build_id, $form_state['storage'], 'cache_form', REQUEST_TIME + $expire);
+  if (!empty($form_state['build_info']) || !empty($form_state['storage'])) {
+    $data = array(
+      'build_info' => $form_state['build_info'],
+      'storage' => $form_state['storage'],
+    );
+    cache_set('form_state_' . $form_build_id, $data, 'cache_form', REQUEST_TIME + $expire);
   }
 }
 
@@ -403,11 +409,11 @@ function form_set_cache($form_build_id, $form, $form_state) {
  * @endcode
  */
 function drupal_form_submit($form_id, &$form_state) {
-  if (!isset($form_state['args'])) {
+  if (!isset($form_state['build_info']['args'])) {
     $args = func_get_args();
     array_shift($args);
     array_shift($args);
-    $form_state['args'] = $args;
+    $form_state['build_info']['args'] = $args;
   }
 
   $form = drupal_retrieve_form($form_id, $form_state);
@@ -447,7 +453,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // We save two copies of the incoming arguments: one for modules to use
   // when mapping form ids to constructor functions, and another to pass to
   // the constructor function itself.
-  $args = $form_state['args'];
+  $args = $form_state['build_info']['args'];
 
   // We first check to see if there's a function named after the $form_id.
   // If there is, we simply pass the arguments on to it to get the form.
@@ -495,15 +501,6 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // Otherwise, call the function named after the form id.
   $form = call_user_func_array(isset($callback) ? $callback : $form_id, $args);
   $form['#form_id'] = $form_id;
-  $form['#args'] = $form_state['args'];
-
-  // Whenever this form is (re)built, restore the include file property from
-  // $form_state, if existent.
-  // @see drupal_build_form()
-  // @see form_get_cache()
-  if (!empty($form_state['include_file'])) {
-    $form['#include_file'] = $form_state['include_file'];
-  }
 
   return $form;
 }

@@ -31,7 +31,7 @@ function color_theme() {
  * Implement hook_form_FORM_ID_alter().
  */
 function color_form_system_theme_settings_alter(&$form, &$form_state) {
-  if (isset($form_state['args'][0]) && ($theme = $form_state['args'][0]) && color_get_info($theme) && function_exists('gd_info')) {
+  if (isset($form_state['build_info']['args'][0]) && ($theme = $form_state['build_info']['args'][0]) && color_get_info($theme) && function_exists('gd_info')) {
     $form['color'] = array(
       '#type' => 'fieldset',
       '#title' => t('Color scheme'),
