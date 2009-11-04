@@ -1,5 +1,5 @@
 <?php
-// $Id: https.php,v 1.1 2009/09/05 13:05:30 dries Exp $
+// $Id: https.php,v 1.2 2009/11/04 05:05:52 webchick Exp $
 
 /**
  * @file
@@ -11,6 +11,9 @@
 if (!(isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], "simpletest") !== FALSE))) {
   exit;
 }
+
+// Set a global variable to indicate a mock HTTPS request.
+$is_https_mock = empty($_SERVER['HTTPS']);
 
 // Change to https.
 $_SERVER['HTTPS'] = 'on';
