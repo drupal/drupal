@@ -12,6 +12,9 @@ if (!(isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'],
   exit;
 }
 
+// Set a global variable to indicate a mock HTTPS request.
+$is_https_mock = empty($_SERVER['HTTPS']);
+
 // Change to https.
 $_SERVER['HTTPS'] = 'on';
 

@@ -151,12 +151,19 @@ function _drupal_session_write($sid, $value) {
     'session' => $value,
     'timestamp' => REQUEST_TIME,
   );
-  $insecure_session_name = substr(session_name(), 1);
-  if ($is_https && isset($_COOKIE[$insecure_session_name])) {
-    $fields['sid'] = $_COOKIE[$insecure_session_name];
+  $key = array('sid' => $sid);
+  if ($is_https) {
+    $key['ssid'] = $sid;
+    $insecure_session_name = substr(session_name(), 1);
+    // The "secure pages" setting allows a site to simultaneously use both
+    // secure and insecure session cookies. If enabled, use the insecure session
+    // identifier as the sid.
+    if (variable_get('https', FALSE) && isset($_COOKIE[$insecure_session_name])) {
+      $key['sid'] = $_COOKIE[$insecure_session_name];
+    }
   }
   db_merge('sessions')
-    ->key(array($is_https ? 'ssid' : 'sid' => $sid))
+    ->key($key)
     ->fields($fields)
     ->execute();
 

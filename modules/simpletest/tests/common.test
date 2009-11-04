@@ -760,6 +760,8 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
   }
 
   function testDrupalHTTPRequest() {
+    global $is_https;
+
     // Parse URL schema.
     $missing_scheme = drupal_http_request('example.com/path');
     $this->assertEqual($missing_scheme->code, -1002, t('Returned with "-1002" error code.'));
@@ -781,18 +783,23 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $this->assertEqual($result->code, '404', t('Result code is 404'));
     $this->assertEqual($result->status_message, 'Not Found', t('Result status message is "Not Found"'));
 
-    // Test that timeout is respected. The test machine is expected to be able
-    // to make the connection (i.e. complete the fsockopen()) in 2 seconds and
-    // return within a total of 5 seconds. If the test machine is extremely
-    // slow, the test will fail. fsockopen() has been seen to time out in
-    // slightly less than the specified timeout, so allow a little slack on the
-    // minimum expected time (i.e. 1.8 instead of 2).
-    timer_start(__METHOD__);
-    $result = drupal_http_request(url('system-test/sleep/10', array('absolute' => TRUE)), array('timeout' => 2));
-    $time = timer_read(__METHOD__) / 1000;
-    $this->assertTrue(1.8 < $time && $time < 5, t('Request timed out (%time seconds).', array('%time' => $time)));
-    $this->assertTrue($result->error, t('An error message was returned.'));
-    $this->assertEqual($result->code, HTTP_REQUEST_TIMEOUT, t('Proper error code was returned.'));
+    // Skip the timeout tests when the testing environment is HTTPS because
+    // stream_set_timeout() does not work for SSL connections.
+    // @link http://bugs.php.net/bug.php?id=47929
+    if (!$is_https) {
+      // Test that timeout is respected. The test machine is expected to be able
+      // to make the connection (i.e. complete the fsockopen()) in 2 seconds and
+      // return within a total of 5 seconds. If the test machine is extremely
+      // slow, the test will fail. fsockopen() has been seen to time out in
+      // slightly less than the specified timeout, so allow a little slack on
+      // the minimum expected time (i.e. 1.8 instead of 2).
+      timer_start(__METHOD__);
+      $result = drupal_http_request(url('system-test/sleep/10', array('absolute' => TRUE)), array('timeout' => 2));
+      $time = timer_read(__METHOD__) / 1000;
+      $this->assertTrue(1.8 < $time && $time < 5, t('Request timed out (%time seconds).', array('%time' => $time)));
+      $this->assertTrue($result->error, t('An error message was returned.'));
+      $this->assertEqual($result->code, HTTP_REQUEST_TIMEOUT, t('Proper error code was returned.'));
+    }
   }
 
   function testDrupalHTTPRequestBasicAuth() {
@@ -800,7 +807,7 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $password = $this->randomName();
     $url = url('system-test/auth', array('absolute' => TRUE));
 
-    $auth = str_replace('http://', 'http://' . $username . ':' . $password . '@', $url);
+    $auth = str_replace('://', '://' . $username . ':' . $password . '@', $url);
     $result = drupal_http_request($auth);
 
     $this->drupalSetContent($result->data);
