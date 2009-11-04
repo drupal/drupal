@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.4 2009/11/03 05:34:37 webchick Exp $
+// $Id: ajax.js,v 1.5 2009/11/04 04:38:30 webchick Exp $
 (function ($) {
 
 /**
@@ -41,6 +41,7 @@ Drupal.behaviors.AJAX = {
       // than the usual location.
       if ($(this).attr('href')) {
         element_settings.url = $(this).attr('href');
+        element_settings.event = 'click';
       }
       var base = $(this).attr('id');
       Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
