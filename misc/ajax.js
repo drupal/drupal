@@ -41,6 +41,7 @@ Drupal.behaviors.AJAX = {
       // than the usual location.
       if ($(this).attr('href')) {
         element_settings.url = $(this).attr('href');
+        element_settings.event = 'click';
       }
       var base = $(this).attr('id');
       Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
