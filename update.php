@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.309 2009/10/24 01:31:05 webchick Exp $
+// $Id: update.php,v 1.310 2009/11/04 05:39:14 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -37,8 +37,7 @@ function update_selection_page() {
   return $output;
 }
 
-function update_script_selection_form() {
-  $form = array();
+function update_script_selection_form($form, &$form_state) {
   $count = 0;
   $form['start'] = array(
     '#tree' => TRUE,
