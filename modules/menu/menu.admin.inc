@@ -664,19 +664,19 @@ function menu_configure() {
     '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
   );
 
-  $main = variable_get('menu_main_links_source', 'navigation');
+  $main = variable_get('menu_main_links_source', 'main-menu');
   $main_options = array_merge($menu_options, array('' => t('No Main links')));
   $form['menu_main_links_source'] = array(
     '#type' => 'select',
     '#title' => t('Source for the Main links'),
-    '#default_value' => 'navigation',
+    '#default_value' => 'main-menu',
     '#options' => $main_options,
     '#tree' => FALSE,
     '#description' => t('Select what should be displayed as the Main links (typically at the top of the page).'),
   );
 
   $secondary_options = array_merge($menu_options, array('' => t('No Secondary links')));
-  $form["menu_secondary_links_source"] = array(
+  $form['menu_secondary_links_source'] = array(
     '#type' => 'select',
     '#title' => t('Source for the Secondary links'),
     '#default_value' => 'user-menu',
