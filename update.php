@@ -37,8 +37,7 @@ function update_selection_page() {
   return $output;
 }
 
-function update_script_selection_form() {
-  $form = array();
+function update_script_selection_form($form, &$form_state) {
   $count = 0;
   $form['start'] = array(
     '#tree' => TRUE,

@@ -645,9 +645,11 @@ function hook_form_system_theme_settings_alter(&$form, &$form_state) {
  * function but each form will have a different form id for submission,
  * validation, theming or alteration by other modules.
  *
- * The callback arguments will be passed as parameters to the function. Callers
- * of drupal_get_form() are also able to pass in parameters. These will be
- * appended after those specified by hook_forms().
+ * The 'callback arguments' will be passed as parameters to the function defined
+ * in 'callback'. In case the code that calls drupal_get_form() also passes
+ * parameters, then the 'callback' function will receive the
+ * 'callback arguments' specified in hook_forms() before those that have been
+ * passed to drupal_get_form().
  *
  * See node_forms() for an actual example of how multiple forms share a common
  * building function.
@@ -656,16 +658,44 @@ function hook_form_system_theme_settings_alter(&$form, &$form_state) {
  *   The unique string identifying the desired form.
  * @param $args
  *   An array containing the original arguments provided to drupal_get_form().
+ *   These are always passed to the form builder and do not have to be specified
+ *   manually in 'callback arguments'.
+ *
  * @return
- *   An array keyed by form_id with callbacks and optional, callback arguments.
+ *   An associative array whose keys define form_ids and whose values are an
+ *   associative array defining the following keys:
+ *   - callback: The name of the form builder function to invoke.
+ *   - callback arguments: (optional) Additional arguments to pass to the
+ *     function defined in 'callback', which are prepended to $args.
+ *   - wrapper_callback: (optional) The name of a form builder function to
+ *     invoke before the form builder defined in 'callback' is invoked. This
+ *     wrapper callback may prepopulate the $form array with form elements,
+ *     which will then be already contained in the $form that is passed on to
+ *     the form builder defined in 'callback'. For example, a wrapper callback
+ *     could setup wizard-alike form buttons that are the same for a variety of
+ *     forms that belong to the wizard, which all share the same wrapper
+ *     callback.
  */
 function hook_forms($form_id, $args) {
+  // Simply reroute the (non-existing) $form_id 'mymodule_first_form' to
+  // 'mymodule_main_form'.
   $forms['mymodule_first_form'] = array(
-    'callback' => 'mymodule_form_builder',
+    'callback' => 'mymodule_main_form',
+  );
+
+  // Reroute the $form_id and prepend an additional argument that gets passed to
+  // the 'mymodule_main_form' form builder function.
+  $forms['mymodule_second_form'] = array(
+    'callback' => 'mymodule_main_form',
     'callback arguments' => array('some parameter'),
   );
-  $forms['mymodule_second_form'] = array(
-    'callback' => 'mymodule_form_builder',
+
+  // Reroute the $form_id, but invoke the form builder function
+  // 'mymodule_main_form_wrapper' first, so we can prepopulate the $form array
+  // that is passed to the actual form builder 'mymodule_main_form'.
+  $forms['mymodule_wrapped_form'] = array(
+    'callback' => 'mymodule_main_form',
+    'wrapper_callback' => 'mymodule_main_form_wrapper',
   );
 
   return $forms;

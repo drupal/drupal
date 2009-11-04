@@ -126,8 +126,10 @@ function drupal_get_form($form_id) {
  *     common elements, such as back/next/save buttons in multi-step form
  *     wizards, may define a form builder function name that returns a form
  *     structure, which is passed on to the actual form builder function.
- *     Such forms cannot use drupal_get_form() and need to prepare $form_state
- *     on their own.
+ *     Such implementations may either define the 'wrapper_callback' via
+ *     hook_forms() or have to invoke drupal_build_form() (instead of
+ *     drupal_get_form()) on their own in a custom menu callback to prepare
+ *     $form_state accordingly.
  *   Further $form_state properties controlling the redirection behavior after
  *   form submission may be found in drupal_redirect_form().
  *
@@ -479,7 +481,18 @@ function drupal_retrieve_form($form_id, &$form_state) {
     if (isset($form_definition['callback'])) {
       $callback = $form_definition['callback'];
     }
+    // In case $form_state['wrapper_callback'] is not defined already, we also
+    // allow hook_forms() to define one.
+    if (!isset($form_state['wrapper_callback']) && isset($form_definition['wrapper_callback'])) {
+      $form_state['wrapper_callback'] = $form_definition['wrapper_callback'];
+    }
   }
+
+  $form = array();
+  // We need to pass $form_state by reference in order for forms to modify it,
+  // since call_user_func_array() requires that referenced variables are passed
+  // explicitly.
+  $args = array_merge(array($form, &$form_state), $args);
 
   // When the passed $form_state (not using drupal_get_form()) defines a
   // 'wrapper_callback', then it requests to invoke a separate (wrapping) form
@@ -488,14 +501,11 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // pre-populating a form with common elements for certain forms, such as
   // back/next/save buttons in multi-step form wizards.
   // @see drupal_build_form()
-  $form = array();
   if (isset($form_state['wrapper_callback']) && function_exists($form_state['wrapper_callback'])) {
-    $form = $form_state['wrapper_callback']($form, $form_state);
+    $form = call_user_func_array($form_state['wrapper_callback'], $args);
+    // Put the prepopulated $form into $args.
+    $args[0] = $form;
   }
-  // We need to pass $form_state by reference in order for forms to modify it,
-  // since call_user_func_array() requires that referenced variables be passed
-  // explicitly.
-  $args = array_merge(array($form, &$form_state), $args);
 
   // If $callback was returned by a hook_forms() implementation, call it.
   // Otherwise, call the function named after the form id.

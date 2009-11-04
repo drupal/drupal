@@ -321,13 +321,10 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
    * @return
    *   An array containing the processed form, the form_state and any errors.
    */
-  private function formSubmitHelper($form_element, $edit) {
+  private function formSubmitHelper($form, $edit) {
     $form_id = $this->randomName();
-
     $form_state = form_state_defaults();
-    $form = array();
 
-    $form = array_merge($form, $form_element);
     $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
 
     $form_state['input'] = $edit;

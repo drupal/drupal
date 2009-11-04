@@ -1480,7 +1480,6 @@ function node_search_status() {
  * Implement hook_search_admin().
  */
 function node_search_admin() {
-  $form = array();
   // Output form for defining rank factor weights.
   $form['content_ranking'] = array(
     '#type' => 'fieldset',

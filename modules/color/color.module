@@ -139,8 +139,7 @@ function color_get_palette($theme, $default = FALSE) {
 /**
  * Form callback. Returns the configuration form.
  */
-function color_scheme_form($form, &$form_state, $theme) {
-  $form = array();
+function color_scheme_form($complete_form, &$form_state, $theme) {
   $base = drupal_get_path('module', 'color');
   $info = color_get_info($theme);
 
