@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.220 2009/10/27 06:07:38 webchick Exp $
+// $Id: install.php,v 1.221 2009/11/04 04:56:54 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -394,7 +394,7 @@ function install_run_task($task, &$install_state) {
         // We need to pass $install_state by reference in order for forms to
         // modify it, since the form API will use it in call_user_func_array(),
         // which requires that referenced variables be passed explicitly.
-        'args' => array(&$install_state),
+        'build_info' => array('args' => array(&$install_state)),
         'no_redirect' => TRUE,
       );
       $form = drupal_build_form($function, $form_state);

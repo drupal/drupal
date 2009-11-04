@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.16 2009/10/18 05:14:39 webchick Exp $
+// $Id: ajax.inc,v 1.17 2009/11/04 04:56:54 webchick Exp $
 
 /**
  * @file
@@ -216,7 +216,6 @@ function ajax_get_form() {
   // The form needs to be processed; prepare for that by setting a few internal
   // variables.
   $form_state['input'] = $_POST;
-  $form_state['args'] = $form['#args'];
   $form_id = $form['#form_id'];
 
   return array($form, $form_state, $form_id, $form_build_id);
