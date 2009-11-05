@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.164 2009/11/01 22:10:07 webchick Exp $
+// $Id: module.inc,v 1.165 2009/11/05 16:19:25 webchick Exp $
 
 /**
  * @file
@@ -383,6 +383,7 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
     $implementations = array();
     cache_set('module_implements', array());
     drupal_static_reset('module_hook_info');
+    drupal_static_reset('drupal_alter');
     cache_clear_all('hook_info', 'cache');
     return;
   }

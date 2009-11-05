@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.52 2009/11/03 04:35:01 webchick Exp $
+// $Id: node.test,v 1.53 2009/11/05 16:19:25 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -758,7 +758,8 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
     $web_user = $this->drupalCreateUser(array('access content'));
     foreach ($operations as $op) {
       $grants = node_test_node_grants($op, $web_user);
-      $altered_grants = drupal_alter($grants, $web_user, $op);
+      $altered_grants = $grants;
+      drupal_alter('node_grants', $altered_grants, $web_user, $op);
       $this->assertNotEqual($grants, $altered_grants, t('Altered the %op grant for a user.', array('%op' => $op)));
     }
   }
