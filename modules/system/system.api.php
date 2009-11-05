@@ -56,20 +56,19 @@ function hook_hook_info() {
  * @return
  *   An array whose keys are entity type names and whose values identify
  *   properties of those types that the  system needs to know about:
- *
- *   name: The human-readable name of the type.
- *   controller class: The name of the class that is used to load the objects.
+ *   - name: The human-readable name of the type.
+ *   - controller class: The name of the class that is used to load the objects.
  *     The class has to implement the DrupalEntityController interface. Leave
  *     blank to use the DefaultDrupalEntityController implementation.
- *   base table: (used by DefaultDrupalEntityController) The name of the entity
- *     type's base table.
- *   static cache: (used by DefaultDrupalEntityController) FALSE to disable
+ *   - base table: (used by DefaultDrupalEntityController) The name of the
+ *     entity type's base table.
+ *   - static cache: (used by DefaultDrupalEntityController) FALSE to disable
  *     static caching of entities during a page request. Defaults to TRUE.
- *   load hook: The name of the hook which should be invoked by
- *   DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
- *   fieldable: Set to TRUE if you want your entity type to be fieldable.
+ *   - load hook: The name of the hook which should be invoked by
+ *     DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
+ *   - fieldable: Set to TRUE if you want your entity type to be fieldable.
  *   - object keys: An array describing how the Field API can extract the
- *     information it needs from the objects of the type.
+ *     information it needs from the objects of the type. Elements:
  *     - id: The name of the property that contains the primary id of the
  *       object. Every object passed to the Field API must have this property
  *       and its value must be numeric.
@@ -87,7 +86,7 @@ function hook_hook_info() {
  *     information it needs from the bundle objects for this type (e.g
  *     $vocabulary objects for terms; not applicable for nodes).
  *     This element can be omitted if this type's bundles do not exist as
- *     standalone objects.
+ *     standalone objects. Elements:
  *     - bundle: The name of the property that contains the name of the bundle
  *       object.
  *   - cacheable: A boolean indicating whether Field API should cache
@@ -95,11 +94,11 @@ function hook_hook_info() {
  *     field_attach_load().
  *   - bundles: An array describing all bundles for this object type.
  *     Keys are bundles machine names, as found in the objects' 'bundle'
- *     property (defined in the 'object keys' entry above).
+ *     property (defined in the 'object keys' entry above). Elements:
  *     - label: The human-readable name of the bundle.
  *     - admin: An array of information that allow Field UI pages (currently
  *       implemented in a contributed module) to attach themselves to the
- *       existing administration pages for the bundle.
+ *       existing administration pages for the bundle. Elements:
  *       - path: the path of the bundle's main administration page, as defined
  *         in hook_menu(). If the path includes a placeholder for the bundle,
  *         the 'bundle argument', 'bundle helper' and 'real path' keys below
