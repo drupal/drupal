@@ -1576,34 +1576,30 @@ function file_download() {
  * from being scanned.
  *
  * @param $dir
- *   The base directory or URI for the scan, without trailing slash.
+ *   The base directory or URI to scan, without trailing slash.
  * @param $mask
  *   The preg_match() regular expression of the files to find.
  * @param $options
- *   An associative array of additional options, with the following keys:
- *   - 'nomask'
- *     The preg_match() regular expression of the files to ignore. Defaults to
- *     '/(\.\.?|CVS)$/'.
- *   - 'callback'
- *     The callback function to call for each match. There is no default
- *     callback.
- *   - 'recurse'
- *     When TRUE, the directory scan will recurse the entire tree starting at
- *     the provided directory. Defaults to TRUE.
- *   - 'key'
- *     The key to be used for the returned array of files. Possible values are
- *     'filepath', for the path starting with $dir, 'filename', for the
- *     basename of the file, and 'name' for the name of the file without an
- *     extension. Defaults to 'filepath'.
- *   - 'min_depth'
- *     Minimum depth of directories to return files from. Defaults to 0.
+ *   An associative array of additional options, with the following elements:
+ *   - 'nomask': The preg_match() regular expression of the files to ignore.
+ *     Defaults to '/(\.\.?|CVS)$/'.
+ *   - 'callback': The callback function to call for each match. There is no
+ *     default callback.
+ *   - 'recurse': When TRUE, the directory scan will recurse the entire tree
+ *     starting at the provided directory. Defaults to TRUE.
+ *   - 'key': The key to be used for the returned associative array of files.
+ *     Possible values are 'uri', for the file's URI; 'filename', for the
+ *     basename of the file; and 'name' for the name of the file without the
+ *     extension. Defaults to 'uri'.
+ *   - 'min_depth': Minimum depth of directories to return files from. Defaults
+ *     to 0.
  * @param $depth
  *   Current depth of recursion. This parameter is only used internally and
- *   should not be passed.
+ *   should not be passed in.
+ *
  * @return
- *   An associative array (keyed on the provided key) of objects with
- *   'uri', 'filename', and 'name' members corresponding to the
- *   matching files.
+ *   An associative array (keyed on the chosen key) of objects with 'uri',
+ *   'filename', and 'name' members corresponding to the matching files.
  */
 function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
   // Merge in defaults.
