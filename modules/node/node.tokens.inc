@@ -139,13 +139,13 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'body':
           if (!empty($node->body)) {
-            $replacements[$original] = $sanitize ? $node->body[0]['safe'] : $node->body[0]['value'];
+            $replacements[$original] = $sanitize ? $node->body[FIELD_LANGUAGE_NONE][0]['safe'] : $node->body[FIELD_LANGUAGE_NONE][0]['value'];
           }
           break;
 
         case 'summary':
           if (!empty($node->body)) {
-            $replacements[$original] = $sanitize ? $node->body[0]['safe_summary'] : $node->body[0]['summary'];
+            $replacements[$original] = $sanitize ? $node->body[FIELD_LANGUAGE_NONE][0]['safe_summary'] : $node->body[FIELD_LANGUAGE_NONE][0]['summary'];
           }
           break;
 
