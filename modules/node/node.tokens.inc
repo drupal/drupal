@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tokens.inc,v 1.5 2009/10/21 19:13:08 dries Exp $
+// $Id: node.tokens.inc,v 1.6 2009/11/05 03:35:29 dries Exp $
 
 /**
  * @file
@@ -139,13 +139,13 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'body':
           if (!empty($node->body)) {
-            $replacements[$original] = $sanitize ? $node->body[0]['safe'] : $node->body[0]['value'];
+            $replacements[$original] = $sanitize ? $node->body[FIELD_LANGUAGE_NONE][0]['safe'] : $node->body[FIELD_LANGUAGE_NONE][0]['value'];
           }
           break;
 
         case 'summary':
           if (!empty($node->body)) {
-            $replacements[$original] = $sanitize ? $node->body[0]['safe_summary'] : $node->body[0]['summary'];
+            $replacements[$original] = $sanitize ? $node->body[FIELD_LANGUAGE_NONE][0]['safe_summary'] : $node->body[FIELD_LANGUAGE_NONE][0]['summary'];
           }
           break;
 
