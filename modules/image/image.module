@@ -631,7 +631,7 @@ function image_style_generate() {
     file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
   }
   else {
-    watchdog('image', 'Unable to generate the derived image located at %path.', $destination);
+    watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $destination));
     drupal_add_http_header('500 Internal Server Error');
     print t('Error generating image.');
     drupal_exit();
