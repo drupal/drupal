@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.24 2009/10/23 22:24:15 webchick Exp $
+// $Id: image.module,v 1.25 2009/11/05 02:50:38 dries Exp $
 
 /**
  * @file
@@ -631,7 +631,7 @@ function image_style_generate() {
     file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
   }
   else {
-    watchdog('image', 'Unable to generate the derived image located at %path.', $destination);
+    watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $destination));
     drupal_add_http_header('500 Internal Server Error');
     print t('Error generating image.');
     drupal_exit();
