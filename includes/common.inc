@@ -4700,26 +4700,36 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
  *   keyed array as described above.
  */
 function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
-  $hook = $type . '_alter';
-  foreach (module_implements($hook) as $module) {
-    $function = $module . '_' . $hook;
-    $function($data, $context1, $context2);
-  }
-  // Allow the theme to alter variables after the theme system has been
-  // initialized.
-  global $theme, $base_theme_info;
-  if (isset($theme)) {
-    $theme_keys = array();
-    foreach ($base_theme_info as $base) {
-      $theme_keys[] = $base->name;
+  $functions = &drupal_static(__FUNCTION__, array());
+
+  // Some alter hooks are invoked many times per page request, so statically
+  // cache the list of functions to call, and on subsequent calls, iterate
+  // through them quickly.
+  if (!isset($functions[$type])) {
+    $functions[$type] = array();
+    $hook = $type . '_alter';
+    foreach (module_implements($hook) as $module) {
+      $functions[$type][] = $module . '_' . $hook;
     }
-    $theme_keys[] = $theme;
-    foreach ($theme_keys as $theme_key) {
-      $function = $theme_key . '_' . $hook;
-      if (function_exists($function)) {
-        $function($data, $context1, $context2);
+    // Allow the theme to alter variables after the theme system has been
+    // initialized.
+    global $theme, $base_theme_info;
+    if (isset($theme)) {
+      $theme_keys = array();
+      foreach ($base_theme_info as $base) {
+        $theme_keys[] = $base->name;
+      }
+      $theme_keys[] = $theme;
+      foreach ($theme_keys as $theme_key) {
+        $function = $theme_key . '_' . $hook;
+        if (function_exists($function)) {
+          $functions[$type][] = $function;
+        }
       }
     }
+  }
+  foreach ($functions[$type] as $function) {
+    $function($data, $context1, $context2);
   }
 }
 

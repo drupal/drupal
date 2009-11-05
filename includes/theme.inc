@@ -85,6 +85,9 @@ function drupal_theme_initialize() {
     $ancestor = $themes[$ancestor]->base_theme;
   }
   _drupal_theme_initialize($themes[$theme], array_reverse($base_theme));
+
+  // Themes can have alter functions, so reset the drupal_alter() cache.
+  drupal_static_reset('drupal_alter');
 }
 
 /**
