@@ -3222,9 +3222,11 @@ class NodeController extends DrupalDefaultEntityController {
     // object type specific callback.
     $typed_nodes = array();
     foreach ($nodes as $id => $object) {
-      if (isset($object->title)) {
-        $object->title = array(FIELD_LANGUAGE_NONE => array(array('value' => $object->title)));
-      }
+      // The value loaded in $object->title is the one stored in {node}.title,
+      // which is used for building list queries. By unsetting it here, we
+      // allow DrupalDefaultEntityController:attachLoad() to populate it along
+      // with all the other field values for consistency.
+      unset($object->title);
       $typed_nodes[$object->type][$id] = $object;
     }
 
