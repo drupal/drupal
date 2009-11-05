@@ -782,14 +782,27 @@ function variable_del($name) {
  * from a form submission, the contents of a shopping cart, or other user-
  * specific content that should not be cached and displayed to other users.
  *
+ * @param $check_only
+ *   (optional) Set to TRUE to only return whether a previous call found a
+ *   cache entry.
+ *
  * @return
  *   The cache object, if the page was found in the cache, NULL otherwise.
  */
-function drupal_page_get_cache() {
+function drupal_page_get_cache($check_only = FALSE) {
   global $base_root;
+  static $cache_hit = FALSE;
+
+  if ($check_only) {
+    return $cache_hit;
+  }
 
   if (drupal_page_is_cacheable()) {
-    return cache_get($base_root . request_uri(), 'cache_page');
+    $cache = cache_get($base_root . request_uri(), 'cache_page');
+    if ($cache !== FALSE) {
+      $cache_hit = TRUE;
+    }
+    return $cache;
   }
 }
 
@@ -797,9 +810,10 @@ function drupal_page_get_cache() {
  * Determine the cacheability of the current page.
  *
  * @param $allow_caching
- *  Set to FALSE if you want to prevent this page to get cached.
+ *   Set to FALSE if you want to prevent this page to get cached.
+ *
  * @return
- *  TRUE if the current page can be cached, FALSE otherwise.
+ *   TRUE if the current page can be cached, FALSE otherwise.
  */
 function drupal_page_is_cacheable($allow_caching = NULL) {
   $allow_caching_static = &drupal_static(__FUNCTION__, TRUE);
@@ -1447,7 +1461,41 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
     // phase.
     while ($phases && $phase > $completed_phase && $final_phase > $completed_phase) {
       $current_phase = array_shift($phases);
-      _drupal_bootstrap($current_phase);
+      switch ($current_phase) {
+        case DRUPAL_BOOTSTRAP_CONFIGURATION:
+          _drupal_bootstrap_configuration();
+          break;
+
+        case DRUPAL_BOOTSTRAP_PAGE_CACHE:
+          _drupal_bootstrap_page_cache();
+          break;
+
+        case DRUPAL_BOOTSTRAP_DATABASE:
+          _drupal_bootstrap_database();
+          break;
+
+        case DRUPAL_BOOTSTRAP_VARIABLES:
+          _drupal_bootstrap_variables();
+          break;
+
+        case DRUPAL_BOOTSTRAP_SESSION:
+          require_once DRUPAL_ROOT . '/' . variable_get('session_inc', 'includes/session.inc');
+          drupal_session_initialize();
+          break;
+
+        case DRUPAL_BOOTSTRAP_PAGE_HEADER:
+          _drupal_bootstrap_page_header();
+          break;
+
+        case DRUPAL_BOOTSTRAP_LANGUAGE:
+          drupal_language_initialize();
+          break;
+
+        case DRUPAL_BOOTSTRAP_FULL:
+          require_once DRUPAL_ROOT . '/includes/common.inc';
+          _drupal_bootstrap_full();
+          break;
+      }
       // This function is reentrant. Only update the completed phase when the
       // current call actually resulted in a progress in the bootstrap process.
       if ($current_phase > $completed_phase) {
@@ -1459,125 +1507,122 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
 }
 
 /**
- * Return the current bootstrap phase for this Drupal process. The
- * current phase is the one most recently completed by
- * drupal_bootstrap().
+ * Bootstrap configuration: Setup script environment and load settings.php.
+ */
+function _drupal_bootstrap_configuration() {
+  drupal_environment_initialize();
+  // Start a page timer:
+  timer_start('page');
+  // Initialize the configuration, including variables from settings.php.
+  drupal_settings_initialize();
+}
+
+/**
+ * Bootstrap page cache: Try to serve a page from cache.
+ */
+function _drupal_bootstrap_page_cache() {
+  global $user;
+
+  // Allow specifying special cache handlers in settings.php, like
+  // using memcached or files for storing cache information.
+  require_once DRUPAL_ROOT . '/' . variable_get('cache_inc', 'includes/cache.inc');
+  // Check for a cache mode force from settings.php.
+  if (variable_get('page_cache_without_database')) {
+    $cache_mode = CACHE_NORMAL;
+  }
+  else {
+    drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
+    $cache_mode = variable_get('cache');
+  }
+  drupal_block_denied(ip_address());
+  // If there is no session cookie and cache is enabled (or forced), try
+  // to serve a cached page.
+  if (!isset($_COOKIE[session_name()]) && $cache_mode == CACHE_NORMAL) {
+    // Make sure there is a user object because it's timestamp will be
+    // checked, hook_boot might check for anonymous user etc.
+    $user = drupal_anonymous_user();
+    // Get the page from the cache.
+    $cache = drupal_page_get_cache();
+    // If there is a cached page, display it.
+    if (is_object($cache)) {
+      // If the skipping of the bootstrap hooks is not enforced, call
+      // hook_boot.
+      if (variable_get('page_cache_invoke_hooks', TRUE)) {
+        bootstrap_invoke_all('boot');
+      }
+      header('X-Drupal-Cache: HIT');
+      drupal_serve_page_from_cache($cache);
+      // If the skipping of the bootstrap hooks is not enforced, call
+      // hook_exit.
+      if (variable_get('page_cache_invoke_hooks', TRUE)) {
+        bootstrap_invoke_all('exit');
+      }
+      // We are done.
+      exit;
+    }
+  }
+}
+
+/**
+ * Bootstrap database: Initialize database system and register autoload functions.
+ */
+function _drupal_bootstrap_database() {
+  // The user agent header is used to pass a database prefix in the request when
+  // running tests. However, for security reasons, it is imperative that we
+  // validate we ourselves made the request.
+  if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], "simpletest") !== FALSE) && !drupal_valid_test_ua($_SERVER['HTTP_USER_AGENT'])) {
+    header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
+    exit;
+  }
+  // Initialize the database system. Note that the connection
+  // won't be initialized until it is actually requested.
+  require_once DRUPAL_ROOT . '/includes/database/database.inc';
+  // Register autoload functions so that we can access classes and interfaces.
+  spl_autoload_register('drupal_autoload_class');
+  spl_autoload_register('drupal_autoload_interface');
+}
+
+/**
+ * Bootstrap variables: Load system variables and all enabled bootstrap modules.
+ */
+function _drupal_bootstrap_variables() {
+  global $conf;
+
+  // Load variables from the database, but do not overwrite variables set in settings.php.
+  $conf = variable_initialize(isset($conf) ? $conf : array());
+  // Load bootstrap modules.
+  require_once DRUPAL_ROOT . '/includes/module.inc';
+  module_load_all(TRUE);
+}
+
+/**
+ * Bootstrap page header: Invoke hook_boot(), intialize locking system, and send default HTTP headers.
+ */
+function _drupal_bootstrap_page_header() {
+  bootstrap_invoke_all('boot');
+  if (!drupal_page_get_cache(TRUE) && drupal_page_is_cacheable()) {
+    header('X-Drupal-Cache: MISS');
+  }
+
+  // Prepare for non-cached page workflow.
+  require_once DRUPAL_ROOT . '/' . variable_get('lock_inc', 'includes/lock.inc');
+  lock_initialize();
+
+  if (!drupal_is_cli()) {
+    ob_start();
+    drupal_page_header();
+  }
+}
+
+/**
+ * Returns the current bootstrap phase for this Drupal process.
  *
- * @see drupal_bootstrap
+ * The current phase is the one most recently completed by drupal_bootstrap().
+ *
+ * @see drupal_bootstrap()
  */
 function drupal_get_bootstrap_phase() {
   return drupal_bootstrap();
-}
-
-function _drupal_bootstrap($phase) {
-  global $conf, $user;
-  static $cache;
-
-  switch ($phase) {
-
-    case DRUPAL_BOOTSTRAP_CONFIGURATION:
-      drupal_environment_initialize();
-      // Start a page timer:
-      timer_start('page');
-      // Initialize the configuration, including variables from settings.php.
-      drupal_settings_initialize();
-      break;
-
-    case DRUPAL_BOOTSTRAP_PAGE_CACHE:
-      // Allow specifying special cache handlers in settings.php, like
-      // using memcached or files for storing cache information.
-      require_once DRUPAL_ROOT . '/' . variable_get('cache_inc', 'includes/cache.inc');
-      // Check for a cache mode force from settings.php.
-      if (variable_get('page_cache_without_database')) {
-        $cache_mode = CACHE_NORMAL;
-      }
-      else {
-        drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
-        $cache_mode = variable_get('cache');
-      }
-      drupal_block_denied(ip_address());
-      // If there is no session cookie and cache is enabled (or forced), try
-      // to serve a cached page.
-      if (!isset($_COOKIE[session_name()]) && $cache_mode == CACHE_NORMAL) {
-        // Make sure there is a user object because it's timestamp will be
-        // checked, hook_boot might check for anonymous user etc.
-        $user = drupal_anonymous_user();
-        // Get the page from the cache.
-        $cache = drupal_page_get_cache();
-        // If there is a cached page, display it.
-        if (is_object($cache)) {
-          // If the skipping of the bootstrap hooks is not enforced, call
-          // hook_boot.
-          if (variable_get('page_cache_invoke_hooks', TRUE)) {
-            bootstrap_invoke_all('boot');
-          }
-          header('X-Drupal-Cache: HIT');
-          drupal_serve_page_from_cache($cache);
-          // If the skipping of the bootstrap hooks is not enforced, call
-          // hook_exit.
-          if (variable_get('page_cache_invoke_hooks', TRUE)) {
-            bootstrap_invoke_all('exit');
-          }
-          // We are done.
-          exit;
-        }
-      }
-      break;
-
-    case DRUPAL_BOOTSTRAP_DATABASE:
-      // The user agent header is used to pass a database prefix in the request when
-      // running tests. However, for security reasons, it is imperative that we
-      // validate we ourselves made the request.
-      if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], "simpletest") !== FALSE) && !drupal_valid_test_ua($_SERVER['HTTP_USER_AGENT'])) {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
-        exit;
-      }
-      // Initialize the database system. Note that the connection
-      // won't be initialized until it is actually requested.
-      require_once DRUPAL_ROOT . '/includes/database/database.inc';
-      // Register autoload functions so that we can access classes and interfaces.
-      spl_autoload_register('drupal_autoload_class');
-      spl_autoload_register('drupal_autoload_interface');
-      break;
-
-    case DRUPAL_BOOTSTRAP_VARIABLES:
-      // Load variables from the database, but do not overwrite variables set in settings.php.
-      $conf = variable_initialize(isset($conf) ? $conf : array());
-      // Load bootstrap modules.
-      require_once DRUPAL_ROOT . '/includes/module.inc';
-      module_load_all(TRUE);
-      break;
-
-    case DRUPAL_BOOTSTRAP_SESSION:
-      require_once DRUPAL_ROOT . '/' . variable_get('session_inc', 'includes/session.inc');
-      drupal_session_initialize();
-      break;
-
-    case DRUPAL_BOOTSTRAP_PAGE_HEADER:
-      bootstrap_invoke_all('boot');
-      if (!$cache && drupal_page_is_cacheable()) {
-        header('X-Drupal-Cache: MISS');
-      }
-
-      // Prepare for non-cached page workflow.
-      require_once DRUPAL_ROOT . '/' . variable_get('lock_inc', 'includes/lock.inc');
-      lock_initialize();
-
-      if (!drupal_is_cli()) {
-        ob_start();
-        drupal_page_header();
-      }
-      break;
-
-    case DRUPAL_BOOTSTRAP_LANGUAGE:
-      drupal_language_initialize();
-      break;
-
-    case DRUPAL_BOOTSTRAP_FULL:
-      require_once DRUPAL_ROOT . '/includes/common.inc';
-      _drupal_bootstrap_full();
-      break;
-  }
 }
 
 /**
