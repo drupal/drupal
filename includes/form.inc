@@ -48,7 +48,7 @@
 
 /**
  * Retrieves a form from a constructor function, or from the cache if
- * the form was built in a previous page-load. The form is then passesed
+ * the form was built in a previous page-load. The form is then passed
  * on for processing, after and rendered for display if necessary.
  *
  * @param $form_id
