@@ -358,6 +358,11 @@ function system_install() {
     drupal_install_schema($module);
   }
 
+  // Clear out module list and hook implementation statics before calling
+  // system_theme_data().
+  module_list(TRUE, FALSE);
+  module_implements('', FALSE, TRUE);
+
   // Load system theme data appropriately.
   system_theme_data();
 
