@@ -106,7 +106,10 @@ function trigger_trigger_info() {
        ),
      ),
      'comment' => array(
-         'comment_insert' => array(
+       'comment_presave' => array(
+         'label' => t('When either saving a new comment or updating an existing comment'),
+       ),
+       'comment_insert' => array(
          'label' => t('After saving a new comment'),
        ),
        'comment_update' => array(
@@ -349,6 +352,13 @@ function _trigger_normalize_comment_context($type, $comment) {
 }
 
 /**
+ * Implement hook_comment_presave().
+ */
+function trigger_comment_presave($comment) {
+  _trigger_comment($comment, 'comment_presave');
+}
+
+/**
  * Implement hook_comment_insert().
  */
 function trigger_comment_insert($comment) {
@@ -407,7 +417,6 @@ function _trigger_comment($a1, $hook) {
       actions_do($aid, $objects[$type], $context);
     }
     else {
-      $a1 = (object) $a1;
       actions_do($aid, $a1, $context);
     }
   }

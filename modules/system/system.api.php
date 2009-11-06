@@ -2405,13 +2405,16 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
  *   - 'triggers': An array of the events (that is, hooks) that can trigger this
  *     action. For example: array('node_insert', 'user_update'). You can also
  *     declare support for any trigger by returning array('any') for this value.
- *   - 'behavior': (optional) machine-readable array of behaviors of this
- *     action, used to signal additional actions that may need to be triggered.
- *     Currently recognized behaviors by Trigger module:
- *     - 'changes_node_property': If an action with this behavior is assigned to
- *       a trigger other than 'node_presave', any node save actions also
- *       assigned to this trigger are moved later in the list. If a node save
- *       action is not present, one will be added.
+ *   - 'behavior': (optional) A machine-readable array of behaviors of this
+ *     action, used to signal additionally required actions that may need to be
+ *     triggered. Currently recognized behaviors by Trigger module:
+ *     - 'changes_property': If an action with this behavior is assigned to a
+ *       trigger other than a "presave" hook, any save actions also assigned to
+ *       this trigger are moved later in the list. If no save action is present,
+ *       one will be added.
+ *       Modules that are processing actions (like Trigger module) should take
+ *       special care for the "presave" hook, in which case a dependent "save"
+ *       action should NOT be invoked.
  */
 function hook_action_info() {
   return array(
@@ -2419,12 +2422,20 @@ function hook_action_info() {
       'type' => 'comment',
       'label' => t('Unpublish comment'),
       'configurable' => FALSE,
-      'triggers' => array('comment_insert', 'comment_update'),
+      'behavior' => array('changes_property'),
+      'triggers' => array('comment_presave', 'comment_insert', 'comment_update'),
     ),
     'comment_unpublish_by_keyword_action' => array(
       'type' => 'comment',
       'label' => t('Unpublish comment containing keyword(s)'),
       'configurable' => TRUE,
+      'behavior' => array('changes_property'),
+      'triggers' => array('comment_presave', 'comment_insert', 'comment_update'),
+    ),
+    'comment_save_action' => array(
+      'type' => 'comment',
+      'label' => t('Save comment'),
+      'configurable' => FALSE,
       'triggers' => array('comment_insert', 'comment_update'),
     ),
   );

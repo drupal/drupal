@@ -2336,18 +2336,27 @@ function comment_action_info() {
       'label' => t('Publish comment'),
       'type' => 'comment',
       'configurable' => FALSE,
-      'triggers' => array('comment_insert', 'comment_update'),
+      'behavior' => array('changes_property'),
+      'triggers' => array('comment_presave', 'comment_insert', 'comment_update'),
     ),
     'comment_unpublish_action' => array(
       'label' => t('Unpublish comment'),
       'type' => 'comment',
       'configurable' => FALSE,
-      'triggers' => array('comment_insert', 'comment_update'),
+      'behavior' => array('changes_property'),
+      'triggers' => array('comment_presave', 'comment_insert', 'comment_update'),
     ),
     'comment_unpublish_by_keyword_action' => array(
       'label' => t('Unpublish comment containing keyword(s)'),
       'type' => 'comment',
       'configurable' => TRUE,
+      'behavior' => array('changes_property'),
+      'triggers' => array('comment_presave', 'comment_insert', 'comment_update'),
+    ),
+    'comment_save_action' => array(
+      'label' => t('Save comment'),
+      'type' => 'comment',
+      'configurable' => FALSE,
       'triggers' => array('comment_insert', 'comment_update'),
     ),
   );
@@ -2364,18 +2373,18 @@ function comment_action_info() {
  * @ingroup actions
  */
 function comment_publish_action($comment, $context = array()) {
-  if (isset($comment->cid)) {
-    $cid = $comment->cid;
+  if (isset($comment->comment)) {
     $subject = $comment->subject;
+    $comment->status = COMMENT_PUBLISHED;
   }
   else {
     $cid = $context['cid'];
     $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid', $cid))->fetchField();
+    db_update('comment')
+      ->fields(array('status' => COMMENT_PUBLISHED))
+      ->condition('cid', $cid)
+      ->execute();
   }
-  db_update('comment')
-    ->fields(array('status' => COMMENT_PUBLISHED))
-    ->condition('cid', $cid)
-    ->execute();
   watchdog('action', 'Published comment %subject.', array('%subject' => $subject));
 }
 
@@ -2390,18 +2399,18 @@ function comment_publish_action($comment, $context = array()) {
  * @ingroup actions
  */
 function comment_unpublish_action($comment, $context = array()) {
-  if (isset($comment->cid)) {
-    $cid = $comment->cid;
+  if (isset($comment->comment)) {
     $subject = $comment->subject;
+    $comment->status = COMMENT_NOT_PUBLISHED;
   }
   else {
     $cid = $context['cid'];
     $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid', $cid))->fetchField();
+    db_update('comment')
+      ->fields(array('status' => COMMENT_NOT_PUBLISHED))
+      ->condition('cid', $cid)
+      ->execute();
   }
-  db_update('comment')
-    ->fields(array('status' => COMMENT_NOT_PUBLISHED))
-    ->condition('cid', $cid)
-    ->execute();
   watchdog('action', 'Unpublished comment %subject.', array('%subject' => $subject));
 }
 
@@ -2411,9 +2420,7 @@ function comment_unpublish_action($comment, $context = array()) {
  * @param $comment
  *   A comment object.
  * @param $context
- *   An array providing more information about the context of the call to this action.
- *   Unused here, since this action currently only supports the insert and update ops of
- *   the comment hook, both of which provide a complete $comment object.
+ *   Keyed array. Must contain the id of the comment if $comment is not passed.
  *
  * @ingroup actions
  * @see comment_unpublish_by_keyword_action_form()
@@ -2422,10 +2429,7 @@ function comment_unpublish_action($comment, $context = array()) {
 function comment_unpublish_by_keyword_action($comment, $context) {
   foreach ($context['keywords'] as $keyword) {
     if (strpos($comment->comment, $keyword) !== FALSE || strpos($comment->subject, $keyword) !== FALSE) {
-      db_update('comment')
-        ->fields(array('status' => COMMENT_NOT_PUBLISHED))
-        ->condition('cid', $comment->cid)
-        ->execute();
+      $comment->status = COMMENT_NOT_PUBLISHED;
       watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject));
       break;
     }
@@ -2457,6 +2461,14 @@ function comment_unpublish_by_keyword_action_form($context) {
  */
 function comment_unpublish_by_keyword_action_submit($form, $form_state) {
   return array('keywords' => drupal_explode_tags($form_state['values']['keywords']));
+}
+
+/**
+ * Action to save a comment.
+ */
+function comment_save_action($comment) {
+  comment_save($comment);
+  watchdog('action', 'Saved comment %title', array('%title' => $comment->subject));
 }
 
 /**
