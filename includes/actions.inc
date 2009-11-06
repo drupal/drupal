@@ -167,17 +167,21 @@ function actions_list($reset = FALSE) {
 }
 
 /**
- * Retrieve all action instances from the database.
+ * Retrieves all action instances from the database.
  *
- * Compare with actions_list() which gathers actions by
- * invoking hook_action_info(). The two are synchronized
- * by visiting /admin/build/actions (when actions.module is
- * enabled) which runs actions_synchronize().
+ * Compare with actions_list(), which gathers actions by invoking
+ * hook_action_info(). The actions returned by this function and the actions
+ * returned by actions_list() are partially synchronized. Non-configurable
+ * actions from hook_action_info() implementations are put into the database
+ * when actions_synchronize() is called, which happens when
+ * admin/settings/actions is visited. Configurable actions are not added to
+ * the database until they are configured in the user interface, in which case
+ * a database row is created for each configuration of each action.
  *
  * @return
- *   Associative array keyed by action ID. Each value is
- *   an associative array with keys 'callback', 'description',
- *   'type' and 'configurable'.
+ *   Associative array keyed by action ID. Each value is an
+ *   associative array with keys 'callback', 'description', 'type' and
+ *   'configurable'.
  */
 function actions_get_all_actions() {
   $actions = array();
