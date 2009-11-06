@@ -52,7 +52,22 @@ function update_get_projects() {
  */
 function _update_process_info_list(&$projects, $list, $project_type) {
   foreach ($list as $file) {
-    if (empty($file->status)) {
+    // A disabled base theme of an enabled sub-theme still has all of its code
+    // run by the sub-theme, so we include it in our "enabled" projects list.
+    if (!$file->status && !empty($file->sub_themes)) {
+      foreach ($file->sub_themes as $key => $name) {
+        // Build a list of enabled sub-themes.
+        if ($list[$key]->status) {
+          $file->enabled_sub_themes[$key] = $name;
+        }
+      }
+      // If there are no enabled subthemes, we should ingore this theme and go
+      // on to the next one.
+      if (empty($file->enabled_sub_themes)) {
+        continue;
+      }
+    }
+    elseif (empty($file->status)) {
       // Skip disabled modules or themes.
       continue;
     }
@@ -89,6 +104,21 @@ function _update_process_info_list(&$projects, $list, $project_type) {
     }
 
     $project_name = $file->info['project'];
+
+    // Add a list of sub-themes that "depend on" the project and a list of base
+    // themes that are "required by" the project.
+    if ($project_name == 'drupal') {
+      // Drupal core is always required, so this extra info would be noise.
+      $sub_themes = array();
+      $base_themes = array();
+    }
+    else {
+      // Add list of enabled sub-themes.
+      $sub_themes = !empty($file->enabled_sub_themes) ? $file->enabled_sub_themes : array();
+      // Add list of base themes.
+      $base_themes = !empty($file->base_themes) ? $file->base_themes : array();
+    }
+
     if (!isset($projects[$project_name])) {
       // Only process this if we haven't done this project, since a single
       // project can have multiple modules or themes.
@@ -98,12 +128,16 @@ function _update_process_info_list(&$projects, $list, $project_type) {
         'datestamp' => $file->info['datestamp'],
         'includes' => array($file->name => $file->info['name']),
         'project_type' => $project_name == 'drupal' ? 'core' : $project_type,
+        'sub_themes' => $sub_themes,
+        'base_themes' => $base_themes,
       );
     }
     else {
       $projects[$project_name]['includes'][$file->name] = $file->info['name'];
       $projects[$project_name]['info']['_info_file_ctime'] = max($projects[$project_name]['info']['_info_file_ctime'], $file->info['_info_file_ctime']);
       $projects[$project_name]['datestamp'] = max($projects[$project_name]['datestamp'], $file->info['datestamp']);
+      $projects[$project_name]['sub_themes'] = array_merge($projects[$project_name]['sub_themes'], $sub_themes);
+      $projects[$project_name]['base_themes'] = array_merge($projects[$project_name]['base_themes'], $base_themes);
     }
   }
 }
