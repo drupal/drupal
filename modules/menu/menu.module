@@ -300,6 +300,9 @@ function menu_delete($menu) {
  * @return
  *   An array of menu link titles keyed on the a string containing the menu name
  *   and mlid. The list excludes the given item and its children.
+ *
+ * @todo This has to be turned into a #process form element callback. The
+ *   'menu_override_parent_selector' variable is entirely superfluous.
  */
 function menu_parent_options($menus, $item) {
   // The menu_links table can be practically any size and we need a way to
@@ -449,40 +452,35 @@ function menu_block_view_alter(&$data, $block) {
  * Implement hook_node_insert().
  */
 function menu_node_insert(stdClass $node) {
-  if (isset($node->menu)) {
-    $item = &$node->menu;
-    if (!empty($item['delete'])) {
-      menu_link_delete($item['mlid']);
-    }
-    elseif (trim($item['link_title'])) {
-      $item['link_title'] = trim($item['link_title']);
-      $item['link_path'] = "node/$node->nid";
-      if (!$item['customized']) {
-        $item['options']['attributes']['title'] = trim($node->title[FIELD_LANGUAGE_NONE][0]['value']);
-      }
-      if (!menu_link_save($item)) {
-        drupal_set_message(t('There was an error saving the menu link.'), 'error');
-      }
-    }
-  }
+  menu_node_save($node);
 }
 
 /**
  * Implement hook_node_update().
  */
 function menu_node_update(stdClass $node) {
+  menu_node_save($node);
+}
+
+/**
+ * Helper for hook_node_insert() and hook_node_update().
+ */
+function menu_node_save(stdClass $node) {
   if (isset($node->menu)) {
-    $item = &$node->menu;
-    if (!empty($item['delete'])) {
-      menu_link_delete($item['mlid']);
-    }
-    elseif (trim($item['link_title'])) {
-      $item['link_title'] = trim($item['link_title']);
-      $item['link_path'] = "node/$node->nid";
-      if (!$item['customized']) {
-        $item['options']['attributes']['title'] = trim($node->title[FIELD_LANGUAGE_NONE][0]['value']);
+    $link = &$node->menu;
+    if (empty($link['enabled'])) {
+      if (!empty($link['mlid'])) {
+        menu_link_delete($link['mlid']);
       }
-      if (!menu_link_save($item)) {
+    }
+    elseif (trim($link['link_title'])) {
+      $link['link_title'] = trim($link['link_title']);
+      $link['link_path'] = "node/$node->nid";
+      // If not already set, use the node's title as link title attribute.
+      if (empty($link['options']['attributes']['title']) && !$link['customized']) {
+        $link['options']['attributes']['title'] = trim($node->title[FIELD_LANGUAGE_NONE][0]['value']);
+      }
+      if (!menu_link_save($link)) {
         drupal_set_message(t('There was an error saving the menu link.'), 'error');
       }
     }
@@ -525,7 +523,19 @@ function menu_node_prepare(stdClass $node) {
       }
     }
     // Set default values.
-    $node->menu = $item + array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu_name, 'weight' => 0, 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0, 'customized' => 0);
+    $node->menu = $item + array(
+      'link_title' => '',
+      'mlid' => 0,
+      'plid' => 0,
+      'menu_name' => $menu_name,
+      'weight' => 0,
+      'options' => array(),
+      'module' => 'menu',
+      'expanded' => 0,
+      'hidden' => 0,
+      'has_children' => 0,
+      'customized' => 0,
+    );
   }
   // Find the depth limit for the parent select.
   if (!isset($node->menu['parent_depth_limit'])) {
@@ -546,77 +556,88 @@ function _menu_parent_depth_limit($item) {
 function menu_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
     // Generate a list of possible parents.
+    // @todo This must be handled in a #process handler.
     $type = $form['#node']->type;
     $options = menu_parent_options(menu_get_menus(), $type);
-    if (count($options) == 0) {
-      // No possible parent menu items found so there is no need to display the
-      // menu options.
+    // If no possible parent menu items were found, there is nothing to display.
+    if (empty($options)) {
       return;
     }
-
-    // Note - doing this to make sure the delete checkbox stays in the form.
-    $form['#cache'] = TRUE;
+    $link = $form['#node']->menu;
+    $form['#submit'][] = 'menu_node_form_submit';
 
     $form['menu'] = array(
       '#type' => 'fieldset',
       '#title' => t('Menu settings'),
       '#access' => user_access('administer menu'),
       '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
+      '#collapsed' => !$link['link_title'],
       '#group' => 'additional_settings',
       '#attached' => array(
         'js' => array(drupal_get_path('module', 'menu') . '/menu.js'),
       ),
       '#tree' => TRUE,
       '#weight' => -2,
-      '#attributes' => array('class' => array('menu-item-form')),
+      '#attributes' => array('class' => array('menu-link-form')),
     );
-    $item = $form['#node']->menu;
+    $form['menu']['enabled'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Provide a menu link'),
+      '#default_value' => (int) (bool) $link['mlid'],
+    );
+    $form['menu']['link'] = array(
+      '#type' => 'container',
+      '#parents' => array('menu'),
+      '#states' => array(
+        'invisible' => array(
+          'input[name="menu[enabled]"]' => array('checked' => FALSE),
+        ),
+      ),
+    );
 
-    if ($item['mlid']) {
-      // There is an existing link.
-      $form['menu']['delete'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Delete this menu item.'),
-      );
-    }
-    if (!$item['link_title']) {
-      $form['menu']['#collapsed'] = TRUE;
-    }
-
+    // Populate the element with the link data.
     foreach (array('mlid', 'module', 'hidden', 'has_children', 'customized', 'options', 'expanded', 'hidden', 'parent_depth_limit') as $key) {
-      $form['menu'][$key] = array('#type' => 'value', '#value' => $item[$key]);
+      $form['menu']['link'][$key] = array('#type' => 'value', '#value' => $link[$key]);
     }
-    $form['menu']['#item'] = $item;
 
-    $form['menu']['link_title'] = array('#type' => 'textfield',
+    $form['menu']['link']['link_title'] = array(
+      '#type' => 'textfield',
       '#title' => t('Menu link title'),
-      '#default_value' => $item['link_title'],
-      '#description' => t('The link text corresponding to this item that should appear in the menu. Leave blank if you do not wish to add this post to the menu.'),
-      '#required' => FALSE,
+      '#default_value' => $link['link_title'],
     );
 
-    $default = ($item['mlid'] ? $item['menu_name'] . ':' . $item['plid'] : variable_get('menu_parent_' . $type, 'main-menu:0'));
+    $default = ($link['mlid'] ? $link['menu_name'] . ':' . $link['plid'] : variable_get('menu_parent_' . $type, 'main-menu:0'));
+    // @todo This will fail with the new selective menus per content type.
     if (!isset($options[$default])) {
       $default = 'navigation:0';
     }
-    $form['menu']['parent'] = array(
+    $form['menu']['link']['parent'] = array(
       '#type' => 'select',
       '#title' => t('Parent item'),
       '#default_value' => $default,
       '#options' => $options,
-      '#description' => t('The maximum depth for an item and all its children is fixed at !maxdepth. Some menu items may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
-      '#attributes' => array('class' => array('menu-title-select')),
+      '#attributes' => array('class' => array('menu-parent-select')),
     );
-    $form['#submit'][] = 'menu_node_form_submit';
-
-    $form['menu']['weight'] = array(
+    $form['menu']['link']['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight'),
       '#delta' => 50,
-      '#default_value' => $item['weight'],
-      '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
+      '#default_value' => $link['weight'],
+      '#description' => t('Menu links with smaller weights are displayed before links with larger weights.'),
     );
+  }
+}
+
+/**
+ * Submit handler for node form.
+ *
+ * @see menu_form_alter()
+ */
+function menu_node_form_submit($form, &$form_state) {
+  // Decompose the selected menu parent option into 'menu_name' and 'plid', if
+  // the form used the default parent selection widget.
+  if (!empty($form_state['values']['menu']['parent'])) {
+    list($form_state['values']['menu']['menu_name'], $form_state['values']['menu']['plid']) = explode(':', $form_state['values']['menu']['parent']);
   }
 }
 
@@ -647,6 +668,7 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
   // To avoid an 'illegal option' error after saving the form we have to load
   // all available menu items.
   // Otherwise it is not possible to dynamically add options to the list.
+  // @todo Convert menu_parent_options() into a #process callback.
   $options = menu_parent_options(menu_get_menus(), array('mlid' => 0));
   $form['menu']['menu_parent'] = array(
     '#type' => 'select',
@@ -663,13 +685,6 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
     '(function ($) { Drupal.menu_update_parent_list(); })(jQuery);',
     array('scope' => 'footer', 'type' => 'inline')
   );
-}
-
-/**
- * Decompose the selected menu parent option into the menu_name and plid.
- */
-function menu_node_form_submit($form, &$form_state) {
-  list($form_state['values']['menu']['menu_name'], $form_state['values']['menu']['plid']) = explode(':', $form_state['values']['menu']['parent']);
 }
 
 /**

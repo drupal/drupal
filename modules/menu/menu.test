@@ -511,3 +511,88 @@ class MenuTestCase extends DrupalWebTestCase {
     }
   }
 }
+
+/**
+ * Test menu settings for nodes.
+ */
+class MenuNodeTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Menu settings for nodes',
+      'description' => 'Add, edit, and delete a node with menu link.',
+      'group' => 'Menu',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('menu');
+
+    $this->admin_user = $this->drupalCreateUser(array(
+      'access administration pages',
+      'administer content types',
+      'administer menu',
+      'create page content',
+      'edit any page content',
+      'delete any page content',
+    ));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Test creating, editing, deleting menu links via node form widget.
+   */
+  function testMenuNodeFormWidget() {
+    // Enable Navigation menu as available menu.
+    $edit = array(
+      'menu_options[navigation]' => 1,
+    );
+    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    // Change default parent item to Navigation menu, so we can assert more
+    // easily.
+    $edit = array(
+      'menu_parent' => 'navigation:0',
+    );
+    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+
+    // Create a node.
+    $node_title = $this->randomName();
+    $edit = array(
+      'title[zxx][0][value]' => $node_title,
+      'body[zxx][0][value]' => $this->randomString(),
+    );
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $node = $this->drupalGetNodeByTitle($node_title);
+    // Assert that there is no link for the node.
+    $this->drupalGet('');
+    $this->assertNoLink($node_title);
+
+    // Edit the node, enable the menu link setting, but skip the link title.
+    $edit = array(
+      'menu[enabled]' => 1,
+    );
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    // Assert that there is no link for the node.
+    $this->drupalGet('');
+    $this->assertNoLink($node_title);
+
+    // Edit the node and create a menu link.
+    $edit = array(
+      'menu[enabled]' => 1,
+      'menu[link_title]' => $node_title,
+    );
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    // Assert that the link exists.
+    $this->drupalGet('');
+    $this->assertLink($node_title);
+
+    // Edit the node and remove the menu link.
+    $edit = array(
+      'menu[enabled]' => FALSE,
+    );
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    // Assert that there is no link for the node.
+    $this->drupalGet('');
+    $this->assertNoLink($node_title);
+  }
+}
+
