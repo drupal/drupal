@@ -208,8 +208,8 @@ function default_install() {
     'description' => $description,
     'machine_name' => 'tags',
     'help' => $help,
-    'weight' => 0,
-  );
+
+  );  
   taxonomy_vocabulary_save($vocabulary);
   $instance = array(
     'field_name' => 'taxonomy_' . $vocabulary->machine_name,
@@ -219,6 +219,95 @@ function default_install() {
     'description' => $vocabulary->help,
     'widget' => array(
       'type' => 'taxonomy_autocomplete',
+      'weight' => 4,
+    ),
+  );
+  field_create_instance($instance);
+
+
+  // Create an image field named "Image", enabled for the 'article' content type.
+  // Many of the following values will be defaulted, they're included here as an illustrative examples.
+  // @see: http://api.drupal.org/api/function/field_create_field/7
+
+  $field = array(
+    'field_name' => 'field_image',
+    'type' => 'image',
+    'cardinality' => 1,
+    'translatable' => TRUE,
+    'locked' => FALSE,
+    'indexes' => array('fid' => array('fid')),
+    'settings' => array(
+      'uri_scheme' => 'public',
+      'default_image' => FALSE,
+    ),
+    'storage' => array(
+      'type' => 'field_sql_storage',
+      'settings' => array(),
+    ),
+  );
+  field_create_field($field);
+
+
+  // Many of the following values will be defaulted, they're included here as an illustrative examples.
+  // @see: http://api.drupal.org/api/function/field_create_instance/7
+  $instance = array(
+    'field_name' => 'field_image',
+    'object_type' => 'node',
+    'label' => 'Image',
+    'bundle' => 'article',
+    'description' => 'Upload an image to go with this article.',
+    'required' => FALSE,
+
+    'settings' => array(
+      'file_directory' => 'field/image',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'alt_field' => TRUE,
+      'title_field' => '',
+    ),
+
+    'widget' => array(
+      'type' => 'image_image',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+      ),
+      'weight' => -1,
+    ),
+
+    'display' => array(
+      'full' => array(
+        'label' => 'hidden',
+        'type' => 'image__large',
+        'settings' => array(),
+        'weight' => -1,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'type' => 'image_link_content__medium',
+        'settings' => array(),
+        'weight' => -1,
+      ),
+      'rss' => array(
+        'label' => 'hidden',
+        'type' => 'image__large',
+        'settings' => array(),
+        'weight' => -1,
+      ),
+      'search_index' => array(
+        'label' => 'hidden',
+        'type' => 'image__large',
+        'settings' => array(),
+        'weight' => -1,
+      ),
+      'search_results' => array(
+        'label' => 'hidden',
+        'type' => 'image__large',
+        'settings' => array(),
+        'weight' => -1,
+      ),
     ),
   );
   field_create_instance($instance);
