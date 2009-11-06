@@ -67,7 +67,7 @@ function xmlrpc_server($callbacks) {
   xmlrpc_server_set($xmlrpc_server);
   $result = xmlrpc_server_call($xmlrpc_server, $xmlrpc_server->message->methodname, $xmlrpc_server->message->params);
 
-  if ($result->is_error) {
+  if (is_object($result) && !empty($result->is_error)) {
     xmlrpc_server_error($result);
   }
   // Encode the result
