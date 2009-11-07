@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1076 2009/11/07 13:35:21 dries Exp $
+// $Id: user.module,v 1.1077 2009/11/07 14:27:20 webchick Exp $
 
 /**
  * @file
@@ -1562,7 +1562,7 @@ function user_init() {
 }
 
 /**
- * Load a either a specified or the current user account.
+ * Load either a specified or the current user account.
  *
  * @param $uid
  *   An optional user ID of the user to load. If not provided, the current
