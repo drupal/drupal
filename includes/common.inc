@@ -4963,10 +4963,13 @@ function drupal_render(&$elements) {
   if (isset($elements['#theme'])) {
     $elements['#children'] = theme($elements['#theme'], $elements);
   }
-  // If #theme was not set and the element has children, render them now
-  // using drupal_render_children().
+  // If #theme was not set and the element has children, render them now.
+  // This is the same process as drupal_render_children() but is inlined
+  // for speed.
   if ($elements['#children'] == '') {
-    $elements['#children'] = drupal_render_children($elements, $children);
+    foreach ($children as $key) {
+      $elements['#children'] .= drupal_render($elements[$key]);
+    }
   }
 
   // Let the theme functions in #theme_wrappers add markup around the rendered
