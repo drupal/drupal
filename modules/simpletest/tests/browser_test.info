@@ -1,8 +1,0 @@
-; $Id$
-name = Browser test
-description = Provide various pages for testing the browser.
-package = Testing
-version = VERSION
-core = 7.x
-files[] = browser_test.module
-hidden = TRUE
