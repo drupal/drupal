@@ -1,8 +1,0 @@
-; $Id: browser_test.info,v 1.1 2009/08/17 06:08:47 dries Exp $
-name = Browser test
-description = Provide various pages for testing the browser.
-package = Testing
-version = VERSION
-core = 7.x
-files[] = browser_test.module
-hidden = TRUE
