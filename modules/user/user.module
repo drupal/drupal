@@ -1562,7 +1562,7 @@ function user_init() {
 }
 
 /**
- * Load a either a specified or the current user account.
+ * Load either a specified or the current user account.
  *
  * @param $uid
  *   An optional user ID of the user to load. If not provided, the current
