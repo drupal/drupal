@@ -614,6 +614,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
   $edit += array(
     'name' => '',
     'description' => '',
+    'format' => filter_default_format(),
     'vocabulary_machine_name' => $vocabulary->machine_name,
     'tid' => NULL,
     'weight' => 0,
@@ -653,7 +654,9 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
-    '#description' => t('A description of the term. To be displayed on taxonomy/term pages and RSS feeds.'));
+    '#description' => t('A description of the term. To be displayed on taxonomy/term pages and RSS feeds.'),
+    '#text_format' => $edit['format'],
+  );
 
   $form['vocabulary_machine_name'] = array(
     '#type' => 'textfield',
@@ -767,6 +770,10 @@ function taxonomy_form_term_submit($form, &$form_state) {
     $form_state['confirm_parents'] = TRUE;
     return;
   }
+
+  // Massage #text_format.
+  $form_state['values']['format'] = $form_state['values']['description_format'];
+  unset($form_state['values']['description_format']);
 
   $term = taxonomy_form_term_submit_builder($form, $form_state);
 

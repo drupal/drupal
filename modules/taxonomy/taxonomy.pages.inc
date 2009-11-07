@@ -33,14 +33,12 @@ function taxonomy_term_page($term) {
   field_attach_prepare_view('taxonomy_term', array($term->tid => $term), 'full');
   $build = array();
   $build += field_attach_view('taxonomy_term', $term);
-  if (!empty($term->description)) {
-    $build['term_description'] = array(
-      '#markup' => filter_xss_admin($term->description),
-      '#weight' => -1,
-      '#prefix' => '<div class="taxonomy-term-description">',
-      '#suffix' => '</div>',
-    );
-  }
+  $build['term_description'] = array(
+    '#markup' => check_markup($term->description, $term->format, '', TRUE),
+    '#weight' => -1,
+    '#prefix' => '<div class="taxonomy-term-description">',
+    '#suffix' => '</div>',
+  );
   if ($nids = taxonomy_select_nodes($term->tid, TRUE, variable_get('default_nodes_main', 10))) {
     $nodes = node_load_multiple($nids);
     $build += node_build_multiple($nodes);
@@ -69,8 +67,8 @@ function taxonomy_term_feed($term) {
   $channel['link'] = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
   $channel['title'] = variable_get('site_name', 'Drupal') . ' - ' . $term->name;
   // Only display the description if we have a single term, to avoid clutter and confusion.
-  // HTML will be removed from feed description, so no need to filter here.
-  $channel['description'] = $term->description;
+  // HTML will be removed from feed description.
+  $channel['description'] = check_markup($term->description, $term->format, '', TRUE);
   $nids = taxonomy_select_nodes($term->tid, FALSE, variable_get('feed_default_items', 10));
 
   node_feed($nids, $channel);

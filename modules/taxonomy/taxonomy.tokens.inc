@@ -115,7 +115,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'description':
-          $replacements[$original] = $sanitize ? filter_xss($term->description) : $term->description;
+          $replacements[$original] = $sanitize ? check_markup($term->description, $term->format, '', TRUE) : $term->description;
           break;
 
         case 'url':

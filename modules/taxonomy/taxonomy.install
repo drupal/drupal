@@ -50,6 +50,13 @@ function taxonomy_schema() {
         'description' => 'A description of the term.',
         'translatable' => TRUE,
       ),
+      'format' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {filter_format}.format of the description.',
+      ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -407,3 +414,17 @@ function taxonomy_update_7005(&$sandbox) {
    db_drop_table('taxonomy_term_node');
   }
 }
+
+/**
+ * Add vocabulary machine_name column.
+ */
+function taxonomy_update_7006() {
+  db_add_field('taxonomy_term_data', 'format', array(
+    'type' => 'int',
+    'size' => 'small',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'The {filter_format}.format of the description.',
+  ));
+}
+
