@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.tokens.inc,v 1.3 2009/10/24 05:13:44 webchick Exp $
+// $Id: taxonomy.tokens.inc,v 1.4 2009/11/07 14:18:07 webchick Exp $
 
 /**
  * @file
@@ -115,7 +115,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'description':
-          $replacements[$original] = $sanitize ? filter_xss($term->description) : $term->description;
+          $replacements[$original] = $sanitize ? check_markup($term->description, $term->format, '', TRUE) : $term->description;
           break;
 
         case 'url':
