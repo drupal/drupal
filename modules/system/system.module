@@ -217,6 +217,10 @@ function system_permission() {
       'title' => t('Access administration pages'),
       'description' => t('View the administration panel and browse the help system.'),
     ),
+    'access contextual links' => array(
+      'title' => t('Access contextual links'),
+      'description' => t('Use contextual links to perform actions related to elements on a page.'),
+    ),
     'access site in maintenance mode' => array(
       'title' => t('Access site in maintenance mode'),
       'description' => t('Log in when the site is in maintenance mode.'),
@@ -3516,16 +3520,23 @@ function theme_system_settings_form($variables) {
 
 /**
  * Template variable preprocessor for contextual links.
+ *
+ * @see system_build_contextual_links()
  */
 function system_preprocess(&$variables, $hook) {
   static $hooks;
 
+  // Initialize the $contextual_links template variable.
+  $variables['contextual_links'] = array();
+
+  // Nothing to do here if the user is not permitted to access contextual links.
+  if (!user_access('access contextual links')) {
+    return;
+  }
+
   if (!isset($hooks)) {
     $hooks = theme_get_registry();
   }
-
-  // Initialize contextual links template variable.
-  $variables['contextual_links'] = array();
 
   // Determine the primary theme function argument.
   if (isset($hooks[$hook]['variables'])) {
@@ -3539,7 +3550,7 @@ function system_preprocess(&$variables, $hook) {
     $element = $variables[$key];
   }
 
-  if (isset($element) && is_array($element) && isset($element['#contextual_links'])) {
+  if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
     $variables['contextual_links'] = system_build_contextual_links($element);
     if (!empty($variables['contextual_links'])) {
       $variables['classes_array'][] = 'contextual-links-region';
@@ -3551,21 +3562,32 @@ function system_preprocess(&$variables, $hook) {
  * Build a renderable array for contextual links.
  *
  * @param $element
- *   A renderable array containing a #contextual_links property.
+ *   A renderable array containing a #contextual_links property, which is a
+ *   keyed array. Each key is the name of the implementing module, and each
+ *   value is an array that forms the function arguments for
+ *   menu_contextual_links(). For example:
+ *   @code
+ *     array('#contextual_links' => array(
+ *       'block' => array('admin/structure/block/manage', array('system', 'navigation')),
+ *       'menu' => array('admin/structure/menu/manage', array('navigation')),
+ *     ))
+ *   @endcode
  *
  * @return
  *   A renderable array representing contextual links.
+ *
+ * @see menu_contextual_links()
  */
 function system_build_contextual_links($element) {
   static $destination;
 
-  // Transform contextual links into parameters suitable for theme_link().
-  $items = call_user_func_array('array_merge_recursive', $element['#contextual_links']);
-  $build = array();
-  if (empty($items)) {
-    return $build;
+  // Retrieve contextual menu links.
+  $items = array();
+  foreach ($element['#contextual_links'] as $module => $args) {
+    $items += menu_contextual_links($module, $args[0], $args[1]);
   }
 
+  // Transform contextual links into parameters suitable for theme_link().
   if (!isset($destination)) {
     $destination = drupal_get_destination();
   }
@@ -3584,6 +3606,7 @@ function system_build_contextual_links($element) {
     $item['localized_options']['query'] += $destination;
     $links[$class] += $item['localized_options'];
   }
+  $build = array();
   if ($links) {
     $build = array(
       '#theme' => 'links',

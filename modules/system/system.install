@@ -1097,7 +1097,7 @@ function system_schema() {
     ),
     'indexes' => array(
       'fit' => array('fit'),
-      'tab_parent' => array('tab_parent'),
+      'tab_parent' => array(array('tab_parent', 64), 'weight', 'title'),
       'tab_root_weight_title' => array(array('tab_root', 64), 'weight', 'title'),
     ),
     'primary key' => array('path'),

@@ -140,6 +140,8 @@ function update_fix_d7_requirements() {
       'not null' => TRUE,
       'default' => 0,
     ));
+    db_drop_index('menu_router', 'tab_parent');
+    db_add_index('menu_router', 'tab_parent', array(array('tab_parent', 64), 'weight', 'title'));
     db_add_field('menu_router', 'theme_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
     db_add_field('menu_router', 'theme_arguments', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
 

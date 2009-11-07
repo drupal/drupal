@@ -430,7 +430,7 @@ function menu_block_view($delta = '') {
   $data['content'] = menu_tree($delta);
   // Add contextual links for this block.
   if (!empty($data['content'])) {
-    $data['content']['#contextual_links']['menu'] = menu_contextual_links('admin/structure/menu/manage', array($delta));
+    $data['content']['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($delta));
   }
   return $data;
 }
@@ -443,7 +443,7 @@ function menu_block_view_alter(&$data, $block) {
   if ($block->module == 'system' && !empty($data['content'])) {
     $system_menus = menu_list_system_menus();
     if (isset($system_menus[$block->delta])) {
-      $data['content']['#contextual_links']['menu'] = menu_contextual_links('admin/structure/menu/manage', array($block->delta));
+      $data['content']['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($block->delta));
     }
   }
 }

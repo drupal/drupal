@@ -1796,16 +1796,26 @@ function menu_local_tasks($level = 0) {
  * If the path "node/123" is passed to this function, then it will return the
  * links for 'edit' and 'report-as-spam'.
  *
+ * @param $module
+ *   The name of the implementing module. This is used to prefix the key for
+ *   each contextual link, which is transformed into a CSS class during
+ *   rendering by theme_links(). For example, if $module is 'block' and the
+ *   retrieved local task path argument is 'edit', then the resulting CSS class
+ *   will be 'block-edit'.
  * @param $path
- *   The menu router path of the object to retrieve local tasks for, for example
- *   "node/123" or "admin/structure/menu/manage/[menu_name]".
+ *   The static menu router path of the object to retrieve local tasks for, for
+ *   example 'node' or 'admin/structure/block/manage'.
+ * @param $args
+ *   A list of of dynamic path arguments to append to $path to form the fully-
+ *   qualified menu router path, for example array(123) for a certain node or
+ *   array('system', 'navigation') for a certain block.
  *
  * @return
  *   A list of menu router items that are local tasks for the passed in path.
  *
  * @see system_preprocess()
  */
-function menu_contextual_links($parent_path, $args) {
+function menu_contextual_links($module, $parent_path, $args) {
   static $path_empty = array();
 
   $links = array();
@@ -1851,12 +1861,9 @@ function menu_contextual_links($parent_path, $args) {
     if (!$item['access']) {
       continue;
     }
-    // All contextual links are keyed by the actual "task" path argument. The
-    // menu system does not allow for two local tasks with the same name, and
-    // since the key is also used as CSS class for the link item, which may be
-    // styled as icon, it wouldn't make sense to display the same icon for
-    // different tasks.
-    $links[$key] = $item;
+    // All contextual links are keyed by the actual "task" path argument,
+    // prefixed with the name of the implementing module.
+    $links[$module . '-' . $key] = $item;
   }
 
   // Allow modules to alter contextual links.

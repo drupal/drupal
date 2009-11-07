@@ -2084,13 +2084,15 @@ function _user_cancel($edit, $account, $method) {
  *
  * @param $account
  *   A user object.
+ * @param $build_mode
+ *   Build mode, e.g. 'full'.
  *
  * @return
  *   An array as expected by drupal_render().
  */
-function user_build($account) {
+function user_build($account, $build_mode = 'full') {
   // Retrieve all profile fields and attach to $account->content.
-  user_build_content($account);
+  user_build_content($account, $build_mode);
 
   $build = $account->content;
   // We don't need duplicate rendering info in account->content.
@@ -2099,7 +2101,11 @@ function user_build($account) {
   $build += array(
     '#theme' => 'user_profile',
     '#account' => $account,
+    '#build_mode' => $build_mode,
   );
+
+  // Allow modules to modify the structured user.
+  drupal_alter('user_build', $build);
 
   return $build;
 }
@@ -2109,19 +2115,19 @@ function user_build($account) {
  *
  * @param $account
  *   A user object.
- *
+ * @param $build_mode
+ *   Build mode, e.g. 'full'.
  */
-function user_build_content($account) {
+function user_build_content($account, $build_mode = 'full') {
+  // Remove previously built content, if exists.
   $account->content = array();
 
-  $accounts = array($account->uid, $account);
-  field_attach_prepare_view('user', $accounts, 'full');
-
   // Build fields content.
-  $account->content += field_attach_view('user', $account);
+  field_attach_prepare_view('user', array($account->uid, $account), $build_mode);
+  $account->content += field_attach_view('user', $account, $build_mode);
 
   // Populate $account->content with a render() array.
-  module_invoke_all('user_view', $account);
+  module_invoke_all('user_view', $account, $build_mode);
 }
 
 /**

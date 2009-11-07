@@ -794,8 +794,6 @@ function comment_build($comment, stdClass $node, $build_mode = 'full') {
     '#node' => $node,
     '#build_mode' => $build_mode,
   );
-  // Add contextual links for this comment.
-  $build['#contextual_links']['comment'] = menu_contextual_links('comment', array($comment->cid));
 
   $prefix = '';
   $is_threaded = isset($comment->divs) && variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED) == COMMENT_MODE_THREADED;
@@ -818,6 +816,9 @@ function comment_build($comment, stdClass $node, $build_mode = 'full') {
   if ($is_threaded && !empty($comment->divs_final)) {
     $build['#suffix'] = str_repeat('</div>', $comment->divs_final);
   }
+
+  // Allow modules to modify the structured comment.
+  drupal_alter('comment_build', $build);
 
   return $build;
 }
@@ -844,6 +845,7 @@ function comment_build_content($comment, stdClass $node, $build_mode = 'full') {
     '#markup' => check_markup($comment->comment, $comment->format, '', TRUE),
   );
 
+  // Build fields content.
   field_attach_prepare_view('comment', array($comment->cid => $comment), $build_mode);
   $comment->content += field_attach_view('comment', $comment, $build_mode);
 
@@ -857,9 +859,6 @@ function comment_build_content($comment, stdClass $node, $build_mode = 'full') {
 
   // Allow modules to make their own additions to the comment.
   module_invoke_all('comment_view', $comment, $build_mode);
-
-  // Allow modules to modify the structured comment.
-  drupal_alter('comment_build', $comment, $build_mode);
 }
 
 /**

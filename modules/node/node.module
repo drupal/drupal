@@ -1148,7 +1148,11 @@ function node_build($node, $build_mode = 'full') {
     '#build_mode' => $build_mode,
   );
   // Add contextual links for this node.
-  $build['#contextual_links']['node'] = menu_contextual_links('node', array($node->nid));
+  // @todo Make this configurable per build mode.
+  $build['#contextual_links']['node'] = array('node', array($node->nid));
+
+  // Allow modules to modify the structured node.
+  drupal_alter('node_build', $build);
 
   return $build;
 }
@@ -1177,7 +1181,6 @@ function node_build($node, $build_mode = 'full') {
  *   A node object.
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
- *
  */
 function node_build_content(stdClass $node, $build_mode = 'full') {
   // Remove previously built content, if exists.
@@ -1190,6 +1193,9 @@ function node_build_content(stdClass $node, $build_mode = 'full') {
   }
 
   // Build fields content.
+  // @todo field_attach_prepare_view() is only invoked by node_build_multiple(),
+  //   all other entities invoke it _here_.
+  //field_attach_prepare_view('node', array($node->nid => $node), $build_mode);
   $node->content += field_attach_view('node', $node, $build_mode);
 
   // Always display a read more link on teasers because we have no way
@@ -1210,9 +1216,6 @@ function node_build_content(stdClass $node, $build_mode = 'full') {
 
   // Allow modules to make their own additions to the node.
   module_invoke_all('node_view', $node, $build_mode);
-
-  // Allow modules to modify the structured node.
-  drupal_alter('node_build', $node, $build_mode);
 }
 
 /**
@@ -1543,8 +1546,9 @@ function node_search_execute($keys = NULL) {
   foreach ($find as $item) {
     // Render the node.
     $node = node_load($item->sid);
-    node_build_content($node, 'search_result');
-    $node->rendered = drupal_render($node->content);
+    $build = node_build($node, 'search_result');
+    unset($build['#theme']);
+    $node->rendered = drupal_render($build);
 
     // Fetch comments for snippet.
     $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node);
@@ -2032,16 +2036,17 @@ function node_feed($nids = FALSE, $channel = array()) {
 
     // The node gets built and modules add to or modify $node->rss_elements
     // and $node->rss_namespaces.
-    node_build_content($node, 'rss');
+    $build = node_build($node, 'rss');
+    unset($build['#theme']);
 
     if (!empty($node->rss_namespaces)) {
       $namespaces = array_merge($namespaces, $node->rss_namespaces);
     }
 
-    if ($item_length != 'title' && !empty($node->content)) {
+    if ($item_length != 'title') {
       // We render node contents and force links to be last.
-      $links = drupal_render($node->content['links']);
-      $item_text .= drupal_render($node->content) . $links;
+      $build['links']['#weight'] = 1000;
+      $item_text .= drupal_render($build);
     }
 
     $items .= format_rss_item($node->title[FIELD_LANGUAGE_NONE][0]['value'], $node->link, $item_text, $node->rss_elements);
@@ -2185,8 +2190,9 @@ function _node_index_node(stdClass $node) {
   variable_set('node_cron_last', $node->changed);
 
   // Render the node.
-  node_build_content($node, 'search_index');
-  $node->rendered = drupal_render($node->content);
+  $build = node_build($node, 'search_index');
+  unset($build['#theme']);
+  $node->rendered = drupal_render($build);
 
   $text = '<h1>' . check_plain($node->title[FIELD_LANGUAGE_NONE][0]['value']) . '</h1>' . $node->rendered;
 

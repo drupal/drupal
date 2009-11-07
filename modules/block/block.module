@@ -283,7 +283,7 @@ function _block_get_renderable_array($list = array()) {
 
     // Add contextual links for this block; skipping the system main block.
     if ($key != 'system_main') {
-      $build[$key]['#contextual_links']['block'] = menu_contextual_links('admin/structure/block/manage', array($block->module, $block->delta));
+      $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($block->module, $block->delta));
     }
 
     $build[$key] += array(

@@ -540,9 +540,9 @@ function hook_node_view(stdClass $node, $build_mode) {
 }
 
 /**
- * The node content was built, the module may modify the structured content.
+ * The node content was built; the module may modify the structured content.
  *
- * This hook is called after the content has been assembled in $node->content
+ * This hook is called after the content has been assembled in a structured array
  * and may be used for doing processing which requires that the complete node
  * content structure has been built.
  *
@@ -551,20 +551,19 @@ function hook_node_view(stdClass $node, $build_mode) {
  * Alternatively, it could also implement hook_preprocess_node(). See
  * drupal_render() and theme() documentation respectively for details.
  *
- * @param $node
- *   The node the action is being performed on.
- * @param $build_mode
- *   The $build_mode parameter from node_build().
+ * @param $build
+ *   A renderable array representing the node content.
+ *
+ * @see node_build()
  */
-function hook_node_build_alter(stdClass $node, $build_mode) {
-  // Check for the existence of a field added by another module.
-  if (isset($node->content['an_additional_field'])) {
+function hook_node_build_alter($build) {
+  if ($build['#build_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
-    $node->content['an_additional_field']['#weight'] = -10;
+    $build['an_additional_field']['#weight'] = -10;
   }
 
   // Add a #post_render callback to act on the rendered HTML of the node.
-  $node->content['#post_render'][] = 'my_module_node_post_render';
+  $build['#post_render'][] = 'my_module_node_post_render';
 }
 
 /**
