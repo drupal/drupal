@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.415 2009/10/24 23:19:21 webchick Exp $
+// $Id: system.install,v 1.416 2009/11/07 13:35:21 dries Exp $
 
 /**
  * @file
@@ -1097,7 +1097,7 @@ function system_schema() {
     ),
     'indexes' => array(
       'fit' => array('fit'),
-      'tab_parent' => array('tab_parent'),
+      'tab_parent' => array(array('tab_parent', 64), 'weight', 'title'),
       'tab_root_weight_title' => array(array('tab_root', 64), 'weight', 'title'),
     ),
     'primary key' => array('path'),

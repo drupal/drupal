@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.522 2009/11/03 06:47:22 webchick Exp $
+// $Id: book.module,v 1.523 2009/11/07 13:35:20 dries Exp $
 
 /**
  * @file
@@ -1087,8 +1087,10 @@ function book_export_traverse($tree, $visit_func) {
  *   The HTML generated for the given node.
  */
 function book_node_export(stdClass $node, $children = '') {
-  node_build_content($node, 'print');
-  $node->rendered = drupal_render($node->content);
+  $build = node_build($node, 'print');
+  unset($build['#theme']);
+  // @todo Rendering should happen in the template using render().
+  $node->rendered = drupal_render($build);
 
   return theme('book_node_export_html', array('node' => $node, 'children' => $children));
 }

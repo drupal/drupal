@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.394 2009/10/23 22:24:11 webchick Exp $
+// $Id: block.module,v 1.395 2009/11/07 13:35:20 dries Exp $
 
 /**
  * @file
@@ -283,7 +283,7 @@ function _block_get_renderable_array($list = array()) {
 
     // Add contextual links for this block; skipping the system main block.
     if ($key != 'system_main') {
-      $build[$key]['#contextual_links']['block'] = menu_contextual_links('admin/structure/block/manage', array($block->module, $block->delta));
+      $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($block->module, $block->delta));
     }
 
     $build[$key] += array(
