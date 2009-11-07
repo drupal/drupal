@@ -97,6 +97,9 @@ function filter_schema() {
     'unique keys' => array(
       'name' => array('name'),
     ),
+    'indexes' => array(
+      'weight' => array('weight'),
+    ),
   );
 
   $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');
@@ -115,6 +118,7 @@ function filter_schema() {
  */
 function filter_update_7000() {
   db_add_field('filter_formats', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+  db_add_index('filter_formats', 'weight', array('weight'));
 }
 
 /**
