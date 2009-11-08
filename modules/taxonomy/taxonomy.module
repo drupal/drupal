@@ -234,30 +234,29 @@ function taxonomy_menu() {
   );
 
   $items['admin/structure/taxonomy/%taxonomy_vocabulary'] = array(
-    'title' => 'Vocabulary', // this is replaced by callback
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_form_vocabulary', 3),
     'title callback' => 'taxonomy_admin_vocabulary_title_callback',
     'title arguments' => array(3),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_overview_terms', 3),
     'access arguments' => array('administer taxonomy'),
-    'type' => MENU_CALLBACK,
     'file' => 'taxonomy.admin.inc',
   );
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/edit'] = array(
-    'title' => 'Edit vocabulary',
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary/list'] = array(
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -20,
   );
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/list'] = array(
-    'title' => 'List terms',
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary/edit'] = array(
+    'title' => 'Edit',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_overview_terms', 3),
+    'page arguments' => array('taxonomy_form_vocabulary', 3),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
     'weight' => -10,
     'file' => 'taxonomy.admin.inc',
   );
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/list/add'] = array(
+
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary/add'] = array(
     'title' => 'Add term',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_term', array(), 3),
@@ -888,7 +887,7 @@ function taxonomy_help($path, $arg) {
     case 'admin/structure/taxonomy':
       $output = '<p>' . t('Configure the vocabularies and terms for your site.') . '</p>';
       return $output;
-    case 'admin/structure/taxonomy/%/list':
+    case 'admin/structure/taxonomy/%':
       $vocabulary = taxonomy_vocabulary_load($arg[3]);
       switch ($vocabulary->hierarchy) {
         case 0:

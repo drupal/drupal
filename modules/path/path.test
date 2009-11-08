@@ -183,7 +183,7 @@ class PathTaxonomyTermTestCase extends DrupalWebTestCase {
     $edit['name'] = $this->randomName();
     $edit['description'] = $this->randomName();
     $edit['path[alias]'] = $this->randomName();
-    $this->drupalPost('admin/structure/taxonomy/1/list/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/1/add', $edit, t('Save'));
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[alias]']);
