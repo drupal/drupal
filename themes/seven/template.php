@@ -77,19 +77,5 @@ function seven_tablesort_indicator($variables) {
  */
 function seven_fieldset($variables) {
   $element = $variables['element'];
-  if (!empty($element['#collapsible'])) {
-    drupal_add_js('misc/collapse.js');
-
-    if (!isset($element['#attributes']['class'])) {
-      $element['#attributes']['class'] = array();
-    }
-
-    $element['#attributes']['class'][] = 'collapsible';
-    if (!empty($element['#collapsed'])) {
-      $element['#attributes']['class'][] = 'collapsed';
-    }
-  }
-  $element['#attributes']['id'] = $element['#id'];
-
   return '<fieldset' . drupal_attributes($element['#attributes']) . '>' . ($element['#title'] ? '<legend><span>' . $element['#title'] . '</span></legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="fieldset-description">' . $element['#description'] . '</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . (isset($element['#value']) ? $element['#value'] : '') . "</fieldset>\n";
 }

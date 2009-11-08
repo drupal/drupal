@@ -1731,19 +1731,6 @@ function form_get_options($element, $key) {
  */
 function theme_fieldset($variables) {
   $element = $variables['element'];
-  if (!empty($element['#collapsible'])) {
-
-    if (!isset($element['#attributes']['class'])) {
-      $element['#attributes']['class'] = array();
-    }
-
-    $element['#attributes']['class'][] = 'collapsible';
-    if (!empty($element['#collapsed'])) {
-      $element['#attributes']['class'][] = 'collapsed';
-    }
-  }
-  $element['#attributes']['id'] = $element['#id'];
-
   return '<fieldset' . drupal_attributes($element['#attributes']) . '>' . ($element['#title'] ? '<legend>' . $element['#title'] . '</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="fieldset-description">' . $element['#description'] . '</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . (isset($element['#value']) ? $element['#value'] : '') . "</fieldset>\n";
 }
 
@@ -2407,9 +2394,20 @@ function form_process_fieldset(&$element, &$form_state) {
 
   // Contains form element summary functionalities.
   $element['#attached']['js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
+
+  // Collapsible fieldsets
   if (!empty($element['#collapsible'])) {
     $element['#attached']['js'][] = 'misc/collapse.js';
+    if (!isset($element['#attributes']['class'])) {
+      $element['#attributes']['class'] = array();
+    }
+
+    $element['#attributes']['class'][] = 'collapsible';
+    if (!empty($element['#collapsed'])) {
+      $element['#attributes']['class'][] = 'collapsed';
+    }
   }
+  $element['#attributes']['id'] = $element['#id'];
 
   return $element;
 }
