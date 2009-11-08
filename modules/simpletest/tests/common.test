@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.88 2009/11/08 12:43:41 webchick Exp $
+// $Id: common.test,v 1.89 2009/11/08 13:58:03 webchick Exp $
 
 /**
  * @file
@@ -308,6 +308,42 @@ class CommonURLUnitTest extends DrupalUnitTestCase {
     $query = array($this->randomName(5) => $this->randomName(5));
     $result = url($url, array('query' => $query));
     $this->assertEqual($url . '&' . http_build_query($query, '', '&'), $result, t('External URL query string can be extended with a custom query string in $options.'));
+  }
+}
+
+/**
+ * Tests for the check_plain() and filter_xss() functions.
+ */
+class CommonXssUnitTest extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'String filtering tests',
+      'description' => 'Confirm that check_plain() and filter_xss() work correctly, including invalid multi-byte sequences.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Check that invalid multi-byte sequences are rejected.
+   */
+  function testInvalidMultiByte() {
+     $text = check_plain("Foo\xC0barbaz");
+     $this->assertEqual($text, '', 'check_plain() rejects invalid sequence "Foo\xC0barbaz"');
+     $text = check_plain("Fooÿñ");
+     $this->assertEqual($text, "Fooÿñ", 'check_plain() accepts valid sequence "Fooÿñ"');
+     $text = filter_xss("Foo\xC0barbaz");
+     $this->assertEqual($text, '', 'filter_xss() rejects invalid sequence "Foo\xC0barbaz"');
+     $text = filter_xss("Fooÿñ");
+     $this->assertEqual($text, "Fooÿñ", 'filter_xss() accepts valid sequence Fooÿñ');
+  }
+
+  /**
+   * Check that special characters are escaped.
+   */
+  function testEscaping() {
+     $text = check_plain("<script>");
+     $this->assertEqual($text, '&lt;script&gt;', 'check_plain() escapes &lt;script&gt;');
   }
 }
 
