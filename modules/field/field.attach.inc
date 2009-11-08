@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.57 2009/11/01 12:11:10 dries Exp $
+// $Id: field.attach.inc,v 1.58 2009/11/08 10:02:41 webchick Exp $
 
 /**
  * @file
@@ -1271,7 +1271,7 @@ function field_attach_extra_weight($bundle, $pseudo_field) {
  *
  * TODO D7: We do not yet know if this really belongs in Field API.
  */
-function field_attach_prepare_translation(stdClass $node) {
+function field_attach_prepare_translation($node) {
   // Prevent against invalid 'nodes' built by broken 3rd party code.
   if (isset($node->type)) {
     $type = content_types($node->type);

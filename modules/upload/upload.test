@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.test,v 1.28 2009/11/01 12:11:10 dries Exp $
+// $Id: upload.test,v 1.29 2009/11/08 10:02:41 webchick Exp $
 
 /**
  * @file
@@ -192,7 +192,7 @@ class UploadTestCase extends DrupalWebTestCase {
    * @param string $filename Name of file to upload.
    * @param boolean $assert Assert that the node was successfully updated.
    */
-  function uploadFile(stdClass $node, $filename, $assert = TRUE) {
+  function uploadFile($node, $filename, $assert = TRUE) {
     $edit = array();
     $edit['files[upload]'] = $filename; //edit-upload
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));

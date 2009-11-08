@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.20 2009/11/01 12:11:10 dries Exp $
+// $Id: book.pages.inc,v 1.21 2009/11/08 10:02:41 webchick Exp $
 
 /**
  * @file
@@ -89,7 +89,7 @@ function book_export_html($nid) {
 /**
  * Menu callback; show the outline form for a single node.
  */
-function book_outline(stdClass $node) {
+function book_outline($node) {
   drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
   return drupal_get_form('book_outline_form', $node);
 }
@@ -102,7 +102,7 @@ function book_outline(stdClass $node) {
  *
  * @ingroup forms
  */
-function book_outline_form($form, &$form_state, stdClass $node) {
+function book_outline_form($form, &$form_state, $node) {
   if (!isset($node->book)) {
     // The node is not part of any book yet - set default options.
     $node->book = _book_link_defaults($node->nid);
@@ -186,7 +186,7 @@ function book_outline_form_submit($form, &$form_state) {
  *
  * @ingroup forms
  */
-function book_remove_form($form, &$form_state, stdClass $node) {
+function book_remove_form($form, &$form_state, $node) {
   $form['#node'] = $node;
   $title = array('%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']);
 
