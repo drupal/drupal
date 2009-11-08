@@ -63,11 +63,9 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
       }
     }
     else {
-      // The module name (rather than the filename) is used as the fallback
-      // weighting in order to guarantee consistent behavior across different
-      // Drupal installations, which might have modules installed in different
-      // locations in the file system. The ordering here must also be
-      // consistent with the one used in module_implements().
+      // As this is the $refresh case, make sure that system_list() returns
+      // fresh data.
+      drupal_static_reset('system_list');
       if ($bootstrap) {
         $list = system_list('bootstrap');
       }
@@ -104,6 +102,11 @@ function system_list($type) {
 
   if (!isset($lists)) {
     $lists = array('bootstrap' => array(), 'module' => array(), 'theme' => array());
+    // The module name (rather than the filename) is used as the fallback
+    // weighting in order to guarantee consistent behavior across different
+    // Drupal installations, which might have modules installed in different
+    // locations in the file system. The ordering here must also be
+    // consistent with the one used in module_implements().
     $result = db_query("SELECT * FROM {system} WHERE status = 1 ORDER BY weight ASC, name ASC");
     foreach ($result as $record) {
       // Build a list of all enabled modules.
@@ -268,7 +271,6 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
 
   if (!empty($invoke_modules)) {
     // Refresh the module list to exclude the disabled modules.
-    drupal_static_reset('system_list');
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
     // Force to regenerate the stored list of hook implementations.
@@ -329,7 +331,6 @@ function module_disable($module_list) {
 
   if (!empty($invoke_modules)) {
     // Refresh the module list to exclude the disabled modules.
-    drupal_static_reset('system_list');
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
     // Invoke hook_modules_disabled before disabling modules,
