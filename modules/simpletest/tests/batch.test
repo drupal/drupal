@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.test,v 1.6 2009/11/02 15:57:33 webchick Exp $
+// $Id: batch.test,v 1.7 2009/11/08 12:33:15 webchick Exp $
 
 /**
  * @file
@@ -103,6 +103,7 @@ class BatchAPIPercentagesTestCase extends DrupalWebTestCase {
    * testCases class variable.
    */
   function testBatchAPIPercentages() {
+    require_once DRUPAL_ROOT . '/includes/batch.inc';
     foreach ($this->testCases as $expected_result => $arguments) {
       // PHP sometimes casts numeric strings that are array keys to integers,
       // cast them back here.
