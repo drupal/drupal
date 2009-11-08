@@ -70,7 +70,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
         $list = system_list('bootstrap');
       }
       else {
-        $list = system_list('module');
+        $list = system_list('module_enabled');
       }
     }
   }
@@ -101,31 +101,47 @@ function system_list($type) {
   $lists = &drupal_static(__FUNCTION__);
 
   if (!isset($lists)) {
-    $lists = array('bootstrap' => array(), 'module' => array(), 'theme' => array());
+    $lists = array(
+      'bootstrap' => array(),
+      'module' => array(),
+      'module_enabled' => array(),
+      'theme' => array(),
+      'theme_enabled' => array(),
+    );
     // The module name (rather than the filename) is used as the fallback
     // weighting in order to guarantee consistent behavior across different
     // Drupal installations, which might have modules installed in different
     // locations in the file system. The ordering here must also be
     // consistent with the one used in module_implements().
-    $result = db_query("SELECT * FROM {system} WHERE status = 1 ORDER BY weight ASC, name ASC");
+    $result = db_query("SELECT * FROM {system} ORDER BY weight ASC, name ASC");
     foreach ($result as $record) {
-      // Build a list of all enabled modules.
+      // Build a list of all modules.
       if ($record->type == 'module') {
         $lists['module'][$record->name] = $record->name;
-        // Build a separate array of modules required for bootstrap.
-        if ($record->bootstrap) {
-          $lists['bootstrap'][$record->name] = $record->name;
+        // Build a list of all enabled modules.
+        if ($record->status) {
+          $lists['module_enabled'][$record->name] = $record->name;
+          // Build a separate array of modules required for bootstrap.
+          if ($record->bootstrap) {
+            $lists['bootstrap'][$record->name] = $record->name;
+          }
         }
       }
-      // Build a list of enabled themes.
+      // Build a list of themes.
       if ($record->type == 'theme') {
         $lists['theme'][$record->name] = $record;
+        // Build a list of enabled themes.
+        if ($record->status) {
+          $lists['theme_enabled'][$record->name] = $record;
+        }
       }
 
       // Additionally prime drupal_get_filename() with the filename and type
       // for each record, this prevents subsequent database lookups when
       // drupal_get_filename() is called without the 'file' argument.
-      drupal_get_filename($record->type, $record->name, $record->filename);
+      if ($record->status) {
+        drupal_get_filename($record->type, $record->name, $record->filename);
+      }
     }
   }
 

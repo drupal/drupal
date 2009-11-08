@@ -52,7 +52,7 @@ class FormsTestCase extends DrupalWebTestCase {
     $elements['file']['empty_values'] = $empty_strings;
 
     // Regular expression to find the expected marker on required elements.
-    $required_marker_preg = '@<label.*<span class="form-required" title="This field is required\.">\*</span></label>@';
+    $required_marker_preg = '@<label.*<span class="form-required" title="This field is required\.">\*</span>.*</label>@';
 
     // Go through all the elements and all the empty values for them
     foreach ($elements as $type => $data) {
