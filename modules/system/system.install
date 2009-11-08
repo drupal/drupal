@@ -1567,8 +1567,7 @@ function system_schema() {
     ),
     'primary key' => array('filename'),
     'indexes' => array(
-      'modules' => array('type', 'status', 'weight', 'name'),
-      'bootstrap' => array('type', 'status', 'bootstrap', 'weight', 'name'),
+      'system_list' => array('status', 'weight', 'name'),
       'type_name' => array('type', 'name'),
     ),
   );
@@ -2196,14 +2195,15 @@ function system_update_7017() {
 }
 
 /**
- * Shorten the {system}.type column and add an index on type and name.
+ * Shorten the {system}.type column and modify indexes.
  */
 function system_update_7018() {
   db_drop_index('system', 'modules');
   db_drop_index('system', 'type_name');
+  db_drop_index('system', 'bootstrap');
   db_change_field('system', 'type', 'type', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
-  db_add_index('system', 'modules', array('type', 'status', 'weight', 'name'));
   db_add_index('system', 'type_name', array('type', 'name'));
+  db_add_index('system', 'system_list', array('status', 'weight', 'name'));
 }
 
 /**

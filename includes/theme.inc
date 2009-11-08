@@ -562,6 +562,7 @@ function list_themes($refresh = FALSE) {
 
   if ($refresh) {
     $list = array();
+    drupal_static_reset('system_list');
   }
 
   if (empty($list)) {
@@ -570,8 +571,7 @@ function list_themes($refresh = FALSE) {
     // Extract from the database only when it is available.
     // Also check that the site is not in the middle of an install or update.
     if (db_is_active() && !defined('MAINTENANCE_MODE')) {
-      $result = db_query("SELECT * FROM {system} WHERE type = :theme", array(':theme' => 'theme'));
-      foreach ($result as $theme) {
+      foreach (system_list('theme') as $theme) {
         if (file_exists($theme->filename)) {
           $theme->info = unserialize($theme->info);
           $themes[] = $theme;

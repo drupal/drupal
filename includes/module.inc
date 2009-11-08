@@ -69,21 +69,10 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
       // locations in the file system. The ordering here must also be
       // consistent with the one used in module_implements().
       if ($bootstrap) {
-        $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, name ASC");
+        $list = system_list('bootstrap');
       }
       else {
-        $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, name ASC");
-      }
-      foreach ($result as $module) {
-        if (file_exists($module->filename)) {
-          // First call drupal_get_filename() to prime the static cache for
-          // later lookups of the module path. Since we've already queried for
-          // the filename and can pass that in as an argument, this avoids a
-          // database hit for every module when drupal_get_filename() is
-          // subsequently called by drupal_load().
-          drupal_get_filename('module', $module->name, $module->filename);
-          $list[$module->name] = $module->name;
-        }
+        $list = system_list('module');
       }
     }
   }
@@ -95,6 +84,49 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
     return $sorted_list;
   }
   return $list;
+}
+
+/**
+ * Build a list of bootstrap modules and enabled modules and themes.
+ *
+ * @param $type
+ *   The type of list to return, either 'module', 'bootstrap', or 'theme'.
+ *
+ * @return
+ *   An associative array of modules or themes, keyed by name, with the minimum
+ *   data required to bootstrap.
+ *
+ * @see module_list()
+ * @see list_themes()
+ */
+function system_list($type) {
+  $lists = &drupal_static(__FUNCTION__);
+
+  if (!isset($lists)) {
+    $lists = array('bootstrap' => array(), 'module' => array(), 'theme' => array());
+    $result = db_query("SELECT * FROM {system} WHERE status = 1 ORDER BY weight ASC, name ASC");
+    foreach ($result as $record) {
+      // Build a list of all enabled modules.
+      if ($record->type == 'module') {
+        $lists['module'][$record->name] = $record->name;
+        // Build a separate array of modules required for bootstrap.
+        if ($record->bootstrap) {
+          $lists['bootstrap'][$record->name] = $record->name;
+        }
+      }
+      // Build a list of enabled themes.
+      if ($record->type == 'theme') {
+        $lists['theme'][$record->name] = $record;
+      }
+
+      // Additionally prime drupal_get_filename() with the filename and type
+      // for each record, this prevents subsequent database lookups when
+      // drupal_get_filename() is called without the 'file' argument.
+      drupal_get_filename($record->type, $record->name, $record->filename);
+    }
+  }
+
+  return $lists[$type];
 }
 
 /**
@@ -236,6 +268,7 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
 
   if (!empty($invoke_modules)) {
     // Refresh the module list to exclude the disabled modules.
+    drupal_static_reset('system_list');
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
     // Force to regenerate the stored list of hook implementations.
@@ -296,6 +329,7 @@ function module_disable($module_list) {
 
   if (!empty($invoke_modules)) {
     // Refresh the module list to exclude the disabled modules.
+    drupal_static_reset('system_list');
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
     // Invoke hook_modules_disabled before disabling modules,
