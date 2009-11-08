@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.548 2009/11/05 16:19:25 webchick Exp $
+// $Id: theme.inc,v 1.549 2009/11/08 09:29:07 dries Exp $
 
 /**
  * @file
@@ -562,6 +562,7 @@ function list_themes($refresh = FALSE) {
 
   if ($refresh) {
     $list = array();
+    drupal_static_reset('system_list');
   }
 
   if (empty($list)) {
@@ -570,8 +571,7 @@ function list_themes($refresh = FALSE) {
     // Extract from the database only when it is available.
     // Also check that the site is not in the middle of an install or update.
     if (db_is_active() && !defined('MAINTENANCE_MODE')) {
-      $result = db_query("SELECT * FROM {system} WHERE type = :theme", array(':theme' => 'theme'));
-      foreach ($result as $theme) {
+      foreach (system_list('theme') as $theme) {
         if (file_exists($theme->filename)) {
           $theme->info = unserialize($theme->info);
           $themes[] = $theme;
