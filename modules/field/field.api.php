@@ -606,12 +606,11 @@ function hook_field_widget_info_alter(&$info) {
 }
 
 /**
- * Return a single form element for a form.
+ * Return a single form element for a field widget.
  *
- * It will be built out and validated in the callback(s) listed in
- * hook_element_info(). We build it out in the callbacks rather than in
- * hook_field_widget so it can be plugged into any module that can
- * provide it with valid $field information.
+ * Field widget form elements should be based on the passed in $element, which
+ * contains the base form element properties derived from the field
+ * configuration.
  *
  * Field API will set the weight, field name and delta values for each
  * form element. If there are multiple values for this field, the
@@ -633,11 +632,23 @@ function hook_field_widget_info_alter(&$info) {
  * @param $delta
  *   The order of this item in the array of subelements (0, 1, 2, etc).
  * @param $element
- *   A form element array containing basic properties for the widget: #title,
- *   #description, #required, #field, #field_instance, #field_name, #delta,
- *   #columns.
+ *   A form element array containing basic properties for the widget:
+ *   - #object_type: The name of the object the field is attached to.
+ *   - #bundle: The name of the field bundle the field is contained in.
+ *   - #field_name: The name of the field.
+ *   - #columns: A list of field storage columns of the field.
+ *   - #title: The sanitized element label for the field instance, ready for
+ *     output.
+ *   - #description: The sanitized element description for the field instance,
+ *     ready for output.
+ *   - #required: A Boolean indicating whether the element value is required;
+ *     for required multiple value fields, only the first widget's values are
+ *     required.
+ *   - #delta: The order of this item in the array of subelements; see $delta
+ *     above.
+ *
  * @return
- *   The form item for a single element for this field.
+ *   The form elements for a single widget for this field.
  */
 function hook_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $element += array(
