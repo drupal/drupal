@@ -869,7 +869,7 @@ function node_load($nid = NULL, $vid = NULL, $reset = FALSE) {
 /**
  * Perform validation checks on the given node.
  */
-function node_validate(stdClass $node, $form = array()) {
+function node_validate($node, $form = array()) {
   $type = node_type_get_type($node);
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
@@ -924,7 +924,7 @@ function node_submit($node) {
  *   The $node object to be saved. If $node->nid is
  *   omitted (or $node->is_new is TRUE), a new node will be added.
  */
-function node_save(stdClass $node) {
+function node_save($node) {
   field_attach_presave('node', $node);
   // Let modules modify the node before it is saved to the database.
   module_invoke_all('node_presave', $node);
@@ -1035,7 +1035,7 @@ function node_save(stdClass $node) {
  * Node is taken by reference, because drupal_write_record() updates the
  * $node with the revision id, and we need to pass that back to the caller.
  */
-function _node_save_revision(stdClass $node, $uid, $update = NULL) {
+function _node_save_revision($node, $uid, $update = NULL) {
   $temp_uid = $node->uid;
   $node->uid = $uid;
   if (isset($update)) {
@@ -1182,7 +1182,7 @@ function node_build($node, $build_mode = 'full') {
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
  */
-function node_build_content(stdClass $node, $build_mode = 'full') {
+function node_build_content($node, $build_mode = 'full') {
   // Remove previously built content, if exists.
   $node->content = array();
 
@@ -1274,7 +1274,7 @@ function node_language_provider($languages) {
  * @return
  *   A $page element suitable for use by drupal_page_render().
  */
-function node_show(stdClass $node, $message = FALSE) {
+function node_show($node, $message = FALSE) {
   if ($message) {
     drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'], '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
   }
@@ -1689,7 +1689,7 @@ function theme_node_search_admin($variables) {
   return $output;
 }
 
-function _node_revision_access(stdClass $node, $op = 'view') {
+function _node_revision_access($node, $op = 'view') {
   $access = &drupal_static(__FUNCTION__, array());
   if (!isset($access[$node->vid])) {
     $node_current_revision = node_load($node->nid);
@@ -1929,7 +1929,7 @@ function node_type_page_title($type) {
 /**
  * Title callback.
  */
-function node_page_title(stdClass $node) {
+function node_page_title($node) {
   return $node->title;
 }
 
@@ -1958,7 +1958,7 @@ function node_last_changed($nid) {
 /**
  * Return a list of all the existing revision numbers.
  */
-function node_revision_list(stdClass $node) {
+function node_revision_list($node) {
   $revisions = array();
   $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revision} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {users} u ON u.uid = r.uid WHERE r.nid = :nid ORDER BY r.timestamp DESC', array(':nid' => $node->nid));
   foreach ($result as $revision) {
@@ -2151,7 +2151,7 @@ function node_page_default() {
 /**
  * Menu callback; view a single node.
  */
-function node_page_view(stdClass $node) {
+function node_page_view($node) {
   $return = node_show($node);
   if (isset($return['nodes'][$node->nid]['title'])) {
     drupal_set_title($return['nodes'][$node->nid]['title']['items'][0]['#item']['value']);
@@ -2182,7 +2182,7 @@ function node_update_index() {
  * @param $node
  *   The node to index.
  */
-function _node_index_node(stdClass $node) {
+function _node_index_node($node) {
   $node = node_load($node->nid);
 
   // Save the changed time of the most recent indexed node, for the search
@@ -2686,7 +2686,7 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
  * @param $node
  *   The $node to acquire grants for.
  */
-function node_access_acquire_grants(stdClass $node) {
+function node_access_acquire_grants($node) {
   $grants = module_invoke_all('node_access_records', $node);
   // Let modules alter the grants.
   drupal_alter('node_access_records', $grants, $node);
@@ -2730,7 +2730,7 @@ function node_access_acquire_grants(stdClass $node) {
  *   If false, do not delete records. This is only for optimization purposes,
  *   and assumes the caller has already performed a mass delete of some form.
  */
-function node_access_write_grants(stdClass $node, $grants, $realm = NULL, $delete = TRUE) {
+function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE) {
   if ($delete) {
     $query = db_delete('node_access')->condition('nid', $node->nid);
     if ($realm) {
@@ -2919,7 +2919,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 /**
  * Implement hook_form().
  */
-function node_content_form(stdClass $node, $form_state) {
+function node_content_form($node, $form_state) {
   // It is impossible to define a content type without implementing hook_form()
   // so simply return an empty array().
   // @todo: remove this requirement.
@@ -3017,7 +3017,7 @@ function node_action_info() {
  * Implement a Drupal action.
  * Sets the status of a node to 1, meaning published.
  */
-function node_publish_action(stdClass $node, $context = array()) {
+function node_publish_action($node, $context = array()) {
   $node->status = NODE_PUBLISHED;
   watchdog('action', 'Set @type %title to published.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
@@ -3026,7 +3026,7 @@ function node_publish_action(stdClass $node, $context = array()) {
  * Implement a Drupal action.
  * Sets the status of a node to 0, meaning unpublished.
  */
-function node_unpublish_action(stdClass $node, $context = array()) {
+function node_unpublish_action($node, $context = array()) {
   $node->status = NODE_NOT_PUBLISHED;
   watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
@@ -3035,7 +3035,7 @@ function node_unpublish_action(stdClass $node, $context = array()) {
  * Implement a Drupal action.
  * Sets the sticky-at-top-of-list property of a node to 1.
  */
-function node_make_sticky_action(stdClass $node, $context = array()) {
+function node_make_sticky_action($node, $context = array()) {
   $node->sticky = NODE_STICKY;
   watchdog('action', 'Set @type %title to sticky.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
@@ -3044,7 +3044,7 @@ function node_make_sticky_action(stdClass $node, $context = array()) {
  * Implement a Drupal action.
  * Sets the sticky-at-top-of-list property of a node to 0.
  */
-function node_make_unsticky_action(stdClass $node, $context = array()) {
+function node_make_unsticky_action($node, $context = array()) {
   $node->sticky = NODE_NOT_STICKY;
   watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
@@ -3053,7 +3053,7 @@ function node_make_unsticky_action(stdClass $node, $context = array()) {
  * Implement a Drupal action.
  * Sets the promote property of a node to 1.
  */
-function node_promote_action(stdClass $node, $context = array()) {
+function node_promote_action($node, $context = array()) {
   $node->promote = NODE_PROMOTED;
   watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
@@ -3062,7 +3062,7 @@ function node_promote_action(stdClass $node, $context = array()) {
  * Implement a Drupal action.
  * Sets the promote property of a node to 0.
  */
-function node_unpromote_action(stdClass $node, $context = array()) {
+function node_unpromote_action($node, $context = array()) {
   $node->promote = NODE_NOT_PROMOTED;
   watchdog('action', 'Removed @type %title from front page.', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
@@ -3071,7 +3071,7 @@ function node_unpromote_action(stdClass $node, $context = array()) {
  * Implement a Drupal action.
  * Saves a node.
  */
-function node_save_action(stdClass $node) {
+function node_save_action($node) {
   node_save($node);
   watchdog('action', 'Saved @type %title', array('@type' => node_type_get_name($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value']));
 }
@@ -3080,7 +3080,7 @@ function node_save_action(stdClass $node) {
  * Implement a configurable Drupal action.
  * Assigns ownership of a node to a user.
  */
-function node_assign_owner_action(stdClass $node, $context) {
+function node_assign_owner_action($node, $context) {
   $node->uid = $context['owner_uid'];
   $owner_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['owner_uid']))->fetchField();
   watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_type($node), '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'], '%name' => $owner_name));
@@ -3160,7 +3160,7 @@ function node_unpublish_by_keyword_action_submit($form, $form_state) {
  *   An array providing more information about the context of the call to this
  *   action.
  */
-function node_unpublish_by_keyword_action(stdClass $node, $context) {
+function node_unpublish_by_keyword_action($node, $context) {
   foreach ($context['keywords'] as $keyword) {
     if (strpos(drupal_render(node_build(clone $node)), $keyword) !== FALSE || strpos($node->title, $keyword) !== FALSE) {
       $node->status = NODE_NOT_PUBLISHED;

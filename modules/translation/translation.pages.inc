@@ -12,7 +12,7 @@
  * @param $node
  *   Node object.
  */
-function translation_node_overview(stdClass $node) {
+function translation_node_overview($node) {
   if ($node->tnid) {
     // Already part of a set, grab that set.
     $tnid = $node->tnid;

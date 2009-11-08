@@ -151,7 +151,7 @@ function forum_init() {
  * @return
  *   Boolean indicating if the node can be assigned to a forum.
  */
-function _forum_node_check_node_type(stdClass $node) {
+function _forum_node_check_node_type($node) {
   // Fetch information about the forum field.
   $field = field_info_instance('node', 'taxonomy_forums', $node->type);
 
@@ -161,7 +161,7 @@ function _forum_node_check_node_type(stdClass $node) {
 /**
  * Implement hook_node_view().
  */
-function forum_node_view(stdClass $node, $build_mode) {
+function forum_node_view($node, $build_mode) {
   $vid = variable_get('forum_nav_vocabulary', 0);
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_node_check_node_type($node)) {
@@ -184,7 +184,7 @@ function forum_node_view(stdClass $node, $build_mode) {
 /**
  * Implement hook_node_prepare().
  */
-function forum_node_prepare(stdClass $node) {
+function forum_node_prepare($node) {
   if (_forum_node_check_node_type($node)) {
     if (empty($node->nid)) {
       // New topic
@@ -198,7 +198,7 @@ function forum_node_prepare(stdClass $node) {
  *
  * Check in particular that only a "leaf" term in the associated taxonomy.
  */
-function forum_node_validate(stdClass $node, $form) {
+function forum_node_validate($node, $form) {
   if (_forum_node_check_node_type($node)) {
     $langcode = $form['taxonomy_forums']['#language'];
     // vocabulary is selected, not a "container" term.
@@ -224,7 +224,7 @@ function forum_node_validate(stdClass $node, $form) {
  *
  * Assign forum taxonomy when adding a topic from within a forum.
  */
-function forum_node_presave(stdClass $node) {
+function forum_node_presave($node) {
   if (_forum_node_check_node_type($node)) {
     // Make sure all fields are set properly:
     $node->icon = !empty($node->icon) ? $node->icon : '';
@@ -243,7 +243,7 @@ function forum_node_presave(stdClass $node) {
 /**
  * Implement hook_node_update().
  */
-function forum_node_update(stdClass $node) {
+function forum_node_update($node) {
   if (_forum_node_check_node_type($node)) {
     if (empty($node->revision) && db_query('SELECT tid FROM {forum} WHERE nid=:nid', array(':nid' => $node->nid))->fetchField()) {
       if (!empty($node->forum_tid)) {
@@ -291,7 +291,7 @@ function forum_node_update(stdClass $node) {
 /**
  * Implement hook_node_insert().
  */
-function forum_node_insert(stdClass $node) {
+function forum_node_insert($node) {
   if (_forum_node_check_node_type($node)) {
     if (!empty($node->forum_tid)) {
       $nid = db_insert('forum')
@@ -308,7 +308,7 @@ function forum_node_insert(stdClass $node) {
 /**
  * Implement hook_node_delete().
  */
-function forum_node_delete(stdClass $node) {
+function forum_node_delete($node) {
   if (_forum_node_check_node_type($node)) {
     db_delete('forum')
       ->condition('nid', $node->nid)
@@ -602,7 +602,7 @@ function forum_block_view_pre_render($elements) {
 /**
  * Implement hook_form().
  */
-function forum_form(stdClass $node, $form_state) {
+function forum_form($node, $form_state) {
   $type = node_type_get_type($node);
 
   if (!empty($node->nid)) {

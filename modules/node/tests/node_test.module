@@ -10,7 +10,7 @@
 /**
  * Implement hook_node_view().
  */
-function node_test_node_view(stdClass $node, $build_mode) {
+function node_test_node_view($node, $build_mode) {
   if ($build_mode == 'rss') {
     // Add RSS elements and namespaces when building the RSS feed.
     $node->rss_elements[] = array(
@@ -51,7 +51,7 @@ function node_test_node_grants($account, $op) {
 /**
  * Implement hook_node_access_records().
  */
-function node_test_node_access_records(stdClass $node) {
+function node_test_node_access_records($node) {
   $grants = array();
   if ($node->type == 'article') {
     // Create grant in arbitrary article_realm for article nodes.
@@ -81,7 +81,7 @@ function node_test_node_access_records(stdClass $node) {
 /**
  * Implement hook_node_access_records_alter().
  */
-function node_test_node_access_records_alter(&$grants, stdClass $node) {
+function node_test_node_access_records_alter(&$grants, $node) {
   if (!empty($grants)) {
     foreach ($grants as $key => $grant) {
       // Alter grant from test_page_realm to test_alter_realm and modify the gid.

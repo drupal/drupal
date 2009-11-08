@@ -180,7 +180,7 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
 /**
  * Implement hook_node_insert().
  */
-function path_node_insert(stdClass $node) {
+function path_node_insert($node) {
   if (isset($node->path)) {
     $path = $node->path;
     $path['alias'] = trim($path['alias']);
@@ -197,7 +197,7 @@ function path_node_insert(stdClass $node) {
 /**
  * Implement hook_node_update().
  */
-function path_node_update(stdClass $node) {
+function path_node_update($node) {
   if (isset($node->path)) {
     $path = $node->path;
     $path['alias'] = trim($path['alias']);
@@ -218,7 +218,7 @@ function path_node_update(stdClass $node) {
 /**
  * Implement hook_node_delete().
  */
-function path_node_delete(stdClass $node) {
+function path_node_delete($node) {
   // Delete all aliases associated with this node.
   path_delete(array('source' => 'node/' . $node->nid));
 }

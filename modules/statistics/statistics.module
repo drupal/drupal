@@ -103,7 +103,7 @@ function statistics_permission() {
 /**
  * Implement hook_node_view().
  */
-function statistics_node_view(stdClass $node, $build_mode) {
+function statistics_node_view($node, $build_mode) {
   if ($build_mode != 'rss') {
     $links = array();
     if (user_access('view post access counter')) {
@@ -376,7 +376,7 @@ function _statistics_format_item($title, $path) {
 /**
  * Implement hook_node_delete().
  */
-function statistics_node_delete(stdClass $node) {
+function statistics_node_delete($node) {
   // clean up statistics table when node is deleted
   db_delete('node_counter')
     ->condition('nid', $node->nid)

@@ -423,7 +423,7 @@ function comment_get_recent($number = 10) {
  * @return
  *   "page=X" if the page number is greater than zero; empty string otherwise.
  */
-function comment_new_page_count($num_comments, $new_replies, stdClass $node) {
+function comment_new_page_count($num_comments, $new_replies, $node) {
   $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
   $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
   $pagenum = NULL;
@@ -483,7 +483,7 @@ function theme_comment_block() {
 /**
  * Implement hook_node_view().
  */
-function comment_node_view(stdClass $node, $build_mode) {
+function comment_node_view($node, $build_mode) {
   $links = array();
 
   if ($node->comment) {
@@ -589,7 +589,7 @@ function comment_node_view(stdClass $node, $build_mode) {
  * @param $node
  *  A node object.
  */
-function comment_node_page_additions(stdClass $node) {
+function comment_node_page_additions($node) {
   $additions = array();
 
   // Only attempt to render comments if the node has visible comments.
@@ -690,7 +690,7 @@ function comment_node_page_additions(stdClass $node) {
  * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
  * to consider the trailing "/" so we use a substring only.
  */
-function comment_get_thread(stdClass $node, $mode, $comments_per_page) {
+function comment_get_thread($node, $mode, $comments_per_page) {
   $query = db_select('comment', 'c')->extend('PagerDefault');
   $query->addField('c', 'cid');
   $query
@@ -780,7 +780,7 @@ function comment_prepare_thread(&$comments) {
  * @return
  *   An array as expected by drupal_render().
  */
-function comment_build($comment, stdClass $node, $build_mode = 'full') {
+function comment_build($comment, $node, $build_mode = 'full') {
   // Populate $comment->content with a render() array.
   comment_build_content($comment, $node, $build_mode);
 
@@ -836,7 +836,7 @@ function comment_build($comment, stdClass $node, $build_mode = 'full') {
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
  */
-function comment_build_content($comment, stdClass $node, $build_mode = 'full') {
+function comment_build_content($comment, $node, $build_mode = 'full') {
   // Remove previously built content, if exists.
   $comment->content = array();
 
@@ -873,7 +873,7 @@ function comment_build_content($comment, stdClass $node, $build_mode = 'full') {
  * @return
  *   A structured array of links.
  */
-function comment_links($comment, stdClass $node) {
+function comment_links($comment, $node) {
   $links = array();
   if ($node->comment == COMMENT_NODE_OPEN) {
     if (user_access('administer comments') && user_access('post comments')) {
@@ -936,7 +936,7 @@ function comment_links($comment, stdClass $node) {
  * @return
  *   An array in the format expected by drupal_render().
  */
-function comment_build_multiple($comments, stdClass $node, $build_mode = 'full', $weight = 0) {
+function comment_build_multiple($comments, $node, $build_mode = 'full', $weight = 0) {
   field_attach_prepare_view('comment', $comments, $build_mode);
 
   $build = array(
@@ -1122,7 +1122,7 @@ function comment_node_load($nodes, $types) {
 /**
  * Implement hook_node_prepare().
  */
-function comment_node_prepare(stdClass $node) {
+function comment_node_prepare($node) {
   if (!isset($node->comment)) {
     $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
   }
@@ -1131,7 +1131,7 @@ function comment_node_prepare(stdClass $node) {
 /**
  * Implement hook_node_insert().
  */
-function comment_node_insert(stdClass $node) {
+function comment_node_insert($node) {
   db_insert('node_comment_statistics')
     ->fields(array(
       'nid' => $node->nid,
@@ -1146,7 +1146,7 @@ function comment_node_insert(stdClass $node) {
 /**
  * Implement hook_node_delete().
  */
-function comment_node_delete(stdClass $node) {
+function comment_node_delete($node) {
   $cids = db_query('SELECT cid FROM {comment} WHERE nid = :nid', array(':nid' => $node->nid))->fetchCol();
   comment_delete_multiple($cids);
   db_delete('node_comment_statistics')
@@ -1157,7 +1157,7 @@ function comment_node_delete(stdClass $node) {
 /**
  * Implement hook_node_update_index().
  */
-function comment_node_update_index(stdClass $node) {
+function comment_node_update_index($node) {
   $text = '';
   if ($node->comment != COMMENT_NODE_HIDDEN) {
     $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(
@@ -1182,7 +1182,7 @@ function comment_update_index() {
 /**
  * Implement hook_node_search_result().
  */
-function comment_node_search_result(stdClass $node) {
+function comment_node_search_result($node) {
   if ($node->comment != COMMENT_NODE_HIDDEN) {
     $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
     return format_plural($comments, '1 comment', '@count comments');

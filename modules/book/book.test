@@ -94,7 +94,7 @@ class BookTestCase extends DrupalWebTestCase {
    * @param $breadcrumb
    *   The nodes that should be displayed in the breadcrumb.
    */
-  function checkBookNode(stdClass $node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
+  function checkBookNode($node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
     // $number does not use drupal_static as it should not be reset
     // since it uniquely identifies each call to checkBookNode().
     static $number = 0;

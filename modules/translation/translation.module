@@ -75,7 +75,7 @@ function translation_menu() {
  * and where the current node is not language neutral (which should span
  * all languages).
  */
-function _translation_tab_access(stdClass $node) {
+function _translation_tab_access($node) {
   if (!empty($node->language) && translation_supported_type($node->type)) {
     return user_access('translate content');
   }
@@ -168,7 +168,7 @@ function translation_form_alter(&$form, &$form_state, $form_id) {
  * Display translation links with native language names, if this node
  * is part of a translation set.
  */
-function translation_node_view(stdClass $node, $build_mode) {
+function translation_node_view($node, $build_mode) {
   if (isset($node->tnid) && $translations = translation_node_get_translations($node->tnid)) {
     $path = 'node/' . $node->nid;
     $links = language_negotiation_get_switch_links(LANGUAGE_TYPE_CONTENT, $path);
@@ -188,7 +188,7 @@ function translation_node_view(stdClass $node, $build_mode) {
 /**
  * Implement hook_node_prepare().
  */
-function translation_node_prepare(stdClass $node) {
+function translation_node_prepare($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     if (empty($node->nid) && isset($_GET['translation']) && isset($_GET['language']) &&
@@ -218,7 +218,7 @@ function translation_node_prepare(stdClass $node) {
 /**
  * Implement hook_node_insert().
  */
-function translation_node_insert(stdClass $node) {
+function translation_node_insert($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     if (!empty($node->translation_source)) {
@@ -251,7 +251,7 @@ function translation_node_insert(stdClass $node) {
 /**
  * Implement hook_node_update().
  */
-function translation_node_update(stdClass $node) {
+function translation_node_update($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     if (isset($node->translation) && $node->translation && !empty($node->language) && $node->tnid) {
@@ -280,7 +280,7 @@ function translation_node_update(stdClass $node) {
  *
  * Ensure that duplicate translations can not be created for the same source.
  */
-function translation_node_validate(stdClass $node, $form) {
+function translation_node_validate($node, $form) {
   // Only act on translatable nodes with a tnid or translation_source.
   if (translation_supported_type($node->type) && (!empty($node->tnid) || !empty($form['#node']->translation_source->nid))) {
     $tnid = !empty($node->tnid) ? $node->tnid : $form['#node']->translation_source->nid;
@@ -294,7 +294,7 @@ function translation_node_validate(stdClass $node, $form) {
 /**
  * Implement hook_node_delete().
  */
-function translation_node_delete(stdClass $node) {
+function translation_node_delete($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     translation_remove_from_set($node);
@@ -305,7 +305,7 @@ function translation_node_delete(stdClass $node) {
  * Remove a node from its translation set (if any)
  * and update the set accordingly.
  */
-function translation_remove_from_set(stdClass $node) {
+function translation_remove_from_set($node) {
   if (isset($node->tnid)) {
     $query = db_update('node')
       ->fields(array(

@@ -63,7 +63,7 @@ function book_permission() {
 /**
  * Inject links into $node as needed.
  */
-function book_node_view_link(stdClass $node, $build_mode) {
+function book_node_view_link($node, $build_mode) {
   $links = array();
 
   if (isset($node->book['depth'])) {
@@ -177,14 +177,14 @@ function book_menu() {
 /**
  * Menu item access callback - determine if the outline tab is accessible.
  */
-function _book_outline_access(stdClass $node) {
+function _book_outline_access($node) {
   return user_access('administer book outlines') && node_access('view', $node);
 }
 
 /**
  * Menu item access callback - determine if the user can remove nodes from the outline.
  */
-function _book_outline_remove_access(stdClass $node) {
+function _book_outline_remove_access($node) {
   return isset($node->book) && ($node->book['bid'] != $node->nid) && _book_outline_access($node);
 }
 
@@ -439,7 +439,7 @@ function _book_parent_select($book_link) {
 /**
  * Build the common elements of the book form for the node and outline forms.
  */
-function _book_add_form_elements(&$form, stdClass $node) {
+function _book_add_form_elements(&$form, $node) {
   // Need this for AJAX.
   $form['#cache'] = TRUE;
 
@@ -520,7 +520,7 @@ function _book_add_form_elements(&$form, stdClass $node) {
  * Performs all additions and updates to the book outline through node addition,
  * node editing, node deletion, or the outline tab.
  */
-function _book_update_outline(stdClass $node) {
+function _book_update_outline($node) {
   if (empty($node->book['bid'])) {
     return FALSE;
   }
@@ -736,7 +736,7 @@ function book_node_load($nodes, $types) {
 /**
  * Implement hook_node_view().
  */
-function book_node_view(stdClass $node, $build_mode) {
+function book_node_view($node, $build_mode) {
   if ($build_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
       $node->content['book_navigation'] = array(
@@ -768,7 +768,7 @@ function book_page_alter(&$page) {
 /**
  * Implement hook_node_presave().
  */
-function book_node_presave(stdClass $node) {
+function book_node_presave($node) {
   // Always save a revision for non-administrators.
   if (!empty($node->book['bid']) && !user_access('administer nodes')) {
     $node->revision = 1;
@@ -786,7 +786,7 @@ function book_node_presave(stdClass $node) {
 /**
  * Implement hook_node_insert().
  */
-function book_node_insert(stdClass $node) {
+function book_node_insert($node) {
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
@@ -801,7 +801,7 @@ function book_node_insert(stdClass $node) {
 /**
  * Implement hook_node_update().
  */
-function book_node_update(stdClass $node) {
+function book_node_update($node) {
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
@@ -816,7 +816,7 @@ function book_node_update(stdClass $node) {
 /**
  * Implement hook_node_delete().
  */
-function book_node_delete(stdClass $node) {
+function book_node_delete($node) {
   if (!empty($node->book['bid'])) {
     if ($node->nid == $node->book['bid']) {
       // Handle deletion of a top-level post.
@@ -839,7 +839,7 @@ function book_node_delete(stdClass $node) {
 /**
  * Implement hook_node_prepare().
  */
-function book_node_prepare(stdClass $node) {
+function book_node_prepare($node) {
   // Prepare defaults for the add/edit form.
   if (empty($node->book) && (user_access('add content to books') || user_access('administer book outlines'))) {
     $node->book = array();
@@ -1086,7 +1086,7 @@ function book_export_traverse($tree, $visit_func) {
  * @return
  *   The HTML generated for the given node.
  */
-function book_node_export(stdClass $node, $children = '') {
+function book_node_export($node, $children = '') {
   $build = node_build($node, 'print');
   unset($build['#theme']);
   // @todo Rendering should happen in the template using render().

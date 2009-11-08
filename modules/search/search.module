@@ -714,7 +714,7 @@ function search_touch_node($nid) {
 /**
  * Implement hook_node_update_index().
  */
-function search_node_update_index(stdClass $node) {
+function search_node_update_index($node) {
   // Transplant links to a node into the target node.
   $result = db_query("SELECT caption FROM {search_node_links} WHERE nid = :nid", array(':nid' => $node->nid), array('target' => 'slave'));
   $output = array();
@@ -729,7 +729,7 @@ function search_node_update_index(stdClass $node) {
 /**
  * Implement hook_node_update().
  */
-function search_node_update(stdClass $node) {
+function search_node_update($node) {
   // Reindex the node when it is updated. The node is automatically indexed
   // when it is added, simply by being added to the node table.
   search_touch_node($node->nid);
