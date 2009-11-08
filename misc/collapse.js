@@ -11,7 +11,10 @@ Drupal.toggleFieldset = function (fieldset) {
     var content = $('> div:not(.action)', fieldset);
     $(fieldset)
       .removeClass('collapsed')
-      .trigger({ type: 'collapsed', value: false });
+      .trigger({ type: 'collapsed', value: false })
+      .find('> legend > a > span.element-invisible')
+        .empty()
+        .append(Drupal.t('Hide'));
     content.hide();
     content.slideDown({
       duration: 'fast',
@@ -31,7 +34,10 @@ Drupal.toggleFieldset = function (fieldset) {
     $('div.action', fieldset).hide();
     $(fieldset).trigger({ type: 'collapsed', value: true });
     var content = $('> div:not(.action)', fieldset).slideUp('fast', function () {
-      $(this.parentNode).addClass('collapsed');
+      $(this.parentNode).addClass('collapsed')
+        .find('> legend > a > span.element-invisible')
+          .empty()
+          .append(Drupal.t('Show'));
       this.parentNode.animating = false;
     });
   }
@@ -75,15 +81,22 @@ Drupal.behaviors.collapse = {
       // Turn the legend into a clickable link and wrap the contents of the
       // fieldset in a div for easier animation.
       var text = this.innerHTML;
-        $(this).empty().append($('<a href="#">' + text + '</a>').click(function () {
-          var fieldset = $(this).parents('fieldset:first')[0];
-          // Don't animate multiple times.
-          if (!fieldset.animating) {
-            fieldset.animating = true;
-            Drupal.toggleFieldset(fieldset);
-          }
-          return false;
-        }))
+      $(this).empty()
+        .append($('<a href="#">' + text + '</a>')
+          .click(function () {
+            var fieldset = $(this).parents('fieldset:first')[0];
+            // Don't animate multiple times.
+            if (!fieldset.animating) {
+              fieldset.animating = true;
+              Drupal.toggleFieldset(fieldset);
+            }
+            return false;
+          })
+          .prepend($('<span class="element-invisible"></span>')
+            .append(fieldset.hasClass('collapsed') ? Drupal.t('Show') : Drupal.t('Hide'))
+            .after(' ')
+          )
+        )
         .append(summary)
         .after(
           $('<div class="fieldset-wrapper"></div>')

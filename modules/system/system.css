@@ -322,7 +322,7 @@ html.js fieldset.collapsed {
 html.js fieldset.collapsed * {
   display: none;
 }
-html.js fieldset.collapsed legend {
+html.js fieldset.collapsed legend, html.js fieldset.collapsed legend a span.element-invisible {
   display: block;
   overflow: hidden;
 }
