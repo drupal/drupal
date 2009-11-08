@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.63 2009/09/21 08:52:41 dries Exp $ */
+/* $Id: system.css,v 1.64 2009/11/08 11:46:22 webchick Exp $ */
 
 /*
 ** HTML elements
@@ -322,7 +322,7 @@ html.js fieldset.collapsed {
 html.js fieldset.collapsed * {
   display: none;
 }
-html.js fieldset.collapsed legend {
+html.js fieldset.collapsed legend, html.js fieldset.collapsed legend a span.element-invisible {
   display: block;
   overflow: hidden;
 }
