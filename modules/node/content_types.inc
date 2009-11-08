@@ -430,7 +430,7 @@ function node_type_delete_confirm($form, &$form_state, $type) {
 
   $num_nodes = db_query("SELECT COUNT(*) FROM {node} WHERE type = :type", array(':type' => $type->type))->fetchField();
   if ($num_nodes) {
-    $caption .= '<p>' . format_plural($num_nodes, '<strong>Warning:</strong> there is currently 1 %type post on your site. It may not be able to be displayed or edited correctly once you have removed this content type.', '<strong>Warning:</strong> there are currently @count %type posts on your site. They may not be able to be displayed or edited correctly once you have removed this content type.', array('%type' => $type->name)) . '</p>';
+    $caption .= '<p>' . format_plural($num_nodes, '%type is used by 1 piece of content on your site. If you remove this content type, you will not be able to edit the %type content and it may not display correctly.', '%type is used by @count pieces of content on your site. If you remove %type, you will not be able to edit the %type content and it may not display correctly.', array('%type' => $type->name)) . '</p>';
   }
 
   $caption .= '<p>' . t('This action cannot be undone.') . '</p>';
