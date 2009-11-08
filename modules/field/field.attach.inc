@@ -494,6 +494,7 @@ function field_attach_form($obj_type, $object, &$form, &$form_state, $langcode =
   $form['#extra_fields'] = field_extra_fields($bundle);
 
   // Let other modules make changes to the form.
+  // Avoid module_invoke_all() to let parameters be taken by reference.
   foreach (module_implements('field_attach_form') as $module) {
     $function = $module . '_field_attach_form';
     $function($obj_type, $object, $form, $form_state, $langcode);
@@ -575,16 +576,16 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
   // Fetch other objects from their storage location.
   if ($queried_objects) {
     // The invoke order is:
-    // - hook_field_attach_pre_load()
+    // - hook_field_storage_pre_load()
     // - storage backend's hook_field_storage_load()
     // - field-type module's hook_field_load()
     // - hook_field_attach_load()
 
-    // Invoke hook_field_attach_pre_load(): let any module load field
+    // Invoke hook_field_storage_pre_load(): let any module load field
     // data before the storage engine, accumulating along the way.
     $skip_fields = array();
-    foreach (module_implements('field_attach_pre_load') as $module) {
-      $function = $module . '_field_attach_pre_load';
+    foreach (module_implements('field_storage_pre_load') as $module) {
+      $function = $module . '_field_storage_pre_load';
       $function($obj_type, $queried_objects, $age, $skip_fields, $options);
     }
 
@@ -627,10 +628,7 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
 
     // Invoke hook_field_attach_load(): let other modules act on loading the
     // object.
-    foreach (module_implements('field_attach_load') as $module) {
-      $function = $module . '_field_attach_load';
-      $function($obj_type, $queried_objects, $age, $options);
-    }
+    module_invoke_all('field_attach_load', $obj_type, $queried_objects, $age, $options);
 
     // Build cache data.
     if ($cache_write) {
@@ -695,6 +693,7 @@ function field_attach_validate($obj_type, $object) {
   _field_invoke('validate', $obj_type, $object, $errors);
 
   // Let other modules validate the object.
+  // Avoid module_invoke_all() to let $errors be taken by reference.
   foreach (module_implements('field_attach_validate') as $module) {
     $function = $module . '_field_attach_validate';
     $function($obj_type, $object, $errors);
@@ -772,6 +771,7 @@ function field_attach_submit($obj_type, $object, $form, &$form_state) {
   _field_invoke_default('submit', $obj_type, $object, $form, $form_state);
 
   // Let other modules act on submitting the object.
+  // Avoid module_invoke_all() to let $form_state be taken by reference.
   foreach (module_implements('field_attach_submit') as $module) {
     $function = $module . '_field_attach_submit';
     $function($obj_type, $object, $form, $form_state);
@@ -793,10 +793,7 @@ function field_attach_presave($obj_type, $object) {
   _field_invoke('presave', $obj_type, $object);
 
   // Let other modules act on presaving the object.
-  foreach (module_implements('field_attach_presave') as $module) {
-    $function = $module . '_field_attach_presave';
-    $function($obj_type, $object);
-  }
+  module_invoke_all('field_attach_presave', $obj_type, $object);
 }
 
 /**
@@ -821,11 +818,11 @@ function field_attach_insert($obj_type, $object) {
 
   list($id, $vid, $bundle, $cacheable) = entity_extract_ids($obj_type, $object);
 
-  // Let other modules act on inserting the object, accumulating saved
-  // fields along the way.
+  // Let any module insert field data before the storage engine, accumulating
+  // saved fields along the way.
   $skip_fields = array();
-  foreach (module_implements('field_attach_pre_insert') as $module) {
-    $function = $module . '_field_attach_pre_insert';
+  foreach (module_implements('field_storage_pre_insert') as $module) {
+    $function = $module . '_field_storage_pre_insert';
     $function($obj_type, $object, $skip_fields);
   }
 
@@ -849,6 +846,9 @@ function field_attach_insert($obj_type, $object) {
     module_invoke($storage_info['module'], 'field_storage_write', $obj_type, $object, FIELD_STORAGE_INSERT, $fields);
   }
 
+  // Let other modules act on inserting the object.
+  module_invoke_all('field_attach_insert', $obj_type, $object);
+
   if ($cacheable) {
     cache_clear_all("field:$obj_type:$id", 'cache_field');
   }
@@ -867,11 +867,11 @@ function field_attach_update($obj_type, $object) {
 
   list($id, $vid, $bundle, $cacheable) = entity_extract_ids($obj_type, $object);
 
-  // Let other modules act on updating the object, accumulating saved
-  // fields along the way.
+  // Let any module update field data before the storage engine, accumulating
+  // saved fields along the way.
   $skip_fields = array();
-  foreach (module_implements('field_attach_pre_update') as $module) {
-    $function = $module . '_field_attach_pre_update';
+  foreach (module_implements('field_storage_pre_update') as $module) {
+    $function = $module . '_field_storage_pre_update';
     $function($obj_type, $object, $skip_fields);
   }
 
@@ -898,6 +898,9 @@ function field_attach_update($obj_type, $object) {
     $storage_info = field_info_storage_types($storage);
     module_invoke($storage_info['module'], 'field_storage_write', $obj_type, $object, FIELD_STORAGE_UPDATE, $fields);
   }
+
+  // Let other modules act on updating the object.
+  module_invoke_all('field_attach_update', $obj_type, $object);
 
   if ($cacheable) {
     cache_clear_all("field:$obj_type:$id", 'cache_field');
@@ -933,10 +936,7 @@ function field_attach_delete($obj_type, $object) {
   }
 
   // Let other modules act on deleting the object.
-  foreach (module_implements('field_attach_delete') as $module) {
-    $function = $module . '_field_attach_delete';
-    $function($obj_type, $object);
-  }
+  module_invoke_all('field_attach_delete', $obj_type, $object);
 
   if ($cacheable) {
     cache_clear_all("field:$obj_type:$id", 'cache_field');
@@ -972,10 +972,7 @@ function field_attach_delete_revision($obj_type, $object) {
   }
 
   // Let other modules act on deleting the revision.
-  foreach (module_implements('field_attach_delete_revision') as $module) {
-    $function = $module . '_field_attach_delete_revision';
-    $function($obj_type, $object);
-  }
+  module_invoke_all('field_attach_delete_revision', $obj_type, $object);
 }
 
 /**
@@ -1071,8 +1068,8 @@ function field_attach_query($field_id, $conditions, $options = array()) {
   // Give a chance to 3rd party modules that bypass the storage engine to
   // handle the query.
   $skip_field = FALSE;
-  foreach (module_implements('field_attach_pre_query') as $module) {
-    $function = $module . '_field_attach_pre_query';
+  foreach (module_implements('field_storage_pre_query') as $module) {
+    $function = $module . '_field_storage_pre_query';
     $results = $function($field_id, $conditions, $options, $skip_field);
     // Stop as soon as a module claims it handled the query.
     if ($skip_field) {
@@ -1301,10 +1298,8 @@ function field_attach_create_bundle($obj_type, $bundle) {
   // Clear the cache.
   field_cache_clear();
 
-  foreach (module_implements('field_attach_create_bundle') as $module) {
-    $function = $module . '_field_attach_create_bundle';
-    $function($obj_type, $bundle);
-  }
+  // Let other modules act on creating the bundle.
+  module_invoke_all('field_attach_create_bundle', $obj_type, $bundle);
 }
 
 /**
@@ -1327,10 +1322,8 @@ function field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new) {
   // Clear the cache.
   field_cache_clear();
 
-  foreach (module_implements('field_attach_rename_bundle') as $module) {
-    $function = $module . '_field_attach_rename_bundle';
-    $function($obj_type, $bundle_old, $bundle_new);
-  }
+  // Let other modules act on renaming the bundle.
+  module_invoke_all('field_attach_rename_bundle', $obj_type, $bundle_old, $bundle_new);
 }
 
 /**
@@ -1359,10 +1352,7 @@ function field_attach_delete_bundle($obj_type, $bundle) {
   field_cache_clear();
 
   // Let other modules act on deleting the bundle.
-  foreach (module_implements('field_attach_delete_bundle') as $module) {
-    $function = $module . '_field_attach_delete_bundle';
-    $function($obj_type, $bundle, $instances);
-  }
+  module_invoke_all('field_attach_delete_bundle', $obj_type, $bundle, $instances);
 }
 
 

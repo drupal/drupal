@@ -420,9 +420,9 @@ function forum_comment_delete($comment) {
 }
 
 /**
- * Implement hook_field_attach_pre_insert().
+ * Implement hook_field_storage_pre_insert().
  */
-function forum_field_attach_pre_insert($obj_type, $object, $skip_fields) {
+function forum_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
   if ($obj_type == 'node' && $object->status && _forum_node_check_node_type($object)) {
     $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
     foreach ($object->taxonomy_forums as $language) {
@@ -443,9 +443,9 @@ function forum_field_attach_pre_insert($obj_type, $object, $skip_fields) {
 }
 
 /**
- * Implement hook_field_attach_pre_update().
+ * Implement hook_field_storage_pre_update().
  */
-function forum_field_attach_pre_update($obj_type, $object, $skip_fields) {
+function forum_field_storage_pre_update($obj_type, $object, &$skip_fields) {
   $first_call = &drupal_static(__FUNCTION__, array());
 
   if ($obj_type == 'node' && $object->status && _forum_node_check_node_type($object)) {

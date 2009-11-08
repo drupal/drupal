@@ -926,35 +926,6 @@ function hook_field_attach_form($obj_type, $object, &$form, &$form_state, $langc
 }
 
 /**
- * Act on field_attach_pre_load.
- *
- * This hook allows modules to load data before the Field Storage API,
- * optionally preventing the field storage module from doing so.
- *
- * This lets 3rd party modules override, mirror, shard, or otherwise store a
- * subset of fields in a different way than the current storage engine.
- * Possible use cases include : per-bundle storage, per-combo-field storage...
- *
- * @param $obj_type
- *   The type of objects for which to load fields; e.g. 'node' or 'user'.
- * @param $objects
- *   An array of objects for which to load fields, keyed by object id.
- * @param $age
- *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
- *   FIELD_LOAD_REVISION to load the version indicated by each object.
- * @param $skip_fields
- *   An array keyed by field ids whose data has already been loaded and
- *   therefore should not be loaded again. The values associated to these keys
- *   are not specified.
- * @return
- *   - Loaded field values are added to $objects. Fields with no values should be
- *   set as an empty array.
- *   - Loaded field ids are set as keys in $skip_fields.
- */
-function hook_field_attach_pre_load($obj_type, $objects, $age, &$skip_fields) {
-}
-
-/**
  * Act on field_attach_load.
  *
  * This hook is invoked after the field module has performed the operation.
@@ -1008,6 +979,26 @@ function hook_field_attach_presave($obj_type, $object) {
 }
 
 /**
+ * Act on field_attach_insert.
+ *
+ * This hook is invoked after the field module has performed the operation.
+ *
+ * See field_attach_insert() for details and arguments.
+ */
+function hook_field_attach_insert($obj_type, $object) {
+}
+
+/**
+ * Act on field_attach_update.
+ *
+ * This hook is invoked after the field module has performed the operation.
+ *
+ * See field_attach_update() for details and arguments.
+ */
+function hook_field_attach_update($obj_type, $object) {
+}
+
+/**
  * Act on field_attach_preprocess.
  *
  * This hook is invoked while preprocessing the field.tpl.php template file.
@@ -1022,73 +1013,6 @@ function hook_field_attach_presave($obj_type, $object) {
  *   - element: The structured array containing the values ready for rendering.
  */
 function hook_field_attach_preprocess_alter(&$variables, $context) {
-}
-
-/**
- * Act on field_attach_insert.
- *
- * This hook allows modules to store data before the Field Storage
- * API, optionally preventing the field storage module from doing so.
- *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
- *   The object with fields to save.
- * @param $skip_fields
- *   An array keyed by field ids whose data has already been written and
- *   therefore should not be written again. The values associated to these keys
- *   are not specified.
- * @return
- *   Saved field ids are set set as keys in $skip_fields.
- */
-function hook_field_attach_pre_insert($obj_type, $object, &$skip_fields) {
-}
-
-/**
- * Act on field_attach_update.
- *
- * This hook allows modules to store data before the Field Storage
- * API, optionally preventing the field storage module from doing so.
- *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
- *   The object with fields to save.
- * @param $skip_fields
- *   An array keyed by field ids whose data has already been written and
- *   therefore should not be written again. The values associated to these keys
- *   are not specified.
- * @return
- *   Saved field ids are set set as keys in $skip_fields.
- */
-function hook_field_attach_pre_update($obj_type, $object, &$skip_fields) {
-}
-
-/**
- * Act on field_attach_pre_query.
- *
- * This hook should be implemented by modules that use
- * hook_field_attach_pre_load(), hook_field_attach_pre_insert() and
- * hook_field_attach_pre_update() to bypass the regular storage engine, to
- * handle field queries.
- *
- * @param $field_name
- *   The name of the field to query.
- * @param $conditions
- *   See field_attach_query().
- *   A storage module that doesn't support querying a given column should raise
- *   a FieldQueryException. Incompatibilities should be mentioned on the module
- *   project page.
- * @param $options
- *   See field_attach_query(). All option keys are guaranteed to be specified.
- * @param $skip_field
- *   Boolean, always coming as FALSE.
- * @return
- *   See field_attach_query().
- *   The $skip_field parameter should be set to TRUE if the query has been
- *   handled.
- */
-function hook_field_attach_pre_query($field_name, $conditions, $options, &$skip_field) {
 }
 
 /**
@@ -1372,6 +1296,151 @@ function hook_field_storage_delete_field($field) {
  *   The instance being deleted.
  */
 function hook_field_storage_delete_instance($instance) {
+}
+
+/**
+ * Act before the storage backends load field data.
+ *
+ * This hook allows modules to load data before the Field Storage API,
+ * optionally preventing the field storage module from doing so.
+ *
+ * This lets 3rd party modules override, mirror, shard, or otherwise store a
+ * subset of fields in a different way than the current storage engine.
+ * Possible use cases include: per-bundle storage, per-combo-field storage...
+ *
+ * @param $obj_type
+ *   The type of objects for which to load fields; e.g. 'node' or 'user'.
+ * @param $objects
+ *   An array of objects for which to load fields, keyed by object id.
+ * @param $age
+ *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
+ *   FIELD_LOAD_REVISION to load the version indicated by each object.
+ * @param $skip_fields
+ *   An array keyed by field ids whose data has already been loaded and
+ *   therefore should not be loaded again. The values associated to these keys
+ *   are not specified.
+ * @return
+ *   - Loaded field values are added to $objects. Fields with no values should
+ *     be set as an empty array.
+ *   - Loaded field ids are set as keys in $skip_fields.
+ */
+function hook_field_storage_pre_load($obj_type, $objects, $age, &$skip_fields) {
+}
+
+/**
+ * Act before the storage backends insert field data.
+ *
+ * This hook allows modules to store data before the Field Storage API,
+ * optionally preventing the field storage module from doing so.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The object with fields to save.
+ * @param $skip_fields
+ *   An array keyed by field ids whose data has already been written and
+ *   therefore should not be written again. The values associated to these keys
+ *   are not specified.
+ * @return
+ *   Saved field ids are set set as keys in $skip_fields.
+ */
+function hook_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
+  if ($obj_type == 'node' && $object->status && _forum_node_check_node_type($object)) {
+    $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
+    foreach ($object->taxonomy_forums as $language) {
+      foreach ($language as $delta) {
+        $query->values(array(
+          'nid' => $object->nid,
+          'title' => $object->title[FIELD_LANGUAGE_NONE][0]['value'],
+          'tid' => $delta['value'],
+          'sticky' => $object->sticky,
+          'created' => $object->created,
+          'comment_count' => 0,
+          'last_comment_timestamp' => $object->created,
+        ));
+      }
+    }
+    $query->execute();
+  }
+}
+
+/**
+ * Act before the storage backends update field data.
+ *
+ * This hook allows modules to store data before the Field Storage API,
+ * optionally preventing the field storage module from doing so.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The object with fields to save.
+ * @param $skip_fields
+ *   An array keyed by field ids whose data has already been written and
+ *   therefore should not be written again. The values associated to these keys
+ *   are not specified.
+ * @return
+ *   Saved field ids are set set as keys in $skip_fields.
+ */
+function hook_field_storage_pre_update($obj_type, $object, &$skip_fields) {
+  $first_call = &drupal_static(__FUNCTION__, array());
+
+  if ($obj_type == 'node' && $object->status && _forum_node_check_node_type($object)) {
+    // We don't maintain data for old revisions, so clear all previous values
+    // from the table. Since this hook runs once per field, per object, make
+    // sure we only wipe values once.
+    if (!isset($first_call[$object->nid])) {
+      $first_call[$object->nid] = FALSE;
+      db_delete('forum_index')->condition('nid', $object->nid)->execute();
+    }
+    // Only save data to the table if the node is published.
+    if ($object->status) {
+      $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
+      foreach ($object->taxonomy_forums as $language) {
+        foreach ($language as $delta) {
+          $query->values(array(
+            'nid' => $object->nid,
+            'title' => $object->title,
+            'tid' => $delta['value'],
+            'sticky' => $object->sticky,
+            'created' => $object->created,
+            'comment_count' => 0,
+            'last_comment_timestamp' => $object->created,
+          ));
+        }
+      }
+      $query->execute();
+      // The logic for determining last_comment_count is fairly complex, so
+      // call _forum_update_forum_index() too.
+      _forum_update_forum_index($object->nid);
+    }
+  }
+}
+
+/**
+ * Act before the storage backend runs the query.
+ *
+ * This hook should be implemented by modules that use
+ * hook_field_storage_pre_load(), hook_field_storage_pre_insert() and
+ * hook_field_storage_pre_update() to bypass the regular storage engine, to
+ * handle field queries.
+ *
+ * @param $field_name
+ *   The name of the field to query.
+ * @param $conditions
+ *   See field_attach_query().
+ *   A storage module that doesn't support querying a given column should raise
+ *   a FieldQueryException. Incompatibilities should be mentioned on the module
+ *   project page.
+ * @param $options
+ *   See field_attach_query(). All option keys are guaranteed to be specified.
+ * @param $skip_field
+ *   Boolean, always coming as FALSE.
+ * @return
+ *   See field_attach_query().
+ *   The $skip_field parameter should be set to TRUE if the query has been
+ *   handled.
+ */
+function hook_field_storage_pre_query($field_name, $conditions, $options, &$skip_field) {
 }
 
 /**
