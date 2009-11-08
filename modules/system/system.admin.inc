@@ -1762,7 +1762,9 @@ function system_date_time_settings() {
       // the system.
       if ($type_info['locked'] == 0) {
         $form['formats']['delete']['date_format_' . $type . '_delete'] = array(
-          '#markup' => l(t('delete'), 'admin/config/regional/date-time/types/' . $type . '/delete'),
+          '#type' => 'link',
+          '#title' => t('delete'),
+          '#href' => 'admin/config/regional/date-time/types/' . $type . '/delete',
         );
       }
     }

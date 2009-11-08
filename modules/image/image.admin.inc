@@ -394,7 +394,9 @@ function image_effect_form($form, &$form_state, $style, $effect) {
     '#value' => isset($effect['ieid']) ? t('Update effect') : t('Add effect'),
   );
   $form['buttons']['cancel'] = array(
-    '#markup' => l(t('Cancel'), 'admin/config/media/image-styles/edit/' . $style['name']),
+    '#type' => 'link',
+    '#title' => t('Cancel'),
+    '#href' => 'admin/config/media/image-styles/edit/' . $style['name'],
   );
 
   return $form;

@@ -175,7 +175,9 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
   );
 
   $form['change_set'] = array(
-    '#markup' => l(t('Change set'), 'admin/config/system/shortcut'),
+    '#type' => 'link',
+    '#title' => t('Change set'),
+    '#href' => 'admin/config/system/shortcut',
     '#prefix' => '<div class="shortcuts-change-set"> (',
     '#suffix' => ')</div>',
     '#weight' => -99,

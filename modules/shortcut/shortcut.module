@@ -524,7 +524,10 @@ function shortcut_page_build(&$page) {
     $link_text = shortcut_set_switch_access() ? t('Add to %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->title)) : t('Add to shortcuts');
     $page['add_to_shortcuts'] = array(
      '#prefix' => '<div class="add-to-shortcuts">',
-     '#markup' => l('<span class="icon"></span><span class="text">' . $link_text . '</span>', 'admin/config/system/shortcut/' . $shortcut_set->set_name . '/add-link-inline', array('query' => $query, 'html' => TRUE)),
+     '#type' => 'link',
+     '#title' => '<span class="icon"></span><span class="text">' . $link_text . '</span>',
+     '#href' => 'admin/config/system/shortcut/' . $shortcut_set->set_name . '/add-link-inline',
+     '#options' => array('query' => $query, 'html' => TRUE),
      '#suffix' => '</div>',
     );
   }
@@ -536,7 +539,12 @@ function shortcut_page_build(&$page) {
   $shortcut_set = shortcut_current_displayed_set();
   $configure_link = NULL;
   if (shortcut_set_edit_access($shortcut_set)) {
-    $configure_link = array('#markup' => l(t('edit shortcuts'), 'admin/config/system/shortcut/' . $shortcut_set->set_name, array('attributes' => array('id' => 'toolbar-customize'))));
+    $configure_link = array(
+      '#type' => 'link',
+      '#title' => t('edit shortcuts'),
+      '#href' => 'admin/config/system/shortcut/' . $shortcut_set->set_name,
+      '#options' => array('attributes' => array('id' => 'toolbar-customize')),
+    );
   }
 
   $drawer = array(

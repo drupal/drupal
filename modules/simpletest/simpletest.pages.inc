@@ -319,7 +319,9 @@ function simpletest_result_form($form, &$form_state, $test_id) {
   );
 
   $form['action']['return'] = array(
-    '#markup' => l(t('Return to list'), 'admin/config/development/testing'),
+    '#type' => 'link',
+    '#title' => t('Return to list'),
+    '#href' => 'admin/config/development/testing',
   );
 
   if (is_numeric($test_id)) {
