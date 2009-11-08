@@ -311,6 +311,42 @@ class CommonURLUnitTest extends DrupalUnitTestCase {
   }
 }
 
+/**
+ * Tests for the check_plain() and filter_xss() functions.
+ */
+class CommonXssUnitTest extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'String filtering tests',
+      'description' => 'Confirm that check_plain() and filter_xss() work correctly, including invalid multi-byte sequences.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Check that invalid multi-byte sequences are rejected.
+   */
+  function testInvalidMultiByte() {
+     $text = check_plain("Foo\xC0barbaz");
+     $this->assertEqual($text, '', 'check_plain() rejects invalid sequence "Foo\xC0barbaz"');
+     $text = check_plain("Fooÿñ");
+     $this->assertEqual($text, "Fooÿñ", 'check_plain() accepts valid sequence "Fooÿñ"');
+     $text = filter_xss("Foo\xC0barbaz");
+     $this->assertEqual($text, '', 'filter_xss() rejects invalid sequence "Foo\xC0barbaz"');
+     $text = filter_xss("Fooÿñ");
+     $this->assertEqual($text, "Fooÿñ", 'filter_xss() accepts valid sequence Fooÿñ');
+  }
+
+  /**
+   * Check that special characters are escaped.
+   */
+  function testEscaping() {
+     $text = check_plain("<script>");
+     $this->assertEqual($text, '&lt;script&gt;', 'check_plain() escapes &lt;script&gt;');
+  }
+}
+
 class CommonSizeTestCase extends DrupalUnitTestCase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
