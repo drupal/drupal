@@ -13,7 +13,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     public static function getInfo() {
     return array(
       'name' => 'Field UI tests',
-      'description' => 'Test the filed UI functionality.',
+      'description' => 'Test the field UI functionality.',
       'group' => 'Field UI',
     );
   }
@@ -87,7 +87,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     $edit['_add_new_field[widget_type]'] = 'test_field_widget';
     $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '/fields',  $edit, t('Save'));
 
-    $this->assertText(t('@label field settings', array('@label' => $this->field_label)), t('Field settings page was displayed.'));
+    $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $this->field_label)), t('Field settings page was displayed.'));
 
     $this->drupalPost(NULL, array(), t('Save field settings'));
 

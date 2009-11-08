@@ -812,20 +812,14 @@ function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $
     $field = field_read_field($field['field_name']);
   }
 
-  $field_type = field_info_field_types($field['type']);
-
-  $info_function = $field['module'] . '_field_info';
-  $info = $info_function();
-  $description = '<p><strong>' . $info[$field['type']]['label'] . ':</strong> ';
-  $description .= $info[$field['type']]['description'] . '</p>';
-  $form['#prefix'] = '<div class="description">' . $description . '</div>';
+  drupal_set_title($instance['label']);
 
   $description = '<p>' . t('These settings apply to the %field field everywhere it is used. These settings impact the way that data is stored in the database and cannot be changed once data has been created.', array('%field' => $instance['label'])) . '</p>';
 
   // Create a form structure for the field values.
   $form['field'] = array(
     '#type' => 'fieldset',
-    '#title' => t('%field field settings', array('%field' => $instance['label'])),
+    '#title' => t('Field settings'),
     '#description' => $description,
     '#tree' => TRUE,
   );
@@ -856,7 +850,7 @@ function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $
   // responsible for not returning settings that cannot be changed if
   // the field already has data.
   $form['field']['settings'] = array();
-  $additions = module_invoke($field_type['module'], 'field_settings_form', $field, $instance, $has_data);
+  $additions = module_invoke($field['module'], 'field_settings_form', $field, $instance, $has_data);
   if (is_array($additions)) {
     $form['field']['settings'] = $additions;
   }
@@ -1137,11 +1131,6 @@ function field_ui_field_edit_form($form, &$form_state, $obj_type, $bundle, $inst
     // will not use it.
     field_ui_default_value_widget($field, $instance, $form, $form_state);
   }
-
-  $info = field_info_field_types($field['type']);
-  $description = '<p><strong>' . $info['label'] . ':</strong> ';
-  $description .= $info['description'] . '</p>';
-  $form['#prefix'] = '<div class="description">' . $description . '</div>';
 
   $has_data = field_has_data($field);
   if ($has_data) {
