@@ -1056,6 +1056,19 @@ function system_library() {
     ),
   );
 
+  // Contextual links.
+  $libraries['contextual-links'] = array(
+    'title' => 'Contextual links',
+    'website' => 'http://drupal.org/node/473268',
+    'version' => '1.0',
+    'js' => array(
+      'misc/contextual_links.js' => array(),
+    ),
+    'css' => array(
+      'misc/contextual_links.css' => array(),
+    ),
+  );
+
   // Vertical Tabs.
   $libraries['vertical-tabs'] = array(
     'title' => 'Vertical Tabs',
@@ -3613,8 +3626,7 @@ function system_build_contextual_links($element) {
       '#links' => $links,
       '#attributes' => array('class' => array('contextual-links')),
       '#attached' => array(
-        'js' => array('misc/contextual_links.js'),
-        'css' => array('misc/contextual_links.css'),
+        'library' => array(array('system', 'contextual-links')),
       ),
     );
   }
