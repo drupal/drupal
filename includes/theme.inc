@@ -1370,6 +1370,31 @@ function theme_status_messages($variables) {
 }
 
 /**
+ * Return a themed link.
+ *
+ * All Drupal code that outputs a link should call the l() function. That
+ * function performs some initial preprocessing, and then, if necessary,
+ * calls theme('link') for rendering the anchor tag.
+ *
+ * To optimize performance for sites that don't need custom theming of links,
+ * the l() function includes an inline copy of this function, and uses that copy
+ * if none of the enabled modules or the active theme implement any preprocess
+ * or process functions or override this theme implementation.
+ *
+ * @param $variables
+ *   An associative array containing the keys 'text', 'path', and 'options'.
+ *   See the l() function for information about these variables.
+ *
+ * @return
+ *   An HTML string containing a link to the given path.
+ *
+ * @see l()
+ */
+function theme_link($variables) {
+  return '<a href="' . check_plain(url($variables['path'], $variables['options'])) . '"' . drupal_attributes($variables['options']['attributes']) . '>' . ($variables['options']['html'] ? $variables['text'] : check_plain($variables['text'])) . '</a>';
+}
+
+/**
  * Return a themed set of links.
  *
  * @param $variables

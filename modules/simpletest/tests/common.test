@@ -70,9 +70,23 @@ class CommonURLUnitTest extends DrupalUnitTestCase {
    * Confirm that invalid text given as $path is filtered.
    */
   function testLXSS() {
+    global $conf;
     $text = $this->randomName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
+    // Regardless of whether there is a theme override of theme_link() or not,
+    // unless the 'theme_link' configuration variable is FALSE, l() will
+    // attempt to initialize the theme system in order to determine if
+    // the link needs to be themed. However, drupal_theme_initialize() requires
+    // a database query, which doesn't work in the context of unit tests,
+    // because simpletest sets up a table prefix, but doesn't generate the
+    // corresponding prefixed tables. We need to either circumvent theme system
+    // initialization, or make CommonURLUnitTest inherit from DrupalWebTestCase.
+    // Since our goal in this unit test is specifically to test the default
+    // implementation, we choose the former.
+    $theme_link_saved = isset($conf['theme_link']) ? $conf['theme_link'] : NULL;
+    $conf['theme_link'] = FALSE;
     $link = l($text, $path);
+    $conf['theme_link'] = $theme_link_saved;
     $sanitized_path = check_url(url($path));
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, t('XSS attack @path was filtered', array('@path' => $path)));
   }

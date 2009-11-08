@@ -2683,6 +2683,7 @@ function drupal_attributes(array $attributes = array()) {
  */
 function l($text, $path, array $options = array()) {
   global $language_url;
+  static $use_theme = NULL;
 
   // Merge in defaults.
   $options += array(
@@ -2702,6 +2703,35 @@ function l($text, $path, array $options = array()) {
     $options['attributes']['title'] = strip_tags($options['attributes']['title']);
   }
 
+  // Determine if rendering of the link is to be done with a theme function
+  // or the inline default. Inline is faster, but if the theme system has been
+  // loaded and a module or theme implements a preprocess or process function
+  // or overrides the theme_link() function, then invoke theme(). Preliminary
+  // benchmarks indicate that invoking theme() can slow down the l() function
+  // by 20% or more, and that some of the link-heavy Drupal pages spend more
+  // than 10% of the total page request time in the l() function.
+  if (!isset($use_theme) && function_exists('theme')) {
+    // Allow edge cases to prevent theme initialization and force inline link
+    // rendering.
+    if (variable_get('theme_link', TRUE)) {
+      drupal_theme_initialize();
+      $registry = theme_get_registry();
+      // We don't want to duplicate functionality that's in theme(), so any
+      // hint of a module or theme doing anything at all special with the 'link'
+      // theme hook should simply result in theme() being called. This includes
+      // the overriding of theme_link() with an alternate function or template,
+      // the presence of preprocess or process functions, or the presence of
+      // include files.
+      $use_theme = !isset($registry['link']['function']) || ($registry['link']['function'] != 'theme_link');
+      $use_theme = $use_theme || !empty($registry['link']['preprocess functions']) || !empty($registry['link']['process functions']) || !empty($registry['link']['includes']);
+    }
+    else {
+      $use_theme = FALSE;
+    }
+  }
+  if ($use_theme) {
+    return theme('link', array('text' => $text, 'path' => $path, 'options' => $options));
+  }
   return '<a href="' . check_plain(url($path, $options)) . '"' . drupal_attributes($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
 }
 
@@ -5347,6 +5377,9 @@ function drupal_common_theme() {
     ),
     'status_messages' => array(
       'variables' => array('display' => NULL),
+    ),
+    'link' => array(
+      'variables' => array('text' => NULL, 'path' => NULL, 'options' => array()),
     ),
     'links' => array(
       'variables' => array('links' => NULL, 'attributes' => array('class' => array('links')), 'heading' => array()),
