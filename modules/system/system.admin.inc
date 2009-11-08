@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.219 2009/11/03 05:27:18 webchick Exp $
+// $Id: system.admin.inc,v 1.220 2009/11/08 13:23:41 webchick Exp $
 
 /**
  * @file
@@ -1762,7 +1762,9 @@ function system_date_time_settings() {
       // the system.
       if ($type_info['locked'] == 0) {
         $form['formats']['delete']['date_format_' . $type . '_delete'] = array(
-          '#markup' => l(t('delete'), 'admin/config/regional/date-time/types/' . $type . '/delete'),
+          '#type' => 'link',
+          '#title' => t('delete'),
+          '#href' => 'admin/config/regional/date-time/types/' . $type . '/delete',
         );
       }
     }

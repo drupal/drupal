@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.15 2009/11/03 05:27:18 webchick Exp $
+// $Id: image.admin.inc,v 1.16 2009/11/08 13:23:41 webchick Exp $
 
 /**
  * @file
@@ -394,7 +394,9 @@ function image_effect_form($form, &$form_state, $style, $effect) {
     '#value' => isset($effect['ieid']) ? t('Update effect') : t('Add effect'),
   );
   $form['buttons']['cancel'] = array(
-    '#markup' => l(t('Cancel'), 'admin/config/media/image-styles/edit/' . $style['name']),
+    '#type' => 'link',
+    '#title' => t('Cancel'),
+    '#href' => 'admin/config/media/image-styles/edit/' . $style['name'],
   );
 
   return $form;

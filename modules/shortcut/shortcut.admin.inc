@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.admin.inc,v 1.1 2009/10/17 00:51:52 dries Exp $
+// $Id: shortcut.admin.inc,v 1.2 2009/11/08 13:23:41 webchick Exp $
 
 /**
  * @file
@@ -175,7 +175,9 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
   );
 
   $form['change_set'] = array(
-    '#markup' => l(t('Change set'), 'admin/config/system/shortcut'),
+    '#type' => 'link',
+    '#title' => t('Change set'),
+    '#href' => 'admin/config/system/shortcut',
     '#prefix' => '<div class="shortcuts-change-set"> (',
     '#suffix' => ')</div>',
     '#weight' => -99,
