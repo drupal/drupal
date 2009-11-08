@@ -2091,31 +2091,37 @@ function registry_rebuild() {
  *   TRUE to reset a specific named variable, or all variables if $name is NULL.
  *   Resetting every variable should only be used, for example, for running
  *   unit tests with a clean environment. Should be used only though via
- *   function drupal_static_reset().
+ *   function drupal_static_reset() and the return value should not be used in
+ *   this case.
  *
  * @return
- *   Returns a variable by reference if $reset is FALSE.
+ *   Returns a variable by reference.
  */
 function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
-  static $data = array();
-
-  // Reset a single value, or all values.
+  static $data = array(), $default = array();
+  if (!isset($name)) {
+    // All variables are reset.
+    $data = $default;
+    // As the function returns a reference, the return should always be a
+    // variable.
+    return $data;
+  }
   if ($reset) {
-    if (isset($name)) {
-      unset($data[$name]);
+    // The reset means the default is loaded.
+    if (array_key_exists($name, $default)) {
+      $data[$name] = $default[$name];
     }
     else {
-      $data = array();
+      // Reset was called before a default is set and yet a variable must be
+      // returned.
+      return $data;
     }
-    // We must return a reference to a variable.
-    $dummy = NULL;
-    return $dummy;
   }
-
-  if (!isset($data[$name])) {
-    $data[$name] = $default_value;
+  elseif (!array_key_exists($name, $data)) {
+    // Store the default value internally and also copy it to the reference to
+    // be returned.
+    $default[$name] = $data[$name] = $default_value;
   }
-
   return $data[$name];
 }
 
