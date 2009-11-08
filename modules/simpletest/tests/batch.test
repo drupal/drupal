@@ -103,6 +103,7 @@ class BatchAPIPercentagesTestCase extends DrupalWebTestCase {
    * testCases class variable.
    */
   function testBatchAPIPercentages() {
+    require_once DRUPAL_ROOT . '/includes/batch.inc';
     foreach ($this->testCases as $expected_result => $arguments) {
       // PHP sometimes casts numeric strings that are array keys to integers,
       // cast them back here.
