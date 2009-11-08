@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.837 2009/11/07 13:35:21 dries Exp $
+// $Id: system.module,v 1.838 2009/11/08 10:29:23 webchick Exp $
 
 /**
  * @file
@@ -1053,6 +1053,19 @@ function system_library() {
     'version' => '2.16',
     'js' => array(
       'misc/jquery.form.js' => array(),
+    ),
+  );
+
+  // Contextual links.
+  $libraries['contextual-links'] = array(
+    'title' => 'Contextual links',
+    'website' => 'http://drupal.org/node/473268',
+    'version' => '1.0',
+    'js' => array(
+      'misc/contextual_links.js' => array(),
+    ),
+    'css' => array(
+      'misc/contextual_links.css' => array(),
     ),
   );
 
@@ -3613,8 +3626,7 @@ function system_build_contextual_links($element) {
       '#links' => $links,
       '#attributes' => array('class' => array('contextual-links')),
       '#attached' => array(
-        'js' => array('misc/contextual_links.js'),
-        'css' => array('misc/contextual_links.css'),
+        'library' => array(array('system', 'contextual-links')),
       ),
     );
   }
