@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.38 2009/11/08 10:02:41 webchick Exp $
+// $Id: forum.test,v 1.39 2009/11/08 11:19:02 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -142,7 +142,7 @@ class ForumTestCase extends DrupalWebTestCase {
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/structure/taxonomy/' . $vid, $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $vid . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), t('Vocabulary was edited'));
 
