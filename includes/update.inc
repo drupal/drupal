@@ -22,10 +22,10 @@ function update_fix_compatibility() {
     }
   }
   if (!empty($incompatible)) {
-  	db_update('system')
-  	  ->fields(array('status' => 0))
-  	  ->condition('name', $incompatible, 'IN')
-  	  ->execute();
+    db_update('system')
+      ->fields(array('status' => 0))
+      ->condition('name', $incompatible, 'IN')
+      ->execute();
   }
 }
 
