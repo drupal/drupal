@@ -88,11 +88,17 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
  * Build a list of bootstrap modules and enabled modules and themes.
  *
  * @param $type
- *   The type of list to return, either 'module', 'bootstrap', or 'theme'.
+ *   The type of list to return:
+ *   - module: All modules.
+ *   - module_enabled: All enabled modules.
+ *   - bootstrap: All enabled modules required for bootstrap.
+ *   - theme: All themes.
+ *   - theme_enabled: All enabled themes.
  *
  * @return
- *   An associative array of modules or themes, keyed by name, with the minimum
- *   data required to bootstrap.
+ *   An associative array of modules or themes, keyed by name, and having the
+ *   respective database row as value. For $type 'module_enabled' and
+ *   'bootstrap', the array values equal the keys.
  *
  * @see module_list()
  * @see list_themes()
@@ -117,7 +123,7 @@ function system_list($type) {
     foreach ($result as $record) {
       // Build a list of all modules.
       if ($record->type == 'module') {
-        $lists['module'][$record->name] = $record->name;
+        $lists['module'][$record->name] = $record;
         // Build a list of all enabled modules.
         if ($record->status) {
           $lists['module_enabled'][$record->name] = $record->name;
