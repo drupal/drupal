@@ -1,5 +1,5 @@
 <?php
-// $Id: field.default.inc,v 1.22 2009/10/31 16:06:35 dries Exp $
+// $Id: field.default.inc,v 1.23 2009/11/09 18:23:41 dries Exp $
 
 /**
  * @file
@@ -17,7 +17,7 @@ function field_default_extract_form_values($obj_type, $object, $field, $instance
   if (isset($form_state['values'][$field_name][$langcode])) {
     $items = $form_state['values'][$field_name][$langcode];
     // Remove the 'value' of the 'add more' button.
-    unset($items[$field_name . '_add_more']);
+    unset($items['add_more']);
   }
 }
 
