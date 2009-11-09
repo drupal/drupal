@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.19 2009/11/07 13:35:20 dries Exp $
+// $Id: update.inc,v 1.20 2009/11/09 01:51:24 webchick Exp $
 
 /**
  * @file
@@ -22,10 +22,10 @@ function update_fix_compatibility() {
     }
   }
   if (!empty($incompatible)) {
-  	db_update('system')
-  	  ->fields(array('status' => 0))
-  	  ->condition('name', $incompatible, 'IN')
-  	  ->execute();
+    db_update('system')
+      ->fields(array('status' => 0))
+      ->condition('name', $incompatible, 'IN')
+      ->execute();
   }
 }
 
