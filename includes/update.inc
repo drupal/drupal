@@ -452,12 +452,6 @@ function update_do_one($module, $number, &$context) {
       }
       $ret['results']['query'] = $function($context['sandbox']);
       $ret['results']['success'] = TRUE;
-
-      // @TODO Remove this block after all updates have been converted to
-      // return only strings.
-      if (is_array($ret['results']['query'])) {
-        $ret = $ret['results']['query'];
-      }
     }
     // @TODO We may want to do different error handling for different exception
     // types, but for now we'll just print the message.
@@ -468,13 +462,6 @@ function update_do_one($module, $number, &$context) {
     if ($context['log']) {
       $ret['queries'] = Database::getLog($function);
     }
-  }
-
-  // @TODO Remove this block after all updates have been converted to return
-  // only strings.
-  if (isset($ret['#finished'])) {
-    $context['finished'] = $ret['#finished'];
-    unset($ret['#finished']);
   }
 
   if (isset($context['sandbox']['#finished'])) {

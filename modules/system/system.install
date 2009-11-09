@@ -738,7 +738,7 @@ function system_schema() {
     'primary key' => array('type'),
   );
 
-  // This table's name is plural as some versions of MySQL can't create a 
+  // This table's name is plural as some versions of MySQL can't create a
   // table named 'date_format'.
   $schema['date_formats'] = array(
     'description' => 'Stores configured date formats.',
@@ -1630,37 +1630,29 @@ function system_update_last_removed() {
 * Increase the size of the 'load_functions' and 'to_arg_functions' fields in table 'menu_router'.
 */
 function system_update_6048() {
-  $ret = array();
-  db_change_field($ret, 'menu_router', 'load_functions', 'load_functions', array('type' => 'text', 'not null' => TRUE,));
-  db_change_field($ret, 'menu_router', 'to_arg_functions', 'to_arg_functions', array('type' => 'text', 'not null' => TRUE,));
-
-  return $ret;
+  db_change_field('menu_router', 'load_functions', 'load_functions', array('type' => 'text', 'not null' => TRUE,));
+  db_change_field('menu_router', 'to_arg_functions', 'to_arg_functions', array('type' => 'text', 'not null' => TRUE,));
 }
 
 /**
  * Replace src index on the {url_alias} table with src, language.
  */
 function system_update_6049() {
-  $ret = array();
-  db_drop_index($ret, 'url_alias', 'src');
-  db_add_index($ret, 'url_alias', 'src_language', array('src', 'language'));
-  return $ret;
+  db_drop_index('url_alias', 'src');
+  db_add_index('url_alias', 'src_language', array('src', 'language'));
 }
 
 /**
  * Clear any menu router blobs stored in the cache table.
  */
 function system_update_6050() {
-  $ret = array();
   cache_clear_all('router:', 'cache_menu', TRUE);
-  return $ret;
 }
 
 /**
  * Create a signature_format column.
  */
 function system_update_6051() {
-  $ret = array();
 
   if (!db_column_exists('users', 'signature_format')) {
 
@@ -1680,7 +1672,11 @@ function system_update_6051() {
 
     // Set the format of existing signatures to the current default input format.
     if ($current_default_filter = variable_get('filter_default_format', 0)) {
-      $ret[] = update_sql("UPDATE {users} SET signature_format = ". $current_default_filter);
+      db_update('users')
+        ->fields(array(
+          'signature_format' => $current_default_filter,
+        ))
+        ->execute();
     }
 
     drupal_set_message("User signatures no longer inherit comment input formats. Each user's signature now has its own associated format that can be selected on the user's account page. Existing signatures have been set to your site's default input format.");
