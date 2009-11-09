@@ -17,7 +17,7 @@ function field_default_extract_form_values($obj_type, $object, $field, $instance
   if (isset($form_state['values'][$field_name][$langcode])) {
     $items = $form_state['values'][$field_name][$langcode];
     // Remove the 'value' of the 'add more' button.
-    unset($items[$field_name . '_add_more']);
+    unset($items['add_more']);
   }
 }
 

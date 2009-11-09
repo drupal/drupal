@@ -183,7 +183,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
 
     // Add 'add more' button, if not working with a programmed form.
     if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
-      $form_element[$field_name . '_add_more'] = array(
+      $form_element['add_more'] = array(
         '#type' => 'submit',
         '#name' => $field_name . '_add_more',
         '#value' => t('Add another item'),
@@ -236,7 +236,7 @@ function theme_field_multiple_value_form($variables) {
     // preview or failed validation)
     $items = array();
     foreach (element_children($element) as $key) {
-      if ($key === $element['#field_name'] . '_add_more') {
+      if ($key === 'add_more') {
         $add_more_button = &$element[$key];
       }
       else {
