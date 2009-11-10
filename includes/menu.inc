@@ -1817,13 +1817,13 @@ function menu_local_tasks($level = 0) {
  *   rendering by theme_links(). For example, if $module is 'block' and the
  *   retrieved local task path argument is 'edit', then the resulting CSS class
  *   will be 'block-edit'.
- * @param $path
+ * @param $parent_path
  *   The static menu router path of the object to retrieve local tasks for, for
  *   example 'node' or 'admin/structure/block/manage'.
  * @param $args
- *   A list of of dynamic path arguments to append to $path to form the fully-
- *   qualified menu router path, for example array(123) for a certain node or
- *   array('system', 'navigation') for a certain block.
+ *   A list of dynamic path arguments to append to $parent_path to form the
+ *   fully-qualified menu router path, for example array(123) for a certain
+ *   node or array('system', 'navigation') for a certain block.
  *
  * @return
  *   A list of menu router items that are local tasks for the passed in path.
