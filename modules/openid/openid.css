@@ -1,4 +1,4 @@
-/* $Id: openid.css,v 1.8 2009/08/24 03:11:34 webchick Exp $ */
+/* $Id: openid.css,v 1.9 2009/11/10 17:27:53 webchick Exp $ */
 
 #edit-openid-identifier {
   background-image: url("login-bg.png");
@@ -33,7 +33,7 @@ html.js #user-login li.openid-link {
 #user-login li.user-link {
   display: none;
 }
-#user-login-form li.openid-link a, 
+#user-login-form li.openid-link a,
 #user-login li.openid-link a {
   background: transparent url("login-bg.png") no-repeat 0 2px;
   padding: 0 20px;

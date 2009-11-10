@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.install,v 1.6 2009/10/13 13:54:55 dries Exp $
+// $Id: toolbar.install,v 1.7 2009/11/10 17:27:54 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Implementation of hook_install().
  *
  * @todo
- *   Implement role based shortcut bars. 
+ *   Implement role based shortcut bars.
  */
 function toolbar_install() {
   $t = get_t();

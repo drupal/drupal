@@ -1,5 +1,5 @@
 <?php
-// $Id: options.test,v 1.2 2009/11/02 20:31:49 webchick Exp $
+// $Id: options.test,v 1.3 2009/11/10 17:27:53 webchick Exp $
 
 class OptionsWidgetsTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -72,7 +72,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
 
   /**
    * Return an <option> element by value from rendered HTML, or
-   * '' if it is not found. 
+   * '' if it is not found.
    */
   function getOptionByValue($html, $value) {
     if (preg_match('@(<option[^>]*value="' . $value . '"[^>]*>[^<]*</option>)@i', $html, $m)) {

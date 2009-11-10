@@ -1,5 +1,5 @@
 <?php
-// $Id: default.install,v 1.17 2009/11/06 02:38:08 webchick Exp $
+// $Id: default.install,v 1.18 2009/11/10 17:27:54 webchick Exp $
 
 /**
  * Implement hook_install().
@@ -209,7 +209,7 @@ function default_install() {
     'machine_name' => 'tags',
     'help' => $help,
 
-  );  
+  );
   taxonomy_vocabulary_save($vocabulary);
   $instance = array(
     'field_name' => 'taxonomy_' . $vocabulary->machine_name,

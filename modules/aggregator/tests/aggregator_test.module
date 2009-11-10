@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator_test.module,v 1.4 2009/09/30 18:36:02 dries Exp $
+// $Id: aggregator_test.module,v 1.5 2009/11/10 17:27:53 webchick Exp $
 
 /**
  * Implement hook_menu().
@@ -18,7 +18,7 @@ function aggregator_test_menu() {
 /**
  * Page callback. Generates a test feed and simulates last-modified and etags.
  *
- * @param $use_last_modified 
+ * @param $use_last_modified
  *   Set TRUE to send a last modified header.
  * @param $use_etag
  *   Set TRUE to send an etag.

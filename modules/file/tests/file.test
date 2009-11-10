@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.6 2009/10/15 12:44:36 dries Exp $
+// $Id: file.test,v 1.7 2009/11/10 17:27:53 webchick Exp $
 
 /**
  * @file
@@ -534,7 +534,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
 
   /**
    * A loose assertion to check that a file is uploaded to the right location.
-   *  
+   *
    * @param $expected_path
    *   The location where the file is expected to be uploaded. Duplicate file
    *   names to not need to be taken into account.

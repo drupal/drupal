@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.25 2009/11/06 03:17:59 webchick Exp $
+// $Id: menu.test,v 1.26 2009/11/10 17:27:53 webchick Exp $
 
 /**
  * @file
@@ -181,7 +181,7 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->assertFalse(menu_load($menu_name), 'Custom menu was deleted');
     // Test if all menu links associated to the menu were removed from database.
     $result = db_query("SELECT menu_name FROM {menu_links} WHERE menu_name = :menu_name", array(':menu_name' => $menu_name))->fetchField();
-    $this->assertFalse($result, t('All menu links associated to the custom menu were deleted.'));    
+    $this->assertFalse($result, t('All menu links associated to the custom menu were deleted.'));
   }
 
   /**

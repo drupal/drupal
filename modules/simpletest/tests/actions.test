@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.test,v 1.10 2009/10/18 06:56:24 webchick Exp $
+// $Id: actions.test,v 1.11 2009/11/10 17:27:53 webchick Exp $
 
 class ActionsConfigurationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -118,7 +118,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
     $result = db_query("SELECT * FROM {watchdog} WHERE type = 'actions_loop_test' OR type = 'actions' ORDER BY timestamp");
     $loop_started = FALSE;
     foreach ($result as $row) {
-      
+
       $expected_message = array_shift($expected);
       $this->assertEqual($row->message, $expected_message, t('Expected message %expected, got %message.', array('%expected' => $expected_message, '%message' => $row->message)));
     }

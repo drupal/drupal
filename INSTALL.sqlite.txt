@@ -1,10 +1,10 @@
-// $Id: INSTALL.sqlite.txt,v 1.1 2009/03/13 21:41:15 dries Exp $
+// $Id: INSTALL.sqlite.txt,v 1.2 2009/11/10 17:27:53 webchick Exp $
 
 SQLITE REQUIREMENTS
 -------------------
 
 To use SQLite with your Drupal installation, the following requirements must
-be met: server has PHP 5.2 or later with PDO, and the PDO SQLite driver must 
+be met: server has PHP 5.2 or later with PDO, and the PDO SQLite driver must
 be enabled.
 
 SQLITE DATABASE CREATION

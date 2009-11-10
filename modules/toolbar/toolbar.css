@@ -1,4 +1,4 @@
-/* $Id: toolbar.css,v 1.6 2009/10/18 12:06:06 dries Exp $ */
+/* $Id: toolbar.css,v 1.7 2009/11/10 17:27:54 webchick Exp $ */
 
 body.toolbar {
   padding-top: 30px;
@@ -41,7 +41,7 @@ div#toolbar {
 
 div#toolbar .collapsed {
   display: none;
-}  
+}
 
 div#toolbar div.shadow {
   position: absolute;

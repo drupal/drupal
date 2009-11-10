@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.module,v 1.10 2009/09/21 07:56:08 dries Exp $
+// $Id: database_test.module,v 1.11 2009/11/10 17:27:53 webchick Exp $
 
 /**
  * Implement hook_query_alter().
@@ -149,7 +149,7 @@ function database_test_tablesort() {
   $query = db_select('test_task', 't');
   $query
     ->fields('t', array('tid', 'pid', 'task', 'priority'));
-  
+
   $query = $query->extend('TableSort')->orderByHeader($header);
 
   // We need all the results at once to check the sort.
@@ -178,7 +178,7 @@ function database_test_tablesort_first() {
   $query = db_select('test_task', 't');
   $query
     ->fields('t', array('tid', 'pid', 'task', 'priority'));
-  
+
   $query = $query->extend('TableSort')->orderByHeader($header)->orderBy('priority');
 
   // We need all the results at once to check the sort.

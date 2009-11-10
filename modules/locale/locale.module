@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.267 2009/10/24 05:13:44 webchick Exp $
+// $Id: locale.module,v 1.268 2009/11/10 17:27:53 webchick Exp $
 
 /**
  * @file
@@ -468,7 +468,7 @@ function locale_theme() {
  */
 function locale_field_attach_view_alter(&$output, $context) {
   // In locale_field_fallback_view() we might call field_attach_view(). The
-  // static variable avoids unnecessary recursion. 
+  // static variable avoids unnecessary recursion.
   static $recursion;
 
   // Do not apply fallback rules if disabled or if Locale is not registered as a

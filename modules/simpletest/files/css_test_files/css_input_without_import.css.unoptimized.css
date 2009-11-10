@@ -1,4 +1,4 @@
-/* $Id: css_input_without_import.css.unoptimized.css,v 1.1 2009/10/05 02:48:38 webchick Exp $ */
+/* $Id: css_input_without_import.css.unoptimized.css,v 1.2 2009/11/10 17:27:53 webchick Exp $ */
 
 /**
  * @file Basic css that does not use import
@@ -22,7 +22,7 @@ body {
  * CSS spec says that all whitespace is valid whitespace, so this selector should be just as
  * good as the one above.
  */
- 
+
 .this
 .is
 .a
