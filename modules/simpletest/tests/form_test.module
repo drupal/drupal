@@ -211,7 +211,7 @@ function _form_test_tableselect_js_select_form($form, $form_state, $action) {
  * drupal_form_submit using the values specified in this function.
  *
  * The form's field test_value begins at 'initial_value', and is changed
- * to 'form_submitted' when the form is submitted successfully. On 
+ * to 'form_submitted' when the form is submitted successfully. On
  * completion this function is passed 'done' to complete the process.
  */
 function form_test_drupal_form_submit_batch_api($arg = '') {

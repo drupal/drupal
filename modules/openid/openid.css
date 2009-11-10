@@ -33,7 +33,7 @@ html.js #user-login li.openid-link {
 #user-login li.user-link {
   display: none;
 }
-#user-login-form li.openid-link a, 
+#user-login-form li.openid-link a,
 #user-login li.openid-link a {
   background: transparent url("login-bg.png") no-repeat 0 2px;
   padding: 0 20px;

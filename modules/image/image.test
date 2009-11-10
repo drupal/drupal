@@ -82,7 +82,7 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
    */
   function _testImageStyleUrlAndPath($scheme) {
     // Make the default scheme neither "public" nor "private" to verify the
-    // functions work for other than the default scheme. 
+    // functions work for other than the default scheme.
     variable_set('file_default_scheme', 'temporary');
     file_prepare_directory($d = 'temporary://', FILE_CREATE_DIRECTORY);
 

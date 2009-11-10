@@ -72,7 +72,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
 
   /**
    * Return an <option> element by value from rendered HTML, or
-   * '' if it is not found. 
+   * '' if it is not found.
    */
   function getOptionByValue($html, $value) {
     if (preg_match('@(<option[^>]*value="' . $value . '"[^>]*>[^<]*</option>)@i', $html, $m)) {

@@ -354,7 +354,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
         $indexes = $this->getIndexes($table);
         $this->assertTrue($indexes["{$field_name}_value"] == array(1 => "{$field_name}_value"), t("Index on value created in $table"));
       }
-        
+
       // Add a different index, removing the existing custom one.
       $field = array('field_name' => $field_name, 'indexes' => array('value_format' => array('value', 'format')));
       field_update_field($field);
@@ -363,14 +363,14 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
         $this->assertTrue($indexes["{$field_name}_value_format"] == array(1 => "{$field_name}_value", 2 => "{$field_name}_format"), t("Index on value_format created in $table"));
         $this->assertTrue(empty($indexes["{$field_name}_value"]), t("Index on value removed in $table"));
       }
-        
+
       // Verify that the tables were not dropped.
       $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
       field_attach_load('test_entity', array(0 => $entity));
       $this->assertEqual($entity->{$field_name}[FIELD_LANGUAGE_NONE][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
     }
   }
-  
+
   /**
    * Test the storage details.
    */

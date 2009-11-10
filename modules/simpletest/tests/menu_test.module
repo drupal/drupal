@@ -125,9 +125,9 @@ function menu_test_theme_callback($argument) {
  * Helper function for the testMenuName() test. Used to change the menu_name
  * parameter of a menu.
  *
- * @param $new_name 
+ * @param $new_name
  *   If set, will change the menu_name value.
- * @return 
+ * @return
  *   The menu_name value to use.
  */
 function menu_test_menu_name($new_name = '') {

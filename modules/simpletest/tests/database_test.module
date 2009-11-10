@@ -149,7 +149,7 @@ function database_test_tablesort() {
   $query = db_select('test_task', 't');
   $query
     ->fields('t', array('tid', 'pid', 'task', 'priority'));
-  
+
   $query = $query->extend('TableSort')->orderByHeader($header);
 
   // We need all the results at once to check the sort.
@@ -178,7 +178,7 @@ function database_test_tablesort_first() {
   $query = db_select('test_task', 't');
   $query
     ->fields('t', array('tid', 'pid', 'task', 'priority'));
-  
+
   $query = $query->extend('TableSort')->orderByHeader($header)->orderBy('priority');
 
   // We need all the results at once to check the sort.

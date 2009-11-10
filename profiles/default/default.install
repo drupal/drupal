@@ -209,7 +209,7 @@ function default_install() {
     'machine_name' => 'tags',
     'help' => $help,
 
-  );  
+  );
   taxonomy_vocabulary_save($vocabulary);
   $instance = array(
     'field_name' => 'taxonomy_' . $vocabulary->machine_name,

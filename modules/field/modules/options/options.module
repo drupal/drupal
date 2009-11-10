@@ -151,7 +151,7 @@ function options_buttons_elements_process($element, &$form_state, $form) {
       break;
     }
   }
-  
+
   // If required and there is one option, make it the default.
   if ($required && count($options) == 1) {
     $keys = array_keys($options);

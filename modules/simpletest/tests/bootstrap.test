@@ -180,7 +180,7 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
 
   /**
    * Test page compression.
-   * 
+   *
    * The test should pass even if zlib.output_compression is enabled in php.ini,
    * .htaccess or similar, or if compression is done outside PHP, e.g. by the
    * mod_deflate Apache module.
@@ -356,7 +356,7 @@ class BootstrapTimerTestCase extends DrupalUnitTestCase {
   /**
    * Test timer_read() to ensure it properly accumulates time when the timer
    * started and stopped multiple times.
-   * @return 
+   * @return
    */
   function testTimer() {
     timer_start('test');

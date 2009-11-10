@@ -1892,7 +1892,7 @@ class FileDownloadTest extends FileTestCase {
     $this->assertEqual($GLOBALS['base_url'] . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a URL for a created file.'));
     $this->drupalHead($url);
     $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the created file.'));
-  
+
     // Test generating an URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
     $filepath = 'misc/jquery.js';

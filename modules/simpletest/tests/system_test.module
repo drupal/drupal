@@ -9,7 +9,7 @@ function system_test_menu() {
     'page callback' => 'system_test_batch_theme',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
-  );    
+  );
   $items['system-test/sleep/%'] = array(
     'page callback' => 'system_test_sleep',
     'page arguments' => array(2),

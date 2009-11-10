@@ -467,7 +467,7 @@ class FilterDefaultFormatTestCase extends DrupalWebTestCase {
       'group' => 'Filter',
     );
   }
- 
+
   function testDefaultTextFormats() {
     // Create two text formats, and two users. The first user has access to
     // both formats, but the second user only has access to the second one.
@@ -1024,11 +1024,11 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     $f = _filter_htmlcorrector('test <!--this is a comment-->');
     $this->assertEqual($f, 'test <!--this is a comment-->', t('HTML corrector -- Do not touch HTML comments.'));
 
-    $f = _filter_htmlcorrector('test <!-- comment <p>another 
-    <strong>multiple</strong> line 
+    $f = _filter_htmlcorrector('test <!-- comment <p>another
+    <strong>multiple</strong> line
     comment</p> -->');
-    $this->assertEqual($f, 'test <!-- comment <p>another 
-    <strong>multiple</strong> line 
+    $this->assertEqual($f, 'test <!-- comment <p>another
+    <strong>multiple</strong> line
     comment</p> -->', t('HTML corrector -- Do not touch HTML comments.'));
 
     $f = _filter_htmlcorrector('test <!-- comment <p>another comment</p> -->');

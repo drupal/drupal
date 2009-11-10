@@ -534,7 +534,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
 
   /**
    * A loose assertion to check that a file is uploaded to the right location.
-   *  
+   *
    * @param $expected_path
    *   The location where the file is expected to be uploaded. Duplicate file
    *   names to not need to be taken into account.

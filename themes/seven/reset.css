@@ -1,7 +1,7 @@
 /* $Id$ */
 
 /**
- * Reset CSS styles. 
+ * Reset CSS styles.
  *
  * Based on Eric Meyer's "Reset CSS 1.0" tool from
  * http://meyerweb.com/eric/tools/css/reset
@@ -184,8 +184,8 @@ q:before, q:after {
 }
 
 /* Remember to highlight inserts somehow! */
-ins { 
-  text-decoration: none; 
+ins {
+  text-decoration: none;
 }
 del {
   text-decoration: line-through;
@@ -206,8 +206,8 @@ table {
 input,
 select,
 textarea,
-body { 
-  font: 13px/20px "Helvetica Neue", Helvetica, Arial, sans-serif; 
+body {
+  font: 13px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /**

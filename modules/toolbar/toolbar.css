@@ -41,7 +41,7 @@ div#toolbar {
 
 div#toolbar .collapsed {
   display: none;
-}  
+}
 
 div#toolbar div.shadow {
   position: absolute;

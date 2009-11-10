@@ -1690,7 +1690,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $assert = isset($node->body['it']) && !isset($node->body['en']) && $node->body['it'][0]['value'] == $body_value;
     $this->assertTrue($assert, t('Field language correctly changed.'));
   }
-  
+
   /*
    * Test multilingual field display settings.
    */
@@ -1708,11 +1708,11 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $edit[$body_key] = $body_value;
     $edit['language'] = 'en';
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    
+
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
     $this->assertTrue($node, t('Node found in database.'));
-    
+
     // Check if node body is showed.
     $this->drupalGet("node/$node->nid");
     $body_xpath = '//div[@id="node-' . $node->nid . '"]//div[@property="content:encoded"]/p';

@@ -10,7 +10,7 @@
  * Implementation of hook_install().
  *
  * @todo
- *   Implement role based shortcut bars. 
+ *   Implement role based shortcut bars.
  */
 function toolbar_install() {
   $t = get_t();

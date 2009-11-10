@@ -111,17 +111,17 @@ class BlockTestCase extends DrupalWebTestCase {
    */
   function testBlockVisibility() {
     $block = array();
-    
+
     // Create a random title for the block
     $title = $this->randomName(8);
-    
+
     // Create the custom block
     $custom_block = array();
     $custom_block['info'] = $this->randomName(8);
     $custom_block['title'] = $title;
     $custom_block['body'] = $this->randomName(32);
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
-    
+
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
     $block['module'] = 'block';
     $block['delta'] = $bid;
@@ -253,7 +253,7 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
       'group' => 'Block',
     );
   }
-  
+
   /**
    * Check the enabled Garland blocks are correctly copied over.
    */
@@ -297,7 +297,7 @@ class BlockAdminThemeTestCase extends DrupalWebTestCase {
       'group' => 'Block',
     );
   }
-  
+
   /**
    * Check for the accessibility of the admin theme on the  block admin page.
    */

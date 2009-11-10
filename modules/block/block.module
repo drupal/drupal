@@ -32,7 +32,7 @@ function block_help($path, $arg) {
     case 'admin/structure/block/add':
       return '<p>' . t('Use this page to create a new custom block. New blocks are disabled by default, and must be moved to a region on the <a href="@blocks">blocks administration page</a> to be visible.', array('@blocks' => url('admin/structure/block'))) . '</p>';
   }
-  if ($arg[0] == 'admin' && $arg[1] == 'structure' && $arg['2'] == 'block' && (empty($arg[3]) || $arg[3] == 'list')) {  
+  if ($arg[0] == 'admin' && $arg[1] == 'structure' && $arg['2'] == 'block' && (empty($arg[3]) || $arg[3] == 'list')) {
     $demo_theme = !empty($arg[4]) ? $arg[4] : variable_get('theme_default', 'garland');
     $themes = list_themes();
     $output = '<p>' . t('This page provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page. Click the <em>configure</em> link next to each block to configure its specific title and visibility settings.') . '</p>';
@@ -302,13 +302,13 @@ function _block_get_renderable_array($list = array()) {
  * @param $theme
  *   The theme to rehash blocks for. If not provided, defaults to the currently
  *   used theme.
- * 
+ *
  * @return
  *   Blocks currently exported by modules.
  */
 function _block_rehash($theme = NULL) {
   global $theme_key;
-  
+
   drupal_theme_initialize();
 
   if (!isset($theme)) {
@@ -843,7 +843,7 @@ function _block_render_blocks($region_blocks) {
  */
 function _block_get_cache_id($block) {
   global $user;
-  
+
   // User 1 being out of the regular 'roles define permissions' schema,
   // it brings too many chances of having unwanted output get in the cache
   // and later be served to other users. We therefore exclude user 1 from
@@ -906,7 +906,7 @@ function template_preprocess_block(&$variables) {
 /**
  * Implement hook_user_role_delete().
  *
- * Remove deleted role from blocks that use it. 
+ * Remove deleted role from blocks that use it.
  */
 function block_user_role_delete($role) {
   db_delete('block_role')

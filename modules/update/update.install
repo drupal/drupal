@@ -46,7 +46,7 @@ function update_schema() {
 }
 
 /**
- * Create a queue to store tasks for requests to fetch available update data. 
+ * Create a queue to store tasks for requests to fetch available update data.
  */
 function update_update_7000() {
   module_load_include('inc', 'system', 'system.queue');

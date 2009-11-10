@@ -97,7 +97,7 @@ class TestFileTransfer extends FileTransfer {
   protected $username = NULL;
   protected $password = NULL;
   protected $port = NULL;
-  
+
   /**
    * This is for testing the CopyRecursive logic.
    */
@@ -135,7 +135,7 @@ class TestFileTransfer extends FileTransfer {
       throw new FileTransferException('Unable to remove to file @file.', NULL, array('@file' => $item));
     }
   }
-  
+
   function isDirectory($path) {
     return $this->shouldIsDirectoryReturnTrue;
   }
