@@ -1,5 +1,5 @@
 <?php
-// $Id: default.sites.php,v 1.1 2009/03/30 05:45:48 webchick Exp $
+// $Id: example.sites.php,v 1.1 2009/11/10 19:25:51 webchick Exp $
 
 /**
  * @file
