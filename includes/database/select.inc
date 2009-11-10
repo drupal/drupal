@@ -1065,8 +1065,8 @@ class SelectQuery extends Query implements SelectQueryInterface {
     }
 
     // Modules may alter all queries or only those having a particular tag.
-    drupal_alter('query', $query);
     if (isset($this->alterTags)) {
+      drupal_alter('query', $query);
       foreach ($this->alterTags as $tag => $value) {
         drupal_alter("query_$tag", $query);
       }
