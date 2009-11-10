@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.21 2009/11/09 18:34:26 dries Exp $
+// $Id: update.inc,v 1.22 2009/11/10 22:06:09 dries Exp $
 
 /**
  * @file
@@ -285,6 +285,10 @@ function update_fix_d7_requirements() {
     db_create_table('date_format_type', $schema['date_format_type']);
     db_create_table('date_formats', $schema['date_formats']);
     db_create_table('date_format_locale', $schema['date_format_locale']);
+
+    $schema['cache_bootstrap'] = $schema['cache'];
+    $schema['cache_bootstrap']['description'] = 'Cache table for data required to bootstrap Drupal, may be routed to a shared memory cache.';
+    db_create_table('cache_bootstrap', $schema['cache_bootstrap']);
 
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
