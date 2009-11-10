@@ -701,12 +701,12 @@ function drupal_get_filename($type, $name, $filename = NULL) {
  */
 function variable_initialize($conf = array()) {
   // NOTE: caching the variables improves performance by 20% when serving cached pages.
-  if ($cached = cache_get('variables', 'cache')) {
+  if ($cached = cache_get('variables', 'cache_bootstrap')) {
     $variables = $cached->data;
   }
   else {
     $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
-    cache_set('variables', $variables);
+    cache_set('variables', $variables, 'cache_bootstrap');
   }
 
   foreach ($conf as $name => $value) {
@@ -750,7 +750,7 @@ function variable_set($name, $value) {
 
   db_merge('variable')->key(array('name' => $name))->fields(array('value' => serialize($value)))->execute();
 
-  cache_clear_all('variables', 'cache');
+  cache_clear_all('variables', 'cache_bootstrap');
 
   $conf[$name] = $value;
 }
@@ -769,7 +769,7 @@ function variable_del($name) {
   db_delete('variable')
     ->condition('name', $name)
     ->execute();
-  cache_clear_all('variables', 'cache');
+  cache_clear_all('variables', 'cache_bootstrap');
 
   unset($conf[$name]);
 }
@@ -2005,7 +2005,7 @@ function _registry_check_code($type, $name = NULL) {
 
   if (!isset($lookup_cache)) {
     $lookup_cache = array();
-    if ($cache = cache_get('lookup_cache', 'cache_registry')) {
+    if ($cache = cache_get('lookup_cache', 'cache_bootstrap')) {
       $lookup_cache = $cache->data;
     }
   }
@@ -2022,7 +2022,7 @@ function _registry_check_code($type, $name = NULL) {
   // changes to the lookup cache for this request.
   if ($type == REGISTRY_WRITE_LOOKUP_CACHE) {
     if ($cache_update_needed) {
-      cache_set('lookup_cache', $lookup_cache, 'cache_registry');
+      cache_set('lookup_cache', $lookup_cache, 'cache_bootstrap');
     }
     return;
   }

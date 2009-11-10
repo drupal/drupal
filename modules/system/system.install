@@ -701,6 +701,8 @@ function system_schema() {
     'primary key' => array('cid'),
   );
 
+  $schema['cache_bootstrap'] = $schema['cache'];
+  $schema['cache_bootstrap']['description'] = 'Cache table for data required to bootstrap Drupal, may be routed to a shared memory cache.';
   $schema['cache_form'] = $schema['cache'];
   $schema['cache_form']['description'] = 'Cache table for the form system to store recently built forms and their storage data, to be used in subsequent page requests.';
   $schema['cache_page'] = $schema['cache'];
@@ -709,8 +711,6 @@ function system_schema() {
   $schema['cache_menu']['description'] = 'Cache table for the menu system to store router information as well as generated link trees for various menu/page/user combinations.';
   $schema['cache_path'] = $schema['cache'];
   $schema['cache_path']['description'] = 'Cache table for path alias lookup.';
-  $schema['cache_registry'] = $schema['cache'];
-  $schema['cache_registry']['description'] = 'Cache table for the code registry system to remember what code files need to be loaded on any given page.';
 
   $schema['date_format_type'] = array(
     'description' => 'Stores configured date format types.',
@@ -1962,19 +1962,6 @@ function system_update_7006() {
     ),
     'primary key' => array('filename'),
   );
-  $schema['cache_registry'] = array(
-    'fields' => array(
-      'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
-      'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'headers'    => array('type' => 'text', 'not null' => FALSE),
-      'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
-    ),
-    'indexes' => array('expire' => array('expire')),
-    'primary key' => array('cid'),
-  );
-  db_create_table('cache_registry', $schema['cache_registry']);
   db_create_table('registry', $schema['registry']);
   db_create_table('registry_file', $schema['registry_file']);
   registry_rebuild();

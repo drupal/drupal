@@ -286,6 +286,10 @@ function update_fix_d7_requirements() {
     db_create_table('date_formats', $schema['date_formats']);
     db_create_table('date_format_locale', $schema['date_format_locale']);
 
+    $schema['cache_bootstrap'] = $schema['cache'];
+    $schema['cache_bootstrap']['description'] = 'Cache table for data required to bootstrap Drupal, may be routed to a shared memory cache.';
+    db_create_table('cache_bootstrap', $schema['cache_bootstrap']);
+
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
       db_add_field('locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));

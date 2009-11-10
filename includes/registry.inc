@@ -83,7 +83,7 @@ function _registry_rebuild() {
 
   $unchanged_resources = array();
   $lookup_cache = array();
-  if ($cache = cache_get('lookup_cache', 'cache_registry')) {
+  if ($cache = cache_get('lookup_cache', 'cache_bootstrap')) {
     $lookup_cache = $cache->data;
   }
   foreach ($lookup_cache as $key => $file) {
@@ -96,12 +96,10 @@ function _registry_rebuild() {
   module_implements('', FALSE, TRUE);
   _registry_check_code(REGISTRY_RESET_LOOKUP_CACHE);
 
-  cache_clear_all('*', 'cache_registry', TRUE);
-
   // We have some unchanged resources, warm up the cache - no need to pay
   // for looking them up again.
   if (count($unchanged_resources) > 0) {
-    cache_set('lookup_cache', $unchanged_resources, 'cache_registry');
+    cache_set('lookup_cache', $unchanged_resources, 'cache_bootstrap');
   }
 }
 

@@ -36,9 +36,10 @@ function _cache_get_object($bin) {
  *   The cache ID of the data to retrieve.
  * @param $bin
  *   The cache bin to store the data in. Valid core values are 'cache_block',
- *   'cache_field', 'cache_filter', 'cache_form', 'cache_menu', 'cache_page',
- *   'cache_path', 'cache_registry', 'cache_update' or 'cache' for the default
- *   cache.
+ *   'cache_bootstrap', 'cache_field', 'cache_filter', 'cache_form',
+ *   'cache_menu', 'cache_page', 'cache_path', 'cache_update' or 'cache' for
+ *   the default cache.
+ *
  * @return The cache or FALSE on failure.
  */
 function cache_get($cid, $bin = 'cache') {
@@ -117,8 +118,8 @@ function cache_get_multiple(array &$cids, $bin = 'cache') {
  *   Strings will be stored as plain text and not serialized.
  * @param $bin
  *   The cache bin to store the data in. Valid core values are 'cache_block',
- *   'cache_field', 'cache_filter', 'cache_form', 'cache_menu', 'cache_page',
- *   'cache_path', 'cache_registry', 'cache_update' or 'cache' for the default
+ *   'cache_bootstrap', 'cache_field', 'cache_filter', 'cache_form',
+ *   'cache_menu', 'cache_page', 'cache_update' or 'cache' for the default
  *   cache.
  * @param $expire
  *   One of the following values:

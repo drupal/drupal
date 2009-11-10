@@ -438,16 +438,16 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   // per request.
   if ($reset) {
     $implementations = array();
-    cache_set('module_implements', array());
+    cache_set('module_implements', array(), 'cache_bootstrap');
     drupal_static_reset('module_hook_info');
     drupal_static_reset('drupal_alter');
-    cache_clear_all('hook_info', 'cache');
+    cache_clear_all('hook_info', 'cache_bootstrap');
     return;
   }
 
   // Fetch implementations from cache.
   if (empty($implementations)) {
-    $implementations = cache_get('module_implements');
+    $implementations = cache_get('module_implements', 'cache_bootstrap');
     if ($implementations === FALSE) {
       $implementations = array();
     }
@@ -498,7 +498,7 @@ function module_hook_info() {
   $hook_info = &drupal_static(__FUNCTION__, array());
 
   if (empty($hook_info)) {
-    $cache = cache_get('hook_info');
+    $cache = cache_get('hook_info', 'cache_bootstrap');
     if ($cache === FALSE) {
       // Rebuild the cache and save it.
       // We can't use module_invoke_all() here or it would cause an infinite
@@ -519,7 +519,7 @@ function module_hook_info() {
           $function($hook_info);
         }
       }
-      cache_set('hook_info', $hook_info);
+      cache_set('hook_info', $hook_info, 'cache_bootstrap');
     }
     else {
       $hook_info = $cache->data;
