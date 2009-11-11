@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.220 2009/11/08 13:23:41 webchick Exp $
+// $Id: system.admin.inc,v 1.221 2009/11/11 17:14:59 dries Exp $
 
 /**
  * @file
@@ -436,7 +436,6 @@ function system_theme_settings($form, &$form_state, $key = '') {
     'node_user_picture'         => t('User pictures in posts'),
     'comment_user_picture'      => t('User pictures in comments'),
     'comment_user_verification' => t('User verification status in comments'),
-    'search'                    => t('Search box'),
     'favicon'                   => t('Shortcut icon'),
     'main_menu'                 => t('Main menu'),
     'secondary_menu'            => t('Secondary menu'),
