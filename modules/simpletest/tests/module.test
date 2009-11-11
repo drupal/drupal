@@ -77,7 +77,7 @@ class ModuleUnitTest extends DrupalWebTestCase {
    */
   protected function assertModuleList(Array $expected_values, $condition) {
     $expected_values = array_combine($expected_values, $expected_values);
-    $this->assertIdentical($expected_values, module_list(), t('@condition: module_list() returns correct results', array('@condition' => $condition)));
+    $this->assertEqual($expected_values, module_list(), t('@condition: module_list() returns correct results', array('@condition' => $condition)));
     ksort($expected_values);
     $this->assertIdentical($expected_values, module_list(FALSE, FALSE, TRUE), t('@condition: module_list() returns correctly sorted results', array('@condition' => $condition)));
   }

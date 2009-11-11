@@ -1978,7 +1978,7 @@ function system_get_files_database(&$files, $type) {
     if (isset($files[$file->name]) && is_object($files[$file->name])) {
       $file->uri = $file->filename;
       foreach ($file as $key => $value) {
-        if (!isset($files[$file->name]->key)) {
+        if (!isset($files[$file->name]->$key)) {
           $files[$file->name]->$key = $value;
         }
       }
@@ -2122,6 +2122,10 @@ function _system_rebuild_module_data() {
 
   // Read info files for each module.
   foreach ($modules as $key => $module) {
+    // The module system uses the key 'filename' instead of 'uri' so copy the
+    // value so it will be used by the modules system.
+    $modules[$key]->filename = $module->uri;
+
     // Look for the info file.
     $module->info = drupal_parse_info_file(dirname($module->uri) . '/' . $module->name . '.info');
 
