@@ -378,14 +378,18 @@ function shortcut_current_displayed_set($account = NULL) {
   // If none was found, try to find a shortcut set that is explicitly assigned
   // to this user.
   $query = db_select('shortcut_set', 's');
-  $query->fields('s');
+  $query->addField('s', 'set_name');
   $query->join('shortcut_set_users', 'u', 's.set_name = u.set_name');
   $query->condition('u.uid', $account->uid);
-  $shortcut_set = $query->execute()->fetchObject();
+  $shortcut_set_name = $query->execute()->fetchField();
+  if ($shortcut_set_name) {
+    $shortcut_set = shortcut_set_load($shortcut_set_name);
+  }
   // Otherwise, use the default set.
-  if (!$shortcut_set) {
+  else { 
     $shortcut_set = shortcut_default_set($account);
   }
+
   $shortcut_sets[$account->uid] = $shortcut_set;
   return $shortcut_set;
 }
@@ -516,17 +520,36 @@ function shortcut_page_build(&$page) {
     $query = array(
      'link' => $link,
      'name' => drupal_get_title(),
-     'token' => drupal_get_token('shortcut-add-link'),
     );
     $query += drupal_get_destination();
 
     $shortcut_set = shortcut_current_displayed_set();
-    $link_text = shortcut_set_switch_access() ? t('Add to %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->title)) : t('Add to shortcuts');
-    $page['add_to_shortcuts'] = array(
-     '#prefix' => '<div class="add-to-shortcuts">',
+
+    // Check if $link is already a shortcut and set $link_mode accordingly.
+    foreach ($shortcut_set->links as $shortcut) {
+      if ($link == $shortcut['link_path']) {
+        $mlid = $shortcut['mlid'];
+        break;
+      }
+    }
+    $link_mode = isset($mlid) ? "remove" : "add";
+
+    if ($link_mode == "add") {
+      $query['token'] = drupal_get_token('shortcut-add-link');
+      $link_text = shortcut_set_switch_access() ? t('Add to %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->title)) : t('Add to shortcuts');
+      $link_path = 'admin/config/system/shortcut/' . $shortcut_set->set_name . '/add-link-inline';
+    }
+    else {
+      $query['mlid'] = $mlid;
+      $link_text = shortcut_set_switch_access() ? t('Remove from %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->title)) : t('Remove from shortcuts');
+      $link_path = 'admin/config/system/shortcut/link/' . $mlid . '/delete';
+    }
+
+    $page['add_or_remove_shortcut'] = array(
+     '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
      '#type' => 'link',
      '#title' => '<span class="icon"></span><span class="text">' . $link_text . '</span>',
-     '#href' => 'admin/config/system/shortcut/' . $shortcut_set->set_name . '/add-link-inline',
+     '#href' => $link_path,
      '#options' => array('query' => $query, 'html' => TRUE),
      '#suffix' => '</div>',
     );
@@ -559,7 +582,7 @@ function shortcut_page_build(&$page) {
  * Implement hook_preprocess_page().
  */
 function shortcut_preprocess_page(&$variables) {
-  if (isset($variables['page']['add_to_shortcuts'])) {
-    $variables['add_to_shortcuts'] = drupal_render($variables['page']['add_to_shortcuts']);
+  if (isset($variables['page']['add_or_remove_shortcut'])) {
+    $variables['add_or_remove_shortcut'] = drupal_render($variables['page']['add_or_remove_shortcut']);
   }
 }

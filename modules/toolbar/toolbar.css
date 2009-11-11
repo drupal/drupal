@@ -49,7 +49,7 @@ div#toolbar div.shadow {
   right: 0;
   bottom: -15px;
   height: 15px;
-  background: url(toolbar.png) 0 -85px repeat-x;
+  background: url(toolbar.png) 0 -45px repeat-x;
 }
 
 div#toolbar a {
@@ -66,7 +66,7 @@ div#toolbar ul li a {
  * Administration menu.
  */
 div#toolbar div.toolbar-menu {
-  background: url(toolbar.png) 0 -20px repeat-x;
+  background: #000;
   height: 25px;
   line-height: 20px;
   padding: 5px 10px 0;
@@ -88,7 +88,7 @@ div#toolbar div.toolbar-menu span.toggle {
   position: absolute;
   right: 10px;
   cursor: pointer;
-  background: url(toolbar.png) 0 -60px no-repeat;
+  background: url(toolbar.png) 0 -20px no-repeat;
   text-indent: -9999px;
   overflow: hidden;
   width: 25px;
@@ -96,7 +96,7 @@ div#toolbar div.toolbar-menu span.toggle {
 }
 
 div#toolbar div.toolbar-menu span.toggle-active {
-  background-position:  -25px -60px;
+  background-position:  -25px -20px;
 }
 
 div#toolbar div.toolbar-menu ul li a {

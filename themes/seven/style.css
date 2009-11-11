@@ -737,8 +737,8 @@ body.overlay #block-system-main {
 }
 
 /* Shortcut theming */
-div.add-to-shortcuts {
+div.add-or-remove-shortcuts {
   float: left;
-  margin-left: 6px;
-  margin-top: 6px;
+  padding-top: 6px;
+  padding-left: 6px;
 }

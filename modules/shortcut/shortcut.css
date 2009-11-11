@@ -27,7 +27,7 @@ div#toolbar div.toolbar-shortcuts ul li a.active:focus {
 
 div#toolbar div.toolbar-shortcuts ul li a.active:hover,
 div#toolbar div.toolbar-shortcuts ul li a.active {
-  background: url(../toolbar/toolbar.png) 0 -20px repeat-x;
+  background: #000;
 }
 
 div#toolbar div.toolbar-shortcuts span.icon {
@@ -40,26 +40,36 @@ div#toolbar div.toolbar-shortcuts span.icon {
   -webkit-border-radius: 5px;
 }
 
-div.add-to-shortcuts a span.icon {
+div.add-or-remove-shortcuts {
+  padding-top: 5px;
+}
+
+div.add-or-remove-shortcuts a span.icon {
   display: block;
   width: 12px;
-  background: url(../toolbar/toolbar.png) no-repeat -50px -60px;
+  background: transparent url(shortcut.png) no-repeat scroll 0 0;
   height: 12px;
   float: left;
   margin-left:8px;
 }
 
-div.add-to-shortcuts a:hover span.icon {
-  background-position: -50px -72px;
+div.add-shortcut a:hover span.icon {
+  background-position: 0 -12px;
+}
+div.remove-shortcut a span.icon {
+  background-position: -12px 0;
+}
+div.remove-shortcut a:hover span.icon {
+  background-position: -12px -12px;
 }
 
-div.add-to-shortcuts a span.text {
+div.add-or-remove-shortcuts a span.text {
   float: left;
   padding-left:10px;
   display: none;
 }
 
-div.add-to-shortcuts a:hover span.text {
+div.add-or-remove-shortcuts a:hover span.text {
   font-size: 10px;
   line-height: 12px;
   color: #fff;
