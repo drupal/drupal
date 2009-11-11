@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.20 2009/10/18 04:35:30 webchick Exp $ */
+/* $Id: style.css,v 1.21 2009/11/11 06:56:52 webchick Exp $ */
 
 /**
  * Generic elements
@@ -737,8 +737,8 @@ body.overlay #block-system-main {
 }
 
 /* Shortcut theming */
-div.add-to-shortcuts {
+div.add-or-remove-shortcuts {
   float: left;
-  margin-left: 6px;
-  margin-top: 6px;
+  padding-top: 6px;
+  padding-left: 6px;
 }
