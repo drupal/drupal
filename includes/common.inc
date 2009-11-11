@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1044 2009/11/10 22:06:09 dries Exp $
+// $Id: common.inc,v 1.1045 2009/11/11 00:48:56 webchick Exp $
 
 /**
  * @file
@@ -5944,6 +5944,7 @@ function drupal_parse_info_file($filename) {
  */
 function drupal_parse_info_format($data) {
   $info = array();
+  $constants = get_defined_constants();
 
   if (preg_match_all('
     @^\s*                           # Start at the beginning of a line, ignoring leading whitespace
@@ -5982,8 +5983,8 @@ function drupal_parse_info_format($data) {
         $parent = &$parent[$key];
       }
 
-      // Handle PHP constants
-      if (defined($value)) {
+      // Handle PHP constants.
+      if (isset($constants[$value])) {
         $value = constant($value);
       }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.89 2009/11/08 13:58:03 webchick Exp $
+// $Id: common.test,v 1.90 2009/11/11 00:48:56 webchick Exp $
 
 /**
  * @file
@@ -1572,6 +1572,29 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
     if (isset($message)) {
       $this->assertEqual($error['message'], $message, t("Message was %message", array('%message' => $message)));
     }
+  }
+}
+
+/**
+ * Test the drupal_parse_info_file() API function.
+ */
+class ParseInfoFilesTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Parsing .info files',
+      'description' => 'Tests parsing .info files.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Parse an example .info file an verify the results.
+   */
+  function testParseInfoFile() {
+    $info_values = drupal_parse_info_file(drupal_get_path('module', 'simpletest') . '/tests/common_test_info.txt');
+    $this->assertEqual($info_values['simple_string'], 'A simple string', t('Simple string value was parsed correctly.'), t('System'));
+    $this->assertEqual($info_values['simple_constant'], WATCHDOG_INFO, t('Constant value was parsed correctly.'), t('System'));
+    $this->assertEqual($info_values['double_colon'], 'dummyClassName::', t('Value containing double-colon was parsed correctly.'), t('System'));
   }
 }
 
