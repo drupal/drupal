@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.57 2009/11/08 11:19:02 webchick Exp $
+// $Id: taxonomy.test,v 1.58 2009/11/11 17:10:49 dries Exp $
 
 /**
  * @file
@@ -418,7 +418,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $edit["body[$langcode][0][value]"] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
-    $edit[$instance['field_name'] . "[$langcode][value]"] = implode(', ', $terms);
+    $edit[$instance['field_name'] . "[$langcode]"] = implode(', ', $terms);
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('@type %title has been created.', array('@type' => t('Page'), '%title' => $edit["title[$langcode][0][value]"])), t('The node was created successfully'));
     foreach ($terms as $term) {
