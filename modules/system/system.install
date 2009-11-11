@@ -1567,6 +1567,7 @@ function system_schema() {
     ),
     'primary key' => array('filename'),
     'indexes' => array(
+      'bootstrap' => array('status', 'bootstrap', 'type', 'weight', 'name'),
       'system_list' => array('weight', 'name'),
       'type_name' => array('type', 'name'),
     ),
@@ -2183,7 +2184,6 @@ function system_update_7017() {
 function system_update_7018() {
   db_drop_index('system', 'modules');
   db_drop_index('system', 'type_name');
-  db_drop_index('system', 'bootstrap');
   db_change_field('system', 'type', 'type', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
   db_add_index('system', 'type_name', array('type', 'name'));
   db_add_index('system', 'system_list', array('weight', 'name'));

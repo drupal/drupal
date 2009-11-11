@@ -89,11 +89,9 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
  *
  * @param $type
  *   The type of list to return:
- *   - module: All modules.
  *   - module_enabled: All enabled modules.
  *   - bootstrap: All enabled modules required for bootstrap.
  *   - theme: All themes.
- *   - theme_enabled: All enabled themes.
  *
  * @return
  *   An associative array of modules or themes, keyed by name, and having the
@@ -106,13 +104,31 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
 function system_list($type) {
   $lists = &drupal_static(__FUNCTION__);
 
-  if (!isset($lists)) {
+  // For bootstrap modules, attempt to fetch the list from cache if possible.
+  // if not fetch only the required information to fire bootstrap hooks
+  // in case we are going to serve the page from cache.
+  if ($type == 'bootstrap') {
+    if ($cached = cache_get('bootstrap_modules', 'cache_bootstrap')) {
+      $bootstrap_list = $cached->data;
+    }
+    else {
+      $bootstrap_list = db_query("SELECT name, filename FROM {system} WHERE status = 1 AND bootstrap = 1 AND type = 'module' ORDER BY weight ASC, name ASC")->fetchAllAssoc('name');
+      cache_set('bootstrap_modules', $bootstrap_list, 'cache');
+    }
+    foreach ($bootstrap_list as $module) {
+      // Prime the drupal_get_filename() static cache to avoid subsequent
+      // queries to retrieve module filename.
+      drupal_get_filename('module', $module->name, $module->filename);
+    }
+    // We only return the module names here since module_list() doesn't need
+    // the filename itself.
+    $lists['bootstrap'] = array_keys($bootstrap_list);
+  }
+  // Otherwise build the list for enabled modules and themes.
+  elseif (!isset($lists)) {
     $lists = array(
-      'bootstrap' => array(),
-      'module' => array(),
       'module_enabled' => array(),
       'theme' => array(),
-      'theme_enabled' => array(),
     );
     // The module name (rather than the filename) is used as the fallback
     // weighting in order to guarantee consistent behavior across different
@@ -121,25 +137,13 @@ function system_list($type) {
     // consistent with the one used in module_implements().
     $result = db_query("SELECT * FROM {system} ORDER BY weight ASC, name ASC");
     foreach ($result as $record) {
-      // Build a list of all modules.
-      if ($record->type == 'module') {
-        $lists['module'][$record->name] = $record;
+      if ($record->type == 'module' && $record->status) {
         // Build a list of all enabled modules.
-        if ($record->status) {
-          $lists['module_enabled'][$record->name] = $record->name;
-          // Build a separate array of modules required for bootstrap.
-          if ($record->bootstrap) {
-            $lists['bootstrap'][$record->name] = $record->name;
-          }
-        }
+        $lists['module_enabled'][$record->name] = $record->name;
       }
       // Build a list of themes.
       if ($record->type == 'theme') {
         $lists['theme'][$record->name] = $record;
-        // Build a list of enabled themes.
-        if ($record->status) {
-          $lists['theme_enabled'][$record->name] = $record;
-        }
       }
 
       // Additionally prime drupal_get_filename() with the filename and type
@@ -152,6 +156,14 @@ function system_list($type) {
   }
 
   return $lists[$type];
+}
+
+/**
+ * Reset all system_list() caches.
+ */
+function system_list_reset() {
+  drupal_static_reset('system_list');
+  cache_clear_all('bootstrap_modules', 'cache_bootstrap');
 }
 
 /**
@@ -293,6 +305,7 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
 
   if (!empty($invoke_modules)) {
     // Refresh the module list to exclude the disabled modules.
+    system_list_reset();
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
     // Force to regenerate the stored list of hook implementations.
@@ -353,6 +366,7 @@ function module_disable($module_list) {
 
   if (!empty($invoke_modules)) {
     // Refresh the module list to exclude the disabled modules.
+    system_list_reset();
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
     // Invoke hook_modules_disabled before disabling modules,
