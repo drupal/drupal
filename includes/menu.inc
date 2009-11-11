@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.361 2009/11/10 22:08:43 dries Exp $
+// $Id: menu.inc,v 1.362 2009/11/11 08:28:50 dries Exp $
 
 /**
  * @file
@@ -189,6 +189,14 @@ define('MENU_LOCAL_ACTION', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION);
  * @{
  * Flags for use in the "context" attribute of menu router items.
  */
+
+/**
+ * Internal menu flag: Invisible local task.
+ *
+ * This flag may be used for local tasks like "Delete", so custom modules and
+ * themes can alter the default context and expose the task by altering menu.
+ */
+define('MENU_CONTEXT_NONE', 0x0000);
 
 /**
  * Internal menu flag: Local task should be displayed in page context.
@@ -1859,6 +1867,7 @@ function menu_contextual_links($module, $parent_path, $args) {
     $data[$root_path] = db_select('menu_router', 'm')
       ->fields('m')
       ->condition('tab_parent', $router_item['tab_root'])
+      ->condition('context', MENU_CONTEXT_NONE, '<>')
       ->condition('context', MENU_CONTEXT_PAGE, '<>')
       ->orderBy('weight')
       ->orderBy('title')
