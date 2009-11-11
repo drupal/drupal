@@ -157,9 +157,6 @@ function taxonomy_theme() {
     'taxonomy_overview_terms' => array(
       'render element' => 'form',
     ),
-    'taxonomy_autocomplete' => array(
-      'render element' => 'element',
-    ),
   );
 }
 
@@ -1028,7 +1025,7 @@ function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcod
   // behavior for multiple values (taxonomy_autocomplete widget).
   if ($widget['behaviors']['multiple values'] == FIELD_BEHAVIOR_CUSTOM && $field['cardinality'] >= 2) {
     if (count($items) > $field['cardinality']) {
-      $errors[$field['field_name']][0][] = array(
+      $errors[$field['field_name']][$langcode][0][] = array(
         'error' => 'taxonomy_term_illegal_value',
         'message' => t('%name: this field cannot hold more that @count values.', array('%name' => t($instance['label']), '@count' => $field['cardinality'])),
       );
@@ -1038,7 +1035,7 @@ function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcod
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!isset($allowed_values[$item['value']])) {
-        $errors[$field['field_name']][$delta][] = array(
+        $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'taxonomy_term_illegal_value',
           'message' => t('%name: illegal value.', array('%name' => t($instance['label']))),
         );
@@ -1211,148 +1208,76 @@ function taxonomy_term_title($term) {
  * Implement hook_field_widget().
  */
 function taxonomy_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $tags = array();
+  foreach ($items as $item) {
+    $tags[$item['value']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['value']);
+  }
+
   $element += array(
-    '#type' => $instance['widget']['type'],
-    '#default_value' => !empty($items) ? $items : array(),
+    '#type' => 'textfield',
+    '#default_value' => taxonomy_implode_tags($tags),
+    // @todo Path should include the object type as well.
+    '#autocomplete_path' => 'taxonomy/autocomplete/'. $field['field_name'] .'/'. $instance['bundle'],
+    '#size' => $instance['widget']['settings']['size'],
+    '#element_validate' => array('taxonomy_autocomplete_validate'),
   );
+
   return $element;
+}
+
+/**
+ * Form element validate handler for taxonomy term autocomplete element.
+ */
+function taxonomy_autocomplete_validate($element, &$form_state) {
+  // Autocomplete widgets do not send their tids in the form, so we must detect
+  // them here and process them independently.
+  if ($tags = $element['#value']) {
+    // Collect candidate vocabularies.
+    $field = $form_state['complete form']['#fields'][$element['#field_name']]['field'];
+    $vids = array();
+    foreach ($field['settings']['allowed_values'] as $tree) {
+      $vids[] = $tree['vid'];
+    }
+
+    // Translate term names into actual terms.
+    $typed_terms = drupal_explode_tags($tags);
+    $values = array();
+    foreach ($typed_terms as $typed_term) {
+      // See if the term exists in the chosen vocabulary and return the tid;
+      // otherwise, create a new term.
+      if ($possibilities = taxonomy_term_load_multiple(array(), array('name' => trim($typed_term), 'vid' => $vids))) {
+        $term = array_pop($possibilities);
+      }
+      else {
+        $vocabulary = taxonomy_vocabulary_load($vids[0]);
+        $term = (object) array(
+          'vid' => $vids[0],
+          'name' => $typed_term,
+          'vocabulary_machine_name' => $vocabulary->machine_name,
+        );
+        taxonomy_term_save($term);
+      }
+      $values[] = $term->tid;
+    }
+    $value = options_transpose_array_rows_cols(array('value' => $values));
+  }
+  else {
+    $value = array();
+  }
+
+  form_set_value($element, $value, $form_state);
 }
 
 /**
  * Implement hook_field_widget_error().
  */
 function taxonomy_field_widget_error($element, $error) {
-  $field_key = $element['#columns'][0];
-  form_error($element[$field_key], $error['message']);
-}
-
-/**
- * Process an individual autocomplete widget element.
- *
- * Build the form element. When creating a form using FAPI #process, note that
- * $element['#value'] is already set.
- *
- * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
- *
- * @todo For widgets to be actual FAPI 'elements', reusable outside of a 'field'
- * context, they shoudn't rely on $field and $instance. The bits of information
- * needed to adjust the behavior of the 'element' should be extracted in
- * hook_field_widget() above.
- */
-function taxonomy_autocomplete_elements_process($element, &$form_state, $form) {
-  $field = $form['#fields'][$element['#field_name']]['field'];
-  $instance = $form['#fields'][$element['#field_name']]['instance'];
-  $field_key = $element['#columns'][0];
-
-  // See if this element is in the database format or the transformed format,
-  // and transform it if necessary.
-  if (is_array($element['#value'])) {
-    if (!array_key_exists($field_key, $element['#value'])) {
-      $tags = array();
-      foreach ($element['#default_value'] as $item) {
-        $tags[$item['value']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['value']);
-      }
-      $typed_string = taxonomy_implode_tags($tags);
-    }
-    else {
-      $typed_string = $element['#value'][$field_key];
-    }
+  if ($element['#type'] == 'textfield') {
+    form_error($element, $error['message']);
   }
   else {
-    $typed_string = $element['#value'];
+    form_error($element['value'], $error['message']);
   }
-
-  $value = array();
-  $element[$field_key] = array(
-    '#type' => 'textfield',
-    '#default_value' => $typed_string,
-    '#autocomplete_path' => 'taxonomy/autocomplete/'. $element['#field_name'] .'/'. $element['#bundle'],
-    '#size' => $instance['widget']['settings']['size'],
-    '#attributes' => array('class' => array('text')),
-    '#title' => $element['#title'],
-    '#description' => $element['#description'],
-    '#required' => $element['#required'],
-  );
-  $element[$field_key]['#maxlength'] = !empty($field['settings']['max_length']) ? $field['settings']['max_length'] : NULL;
-
-  // Set #element_validate in a way that it will not wipe out other validation
-  // functions already set by other modules.
-  if (empty($element['#element_validate'])) {
-    $element['#element_validate'] = array();
-  }
-  array_unshift($element['#element_validate'], 'taxonomy_autocomplete_validate');
-
-  // Make sure field info will be available to the validator which does not get
-  // the values in $form.
-  $form_state['#fields'][$element['#field_name']] = $form['#fields'][$element['#field_name']];
-  return $element;
-}
-
-/**
- * FAPI function to validate taxonomy term autocomplete element.
- */
-function taxonomy_autocomplete_validate($element, &$form_state) {
-  $field_name = $element['#field_name'];
-  if (!isset($form_state['values'][$field_name])) {
-    return;
-  }
-
-  // Autocomplete widgets do not send their tids in the form, so we must detect
-  // them here and process them independently.
-  $langcode = $form_state['complete form'][$field_name]['#language'];
-  if ($tags = $form_state['values'][$field_name][$langcode]['value']) {
-    // @see taxonomy_node_save
-    $field = $form_state['#fields'][$element['#field_name']]['field'];
-    $field_key = $element['#columns'][0];
-    $vids = array();
-    foreach ($field['settings']['allowed_values'] as $tree) {
-      $vids[] = $tree['vid'];
-    }
-    $typed_terms = drupal_explode_tags($tags);
-    $values = array();
-
-    foreach ($typed_terms as $typed_term) {
-
-      // See if the term exists in the chosen vocabulary and return the tid;
-      // otherwise, add a new record.
-      $possibilities = taxonomy_term_load_multiple(array(), array('name' => trim($typed_term), 'vid' => $vids));
-      $typed_term_tid = NULL;
-
-      // tid match, if any.
-      foreach ($possibilities as $possibility) {
-        $typed_term_tid = $possibility->tid;
-        break;
-      }
-      if (!$typed_term_tid) {
-        $vocabulary = taxonomy_vocabulary_load($vids[0]);
-        $edit = array(
-          'vid' => $vids[0],
-          'name' => $typed_term,
-          'vocabulary_machine_name' => $vocabulary->machine_name,
-        );
-        $term = (object) $edit;
-        if ($status = taxonomy_term_save($term)) {
-          $typed_term_tid = $term->tid;
-        }
-      }
-      $values[$typed_term_tid] = $typed_term_tid;
-    }
-    $results = options_transpose_array_rows_cols(array($field_key => $values));
-    form_set_value($element, $results, $form_state);
-  }
-}
-
-/**
- * Implement hook_element_info().
- */
-function taxonomy_element_info() {
-  $types['taxonomy_autocomplete'] = array(
-    '#input' => TRUE,
-    '#columns' => array('value'),
-    '#delta' => 0,
-    '#process' => array('taxonomy_autocomplete_elements_process'),
-  );
-  return $types;
 }
 
 /**
