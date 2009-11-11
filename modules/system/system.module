@@ -2217,7 +2217,6 @@ function _system_rebuild_theme_data() {
         'logo',
         'name',
         'node_user_picture',
-        'search',
         'slogan',
         'main_menu',
         'secondary_menu',
