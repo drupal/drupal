@@ -2200,7 +2200,7 @@ function form_process_container($element, &$form_state) {
  * @param $element
  *   An associative array containing the properties and children of the
  *   group.
- *   Properties used: #children.
+ *   Properties used: #id, #attributes, #children.
  * @return
  *   A themed HTML string representing the form element.
  *
@@ -2208,7 +2208,12 @@ function form_process_container($element, &$form_state) {
  */
 function theme_container($variables) {
   $element = $variables['element'];
-  return '<div class="form-wrapper" id="' . $element['#id'] . '">' . $element['#children'] . '</div>';
+  if (!isset($element['#attributes']['id'])) {
+    $element['#attributes']['id'] = drupal_html_id($element['#id']);
+  }
+  // Force the 'form-wrapper' class.
+  $element['#attributes']['class'][] = 'form-wrapper';
+  return '<div' . drupal_attributes($element['#attributes']) . '>' . $element['#children'] . '</div>';
 }
 
 /**

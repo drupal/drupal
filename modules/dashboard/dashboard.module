@@ -208,8 +208,12 @@ function dashboard_admin($launch_customize = FALSE) {
  * Returns TRUE if the user is currently viewing the dashboard.
  */
 function dashboard_is_visible() {
-  $menu_item = menu_get_item();
-  return isset($menu_item['page_callback']) && $menu_item['page_callback'] == 'dashboard_admin';
+  static $is_visible;
+  if (!isset($is_visible)) {
+    $menu_item = menu_get_item();
+    $is_visible = isset($menu_item['page_callback']) && $menu_item['page_callback'] == 'dashboard_admin';
+  }
+  return $is_visible;
 }
 
 /**
@@ -225,7 +229,11 @@ function dashboard_region_descriptions() {
  * Return an array of dashboard region names.
  */
 function dashboard_regions() {
-  return array_keys(dashboard_region_descriptions());
+  static $regions;
+  if (!isset($regions)) {
+    $regions = array_keys(dashboard_region_descriptions());
+  }
+  return $regions;
 }
 
 /**
@@ -233,7 +241,7 @@ function dashboard_regions() {
  */
 function dashboard_dashboard_regions() {
   return array(
-    'dashboard_main' =>  'Dashboard main',
+    'dashboard_main' => 'Dashboard main',
     'dashboard_sidebar' => 'Dashboard sidebar',
   );
 }

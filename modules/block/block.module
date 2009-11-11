@@ -574,18 +574,19 @@ function block_theme_initialize($theme) {
  *   array key instead of <i>module</i>_<i>delta</i>.
  */
 function block_list($region) {
-  $blocks = &drupal_static(__FUNCTION__, array());
+  $blocks = &drupal_static(__FUNCTION__);
 
-  if (empty($blocks)) {
+  if (!isset($blocks)) {
     $blocks = _block_load_blocks();
   }
 
-  // Create an empty array if there were no entries.
+  // Create an empty array if there are no entries.
   if (!isset($blocks[$region])) {
     $blocks[$region] = array();
   }
-
-  $blocks[$region] = _block_render_blocks($blocks[$region]);
+  else {
+    $blocks[$region] = _block_render_blocks($blocks[$region]);
+  }
 
   return $blocks[$region];
 }
