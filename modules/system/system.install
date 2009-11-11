@@ -1733,10 +1733,10 @@ function system_update_7000() {
     $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ forum\ topics(?=,|$)/', 'edit own forum content', $role->perm);
 
     if ($renamed_permission != $role->perm) {
-    	db_update('permission')
-    	  ->fields(array('perm' => $renamed_permission))
-    	  ->condition('rid', $role->rid)
-    	  ->execute();
+      db_update('permission')
+        ->fields(array('perm' => $renamed_permission))
+        ->condition('rid', $role->rid)
+        ->execute();
     }
   }
 }
@@ -1782,7 +1782,7 @@ function system_update_7002() {
  * Update {blocked_ips} with valid IP addresses from {access}.
  */
 function system_update_7003() {
-	$messages = array();
+  $messages = array();
   $type = 'host';
   $result = db_query("SELECT mask FROM {access} WHERE status = :status AND type = :type", array(
     ':status' => 0,
@@ -1790,9 +1790,9 @@ function system_update_7003() {
   ));
   foreach ($result as $blocked) {
     if (filter_var($blocked->mask, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) !== FALSE) {
-    	db_insert('blocked_ips')
-    	  ->fields(array('ip' => $blocked->mask))
-    	  ->execute();
+      db_insert('blocked_ips')
+        ->fields(array('ip' => $blocked->mask))
+        ->execute();
     }
     else {
       $invalid_host = check_plain($blocked->mask);
@@ -1861,11 +1861,11 @@ function system_update_7004(&$sandbox) {
           ))
           ->fetchField();
           if ($block_exists) {
-          	db_update($table)
-          	  ->fields(array('delta' => $new_delta))
-          	  ->condition('module', $module)
-          	  ->condition('delta', $old_delta)
-          	  ->execute();
+            db_update($table)
+              ->fields(array('delta' => $new_delta))
+              ->condition('module', $module)
+              ->condition('delta', $old_delta)
+              ->execute();
           }
         }
       }
@@ -2018,10 +2018,10 @@ function system_update_7008() {
  *
  */
 function system_update_7009() {
-	db_update('variable')
-	  ->fields(array('name' => 'main_menu_links_source'))
-	  ->condition('name', 'menu_primary_links_source')
-	  ->execute();
+  db_update('variable')
+    ->fields(array('name' => 'main_menu_links_source'))
+    ->condition('name', 'menu_primary_links_source')
+    ->execute();
 }
 
 /**
@@ -2411,10 +2411,10 @@ function system_update_7022() {
  * Change the PHP for settings permission.
  */
 function system_update_7023() {
-	db_update('role_permission')
-	  ->fields(array('permission' => 'use PHP for settings'))
-	  ->condition('permission', 'use PHP for block visibility')
-	  ->execute();
+  db_update('role_permission')
+    ->fields(array('permission' => 'use PHP for settings'))
+    ->condition('permission', 'use PHP for block visibility')
+    ->execute();
 }
 
 /**
