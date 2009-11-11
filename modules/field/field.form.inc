@@ -60,7 +60,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
       $element = array(
         '#object_type' => $instance['object_type'],
         '#bundle' => $instance['bundle'],
-        '#field_name' => $field['field_name'],
+        '#field_name' => $field_name,
         '#columns' => array_keys($field['columns']),
         '#title' => check_plain(t($instance['label'])),
         '#description' => field_filter_xss($instance['description']),
@@ -89,14 +89,23 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
     // The '#language' key can be used to access the field's form element when
     // $langcode is unknown. The #weight property is inherited from the field's
     // form element.
-    $addition[$field['field_name']] = array(
+    // Also aid in theming of field widgets by rendering a classified container.
+    $addition[$field_name] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'field-type-' . drupal_html_class($field['type']),
+          'field-name-' . drupal_html_class($field_name),
+          'field-widget-' . drupal_html_class($instance['widget']['type']),
+        ),
+      ),
       '#tree' => TRUE,
       '#weight' => $instance['widget']['weight'],
       '#language' => $langcode,
       $langcode => $form_element,
     );
 
-    $form['#fields'][$field['field_name']]['form_path'] = array($field['field_name']);
+    $form['#fields'][$field_name]['form_path'] = array($field_name);
   }
 
   return $addition;

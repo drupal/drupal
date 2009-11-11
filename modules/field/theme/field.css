@@ -27,12 +27,3 @@ form .field-multiple-table td.field-multiple-drag a.tabledrag-handle {
 form .field-add-more-submit {
   margin: .5em 0 0;
 }
-
-form .form-item .text {
-  display: inline;
-  width: auto;
-}
-form .form-item .widget-number {
-  display: inline;
-  width: auto;
-}

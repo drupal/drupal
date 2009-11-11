@@ -617,7 +617,6 @@ function text_textfield_elements_process($element, $form_state, $form) {
     '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
     '#autocomplete_path' => $element['#autocomplete_path'],
     '#size' => $instance['widget']['settings']['size'],
-    '#attributes' => array('class' => array('text')),
     '#title' => $element['#title'],
     '#description' => $element['#description'],
     '#required' => $element['#required'],
@@ -706,7 +705,6 @@ function text_textarea_with_summary_process($element, $form_state, $form) {
     '#title' => $display ? t('Full text') : $element['#title'],
     '#description' => $element['#description'],
     '#required' => $element['#required'],
-    '#attributes' => array('class' => array('text-full-textarea')),
     '#prefix' => '<div class="text-full-wrapper">',
     '#suffix' => '</div>',
   );

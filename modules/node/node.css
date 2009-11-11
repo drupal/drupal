@@ -24,10 +24,6 @@
 td.revision-current {
   background: #ffc;
 }
-.node-form .form-text {
-  display: block;
-  width: 95%;
-}
 .node-form .container-inline .form-text {
   display: inline;
   width: auto;
