@@ -1,4 +1,4 @@
-/* $Id: field.css,v 1.7 2009/11/10 06:48:58 dries Exp $ */
+/* $Id: field.css,v 1.8 2009/11/11 08:32:35 dries Exp $ */
 
 /* Field display */
 .field .field-label {
@@ -26,13 +26,4 @@ form .field-multiple-table td.field-multiple-drag a.tabledrag-handle {
 
 form .field-add-more-submit {
   margin: .5em 0 0;
-}
-
-form .form-item .text {
-  display: inline;
-  width: auto;
-}
-form .form-item .widget-number {
-  display: inline;
-  width: auto;
 }

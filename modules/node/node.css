@@ -1,4 +1,4 @@
-/* $Id: node.css,v 1.9 2009/11/03 04:35:01 webchick Exp $ */
+/* $Id: node.css,v 1.10 2009/11/11 08:32:35 dries Exp $ */
 
 .node-unpublished {
   background-color: #fff4f4;
@@ -23,10 +23,6 @@
 }
 td.revision-current {
   background: #ffc;
-}
-.node-form .form-text {
-  display: block;
-  width: 95%;
 }
 .node-form .container-inline .form-text {
   display: inline;

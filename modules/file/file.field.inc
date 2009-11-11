@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.9 2009/11/01 14:05:32 dries Exp $
+// $Id: file.field.inc,v 1.10 2009/11/11 08:32:35 dries Exp $
 
 /**
  * @file
@@ -500,7 +500,6 @@ function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $
     $elements['#file_upload_delta'] = $delta;
     $elements['#theme'] = 'file_widget_multiple';
     $elements['#theme_wrappers'] = array('fieldset');
-    $elements['#attributes']['class'] = array('file-widget');
     $elements['#process'] = array('file_field_widget_process_multiple');
     $elements['#title'] = $element['#title'];
     $elements['#description'] = $element['#description'];
