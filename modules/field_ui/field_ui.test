@@ -20,7 +20,7 @@ class FieldUITestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('field_test');
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
     $this->drupalLogin($admin_user);
     // Create content type, with underscores.
     $type_name =  strtolower($this->randomName(8)) . '_' .'test';
@@ -102,6 +102,12 @@ class FieldUITestCase extends DrupalWebTestCase {
     // Assert redirection back the to "manage fields" page.
     $this->assertText(t('Saved @label configuration.', array('@label' => $this->field_label)), t('Redirected to "Manage fields" page.'));
     $this->assertText($this->field_name, t('Field was created and appears in overview page.'));
+
+    // Assert the field appears in the "add existing field" section for
+    // different entity types; e.g. if a field was added in a node entity, it
+    // should also appear in the 'taxonomy term' entity.
+    $this->drupalGet('admin/structure/taxonomy/1/fields');
+    $this->assertTrue($this->xpath('//select[@id="edit--add-existing-field-field-name"]//option[@value="' . $this->field_name . '"]'), t('Existing field was found in account settings.'));
   }
 
   /**
