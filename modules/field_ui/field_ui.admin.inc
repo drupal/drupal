@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.28 2009/11/08 09:24:55 dries Exp $
+// $Id: field_ui.admin.inc,v 1.29 2009/11/11 06:58:24 webchick Exp $
 
 /**
  * @file
@@ -778,18 +778,21 @@ function field_ui_formatter_options($field_type = NULL) {
 function field_ui_existing_field_options($obj_type, $bundle) {
   $options = array();
   $field_types = field_info_field_types();
-  foreach (field_info_instances($obj_type) as $bundle_name => $instances) {
-    // No need to look in the current bundle.
-    if ($bundle_name != $bundle) {
-      foreach ($instances as $instance) {
-        $field = field_info_field($instance['field_name']);
-        // Don't show locked fields or fields already in the current bundle.
-        if (empty($field['locked']) && !field_info_instance($obj_type, $field['field_name'], $bundle)) {
-          $text = t('@type: @field (@label)', array(
-            '@type' => $field_types[$field['type']]['label'],
-            '@label' => t($instance['label']), '@field' => $instance['field_name'],
-          ));
-          $options[$instance['field_name']] = (drupal_strlen($text) > 80 ? truncate_utf8($text, 77) . '...' : $text);
+
+  foreach (field_info_instances() as $existing_obj_type => $bundles) {
+    foreach ($bundles as $existing_bundle => $instances) {
+      // No need to look in the current bundle.
+      if (!($existing_bundle == $bundle && $existing_obj_type == $obj_type)) {
+        foreach ($instances as $instance) {
+          $field = field_info_field($instance['field_name']);
+          // Don't show locked fields or fields already in the current bundle.
+          if (empty($field['locked']) && !field_info_instance($obj_type, $field['field_name'], $bundle)) {
+            $text = t('@type: @field (@label)', array(
+              '@type' => $field_types[$field['type']]['label'],
+              '@label' => t($instance['label']), '@field' => $instance['field_name'],
+            ));
+            $options[$instance['field_name']] = (drupal_strlen($text) > 80 ? truncate_utf8($text, 77) . '...' : $text);
+          }
         }
       }
     }
