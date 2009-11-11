@@ -88,27 +88,25 @@ function block_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['admin/structure/block/manage/%block/%'] = array(
+  $items['admin/structure/block/manage/%/%'] = array(
     'title' => 'Configure block',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_admin_configure', 4),
-    'load arguments' => array(5),
+    'page arguments' => array('block_admin_configure', 4, 5),
     'access arguments' => array('administer blocks'),
     'file' => 'block.admin.inc',
   );
-  $items['admin/structure/block/manage/%block/%/configure'] = array(
+  $items['admin/structure/block/manage/%/%/configure'] = array(
     'title' => 'Configure block',
-    'load arguments' => array(5),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
   );
-  $items['admin/structure/block/manage/%block/%/delete'] = array(
+  $items['admin/structure/block/manage/%/%/delete'] = array(
     'title' => 'Delete block',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_custom_block_delete', 4),
-    'load arguments' => array(5),
+    'page arguments' => array('block_custom_block_delete', 4, 5),
     'access arguments' => array('administer blocks'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_NONE,
     'file' => 'block.admin.inc',
   );
   $items['admin/structure/block/add'] = array(
@@ -598,22 +596,20 @@ function block_list($region) {
  * @param $module
  *   Name of the module that implements the block to load.
  * @param $delta
- *   Unique ID of the block within the context of $module.
+ *   Unique ID of the block within the context of $module. Pass NULL to return
+ *   an empty $block object for $module.
  *
  * @return
  *   A block object.
  */
 function block_load($module, $delta) {
-  $block = db_query('SELECT * FROM {block} WHERE module = :module AND delta = :delta',
-    array(
-      ':module' => $module,
-      ':delta' => $delta
-    ))
-    ->fetchObject();
+  if (isset($delta)) {
+    $block = db_query('SELECT * FROM {block} WHERE module = :module AND delta = :delta', array(':module' => $module, ':delta' => $delta))->fetchObject();
+  }
 
   // If the block does not exist in the database yet return a stub block
   // object.
-  if (!$block) {
+  if (empty($block)) {
     $block = new stdClass;
     $block->module = $module;
     $block->delta = $delta;

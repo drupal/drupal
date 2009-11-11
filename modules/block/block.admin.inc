@@ -176,7 +176,8 @@ function _block_compare($a, $b) {
 /**
  * Menu callback; displays the block configuration form.
  */
-function block_admin_configure($form, &$form_state, $block) {
+function block_admin_configure($form, &$form_state, $module, $delta) {
+  $block = block_load($module, $delta);
   $form['module'] = array(
     '#type' => 'value',
     '#value' => $block->module,
@@ -426,10 +427,7 @@ function block_admin_configure_submit($form, &$form_state) {
  * Menu callback: display the custom block addition form.
  */
 function block_add_block_form($form, &$form_state) {
-  $block = new stdClass;
-  $block->module = 'block';
-  $block->delta = NULL;
-  return block_admin_configure($form, $form_state, $block);
+  return block_admin_configure($form, $form_state, 'block', NULL);
 }
 
 function block_add_block_form_validate($form, &$form_state) {
@@ -511,7 +509,8 @@ function block_add_block_form_submit($form, &$form_state) {
 /**
  * Menu callback; confirm deletion of custom blocks.
  */
-function block_custom_block_delete($form, &$form_state, $block) {
+function block_custom_block_delete($form, &$form_state, $module, $delta) {
+  $block = block_load($module, $delta);
   $custom_block = block_custom_block_get($block->delta);
   $form['info'] = array('#type' => 'hidden', '#value' => $custom_block['info'] ? $custom_block['info'] : $custom_block['title']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $block->delta);
