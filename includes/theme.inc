@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.551 2009/11/12 07:00:48 dries Exp $
+// $Id: theme.inc,v 1.552 2009/11/12 21:05:49 dries Exp $
 
 /**
  * @file
@@ -1138,7 +1138,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
 
   // If no key is given, use the current theme if we can determine it.
   if (is_null($theme)) {
-    $theme = !empty($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : (!empty($GLOBALS['custom_theme']) ? $GLOBALS['custom_theme'] : '');
+    $theme = !empty($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : '';
   }
 
   if (empty($cache[$theme])) {
