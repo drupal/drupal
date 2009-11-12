@@ -3465,9 +3465,13 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
 
   if ($optimize) {
     // Perform some safe CSS optimizations.
+    $contents = preg_replace('{
+      (?<=\\\\\*/)([^/\*]+/\*)([^\*/]+\*/)  # Add a backslash also at the end ie-mac hack comment, so the next pass will not touch it.
+                                            # The added backshlash does not affect the effectiveness of the hack.
+      }x', '\1\\\\\2', $contents);    
     $contents = preg_replace('<
-      \s*([@{}:;,]|\)\s|\s\()\s* |  # Remove whitespace around separators, but keep space around parentheses.
-      /\*([^*\\\\]|\*(?!/))+\*/     # Remove comments that are not CSS hacks.
+      \s*([@{}:;,]|\)\s|\s\()\s* |          # Remove whitespace around separators, but keep space around parentheses.
+      /\*[^*\\\\]*\*+([^/*][^*]*\*+)*/ |    # Remove comments that are not CSS hacks.
       >x', '\1', $contents);
   }
 
