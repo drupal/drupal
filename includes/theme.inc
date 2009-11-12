@@ -1138,7 +1138,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
 
   // If no key is given, use the current theme if we can determine it.
   if (is_null($theme)) {
-    $theme = !empty($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : (!empty($GLOBALS['custom_theme']) ? $GLOBALS['custom_theme'] : '');
+    $theme = !empty($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : '';
   }
 
   if (empty($cache[$theme])) {
