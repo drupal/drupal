@@ -463,7 +463,7 @@ function forum_field_storage_pre_update($obj_type, $object, &$skip_fields) {
         foreach ($language as $delta) {
           $query->values(array(
             'nid' => $object->nid,
-            'title' => $object->title,
+            'title' => $object->title[FIELD_LANGUAGE_NONE][0]['value'],
             'tid' => $delta['value'],
             'sticky' => $object->sticky,
             'created' => $object->created,
@@ -1107,14 +1107,14 @@ function _forum_update_forum_index($nid) {
 
   if ($count > 0) {
     // Comments exist.
-    $last_reply = db_query_range('SELECT cid, name, timestamp, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', array(
+    $last_reply = db_query_range('SELECT cid, name, created, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', 0, 1, array(
       ':nid' => $nid,
       ':status' => COMMENT_PUBLISHED,
-    ), 0, 1)->fetchObject();
+    ))->fetchObject();
     db_update('forum_index')
       ->fields( array(
         'comment_count' => $count,
-        'last_comment_timestamp' => $last_reply->timestamp,
+        'last_comment_timestamp' => $last_reply->created,
       ))
       ->condition('nid', $nid)
       ->execute();

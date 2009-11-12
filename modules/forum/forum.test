@@ -75,6 +75,16 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->createForumTopic($this->forum, FALSE);
     $this->createForumTopic($this->forum, FALSE);
     $this->drupalGet('node');
+
+    // Test adding a comment to a forum topic.
+    $node = $this->createForumTopic($this->forum, FALSE);
+    $this->drupalPost("node/$node->nid", array('comment' => $this->randomName()), t('Save'));
+    $this->assertResponse(200);
+
+    // Test editing a forum topic that has a comment.
+    $this->drupalLogin($this->any_user);
+    $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
+    $this->assertResponse(200);
   }
 
   /**
