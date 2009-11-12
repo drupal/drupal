@@ -195,6 +195,19 @@ function comment_update_7009() {
 }
 
 /**
+ * Add {node_comment_statistics}.cid column.
+ */
+function comment_update_7010() {
+  db_add_field('node_comment_statistics', 'cid', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'The {comment}.cid of the last comment.',
+  ));
+  db_add_index('node_comment_statistics', 'cid', array('cid'));
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
@@ -330,6 +343,12 @@ function comment_schema() {
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The {node}.nid for which the statistics are compiled.',
+      ),
+      'cid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {comment}.cid of the last comment.',
       ),
       'last_comment_timestamp' => array(
         'type' => 'int',

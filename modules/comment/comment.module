@@ -371,44 +371,29 @@ function comment_permalink($comment) {
 /**
  * Find the most recent comments that are available to the current user.
  *
- * This is done in two steps:
- *   1. Query the {node_comment_statistics} table to find n number of nodes that
- *      have the most recent comments. This table is indexed on
- *      last_comment_timestamp, thus making it a fast query.
- *   2. Load the information from the comments table based on the nids found
- *      in step 1.
- *
  * @param integer $number
- *   (optional) The maximum number of comments to find.
+ *   (optional) The maximum number of comments to find. Defaults to 10.
  * @return
- *   An array of comment objects each containing a nid, subject, cid, created
- *   and changed, or an empty array if there are no recent comments visible
- *   to the current user.
+ *   An array of comment objects or an empty array if there are no recent
+ *   comments visible to the current user.
  */
 function comment_get_recent($number = 10) {
-  // Step 1: Select a $number of nodes which have new comments,
-  //         and are visible to the current user.
-  $nids = db_query_range("SELECT nc.nid FROM {node_comment_statistics} nc WHERE nc.comment_count > 0 ORDER BY nc.last_comment_timestamp DESC", 0, $number)->fetchCol();
+  $query = db_select('comment', 'c');
+  $query->innerJoin('node', 'n', 'n.nid = c.nid');
+  $query->innerJoin('node_comment_statistics', 'ncs', 'ncs.nid = c.nid');
+  $query->addTag('node_access');
+  $comments = $query
+    ->fields('c')
+    ->condition('ncs.comment_count', 0, '>')
+    ->condition('c.status', COMMENT_PUBLISHED)
+    ->condition('n.status', NODE_PUBLISHED)
+    ->orderBy('ncs.last_comment_timestamp', 'DESC')
+    ->orderBy('c.cid', 'DESC')
+    ->range(0, $number)
+    ->execute()
+    ->fetchAll();
 
-  $comments = array();
-  if (!empty($nids)) {
-    // Step 2: From among the comments on the nodes selected in the first query,
-    //         find the $number of most recent comments.
-    // Using Query Builder here for the IN-Statement.
-    $query = db_select('comment', 'c');
-    $query->innerJoin('node', 'n', 'n.nid = c.nid');
-    return $query
-      ->fields('c', array('nid', 'subject', 'cid', 'created', 'changed'))
-      ->condition('c.nid', $nids, 'IN')
-      ->condition('c.status', COMMENT_PUBLISHED)
-      ->condition('n.status', 1)
-      ->orderBy('c.cid', 'DESC')
-      ->range(0, $number)
-      ->execute()
-      ->fetchAll();
-  }
-
-  return $comments;
+  return $comments ? $comments : array();
 }
 
 /**
@@ -1102,6 +1087,7 @@ function comment_node_load($nodes, $types) {
       $comments_enabled[] = $node->nid;
     }
     else {
+      $node->cid = 0;
       $node->last_comment_timestamp = $node->created;
       $node->last_comment_name = '';
       $node->comment_count = 0;
@@ -1110,8 +1096,9 @@ function comment_node_load($nodes, $types) {
 
   // For nodes with comments enabled, fetch information from the database.
   if (!empty($comments_enabled)) {
-    $result = db_query('SELECT nid, last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid IN(:comments_enabled)', array(':comments_enabled' => $comments_enabled));
+    $result = db_query('SELECT nid, cid, last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid IN (:comments_enabled)', array(':comments_enabled' => $comments_enabled));
     foreach ($result as $record) {
+      $nodes[$record->nid]->cid = $record->cid;
       $nodes[$record->nid]->last_comment_timestamp = $record->last_comment_timestamp;
       $nodes[$record->nid]->last_comment_name = $record->last_comment_name;
       $nodes[$record->nid]->comment_count = $record->comment_count;
@@ -1135,6 +1122,7 @@ function comment_node_insert($node) {
   db_insert('node_comment_statistics')
     ->fields(array(
       'nid' => $node->nid,
+      'cid' => 0,
       'last_comment_timestamp' => $node->changed,
       'last_comment_name' => NULL,
       'last_comment_uid' => $node->uid,
@@ -2273,7 +2261,8 @@ function _comment_update_node_statistics($nid) {
       ':status' => COMMENT_PUBLISHED,
     ))->fetchObject();
     db_update('node_comment_statistics')
-      ->fields( array(
+      ->fields(array(
+        'cid' => $last_reply->cid,
         'comment_count' => $count,
         'last_comment_timestamp' => $last_reply->changed,
         'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
@@ -2286,7 +2275,8 @@ function _comment_update_node_statistics($nid) {
     // Comments do not exist.
     $node = db_query('SELECT uid, created FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
     db_update('node_comment_statistics')
-      ->fields( array(
+      ->fields(array(
+        'cid' => 0,
         'comment_count' => 0,
         'last_comment_timestamp' => $node->created,
         'last_comment_name' => '',
