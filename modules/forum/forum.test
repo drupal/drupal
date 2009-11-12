@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.39 2009/11/08 11:19:02 webchick Exp $
+// $Id: forum.test,v 1.40 2009/11/12 20:30:22 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -75,6 +75,16 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->createForumTopic($this->forum, FALSE);
     $this->createForumTopic($this->forum, FALSE);
     $this->drupalGet('node');
+
+    // Test adding a comment to a forum topic.
+    $node = $this->createForumTopic($this->forum, FALSE);
+    $this->drupalPost("node/$node->nid", array('comment' => $this->randomName()), t('Save'));
+    $this->assertResponse(200);
+
+    // Test editing a forum topic that has a comment.
+    $this->drupalLogin($this->any_user);
+    $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
+    $this->assertResponse(200);
   }
 
   /**
