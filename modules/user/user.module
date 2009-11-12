@@ -2123,7 +2123,7 @@ function user_build_content($account, $build_mode = 'full') {
   $account->content = array();
 
   // Build fields content.
-  field_attach_prepare_view('user', array($account->uid, $account), $build_mode);
+  field_attach_prepare_view('user', array($account->uid => $account), $build_mode);
   $account->content += field_attach_view('user', $account, $build_mode);
 
   // Populate $account->content with a render() array.
