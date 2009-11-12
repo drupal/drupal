@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1077 2009/11/07 14:27:20 webchick Exp $
+// $Id: user.module,v 1.1078 2009/11/12 07:00:48 dries Exp $
 
 /**
  * @file
@@ -3274,6 +3274,10 @@ function user_rdf_mapping() {
         'rdftype' => array('sioc:User'),
         'name' => array(
           'predicates' => array('foaf:name'),
+        ),
+        'homepage' => array(
+          'predicates' => array('foaf:page'),
+          'type' => 'rel',
         ),
       ),
     ),
