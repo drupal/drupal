@@ -397,6 +397,15 @@ function hook_field_validate($obj_type, $object, $field, $instance, $langcode, &
  *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
  */
 function hook_field_presave($obj_type, $object, $field, $instance, $langcode, &$items) {
+  if ($field['type'] == 'number_decimal') {
+    // Let PHP round the value to ensure consistent behavior across storage
+    // backends.
+    foreach ($items as $delta => $item) {
+      if (isset($item['value'])) {
+        $items[$delta]['value'] = round($item['value'], $field['settings']['scale']);
+      }
+    }
+  }
 }
 
 /**

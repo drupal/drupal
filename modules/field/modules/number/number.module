@@ -192,6 +192,21 @@ function number_field_validate($obj_type, $object, $field, $instance, $langcode,
 }
 
 /**
+ * Implements hook_field_presave().
+ */
+function number_field_presave($obj_type, $object, $field, $instance, $langcode, &$items) {
+  if ($field['type'] == 'number_decimal') {
+    // Let PHP round the value to ensure consistent behavior across storage
+    // backends.
+    foreach ($items as $delta => $item) {
+      if (isset($item['value'])) {
+        $items[$delta]['value'] = round($item['value'], $field['settings']['scale']);
+      }
+    }
+  }
+}
+
+/**
  * Implement hook_content_is_empty().
  */
 function number_field_is_empty($item, $field) {
@@ -348,12 +363,6 @@ function number_field_widget_validate($element, &$form_state) {
       // Substitute the decimal separator,
       if ($type == 'decimal' || $type == 'float') {
         $value = strtr($value, $field['settings']['decimal_separator'], '.');
-      }
-      // Let PHP round the value to ensure consistent behavior across storage
-      // backends.
-      // @todo This should be done at field level.
-      if ($type == 'decimal') {
-        $value = round($value, $field['settings']['scale']);
       }
       form_set_value($element, $value, $form_state);
     }
