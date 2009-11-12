@@ -402,6 +402,10 @@ function rdf_preprocess_node(&$variables) {
     $date_attributes_array = rdf_rdfa_attributes($variables['rdf_mapping']['created'], $variables['created']);
     $variables['rdf_template_variable_attributes_array']['date'] = $date_attributes_array;
   }
+  // Adds RDFa markup for the relation between the node and its author.
+  if (!empty($variables['rdf_mapping']['uid'])) {
+    $variables['rdf_template_variable_attributes_array']['name']['rel'] = $variables['rdf_mapping']['uid']['predicates'];
+  }
 }
 
 /**
@@ -440,48 +444,46 @@ function rdf_preprocess_user_profile(&$variables) {
  * Implements MODULE_preprocess_HOOK().
  */
 function rdf_preprocess_username(&$variables) {
-  $account = $variables['account'];
-  if (!empty($account->rdf_mapping['name'])) {
-    if ($account->uid != 0) {
-      // The following RDFa construct allows to fit all the needed information
-      // into the a tag and avoids having to wrap it with an extra span.
-
-      // An RDF resource for the user is created with the 'about' attribute and
-      // the profile URI is used to identify this resource. Even if the user
-      // profile is not accessible, we generate its URI regardless in order to
-      // be able to identify the user in RDF.
+  // $variables['account'] is a pseudo account object, and as such, does not
+  // contain the rdf mappings for the user; in the case of nodes and comments,
+  // it contains the mappings for the node or comment object instead. Therefore,
+  // the real account object for the user is needed. The real account object is
+  // needed for this function only; it should not replace $variables['account'].
+  if ($account = user_load($variables['uid'])) {
+    // An RDF resource for the user is created with the 'about' attribute and
+    // the profile URI is used to identify this resource. Even if the user
+    // profile is not accessible, we generate its URI regardless in order to
+    // be able to identify the user in RDF. We do not use this attribute for
+    // the anonymous user because we do not have a user profile URI for it (only
+    // a homepage which cannot be used as user profile in RDF).
+    if ($account->uid > 0) {
       $variables['attributes_array']['about'] = url('user/' . $account->uid);
-      // The 'typeof' attribute specifies the RDF type(s) of this resource. They
-      // are defined in the 'rdftype' property of the user object RDF mapping.
-      // Since the full user object is not available in $variables, it needs to
-      // be loaded. This is due to the collision between the node and user
-      // when they are merged into $account and some properties are overridden.
-      $variables['attributes_array']['typeof'] = user_load($account->uid)->rdf_mapping['rdftype'];
-
-      // The first thing we are describing is the relation between the user and
-      // the parent resource (e.g. a node). Because the set of predicate link
-      // the parent to the user, we must use the 'rev' RDFa attribute to specify
-      // that the relationship is reverse.
-      if (!empty($account->rdf_mapping['uid']['predicates'])) {
-        $variables['attributes_array']['rev'] = $account->rdf_mapping['uid']['predicates'];
-        // We indicate the parent identifier in the 'resource' attribute,
-        // typically this is the entity URI. This is the object in RDF.
-        $parent_uri = '';
-        if (!empty($account->path['source'])) {
-          $parent_uri = url($account->path['source']);
-        }
-        elseif (!empty($account->cid)) {
-          $parent_uri = url('comment/' . $account->cid, array('fragment' => 'comment-' . $account->cid));
-        }
-        $variables['attributes_array']['resource'] = $parent_uri;
-      }
-
-      // The second information we annotate is the name of the user with the
-      // 'property' attribute. We do not need to specify the RDF object here
-      // because it's the value inside the a tag which will be used
-      // automatically according to the RDFa parsing rules.
-      $variables['attributes_array']['property'] = $account->rdf_mapping['name']['predicates'];
     }
+
+    // The remaining attributes are defined by RDFa as lists
+    // (http://www.w3.org/TR/rdfa-syntax/#rdfa-attributes). Therefore, merge
+    // rather than override, so as not to clobber values set by earlier
+    // preprocess functions.
+    $attributes = array();
+
+    // The 'typeof' attribute specifies the RDF type(s) of this resource. They
+    // are defined in the 'rdftype' property of the user object RDF mapping.
+    if (!empty($account->rdf_mapping['rdftype'])) {
+      $attributes['typeof'] = $account->rdf_mapping['rdftype'];
+    }
+
+    // Annotate the user name in RDFa. The attribute 'property' is used here
+    // because the user name is a literal.
+    if (!empty($account->rdf_mapping['name'])) {
+      $attributes['property'] = $account->rdf_mapping['name']['predicates'];
+    }
+
+    // Add the homepage RDFa markup if present.
+    if (!empty($variables['homepage']) && !empty($account->rdf_mapping['homepage'])) {
+      $attributes['rel'] = $account->rdf_mapping['homepage']['predicates'];
+    }
+
+    $variables['attributes_array'] = array_merge_recursive($variables['attributes_array'], $attributes);
   }
 }
 
@@ -502,6 +504,10 @@ function rdf_preprocess_comment(&$variables) {
   if (!empty($comment->rdf_mapping['created'])) {
     $date_attributes_array = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created);
     $variables['rdf_template_variable_attributes_array']['created'] = $date_attributes_array;
+  }
+  // Adds RDFa markup for the relation between the comment and its author.
+  if (!empty($comment->rdf_mapping['uid'])) {
+    $variables['rdf_template_variable_attributes_array']['author']['rel'] = $comment->rdf_mapping['uid']['predicates'];
   }
   if (!empty($comment->rdf_mapping['title'])) {
     // Adds RDFa markup to the subject of the comment. Because the RDFa markup is

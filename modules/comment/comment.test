@@ -149,7 +149,7 @@ class CommentHelperCase extends DrupalWebTestCase {
   }
 
   /**
-   * Set comment form setting.
+   * Set comment form location setting.
    *
    * @param boolean $enabled
    *   Form value.
@@ -866,7 +866,7 @@ class CommentRSSUnitTest extends CommentHelperCase {
 }
 
 /**
- * Test RDFa markup for comments.
+ * Tests RDFa markup for comments.
  */
 class CommentRdfaTestCase extends CommentHelperCase {
   public static function getInfo() {
@@ -881,36 +881,101 @@ class CommentRdfaTestCase extends CommentHelperCase {
     parent::setUp('comment', 'rdf');
 
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer permissions', 'administer blocks'));
-    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content'));
+    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'access user profiles'));
 
-    $this->drupalLogin($this->web_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
-    $this->drupalLogout();
-  }
-
-  function testAttributesInMarkup() {
-    // Set comments to not have subject.
-    $this->drupalLogin($this->admin_user);
-    $this->setCommentPreview(FALSE);
+    // Enables anonymous user comments.
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'access comments' => TRUE,
+      'post comments' => TRUE,
+      'post comments without approval' => TRUE,
+    ));
+    // Allows anonymous to leave their contact information.
+    $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAY_CONTACT);
+    $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
     $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
-    $this->drupalLogout();
 
-    // Post comment.
+    // Creates the nodes on which the test comments will be posted.
     $this->drupalLogin($this->web_user);
-    $subject_text = 'foo';
-    $comment_text = 'bar';
-    $comment = $this->postComment($this->node, $comment_text, $subject_text, FALSE);
-    $this->drupalGet('node/' . $this->node->nid);
+    $this->node1 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $this->node2 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $this->drupalLogout();
+  }
 
+  /**
+   * Tests the presence of the RDFa markup for the title, date and author and
+   * homepage on registered users and anonymous comments.
+   */
+  function testAttributesInRdfaMarkup() {
+
+    // Posts comment #1 as a registered user.
+    $this->drupalLogin($this->web_user);
+    $comment1_subject = $this->randomName();
+    $comment1_body = $this->randomName();
+    $comment1 = $this->postComment($this->node1, $comment1_body, $comment1_subject);
+
+    // Tests comment #1 with access to the user profile.
+    $this->drupalGet('node/' . $this->node1->nid);
+    $this->_testBasicCommentRdfaMarkup($comment1);
+
+    // Tests comment #1 with no access to the user profile (as anonymous user).
+    $this->drupalLogout();
+    $this->drupalGet('node/' . $this->node1->nid);
+    $this->_testBasicCommentRdfaMarkup($comment1);
+
+
+    // Posts comment #2 as anonymous user.
+    $comment2_subject = $this->randomName();
+    $comment2_body = $this->randomName();
+    $anonymous_user = array();
+    $anonymous_user['name'] = $this->randomName();
+    $anonymous_user['mail'] = 'tester@simpletest.org';
+    $anonymous_user['homepage'] = 'http://example.org/';
+    $comment2 = $this->postComment($this->node2, $comment2_body, $comment2_subject, $anonymous_user);
+    $this->drupalGet('node/' . $this->node2->nid);
+
+    // Tests comment #2 as anonymous user.
+    $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
+    // Tests the RDFa markup for the homepage (specific to anonymous comments).
+    $comment_homepage = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/a[contains(@class, 'username') and @typeof='sioc:User' and @property='foaf:name' and @href='http://example.org/' and contains(@rel, 'foaf:page')]");
+    $this->assertTrue(!empty($comment_homepage), t('RDFa markup for the homepage of anonymous user found.'));
+    // There should be no about attribute on anonymous comments.
+    $comment_homepage = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/a[@about]");
+    $this->assertTrue(empty($comment_homepage), t('No about attribute is present on anonymous user comment.'));
+
+    // Tests comment #2 as logged in user.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('node/' . $this->node2->nid);
+    $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
+    // Tests the RDFa markup for the homepage (specific to anonymous comments).
+    $comment_homepage = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/a[contains(@class, 'username') and @typeof='sioc:User' and @property='foaf:name' and @href='http://example.org/' and contains(@rel, 'foaf:page')]");
+    $this->assertTrue(!empty($comment_homepage), t('RDFa markup for the homepage of anonymous user found.'));
+    // There should be no about attribute on anonymous comments.
+    $comment_homepage = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/a[@about]");
+    $this->assertTrue(empty($comment_homepage), t('No about attribute is present on anonymous user comment.'));
+  }
+
+  /**
+   * Helper function for testAttributesInRdfaMarkup().
+   *
+   * Tests the current page for basic comment RDFa markup.
+   *
+   * @param $comment
+   *   Comment object.
+   * @param $acount
+   *   An array containing information about an anonymous user.
+   */
+  function _testBasicCommentRdfaMarkup($comment, $account = array()) {
     $comment_container = $this->xpath("//div[contains(@class, 'comment') and @typeof='sioct:Post']");
-    $this->assertFalse(empty($comment_container));
-    $comment_title = $this->xpath("//h3[@property='dc:title']");
-    $this->assertEqual((string)$comment_title[0]->a, 'foo');
+    $this->assertTrue(!empty($comment_container));
+    $comment_title = $this->xpath("//div[@typeof='sioct:Post']//h3[@property='dc:title']");
+    $this->assertEqual((string)$comment_title[0]->a, $comment->subject);
     $comment_date = $this->xpath("//div[@typeof='sioct:Post']//*[contains(@property, 'dc:date') and contains(@property, 'dc:created')]");
-    $this->assertFalse(empty($comment_date));
-    $comment_author = $this->xpath("//div[@typeof='sioct:Post']//*[contains(@property, 'foaf:name')]");
-    $this->assertEqual((string)$comment_author[0], $this->web_user->name);
+    $this->assertTrue(!empty($comment_date));
+    // The author tag can be either a or span
+    $comment_author = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/*[contains(@class, 'username') and @typeof='sioc:User' and @property='foaf:name']");
+    $name = empty($account['name']) ? $this->web_user->name : $account['name'] . ' (not verified)';
+    $this->assertEqual((string)$comment_author[0], $name);
   }
 }

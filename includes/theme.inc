@@ -2003,7 +2003,10 @@ function template_preprocess_username(&$variables) {
     $variables['link_path'] = 'user/' . $variables['uid'];
   }
   elseif (!empty($account->homepage)) {
-    $variables['link_attributes'] = array('rel' => 'nofollow');
+    // Like the 'class' attribute, the 'rel' attribute can hold a
+    // space-separated set of values, so initialize it as an array to make it
+    // easier for other preprocess functions to append to it.
+    $variables['link_attributes'] = array('rel' => array('nofollow'));
     $variables['link_path'] = $account->homepage;
     $variables['homepage'] = $account->homepage;
   }
@@ -2023,7 +2026,14 @@ function template_process_username(&$variables) {
   // This is done in the process phase so that attributes may be added by
   // modules or the theme during the preprocess phase.
   if (isset($variables['link_path'])) {
-    $variables['link_options']['attributes'] = $variables['link_attributes'] + $variables['attributes_array'];
+    // $variables['attributes_array'] contains attributes that should be applied
+    // regardless of whether a link is being rendered or not.
+    // $variables['link_attributes'] contains attributes that should only be
+    // applied if a link is being rendered. Preprocess functions are encouraged
+    // to use the former unless they want to add attributes on the link only.
+    // If a link is being rendered, these need to be merged. Some attributes are
+    // themselves arrays, so the merging needs to be recursive.
+    $variables['link_options']['attributes'] = array_merge_recursive($variables['link_attributes'], $variables['attributes_array']);
   }
 }
 

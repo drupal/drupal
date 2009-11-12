@@ -3275,6 +3275,10 @@ function user_rdf_mapping() {
         'name' => array(
           'predicates' => array('foaf:name'),
         ),
+        'homepage' => array(
+          'predicates' => array('foaf:page'),
+          'type' => 'rel',
+        ),
       ),
     ),
   );
