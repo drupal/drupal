@@ -12,7 +12,8 @@
 function node_overview_types() {
   $types = node_type_get_types();
   $names = node_type_get_names();
-  $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => '2'));
+  $field_ui = module_exists('field_ui');
+  $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => $field_ui ? '4' : '2'));
   $rows = array();
 
   foreach ($names as $key => $name) {
@@ -23,6 +24,14 @@ function node_overview_types() {
       // Set the edit column.
       $row[] = array('data' => l(t('edit'), 'admin/structure/types/manage/' . $type_url_str));
 
+      if ($field_ui) {
+        // Manage fields.
+        $row[] = array('data' => l(t('manage fields'), 'admin/structure/types/manage/' . $type_url_str . '/fields'));
+
+        // Display fields.
+        $row[] = array('data' => l(t('manage display'), 'admin/structure/types/manage/' . $type_url_str . '/display'));
+      }
+
       // Set the delete column.
       if ($type->custom) {
         $row[] = array('data' => l(t('delete'), 'admin/structure/types/manage/' . $type_url_str . '/delete'));
@@ -30,6 +39,7 @@ function node_overview_types() {
       else {
         $row[] = array('data' => '');
       }
+
       $rows[] = $row;
     }
   }
