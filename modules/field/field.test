@@ -1432,7 +1432,7 @@ class FieldFormTestCase extends FieldTestCase {
     // Submit with missing required value.
     $edit = array();
     $this->drupalPost('test-entity/add/test-bundle', $edit, t('Save'));
-    $this->assertText(t('!name field is required.', array('!name' => $this->instance['label'])), 'Required field with no value fails validation');
+    $this->assertRaw(t('!name field is required.', array('!name' => $this->instance['label'])), 'Required field with no value fails validation');
 
     // Create an entity
     $value = mt_rand(1, 127);
@@ -1448,7 +1448,7 @@ class FieldFormTestCase extends FieldTestCase {
     $value = '';
     $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost('test-entity/' . $id . '/edit', $edit, t('Save'));
-    $this->assertText(t('!name field is required.', array('!name' => $this->instance['label'])), 'Required field with no value fails validation');
+    $this->assertRaw(t('!name field is required.', array('!name' => $this->instance['label'])), 'Required field with no value fails validation');
   }
 
 //  function testFieldFormMultiple() {

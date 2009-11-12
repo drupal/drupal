@@ -832,10 +832,7 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
       // checkboxes, can return a valid value of '0'. Instead, check the
       // length if it's a string, and the item count if it's an array.
       if ($elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0))) {
-        form_error($elements, $t('<a href="#!field_id">!name</a> field is required.', array(
-          '!field_id' => $elements['#id'],
-          '!name' => $elements['#title'],
-        )));
+        form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
       }
 
       // Verify that the value is not longer than #maxlength.
@@ -2770,21 +2767,14 @@ function theme_form_element($variables) {
 
   $output = '<div class="' . implode(' ', $class) . '">' . "\n";
   $required = !empty($element['#required']) ? theme('form_required_marker', array('element' => $element)) : '';
-  $error = '';
-  if (!empty($element['#required']) && empty($element['#value'])) {
-    $error = form_get_error($element) ? '<span class="error">' . $t('Field is required.') . '</span>' : '';
-  }
-  else {
-    $error = form_get_error($element) ? '<span class="error">' . filter_xss_admin(form_get_error($element)) . '</span>' : '';
-  }
 
   if (!empty($element['#title']) && empty($element['#form_element_skip_title'])) {
     $title = $element['#title'];
     if (!empty($element['#id'])) {
-      $output .= ' <label for="' . $element['#id'] . '">' . $t('!title !required !error', array('!title' => filter_xss_admin($title), '!required' => $required, '!error' => $error)) . "</label>\n";
+      $output .= ' <label for="' . $element['#id'] . '">' . $t('!title !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
     }
     else {
-      $output .= ' <label>' . $t('!title !required !error', array('!title' => filter_xss_admin($title), '!required' => $required, '!error' => $error)) . "</label>\n";
+      $output .= ' <label>' . $t('!title !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
     }
   }
 
