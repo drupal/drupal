@@ -64,12 +64,12 @@ function _field_info_collate_types($reset = FALSE) {
 
   if ($reset) {
     $info = NULL;
-    cache_clear_all('field_info_types', 'cache_bootstrap');
+    cache_clear_all('field_info_types', 'cache_field');
     return;
   }
 
   if (!isset($info)) {
-    if ($cached = cache_get('field_info_types', 'cache_bootstrap')) {
+    if ($cached = cache_get('field_info_types', 'cache_field')) {
       $info = $cached->data;
     }
     else {
@@ -137,7 +137,7 @@ function _field_info_collate_types($reset = FALSE) {
       }
       drupal_alter('field_storage_info', $info['storage types']);
 
-      cache_set('field_info_types', $info, 'cache_bootstrap');
+      cache_set('field_info_types', $info, 'cache_field');
     }
   }
 
@@ -168,12 +168,12 @@ function _field_info_collate_fields($reset = FALSE) {
 
   if ($reset) {
     $info = NULL;
-    cache_clear_all('field_info_fields', 'cache_field_bootstrap');
+    cache_clear_all('field_info_fields', 'cache_field');
     return;
   }
 
   if (!isset($info)) {
-    if ($cached = cache_get('field_info_fields', 'cache_bootstrap')) {
+    if ($cached = cache_get('field_info_fields', 'cache_field')) {
       $definitions = $cached->data;
     }
     else {
@@ -181,7 +181,7 @@ function _field_info_collate_fields($reset = FALSE) {
         'field_ids' => field_read_fields(array(), array('include_deleted' => 1)),
         'instances' => field_read_instances(),
       );
-      cache_set('field_info_fields', $definitions, 'cache_bootstrap');
+      cache_set('field_info_fields', $definitions, 'cache_field');
     }
 
     // Populate 'field_ids' with all fields.
