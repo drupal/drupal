@@ -866,7 +866,6 @@ function user_account_form(&$form, &$form_state) {
   $account = $form['#user'];
   $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
 
-  _user_password_dynamic_validation();
   $admin = user_access('administer users');
 
   $form['#validate'][] = 'user_account_form_validate';
@@ -2951,40 +2950,42 @@ function _user_mail_notify($op, $account, $language = NULL) {
 }
 
 /**
- * Add javascript and string translations for dynamic password validation
- * (strength and confirmation checking).
+ * Form element process handler for client-side password validation.
  *
- * This is an internal function that makes it easier to manage the translation
- * strings that need to be passed to the javascript code.
+ * This #process handler is automatically invoked for 'password_confirm' form
+ * elements to add the JavaScript and string translations for dynamic password
+ * validation.
+ *
+ * @see system_element_info()
  */
-function _user_password_dynamic_validation() {
-  static $complete = FALSE;
+function user_form_process_password_confirm($element) {
   global $user;
-  // Only need to do once per page.
-  if (!$complete) {
-    drupal_add_js(drupal_get_path('module', 'user') . '/user.js');
 
-    drupal_add_js(array(
-      'password' => array(
-        'strengthTitle' => t('Password strength:'),
-        'hasWeaknesses' => t('To make your password stronger:'),
-        'tooShort' => t('Make it at least 6 characters'),
-        'addLowerCase' => t('Add lowercase letters'),
-        'addUpperCase' => t('Add uppercase letters'),
-        'addNumbers' => t('Add numbers'),
-        'addPunctuation' => t('Add punctuation'),
-        'sameAsUsername' => t('Make it different from your username'),
-        'confirmSuccess' => t('yes'),
-        'confirmFailure' => t('no'),
-        'weak'           => t('Weak'),
-        'fair'           => t('Fair'),
-        'good'           => t('Good'),
-        'strong'         => t('Strong'),
-        'confirmTitle' => t('Passwords match:'),
-        'username' => (isset($user->name) ? $user->name : ''))),
-      'setting');
-    $complete = TRUE;
-  }
+  $js_settings = array(
+    'password' => array(
+      'strengthTitle' => t('Password strength:'),
+      'hasWeaknesses' => t('To make your password stronger:'),
+      'tooShort' => t('Make it at least 6 characters'),
+      'addLowerCase' => t('Add lowercase letters'),
+      'addUpperCase' => t('Add uppercase letters'),
+      'addNumbers' => t('Add numbers'),
+      'addPunctuation' => t('Add punctuation'),
+      'sameAsUsername' => t('Make it different from your username'),
+      'confirmSuccess' => t('yes'),
+      'confirmFailure' => t('no'),
+      'weak' => t('Weak'),
+      'fair' => t('Fair'),
+      'good' => t('Good'),
+      'strong' => t('Strong'),
+      'confirmTitle' => t('Passwords match:'),
+      'username' => (isset($user->name) ? $user->name : ''),
+    ),
+  );
+
+  $element['#attached']['js'][] = drupal_get_path('module', 'user') . '/user.js';
+  $element['#attached']['js'][] = array('data' => $js_settings, 'type' => 'setting');
+
+  return $element;
 }
 
 /**

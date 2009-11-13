@@ -368,7 +368,7 @@ function system_element_info() {
   );
   $types['password_confirm'] = array(
     '#input' => TRUE,
-    '#process' => array('form_process_password_confirm'),
+    '#process' => array('form_process_password_confirm', 'user_form_process_password_confirm'),
     '#theme_wrappers' => array('form_element'),
   );
   $types['textarea'] = array(
