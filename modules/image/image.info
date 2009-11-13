@@ -1,9 +1,10 @@
-; $Id: image.info,v 1.3 2009/10/12 05:22:57 webchick Exp $
+; $Id: image.info,v 1.4 2009/11/13 03:30:37 webchick Exp $
 name = Image
 description = Provides image manipulation tools.
 package = Core
 version = VERSION
 core = 7.x
+dependencies[] = file
 files[] = image.module
 files[] = image.admin.inc
 files[] = image.effects.inc
