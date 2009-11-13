@@ -417,13 +417,13 @@ function field_sql_storage_field_storage_write($obj_type, $object, $op, $fields)
           break;
         }
       }
+    }
 
-      // Execute the query if we have values to insert.
-      if ($do_insert) {
-        $query->execute();
-        if (isset($vid)) {
-          $revision_query->execute();
-        }
+    // Execute the query if we have values to insert.
+    if ($do_insert) {
+      $query->execute();
+      if (isset($vid)) {
+        $revision_query->execute();
       }
     }
   }
