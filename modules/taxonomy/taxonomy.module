@@ -1216,8 +1216,7 @@ function taxonomy_field_widget(&$form, &$form_state, $field, $instance, $langcod
   $element += array(
     '#type' => 'textfield',
     '#default_value' => taxonomy_implode_tags($tags),
-    // @todo Path should include the object type as well.
-    '#autocomplete_path' => 'taxonomy/autocomplete/'. $field['field_name'] .'/'. $instance['bundle'],
+    '#autocomplete_path' => $instance['widget']['settings']['autocomplete_path'] . '/' . $field['field_name'],
     '#size' => $instance['widget']['settings']['size'],
     '#element_validate' => array('taxonomy_autocomplete_validate'),
   );

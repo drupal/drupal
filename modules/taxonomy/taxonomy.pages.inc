@@ -77,8 +77,7 @@ function taxonomy_term_feed($term) {
 /**
  * Helper function for autocompletion
  */
-function taxonomy_autocomplete($field_name, $bundle, $tags_typed = '') {
-  $instance = field_info_instance($field_name, $bundle);
+function taxonomy_autocomplete($field_name, $tags_typed = '') {
   $field = field_info_field($field_name);
 
   // The user enters a comma-separated list of tags. We only autocomplete the last tag.
