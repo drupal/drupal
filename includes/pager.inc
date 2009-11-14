@@ -540,7 +540,7 @@ function pager_load_array($value, $element, $old_array) {
   $new_array = $old_array;
   // Look for empty elements.
   for ($i = 0; $i < $element; $i++) {
-    if (!$new_array[$i]) {
+    if (empty($new_array[$i])) {
       // Load found empty element with 0.
       $new_array[$i] = 0;
     }
