@@ -1391,6 +1391,10 @@ function node_permission() {
       'title' => t('Access content'),
       'description' => t('View published content.'),
     ),
+    'access content overview' => array(
+      'title' => t('Access content overview'),
+      'description' => t('Access the content overview page.'),
+    ),
     'bypass node access' => array(
       'title' => t('Bypass node access'),
       'description' => t('View, edit and delete all site content. Users with this permission will bypass any content-related access control. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
@@ -1741,7 +1745,7 @@ function node_menu() {
     'description' => 'Find and manage content.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_admin_content'),
-    'access arguments' => array('administer nodes'),
+    'access arguments' => array('access content overview'),
     'weight' => -10,
     'file' => 'node.admin.inc',
   );

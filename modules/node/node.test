@@ -950,57 +950,118 @@ class NodeAccessRebuildTestCase extends DrupalWebTestCase {
  * Test node administration page functionality.
  */
 class NodeAdminTestCase extends DrupalWebTestCase {
-  protected $admin_user;
-
   public static function getInfo() {
     return array(
       'name' => 'Node administration',
       'description' => 'Test node administration page functionality.',
-      'group' => 'Node'
+      'group' => 'Node',
     );
   }
 
   function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content'));
-    $this->drupalLogin($this->admin_user);
+
+    // Remove the "view own unpublished content" permission which is set
+    // by default for authenticated users so we can test this permission
+    // correctly.
+    user_role_revoke_permissions(DRUPAL_AUTHENTICATED_RID, array('view own unpublished content'));
+
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'access content overview', 'administer nodes', 'bypass node access'));
+    $this->base_user_1 = $this->drupalCreateUser(array('access content overview'));
+    $this->base_user_2 = $this->drupalCreateUser(array('access content overview', 'view own unpublished content'));
+    $this->base_user_3 = $this->drupalCreateUser(array('access content overview', 'bypass node access'));
   }
 
   /**
-   * Create 3 nodes and test if they are listed on the node admistration page.
+   * Tests content overview with different user permissions.
    */
-  function testNodeAdmin() {
-    $this->drupalPost('admin/content', array(), t('Update'));
-    $this->assertText(t('No items selected.'), t('Clicking update with no nodes displays error message on the node administration listing.'));
+  function testContentAdminPages() {
+    $this->drupalLogin($this->admin_user);
 
-    $node1 = $this->drupalCreateNode(array('type' => 'article', 'status' => 1));
-    $node2 = $this->drupalCreateNode(array('type' => 'article', 'status' => 0));
-    $node3 = $this->drupalCreateNode(array('type' => 'page'));
+    $nodes['published_page'] = $this->drupalCreateNode(array('type' => 'page'));
+    $nodes['published_article'] = $this->drupalCreateNode(array('type' => 'article'));
+    $nodes['unpublished_page_1'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->base_user_1->uid, 'status' => 0));
+    $nodes['unpublished_page_2'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->base_user_2->uid, 'status' => 0));
 
+    // Verify view, edit, and delete links for any content.
     $this->drupalGet('admin/content');
-    $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], t('Node appears on the node administration listing.'));
+    $this->assertResponse(200);
+    foreach ($nodes as $node) {
+      $this->assertLinkByHref('node/' . $node->nid);
+      $this->assertLinkByHref('node/' . $node->nid . '/edit');
+      $this->assertLinkByHref('node/' . $node->nid . '/delete');
+      // Verify tableselect.
+      $this->assertFieldByName('nodes[' . $node->nid . ']', '', t('Tableselect found.'));
+    }
 
-    $this->drupalPost('admin/content', array(), t('Update'));
-    $this->assertText(t('No items selected.'), t('Clicking update with no selected nodes displays error message on the node administration listing.'));
-
-    // Filter the node listing by status.
+    // Verify filtering by publishing status.
     $edit = array(
       'status' => 'status-1',
     );
-    $this->drupalPost('admin/content', $edit, t('Filter'));
-    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('status'), '%value' => t('published'))), t('The node administration listing is filtered by status.'));
-    $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], t('Published node appears on the node administration listing.'));
-    $this->assertNoText($node2->title[FIELD_LANGUAGE_NONE][0]['value'], t('Unpublished node does not appear on the node administration listing.'));
+    $this->drupalPost(NULL, $edit, t('Filter'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('status'), '%value' => t('published'))), t('Content list is filtered by status.'));
+    $this->assertLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
+    $this->assertLinkByHref('node/' . $nodes['published_article']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid . '/edit');
 
-    // Filter the node listing by content type.
+    // Verify filtering by status and content type.
     $edit = array(
-      'type' => 'article',
+      'type' => 'page',
     );
-    $this->drupalPost('admin/content', $edit, t('Refine'));
-    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('status'), '%value' => t('published'))), t('The node administration listing is filtered by status.'));
-    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('type'), '%value' => 'Article')), t('The node administration listing is filtered by content type.'));
-    $this->assertText($node1->title[FIELD_LANGUAGE_NONE][0]['value'], t('Article node appears on the node administration listing.'));
-    $this->assertNoText($node3->title[FIELD_LANGUAGE_NONE][0]['value'], t('Page node does not appear on the node administration listing.'));
+    $this->drupalPost(NULL, $edit, t('Refine'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('status'), '%value' => t('published'))), t('Content list is filtered by status.'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('type'), '%value' => 'Page')), t('Content list is filtered by content type.'));
+    $this->assertLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['published_article']->nid . '/edit');
+
+    // Verify no operation links are displayed for regular users.
+    $this->drupalLogout();
+    $this->drupalLogin($this->base_user_1);
+    $this->drupalGet('admin/content');
+    $this->assertResponse(200);
+    $this->assertLinkByHref('node/' . $nodes['published_page']->nid);
+    $this->assertLinkByHref('node/' . $nodes['published_article']->nid);
+    $this->assertNoLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['published_page']->nid . '/delete');
+    $this->assertNoLinkByHref('node/' . $nodes['published_article']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['published_article']->nid . '/delete');
+
+    // Verify no unpublished content is displayed without permission.
+    $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid);
+    $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid . '/delete');
+
+    // Verify no tableselect.
+    $this->assertNoFieldByName('nodes[' . $nodes['published_page']->nid . ']', '', t('No tableselect found.'));
+
+    // Verify unpublished content is displayed with permission.
+    $this->drupalLogout();
+    $this->drupalLogin($this->base_user_2);
+    $this->drupalGet('admin/content');
+    $this->assertResponse(200);
+    $this->assertLinkByHref('node/' . $nodes['unpublished_page_2']->nid);
+    // Verify no operation links are displayed.
+    $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_2']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_2']->nid . '/delete');
+
+    // Verify user cannot see unpublished content of other users.
+    $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid);
+    $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid . '/delete');
+
+    // Verify no tableselect.
+    $this->assertNoFieldByName('nodes[' . $nodes['unpublished_page_2']->nid . ']', '', t('No tableselect found.'));
+
+    // Verify node access can be bypassed.
+    $this->drupalLogout();
+    $this->drupalLogin($this->base_user_3);
+    $this->drupalGet('admin/content');
+    $this->assertResponse(200);
+    foreach ($nodes as $node) {
+      $this->assertLinkByHref('node/' . $node->nid);
+      $this->assertLinkByHref('node/' . $node->nid . '/edit');
+      $this->assertLinkByHref('node/' . $node->nid . '/delete');
+    }
   }
 }
 

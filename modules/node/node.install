@@ -556,6 +556,16 @@ function node_update_7007() {
 }
 
 /**
+ * Split the 'administer nodes' permission from 'access content overview'.
+ */
+function node_update_7008() {
+  $roles = user_roles(FALSE, 'administer nodes');
+  foreach ($roles as $rid => $role) {
+    user_role_grant_permissions($rid, array('access content overview'));
+  }
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

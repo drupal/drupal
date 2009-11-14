@@ -213,7 +213,7 @@ class TrackerTest extends DrupalWebTestCase {
    * Test that publish/unpublish works at admin/content/node
    */
   function testTrackerAdminUnpublish() {
-    $admin_user = $this->drupalCreateUser(array('administer nodes'));
+    $admin_user = $this->drupalCreateUser(array('access content overview', 'administer nodes', 'bypass node access'));
     $this->drupalLogin($admin_user);
 
     $node = $this->drupalCreateNode(array(

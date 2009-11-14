@@ -396,7 +396,7 @@ function node_admin_content($form, $form_state) {
     '#access' => _node_add_access(),
     '#markup' => theme('links', array('links' => array(array('title' => t('Add new content'), 'href' => 'node/add')), 'attributes' => array('class' => array('action-links')))),
   );
-  $form[] = node_filter_form();
+  $form['filter'] = node_filter_form();
   $form['#submit'][] = 'node_filter_form_submit';
   $form['#theme'] = 'node_filter_form';
   $form['admin'] = node_admin_nodes();
@@ -408,6 +408,32 @@ function node_admin_content($form, $form_state) {
  * Form builder: Builds the node administration overview.
  */
 function node_admin_nodes() {
+  $admin_access = user_access('administer nodes');
+
+  // Build the 'Update options' form.
+  $form['options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Update options'),
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
+    '#access' => $admin_access,
+  );
+  $options = array();
+  foreach (module_invoke_all('node_operations') as $operation => $array) {
+    $options[$operation] = $array['label'];
+  }
+  $form['options']['operation'] = array(
+    '#type' => 'select',
+    '#options' => $options,
+    '#default_value' => 'approve',
+  );
+  $form['options']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Update'),
+    '#validate' => array('node_admin_nodes_validate'),
+    '#submit' => array('node_admin_nodes_submit'),
+  );
+
   // Enable language column if translation module is enabled
   // or if we have any node with language.
   $multilanguage = (module_exists('translation') || db_query("SELECT COUNT(*) FROM {node} WHERE language <> ''")->fetchField());
@@ -424,80 +450,125 @@ function node_admin_nodes() {
     $header['language'] = array('data' => t('Language'), 'field' => 'n.language');
   }
   $header['operations'] = array('data' => t('Operations'));
-  
+
   $query = db_select('node', 'n')->extend('PagerDefault')->extend('TableSort');
-  $query->join('users', 'u', 'n.uid = u.uid');
   node_build_filter_query($query);
 
-  $result = $query
-    ->fields('n')
-    ->fields('u', array('name'))
+  if (!user_access('bypass node access')) {
+    // If the user is able to view their own unpublished nodes, allow them
+    // to see these in addition to published nodes. Check that they actually
+    // have some unpublished nodes to view before adding the condition.
+    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT nid FROM {node} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->uid, ':status' => 0))->fetchCol()) {
+      $query->condition(db_or()
+        ->condition('n.status', 1)
+        ->condition('n.nid', $own_unpublished, 'IN')
+      );
+    }
+    else {
+      // If not, restrict the query to published nodes.
+      $query->condition('n.status', 1);
+    }
+  }
+  $nids = $query
+    ->fields('n',array('nid'))
     ->limit(50)
     ->orderByHeader($header)
-    ->execute();
+    ->execute()
+    ->fetchCol();
+  $nodes = node_load_multiple($nids);
 
-  // Build the 'Update options' form.
-  $form['options'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Update options'),
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
-  );
-  $options = array();
-  foreach (module_invoke_all('node_operations') as $operation => $array) {
-    $options[$operation] = $array['label'];
-  }
-  $form['options']['operation'] = array(
-    '#type' => 'select',
-    '#options' => $options,
-    '#default_value' => 'approve',
-  );
-  $options = array();
-  $form['options']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Update'),
-    '#submit' => array('node_admin_nodes_submit'),
-    '#validate' => array('node_admin_nodes_validate'),
-  );
-
+  // Prepare the list of nodes.
   $languages = language_list();
   $destination = drupal_get_destination();
-  $nodes = array();
-  foreach ($result as $node) {
-    $l_options = empty($node->language) ? array() : array('language' => $languages[$node->language]);
+  $options = array();
+  foreach ($nodes as $node) {
+    $l_options = !empty($node->language) ? array('language' => $languages[$node->language]) : array();
     $options[$node->nid] = array(
       'title' => array(
         'data' => array(
           '#type' => 'link',
-          '#title' => $node->title,
+          '#title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'],
           '#href' => 'node/' . $node->nid,
           '#options' => $l_options,
           '#suffix' => ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
         ),
       ),
-      'type' =>  check_plain(node_type_get_name($node)),
+      'type' => check_plain(node_type_get_name($node)),
       'author' => theme('username', array('account' => $node)),
-      'status' =>  $node->status ? t('published') : t('not published'),
+      'status' => $node->status ? t('published') : t('not published'),
       'changed' => format_date($node->changed, 'short'),
     );
     if ($multilanguage) {
       $options[$node->nid]['language'] = empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name);
     }
-    $options[$node->nid]['operations'] = array(
-      'data' => array(
-        '#type' => 'link',
-        '#title' => t('edit'),
-        '#href' => 'node/' . $node->nid . '/edit',
-        '#options' => array('query' => $destination),
-      ),
+    // Build a list of all the accessible operations for the current node.
+    $operations = array();
+    if (node_access('update', $node)) {
+      $operations['edit'] = array(
+        'title' => t('edit'),
+        'href' => 'node/' . $node->nid . '/edit',
+        'query' => $destination,
+      );
+    }
+    if (node_access('delete', $node)) {
+      $operations['delete'] = array(
+        'title' => t('delete'),
+        'href' => 'node/' . $node->nid . '/delete',
+        'query' => $destination,
+      );
+    }
+    $options[$node->nid]['operations'] = array();
+    if (count($operations) > 1) {
+      // Render an unordered list of operations links.
+      $options[$node->nid]['operations'] = array(
+        'data' => array(
+          '#theme' => 'links',
+          '#links' => $operations,
+          '#attributes' => array('class' => array('links', 'inline')),
+        ),
+      );
+    }
+    elseif (!empty($operations)) {
+      // Render the first and only operation as a link.
+      $link = reset($operations);
+      $options[$node->nid]['operations'] = array(
+        'data' => array(
+          '#type' => 'link',
+          '#title' => $link['title'],
+          '#href' => $link['href'],
+          '#options' => array('query' => $link['query']),
+        ),
+      );
+    }
+  }
+
+  // Only use a tableselect when the current user is able to perform any
+  // operations.
+  if ($admin_access) {
+    $form['nodes'] = array(
+      '#type' => 'tableselect',
+      '#header' => $header,
+      '#options' => $options,
+      '#empty' => t('No content available.'),
     );
   }
-  $form['nodes'] = array(
-    '#type' => 'tableselect',
-    '#header' => $header,
-    '#options' => $options,
-    '#empty' => t('No content available.'),
-  );
+  // Otherwise, use a simple table.
+  else {
+    // Display an empty message like in the tableselect.
+    if (empty($options)) {
+      $row = array(
+        'data' => t('No content available.'),
+        'colspan' => count($header),
+      );
+      $options = array($row);
+    }
+    $form['nodes'] = array(
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $options,
+    );
+  }
+
   $form['pager'] = array('#markup' => theme('pager', array('tags' => NULL)));
   return $form;
 }
