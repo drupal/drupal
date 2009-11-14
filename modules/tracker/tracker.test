@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.test,v 1.12 2009/10/11 03:07:20 webchick Exp $
+// $Id: tracker.test,v 1.13 2009/11/14 07:58:50 dries Exp $
 
 class TrackerTest extends DrupalWebTestCase {
   protected $user;
@@ -213,7 +213,7 @@ class TrackerTest extends DrupalWebTestCase {
    * Test that publish/unpublish works at admin/content/node
    */
   function testTrackerAdminUnpublish() {
-    $admin_user = $this->drupalCreateUser(array('administer nodes'));
+    $admin_user = $this->drupalCreateUser(array('access content overview', 'administer nodes', 'bypass node access'));
     $this->drupalLogin($admin_user);
 
     $node = $this->drupalCreateNode(array(
