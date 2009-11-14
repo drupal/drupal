@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.75 2009/10/31 18:12:26 dries Exp $
+// $Id: pager.inc,v 1.76 2009/11/14 20:20:06 dries Exp $
 
 /**
  * @file
@@ -540,7 +540,7 @@ function pager_load_array($value, $element, $old_array) {
   $new_array = $old_array;
   // Look for empty elements.
   for ($i = 0; $i < $element; $i++) {
-    if (!$new_array[$i]) {
+    if (empty($new_array[$i])) {
       // Load found empty element with 0.
       $new_array[$i] = 0;
     }
