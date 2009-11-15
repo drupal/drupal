@@ -831,7 +831,9 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
       // A simple call to empty() will not cut it here as some fields, like
       // checkboxes, can return a valid value of '0'. Instead, check the
       // length if it's a string, and the item count if it's an array.
-      if ($elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0))) {
+      // An unchecked checkbox has a #value of numeric 0, different than string
+      // '0', which could be a valid value.
+      if ($elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0) || $elements['#value'] === 0)) {
         form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
       }
 
@@ -1408,9 +1410,15 @@ function form_type_image_button_value($form, $input, $form_state) {
 function form_type_checkbox_value($element, $input = FALSE) {
   if ($input !== FALSE) {
     if (empty($element['#disabled'])) {
-      return !empty($input) ? $element['#return_value'] : 0;
+      // Successful (checked) checkboxes are present with a value (possibly '0').
+      // http://www.w3.org/TR/html401/interact/forms.html#successful-controls
+      // For an unchecked checkbox, we return numeric 0, so we can explicitly
+      // test for a value different than string '0'.
+      return isset($input) ? $element['#return_value'] : 0;
     }
     else {
+      // Disabled form controls are not submitted by the browser. Ignore any
+      // submitted value and always return default.
       return $element['#default_value'];
     }
   }
@@ -2098,17 +2106,22 @@ function theme_text_format_wrapper($variables) {
  */
 function theme_checkbox($variables) {
   $element = $variables['element'];
+  $t = get_t();
   _form_set_class($element, array('form-checkbox'));
   $checkbox = '<input ';
   $checkbox .= 'type="checkbox" ';
   $checkbox .= 'name="' . $element['#name'] . '" ';
   $checkbox .= 'id="' . $element['#id'] . '" ' ;
   $checkbox .= 'value="' . $element['#return_value'] . '" ';
-  $checkbox .= $element['#value'] ? ' checked="checked" ' : ' ';
+  // Unchecked checkbox has #value of numeric 0.
+  if ($element['#value'] !== 0 && $element['#value'] == $element['#return_value']) {
+    $checkbox .= 'checked="checked" ';
+  }
   $checkbox .= drupal_attributes($element['#attributes']) . ' />';
 
   if (!is_null($element['#title'])) {
-    $checkbox = '<label class="option" for="' . $element['#id'] . '">' . $checkbox . ' ' . $element['#title'] . '</label>';
+    $required = !empty($element['#required']) ? ' <span class="form-required" title="' . $t('This field is required.') . '">*</span>' : '';
+    $checkbox = '<label class="option" for="' . $element['#id'] . '">' . $checkbox . ' ' . $element['#title'] . $required . '</label>';
   }
 
   return $checkbox;
@@ -2165,7 +2178,7 @@ function form_process_checkboxes($element) {
           '#processed' => TRUE,
           '#title' => $choice,
           '#return_value' => $key,
-          '#default_value' => isset($value[$key]),
+          '#default_value' => isset($value[$key]) ? $key : NULL,
           '#attributes' => $element['#attributes'],
           '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
         );
@@ -2319,7 +2332,7 @@ function form_process_tableselect($element) {
             '#type' => 'checkbox',
             '#title' => '',
             '#return_value' => $key,
-            '#default_value' => isset($value[$key]),
+            '#default_value' => isset($value[$key]) ? $key : NULL,
             '#attributes' => $element['#attributes'],
             '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
           );

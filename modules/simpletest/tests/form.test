@@ -10,22 +10,30 @@ class FormsTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Required field validation',
-      'description' => 'Carriage returns, tabs, and spaces are not valid content for a required field.',
+      'name' => 'Form element validation',
+      'description' => 'Tests various form element validation mechanisms.',
       'group' => 'Form API',
     );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
   }
 
   /**
    * Check several empty values for required forms elements.
    *
+   * Carriage returns, tabs, spaces, and unchecked checkbox elements are not
+   * valid content for a required field.
+   *
    * If the form field is found in form_get_errors() then the test pass.
    */
   function testRequiredFields() {
     // Originates from http://drupal.org/node/117748
-    // Sets of empty strings and arrays
+    // Sets of empty strings and arrays.
     $empty_strings = array('""' => "", '"\n"' => "\n", '" "' => " ", '"\t"' => "\t", '" \n\t "' => " \n\t ", '"\n\n\n\n\n"' => "\n\n\n\n\n");
     $empty_arrays = array('array()' => array());
+    $empty_checkbox = array(NULL);
 
     $elements['textfield']['element'] = array('#title' => $this->randomName(), '#type' => 'textfield');
     $elements['textfield']['empty_values'] = $empty_strings;
@@ -42,6 +50,9 @@ class FormsTestCase extends DrupalWebTestCase {
     $elements['radios']['element'] = array('#title' => $this->randomName(), '#type' => 'radios', '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
     $elements['radios']['empty_values'] = $empty_arrays;
 
+    $elements['checkbox']['element'] = array('#title' => $this->randomName(), '#type' => 'checkbox', '#required' => TRUE, '#title' => $this->randomName());
+    $elements['checkbox']['empty_values'] = $empty_checkbox;
+
     $elements['checkboxes']['element'] = array('#title' => $this->randomName(), '#type' => 'checkboxes', '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
     $elements['checkboxes']['empty_values'] = $empty_arrays;
 
@@ -54,7 +65,7 @@ class FormsTestCase extends DrupalWebTestCase {
     // Regular expression to find the expected marker on required elements.
     $required_marker_preg = '@<label.*<span class="form-required" title="This field is required\.">\*</span></label>@';
 
-    // Go through all the elements and all the empty values for them
+    // Go through all the elements and all the empty values for them.
     foreach ($elements as $type => $data) {
       foreach ($data['empty_values'] as $key => $empty) {
         foreach (array(TRUE, FALSE) as $required) {
@@ -107,42 +118,37 @@ class FormsTestCase extends DrupalWebTestCase {
     // Clear the expected form error messages so they don't appear as exceptions.
     drupal_get_messages();
   }
-}
-
-/**
- * Test form type functions for expected behavior.
- */
-class FormsTestTypeCase extends DrupalUnitTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Form type-specific tests',
-      'description' => 'Test form type functions for expected behavior.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
-   * Test form_type_checkbox_value() function for expected behavior.
+   * Test default value handling for checkboxes.
+   *
+   * @see _form_test_checkbox().
    */
-  function testFormCheckboxValue() {
-    $form['#return_value'] = $return_value = $this->randomName();
-    $form['#default_value'] = $default_value = $this->randomName();
-    // Element is disabled , and $edit is not empty.
-    $form['#disabled'] = TRUE;
-    $edit = array(1);
-    $this->assertEqual(form_type_checkbox_value($form, $edit), $default_value, t('form_type_checkbox_value() returns the default value when #disabled is set.'));
-
-    // Element is not disabled, $edit is not empty.
-    unset($form['#disabled']);
-    $this->assertEqual(form_type_checkbox_value($form, $edit), $return_value, t('form_type_checkbox_value() returns the return value when #disabled is not set.'));
-
-    // Element is not disabled, $edit is empty.
+  function testCheckboxProcessing() {
+    // First, try to submit without the required checkbox.
     $edit = array();
-    $this->assertIdentical(form_type_checkbox_value($form, $edit), 0, t('form_type_checkbox_value() returns 0 when #disabled is not set, and $edit is empty.'));
+    $this->drupalPost('form-test/checkbox', $edit, t('Submit'));
+    $this->assertRaw(t('!name field is required.', array('!name' => 'required_checkbox')), t('A required checkbox is actually mandatory'));
 
-    // $edit is FALSE.
-    $edit = FALSE;
-    $this->assertNull(form_type_checkbox_value($form, $edit), t('form_type_checkbox_value() returns NULL when $edit is FALSE'));
+    // Now try to submit the form correctly.
+    $this->drupalPost(NULL, array('required_checkbox' => 1), t('Submit'));
+
+    $values = json_decode($this->drupalGetContent(), TRUE);
+    $expected_values = array(
+      'disabled_checkbox_on' => 'disabled_checkbox_on',
+      'disabled_checkbox_off' => '',
+      'checkbox_on' => 'checkbox_on',
+      'checkbox_off' => '',
+      'zero_checkbox_on' => '0',
+      'zero_checkbox_off' => '',
+    );
+    foreach ($expected_values as $widget => $expected_value) {
+      $this->assertEqual($values[$widget], $expected_value, t('Checkbox %widget returns expected value (expected: %expected, got: %value)', array(
+        '%widget' => var_export($widget, TRUE),
+        '%expected' => var_export($expected_value, TRUE),
+        '%value' => var_export($values[$widget], TRUE),
+      )));
+    }
   }
 }
 
