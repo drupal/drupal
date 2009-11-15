@@ -479,7 +479,7 @@ html.js fieldset.collapsible .fieldset-wrapper {
 }
 
 div.form-item {
-  padding: 9px;
+  padding: 9px 0;
   margin: 0 0 10px;
 }
 
@@ -520,7 +520,7 @@ div.form-item label.option input {
 .filter-wrapper {
   border-top: 0;
   width: 95%;
-  padding: 10px 2px 10px 2px;
+  padding: 10px 2px;
 }
 
 .filter-wrapper > div {
@@ -606,6 +606,11 @@ textarea.form-textarea:focus,
 select.form-select:focus {
   color: #000;
   border-color: #ace;
+}
+
+.resizable-textarea .grippie {
+  width: 100%; 
+  padding: 0 2px;
 }
 
 html.js input.form-autocomplete {
