@@ -80,14 +80,23 @@ function node_help($path, $arg) {
 
   switch ($path) {
     case 'admin/help#node':
-      $output = '<p>' . t('The node module manages content on your site, and stores all posts (regardless of type) as a "node" . In addition to basic publishing settings, including whether the post has been published, promoted to the site front page, or should remain present (or sticky) at the top of lists, the node module also records basic information about the author of a post. Optional revision control over edits is available. For additional functionality, the node module is often extended by other modules.') . '</p>';
-      $output .= '<p>' . t('Though each post on your site is a node, each post is also of a particular <a href="@content-type">content type</a>. <a href="@content-type">Content types</a> are used to define the characteristics of a post, including the title and description of the fields displayed on its add and edit pages. Each content type may have different default settings for <em>Publishing options</em> and other workflow controls. By default, the two content types in a standard Drupal installation are <em>Page</em> and <em>Story</em>. Use the <a href="@content-type">content types page</a> to add new or edit existing content types. Additional content types also become available as you enable additional core, contributed and custom modules.', array('@content-type' => url('admin/structure/types'))) . '</p>';
-      $output .= '<p>' . t('The administrative <a href="@content">content page</a> allows you to review and manage your site content. The node module makes a number of permissions available for each content type, which may be set by role on the <a href="@permissions">permissions page</a>.', array('@content' => url('admin/content'), '@permissions' => url('admin/config/people/permissions'))) . '</p>';
-      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@node">Node module</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) . '</p>';
-      return $output;
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The node module manages the creation, editing, deletion, and display of all content on your site.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Publishing content') . '</dt>';
+      $output .= '<dd>' . t('When new content is created, the node module records basic information about the content item including the author, date of creation, and the type of content. It also tracks the <em>publishing options</em> which define whether or not the content is published, promoted to the front page of the site, and/or sticky at the top of content lists. Revision control of content edits is also available. Default settings can be configured for each <a href="@content-type">type of content</a> on your site.', array('@content-type' => url('admin/structure/types'))) . '</dd>';
+      $output .= '<dt>' . t('Administering content') . '</dt>';
+      $output .= '<dd>' . t('The administrative <a href="@content">content page</a> allows you to review and manage your site content.', array('@content' => url('admin/content'))) . '</dd>';
+      $output .= '<dt>' . t('User permissions') . '</dt>';
+      $output .= '<dd>' . t('The node module makes a number of permissions available for each content type, which may be set by role on the <a href="@permissions">permissions page</a>.', array('@permissions' => url('admin/settings/permissions'))) . '</dd>';
+      $output .= '</dl>';
+  
+    return $output;
 
     case 'admin/content':
-      return ' '; // Return a non-null value so that the 'more help' link is shown.
+      // Return a non-null value so that the 'more help' link is shown.
+      return ' ';
 
     case 'admin/structure/types/add':
       return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
@@ -96,13 +105,12 @@ function node_help($path, $arg) {
       return '<p>' . t('This form lets you add, edit, and arrange fields within the %type content type.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
 
     case 'admin/structure/types/manage/' . $arg[3] . '/display':
-      return '<p>' . t('This form lets you configure how fields and labels are displayed when %type content is viewed in teaser and full-page mode.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
-
+      return '<p>' . t('This form lets you configure how fields should be displayed when %type content is rendered in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
     case 'admin/structure/types/manage/' . $arg[3] . '/display/' . $arg[5]:
-      return '<p>' . t('This form lets you configure how fields should be displayed when rendered %type content in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
+      return '<p>' . t('This form lets you configure how fields should be displayed when %type content is rendered in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
 
     case 'node/%/revisions':
-      return '<p>' . t('The revisions let you track differences between multiple versions of a post.') . '</p>';
+      return '<p>' . t('The revisions let you track differences between multiple versions of your content.') . '</p>';
 
     case 'node/%/edit':
       $node = node_load($arg[1]);
@@ -1769,7 +1777,7 @@ function node_menu() {
 
   $items['admin/structure/types'] = array(
     'title' => 'Content types',
-    'description' => 'Manage posts by content type, including default status, front page promotion, comment settings, etc.',
+    'description' => 'Manage content types, including default status, front page promotion, comment settings, etc.',
     'page callback' => 'node_overview_types',
     'access arguments' => array('administer content types'),
     'file' => 'content_types.inc',
@@ -3144,7 +3152,7 @@ function node_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(
     '#title' => t('Keywords'),
     '#type' => 'textarea',
-    '#description' => t('The post will be unpublished if it contains any of the phrases above. Use a case-sensitive, comma-separated list of phrases. Example: funny, bungee jumping, "Company, Inc."'),
+    '#description' => t('The content will be unpublished if it contains any of the phrases above. Use a case-sensitive, comma-separated list of phrases. Example: funny, bungee jumping, "Company, Inc."'),
     '#default_value' => isset($context['keywords']) ? drupal_implode_tags($context['keywords']) : '',
   );
   return $form;
@@ -3190,7 +3198,7 @@ function node_requirements($phase) {
   } else {
     $value = $t('Disabled');
   }
-  $description = $t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.');
+  $description = $t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions.');
 
   $requirements['node_access'] = array(
     'title' => $t('Node Access Permissions'),
