@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.102 2009/11/06 03:59:06 webchick Exp $
+// $Id: system.api.php,v 1.103 2009/11/15 08:48:39 dries Exp $
 
 /**
  * @file
@@ -1973,7 +1973,10 @@ function hook_install() {
  *   to the user. If no message is returned, no message will be presented to the
  *   user.
  */
-function hook_update_N(&$sandbox = NULL) {
+function hook_update_N(&$sandbox) {
+  // For non-multipass updates, the signature can simply be;
+  // function hook_update_N() {
+
   // For most updates, the following is sufficient.
   db_add_field('mytable1', 'newcol', array('type' => 'int', 'not null' => TRUE, 'description' => 'My new integer column.'));
 
