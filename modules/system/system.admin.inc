@@ -791,7 +791,7 @@ function _system_modules_build_row($info, $extra) {
   );
   // Set the basic properties.
   $form['name'] = array(
-    '#markup' => t($info['name']),
+    '#markup' => $info['name'],
   );
   $form['description'] = array(
     '#markup' => t($info['description']),
