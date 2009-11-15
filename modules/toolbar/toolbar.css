@@ -41,6 +41,7 @@ div#toolbar {
 
 div#toolbar .collapsed {
   display: none;
+  visibility: hidden;
 }
 
 div#toolbar div.shadow {
@@ -84,7 +85,7 @@ div#toolbar div.toolbar-menu #toolbar-menu {
   left: 10px;
 }
 
-div#toolbar div.toolbar-menu span.toggle {
+div#toolbar div.toolbar-menu a.toggle {
   position: absolute;
   right: 10px;
   cursor: pointer;
@@ -95,7 +96,7 @@ div#toolbar div.toolbar-menu span.toggle {
   height: 25px;
 }
 
-div#toolbar div.toolbar-menu span.toggle-active {
+div#toolbar div.toolbar-menu a.toggle-active {
   background-position:  -25px -20px;
 }
 

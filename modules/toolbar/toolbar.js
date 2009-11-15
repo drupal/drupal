@@ -7,11 +7,11 @@
 Drupal.behaviors.admin = {
   attach: function(context) {
 
-    // Set the intial state of the toolbar.
+    // Set the initial state of the toolbar.
     $('#toolbar', context).once('toolbar', Drupal.admin.toolbar.init);
 
     // Toggling toolbar drawer.
-    $('#toolbar span.toggle', context).once('toolbar-toggle').click(function() {
+    $('#toolbar a.toggle', context).once('toolbar-toggle').click(function() {
       Drupal.admin.toolbar.toggle();
       return false;
     });
@@ -44,8 +44,12 @@ Drupal.admin.toolbar.init = function() {
  * Collapse the admin toolbar.
  */
 Drupal.admin.toolbar.collapse = function() {
+  var toggle_text = Drupal.t('Open the drawer');
   $('#toolbar div.toolbar-drawer').addClass('collapsed');
-  $('#toolbar span.toggle').removeClass('toggle-active');
+  $('#toolbar a.toggle')
+    .removeClass('toggle-active')
+    .attr('title',  toggle_text)
+    .html(toggle_text);
   $('body').removeClass('toolbar-drawer');
   $.cookie(
     'Drupal.admin.toolbar.collapsed', 
@@ -58,8 +62,12 @@ Drupal.admin.toolbar.collapse = function() {
  * Expand the admin toolbar.
  */
 Drupal.admin.toolbar.expand = function() {
+  var toggle_text = Drupal.t('Close the drawer');
   $('#toolbar div.toolbar-drawer').removeClass('collapsed');
-  $('#toolbar span.toggle').addClass('toggle-active');
+  $('#toolbar a.toggle')
+    .addClass('toggle-active')
+    .attr('title',  toggle_text)
+    .html(toggle_text);
   $('body').addClass('toolbar-drawer');
   $.cookie(
     'Drupal.admin.toolbar.collapsed', 
@@ -72,7 +80,7 @@ Drupal.admin.toolbar.expand = function() {
  * Toggle the admin toolbar.
  */
 Drupal.admin.toolbar.toggle = function() {
-  if ($('#toolbar .toolbar-drawer').is('.collapsed')) {
+  if ($('#toolbar div.toolbar-drawer').hasClass('collapsed')) {
     Drupal.admin.toolbar.expand();
   }
   else {
