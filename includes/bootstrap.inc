@@ -2100,8 +2100,12 @@ function registry_rebuild() {
 function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
   static $data = array(), $default = array();
   if (!isset($name)) {
-    // All variables are reset.
-    $data = $default;
+    // All variables are reset. This needs to be done one at a time so that
+    // references returned by earlier invocations of drupal_static() also get
+    // reset.
+    foreach ($default as $name => $value) {
+      $data[$name] = $value;
+    }
     // As the function returns a reference, the return should always be a
     // variable.
     return $data;
