@@ -3958,10 +3958,6 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  * @see drupal_render().
  */
 function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_check = FALSE) {
-  // If there is nothing to process then return.
-  if (empty($elements['#attached'])) {
-    return;
-  }
   // Add defaults to the special attached structures that should be processed differently.
   $elements['#attached'] += array(
     'library' => array(),
@@ -4060,13 +4056,11 @@ function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_ch
  *   @endcode
  */
 function drupal_process_states(&$elements) {
-  if (!empty($elements['#states'])) {
-    $elements['#attached']['js']['misc/states.js'] = array('weight' => JS_LIBRARY + 1);
-    $elements['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('states' => array('#' . $elements['#id'] => $elements['#states'])),
-    );
-  }
+  $elements['#attached']['js']['misc/states.js'] = array('weight' => JS_LIBRARY + 1);
+  $elements['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array('states' => array('#' . $elements['#id'] => $elements['#states'])),
+  );
 }
 
 /**
@@ -5019,11 +5013,15 @@ function drupal_render(&$elements) {
   }
 
   // Add any JavaScript state information associated with the element.
-  drupal_process_states($elements);
+  if (!empty($elements['#states'])) {
+    drupal_process_states($elements);
+  }
 
   // Add additional libraries, CSS, JavaScript an other custom
   // attached data associated with this element.
-  drupal_process_attached($elements);
+  if (!empty($elements['#attached'])) {
+    drupal_process_attached($elements);
+  }
 
   $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
   $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
