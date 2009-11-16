@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1048 2009/11/16 05:15:21 webchick Exp $
+// $Id: common.inc,v 1.1049 2009/11/16 20:31:27 webchick Exp $
 
 /**
  * @file
@@ -5131,7 +5131,9 @@ function drupal_render_cache_get($elements) {
   if (!empty($cid) && $cache = cache_get($cid, $bin)) {
     // Add additional libraries, JavaScript, CSS and other data attached
     // to this element.
-    drupal_process_attached($cache->data);
+    if (isset($cache->data['#attached'])) {
+      drupal_process_attached($cache->data);
+    }
     // Return the rendered output.
     return $cache->data['#markup'];;
   }
