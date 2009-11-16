@@ -66,8 +66,9 @@ function openid_user_insert(&$edit, $account, $category) {
   if (isset($_SESSION['openid']['values'])) {
     // The user has registered after trying to login via OpenID.
     if (variable_get('user_email_verification', TRUE)) {
-      drupal_set_message(t('Once you have verified your email address, you may log in via OpenID.'));
+      drupal_set_message(t('Once you have verified your e-mail address, you may log in via OpenID.'));
     }
+    user_set_authmaps($account, array('authname_openid' => $_SESSION['openid']['values']['response']['openid.claimed_id']));
     unset($_SESSION['openid']);
   }
 }
@@ -133,15 +134,21 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
   if (isset($_SESSION['openid']['values'])) {
     // We were unable to auto-register a new user. Prefill the registration
     // form with the values we have.
-    $form['name']['#default_value'] = $_SESSION['openid']['values']['name'];
-    $form['mail']['#default_value'] = $_SESSION['openid']['values']['mail'];
+    $form['account']['name']['#default_value'] = $_SESSION['openid']['values']['name'];
+    $form['account']['mail']['#default_value'] = $_SESSION['openid']['values']['mail'];
+
     // If user_email_verification is off, hide the password field and just fill
     // with random password to avoid confusion.
     if (!variable_get('user_email_verification', TRUE)) {
       $form['pass']['#type'] = 'hidden';
       $form['pass']['#value'] = user_password();
     }
-    $form['auth_openid'] = array('#type' => 'hidden', '#value' => $_SESSION['openid']['values']['auth_openid']);
+    $form['openid_display'] = array(
+      '#type' => 'item',
+      '#title' => t('Your OpenID'),
+      '#description' => t('This OpenID will be attached to your account after registration.'),
+      '#markup' => check_plain($_SESSION['openid']['values']['response']['openid.claimed_id']),
+    );
   }
 }
 
@@ -432,18 +439,33 @@ function openid_authentication($response) {
     // Register new user
     $form_state['build_info']['args'] = array();
     $form_state['redirect'] = NULL;
-    $form_state['values']['name'] = (empty($response['openid.sreg.nickname'])) ? $identity : $response['openid.sreg.nickname'];
-    $form_state['values']['mail'] = (empty($response['openid.sreg.email'])) ? '' : $response['openid.sreg.email'];
+    $form_state['values']['name'] = !empty($response['openid.sreg.nickname']) ? $response['openid.sreg.nickname'] : '';
+    $form_state['values']['mail'] = !empty($response['openid.sreg.email']) ? $response['openid.sreg.email'] : '';
     $form_state['values']['pass']  = user_password();
     $form_state['values']['status'] = variable_get('user_register', 1) == 1;
     $form_state['values']['response'] = $response;
-    $form = drupal_retrieve_form('user_register_form', $form_state);
-    drupal_prepare_form('user_register_form', $form, $form_state);
-    drupal_validate_form('user_register_form', $form, $form_state);
-    if (form_get_errors()) {
+
+    if (empty($response['openid.sreg.email']) && empty($response['openid.sreg.nickname'])) {
+      drupal_set_message(t('Please complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'warning');
+      $success = FALSE;
+    }
+    else {
+      $form = drupal_retrieve_form('user_register_form', $form_state);
+      drupal_prepare_form('user_register_form', $form, $form_state);
+      drupal_validate_form('user_register_form', $form, $form_state);
+      $success = !form_get_errors();
+      if (!$success) {
+        drupal_set_message(t('Account registration using the information provided by your OpenID provider failed due to the reasons listed below. Please complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'warning');
+        // Append form validation errors below the above warning.
+        $messages = drupal_get_messages('error');
+        foreach ($messages['error'] as $message) {
+          drupal_set_message( $message, 'error');
+        }
+      }
+    }
+    if (!$success) {
       // We were unable to register a valid new user, redirect to standard
       // user/register and prefill with the values we received.
-      drupal_set_message(t('OpenID registration failed for the reasons listed. You may register now, or if you already have an account you can <a href="@login">log in</a> now and add your OpenID under "My Account"', array('@login' => url('user/login'))), 'error');
       $_SESSION['openid']['values'] = $form_state['values'];
       // We'll want to redirect back to the same place.
       $destination = drupal_get_destination();

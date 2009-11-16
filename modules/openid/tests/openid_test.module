@@ -212,7 +212,7 @@ function _openid_test_endpoint_authenticate() {
   // Generate response containing the user's identity. The openid.sreg.xxx
   // entries contain profile data stored by the OpenID Provider (see OpenID
   // Simple Registration Extension 1.0).
-  $response = array(
+  $response = variable_get('openid_test_response', array()) + array(
     'openid.ns' => OPENID_NS_2_0,
     'openid.mode' => 'id_res',
     'openid.op_endpoint' => $base_url . url('openid/provider'),
@@ -222,8 +222,6 @@ function _openid_test_endpoint_authenticate() {
     'openid.return_to' => $_REQUEST['openid_return_to'],
     'openid.response_nonce' => $nonce,
     'openid.assoc_handle' => 'openid-test',
-    'openid.sreg.email' => 'johndoe@example.com',
-    'openid.sreg.nickname' => 'johndoe',
     'openid.signed' => 'op_endpoint,claimed_id,identity,return_to,response_nonce,assoc_handle',
   );
 
