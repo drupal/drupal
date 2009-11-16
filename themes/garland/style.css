@@ -291,6 +291,31 @@ table .form-button, table .form-submit {
 }
 
 /**
+ * Skip link
+ */
+#skip-link a:link, #skip-link a:visited {
+  font-weight: bold; 
+  background: #fff; 
+  padding: 0px 5px;
+  text-decoration: none;
+  font-size: 80%;
+  text-align: right;
+  top: -99em;
+  left: auto;
+  position: absolute;
+}
+
+#skip-link a:hover, #skip-link a:focus, #skip-link a:active  {
+  height: auto;
+  width: auto;
+  overflow: visible;
+  top:0;
+  left:0;
+  position: fixed;
+  z-index: 1000;
+}
+
+/**
  * Layout
  */
 .region-header {

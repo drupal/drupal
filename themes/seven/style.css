@@ -51,6 +51,34 @@ legend {
 }
 
 /**
+ * Skip link.
+ */
+#skip-link {
+  margin-top: 20px;
+  position: absolute;
+  right: 40px;
+  z-index: 50;
+}
+
+#skip-link a:link,
+#skip-link a:visited {
+ -moz-border-radius: 10px;
+ -webit-border-radius: 10px;
+ border-radius: 10px;
+ background: #d5d5ce;
+ color: #444;
+ font-size: 0.94em;
+ padding: 1px 10px 2px;
+}
+
+#skip-link a:hover,
+#skip-link a:focus {
+  background: #444;
+  color: #fff;
+  text-decoration: none;
+}
+
+/**
  * Branding.
  */
 #branding {
