@@ -1,5 +1,5 @@
 <?php
-// $Id: html.tpl.php,v 1.2 2009/10/19 18:28:16 dries Exp $
+// $Id: html.tpl.php,v 1.3 2009/11/16 05:34:24 webchick Exp $
 
 /**
  * @file
@@ -45,6 +45,9 @@
   <?php print $scripts; ?>
 </head>
 <body class="<?php print $classes; ?>" <?php print $attributes;?>>
+  <div id="skip-link">
+    <a href="#main-content"><?php print t('Skip to main content'); ?></a>
+  </div>
   <?php print $page_top; ?>
   <?php print $page; ?>
   <?php print $page_bottom; ?>

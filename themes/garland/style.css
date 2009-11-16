@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.66 2009/10/17 05:50:29 webchick Exp $ */
+/* $Id: style.css,v 1.67 2009/11/16 05:34:24 webchick Exp $ */
 
 /**
  * Generic elements
@@ -288,6 +288,31 @@ fieldset .form-button, fieldset .form-submit,
 .sidebar .form-button, .sidebar .form-submit,
 table .form-button, table .form-submit {
   margin: 0;
+}
+
+/**
+ * Skip link
+ */
+#skip-link a:link, #skip-link a:visited {
+  font-weight: bold; 
+  background: #fff; 
+  padding: 0px 5px;
+  text-decoration: none;
+  font-size: 80%;
+  text-align: right;
+  top: -99em;
+  left: auto;
+  position: absolute;
+}
+
+#skip-link a:hover, #skip-link a:focus, #skip-link a:active  {
+  height: auto;
+  width: auto;
+  overflow: visible;
+  top:0;
+  left:0;
+  position: fixed;
+  z-index: 1000;
 }
 
 /**

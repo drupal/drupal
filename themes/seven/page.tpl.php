@@ -1,6 +1,7 @@
 <?php
-// $Id: page.tpl.php,v 1.7 2009/11/11 06:56:52 webchick Exp $
+// $Id: page.tpl.php,v 1.8 2009/11/16 05:34:24 webchick Exp $
 ?>
+  <a name="main-content" id="main-content"></a>
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>
     <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
