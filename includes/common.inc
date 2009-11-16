@@ -5131,7 +5131,9 @@ function drupal_render_cache_get($elements) {
   if (!empty($cid) && $cache = cache_get($cid, $bin)) {
     // Add additional libraries, JavaScript, CSS and other data attached
     // to this element.
-    drupal_process_attached($cache->data);
+    if (isset($cache->data['#attached'])) {
+      drupal_process_attached($cache->data);
+    }
     // Return the rendered output.
     return $cache->data['#markup'];;
   }
