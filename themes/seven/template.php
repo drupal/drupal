@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.9 2009/11/08 13:37:34 webchick Exp $
+// $Id: template.php,v 1.10 2009/11/16 05:11:01 webchick Exp $
 
 /**
  * Override or insert variables into the page template.
@@ -77,5 +77,18 @@ function seven_tablesort_indicator($variables) {
  */
 function seven_fieldset($variables) {
   $element = $variables['element'];
-  return '<fieldset' . drupal_attributes($element['#attributes']) . '>' . ($element['#title'] ? '<legend><span>' . $element['#title'] . '</span></legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="fieldset-description">' . $element['#description'] . '</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . (isset($element['#value']) ? $element['#value'] : '') . "</fieldset>\n";
+
+  $output = '<fieldset' . drupal_attributes($element['#attributes']) . '>';
+  if (!empty($element['#title'])) {
+    $output .= '<legend><span>' . $element['#title'] . '</span></legend>';
+  }
+  if (!empty($element['#description'])) {
+    $output .= '<div class="fieldset-description">' . $element['#description'] . '</div>';
+  }
+  $output .= $element['#children'];
+  if (isset($element['#value'])) {
+    $output .= $element['#value'];
+  }
+  $output .= "</fieldset>\n";
+  return $output;
 }

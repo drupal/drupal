@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.841 2009/11/13 10:21:50 dries Exp $
+// $Id: system.module,v 1.842 2009/11/16 05:11:01 webchick Exp $
 
 /**
  * @file
@@ -488,7 +488,7 @@ function system_element_info() {
 
   $types['token'] = array(
     '#input' => TRUE,
-    '#theme' => array('hidden'),
+    '#theme' => 'hidden',
   );
 
   return $types;
