@@ -488,7 +488,7 @@ function system_element_info() {
 
   $types['token'] = array(
     '#input' => TRUE,
-    '#theme' => array('hidden'),
+    '#theme' => 'hidden',
   );
 
   return $types;

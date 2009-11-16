@@ -1017,11 +1017,16 @@ function form_builder($form_id, $element, &$form_state) {
   $element['#processed'] = FALSE;
 
   // Use element defaults.
-  if ((!empty($element['#type'])) && ($info = element_info($element['#type']))) {
+  if (isset($element['#type']) && ($info = element_info($element['#type']))) {
     // Overlay $info onto $element, retaining preexisting keys in $element.
     $element += $info;
     $element['#defaults_loaded'] = TRUE;
   }
+  // Assign basic defaults common for all form elements.
+  $element += array(
+    '#required' => FALSE,
+    '#attributes' => array(),
+  );
 
   // Special handling if we're on the top level form element.
   if (isset($element['#type']) && $element['#type'] == 'form') {
@@ -1739,7 +1744,20 @@ function form_get_options($element, $key) {
  */
 function theme_fieldset($variables) {
   $element = $variables['element'];
-  return '<fieldset' . drupal_attributes($element['#attributes']) . '>' . ($element['#title'] ? '<legend>' . $element['#title'] . '</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="fieldset-description">' . $element['#description'] . '</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . (isset($element['#value']) ? $element['#value'] : '') . "</fieldset>\n";
+
+  $output = '<fieldset' . drupal_attributes($element['#attributes']) . '>';
+  if (!empty($element['#title'])) {
+    $output .= '<legend>' . $element['#title'] . '</legend>';
+  }
+  if (!empty($element['#description'])) {
+    $output .= '<div class="fieldset-description">' . $element['#description'] . '</div>';
+  }
+  $output .= $element['#children'];
+  if (isset($element['#value'])) {
+    $output .= $element['#value'];
+  }
+  $output .= "</fieldset>\n";
+  return $output;
 }
 
 /**
@@ -1765,7 +1783,8 @@ function theme_radio($variables) {
   $output .= 'value="' . $element['#return_value'] . '" ';
   $output .= (check_plain($element['#value']) == $element['#return_value']) ? ' checked="checked" ' : ' ';
   $output .= drupal_attributes($element['#attributes']) . ' />';
-  if (!is_null($element['#title'])) {
+
+  if (isset($element['#title'])) {
     $output = '<label class="option" for="' . $element['#id'] . '">' . $output . ' ' . $element['#title'] . '</label>';
   }
 
@@ -2119,7 +2138,7 @@ function theme_checkbox($variables) {
   }
   $checkbox .= drupal_attributes($element['#attributes']) . ' />';
 
-  if (!is_null($element['#title'])) {
+  if (isset($element['#title'])) {
     $required = !empty($element['#required']) ? ' <span class="form-required" title="' . $t('This field is required.') . '">*</span>' : '';
     $checkbox = '<label class="option" for="' . $element['#id'] . '">' . $checkbox . ' ' . $element['#title'] . $required . '</label>';
   }
@@ -2157,7 +2176,7 @@ function theme_checkboxes($variables) {
  * This is used as a pre render function for checkboxes and radios.
  */
 function form_pre_render_conditional_form_element($element) {
-  if ($element['#title'] || $element['#description']) {
+  if (isset($element['#title']) || isset($element['#description'])) {
     unset($element['#id']);
     $element['#theme_wrappers'][] = 'form_element';
   }

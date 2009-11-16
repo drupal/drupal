@@ -4939,9 +4939,8 @@ function drupal_render_page($page) {
  *   The rendered HTML.
  */
 function drupal_render(&$elements) {
-  static $defaults;
   // Early-return nothing if user does not have access.
-  if (!isset($elements) || (isset($elements['#access']) && !$elements['#access'])) {
+  if (empty($elements) || (isset($elements['#access']) && !$elements['#access'])) {
     return;
   }
 
@@ -4954,7 +4953,7 @@ function drupal_render(&$elements) {
   if (isset($elements['#cache']) && $cached_output = drupal_render_cache_get($elements)) {
     return $cached_output;
   }
-  
+
   // If #markup is not empty, set #type. This allows to specify just #markup on
   // an element without setting #type.
   if (!empty($elements['#markup']) && !isset($elements['#type'])) {
@@ -4965,12 +4964,6 @@ function drupal_render(&$elements) {
   // them.
   if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
     $elements += element_info($elements['#type']);
-  }
-  else {
-    if (!isset($defaults)) {
-      $defaults = element_basic_defaults();
-    }
-    $elements += $defaults;
   }
 
   // Make any final changes to the element before it is rendered. This means
@@ -5062,7 +5055,9 @@ function drupal_render_children(&$element, $children_keys = NULL) {
   }
   $output = '';
   foreach ($children_keys as $key) {
-    $output .= drupal_render($element[$key]);
+    if (!empty($element[$key])) {
+      $output .= drupal_render($element[$key]);
+    }
   }
   return $output;
 }
@@ -5166,7 +5161,9 @@ function drupal_render_cache_set($markup, $elements) {
 
   $data['#markup'] = $markup;
   // Persist attached data associated with this element.
-  $data['#attached'] = $elements['#attached'];
+  if (isset($elements['#attached'])) {
+    $data['#attached'] = $elements['#attached'];
+  }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CACHE_PERMANENT;
   cache_set($cid, $data, $bin, $expire);
@@ -5258,10 +5255,8 @@ function element_info($type) {
   $cache = &drupal_static(__FUNCTION__);
 
   if (!isset($cache)) {
-    $basic_defaults = element_basic_defaults();
     $cache = module_invoke_all('element_info');
     foreach ($cache as $element_type => $info) {
-      $cache[$element_type] = array_merge_recursive($basic_defaults, $info);
       $cache[$element_type]['#type'] = $element_type;
     }
     // Allow modules to alter the element type defaults.
@@ -5269,19 +5264,6 @@ function element_info($type) {
   }
 
   return isset($cache[$type]) ? $cache[$type] : array();
-}
-
-/**
- * Retrieve the basic default properties that are common to all elements.
- */
-function element_basic_defaults() {
-  return array(
-    '#description' => '',
-    '#title' => '',
-    '#attributes' => array(),
-    '#required' => FALSE,
-    '#attached' => array(),
-  );
 }
 
 /**
