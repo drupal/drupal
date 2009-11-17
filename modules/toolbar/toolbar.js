@@ -1,4 +1,4 @@
-// $Id: toolbar.js,v 1.8 2009/11/15 21:13:26 webchick Exp $
+// $Id: toolbar.js,v 1.9 2009/11/17 18:51:19 webchick Exp $
 (function ($) {
 
 /**
@@ -54,7 +54,11 @@ Drupal.admin.toolbar.collapse = function() {
   $.cookie(
     'Drupal.admin.toolbar.collapsed', 
     1, 
-    {path: Drupal.settings.basePath}
+    {
+      path: Drupal.settings.basePath,
+      // The cookie should "never" expire.
+      expires: 36500
+    }
   );
 }
 
@@ -72,7 +76,11 @@ Drupal.admin.toolbar.expand = function() {
   $.cookie(
     'Drupal.admin.toolbar.collapsed', 
     0, 
-    {path: Drupal.settings.basePath}
+    {
+      path: Drupal.settings.basePath,
+      // The cookie should "never" expire.
+      expires: 36500
+    }
   );
 }
 
