@@ -11,3 +11,4 @@ files[] = user.install
 files[] = user.test
 files[] = user.tokens.inc
 required = TRUE
+configure = admin/config/people

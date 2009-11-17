@@ -8,3 +8,4 @@ files[] = trigger.module
 files[] = trigger.admin.inc
 files[] = trigger.install
 files[] = trigger.test
+configure = admin/structure/trigger

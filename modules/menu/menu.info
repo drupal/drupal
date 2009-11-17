@@ -8,3 +8,4 @@ files[] = menu.module
 files[] = menu.admin.inc
 files[] = menu.install
 files[] = menu.test
+configure = admin/structure/menu

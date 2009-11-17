@@ -13,3 +13,4 @@ files[] = update.manager.inc
 files[] = update.report.inc
 files[] = update.settings.inc
 files[] = update.test
+configure = admin/reports/updates/settings

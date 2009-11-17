@@ -9,6 +9,7 @@ files[] = simpletest.pages.inc
 files[] = simpletest.install
 files[] = simpletest.test
 files[] = drupal_web_test_case.php
+configure = admin/config/development/testing/settings
 
 ; Tests in tests directory.
 files[] = tests/actions.test

@@ -1,5 +1,4 @@
 ; $Id$
-
 name = Book
 description = Allows users to create and organize related content in an outline.
 package = Core
@@ -10,3 +9,4 @@ files[] = book.admin.inc
 files[] = book.pages.inc
 files[] = book.install
 files[] = book.test
+configure = admin/content/book/settings

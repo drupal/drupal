@@ -10,3 +10,4 @@ files[] = search.pages.inc
 files[] = search.install
 files[] = search.test
 files[] = search.extender.inc
+configure = admin/config/search/settings

@@ -159,9 +159,21 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
 .more-help-link {
   text-align: right; /* LTR */
 }
-.more-help-link a {
+.more-help-link a, a.module-link {
   padding: 1px 0 1px 20px; /* LTR */
+}
+a.module-link {
+  display: block;
+  white-space: nowrap;
+}
+.more-help-link a, a.module-link-help {
   background: url(../../misc/help.png) 0 50% no-repeat; /* LTR */
+}
+a.module-link-permissions {
+  background: url(../../misc/permissions.png) 0 50% no-repeat; /* LTR */
+}
+a.module-link-configure {
+  background: url(../../misc/configure.png) 0 50% no-repeat; /* LTR */
 }
 .more-link {
   text-align: right; /* LTR */

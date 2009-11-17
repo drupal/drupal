@@ -9,3 +9,4 @@ files[] = profile.admin.inc
 files[] = profile.pages.inc
 files[] = profile.install
 files[] = profile.test
+configure = admin/config/people/profile

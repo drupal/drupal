@@ -1,5 +1,4 @@
 ; $Id$
-
 name = Comment
 description = Allows users to comment on and discuss published content.
 package = Core
@@ -11,3 +10,4 @@ files[] = comment.pages.inc
 files[] = comment.install
 files[] = comment.test
 files[] = comment.tokens.inc
+configure = admin/content/comment

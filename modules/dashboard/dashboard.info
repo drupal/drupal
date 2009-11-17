@@ -6,3 +6,4 @@ package = Core
 version = VERSION
 files[] = dashboard.module
 dependencies[] = block
+configure = admin/dashboard/customize

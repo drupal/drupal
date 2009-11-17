@@ -10,3 +10,4 @@ files[] = statistics.pages.inc
 files[] = statistics.install
 files[] = statistics.test
 files[] = statistics.tokens.inc
+configure = admin/config/system/statistics

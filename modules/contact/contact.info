@@ -9,3 +9,4 @@ files[] = contact.admin.inc
 files[] = contact.pages.inc
 files[] = contact.install
 files[] = contact.test
+configure = admin/structure/contact

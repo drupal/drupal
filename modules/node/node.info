@@ -12,3 +12,4 @@ files[] = node.install
 files[] = node.test
 files[] = node.tokens.inc
 required = TRUE
+configure = admin/structure/types

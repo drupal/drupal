@@ -1,4 +1,4 @@
-;h $Id$
+; $Id$
 name = Filter
 description = Filters content in preparation for display.
 package = Core
@@ -10,3 +10,4 @@ files[] = filter.pages.inc
 files[] = filter.install
 files[] = filter.test
 required = TRUE
+configure = admin/config/content/formats

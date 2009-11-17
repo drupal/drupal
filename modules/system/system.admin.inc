@@ -720,10 +720,37 @@ function system_modules($form, $form_state = array()) {
     // Generate link for module's help page, if there is one.
     if ($help_arg && $module->status && in_array($filename, module_implements('help'))) {
       if (module_invoke($filename, 'help', "admin/help#$filename", $help_arg)) {
-        // Module has a help page.
-        $extra['help'] = theme('more_help_link', array('url' => url("admin/help/$filename")));
+        $extra['links']['help'] = array(
+          '#type' => 'link',
+          '#title' => t('Help'),
+          '#href' => "admin/help/$filename",
+          '#options' => array('attributes' => array('class' =>  array('module-link', 'module-link-help'), 'title' => t('Help'))),
+        );
       }
     }
+    // Generate link for module's permission, if the user has access to it.
+    if ($module->status && user_access('administer permissions') && in_array($filename, module_implements('permission'))) {
+      $extra['links']['permissions'] = array(
+        '#type' => 'link',
+        '#title' => t('Permissions'),
+        '#href' => 'admin/config/people/permissions',
+        '#options' => array('fragment' => 'module-' . $filename, 'attributes' => array('class' => array('module-link', 'module-link-permissions'), 'title' => t('Configure permissions'))),
+      );
+    }
+    // Generate link for module's configuration page, if the module provides
+    // one.
+    if ($module->status && isset($module->info['configure'])) {
+      $configure_link = menu_get_item($module->info['configure']);
+      if ($configure_link['access']) {
+        $extra['links']['configure'] = array(
+          '#type' => 'link',
+          '#title' => t('Configure'),
+          '#href' => $configure_link['href'],
+          '#options' => array('attributes' => array('class' => array('module-link', 'module-link-configure'), 'title' => $configure_link['description'])),
+        );
+      }
+    }
+
     // Mark dependents disabled so the user cannot remove required modules.
     $dependents = array();
     // If this module is required by other modules, list those, and then make it
@@ -754,6 +781,7 @@ function system_modules($form, $form_state = array()) {
         t('Name'),
         t('Version'),
         t('Description'),
+        array('data' => t('Operations'), 'colspan' => 3),
       ),
     );
   }
@@ -784,7 +812,7 @@ function _system_modules_build_row($info, $extra) {
     'required_by' => array(),
     'disabled' => FALSE,
     'enabled' => FALSE,
-    'help' => '',
+    'links' => array(),
   );
   $form = array(
     '#tree' => TRUE,
@@ -843,12 +871,11 @@ function _system_modules_build_row($info, $extra) {
     $form['description']['#markup'] .= theme('system_modules_incompatible', array('message' => $status_long));
   }
 
-  // Show a "more help" link for modules that have them.
-  if ($extra['help']) {
-    $form['help'] = array(
-      '#markup' => $extra['help'],
-    );
+  // Build operation links.
+  foreach (array('help', 'permissions', 'configure') as $key) {
+    $form['links'][$key] = (isset($extra['links'][$key]) ? $extra['links'][$key] : array());
   }
+
   return $form;
 }
 
@@ -2307,14 +2334,8 @@ function theme_system_modules_fieldset($variables) {
     }
     $row[] = $label . '><strong>' . drupal_render($module['name']) . '</strong></label>';
     $row[] = drupal_render($module['version']);
-    $description = '';
-    // If we have help, it becomes the first part
-    // of the description - with CSS, it is float: right'd.
-    if (isset($module['help'])) {
-      $description = '<div class="module-help">' . drupal_render($module['help']) . '</div>';
-    }
     // Add the description, along with any modules it requires.
-    $description .= drupal_render($module['description']);
+    $description = drupal_render($module['description']);
     if ($module['#requires']) {
       $description .= '<div class="admin-requirements">' . t('Requires: !module-list', array('!module-list' => implode(', ', $module['#requires']))) . '</div>';
     }
@@ -2322,6 +2343,10 @@ function theme_system_modules_fieldset($variables) {
       $description .= '<div class="admin-requirements">' . t('Required by: !module-list', array('!module-list' => implode(', ', $module['#required_by']))) . '</div>';
     }
     $row[] = array('data' => $description, 'class' => array('description'));
+    // Display links (such as help or permissions) in their own columns.
+    foreach (array('help', 'permissions', 'configure') as $key) {
+      $row[] = array('data' => drupal_render($module['links'][$key]), 'class' => array($key));
+    }
     $rows[] = $row;
   }
 

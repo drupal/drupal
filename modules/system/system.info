@@ -16,3 +16,4 @@ files[] = system.tokens.inc
 files[] = system.updater.inc
 files[] = mail.sending.inc
 required = TRUE
+configure = admin/config/system

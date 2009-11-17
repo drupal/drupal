@@ -12,3 +12,4 @@ files[] = aggregator.parser.inc
 files[] = aggregator.processor.inc
 files[] = aggregator.install
 files[] = aggregator.test
+configure = admin/config/services/aggregator/settings

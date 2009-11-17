@@ -8,3 +8,4 @@ files[] = locale.module
 files[] = locale.install
 files[] = locale.field.inc
 files[] = locale.test
+configure = admin/config/regional/language
