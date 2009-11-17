@@ -54,7 +54,11 @@ Drupal.admin.toolbar.collapse = function() {
   $.cookie(
     'Drupal.admin.toolbar.collapsed', 
     1, 
-    {path: Drupal.settings.basePath}
+    {
+      path: Drupal.settings.basePath,
+      // The cookie should "never" expire.
+      expires: 36500
+    }
   );
 }
 
@@ -72,7 +76,11 @@ Drupal.admin.toolbar.expand = function() {
   $.cookie(
     'Drupal.admin.toolbar.collapsed', 
     0, 
-    {path: Drupal.settings.basePath}
+    {
+      path: Drupal.settings.basePath,
+      // The cookie should "never" expire.
+      expires: 36500
+    }
   );
 }
 
