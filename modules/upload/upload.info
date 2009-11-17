@@ -1,4 +1,4 @@
-; $Id: upload.info,v 1.10 2009/08/19 20:19:37 dries Exp $
+; $Id: upload.info,v 1.11 2009/11/17 21:24:19 dries Exp $
 name = Upload
 description = Allows users to upload and attach files to content.
 package = Core
@@ -9,3 +9,4 @@ files[] = upload.admin.inc
 files[] = upload.install
 files[] = upload.test
 files[] = upload.tokens.inc
+configure = admin/config/media/uploads

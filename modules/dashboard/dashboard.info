@@ -1,4 +1,4 @@
-; $Id: dashboard.info,v 1.1 2009/10/13 13:54:54 dries Exp $
+; $Id: dashboard.info,v 1.2 2009/11/17 21:24:18 dries Exp $
 name = Dashboard
 description = A module that provides a dashboard interface for organizing and tracking various information within your site.
 core = 7.x
@@ -6,3 +6,4 @@ package = Core
 version = VERSION
 files[] = dashboard.module
 dependencies[] = block
+configure = admin/dashboard/customize

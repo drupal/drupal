@@ -1,4 +1,4 @@
-; $Id: node.info,v 1.12 2009/08/19 20:19:36 dries Exp $
+; $Id: node.info,v 1.13 2009/11/17 21:24:18 dries Exp $
 name = Node
 description = Allows content to be submitted to the site and displayed on pages.
 package = Core
@@ -12,3 +12,4 @@ files[] = node.install
 files[] = node.test
 files[] = node.tokens.inc
 required = TRUE
+configure = admin/structure/types

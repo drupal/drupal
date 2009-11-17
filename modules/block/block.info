@@ -1,5 +1,4 @@
-; $Id: block.info,v 1.14 2009/08/28 19:44:05 webchick Exp $
-
+; $Id: block.info,v 1.15 2009/11/17 21:24:18 dries Exp $
 name = Block
 description = Controls the visual building blocks a page is constructed with. Blocks are boxes of content rendered into an area, or region, of a web page.
 package = Core
@@ -9,3 +8,4 @@ files[] = block.module
 files[] = block.admin.inc
 files[] = block.install
 files[] = block.test
+configure = admin/structure/block

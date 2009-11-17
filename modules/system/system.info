@@ -1,4 +1,4 @@
-; $Id: system.info,v 1.18 2009/10/15 21:19:31 webchick Exp $
+; $Id: system.info,v 1.19 2009/11/17 21:24:18 dries Exp $
 name = System
 description = Handles general site configuration for administrators.
 package = Core
@@ -16,3 +16,4 @@ files[] = system.tokens.inc
 files[] = system.updater.inc
 files[] = mail.sending.inc
 required = TRUE
+configure = admin/config/system

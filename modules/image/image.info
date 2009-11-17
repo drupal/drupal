@@ -1,4 +1,4 @@
-; $Id: image.info,v 1.4 2009/11/13 03:30:37 webchick Exp $
+; $Id: image.info,v 1.5 2009/11/17 21:24:18 dries Exp $
 name = Image
 description = Provides image manipulation tools.
 package = Core
@@ -11,3 +11,4 @@ files[] = image.effects.inc
 files[] = image.field.inc
 files[] = image.install
 files[] = image.test
+configure = admin/config/media/image-styles

@@ -1,4 +1,4 @@
-; $Id: search.info,v 1.10 2009/08/29 10:46:41 dries Exp $
+; $Id: search.info,v 1.11 2009/11/17 21:24:18 dries Exp $
 name = Search
 description = Enables site-wide keyword searching.
 package = Core
@@ -10,3 +10,4 @@ files[] = search.pages.inc
 files[] = search.install
 files[] = search.test
 files[] = search.extender.inc
+configure = admin/config/search/settings

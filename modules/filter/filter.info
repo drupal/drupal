@@ -1,4 +1,4 @@
-;h $Id: filter.info,v 1.12 2009/06/08 09:23:52 dries Exp $
+; $Id: filter.info,v 1.13 2009/11/17 21:24:18 dries Exp $
 name = Filter
 description = Filters content in preparation for display.
 package = Core
@@ -10,3 +10,4 @@ files[] = filter.pages.inc
 files[] = filter.install
 files[] = filter.test
 required = TRUE
+configure = admin/config/content/formats
