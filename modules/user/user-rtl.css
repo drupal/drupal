@@ -1,9 +1,14 @@
-/* $Id: user-rtl.css,v 1.5 2009/08/06 05:06:00 webchick Exp $ */
+/* $Id: user-rtl.css,v 1.6 2009/11/17 02:50:41 webchick Exp $ */
 
 #permissions td.permission {
   padding-left: 0;
   padding-right: 1.5em;
 }
+
+#user-admin-filter dl.multiselect dd .form-item label {
+  float: right;
+}
+
 #user-admin-buttons {
   float: right;
   margin-left: 0;

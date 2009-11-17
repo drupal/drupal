@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.77 2009/11/14 07:58:49 dries Exp $
+// $Id: node.admin.inc,v 1.78 2009/11/17 02:50:41 webchick Exp $
 
 /**
  * @file
@@ -242,7 +242,7 @@ function theme_node_filters($variables) {
 
   $output .= '<dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '');
 
-  $output .= '<dd class="b">';
+  $output .= '<dd>';
 
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);

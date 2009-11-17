@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.67 2009/11/10 17:27:54 webchick Exp $
+// $Id: user.test,v 1.68 2009/11/17 02:50:41 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -984,7 +984,6 @@ class UserAdminTestCase extends DrupalWebTestCase {
 
     // Filter the users by permission 'administer taxonomy'.
     $edit = array();
-    $edit['filter'] = 'permission';
     $edit['permission'] = 'administer taxonomy';
     $this->drupalPost('admin/people', $edit, t('Filter'));
 
