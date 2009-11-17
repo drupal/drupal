@@ -44,10 +44,17 @@ function user_filter_form() {
   );
   foreach ($session as $filter) {
     list($type, $value) = $filter;
-    // Merge an array of arrays into one if necessary.
-    $options = $type == 'permission' ? call_user_func_array('array_merge', $filters[$type]['options']) : $filters[$type]['options'];
-    $params = array('%property' => $filters[$type]['title'] , '%value' => $options[$value]);
-    if ($i++ > 0) {
+    if ($type == 'permission') {
+      // Merge arrays of module permissions into one.
+      // Slice past the first element '[any]' whose value is not an array.
+      $options = call_user_func_array('array_merge', array_slice($filters[$type]['options'], 1));
+      $value = $options[$value];
+    }
+    else {
+      $value = $filters[$type]['options'][$value];
+    }
+    $params = array('%property' => $filters[$type]['title'] , '%value' => $value);
+    if ($i++) {
       $form['filters']['current'][] = array('#markup' => t('<em>and</em> where <strong>%property</strong> is <strong>%value</strong>', $params));
     }
     else {
@@ -60,13 +67,11 @@ function user_filter_form() {
     $form['filters']['status'][$key] = array(
       '#type' => 'select',
       '#options' => $filter['options'],
+      '#title' => $filter['title'],
+      '#default_value' => '[any]',
     );
   }
 
-  $form['filters']['filter'] = array(
-    '#type' => 'radios',
-    '#options' => $names,
-  );
   $form['filters']['buttons']['submit'] = array(
     '#type' => 'submit',
     '#value' => (count($session) ? t('Refine') : t('Filter')),
@@ -94,13 +99,17 @@ function user_filter_form_submit($form, &$form_state) {
   $op = $form_state['values']['op'];
   $filters = user_filters();
   switch ($op) {
-    case t('Filter'): case t('Refine'):
-      if (isset($form_state['values']['filter'])) {
-        $filter = $form_state['values']['filter'];
-        // Merge an array of arrays into one if necessary.
-        $options = $filter == 'permission' ? call_user_func_array('array_merge', $filters[$filter]['options']) : $filters[$filter]['options'];
-        if (isset($options[$form_state['values'][$filter]])) {
-          $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
+    case t('Filter'):
+    case t('Refine'):
+      // Apply every filter that has a choice selected other than 'any'.
+      foreach ($filters as $filter => $options) {
+        if (isset($form_state['values'][$filter]) && $form_state['values'][$filter] != '[any]') {
+          // Merge an array of arrays into one if necessary.
+          $options = ($filter == 'permission') ? form_options_flatten($filters[$filter]['options']) : $filters[$filter]['options'];
+          // Only accept valid selections offered on the dropdown, block bad input.
+          if (isset($options[$form_state['values'][$filter]])) {
+            $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
+          }
         }
       }
       break;
@@ -886,14 +895,11 @@ function theme_user_filters($variables) {
       $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';
     }
   }
+  $output .= '</ul>';
 
-  $output .= '<li><dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '') . '<dd class="a">';
-  foreach (element_children($form['filter']) as $key) {
-    $output .= drupal_render($form['filter'][$key]);
-  }
-  $output .= '</dd>';
+  $output .= '<dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '');
 
-  $output .= '<dt>' . t('is') . '</dt><dd class="b">';
+  $output .= '<dd>';
 
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);
@@ -902,7 +908,6 @@ function theme_user_filters($variables) {
 
   $output .= '</dl>';
   $output .= '<div class="container-inline" id="user-admin-buttons">' . drupal_render($form['buttons']) . '</div>';
-  $output .= '</li></ul>';
 
   return $output;
 }

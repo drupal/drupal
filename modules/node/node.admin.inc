@@ -242,7 +242,7 @@ function theme_node_filters($variables) {
 
   $output .= '<dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '');
 
-  $output .= '<dd class="b">';
+  $output .= '<dd>';
 
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);

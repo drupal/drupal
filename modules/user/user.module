@@ -2783,7 +2783,9 @@ function user_filters() {
     $filters['role'] = array(
       'title' => t('role'),
       'field' => 'ur.rid',
-      'options' => $roles,
+      'options' => array(
+        '[any]' => t('any'),
+      ) + $roles,
     );
   }
 
@@ -2800,13 +2802,19 @@ function user_filters() {
   ksort($options);
   $filters['permission'] = array(
     'title' => t('permission'),
-    'options' => $options,
+    'options' => array(
+      '[any]' => t('any'),
+    ) + $options,
   );
 
   $filters['status'] = array(
     'title' => t('status'),
     'field' => 'u.status',
-    'options' => array(1 => t('active'), 0 => t('blocked')),
+    'options' => array(
+      '[any]' => t('any'),
+      1 => t('active'),
+      0 => t('blocked'),
+    ),
   );
   return $filters;
 }

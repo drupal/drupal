@@ -1,6 +1,6 @@
 /* $Id$ */
 
-#node-admin-content dl.multiselect dd.b .form-item label {
+#node-admin-content dl.multiselect dd .form-item label {
   display: block;
   float: right;
   width: 6em;

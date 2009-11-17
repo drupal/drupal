@@ -984,7 +984,6 @@ class UserAdminTestCase extends DrupalWebTestCase {
 
     // Filter the users by permission 'administer taxonomy'.
     $edit = array();
-    $edit['filter'] = 'permission';
     $edit['permission'] = 'administer taxonomy';
     $this->drupalPost('admin/people', $edit, t('Filter'));
 

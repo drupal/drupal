@@ -4,6 +4,11 @@
   padding-left: 0;
   padding-right: 1.5em;
 }
+
+#user-admin-filter dl.multiselect dd .form-item label {
+  float: right;
+}
+
 #user-admin-buttons {
   float: right;
   margin-left: 0;

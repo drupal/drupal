@@ -193,13 +193,10 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
   padding-bottom: 0;
   font-size: 0.9em;
 }
-dl.multiselect dd.b, dl.multiselect dd.b .form-item, dl.multiselect dd.b select {
+dl.multiselect dd, dl.multiselect dd .form-item, dl.multiselect dd select {
   font-family: inherit;
   font-size: inherit;
   width: 14em;
-}
-dl.multiselect dd.a, dl.multiselect dd.a .form-item {
-  width: 8em;
 }
 dl.multiselect dt, dl.multiselect dd {
   float: left; /* LTR */

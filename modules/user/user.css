@@ -9,12 +9,15 @@
 #permissions tr.odd .form-item, #permissions tr.even .form-item {
   white-space: normal;
 }
-#user-admin-filter ul {
-  list-style-type: none;
-  list-style-image: none;
-  padding: 0;
-  margin: 0;
-  width: 100%;
+/* Override the default multiselect layout in system.css. */
+#user-admin-filter dl.multiselect dd, dl.multiselect dd .form-item {
+  width: 20em; /* 6em label + 14em select */
+}
+#user-admin-filter dl.multiselect dd .form-item label {
+  display: block;
+  float: left; /* LTR */
+  width: 6em;
+  font-weight: normal;
 }
 #user-admin-buttons {
   float: left; /* LTR */
