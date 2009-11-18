@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.268 2009/11/10 17:27:53 webchick Exp $
+// $Id: locale.module,v 1.269 2009/11/18 19:25:28 dries Exp $
 
 /**
  * @file
@@ -1103,5 +1103,17 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
     foreach ($callbacks as $callback) {
       $callback($path, $options);
     }
+  }
+}
+
+/*
+ * Implement hook_form_FORM_ID_alter().
+ */
+function locale_form_comment_form_alter(&$form, &$form_state, $form_id) {
+  // If a content type has multilingual support we set the content language as
+  // comment language.
+  if (empty($form['language']['#value']) && locale_multilingual_node_type($form['#node']->type)) {
+    global $language;
+    $form['language']['#value'] = $language->language;
   }
 }
