@@ -1105,3 +1105,15 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
     }
   }
 }
+
+/*
+ * Implement hook_form_FORM_ID_alter().
+ */
+function locale_form_comment_form_alter(&$form, &$form_state, $form_id) {
+  // If a content type has multilingual support we set the content language as
+  // comment language.
+  if (empty($form['language']['#value']) && locale_multilingual_node_type($form['#node']->type)) {
+    global $language;
+    $form['language']['#value'] = $language->language;
+  }
+}
