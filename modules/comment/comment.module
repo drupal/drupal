@@ -1635,10 +1635,11 @@ function comment_get_display_page($cid, $node_type) {
  * @see comment_form_submit()
  */
 function comment_form($form, &$form_state, $comment) {
-  global $user, $language;
+  global $user;
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $node = node_load($comment->nid);
+  $form['#node'] = $node;
 
   if (!$user->uid && variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
     $form['#attached']['library'][] = array('system', 'cookie');
@@ -1851,7 +1852,7 @@ function comment_form($form, &$form_state, $comment) {
   );
   $form['language'] = array(
     '#type' => 'value',
-    '#value' => isset($comment->language) ? $comment->language : $language->language,
+    '#value' => isset($comment->language) ? $comment->language : '',
   );
   $form['uid'] = array(
     '#type' => 'value',
