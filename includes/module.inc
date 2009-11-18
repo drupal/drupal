@@ -113,7 +113,7 @@ function system_list($type) {
     }
     else {
       $bootstrap_list = db_query("SELECT name, filename FROM {system} WHERE status = 1 AND bootstrap = 1 AND type = 'module' ORDER BY weight ASC, name ASC")->fetchAllAssoc('name');
-      cache_set('bootstrap_modules', $bootstrap_list, 'cache');
+      cache_set('bootstrap_modules', $bootstrap_list, 'cache_bootstrap');
     }
     foreach ($bootstrap_list as $module) {
       // Prime the drupal_get_filename() static cache to avoid subsequent
@@ -555,7 +555,7 @@ function module_implements_write_cache() {
   // optimized as tightly, and not doing so keeps the cache entry smaller.
   if (isset($implementations['#write_cache']) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD')) {
     unset($implementations['#write_cache']);
-    cache_set('module_implements', $implementations);
+    cache_set('module_implements', $implementations, 'cache_bootstrap');
   }
 }
 
