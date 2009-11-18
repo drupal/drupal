@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.21 2009/11/08 10:02:41 webchick Exp $
+// $Id: book.pages.inc,v 1.22 2009/11/18 18:51:11 dries Exp $
 
 /**
  * @file
@@ -117,7 +117,7 @@ function book_outline_form($form, &$form_state, $node) {
   }
   $form['#node'] = $node;
   $form['#id'] = 'book-outline';
-  _book_add_form_elements($form, $node);
+  _book_add_form_elements($form, $form_state, $node);
 
   $form['book']['#collapsible'] = FALSE;
 

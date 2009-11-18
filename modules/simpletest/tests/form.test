@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.24 2009/11/15 21:36:06 webchick Exp $
+// $Id: form.test,v 1.25 2009/11/18 18:51:11 dries Exp $
 
 /**
  * @file
@@ -432,7 +432,7 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Tests using the form with an activated #cache property.
+   * Tests using the form with an activated $form_state['cache'] property.
    */
   function testFormCached() {
     $user = $this->drupalCreateUser(array('access content'));
