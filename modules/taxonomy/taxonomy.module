@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.538 2009/11/13 09:24:06 dries Exp $
+// $Id: taxonomy.module,v 1.539 2009/11/18 18:58:01 dries Exp $
 
 /**
  * @file
@@ -220,7 +220,7 @@ function taxonomy_menu() {
     'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.feeds.inc',
+    'file' => 'taxonomy.pages.inc',
   );
   $items['taxonomy/autocomplete'] = array(
     'title' => 'Autocomplete taxonomy',
