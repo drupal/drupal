@@ -432,7 +432,7 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Tests using the form with an activated #cache property.
+   * Tests using the form with an activated $form_state['cache'] property.
    */
   function testFormCached() {
     $user = $this->drupalCreateUser(array('access content'));

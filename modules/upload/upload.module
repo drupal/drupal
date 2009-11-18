@@ -210,7 +210,7 @@ function upload_node_form_submit(&$form, &$form_state) {
   }
 }
 
-function upload_form_alter(&$form, $form_state, $form_id) {
+function upload_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
     $form['workflow']['upload'] = array(
       '#type' => 'radios',
@@ -256,7 +256,7 @@ function upload_form_alter(&$form, $form_state, $form_id) {
         }
       }
       else {
-        $form['attachments']['wrapper'] += _upload_form($node);
+        $form['attachments']['wrapper'] += _upload_form($node, $form_state);
       }
       $form['#submit'][] = 'upload_node_form_submit';
     }
@@ -529,12 +529,12 @@ function upload_save($node) {
   }
 }
 
-function _upload_form($node) {
+function _upload_form($node, &$form_state) {
   global $user;
 
+  $form_state['cache'] = TRUE;
   $form = array(
     '#theme' => 'upload_form_new',
-    '#cache' => TRUE,
     '#prefix' => '<div id="attach-wrapper">',
     '#suffix' => '</div>',
   );
@@ -669,7 +669,7 @@ function upload_js() {
 
   $node->files = $files;
 
-  $form = _upload_form($node);
+  $form = _upload_form($node, $form_state);
 
   unset($cached_form['attachments']['wrapper']['new']);
   $cached_form['attachments']['wrapper'] = array_merge($cached_form['attachments']['wrapper'], $form);

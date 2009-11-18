@@ -112,7 +112,11 @@ function drupal_get_form($form_id) {
  *     can have unexpected effects. The 'get' method should only be used on
  *     forms that do not change data, as that is exclusively the domain of post.
  *   - no_redirect: If set to TRUE the form will NOT perform a drupal_goto(),
- *     even if a redirect is set.
+ *     even if 'redirect' is set.
+ *   - cache: If set to TRUE the original, unprocessed form structure will be
+ *     cached, which allows to rebuild the entire form from cache.
+ *   - no_cache: If set to TRUE the form will NOT be cached, even if 'cache' is
+ *     set.
  *   - always_process: If TRUE and the method is GET, a form_id is not
  *     necessary. This should only be used on RESTful GET forms that do NOT
  *     write data, as this could lead to security issues. It is useful so that
@@ -192,7 +196,7 @@ function drupal_build_form($form_id, &$form_state) {
 
       drupal_prepare_form($form_id, $form, $form_state);
       // Store a copy of the unprocessed form for caching and indicate that it
-      // is cacheable if #cache will be set.
+      // is cacheable in case $form_state['cache'] is set.
       $original_form = $form;
       $cacheable = TRUE;
     }
@@ -204,9 +208,11 @@ function drupal_build_form($form_id, &$form_state) {
     // reference.
     drupal_process_form($form_id, $form, $form_state);
 
-    if ($cacheable && !empty($form_state['cache']) && empty($form['#no_cache'])) {
-      // Caching is done past drupal_process_form so #process callbacks can
-      // set #cache.
+    // After processing the form, the form builder or a #process callback may
+    // have set $form_state['cache'] to indicate that the original form and the
+    // $form_state shall be cached. But the form may only be cached if the
+    // special 'no_cache' property is not set to TRUE.
+    if ($cacheable && !empty($form_state['cache']) && empty($form_state['no_cache'])) {
       form_set_cache($form_build_id, $original_form, $form_state);
     }
   }
@@ -299,7 +305,7 @@ function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
   $form['#build_id'] = $form_build_id;
   drupal_prepare_form($form_id, $form, $form_state);
 
-  if (empty($form['#no_cache'])) {
+  if (empty($form_state['no_cache'])) {
     // We cache the form structure so it can be retrieved later for validation.
     // If $form_state['storage'] is populated, we also cache it so that it can
     // be used to resume complex multi-step processes.
@@ -1120,12 +1126,6 @@ function form_builder($form_id, $element, &$form_state) {
   // Now that we've processed everything, we can go back to handle the funky
   // Internet Explorer button-click scenario.
   _form_builder_ie_cleanup($element, $form_state);
-
-  // If some callback set #cache, we need to flip a flag so later it
-  // can be found.
-  if (!empty($element['#cache'])) {
-    $form_state['cache'] = $element['#cache'];
-  }
 
   // If there is a file element, we need to flip a flag so later the
   // form encoding can be set.

@@ -366,7 +366,7 @@ function ajax_deliver($page_callback_result) {
  *   None. Additional code is added to the header of the page using
  *   drupal_add_js().
  */
-function ajax_process_form($element) {
+function ajax_process_form($element, &$form_state) {
   $js_added = &drupal_static(__FUNCTION__, array());
 
   // Add a reasonable default event handler if none was specified.
@@ -437,7 +437,7 @@ function ajax_process_form($element) {
     drupal_add_js(array('ajax' => array($element['#id'] => $ajax_binding)), 'setting');
 
     $js_added[$element['#id']] = TRUE;
-    $element['#cache'] = TRUE;
+    $form_state['cache'] = TRUE;
   }
   return $element;
 }

@@ -211,16 +211,14 @@ function poll_field_extra_fields($bundle) {
 /**
  * Implement hook_form().
  */
-function poll_form($node, $form_state) {
+function poll_form($node, &$form_state) {
   global $user;
 
   $admin = user_access('administer nodes') || user_access('edit any poll content') || (user_access('edit own poll content') && $user->uid == $node->uid);
 
   $type = node_type_get_type($node);
 
-  $form = array(
-    '#cache' => TRUE,
-  );
+  $form_state['cache'] = TRUE;
 
   if (isset($form_state['choice_count'])) {
     $choice_count = $form_state['choice_count'];
@@ -658,7 +656,7 @@ function poll_view_voting($form, &$form_state, $node, $block = FALSE) {
 
   // Set form caching because we could have multiple of these forms on
   // the same page, and we want to ensure the right one gets picked.
-  $form['#cache'] = TRUE;
+  $form_state['cache'] = TRUE;
 
   // Provide a more cleanly named voting form theme.
   $form['#theme'] = 'poll_vote';
@@ -845,6 +843,8 @@ function template_preprocess_poll_bar(&$variables) {
  * @see poll_cancel()
  */
 function poll_cancel_form($form, &$form_state, $nid) {
+  $form_state['cache'] = TRUE;
+
   // Store the nid so we can get to it in submit functions.
   $form['#nid'] = $nid;
 
@@ -853,8 +853,6 @@ function poll_cancel_form($form, &$form_state, $nid) {
     '#value' => t('Cancel your vote'),
     '#submit' => array('poll_cancel')
   );
-
-  $form['#cache'] = TRUE;
 
   return $form;
 }

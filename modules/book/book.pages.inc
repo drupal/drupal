@@ -117,7 +117,7 @@ function book_outline_form($form, &$form_state, $node) {
   }
   $form['#node'] = $node;
   $form['#id'] = 'book-outline';
-  _book_add_form_elements($form, $node);
+  _book_add_form_elements($form, $form_state, $node);
 
   $form['book']['#collapsible'] = FALSE;
 

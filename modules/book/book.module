@@ -360,8 +360,7 @@ function book_get_books() {
  * @see book_pick_book_submit()
  * @see book_submit()
  */
-function book_form_alter(&$form, $form_state, $form_id) {
-
+function book_form_alter(&$form, &$form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
     // Add elements to the node form.
     $node = $form['#node'];
@@ -375,7 +374,7 @@ function book_form_alter(&$form, $form_state, $form_id) {
     }
 
     if ($access) {
-      _book_add_form_elements($form, $node);
+      _book_add_form_elements($form, $form_state, $node);
       $form['book']['pick-book'] = array(
         '#type' => 'submit',
         '#value' => t('Change book (update list of parents)'),
@@ -439,9 +438,9 @@ function _book_parent_select($book_link) {
 /**
  * Build the common elements of the book form for the node and outline forms.
  */
-function _book_add_form_elements(&$form, $node) {
+function _book_add_form_elements(&$form, &$form_state, $node) {
   // Need this for AJAX.
-  $form['#cache'] = TRUE;
+  $form_state['cache'] = TRUE;
 
   $form['book'] = array(
     '#type' => 'fieldset',
