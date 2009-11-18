@@ -1401,6 +1401,14 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
+   * Retrieve a Drupal path or an absolute path and JSON decode the result.
+   */
+  function drupalGetAJAX($path, array $options = array(), array $headers = array()) {
+    $out = $this->drupalGet($path, $options, $headers);
+    return json_decode($out, TRUE);
+  }
+
+  /**
    * Execute a POST request on a Drupal page.
    * It will be done as usual POST request with SimpleBrowser.
    *
@@ -1409,6 +1417,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   NULL to post to the current page. For multi-stage forms you can set the
    *   path to NULL and have it post to the last received page. Example:
    *
+   *   @code
    *   // First step in form.
    *   $edit = array(...);
    *   $this->drupalPost('some_url', $edit, t('Save'));
@@ -1416,6 +1425,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   // Second step in form.
    *   $edit = array(...);
    *   $this->drupalPost(NULL, $edit, t('Save'));
+   *   @endcode
    * @param  $edit
    *   Field data in an associative array. Changes the current input fields
    *   (where possible) to the values indicated. A checkbox can be set to
@@ -1425,10 +1435,28 @@ class DrupalWebTestCase extends DrupalTestCase {
    *
    *   Multiple select fields can be set using name[] and setting each of the
    *   possible values. Example:
+   *   @code
    *   $edit = array();
    *   $edit['name[]'] = array('value1', 'value2');
+   *   @endcode
    * @param $submit
-   *   Value of the submit button.
+   *   Value of the submit button whose click is to be emulated. For example,
+   *   t('Save'). The processing of the request depends on this value. For
+   *   example, a form may have one button with the value t('Save') and another
+   *   button with the value t('Delete'), and execute different code depending
+   *   on which one is clicked.
+   *
+   *   This function can also be called to emulate an AJAX submission. In this
+   *   case, this value needs to be an array with the following keys:
+   *   - path: A path to submit the form values to for AJAX-specific processing,
+   *     which is likely different than the $path parameter used for retrieving
+   *     the initial form. Defaults to 'system/ajax'.
+   *   - triggering_element: If the value for the 'path' key is 'system/ajax' or
+   *     another generic AJAX processing path, this needs to be set to the '/'
+   *     separated path to the element within the server's cached $form array.
+   *     The callback for the generic AJAX processing path uses this to find
+   *     the #ajax information for the element, including which specific
+   *     callback to use for processing the request.
    * @param $options
    *   Options to be forwarded to url().
    * @param $headers
@@ -1437,6 +1465,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function drupalPost($path, $edit, $submit, array $options = array(), array $headers = array()) {
     $submit_matches = FALSE;
+    $ajax = is_array($submit);
     if (isset($path)) {
       $html = $this->drupalGet($path, $options);
     }
@@ -1449,8 +1478,15 @@ class DrupalWebTestCase extends DrupalTestCase {
         $edit = $edit_save;
         $post = array();
         $upload = array();
-        $submit_matches = $this->handleForm($post, $edit, $upload, $submit, $form);
+        $submit_matches = $this->handleForm($post, $edit, $upload, $ajax ? NULL : $submit, $form);
         $action = isset($form['action']) ? $this->getAbsoluteUrl($form['action']) : $this->getUrl();
+        if ($ajax) {
+          $action = $this->getAbsoluteUrl(!empty($submit['path']) ? $submit['path'] : 'system/ajax');
+          // AJAX callbacks verify the triggering element if necessary, so while
+          // we may eventually want extra code that verifies it in the
+          // handleForm() function, it's not currently a requirement.
+          $submit_matches = TRUE;
+        }
 
         // We post only if we managed to handle every field in edit and the
         // submit button matches.
@@ -1474,6 +1510,9 @@ class DrupalWebTestCase extends DrupalTestCase {
               // http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
               $post[$key] = urlencode($key) . '=' . urlencode($value);
             }
+            if ($ajax && isset($submit['triggering_element'])) {
+              $post['ajax_triggering_element'] = 'ajax_triggering_element=' . urlencode($submit['triggering_element']);
+            }
             $post = implode('&', $post);
           }
           $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HTTPHEADER => $headers));
@@ -1495,9 +1534,19 @@ class DrupalWebTestCase extends DrupalTestCase {
       foreach ($edit as $name => $value) {
         $this->fail(t('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
       }
-      $this->assertTrue($submit_matches, t('Found the @submit button', array('@submit' => $submit)));
+      if (!$ajax) {
+        $this->assertTrue($submit_matches, t('Found the @submit button', array('@submit' => $submit)));
+      }
       $this->fail(t('Found the requested form fields at @path', array('@path' => $path)));
     }
+  }
+
+  /**
+   * Execute a POST request on an AJAX path and JSON decode the result.
+   */
+  protected function drupalPostAJAX($path, $edit, $triggering_element, $ajax_path = 'system/ajax', array $options = array(), array $headers = array()) {
+    $out = $this->drupalPost($path, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers);
+    return json_decode($out, TRUE);
   }
 
   /**
