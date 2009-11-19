@@ -1795,7 +1795,7 @@ function system_user_timezone(&$form, &$form_state) {
     '#options' => system_time_zones($account->uid != $user->uid),
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   );
-  if (!isset($account->timezone) && $account->uid == $user->uid) {
+  if (!isset($account->timezone) && $account->uid == $user->uid && empty($form_state['input']['timezone'])) {
     $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Please confirm the selection and click save.');
     $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
     drupal_add_js('misc/timezone.js');
