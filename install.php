@@ -1433,11 +1433,8 @@ function install_import_locales_remaining(&$install_state) {
 function install_finished(&$install_state) {
   drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())), PASS_THROUGH);
   $messages = drupal_set_message();
-  $output = '<p>' . st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) . '</p>';
-  $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
-  if (module_exists('help')) {
-    $output .= '<p>' . st('For more information on configuring Drupal, refer to the <a href="@help">help section</a>.', array('@help' => url('admin/help'))) . '</p>';
-  }
+  $output = '<p>' . st('Congratulations, you installed @drupal!', array('@drupal' => drupal_install_profile_name())) . '</p>';
+  $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => url(''))) : st('<a href="@url">Visit your new site</a>.', array('@url' => url('')))) . '</p>';
 
   // Rebuild the module and theme data, in case any newly-installed modules
   // need to modify it via hook_system_info_alter(). We need to clear the
