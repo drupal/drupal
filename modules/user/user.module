@@ -304,219 +304,225 @@ function user_load_by_name($name) {
  *   A fully-loaded $user object upon successful save or FALSE if the save failed.
  */
 function user_save($account, $edit = array(), $category = 'account') {
-  $table = drupal_get_schema('users');
-  $user_fields = $table['fields'];
+  $transaction = db_transaction();
+  try {
+    $table = drupal_get_schema('users');
+    $user_fields = $table['fields'];
 
-  if (!empty($edit['pass'])) {
-    // Allow alternate password hashing schemes.
-    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
-    $edit['pass'] = user_hash_password(trim($edit['pass']));
-    // Abort if the hashing failed and returned FALSE.
-    if (!$edit['pass']) {
-      return FALSE;
+    if (!empty($edit['pass'])) {
+      // Allow alternate password hashing schemes.
+      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+      $edit['pass'] = user_hash_password(trim($edit['pass']));
+      // Abort if the hashing failed and returned FALSE.
+      if (!$edit['pass']) {
+        return FALSE;
+      }
     }
-  }
-  else {
-    // Avoid overwriting an existing password with a blank password.
-    unset($edit['pass']);
-  }
-
-  // Get the fields form so we can recognize the fields in the $edit
-  // form that should not go into the serialized data array.
-  $field_form = array();
-  $field_form_state = array();
-  $edit = (object) $edit;
-  field_attach_form('user', $edit, $field_form, $field_form_state);
-
-  // Presave fields.
-  field_attach_presave('user', $edit);
-
-  $edit = (array) $edit;
-
-  if (!isset($account->is_new)) {
-    $account->is_new = empty($account->uid);
-  }
-
-  user_module_invoke('presave', $edit, $account, $category);
-
-  if (is_object($account) && !$account->is_new) {
-    $data = unserialize(db_query('SELECT data FROM {users} WHERE uid = :uid', array(':uid' => $account->uid))->fetchField());
-    // Consider users edited by an administrator as logged in, if they haven't
-    // already, so anonymous users can view the profile (if allowed).
-    if (empty($edit['access']) && empty($account->access) && user_access('administer users')) {
-      $edit['access'] = REQUEST_TIME;
+    else {
+      // Avoid overwriting an existing password with a blank password.
+      unset($edit['pass']);
     }
-    foreach ($edit as $key => $value) {
-      // Form fields that don't pertain to the users, user_roles, or
-      // Field API are automatically serialized into the users.data
-      // column.
-      if (!in_array($key, array('roles', 'is_new')) && empty($user_fields[$key]) && empty($field_form[$key])) {
-        if ($value === NULL) {
-          unset($data[$key]);
+
+    // Get the fields form so we can recognize the fields in the $edit
+    // form that should not go into the serialized data array.
+    $field_form = array();
+    $field_form_state = array();
+    $edit = (object) $edit;
+    field_attach_form('user', $edit, $field_form, $field_form_state);
+
+    // Presave fields.
+    field_attach_presave('user', $edit);
+
+    $edit = (array) $edit;
+
+    if (!isset($account->is_new)) {
+      $account->is_new = empty($account->uid);
+    }
+
+    user_module_invoke('presave', $edit, $account, $category);
+
+    if (is_object($account) && !$account->is_new) {
+      $data = unserialize(db_query('SELECT data FROM {users} WHERE uid = :uid', array(':uid' => $account->uid))->fetchField());
+      // Consider users edited by an administrator as logged in, if they haven't
+      // already, so anonymous users can view the profile (if allowed).
+      if (empty($edit['access']) && empty($account->access) && user_access('administer users')) {
+        $edit['access'] = REQUEST_TIME;
+      }
+      foreach ($edit as $key => $value) {
+        // Form fields that don't pertain to the users, user_roles, or
+        // Field API are automatically serialized into the users.data
+        // column.
+        if (!in_array($key, array('roles', 'is_new')) && empty($user_fields[$key]) && empty($field_form[$key])) {
+          if ($value === NULL) {
+            unset($data[$key]);
+          }
+          else {
+            $data[$key] = $value;
+          }
         }
-        else {
+      }
+
+      // Process picture uploads.
+      if (!empty($edit['picture']->fid)) {
+        $picture = $edit['picture'];
+        // If the picture is a temporary file move it to its final location and
+        // make it permanent.
+        if (($picture->status & FILE_STATUS_PERMANENT) == 0) {
+          $info = image_get_info($picture->uri);
+          $picture_directory =  variable_get('file_default_scheme', 'public') . '://' . variable_get('user_picture_path', 'pictures');
+
+          // Prepare the pictures directory.
+          file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
+          $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '.' . $info['extension']);
+
+          if ($picture = file_move($picture, $destination, FILE_EXISTS_REPLACE)) {
+            $picture->status |= FILE_STATUS_PERMANENT;
+            $edit['picture'] = file_save($picture);
+          }
+        }
+      }
+      $edit['picture'] = empty($edit['picture']->fid) ? 0 : $edit['picture']->fid;
+
+      $edit['data'] = $data;
+      // Do not allow 'uid' to be changed.
+      $edit['uid'] = $account->uid;
+      // Save changes to the user table.
+      $success = drupal_write_record('users', $edit, 'uid');
+      if ($success === FALSE) {
+        // The query failed - better to abort the save than risk further
+        // data loss.
+        return FALSE;
+      }
+
+      // If the picture changed or was unset, remove the old one. This step needs
+      // to occur after updating the {users} record so that user_file_references()
+      // doesn't report it in use and block the deletion.
+      if (!empty($account->picture->fid) && ($edit['picture'] != $account->picture->fid)) {
+        file_delete($account->picture);
+      }
+
+      // Reload user roles if provided.
+      if (isset($edit['roles']) && is_array($edit['roles'])) {
+        db_delete('users_roles')
+          ->condition('uid', $account->uid)
+          ->execute();
+
+        $query = db_insert('users_roles')->fields(array('uid', 'rid'));
+        foreach (array_keys($edit['roles']) as $rid) {
+          if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+            $query->values(array(
+              'uid' => $account->uid,
+              'rid' => $rid,
+            ));
+          }
+        }
+        $query->execute();
+      }
+
+      // Delete a blocked user's sessions to kick them if they are online.
+      if (isset($edit['status']) && $edit['status'] == 0) {
+        drupal_session_destroy_uid($account->uid);
+      }
+
+      // If the password changed, delete all open sessions and recreate
+      // the current one.
+      if (!empty($edit['pass'])) {
+        drupal_session_destroy_uid($account->uid);
+        if ($account->uid == $GLOBALS['user']->uid) {
+          drupal_session_regenerate();
+        }
+      }
+
+      // Save Field data.
+      $object = (object) $edit;
+      field_attach_update('user', $object);
+
+      // Refresh user object.
+      $user = user_load($account->uid, TRUE);
+
+      // Send emails after we have the new user object.
+      if (isset($edit['status']) && $edit['status'] != $account->status) {
+        // The user's status is changing; conditionally send notification email.
+        $op = $edit['status'] == 1 ? 'status_activated' : 'status_blocked';
+        _user_mail_notify($op, $user);
+      }
+
+      user_module_invoke('update', $edit, $user, $category);
+    }
+    else {
+      // Allow 'uid' to be set by the caller. There is no danger of writing an
+      // existing user as drupal_write_record will do an INSERT.
+      if (empty($edit['uid'])) {
+        $edit['uid'] = db_next_id(db_query('SELECT MAX(uid) FROM {users}')->fetchField());
+      }
+      // Allow 'created' to be set by the caller.
+      if (!isset($edit['created'])) {
+        $edit['created'] = REQUEST_TIME;
+      }
+      // Consider users created by an administrator as already logged in, so
+      // anonymous users can view the profile (if allowed).
+      if (empty($edit['access']) && user_access('administer users')) {
+        $edit['access'] = REQUEST_TIME;
+      }
+
+      $edit['mail'] = trim($edit['mail']);
+      $success = drupal_write_record('users', $edit);
+      if ($success === FALSE) {
+        // On a failed INSERT some other existing user's uid may be returned.
+        // We must abort to avoid overwriting their account.
+        return FALSE;
+      }
+
+      // Build the initial user object.
+      $user = user_load($edit['uid'], TRUE);
+
+      $object = (object) $edit;
+      field_attach_insert('user', $object);
+
+      user_module_invoke('insert', $edit, $user, $category);
+
+      // Note, we wait with saving the data column to prevent module-handled
+      // fields from being saved there.
+      $data = array();
+      foreach ($edit as $key => $value) {
+        // Form fields that don't pertain to the users, user_roles, or
+        // Field API are automatically serialized into the user.data
+        // column.
+        if ((!in_array($key, array('roles', 'is_new'))) && (empty($user_fields[$key]) && empty($field_form[$key])) && ($value !== NULL)) {
           $data[$key] = $value;
         }
       }
-    }
+      if (!empty($data)) {
+        $data_array = array('uid' => $user->uid, 'data' => $data);
+        drupal_write_record('users', $data_array, 'uid');
+      }
 
-    // Process picture uploads.
-    if (!empty($edit['picture']->fid)) {
-      $picture = $edit['picture'];
-      // If the picture is a temporary file move it to its final location and
-      // make it permanent.
-      if (($picture->status & FILE_STATUS_PERMANENT) == 0) {
-        $info = image_get_info($picture->uri);
-        $picture_directory =  variable_get('file_default_scheme', 'public') . '://' . variable_get('user_picture_path', 'pictures');
-
-        // Prepare the pictures directory.
-        file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
-        $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '.' . $info['extension']);
-
-        if ($picture = file_move($picture, $destination, FILE_EXISTS_REPLACE)) {
-          $picture->status |= FILE_STATUS_PERMANENT;
-          $edit['picture'] = file_save($picture);
+      // Save user roles (delete just to be safe).
+      if (isset($edit['roles']) && is_array($edit['roles'])) {
+        db_delete('users_roles')
+          ->condition('uid', $edit['uid'])
+          ->execute();
+        $query = db_insert('users_roles')->fields(array('uid', 'rid'));
+        foreach (array_keys($edit['roles']) as $rid) {
+          if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+            $query->values(array(
+              'uid' => $edit['uid'],
+              'rid' => $rid,
+            ));
+          }
         }
+        $query->execute();
       }
-    }
-    $edit['picture'] = empty($edit['picture']->fid) ? 0 : $edit['picture']->fid;
 
-    $edit['data'] = $data;
-    // Do not allow 'uid' to be changed.
-    $edit['uid'] = $account->uid;
-    // Save changes to the user table.
-    $success = drupal_write_record('users', $edit, 'uid');
-    if ($success === FALSE) {
-      // The query failed - better to abort the save than risk further
-      // data loss.
-      return FALSE;
+      // Build the finished user object.
+      $user = user_load($edit['uid'], TRUE);
     }
 
-    // If the picture changed or was unset, remove the old one. This step needs
-    // to occur after updating the {users} record so that user_file_references()
-    // doesn't report it in use and block the deletion.
-    if (!empty($account->picture->fid) && ($edit['picture'] != $account->picture->fid)) {
-      file_delete($account->picture);
-    }
-
-    // Reload user roles if provided.
-    if (isset($edit['roles']) && is_array($edit['roles'])) {
-      db_delete('users_roles')
-        ->condition('uid', $account->uid)
-        ->execute();
-
-      $query = db_insert('users_roles')->fields(array('uid', 'rid'));
-      foreach (array_keys($edit['roles']) as $rid) {
-        if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-          $query->values(array(
-            'uid' => $account->uid,
-            'rid' => $rid,
-          ));
-        }
-      }
-      $query->execute();
-    }
-
-    // Delete a blocked user's sessions to kick them if they are online.
-    if (isset($edit['status']) && $edit['status'] == 0) {
-      drupal_session_destroy_uid($account->uid);
-    }
-
-    // If the password changed, delete all open sessions and recreate
-    // the current one.
-    if (!empty($edit['pass'])) {
-      drupal_session_destroy_uid($account->uid);
-      if ($account->uid == $GLOBALS['user']->uid) {
-        drupal_session_regenerate();
-      }
-    }
-
-    // Save Field data.
-    $object = (object) $edit;
-    field_attach_update('user', $object);
-
-    // Refresh user object.
-    $user = user_load($account->uid, TRUE);
-
-    // Send emails after we have the new user object.
-    if (isset($edit['status']) && $edit['status'] != $account->status) {
-      // The user's status is changing; conditionally send notification email.
-      $op = $edit['status'] == 1 ? 'status_activated' : 'status_blocked';
-      _user_mail_notify($op, $user);
-    }
-
-    user_module_invoke('update', $edit, $user, $category);
+    return $user;
   }
-  else {
-    // Allow 'uid' to be set by the caller. There is no danger of writing an
-    // existing user as drupal_write_record will do an INSERT.
-    if (empty($edit['uid'])) {
-      $edit['uid'] = db_next_id(db_query('SELECT MAX(uid) FROM {users}')->fetchField());
-    }
-    // Allow 'created' to be set by the caller.
-    if (!isset($edit['created'])) {
-      $edit['created'] = REQUEST_TIME;
-    }
-    // Consider users created by an administrator as already logged in, so
-    // anonymous users can view the profile (if allowed).
-    if (empty($edit['access']) && user_access('administer users')) {
-      $edit['access'] = REQUEST_TIME;
-    }
-
-    $edit['mail'] = trim($edit['mail']);
-    $success = drupal_write_record('users', $edit);
-    if ($success === FALSE) {
-      // On a failed INSERT some other existing user's uid may be returned.
-      // We must abort to avoid overwriting their account.
-      return FALSE;
-    }
-
-    // Build the initial user object.
-    $user = user_load($edit['uid'], TRUE);
-
-    $object = (object) $edit;
-    field_attach_insert('user', $object);
-
-    user_module_invoke('insert', $edit, $user, $category);
-
-    // Note, we wait with saving the data column to prevent module-handled
-    // fields from being saved there.
-    $data = array();
-    foreach ($edit as $key => $value) {
-      // Form fields that don't pertain to the users, user_roles, or
-      // Field API are automatically serialized into the user.data
-      // column.
-      if ((!in_array($key, array('roles', 'is_new'))) && (empty($user_fields[$key]) && empty($field_form[$key])) && ($value !== NULL)) {
-        $data[$key] = $value;
-      }
-    }
-    if (!empty($data)) {
-      $data_array = array('uid' => $user->uid, 'data' => $data);
-      drupal_write_record('users', $data_array, 'uid');
-    }
-
-    // Save user roles (delete just to be safe).
-    if (isset($edit['roles']) && is_array($edit['roles'])) {
-      db_delete('users_roles')
-        ->condition('uid', $edit['uid'])
-        ->execute();
-      $query = db_insert('users_roles')->fields(array('uid', 'rid'));
-      foreach (array_keys($edit['roles']) as $rid) {
-        if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-          $query->values(array(
-            'uid' => $edit['uid'],
-            'rid' => $rid,
-          ));
-        }
-      }
-      $query->execute();
-    }
-
-    // Build the finished user object.
-    $user = user_load($edit['uid'], TRUE);
+  catch (Exception $e) {
+    $transaction->rollback('user', $e->getMessage(), array(), WATCHDOG_ERROR);
   }
-
-  return $user;
 }
 
 /**

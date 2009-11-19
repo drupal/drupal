@@ -229,6 +229,13 @@ abstract class DatabaseConnection extends PDO {
   protected $willRollback;
 
   /**
+   * Array of argument arrays for logging post-rollback.
+   *
+   * @var array
+   */
+  protected $rollbackLogs = array();
+
+  /**
    * The name of the Select class for this connection.
    *
    * Normally this and the following class names would be static variables,
@@ -849,10 +856,51 @@ abstract class DatabaseConnection extends PDO {
    * Schedule the current transaction for rollback.
    *
    * This method throws an exception if no transaction is active.
+   *
+   * @param $type
+   *   The category to which the rollback message belongs.
+   * @param $message
+   *   The message to store in the log. Keep $message translatable
+   *   by not concatenating dynamic values into it! Variables in the
+   *   message should be added by using placeholder strings alongside
+   *   the variables argument to declare the value of the placeholders.
+   * @param $variables
+   *   Array of variables to replace in the message on display or
+   *   NULL if message is already translated or not possible to
+   *   translate.
+   * @param $severity
+   *   The severity of the message, as per RFC 3164.
+   * @param $link
+   *   A link to associate with the message.
+   *
+   * @see DatabaseTransaction::rollback()
+   * @see watchdog()
    */
-  public function rollback() {
+  public function rollback($type = NULL, $message = NULL, $variables = array(), $severity = NULL, $link = NULL) {
     if ($this->transactionLayers == 0) {
       throw new NoActiveTransactionException();
+    }
+
+    // Set the severity to the configured default if not specified.
+    if (!isset($severity)) {
+      $logging = Database::getLoggingCallback();
+      if (is_array($logging)) {
+        $severity = $logging['default_severity'];
+      }
+    }
+    
+    // Record in an array to send to the log after transaction rollback. Messages written
+    // directly to a log (with a database back-end) will roll back during the following
+    // transaction rollback. This is an array because rollback could be requested multiple
+    // times during a transaction, and all such errors ought to be logged.
+    if (isset($message)) {
+      $this->rollbackLogs[] = array(
+        'type' => $type,
+        'message' => $message,
+        'variables' => $variables,
+        'severity' => $severity,
+        'link' => $link,
+      );
     }
 
     $this->willRollback = TRUE;
@@ -890,9 +938,6 @@ abstract class DatabaseConnection extends PDO {
       if ($this->supportsTransactions()) {
         parent::beginTransaction();
       }
-
-      // Reset any scheduled rollback
-      $this->willRollback = FALSE;
     }
   }
 
@@ -912,11 +957,41 @@ abstract class DatabaseConnection extends PDO {
 
     --$this->transactionLayers;
 
-    if ($this->transactionLayers == 0 && $this->supportsTransactions()) {
+    if ($this->transactionLayers == 0) {
       if ($this->willRollback) {
-        parent::rollBack();
+        $logging = Database::getLoggingCallback();
+        $logging_callback = NULL;
+        if (is_array($logging)) {
+          $logging_callback = $logging['callback'];
+        }
+
+        if ($this->supportsTransactions()) {
+          parent::rollBack();
+        }
+        else {
+          if (isset($logging_callback)) {
+            // Log the failed rollback.
+            $logging_callback('database', 'Explicit rollback failed: not supported on active connection.', array(), $logging['error_severity']);
+          }
+          
+          // It would be nice to throw an exception here if logging failed,
+          // but throwing exceptions in destructors is not supported.
+        }
+        
+        if (isset($logging_callback)) {
+          // Play back the logged errors to the specified logging callback post-rollback.
+          foreach ($this->rollbackLogs as $log_item) {
+            $logging_callback($log_item['type'], $log_item['message'], $log_item['variables'], $log_item['severity'], $log_item['link']);
+          }
+        }
+
+        // Reset any scheduled rollback.
+        $this->willRollback = FALSE;
+  
+        // Reset the error logs.
+        $this->rollbackLogs = array();
       }
-      else {
+      elseif ($this->supportsTransactions()) {
         parent::commit();
       }
     }
@@ -1164,6 +1239,17 @@ abstract class Database {
   static protected $logs = array();
 
   /**
+   * A logging function callback array.
+   *
+   * The function must accept the same function signature as Drupal's watchdog().
+   * The array containst key/value pairs for callback (string), default_severity (int),
+   * and error_severity (int).
+   *
+   * @var string
+   */
+  static protected $logging_callback = NULL;
+
+  /**
    * Start logging a given logging key on the specified connection.
    *
    * @see DatabaseLog
@@ -1193,6 +1279,37 @@ abstract class Database {
     return self::$logs[$key];
   }
 
+  /**
+   * Set a logging callback for notices and errors.
+   *
+   * @see watchdog()
+   * @param $logging_callback
+   *   The function to use as the logging callback.
+   * @param $logging_default_severity
+   *   The default severity level to use for logged messages.
+   * @param $logging_error_severity
+   *   The severity level to use for logging error messages.
+   */
+  final public static function setLoggingCallback($callback, $default_severity, $error_severity) {
+    self::$logging_callback = array(
+      'callback' => $callback,
+      'default_severity' => $default_severity,
+      'error_severity' => $error_severity,
+    );
+  }
+  
+  /**
+   * Get the logging callback for notices and errors.
+   *
+   * @return
+   *   An array with the logging callback and severity levels.
+   *
+   * @see watchdog()
+   */
+  final public static function getLoggingCallback() {
+    return self::$logging_callback;
+  }
+  
   /**
    * Retrieve the queries logged on for given logging key.
    *
@@ -1542,9 +1659,34 @@ class DatabaseTransaction {
    *
    * This is just a wrapper method to rollback whatever transaction stack we
    * are currently in, which is managed by the connection object itself.
+   *
+   * @param $type
+   *   The category to which the rollback message belongs.
+   * @param $message
+   *   The message to store in the log. Keep $message translatable
+   *   by not concatenating dynamic values into it! Variables in the
+   *   message should be added by using placeholder strings alongside
+   *   the variables argument to declare the value of the placeholders.
+   * @param $variables
+   *   Array of variables to replace in the message on display or
+   *   NULL if message is already translated or not possible to
+   *   translate.
+   * @param $severity
+   *   The severity of the message, as per RFC 3164.
+   * @param $link
+   *   A link to associate with the message.
+   *
+   * @see DatabaseConnection::rollback()
+   * @see watchdog()
    */
-  public function rollback() {
-    $this->connection->rollback();
+  public function rollback($type = NULL, $message = NULL, $variables = array(), $severity = NULL, $link = NULL) {
+    if (!isset($severity)) {
+      $logging = Database::getLoggingCallback();
+      if (is_array($logging)) {
+        $severity = $logging['default_severity'];
+      }
+    }
+    $this->connection->rollback($type, $message, $variables, $severity, $link);
   }
 
   /**

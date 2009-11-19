@@ -933,108 +933,115 @@ function node_submit($node) {
  *   omitted (or $node->is_new is TRUE), a new node will be added.
  */
 function node_save($node) {
-  field_attach_presave('node', $node);
-  // Let modules modify the node before it is saved to the database.
-  module_invoke_all('node_presave', $node);
-  global $user;
+  $transaction = db_transaction();
 
-  if (!isset($node->is_new)) {
-    $node->is_new = empty($node->nid);
-  }
+  try {
+    field_attach_presave('node', $node);
+    // Let modules modify the node before it is saved to the database.
+    module_invoke_all('node_presave', $node);
+    global $user;
 
-  // Apply filters to some default node fields:
-  if ($node->is_new) {
-    // Insert a new node.
-    $node->is_new = TRUE;
-
-    // When inserting a node, $node->log must be set because
-    // {node_revision}.log does not (and cannot) have a default
-    // value. If the user does not have permission to create
-    // revisions, however, the form will not contain an element for
-    // log so $node->log will be unset at this point.
-    if (!isset($node->log)) {
-      $node->log = '';
+    if (!isset($node->is_new)) {
+      $node->is_new = empty($node->nid);
     }
-  }
-  elseif (!empty($node->revision)) {
-    $node->old_vid = $node->vid;
-    unset($node->vid);
-  }
-  else {
-    // When updating a node, avoid clobbering an existing log entry with an empty one.
-    if (empty($node->log)) {
-      unset($node->log);
+
+    // Apply filters to some default node fields:
+    if ($node->is_new) {
+      // Insert a new node.
+      $node->is_new = TRUE;
+
+      // When inserting a node, $node->log must be set because
+      // {node_revision}.log does not (and cannot) have a default
+      // value. If the user does not have permission to create
+      // revisions, however, the form will not contain an element for
+      // log so $node->log will be unset at this point.
+      if (!isset($node->log)) {
+        $node->log = '';
+      }
     }
-  }
-
-  // Set some required fields:
-  if (empty($node->created)) {
-    $node->created = REQUEST_TIME;
-  }
-  // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
-  $node->changed = REQUEST_TIME;
-
-  $node->timestamp = REQUEST_TIME;
-  $update_node = TRUE;
-
-  // When converting the title property to fields we preserved the {node}.title
-  // db column for performance, setting the default language value into this
-  // column. After this we restore the field data structure to the previous node
-  // title field.
-  $title_field = $node->title;
-  $langcode = FIELD_LANGUAGE_NONE;
-  $node->title = $title_field[$langcode][0]['value'];
-
-  // Generate the node table query and the node_revisions table query.
-  if ($node->is_new) {
-    drupal_write_record('node', $node);
-    _node_save_revision($node, $user->uid);
-    $op = 'insert';
-  }
-  else {
-    drupal_write_record('node', $node, 'nid');
-    if (!empty($node->revision)) {
-      _node_save_revision($node, $user->uid);
+    elseif (!empty($node->revision)) {
+      $node->old_vid = $node->vid;
+      unset($node->vid);
     }
     else {
-      _node_save_revision($node, $user->uid, 'vid');
-      $update_node = FALSE;
+      // When updating a node, avoid clobbering an existing log entry with an empty one.
+      if (empty($node->log)) {
+        unset($node->log);
+      }
     }
-    $op = 'update';
+
+    // Set some required fields:
+    if (empty($node->created)) {
+      $node->created = REQUEST_TIME;
+    }
+    // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
+    $node->changed = REQUEST_TIME;
+  
+    $node->timestamp = REQUEST_TIME;
+    $update_node = TRUE;
+
+    // When converting the title property to fields we preserved the {node}.title
+    // db column for performance, setting the default language value into this
+    // column. After this we restore the field data structure to the previous node
+    // title field.
+    $title_field = $node->title;
+    $langcode = FIELD_LANGUAGE_NONE;
+    $node->title = $title_field[$langcode][0]['value'];
+
+    // Generate the node table query and the node_revisions table query.
+    if ($node->is_new) {
+      drupal_write_record('node', $node);
+      _node_save_revision($node, $user->uid);
+      $op = 'insert';
+    }
+    else {
+      drupal_write_record('node', $node, 'nid');
+      if (!empty($node->revision)) {
+        _node_save_revision($node, $user->uid);
+      }
+      else {
+        _node_save_revision($node, $user->uid, 'vid');
+        $update_node = FALSE;
+      }
+      $op = 'update';
+    }
+    if ($update_node) {
+      db_update('node')
+        ->fields(array('vid' => $node->vid))
+        ->condition('nid', $node->nid)
+        ->execute();
+    }
+  
+    // Restore the title field data structure after db storage.
+    $node->title = $title_field;
+  
+    // Call the node specific callback (if any). This can be
+    // node_invoke($node, 'insert') or
+    // node_invoke($node, 'update').
+    node_invoke($node, $op);
+  
+    // Save fields.
+    $function = "field_attach_$op";
+    $function('node', $node);
+  
+    module_invoke_all('node_' . $op, $node);
+  
+    // Update the node access table for this node.
+    node_access_acquire_grants($node);
+  
+    // Clear internal properties.
+    unset($node->is_new);
+  
+    // Clear the page and block caches.
+    cache_clear_all();
+  
+    // Ignore slave server temporarily to give time for the
+    // saved node to be propagated to the slave.
+    db_ignore_slave();
   }
-  if ($update_node) {
-    db_update('node')
-      ->fields(array('vid' => $node->vid))
-      ->condition('nid', $node->nid)
-      ->execute();
+  catch (Exception $e) {
+    $transaction->rollback('node', $e->getMessage(), array(), WATCHDOG_ERROR);
   }
-
-  // Restore the title field data structure after db storage.
-  $node->title = $title_field;
-
-  // Call the node specific callback (if any). This can be
-  // node_invoke($node, 'insert') or
-  // node_invoke($node, 'update').
-  node_invoke($node, $op);
-
-  // Save fields.
-  $function = "field_attach_$op";
-  $function('node', $node);
-
-  module_invoke_all('node_' . $op, $node);
-
-  // Update the node access table for this node.
-  node_access_acquire_grants($node);
-
-  // Clear internal properties.
-  unset($node->is_new);
-
-  // Clear the page and block caches.
-  cache_clear_all();
-
-  // Ignore slave server temporarily to give time for the
-  // saved node to be propagated to the slave.
-  db_ignore_slave();
 }
 
 /**
