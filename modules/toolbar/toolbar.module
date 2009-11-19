@@ -105,7 +105,7 @@ function toolbar_page_build(&$page) {
   $page['page_top']['toolbar'] = array(
     '#pre_render' => array('toolbar_pre_render'),
     '#access' => user_access('access toolbar'),
-    'toolbar_drawer' => isset($page['toolbar_drawer']) ? $page['toolbar_drawer'] : array(),
+    'toolbar_drawer' => array(),
   );
 }
 

@@ -554,7 +554,23 @@ function shortcut_page_build(&$page) {
      '#suffix' => '</div>',
     );
   }
+}
 
+/**
+ * Implements hook_page_alter().
+ */
+function shortcut_page_alter(&$page) {
+  if (isset($page['page_top']['toolbar'])) {
+    // If the toolbar is available, add a pre-render function to display the
+    // current shortcuts in the toolbar drawer.
+    $page['page_top']['toolbar']['#pre_render'][] = 'shortcut_toolbar_pre_render';
+  }
+}
+
+/**
+ * Pre-render function for adding shortcuts to the toolbar drawer.
+ */
+function shortcut_toolbar_pre_render($toolbar) {
   $links = shortcut_renderable_links();
   $links['#attached'] = array('css' => array(drupal_get_path('module', 'shortcut') . '/shortcut.css'));
   $links['#prefix'] = '<div class="toolbar-shortcuts">';
@@ -575,7 +591,8 @@ function shortcut_page_build(&$page) {
     'configure' => $configure_link,
   );
 
-  $page['toolbar_drawer'] = $drawer;
+  $toolbar['toolbar_drawer'][] = $drawer;
+  return $toolbar;
 }
 
 /**
