@@ -60,7 +60,7 @@ class MenuIncTestCase extends DrupalWebTestCase {
     // For a regular user, the fact that the site is in maintenance mode means
     // we expect the theme callback system to be bypassed entirely.
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertRaw('seven/style.css', t("The maintenance theme's CSS appears on the page."));
+    $this->assertRaw('minnelli/minnelli.css', t("The maintenance theme's CSS appears on the page."));
 
     // An administrator, however, should continue to see the requested theme.
     $admin_user = $this->drupalCreateUser(array('access site in maintenance mode'));

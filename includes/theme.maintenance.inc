@@ -11,8 +11,8 @@
  * in maintenance mode. It also applies when the database is unavailable.
  *
  * Seven is always used for the initial install and update operations. In
- * other cases, "settings.php" must have a "maintenance_theme" key set for the
- * $conf variable in order to change the maintenance theme.
+ * other cases, Minnelli is used, but this can be overridden by setting a
+ * "maintenance_theme" key in the $conf variable in settings.php.
  */
 function _drupal_maintenance_theme() {
   global $theme, $theme_key;
@@ -46,7 +46,7 @@ function _drupal_maintenance_theme() {
       drupal_load('module', 'filter');
     }
 
-    $custom_theme = variable_get('maintenance_theme', 'seven');
+    $custom_theme = variable_get('maintenance_theme', 'minnelli');
   }
 
   $themes = list_themes();
