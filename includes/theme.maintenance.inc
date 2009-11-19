@@ -10,7 +10,7 @@
  * Sets up the theming system for site installs, updates and when the site is
  * in maintenance mode. It also applies when the database is unavailable.
  *
- * Minnelli is always used for the initial install and update operations. In
+ * Seven is always used for the initial install and update operations. In
  * other cases, "settings.php" must have a "maintenance_theme" key set for the
  * $conf variable in order to change the maintenance theme.
  */
@@ -33,7 +33,7 @@ function _drupal_maintenance_theme() {
 
   // Install and update pages are treated differently to prevent theming overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
-    $custom_theme = 'minnelli';
+    $custom_theme = 'seven';
   }
   else {
     if (!db_is_active()) {
@@ -46,7 +46,7 @@ function _drupal_maintenance_theme() {
       drupal_load('module', 'filter');
     }
 
-    $custom_theme = variable_get('maintenance_theme', 'minnelli');
+    $custom_theme = variable_get('maintenance_theme', 'seven');
   }
 
   $themes = list_themes();
@@ -165,9 +165,9 @@ function theme_install_page($variables) {
   // fix path_to_theme() for the template, to point at the actual
   // theme rather than system module as owner of the hook.
   global $theme_path;
-  $theme_path = 'themes/garland';
+  $theme_path = 'themes/seven';
 
-  return theme_render_template('themes/garland/maintenance-page.tpl.php', $variables);
+  return theme_render_template('themes/seven/maintenance-page.tpl.php', $variables);
 }
 
 /**
@@ -203,9 +203,9 @@ function theme_update_page($variables) {
   // fix path_to_theme() for the template, to point at the actual
   // theme rather than system module as owner of the hook.
   global $theme_path;
-  $theme_path = 'themes/garland';
+  $theme_path = 'themes/seven';
 
-  return theme_render_template('themes/garland/maintenance-page.tpl.php', $variables);
+  return theme_render_template('themes/seven/maintenance-page.tpl.php', $variables);
 }
 
 /**
