@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.62 2009/11/11 08:28:50 dries Exp $
+// $Id: block.admin.inc,v 1.63 2009/11/19 04:00:47 webchick Exp $
 
 /**
  * @file
@@ -114,6 +114,8 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
  * Process main blocks administration form submissions.
  */
 function block_admin_display_form_submit($form, &$form_state) {
+  $txn = db_transaction();
+
   foreach ($form_state['values'] as $block) {
     $block['status'] = (int) ($block['region'] != BLOCK_REGION_NONE);
     $block['region'] = $block['status'] ? $block['region'] : '';
@@ -365,6 +367,8 @@ function block_admin_configure_validate($form, &$form_state) {
 
 function block_admin_configure_submit($form, &$form_state) {
   if (!form_get_errors()) {
+    $txn = db_transaction();
+
     db_update('block')
       ->fields(array(
         'visibility' => (int) $form_state['values']['visibility'],

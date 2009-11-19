@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.326 2009/11/15 21:41:06 webchick Exp $
+// $Id: bootstrap.inc,v 1.327 2009/11/19 04:00:47 webchick Exp $
 
 /**
  * @file
@@ -1276,6 +1276,8 @@ function request_uri() {
  *
  * @see watchdog_severity_levels()
  * @see hook_watchdog()
+ * @see DatabaseConnection::rollback()
+ * @see DatabaseTransaction::rollback()
  */
 function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
@@ -1602,6 +1604,10 @@ function _drupal_bootstrap_database() {
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
   require_once DRUPAL_ROOT . '/includes/database/database.inc';
+
+  // Set Drupal's watchdog as the logging callback.
+  Database::setLoggingCallback('watchdog', WATCHDOG_NOTICE, WATCHDOG_ERROR);
+
   // Register autoload functions so that we can access classes and interfaces.
   spl_autoload_register('drupal_autoload_class');
   spl_autoload_register('drupal_autoload_interface');
