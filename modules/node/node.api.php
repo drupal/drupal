@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.45 2009/11/15 02:11:51 webchick Exp $
+// $Id: node.api.php,v 1.46 2009/11/19 22:50:42 webchick Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function hook_node_grants($account, $op) {
  * - 'gid': A 'grant ID' from hook_node_grants().
  * - 'grant_view': If set to TRUE a user that has been identified as a member
  *   of this gid within this realm can view this node.
- * - 'grant_edit': If set to TRUE a user that has been identified as a member
+ * - 'grant_update': If set to TRUE a user that has been identified as a member
  *   of this gid within this realm can edit this node.
  * - 'grant_delete': If set to TRUE a user that has been identified as a member
  *   of this gid within this realm can delete this node.
