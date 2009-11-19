@@ -1,4 +1,4 @@
-; $Id: seven.info,v 1.2 2009/09/29 16:30:30 webchick Exp $
+; $Id: seven.info,v 1.3 2009/11/19 03:11:53 webchick Exp $
 name = Seven
 description = A simple one-column, tableless, fluid width administration theme.
 package = Core
@@ -12,3 +12,5 @@ regions[content] = Content
 regions[help] = Help
 regions[page_top] = Page top
 regions[page_bottom] = Page bottom
+regions[sidebar_first] = First sidebar
+regions_hidden[] = sidebar_first

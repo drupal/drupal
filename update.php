@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.310 2009/11/04 05:39:14 webchick Exp $
+// $Id: update.php,v 1.311 2009/11/19 03:11:53 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -194,7 +194,7 @@ function update_info_page() {
   $output .= "<li>Install your new files in the appropriate location, as described in the handbook.</li>\n";
   $output .= "</ol>\n";
   $output .= "<p>When you have performed the steps above, you may proceed.</p>\n";
-  $output .= '<form method="post" action="update.php?op=selection&amp;token=' . $token . '"><p><input type="submit" value="Continue" /></p></form>';
+  $output .= '<form method="post" action="update.php?op=selection&amp;token=' . $token . '"><p><input type="submit" value="Continue" class="form-submit" /></p></form>';
   $output .= "\n";
   return $output;
 }

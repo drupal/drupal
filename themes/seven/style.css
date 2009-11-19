@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.23 2009/11/16 05:34:24 webchick Exp $ */
+/* $Id: style.css,v 1.24 2009/11/19 03:11:53 webchick Exp $ */
 
 /**
  * Generic elements
@@ -746,6 +746,59 @@ div.admin-options div.form-item {
 /* Update status */
 .versions table.version {
   border: none;
+}
+
+/* Maintenance theming */
+body.in-maintenance #sidebar-first {
+  float: right;
+  width: 200px;
+}
+body.in-maintenance #content {
+  width: 550px;
+  padding-right: 20px;
+}
+body.in-maintenance #page {
+  width: 770px;
+  margin: 0 auto;
+  padding-top: 2em;
+}
+body.in-maintenance #branding h1 {
+  width: 770px;
+  margin: 0 auto;
+  float: none;
+}
+
+body.in-maintenance .form-type-radio {
+  display: inline-block;
+}
+
+body.in-maintenance .form-submit {
+  display: block;
+}
+
+body.in-maintenance #logo {
+  margin-bottom: 1.5em;
+}
+
+ol.task-list {
+  margin-left: 0; /* LTR */
+  list-style-type: none;
+  list-style-image: none;
+}
+ol.task-list li {
+  padding: 0.5em 1em 0.5em 0; /* LTR */
+  color: #adadad;
+}
+ol.task-list li.active {
+  background: transparent url(images/task-item.png) no-repeat 3px 50%; /* LTR */
+  padding: 0.5em 1em 0.5em 20px; /* LTR */
+  color: #000;
+}
+ol.task-list li.done {
+  color: #393;
+  background: transparent url(images/task-check.png) no-repeat 0px 50%; /* LTR */
+  padding: 0.5em 1em 0.5em 20px; /* LTR */
+  color: green;
 }
 
 /* Overlay theming */
