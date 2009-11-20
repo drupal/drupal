@@ -1,4 +1,4 @@
-// $Id: progress.js,v 1.25 2009/08/17 07:12:15 webchick Exp $
+// $Id: progress.js,v 1.26 2009/11/20 05:53:40 webchick Exp $
 (function ($) {
 
 /**
@@ -18,7 +18,9 @@ Drupal.progressBar = function (id, updateCallback, method, errorCallback) {
   this.updateCallback = updateCallback;
   this.errorCallback = errorCallback;
 
-  this.element = $('<div class="progress"></div>').attr('id', id);
+  // The WAI-ARIA setting aria-live="polite" will announce changes after users
+  // have completed their current activity and not interrupt the screen reader.
+  this.element = $('<div class="progress" aria-live="polite"></div>').attr('id', id);
   this.element.html('<div class="bar"><div class="filled"></div></div>' +
                     '<div class="percentage"></div>' +
                     '<div class="message">&nbsp;</div>');
