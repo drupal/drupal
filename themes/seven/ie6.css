@@ -1,4 +1,4 @@
-/* $Id: ie6.css,v 1.1 2009/07/31 19:35:57 dries Exp $ */
+/* $Id: ie6.css,v 1.2 2009/11/20 04:27:40 webchick Exp $ */
 
 ul.menu li,
 ul.menu li a,
@@ -6,4 +6,14 @@ ul.links li,
 ul.links li a,
 #page {
   height: 1%;
+}
+
+#block-system-main ul.node-type-list li a, #block-system-main ul.admin-list li a {
+  height: 1px;
+  position: relative;
+  display: block;
+}
+
+#block-system-main ul.node-type-list li div.description a, #block-system-main ul.admin-list li div.description a {
+  display: inline;
 }
