@@ -438,7 +438,10 @@ function module_hook($module, $hook) {
  * @see module_implements_write_cache().
  */
 function module_implements($hook, $sort = FALSE, $reset = FALSE) {
-  $implementations = &drupal_static(__FUNCTION__, array());
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static = array();
+  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
+  $implementations = &$drupal_static[__FUNCTION__];
 
   // We maintain a persistent cache of hook implementations in addition to the
   // static cache to avoid looping through every module and every hook on each

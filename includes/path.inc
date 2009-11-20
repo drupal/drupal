@@ -45,14 +45,21 @@ function drupal_path_initialize() {
  */
 function drupal_lookup_path($action, $path = '', $path_language = '') {
   global $language;
-  $cache = &drupal_static(__FUNCTION__, array(
-    'map' => array(),
-    'no_source' => array(),
-    'whitelist' => NULL,
-    'system_paths' => array(),
-    'no_aliases' => array(),
-    'first_call' => TRUE,
-  ));
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static = array();
+  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
+  $cache = &$drupal_static[__FUNCTION__];
+
+  if (!isset($cache)) {
+    $cache = array(
+      'map' => array(),
+      'no_source' => array(),
+      'whitelist' => NULL,
+      'system_paths' => array(),
+      'no_aliases' => array(),
+      'first_call' => TRUE,
+    );
+  }
 
   // Retrieve the path alias whitelist.
   if (!isset($cache['whitelist'])) {
@@ -245,7 +252,14 @@ function drupal_get_normal_path($path, $path_language = '') {
  *   not found.
  */
 function arg($index = NULL, $path = NULL) {
-  $arguments = &drupal_static(__FUNCTION__);
+  // Even though $arguments doesn't need to be resettable for any functional
+  // reasons (the result of explode() does not depend on any run-time
+  // information), it should be resettable anyway in case a module needs to
+  // free up the memory used by it.
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static = array();
+  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
+  $arguments = &$drupal_static[__FUNCTION__];
 
   if (!isset($path)) {
     $path = $_GET['q'];
@@ -310,7 +324,10 @@ function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
  *   Boolean value: TRUE if the current page is the front page; FALSE if otherwise.
  */
 function drupal_is_front_page() {
-  $is_front_page = &drupal_static(__FUNCTION__);
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static = array();
+  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
+  $is_front_page = &$drupal_static[__FUNCTION__];
 
   if (!isset($is_front_page)) {
     // As drupal_path_initialize updates $_GET['q'] with the 'site_frontpage' path,

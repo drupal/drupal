@@ -2275,7 +2275,11 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
  *   A translated date string in the requested format.
  */
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
-  $timezones = &drupal_static(__FUNCTION__, array());
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static = array();
+  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
+  $timezones = &$drupal_static[__FUNCTION__];
+
   if (!isset($timezone)) {
     global $user;
     if (variable_get('configurable_timezones', 1) && $user->uid && $user->timezone) {
@@ -2512,7 +2516,10 @@ function url($path = NULL, array $options = array()) {
   }
 
   global $base_url, $base_secure_url, $base_insecure_url;
-  $script = &drupal_static(__FUNCTION__);
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static = array();
+  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
+  $script = &$drupal_static[__FUNCTION__];
 
   if (!isset($script)) {
     // On some web servers, such as IIS, we can't omit "index.php". So, we
@@ -4728,7 +4735,10 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
  *   keyed array as described above.
  */
 function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
-  $functions = &drupal_static(__FUNCTION__, array());
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static = array();
+  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
+  $functions = &$drupal_static[__FUNCTION__];
 
   // Some alter hooks are invoked many times per page request, so statically
   // cache the list of functions to call, and on subsequent calls, iterate
@@ -6214,8 +6224,10 @@ function drupal_check_incompatibility($v, $current_version) {
  *   to return an array with info about all types.
  */
 function entity_get_info($entity_type = NULL) {
-  // We statically cache the information returned by hook_entity_info().
-  $entity_info = &drupal_static(__FUNCTION__, array());
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static = array();
+  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
+  $entity_info = &$drupal_static[__FUNCTION__];
 
   if (empty($entity_info)) {
     if ($cache = cache_get('entity_info')) {
