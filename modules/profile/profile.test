@@ -68,6 +68,53 @@ class ProfileTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Update a profile field.
+   *
+   * @param $fid
+   *   The fid of the field to be updated.
+   * @param $type
+   *   The type of field to be updated.
+   * @param $edit
+   *   Field parameters to be submitted.
+   * @return
+   *   Array representation of the updated field.
+   */
+  function updateProfileField($fid, $type = 'textfield', $edit = array()) {
+
+    $form_name = $edit['name'];
+    $title = $edit['title'];
+    $category = $edit['category'];
+
+    $this->drupalPost('admin/config/people/profile/edit/' . $fid, $edit, t('Save field'));
+
+    // Check that the updated field is appearing on the user edit form.
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit/' . $category);
+
+    // Checking field.
+    if ($type == 'date') {
+      $this->assertField($form_name . '[month]', t('Found month selection field'));
+      $this->assertField($form_name . '[day]', t('Found day selection field'));
+      $this->assertField($form_name . '[year]', t('Found day selection field'));
+    }
+    else {
+      $this->assertField($form_name , t('Found form named @name', array('@name' => $form_name)));
+    }
+
+    // Checking name.
+    $this->assertText($title, t('Checking title for field %title', array('%title' => $title)));
+    // Checking explanation.
+    $this->assertText($edit['explanation'], t('Checking explanation for field %title', array('%title' => $title)));
+
+    return array(
+      'fid' => $fid,
+      'type' => $type,
+      'form_name' => $form_name,
+      'title' => $title,
+      'category' => $category,
+    );
+  }
+
+  /**
    * Set the profile field to a random value
    *
    * @param $field
@@ -140,10 +187,18 @@ class ProfileTestFields extends ProfileTestCase {
       'url' => 'http://www.' . str_replace('_', '', $this->randomName(10)) . '.org',
     );
 
-    // For each field type, create a field, give it a value and delete the field.
+    // For each field type, create a field, give it a value, update the field,
+    // and delete the field.
     foreach ($field_types as $type => $value) {
       $field = $this->createProfileField($type);
       $this->setProfileField($field, $value);
+      $edit = array(
+        'name' => $field['form_name'],
+        'title' => $this->randomName(),
+        'category' => $field['category'],
+        'explanation' => $this->randomName(),
+      );
+      $field = $this->updateProfileField($field['fid'], $field['type'], $edit);
       $this->deleteProfileField($field);
     }
   }
@@ -159,7 +214,7 @@ class ProfileTestSelect extends ProfileTestCase {
   }
 
   /**
-   * Create a list selection field, give it a value, and delete the field.
+   * Create a list selection field, give it a value, update and delete the field.
    */
   function testProfileSelectionField() {
     $this->drupalLogin($this->admin_user);
@@ -171,6 +226,13 @@ class ProfileTestSelect extends ProfileTestCase {
 
     $this->setProfileField($field, rand(1, 10));
 
+    $edit = array(
+      'name' => $field['form_name'],
+      'title' => $this->randomName(),
+      'category' => $field['category'],
+      'explanation' => $this->randomName(),
+    );
+    $field = $this->updateProfileField($field['fid'], $field['type'], $edit);
     $this->deleteProfileField($field);
   }
 }
@@ -185,7 +247,7 @@ class ProfileTestDate extends ProfileTestCase {
   }
 
   /**
-   * Create a date field, give it a value, and delete the field.
+   * Create a date field, give it a value, update and delete the field.
    */
   function testProfileDateField() {
     $this->drupalLogin($this->admin_user);
@@ -208,6 +270,13 @@ class ProfileTestDate extends ProfileTestCase {
 
     $this->assertText('01/09/1983', t('Found date profile field.'));
 
+    $edit = array(
+      'name' => $field['form_name'],
+      'title' => $this->randomName(),
+      'category' => $field['category'],
+      'explanation' => $this->randomName(),
+    );
+    $field = $this->updateProfileField($field['fid'], $field['type'], $edit);
     $this->deleteProfileField($field);
   }
 }
