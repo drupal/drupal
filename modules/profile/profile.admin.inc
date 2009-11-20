@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.34 2009/11/03 05:27:18 webchick Exp $
+// $Id: profile.admin.inc,v 1.35 2009/11/20 04:15:15 webchick Exp $
 
 /**
  * @file
@@ -317,7 +317,7 @@ function profile_field_form_validate($form, &$form_state) {
   $query->fields('profile_field', array('fid'));
 
   if (isset($form_state['values']['fid'])) {
-    $query->condition('fid', $form_state['values']['fid']);
+    $query->condition('fid', $form_state['values']['fid'], '<>');
   }
   $query_name = clone $query;
 
@@ -356,9 +356,9 @@ function profile_field_form_submit($form, &$form_state) {
   if (!isset($form_state['values']['page'])) {
     $form_state['values']['page'] = '';
   }
+  // Remove all elements that are not profile_field columns.
+  $values = array_intersect_key($form_state['values'], array_flip(array('type', 'category', 'title', 'name', 'explanation', 'visibility', 'page', 'weight', 'autocomplete', 'required', 'register', 'options')));
   if (!isset($form_state['values']['fid'])) {
-    // Remove all elements that are not profile_field columns.
-    $values = array_intersect_key($form_state['values'], array_flip(array('type', 'category', 'title', 'name', 'explanation', 'visibility', 'page', 'weight', 'autocomplete', 'required', 'register', 'options')));
     db_insert('profile_field')
       ->fields($values)
       ->execute();
@@ -367,9 +367,9 @@ function profile_field_form_submit($form, &$form_state) {
   }
   else {
     db_update('profile_field')
-      ->fields($form_state['values'])
+      ->fields($values)
       ->condition('fid', $form_state['values']['fid'])
-      ->exeucte();
+      ->execute();
     drupal_set_message(t('The field has been updated.'));
   }
   cache_clear_all();
