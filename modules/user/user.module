@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1082 2009/11/19 04:00:47 webchick Exp $
+// $Id: user.module,v 1.1083 2009/11/20 06:12:45 webchick Exp $
 
 /**
  * @file
@@ -679,7 +679,10 @@ function user_role_permissions($roles = array()) {
  */
 function user_access($string, $account = NULL) {
   global $user;
-  $perm = &drupal_static(__FUNCTION__, array());
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static = array();
+  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
+  $perm = &$drupal_static[__FUNCTION__];
 
   if (!isset($account)) {
     $account = $user;
