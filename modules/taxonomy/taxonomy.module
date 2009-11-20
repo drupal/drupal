@@ -1258,7 +1258,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
       }
       $values[] = $term->tid;
     }
-    $value = options_transpose_array_rows_cols(array('value' => $values));
+    $value = options_array_transpose(array('value' => $values));
   }
   else {
     $value = array();

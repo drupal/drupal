@@ -381,7 +381,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $langcode = FIELD_LANGUAGE_NONE;
     $edit["title[$langcode][0][value]"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
-    $edit[$this->instance['field_name'] . '[' . $langcode .'][value][]'] = $term1->tid;
+    $edit[$this->instance['field_name'] . '[' . $langcode .'][]'] = $term1->tid;
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the node is viewed.
@@ -390,7 +390,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->assertText($term1->name, t('Term is displayed when viewing the node.'));
 
     // Edit the node with a different term.
-    $edit[$this->instance['field_name'] . '[' . $langcode . '][value][]'] = $term2->tid;
+    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term2->tid;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
     $this->drupalGet('node/' . $node->nid);
@@ -811,11 +811,11 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     // Display creation form.
     $langcode = FIELD_LANGUAGE_NONE;
     $this->drupalGet('test-entity/add/test-bundle');
-    $this->assertFieldByName("{$this->field_name}[$langcode][value]", '', t('Widget is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode]", '', t('Widget is displayed'));
 
     // Submit with some value.
     $edit = array(
-      "{$this->field_name}[$langcode][value]" => array($term->tid),
+      "{$this->field_name}[$langcode]" => array($term->tid),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);

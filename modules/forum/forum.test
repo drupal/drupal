@@ -267,7 +267,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $edit = array(
       "title[$langcode][0][value]" => $title,
       "body[$langcode][0][value]" => $body,
-      "taxonomy_forums[$langcode][value]" => $tid,
+      "taxonomy_forums[$langcode]" => $tid,
     );
 
     // TODO The taxonomy select value is set by drupal code when the tid is part
@@ -357,7 +357,7 @@ class ForumTestCase extends DrupalWebTestCase {
       $edit["title[$langcode][0][value]"] = 'node/' . $node->nid;
       $edit["body[$langcode][0][value]"] = $this->randomName(256);
       // Assume the topic is initially associated with $forum.
-      $edit["taxonomy_forums[$langcode][value]"] = $this->root_forum['tid'];
+      $edit["taxonomy_forums[$langcode]"] = $this->root_forum['tid'];
       $edit['shadow'] = TRUE;
       $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
       $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit["title[$langcode][0][value]"])), t('Forum node was edited'));
