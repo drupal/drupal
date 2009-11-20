@@ -1593,6 +1593,65 @@ class FieldFormTestCase extends FieldTestCase {
   }
 
   /**
+   * Tests fields with no 'edit' access.
+   */
+  function testFieldFormAccess() {
+    // Create a "regular" field.
+    $field = $this->field_single;
+    $field_name = $field['field_name'];
+    $instance = $this->instance;
+    $instance['field_name'] = $field_name;
+    field_create_field($field);
+    field_create_instance($instance);
+
+    // Create a field with no edit access - see field_test_field_access().
+    $field_no_access = array(
+      'field_name' => 'field_no_edit_access',
+      'type' => 'test_field',
+    );
+    $field_name_no_access = $field_no_access['field_name'];
+    $instance_no_access = array(
+      'field_name' => $field_name_no_access,
+      'object_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+      'default_value' => array(0 => array('value' => 99)),
+    );
+    field_create_field($field_no_access);
+    field_create_instance($instance_no_access);
+
+    $langcode = FIELD_LANGUAGE_NONE;
+
+    // Display creation form.
+    $this->drupalGet('test-entity/add/test-bundle');
+    $this->assertNoFieldByName("{$field_name_no_access}[$langcode][0][value]", '', t('Widget is not displayed if field access is denied.'));
+
+    // Create entity.
+    $edit = array("{$field_name}[$langcode][0][value]" => 1);
+    $this->drupalPost(NULL, $edit, t('Save'));
+    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    $id = $match[1];
+
+    // Check that the default value was saved.
+    $entity = field_test_entity_test_load($id);
+    $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, t('Default value was saved for the field with no edit access.'));
+    $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 1, t('Entered value vas saved for the field with edit access.'));
+
+    // Create a new revision.
+    $edit = array("{$field_name}[$langcode][0][value]" => 2, 'revision' => TRUE);
+    $this->drupalPost('test-entity/' . $id . '/edit', $edit, t('Save'));
+
+    // Check that the new revision has the expected values.
+    $entity = field_test_entity_test_load($id);
+    $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, t('New revision has the expected value for the field with no edit access.'));
+    $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 2, t('New revision has the expected value for the field with edit access.'));
+
+    // Check that the revision is also saved in the revisions table.
+    $entity = field_test_entity_test_load($id, $entity->ftvid);
+    $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, t('New revision has the expected value for the field with no edit access.'));
+    $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 2, t('New revision has the expected value for the field with edit access.'));
+  }
+
+  /**
    * Execute a POST request on a AHAH callback.
    *
    * Stolen from poll.test. The JSON result is parsed into HTML and placed in
