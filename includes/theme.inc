@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.552 2009/11/12 21:05:49 dries Exp $
+// $Id: theme.inc,v 1.553 2009/11/20 04:29:42 webchick Exp $
 
 /**
  * @file
@@ -1239,9 +1239,7 @@ function theme_render_template($template_file, $variables) {
   extract($variables, EXTR_SKIP);               // Extract the variables to a local namespace
   ob_start();                                   // Start output buffering
   include DRUPAL_ROOT . '/' . $template_file;   // Include the template file
-  $contents = ob_get_contents();                // Get the contents of the buffer
-  ob_end_clean();                               // End buffering and discard
-  return $contents;                             // Return the contents
+  return ob_get_clean();                        // End buffering and return its contents
 }
 
 /**
