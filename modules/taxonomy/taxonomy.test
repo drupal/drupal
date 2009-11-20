@@ -738,7 +738,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $this->instance = array(
       'field_name' => $this->field_name,
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_select',
       ),
@@ -752,7 +752,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
 
     // Test valid and invalid values with field_attach_validate().
     $langcode = FIELD_LANGUAGE_NONE;
-    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+    $entity = field_test_create_stub_entity();
     $term = $this->createTerm($this->vocabulary);
     $entity->{$this->field_name}[$langcode][0]['value'] = $term->tid;
     field_attach_validate('test_entity', $entity);
@@ -763,7 +763,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
       $this->assertTrue($entity->{$this->field_name}[$langcode][0]['value'] != $term->tid, t('Term from wrong vocabulary does not cause validation error'));
     }
 
-    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+    $entity = field_test_create_stub_entity();
     $bad_term = $this->createTerm($this->createVocabulary());
     $entity->{$this->field_name}[$langcode][0]['value'] = $bad_term->tid;
     try {
@@ -797,7 +797,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $this->instance = array(
       'field_name' => $this->field_name,
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'label' => $this->randomName() . '_label',
       'widget' => array(
         'type' => 'options_select',

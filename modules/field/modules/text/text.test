@@ -10,7 +10,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     return array(
       'name'  => 'Text Field',
       'description'  => "Test the creation of text fields.",
-      'group' => 'Field'
+      'group' => 'Field Types'
     );
   }
 
@@ -41,7 +41,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $this->instance = array(
       'field_name' => $this->field['field_name'],
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'text_textfield',
       ),
@@ -53,7 +53,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     );
     field_create_instance($this->instance);
     // Test valid and invalid values with field_attach_validate().
-    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+    $entity = field_test_create_stub_entity();
     $langcode = FIELD_LANGUAGE_NONE;
     for ($i = 0; $i <= $max_length + 2; $i++) {
       $entity->{$this->field['field_name']}[$langcode][0]['value'] = str_repeat('x', $i);
@@ -87,7 +87,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $this->instance = array(
       'field_name' => $this->field_name,
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'label' => $this->randomName() . '_label',
       'settings' => array(
         'text_processing' => TRUE,
@@ -141,7 +141,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $this->instance = array(
       'field_name' => $this->field_name,
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'label' => $this->randomName() . '_label',
       'settings' => array(
         'text_processing' => TRUE,
@@ -224,7 +224,7 @@ class TextSummaryTestCase extends DrupalWebTestCase {
     return array(
       'name' => 'Text summary',
       'description' => 'Test text_summary() with different strings and lengths.',
-      'group' => 'Field',
+      'group' => 'Field Types',
     );
   }
 

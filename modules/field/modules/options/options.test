@@ -6,7 +6,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     return array(
       'name'  => 'Options widgets',
       'description'  => "Test the Options widgets.",
-      'group' => 'Field'
+      'group' => 'Field Types'
     );
   }
 
@@ -62,7 +62,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     $instance = array(
       'field_name' => $this->card_1['field_name'],
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_buttons',
       ),
@@ -118,7 +118,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     $instance = array(
       'field_name' => $this->card_2['field_name'],
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_buttons',
       ),
@@ -204,7 +204,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     $instance = array(
       'field_name' => $this->card_1['field_name'],
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_select',
       ),
@@ -258,7 +258,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     $instance = array(
       'field_name' => $this->card_2['field_name'],
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_select',
       ),
@@ -341,7 +341,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     $instance = array(
       'field_name' => $this->bool['field_name'],
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_onoff',
       ),

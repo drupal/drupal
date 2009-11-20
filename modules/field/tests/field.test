@@ -82,7 +82,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     return array(
       'name' => 'Field attach tests (storage-related)',
       'description' => 'Test storage-related Field Attach API functions.',
-      'group' => 'Field',
+      'group' => 'Field API',
     );
   }
 
@@ -400,7 +400,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
    * Test insert with missing or NULL fields, with default value.
    */
   function testFieldAttachSaveMissingDataDefaultValue() {
-    // Add a default value.
+    // Add a default value function.
     $this->instance['default_value_function'] = 'field_test_default_value';
     field_update_instance($this->instance);
 
@@ -802,7 +802,7 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     return array(
       'name' => 'Field attach tests (other)',
       'description' => 'Test other Field Attach API functions.',
-      'group' => 'Field',
+      'group' => 'Field API',
     );
   }
 
@@ -1129,7 +1129,7 @@ class FieldInfoTestCase extends FieldTestCase {
     return array(
       'name' => 'Field info tests',
       'description' => 'Get information about existing fields, instances and bundles.',
-      'group' => 'Field',
+      'group' => 'Field API',
     );
   }
 
@@ -1181,7 +1181,7 @@ class FieldInfoTestCase extends FieldTestCase {
 
     // Verify that no unexpected instances exist.
     $core_fields = field_info_fields();
-    $instances = field_info_instances('test_entity', FIELD_TEST_BUNDLE);
+    $instances = field_info_instances('test_entity', 'test_bundle');
     $this->assertTrue(empty($instances), t('With no instances, info bundles is empty.'));
 
     // Create a field, verify it shows up.
@@ -1206,7 +1206,7 @@ class FieldInfoTestCase extends FieldTestCase {
     $instance = array(
       'field_name' => $field['field_name'],
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'label' => $this->randomName(),
       'description' => $this->randomName(),
       'weight' => mt_rand(0, 127),
@@ -1265,7 +1265,7 @@ class FieldInfoTestCase extends FieldTestCase {
     $instance_definition = array(
       'field_name' => $field_definition['field_name'],
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
     );
     field_create_instance($instance_definition);
 
@@ -1334,7 +1334,7 @@ class FieldFormTestCase extends FieldTestCase {
     return array(
       'name' => 'Field form tests',
       'description' => 'Test Field form handling.',
-      'group' => 'Field',
+      'group' => 'Field API',
     );
   }
 
@@ -1690,7 +1690,7 @@ class FieldCrudTestCase extends FieldTestCase {
     return array(
       'name' => 'Field CRUD tests',
       'description' => 'Test field create, read, update, and delete.',
-      'group' => 'Field',
+      'group' => 'Field API',
     );
   }
 
@@ -1923,7 +1923,7 @@ class FieldCrudTestCase extends FieldTestCase {
     $this->instance_definition = array(
       'field_name' => $this->field['field_name'],
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'test_field_widget',
       ),
@@ -2020,7 +2020,7 @@ class FieldCrudTestCase extends FieldTestCase {
     // Create a decimal 5.2 field.
     $field = array('field_name' => 'decimal53', 'type' => 'number_decimal', 'cardinality' => 3, 'settings' => array('precision' => 5, 'scale' => 2));
     $field = field_create_field($field);
-    $instance = array('field_name' => 'decimal53', 'object_type' => 'test_entity', 'bundle' => FIELD_TEST_BUNDLE);
+    $instance = array('field_name' => 'decimal53', 'object_type' => 'test_entity', 'bundle' => 'test_bundle');
     $instance = field_create_instance($instance);
 
     // Update it to a deciaml 5.3 field.
@@ -2137,7 +2137,7 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     return array(
       'name' => 'Field instance CRUD tests',
       'description' => 'Create field entities by attaching fields to entities.',
-      'group' => 'Field',
+      'group' => 'Field API',
     );
   }
 
@@ -2153,7 +2153,7 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
       'field_name' => $this->field['field_name'],
       'object_type' => 'test_entity',
       'object_type' => 'test_entity',
-      'bundle' => FIELD_TEST_BUNDLE,
+      'bundle' => 'test_bundle',
     );
   }
 
@@ -2329,7 +2329,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     return array(
       'name' => 'Field translations tests',
       'description' => 'Test multilanguage fields logic.',
-      'group' => 'Field',
+      'group' => 'Field API',
     );
   }
 
@@ -2563,7 +2563,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     return array(
       'name' => 'Field bulk delete tests',
       'description'=> 'Bulk delete fields and instances, and clean up afterwards.',
-      'group' => 'Field',
+      'group' => 'Field API',
     );
   }
 

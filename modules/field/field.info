@@ -12,6 +12,6 @@ files[] = field.default.inc
 files[] = field.multilingual.inc
 files[] = field.attach.inc
 files[] = field.form.inc
-files[] = field.test
+files[] = tests/field.test
 dependencies[] = field_sql_storage
 required = TRUE
