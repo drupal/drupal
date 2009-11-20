@@ -371,6 +371,18 @@ ul.secondary li.active a.active {
   font-size: 15px;
 }
 
+#block-system-main ul.node-type-list li a, #block-system-main ul.admin-list li a {
+  margin-left: -30px;
+  padding: 0px 0 4px 30px;
+  min-height: 0;
+}
+
+#block-system-main ul.node-type-list li div.description a, #block-system-main ul.admin-list li div.description a {
+  margin-left: 0px;
+  padding: 0px;
+  min-height: inherit;
+}
+
 /**
  * Tables.
  */
