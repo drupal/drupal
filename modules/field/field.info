@@ -1,4 +1,4 @@
-; $Id: field.info,v 1.5 2009/08/22 00:58:52 webchick Exp $
+; $Id: field.info,v 1.6 2009/11/20 23:29:28 webchick Exp $
 name = Field
 description = Field API to add fields to objects like nodes and users.
 package = Core - fields
@@ -12,6 +12,6 @@ files[] = field.default.inc
 files[] = field.multilingual.inc
 files[] = field.attach.inc
 files[] = field.form.inc
-files[] = field.test
+files[] = tests/field.test
 dependencies[] = field_sql_storage
 required = TRUE
