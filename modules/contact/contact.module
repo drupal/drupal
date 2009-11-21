@@ -20,14 +20,13 @@ function contact_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@contact">Contact module</a>.', array('@contact' => url('http://drupal.org/handbook/modules/contact/', array('absolute' => TRUE)))) . '</p>';
       return $output;
     case 'admin/structure/contact':
-      $output = '<p>' . t('This page lets you set up <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/structure/contact/settings'), '@form' => url('contact'))) . '</p>';
-      if (!module_exists('menu')) {
-        $menu_note = t('The menu item can be customized and configured only once the menu module has been <a href="@modules-page">enabled</a>.', array('@modules-page' => url('admin/config/modules')));
+      $output = '<p>' . t('Add one or more categories to set up your site-wide <a href="@form">contact form</a>. You can <a href="@settings">customize the information above the contact form</a> on the settings page.', array('@settings' => url('admin/structure/contact/settings'), '@form' => url('contact'))) . '</p>';      if (!module_exists('menu')) {
+        $menu_note = t('The menu item can be configured only if the menu module is <a href="@modules-page">enabled</a>.', array('@modules-page' => url('admin/config/modules')));
       }
       else {
         $menu_note = '';
       }
-      $output .= '<p>' . t('The contact module also adds a <a href="@menu-settings">menu item</a> (disabled by default) to the navigation block.', array('@menu-settings' => url('admin/structure/menu'))) . ' ' . $menu_note . '</p>';
+      $output .= '<p>' . t('A <a href="@menu-settings">contact menu item</a> (disabled by default) is available in the navigation block.', array('@menu-settings' => url('admin/structure/menu'))) . ' ' . $menu_note . '</p>';
       return $output;
   }
 }
