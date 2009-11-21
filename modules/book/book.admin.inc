@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.26 2009/11/08 10:02:41 webchick Exp $
+// $Id: book.admin.inc,v 1.27 2009/11/21 08:58:23 dries Exp $
 
 /**
  * @file
@@ -38,18 +38,17 @@ function book_admin_settings() {
   $types = node_type_get_names();
   $form['book_allowed_types'] = array(
     '#type' => 'checkboxes',
-    '#title' => t('Allowed book outline types'),
+    '#title' => t('Content types allowed in book outlines'),
     '#default_value' => array('book'),
     '#options' => $types,
-    '#description' => t('Select content types which users with the %add-perm permission will be allowed to add to the book hierarchy. Users with the %outline-perm permission can add all content types.', array('%add-perm' => t('add content to books'),  '%outline-perm' => t('administer book outlines'))),
+    '#description' => t('Users with the %outline-perm permission can add all content types.', array('%add-perm' => t('add content to books'),  '%outline-perm' => t('administer book outlines'))),
     '#required' => TRUE,
   );
   $form['book_child_type'] = array(
     '#type' => 'radios',
-    '#title' => t('Default child page type'),
+    '#title' => t('Content type for child pages'),
     '#default_value' => 'book',
     '#options' => $types,
-    '#description' => t('The content type for the %add-child link must be one of those selected as an allowed book outline type.', array('%add-child' => t('Add child page'))),
     '#required' => TRUE,
   );
   $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
