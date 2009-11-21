@@ -539,6 +539,9 @@ class DrupalUnitTestCase extends DrupalTestCase {
     $this->originalPrefix = $db_prefix;
     $this->originalFileDirectory = file_directory_path();
 
+    // Reset all statics so that test is performed with a clean environment.
+    drupal_static_reset();
+
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $db_prefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
     $conf['file_public_path'] = $this->originalFileDirectory . '/' . $db_prefix;
@@ -1052,6 +1055,9 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Log fatal errors.
     ini_set('log_errors', 1);
     ini_set('error_log', $directory . '/error.log');
+
+    // Reset all statics so that test is performed with a clean environment.
+    drupal_static_reset();
 
     include_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_install_system();

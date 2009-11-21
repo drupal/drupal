@@ -405,16 +405,11 @@ class BootstrapResettableStaticTestCase extends DrupalUnitTestCase {
     $var = 'bar';
     drupal_static_reset($name);
     $this->assertEqual($var, 'foo', t('Variable was reset after second invocation of name-specific reset.'));
-
-    // Ensure that batch processing doesn't get reset.
-    $batch = &batch_get();
-    $batch_saved = $batch;
     $var = 'bar';
     drupal_static_reset();
     $this->assertEqual($var, 'foo', t('Variable was reset after first invocation of global reset.'));
     $var = 'bar';
     drupal_static_reset();
     $this->assertEqual($var, 'foo', t('Variable was reset after second invocation of global reset.'));
-    $batch = $batch_saved;
   }
 }
