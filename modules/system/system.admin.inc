@@ -992,6 +992,7 @@ function system_modules_submit($form, &$form_state) {
     // the form submission data needed later.
     if (!isset($form_state['values']['confirm'])) {
       $form_state['storage'] = array('more_modules' => $more_modules, 'modules' => $modules);
+      $form_state['rebuild'] = TRUE;
       return;
     }
     // Otherwise, install or enable the modules.
@@ -1203,6 +1204,7 @@ function system_modules_uninstall_submit($form, &$form_state) {
   }
   else {
     $form_state['storage'] = $form_state['values'];
+    $form_state['rebuild'] = TRUE;
   }
 }
 

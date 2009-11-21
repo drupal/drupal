@@ -1465,13 +1465,8 @@ function drupal_anonymous_user($session = '') {
  *
  */
 function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
-  $final_phase = &drupal_static(__FUNCTION__ . '_final_phase');
-  // When not recursing, store the phase name so it's not forgotten while
-  // recursing.
-  if ($new_phase) {
-    $final_phase = $phase;
-  }
-  $phases = &drupal_static(__FUNCTION__ . '_phases', array(
+  // Not drupal_static(), because does not depend on any run-time information.
+  static $phases = array(
     DRUPAL_BOOTSTRAP_CONFIGURATION,
     DRUPAL_BOOTSTRAP_PAGE_CACHE,
     DRUPAL_BOOTSTRAP_DATABASE,
@@ -1480,9 +1475,19 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
     DRUPAL_BOOTSTRAP_PAGE_HEADER,
     DRUPAL_BOOTSTRAP_LANGUAGE,
     DRUPAL_BOOTSTRAP_FULL,
-  ));
-  $completed_phase = &drupal_static(__FUNCTION__ . '_completed_phase', -1);
+  );
+  // Not drupal_static(), because the only legitimate API to control this is to
+  // call drupal_bootstrap() with a new phase parameter.
+  static $final_phase;
+  // Not drupal_static(), because it's impossible to roll back to an earlier
+  // bootstrap state.
+  static $completed_phase = -1;
 
+  // When not recursing, store the phase name so it's not forgotten while
+  // recursing.
+  if ($new_phase) {
+    $final_phase = $phase;
+  }
   if (isset($phase)) {
     // Call a phase if it has not been called before and is below the requested
     // phase.

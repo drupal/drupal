@@ -346,6 +346,7 @@ function form_storage_test_form_submit($form, &$form_state) {
   else {
     drupal_set_message("Title: ". check_plain($form_state['storage']['thing']['title']));
   }
+  $form_state['rebuild'] = TRUE;
   $form_state['storage']['step']++;
   drupal_set_message("Form constructions: ". $_SESSION['constructions']);
 }

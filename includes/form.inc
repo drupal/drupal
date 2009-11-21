@@ -104,6 +104,21 @@ function drupal_get_form($form_id) {
  *     - file: An optional include file that contains the form and is
  *       automatically loaded by form_get_cache(). Defaults to the current menu
  *       router item's 'file' definition, if existent.
+ *   - storage: An array that may be used to store information related to the
+ *     processed data in the form, which can be accessed and used within the
+ *     same page request, but also persist across multiple steps in a multi-step
+ *     form.
+ *   - rebuild: Normally, after the entire form processing is completed and
+ *     submit handlers ran, a form is considered to be done and
+ *     drupal_redirect_form() will redirect the user to a new page using a GET
+ *     request (so a browser refresh does not re-submit the form). However, if
+ *     'rebuild' has been set to TRUE, then a new copy of the form is
+ *     immediately built and sent to the browser; instead of a redirect. This is
+ *     used for multi-step forms, such as wizards and confirmation forms. Also,
+ *     if a form validation handler has set 'rebuild' to TRUE and a validation
+ *     error occurred, then the form is rebuilt prior to being returned,
+ *     enabling form elements to be altered, as appropriate to the particular
+ *     validation error.
  *   - input: An array of input that corresponds to $_POST or $_GET, depending
  *     on the 'method' chosen (see below).
  *   - method: The HTTP form method to use for finding the input for this form.
@@ -224,13 +239,12 @@ function drupal_build_form($form_id, &$form_state) {
   // the form will simply be re-rendered with the values still in its
   // fields.
   //
-  // If $form_state['storage'] or $form_state['rebuild'] has been set
-  // and the form has been submitted, we know that we're in a complex
-  // multi-part process of some sort and the form's workflow is NOT
-  // complete. We need to construct a fresh copy of the form, passing
-  // in the latest $form_state in addition to any other variables passed
+  // If $form_state['rebuild'] has been set and the form has been submitted, we
+  // know that we're in a multi-part process of some sort and the form's
+  // workflow is not complete. We need to construct a fresh copy of the form,
+  // passing in the latest $form_state in addition to any other variables passed
   // into drupal_get_form().
-  if ((!empty($form_state['storage']) || $form_state['rebuild']) && $form_state['submitted'] && !form_get_errors()) {
+  if ($form_state['rebuild'] && $form_state['submitted'] && !form_get_errors()) {
     $form = drupal_rebuild_form($form_id, $form_state);
   }
 
@@ -255,7 +269,7 @@ function form_state_defaults() {
     'rebuild' => FALSE,
     'redirect' => NULL,
     'build_info' => array(),
-    'storage' => NULL,
+    'storage' => array(),
     'submitted' => FALSE,
     'programmed' => FALSE,
     'cache'=> FALSE,
@@ -758,8 +772,7 @@ function drupal_validate_form($form_id, $form, &$form_state) {
  * - If $form_state['programmed'] is TRUE, the form submission was usually
  *   invoked via drupal_form_submit(), so any redirection would break the script
  *   that invoked drupal_form_submit().
- * - If $form_state['rebuild'] is TRUE or $form_state['storage'] is populated,
- *   the form is most probably a multi-step form and needs to be rebuilt without
+ * - If $form_state['rebuild'] is TRUE, the form needs to be rebuilt without
  *   redirection.
  *
  * @param $form_state
@@ -773,8 +786,8 @@ function drupal_redirect_form($form_state) {
   if (!empty($form_state['programmed'])) {
     return;
   }
-  // Skip redirection for multi-step forms.
-  if (!empty($form_state['rebuild']) || !empty($form_state['storage'])) {
+  // Skip redirection if rebuild is activated.
+  if (!empty($form_state['rebuild'])) {
     return;
   }
   // Skip redirection if it was explicitly disallowed.
@@ -3161,7 +3174,13 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
  * Retrieves the current batch.
  */
 function &batch_get() {
-  $batch = &drupal_static(__FUNCTION__, array());
+  // Not drupal_static(), because Batch API operates at a lower level than most
+  // use-cases for resetting static variables, and we specifically do not want a
+  // global drupal_static_reset() resetting the batch information. Functions
+  // that are part of the Batch API and need to reset the batch information may
+  // call batch_get() and manipulate the result by reference. Functions that are
+  // not part of the Batch API can also do this, but shouldn't.
+  static $batch = array();
   return $batch;
 }
 
