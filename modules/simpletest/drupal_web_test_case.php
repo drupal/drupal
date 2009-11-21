@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.172 2009/11/20 05:14:13 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.173 2009/11/21 00:43:42 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1404,8 +1404,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * Retrieve a Drupal path or an absolute path and JSON decode the result.
    */
   function drupalGetAJAX($path, array $options = array(), array $headers = array()) {
-    $out = $this->drupalGet($path, $options, $headers);
-    return json_decode($out, TRUE);
+    return drupal_json_decode($this->drupalGet($path, $options, $headers));
   }
 
   /**
@@ -1545,8 +1544,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * Execute a POST request on an AJAX path and JSON decode the result.
    */
   protected function drupalPostAJAX($path, $edit, $triggering_element, $ajax_path = 'system/ajax', array $options = array(), array $headers = array()) {
-    $out = $this->drupalPost($path, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers);
-    return json_decode($out, TRUE);
+    return drupal_json_decode($this->drupalPost($path, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers));
   }
 
   /**
