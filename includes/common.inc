@@ -4342,10 +4342,22 @@ function drupal_clear_js_cache() {
  * Converts a PHP variable into its Javascript equivalent.
  *
  * We use HTML-safe strings, i.e. with <, > and & escaped.
+ *
+ * @see drupal_json_decode()
  */
 function drupal_json_encode($var) {
-  // json_encode() does not escape <, > and &, so we do it with str_replace()
-  return str_replace(array("<", ">", "&"), array('\x3c', '\x3e', '\x26'), json_encode($var));
+  // json_encode() does not escape <, > and &, so we do it with str_replace().
+  return str_replace(array('<', '>', '&'), array('\x3c', '\x3e', '\x26'), json_encode($var));
+}
+
+/**
+ * Converts an HTML-safe JSON string into its PHP equivalent.
+ *
+ * @see drupal_json_encode()
+ */
+function drupal_json_decode($var) {
+  // json_decode() does not unescape <, > and &, so we do it with str_replace().
+  return json_decode(str_replace(array('\x3c', '\x3e', '\x26'), array('<', '>', '&'), $var), TRUE);
 }
 
 /**

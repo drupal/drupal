@@ -1552,8 +1552,8 @@ class FieldFormTestCase extends FieldTestCase {
     $this->drupalGet('test-entity/add/test-bundle');
 
     // Press 'add more' button a couple times -> 3 widgets.
-    // The drupalPostAhah() helper will not work iteratively, so we add those.
-    // through non-'JS' submission.
+    // drupalPostAJAX() will not work iteratively, so we add those through
+    // non-JS submission.
     $this->drupalPost(NULL, array(), t('Add another item'));
     $this->drupalPost(NULL, array(), t('Add another item'));
 
@@ -1575,8 +1575,10 @@ class FieldFormTestCase extends FieldTestCase {
       $field_values[$weight]['value'] = (string)$value;
       $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
     }
-    // Press 'add more' button through AHAH.
-    $this->_fieldPostAhah($edit, t('Add another item'));
+    // Press 'add more' button through AJAX, and place the expected HTML result
+    // as the tested content.
+    $commands = $this->drupalPostAJAX(NULL, $edit, $this->field_name . '_add_more');
+    $this->content = $commands[1]['data'];
 
     ksort($values);
     $values = array_values($values);
@@ -1649,39 +1651,6 @@ class FieldFormTestCase extends FieldTestCase {
     $entity = field_test_entity_test_load($id, $entity->ftvid);
     $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, t('New revision has the expected value for the field with no edit access.'));
     $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 2, t('New revision has the expected value for the field with edit access.'));
-  }
-
-  /**
-   * Execute a POST request on a AHAH callback.
-   *
-   * Stolen from poll.test. The JSON result is parsed into HTML and placed in
-   * $this->content, so that regular asserts can be performed.
-   *
-   * Since the result is generally not a full-fledged form, this cannot be
-   * called iteratively.
-   */
-  function _fieldPostAhah($edit, $submit, array $options = array(), array $headers = array()) {
-    $this->additionalCurlOptions[CURLOPT_URL] = url('system/ajax', array('absolute' => TRUE));
-    $this->drupalPost(NULL, $edit, $submit);
-    unset($this->additionalCurlOptions[CURLOPT_URL]);
-
-    // The response is drupal_json_output, so we need to undo some escaping.
-    $commands = json_decode(str_replace(array('\x3c', '\x3e', '\x26'), array("<", ">", "&"), $this->drupalGetContent()));
-
-    // The JSON response will be two AJAX commands. The first is a settings
-    // command and the second is the replace command.
-    $settings = reset($commands);
-    $replace = next($commands);
-
-    $this->assertTrue(is_object($settings), t('The response settings command is an object'));
-    $this->assertTrue(is_object($replace), t('The response replace command is an object'));
-
-    // This response data is valid HTML so we will can reuse everything we have
-    // for HTML pages.
-    $this->content = $replace->data;
-
-    // Needs to be emptied out so the new content will be parsed.
-    $this->elements = '';
   }
 }
 
