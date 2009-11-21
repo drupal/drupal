@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.2 2009/11/21 00:43:42 webchick Exp $
+// $Id: field.test,v 1.3 2009/11/21 14:35:05 dries Exp $
 
 /**
  * @file
@@ -2495,6 +2495,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     $this->assertTrue(count($obj_info['translation']), t('Nodes are translatable.'));
 
     // Prepare the field translations.
+    field_test_entity_info_translatable('test_entity', TRUE);
     $eid = $evid = 1;
     $obj_type = 'test_entity';
     $object = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
