@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.806 2009/11/19 04:00:47 webchick Exp $
+// $Id: comment.module,v 1.807 2009/11/21 17:53:17 dries Exp $
 
 /**
  * @file
@@ -1561,9 +1561,9 @@ function comment_num_new($nid, $timestamp = 0) {
     $timestamp = ($timestamp > NODE_NEW_LIMIT ? $timestamp : NODE_NEW_LIMIT);
 
     // Use the timestamp to retrieve the number of new comments.
-    return db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid  AND changed > :changed AND status = :status', array(
+    return db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid  AND changed > :timestamp AND status = :status', array(
       ':nid' => $nid,
-      ':changed' => $timestamp,
+      ':timestamp' => $timestamp,
       ':status' => COMMENT_PUBLISHED,
       ))->fetchField();
   }
