@@ -22,13 +22,13 @@ function forum_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) . '</p>';
       return $output;
     case 'admin/structure/forum':
-      return '<p>' . t('This page displays a list of existing forums and containers. Containers (optionally) hold forums, and forums hold forum topics (a forum topic is the initial post to a threaded discussion). To provide structure, both containers and forums may be placed inside other containers and forums.') . '</p>';
+      return '<p>' . t('Forums contain forum topics. Use containers to group related forums.') . '</p>';
     case 'admin/structure/forum/add/container':
-      return '<p>' . t('By grouping related or similar forums, containers help organize forums. For example, a container named "Food" may hold two forums named "Fruit" and "Vegetables", respectively.') . '</p>';
+      return '<p>' . t('Use containers to group related forums.') . '</p>';
     case 'admin/structure/forum/add/forum':
-      return '<p>' . t('A forum holds related or similar forum topics (a forum topic is the initial post to a threaded discussion). For example, a forum named "Fruit" may contain forum topics titled "Apples" and "Bananas", respectively.') . '</p>';
+      return '<p>' . t('A forum holds related forum topics.') . '</p>';
     case 'admin/structure/forum/settings':
-      return '<p>' . t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/structure/taxonomy/' . variable_get('forum_nav_vocabulary', 0) . '/edit'))) . '</p>';
+      return '<p>' . t('Adjust the display of your forum topics. Select the <em>content types</em> to use in forums on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/structure/taxonomy/' . variable_get('forum_nav_vocabulary', 0) . '/edit'))) . '</p>';
   }
 }
 
@@ -76,7 +76,7 @@ function forum_menu() {
   );
   $items['admin/structure/forum'] = array(
     'title' => 'Forums',
-    'description' => 'Control forums and their hierarchy and change forum settings.',
+    'description' => 'Control forum hierarchy settings.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('forum_overview'),
     'access arguments' => array('administer forums'),
@@ -212,7 +212,7 @@ function forum_node_validate($node, $form) {
           ':vid' => $term->vid,
         ))->fetchField();
         if ($used && in_array($term->tid, $containers)) {
-          form_set_error('taxonomy_forums', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => $term->name)));
+          form_set_error('taxonomy_forums', t('The item %forum is only a forum container. Select one of the forums below it.', array('%forum' => $term->name)));
         }
       }
     }
@@ -349,7 +349,7 @@ function forum_node_info() {
     'forum' => array(
       'name' => t('Forum topic'),
       'base' => 'forum',
-      'description' => t('A <em>forum topic</em> is the initial post to a new discussion thread within a forum.'),
+      'description' => t('A <em>forum topic</em> starts a new discussion thread within a forum.'),
       'title_label' => t('Subject'),
     )
   );
@@ -362,7 +362,7 @@ function forum_permission() {
   $perms = array(
     'administer forums' => array(
       'title' => t('Administer forums'),
-      'description' => t('Manage forums and configure forum administration settings.'),
+      'description' => t('Forum administration and settings.'),
     ),
   );
   return $perms;
@@ -854,7 +854,7 @@ function template_preprocess_forums(&$variables) {
       if (node_access('create', $type)) {
         // Fetch the "General" name of the content type;
         // Push the link with title and url to the array.
-        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_type_get_name($type))), 'href' => 'node/add/' . str_replace('_', '-', $type) . '/' . $variables['tid']);
+        $forum_types[$type] = array('title' => t('Add new @node_type', array('@node_type' => node_type_get_name($type))), 'href' => 'node/add/' . str_replace('_', '-', $type) . '/' . $variables['tid']);
       }
     }
 

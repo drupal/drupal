@@ -279,12 +279,12 @@ class ForumTestCase extends DrupalWebTestCase {
     $type = t('Forum topic');
     if ($container) {
       $this->assertNoRaw(t('@type %title has been created.', array('@type' => $type, '%title' => $title)), t('Forum topic was not created'));
-      $this->assertRaw(t('The item %title is only a container for forums.', array('%title' => $forum['name'])), t('Error message was shown'));
+      $this->assertRaw(t('The item %title is only a forum container.', array('%title' => $forum['name'])), t('Error message was shown'));
       return;
     }
     else {
       $this->assertRaw(t('@type %title has been created.', array('%title' => $title, '@type' => $type)), t('Forum topic was created'));
-      $this->assertNoRaw(t('The item %title is only a container for forums.', array('%title' => $forum['name'])), t('No error message was shown'));
+      $this->assertNoRaw(t('The item %title is only a forum container.', array('%title' => $forum['name'])), t('No error message was shown'));
     }
 
     // Retrieve node object.
