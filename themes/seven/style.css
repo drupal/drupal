@@ -798,7 +798,7 @@ ol.task-list {
   list-style-image: none;
 }
 ol.task-list li {
-  padding: 0.5em 1em 0.5em 0; /* LTR */
+  padding: 0.5em 1em 0.5em 20px; /* LTR */
   color: #adadad;
 }
 ol.task-list li.active {
@@ -809,7 +809,6 @@ ol.task-list li.active {
 ol.task-list li.done {
   color: #393;
   background: transparent url(images/task-check.png) no-repeat 0px 50%; /* LTR */
-  padding: 0.5em 1em 0.5em 20px; /* LTR */
   color: green;
 }
 
