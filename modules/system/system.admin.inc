@@ -677,7 +677,7 @@ function system_modules($form, $form_state = array()) {
   uasort($files, 'system_sort_modules_by_info_name');
 
   // If the modules form was submitted, then system_modules_submit() runs first
-  // and if there are unfilled required modules, then form_state['storage'] is
+  // and if there are unfilled required modules, then $form_state['storage'] is
   // filled, triggering a rebuild. In this case we need to display a
   // confirmation form.
   if (!empty($form_state['storage'])) {
@@ -925,7 +925,7 @@ function system_modules_submit($form, &$form_state) {
   include_once DRUPAL_ROOT . '/includes/install.inc';
   $modules = array();
   // If we're not coming from the confirmation form, build the list of modules.
-  if (!isset($form_state['storage']['modules'])) {
+  if (empty($form_state['storage'])) {
     foreach ($form_state['values']['modules'] as $group_name => $group) {
       foreach ($group as $module => $enabled) {
         $modules[$module] = array('group' => $group_name, 'enabled' => $enabled['enable']);
@@ -1009,10 +1009,6 @@ function system_modules_submit($form, &$form_state) {
       }
     }
   }
-  // Now we have installed every module as required (either by the user or
-  // because other modules require them) so we don't need the temporary
-  // storage anymore.
-  unset($form_state['storage']);
 
   $old_module_list = module_list();
 
@@ -1096,7 +1092,7 @@ function system_modules_uninstall($form, $form_state = NULL) {
   include_once DRUPAL_ROOT . '/includes/install.inc';
 
   // Display the confirm form if any modules have been submitted.
-  if (isset($form_state) && $confirm_form = system_modules_uninstall_confirm_form($form_state['storage'])) {
+  if (!empty($form_state) && $confirm_form = system_modules_uninstall_confirm_form($form_state['storage'])) {
     return $confirm_form;
   }
 
@@ -1146,7 +1142,7 @@ function system_modules_uninstall($form, $form_state = NULL) {
  */
 function system_modules_uninstall_confirm_form($storage) {
   // Nothing to build.
-  if (!isset($storage, $storage['uninstall'])) {
+  if (empty($storage)) {
     return;
   }
 
@@ -1199,7 +1195,6 @@ function system_modules_uninstall_submit($form, &$form_state) {
     drupal_uninstall_modules($modules);
     drupal_set_message(t('The selected modules have been uninstalled.'));
 
-    unset($form_state['storage']);
     $form_state['redirect'] = 'admin/config/modules/uninstall';
   }
   else {
