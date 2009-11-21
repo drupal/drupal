@@ -90,10 +90,9 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
 
     $form['modules']['aggregator']['aggregator_summary_items'] = array(
       '#type' => 'select',
-      '#title' => t('Items shown in sources and categories pages') ,
+      '#title' => t('Number of items shown in listing pages') ,
       '#default_value' => variable_get('aggregator_summary_items', 3),
       '#options' => $items,
-      '#description' => t('Number of feed items displayed in feed and category summary pages.'),
     );
 
     $form['modules']['aggregator']['aggregator_clear'] = array(
@@ -101,16 +100,16 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
       '#title' => t('Discard items older than'),
       '#default_value' => variable_get('aggregator_clear', 9676800),
       '#options' => $period,
-      '#description' => t('The length of time to retain feed items before discarding. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
+      '#description' => t('Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
     );
 
     $form['modules']['aggregator']['aggregator_category_selector'] = array(
       '#type' => 'radios',
-      '#title' => t('Category selection type'),
+      '#title' => t('Select categories using'),
       '#default_value' => variable_get('aggregator_category_selector', 'checkboxes'),
       '#options' => array('checkboxes' => t('checkboxes'),
       'select' => t('multiple selector')),
-      '#description' => t('The type of category selection widget displayed on categorization pages. (For a small number of categories, checkboxes are easier to use, while a multiple selector works well with large numbers of categories.)'),
+      '#description' => t('For a small number of categories, checkboxes are easier to use, while a multiple selector works well with large numbers of categories.'),
     );
     $form['modules']['aggregator']['aggregator_teaser_length'] = array(
       '#type' => 'select',
