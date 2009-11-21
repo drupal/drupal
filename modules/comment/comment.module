@@ -1561,9 +1561,9 @@ function comment_num_new($nid, $timestamp = 0) {
     $timestamp = ($timestamp > NODE_NEW_LIMIT ? $timestamp : NODE_NEW_LIMIT);
 
     // Use the timestamp to retrieve the number of new comments.
-    return db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid  AND changed > :changed AND status = :status', array(
+    return db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid  AND changed > :timestamp AND status = :status', array(
       ':nid' => $nid,
-      ':changed' => $timestamp,
+      ':timestamp' => $timestamp,
       ':status' => COMMENT_PUBLISHED,
       ))->fetchField();
   }
