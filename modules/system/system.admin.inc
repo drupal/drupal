@@ -925,7 +925,7 @@ function system_modules_submit($form, &$form_state) {
   include_once DRUPAL_ROOT . '/includes/install.inc';
   $modules = array();
   // If we're not coming from the confirmation form, build the list of modules.
-  if (!isset($form_state['storage'])) {
+  if (!isset($form_state['storage']['modules'])) {
     foreach ($form_state['values']['modules'] as $group_name => $group) {
       foreach ($group as $module => $enabled) {
         $modules[$module] = array('group' => $group_name, 'enabled' => $enabled['enable']);
@@ -1146,7 +1146,7 @@ function system_modules_uninstall($form, $form_state = NULL) {
  */
 function system_modules_uninstall_confirm_form($storage) {
   // Nothing to build.
-  if (!isset($storage)) {
+  if (!isset($storage, $storage['uninstall'])) {
     return;
   }
 
