@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.402 2009/11/21 14:06:45 dries Exp $
+// $Id: form.inc,v 1.403 2009/11/22 07:32:47 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1109,10 +1109,11 @@ function form_builder($form_id, $element, &$form_state) {
       // Check to see if a tree of child elements is present. If so,
       // continue down the tree if required.
       $element[$key]['#parents'] = $element[$key]['#tree'] && $element['#tree'] ? array_merge($element['#parents'], array($key)) : array($key);
-      $array_parents = isset($element['#array_parents']) ? $element['#array_parents'] : array();
-      $array_parents[] = $key;
-      $element[$key]['#array_parents'] = $array_parents;
     }
+    // Ensure #array_parents follows the actual form structure.
+    $array_parents = isset($element['#array_parents']) ? $element['#array_parents'] : array();
+    $array_parents[] = $key;
+    $element[$key]['#array_parents'] = $array_parents;
 
     // Assign a decimal placeholder weight to preserve original array order.
     if (!isset($element[$key]['#weight'])) {
