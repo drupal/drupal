@@ -107,6 +107,11 @@ class AJAXCommandsTestCase extends AJAXTestCase {
     $command = $commands[1];
     $this->assertTrue($command['command'] == 'changed' && $command['selector'] == '#changed_div', "'changed' AJAX command issued with correct selector");
 
+    // Tests the 'changed' command using the second argument.
+    $commands = $this->drupalPostAJAX($form_path, $edit, 'changed_command_asterisk_example');
+    $command = $commands[1];
+    $this->assertTrue($command['command'] == 'changed' && $command['selector'] == '#changed_div' && $command['asterisk'] == '#changed_div_mark_this', "'changed' AJAX command (with asterisk) issued with correct selector");
+
     // 'css' command will go here when it is implemented.
 
     // Tests the 'data' command.

@@ -720,7 +720,7 @@ function ajax_command_changed($selector, $asterisk = '') {
   return array(
     'command' => 'changed',
     'selector' => $selector,
-    'star' => $asterisk,
+    'asterisk' => $asterisk,
   );
 }
 

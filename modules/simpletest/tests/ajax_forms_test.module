@@ -130,7 +130,7 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
     '#suffix' => '<div id="before_div">Insert something before this.</div>',
   );
 
-  // Shows the 'changed' command.
+  // Shows the 'changed' command without asterisk.
   $form['changed_command_example'] = array(
     '#value' => t("AJAX changed: Click to mark div changed."),
     '#type' => 'submit',
@@ -138,6 +138,14 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
       'callback' => 'ajax_forms_test_advanced_commands_changed_callback',
     ),
     '#suffix' => '<div id="changed_div"> <div id="changed_div_mark_this">This div can be marked as changed or not.</div></div>',
+  );
+  // Shows the 'changed' command adding the asterisk.
+  $form['changed_command_asterisk_example'] = array(
+    '#value' => t("AJAX changed: Click to mark div changed with asterisk."),
+    '#type' => 'submit',
+    '#ajax' => array(
+      'callback' => 'ajax_forms_test_advanced_commands_changed_asterisk_callback',
+    ),
   );
 
   // Shows the AJAX 'css' command.
@@ -264,14 +272,15 @@ function ajax_forms_test_advanced_commands_before_callback($form, $form_state) {
  * AJAX callback for 'changed'.
  */
 function ajax_forms_test_advanced_commands_changed_callback($form, $form_state) {
-  $checkbox_value = $form_state['values']['changed_command_example'];
-  $checkbox_value_string = $checkbox_value ? "TRUE" : "FALSE";
+  $commands[] = ajax_command_changed('#changed_div');
+  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+}
+/**
+ * AJAX callback for 'changed' with asterisk marking inner div.
+ */
+function ajax_forms_test_advanced_commands_changed_asterisk_callback($form, $form_state) {
   $commands = array();
-  if ($checkbox_value) {
-    // @todo This does not yet exercise the 2nd arg (asterisk) so that should
-    //       be added when it works.
-    $commands[] = ajax_command_changed( '#changed_div');
-  }
+  $commands[] = ajax_command_changed('#changed_div', '#changed_div_mark_this');
   return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
 }
 
