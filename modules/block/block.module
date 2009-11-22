@@ -18,8 +18,8 @@ function block_help($path, $arg) {
   switch ($path) {
     case 'admin/help#block':
       $output = '';
-      $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Blocks are boxes of content rendered into an area, or region, of one or more pages of a website. The default theme Seven, for example, implements the regions "Content", "Help", "Dashboard main", and "Dashboard sidebar", and a block may appear in any one of these areas. The <a href="@blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. For more information, see the online handbook entry for <a href="@block">Block module</a>.', array('@block' => 'http://drupal.org/handbook/modules/block/', '@blocks' => url('admin/structure/block'))) . '</p>';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Block module allows you to create boxes of content, which are rendered into an area, or region, of one or more pages of a website. The default theme Seven, for example, implements the regions "Content", "Help", "Dashboard main", and "Dashboard sidebar", and a block may appear in any one of these areas. The <a href="@blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. For more information, see the online handbook entry for <a href="@block">Block module</a>.', array('@block' => 'http://drupal.org/handbook/modules/block/', '@blocks' => url('admin/structure/block'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Positioning content') . '</dt>';
