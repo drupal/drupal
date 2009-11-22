@@ -231,7 +231,7 @@ function system_themes_form() {
         break;
       }
     }
-    $screenshot = $screenshot ? theme('image', array('path' => $screenshot, 'alt' => t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), 'title' => '', 'attributes' => array('class' => array('screenshot')), 'getsize' => FALSE)) : t('no screenshot');
+    $screenshot = $screenshot ? theme('image', array('path' => $screenshot, 'alt' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])), 'title' => '', 'attributes' => array('class' => array('screenshot')), 'getsize' => FALSE)) : t('no screenshot');
 
     $form[$theme->name]['screenshot'] = array('#markup' => $screenshot);
     $form[$theme->name]['info'] = array(
