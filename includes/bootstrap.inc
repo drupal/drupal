@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.329 2009/11/21 14:06:45 dries Exp $
+// $Id: bootstrap.inc,v 1.330 2009/11/22 08:20:51 dries Exp $
 
 /**
  * @file
@@ -832,7 +832,9 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
  *   The name of the bootstrap hook we wish to invoke.
  */
 function bootstrap_invoke_all($hook) {
-  foreach (module_list(TRUE, TRUE) as $module) {
+  // _drupal_bootstrap_page_cache() already loaded the bootstrap modules, so we
+  // don't need to tell module_list() to reset its bootstrap list.
+  foreach (module_list(FALSE, TRUE) as $module) {
     drupal_load('module', $module);
     module_invoke($module, $hook);
   }
