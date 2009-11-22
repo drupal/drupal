@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.403 2009/11/22 07:32:47 dries Exp $
+// $Id: form.inc,v 1.404 2009/11/22 18:27:11 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1937,8 +1937,7 @@ function form_process_date($element) {
         $options = drupal_map_assoc(range(1900, 2050));
         break;
     }
-    $parents = $element['#parents'];
-    $parents[] = $type;
+
     $element[$type] = array(
       '#type' => 'select',
       '#value' => $element['#value'][$type],
