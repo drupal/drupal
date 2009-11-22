@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.226 2009/11/21 17:01:31 webchick Exp $
+// $Id: system.admin.inc,v 1.227 2009/11/22 18:42:55 dries Exp $
 
 /**
  * @file
@@ -231,7 +231,7 @@ function system_themes_form() {
         break;
       }
     }
-    $screenshot = $screenshot ? theme('image', array('path' => $screenshot, 'alt' => t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), 'title' => '', 'attributes' => array('class' => array('screenshot')), 'getsize' => FALSE)) : t('no screenshot');
+    $screenshot = $screenshot ? theme('image', array('path' => $screenshot, 'alt' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])), 'title' => '', 'attributes' => array('class' => array('screenshot')), 'getsize' => FALSE)) : t('no screenshot');
 
     $form[$theme->name]['screenshot'] = array('#markup' => $screenshot);
     $form[$theme->name]['info'] = array(
