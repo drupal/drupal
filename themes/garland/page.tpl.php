@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.38 2009/11/22 03:25:42 webchick Exp $
+// $Id: page.tpl.php,v 1.39 2009/11/22 23:44:09 webchick Exp $
 ?>
   <?php print render($page['header']); ?>
 
@@ -45,7 +45,7 @@
           <?php if ($title): ?><h1<?php print $tabs ? ' class="with-tabs"' : '' ?>><?php print $title ?></h1><?php endif; ?>
           <?php if ($tabs): ?><ul class="tabs primary"><?php print render($tabs) ?></ul></div><?php endif; ?>
           <?php if ($tabs2): ?><ul class="tabs secondary"><?php print render($tabs2) ?></ul><?php endif; ?>
-          <?php if ($show_messages && $messages): print $messages; endif; ?>
+          <?php print $messages; ?>
           <?php print render($page['help']); ?>
           <?php if ($action_links): ?><ul class="action-links"><?php print render($action_links); ?></ul><?php endif; ?>
           <div class="clearfix">

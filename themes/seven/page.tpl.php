@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.8 2009/11/16 05:34:24 webchick Exp $
+// $Id: page.tpl.php,v 1.9 2009/11/22 23:44:09 webchick Exp $
 ?>
   <a name="main-content" id="main-content"></a>
   <div id="branding" class="clearfix">
@@ -13,7 +13,7 @@
     <?php if ($secondary_local_tasks): ?><ul class="tabs secondary"><?php print render($secondary_local_tasks); ?></ul><?php endif; ?>
 
     <div id="content" class="clearfix">
-      <?php if ($show_messages && $messages): ?>
+      <?php if ($messages): ?>
         <div id="console" class="clearfix"><?php print $messages; ?></div>
       <?php endif; ?>
       <?php if ($page['help']): ?>
