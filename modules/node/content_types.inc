@@ -176,7 +176,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#type' => 'textarea',
     '#title' => t('Explanation or submission guidelines'),
     '#default_value' => $type->help,
-    '#description' => t('This text will be displayed at the top of the submission form for this content type.')
+    '#description' => t('This text will be displayed at the top of the page when creating new content of this type.'),
   );
   $form['workflow'] = array(
     '#type' => 'fieldset',
