@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.102 2009/11/21 17:44:51 webchick Exp $
+// $Id: content_types.inc,v 1.103 2009/11/22 02:39:06 webchick Exp $
 
 /**
  * @file
@@ -176,7 +176,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#type' => 'textarea',
     '#title' => t('Explanation or submission guidelines'),
     '#default_value' => $type->help,
-    '#description' => t('This text will be displayed at the top of the submission form for this content type.')
+    '#description' => t('This text will be displayed at the top of the page when creating new content of this type.'),
   );
   $form['workflow'] = array(
     '#type' => 'fieldset',
