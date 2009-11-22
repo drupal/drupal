@@ -70,7 +70,7 @@ function garland_preprocess_page(&$vars) {
     $vars['secondary_nav'] = FALSE;
   }
 
-  // Prepare header
+  // Prepare header.
   $site_fields = array();
   if (!empty($vars['site_name'])) {
     $site_fields[] = check_plain($vars['site_name']);
@@ -83,7 +83,11 @@ function garland_preprocess_page(&$vars) {
     $site_fields[0] = '<span>' . $site_fields[0] . '</span>';
   }
   $vars['site_html'] = implode(' ', $site_fields);
-
+  
+  // Set a variable for the site name title and logo alt attributes text.
+  $slogan_text = filter_xss_admin(variable_get('site_slogan', ''));
+  $site_name_text = filter_xss_admin(variable_get('site_name', 'Drupal'));
+  $vars['site_name_and_slogan'] = $site_name_text . ' ' . $slogan_text;
 }
 
 /**

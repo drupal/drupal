@@ -32,7 +32,7 @@ h1 {
   font-size: 170%;
 }
 
-h2 {
+h2, #center h1 {
   font-size: 160%;
   line-height: 130%;
 }
@@ -380,18 +380,18 @@ table .form-button, table .form-submit {
   position: absolute;
 }
 
-#wrapper #container #header h1, #wrapper #container #header h1 a:link, #wrapper #container #header h1 a:visited {
+#branding, #branding a:link, #branding a:visited {
   line-height: 120px;
   position: relative;
   z-index: 2;
   white-space: nowrap;
 }
 
-#wrapper #container #header h1 span {
+#branding span {
   font-weight: bold;
 }
 
-#wrapper #container #header h1 img {
+#branding img {
   padding-top: 14px;
   padding-right: 20px; /* LTR */
   float: left; /* LTR */
@@ -526,14 +526,21 @@ body.two-sidebars .region-footer {
 /**
  * Header
  */
-#wrapper #container #header h1, #wrapper #container #header h1 a:link, #wrapper #container #header h1 a:visited {
+div#branding {
+  font-family: Helvetica,Arial,sans-serif;
+}
+
+div#branding strong {
+   font-weight: normal;
+}
+
+#branding, #branding a:link, #branding a:visited {
   color: #fff;
-  font-weight: normal;
   text-shadow: #1659ac 0px 1px 3px;
   font-size: 1.5em;
 }
 
-#wrapper #container #header h1 a:hover {
+#branding a:hover {
   text-decoration: none;
 }
 
@@ -642,7 +649,7 @@ ul.secondary {
   margin: -0.2em -26px 1em;
   padding: 0 26px 0.6em;
 }
-h2.with-tabs {
+h1.with-tabs {
   float: left; /* LTR */
   margin: 0 2em 0 0; /* LTR */
   padding: 0;

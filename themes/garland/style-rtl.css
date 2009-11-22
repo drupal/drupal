@@ -80,7 +80,7 @@ dl dd {
   background: #edf5fa url("images/body.png") repeat-x 50% 0;
 }
 
-#wrapper #container #header h1 img {
+#branding img {
   padding-right: 0;
   padding-left: 20px;
   float: right;
@@ -149,7 +149,7 @@ body.sidebar-second #squeeze {
  */
 ul.main-menu {
   float: left;
-width:70%;
+  width:70%;
 }
 
 ul.main-menu li {
@@ -176,7 +176,7 @@ ul.secondary {
   clear: both;
   text-align: right;
 }
-h2.with-tabs {
+h1.with-tabs {
   float: right;
   margin: 0 0 0 2em;
 }
