@@ -447,7 +447,7 @@ html.js .no-js {
 }
 .progress .filled {
   background: #0072b9;
-  height: 1em;
+  height: 1.1em;
   border-bottom: 0.5em solid #004a73;
   width: 0%;
 }
