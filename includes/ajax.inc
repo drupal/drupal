@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.18 2009/11/18 18:51:11 dries Exp $
+// $Id: ajax.inc,v 1.19 2009/11/22 02:48:37 webchick Exp $
 
 /**
  * @file
@@ -720,7 +720,7 @@ function ajax_command_changed($selector, $asterisk = '') {
   return array(
     'command' => 'changed',
     'selector' => $selector,
-    'star' => $asterisk,
+    'asterisk' => $asterisk,
   );
 }
 
