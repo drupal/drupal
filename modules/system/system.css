@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.66 2009/11/17 21:24:18 dries Exp $ */
+/* $Id: system.css,v 1.67 2009/11/22 03:03:24 webchick Exp $ */
 
 /*
 ** HTML elements
@@ -447,7 +447,7 @@ html.js .no-js {
 }
 .progress .filled {
   background: #0072b9;
-  height: 1em;
+  height: 1.1em;
   border-bottom: 0.5em solid #004a73;
   width: 0%;
 }
