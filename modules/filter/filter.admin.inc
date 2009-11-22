@@ -135,7 +135,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
   }
   // Table with filters
   $filter_info = filter_get_filters();
-  $filters = filter_list_format($format->format, TRUE);
+  $filters = filter_list_format($format->format);
 
   $form['filters'] = array('#type' => 'fieldset',
     '#title' => t('Filters'),
@@ -260,12 +260,12 @@ function filter_admin_configure($form, &$form_state, $format) {
 
   $form['#format'] = $format;
   foreach ($filters as $name => $filter) {
-    if (isset($filter_info[$name]['settings callback']) && function_exists($filter_info[$name]['settings callback'])) {
+    if ($filter->status && isset($filter_info[$name]['settings callback']) && function_exists($filter_info[$name]['settings callback'])) {
       // Pass along stored filter settings and default settings, but also the
       // format object and all filters to allow for complex implementations.
       $defaults = (isset($filter_info[$name]['default settings']) ? $filter_info[$name]['default settings'] : array());
       $settings_form = $filter_info[$name]['settings callback']($form, $form_state, $filters[$name], $defaults, $format, $filters);
-      if (isset($settings_form) && is_array($settings_form)) {
+      if (!empty($settings_form)) {
         $form['settings'][$name] = array(
           '#type' => 'fieldset',
           '#title' => check_plain($filter->title),
@@ -330,8 +330,10 @@ function filter_admin_order($form, &$form_state, $format = NULL) {
 
   $form['weights'] = array('#tree' => TRUE);
   foreach ($filters as $id => $filter) {
-    $form['names'][$id] = array('#markup' => $filter->title);
-    $form['weights'][$id] = array('#type' => 'weight', '#default_value' => $filter->weight);
+    if ($filter->status) {
+      $form['names'][$id] = array('#markup' => $filter->title);
+      $form['weights'][$id] = array('#type' => 'weight', '#default_value' => $filter->weight);
+    }
   }
   $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));

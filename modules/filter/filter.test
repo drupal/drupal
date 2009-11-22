@@ -111,7 +111,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     $this->assertTrue(empty($format_filters), t('Database contains values for all filters in the saved format.'));
 
     // Verify filter_list_format().
-    $filters = filter_list_format($format->format, TRUE);
+    $filters = filter_list_format($format->format);
     $format_filters = $format->filters;
     foreach ($filters as $name => $filter) {
       $t_args = array('%format' => $format->name, '%filter' => $name);
@@ -204,6 +204,22 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->assertTrue(filter_access(filter_format_load($full), $this->admin_user), t('Admin user may use Full HTML.'));
     $this->assertFalse(filter_access(filter_format_load($full), $this->web_user), t('Web user may not use Full HTML.'));
 
+    // Verify that disabled filters are not displayed.
+    $edit = array();
+    $edit['filters[filter_url][status]'] = FALSE;
+    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->drupalGet('admin/config/content/formats/' . $filtered . '/configure');
+    $this->assertNoText(t('Convert URLs into links'), t('Disabled URL filter cannot be configured.'));
+    $this->drupalGet('admin/config/content/formats/' . $filtered . '/order');
+    $this->assertNoText(t('Convert URLs into links'), t('Disabled URL filter cannot be re-ordered.'));
+    $edit = array();
+    $edit['filters[filter_url][status]'] = 1;
+    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->drupalGet('admin/config/content/formats/' . $filtered . '/configure');
+    $this->assertText(t('Convert URLs into links'), t('Enabled URL filter can be configured.'));
+    $this->drupalGet('admin/config/content/formats/' . $filtered . '/order');
+    $this->assertText(t('Convert URLs into links'), t('Enabled URL filter can be re-ordered.'));
+
     // Add an additional tag.
     $edit = array();
     $edit['settings[filter_html][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
@@ -243,15 +259,13 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $format = $this->getFormat($edit['name']);
     $this->assertNotNull($format, t('Format found in database.'));
 
-    if ($format !== NULL) {
-      $this->assertFieldByName('roles[2]', '', t('Role found.'));
-      $this->assertFieldByName('filters[' . $second_filter . '][status]', '', t('Line break filter found.'));
-      $this->assertFieldByName('filters[' . $first_filter . '][status]', '', t('Url filter found.'));
+    $this->assertFieldByName('roles[2]', '', t('Role found.'));
+    $this->assertFieldByName('filters[' . $second_filter . '][status]', '', t('Line break filter found.'));
+    $this->assertFieldByName('filters[' . $first_filter . '][status]', '', t('Url filter found.'));
 
-      // Delete new filter.
-      $this->drupalPost('admin/config/content/formats/' . $format->format . '/delete', array(), t('Delete'));
-      $this->assertRaw(t('Deleted text format %format.', array('%format' => $edit['name'])), t('Format successfully deleted.'));
-    }
+    // Delete new filter.
+    $this->drupalPost('admin/config/content/formats/' . $format->format . '/delete', array(), t('Delete'));
+    $this->assertRaw(t('Deleted text format %format.', array('%format' => $edit['name'])), t('Format successfully deleted.'));
 
     // Allow authenticated users on full HTML.
     $format = filter_format_load($full);

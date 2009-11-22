@@ -92,12 +92,12 @@
  *
  * @code
  *   function mymodule_filter_settings($form, &$form_state, $filter, $defaults) {
- *     $form['mymodule_url_length'] = array(
+ *     $settings['mymodule_url_length'] = array(
  *       '#type' => 'textfield',
  *       '#title' => t('Maximum link text length'),
  *       '#default_value' => isset($filter->settings['mymodule_url_length']) ? $filter->settings['mymodule_url_length'] : $defaults['mymodule_url_length'],
  *     );
- *     return $form;
+ *     return $settings;
  *   }
  * @endcode
  *

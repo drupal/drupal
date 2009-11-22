@@ -191,9 +191,8 @@ function filter_format_save(&$format) {
     $return = drupal_write_record('filter_format', $format, 'format');
   }
 
-  // Get the filters currently active in the format, to add new filters
-  // to the bottom.
-  $current = filter_list_format($format->format, TRUE);
+  // Get the current filters in the format, to add new filters to the bottom.
+  $current = filter_list_format($format->format);
   $filter_info = filter_get_filters();
   if (!isset($format->filters)) {
     $format->filters = array();
@@ -506,11 +505,17 @@ function filter_format_allowcache($format_id) {
 /**
  * Retrieve a list of filters for a given text format.
  *
+ * Note that this function returns all associated filters regardless of whether
+ * they are enabled or disabled. All functions working with the filter
+ * information outside of filter administration should test for $filter->status
+ * before performing actions with the filter.
+ *
  * @param $format_id
- *   The format ID.
+ *   The format ID to retrieve filters for.
  *
  * @return
- *   An array of filter objects assosiated to the given format.
+ *   An array of filter objects associated to the given text format, keyed by
+ *   filter name.
  */
 function filter_list_format($format_id) {
   $filters = &drupal_static(__FUNCTION__, array());
@@ -730,7 +735,7 @@ function _filter_tips($format_id, $long = FALSE) {
     $filters = filter_list_format($format->format);
     $tips[$format->name] = array();
     foreach ($filters as $name => $filter) {
-      if (isset($filter_info[$name]['tips callback']) && function_exists($filter_info[$name]['tips callback'])) {
+      if ($filter->status && isset($filter_info[$name]['tips callback']) && function_exists($filter_info[$name]['tips callback'])) {
         $tip = $filter_info[$name]['tips callback']($filter, $format, $long);
         $tips[$format->name][$name] = array('tip' => $tip, 'id' => $name);
       }
@@ -866,7 +871,7 @@ function filter_filter_info() {
  * Settings callback for the HTML filter.
  */
 function _filter_html_settings($form, &$form_state, $filter, $defaults) {
-  $form['allowed_html'] = array(
+  $settings['allowed_html'] = array(
     '#type' => 'textfield',
     '#title' => t('Allowed HTML tags'),
     '#default_value' => isset($filter->settings['allowed_html']) ? $filter->settings['allowed_html'] : $defaults['allowed_html'],
@@ -874,19 +879,19 @@ function _filter_html_settings($form, &$form_state, $filter, $defaults) {
     '#maxlength' => 1024,
     '#description' => t('Specify a list of tags which should not be stripped. (Note that JavaScript event attributes are always stripped.)'),
   );
-  $form['filter_html_help'] = array(
+  $settings['filter_html_help'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display HTML help'),
     '#default_value' => isset($filter->settings['filter_html_help']) ? $filter->settings['filter_html_help'] : $defaults['filter_html_help'],
     '#description' => t('If enabled, Drupal will display some basic HTML help in the long filter tips.'),
   );
-  $form['filter_html_nofollow'] = array(
+  $settings['filter_html_nofollow'] = array(
     '#type' => 'checkbox',
     '#title' => t('Spam link deterrent'),
     '#default_value' => isset($filter->settings['filter_html_nofollow']) ? $filter->settings['filter_html_nofollow'] : $defaults['filter_html_nofollow'],
     '#description' => t('If enabled, Drupal will add rel="nofollow" to all links, as a measure to reduce the effectiveness of spam links. Note: this will also prevent valid links from being followed by search engines, therefore it is likely most effective when enabled for anonymous users.'),
   );
-  return $form;
+  return $settings;
 }
 
 /**
@@ -1012,14 +1017,14 @@ function _filter_html_tips($filter, $format, $long = FALSE) {
  * Settings callback for URL filter.
  */
 function _filter_url_settings($form, &$form_state, $filter, $defaults) {
-  $form['filter_url_length'] = array(
+  $settings['filter_url_length'] = array(
     '#type' => 'textfield',
     '#title' => t('Maximum link text length'),
     '#default_value' => isset($filter->settings['filter_url_length']) ? $filter->settings['filter_url_length'] : $defaults['filter_url_length'],
     '#maxlength' => 4,
     '#description' => t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained; just the text portion of the link will be truncated.'),
   );
-  return $form;
+  return $settings;
 }
 
 /**
