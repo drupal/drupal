@@ -13,7 +13,7 @@
     <?php if ($secondary_local_tasks): ?><ul class="tabs secondary"><?php print render($secondary_local_tasks); ?></ul><?php endif; ?>
 
     <div id="content" class="clearfix">
-      <?php if ($show_messages && $messages): ?>
+      <?php if ($messages): ?>
         <div id="console" class="clearfix"><?php print $messages; ?></div>
       <?php endif; ?>
       <?php if ($page['help']): ?>

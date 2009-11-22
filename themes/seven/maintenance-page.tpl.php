@@ -29,7 +29,7 @@
     <?php endif; ?>
 
     <div id="content" class="clearfix">
-      <?php if ($show_messages && $messages): ?>
+      <?php if ($messages): ?>
         <div id="console"><?php print $messages; ?></div>
       <?php endif; ?>
       <?php if ($help): ?>
