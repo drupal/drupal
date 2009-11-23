@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Enables tracking of recent posts for users.
+ * Enables tracking of recent content for users.
  */
 
 /**
@@ -13,7 +13,7 @@ function tracker_help($path, $arg) {
   switch ($path) {
     case 'admin/help#tracker':
       $output = '<p>' . t('The tracker module displays the most recently added or updated content on your site, and provides user-level tracking to follow the contributions of particular authors.') . '</p>';
-      $output .= '<p>' . t("The <em>Recent posts</em> page is available via a link in the navigation menu block and displays new and recently-updated content (including the content type, the title, the author's name, number of comments, and time of last update) in reverse chronological order. Posts are marked updated when changes occur in the text, or when new comments are added. To use the tracker module to follow a specific user's contributions, select the <em>Track</em> tab from the user's profile page.") . '</p>';
+      $output .= '<p>' . t("The <em>Recent content</em> page is available via a link in the navigation menu block and displays new and recently-updated content (including the content type, the title, the author's name, number of comments, and time of last update) in reverse chronological order. Content is marked updated when changes occur in the text, or when new comments are added. To use the tracker module to follow a specific user's contributions, select the <em>Track</em> tab from the user's profile page.") . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@tracker">Tracker module</a>.', array('@tracker' => 'http://drupal.org/handbook/modules/tracker/')) . '</p>';
       return $output;
   }
@@ -24,18 +24,18 @@ function tracker_help($path, $arg) {
  */
 function tracker_menu() {
   $items['tracker'] = array(
-    'title' => 'Recent posts',
+    'title' => 'Recent content',
     'page callback' => 'tracker_page',
     'access arguments' => array('access content'),
     'weight' => 1,
     'file' => 'tracker.pages.inc',
   );
   $items['tracker/all'] = array(
-    'title' => 'All recent posts',
+    'title' => 'All recent content',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['tracker/%user_uid_optional'] = array(
-    'title' => 'My recent posts',
+    'title' => 'My recent content',
     'page callback' => 'tracker_page',
     'access callback' => '_tracker_myrecent_access',
     'access arguments' => array(1),
@@ -53,8 +53,8 @@ function tracker_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'tracker.pages.inc',
   );
-  $items['user/%user/track/posts'] = array(
-    'title' => 'Track posts',
+  $items['user/%user/track/content'] = array(
+    'title' => 'Track content',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
@@ -144,7 +144,7 @@ function tracker_cron() {
  * Access callback for tracker/%user_uid_optional.
  */
 function _tracker_myrecent_access($account) {
-  // This path is only allowed for authenticated users looking at their own posts.
+  // This path is only allowed for authenticated users looking at their own content.
   return $account->uid && ($GLOBALS['user']->uid == $account->uid) && user_access('access content');
 }
 

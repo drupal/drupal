@@ -43,7 +43,7 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalGet('tracker');
     $this->assertNoText($unpublished->title[FIELD_LANGUAGE_NONE][0]['value'], t('Unpublished node do not show up in the tracker listing.'));
     $this->assertText($published->title[FIELD_LANGUAGE_NONE][0]['value'], t('Published node show up in the tracker listing.'));
-    $this->assertLink(t('My recent posts'), 0, t('User tab shows up on the global tracker page.'));
+    $this->assertLink(t('My recent content'), 0, t('User tab shows up on the global tracker page.'));
   }
 
   /**
@@ -233,6 +233,6 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalPost('admin/content', $edit, t('Update'));
 
     $this->drupalGet('tracker');
-    $this->assertText(t('No posts available.'), t('Node is displayed on the tracker listing pages.'));
+    $this->assertText(t('No content available.'), t('Node is displayed on the tracker listing pages.'));
   }
 }

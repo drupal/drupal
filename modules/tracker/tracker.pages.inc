@@ -69,12 +69,12 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     }
   }
   else {
-    $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '5'));
+    $rows[] = array(array('data' => t('No content available.'), 'colspan' => '5'));
   }
 
   $page['tracker'] = array(
     '#rows' => $rows,
-    '#header' => array(t('Type'), t('Post'), t('Author'), t('Replies'), t('Last updated')),
+    '#header' => array(t('Type'), t('Title'), t('Author'), t('Replies'), t('Last updated')),
     '#theme' => 'table',
     '#attached' => array(
       'css' => array(drupal_get_path('module', 'tracker') . '/tracker.css' => array('preprocess' => FALSE)),
