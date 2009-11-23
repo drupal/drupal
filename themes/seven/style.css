@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.26 2009/11/21 18:18:21 webchick Exp $ */
+/* $Id: style.css,v 1.27 2009/11/23 01:41:43 webchick Exp $ */
 
 /**
  * Generic elements
@@ -437,7 +437,7 @@ table th {
   text-transform: uppercase;
   background: #e1e2dc;
   font-weight: normal;
-  border-width: 0 1px 1px 1px;
+  border-width: 1px;
   border-style: solid;
   border-color: #bebfb9;
   padding: 3px 3px 3px 10px;
