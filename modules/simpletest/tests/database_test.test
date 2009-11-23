@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.72 2009/10/26 04:46:38 webchick Exp $
+// $Id: database_test.test,v 1.73 2009/11/23 22:31:42 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -942,6 +942,27 @@ class DatabaseDeleteTruncateTestCase extends DatabaseTestCase {
       'description' => 'Test the Delete and Truncate query builders.',
       'group' => 'Database',
     );
+  }
+
+  /**
+   * Confirm that we can use a subselect in a delete successfully.
+   */
+  function testSubselectDelete() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
+    $pid_to_delete = db_query("SELECT * FROM {test_task} WHERE task = 'sleep'")->fetchField();
+
+    $subquery = db_select('test', 't')
+      ->fields('t', array('id'))
+      ->condition('t.id', array($pid_to_delete), 'IN');
+    $delete = db_delete('test_task')
+      ->condition('task', 'sleep')
+      ->condition('pid', $subquery, 'IN');
+
+    $num_deleted = $delete->execute();
+    $this->assertEqual($num_deleted, 1, t("Deleted 1 record."));
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
   }
 
   /**
