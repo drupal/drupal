@@ -925,6 +925,7 @@ class DeleteQuery extends Query implements QueryConditionInterface {
     $query = 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '} ';
 
     if (count($this->condition)) {
+
       $this->condition->compile($this->connection, $this);
       $query .= "\nWHERE " . $this->condition;
     }
@@ -1234,6 +1235,8 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
         }
         else {
           // It's a structured condition, so parse it out accordingly.
+          // Note that $condition['field'] will only be an object for a dependent
+          // DatabaseCondition object, not for a dependent subquery.
           if ($condition['field'] instanceof QueryConditionInterface) {
             // Compile the sub-condition recursively and add it to the list.
             $condition['field']->compile($connection, $queryPlaceholder);
@@ -1257,7 +1260,8 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
             $operator += $operator_defaults;
 
             $placeholders = array();
-            if ($condition['value'] instanceof SelectQuery) {
+            if ($condition['value'] instanceof SelectQueryInterface) {
+              $condition['value']->compile($connection, $queryPlaceholder);
               $placeholders[] = (string)$condition['value'];
               $arguments += $condition['value']->arguments();
             }
@@ -1275,7 +1279,6 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
               }
             }
             $condition_fragments[] = ' (' . $condition['field'] . ' ' . $operator['operator'] . ' ' . $operator['prefix'] . implode($operator['delimiter'], $placeholders) . $operator['postfix'] . ') ';
-
           }
         }
       }

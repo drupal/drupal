@@ -945,6 +945,27 @@ class DatabaseDeleteTruncateTestCase extends DatabaseTestCase {
   }
 
   /**
+   * Confirm that we can use a subselect in a delete successfully.
+   */
+  function testSubselectDelete() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
+    $pid_to_delete = db_query("SELECT * FROM {test_task} WHERE task = 'sleep'")->fetchField();
+
+    $subquery = db_select('test', 't')
+      ->fields('t', array('id'))
+      ->condition('t.id', array($pid_to_delete), 'IN');
+    $delete = db_delete('test_task')
+      ->condition('task', 'sleep')
+      ->condition('pid', $subquery, 'IN');
+
+    $num_deleted = $delete->execute();
+    $this->assertEqual($num_deleted, 1, t("Deleted 1 record."));
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
+  }
+
+  /**
    * Confirm that we can delete a single record successfully.
    */
   function testSimpleDelete() {
