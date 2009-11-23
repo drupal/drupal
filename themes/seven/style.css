@@ -780,8 +780,8 @@ body.in-maintenance #branding h1 {
   float: none;
 }
 
-body.in-maintenance .form-type-radio {
-  display: inline-block;
+body.in-maintenance .form-radios .form-type-radio {
+  padding: 2px 0;
 }
 
 body.in-maintenance .form-submit {
