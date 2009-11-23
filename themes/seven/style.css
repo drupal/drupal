@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.27 2009/11/23 01:41:43 webchick Exp $ */
+/* $Id: style.css,v 1.28 2009/11/23 22:30:41 dries Exp $ */
 
 /**
  * Generic elements
@@ -780,8 +780,8 @@ body.in-maintenance #branding h1 {
   float: none;
 }
 
-body.in-maintenance .form-type-radio {
-  display: inline-block;
+body.in-maintenance .form-radios .form-type-radio {
+  padding: 2px 0;
 }
 
 body.in-maintenance .form-submit {
