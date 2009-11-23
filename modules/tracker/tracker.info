@@ -1,6 +1,6 @@
-; $Id: tracker.info,v 1.9 2009/06/08 09:23:54 dries Exp $
+; $Id: tracker.info,v 1.10 2009/11/23 02:45:42 webchick Exp $
 name = Tracker
-description = Enables tracking of recent posts for users.
+description = Enables tracking of recent content for users.
 dependencies[] = comment
 package = Core
 version = VERSION
