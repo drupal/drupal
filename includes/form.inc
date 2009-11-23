@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.404 2009/11/22 18:27:11 dries Exp $
+// $Id: form.inc,v 1.405 2009/11/23 22:37:37 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -415,7 +415,8 @@ function form_set_cache($form_build_id, $form, $form_state) {
  * $form_state = array();
  * $form_state['values']['name'] = 'robo-user';
  * $form_state['values']['mail'] = 'robouser@example.com';
- * $form_state['values']['pass'] = 'password';
+ * $form_state['values']['pass']['pass1'] = 'password';
+ * $form_state['values']['pass']['pass2'] = 'password';
  * $form_state['values']['op'] = t('Create new account');
  * drupal_form_submit('user_register_form', $form_state);
  *
