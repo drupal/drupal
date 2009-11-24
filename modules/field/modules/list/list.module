@@ -224,19 +224,30 @@ function list_allowed_values_list($string_values, $position_keys = FALSE) {
 function list_allowed_values_validate($element, &$form_state) {
   $values = list_allowed_values_list($element['#value'], $element['#list_field_type'] == 'list');
   $field_type = $element['#list_field_type'];
+
+  // Check that keys are valid for the field type.
   foreach ($values as $key => $value) {
     if ($field_type == 'list_number' && !is_numeric($key)) {
-      form_error($element, t('The entered available values are not valid. Each key must be a valid integer or decimal.'));
+      form_error($element, t('Allowed values list: each key must be a valid integer or decimal.'));
       break;
     }
     elseif ($field_type == 'list_text' && strlen($key) > 255) {
-      form_error($element, t('The entered available values are not valid. Each key must be a string less than 255 characters.'));
+      form_error($element, t('Allowed values list: each key must be a string less than 255 characters.'));
       break;
     }
-    elseif ($field_type == 'list' && (!preg_match('/^-?\d+$/', $key))) {
-      form_error($element, t('The entered available values are not valid. All specified keys must be integers.'));
+    elseif ($field_type == 'list' && !preg_match('/^-?\d+$/', $key)) {
+      form_error($element, t('Allowed values list: keys must be integers.'));
       break;
     }
+    elseif ($field_type == 'list_boolean' && !in_array($key, array('0', '1'))) {
+      form_error($element, t('Allowed values list: keys must be either 0 or 1.'));
+      break;
+    }
+  }
+
+  // Check that boolean fields get two values.
+  if ($field_type == 'list_boolean' && count($values) != 2) {
+    form_error($element, t('Allowed values list: two values are required.'));
   }
 }
 
