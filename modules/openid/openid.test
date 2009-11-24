@@ -335,25 +335,45 @@ class OpenIDUnitTest extends DrupalWebTestCase {
     // section 7.2. If the user-supplied string starts with xri:// it should be
     // stripped and the resulting string should be treated as an XRI when it
     // starts with "=", "@", "+", "$", "!" or "(".
-    $this->assertTrue(_openid_is_xri('xri://=foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme.'));
-    $this->assertTrue(_openid_is_xri('xri://@foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme.'));
-    $this->assertTrue(_openid_is_xri('xri://+foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme.'));
-    $this->assertTrue(_openid_is_xri('xri://$foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme.'));
-    $this->assertTrue(_openid_is_xri('xri://!foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme..'));
-    $this->assertTrue(_openid_is_xri('xri://(foo'), t('_openid_is_xri returned expected result for an xri identifier with xri scheme..'));
+    $this->assertTrue(_openid_is_xri('xri://=foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme.'));
+    $this->assertTrue(_openid_is_xri('xri://@foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme.'));
+    $this->assertTrue(_openid_is_xri('xri://+foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme.'));
+    $this->assertTrue(_openid_is_xri('xri://$foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme.'));
+    $this->assertTrue(_openid_is_xri('xri://!foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme..'));
+    $this->assertTrue(_openid_is_xri('xri://(foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme..'));
 
-    $this->assertTrue(_openid_is_xri('=foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('@foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('+foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('$foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('!foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('(foo'), t('_openid_is_xri returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('=foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('@foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('+foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('$foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('!foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('(foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
 
-    $this->assertFalse(_openid_is_xri('foo'), t('_openid_is_xri returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('xri://foo'), t('_openid_is_xri returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('http://foo/'), t('_openid_is_xri returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('http://example.com/'), t('_openid_is_xri returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('user@example.com/'), t('_openid_is_xri returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('http://user@example.com/'), t('_openid_is_xri returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('foo'), t('_openid_is_xri() returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('xri://foo'), t('_openid_is_xri() returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('http://foo/'), t('_openid_is_xri() returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('http://example.com/'), t('_openid_is_xri() returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('user@example.com/'), t('_openid_is_xri() returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('http://user@example.com/'), t('_openid_is_xri() returned expected result for an http URL.'));
   }
+
+  /**
+   * Test _openid_normalize().
+   */
+  function testOpenidNormalize() {
+    // Test that the normalization is according to OpenID Authentication 2.0,
+    // section 7.2 and 11.5.2.
+
+    $this->assertEqual(_openid_normalize('$foo'), '$foo', t('_openid_normalize() correctly normalized an XRI.'));
+    $this->assertEqual(_openid_normalize('xri://$foo'), '$foo', t('_openid_normalize() correctly normalized an XRI with an xri:// scheme.'));
+
+    $this->assertEqual(_openid_normalize('example.com/'), 'http://example.com/', t('_openid_normalize() correctly normalized a URL with a missing scheme.'));
+    $this->assertEqual(_openid_normalize('example.com'), 'http://example.com/', t('_openid_normalize() correctly normalized a URL with a missing scheme and empty path.'));
+    $this->assertEqual(_openid_normalize('http://example.com'), 'http://example.com/', t('_openid_normalize() correctly normalized a URL with an empty path.'));
+
+    $this->assertEqual(_openid_normalize('http://example.com/path'), 'http://example.com/path', t('_openid_normalize() correctly normalized a URL with a path.'));
+
+    $this->assertEqual(_openid_normalize('http://example.com/path#fragment'), 'http://example.com/path', t('_openid_normalize() correctly normalized a URL with a fragment.'));
+  }
+
 }

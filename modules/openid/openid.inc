@@ -144,6 +144,9 @@ function _openid_normalize_url($url) {
     $normalized_url = 'http://' . $url;
   }
 
+  // Strip the fragment and fragment delimiter if present.
+  $normalized_url = strtok($normalized_url, '#');
+
   if (substr_count($normalized_url, '/') < 3) {
     $normalized_url .= '/';
   }
