@@ -2252,7 +2252,7 @@ function form_process_container($element, &$form_state) {
 function theme_container($variables) {
   $element = $variables['element'];
   if (!isset($element['#attributes']['id'])) {
-    $element['#attributes']['id'] = drupal_html_id($element['#id']);
+    $element['#attributes']['id'] = $element['#id'];
   }
   // Force the 'form-wrapper' class.
   $element['#attributes']['class'][] = 'form-wrapper';
