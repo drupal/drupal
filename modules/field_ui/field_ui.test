@@ -20,8 +20,11 @@ class FieldUITestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('field_test');
+
+    // Create test user.
     $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
     $this->drupalLogin($admin_user);
+
     // Create content type, with underscores.
     $type_name =  strtolower($this->randomName(8)) . '_' .'test';
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
@@ -81,10 +84,12 @@ class FieldUITestCase extends DrupalWebTestCase {
    */
   function createField() {
     // Create a test field.
-    $edit['_add_new_field[label]'] =  $this->field_label;
-    $edit['_add_new_field[field_name]'] =  $this->field_name;
-    $edit['_add_new_field[type]'] = 'test_field';
-    $edit['_add_new_field[widget_type]'] = 'test_field_widget';
+    $edit = array(
+      '_add_new_field[label]' => $this->field_label,
+      '_add_new_field[field_name]' => $this->field_name,
+      '_add_new_field[type]' => 'test_field',
+      '_add_new_field[widget_type]' => 'test_field_widget',
+    );
     $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '/fields',  $edit, t('Save'));
 
     $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $this->field_label)), t('Field settings page was displayed.'));
@@ -119,10 +124,11 @@ class FieldUITestCase extends DrupalWebTestCase {
 
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
-    $edit = array();
-    $edit['field[settings][test_field_setting]'] = $string;
-    $edit['instance[settings][test_instance_setting]'] = $string;
-    $edit['instance[widget][settings][test_widget_setting]'] = $string;
+    $edit = array(
+      'field[settings][test_field_setting]' => $string,
+      'instance[settings][test_instance_setting]' => $string,
+      'instance[widget][settings][test_widget_setting]' => $string,
+    );
     $this->drupalPost(NULL, $edit, t('Save settings'));
 
     // Assert the field settings.
@@ -141,10 +147,11 @@ class FieldUITestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Add existing field'), t('"Add existing field" was found.'));
 
     // Add a new field based on an existing field.
-    $edit = array();
-    $edit['_add_existing_field[label]'] = $this->field_label . '_2';
-    $edit['_add_existing_field[field_name]'] =  $this->field_name;
-    $edit['_add_existing_field[widget_type]'] = 'test_field_widget';
+    $edit = array(
+      '_add_existing_field[label]' => $this->field_label . '_2',
+      '_add_existing_field[field_name]' => $this->field_name,
+      '_add_existing_field[widget_type]' => 'test_field_widget',
+    );
     $this->drupalPost("admin/structure/types/manage/page/fields", $edit, t('Save'));
     $this->drupalPost(NULL, array(), t('Save settings'));
 
@@ -173,7 +180,8 @@ class FieldUITestCase extends DrupalWebTestCase {
     $this->assertNoText(t('Body'), t('Body field was deleted.'));
 
     // Re-add body field by visiting the content type edit page.
-    $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type . '', array('body_label' => 'New body field'), t('Save content type'));
+    $edit = array('body_label' => 'New body field');
+    $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type, $edit, t('Save content type'));
     $this->drupalGet('admin/structure/types/manage/' . $this->hyphen_type . '/fields/');
     $this->assertText(t('New body field'), t('New body field was found.'));
 
@@ -206,5 +214,56 @@ class FieldUITestCase extends DrupalWebTestCase {
     $instance = field_info_instance($obj_type, $field_name, $bundle);
     $this->assertTrue($instance['settings']['test_instance_setting'] == $string, t('Field instance settings were found.'));
     $this->assertTrue($instance['widget']['settings']['test_widget_setting'] == $string, t('Field widget settings were found.'));
+  }
+
+  /**
+   * Tests that default value is correctly validated and saved.
+   */
+  function testDefaultValue() {
+    // Create a test field and instance.
+    $field_name = 'test';
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'test_field'
+    );
+    field_create_field($field);
+    $instance = array(
+      'field_name' => $field_name,
+      'object_type' => 'node',
+      'bundle' => $this->type,
+    );
+    field_create_instance($instance);
+
+    $langcode = FIELD_LANGUAGE_NONE;
+    $admin_path = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields/' . $field_name;
+    $element_id = "edit-instance-default-value-widget-$field_name-$langcode-0-value";
+    $element_name = "instance[default_value_widget][$field_name][$langcode][0][value]";
+
+    $this->drupalGet($admin_path);
+    $this->assertFieldById($element_id, '', t('The default value widget was empty.'));
+
+    // Check that invalid default values are rejected.
+    $edit = array($element_name => '-1');
+    $this->drupalPost($admin_path, $edit, t('Save settings'));
+    $this->assertText("$field_name does not accept the value -1", t('Form vaildation failed.'));
+
+    // Check that the default value is saved.
+    $edit = array($element_name => '1');
+    $this->drupalPost($admin_path, $edit, t('Save settings'));
+    $this->assertText("Saved $field_name configuration", t('The form was successfully submitted.'));
+    $instance = field_info_instance('node', $field_name, $this->type);
+    $this->assertEqual($instance['default_value'], array(array('value' => 1)), t('The default value was correctly saved.'));
+
+    // Check that the default value shows up in the form
+    $this->drupalGet($admin_path);
+    $this->assertFieldById($element_id, '1', t('The default value widget was displayed with the correct value.'));
+
+    // Check that the default value can be emptied.
+    $edit = array($element_name => '');
+    $this->drupalPost(NULL, $edit, t('Save settings'));
+    $this->assertText("Saved $field_name configuration", t('The form was successfully submitted.'));
+    field_info_cache_clear();
+    $instance = field_info_instance('node', $field_name, $this->type);
+    $this->assertEqual($instance['default_value'], NULL, t('The default value was correctly saved.'));
   }
 }
