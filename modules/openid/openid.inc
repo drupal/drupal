@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.21 2009/10/13 21:16:43 dries Exp $
+// $Id: openid.inc,v 1.22 2009/11/24 05:20:48 dries Exp $
 
 /**
  * @file
@@ -143,6 +143,9 @@ function _openid_normalize_url($url) {
   if (stristr($url, '://') === FALSE) {
     $normalized_url = 'http://' . $url;
   }
+
+  // Strip the fragment and fragment delimiter if present.
+  $normalized_url = strtok($normalized_url, '#');
 
   if (substr_count($normalized_url, '/') < 3) {
     $normalized_url .= '/';
