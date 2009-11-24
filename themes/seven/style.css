@@ -161,6 +161,10 @@ div.error {
   border-color: #d52;
 }
 
+div.error p.error {
+  color: #333;
+}
+
 div.status {
   color: #360;
   background: #cf8;
