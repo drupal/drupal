@@ -998,8 +998,9 @@ function image_effect_delete($effect) {
  */
 function image_effect_apply($image, $effect) {
   module_load_include('inc', 'image', 'image.effects');
-  if (function_exists($effect['effect callback'])) {
-    return call_user_func($effect['effect callback'], $image, $effect['data']);
+  $function = $effect['effect callback'];
+  if (function_exists($function)) {
+    return $function($image, $effect['data']);
   }
   return FALSE;
 }
