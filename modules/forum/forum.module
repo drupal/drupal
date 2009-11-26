@@ -12,14 +12,17 @@
 function forum_help($path, $arg) {
   switch ($path) {
     case 'admin/help#forum':
-      $output = '<p>' . t('The forum module lets you create threaded discussion forums with functionality similar to other message board systems. Forums are useful because they allow community members to discuss topics with one another while ensuring those conversations are archived for later reference. The <a href="@create-topic">forum topic</a> menu item (under <em>Add new content</em> on the Navigation menu) creates the initial post of a new threaded discussion, or thread.', array('@create-topic' => url('node/add/forum'))) . '</p>';
-      $output .= '<p>' . t('A threaded discussion occurs as people leave comments on a forum topic (or on other comments within that topic). A forum topic is contained within a forum, which may hold many similar or related forum topics. Forums are (optionally) nested within a container, which may hold many similar or related forums. Both containers and forums may be nested within other containers and forums, and provide structure for your message board. By carefully planning this structure, you make it easier for users to find and comment on a specific forum topic.') . '</p>';
-      $output .= '<p>' . t('When administering a forum, note that:') . '</p>';
-      $output .= '<ul><li>' . t('a forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic.') . '</li>';
-      $output .= '<li>' . t('when moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</li>';
-      $output .= '<li>' . t('selecting <em>Closed</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments) on the thread.') . '</li>';
-      $output .= '<li>' . t('selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') . '</li></ul>';
-      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) . '</p>';
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Forum module lets you create threaded discussion forums with functionality similar to other message board systems. Forums are useful because they allow community members to discuss topics with one another while ensuring those conversations are archived for later reference. Forums behave by posting topics and threads in nested hierarchies, which allow many discussions to be categorized in various ways. The <a href="@create-topic">forum topic</a> link on the <a href="@content-add">Add new content</a> page creates the first post of a new threaded discussion, or thread. For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@create-topic' => url('node/add/forum'), '@content-add' => url('node/add'), '@forum' => 'http://drupal.org/handbook/modules/forum/')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Navigation') . '</dt>';
+      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu item in the navigation menu that links to the <a href="@forums">main forums page</a>.', array('@forums' => url('forum'))) . '</dd>';
+      $output .= '<dt>' . t('Moving forum topics') . '</dt>';
+      $output .= '<dd>' . t('A forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic. When moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</dd>';
+      $output .= '<dt>' . t('Locking and disabling comments') . '</dt>';
+      $output .= '<dd>' . t('Selecting <em>Closed</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments on) the thread. Selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') . '</dd>';
+      $output .= '</dl>';
       return $output;
     case 'admin/structure/forum':
       return '<p>' . t('Forums contain forum topics. Use containers to group related forums.') . '</p>';
@@ -28,7 +31,7 @@ function forum_help($path, $arg) {
     case 'admin/structure/forum/add/forum':
       return '<p>' . t('A forum holds related forum topics.') . '</p>';
     case 'admin/structure/forum/settings':
-      return '<p>' . t('Adjust the display of your forum topics. Select the <em>content types</em> to use in forums on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/structure/taxonomy/' . variable_get('forum_nav_vocabulary', 0) . '/edit'))) . '</p>';
+      return '<p>' . t('Adjust the display of your forum topics. Organize the forums on the <a href="@forum-structure">forum structure page</a>.', array('@forum-structure' => url('admin/structure/forum'))) . '</p>';
   }
 }
 
