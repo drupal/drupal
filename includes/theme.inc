@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.553 2009/11/20 04:29:42 webchick Exp $
+// $Id: theme.inc,v 1.554 2009/11/26 18:57:16 dries Exp $
 
 /**
  * @file
@@ -562,7 +562,7 @@ function list_themes($refresh = FALSE) {
 
   if ($refresh) {
     $list = array();
-    drupal_static_reset('system_list');
+    system_list_reset();
   }
 
   if (empty($list)) {
