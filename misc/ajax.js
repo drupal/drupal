@@ -26,6 +26,7 @@ Drupal.behaviors.AJAX = {
         var element_settings = settings.ajax[base];
 
         $(element_settings.selector).each(function () {
+          element_settings.element = this;
           Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
         });
 
