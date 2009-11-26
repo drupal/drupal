@@ -39,10 +39,19 @@ function blog_user_view($account) {
 function blog_help($path, $arg) {
   switch ($path) {
     case 'admin/help#blog':
-      $output  = '<p>' . t('The blog module allows registered users to maintain an online journal, or <em>blog</em>. Blogs are made up of individual <em>blog entries</em>, and the blog entries are most often displayed in descending order by creation time.') . '</p>';
-      $output .= '<p>' . t("There is an (optional) <em>Blogs</em> menu item added to the Navigation menu, which displays all blogs available on your site, and a <em>My blog</em> item displaying the current user's blog entries. The <em>Blog entry</em> menu item under <em>Add new content</em> allows new blog entries to be created.") . '</p>';
-      $output .= '<p>' . t('Each blog entry is displayed with an automatic link to other blogs created by the same user. By default, blog entries have comments enabled and are automatically promoted to the site front page. The blog module also creates a <em>Recent blog posts</em> block that may be enabled at the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</p>';
-      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@blog">Blog module</a>.', array('@blog' => 'http://drupal.org/handbook/modules/blog/')) . '</p>';
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t("The Blog module allows registered users to maintain an online journal, or <em>blog</em>. Blogs are made up of individual <em>blog entries</em>. By default, the blog entries are displayed by creation time in descending order, with comments enabled, and are promoted to the site's front page. For more information, see the online handbook entry for <a href='@blog''>Blog module</a>.", array('@blog' => 'http://drupal.org/handbook/modules/blog/')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Single-user blogs') . '</dt>';
+      $output .= '<dd>' . t("Each user's blog entries are automatically displayed with a link to the user's main blog page. You can create as many single-user blogs as you have site users with permission to create blog content.") . '</dd>';
+      $output .= '<dt>' . t('Multi-user blogs') . '</dt>';
+      $output .= '<dd>' . t("Blog entries from each single-user blog are also aggregated into one central multi-user blog, which displays the blog content of all users in a single listing.") . '</dd>';
+      $output .= '<dt>' . t('Navigation') . '</dt>';
+      $output .= '<dd>' . t("There is an optional <em>Blogs</em> menu item added to the Navigation menu, which displays all blogs available on your site, and a <em>My blog</em> item displaying the current user's blog entries.") . '</dd>';
+      $output .= '<dt>' . t('Blocks') . '</dt>';
+      $output .= '<dd>' . t('The Blog module also creates a default <em>Recent blog posts</em> block that may be enabled at the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
