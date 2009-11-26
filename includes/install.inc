@@ -600,6 +600,7 @@ function _drupal_install_module($module) {
     module_invoke($module, 'install');
     $versions = drupal_get_schema_versions($module);
     drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
+    system_list_reset();
     return TRUE;
   }
 }

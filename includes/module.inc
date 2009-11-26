@@ -115,9 +115,10 @@ function system_list($type) {
       $bootstrap_list = db_query("SELECT name, filename FROM {system} WHERE status = 1 AND bootstrap = 1 AND type = 'module' ORDER BY weight ASC, name ASC")->fetchAllAssoc('name');
       cache_set('bootstrap_modules', $bootstrap_list, 'cache_bootstrap');
     }
+    // To avoid a separate database lookup for the filepath, prime the 
+    // drupal_get_filename() static cache for bootstrap modules only.
+    // The rest is stored separately to keep the bootstrap module cache small.
     foreach ($bootstrap_list as $module) {
-      // Prime the drupal_get_filename() static cache to avoid subsequent
-      // queries to retrieve module filename.
       drupal_get_filename('module', $module->name, $module->filename);
     }
     // We only return the module names here since module_list() doesn't need
@@ -125,33 +126,42 @@ function system_list($type) {
     $lists['bootstrap'] = array_keys($bootstrap_list);
   }
   // Otherwise build the list for enabled modules and themes.
-  elseif (!isset($lists)) {
-    $lists = array(
-      'module_enabled' => array(),
-      'theme' => array(),
-    );
-    // The module name (rather than the filename) is used as the fallback
-    // weighting in order to guarantee consistent behavior across different
-    // Drupal installations, which might have modules installed in different
-    // locations in the file system. The ordering here must also be
-    // consistent with the one used in module_implements().
-    $result = db_query("SELECT * FROM {system} ORDER BY weight ASC, name ASC");
-    foreach ($result as $record) {
-      if ($record->type == 'module' && $record->status) {
-        // Build a list of all enabled modules.
-        $lists['module_enabled'][$record->name] = $record->name;
+  elseif (!isset($lists['module_enable'])) {
+    if ($cached = cache_get('system_list', 'cache_bootstrap')) {
+      $lists = $cached->data;
+    }
+    else {
+      $lists = array(
+        'module_enabled' => array(),
+        'theme' => array(),
+        'filepaths' => array(),
+      );
+      // The module name (rather than the filename) is used as the fallback
+      // weighting in order to guarantee consistent behavior across different
+      // Drupal installations, which might have modules installed in different
+      // locations in the file system. The ordering here must also be
+      // consistent with the one used in module_implements().
+      $result = db_query("SELECT * FROM {system} ORDER BY weight ASC, name ASC");
+      foreach ($result as $record) {
+        if ($record->type == 'module' && $record->status) {
+          // Build a list of all enabled modules.
+          $lists['module_enabled'][$record->name] = $record->name;
+        }
+        // Build a list of themes.
+        if ($record->type == 'theme') {
+          $lists['theme'][$record->name] = $record;
+        }
+        // Build a list of filenames so drupal_get_filename can use it.
+        if ($record->status) {
+          $lists['filepaths'][] = array('type' => $record->type, 'name' => $record->name, 'filepath' => $record->filename);
+        }
       }
-      // Build a list of themes.
-      if ($record->type == 'theme') {
-        $lists['theme'][$record->name] = $record;
-      }
-
-      // Additionally prime drupal_get_filename() with the filename and type
-      // for each record, this prevents subsequent database lookups when
-      // drupal_get_filename() is called without the 'file' argument.
-      if ($record->status) {
-        drupal_get_filename($record->type, $record->name, $record->filename);
-      }
+      cache_set('system_list', $lists, 'cache_bootstrap');
+    }
+    // To avoid a separate database lookup for the filepath, prime the 
+    // drupal_get_filename() static cache with all enabled modules and themes.
+    foreach ($lists['filepaths'] as $item) {
+      drupal_get_filename($item['type'], $item['name'], $item['filepath']);
     }
   }
 
@@ -164,6 +174,7 @@ function system_list($type) {
 function system_list_reset() {
   drupal_static_reset('system_list');
   cache_clear_all('bootstrap_modules', 'cache_bootstrap');
+  cache_clear_all('system_list', 'cache_bootstrap');
 }
 
 /**

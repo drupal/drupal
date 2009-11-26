@@ -562,7 +562,7 @@ function list_themes($refresh = FALSE) {
 
   if ($refresh) {
     $list = array();
-    drupal_static_reset('system_list');
+    system_list_reset();
   }
 
   if (empty($list)) {
