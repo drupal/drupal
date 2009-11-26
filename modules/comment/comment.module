@@ -76,11 +76,15 @@ define('COMMENT_NODE_OPEN', 2);
 function comment_help($path, $arg) {
   switch ($path) {
     case 'admin/help#comment':
-      $output  = '<p>' . t('The comment module allows visitors to comment on your posts, creating ad hoc discussion boards. Any <a href="@content-type">content type</a> may have its <em>Default comment setting</em> set to <em>Open</em> to allow comments, <em>Hidden</em> to hide existing comments and prevent new comments or <em>Closed</em> to allow existing comments to be viewed but no new comments added. Comment display settings and other controls may also be customized for each content type.', array('@content-type' => url('admin/structure/types'))) . '</p>';
-      $output .= '<p>' . t('Comment permissions are assigned to user roles, and are used to determine whether anonymous users (or other roles) are allowed to comment on posts. If anonymous users are allowed to comment, their individual contact information may be retained in cookies stored on their local computer for use in later comment submissions. When a comment has no replies, it may be (optionally) edited by its author. The comment module uses the same text formats and HTML tags available when creating other forms of content.') . '</p>';
-      $output .= '<p>' . t('Change comment settings on the content type\'s <a href="@content-type">edit page</a>.', array('@content-type' => url('admin/structure/types'))) . '</p>';
-      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@comment">Comment module</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) . '</p>';
-
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Comment module allows users to comment on site content, set commenting defaults and permissions, and moderate comments. For more information, see the online handbook entry for <a href="@comment">Comment module</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Default and custom settings') . '</dt>';
+      $output .= '<dd>' . t("Each <a href='@content-type'>content type</a> can have its own default comment settings configured as: <em>Open</em> to allow new comments, <em>Hidden</em> to hide existing comments and prevent new comments, or <em>Closed</em> to view existing comments, but prevent new comments. These defaults will apply to all new content created (changes to the settings on existing content must be done manually). Other comment settings can also be customized per content type, and can be overriden for any given item of content. When a comment has no replies, it remains editable by its author, as long as the author has a user account and is logged in.", array('@content-type' => url('admin/structure/types'))) . '</dd>';
+      $output .= '<dt>' . t('Comment moderation') . '</dt>';
+      $output .= '<dd>' . t("Comments from users who do not have the <em>Post comments without approval</em> permission are placed in the <a href='@comment-approval'>Unapproved comments</a> queue, until a user who has permission to <em>Administer comments</em> moderates them as either published or deleted. Published comments can be bulk managed on the <a href='@admin-comment'>Published comments</a> administration page.", array('@comment-approval' => url('admin/content/comment/approval'), '@admin-comment' => url('admin/content/comment'))) . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
