@@ -138,8 +138,7 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     rdf_modules_installed(array('rdf_test', 'node'));
     // entity_info caches must be cleared during testing. This is done
     // automatically during the manual installation.
-    cache_clear_all('entity_info', 'cache');
-    drupal_static_reset('entity_get_info');
+    entity_info_cache_clear();
   }
 
   /**

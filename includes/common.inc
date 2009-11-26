@@ -6279,6 +6279,14 @@ function entity_get_info($entity_type = NULL) {
 }
 
 /**
+ * Resets the cached information about entity types.
+ */
+function entity_info_cache_clear() {
+  drupal_static_reset('entity_get_info');
+  cache_clear_all('entity_info', 'cache');
+}
+
+/**
  * Helper function to extract id, vid, and bundle name from an entity.
  *
  * @param $entity_type

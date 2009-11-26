@@ -1055,7 +1055,7 @@ function system_modules_submit($form, &$form_state) {
   node_types_rebuild();
   menu_rebuild();
   cache_clear_all('schema', 'cache');
-  cache_clear_all('entity_info', 'cache');
+  entity_info_cache_clear();
   drupal_clear_css_cache();
   drupal_clear_js_cache();
 

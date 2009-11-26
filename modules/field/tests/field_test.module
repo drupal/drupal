@@ -105,8 +105,7 @@ function field_test_entity_info_translatable($obj_type = NULL, $translatable = N
   $stored_value = &drupal_static(__FUNCTION__, array());
   if (isset($obj_type)) {
     $stored_value[$obj_type] = $translatable;
-    drupal_static_reset('entity_get_info');
-    cache_clear_all('entity_info', 'cache');
+    entity_info_cache_clear();
   }
   return $stored_value;
 }

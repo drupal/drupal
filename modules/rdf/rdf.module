@@ -163,8 +163,7 @@ function rdf_mapping_save(&$mapping) {
     ))
     ->execute();
 
-  cache_clear_all('entity_info', 'cache');
-  drupal_static_reset('entity_get_info');
+  entity_info_cache_clear();
 
   return $status;
 }
@@ -258,8 +257,7 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
 function rdf_modules_installed($modules) {
   // We need to clear the caches of entity_info as this is not done right
   // during the tests. see http://drupal.org/node/594234
-  cache_clear_all('entity_info', 'cache');
-  drupal_static_reset('entity_get_info');
+  entity_info_cache_clear();
 
   foreach ($modules as $module) {
     $function = $module . '_rdf_mapping';
