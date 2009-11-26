@@ -47,8 +47,8 @@ Let's begin!
     option is at http://www.example.com/?q=admin/config/development/maintenance
     (replace www.example.com with your installation's domain name and path).
 
-4.  If using a custom or contributed theme, switch
-    to a core theme, such as Garland or Bluemarine.
+4.  If using a custom or contributed theme, switch to a core theme (either
+    Garland or Stark).
 
 5.  Disable all custom and contributed modules.
 
@@ -91,10 +91,9 @@ Let's begin!
 12. Re-enable custom and contributed modules and re-run update.php
     to update custom and contributed database tables.
 
-13. Return the site to its original theme (if you switched to a core
-    theme like Garland or Bluemarine in step #4). If your site uses a
-    custom or contributed theme, make sure it is compatible with your
-    version of Drupal.
+13. Return the site to its original theme (if you switched to a core theme in
+    step #4). If your site uses a custom or contributed theme, make sure it is
+    compatible with your version of Drupal.
 
       - For contributed themes, check http://drupal.org/project/themes
         for the version of a theme matching your version of Drupal.
