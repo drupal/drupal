@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.28 2009/11/13 11:59:14 dries Exp $
+// $Id: field.info.inc,v 1.29 2009/11/26 05:54:48 webchick Exp $
 
 /**
  * @file
@@ -26,8 +26,7 @@
 function field_info_cache_clear() {
   // @todo: Remove this when field_attach_*_bundle() bundle management
   // functions are moved to the entity API.
-  drupal_static_reset('entity_get_info');
-  cache_clear_all('entity_info', 'cache');
+  entity_info_cache_clear();
 
   _field_info_collate_types(TRUE);
   drupal_static_reset('field_build_modes');

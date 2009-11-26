@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1051 2009/11/21 00:43:42 webchick Exp $
+// $Id: common.inc,v 1.1052 2009/11/26 05:54:48 webchick Exp $
 
 /**
  * @file
@@ -6276,6 +6276,14 @@ function entity_get_info($entity_type = NULL) {
   }
 
   return empty($entity_type) ? $entity_info : $entity_info[$entity_type];
+}
+
+/**
+ * Resets the cached information about entity types.
+ */
+function entity_info_cache_clear() {
+  drupal_static_reset('entity_get_info');
+  cache_clear_all('entity_info', 'cache');
 }
 
 /**

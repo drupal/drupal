@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.1 2009/11/20 23:29:28 webchick Exp $
+// $Id: field_test.module,v 1.2 2009/11/26 05:54:48 webchick Exp $
 
 /**
  * @file
@@ -105,8 +105,7 @@ function field_test_entity_info_translatable($obj_type = NULL, $translatable = N
   $stored_value = &drupal_static(__FUNCTION__, array());
   if (isset($obj_type)) {
     $stored_value[$obj_type] = $translatable;
-    drupal_static_reset('entity_get_info');
-    cache_clear_all('entity_info', 'cache');
+    entity_info_cache_clear();
   }
   return $stored_value;
 }
