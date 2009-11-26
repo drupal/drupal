@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.5 2009/11/04 04:38:30 webchick Exp $
+// $Id: ajax.js,v 1.6 2009/11/26 03:05:42 webchick Exp $
 (function ($) {
 
 /**
@@ -26,6 +26,7 @@ Drupal.behaviors.AJAX = {
         var element_settings = settings.ajax[base];
 
         $(element_settings.selector).each(function () {
+          element_settings.element = this;
           Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
         });
 
