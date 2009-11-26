@@ -40,17 +40,19 @@ require_once DRUPAL_ROOT . '/modules/image/image.field.inc';
 function image_help($path, $arg) {
   switch ($path) {
     case 'admin/help#image':
-      $naming_approaches = array();
-      $naming_approaches[] =  t('Based on where it will be used: !name', array('!name' => '<code>profile-picture</code>'));
-      $naming_approaches[] =  t('Describing its appearance: !name', array('!name' => '<code>square-85x85</code>'));
       $output = '';
-      $output .= '<p>' . t('The Image module provides functionality for displaying images on your site though <a href="!url">image styles</a>.', array('!url' => url('admin/config/media/image-styles'))) .'</p>';
-      $output .= '<h3>' . t('Image styles') . '</h3>';
-      $output .= '<p>' . t('Image <em>styles</em> allow your site to output an image in several different ways without affecting the original image. Any created images will automatically be refreshed if any changes are made to the image style.') .'</p>';
-      $output .= '<p>' . t('Every image style must have a name, which will be used in the URL of generated images. There are two common approaches to naming image styles:') . '</p>';
-      $output .= theme('item_list', array('items' => $naming_approaches));
-      $output .= '<p>' . t('Both approaches are common and which you choose depends on how you use the image style.') . '</p>';
-      $output .= '<p>' . t('After creating an image style, <em>effects</em> may be added to the style. Image module comes with some basic effects such as <em>crop</em>, <em>scale</em>, <em>desaturate</em>, and <em>rotate</em>. In addition to the effects included with Image, other modules may provide additional effects. Multiple effects may be combined together, such as using the <em>crop and scale</em> effect and the <em>desaturate</em> effect, you could create square, grayscale thumbnails.');
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Image module allows you to manipulate images on your website. It exposes a setting for using the <em>Image toolkit</em>, allows you to configure <em>Image styles</em> that can be used for resizing or adjusting images on display, and provides an <em>Image</em> field for attaching images to content. For more information, see the online handbook entry for <a href="@image">Image module</a>.', array('@image' => 'http://drupal.org/handbook/modules/image')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Manipulating images') . '</dt>';
+      $output .= '<dd>' . t('With the Image module you can scale, crop, resize, rotate and desaturate images without affecting the original image using <a href="@image">image styles</a>. When you change an image style, the module automatically refreshes all created images. Every image style must have a name, which will be used in the URL of the generated images. There are two common approaches to naming image styles (which you use will depend on how the image style is being applied):',array('@image' => url('admin/config/media/image-styles')));
+      $output .= '<ul><li>' . t('Based on where it will be used: eg. <em>profile-picture</em>') . '</li>';
+      $output .= '<li>' . t('Describing its appearance: eg. <em>square-85x85</em>') . '</li></ul>';
+      $output .=  t('After you create an image style, you can add effects: crop, scale, resize, rotate, desaturate, and rotate (other contributed modules provide additional effects). For example, by combining effects as crop, scale, and desaturate, you can create square, grayscale thumbnails.') . '<dd>';
+      $output .= '<dt>' . t ('Attaching images to content as fields') . '</dt>';
+      $output .= '<dd>' . t ("Image module also allows you to attach images to content as fields. To add an image field to a <a href='@content-type'>content type</a>, go to the content type's <em>manage fields</em> page, and add a new field of type <em>Image</em>. Attaching images to content this way allows image styles to be applied and maintained, and also allows you more flexibility when theming.", array('@content-type' => url('admin/structure/types'))) . '</dd>';
+      $output .= '</dl>';
       return $output;
     case 'admin/config/media/image-styles':
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
