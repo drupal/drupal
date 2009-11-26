@@ -2,6 +2,26 @@
 // $Id$
 
 /**
+ * Implements hook_help().
+ */
+function dashboard_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#dashboard':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Dashboard module provides a <a href="@dashboard">Dashboard page</a> in the administrative interface for organizing administrative tasks and navigation, and tracking information within your site. The Dashboard page contains blocks, which you can add to and arrange using the drag and drop interface that appears when you click on the <em>Customize</em> link.', array('@dashboard' => url('admin/dashboard'))) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Tracking user activity') . '</dt>';
+      $output .= '<dd>' . t("By enabling blocks such as <em>Who's online</em> and <em>Who's new</em>, site users can track who is logged in and new user signups at a centralized location.") . '</dd>';
+      $output .= '<dt>' . t('Tracking content activity') . '</dt>';
+      $output .= '<dd>' . t('By enabling blocks such as <em>Recent blog posts</em>, <em>New forum topics</em> and <em>Recent comments</em>, site users can view newly added site content at a glance.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
  * Implement hook_menu().
  */
 function dashboard_menu() {
