@@ -680,9 +680,17 @@ function template_preprocess_field(&$variables) {
   $field_type_css = strtr($field['type'], '_', '-');
   $field_name_css = strtr($field['field_name'], '_', '-');
 
-  // If the formatter is multiple, the template sees only one 'item', which
-  // will include all values.
-  $items = $element['#formatter_single'] ? $element['items'] : array($element['items']);
+  // Prepare an $items variable that the template can simply loop on.
+  if ($element['#formatter_single']) {
+    // Filter out non-children properties that might have been added if the
+    // renderable array has gone through form_builder().
+    $items = array_intersect_key($element['items'], array_flip(element_children($element['items'])));
+  }
+  else {
+    // If the formatter is multiple, the template sees only one 'item', which
+    // will include all values.
+    $items = array($element['items']);
+  }
 
   $additions = array(
     'object' => $element['#object'],
