@@ -453,11 +453,13 @@ table th.active {
 
 table th a {
   display: block;
+  position: relative;
 }
 
 table th.active img {
-  float: right;
-  margin-top: 3px;
+  position: absolute;
+  top: 3px;
+  right: 3px;
 }
 
 table td.active {
