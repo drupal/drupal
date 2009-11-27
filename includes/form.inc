@@ -227,8 +227,15 @@ function drupal_build_form($form_id, &$form_state) {
     // have set $form_state['cache'] to indicate that the original form and the
     // $form_state shall be cached. But the form may only be cached if the
     // special 'no_cache' property is not set to TRUE.
-    if ($cacheable && !empty($form_state['cache']) && empty($form_state['no_cache'])) {
-      form_set_cache($form_build_id, $original_form, $form_state);
+    if (!empty($form_state['cache']) && empty($form_state['no_cache'])) {
+      // Cache the form upon initial build of the form.
+      if ($cacheable) {
+        form_set_cache($form_build_id, $original_form, $form_state);
+      }
+      // After processing a cached form, only update the cached form state.
+      else {
+        form_set_cache($form_state['input']['form_build_id'], NULL, $form_state);
+      }
     }
   }
 
@@ -372,11 +379,16 @@ function form_get_cache($form_build_id, &$form_state) {
 function form_set_cache($form_build_id, $form, $form_state) {
   // 6 hours cache life time for forms should be plenty.
   $expire = 21600;
-  global $user;
-  if ($user->uid) {
-    $form['#cache_token'] = drupal_get_token();
+
+  // Cache form structure.
+  if (isset($form)) {
+    if ($GLOBALS['user']->uid) {
+      $form['#cache_token'] = drupal_get_token();
+    }
+    cache_set('form_' . $form_build_id, $form, 'cache_form', REQUEST_TIME + $expire);
   }
-  cache_set('form_' . $form_build_id, $form, 'cache_form', REQUEST_TIME + $expire);
+
+  // Cache form state.
   if (!empty($form_state['build_info']) || !empty($form_state['storage'])) {
     $data = array(
       'build_info' => $form_state['build_info'],
