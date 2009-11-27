@@ -191,7 +191,7 @@ function forum_node_prepare($node) {
   if (_forum_node_check_node_type($node)) {
     if (empty($node->nid)) {
       // New topic
-      $node->taxonomy_forums[0]['value'] =  arg(3);
+      $node->taxonomy_forums[0]['tid'] =  arg(3);
     }
   }
 }
@@ -208,8 +208,8 @@ function forum_node_validate($node, $form) {
     if (!empty($node->taxonomy_forums[$langcode])) {
       // Extract the node's proper topic ID.
       $containers = variable_get('forum_containers', array());
-      foreach ($node->taxonomy_forums[$langcode] as $tid) {
-        $term = taxonomy_term_load($tid['value']);
+      foreach ($node->taxonomy_forums[$langcode] as $item) {
+        $term = taxonomy_term_load($item['tid']);
         $used = db_query_range('SELECT 1 FROM {taxonomy_term_data} WHERE tid = :tid AND vid = :vid',0 , 1, array(
           ':tid' => $term->tid,
           ':vid' => $term->vid,
@@ -233,11 +233,11 @@ function forum_node_presave($node) {
     $node->icon = !empty($node->icon) ? $node->icon : '';
     $langcode = array_shift(array_keys($node->taxonomy_forums));
     if (!empty($node->taxonomy_forums[$langcode])) {
-      $node->forum_tid = $node->taxonomy_forums[$langcode][0]['value'];
+      $node->forum_tid = $node->taxonomy_forums[$langcode][0]['tid'];
       $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->nid))->fetchField();
       if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
         // A shadow copy needs to be created. Retain new term and add old term.
-        $node->taxonomy_forums[$langcode][] = array('value' => $old_tid);
+        $node->taxonomy_forums[$langcode][] = array('tid' => $old_tid);
       }
     }
   }
@@ -429,11 +429,11 @@ function forum_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
   if ($obj_type == 'node' && $object->status && _forum_node_check_node_type($object)) {
     $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
     foreach ($object->taxonomy_forums as $language) {
-      foreach ($language as $delta) {
+      foreach ($language as $item) {
         $query->values(array(
           'nid' => $object->nid,
           'title' => $object->title[FIELD_LANGUAGE_NONE][0]['value'],
-          'tid' => $delta['value'],
+          'tid' => $item['tid'],
           'sticky' => $object->sticky,
           'created' => $object->created,
           'comment_count' => 0,
@@ -463,11 +463,11 @@ function forum_field_storage_pre_update($obj_type, $object, &$skip_fields) {
     if ($object->status) {
       $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
       foreach ($object->taxonomy_forums as $language) {
-        foreach ($language as $delta) {
+        foreach ($language as $item) {
           $query->values(array(
             'nid' => $object->nid,
             'title' => $object->title[FIELD_LANGUAGE_NONE][0]['value'],
-            'tid' => $delta['value'],
+            'tid' => $item['tid'],
             'sticky' => $object->sticky,
             'created' => $object->created,
             'comment_count' => 0,
