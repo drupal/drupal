@@ -754,23 +754,24 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $langcode = FIELD_LANGUAGE_NONE;
     $entity = field_test_create_stub_entity();
     $term = $this->createTerm($this->vocabulary);
-    $entity->{$this->field_name}[$langcode][0]['value'] = $term->tid;
-    field_attach_validate('test_entity', $entity);
+    $entity->{$this->field_name}[$langcode][0]['tid'] = $term->tid;
     try {
-      $this->assertTrue($entity->{$this->field_name}[$langcode][0]['value'] == $term->tid, t('Correct term does not cause validation error'));
+      field_attach_validate('test_entity', $entity);
+      $this->pass(t('Correct term does not cause validation error'));
     }
     catch (FieldValidationException $e) {
-      $this->assertTrue($entity->{$this->field_name}[$langcode][0]['value'] != $term->tid, t('Term from wrong vocabulary does not cause validation error'));
+      $this->fail(t('Correct term does not cause validation error'));
     }
 
     $entity = field_test_create_stub_entity();
     $bad_term = $this->createTerm($this->createVocabulary());
-    $entity->{$this->field_name}[$langcode][0]['value'] = $bad_term->tid;
+    $entity->{$this->field_name}[$langcode][0]['tid'] = $bad_term->tid;
     try {
       field_attach_validate('test_entity', $entity);
+      $this->fail(t('Wrong term causes validation error'));
     }
     catch (FieldValidationException $e) {
-      $this->assertTrue($this->field['settings']['allowed_values'][0]['vid'] != $bad_term->vid, t('Wrong term causes validation error'));
+      $this->pass(t('Wrong term causes validation error'));
     }
   }
 

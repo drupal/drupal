@@ -999,14 +999,14 @@ function taxonomy_field_widget_info_alter(&$info) {
 function taxonomy_field_schema($field) {
   return array(
     'columns' => array(
-      'value' => array(
+      'tid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
       ),
     ),
     'indexes' => array(
-      'value' => array('value'),
+      'tid' => array('tid'),
     ),
   );
 }
@@ -1033,8 +1033,8 @@ function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcod
   }
 
   foreach ($items as $delta => $item) {
-    if (!empty($item['value'])) {
-      if (!isset($allowed_values[$item['value']])) {
+    if (!empty($item['tid'])) {
+      if (!isset($allowed_values[$item['tid']])) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'taxonomy_term_illegal_value',
           'message' => t('%name: illegal value.', array('%name' => t($instance['label']))),
@@ -1048,7 +1048,7 @@ function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcod
  * Implement hook_field_is_empty().
  */
 function taxonomy_field_is_empty($item, $field) {
-  if (!is_array($item) || (empty($item['value']) && (string) $item['value'] !== '0')) {
+  if (!is_array($item) || (empty($item['tid']) && (string) $item['tid'] !== '0')) {
     return TRUE;
   }
   return FALSE;
@@ -1127,7 +1127,7 @@ function taxonomy_field_formatter_prepare_view($obj_type, $objects, $field, $ins
   foreach ($objects as $id => $object) {
     foreach ($items[$id] as $delta => $item) {
       // Force the array key to prevent duplicates.
-      $tids[$item['value']] = $item['value'];
+      $tids[$item['tid']] = $item['tid'];
     }
   }
   if ($tids) {
@@ -1137,9 +1137,9 @@ function taxonomy_field_formatter_prepare_view($obj_type, $objects, $field, $ins
     foreach ($objects as $id => $object) {
       foreach ($items[$id] as $delta => $item) {
         // Check whether the taxonomy term field instance value could be loaded.
-        if (isset($terms[$item['value']])) {
+        if (isset($terms[$item['tid']])) {
           // Replace the instance value with the term data.
-          $items[$id][$delta]['taxonomy_term'] = $terms[$item['value']];
+          $items[$id][$delta]['taxonomy_term'] = $terms[$item['tid']];
         }
         // Otherwise, unset the instance value, since the term does not exist.
         else {
@@ -1175,7 +1175,7 @@ function _taxonomy_clean_field_cache($term) {
 
     // Check this term's vocabulary against those used for the field's options.
     if (in_array($term->vid, $vids)) {
-      $conditions = array(array('value', $term->tid));
+      $conditions = array(array('tid', $term->tid));
       if ($obj_types) {
         $conditions[] = array('type', $obj_types, 'NOT IN');
       }
@@ -1210,7 +1210,7 @@ function taxonomy_term_title($term) {
 function taxonomy_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $tags = array();
   foreach ($items as $item) {
-    $tags[$item['value']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['value']);
+    $tags[$item['tid']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['tid']);
   }
 
   $element += array(
@@ -1258,7 +1258,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
       }
       $values[] = $term->tid;
     }
-    $value = options_array_transpose(array('value' => $values));
+    $value = options_array_transpose(array('tid' => $values));
   }
   else {
     $value = array();
@@ -1271,12 +1271,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
  * Implement hook_field_widget_error().
  */
 function taxonomy_field_widget_error($element, $error) {
-  if ($element['#type'] == 'textfield') {
-    form_error($element, $error['message']);
-  }
-  else {
-    form_error($element['value'], $error['message']);
-  }
+  form_error($element, $error['message']);
 }
 
 /**
@@ -1381,7 +1376,7 @@ function taxonomy_field_insert($obj_type, $object, $field, $instance, $langcode,
     foreach ($items as $item) {
       $query->values(array(
         'nid' => $object->nid,
-        'tid' => $item['value'],
+        'tid' => $item['tid'],
         'sticky' => $object->sticky,
         'created' => $object->created,
       ));
@@ -1410,7 +1405,7 @@ function taxonomy_field_update($obj_type, $object, $field, $instance, $langcode,
       foreach ($items as $item) {
         $query->values(array(
           'nid' => $object->nid,
-          'tid' => $item['value'],
+          'tid' => $item['tid'],
           'sticky' => $object->sticky,
           'created' => $object->created,
         ));
