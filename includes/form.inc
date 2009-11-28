@@ -726,7 +726,13 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
  *   A unique string identifying the form for validation, submission,
  *   theming, and hook_form_alter functions.
  * @param $form
- *   An associative array containing the structure of the form.
+ *   An associative array containing the structure of the form, which is passed
+ *   by reference. Form validation handlers are able to alter the form structure
+ *   (like #process and #after_build callbacks during form building) in case of
+ *   a validation error. If a validation handler alters the form structure, it
+ *   is responsible for validating the values of changed form elements in
+ *   $form_state['values'] to prevent form submit handlers from receiving
+ *   unvalidated values.
  * @param $form_state
  *   A keyed array containing the current state of the form. The current
  *   user-submitted data is stored in $form_state['values'], though
@@ -738,7 +744,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
  *   web service requests, or other expensive requests that should
  *   not be repeated in the submission step.
  */
-function drupal_validate_form($form_id, $form, &$form_state) {
+function drupal_validate_form($form_id, &$form, &$form_state) {
   $validated_forms = &drupal_static(__FUNCTION__, array());
 
   if (isset($validated_forms[$form_id]) && empty($form_state['must_validate'])) {
@@ -846,7 +852,7 @@ function drupal_redirect_form($form_state) {
  *   A unique string identifying the form for validation, submission,
  *   theming, and hook_form_alter functions.
  */
-function _form_validate($elements, &$form_state, $form_id = NULL) {
+function _form_validate(&$elements, &$form_state, $form_id = NULL) {
   // Also used in the installer, pre-database setup.
   $t = get_t();
 

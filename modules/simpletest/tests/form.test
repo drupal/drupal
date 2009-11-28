@@ -153,6 +153,61 @@ class FormsTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Test form validation handlers.
+ */
+class FormValidationTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Form validation handlers',
+      'description' => 'Tests form processing and alteration via form validation handlers.',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests form alterations by #element_validate, #validate, and form_set_value().
+   */
+  function testValidate() {
+    $this->drupalGet('form-test/validate');
+    // Verify that #element_validate handlers can alter the form and submitted
+    // form values.
+    $edit = array(
+      'name' => 'element_validate',
+    );
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertFieldByName('name', '#value changed by #element_validate', t('Form element #value was altered.'));
+    $this->assertText('Name value: value changed by form_set_value() in #element_validate', t('Form element value in $form_state was altered.'));
+
+    // Verify that #validate handlers can alter the form and submitted
+    // form values.
+    $edit = array(
+      'name' => 'validate',
+    );
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertFieldByName('name', '#value changed by #validate', t('Form element #value was altered.'));
+    $this->assertText('Name value: value changed by form_set_value() in #validate', t('Form element value in $form_state was altered.'));
+
+    // Verify that #element_validate handlers can make form elements
+    // inaccessible, but values persist.
+    $edit = array(
+      'name' => 'element_validate_access',
+    );
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertNoFieldByName('name', t('Form element was hidden.'));
+    $this->assertText('Name value: element_validate_access', t('Value for inaccessible form element exists.'));
+
+    // Verify that value for inaccessible form element persists.
+    $this->drupalPost(NULL, array(), 'Save');
+    $this->assertNoFieldByName('name', t('Form element was hidden.'));
+    $this->assertText('Name value: element_validate_access', t('Value for inaccessible form element exists.'));
+  }
+}
+
+/**
  * Test the tableselect form element for expected behavior.
  */
 class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
