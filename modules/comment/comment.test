@@ -440,7 +440,7 @@ class CommentPreviewTest extends CommentHelperCase {
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment'] = $this->randomName(16);
-    $edit['author'] = $web_user->name;
+    $edit['name'] = $web_user->name;
     $edit['date'] = '2008-03-02 17:23 +0300';
     $expected_date = format_date(strtotime($edit['date']));
     $comment = $this->postComment($this->node, $edit['subject'], $edit['comment'], TRUE);
@@ -450,13 +450,13 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
     $this->assertText($edit['subject'], t('Subject displayed.'));
     $this->assertText($edit['comment'], t('Comment displayed.'));
-    $this->assertText($edit['author'], t('Author displayed.'));
+    $this->assertText($edit['name'], t('Author displayed.'));
     $this->assertText($expected_date, t('Date displayed.'));
 
     // Check that the title and body fields are displayed with the correct values.
     $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
     $this->assertFieldByName('comment', $edit['comment'], t('Comment field displayed.'));
-    $this->assertFieldByName('author', $edit['author'], t('Author field displayed.'));
+    $this->assertFieldByName('name', $edit['name'], t('Author field displayed.'));
     $this->assertFieldByName('date', $edit['date'], t('Date field displayed.'));
   }
 

@@ -1648,11 +1648,13 @@ function comment_get_display_page($cid, $node_type) {
 function comment_form($form, &$form_state, $comment) {
   global $user;
 
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
   $node = node_load($comment->nid);
   $form['#node'] = $node;
 
-  if (!$user->uid && variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
+  $anonymous_contact = variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT);
+  $is_admin = (!empty($comment->cid) && user_access('administer comments'));
+
+  if (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
     $form['#attached']['library'][] = array('system', 'cookie');
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
@@ -1662,217 +1664,163 @@ function comment_form($form, &$form_state, $comment) {
   if (isset($form_state['comment'])) {
     $comment = $form_state['comment'] + (array) $comment;
   }
-  $comment += array('name' => '', 'mail' => '', 'homepage' => '');
+  $comment += array(
+    'name' => '',
+    'mail' => '',
+    'homepage' => '',
+    'subject' => '',
+    'comment' => '',
+    'cid' => NULL,
+    'pid' => NULL,
+    'language' => '',
+    'uid' => 0,
+  );
   $comment = (object) $comment;
+
+  // If not replying to a comment, use our dedicated page callback for new
+  // comments on nodes.
+  if (empty($comment->cid) && empty($comment->pid)) {
+    $form['#action'] = url('comment/reply/' . $comment->nid);
+  }
 
   if (isset($form_state['comment_preview'])) {
     $form += $form_state['comment_preview'];
   }
 
-  if ($user->uid) {
-    if (!empty($comment->cid) && user_access('administer comments')) {
-      if (!empty($comment->author)) {
-        $author = $comment->author;
-      }
-      elseif (!empty($comment->name)) {
-        $author = $comment->name;
-      }
-      else {
-        $author = $comment->registered_name;
-      }
-
-      if (isset($comment->status)) {
-        $status = $comment->status;
-      }
-      else {
-        $status = COMMENT_NOT_PUBLISHED;
-      }
-
-      if (!empty($comment->date)) {
-        $date = $comment->date;
-      }
-      else {
-        $date = format_date($comment->changed, 'custom', 'Y-m-d H:i O');
-      }
-
-      $form['admin'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Administration'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#weight' => -2,
-      );
-
-      if ($comment->registered_name != '') {
-        // The comment is by a registered user.
-        $form['admin']['author'] = array(
-          '#type' => 'textfield',
-          '#title' => t('Authored by'),
-          '#size' => 30,
-          '#maxlength' => 60,
-          '#autocomplete_path' => 'user/autocomplete',
-          '#default_value' => $author,
-          '#weight' => -1,
-        );
-      }
-      else {
-        // The comment is by an anonymous user.
-        $form['is_anonymous'] = array(
-          '#type' => 'value',
-          '#value' => TRUE,
-        );
-        $form['admin']['name'] = array(
-          '#type' => 'textfield',
-          '#title' => t('Authored by'),
-          '#size' => 30,
-          '#maxlength' => 60,
-          '#default_value' => $author,
-          '#weight' => -1,
-        );
-        $form['admin']['mail'] = array(
-          '#type' => 'textfield',
-          '#title' => t('E-mail'),
-          '#maxlength' => 64,
-          '#size' => 30,
-          '#default_value' => $comment->mail,
-          '#description' => t('The content of this field is kept private and will not be shown publicly.'),
-        );
-        $form['admin']['homepage'] = array(
-          '#type' => 'textfield',
-          '#title' => t('Homepage'),
-          '#maxlength' => 255,
-          '#size' => 30,
-          '#default_value' => $comment->homepage,
-        );
-      }
-      $form['admin']['date'] = array(
-        '#type' => 'textfield',
-        '#parents' => array('date'),
-        '#title' => t('Authored on'),
-        '#size' => 20,
-        '#maxlength' => 25,
-        '#default_value' => $date,
-        '#weight' => -1,
-      );
-      $form['admin']['status'] = array(
-        '#type' => 'radios',
-        '#parents' => array('status'),
-        '#title' => t('Status'),
-        '#default_value' => $status,
-        '#options' => array(COMMENT_NOT_PUBLISHED => t('Not published'), COMMENT_PUBLISHED => t('Published')),
-        '#weight' => -1,
-      );
-    }
-    else {
-      $form['_author'] = array(
-        '#type' => 'item',
-        '#title' => t('Your name'),
-        '#markup' => theme('username', array('account' => $user)),
-      );
-      $form['author'] = array(
-        '#type' => 'value',
-        '#value' => $user->name,
-      );
-    }
-  }
-  elseif (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MAY_CONTACT) {
-    $form['name'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Your name'),
-      '#maxlength' => 60,
-      '#size' => 30,
-      '#default_value' => $comment->name ? $comment->name : variable_get('anonymous', t('Anonymous')),
-    );
-    $form['mail'] = array(
-      '#type' => 'textfield',
-      '#title' => t('E-mail'),
-      '#maxlength' => 64,
-      '#size' => 30,
-      '#default_value' => $comment->mail, '#description' => t('The content of this field is kept private and will not be shown publicly.'),
-    );
-    $form['homepage'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Homepage'),
-      '#maxlength' => 255,
-      '#size' => 30,
-      '#default_value' => $comment->homepage,
-    );
-  }
-  elseif (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MUST_CONTACT) {
-    $form['name'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Your name'),
-      '#maxlength' => 60,
-      '#size' => 30,
-      '#default_value' => $comment->name ? $comment->name : variable_get('anonymous', t('Anonymous')),
-      '#required' => TRUE,
-    );
-    $form['mail'] = array(
-      '#type' => 'textfield',
-      '#title' => t('E-mail'),
-      '#maxlength' => 64,
-      '#size' => 30,
-      '#default_value' => $comment->mail, '#description' => t('The content of this field is kept private and will not be shown publicly.'),
-      '#required' => TRUE,
-    );
-    $form['homepage'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Homepage'),
-      '#maxlength' => 255,
-      '#size' => 30,
-      '#default_value' => $comment->homepage,
+  // Display author information in a fieldset for comment moderators.
+  if ($is_admin) {
+    $form['author'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Administration'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#weight' => -2,
     );
   }
 
-  if (variable_get('comment_subject_field_' . $node->type, 1) == 1) {
-    $form['subject'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Subject'),
-      '#maxlength' => 64,
-      '#default_value' => !empty($comment->subject) ? $comment->subject : '',
-    );
-  }
-
-  if (!empty($comment->comment)) {
-    $default = $comment->comment;
+  // Prepare default values for form elements.
+  if ($is_admin) {
+    $author = ($comment->uid && $comment->name ? $comment->name : $comment->registered_name);
+    $status = (isset($comment->status) ? $comment->status : COMMENT_NOT_PUBLISHED);
+    $date = (!empty($comment->date) ? $comment->date : format_date($comment->changed, 'custom', 'Y-m-d H:i O'));
   }
   else {
-    $default = '';
+    if ($user->uid) {
+      $author = $user->name;
+    }
+    else {
+      $author = ($comment->name ? $comment->name : variable_get('anonymous', t('Anonymous')));
+    }
+    $status = (user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED);
+    $date = '';
   }
 
+  // Add the author name field depending on the current user.
+  if ($is_admin) {
+    $form['author']['name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Authored by'),
+      '#default_value' => $author,
+      '#maxlength' => 60,
+      '#size' => 30,
+    );
+    // If the comment is by a registered user, allow to autocomplete username.
+    if ($comment->registered_name != '') {
+      $form['author']['name']['#autocomplete_path'] = 'user/autocomplete';
+    }
+  }
+  elseif ($user->uid) {
+    $form['author']['_author'] = array(
+      '#type' => 'item',
+      '#title' => t('Your name'),
+      '#markup' => theme('username', array('account' => $user)),
+    );
+    $form['author']['name'] = array(
+      '#type' => 'value',
+      '#value' => $author,
+    );
+  }
+  else {
+    $form['author']['name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Your name'),
+      '#default_value' => $author,
+      '#maxlength' => 60,
+      '#size' => 30,
+    );
+  }
+
+  // Add author e-mail and homepage fields depending on the current user.
+  $form['author']['mail'] = array(
+    '#type' => 'textfield',
+    '#title' => t('E-mail'),
+    '#default_value' => $comment->mail,
+    '#maxlength' => 64,
+    '#size' => 30,
+    '#description' => t('The content of this field is kept private and will not be shown publicly.'),
+    '#access' => $is_admin || (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
+  );
+  $form['author']['homepage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Homepage'),
+    '#default_value' => $comment->homepage,
+    '#maxlength' => 255,
+    '#size' => 30,
+    '#access' => $is_admin || (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
+  );
+  // Conditionally mark fields as required for anonymous users, if configured.
+  if (!$user->uid && $anonymous_contact == COMMENT_ANONYMOUS_MUST_CONTACT) {
+    $form['author']['name']['#required'] = TRUE;
+    $form['author']['mail']['#required'] = TRUE;
+  }
+
+  // Add administrative comment publishing options.
+  $form['author']['date'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Authored on'),
+    '#default_value' => $date,
+    '#maxlength' => 25,
+    '#size' => 20,
+    '#access' => $is_admin,
+  );
+  $form['author']['status'] = array(
+    '#type' => 'radios',
+    '#title' => t('Status'),
+    '#default_value' => $status,
+    '#options' => array(
+      COMMENT_PUBLISHED => t('Published'),
+      COMMENT_NOT_PUBLISHED => t('Not published'),
+    ),
+    '#access' => $is_admin,
+  );
+
+  $form['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#maxlength' => 64,
+    '#default_value' => $comment->subject,
+    '#access' => variable_get('comment_subject_field_' . $node->type, 1) == 1,
+  );
   $form['comment'] = array(
     '#type' => 'textarea',
     '#title' => t('Comment'),
-    '#rows' => 15,
-    '#default_value' => $default,
+    '#default_value' => $comment->comment,
     '#text_format' => isset($comment->format) ? $comment->format : filter_default_format(),
     '#required' => TRUE,
+    '#rows' => 15,
   );
 
-  $form['cid'] = array(
+  // Used for conditional validation of author fields.
+  $form['is_anonymous'] = array(
     '#type' => 'value',
-    '#value' => !empty($comment->cid) ? $comment->cid : NULL,
+    '#value' => ($comment->cid ? !$comment->uid : !$user->uid),
   );
-  $form['pid'] = array(
-    '#type' => 'value',
-    '#value' => !empty($comment->pid) ? $comment->pid : NULL,
-  );
-  $form['nid'] = array(
-    '#type' => 'value',
-    '#value' => $comment->nid,
-  );
-  $form['language'] = array(
-    '#type' => 'value',
-    '#value' => isset($comment->language) ? $comment->language : '',
-  );
-  $form['uid'] = array(
-    '#type' => 'value',
-    '#value' => !empty($comment->uid) ? $comment->uid : 0,
-  );
-  $form['node_type'] = array(
-    '#type' => 'value',
-    '#value' => 'comment_node_' . $node->type,
-  );
+
+  // Add internal comment properties.
+  foreach (array('cid', 'pid', 'nid', 'language', 'uid') as $key) {
+    $form[$key] = array('#type' => 'value', '#value' => $comment->$key);
+  }
+  $form['node_type'] = array('#type' => 'value', '#value' => 'comment_node_' . $node->type);
 
   // Only show the save button if comment previews are optional or if we are
   // already previewing the submission. However, if there are form errors,
@@ -1891,12 +1839,8 @@ function comment_form($form, &$form_state, $comment) {
     '#weight' => 20,
     '#submit' => array('comment_form_build_preview'),
   );
-  $form['#token'] = 'comment' . $comment->nid . (isset($comment->pid) ? $comment->pid : '');
 
-  if (empty($comment->cid) && empty($comment->pid)) {
-    $form['#action'] = url('comment/reply/' . $comment->nid);
-  }
-
+  // Attach fields.
   $comment->node_type = 'comment_node_' . $node->type;
   $form['#builder_function'] = 'comment_form_submit_build_comment';
   field_attach_form('comment', $comment, $form, $form_state);
@@ -1926,14 +1870,14 @@ function comment_preview($comment) {
     $comment->format = $comment->comment_format;
 
     // Attach the user and time information.
-    if (!empty($comment->author)) {
-      $account = user_load_by_name($comment->author);
+    if (!empty($comment->name)) {
+      $account = user_load_by_name($comment->name);
     }
-    elseif ($user->uid && !isset($comment->is_anonymous)) {
+    elseif ($user->uid && empty($comment->is_anonymous)) {
       $account = $user;
     }
 
-    if (!empty($account)) {
+    if (!empty($account->uid)) {
       $comment->uid = $account->uid;
       $comment->name = check_plain($account->name);
     }
@@ -1979,17 +1923,17 @@ function comment_form_validate($form, &$form_state) {
   $comment = (object) $form_state['values'];
   field_attach_form_validate('comment', $comment, $form, $form_state);
 
-  if (isset($form_state['values']['date'])) {
-    if (strtotime($form_state['values']['date']) === FALSE) {
+  if (!empty($form_state['values']['cid'])) {
+    if ($form_state['values']['date'] && strtotime($form_state['values']['date']) === FALSE) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
-  }
-  if (isset($form_state['values']['author']) && !$account = user_load_by_name($form_state['values']['author'])) {
-    form_set_error('author', t('You have to specify a valid author.'));
+    if ($form_state['values']['name'] && !$account = user_load_by_name($form_state['values']['name'])) {
+      form_set_error('name', t('You have to specify a valid author.'));
+    }
   }
 
   // Check validity of name, mail and homepage (if given).
-  if (!$user->uid || isset($form_state['values']['is_anonymous'])) {
+  if (!$user->uid || $form_state['values']['is_anonymous']) {
     $node = node_load($form_state['values']['nid']);
     if (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) > COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
       if ($form_state['values']['name']) {
@@ -2034,17 +1978,15 @@ function comment_form_validate($form, &$form_state) {
  */
 function comment_submit($comment) {
   $comment += array('subject' => '');
-  if (!isset($comment['date'])) {
+  if (empty($comment['date'])) {
     $comment['date'] = 'now';
   }
 
   $comment['created'] = strtotime($comment['date']);
   $comment['changed'] = REQUEST_TIME;
 
-  if (isset($comment['author'])) {
-    $account = user_load_by_name($comment['author']);
+  if (!empty($comment['name']) && ($account = user_load_by_name($comment['name']))) {
     $comment['uid'] = $account->uid;
-    $comment['name'] = $comment['author'];
   }
 
   // Validate the comment's subject. If not specified, extract from comment body.
