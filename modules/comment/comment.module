@@ -685,13 +685,17 @@ function comment_get_thread($node, $mode, $comments_per_page) {
   $query
     ->condition('c.nid', $node->nid)
     ->addTag('node_access')
+    ->addTag('comment_filter')
+    ->addMetaData('node', $node)
     ->limit($comments_per_page);
 
   $count_query = db_select('comment', 'c');
   $count_query->addExpression('COUNT(*)');
   $count_query
     ->condition('c.nid', $node->nid)
-    ->addTag('node_access');
+    ->addTag('node_access')
+    ->addTag('comment_filter')
+    ->addMetaData('node', $node);
 
   if (!user_access('administer comments')) {
     $query->condition('c.status', COMMENT_PUBLISHED);
