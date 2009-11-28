@@ -1,4 +1,4 @@
-/* $Id: vertical-tabs.css,v 1.1 2009/07/31 19:35:57 dries Exp $ */
+/* $Id: vertical-tabs.css,v 1.2 2009/11/28 09:59:27 dries Exp $ */
 
 /**
  * Override of misc/vertical-tabs.css.
@@ -40,6 +40,7 @@ div.vertical-tabs ul li.vertical-tab-button .summary {
 
 div.vertical-tabs ul li.vertical-tab-button a:hover {
   background: #fff;
+  text-decoration: none;
 }
 
 div.vertical-tabs ul li.selected a,
