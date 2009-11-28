@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.68 2009/11/17 02:50:41 webchick Exp $
+// $Id: user.test,v 1.69 2009/11/28 21:44:54 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -981,6 +981,10 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $this->assertText($user_b->name, t('Found user B on admin users page'));
     $this->assertText($user_c->name, t('Found user C on admin users page'));
     $this->assertText($admin_user->name, t('Found Admin user on admin users page'));
+
+    // Test for existence of edit link in table.
+    $link = l(t('edit'), "user/$user_a->uid/edit", array('query' => array('destination' => 'admin/people')));
+    $this->assertRaw($link, t('Found user A edit link on admin users page'));
 
     // Filter the users by permission 'administer taxonomy'.
     $edit = array();
