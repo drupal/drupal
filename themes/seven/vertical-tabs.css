@@ -40,6 +40,7 @@ div.vertical-tabs ul li.vertical-tab-button .summary {
 
 div.vertical-tabs ul li.vertical-tab-button a:hover {
   background: #fff;
+  text-decoration: none;
 }
 
 div.vertical-tabs ul li.selected a,
