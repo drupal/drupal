@@ -191,11 +191,10 @@ function tracker_node_delete($node, $arg = 0) {
  * comments so we need to check for those here.
  */
 function tracker_comment_update($comment) {
-  $comment = (array) $comment;
   // comment_save() calls hook_comment_publish() for all published comments
   // so we to handle all other values here.
-  if ($comment['status'] != COMMENT_PUBLISHED) {
-    _tracker_remove($comment['nid'], $comment['uid'], $comment['timestamp']);
+  if ($comment->status != COMMENT_PUBLISHED) {
+    _tracker_remove($comment->nid, $comment->uid, $comment->changed);
   }
 }
 
@@ -309,9 +308,10 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     // Comments are a second reason to keep the user's subscription.
     if (!$keep_subscription) {
       // Check if the user has commented at least once on the given nid
-      $keep_subscription = db_query_range('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND uid = :uid AND status = 0', 0, 1, array(
+      $keep_subscription = db_query_range('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND uid = :uid AND status = :status', 0, 1, array(
         ':nid' => $nid,
         ':uid' => $uid,
+        ':status' => COMMENT_PUBLISHED,
       ))->fetchField();
     }
 
