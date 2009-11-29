@@ -48,8 +48,16 @@ function help_help($path, $arg) {
       $output .= '<p>' . t('For more information, please refer to the specific topics listed in the next section, or the <a href="@handbook">online Drupal handbooks</a>. You may also post at the <a href="@forum">Drupal forum</a>, or view the wide range of <a href="@support">other support options</a> available.', array('@help' => url('admin/help'), '@handbook' => 'http://drupal.org/handbooks', '@forum' => 'http://drupal.org/forum', '@support' => 'http://drupal.org/support')) . '</p>';
       return $output;
     case 'admin/help#help':
-      $output = '<p>' . t('The help module provides context sensitive help on the use and configuration of <a href="@drupal">Drupal</a> and its modules, and is a supplement to the more extensive online <a href="@handbook">Drupal handbook</a>. The online handbook may contain more up-to-date information, is annotated with helpful user-contributed comments, and serves as the definitive reference point for all Drupal documentation.', array('@drupal' => 'http://drupal.org', '@handbook' => 'http://drupal.org/handbook')) . '</p>';
-      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@help">Help module</a>.', array('@help' => 'http://drupal.org/handbook/modules/help/')) . '</p>';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Help module provides <a href="@help-page">Help reference pages</a> and context-sensitive advice to guide you through the use and configuration of modules. It is a starting point for the online <a href="@handbook">Drupal handbooks</a>. The handbooks contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the online handbook entry for the <a href="@help">Help module</a>.', array('@help' => 'http://drupal.org/handbook/modules/help/', '@handbook' => 'http://drupal.org/handbook', '@help-page' => url('admin/help'))) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Providing a help reference') . '</dt>';
+      $output .= '<dd>' . t('The Help module displays explanations for using each module listed on the main <a href="@help">Help reference page</a>.', array('@help' => url('admin/help'))) . '</dd>';
+      $output .= '<dt>' . t('Providing context-sensitive help') . '</dt>';
+      $output .= '<dd>' . t('The Help module displays context-sensitive advice and explanations on various pages.') . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
