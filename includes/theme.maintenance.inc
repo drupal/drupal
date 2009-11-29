@@ -40,10 +40,8 @@ function _drupal_maintenance_theme() {
       // Because we are operating in a crippled environment, we need to
       // bootstrap just enough to allow hook invocations to work.
       $module_list['system']['filename'] = 'modules/system/system.module';
-      $module_list['filter']['filename'] = 'modules/filter/filter.module';
       module_list(TRUE, FALSE, FALSE, $module_list);
       drupal_load('module', 'system');
-      drupal_load('module', 'filter');
     }
 
     $custom_theme = variable_get('maintenance_theme', 'minnelli');
