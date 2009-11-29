@@ -5,13 +5,13 @@
 /**
  * Auto-hide summary textarea if empty and show hide and unhide links.
  */
-Drupal.behaviors.textTextareaSummary = {
+Drupal.behaviors.textSummary = {
   attach: function (context, settings) {
-    $('textarea.text-textarea-summary:not(.text-textarea-summary-processed)', context).addClass('text-textarea-summary-processed').each(function () {
-      var $fieldset = $(this).closest('#body-wrapper');
-      var $summary = $fieldset.find('div.text-summary-wrapper');
-      var $summaryLabel = $summary.find('div.form-type-textarea label');
-      var $full = $fieldset.find('div.text-full-wrapper');
+    $('.text-summary', context).once('text-summary', function () {
+      var $widget = $(this).closest('div.field-type-text-with-summary');
+      var $summary = $widget.find('div.text-summary-wrapper');
+      var $summaryLabel = $summary.find('label');
+      var $full = $widget.find('div.text-full-wrapper');
       var $fullLabel = $full.find('div.form-type-textarea label');
 
       // Setup the edit/hide summary link.

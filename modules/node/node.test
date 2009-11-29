@@ -912,7 +912,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     // Verify that title and body fields are displayed.
     $this->drupalGet('node/add/page');
     $this->assertRaw('Title', t('Title field was found.'));
-    $this->assertRaw('Full text', t('Body field was found.'));
+    $this->assertRaw('Body', t('Body field was found.'));
 
     // Rename the title field and remove the body field.
     $edit = array(
@@ -946,7 +946,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     $this->clickLink('Bar');
     $this->assertEqual(url('node/add/bar', array('absolute' => TRUE)), $this->getUrl(), t('New machine name was used in URL.'));
     $this->assertRaw('Foo', t('Title field was found.'));
-    $this->assertRaw('Full text', t('Body field was found.'));
+    $this->assertRaw('Baz', t('Body field was found.'));
   }
 }
 

@@ -7,20 +7,6 @@
  */
 
 /**
- * Implement hook_theme().
- */
-function text_theme() {
-  return array(
-    'text_textarea' => array(
-      'render element' => 'element',
-    ),
-    'text_textfield' => array(
-      'render element' => 'element',
-    ),
-  );
-}
-
-/**
  * Implement hook_field_info().
  *
  * Field settings:
@@ -146,7 +132,7 @@ function text_field_instance_settings_form($field, $instance) {
     '#default_value' => $settings['text_processing'],
     '#options' => array(
       t('Plain text'),
-      t('Filtered text (user selects input format)'),
+      t('Filtered text (user selects text format)'),
     ),
   );
   if ($field['type'] == 'text_with_summary') {
@@ -154,7 +140,7 @@ function text_field_instance_settings_form($field, $instance) {
       '#type' => 'checkbox',
       '#title' => t('Summary input'),
       '#default_value' => $settings['display_summary'],
-      '#description' => t('This allows authors to input an explicit summary, to be displayed instead of the automatically trimmed text when using the "Summary or trimmed" display format.'),
+      '#description' => t('This allows authors to input an explicit summary, to be displayed instead of the automatically trimmed text when using the "Summary or trimmed" display type.'),
     );
   }
 
@@ -170,13 +156,16 @@ function text_field_instance_settings_form($field, $instance) {
  */
 function text_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
-    foreach (array('value' => t('full text'), 'summary' => t('summary')) as $column => $desc) {
+    // @todo Length is counted separately for summary and value, so the maximum
+    //   length can be exceeded very easily.
+    foreach (array('value', 'summary') as $column) {
       if (!empty($item[$column])) {
         if (!empty($field['settings']['max_length']) && drupal_strlen($item[$column]) > $field['settings']['max_length']) {
           switch ($column) {
             case 'value':
               $message = t('%name: the text may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length']));
               break;
+
             case 'summary':
               $message = t('%name: the summary may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length']));
               break;
@@ -205,11 +194,11 @@ function text_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
       if (!empty($instances[$id]['settings']['text_processing'])) {
         // Only process items with a cacheable format, the rest will be
         // handled by text_field_sanitize().
-        $format = $item['format'];
-        if (filter_format_allowcache($format)) {
-          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode) : '';
+        $format_id = $item['format'];
+        if (filter_format_allowcache($format_id)) {
+          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format_id, $langcode) : '';
           if ($field['type'] == 'text_with_summary') {
-            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode) : '';
+            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format_id, $langcode) : '';
           }
         }
       }
@@ -235,10 +224,10 @@ function text_field_sanitize($obj_type, $object, $field, $instance, $langcode, &
     // from a form preview.
     if (!isset($items[$delta]['safe'])) {
       if (!empty($instance['settings']['text_processing'])) {
-        $format = $item['format'];
-        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode, TRUE) : '';
+        $format_id = $item['format'];
+        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format_id, $langcode, TRUE) : '';
         if ($field['type'] == 'text_with_summary') {
-          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode, TRUE) : '';
+          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format_id, $langcode, TRUE) : '';
         }
       }
       else {
@@ -469,14 +458,6 @@ function text_summary($text, $format = NULL, $size = NULL) {
 
 /**
  * Implement hook_field_widget_info().
- *
- * Here we indicate that the field module will handle
- * the default value and multiple values for these widgets.
- *
- * Callbacks can be omitted if default handing is used.
- * They're included here just so this module can be used
- * as an example for custom modules that might do things
- * differently.
  */
 function text_field_widget_info() {
   return array(
@@ -528,48 +509,55 @@ function text_field_widget_settings_form($field, $instance) {
 }
 
 /**
- * Implement hook_element_info().
- *
- * Autocomplete_path is not used by text_field_widget but other
- * widgets can use it (see nodereference and userreference).
- */
-function text_element_info() {
-  $types['text_textfield'] = array(
-    '#input' => TRUE,
-    '#columns' => array('value'),
-    '#delta' => 0,
-    '#process' => array('text_textfield_elements_process'),
-    '#theme_wrappers' => array('text_textfield'),
-    '#autocomplete_path' => FALSE,
-  );
-  $types['text_textarea'] = array(
-    '#input' => TRUE,
-    '#columns' => array('value', 'format'),
-    '#delta' => 0,
-    '#process' => array('text_textarea_elements_process'),
-    '#theme_wrappers' => array('text_textarea'),
-    '#filter_value' => filter_default_format(),
-  );
-  $types['text_textarea_with_summary'] = array(
-    '#input' => TRUE,
-    '#columns' => array('value', 'format', 'summary'),
-    '#delta' => 0,
-    '#process' => array('text_textarea_with_summary_process'),
-    '#theme_wrappers' => array('text_textarea'),
-    '#filter_value' => filter_default_format(),
-  );
-  return $types;
-}
-
-/**
  * Implement hook_field_widget().
  */
-function text_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $element += array(
-    '#type' => $instance['widget']['type'],
-    '#default_value' => isset($items[$delta]) ? $items[$delta] : '',
-  );
-  if (!empty($instance['settings']['text_processing'])) {
+function text_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
+  $element = $base;
+
+  switch ($instance['widget']['type']) {
+    case 'text_textfield':
+      $element['value'] = $base + array(
+        '#type' => 'textfield',
+        '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
+        '#size' => $instance['widget']['settings']['size'],
+        '#prefix' => '<div class="text-full-wrapper">',
+        '#suffix' => '</div>',
+      );
+      break;
+
+    case 'text_textarea_with_summary':
+      $display = !empty($items[$delta]['summary']) || !empty($instance['settings']['display_summary']);
+      $element['summary'] = array(
+        '#type' => $display ? 'textarea' : 'value',
+        '#default_value' => isset($items[$delta]['summary']) ? $items[$delta]['summary'] : NULL,
+        '#title' => t('Summary'),
+        '#rows' => $instance['widget']['settings']['summary_rows'],
+        '#description' => t('Leave blank to use trimmed value of full text as the summary.'),
+        '#attached' => array(
+          'js' => array(drupal_get_path('module', 'text') . '/text.js'),
+        ),
+        '#attributes' => array('class' => array('text-summary')),
+        '#prefix' => '<div class="text-summary-wrapper">',
+        '#suffix' => '</div>',
+        '#weight' => -10,
+      );
+      // Fall through to the next case.
+
+    case 'text_textarea':
+      $element['value'] = $base + array(
+        '#type' => 'textarea',
+        '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
+        '#rows' => $instance['widget']['settings']['rows'],
+        '#prefix' => '<div class="text-full-wrapper">',
+        '#suffix' => '</div>',
+      );
+      break;
+  }
+
+  if ($instance['settings']['text_processing']) {
+    $element['value']['#text_format'] = isset($items[$delta]['format']) ? $items[$delta]['format'] : filter_default_format();
+    $element['#type'] = 'markup';
+    $element['#input'] = TRUE;
     $element['#value_callback'] = 'text_field_widget_formatted_text_value';
   }
 
@@ -594,164 +582,18 @@ function text_field_widget_error($element, $error) {
 }
 
 /**
- * Process an individual element.
+ * Form element #value_callback to re-assign text format value for a formatted text widget.
  *
- * Build the form element. When creating a form using FAPI #process,
- * note that $element['#value'] is already set.
- *
- * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
- *
- * TODO: For widgets to be actual FAPI 'elements', reusable outside of a
- * 'field' context, they shoudn't rely on $field and $instance. The bits of
- * information needed to adjust the behavior of the 'element' should be
- * extracted in hook_field_widget() above.
+ * #text_format puts the format into 'value_format', while we need it in
+ * 'format'.
  */
-function text_textfield_elements_process($element, $form_state, $form) {
-  $field = $form['#fields'][$element['#field_name']]['field'];
-  $instance = $form['#fields'][$element['#field_name']]['instance'];
-  $field_key = $element['#columns'][0];
-
-  $element[$field_key] = array(
-    '#type' => 'textfield',
-    '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
-    '#autocomplete_path' => $element['#autocomplete_path'],
-    '#size' => $instance['widget']['settings']['size'],
-    '#title' => $element['#title'],
-    '#description' => $element['#description'],
-    '#required' => $element['#required'],
-  );
-
-  $element[$field_key]['#maxlength'] = !empty($field['settings']['max_length']) ? $field['settings']['max_length'] : NULL;
-
-  if (!empty($instance['settings']['text_processing'])) {
-    $filter_key  = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
-    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : filter_default_format();
-    $element[$field_key]['#text_format'] = $format;
-  }
-
-  return $element;
-}
-
-/**
- * Process an individual element.
- *
- * Build the form element. When creating a form using FAPI #process,
- * note that $element['#value'] is already set.
- *
- * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
- */
-function text_textarea_elements_process($element, $form_state, $form) {
-  $field = $form['#fields'][$element['#field_name']]['field'];
-  $instance = $form['#fields'][$element['#field_name']]['instance'];
-  $field_key = $element['#columns'][0];
-
-  $element[$field_key] = array(
-    '#type' => 'textarea',
-    '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
-    '#rows' => $instance['widget']['settings']['rows'],
-    '#weight' => 0,
-    '#title' => $element['#title'],
-    '#description' => $element['#description'],
-    '#required' => $element['#required'],
-  );
-
-  if (!empty($instance['settings']['text_processing'])) {
-    $filter_key = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
-    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : filter_default_format();
-    $element[$field_key]['#text_format'] = $format;
-  }
-
-  return $element;
-}
-
-/**
- * Process an individual element.
- *
- * Build the form element. When creating a form using FAPI #process,
- * note that $element['#value'] is already set.
- *
- * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
- */
-function text_textarea_with_summary_process($element, $form_state, $form) {
-  $field = $form['#fields'][$element['#field_name']]['field'];
-  $instance = $form['#fields'][$element['#field_name']]['instance'];
-
-  $field_key = $element['#columns'][1];
-  $display = !empty($element['#value'][$field_key]) || !empty($instance['settings']['display_summary']);
-  $element[$field_key] = array(
-    '#title' => t('Summary'),
-    '#type' => $display ? 'textarea' : 'value',
-    '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
-    '#rows' => $instance['widget']['settings']['summary_rows'],
-    '#weight' => 0,
-    '#title' => t('Summary'),
-    '#description' => t('Leave blank to use trimmed value of full text as the summary.'),
-    '#display' => $display,
-    '#attached' => array('js' => array(drupal_get_path('module', 'text') . '/text.js')),
-    '#attributes' => array('class' => array('text-textarea-summary')),
-    '#prefix' => '<div class="text-summary-wrapper">',
-    '#suffix' => '</div>',
-  );
-
-  $field_key = $element['#columns'][0];
-  $element[$field_key] = array(
-    '#type' => 'textarea',
-    '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
-    '#rows' => $instance['widget']['settings']['rows'],
-    '#weight' => 1,
-    '#title' => $display ? t('Full text') : $element['#title'],
-    '#description' => $element['#description'],
-    '#required' => $element['#required'],
-    '#prefix' => '<div class="text-full-wrapper">',
-    '#suffix' => '</div>',
-  );
-
-  if (!empty($instance['settings']['text_processing'])) {
-    $filter_key  = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
-    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : filter_default_format();
-    $element[$field_key]['#text_format'] = $format;
-  }
-
-  return $element;
-}
-
-/**
- * Helper function to determine the value for a formatted text widget.
- *
- * '#text_format' puts the format in '[column 0]_format' in incoming values,
- * while we need it in '[column 1]'.
- */
-function text_field_widget_formatted_text_value($form, $edit = FALSE) {
+function text_field_widget_formatted_text_value($element, $edit = FALSE, &$form_state) {
   if ($edit !== FALSE) {
-    $field_key = $form['#columns'][0];
-    $filter_key = (count($form['#columns']) == 2) ? $form['#columns'][1] : 'format';
-    $default_key = $field_key . '_format';
     // The format selector uses #access = FALSE if only one format is
     // available. In this case, we don't receive its value, and need to
     // manually set it.
-    $edit['format'] = !empty($edit[$default_key]) ? $edit[$default_key] : filter_default_format();
-    unset($edit[$default_key]);
+    $edit['format'] = !empty($edit['value_format']) ? $edit['value_format'] : filter_default_format();
+    unset($edit['value_format']);
     return $edit;
   }
-}
-
-/**
- * FAPI theme for an individual text elements.
- *
- * The textfield or textarea is already rendered by the
- * textfield or textarea themes and the html output
- * lives in $variables['element']['#children']. Override this theme to
- * make custom changes to the output.
- *
- * $variables['element']['#field_name'] contains the field name
- * $variables['element']['#delta] is the position of this element in the group
- */
-function theme_text_textfield($variables) {
-  $element = $variables['element'];
-  return $element['#children'];
-}
-
-function theme_text_textarea($variables) {
-  $element = $variables['element'];
-  return $element['#children'];
 }
