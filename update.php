@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.311 2009/11/19 03:11:53 webchick Exp $
+// $Id: update.php,v 1.312 2009/11/29 06:32:45 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -311,10 +311,8 @@ if (empty($op) && update_access_allowed()) {
   // Load module basics.
   include_once DRUPAL_ROOT . '/includes/module.inc';
   $module_list['system']['filename'] = 'modules/system/system.module';
-  $module_list['filter']['filename'] = 'modules/filter/filter.module';
   module_list(TRUE, FALSE, FALSE, $module_list);
   drupal_load('module', 'system');
-  drupal_load('module', 'filter');
 
   // Reset the module_implements() cache so that any new hook implementations
   // in updated code are picked up.

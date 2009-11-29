@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.46 2009/11/19 15:50:23 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.47 2009/11/29 06:32:46 dries Exp $
 
 /**
  * @file
@@ -40,10 +40,8 @@ function _drupal_maintenance_theme() {
       // Because we are operating in a crippled environment, we need to
       // bootstrap just enough to allow hook invocations to work.
       $module_list['system']['filename'] = 'modules/system/system.module';
-      $module_list['filter']['filename'] = 'modules/filter/filter.module';
       module_list(TRUE, FALSE, FALSE, $module_list);
       drupal_load('module', 'system');
-      drupal_load('module', 'filter');
     }
 
     $custom_theme = variable_get('maintenance_theme', 'minnelli');
