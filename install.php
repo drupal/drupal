@@ -1151,6 +1151,16 @@ function install_select_locale(&$install_state) {
   $profilename = $install_state['parameters']['profile'];
   $locales = install_find_locales($profilename);
   $install_state['locales'] += $locales;
+
+  if (!empty($_POST['locale'])) {
+    foreach ($locales as $locale) {
+      if ($_POST['locale'] == $locale->name) {
+        $install_state['parameters']['locale'] = $locale->name;
+        return;
+      }
+    }
+  }
+
   if (empty($install_state['parameters']['locale'])) {
     // If only the built-in (English) language is available, and we are using
     // the default profile and performing an interactive installation, inform
@@ -1169,7 +1179,8 @@ function install_select_locale(&$install_state) {
           $output .= '<ul><li><a href="install.php?profile=' . $profilename . '&amp;locale=en">' . st('Continue installation in English') . '</a></li><li><a href="install.php?profile=' . $profilename . '">' . st('Return to choose a language') . '</a></li></ul>';
         }
         else {
-          $output = '<ul><li><a href="install.php?profile=' . $profilename . '&amp;locale=en">' . st('Install Drupal in English') . '</a></li><li><a href="install.php?profile=' . $profilename . '&amp;localize=true">' . st('Learn how to install Drupal in other languages') . '</a></li></ul>';
+          include_once DRUPAL_ROOT . '/includes/form.inc';
+          $output = drupal_render(drupal_get_form('install_select_locale_form', $locales, $profilename));
         }
         return $output;
       }
@@ -1194,15 +1205,6 @@ function install_select_locale(&$install_state) {
         }
       }
 
-      if (!empty($_POST['locale'])) {
-        foreach ($locales as $locale) {
-          if ($_POST['locale'] == $locale->name) {
-            $install_state['parameters']['locale'] = $locale->name;
-            return;
-          }
-        }
-      }
-
       // We still don't have a locale, so display a form for selecting one.
       // Only do this in the case of interactive installations, since this is
       // not a real form with submit handlers (the database isn't even set up
@@ -1211,7 +1213,7 @@ function install_select_locale(&$install_state) {
       if ($install_state['interactive']) {
         drupal_set_title(st('Choose language'));
         include_once DRUPAL_ROOT . '/includes/form.inc';
-        return drupal_render(drupal_get_form('install_select_locale_form', $locales));
+        return drupal_render(drupal_get_form('install_select_locale_form', $locales, $profilename));
       }
       else {
         throw new Exception(st('Sorry, you must select a language to continue the installation.'));
@@ -1223,7 +1225,7 @@ function install_select_locale(&$install_state) {
 /**
  * Form API array definition for language selection.
  */
-function install_select_locale_form($form, &$form_state, $locales) {
+function install_select_locale_form($form, &$form_state, $locales, $profilename = 'default') {
   include_once DRUPAL_ROOT . '/includes/iso.inc';
   $languages = _locale_get_predefined_list();
   foreach ($locales as $locale) {
@@ -1235,14 +1237,19 @@ function install_select_locale_form($form, &$form_state, $locales) {
     $form['locale'][$locale->name] = array(
       '#type' => 'radio',
       '#return_value' => $locale->name,
-      '#default_value' => $locale->name == 'en',
+      '#default_value' => $locale->name == 'en' ? 'en' : '',
       '#title' => $name . ($locale->name == 'en' ? ' ' . st('(built-in)') : ''),
       '#parents' => array('locale')
     );
   }
+  if ($profilename == 'default') {
+    $form['help'] = array(
+      '#markup' => '<p><a href="install.php?profile=' . $profilename . '&amp;localize=true">' . st('Learn how to install Drupal in other languages') . '</a></p>',
+    );
+  }
   $form['submit'] =  array(
     '#type' => 'submit',
-    '#value' => st('Select language'),
+    '#value' => st('Save and continue'),
   );
   return $form;
 }
