@@ -610,7 +610,6 @@ function text_textfield_elements_process($element, $form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key = $element['#columns'][0];
-  $delta = $element['#delta'];
 
   $element[$field_key] = array(
     '#type' => 'textfield',
@@ -645,7 +644,6 @@ function text_textarea_elements_process($element, $form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key = $element['#columns'][0];
-  $delta = $element['#delta'];
 
   $element[$field_key] = array(
     '#type' => 'textarea',
@@ -677,7 +675,6 @@ function text_textarea_elements_process($element, $form_state, $form) {
 function text_textarea_with_summary_process($element, $form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
-  $delta = $element['#delta'];
 
   $field_key = $element['#columns'][1];
   $display = !empty($element['#value'][$field_key]) || !empty($instance['settings']['display_summary']);
