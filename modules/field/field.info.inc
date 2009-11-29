@@ -451,50 +451,16 @@ function field_info_bundles($obj_type = NULL) {
 }
 
 /**
- * Return array of all field data, keyed by field name.
+ * Return all field efinitions.
  *
- * @param $bundle_type
- *   (optional) The bundle type on which to filter the list of fields. In the
- *   case of nodes, this is the node type.
- * @param $field
- *   (optional) A field array or name on which to filter the list.
- * @param $field_type
- *   (optional) A field type on which to filter the list.
  * @return
- *   An array of Field objects. Each Field object has an additional
- *   property, bundles, which is an array of all the bundles to which
- *   this field belongs.
+ *   An array of field definitions, keyd by field name. Each field has an
+ *   additional property, 'bundles', which is an array of all the bundles to
+ *   which this field belongs.
  */
-function field_info_fields($bundle_type = NULL, $field = NULL, $field_type = NULL) {
-  // Build the list of fields to be used for retrieval.
-  if (isset($field)) {
-    if (is_string($field)) {
-      $field = field_info_field($field);
-    }
-    $fields = array($field['field_name'] => $field);
-  }
-  elseif (isset($bundle_type)) {
-    $instances = field_info_instances($bundle_type);
-    $fields = array();
-    foreach ($instances as $field_name => $instance) {
-      $fields[$field_name] = field_info_field($field_name);
-    }
-  }
-  else {
-    $info = _field_info_collate_fields();
-    $fields = $info['fields'];
-  }
-
-  // If a field type was given, filter the list down to fields of that type.
-  if (isset($field_type)) {
-    foreach ($fields as $key => $field) {
-      if ($field['type'] != $field_type) {
-        unset($fields[$key]);
-      }
-    }
-  }
-
-  return $fields;
+function field_info_fields() {
+  $info = _field_info_collate_fields();
+  return $info['fields'];
 }
 
 /**

@@ -857,36 +857,49 @@ function file_icon_map($file) {
  *   An integer value.
  */
 function file_get_file_reference_count($file, $field = NULL, $field_type = 'file') {
-  $fields = field_info_fields(NULL, $field, $field_type);
+  // Determine the collection of fields to check.
+  if (isset($field)) {
+    // Support $field as 'field name'.
+    if (is_string($field)) {
+      $field = field_info_field($field);
+    }
+    $fields = array($field['field_name'] => $field);
+  }
+  else {
+    $fields = field_info_fields();
+  }
+
   $types = entity_get_info();
   $reference_count = 0;
 
   foreach ($fields as $field) {
-    // TODO: Use a more efficient mechanism rather than actually retrieving
-    // all the references themselves, such as using a COUNT() query.
-    $references = file_get_file_references($file, $field, FIELD_LOAD_REVISION, $field_type);
-    foreach ($references as $obj_type => $type_references) {
-      $reference_count += count($type_references);
-    }
+    if (empty($field_type) || $field['type'] == $field_type) {
+      // TODO: Use a more efficient mechanism rather than actually retrieving
+      // all the references themselves, such as using a COUNT() query.
+      $references = file_get_file_references($file, $field, FIELD_LOAD_REVISION, $field_type);
+      foreach ($references as $obj_type => $type_references) {
+        $reference_count += count($type_references);
+      }
 
-    // If a field_name is present in the file object, the file is being deleted
-    // from this field.
-    if (isset($file->file_field_name) && $field['field_name'] == $file->file_field_name) {
-      // If deleting the entire piece of content, decrement references.
-      if (isset($file->file_field_type) && isset($file->file_field_id)) {
-        if ($file->file_field_type == $obj_type) {
-          $info = entity_get_info($obj_type);
-          $id = $types[$obj_type]['object keys']['id'];
-          foreach ($type_references as $reference) {
-            if ($file->file_field_id == $reference->$id) {
-              $reference_count--;
+      // If a field_name is present in the file object, the file is being deleted
+      // from this field.
+      if (isset($file->file_field_name) && $field['field_name'] == $file->file_field_name) {
+        // If deleting the entire piece of content, decrement references.
+        if (isset($file->file_field_type) && isset($file->file_field_id)) {
+          if ($file->file_field_type == $obj_type) {
+            $info = entity_get_info($obj_type);
+            $id = $types[$obj_type]['object keys']['id'];
+            foreach ($type_references as $reference) {
+              if ($file->file_field_id == $reference->$id) {
+                $reference_count--;
+              }
             }
           }
         }
-      }
-      // Otherwise we're just deleting a single reference in this field.
-      else {
-        $reference_count--;
+        // Otherwise we're just deleting a single reference in this field.
+        else {
+          $reference_count--;
+        }
       }
     }
   }
@@ -915,10 +928,10 @@ function file_get_file_reference_count($file, $field = NULL, $field_type = 'file
  */
 function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISION, $field_type = 'file') {
   $references = drupal_static(__FUNCTION__, array());
-  $fields = field_info_fields(NULL, $field, $field_type);
+  $fields = isset($field) ? array($field['field_name'] => $field) : field_info_fields();
 
   foreach ($fields as $field_name => $file_field) {
-    if (!isset($references[$field_name])) {
+    if ((empty($field_type) || $field['type'] == $field_type) && !isset($references[$field_name])) {
       // Get each time this file is used within a field.
       $cursor = 0;
       $references[$field_name] = field_attach_query($file_field['id'], array(array('fid', $file->fid)), array('limit' => FIELD_QUERY_NO_LIMIT, 'cursor' => &$cursor, 'age'=> $age));
