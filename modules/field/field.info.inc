@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.30 2009/11/29 06:35:47 dries Exp $
+// $Id: field.info.inc,v 1.31 2009/11/29 22:33:47 webchick Exp $
 
 /**
  * @file
@@ -451,10 +451,10 @@ function field_info_bundles($obj_type = NULL) {
 }
 
 /**
- * Return all field efinitions.
+ * Return all field definitions.
  *
  * @return
- *   An array of field definitions, keyd by field name. Each field has an
+ *   An array of field definitions, keyed by field name. Each field has an
  *   additional property, 'bundles', which is an array of all the bundles to
  *   which this field belongs.
  */
