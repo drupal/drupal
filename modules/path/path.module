@@ -12,15 +12,19 @@
 function path_help($path, $arg) {
   switch ($path) {
     case 'admin/help#path':
-      $output = '<p>' . t('The path module allows you to specify aliases for Drupal URLs. Such aliases improve readability of URLs for your users and may help internet search engines to index your content more effectively. More than one alias may be created for a given page.') . '</p>';
-      $output .= '<p>' . t('Some examples of URL aliases are:') . '</p>';
-      $output .= '<ul><li>' . t('%alias for the path %path', array('%alias' => 'login', '%path' => 'user/login')) . '</li>';
-      $output .= '<li>' . t('%alias for the path %path', array('%alias' => 'store', '%path' => 'image/tid/16')) . '</li>';
-      $output .= '<li>' . t('%alias for the path %path', array('%alias' => 'store/products/whirlygigs', '%path' => 'taxonomy/term/7+19+20+21')) . '</li>';
-      $output .= '<li>' . t('%alias for the path %path', array('%alias' => 'contact', '%path' => 'node/3')) . '</li></ul>';
-      $output .= '<p>' . t('The path module enables appropriately permissioned users to specify an optional alias in all node input and editing forms, and provides an interface to view and edit all URL aliases. The two permissions related to URL aliasing are <em>administer url aliases</em> and <em>create url aliases</em>.') . ' </p>';
-      $output .= '<p>' . t('This module also provides user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default. For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up mass URL aliasing.') . ' </p>';
-      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@path">Path module</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) . '</p>';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Path module allows you to specify an alias, or custom URL, for any existing internal system path. Aliases should not be confused with URL redirects, which allow you to forward a changed or inactive URL to a new URL. In addition to making URLs more readable, aliases also help search engines index content more effectively. Multiple aliases may be used for a single internal system path. To automate the aliasing of paths, you can install the contributed module <a href="@pathauto">Pathauto</a>. For more information, see the online handbook entry for the <a href="@path">path module</a>.', array('@path' => 'http://drupal.org/handbook/modules/path', '@pathauto' => 'http://drupal.org/project/pathauto')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Creating aliases') . '</dt>';
+      $output .= '<dd>' . t('Users with sufficient <a href="@permissions">permissions</a> can create aliases under the <em>URL path settings</em> section when they <a href="@createnode">create</a> or edit content. Some examples of aliases are: ', array('@permissions' => url('admin/config/people/permissions', array('fragment' => 'module-path')),'@createnode' => url('node/add')));
+      $output .= '<ul><li>' . t('<em>member/jane-smith</em> aliased to internal path <em>user/123</em>') . '</li>';
+      $output .= '<li>' . t('<em>about-us/team</em> aliased to internal path <em>node/456</em>') . '</li>';
+      $output .= '</ul></dd>';
+      $output .= '<dt>' . t('Managing aliases') . '</dt>';
+      $output .= '<dd>' . t('The Path module also provides a way to search and view a <a href="@aliases">list of all aliases</a> that are in use on your website. Aliases can be added, edited and deleted through this list.', array('@aliases' => url('admin/config/search/path'))) . '</dd>';
+      $output .= '</dl>';
       return $output;
 
     case 'admin/config/search/path':
