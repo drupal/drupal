@@ -80,19 +80,23 @@ function node_help($path, $arg) {
 
   switch ($path) {
     case 'admin/help#node':
-      $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The node module manages the creation, editing, deletion, and display of all content on your site.') . '</p>';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Node module manages the creation, editing, deletion, settings, and display of all site content. For more information, see the online handbook entry for <a href="@node">Node module</a>.', array('@node' => 'http://drupal.org/handbook/modules/node')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Publishing content') . '</dt>';
-      $output .= '<dd>' . t('When new content is created, the node module records basic information about the content item including the author, date of creation, and the type of content. It also tracks the <em>publishing options</em> which define whether or not the content is published, promoted to the front page of the site, and/or sticky at the top of content lists. Revision control of content edits is also available. Default settings can be configured for each <a href="@content-type">type of content</a> on your site.', array('@content-type' => url('admin/structure/types'))) . '</dd>';
+      $output .= '<dt>' . t('Creating content') . '</dt>';
+      $output .= '<dd>' . t('When new content is created, the Node module records basic information about the content, including the author, date of creation, and the <a href="@content-type">Content type</a>. It also manages the <em>publishing options</em>, which define whether or not the content is published, promoted to the front page of the site, and/or sticky at the top of content lists. Default settings can be configured for each <a href="@content-type">type of content</a> on your site.', array('@content-type' => url('admin/structure/types'))) . '</dd>';
+      $output .= '<dt>' . t('Creating custom content types') . '</dt>';
+      $output .= '<dd>' . t('The Node module gives users with the <em>Administer content types</em> permission the ability to <a href="@content-new">create new content types</a> in addition to the default ones already configured. Creating custom content types allows you the flexibility to add <a href="@field">fields</a> and configure default settings that suit the differing needs of various site content.', array('@field' => url('admin/help/field'))) . '</dd>';
       $output .= '<dt>' . t('Administering content') . '</dt>';
-      $output .= '<dd>' . t('The administrative <a href="@content">content page</a> allows you to review and manage your site content.', array('@content' => url('admin/content'))) . '</dd>';
+      $output .= '<dd>' . t('The <a href="@content">Content administration page</a> allows you to review and bulk manage your site content.', array('@content' => url('admin/content'))) . '</dd>';
+      $output .= '<dt>' . t('Creating revisions') . '</dt>';
+      $output .= '<dd>' . t('The Node module also enables you to create multiple versions of any content, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
       $output .= '<dt>' . t('User permissions') . '</dt>';
-      $output .= '<dd>' . t('The node module makes a number of permissions available for each content type, which may be set by role on the <a href="@permissions">permissions page</a>.', array('@permissions' => url('admin/settings/permissions'))) . '</dd>';
-      $output .= '</dl>';
-  
-    return $output;
+      $output .= '<dd>' . t('The Node module makes a number of permissions available for each content type, which can be set by role on the <a href="@permissions">permissions page</a>.', array('@permissions' => url('admin/settings/permissions'))) . '</dd>';
+      $output .= '</dl>'; 
+      return $output;
 
     case 'admin/content':
       // Return a non-null value so that the 'more help' link is shown.
@@ -102,15 +106,16 @@ function node_help($path, $arg) {
       return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
 
     case 'admin/structure/types/manage/' . $arg[3] . '/fields':
-      return '<p>' . t('This form lets you add, edit, and arrange fields within the %type content type.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
+      return '<p>' . t('This form allows you to add, edit, and arrange fields within the %type content type.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
 
     case 'admin/structure/types/manage/' . $arg[3] . '/display':
-      return '<p>' . t('This form lets you configure how fields should be displayed when %type content is rendered in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
+      return '<p>' . t('This form allows you to configure how fields should be displayed when %type content is rendered in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
+
     case 'admin/structure/types/manage/' . $arg[3] . '/display/' . $arg[5]:
-      return '<p>' . t('This form lets you configure how fields should be displayed when %type content is rendered in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
+      return '<p>' . t('This form allows you to configure how fields should be displayed when %type content is rendered in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
 
     case 'node/%/revisions':
-      return '<p>' . t('The revisions let you track differences between multiple versions of your content.') . '</p>';
+      return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert back to older versions.') . '</p>';
 
     case 'node/%/edit':
       $node = node_load($arg[1]);
