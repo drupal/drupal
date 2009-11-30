@@ -142,7 +142,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     variable_set('update_test_xml_map', array('drupal' => '0'));
 
     $this->drupalGet('admin/config/modules');
-    $this->assertText(t('No information is available about potential new releases for currently installed modules and themes.'));
+    $this->assertText(t('No update information available.'));
     $this->clickLink(t('check manually'));
     $this->assertText(t('Checked available update data for one project.'));
     $this->assertNoText(t('There are updates available for your version of Drupal.'));
@@ -159,7 +159,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     variable_set('update_test_xml_map', array('drupal' => '1'));
 
     $this->drupalGet('admin/config/modules');
-    $this->assertText(t('No information is available about potential new releases for currently installed modules and themes.'));
+    $this->assertText(t('No update information available.'));
     $this->clickLink(t('check manually'));
     $this->assertText(t('Checked available update data for one project.'));
     $this->assertText(t('There are updates available for your version of Drupal.'));
@@ -176,7 +176,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     variable_set('update_test_xml_map', array('drupal' => '2-sec'));
 
     $this->drupalGet('admin/config/modules');
-    $this->assertText(t('No information is available about potential new releases for currently installed modules and themes.'));
+    $this->assertText(t('No update information available.'));
     $this->clickLink(t('check manually'));
     $this->assertText(t('Checked available update data for one project.'));
     $this->assertNoText(t('There are updates available for your version of Drupal.'));

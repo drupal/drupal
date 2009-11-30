@@ -432,7 +432,7 @@ function update_cache_clear_submit($form, &$form_state) {
  */
 function _update_no_data() {
   $destination = drupal_get_destination();
-  return t('No information is available about potential new releases for currently installed modules and themes. To check for updates, you may need to <a href="@run_cron">run cron</a> or you can <a href="@check_manually">check manually</a>. Please note that checking for available updates can take a long time, so please be patient.', array(
+  return t('No update information available. <a href="@run_cron">Run cron</a> or <a href="@check_manually">check manually</a>.', array(
     '@run_cron' => url('admin/reports/status/run-cron', array('query' => $destination)),
     '@check_manually' => url('admin/reports/updates/check', array('query' => $destination)),
   ));
@@ -663,10 +663,10 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
     case UPDATE_NOT_FETCHED:
     case UPDATE_FETCH_PENDING:
       if ($msg_type == 'core') {
-        $text = t('There was a problem determining the status of available updates for your version of Drupal.', array(), array('langcode' => $langcode));
+        $text = t('There was a problem checking <a href="@update-report">available updates</a> for Drupal.', array('@update-report' => url('admin/reports/updates')), array('langcode' => $langcode));
       }
       else {
-        $text = t('There was a problem determining the status of available updates for one or more of your modules or themes.', array(), array('langcode' => $langcode));
+        $text = t('There was a problem checking <a href="@update-report">available updates</a> for your modules or themes.', array('@update-report' => url('admin/reports/updates')), array('langcode' => $langcode));
       }
       break;
   }
