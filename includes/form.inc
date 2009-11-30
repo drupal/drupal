@@ -165,8 +165,6 @@ function drupal_build_form($form_id, &$form_state) {
     $form_state['input'] = $form_state['method'] == 'get' ? $_GET : $_POST;
   }
 
-  $cacheable = FALSE;
-
   if (isset($_SESSION['batch_form_state'])) {
     // We've been redirected here after a batch processing : the form has
     // already been processed, so we grab the post-process $form_state value
@@ -181,7 +179,8 @@ function drupal_build_form($form_id, &$form_state) {
     // form_state data from a previous step, we'll retrieve it so it can
     // be passed on to the form processing code.
     if (isset($form_state['input']['form_id']) && $form_state['input']['form_id'] == $form_id && !empty($form_state['input']['form_build_id'])) {
-      $form = form_get_cache($form_state['input']['form_build_id'], $form_state);
+      $form_build_id = $form_state['input']['form_build_id'];
+      $form = form_get_cache($form_build_id, $form_state);
     }
 
     // If the previous bit of code didn't result in a populated $form
@@ -210,10 +209,9 @@ function drupal_build_form($form_id, &$form_state) {
       }
 
       drupal_prepare_form($form_id, $form, $form_state);
-      // Store a copy of the unprocessed form for caching and indicate that it
-      // is cacheable in case $form_state['cache'] is set.
+      // Store a copy of the unprocessed form to cache in case
+      // $form_state['cache'] is set.
       $original_form = $form;
-      $cacheable = TRUE;
     }
 
     // Now that we know we have a form, we'll process it (validating,
@@ -228,13 +226,13 @@ function drupal_build_form($form_id, &$form_state) {
     // $form_state shall be cached. But the form may only be cached if the
     // special 'no_cache' property is not set to TRUE.
     if (!empty($form_state['cache']) && empty($form_state['no_cache'])) {
-      // Cache the form upon initial build of the form.
-      if ($cacheable) {
+      // Cache the original, unprocessed form upon initial build of the form.
+      if (isset($original_form)) {
         form_set_cache($form_build_id, $original_form, $form_state);
       }
       // After processing a cached form, only update the cached form state.
       else {
-        form_set_cache($form_state['input']['form_build_id'], NULL, $form_state);
+        form_set_cache($form_build_id, NULL, $form_state);
       }
     }
   }
