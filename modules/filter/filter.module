@@ -182,6 +182,7 @@ function filter_format_load($format_id) {
  */
 function filter_format_save(&$format) {
   $format->name = trim($format->name);
+  $format->cache = _filter_format_is_cacheable($format);
 
   // Add a new text format.
   if (empty($format->format)) {
@@ -493,13 +494,47 @@ function _filter_list_cmp($a, $b) {
 
 /**
  * Check if text in a certain text format is allowed to be cached.
+ *
+ * This function can be used to check whether the result of the filtering
+ * process can be cached. A text format may allow caching depending on the
+ * filters enabled.
+ *
+ * @param $format_id
+ *   The text format ID to check.
+ * @return
+ *   TRUE if the given text format allows caching, FALSE otherwise.
  */
 function filter_format_allowcache($format_id) {
-  static $cache = array();
-  if (!isset($cache[$format_id])) {
-    $cache[$format_id] = db_query('SELECT cache FROM {filter_format} WHERE format = :format', array(':format' => $format_id))->fetchField();
+  $format = filter_format_load($format_id);
+  return !empty($format->cache);
+}
+
+/**
+ * Helper function to determine whether the output of a given text format can be cached.
+ *
+ * The output of a given text format can be cached when all enabled filters in
+ * the text format allow caching.
+ *
+ * @param $format
+ *   The text format object to check.
+ * @return
+ *   TRUE if all the filters enabled in the given text format allow caching,
+ *   FALSE otherwise.
+ *
+ * @see filter_format_save()
+ */
+function _filter_format_is_cacheable($format) {
+  if (empty($format->filters)) {
+    return TRUE;
   }
-  return $cache[$format_id];
+  $filter_info = filter_get_filters();
+  foreach ($format->filters as $name => $filter) {
+    // By default, 'cache' is TRUE for all filters unless specified otherwise.
+    if (isset($filter_info[$name]['cache']) && !$filter_info[$name]['cache']) {
+      return FALSE;
+    }
+  }
+  return TRUE;
 }
 
 /**
@@ -578,7 +613,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
   $format = filter_format_load($format_id);
 
   // Check for a cached version of this piece of text.
-  $cache = $cache && filter_format_allowcache($format->format);
+  $cache = $cache && !empty($format->cache);
   $cache_id = '';
   if ($cache) {
     $cache_id = $format->format . ':' . $langcode . ':' . md5($text);
