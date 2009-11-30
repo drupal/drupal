@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.48 2009/11/22 08:14:27 dries Exp $
+// $Id: filter.test,v 1.49 2009/11/30 00:42:01 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -11,6 +11,10 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
       'description' => 'Test creation, loading, updating, deleting of text formats and filters.',
       'group' => 'Filter',
     );
+  }
+
+  function setUp() {
+    parent::setUp('filter_test');
   }
 
   /**
@@ -47,6 +51,12 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     $this->verifyTextFormat($format);
     $this->verifyFilters($format);
 
+    // Add a uncacheable filter and save again.
+    $format->filters['filter_test_uncacheable']['status'] = 1;
+    filter_format_save($format);
+    $this->verifyTextFormat($format);
+    $this->verifyFilters($format);
+
     // Delete the text format.
     filter_format_delete($format);
     $db_format = db_query("SELECT * FROM {filter_format} WHERE format = :format", array(':format' => $format->format))->fetchObject();
@@ -79,6 +89,19 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     $this->assertEqual($filter_format->name, $format->name, t('filter_format_load: Proper title for text format %format.', $t_args));
     $this->assertEqual($filter_format->cache, $format->cache, t('filter_format_load: Proper cache indicator for text format %format.', $t_args));
     $this->assertEqual($filter_format->weight, $format->weight, t('filter_format_load: Proper weight for text format %format.', $t_args));
+
+    // Verify the 'cache' text format property according to enabled filters.
+    $filter_info = filter_get_filters();
+    $filters = filter_list_format($filter_format->format);
+    $cacheable = TRUE;
+    foreach ($filters as $name => $filter) {
+      // If this filter is not cacheable, update $cacheable accordingly, so we
+      // can verify $format->cache after iterating over all filters.
+      if (isset($filter_info[$name]['cache']) && !$filter_info[$name]['cache']) {
+        $cacheable = FALSE;
+      }
+    }
+    $this->assertEqual($filter_format->cache, $cacheable, t('Text format contains proper cache property.'));
   }
 
   /**
@@ -90,10 +113,12 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     $format_filters = $format->filters;
     foreach ($filters as $name => $filter) {
       $t_args = array('%format' => $format->name, '%filter' => $name);
+
       // Check whether the filter is contained in the saved $format.
       if (isset($format_filters[$name])) {
         // Verify that filter status is properly stored.
         $this->assertEqual($filter->status, $format_filters[$name]['status'], t('Database: Proper status for %filter in text format %format.', $t_args));
+
         // Verify that filter settings were properly stored.
         $this->assertEqual(unserialize($filter->settings), isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), t('Database: Proper filter settings for %filter in text format %format.', $t_args));
       }
@@ -101,6 +126,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
       else {
         $this->assertTrue($filter->status == 0, t('Database: Proper status for disabled %filter in text format %format.', $t_args));
       }
+
       // Verify that each filter has a module name assigned.
       $this->assertTrue(!empty($filter->module), t('Database: Proper module name for %filter in text format %format.', $t_args));
 
@@ -108,6 +134,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
       // filters have been processed later.
       unset($format_filters[$name]);
     }
+    // Verify that all filters have been processed.
     $this->assertTrue(empty($format_filters), t('Database contains values for all filters in the saved format.'));
 
     // Verify filter_list_format().
@@ -115,10 +142,12 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     $format_filters = $format->filters;
     foreach ($filters as $name => $filter) {
       $t_args = array('%format' => $format->name, '%filter' => $name);
+
       // Check whether the filter is contained in the saved $format.
       if (isset($format_filters[$name])) {
         // Verify that filter status is properly stored.
         $this->assertEqual($filter->status, $format_filters[$name]['status'], t('filter_list_format: Proper status for %filter in text format %format.', $t_args));
+
         // Verify that filter settings were properly stored.
         $this->assertEqual($filter->settings, isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), t('filter_list_format: Proper filter settings for %filter in text format %format.', $t_args));
       }
@@ -126,6 +155,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
       else {
         $this->assertTrue($filter->status == 0, t('filter_list_format: Proper status for disabled %filter in text format %format.', $t_args));
       }
+
       // Verify that each filter has a module name assigned.
       $this->assertTrue(!empty($filter->module), t('filter_list_format: Proper module name for %filter in text format %format.', $t_args));
 
@@ -133,6 +163,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
       // filters have been processed later.
       unset($format_filters[$name]);
     }
+    // Verify that all filters have been processed.
     $this->assertTrue(empty($format_filters), t('filter_list_format: Loaded filters contain values for all filters in the saved format.'));
   }
 }

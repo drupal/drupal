@@ -1,5 +1,5 @@
 <?php
-// $Id: filter_test.module,v 1.2 2009/08/27 21:18:20 dries Exp $
+// $Id: filter_test.module,v 1.3 2009/11/30 00:42:01 dries Exp $
 
 /**
  * @file
@@ -25,5 +25,17 @@ function filter_test_filter_format_update($format) {
  */
 function filter_test_filter_format_delete($format, $default) {
   drupal_set_message('hook_filter_format_delete invoked.');
+}
+
+/**
+ * Implements hook_filter_info().
+ */
+function filter_test_filter_info() {
+  $filters['filter_test_uncacheable'] = array(
+    'title' => 'Uncacheable filter',
+    'description' => 'Does nothing, but makes a text format uncacheable.',
+    'cache' => FALSE,
+  );
+  return $filters;
 }
 
