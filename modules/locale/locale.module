@@ -297,11 +297,9 @@ function locale_permission() {
   return array(
     'administer languages' => array(
       'title' => t('Administer languages'),
-      'description' => t('Manage the languages in which the website content and interface text may be displayed.'),
     ),
     'translate interface' => array(
-      'title' => t('Translate the interface'),
-      'description' => t('Translate the text of the website interface.'),
+      'title' => t('Translate interface texts'),
     ),
   );
 }

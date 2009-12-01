@@ -147,7 +147,7 @@ function dashboard_permission() {
   return array(
     'access dashboard' => array(
       'title' => t('View the administrative dashboard'),
-      'description' => t('Access the site-wide dashboard. Modifying the dashboard requires the "Administer blocks" permission.'),
+      'description' => t('Note: modifying the dashboard requires the !administer_blocks permission.', array('!administer_blocks' => l(t('Administer blocks'), 'admin/config/people/permissions', array('fragment' => 'module-block')))),
     ),
   );
 }

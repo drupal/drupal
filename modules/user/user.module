@@ -726,27 +726,25 @@ function user_permission() {
   return array(
     'administer permissions' =>  array(
       'title' => t('Administer permissions'),
-      'description' => t('Manage the permissions assigned to user roles. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => theme('placeholder', array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'administer users' => array(
       'title' => t('Administer users'),
-      'description' => t('Manage or block users, and manage their role assignments. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => theme('placeholder', array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'access user profiles' => array(
-      'title' => t('Access user profiles'),
-      'description' => t('View profiles of users on the site, which may contain personal information.'),
+      'title' => t('View user profiles'),
     ),
     'change own username' => array(
       'title' => t('Change own username'),
-      'description' => t('Select a different username.'),
     ),
     'cancel account' => array(
-      'title' => t('Cancel account'),
-      'description' => t('Remove or disable own user account and unpublish, anonymize, or remove own submissions depending on the configured <a href="@user-settings-url">user settings</a>.', array('@user-settings-url' => url('admin/config/people/accounts'))),
+      'title' => t('Cancel own user account'),
+      'description' => t('Note: content may be kept, unpublished, deleted or transfered to the %anonymous-name user depending on the configured <a href="@user-settings-url">user settings</a>.', array('%anonymous-name' => variable_get('anonymous', t('Anonymous')), '@user-settings-url' => url('admin/config/people/accounts'))),
     ),
     'select account cancellation method' => array(
       'title' => t('Select method for cancelling own account'),
-      'description' => t('Select the method for cancelling own user account. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => theme('placeholder', array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
   );
 }

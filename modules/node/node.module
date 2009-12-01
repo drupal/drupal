@@ -1401,39 +1401,32 @@ function node_permission() {
   $perms = array(
     'administer content types' => array(
       'title' => t('Administer content types'),
-      'description' => t('Manage content types and content type administration settings.'),
     ),
     'administer nodes' => array(
-      'title' => t('Administer nodes'),
-      'description' => t('Manage all information associated with site content, such as author, publication date and current revision. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'title' => t('Administer content'),
+      'description' => theme('placeholder', array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'access content' => array(
-      'title' => t('Access content'),
-      'description' => t('View published content.'),
+      'title' => t('View published content'),
     ),
     'access content overview' => array(
-      'title' => t('Access content overview'),
-      'description' => t('Access the content overview page.'),
+      'title' => t('Access the content overview page'),
     ),
     'bypass node access' => array(
-      'title' => t('Bypass node access'),
-      'description' => t('View, edit and delete all site content. Users with this permission will bypass any content-related access control. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'title' => t('Bypass content access control'),
+      'description' => t('View, edit and delete all content regardless of permission restrictions. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'view revisions' => array(
-      'title' => t('View revisions'),
-      'description' => t('View content revisions.'),
+      'title' => t('View content revisions'),
     ),
     'revert revisions' => array(
-      'title' => t('Revert revisions'),
-      'description' => t('Replace content with an older revision.'),
+      'title' => t('Revert content revisions'),
     ),
     'delete revisions' => array(
-      'title' => t('Delete revisions'),
-      'description' => t('Delete content revisions.'),
+      'title' => t('Delete content revisions'),
     ),
     'view own unpublished content' => array(
       'title' => t('View own unpublished content'),
-      'description' => t('View unpublished content created by the user'),
     ),
   );
 
@@ -2529,24 +2522,19 @@ function node_list_permissions($type) {
   // Build standard list of node permissions for this type.
   $perms = array(
     "create $type content" => array(
-      'title' => t('Create %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Create new %type_name content.', array('%type_name' => $info->name)),
+      'title' => t('Create new %type_name content', array('%type_name' => $info->name)),
     ),
     "edit own $type content" => array(
       'title' => t('Edit own %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Edit %type_name content created by the user.', array('%type_name' => $info->name)),
     ),
     "edit any $type content" => array(
       'title' => t('Edit any %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Edit any %type_name content, regardless of its author.', array('%type_name' => $info->name)),
     ),
     "delete own $type content" => array(
       'title' => t('Delete own %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Delete %type_name content created by the user.', array('%type_name' => $info->name)),
     ),
     "delete any $type content" => array(
       'title' => t('Delete any %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Delete any %type_name content, regardless of its author.', array('%type_name' => $info->name)),
     ),
   );
 

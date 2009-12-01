@@ -42,11 +42,9 @@ function path_permission() {
   return array(
     'administer url aliases' => array(
       'title' => t('Administer URL aliases'),
-      'description' => t('Manage URL aliases across the entire website.'),
     ),
     'create url aliases' => array(
-      'title' => t('Create URL aliases'),
-      'description' => t('Manage URL aliases on content.'),
+      'title' => t('Create and edit URL aliases'),
     ),
   );
 }

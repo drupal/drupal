@@ -70,18 +70,15 @@ function book_permission() {
   return array(
     'administer book outlines' => array(
       'title' => t('Administer book outlines'),
-      'description' => t('Manage books through the administration panel.'),
     ),
     'create new books' => array(
       'title' => t('Create new books'),
-      'description' => t('Add new top-level books.'),
     ),
     'add content to books' => array(
-      'title' => t('Add content to books'),
-      'description' => t('Add new content and child pages to books.'),
+      'title' => t('Add content and child pages to books'),
     ),
     'access printer-friendly version' => array(
-      'title' => t('Access printer-friendly version'),
+      'title' => t('View printer-friendly books'),
       'description' => t('View a book page and all of its sub-pages as a single document for ease of printing. Can be performance heavy.'),
     ),
   );

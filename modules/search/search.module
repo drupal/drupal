@@ -144,15 +144,12 @@ function search_permission() {
   return array(
     'administer search' => array(
       'title' => t('Administer search'),
-      'description' => t('Configure search administration settings.'),
     ),
     'search content' => array(
-      'title' => t('Search content'),
-      'description' => t('Search website content.'),
+      'title' => t('Use search'),
     ),
     'use advanced search' => array(
       'title' => t('Use advanced search'),
-      'description' => t('Limit search results with additional criteria, such as specific content types. Could have performance implications.'),
     ),
   );
 }

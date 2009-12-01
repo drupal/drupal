@@ -12,8 +12,7 @@
 function toolbar_permission() {
   return array(
     'access toolbar' => array(
-      'title' => t('Access administration toolbar'),
-      'description' => t('Access the persistent administration toolbar displayed on all pages.'),
+      'title' => t('Use the administration toolbar'),
     ),
   );
 }

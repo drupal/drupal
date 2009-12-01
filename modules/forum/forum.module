@@ -365,7 +365,6 @@ function forum_permission() {
   $perms = array(
     'administer forums' => array(
       'title' => t('Administer forums'),
-      'description' => t('Forum administration and settings.'),
     ),
   );
   return $perms;

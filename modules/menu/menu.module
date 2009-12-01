@@ -45,8 +45,7 @@ function menu_help($path, $arg) {
 function menu_permission() {
   return array(
     'administer menu' => array(
-      'title' => t('Administer menu'),
-      'description' => t('Manage menus and menu items.'),
+      'title' => t('Administer menus and menu items'),
     ),
   );
 }

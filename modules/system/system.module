@@ -198,39 +198,31 @@ function system_permission() {
   return array(
     'administer site configuration' => array(
       'title' => t('Administer site configuration'),
-      'description' => t('Configure site-wide settings such as module or theme administration settings.'),
     ),
     'administer software updates' => array(
-      'title' => t('Administer software updates'),
-      'description' => t('Run the update.php script.'),
+      'title' => t('Run software updates'),
     ),
     'administer actions' => array(
       'title' => t('Administer actions'),
-      'description' => t('Manage the actions defined for your site.'),
     ),
     'administer files' => array(
-      'title' => t('Administer files'),
-      'description' => t('Manage user-uploaded files.'),
+      'title' => t('Administer user-uploaded files'),
     ),
     'access administration pages' => array(
-      'title' => t('Access administration pages'),
-      'description' => t('View the administration panel and browse the help system.'),
+      'title' => t('Use the  administration pages and help'),
     ),
     'access contextual links' => array(
-      'title' => t('Access contextual links'),
+      'title' => t('Use contextual links'),
       'description' => t('Use contextual links to perform actions related to elements on a page.'),
     ),
     'access site in maintenance mode' => array(
-      'title' => t('Access site in maintenance mode'),
-      'description' => t('Log in when the site is in maintenance mode.'),
+      'title' => t('Use the site in maintenance mode'),
     ),
     'access site reports' => array(
-      'title' => t('Access site reports'),
-      'description' => t('View reports from system logs and other status information.'),
+      'title' => t('View site reports'),
     ),
     'block IP addresses' => array(
       'title' => t('Block IP addresses'),
-      'description' => t('Block IP addresses from accessing your site.'),
     ),
   );
 }

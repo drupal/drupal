@@ -45,12 +45,10 @@ function upload_theme() {
 function upload_permission() {
   return array(
     'upload files' => array(
-      'title' => t('Upload files'),
-      'description' => t('Attach images and other files to content.'),
+      'title' => t('Upload files for content'),
     ),
     'view uploaded files' => array(
-      'title' => t('View uploaded files'),
-      'description' => t('View and download files attached to content.'),
+      'title' => t('View and download uploaded files'),
     ),
   );
 }

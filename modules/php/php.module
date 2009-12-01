@@ -27,7 +27,7 @@ function php_permission() {
   return array(
     'use PHP for settings' => array(
       'title' => t('Use PHP for settings'),
-      'description' => t('Enter PHP in settings fields where PHP is allowed. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => theme('placeholder', array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
   );
 }

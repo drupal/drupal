@@ -12,21 +12,18 @@
 function taxonomy_permission() {
   $permissions = array(
     'administer taxonomy' => array(
-      'title' => t('Administer taxonomy'),
-      'description' => t('Manage taxonomy vocabularies and terms.'),
+      'title' => t('Administer vocabularies and terms'),
     ),
   );
   foreach (taxonomy_get_vocabularies() as $vocabulary) {
     $permissions += array(
       'edit terms in ' . $vocabulary->vid => array(
         'title' => t('Edit terms in %vocabulary', array('%vocabulary' => $vocabulary->name)),
-        'description' => t('Edit terms in the %vocabulary vocabulary.', array('%vocabulary' => $vocabulary->name)),
       ),
     );
     $permissions += array(
        'delete terms in ' . $vocabulary->vid => array(
-         'title' => t('Delete terms in %vocabulary', array('%vocabulary' => $vocabulary->name)),
-         'description' => t('Delete terms in the %vocabulary vocabulary.', array('%vocabulary' => $vocabulary->name)),
+         'title' => t('Delete terms from %vocabulary', array('%vocabulary' => $vocabulary->name)),
       ),
     );
   }

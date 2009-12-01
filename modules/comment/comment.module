@@ -276,20 +276,16 @@ function comment_node_type_delete($info) {
 function comment_permission() {
   return array(
     'administer comments' => array(
-      'title' => t('Administer comments'),
-      'description' => t('Manage and approve comments, and configure comment administration settings.'),
+      'title' => t('Administer comments and comment settings'),
     ),
     'access comments' => array(
-      'title' => t('Access comments'),
-      'description' => t('View comments attached to content.'),
+      'title' => t('View comments'),
     ),
     'post comments' => array(
-      'title' => t('Post comments'),
-      'description' => t('Add comments to content (approval required).'),
+      'title' => t('Post comments with approval'),
     ),
     'post comments without approval' => array(
       'title' => t('Post comments without approval'),
-      'description' => t('Add comments to content (no approval required).'),
     ),
   );
 }

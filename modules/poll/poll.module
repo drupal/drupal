@@ -64,15 +64,12 @@ function poll_permission() {
   $perms = array(
     'vote on polls' => array(
       'title' => t('Vote on polls'),
-      'description' => t('Cast votes on polls.'),
     ),
     'cancel own vote' => array(
-      'title' => t('Cancel own vote'),
-      'description' => t('Retract and optionally change own votes.'),
+      'title' => t('Cancel and change own votes'),
     ),
     'inspect all votes' => array(
-      'title' => t('Inspect all votes'),
-      'description' => t('View voting results.'),
+      'title' => t('View voting results'),
     ),
   );
 

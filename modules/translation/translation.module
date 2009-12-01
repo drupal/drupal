@@ -89,7 +89,6 @@ function translation_permission() {
   return array(
     'translate content' => array(
       'title' => t('Translate content'),
-      'description' => t('Translate website content.'),
     ),
   );
 }
