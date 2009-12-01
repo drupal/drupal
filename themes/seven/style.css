@@ -54,28 +54,46 @@ legend {
  * Skip link.
  */
 #skip-link {
-  margin-top: 20px;
+  margin-top: 0;
   position: absolute;
-  right: 40px;
+  left: 50%;
+  margin-left: -5.25em;
+  width: auto;
   z-index: 50;
 }
 
+#skip-link a,
 #skip-link a:link,
 #skip-link a:visited {
- -moz-border-radius: 10px;
- -webit-border-radius: 10px;
- border-radius: 10px;
- background: #d5d5ce;
- color: #444;
- font-size: 0.94em;
- padding: 1px 10px 2px;
+  position: absolute;
+  display: block;
+  top: auto;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  -moz-border-radius-bottomleft: 10px;
+  -moz-border-radius-bottomright: 10px;
+  -moz-border-radius-topleft: 0;
+  -moz-border-radius-topright: 0;
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-left-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  border-radius:0 0 10px 10px;
+  background: #444;
+  color: #fff;
+  font-size: 0.94em;
+  text-decoration: none;
 }
 
 #skip-link a:hover,
+#skip-link a:active,
 #skip-link a:focus {
-  background: #444;
-  color: #fff;
-  text-decoration: none;
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  padding: 1px 10px 2px 10px;
 }
 
 /**
