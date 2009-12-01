@@ -8,31 +8,68 @@
   position: relative;
 }
 .contextual-links-region-active {
-  outline: #000 dashed 1px;
+  outline: #999 dashed 1px;
 }
 
 /**
  * Contextual links.
  */
-ul.contextual-links {
-  float: right;
+div.contextual-links-wrapper {
+  display: none;
   font-size: 90%;
+  position: absolute;
+  right: 5px;
+  top: 0px;
+  z-index: 999;
+}
+html.js div.contextual-links-wrapper {
+  display: block;
+}
+a.contextual-links-trigger {
+  background: transparent url(cog-select.png) no-repeat center center;
+  display: none;
+  height: 20px;
+  margin-top: 2px;
+  outline: none;
+  text-indent: 34px;
+  width: 30px;
+  overflow: hidden;
+}
+a.contextual-links-trigger:hover,
+div.contextual-links-active a.contextual-links-trigger {
+  background-color: #fff;
+}
+div.contextual-links-wrapper ul.contextual-links {
+  display: none;
   margin: 0;
-  padding: 0;
+  padding: 5px 10px;
+  position: absolute;
+  right: 0;
+  top: 20px;
+  white-space: nowrap;
+}
+.contextual-links-region:hover a.contextual-links-trigger,
+div.contextual-links-active a.contextual-links-trigger,
+div.contextual-links-active ul.contextual-links {
+  display: block;	
 }
 ul.contextual-links li {
-  border-left: 1px solid #ccc;
-  display: inline;
   line-height: 100%;
   list-style: none;
-  margin: 0 0 0 0.3em;
-  padding: 0 0 0 0.6em;
-}
-ul.contextual-links li.first {
-  border-left: 0;
+  list-style-image: none;
   margin: 0;
   padding: 0;
 }
-ul.contextual-links li a {
+div.contextual-links-wrapper a {
   text-decoration: none;
+}
+ul.contextual-links li a {
+  background: #fff;
+  color: #666;
+  display: block;
+  margin: 0.5em 0;
+  padding: 0.3em;
+}
+ul.contextual-links li a:hover {
+  text-decoration: underline;
 }

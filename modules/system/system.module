@@ -3634,6 +3634,8 @@ function system_build_contextual_links($element) {
   $build = array();
   if ($links) {
     $build = array(
+      '#prefix' => '<div class="contextual-links-wrapper">',
+      '#suffix' => '</div>',
       '#theme' => 'links',
       '#links' => $links,
       '#attributes' => array('class' => array('contextual-links')),
