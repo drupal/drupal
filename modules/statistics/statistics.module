@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.325 2009/11/23 01:33:45 webchick Exp $
+// $Id: statistics.module,v 1.326 2009/12/01 13:14:42 dries Exp $
 
 /**
  * @file
@@ -91,17 +91,14 @@ function statistics_exit() {
  */
 function statistics_permission() {
   return array(
-    'access statistics' => array(
-      'title' => t('Access statistics'),
-      'description' => t('View content access statistics.'),
-    ),
     'administer statistics' => array(
       'title' => t('Administer statistics'),
-      'description' => t('Configure statistics settings.'),
+    ),
+    'access statistics' => array(
+      'title' => t('View content access statistics'),
     ),
     'view post access counter' => array(
-      'title' => t('View post access counter'),
-      'description' => t('View the total number of times a piece of content has been accessed.'),
+      'title' => t('View content hits'),
     ),
   );
 }

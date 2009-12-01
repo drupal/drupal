@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.429 2009/11/24 05:23:54 dries Exp $
+// $Id: aggregator.module,v 1.430 2009/12/01 13:14:42 dries Exp $
 
 /**
  * @file
@@ -305,11 +305,9 @@ function aggregator_permission() {
   return array(
     'administer news feeds' => array(
       'title' => t('Administer news feeds'),
-      'description' => t('Add, edit or delete news feeds that are aggregated to your site.'),
     ),
     'access news feeds' => array(
-      'title' => t('Access news feeds'),
-      'description' => t('View aggregated news feed items.'),
+      'title' => t('View news feeds'),
     ),
   );
 }

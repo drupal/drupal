@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.270 2009/11/18 18:51:11 dries Exp $
+// $Id: upload.module,v 1.271 2009/12/01 13:14:43 dries Exp $
 
 /**
  * @file
@@ -45,12 +45,10 @@ function upload_theme() {
 function upload_permission() {
   return array(
     'upload files' => array(
-      'title' => t('Upload files'),
-      'description' => t('Attach images and other files to content.'),
+      'title' => t('Upload files for content'),
     ),
     'view uploaded files' => array(
-      'title' => t('View uploaded files'),
-      'description' => t('View and download files attached to content.'),
+      'title' => t('View and download uploaded files'),
     ),
   );
 }

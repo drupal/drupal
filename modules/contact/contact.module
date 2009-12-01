@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.137 2009/11/29 19:54:40 webchick Exp $
+// $Id: contact.module,v 1.138 2009/12/01 13:14:42 dries Exp $
 
 /**
  * @file
@@ -43,16 +43,13 @@ function contact_help($path, $arg) {
 function contact_permission() {
   return array(
     'administer contact forms' => array(
-      'title' => t('Administer contact forms'),
-      'description' => t('Manage contact forms and configure contact form administrative settings.'),
+      'title' => t('Administer contact forms and contact form settings'),
     ),
     'access site-wide contact form' => array(
-      'title' => t('Access site-wide contact form'),
-      'description' => t('Send e-mails to administrator-defined recipients using the site-wide contact form.'),
+      'title' => t('Use the site-wide contact form'),
     ),
     'access user contact forms' => array(
-      'title' => t('Access user contact forms'),
-      'description' => t('Send e-mails to users using their contact forms.'),
+      'title' => t("Use users' personal contact forms"),
     ),
   );
 }

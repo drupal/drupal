@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.module,v 1.6 2009/11/19 03:57:15 webchick Exp $
+// $Id: shortcut.module,v 1.7 2009/12/01 13:14:42 dries Exp $
 
 /**
  * @file
@@ -21,15 +21,12 @@ function shortcut_permission() {
   return array(
     'administer shortcuts' => array(
       'title' => t('Administer shortcuts'),
-      'description' => t('Manage all shortcut and shortcut sets.'),
     ),
     'customize shortcut links' => array(
-      'title' => t('Customize shortcut links'),
-      'description' => t("Edit, add and delete the links in shortcut set the user is using."),
+      'title' => t('Customize own shortcuts'),
     ),
     'switch shortcut sets' => array(
-      'title' => t('Choose a different shortcut set'),
-      'description' => t('Choose which set of shortcuts are displayed for the user.')
+      'title' => t('Select own shortcut set'),
     ),
   );
 }

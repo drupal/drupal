@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.176 2009/11/29 20:19:04 webchick Exp $
+// $Id: path.module,v 1.177 2009/12/01 13:14:42 dries Exp $
 
 /**
  * @file
@@ -42,11 +42,9 @@ function path_permission() {
   return array(
     'administer url aliases' => array(
       'title' => t('Administer URL aliases'),
-      'description' => t('Manage URL aliases across the entire website.'),
     ),
     'create url aliases' => array(
-      'title' => t('Create URL aliases'),
-      'description' => t('Manage URL aliases on content.'),
+      'title' => t('Create and edit URL aliases'),
     ),
   );
 }

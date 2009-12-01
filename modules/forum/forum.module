@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.536 2009/11/27 15:17:54 dries Exp $
+// $Id: forum.module,v 1.537 2009/12/01 13:14:42 dries Exp $
 
 /**
  * @file
@@ -365,7 +365,6 @@ function forum_permission() {
   $perms = array(
     'administer forums' => array(
       'title' => t('Administer forums'),
-      'description' => t('Forum administration and settings.'),
     ),
   );
   return $perms;
