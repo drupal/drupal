@@ -1,5 +1,5 @@
 <?php
-// $Id: color.test,v 1.1 2009/09/01 20:40:40 webchick Exp $
+// $Id: color.test,v 1.2 2009/12/01 22:30:30 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ class ColorTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('color');
     // Create users.
-    $this->big_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->big_user = $this->drupalCreateUser(array('administer themes'));
   }
 
   /**

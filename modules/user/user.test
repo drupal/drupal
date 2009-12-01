@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.69 2009/11/28 21:44:54 dries Exp $
+// $Id: user.test,v 1.70 2009/12/01 22:30:31 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -872,7 +872,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles', 'administer site configuration', 'administer users'));
+    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles', 'administer site configuration', 'administer modules', 'administer users'));
 
     // Find the new role ID - it must be the maximum.
     $all_rids = array_keys($this->admin_user->roles);
