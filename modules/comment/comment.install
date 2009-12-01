@@ -208,6 +208,13 @@ function comment_update_7010() {
 }
 
 /**
+ * Add an index to node_comment_statistics on comment_count.
+ */
+function comment_update_7011() {
+  db_add_index('node_comment_statistics', 'comment_count', array('comment_count'));
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

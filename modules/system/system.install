@@ -2491,10 +2491,9 @@ function system_update_7029() {
 }
 
 /**
- * Add an index to node_comment_statistics on comment_count.
+ * Moved to comment_update_7011().
  */
 function system_update_7030() {
-  db_add_index('node_comment_statistics', 'comment_count', array('comment_count'));
 }
 
 /**
