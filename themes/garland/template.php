@@ -22,6 +22,26 @@ function garland_breadcrumb($variables) {
 }
 
 /**
+ * Override or insert variables into the maintenance page template.
+ */
+function garland_preprocess_maintenance_page(&$vars) {
+  // Toggle fixed or fluid width.
+  if (theme_get_setting('garland_width') == 'fluid') {
+    $vars['classes_array'][] = 'fluid-width';
+  }
+}
+
+/**
+ * Override or insert variables into the html template.
+ */
+function garland_preprocess_html(&$vars) {
+  // Toggle fixed or fluid width.
+  if (theme_get_setting('garland_width') == 'fluid') {
+    $vars['classes_array'][] = 'fluid-width';
+  }
+}
+
+/**
  * Override or insert variables into the html template.
  */
 function garland_process_html(&$vars) {

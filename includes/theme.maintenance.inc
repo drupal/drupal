@@ -44,7 +44,7 @@ function _drupal_maintenance_theme() {
       drupal_load('module', 'system');
     }
 
-    $custom_theme = variable_get('maintenance_theme', 'minnelli');
+    $custom_theme = variable_get('maintenance_theme', 'garland');
   }
 
   $themes = list_themes();

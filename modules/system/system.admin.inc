@@ -307,8 +307,10 @@ function system_themes_page() {
   // There are two possible theme groups.
   $theme_group_titles = array(
     'enabled' => format_plural(count($theme_groups['enabled']), 'Enabled theme', 'Enabled themes'),
-    'disabled' => format_plural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes'),
   );
+  if (!empty($theme_groups['disabled'])) {
+    $theme_group_titles['disabled'] = format_plural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes');
+  };
 
   uasort($theme_groups['enabled'], 'system_sort_themes');
   drupal_alter('system_themes_page', $theme_groups);

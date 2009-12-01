@@ -1,8 +1,0 @@
-; $Id$
-name = Minnelli
-description = Tableless, recolorable, multi-column, fixed width theme.
-package = Core
-version = VERSION
-core = 7.x
-base theme = garland
-stylesheets[all][] = minnelli.css

@@ -366,9 +366,24 @@ table .form-button, table .form-submit {
   background: #edf5fa url(images/body.png) repeat-x 50% 0;
 }
 
+/* Set container widths when we are using the "fixed width" option. */
 #wrapper #container {
+  width: 560px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+body.one-sidebar #wrapper #container {
+  width: 770px;
+}
+
+body.two-sidebars #wrapper #container {
+  width: 980px;
+}
+
+/* Unset container width when we are using the "fluid width" option. */
+body.fluid-width #wrapper #container {
+  width: auto;
   max-width: 1270px;
 }
 
