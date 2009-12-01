@@ -244,12 +244,16 @@ ini_set('session.cookie_lifetime', 2000000);
  * these variable overrides will not be modifiable from the Drupal
  * administration interface.
  *
+ * The following overrides are examples:
+ * - site_name: Defines the site's name.
+ * - theme_default: Defines the default theme for this site.
+ * - anonymous: Defines the human-readable name of anonymous users.
  * Remove the leading hash signs to enable.
  */
-$conf = array(
-#   'site_name' => 'My Drupal site',
-#   'theme_default' => 'minnelli',
-#   'anonymous' => 'Visitor',
+# $conf['site_name'] = 'My Drupal site';
+# $conf['theme_default'] = 'minnelli';
+# $conf['anonymous'] = 'Visitor';
+
 /**
  * A custom theme can be set for the offline page. This applies when the site
  * is explicitly set to maintenance mode through the administration page or when
@@ -258,7 +262,8 @@ $conf = array(
  * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.
  * Note: This setting does not apply to installation and update pages.
  */
-#   'maintenance_theme' => 'minnelli', // Leave the comma here.
+# $conf['maintenance_theme'] = 'minnelli';
+
 /**
  * reverse_proxy accepts a boolean value.
  *
@@ -275,7 +280,8 @@ $conf = array(
  * about this setting, do not have a reverse proxy, or Drupal operates in
  * a shared hosting environment, this setting should remain commented out.
  */
-#   'reverse_proxy' => TRUE, // Leave the comma here.
+# $conf['reverse_proxy'] = TRUE;
+
 /**
  * reverse_proxy accepts an array of IP addresses.
  *
@@ -286,8 +292,7 @@ $conf = array(
  * reverse proxies. Otherwise, the client could directly connect to
  * your web server spoofing the X-Forwarded-For headers.
  */
-#   'reverse_proxy_addresses' => array('a.b.c.d', ...), // Leave the comma here.
-);
+# $conf['reverse_proxy_addresses'] = array('a.b.c.d', ...);
 
 /**
  * Page caching:
