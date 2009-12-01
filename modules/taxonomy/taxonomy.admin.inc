@@ -222,6 +222,7 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
       break;
   }
 
+  $form_state['values']['vid'] = $vocabulary->vid;
   $form_state['vid'] = $vocabulary->vid;
   $form_state['redirect'] = 'admin/structure/taxonomy';
 }
@@ -811,9 +812,9 @@ function taxonomy_form_term_submit($form, &$form_state) {
     taxonomy_vocabulary_save($form['#vocabulary']);
   }
 
+  $form_state['values']['tid'] = $term->tid;
   $form_state['tid'] = $term->tid;
   $form_state['redirect'] = 'admin/structure/taxonomy';
-  return;
 }
 
 /**

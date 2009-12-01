@@ -277,6 +277,7 @@ function user_profile_form_submit($form, &$form_state) {
   $edit = (array)$edit;
 
   user_save($account, $edit, $category);
+  $form_state['values']['uid'] = $account->uid;
 
   // Clear the page cache because pages can contain usernames and/or profile information:
   cache_clear_all();

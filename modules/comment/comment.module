@@ -2031,6 +2031,7 @@ function comment_form_submit($form, &$form_state) {
     }
 
     comment_save($comment);
+    $form_state['values']['cid'] = $comment->cid;
     // Explain the approval queue if necessary.
     if ($comment->status == COMMENT_NOT_PUBLISHED) {
       if (!user_access('administer comments')) {

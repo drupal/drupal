@@ -3166,6 +3166,7 @@ function user_register_submit($form, &$form_state) {
     return;
   }
   $form_state['user'] = $account;
+  $form_state['values']['uid'] = $account->uid;
 
   watchdog('user', 'New user: %name (%email).', array('%name' => $form_state['values']['name'], '%email' => $form_state['values']['mail']), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
 
