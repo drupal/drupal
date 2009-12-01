@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.52 2009/11/12 06:46:44 dries Exp $
+// $Id: comment.install,v 1.53 2009/12/01 13:35:24 dries Exp $
 
 /**
  * @file
@@ -205,6 +205,13 @@ function comment_update_7010() {
     'description' => 'The {comment}.cid of the last comment.',
   ));
   db_add_index('node_comment_statistics', 'cid', array('cid'));
+}
+
+/**
+ * Add an index to node_comment_statistics on comment_count.
+ */
+function comment_update_7011() {
+  db_add_index('node_comment_statistics', 'comment_count', array('comment_count'));
 }
 
 /**
