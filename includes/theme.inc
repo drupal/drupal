@@ -1243,6 +1243,73 @@ function theme_render_template($template_file, $variables) {
 }
 
 /**
+ * Enable a given list of themes.
+ *
+ * @param $theme_list
+ *   An array of theme names.
+ */
+function theme_enable($theme_list) {
+  drupal_clear_css_cache();
+
+  foreach ($theme_list as $key) {
+    db_update('system')
+      ->fields(array('status' => 1))
+      ->condition('type', 'theme')
+      ->condition('name', $key)
+      ->execute();
+  }
+
+  list_themes(TRUE);
+  menu_rebuild();
+  drupal_theme_rebuild();
+
+  // Notify locale module about new themes being enabled, so translations can
+  // be imported. This might start a batch, and only return to the redirect
+  // path after that.
+  module_invoke('locale', 'system_update', $theme_list);
+
+  // Invoke hook_themes_enabled after the themes have been enabled.
+  module_invoke_all('themes_enabled', $theme_list);
+
+  return;
+}
+
+/**
+ * Disable a given list of themes.
+ *
+ * @param $theme_list
+ *   An array of theme names.
+ */
+function theme_disable($theme_list) {
+  // Don't disable the default theme.
+  if ($pos = array_search(variable_get('theme_default', 'garland'), $theme_list) !== FALSE) {
+    unset($theme_list[$pos]);
+    if (empty($theme_list)) {
+      return;
+    }
+  }
+
+  drupal_clear_css_cache();
+
+  foreach ($theme_list as $key) {
+    db_update('system')
+      ->fields(array('status' => 0))
+      ->condition('type', 'theme')
+      ->condition('name', $key)
+      ->execute();
+  }
+
+  list_themes(TRUE);
+  menu_rebuild();
+  drupal_theme_rebuild();
+
+  // Invoke hook_themes_enabled after the themes have been enabled.
+  module_invoke_all('themes_disabled', $theme_list);
+
+  return;
+}
+
+/**
  * @defgroup themeable Default theme implementations
  * @{
  * Functions and templates that present output to the user, and can be

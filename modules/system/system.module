@@ -133,8 +133,8 @@ function system_help($path, $arg) {
  */
 function system_theme() {
   return array_merge(drupal_common_theme(), array(
-    'system_themes_form' => array(
-      'render element' => 'form',
+    'system_themes_page' => array(
+      'variables' => array('theme_groups' => NULL),
       'file' => 'system.admin.inc',
     ),
     'system_settings_form' => array(
@@ -581,23 +581,44 @@ function system_menu() {
   $items['admin/appearance'] = array(
     'title' => 'Appearance',
     'description' => 'Select and configure your site theme.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_themes_form'),
+    'page callback' => 'system_themes_page',
     'access arguments' => array('administer site configuration'),
     'position' => 'left',
     'weight' => -6,
     'file' => 'system.admin.inc',
   );
-  $items['admin/appearance/select'] = array(
+  $items['admin/appearance/list'] = array(
     'title' => 'List',
-    'description' => 'Select the default theme for your site.',
+    'description' => 'Select and configure your site theme.',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -1,
     'file' => 'system.admin.inc',
   );
+  $items['admin/appearance/enable'] = array(
+    'title' => 'Enable theme',
+    'page callback' => 'system_theme_enable',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/appearance/disable'] = array(
+    'title' => 'Disable theme',
+    'page callback' => 'system_theme_disable',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/appearance/default'] = array(
+    'title' => 'Set default theme',
+    'page callback' => 'system_theme_default',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
+  );
   $items['admin/appearance/settings'] = array(
-    'title' => 'Configure',
+    'title' => 'Settings',
     'description' => 'Configure default and theme specific settings.',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('system_theme_settings'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,

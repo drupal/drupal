@@ -1185,9 +1185,10 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
    * Test the administration theme functionality.
    */
   function testAdministrationTheme() {
+    theme_enable(array('stark'));
+    variable_set('theme_default', 'stark');
     // Enable an administration theme and show it on the node admin pages.
     $edit = array(
-      'theme_default' => 'stark',
       'admin_theme' => 'garland',
       'node_admin_theme' => TRUE,
     );
@@ -1218,8 +1219,8 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $this->assertRaw('themes/stark', t('Site default theme used on the add content page.'));
 
     // Reset to the default theme settings.
+    variable_set('theme_default', 'garland');
     $edit = array(
-      'theme_default' => 'garland',
       'admin_theme' => '0',
       'node_admin_theme' => FALSE,
     );

@@ -497,34 +497,11 @@ function block_form_user_profile_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
- */
-function block_form_system_themes_form_alter(&$form, &$form_state) {
-  // This function needs to fire before the theme changes are recorded in the
-  // database, otherwise it will populate the default list of blocks from the
-  // new theme, which is empty.
-  array_unshift($form['#submit'], 'block_system_themes_form_submit');
-}
-
-/**
  * Initialize blocks for enabled themes.
  */
-function block_system_themes_form_submit(&$form, &$form_state) {
-  if ($form_state['values']['op'] == t('Save configuration')) {
-    if (is_array($form_state['values']['status'])) {
-      foreach ($form_state['values']['status'] as $key => $choice) {
-        if ($choice || $form_state['values']['theme_default'] == $key) {
-          block_theme_initialize($key);
-        }
-      }
-    }
-    if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] !== variable_get('admin_theme', 0)) {
-      // If we're changing themes, make sure the theme has its blocks initialized.
-      $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', 0, 1, array(':theme' => $form_state['values']['admin_theme']))->fetchField();
-      if (!$has_blocks) {
-        block_theme_initialize($form_state['values']['admin_theme']);
-      }
-    }
+function block_themes_enabled($theme_list) {
+  foreach ($theme_list as $theme) {
+    block_theme_initialize($theme);
   }
 }
 

@@ -522,8 +522,87 @@ html.js .js-hide {
 /*
 ** Styles for the system themes page (admin/appearance)
 */
-#system-themes-form div.incompatible {
+.system-themes-list {
+  margin-bottom: 20px;
+}
+.system-themes-list-disabled {
+  border-top: 1px solid #cdcdcd;
+  padding-top: 20px;
+}
+.system-themes-list h2 {
+  margin: 0;
+}
+.theme-selector {
+  padding-top: 20px;
+}
+.theme-selector .screenshot,
+.theme-selector .no-screenshot {
+  border: 1px solid #e0e0d8;
+  padding: 2px;
+  vertical-align: bottom;
+  width: 294px;
+  height: 219px;
+  line-height: 219px;
+  text-align: center;
+}
+.theme-default .screenshot {
+  border: 1px solid #aaa;
+}
+.system-themes-list-enabled .theme-selector .screenshot,
+.system-themes-list-enabled .theme-selector .no-screenshot {
+  float: left; /* LTR */
+  margin: 0 20px 0 0; /* LTR */
+}
+.system-themes-list-disabled .theme-selector .screenshot,
+.system-themes-list-disabled .theme-selector .no-screenshot {
+  width: 194px;
+  height: 144px;
+  line-height: 144px;
+}
+.theme-selector h3 {
+  font-weight: normal;
+}
+.theme-default h3 {
   font-weight: bold;
+}
+.system-themes-list-enabled .theme-selector h3 {
+  margin-top: 0;
+}
+.system-themes-list-disabled .theme-selector {
+  width: 300px;
+  float: left; /* LTR */
+  padding: 20px 20px 20px 0; /* LTR */
+}
+.system-themes-list-enabled .theme-info {
+  max-width: 940px;
+}
+.system-themes-list-disabled .theme-info {
+  min-height: 170px;
+}
+.theme-selector .incompatible {
+  margin-top: 10px;
+  font-weight: bold;
+}
+.theme-selector .operations {
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+.theme-selector .operations li {
+  float: left; /* LTR */
+  margin: 0;
+  padding: 0 0.7em;
+  list-style-type: none;
+  border-right: 1px solid #cdcdcd;  /* LTR */
+}
+.theme-selector .operations li.last {
+  padding: 0 0 0 0.7em; /* LTR */
+  border-right: none; /* LTR */
+}
+.theme-selector .operations li.first {
+  padding: 0 0.7em 0 0; /* LTR */
+}
+#system-themes-admin-form {
+  clear: left;
 }
 
 /*

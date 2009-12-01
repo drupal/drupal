@@ -80,10 +80,7 @@ class MenuIncTestCase extends DrupalWebTestCase {
     $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
 
     // Now enable the theme and request it again.
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
-    $this->drupalLogin($admin_user);
-    $this->drupalPost('admin/appearance', array('status[stark]' => 1), t('Save configuration'));
-    $this->drupalLogout();
+    theme_enable(array('stark'));
     $this->drupalGet('menu-test/theme-callback/use-stark-theme');
     $this->assertText('Requested theme: stark. Actual theme: stark.', t('The theme callback system uses an optional theme once it has been enabled.'));
     $this->assertRaw('stark/layout.css', t("The optional theme's CSS appears on the page."));

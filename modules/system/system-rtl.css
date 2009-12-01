@@ -90,6 +90,29 @@ input.password-confirm {
   margin-left: 10px;
   margin-right: 0;
 }
+
+.system-themes-list-enabled .theme-selector .screenshot,
+.system-themes-list-enabled .theme-selector .no-screenshot {
+  float: right;
+  margin: 0 0 0 20px;
+}
+.system-themes-list-disabled .theme-selector {
+  float: right;
+  padding: 20px 0 20px 20px;
+}
+.theme-selector .operations li {
+  float: right;
+  border-right: none;
+  border-left: 1px solid #cdcdcd;
+}
+.theme-selector .operations li.last {
+  padding: 0 0.7em 0 0;
+  border-left: none;
+}
+.theme-selector .operations li.first {
+  padding: 0 0 0 0.7em;
+}
+
 .password-strength-title {
   float: right;
 }

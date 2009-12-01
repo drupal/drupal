@@ -722,6 +722,21 @@ div.admin-panel {
   display: block;
 }
 
+/* admin/appearance */
+#block-system-main #system-themes-page h2 {
+  font-weight: normal;
+  text-transform: uppercase;
+}
+#block-system-main .theme-selector h3 {
+  font-weight: normal;
+}
+#block-system-main .theme-default h3 {
+  font-weight: bold;
+}
+#block-system-main .system-themes-list-enabled .theme-selector h3 {
+  margin-top: 0;
+}
+
 /* admin/content and admin/people */
 #block-system-main dl.multiselect,
 #block-system-main dl.multiselect dt,

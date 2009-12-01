@@ -192,12 +192,9 @@ function system_settings_overview() {
 }
 
 /**
- * Menu callback; displays a listing of all themes.
- *
- * @ingroup forms
- * @see system_themes_form_submit()
+ * Retrieve the list of themes that are not hidden.
  */
-function system_themes_form() {
+function _system_theme_list() {
   // Get current list of themes.
   $themes = system_rebuild_theme_data();
 
@@ -209,13 +206,25 @@ function system_themes_form() {
   }
 
   uasort($themes, 'system_sort_modules_by_info_name');
+  return $themes;
+}
 
-  $status = array();
-  $incompatible_core = array();
-  $incompatible_php = array();
+/**
+ * Menu callback; displays a listing of all themes.
+ */
+function system_themes_page() {
+  // Get current list of themes.
+  $themes =& _system_theme_list();
 
-  foreach ($themes as $theme) {
-    $screenshot = NULL;
+  $theme_default = variable_get('theme_default', 'garland');
+  $theme_groups  = array();
+
+  foreach ($themes as &$theme) {
+    $admin_theme_options[$theme->name] = $theme->info['name'];
+    $theme->is_default = ($theme->name == $theme_default);
+
+    // Identify theme screenshot.
+    $theme->screenshot = NULL;
     // Create a list which includes the current theme and all its base themes.
     if (isset($themes[$theme->name]->base_themes)) {
       $theme_keys = array_keys($themes[$theme->name]->base_themes);
@@ -227,60 +236,102 @@ function system_themes_form() {
     // Look for a screenshot in the current theme or in its closest ancestor.
     foreach (array_reverse($theme_keys) as $theme_key) {
       if (isset($themes[$theme_key]) && file_exists($themes[$theme_key]->info['screenshot'])) {
-        $screenshot = $themes[$theme_key]->info['screenshot'];
+        $theme->screenshot = array(
+          'path' => $themes[$theme_key]->info['screenshot'],
+          'alt' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
+          'title' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
+          'attributes' => array('class' => array('screenshot')),
+          'getsize' => FALSE,
+        );
         break;
       }
     }
-    $screenshot = $screenshot ? theme('image', array('path' => $screenshot, 'alt' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])), 'title' => '', 'attributes' => array('class' => array('screenshot')), 'getsize' => FALSE)) : t('no screenshot');
 
-    $form[$theme->name]['screenshot'] = array('#markup' => $screenshot);
-    $form[$theme->name]['info'] = array(
-      '#type' => 'value',
-      '#value' => $theme->info,
-    );
-    $options[$theme->name] = $theme->info['name'];
-
-    $form[$theme->name]['operations'] = drupal_theme_access($theme) ? array('#type' => 'link', '#title' => t('configure'), '#href' => 'admin/appearance/settings/' . $theme->name) : array();
-
-    if (!empty($theme->status)) {
-      $status[] = $theme->name;
+    if (empty($theme->status)) {
+     // Ensure this theme is compatible with this version of core.
+     // Require the 'content' region to make sure the main page
+     // content has a common place in all themes.
+      $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']));
+      $theme->incompatible_php = version_compare(phpversion(), $theme->info['php']) < 0;
     }
-    else {
-      // Ensure this theme is compatible with this version of core.
-      // Require the 'content' region to make sure the main page
-      // content has a common place in all themes.
-      if (!isset($theme->info['core']) || ($theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']))) {
-        $incompatible_core[] = $theme->name;
+    $query['token'] = drupal_get_token('system-theme-operation-link');
+    $theme->operations = array();
+    if (!empty($theme->status) || !$theme->incompatible_core && !$theme->incompatible_php) {
+      // Create the operations links.
+      $query['theme'] = $theme->name;
+      if (drupal_theme_access($theme)) {
+        $theme->operations[] = array(
+          'title' => t('Settings'),
+          'href' => 'admin/appearance/settings/' . $theme->name,
+          'attributes' => array('title' => t('Settings for !theme theme', array('!theme' => $theme->info['name']))),
+        );
       }
-      if (version_compare(phpversion(), $theme->info['php']) < 0) {
-        $incompatible_php[$theme->name] = $theme->info['php'];
+      if (!empty($theme->status)) {
+        if (!$theme->is_default) {
+          $theme->operations[] = array(
+            'title' => t('Disable'),
+            'href' => 'admin/appearance/disable',
+            'query' => $query,
+            'attributes' => array('title' => t('Disable !theme theme', array('!theme' => $theme->info['name']))),
+          );
+          $theme->operations[] = array(
+            'title' => t('Set default'),
+            'href' => 'admin/appearance/default',
+            'query' => $query,
+            'attributes' => array('title' => t('Set !theme as default theme', array('!theme' => $theme->info['name']))),
+          );
+        }
+      }
+      else {
+        $theme->operations[] = array(
+          'title' => t('Enable'),
+          'href' => 'admin/appearance/enable',
+          'query' => $query,
+          'attributes' => array('title' => t('Enable !theme theme', array('!theme' => $theme->info['name']))),
+        );
       }
     }
+
+    // Add notes to default and administration theme.
+    $theme->notes = array();
+    $theme->classes = array();
+    if ($theme->is_default) {
+      $theme->classes[] = 'theme-default';
+      $theme->notes[] = t('default theme');
+    }
+
+    // Sort enabled and disabled themes into their own groups.
+    $theme_groups[$theme->status ? 'enabled' : 'disabled'][] = $theme;
   }
 
-  $form['status'] = array(
-    '#type' => 'checkboxes',
-    '#options' => array_fill_keys(array_keys($options), ''),
-    '#default_value' => $status,
-    '#incompatible_themes_core' => drupal_map_assoc($incompatible_core),
-    '#incompatible_themes_php' => $incompatible_php,
-  );
-  $form['theme_default'] = array(
-    '#type' => 'radios',
-    '#options' => array_fill_keys(array_keys($options), ''),
-    '#default_value' => variable_get('theme_default', 'garland'),
+  // There are two possible theme groups.
+  $theme_group_titles = array(
+    'enabled' => format_plural(count($theme_groups['enabled']), 'Enabled theme', 'Enabled themes'),
+    'disabled' => format_plural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes'),
   );
 
+  uasort($theme_groups['enabled'], 'system_sort_themes');
+  drupal_alter('system_themes_page', $theme_groups);
+
+  $admin_form = drupal_get_form('system_themes_admin_form', $admin_theme_options);
+  return theme('system_themes_page', array('theme_groups' => $theme_groups, 'theme_group_titles' => $theme_group_titles)) . drupal_render($admin_form);
+}
+
+/**
+ * Form to select the administration theme.
+ *
+ * @ingroup forms
+ * @see system_themes_admin_form_submit()
+ */
+function system_themes_admin_form($form, &$form_state, $theme_options) {
   // Administration theme settings.
   $form['admin_theme'] = array(
     '#type' => 'fieldset',
     '#title' => t('Administration theme'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
   $form['admin_theme']['admin_theme'] = array(
     '#type' => 'select',
-    '#options' => array(0 => t('Default theme')) + $options,
+    '#options' => array(0 => t('Default theme')) + $theme_options,
     '#title' => t('Administration theme'),
     '#description' => t('Choose "Default theme" to always use the same theme as the rest of the site.'),
     '#default_value' => variable_get('admin_theme', 0),
@@ -290,84 +341,107 @@ function system_themes_form() {
     '#title' => t('Use the administration theme when editing or creating content'),
     '#default_value' => variable_get('node_admin_theme', '0'),
   );
-
-  $form['buttons']['submit'] = array(
+  $form['admin_theme']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
-
   return $form;
 }
 
 /**
- * Process system_themes_form form submissions.
+ * Process system_themes_admin_form form submissions.
  */
-function system_themes_form_submit($form, &$form_state) {
-  drupal_clear_css_cache();
+function system_themes_admin_form_submit($form, &$form_state) {
+  drupal_set_message(t('The configuration options have been saved.'));
+  variable_set('admin_theme', $form_state['values']['admin_theme']);
+  variable_set('node_admin_theme', $form_state['values']['node_admin_theme']);
+}
 
-  // Store list of previously enabled themes and disable all themes
-  $old_theme_list = $new_theme_list = array();
-  foreach (list_themes() as $theme) {
-    if ($theme->status) {
-      $old_theme_list[] = $theme->name;
+/**
+ * Menu callback; Enables a theme.
+ */
+function system_theme_enable() {
+  if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
+    $theme = $_REQUEST['theme'];
+    // Get current list of themes.
+    $themes =& _system_theme_list();
+
+    // Check if the specified theme is one recognized by the system.
+    if (!empty($themes[$theme])) {
+      theme_enable(array($theme));
+      drupal_set_message(t('The %theme theme has been enabled.', array('%theme' => $themes[$theme]->info['name'])));
     }
+    else {
+      drupal_set_message(t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
+    }
+    drupal_goto('admin/appearance');
   }
-  db_update('system')
-    ->fields(array('status' => 0))
-    ->condition('type', 'theme')
-    ->execute();
+  return drupal_access_denied();
+}
 
-  if ($form_state['values']['op'] == t('Save configuration')) {
-    if (is_array($form_state['values']['status'])) {
-      foreach ($form_state['values']['status'] as $key => $choice) {
-        // Always enable the default theme, despite its status checkbox being checked:
-        if ($choice || $form_state['values']['theme_default'] == $key) {
-          $new_theme_list[] = $key;
-          db_update('system')
-            ->fields(array('status' => 1))
-            ->condition('type', 'theme')
-            ->condition('name', $key)
-            ->execute();
-        }
+/**
+ * Menu callback; Disables a theme.
+ */
+function system_theme_disable() {
+  if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
+    $theme = $_REQUEST['theme'];
+    // Get current list of themes.
+    $themes =& _system_theme_list();
+
+    // Check if the specified theme is one recognized by the system.
+    if (!empty($themes[$theme])) {
+      if ($theme == variable_get('theme_default', 'garland')) {
+        // Don't disable the default theme.
+        drupal_set_message(t('%theme is the default theme and cannot be disabled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
+      }
+      else {
+        theme_disable(array($theme));
+        drupal_set_message(t('The %theme theme has been disabled.', array('%theme' => $themes[$theme]->info['name'])));
       }
     }
-    if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != $form_state['values']['theme_default']) {
-      drupal_set_message(t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
-        '%admin_theme' => $form_state['values']['admin_theme'],
-        '%selected_theme' => $form_state['values']['theme_default'],
-      )));
+    else {
+      drupal_set_message(t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
     }
-
-    // Save the variables.
-    variable_set('theme_default', $form_state['values']['theme_default']);
-    variable_set('admin_theme', $form_state['values']['admin_theme']);
-    variable_set('node_admin_theme', $form_state['values']['node_admin_theme']);
+    drupal_goto('admin/appearance');
   }
-  else {
-    // Revert to defaults: only Garland is enabled.
-    variable_del('theme_default');
-    variable_del('admin_theme');
-    variable_del('node_admin_theme');
-    db_update('system')
-      ->fields(array('status' => 1))
-      ->condition('type', 'theme')
-      ->condition('name', 'garland')
-      ->execute();
-    $new_theme_list = array('garland');
+  return drupal_access_denied();
+}
+
+/**
+ * Menu callback; Set the default theme.
+ */
+function system_theme_default() {
+  if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
+    $theme = $_REQUEST['theme'];
+    // Get current list of themes.
+    $themes =& _system_theme_list();
+
+    // Check if the specified theme is one recognized by the system.
+    if (!empty($themes[$theme])) {
+      // Enable the theme if it is currently disabled.
+      if (empty($themes[$theme]->status)) {
+       theme_enable(array($theme));
+      }
+      // Set the default theme.
+      variable_set('theme_default', $theme);
+      // The status message depends on whether an admin theme is currently in use.
+      $admin_theme = variable_get('admin_theme', 0);
+      if ($admin_theme != $theme) {
+        drupal_set_message(t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
+          '%admin_theme' => $themes[$admin_theme]->info['name'],
+          '%selected_theme' => $themes[$theme]->info['name'],
+        )));
+      }
+      else {
+        drupal_set_message(t('%theme is now the default theme.', array('%theme' => $themes[$theme]->info['name'])));
+      }
+    }
+    else {
+      drupal_set_message(t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
+    }
+    drupal_goto('admin/appearance');
   }
-
-  list_themes(TRUE);
-  menu_rebuild();
-  drupal_theme_rebuild();
-  drupal_set_message(t('The configuration options have been saved.'));
-  $form_state['redirect'] = 'admin/appearance';
-
-  // Notify locale module about new themes being enabled, so translations can
-  // be imported. This might start a batch, and only return to the redirect
-  // path after that.
-  module_invoke('locale', 'system_update', array_diff($new_theme_list, $old_theme_list));
-
-  return;
+  return drupal_access_denied();
 }
 
 /**
@@ -799,6 +873,19 @@ function system_modules($form, $form_state = array()) {
  * Array sorting callback; sorts modules or themes by their name.
  */
 function system_sort_modules_by_info_name($a, $b) {
+  return strcasecmp($a->info['name'], $b->info['name']);
+}
+
+/**
+ * Array sorting callback; sorts modules or themes by their name.
+ */
+function system_sort_themes($a, $b) {
+  if ($a->is_default) {
+    return -1;
+  }
+  if ($b->is_default) {
+    return 1;
+  }
   return strcasecmp($a->info['name'], $b->info['name']);
 }
 
@@ -2418,61 +2505,56 @@ function theme_system_modules_uninstall($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - form: An associative array containing the structure of the form.
+ *   - theme_groups: An associative array containing groups of themes.
  *
  * @ingroup themeable
  */
-function theme_system_themes_form($variables) {
-  $form = $variables['form'];
+function theme_system_themes_page($variables) {
+  $theme_groups = $variables['theme_groups'];
 
-  foreach (element_children($form) as $key) {
-    // Only look for themes
-    if (!isset($form[$key]['info'])) {
+  $output = '<div id="system-themes-page">';
+
+  foreach ($variables['theme_group_titles'] as $state => $title) {
+    if (!count($theme_groups[$state])) {
+      // Skip this group of themes if no theme is there.
       continue;
     }
+    // Start new theme group.
+    $output .= '<div class="system-themes-list system-themes-list-'. $state .' clearfix"><h2>'. $title .'</h2>';
 
-    // Fetch info
-    $info = $form[$key]['info']['#value'];
-    // Localize theme description.
-    $description = t($info['description']);
-    // Make sure it is compatible and render the checkbox if so.
-    if (isset($form['status']['#incompatible_themes_core'][$key])) {
-      unset($form['status'][$key]);
-      $status = theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('incompatible'), 'title' => t('Incompatible with this version of Drupal core')));
-      $description .= '<div class="incompatible">' . t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) . '</div>';
-    }
-    elseif (isset($form['status']['#incompatible_themes_php'][$key])) {
-      unset($form['status'][$key]);
-      $status = theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('incompatible'), 'title' => t('Incompatible with this version of PHP')));
-      $php_required = $form['status']['#incompatible_themes_php'][$key];
-      if (substr_count($php_required, '.') < 2) {
-        $php_required .= '.*';
+    foreach($theme_groups[$state] as $theme) {
+
+      // Theme the screenshot.
+      $screenshot = $theme->screenshot ? theme('image', $theme->screenshot) : '<div class="no-screenshot">' . t('no screenshot') . '</div>';
+
+      // Localize the theme description.
+      $description = t($theme->info['description']);
+
+      // Style theme info
+      $notes = count($theme->notes) ? ' (' . join(', ', $theme->notes) . ')' : '';
+      $theme->classes[] = 'theme-selector';
+      $theme->classes[] = 'clearfix';
+      $output .= '<div class="'. join(' ', $theme->classes) .'">' . $screenshot . '<div class="theme-info"><h3>' . $theme->info['name'] . ' ' . (isset($theme->info['version']) ? $theme->info['version'] : '') . $notes . '</h3><div class="theme-description">' . $description . '</div>';
+
+      // Make sure to provide feedback on compatibility.
+      if (!empty($theme->incompatible_core)) {
+        $output .= '<div class="incompatible">' . t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) . '</div>';
       }
-      $description .= '<div class="incompatible">' . t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $php_required, '!php_version' => phpversion())) . '</div>';
+      elseif (!empty($theme->incompatible_php)) {
+        if (substr_count($theme->info['php'], '.') < 2) {
+          $theme->info['php'] .= '.*';
+        }
+        $output .= '<div class="incompatible">' . t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $theme->info['php'], '!php_version' => phpversion())) . '</div>';
+      }
+      else {
+        $output .= theme('links', array('links' => $theme->operations, 'attributes' => array('class' => array('operations', 'clearfix'))));
+      }
+      $output .= '</div></div>';
     }
-    else {
-      $status = drupal_render($form['status'][$key]);
-    }
-
-    // Style theme info
-    $theme = '<div class="theme-info"><h2>' . $info['name'] . '</h2><div class="description">' . $description . '</div></div>';
-
-    // Build rows
-    $row = array();
-    $row[] = drupal_render($form[$key]['screenshot']);
-    $row[] = $theme;
-    $row[] = isset($info['version']) ? $info['version'] : '';
-    $row[] = array('data' => $status, 'align' => 'center');
-    if ($form['theme_default']) {
-      $row[] = array('data' => drupal_render($form['theme_default'][$key]), 'align' => 'center');
-      $row[] = array('data' => drupal_render($form[$key]['operations']), 'align' => 'center');
-    }
-    $rows[] = $row;
+    $output .= '</div>';
   }
+  $output .= '</div>';
 
-  $header = array(t('Screenshot'), t('Name'), t('Version'), t('Enabled'), t('Default'), t('Operations'));
-  $output = theme('table', array('header' => $header, 'rows' => $rows));
-  $output .= drupal_render_children($form);
   return $output;
 }
 

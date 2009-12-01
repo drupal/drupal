@@ -396,22 +396,30 @@ function update_cron() {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implement hook_themes_enabled().
  *
- * Adds a submit handler to the system modules and themes forms, so that if a
- * site admin saves either form, we invalidate the cache of available updates.
- *
- * @see _update_cache_clear()
+ * If themes are enabled, we invalidate the cache of available updates.
  */
-function update_form_system_themes_form_alter(&$form, $form_state) {
-  $form['#submit'][] = 'update_cache_clear_submit';
+function update_themes_enabled($themes) {
+  // Clear all update module caches.
+  _update_cache_clear();
+}
+
+/**
+ * Implement hook_themes_disabled().
+ *
+ * If themes are disabled, we invalidate the cache of available updates.
+ */
+function update_themes_disabled($themes) {
+  // Clear all update module caches.
+  _update_cache_clear();
 }
 
 /**
  * Implement hook_form_FORM_ID_alter().
  *
- * Adds a submit handler to the system modules and themes forms, so that if a
- * site admin saves either form, we invalidate the cache of available updates.
+ * Adds a submit handler to the system modules form, so that if a site admin
+ * saves the form, we invalidate the cache of available updates.
  *
  * @see _update_cache_clear()
  */

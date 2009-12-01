@@ -237,7 +237,7 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
   function testNonDefaultBlockAdmin() {
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
     $this->drupalLogin($admin_user);
-    $this->drupalPost('admin/appearance', array('status[stark]' => 1), t('Save configuration'));
+    theme_enable(array('stark'));
     $this->drupalGet('admin/structure/block/list/stark');
   }
 }
@@ -277,7 +277,8 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
 
     // Turn on the Stark theme and ensure that it contains all of the blocks
     // that Garland did.
-    $this->drupalPost('admin/appearance', array('theme_default' => 'stark'), t('Save configuration'));
+    theme_enable(array('stark'));
+    variable_set('theme_default', 'stark');
     $result = db_query("SELECT * FROM {block} WHERE theme='stark'");
     foreach ($result as $block) {
       unset($block->theme, $block->bid);

@@ -1075,6 +1075,13 @@ tr.taxonomy-term-divider-bottom {
   border-top: 1px dotted #CCC;
 }
 
+.theme-selector h3 {
+  margin: 10px 0;
+}
+.theme-selector .operations li {
+  list-style-image: none;
+}
+
 /**
  * CSS support
  */
