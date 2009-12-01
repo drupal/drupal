@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.103 2009/11/15 08:48:39 dries Exp $
+// $Id: system.api.php,v 1.104 2009/12/01 00:39:34 dries Exp $
 
 /**
  * @file
@@ -2669,6 +2669,23 @@ function hook_page_delivery_callback_alter(&$callback) {
   // from jQuery, deliver it instead as an AJAX response.
   if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' && $callback == 'drupal_deliver_html_page') {
     $callback = 'ajax_deliver';
+  }
+}
+
+/**
+ * Alters theme operation links.
+ *
+ * @param $theme_groups
+ *   An associative array containing groups of themes.
+ *
+ * @see system_themes_page()
+ */
+function hook_system_themes_page_alter(&$theme_groups) {
+  foreach ($theme_groups as $state => &$group) {
+    foreach($theme_groups[$state] as &$theme) {
+      // Add a foo link to each list of theme operations.
+      $theme->operations[] = l(t('Foo'), 'admin/appearance/foo', array('query' => array('theme' => $theme->name)));
+    }
   }
 }
 

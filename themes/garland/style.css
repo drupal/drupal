@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.68 2009/11/22 03:25:42 webchick Exp $ */
+/* $Id: style.css,v 1.69 2009/12/01 00:39:34 dries Exp $ */
 
 /**
  * Generic elements
@@ -1073,6 +1073,13 @@ tr.taxonomy-term-divider-top {
 
 tr.taxonomy-term-divider-bottom {
   border-top: 1px dotted #CCC;
+}
+
+.theme-selector h3 {
+  margin: 10px 0;
+}
+.theme-selector .operations li {
+  list-style-image: none;
 }
 
 /**

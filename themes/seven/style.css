@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.31 2009/11/27 07:09:56 dries Exp $ */
+/* $Id: style.css,v 1.32 2009/12/01 00:39:35 dries Exp $ */
 
 /**
  * Generic elements
@@ -720,6 +720,21 @@ div.admin-panel {
 
 .container-inline fieldset {
   display: block;
+}
+
+/* admin/appearance */
+#block-system-main #system-themes-page h2 {
+  font-weight: normal;
+  text-transform: uppercase;
+}
+#block-system-main .theme-selector h3 {
+  font-weight: normal;
+}
+#block-system-main .theme-default h3 {
+  font-weight: bold;
+}
+#block-system-main .system-themes-list-enabled .theme-selector h3 {
+  margin-top: 0;
 }
 
 /* admin/content and admin/people */
