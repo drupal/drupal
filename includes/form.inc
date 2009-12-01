@@ -220,21 +220,6 @@ function drupal_build_form($form_id, &$form_state) {
     // altering the $form_state variable, which is passed into them by
     // reference.
     drupal_process_form($form_id, $form, $form_state);
-
-    // After processing the form, the form builder or a #process callback may
-    // have set $form_state['cache'] to indicate that the original form and the
-    // $form_state shall be cached. But the form may only be cached if the
-    // special 'no_cache' property is not set to TRUE.
-    if (!empty($form_state['cache']) && empty($form_state['no_cache'])) {
-      // Cache the original, unprocessed form upon initial build of the form.
-      if (isset($original_form)) {
-        form_set_cache($form_build_id, $original_form, $form_state);
-      }
-      // After processing a cached form, only update the cached form state.
-      else {
-        form_set_cache($form_build_id, NULL, $form_state);
-      }
-    }
   }
 
   // Most simple, single-step forms will be finished by this point --
@@ -251,6 +236,20 @@ function drupal_build_form($form_id, &$form_state) {
   // into drupal_get_form().
   if ($form_state['rebuild'] && $form_state['submitted'] && !form_get_errors()) {
     $form = drupal_rebuild_form($form_id, $form_state);
+  }
+  // After processing the form, the form builder or a #process callback may
+  // have set $form_state['cache'] to indicate that the original form and the
+  // $form_state shall be cached. But the form may only be cached if the
+  // special 'no_cache' property is not set to TRUE and we are not rebuilding.
+  elseif (isset($form_build_id) && $form_state['cache'] && empty($form_state['no_cache'])) {
+    // Cache the original, unprocessed form upon initial build of the form.
+    if (isset($original_form)) {
+      form_set_cache($form_build_id, $original_form, $form_state);
+    }
+    // After processing a cached form, only update the cached form state.
+    else {
+      form_set_cache($form_build_id, NULL, $form_state);
+    }
   }
 
   // Don't override #theme if someone already set it.
