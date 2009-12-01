@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.847 2009/12/01 13:14:42 dries Exp $
+// $Id: system.module,v 1.848 2009/12/01 13:25:29 dries Exp $
 
 /**
  * @file
@@ -3634,6 +3634,8 @@ function system_build_contextual_links($element) {
   $build = array();
   if ($links) {
     $build = array(
+      '#prefix' => '<div class="contextual-links-wrapper">',
+      '#suffix' => '</div>',
       '#theme' => 'links',
       '#links' => $links,
       '#attributes' => array('class' => array('contextual-links')),

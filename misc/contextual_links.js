@@ -1,4 +1,4 @@
-// $Id: contextual_links.js,v 1.1 2009/10/17 05:50:27 webchick Exp $
+// $Id: contextual_links.js,v 1.2 2009/12/01 13:25:28 dries Exp $
 (function ($) {
 
 Drupal.contextualLinks = Drupal.contextualLinks || {};
@@ -8,8 +8,17 @@ Drupal.contextualLinks = Drupal.contextualLinks || {};
  */
 Drupal.behaviors.contextualLinks = {
   attach: function (context) {
-    $('ul.contextual-links', context).once('contextual-links', function () {
-      $(this).hover(Drupal.contextualLinks.hover, Drupal.contextualLinks.hoverOut);
+    $('div.contextual-links-wrapper', context).once('contextual-links', function () {
+      var $wrapper = $(this);
+      var $trigger = $('<a class="contextual-links-trigger" href="#" />').text(Drupal.t('Configure')).click(
+        function () {
+          $wrapper.find('ul.contextual-links').slideToggle(100);
+          $wrapper.toggleClass('contextual-links-active');
+          return false;
+        }
+      );
+      $wrapper.prepend($trigger)
+        .closest('.contextual-links-region').hover(Drupal.contextualLinks.hover, Drupal.contextualLinks.hoverOut);
     });
   }
 };
@@ -18,16 +27,16 @@ Drupal.behaviors.contextualLinks = {
  * Enables outline for the region contextual links are associated with.
  */
 Drupal.contextualLinks.hover = function () {
-  $(this).addClass('contextual-links-link-active')
-    .closest('.contextual-links-region').addClass('contextual-links-region-active');
+  $(this).closest('.contextual-links-region').addClass('contextual-links-region-active');
 };
 
 /**
  * Disables outline for the region contextual links are associated with.
  */
 Drupal.contextualLinks.hoverOut = function () {
-  $(this).removeClass('contextual-links-link-active')
-    .closest('.contextual-links-region').removeClass('contextual-links-region-active');
+  $(this).closest('.contextual-links-region').removeClass('contextual-links-region-active')
+    .find('.contextual-links-active').removeClass('contextual-links-active')
+    .find('ul.contextual-links').hide();
 };
 
 })(jQuery);
