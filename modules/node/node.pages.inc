@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.100 2009/11/08 10:02:41 webchick Exp $
+// $Id: node.pages.inc,v 1.101 2009/12/01 03:07:34 dries Exp $
 
 /**
  * @file
@@ -109,6 +109,10 @@ function node_object_prepare($node) {
  */
 function node_form($form, &$form_state, $node) {
   global $user;
+  // This form has its own multistep persistance.
+  if ($form_state['rebuild']) {
+    $form_state['input'] = array();
+  }
 
   if (isset($form_state['node'])) {
     $node = (object)($form_state['node'] + (array)$node);
