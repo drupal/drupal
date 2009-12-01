@@ -235,7 +235,7 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
    * Test non-default theme admin.
    */
   function testNonDefaultBlockAdmin() {
-    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer themes'));
     $this->drupalLogin($admin_user);
     theme_enable(array('stark'));
     $this->drupalGet('admin/structure/block/list/stark');
@@ -259,7 +259,7 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
    */
   function testNewDefaultThemeBlocks() {
     // Create administrative user.
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(array('administer themes'));
     $this->drupalLogin($admin_user);
 
     // Ensure no other theme's blocks are in the block table yet.
@@ -304,7 +304,7 @@ class BlockAdminThemeTestCase extends DrupalWebTestCase {
    */
   function testAdminTheme() {
     // Create administrative user.
-    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer themes'));
     $this->drupalLogin($admin_user);
 
     // Ensure that access to block admin page is denied when theme is disabled.

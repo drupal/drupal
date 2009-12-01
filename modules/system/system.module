@@ -204,8 +204,14 @@ function system_theme() {
  */
 function system_permission() {
   return array(
+    'administer modules' => array(
+      'title' => t('Administer modules'),
+    ),
     'administer site configuration' => array(
       'title' => t('Administer site configuration'),
+    ),
+    'administer themes' => array(
+      'title' => t('Administer themes'),
     ),
     'administer software updates' => array(
       'title' => t('Run software updates'),
@@ -582,7 +588,7 @@ function system_menu() {
     'title' => 'Appearance',
     'description' => 'Select and configure your site theme.',
     'page callback' => 'system_themes_page',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer themes'),
     'position' => 'left',
     'weight' => -6,
     'file' => 'system.admin.inc',
@@ -597,21 +603,21 @@ function system_menu() {
   $items['admin/appearance/enable'] = array(
     'title' => 'Enable theme',
     'page callback' => 'system_theme_enable',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer themes'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/appearance/disable'] = array(
     'title' => 'Disable theme',
     'page callback' => 'system_theme_disable',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer themes'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/appearance/default'] = array(
     'title' => 'Set default theme',
     'page callback' => 'system_theme_default',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer themes'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
@@ -620,7 +626,7 @@ function system_menu() {
     'description' => 'Configure default and theme specific settings.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_theme_settings'),
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer themes'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'system.admin.inc',
   );
@@ -661,7 +667,7 @@ function system_menu() {
     'description' => 'Enable or disable add-on modules for your site.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_modules'),
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer modules'),
     'file' => 'system.admin.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
@@ -672,19 +678,19 @@ function system_menu() {
   );
   $items['admin/config/modules/list/confirm'] = array(
     'title' => 'List',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer modules'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/config/modules/uninstall'] = array(
     'title' => 'Uninstall',
     'page arguments' => array('system_modules_uninstall'),
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer modules'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/modules/uninstall/confirm'] = array(
     'title' => 'Uninstall',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer modules'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
@@ -1471,7 +1477,7 @@ function blocked_ip_load($iid) {
  * Menu item access callback - only admin or enabled themes can be accessed.
  */
 function _system_themes_access($theme) {
-  return user_access('administer site configuration') && drupal_theme_access($theme);
+  return user_access('administer themes') && drupal_theme_access($theme);
 }
 
 /**

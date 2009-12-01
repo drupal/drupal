@@ -63,7 +63,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
 
   function setUp() {
     parent::setUp('update_test', 'update');
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer modules'));
     $this->drupalLogin($admin_user);
   }
 

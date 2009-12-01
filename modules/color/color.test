@@ -23,7 +23,7 @@ class ColorTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('color');
     // Create users.
-    $this->big_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->big_user = $this->drupalCreateUser(array('administer themes'));
   }
 
   /**

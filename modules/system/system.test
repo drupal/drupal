@@ -10,7 +10,7 @@ class ModuleTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('system_test');
 
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration'));
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($this->admin_user);
   }
 
@@ -1023,6 +1023,7 @@ class SystemMainContentFallback extends DrupalWebTestCase {
     $this->admin_user = $this->drupalCreateUser(array(
       'access administration pages',
       'administer site configuration',
+      'administer modules',
       'administer blocks',
       'administer nodes',
     ));
@@ -1050,7 +1051,7 @@ class SystemMainContentFallback extends DrupalWebTestCase {
 
     // At this point, no region is filled and fallback should be triggered.
     $this->drupalGet('admin/config/system/site-information');
-    $this->assertField('site_name', t('Admin interface still availble.'));
+    $this->assertField('site_name', t('Admin interface still available.'));
 
     // Fallback should not trigger when another module is handling content.
     $this->drupalGet('system-test/main-content-handling');
@@ -1071,7 +1072,7 @@ class SystemMainContentFallback extends DrupalWebTestCase {
     // Request a user* page and see if it is displayed.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('user/' . $this->web_user->uid . '/edit');
-    $this->assertField('mail', t('User interface still availble.'));
+    $this->assertField('mail', t('User interface still available.'));
 
     // Enable the block module again.
     $this->drupalLogin($this->admin_user);
@@ -1176,7 +1177,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration', 'bypass node access'));
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer themes', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
     $this->node = $this->drupalCreateNode();
   }
