@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.425 2009/12/01 18:39:56 dries Exp $
+// $Id: system.install,v 1.426 2009/12/01 19:19:49 webchick Exp $
 
 /**
  * @file
@@ -2808,7 +2808,7 @@ function system_update_7046() {
 /**
  * Normalize the front page path variable.
  */
-function system_update_7046() {
+function system_update_7047() {
   variable_set('site_frontpage', drupal_get_normal_path(variable_get('site_frontpage', 'node')));
 }
 
