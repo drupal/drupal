@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.424 2009/12/01 15:57:40 webchick Exp $
+// $Id: system.install,v 1.425 2009/12/01 18:39:56 dries Exp $
 
 /**
  * @file
@@ -2803,6 +2803,13 @@ function system_update_7046() {
       variable_set('admin_theme', 'garland');
     }
   }
+}
+
+/**
+ * Normalize the front page path variable.
+ */
+function system_update_7046() {
+  variable_set('site_frontpage', drupal_get_normal_path(variable_get('site_frontpage', 'node')));
 }
 
 /**

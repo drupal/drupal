@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.48 2009/11/20 06:12:45 webchick Exp $
+// $Id: path.inc,v 1.49 2009/12/01 18:39:56 dries Exp $
 
 /**
  * @file
@@ -332,7 +332,7 @@ function drupal_is_front_page() {
   if (!isset($is_front_page)) {
     // As drupal_path_initialize updates $_GET['q'] with the 'site_frontpage' path,
     // we can check it against the 'site_frontpage' variable.
-    $is_front_page = ($_GET['q'] == drupal_get_normal_path(variable_get('site_frontpage', 'node')));
+    $is_front_page = ($_GET['q'] == variable_get('site_frontpage', 'node'));
   }
 
   return $is_front_page;
