@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.34 2009/11/22 03:25:42 webchick Exp $
+// $Id: template.php,v 1.35 2009/12/01 15:57:40 webchick Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -18,6 +18,26 @@ function garland_breadcrumb($variables) {
 
     $output .= '<div class="breadcrumb">' . implode(' › ', $breadcrumb) . '</div>';
     return $output;
+  }
+}
+
+/**
+ * Override or insert variables into the maintenance page template.
+ */
+function garland_preprocess_maintenance_page(&$vars) {
+  // Toggle fixed or fluid width.
+  if (theme_get_setting('garland_width') == 'fluid') {
+    $vars['classes_array'][] = 'fluid-width';
+  }
+}
+
+/**
+ * Override or insert variables into the html template.
+ */
+function garland_preprocess_html(&$vars) {
+  // Toggle fixed or fluid width.
+  if (theme_get_setting('garland_width') == 'fluid') {
+    $vars['classes_array'][] = 'fluid-width';
   }
 }
 

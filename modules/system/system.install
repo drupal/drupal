@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.423 2009/12/01 13:35:24 dries Exp $
+// $Id: system.install,v 1.424 2009/12/01 15:57:40 webchick Exp $
 
 /**
  * @file
@@ -2763,6 +2763,46 @@ function system_update_7044() {
 function system_update_7045() {
   db_add_field('flood', 'expiration', array('description' => 'Expiration timestamp. Expired events are purged on cron run.', 'type' => 'int', 'not null' => TRUE, 'default' => 0));
   db_add_index('flood', 'purge', array('expiration'));
+}
+
+/**
+ * Switch from the Minnelli theme if it is the default or admin theme.
+ */
+function system_update_7046() {
+  if (variable_get('theme_default') == 'minnelli' || variable_get('admin_theme') == 'minnelli') {
+    // Make sure Garland is enabled.
+    db_update('system')
+      ->fields(array('status' => 1))
+      ->condition('type', 'theme')
+      ->condition('name', 'garland')
+      ->execute();
+    if (variable_get('theme_default') != 'garland') {
+      // If the default theme isn't Garland, transfer all of Minnelli's old
+      // settings to Garland.
+      $settings = variable_get('theme_minnelli_settings', array());
+      // Set the theme setting width to "fixed" to match Minnelli's old layout.
+      $settings['garland_width'] = 'fixed';
+      variable_set('theme_garland_settings', $settings);
+      // Remove Garland's color files since they won't match Minnelli's.
+      foreach (variable_get('color_garland_files', array()) as $file) {
+        @unlink($file);
+      }
+      if (isset($file) && $file = dirname($file)) {
+        @rmdir($file);
+      }
+      variable_del('color_garland_palette');
+      variable_del('color_garland_stylesheets');
+      variable_del('color_garland_logo');
+      variable_del('color_garland_files');
+      variable_del('color_garland_screenshot');
+    }
+    if (variable_get('theme_default') == 'minnelli') {
+      variable_set('theme_default', 'garland');
+    }
+    if (variable_get('admin_theme') == 'minnelli') {
+      variable_set('admin_theme', 'garland');
+    }
+  }
 }
 
 /**

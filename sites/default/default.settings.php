@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.37 2009/12/01 03:09:10 dries Exp $
+// $Id: default.settings.php,v 1.38 2009/12/01 15:57:40 webchick Exp $
 
 /**
  * @file
@@ -251,7 +251,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * Remove the leading hash signs to enable.
  */
 # $conf['site_name'] = 'My Drupal site';
-# $conf['theme_default'] = 'minnelli';
+# $conf['theme_default'] = 'garland';
 # $conf['anonymous'] = 'Visitor';
 
 /**
@@ -262,7 +262,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.
  * Note: This setting does not apply to installation and update pages.
  */
-# $conf['maintenance_theme'] = 'minnelli';
+# $conf['maintenance_theme'] = 'garland';
 
 /**
  * reverse_proxy accepts a boolean value.

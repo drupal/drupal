@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.47 2009/11/29 06:32:46 dries Exp $
+// $Id: theme.maintenance.inc,v 1.48 2009/12/01 15:57:40 webchick Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function _drupal_maintenance_theme() {
       drupal_load('module', 'system');
     }
 
-    $custom_theme = variable_get('maintenance_theme', 'minnelli');
+    $custom_theme = variable_get('maintenance_theme', 'garland');
   }
 
   $themes = list_themes();
