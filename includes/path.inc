@@ -332,7 +332,7 @@ function drupal_is_front_page() {
   if (!isset($is_front_page)) {
     // As drupal_path_initialize updates $_GET['q'] with the 'site_frontpage' path,
     // we can check it against the 'site_frontpage' variable.
-    $is_front_page = ($_GET['q'] == drupal_get_normal_path(variable_get('site_frontpage', 'node')));
+    $is_front_page = ($_GET['q'] == variable_get('site_frontpage', 'node'));
   }
 
   return $is_front_page;

@@ -1402,25 +1402,25 @@ function system_site_information_settings() {
   $form['site_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Site name'),
-    '#default_value' => 'Drupal',
+    '#default_value' => variable_get('site_name', 'Drupal'),
     '#required' => TRUE
   );
   $form['site_mail'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
-    '#default_value' => ini_get('sendmail_from'),
+    '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
     '#description' => t("The <em>From</em> address in automated e-mails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this e-mail being flagged as spam.)"),
     '#required' => TRUE,
   );
   $form['site_slogan'] = array(
     '#type' => 'textfield',
     '#title' => t('Slogan'),
-    '#default_value' => '',
+    '#default_value' => variable_get('site_slogan', ''),
   );
   $form['site_frontpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Default front page'),
-    '#default_value' => 'node',
+    '#default_value' => drupal_get_path_alias(variable_get('site_frontpage', 'node')),
     '#size' => 40,
     '#description' => t('The home page displays content from this relative URL. If unsure, specify "node".'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
@@ -1428,14 +1428,14 @@ function system_site_information_settings() {
   );
   $form['default_nodes_main'] = array(
     '#type' => 'select', '#title' => t('Number of posts on front page'),
-    '#default_value' => 10,
+    '#default_value' => variable_get('default_nodes_main', 10),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The maximum number of posts displayed on overview pages like the frontpage.')
   );
   $form['site_403'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 403 (access denied) page'),
-    '#default_value' => '',
+    '#default_value' => variable_get('site_403', ''),
     '#size' => 40,
     '#description' => t('This page is displayed when the requested document is denied to the current user. Leave blank to display a generic "access denied" page.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
@@ -1443,7 +1443,7 @@ function system_site_information_settings() {
   $form['site_404'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 404 (not found) page'),
-    '#default_value' => '',
+    '#default_value' => variable_get('site_404', ''),
     '#size' => 40,
     '#description' => t('This page is displayed when no other content matches the requested document. Leave blank to display a generic "page not found" page.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
@@ -1459,7 +1459,7 @@ function system_site_information_settings() {
   $form['#validate'][] = 'system_site_information_settings_validate';
   $form['#submit'][] = 'system_site_information_settings_submit';
 
-  return system_settings_form($form);
+  return system_settings_form($form, FALSE);
 }
 
 /**
@@ -1470,8 +1470,10 @@ function system_site_information_settings_validate($form, &$form_state) {
   if ($error = user_validate_mail($form_state['values']['site_mail'])) {
     form_set_error('site_mail', $error);
   }
+  // Get the normal path of the front page.
+  form_set_value($form['site_frontpage'], drupal_get_normal_path($form_state['values']['site_frontpage']), $form_state);
   // Validate front page path.
-  $item = array('link_path' => drupal_get_normal_path($form_state['values']['site_frontpage']));
+  $item = array('link_path' => $form_state['values']['site_frontpage']);
   if (!menu_valid_path($item)) {
     form_set_error('site_frontpage', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $item['link_path'])));
   }
