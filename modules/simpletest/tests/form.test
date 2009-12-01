@@ -70,7 +70,8 @@ class FormsTestCase extends DrupalWebTestCase {
       foreach ($data['empty_values'] as $key => $empty) {
         foreach (array(TRUE, FALSE) as $required) {
           $form_id = $this->randomName();
-          $form = $form_state = array();
+          $form = array();
+          $form_state = form_state_defaults();
           form_clear_error();
           $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
           $element = $data['element']['#title'];
@@ -131,9 +132,7 @@ class FormsTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('!name field is required.', array('!name' => 'required_checkbox')), t('A required checkbox is actually mandatory'));
 
     // Now try to submit the form correctly.
-    $this->drupalPost(NULL, array('required_checkbox' => 1), t('Submit'));
-
-    $values = json_decode($this->drupalGetContent(), TRUE);
+    $values = drupal_json_decode($this->drupalPost(NULL, array('required_checkbox' => 1), t('Submit')));
     $expected_values = array(
       'disabled_checkbox_on' => 'disabled_checkbox_on',
       'disabled_checkbox_off' => '',
@@ -468,16 +467,15 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('form_test');
+
+    $this->web_user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($this->web_user);
   }
 
   /**
    * Tests using the form in a usual way.
    */
   function testForm() {
-
-    $user = $this->drupalCreateUser(array('access content'));
-    $this->drupalLogin($user);
-
     $this->drupalPost('form_test/form-storage', array('title' => 'new', 'value' => 'value_is_set'), 'Continue');
     $this->assertText('Form constructions: 2', t('The form has been constructed two times till now.'));
 
@@ -490,9 +488,6 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
    * Tests using the form with an activated $form_state['cache'] property.
    */
   function testFormCached() {
-    $user = $this->drupalCreateUser(array('access content'));
-    $this->drupalLogin($user);
-
     $this->drupalPost('form_test/form-storage', array('title' => 'new', 'value' => 'value_is_set'), 'Continue', array('query' => array('cache' => 1)));
     $this->assertText('Form constructions: 1', t('The form has been constructed one time till now.'));
 
@@ -505,11 +500,46 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
    * Tests validation when form storage is used.
    */
   function testValidation() {
-    $user = $this->drupalCreateUser(array('access content'));
-    $this->drupalLogin($user);
-
     $this->drupalPost('form_test/form-storage', array('title' => '', 'value' => 'value_is_set'), 'Continue');
     $this->assertPattern('/value_is_set/', t("The input values have been kept."));
+  }
+
+  /**
+   * Tests updating cached form storage during form validation.
+   *
+   * If form caching is enabled and a form stores data in the form storage, then
+   * the form storage also has to be updated in case of a validation error in
+   * the form. This test re-uses the existing form for multi-step tests, but
+   * triggers a special #element_validate handler to update the form storage
+   * during form validation, while another, required element in the form
+   * triggers a form validation error.
+   */
+  function testCachedFormStorageValidation() {
+    // Request the form with 'cache' query parameter to enable form caching.
+    $this->drupalGet('form_test/form-storage', array('query' => array('cache' => 1)));
+
+    // Skip step 1 of the multi-step form, since the first step copies over
+    // 'title' into form storage, but we want to verify that changes in the form
+    // storage are updated in the cache during form validation.
+    $edit = array('title' => 'foo');
+    $this->drupalPost(NULL, $edit, 'Continue');
+
+    // In step 2, trigger a validation error for the required 'title' field, and
+    // post the special 'change_title' value for the 'value' field, which
+    // conditionally invokes the #element_validate handler to update the form
+    // storage.
+    $edit = array('title' => '', 'value' => 'change_title');
+    $this->drupalPost(NULL, $edit, 'Save');
+
+    // At this point, the form storage should contain updated values, but we do
+    // not see them, because the form has not been rebuilt yet due to the
+    // validation error. Post again with an arbitrary 'title' (which is only
+    // updated in form storage in step 1) and verify that the rebuilt form
+    // contains the values of the updated form storage.
+    $edit = array('title' => 'foo', 'value' => '');
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertFieldByName('title', 'title_changed', t('The altered form storage value was updated in cache and taken over.'));
+    $this->assertText('Title: title_changed', t('The form storage has stored the values.'));
   }
 }
 
@@ -559,8 +589,7 @@ class FormStateValuesCleanTestCase extends DrupalWebTestCase {
    * Tests form_state_values_clean().
    */
   function testFormStateValuesClean() {
-    $this->drupalPost('form_test/form-state-values-clean', array(), t('Submit'));
-    $values = json_decode($this->content, TRUE);
+    $values = drupal_json_decode($this->drupalPost('form_test/form-state-values-clean', array(), t('Submit')));
 
     // Setup the expected result.
     $result = array(
@@ -588,3 +617,46 @@ class FormStateValuesCleanTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests form rebuilding.
+ *
+ * @todo Add tests for other aspects of form rebuilding.
+ */
+class FormsRebuildTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Form rebuilding',
+      'description' => 'Tests functionality of drupal_rebuild_form().',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+
+    $this->web_user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($this->web_user);
+  }
+
+  /**
+   * Tests preservation of values.
+   */
+  function testRebuildPreservesValues() {
+    $edit = array(
+      'checkbox_1_default_off' => TRUE,
+      'checkbox_1_default_on' => FALSE,
+      'text_1' => 'foo',
+    );
+    $this->drupalPost('form-test/form-rebuild-preserve-values', $edit, 'Add more');
+
+    // Verify that initial elements retained their submitted values.
+    $this->assertFieldChecked('edit-checkbox-1-default-off', t('A submitted checked checkbox retained its checked state during a rebuild.'));
+    $this->assertNoFieldChecked('edit-checkbox-1-default-on', t('A submitted unchecked checkbox retained its unchecked state during a rebuild.'));
+    $this->assertFieldById('edit-text-1', 'foo', t('A textfield retained its submitted value during a rebuild.'));
+
+    // Verify that newly added elements were initialized with their default values.
+    $this->assertFieldChecked('edit-checkbox-2-default-on', t('A newly added checkbox was initialized with a default checked state.'));
+    $this->assertNoFieldChecked('edit-checkbox-2-default-off', t('A newly added checkbox was initialized with a default unchecked state.'));
+    $this->assertFieldById('edit-text-2', 'DEFAULT 2', t('A newly added textfield was initialized with its default value.'));
+  }
+}

@@ -109,6 +109,10 @@ function node_object_prepare($node) {
  */
 function node_form($form, &$form_state, $node) {
   global $user;
+  // This form has its own multistep persistance.
+  if ($form_state['rebuild']) {
+    $form_state['input'] = array();
+  }
 
   if (isset($form_state['node'])) {
     $node = (object)($form_state['node'] + (array)$node);

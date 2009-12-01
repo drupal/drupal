@@ -1071,7 +1071,8 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
 
-    $form = $form_state = array();
+    $form = array();
+    $form_state = form_state_defaults();
     field_attach_form($entity_type, $entity, $form, $form_state);
 
     $langcode = FIELD_LANGUAGE_NONE;
@@ -1090,7 +1091,8 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
 
     // Build the form.
-    $form = $form_state = array();
+    $form = array();
+    $form_state = form_state_defaults();
     field_attach_form($entity_type, $entity, $form, $form_state);
 
     // Simulate incoming values.

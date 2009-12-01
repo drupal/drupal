@@ -284,10 +284,7 @@ function form_state_defaults() {
 }
 
 /**
- * Retrieves a form, caches it and processes it with an empty $_POST.
- *
- * This function clears $_POST and passes the empty $_POST to the form_builder.
- * To preserve some parts from $_POST, pass them in $form_state.
+ * Retrieves a form, caches it and processes it again.
  *
  * If your AHAH callback simulates the pressing of a button, then your AHAH
  * callback will need to do the same as what drupal_get_form would do when the
@@ -315,6 +312,13 @@ function form_state_defaults() {
  *   The newly built form.
  */
 function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
+  // AJAX and other contexts may call drupal_rebuild_form() even when
+  // $form_state['rebuild'] isn't set, but _form_builder_handle_input_element()
+  // needs to distinguish a rebuild from an initial build in order to process
+  // user input correctly. Form constructors and form processing functions may
+  // also need to handle a rebuild differently than an initial build.
+  $form_state['rebuild'] = TRUE;
+
   $form = drupal_retrieve_form($form_id, $form_state);
 
   if (!isset($form_build_id)) {
@@ -331,13 +335,8 @@ function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
     form_set_cache($form_build_id, $form, $form_state);
   }
 
-  // Clear out all post data, as we don't want the previous step's
-  // data to pollute this one and trigger validate/submit handling,
-  // then process the form for rendering.
-  $form_state['input'] = array();
-
-  // Also clear out all group associations as these might be different
-  // when rerendering the form.
+  // Clear out all group associations as these might be different when
+  // re-rendering the form.
   $form_state['groups'] = array();
 
   // Do not call drupal_process_form(), since it would prevent the rebuilt form
@@ -409,10 +408,13 @@ function form_set_cache($form_build_id, $form, $form_state) {
  *   different $form_id values to the proper form constructor function. Examples
  *   may be found in node_forms(), search_forms(), and user_forms().
  * @param $form_state
- *   A keyed array containing the current state of the form. Most
- *   important is the $form_state['values'] collection, a tree of data
- *   used to simulate the incoming $_POST information from a user's
- *   form submission.
+ *   A keyed array containing the current state of the form. Most important is
+ *   the $form_state['values'] collection, a tree of data used to simulate the
+ *   incoming $_POST information from a user's form submission. If a key is not
+ *   filled in $form_state['values'], then the default value of the respective
+ *   element is used. To submit an unchecked checkbox or other control that
+ *   browsers submit by not having a $_POST entry, include the key, but set the
+ *   value to NULL.
  * @param ...
  *   Any additional arguments are passed on to the functions called by
  *   drupal_form_submit(), including the unique form constructor function.
@@ -935,9 +937,11 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
  */
 function form_execute_handlers($type, &$form, &$form_state) {
   $return = FALSE;
+  // If there was a button pressed, use its handlers.
   if (isset($form_state[$type . '_handlers'])) {
     $handlers = $form_state[$type . '_handlers'];
   }
+  // Otherwise, check for a form-level handler.
   elseif (isset($form['#' . $type])) {
     $handlers = $form['#' . $type];
   }
@@ -1205,13 +1209,40 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     $value_callback = !empty($element['#value_callback']) ? $element['#value_callback'] : 'form_type_' . $element['#type'] . '_value';
 
     if ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access']))) {
+      // Get the input for the current element. NULL values in the input need to
+      // be explicitly distinguished from missing input. (see below)
       $input = $form_state['input'];
+      $input_exists = TRUE;
       foreach ($element['#parents'] as $parent) {
-        $input = isset($input[$parent]) ? $input[$parent] : NULL;
+        if (is_array($input) && array_key_exists($parent, $input)) {
+          $input = $input[$parent];
+        }
+        else {
+          $input = NULL;
+          $input_exists = FALSE;
+          break;
+        }
       }
-      // If we have input for the current element, assign it to the #value property.
-      if (!$form_state['programmed'] || isset($input)) {
-        // Call #type_value to set the form value;
+      // For browser-submitted forms, the submitted values do not contain values
+      // for certain elements (empty multiple select, unchecked checkbox).
+      // During initial form processing, we add explicit NULL values for such
+      // elements in $form_state['input']. When rebuilding the form, we can
+      // distinguish elements having NULL input from elements that were not part
+      // of the initially submitted form and can therefore use default values
+      // for the latter, if required. Programmatically submitted forms can
+      // submit explicit NULL values when calling drupal_form_submit(), so we do
+      // not modify $form_state['input'] for them.
+      if (!$input_exists && !$form_state['rebuild'] && !$form_state['programmed']) {
+        // We leverage the internal logic of form_set_value() to change the
+        // input values by passing $form_state['input'] instead of the usual
+        // $form_state['values']. In effect, this adds the necessary parent keys
+        // to $form_state['input'] and sets the element's input value to NULL.
+        _form_set_value($form_state['input'], $element, $element['#parents'], NULL);
+        $input_exists = TRUE;
+      }
+      // If we have input for the current element, assign it to the #value
+      // property, optionally filtered through $value_callback.
+      if ($input_exists) {
         if (function_exists($value_callback)) {
           $element['#value'] = $value_callback($element, $input, $form_state);
         }
@@ -1595,11 +1626,10 @@ function form_set_value($element, $value, &$form_state) {
 }
 
 /**
- * Helper function for form_set_value().
+ * Helper function for form_set_value() and _form_builder_handle_input_element().
  *
- * We iterate over $parents and create nested arrays for them
- * in $form_state['values'] if needed. Then we insert the value into
- * the right array.
+ * We iterate over $parents and create nested arrays for them in $form_values if
+ * needed. Then we insert the value into the last parent key.
  */
 function _form_set_value(&$form_values, $element, $parents, $value) {
   $parent = array_shift($parents);

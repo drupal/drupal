@@ -57,7 +57,7 @@ function form_test_menu() {
   $items['form_test/form-storage'] = array(
     'title' => 'Form storage test',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('form_storage_test_form'),
+    'page arguments' => array('form_test_storage_form'),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -83,6 +83,14 @@ function form_test_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_checkbox'),
     'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['form-test/form-rebuild-preserve-values'] = array(
+    'title' => 'Form values preservation during rebuild test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_form_rebuild_preserve_values_form'),
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
 
@@ -370,9 +378,12 @@ function form_test_mock_form_submit($form, &$form_state) {
  * request parameter "cache" the form can be tested with caching enabled, as
  * it would be the case, if the form would contain some #ajax callbacks.
  *
- * @see form_storage_test_form_submit().
+ * @see form_test_storage_form_submit().
  */
-function form_storage_test_form($form, &$form_state) {
+function form_test_storage_form($form, &$form_state) {
+  if ($form_state['rebuild']) {
+    $form_state['input'] = array();
+  }
   // Initialize
   if (empty($form_state['storage'])) {
     if (empty($form_state['input'])) {
@@ -391,25 +402,29 @@ function form_storage_test_form($form, &$form_state) {
   // Count how often the form is constructed
   $_SESSION['constructions']++;
 
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Title',
+    '#default_value' => $form_state['storage']['thing']['title'],
+    '#required' => TRUE,
+  );
+  $form['value'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Value',
+    '#default_value' => $form_state['storage']['thing']['value'],
+    '#element_validate' => array('form_test_storage_element_validate_value_cached'),
+  );
   if ($form_state['storage']['step'] == 1) {
-    $form['title'] = array(
-      '#type' => 'textfield',
-      '#title' => 'title',
-      '#default_value' => $form_state['storage']['thing']['title'],
-      '#required' => TRUE,
-    );
-    $form['value'] = array(
-      '#type' => 'textfield',
-      '#title' => 'value',
-      '#default_value' => $form_state['storage']['thing']['value'],
-    );
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => 'Continue',
     );
   }
   else {
-    $form['body'] = array('#value' => 'This is the second step.');
+    $form['body'] = array(
+      '#type' => 'item',
+      '#value' => 'This is the second step.',
+    );
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => 'Save',
@@ -426,9 +441,27 @@ function form_storage_test_form($form, &$form_state) {
 }
 
 /**
- * Multistep form submit callback.
+ * Form element validation handler for 'value' element in form_test_storage_form().
+ *
+ * Tests updating of cached form storage during validation.
  */
-function form_storage_test_form_submit($form, &$form_state) {
+function form_test_storage_element_validate_value_cached($element, &$form_state) {
+  // If caching is enabled and we receive a certain value, change the value of
+  // 'title'. This presumes that another submitted form value triggers a
+  // validation error elsewhere in the form. Form API should still update the
+  // cached form storage though.
+  if (isset($_REQUEST['cache']) && $form_state['values']['value'] == 'change_title') {
+    $form_state['storage']['thing']['title'] = 'title_changed';
+    // @todo Fix FAPI to make it unnecessary to explicitly set the cache flag in
+    //   this situation. @see http://drupal.org/node/641356.
+    $form_state['cache'] = TRUE;
+  }
+}
+
+/**
+ * Form submit handler for form_test_storage_form().
+ */
+function form_test_storage_form_submit($form, &$form_state) {
   if ($form_state['storage']['step'] == 1) {
     $form_state['storage']['thing']['title'] = $form_state['values']['title'];
     $form_state['storage']['thing']['value'] = $form_state['values']['value'];
@@ -566,4 +599,82 @@ function _form_test_checkbox($form, &$form_state) {
 function _form_test_checkbox_submit($form, &$form_state) {
   drupal_json_output($form_state['values']);
   exit();
+}
+
+/**
+ * Form builder for testing preservation of values during a rebuild.
+ */
+function form_test_form_rebuild_preserve_values_form($form, &$form_state) {
+  // Start the form with two checkboxes, to test different defaults, and a
+  // textfield, to test more than one element type.
+  $form = array(
+    'checkbox_1_default_off' => array(
+      '#type' => 'checkbox',
+      '#title' => t('This checkbox defaults to unchecked.'),
+      '#default_value' => FALSE,
+    ),
+    'checkbox_1_default_on' => array(
+      '#type' => 'checkbox',
+      '#title' => t('This checkbox defaults to checked.'),
+      '#default_value' => TRUE,
+    ),
+    'text_1' => array(
+      '#type' => 'textfield',
+      '#title' => t('This textfield has a non-empty default value.'),
+      '#default_value' => 'DEFAULT 1',
+    ),
+  );
+  // Provide an 'add more' button that rebuilds the form with an additional two
+  // checkboxes and a textfield. The test is to make sure that the rebuild
+  // triggered by this button preserves the user input values for the initial
+  // elements and initializes the new elements with the correct default values.
+  if (empty($form_state['storage']['add_more'])) {
+    $form['add_more'] = array(
+      '#type' => 'submit',
+      '#value' => 'Add more',
+      '#submit' => array('form_test_form_rebuild_preserve_values_form_add_more'),
+    );
+  }
+  else {
+    $form += array(
+      'checkbox_2_default_off' => array(
+        '#type' => 'checkbox',
+        '#title' => t('This checkbox defaults to unchecked.'),
+        '#default_value' => FALSE,
+      ),
+      'checkbox_2_default_on' => array(
+        '#type' => 'checkbox',
+        '#title' => t('This checkbox defaults to checked.'),
+        '#default_value' => TRUE,
+      ),
+      'text_2' => array(
+        '#type' => 'textfield',
+        '#title' => t('This textfield has a non-empty default value.'),
+        '#default_value' => 'DEFAULT 2',
+      ),
+    );
+  }
+  // A submit button that finishes the form workflow (does not rebuild).
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+}
+
+/**
+ * Button submit handler for form_test_form_rebuild_preserve_values_form().
+ */
+function form_test_form_rebuild_preserve_values_form_add_more($form, &$form_state) {
+  // Rebuild, to test preservation of input values.
+  $form_state['storage']['add_more'] = TRUE;
+  $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Form submit handler for form_test_form_rebuild_preserve_values_form().
+ */
+function form_test_form_rebuild_preserve_values_form_submit($form, &$form_state) {
+  // Finish the workflow. Do not rebuild.
+  drupal_set_message(t('Form values: %values', array('%values' => var_export($form_state['values'], TRUE))));
 }
