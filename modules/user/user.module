@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1086 2009/12/01 13:18:41 dries Exp $
+// $Id: user.module,v 1.1087 2009/12/01 16:03:35 dries Exp $
 
 /**
  * @file
@@ -3166,6 +3166,7 @@ function user_register_submit($form, &$form_state) {
     return;
   }
   $form_state['user'] = $account;
+  $form_state['values']['uid'] = $account->uid;
 
   watchdog('user', 'New user: %name (%email).', array('%name' => $form_state['values']['name'], '%email' => $form_state['values']['mail']), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
 

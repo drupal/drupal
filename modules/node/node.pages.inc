@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.101 2009/12/01 03:07:34 dries Exp $
+// $Id: node.pages.inc,v 1.102 2009/12/01 16:03:35 dries Exp $
 
 /**
  * @file
@@ -434,6 +434,7 @@ function node_form_submit($form, &$form_state) {
   }
   if ($node->nid) {
     unset($form_state['rebuild']);
+    $form_state['values']['nid'] = $node->nid;
     $form_state['nid'] = $node->nid;
     $form_state['redirect'] = 'node/' . $node->nid;
   }

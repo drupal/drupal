@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.84 2009/11/27 00:06:10 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.85 2009/12/01 16:03:35 dries Exp $
 
 /**
  * @file
@@ -222,6 +222,7 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
       break;
   }
 
+  $form_state['values']['vid'] = $vocabulary->vid;
   $form_state['vid'] = $vocabulary->vid;
   $form_state['redirect'] = 'admin/structure/taxonomy';
 }
@@ -811,9 +812,9 @@ function taxonomy_form_term_submit($form, &$form_state) {
     taxonomy_vocabulary_save($form['#vocabulary']);
   }
 
+  $form_state['values']['tid'] = $term->tid;
   $form_state['tid'] = $term->tid;
   $form_state['redirect'] = 'admin/structure/taxonomy';
-  return;
 }
 
 /**

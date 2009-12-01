@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.61 2009/10/15 16:18:46 webchick Exp $
+// $Id: user.pages.inc,v 1.62 2009/12/01 16:03:35 dries Exp $
 
 /**
  * @file
@@ -277,6 +277,7 @@ function user_profile_form_submit($form, &$form_state) {
   $edit = (array)$edit;
 
   user_save($account, $edit, $category);
+  $form_state['values']['uid'] = $account->uid;
 
   // Clear the page cache because pages can contain usernames and/or profile information:
   cache_clear_all();

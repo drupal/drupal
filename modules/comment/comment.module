@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.811 2009/12/01 13:14:42 dries Exp $
+// $Id: comment.module,v 1.812 2009/12/01 16:03:35 dries Exp $
 
 /**
  * @file
@@ -2031,6 +2031,7 @@ function comment_form_submit($form, &$form_state) {
     }
 
     comment_save($comment);
+    $form_state['values']['cid'] = $comment->cid;
     // Explain the approval queue if necessary.
     if ($comment->status == COMMENT_NOT_PUBLISHED) {
       if (!user_access('administer comments')) {
