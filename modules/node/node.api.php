@@ -316,30 +316,33 @@ function hook_node_insert($node) {
 }
 
 /**
- * Act on node objects when loaded.
+ * Act on nodes being loaded from the database.
  *
- * This hook allows you to add information to node objects when loaded from
- * the database. It takes an array of nodes indexed by nid as its first
- * parameter. For performance reasons, information for all available nodes
- * should be loaded in a single query where possible.
+ * This hook is invoked during node loading, which is handled by entity_load(),
+ * via classes NodeController and DrupalDefaultEntityController. After the node
+ * information is read from the database or the entity cache, hook_load() is
+ * invoked on the node's content type module, then field_attach_node_revision()
+ * or field_attach_load() is called, then hook_entity_load() is invoked on all
+ * implementing modules, and finally hook_node_load() is invoked on all
+ * implementing modules.
  *
- * The types of all nodes being passed in are also available in the $types
- * parameter. If your module keeps track of the node types it supports, this
- * allows for an early return if nothing needs to be done.
+ * This hook should only be used to add information that is not in the node or
+ * node revisions table, not to replace information that is in these tables
+ * (which could interfere with the entity cache). For performance reasons,
+ * information for all available nodes should be loaded in a single query where
+ * possible.
  *
- * Due to the internal cache in node_load_multiple(), you should not use this
- * hook to modify information returned from the {node} table itself, since
- * this may affect the way nodes are returned from the cache in subsequent
- * calls to the function.
- *
- * @see comment_node_load()
- * @see taxonomy_node_load()
- * @see forum_node_load()
+ * The $types parameter allows for your module to have an early return (for
+ * efficiency) if your module only supports certain node types. However, if your
+ * module defines a content type, you can use hook_load() to respond to loading
+ * of just that content type.
  *
  * @param $nodes
- *   An array of node objects indexed by nid.
+ *   An array of the nodes being loaded, keyed by nid.
  * @param $types
  *   An array containing the types of the nodes.
+ *
+ * For a detailed usage example, see nodeapi_example.module.
  */
 function hook_node_load($nodes, $types) {
   $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
@@ -888,17 +891,27 @@ function hook_insert($node) {
 }
 
 /**
- * Load node-type-specific information.
+ * Act on nodes being loaded from the database.
  *
- * This is a hook used by node modules. It is called to allow the module
- * a chance to load extra information that it stores about a node. The hook
- * should not be used to replace information from the core {node} table since
- * this may interfere with the way nodes are fetched from cache.
+ * This hook is invoked only on the module that defines the node's content type
+ * (use hook_node_load() to respond to all node loads).
+ *
+ * This hook is invoked during node loading, which is handled by entity_load(),
+ * via classes NodeController and DrupalDefaultEntityController. After the node
+ * information is read from the database or the entity cache, hook_load() is
+ * invoked on the node's content type module, then field_attach_node_revision()
+ * or field_attach_load() is called, then hook_entity_load() is invoked on all
+ * implementing modules, and finally hook_node_load() is invoked on all
+ * implementing modules.
+ *
+ * This hook should only be used to add information that is not in the node or
+ * node revisions table, not to replace information that is in these tables
+ * (which could interfere with the entity cache). For performance reasons,
+ * information for all available nodes should be loaded in a single query where
+ * possible.
  *
  * @param $nodes
- *   An array of the nodes being loaded, keyed by nid. At call time,
- *   node.module has already loaded the basic information about the nodes, such
- *   as node ID (nid), title, and body.
+ *   An array of the nodes being loaded, keyed by nid.
  *
  * For a detailed usage example, see node_example.module.
  */
