@@ -2808,7 +2808,7 @@ function system_update_7046() {
 /**
  * Normalize the front page path variable.
  */
-function system_update_7046() {
+function system_update_7047() {
   variable_set('site_frontpage', drupal_get_normal_path(variable_get('site_frontpage', 'node')));
 }
 
