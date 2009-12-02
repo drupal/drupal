@@ -1,0 +1,19 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Install, update and uninstall functions for the overlay module.
+ */
+
+/**
+ * Implements hook_enable().
+ *
+ * If the module is being enabled through the admin UI, and not from an
+ * install profile, reopen the modules page in an overlay.
+ */
+function overlay_enable() {
+  if (strpos(current_path(), 'admin/config/modules') === 0) {
+    drupal_goto('<front>', array('fragment' => 'overlay=admin/config/modules'));
+  }
+}

@@ -574,6 +574,16 @@ div#branding strong {
   margin-bottom: 2em;
 }
 
+/* Don't display any header elements when within the overlay, and adjust the
+   page height accordingly. */
+body.overlay #header * {
+  display: none;
+}
+
+body.overlay {
+  margin-top: -80px;
+}
+
 /**
  * Primary navigation
  */

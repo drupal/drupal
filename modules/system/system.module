@@ -1082,6 +1082,16 @@ function system_library() {
     ),
   );
 
+  // jQuery BBQ plugin.
+  $libraries['jquery-bbq'] = array(
+    'title' => 'jQuery BBQ',
+    'website' => 'http://benalman.com/projects/jquery-bbq-plugin/',
+    'version' => '1.0.2',
+    'js' => array(
+      'misc/jquery.ba-bbq.js',
+    ),
+  );
+
   // Contextual links.
   $libraries['contextual-links'] = array(
     'title' => 'Contextual links',
@@ -3069,13 +3079,16 @@ function system_page_build(&$page) {
       '#markup' => theme('system_run_cron_image', array('image_path' => 'system/run-cron-image')),
     );
   }
+}
 
-  // Find all block regions so they can be rendered.
+/**
+ * Implements hook_page_alter().
+ */
+function system_page_alter(&$page) {
+  // Find all non-empty page regions, and add a theme wrapper function that
+  // allows them to be consistently themed.
   $regions = system_region_list($GLOBALS['theme']);
-
-  // Load all region content assigned via blocks.
   foreach (array_keys($regions) as $region) {
-    // Don't render empty regions.
     if (!empty($page[$region])) {
       $page[$region]['#theme_wrappers'][] = 'region';
       $page[$region]['#region'] = $region;
@@ -3661,3 +3674,13 @@ function system_build_contextual_links($element) {
   return $build;
 }
 
+/**
+ * Implement hook_admin_paths().
+ */
+function system_admin_paths() {
+  $paths = array(
+    'admin' => TRUE,
+    'admin/*' => TRUE,
+  );
+  return $paths;
+}

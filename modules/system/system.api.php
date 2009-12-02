@@ -166,6 +166,52 @@ function hook_entity_load($entities, $type) {
 }
 
 /**
+ * Define administrative paths.
+ *
+ * Modules may specify whether or not the paths they define in hook_menu() are
+ * to be considered administrative. Other modules may use this information to
+ * display those pages differently (e.g. in a modal overlay, or in a different
+ * theme).
+ *
+ * To change the administrative status of menu items defined in another module's
+ * hook_menu(), modules should implement hook_admin_paths_alter().
+ *
+ * @return
+ *   An associative array. For each item, the key is the path in question, in
+ *   a format acceptable to drupal_match_path(). The value for each item should
+ *   be TRUE (for paths considered administrative) or FALSE (for non-
+ *   administrative paths).
+ *
+ * @see hook_menu()
+ * @see drupal_match_path()
+ * @see hook_admin_paths_alter()
+ */
+function hook_admin_paths() {
+  $paths = array(
+    'mymodule/*/add' => TRUE,
+    'mymodule/*/edit' => TRUE,
+  );
+  return $paths;
+}
+
+/**
+ * Redefine administrative paths defined by other modules.
+ *
+ * @param $paths
+ *   An associative array of administrative paths, as defined by implementations
+ *   of hook_admin_paths().
+ *
+ * @see hook_admin_paths()
+ */
+function hook_admin_paths_alter(&$paths) {
+  // Treat all user pages as administrative.
+  $paths['user'] = TRUE;
+  $paths['user/*'] = TRUE;
+  // Treat the forum topic node form as a non-administrative page.
+  $paths['node/add/forum'] = FALSE;
+}
+
+/**
  * Perform periodic actions.
  *
  * This hook will only be called if cron.php is run (e.g. by crontab).

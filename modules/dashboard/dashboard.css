@@ -64,9 +64,11 @@
   border: 0;
 }
 
-#dashboard .canvas-content input {
+#dashboard .canvas-content a.button {
   float: right;
   margin: 0 0 0 10px;
+  color: #5a5a5a;
+  text-decoration: none;
 }
 
 #dashboard .region {

@@ -330,6 +330,7 @@ function shortcut_set_assign_user($shortcut_set, $account) {
     ->key(array('uid' => $account->uid))
     ->fields(array('set_name' => $shortcut_set->set_name))
     ->execute();
+  drupal_static_reset('shortcut_current_displayed_set');
 }
 
 /**
@@ -598,5 +599,18 @@ function shortcut_toolbar_pre_render($toolbar) {
 function shortcut_preprocess_page(&$variables) {
   if (isset($variables['page']['add_or_remove_shortcut'])) {
     $variables['add_or_remove_shortcut'] = drupal_render($variables['page']['add_or_remove_shortcut']);
+  }
+}
+
+/**
+ * Implements hook_system_info_alter().
+ *
+ * If the overlay module is enabled, indicate that the link for adding or
+ * removing shortcuts is one of the page "regions" that should display in the
+ * overlay.
+ */
+function shortcut_system_info_alter(&$info, $file, $type) {
+  if (module_exists('overlay') && $type == 'theme') {
+    $info['overlay_regions'][] = 'add_or_remove_shortcut';
   }
 }

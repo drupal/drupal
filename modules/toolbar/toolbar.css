@@ -36,7 +36,7 @@ div#toolbar {
   left: 0;
   right: 0;
   top: 0;
-  z-index: 100;
+  z-index: 600;
 }
 
 div#toolbar .collapsed {
@@ -71,7 +71,6 @@ div#toolbar div.toolbar-menu {
   height: 25px;
   line-height: 20px;
   padding: 5px 10px 0;
-  overflow: hidden;
   position: relative;
 }
 

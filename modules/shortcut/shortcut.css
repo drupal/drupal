@@ -7,7 +7,6 @@ div#toolbar div.toolbar-shortcuts ul {
   padding: 5px 0;
   height: 40px;
   line-height: 30px;
-  overflow: hidden;
   float: left;
   margin-left:5px;
 }

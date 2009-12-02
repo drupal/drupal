@@ -101,7 +101,7 @@ legend {
  */
 #branding {
   overflow: hidden;
-  padding: 20px 40px 0 40px;
+  padding: 20px 20px 0 20px;
   position: relative;
   background-color: #e0e0d8;
 }
@@ -161,7 +161,7 @@ legend {
  */
 div.messages {
   padding: 9px;
-  margin: 1em 0;
+  margin: 0.5em 0 0;
   color: #036;
   background: #bdf;
   border: 1px solid #ace;
@@ -208,9 +208,8 @@ div.status {
 /**
  * Console.
  */
-#page .console {
-  border-top: 1px solid #ccc;
-  padding: 9px 0 10px;
+#console {
+  margin: 9px 0 10px;
 }
 
 /**
@@ -613,7 +612,7 @@ body div.form-type-radio div.description, body div.form-type-checkbox div.descri
 }
 
 /* Buttons */
-input.form-submit {
+input.form-submit, a.button {
   cursor: pointer;
   padding: 4px 17px;
   color: #5a5a5a;
@@ -628,6 +627,11 @@ input.form-submit {
   -moz-border-radius: 20px;
   -webkit-border-radius: 15px;
   font-size: 1.1em;
+}
+
+a.button:link, a.button:visited, a.button:hover, a.button:active {
+  text-decoration: none;
+  color: #5a5a5a;
 }
 
 div.node-form input#edit-submit,
@@ -687,7 +691,12 @@ html.js input.throbbing {
 
 ul.action-links {
   margin: 1em 0;
+  padding: 0 20px 0 20px;
   overflow: hidden;
+}
+
+#block-system-main ul.action-links {
+  padding: 0;
 }
 
 ul.action-links li {
@@ -853,24 +862,34 @@ ol.task-list li.done {
 }
 
 /* Overlay theming */
-body.overlay {
-  background: #fff;
+.overlay #branding {
+  background-color: #fff;
+  padding-top: 15px;
 }
-
-body.overlay #branding,
-body.overlay #page-title,
-body.overlay #page #left,
-body.overlay #page #footer {
+.overlay .primary,
+.overlay #branding h1.page-title,
+.overlay #page #left,
+.overlay #page #footer {
   display: none;
 }
-
-body.overlay #page {
+.overlay #page {
   margin: 0;
-  padding: 0;
 }
-
-body.overlay #block-system-main {
-  padding: 20px;
+.overlay #branding div.breadcrumb {
+  float: left;
+  position: relative;
+  z-index: 10;
+}
+.overlay ul.secondary {
+  background: transparent none;
+  margin: -2.4em 0 0;
+  padding: 3px 10px;
+}
+.overlay #content {
+  padding: 0 20px;
+}
+.overlay #block-system-main {
+  padding: 0;
 }
 
 /* Shortcut theming */

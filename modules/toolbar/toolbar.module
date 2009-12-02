@@ -134,6 +134,19 @@ function toolbar_preprocess_html(&$vars) {
 }
 
 /**
+ * Implements hook_system_info_alter().
+ *
+ * If the overlay module is enabled, indicate that the 'page_top' region (in
+ * which the toolbar will be displayed) is one of the overlay supplemental
+ * regions that should be refreshed whenever its content is updated.
+ */
+function toolbar_system_info_alter(&$info, $file, $type) {
+  if (module_exists('overlay') && $type == 'theme') {
+    $info['overlay_supplemental_regions'][] = 'page_top';
+  }
+}
+
+/**
  * Build the admin menu as a structured array ready for drupal_render().
  */
 function toolbar_build() {

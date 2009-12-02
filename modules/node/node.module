@@ -247,6 +247,20 @@ function node_field_build_modes($obj_type) {
 }
 
 /**
+ * Implement hook_admin_paths().
+ */
+function node_admin_paths() {
+  $paths = array(
+    'node/*/add' => TRUE,
+    'node/*/edit' => TRUE,
+    'node/*/delete' => TRUE,
+    'node/add' => TRUE,
+    'node/add/*' => TRUE,
+  );
+  return $paths;
+}
+
+/**
  * Gather a listing of links to nodes.
  *
  * @param $result

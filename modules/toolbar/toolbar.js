@@ -15,6 +15,16 @@ Drupal.behaviors.admin = {
       Drupal.admin.toolbar.toggle();
       return false;
     });
+
+    // Set the most recently clicked item as active.
+    $('#toolbar a').once().click(function() {
+      $('#toolbar a').each(function() {
+        $(this).removeClass('active');
+      });
+      if ($(this).parents('div.toolbar-shortcuts').length) {
+        $(this).addClass('active');
+      }
+    });
   }
 };
 
