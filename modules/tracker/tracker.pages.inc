@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.29 2009/11/23 02:45:42 webchick Exp $
+// $Id: tracker.pages.inc,v 1.30 2009/12/02 14:56:32 dries Exp $
 
 /**
  * @file
@@ -37,6 +37,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     ->execute()
     ->fetchAllAssoc('nid');
 
+  $rows = array();
   if (!empty($nodes)) {
     // Now, get the data and put into the placeholder array
     $result = db_query('SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.nid IN (:nids)', array(':nids' => array_keys($nodes)), array('target' => 'slave'));
@@ -46,7 +47,6 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     }
 
     // Finally display the data
-    $rows = array();
     foreach ($nodes as $node) {
       // Determine the number of comments:
       $comments = 0;
@@ -68,14 +68,12 @@ function tracker_page($account = NULL, $set_title = FALSE) {
       );
     }
   }
-  else {
-    $rows[] = array(array('data' => t('No content available.'), 'colspan' => '5'));
-  }
 
   $page['tracker'] = array(
     '#rows' => $rows,
     '#header' => array(t('Type'), t('Title'), t('Author'), t('Replies'), t('Last updated')),
     '#theme' => 'table',
+    '#empty' => t('No content available.'),
     '#attached' => array(
       'css' => array(drupal_get_path('module', 'tracker') . '/tracker.css' => array('preprocess' => FALSE)),
     ),

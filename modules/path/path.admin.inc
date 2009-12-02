@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.36 2009/10/24 05:13:44 webchick Exp $
+// $Id: path.admin.inc,v 1.37 2009/12/02 14:56:32 dries Exp $
 
 /**
  * @file
@@ -61,15 +61,11 @@ function path_admin_overview($keys = NULL) {
     $rows[] = $row;
   }
 
-  if (empty($rows)) {
-    $empty_message = $keys ? t('No URL aliases found.') : t('No URL aliases available. <a href="@link">Add alias</a>.', array('@link' => url('admin/config/search/path/add'))) ;
-    $rows[] = array(array('data' => $empty_message, 'colspan' => ($multilanguage ? 5 : 4)));
-  }
-
   $build['path_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
-    '#rows' => $rows
+    '#rows' => $rows,
+    '#empty' => t('No URL aliases available.'),
   );
   $build['path_pager'] = array('#theme' => 'pager');
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.31 2009/10/09 00:59:56 dries Exp $
+// $Id: dblog.admin.inc,v 1.32 2009/12/02 14:56:32 dries Exp $
 
 /**
  * @file
@@ -74,15 +74,12 @@ function dblog_overview() {
     );
   }
 
-  if (!$rows) {
-    $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 6));
-  }
-
   $build['dblog_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
     '#attributes' => array('id' => 'admin-dblog'),
+    '#empty' => t('No log messages available.'),
   );
   $build['dblog_pager'] = array('#theme' => 'pager');
 
@@ -120,14 +117,11 @@ function dblog_top($type) {
     $rows[] = array($dblog->count, truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE));
   }
 
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 2));
-  }
-
   $build['dblog_top_table']  = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#empty' => t('No log messages available.'),
   );
   $build['dblog_top_pager'] = array('#theme' => 'pager');
 

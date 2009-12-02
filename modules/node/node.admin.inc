@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.78 2009/11/17 02:50:41 webchick Exp $
+// $Id: node.admin.inc,v 1.79 2009/12/02 14:56:32 dries Exp $
 
 /**
  * @file
@@ -554,18 +554,11 @@ function node_admin_nodes() {
   }
   // Otherwise, use a simple table.
   else {
-    // Display an empty message like in the tableselect.
-    if (empty($options)) {
-      $row = array(
-        'data' => t('No content available.'),
-        'colspan' => count($header),
-      );
-      $options = array($row);
-    }
     $form['nodes'] = array(
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $options,
+      '#empty' => t('No content available.'),
     );
   }
 
