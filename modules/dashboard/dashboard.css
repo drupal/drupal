@@ -1,4 +1,4 @@
-/* $Id: dashboard.css,v 1.3 2009/11/21 17:42:00 webchick Exp $ */
+/* $Id: dashboard.css,v 1.4 2009/12/02 07:28:22 webchick Exp $ */
 
 #dashboard div.dashboard-region {
   float: left;
@@ -64,9 +64,11 @@
   border: 0;
 }
 
-#dashboard .canvas-content input {
+#dashboard .canvas-content a.button {
   float: right;
   margin: 0 0 0 10px;
+  color: #5a5a5a;
+  text-decoration: none;
 }
 
 #dashboard .region {

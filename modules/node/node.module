@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1171 2009/12/01 13:14:42 dries Exp $
+// $Id: node.module,v 1.1172 2009/12/02 07:28:22 webchick Exp $
 
 /**
  * @file
@@ -244,6 +244,20 @@ function node_field_build_modes($obj_type) {
     }
   }
   return $modes;
+}
+
+/**
+ * Implement hook_admin_paths().
+ */
+function node_admin_paths() {
+  $paths = array(
+    'node/*/add' => TRUE,
+    'node/*/edit' => TRUE,
+    'node/*/delete' => TRUE,
+    'node/add' => TRUE,
+    'node/add/*' => TRUE,
+  );
+  return $paths;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.555 2009/12/01 00:39:34 dries Exp $
+// $Id: theme.inc,v 1.556 2009/12/02 07:28:22 webchick Exp $
 
 /**
  * @file
@@ -2580,6 +2580,7 @@ function template_preprocess_maintenance_page(&$variables) {
  * pluggable template engine. Uses the region name to generate a template file
  * suggestions. If none are found, the default region.tpl.php is used.
  *
+ * @see drupal_region_class()
  * @see region.tpl.php
  */
 function template_preprocess_region(&$variables) {
@@ -2587,7 +2588,7 @@ function template_preprocess_region(&$variables) {
   $variables['content'] = $variables['elements']['#children'];
   $variables['region'] = $variables['elements']['#region'];
 
-  $region = 'region-' . str_replace('_', '-', $variables['region']);
+  $region = drupal_region_class($variables['region']);
   $variables['classes_array'][] = $region;
   $variables['template_files'][] = $region;
 }

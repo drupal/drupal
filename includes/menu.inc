@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.362 2009/11/11 08:28:50 dries Exp $
+// $Id: menu.inc,v 1.363 2009/12/02 07:28:22 webchick Exp $
 
 /**
  * @file
@@ -2185,6 +2185,9 @@ function menu_cache_clear($menu_name = 'navigation') {
     register_shutdown_function('cache_clear_all', 'links:' . $menu_name . ':', 'cache_menu', TRUE);
     $cache_cleared[$menu_name] = 2;
   }
+
+  // Also clear the menu system static caches.
+  menu_reset_static_cache();
 }
 
 /**
@@ -2193,6 +2196,16 @@ function menu_cache_clear($menu_name = 'navigation') {
  */
 function menu_cache_clear_all() {
   cache_clear_all('*', 'cache_menu', TRUE);
+  menu_reset_static_cache();
+}
+
+/**
+ * Resets the menu system static cache.
+ */
+function menu_reset_static_cache() {
+  drupal_static_reset('menu_tree');
+  drupal_static_reset('menu_tree_all_data');
+  drupal_static_reset('menu_tree_page_data');
 }
 
 /**

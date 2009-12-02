@@ -1,4 +1,4 @@
-/* $Id: toolbar.css,v 1.9 2009/11/15 21:13:26 webchick Exp $ */
+/* $Id: toolbar.css,v 1.10 2009/12/02 07:28:22 webchick Exp $ */
 
 body.toolbar {
   padding-top: 30px;
@@ -36,7 +36,7 @@ div#toolbar {
   left: 0;
   right: 0;
   top: 0;
-  z-index: 100;
+  z-index: 600;
 }
 
 div#toolbar .collapsed {
@@ -71,7 +71,6 @@ div#toolbar div.toolbar-menu {
   height: 25px;
   line-height: 20px;
   padding: 5px 10px 0;
-  overflow: hidden;
   position: relative;
 }
 

@@ -1,4 +1,4 @@
-; $Id: default.info,v 1.8 2009/11/10 17:27:54 webchick Exp $
+; $Id: default.info,v 1.9 2009/12/02 07:28:22 webchick Exp $
 name = Drupal
 description = Create a Drupal site with the most commonly used features pre-installed.
 version = VERSION
@@ -16,6 +16,7 @@ dependencies[] = dblog
 dependencies[] = search
 dependencies[] = shortcut
 dependencies[] = toolbar
+dependencies[] = overlay
 dependencies[] = field_ui
 dependencies[] = file
 dependencies[] = rdf

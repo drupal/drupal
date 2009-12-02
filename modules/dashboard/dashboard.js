@@ -1,4 +1,4 @@
-// $Id: dashboard.js,v 1.2 2009/10/18 11:20:26 dries Exp $
+// $Id: dashboard.js,v 1.3 2009/12/02 07:28:22 webchick Exp $
 (function ($) {
 
 /**
@@ -65,7 +65,7 @@ Drupal.behaviors.dashboard = {
    * Helper for enterCustomizeMode; sets up drag-and-drop and close button.
    */
   setupDrawer: function () {
-    $('div.customize .canvas-content').prepend('<input type="button" class="form-submit" value="' + Drupal.t('Done') + '"></input>');
+    $('div.customize .canvas-content').prepend('<a class="button" href="">' + Drupal.t('Done') + '</a>');
     $('div.customize .canvas-content input').click(Drupal.behaviors.dashboard.exitCustomizeMode);
 
     // Initialize drag-and-drop.

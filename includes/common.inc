@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1052 2009/11/26 05:54:48 webchick Exp $
+// $Id: common.inc,v 1.1053 2009/12/02 07:28:22 webchick Exp $
 
 /**
  * @file
@@ -3588,6 +3588,28 @@ function drupal_html_id($id) {
   }
 
   return $id;
+}
+
+/**
+ * Provides a standard HTML class name that identifies a page region.
+ *
+ * It is recommended that template preprocess functions apply this class to any
+ * page region that is output by the theme (Drupal core already handles this in
+ * the standard template preprocess implementation). Standardizing the class
+ * names in this way allows modules to implement certain features, such as
+ * drag-and-drop or dynamic AJAX loading, in a theme-independent way.
+ *
+ * @param $region
+ *   The name of the page region (for example, 'page_top' or 'content').
+ *
+ * @return
+ *   An HTML class that identifies the region (for example, 'region-page-top'
+ *   or 'region-content').
+ *
+ * @see template_preprocess_region()
+ */
+function drupal_region_class($region) {
+  return drupal_html_class("region-$region");
 }
 
 /**

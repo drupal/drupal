@@ -1,4 +1,4 @@
-// $Id: toolbar.js,v 1.9 2009/11/17 18:51:19 webchick Exp $
+// $Id: toolbar.js,v 1.10 2009/12/02 07:28:22 webchick Exp $
 (function ($) {
 
 /**
@@ -14,6 +14,16 @@ Drupal.behaviors.admin = {
     $('#toolbar a.toggle', context).once('toolbar-toggle').click(function() {
       Drupal.admin.toolbar.toggle();
       return false;
+    });
+
+    // Set the most recently clicked item as active.
+    $('#toolbar a').once().click(function() {
+      $('#toolbar a').each(function() {
+        $(this).removeClass('active');
+      });
+      if ($(this).parents('div.toolbar-shortcuts').length) {
+        $(this).addClass('active');
+      }
     });
   }
 };
