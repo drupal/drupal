@@ -7,6 +7,56 @@
  */
 
 /**
+ * Implement hook_help().
+ */
+function taxonomy_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#taxonomy':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Taxonomy module allows you to classify the content of your website. To classify content, you define <em>vocabularies</em> that contain related <em>terms</em>, and then assign the vocabularies to content types. For more information, see the online handbook entry for the <a href="@taxonomy">Taxonomy module</a>.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Creating vocabularies') . '</dt>';
+      $output .= '<dd>' . t('Users with sufficient <a href="@perm">permissions</a> can create <em>vocabularies</em> and <em>terms</em> through the <a href="@taxo">Taxonomy page</a>. The page listing the terms provides a drag-and-drop interface for controlling the order of the terms and sub-terms within a vocabulary, in a hierarchical fashion. A <em>controlled vocabulary</em> classifying music by genre with terms and sub-terms could look as follows:', array('@taxo' => url('admin/structure/taxonomy'), '@perm' => url('admin/config/people/permissions', array('fragment'=>'module-taxonomy'))));
+      $output .= '<ul><li>' . t ('<em>vocabulary</em>: Music'); '</li>';
+      $output .= '<ul><li>' . t('<em>term</em>: Jazz') . '</li>';
+      $output .= '<ul><li>' . t('<em>sub-term</em>: Swing') . '</li>';
+      $output .= '<li>' . t('<em>sub-term</em>: Fusion') . '</li></ul></ul>';
+      $output .= '<ul><li>' . t('<em>term</em>: Rock') . '</li>';
+      $output .= '<ul><li>' . t('<em>sub-term</em>: Country rock') . '</li>';
+      $output .= '<li>' . t('<em>sub-term</em>: Hard rock') . '</li></ul></ul></ul>';
+      $output .= t('You can assign a sub-term to multiple parent terms. For example, <em>fusion</em> can be assigned to both <em>rock</em> and <em>jazz</em>.') . '</dd>';
+      $output .= '<dd>' . t('Terms in a <em>free-tagging vocabulary</em> can be built gradually as you create or edit content. This is often done used for blogs or photo management applications.') . '</dd>';
+      $output .= '<dt>' . t('Assigning vocabularies to content types') . '</dt>';
+      $output .= '<dd>' . t('Before you can use a new vocabulary to classify your content, a new Taxonomy term field must be added to a <a href="@ctedit">content type</a> on its <em>manage fields</em> page. When adding a taxonomy field, you choose a <em>widget</em> to use to enter the taxonomy information on the conent editing page: a select list, checkboxes, radio buttons, or an auto-complete field (to build a free-tagging vocabulary). After choosing the field type and widget, on the subsequent <em>field settings</em> page you can choose the desired vocabulary, whether one or multiple terms can be chosen from the vocabulary, and other settings. The same vocabulary can be added to multiple content types, by using the "Add existing field" section on the manage fields page.', array('@ctedit' => url('admin/structure/types'))) . '</dd>';
+      $output .= '<dt>' . t('Classifying content') . '</dt>';
+      $output .= '<dd>' . t('After the vocabulary is assigned to the content type, you can start classifying content. The field with terms will appear on the content editing screen when you edit or <a href="@addnode">create content</a>.', array('@addnode' => url('node/add'))) . '</dd>';
+      $output .= '<dt>' . t('Viewing listings and RSS feeds by term') . '</dt>';
+      $output .= '<dd>' . t("Each taxonomy term automatically provides a page listing content that has its classification, and a corresponding RSS feed. For example, if the taxonomy term <em>country rock</em> has the ID 123 (you can see this by looking at the URL when hovering on the linked term, which you can click to navigate to the listing page), then you will find this list at the path <em>taxonomy/term/123</em>. The RSS feed will use the path <em>taxonomy/term/123/feed</em> (the RSS icon for this term's listing will automatically display in your browser's address bar when viewing the listing page).") . '</dd>';
+      $output .= '<dt>' . t('Extending Taxonomy module') . '</dt>';
+      $output .= '<dd>' . t('There are <a href="@taxcontrib">many contributed modules</a> that extend the behavior of the Taxonomy module for both display and organization of terms.', array('@taxcontrib' => 'http://drupal.org/project/modules?filters=tid:71&solrsort=sis_project_release_usage%20desc'));
+      $output .= '</dl>';
+      return $output;
+    case 'admin/structure/taxonomy':
+      $output = '<p>' . t('Configure the vocabularies and terms for your site.') . '</p>';
+      return $output;
+    case 'admin/structure/taxonomy/%':
+      $vocabulary = taxonomy_vocabulary_load($arg[3]);
+      switch ($vocabulary->hierarchy) {
+        case 0:
+          return '<p>' . t('You can reorganize the terms in %capital_name using their drag and drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
+        case 1:
+          return '<p>' . t('%capital_name contains terms grouped with parent terms. You can reorganize the terms in %capital_name using their drag and drop handles.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
+        case 2:
+          return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag and drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
+      }
+    case 'admin/structure/taxonomy/add':
+      return '<p>' . t('To create a new taxonomy vocabulary, type in a name and a description.') . '</p>';
+  }
+}
+
+/**
  * Implement hook_permission().
  */
 function taxonomy_permission() {
@@ -862,38 +912,6 @@ function taxonomy_term_load($tid) {
   }
   $term = taxonomy_term_load_multiple(array($tid), array());
   return $term ? $term[$tid] : FALSE;
-}
-
-/**
- * Implement hook_help().
- */
-function taxonomy_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#taxonomy':
-      $output = '<p>' . t('The taxonomy module allows you to categorize content using various systems of classification. Free-tagging vocabularies are created by users on the fly when they submit posts (as commonly found in blogs and social bookmarking applications). Controlled vocabularies allow for administrator-defined short lists of terms as well as complex hierarchies with multiple relationships between different terms. These methods can be applied to different content types and combined together to create a powerful and flexible method of classifying and presenting your content.') . '</p>';
-      $output .= '<p>' . t('For example, when creating a recipe site, you might want to classify posts by both the type of meal and preparation time. A vocabulary for each allows you to categorize using each criteria independently instead of creating a tag for every possible combination.') . '</p>';
-      $output .= '<p>' . t('Type of Meal: <em>Appetizer, Main Course, Salad, Dessert</em>') . '</p>';
-      $output .= '<p>' . t('Preparation Time: <em>0-30mins, 30-60mins, 1-2 hrs, 2hrs+</em>') . '</p>';
-      $output .= '<p>' . t("Each taxonomy term (often called a 'category' or 'tag' in other systems) automatically provides lists of posts and a corresponding RSS feed. These taxonomy/term URLs can be manipulated to generate AND and OR lists of posts classified with terms. In our recipe site example, it then becomes easy to create pages displaying 'Main courses', '30 minute recipes', or '30 minute main courses and appetizers' by using terms on their own or in combination with others. There are a significant number of contributed modules which you to alter and extend the behavior of the core module for both display and organization of terms.") . '</p>';
-      $output .= '<p>' . t("Terms can also be organized in parent/child relationships from the admin interface. An example would be a vocabulary grouping countries under their parent geo-political regions. The taxonomy module also enables advanced implementations of hierarchy, for example placing Turkey in both the 'Middle East' and 'Europe'.") . '</p>';
-      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@taxonomy">Taxonomy module</a>.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) . '</p>';
-      return $output;
-    case 'admin/structure/taxonomy':
-      $output = '<p>' . t('Configure the vocabularies and terms for your site.') . '</p>';
-      return $output;
-    case 'admin/structure/taxonomy/%':
-      $vocabulary = taxonomy_vocabulary_load($arg[3]);
-      switch ($vocabulary->hierarchy) {
-        case 0:
-          return '<p>' . t('You can reorganize the terms in %capital_name using their drag and drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
-        case 1:
-          return '<p>' . t('%capital_name contains terms grouped with parent terms. You can reorganize the terms in %capital_name using their drag and drop handles.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
-        case 2:
-          return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag and drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
-      }
-    case 'admin/structure/taxonomy/add':
-      return '<p>' . t('Define how your vocabulary will be presented to administrators and users, and which content types to categorize with it. Tags allows users to create terms when submitting posts by typing a comma separated list. Otherwise terms are chosen from a select list and can only be created by users with the "administer taxonomy" permission.') . '</p>';
-  }
 }
 
 /**
