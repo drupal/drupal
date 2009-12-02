@@ -10,15 +10,6 @@
  * Form builder for the update settings tab.
  */
 function update_settings($form) {
-  $notify_emails = variable_get('update_notify_emails', array());
-  $form['update_notify_emails'] = array(
-    '#type' => 'textarea',
-    '#title' => t('E-mail addresses to notify when updates are available'),
-    '#rows' => 4,
-    '#default_value' => implode("\n", $notify_emails),
-    '#description' => t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via e-mail. Put each address on a separate line. If blank, no e-mails will be sent.'),
-  );
-
   $form['update_check_frequency'] = array(
     '#type' => 'radios',
     '#title' => t('Check for updates'),
@@ -30,6 +21,21 @@ function update_settings($form) {
     '#description' => t('Select how frequently you want to automatically check for new releases of your currently installed modules and themes.'),
   );
 
+  $form['update_check_disabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Check for updates of disabled modules and themes'),
+    '#default_value' => variable_get('update_check_disabled', FALSE),
+  );
+
+  $notify_emails = variable_get('update_notify_emails', array());
+  $form['update_notify_emails'] = array(
+    '#type' => 'textarea',
+    '#title' => t('E-mail addresses to notify when updates are available'),
+    '#rows' => 4,
+    '#default_value' => implode("\n", $notify_emails),
+    '#description' => t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via e-mail. Put each address on a separate line. If blank, no e-mails will be sent.'),
+  );
+
   $form['update_notification_threshold'] = array(
     '#type' => 'radios',
     '#title' => t('E-mail notification threshold'),
@@ -39,12 +45,6 @@ function update_settings($form) {
       'security' => t('Only security updates'),
     ),
     '#description' => t('You can choose to send e-mail only if a security update is available, or to be notified about all newer versions. If there are updates available of Drupal core or any of your installed modules and themes, your site will always print a message on the <a href="@status_report">status report</a> page, and will also display an error message on administration pages if there is a security update.', array('@status_report' => url('admin/reports/status')))
-  );
-
-  $form['update_check_disabled'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Check for updates of disabled modules and themes'),
-    '#default_value' => variable_get('update_check_disabled', FALSE),
   );
 
   $form = system_settings_form($form, FALSE);
