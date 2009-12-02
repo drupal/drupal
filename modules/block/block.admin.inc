@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.63 2009/11/19 04:00:47 webchick Exp $
+// $Id: block.admin.inc,v 1.64 2009/12/02 19:39:05 dries Exp $
 
 /**
  * @file
@@ -413,7 +413,7 @@ function block_admin_configure_submit($form, &$form_state) {
       db_merge('block')
         ->key(array('theme' => $theme, 'delta' => $form_state['values']['delta'], 'module' => $form_state['values']['module']))
         ->fields(array(
-          'region' => $region,
+          'region' => ($region == BLOCK_REGION_NONE ? '' : $region),
           'pages' => trim($form_state['values']['pages']),
           'status' => (int) ($region != BLOCK_REGION_NONE),
         ))
@@ -498,7 +498,7 @@ function block_add_block_form_submit($form, &$form_state) {
     db_merge('block')
       ->key(array('theme' => $theme, 'delta' => $delta, 'module' => $form_state['values']['module']))
       ->fields(array(
-        'region' => $region,
+        'region' => ($region == BLOCK_REGION_NONE ? '' : $region),
         'pages' => trim($form_state['values']['pages']),
         'status' => (int) ($region != BLOCK_REGION_NONE),
       ))
