@@ -1,4 +1,4 @@
-// $Id: content_types.js,v 1.7 2009/08/22 23:18:28 webchick Exp $
+// $Id: content_types.js,v 1.8 2009/12/02 15:09:16 dries Exp $
 (function ($) {
 
 Drupal.behaviors.contentTypes = {
@@ -22,7 +22,7 @@ Drupal.behaviors.contentTypes = {
     });
     $('fieldset#edit-display', context).setSummary(function(context) {
       var vals = [];
-      $('input:checked', context).parent().each(function() {
+      $('input:checked', context).next('label').each(function() {
         vals.push(Drupal.checkPlain($(this).text()));
       });
       if (!$('#edit-node-submitted', context).is(':checked')) {

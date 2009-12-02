@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.105 2009/12/02 07:28:22 webchick Exp $
+// $Id: system.api.php,v 1.106 2009/12/02 15:09:16 dries Exp $
 
 /**
  * @file
@@ -320,6 +320,8 @@ function hook_cron_queue_info() {
  *  - "#pre_render": array of callback functions taking $element and $form_state.
  *  - "#post_render": array of callback functions taking $element and $form_state.
  *  - "#submit": array of callback functions taking $form and $form_state.
+ *  - "#title_display": optional string indicating if and how #title should be
+ *    displayed, see theme_form_element() and theme_form_element_label().
  *
  * @see hook_element_info_alter()
  * @see system_element_info()

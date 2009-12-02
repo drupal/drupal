@@ -1,11 +1,11 @@
-// $Id: comment-node-form.js,v 1.3 2009/08/21 00:21:48 webchick Exp $
+// $Id: comment-node-form.js,v 1.4 2009/12/02 15:09:16 dries Exp $
 
 (function ($) {
 
 Drupal.behaviors.commentFieldsetSummaries = {
   attach: function (context) {
     $('fieldset#edit-comment-settings', context).setSummary(function (context) {
-      return Drupal.checkPlain($('input:checked', context).parent().text());
+      return Drupal.checkPlain($('input:checked', context).next('label').text());
     });
     // Provide the summary for the node type form.
     $('fieldset#edit-comment', context).setSummary(function(context) {
@@ -15,7 +15,7 @@ Drupal.behaviors.commentFieldsetSummaries = {
       vals.push($("select[name='comment'] option:selected", context).text());
 
       // Threading.
-      var threading = $("input[name='comment_default_mode']:checked", context).parent().text();
+      var threading = $("input[name='comment_default_mode']:checked", context).next('label').text();
       if (threading) {
         vals.push(threading);
       }

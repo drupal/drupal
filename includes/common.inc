@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1054 2009/12/02 14:56:32 dries Exp $
+// $Id: common.inc,v 1.1055 2009/12/02 15:09:16 dries Exp $
 
 /**
  * @file
@@ -5578,6 +5578,9 @@ function drupal_common_theme() {
     ),
     'form_required_marker' => array(
       'arguments' => array('element' => NULL),
+    ),
+    'form_element_label' => array(
+      'render element' => 'element',
     ),
     'text_format_wrapper' => array(
       'render element' => 'element',

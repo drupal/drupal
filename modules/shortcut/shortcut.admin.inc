@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.admin.inc,v 1.2 2009/11/08 13:23:41 webchick Exp $
+// $Id: shortcut.admin.inc,v 1.3 2009/12/02 15:09:16 dries Exp $
 
 /**
  * @file
@@ -130,25 +130,6 @@ function shortcut_set_switch_submit($form, &$form_state) {
 
   // Assign the shortcut set to the provided user account.
   shortcut_set_assign_user($set, $account);
-}
-
-/**
- * Theme function for the form that switches shortcut sets.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: An array representing the form.
- * @return
- *   A themed HTML string representing the content of the form.
- *
- * @ingroup themeable
- * @see shortcut_set_switch()
- */
-function theme_shortcut_set_switch($variables) {
-  $form = $variables['form'];
-  // Render the textfield for adding a new set inline with the radio button.
-  $form['set']['new']['#title'] = t('New set: !textfield', array('!textfield' => drupal_render($form['new'])));
-  return drupal_render_children($form);
 }
 
 /**
