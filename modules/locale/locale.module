@@ -412,7 +412,7 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
         '#type' => 'select',
         '#title' => t('Language'),
         '#default_value' => (isset($form['#node']->language) ? $form['#node']->language : ''),
-        '#options' => array('' => t('Language neutral')) + locale_language_list('name'),
+        '#options' => array(LANGUAGE_NONE => t('Language neutral')) + locale_language_list('name'),
       );
     }
     // Node type without language selector: assign the default for new nodes

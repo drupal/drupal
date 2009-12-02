@@ -696,8 +696,8 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function drupalCreateNode($settings = array()) {
     // Populate defaults array.
     $settings += array(
-      'body'      => array(FIELD_LANGUAGE_NONE => array(array())),
-      'title'     => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'body'      => array(LANGUAGE_NONE => array(array())),
+      'title'     => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
       'comment'   => 2,
       'changed'   => REQUEST_TIME,
       'moderate'  => 0,
@@ -709,6 +709,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'type'      => 'page',
       'revisions' => NULL,
       'taxonomy'  => NULL,
+      'language'  => LANGUAGE_NONE,
     );
 
     // Use the original node's created time for existing nodes.
@@ -733,8 +734,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'value' => $this->randomName(32),
       'format' => filter_default_format(),
     );
-    $langcode = !empty($settings['language']) ? $settings['language'] : FIELD_LANGUAGE_NONE;
-    $settings['body'][$langcode][0] += $body;
+    $settings['body'][$settings['language']][0] += $body;
 
     $node = (object) $settings;
     node_save($node);

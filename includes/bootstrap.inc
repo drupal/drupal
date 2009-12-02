@@ -179,6 +179,13 @@ define('DRUPAL_AUTHENTICATED_RID', 2);
 define('DRUPAL_KILOBYTE', 1024);
 
 /**
+ * The language code used when no language is explicitly assigned.
+ *
+ * Defined by ISO639-2 for "No linguistic content / Not applicable".
+ */
+define('LANGUAGE_NONE', 'zxx');
+
+/**
  * The type of language used to define the content language.
  */
 define('LANGUAGE_TYPE_CONTENT', 'language');

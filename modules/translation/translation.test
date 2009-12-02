@@ -59,7 +59,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Attempt a resubmission of the form - this emulates using the back button
     // to return to the page then resubmitting the form without a refresh.
     $edit = array();
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     $edit["title[$langcode][0][value]"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $this->drupalPost('node/add/page', $edit, t('Save'), array('query' => array('translation' => $node->nid, 'language' => 'es')));
@@ -128,7 +128,7 @@ class TranslationTestCase extends DrupalWebTestCase {
    */
   function createPage($title, $body, $language) {
     $edit = array();
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     $edit["title[$langcode][0][value]"] = $title;
     $edit["body[$langcode][0][value]"] = $body;
     $edit['language'] = $language;
@@ -154,7 +154,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/add/page', array('query' => array('translation' => $nid, 'language' => $language)));
 
     $edit = array();
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     $edit["title[$langcode][0][value]"] = $title;
     $edit["body[$language][0][value]"] = $body;
     $this->drupalPost(NULL, $edit, t('Save'));

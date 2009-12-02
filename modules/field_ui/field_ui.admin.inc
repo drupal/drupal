@@ -1211,7 +1211,7 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
   $instance['required'] = FALSE;
   $instance['description'] = '';
   // @todo Allow multiple values (requires more work on 'add more' JS handler).
-  $element += field_default_form(NULL, NULL, $field, $instance, FIELD_LANGUAGE_NONE, $items, $form, $form_state, 0);
+  $element += field_default_form(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state, 0);
 
   // Adjust 'form_path' to reflect the actual location of the widget in the
   // form structure.
@@ -1233,16 +1233,16 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
     // Extract field values.
     $items = array();
     $form_state_copy = array('values' => $instance['default_value_widget']);
-    field_default_extract_form_values(NULL, NULL, $field, $instance, FIELD_LANGUAGE_NONE, $items, $form, $form_state_copy);
+    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state_copy);
 
     // Validate the values and report errors.
     $errors = array();
     $function = $field['module'] . '_field_validate';
     if (function_exists($function)) {
-      $function(NULL, NULL, $field, $instance, FIELD_LANGUAGE_NONE, $items, $errors);
+      $function(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $errors);
     }
     if ($errors) {
-      field_default_form_errors(NULL, NULL, $field, $instance, FIELD_LANGUAGE_NONE, $items, $form, $errors);
+      field_default_form_errors(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $errors);
     }
   }
 }
@@ -1264,10 +1264,10 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
     // Extract field values.
     $items = array();
     $form_state_copy = array('values' => $instance['default_value_widget']);
-    field_default_extract_form_values(NULL, NULL, $field, $instance, FIELD_LANGUAGE_NONE, $items, $form, $form_state_copy);
+    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state_copy);
 
     // Prepare field values.
-    field_default_submit(NULL, NULL, $field, $instance, FIELD_LANGUAGE_NONE, $items, $form, $form_state_copy);
+    field_default_submit(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state_copy);
 
     $instance['default_value'] = $items ? $items : NULL;
     unset($instance['default_value_widget']);

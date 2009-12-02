@@ -490,21 +490,21 @@ function node_update_7006(&$context) {
             'vid' => $revision->vid,
             'type' => $revision->type,
           );
-          $node->title[FIELD_LANGUAGE_NONE][0]['value'] = $revision->title;
+          $node->title[LANGUAGE_NONE][0]['value'] = $revision->title;
           if (!empty($revision->teaser) && $revision->teaser != text_summary($revision->body)) {
-            $node->body[FIELD_LANGUAGE_NONE][0]['summary'] = $revision->teaser;
+            $node->body[LANGUAGE_NONE][0]['summary'] = $revision->teaser;
           }
           // Do this after text_summary() above.
           $break = '<!--break-->';
           if (substr($revision->body, 0, strlen($break)) == $break) {
             $revision->body = substr($revision->body, strlen($break));
           }
-          $node->body[FIELD_LANGUAGE_NONE][0]['value'] = $revision->body;
+          $node->body[LANGUAGE_NONE][0]['value'] = $revision->body;
           // Explicitly store the current default text format if the revision
           // did not have its own text format. Similar conversions for other
           // core modules are performed in filter_update_7005(), but we do this
           // one here since we are already migrating the data.
-          $node->body[FIELD_LANGUAGE_NONE][0]['format'] = !empty($revision->format) ? $revision->format : variable_get('filter_default_format', 1);
+          $node->body[LANGUAGE_NONE][0]['format'] = !empty($revision->format) ? $revision->format : variable_get('filter_default_format', 1);
           // This is a core update and no contrib modules are enabled yet, so
           // we can assume default field storage for a faster update.
           field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array());
@@ -563,6 +563,16 @@ function node_update_7008() {
   foreach ($roles as $rid => $role) {
     user_role_grant_permissions($rid, array('access content overview'));
   }
+}
+
+/**
+ * Convert node languages from the empty string to LANGUAGE_NONE.
+ */
+function node_update_7009() {
+  db_update('node')
+    ->fields(array('language' => LANGUAGE_NONE))
+    ->condition('language', '')
+    ->execute();
 }
 
 /**

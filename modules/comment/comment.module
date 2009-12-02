@@ -1672,7 +1672,7 @@ function comment_form($form, &$form_state, $comment) {
     'comment' => '',
     'cid' => NULL,
     'pid' => NULL,
-    'language' => '',
+    'language' => LANGUAGE_NONE,
     'uid' => 0,
   );
   $comment = (object) $comment;

@@ -319,7 +319,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $text = $body . '<random>' . $extra_text . '</random>';
 
     $edit = array();
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     $edit["title[$langcode][0][value]"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $text;
     $edit["body[$langcode][0][value_format]"] = $filtered;

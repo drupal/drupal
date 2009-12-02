@@ -72,7 +72,7 @@ function book_admin_settings_validate($form, &$form_state) {
  * @ingroup forms.
  */
 function book_admin_edit($form, $form_state, $node) {
-  drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
+  drupal_set_title($node->title[LANGUAGE_NONE][0]['value']);
   $form['#node'] = $node;
   _book_admin_table($node, $form);
   $form['save'] = array(
@@ -125,7 +125,7 @@ function book_admin_edit_submit($form, &$form_state) {
       // Update the title if changed.
       if ($row['title']['#default_value'] != $values['title']) {
         $node = node_load($values['nid'], FALSE);
-        $langcode = FIELD_LANGUAGE_NONE;
+        $langcode = LANGUAGE_NONE;
         $node->title = array($langcode => array(array('value' => $values['title'])));
         $node->book['link_title'] = $values['title'];
         $node->revision = 1;

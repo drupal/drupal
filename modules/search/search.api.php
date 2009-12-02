@@ -191,7 +191,7 @@ function hook_search_execute($keys = NULL) {
     $results[] = array(
       'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
       'type' => check_plain(node_type_get_name($node)),
-      'title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'],
+      'title' => $node->title[LANGUAGE_NONE][0]['value'],
       'user' => theme('username', array('account' => $node)),
       'date' => $node->changed,
       'node' => $node,
@@ -267,7 +267,7 @@ function hook_update_index() {
     node_build_content($node, 'search_index');
     $node->rendered = drupal_render($node->content);
 
-    $text = '<h1>' . check_plain($node->title[FIELD_LANGUAGE_NONE][0]['value']) . '</h1>' . $node->rendered;
+    $text = '<h1>' . check_plain($node->title[LANGUAGE_NONE][0]['value']) . '</h1>' . $node->rendered;
 
     // Fetch extra data normally not visible
     $extra = module_invoke_all('node_update_index', $node);

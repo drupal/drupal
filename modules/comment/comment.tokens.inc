@@ -209,7 +209,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
         case 'node':
           $node = node_load($comment->nid);
-          $title = $node->title[FIELD_LANGUAGE_NONE][0]['value'];
+          $title = $node->title[LANGUAGE_NONE][0]['value'];
           $replacements[$original] = $sanitize ? filter_xss($title) : $title;
           break;
       }

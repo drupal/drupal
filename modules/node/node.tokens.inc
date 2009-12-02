@@ -134,18 +134,18 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? check_plain($node->title[FIELD_LANGUAGE_NONE][0]['value']) : $node->title[FIELD_LANGUAGE_NONE][0]['value'];
+          $replacements[$original] = $sanitize ? check_plain($node->title[LANGUAGE_NONE][0]['value']) : $node->title[LANGUAGE_NONE][0]['value'];
           break;
 
         case 'body':
           if (!empty($node->body)) {
-            $replacements[$original] = $sanitize ? $node->body[FIELD_LANGUAGE_NONE][0]['safe'] : $node->body[FIELD_LANGUAGE_NONE][0]['value'];
+            $replacements[$original] = $sanitize ? $node->body[LANGUAGE_NONE][0]['safe'] : $node->body[LANGUAGE_NONE][0]['value'];
           }
           break;
 
         case 'summary':
           if (!empty($node->body)) {
-            $replacements[$original] = $sanitize ? $node->body[FIELD_LANGUAGE_NONE][0]['safe_summary'] : $node->body[FIELD_LANGUAGE_NONE][0]['summary'];
+            $replacements[$original] = $sanitize ? $node->body[LANGUAGE_NONE][0]['safe_summary'] : $node->body[LANGUAGE_NONE][0]['summary'];
           }
           break;
 

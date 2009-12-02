@@ -70,13 +70,6 @@ module_load_include('inc', 'field', 'field.form');
 define('FIELD_CARDINALITY_UNLIMITED', -1);
 
 /**
- * The language code assigned to untranslatable fields.
- *
- * Defined by ISO639-2 for "No linguistic content / Not applicable".
- */
-define('FIELD_LANGUAGE_NONE', 'zxx');
-
-/**
  * TODO
  */
 define('FIELD_BEHAVIOR_NONE', 0x0001);

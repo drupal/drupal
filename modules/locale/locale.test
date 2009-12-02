@@ -1287,11 +1287,11 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);
-    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('English alias works.'));
+    $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('English alias works.'));
 
     // Confirm custom language path alias works.
     $this->drupalGet($prefix . '/' . $custom_language_path);
-    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Custom language alias works.'));
+    $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Custom language alias works.'));
 
     $this->drupalLogout();
   }
@@ -1398,7 +1398,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $node_body =  $this->randomName();
     $edit = array(
       'type' => 'page',
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $node_title))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $node_title))),
       'body' => array($langcode => array(array('value' => $node_body))),
       'language' => $langcode,
     );
@@ -1657,7 +1657,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
    */
   function testMultilingualNodeForm() {
     // Create page content.
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     $title_key = "title[$langcode][0][value]";
     $title_value = $this->randomName(8);
     $body_key = "body[$langcode][0][value]";
@@ -1674,7 +1674,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
     $this->assertTrue($node, t('Node found in database.'));
 
-    $assert = isset($node->body['en']) && !isset($node->body[FIELD_LANGUAGE_NONE]) && $node->body['en'][0]['value'] == $body_value;
+    $assert = isset($node->body['en']) && !isset($node->body[LANGUAGE_NONE]) && $node->body['en'][0]['value'] == $body_value;
     $this->assertTrue($assert, t('Field language correctly set.'));
 
     // Change node language.
@@ -1696,7 +1696,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
    */
   function testMultilingualDisplaySettings() {
     // Create page content.
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     $title_key = "title[$langcode][0][value]";
     $title_value = $this->randomName(8);
     $body_key = "body[$langcode][0][value]";

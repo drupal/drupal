@@ -38,7 +38,7 @@ function statistics_node_tracker() {
       );
     }
 
-    drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
+    drupal_set_title($node->title[LANGUAGE_NONE][0]['value']);
     $build['statistics_table'] = array(
       '#theme' => 'table',
       '#header' => $header,

@@ -431,7 +431,7 @@ function forum_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
       foreach ($language as $item) {
         $query->values(array(
           'nid' => $object->nid,
-          'title' => $object->title[FIELD_LANGUAGE_NONE][0]['value'],
+          'title' => $object->title[LANGUAGE_NONE][0]['value'],
           'tid' => $item['tid'],
           'sticky' => $object->sticky,
           'created' => $object->created,
@@ -465,7 +465,7 @@ function forum_field_storage_pre_update($obj_type, $object, &$skip_fields) {
         foreach ($language as $item) {
           $query->values(array(
             'nid' => $object->nid,
-            'title' => $object->title[FIELD_LANGUAGE_NONE][0]['value'],
+            'title' => $object->title[LANGUAGE_NONE][0]['value'],
             'tid' => $item['tid'],
             'sticky' => $object->sticky,
             'created' => $object->created,

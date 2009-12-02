@@ -249,7 +249,7 @@ EOF;
   }
 
   function createSampleNodes() {
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     // Post 5 articles.
     for ($i = 0; $i < 5; $i++) {
       $edit = array();

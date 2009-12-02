@@ -18,7 +18,7 @@ function field_multilingual_settings_changed() {
  *
  * If an entity has a translation handler and the given field is translatable,
  * a (not necessarily strict) subset of the current enabled languages will be
- * returned, otherwise only FIELD_LANGUAGE_NONE will be returned. Since the
+ * returned, otherwise only LANGUAGE_NONE will be returned. Since the
  * default value for a 'translatable' entity property is FALSE, we ensure that
  * only entities that are able to handle translations actually get translatable
  * fields.
@@ -58,7 +58,7 @@ function field_multilingual_available_languages($obj_type, $field, $suggested_la
       }
     }
     else {
-      $result = $field_languages[$field_name] = array(FIELD_LANGUAGE_NONE);
+      $result = $field_languages[$field_name] = array(LANGUAGE_NONE);
     }
   }
   else {
@@ -71,13 +71,13 @@ function field_multilingual_available_languages($obj_type, $field, $suggested_la
 /**
  * Return available content languages.
  *
- * The languages that may be associated to fields include FIELD_LANGAUGE_NONE.
+ * The languages that may be associated to fields include LANGUAGE_NONE.
  *
  * @return
  *   An array of language codes.
  */
 function field_multilingual_content_languages() {
-  return array_keys(language_list() + array(FIELD_LANGUAGE_NONE => NULL));
+  return array_keys(language_list() + array(LANGUAGE_NONE => NULL));
 }
 
 /**
@@ -131,12 +131,6 @@ function field_multilingual_valid_language($langcode, $default = TRUE) {
   $enabled_languages = field_multilingual_content_languages();
   if (in_array($langcode, $enabled_languages)) {
     return $langcode;
-  }
-  // @todo Currently, node language neutral code is an empty string. Node passes
-  //   $node->language as language parameter to field_attach_form(). We might
-  //   want to unify the two "language neutral" language codes.
-  if ($langcode === '') {
-    return FIELD_LANGUAGE_NONE;
   }
   global $language;
   $langcode = $default ? language_default('language') : $language->language;

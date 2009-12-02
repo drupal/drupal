@@ -1264,7 +1264,7 @@ function hook_mail($key, &$message, $params) {
       '%uid' => $node->uid,
       '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
       '%node_type' => node_type_get_name($node),
-      '%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'],
+      '%title' => $node->title[LANGUAGE_NONE][0]['value'],
       '%teaser' => $node->teaser,
       '%body' => $node->body,
     );

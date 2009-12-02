@@ -263,7 +263,7 @@ class ForumTestCase extends DrupalWebTestCase {
     // select items list.
     $tid = $forum['tid'];
 
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     $edit = array(
       "title[$langcode][0][value]" => $title,
       "body[$langcode][0][value]" => $body,
@@ -340,20 +340,20 @@ class ForumTestCase extends DrupalWebTestCase {
     // View forum node.
     $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(200);
-    $this->assertTitle($node->title[FIELD_LANGUAGE_NONE][0]['value'] . ' | Drupal', t('Forum node was displayed'));
+    $this->assertTitle($node->title[LANGUAGE_NONE][0]['value'] . ' | Drupal', t('Forum node was displayed'));
     $this->assertText(t('Home ' . $crumb . ' Forums ' . $crumb . ' @container ' . $crumb . ' @forum', array('@container' => $this->container['name'], '@forum' => $this->forum['name'])), t('Breadcrumbs were displayed'));
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertTitle('Edit Forum topic ' . $node->title[FIELD_LANGUAGE_NONE][0]['value'] . ' | Drupal', t('Forum edit node was displayed'));
+      $this->assertTitle('Edit Forum topic ' . $node->title[LANGUAGE_NONE][0]['value'] . ' | Drupal', t('Forum edit node was displayed'));
     }
 
     if ($response == 200) {
       // Edit forum node (including moving it to another forum).
       $edit = array();
-      $langcode = FIELD_LANGUAGE_NONE;
+      $langcode = LANGUAGE_NONE;
       $edit["title[$langcode][0][value]"] = 'node/' . $node->nid;
       $edit["body[$langcode][0][value]"] = $this->randomName(256);
       // Assume the topic is initially associated with $forum.

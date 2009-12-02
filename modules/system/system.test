@@ -530,8 +530,8 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
     $this->assertText(t('Access denied'), t('Found the default 403 page'));
 
     $edit = array(
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(10)))),
-      'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(100)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(10)))),
+      'body' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(100)))),
     );
     $node = $this->drupalCreateNode($edit);
 
@@ -539,13 +539,13 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/system/site-information', array('site_403' => 'node/' . $node->nid), t('Save configuration'));
 
     $this->drupalGet('admin');
-    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Found the custom 403 page'));
+    $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Found the custom 403 page'));
 
     // Logout and check that the user login block is shown on custom 403 pages.
     $this->drupalLogout();
 
     $this->drupalGet('admin');
-    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Found the custom 403 page'));
+    $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Found the custom 403 page'));
     $this->assertText(t('User login'), t('Blocks are shown on the custom 403 page'));
 
     // Log back in and remove the custom 403 page.
@@ -607,8 +607,8 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
     $this->assertText(t('Page not found'), t('Found the default 404 page'));
 
     $edit = array(
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(10)))),
-      'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(100)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(10)))),
+      'body' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(100)))),
     );
     $node = $this->drupalCreateNode($edit);
 
@@ -616,7 +616,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/system/site-information', array('site_404' => 'node/' . $node->nid), t('Save configuration'));
 
     $this->drupalGet($this->randomName(10));
-    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Found the custom 404 page'));
+    $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Found the custom 404 page'));
   }
 }
 
@@ -880,7 +880,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
     drupal_set_title($title, PASS_THROUGH);
     $this->assertTrue(strpos(drupal_get_title(), '<em>') !== FALSE, t('Tags in title are not converted to entities when $output is PASS_THROUGH.'));
     // Generate node content.
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     $edit = array(
      "title[$langcode][0][value]" => '!SimpleTest! ' . $title . $this->randomName(20),
      "body[$langcode][0][value]" => '!SimpleTest! test body' . $this->randomName(200),
@@ -1346,7 +1346,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     // Create the initial objects.
     $account = $this->drupalCreateUser();
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
-    $node->title = array(FIELD_LANGUAGE_NONE => array(array('value' => '<blink>Blinking Text</blink>')));
+    $node->title = array(LANGUAGE_NONE => array(array('value' => '<blink>Blinking Text</blink>')));
     global $user, $language;
 
     $source  = '[node:title]';         // Title of the node we passed in
@@ -1357,7 +1357,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $source .= '[date:short]';         // Short date format of REQUEST_TIME
     $source .= '[bogus:token]';        // Nonexistent token, should be untouched
 
-    $target  = check_plain($node->title[FIELD_LANGUAGE_NONE][0]['value']);
+    $target  = check_plain($node->title[LANGUAGE_NONE][0]['value']);
     $target .= check_plain($account->name);
     $target .= format_interval(REQUEST_TIME - $node->created, 2, $language->language);
     $target .= check_plain($user->name);
@@ -1375,10 +1375,10 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     $raw_tokens = array('title' => '[node:title]');
     $generated = token_generate('node', $raw_tokens, array('node' => $node));
-    $this->assertFalse(strcmp($generated['[node:title]'], check_plain($node->title[FIELD_LANGUAGE_NONE][0]['value'])), t('Token sanitized.'));
+    $this->assertFalse(strcmp($generated['[node:title]'], check_plain($node->title[LANGUAGE_NONE][0]['value'])), t('Token sanitized.'));
 
     $generated = token_generate('node', $raw_tokens, array('node' => $node), array('sanitize' => FALSE));
-    $this->assertFalse(strcmp($generated['[node:title]'], $node->title[FIELD_LANGUAGE_NONE][0]['value']), t('Unsanitized token generated properly.'));
+    $this->assertFalse(strcmp($generated['[node:title]'], $node->title[LANGUAGE_NONE][0]['value']), t('Unsanitized token generated properly.'));
   }
 }
 

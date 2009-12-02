@@ -43,7 +43,7 @@ function drupal_path_initialize() {
  *   Either a Drupal system path, an aliased path, or FALSE if no path was
  *   found.
  */
-function drupal_lookup_path($action, $path = '', $path_language = '') {
+function drupal_lookup_path($action, $path = '', $path_language = NULL) {
   global $language;
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static = array();
@@ -90,9 +90,10 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
           // Now fetch the aliases corresponding to these system paths.
           // We order by ASC and overwrite array keys to ensure the correct
           // alias is used when there are multiple aliases per path.
-          $cache['map'][$path_language] = db_query("SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language IN (:language, '') ORDER BY language ASC, pid ASC", array(
+          $cache['map'][$path_language] = db_query("SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language IN (:language, :language_none) ORDER BY language ASC, pid ASC", array(
             ':system' => $cache['system_paths'],
-            ':language' => $path_language
+            ':language' => $path_language,
+            ':language_none' => LANGUAGE_NONE,
           ))->fetchAllKeyed();
           // Keep a record of paths with no alias to avoid querying twice.
           $cache['no_aliases'][$path_language] = array_flip(array_diff_key($cache['system_paths'], array_keys($cache['map'][$path_language])));
@@ -111,9 +112,10 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
       // For system paths which were not cached, query aliases individually.
       else if (!isset($cache['no_aliases'][$path_language][$path])) {
         // Get the most fitting result falling back with alias without language
-        $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language IN (:language, '') ORDER BY language DESC, pid DESC", array(
+        $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", array(
           ':source' => $path,
-          ':language' => $path_language
+          ':language' => $path_language,
+          ':language_none' => LANGUAGE_NONE,
         ))->fetchField();
         $cache['map'][$path_language][$path] = $alias;
         return $alias;
@@ -126,9 +128,10 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
       $source = '';
       if (!isset($cache['map'][$path_language]) || !($source = array_search($path, $cache['map'][$path_language]))) {
         // Get the most fitting result falling back with alias without language
-        if ($source = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language IN (:language, '') ORDER BY language DESC, pid DESC", array(
+        if ($source = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", array(
                      ':alias' => $path,
-                     ':language' => $path_language))
+                     ':language' => $path_language,
+                     ':language_none' => LANGUAGE_NONE))
             ->fetchField()) {
           $cache['map'][$path_language][$source] = $path;
         }
@@ -186,7 +189,7 @@ function drupal_cache_system_paths() {
  *   An aliased path if one was found, or the original path if no alias was
  *   found.
  */
-function drupal_get_path_alias($path = NULL, $path_language = '') {
+function drupal_get_path_alias($path = NULL, $path_language = NULL) {
   // If no path is specified, use the current page's path.
   if ($path == NULL) {
     $path = $_GET['q'];
@@ -210,7 +213,7 @@ function drupal_get_path_alias($path = NULL, $path_language = '') {
  *   The internal path represented by the alias, or the original alias if no
  *   internal path was found.
  */
-function drupal_get_normal_path($path, $path_language = '') {
+function drupal_get_normal_path($path, $path_language = NULL) {
   $original_path = $path;
 
   // Lookup the path alias first.
@@ -445,7 +448,7 @@ function path_load($conditions) {
  *   - language: (optional) The language of the alias.
  */
 function path_save(&$path) {
-  $path += array('pid' => NULL, 'language' => '');
+  $path += array('pid' => NULL, 'language' => LANGUAGE_NONE);
 
   // Insert or update the alias.
   $status = drupal_write_record('url_alias', $path, (!empty($path['pid']) ? 'pid' : NULL));

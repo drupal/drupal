@@ -315,7 +315,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
       // Verify menu link link.
       $this->clickLink($title);
-      $title = $parent_node->title[FIELD_LANGUAGE_NONE][0]['value'];
+      $title = $parent_node->title[LANGUAGE_NONE][0]['value'];
       $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Parent menu link link target was correct'));
     }
 
@@ -325,7 +325,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Verify menu link link.
     $this->clickLink($title);
-    $title = $item_node->title[FIELD_LANGUAGE_NONE][0]['value'];
+    $title = $item_node->title[LANGUAGE_NONE][0]['value'];
     $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Menu link link target was correct'));
   }
 

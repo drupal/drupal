@@ -16,7 +16,7 @@ function locale_field_node_form_update_field_language($form, &$form_state, $rese
   $node = (object) $form_state['values'];
   $available_languages = field_multilingual_content_languages();
   // @todo: Unify language neutral language codes.
-  $selected_language = empty($node->language) ? FIELD_LANGUAGE_NONE : $node->language;
+  $selected_language = empty($node->language) ? LANGUAGE_NONE : $node->language;
   list(, , $bundle) = entity_extract_ids('node', $node);
 
   foreach (field_info_instances('node', $bundle) as $instance) {

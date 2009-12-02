@@ -32,17 +32,17 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
 
     $unpublished = $this->drupalCreateNode(array(
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
       'status' => 0,
     ));
     $published = $this->drupalCreateNode(array(
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
       'status' => 1,
     ));
 
     $this->drupalGet('tracker');
-    $this->assertNoText($unpublished->title[FIELD_LANGUAGE_NONE][0]['value'], t('Unpublished node do not show up in the tracker listing.'));
-    $this->assertText($published->title[FIELD_LANGUAGE_NONE][0]['value'], t('Published node show up in the tracker listing.'));
+    $this->assertNoText($unpublished->title[LANGUAGE_NONE][0]['value'], t('Unpublished node do not show up in the tracker listing.'));
+    $this->assertText($published->title[LANGUAGE_NONE][0]['value'], t('Published node show up in the tracker listing.'));
     $this->assertLink(t('My recent content'), 0, t('User tab shows up on the global tracker page.'));
   }
 
@@ -53,22 +53,22 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
 
     $unpublished = $this->drupalCreateNode(array(
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
       'uid' => $this->user->uid,
       'status' => 0,
     ));
     $my_published = $this->drupalCreateNode(array(
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
       'uid' => $this->user->uid,
       'status' => 1,
     ));
     $other_published_no_comment = $this->drupalCreateNode(array(
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
       'uid' => $this->other_user->uid,
       'status' => 1,
     ));
     $other_published_my_comment = $this->drupalCreateNode(array(
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
       'uid' => $this->other_user->uid,
       'status' => 1,
     ));
@@ -79,17 +79,17 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalPost('comment/reply/' . $other_published_my_comment->nid, $comment, t('Save'));
 
     $this->drupalGet('user/' . $this->user->uid . '/track');
-    $this->assertNoText($unpublished->title[FIELD_LANGUAGE_NONE][0]['value'], t("Unpublished nodes do not show up in the users's tracker listing."));
-    $this->assertText($my_published->title[FIELD_LANGUAGE_NONE][0]['value'], t("Published nodes show up in the user's tracker listing."));
-    $this->assertNoText($other_published_no_comment->title[FIELD_LANGUAGE_NONE][0]['value'], t("Other user's nodes do not show up in the user's tracker listing."));
-    $this->assertText($other_published_my_comment->title[FIELD_LANGUAGE_NONE][0]['value'], t("Nodes that the user has commented on appear in the user's tracker listing."));
+    $this->assertNoText($unpublished->title[LANGUAGE_NONE][0]['value'], t("Unpublished nodes do not show up in the users's tracker listing."));
+    $this->assertText($my_published->title[LANGUAGE_NONE][0]['value'], t("Published nodes show up in the user's tracker listing."));
+    $this->assertNoText($other_published_no_comment->title[LANGUAGE_NONE][0]['value'], t("Other user's nodes do not show up in the user's tracker listing."));
+    $this->assertText($other_published_my_comment->title[LANGUAGE_NONE][0]['value'], t("Nodes that the user has commented on appear in the user's tracker listing."));
 
     // Verify that unpublished comments are removed from the tracker.
     $admin_user = $this->drupalCreateUser(array('administer comments', 'access user profiles'));
     $this->drupalLogin($admin_user);
     $this->drupalPost('comment/1/edit', array('status' => COMMENT_NOT_PUBLISHED), t('Save'));
     $this->drupalGet('user/' . $this->user->uid . '/track');
-    $this->assertNoText($other_published_my_comment->title[FIELD_LANGUAGE_NONE][0]['value'], 'Unpublished comments are not counted on the tracker listing.');
+    $this->assertNoText($other_published_my_comment->title[LANGUAGE_NONE][0]['value'], 'Unpublished comments are not counted on the tracker listing.');
   }
 
   /**
@@ -99,11 +99,11 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
 
     $edit = array(
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
     );
 
     $node = $this->drupalCreateNode($edit);
-    $title = $edit['title'][FIELD_LANGUAGE_NONE][0]['value'];
+    $title = $edit['title'][LANGUAGE_NONE][0]['value'];
     $this->drupalGet('tracker');
     $this->assertPattern('/' . $title . '.*new/', t('New nodes are flagged as such in the tracker listing.'));
 
@@ -128,7 +128,7 @@ class TrackerTest extends DrupalWebTestCase {
 
     $node = $this->drupalCreateNode(array(
       'comment' => 2,
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
     ));
 
     // Add a comment to the page.
@@ -170,7 +170,7 @@ class TrackerTest extends DrupalWebTestCase {
     for ($i = 1; $i <= 3; $i++) {
       $edits[$i] = array(
         'comment' => 2,
-        'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName()))),
+        'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName()))),
       );
       $nodes[$i] = $this->drupalCreateNode($edits[$i]);
     }
@@ -200,7 +200,7 @@ class TrackerTest extends DrupalWebTestCase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
+      $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
     }
     $this->assertText('1 new', t('New comment is counted on the tracker listing pages.'));
     $this->assertText('updated', t('Node is listed as updated'));
@@ -211,7 +211,7 @@ class TrackerTest extends DrupalWebTestCase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
+      $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
     }
     $this->assertText('1 new', t('New comment is counted on the tracker listing pages.'));
   }
@@ -225,12 +225,12 @@ class TrackerTest extends DrupalWebTestCase {
 
     $node = $this->drupalCreateNode(array(
       'comment' => 2,
-      'title' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName()))),
+      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName()))),
     ));
 
     // Assert that the node is displayed.
     $this->drupalGet('tracker');
-    $this->assertText($node->title[FIELD_LANGUAGE_NONE][0]['value'], t('Node is displayed on the tracker listing pages.'));
+    $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Node is displayed on the tracker listing pages.'));
 
     // Unpublish the node and ensure that it's no longer displayed.
     $edit = array(

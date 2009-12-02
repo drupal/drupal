@@ -76,7 +76,7 @@ function translation_menu() {
  * all languages).
  */
 function _translation_tab_access($node) {
-  if (!empty($node->language) && translation_supported_type($node->type)) {
+  if ($node->language != LANGUAGE_NONE && translation_supported_type($node->type)) {
     return user_access('translate content');
   }
   return FALSE;
@@ -122,7 +122,7 @@ function translation_form_alter(&$form, &$form_state, $form_id) {
       // Disable languages for existing translations, so it is not possible to switch this
       // node to some language which is already in the translation set. Also remove the
       // language neutral option.
-      unset($form['language']['#options']['']);
+      unset($form['language']['#options'][LANGUAGE_NONE]);
       foreach (translation_node_get_translations($node->tnid) as $translation) {
         if ($translation->nid != $node->nid) {
           unset($form['language']['#options'][$translation->language]);
@@ -201,7 +201,7 @@ function translation_node_prepare($node) {
         $translations = translation_node_get_translations($source_node->tnid);
         if (isset($translations[$language])) {
           $languages = language_list();
-          drupal_set_message(t('A translation of %title in %language already exists, a new %type  will be created instead of a translation.', array('%title' => $source_node->title[FIELD_LANGUAGE_NONE][0]['value'], '%language' => $languages[$language]->name, '%type' => $node->type)), 'error');
+          drupal_set_message(t('A translation of %title in %language already exists, a new %type  will be created instead of a translation.', array('%title' => $source_node->title[LANGUAGE_NONE][0]['value'], '%language' => $languages[$language]->name, '%type' => $node->type)), 'error');
           return;
         }
       }

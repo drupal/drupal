@@ -108,7 +108,7 @@ function node_filters() {
   }
   // Language filter if there is a list of languages
   if ($languages = module_invoke('locale', 'language_list')) {
-    $languages = array('' => t('Language neutral')) + $languages;
+    $languages = array(LANGUAGE_NONE => t('Language neutral')) + $languages;
     $filters['language'] = array(
       'title' => t('language'),
       'options' => array(
@@ -169,7 +169,7 @@ function node_filter_form() {
       $value = $value->name;
     }
     elseif ($type == 'language') {
-      $value = empty($value) ? t('Language neutral') : module_invoke('locale', 'language_name', $value);
+      $value = $value == LANGUAGE_NONE ? t('Language neutral') : module_invoke('locale', 'language_name', $value);
     }
     else {
       $value = $filters[$type]['options'][$value];
@@ -356,7 +356,7 @@ function _node_mass_update_batch_process($nodes, $updates, &$context) {
     $node = _node_mass_update_helper($nid, $updates);
 
     // Store result for post-processing in the finished callback.
-    $context['results'][] = l($node->title[FIELD_LANGUAGE_NONE][0]['value'], 'node/' . $node->nid);
+    $context['results'][] = l($node->title[LANGUAGE_NONE][0]['value'], 'node/' . $node->nid);
 
     // Update our progress information.
     $context['sandbox']['progress']++;
@@ -436,7 +436,7 @@ function node_admin_nodes() {
 
   // Enable language column if translation module is enabled
   // or if we have any node with language.
-  $multilanguage = (module_exists('translation') || db_query("SELECT COUNT(*) FROM {node} WHERE language <> ''")->fetchField());
+  $multilanguage = (module_exists('translation') || db_query("SELECT COUNT(*) FROM {node} WHERE language <> :language", array(':language' => LANGUAGE_NONE))->fetchField());
 
   // Build the sortable table header.
   $header = array(
@@ -482,12 +482,12 @@ function node_admin_nodes() {
   $destination = drupal_get_destination();
   $options = array();
   foreach ($nodes as $node) {
-    $l_options = !empty($node->language) ? array('language' => $languages[$node->language]) : array();
+    $l_options = $node->language != LANGUAGE_NONE ? array('language' => $languages[$node->language]) : array();
     $options[$node->nid] = array(
       'title' => array(
         'data' => array(
           '#type' => 'link',
-          '#title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'],
+          '#title' => $node->title[LANGUAGE_NONE][0]['value'],
           '#href' => 'node/' . $node->nid,
           '#options' => $l_options,
           '#suffix' => ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
@@ -499,7 +499,7 @@ function node_admin_nodes() {
       'changed' => format_date($node->changed, 'short'),
     );
     if ($multilanguage) {
-      $options[$node->nid]['language'] = empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name);
+      $options[$node->nid]['language'] = $node->language == LANGUAGE_NONE ? t('Language neutral') : t($languages[$node->language]->name);
     }
     // Build a list of all the accessible operations for the current node.
     $operations = array();

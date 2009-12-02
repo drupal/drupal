@@ -2813,6 +2813,16 @@ function system_update_7047() {
 }
 
 /**
+ * Convert path languages from the empty string to LANGUAGE_NONE.
+ */
+function system_update_7048() {
+  db_update('url_alias')
+    ->fields(array('language' => LANGUAGE_NONE))
+    ->condition('language', '')
+    ->execute();
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

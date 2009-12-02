@@ -42,28 +42,28 @@ class ListFieldTestCase extends DrupalWebTestCase {
     // All three options appear.
     $entity = field_test_create_stub_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE][1]), t('Option 1 exists'));
-    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE][2]), t('Option 2 exists'));
-    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE][3]), t('Option 3 exists'));
+    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][1]), t('Option 1 exists'));
+    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][2]), t('Option 2 exists'));
+    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][3]), t('Option 3 exists'));
 
     // Removed options do not appear.
     $this->card_1['settings']['allowed_values'] = "2|Two";
     field_update_field($this->card_1);
     $entity = field_test_create_stub_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE][1]), t('Option 1 does not exist'));
-    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE][2]), t('Option 2 exists'));
-    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE][3]), t('Option 3 does not exist'));
+    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][1]), t('Option 1 does not exist'));
+    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][2]), t('Option 2 exists'));
+    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][3]), t('Option 3 does not exist'));
 
     // Completely new options appear.
     $this->card_1['settings']['allowed_values'] = "10|Update\n20|Twenty";
     field_update_field($this->card_1);
     $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE][1]), t('Option 1 does not exist'));
-    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE][2]), t('Option 2 does not exist'));
-    $this->assertTrue(empty($form['card_1'][FIELD_LANGUAGE_NONE][3]), t('Option 3 does not exist'));
-    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE][10]), t('Option 10 exists'));
-    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE][20]), t('Option 20 exists'));
+    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][1]), t('Option 1 does not exist'));
+    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][2]), t('Option 2 does not exist'));
+    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][3]), t('Option 3 does not exist'));
+    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][10]), t('Option 10 exists'));
+    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][20]), t('Option 20 exists'));
 
     // Options are reset when a new field with the same name is created.
     field_delete_field($this->card_1['field_name']);
@@ -81,9 +81,9 @@ class ListFieldTestCase extends DrupalWebTestCase {
     $this->instance_1 = field_create_instance($this->instance_1);
     $entity = field_test_create_stub_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE][1]), t('Option 1 exists'));
-    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE][2]), t('Option 2 exists'));
-    $this->assertTrue(!empty($form['card_1'][FIELD_LANGUAGE_NONE][3]), t('Option 3 exists'));
+    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][1]), t('Option 1 exists'));
+    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][2]), t('Option 2 exists'));
+    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][3]), t('Option 3 exists'));
   }
   
 }

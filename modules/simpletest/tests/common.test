@@ -593,7 +593,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     $settings = array(
       'type' => 'page',
       'body' => array(
-        FIELD_LANGUAGE_NONE => array(
+        LANGUAGE_NONE => array(
           array(
             'value' => t('This tests the inline CSS!') . "<?php drupal_add_css('$css', 'inline'); ?>",
             // The "PHP code" format is always the most recent one added, since

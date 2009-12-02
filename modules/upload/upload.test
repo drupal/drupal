@@ -74,7 +74,7 @@ class UploadTestCase extends DrupalWebTestCase {
       $edit = array();
       $edit['files[' . $upload->fid . '][description]'] = $new_name = substr($upload->description, 1);
       $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-      $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'])), 'File renamed successfully.');
+      $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title[LANGUAGE_NONE][0]['value'])), 'File renamed successfully.');
 
       $this->assertText($new_name, $new_name . ' found on node.');
       $this->assertNoText($upload->description, $upload->description . ' not found on node.');
@@ -83,7 +83,7 @@ class UploadTestCase extends DrupalWebTestCase {
       $edit = array();
       $edit['files[' . $upload->fid . '][remove]'] = TRUE;
       $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-      $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'])), 'File deleted successfully.');
+      $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title[LANGUAGE_NONE][0]['value'])), 'File deleted successfully.');
 
       $this->assertNoText($new_name, $new_name . ' not found on node.');
       $uri = 'public://' . $upload->description;
@@ -197,7 +197,7 @@ class UploadTestCase extends DrupalWebTestCase {
     $edit['files[upload]'] = $filename; //edit-upload
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     if ($assert) {
-      $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title[FIELD_LANGUAGE_NONE][0]['value'])), 'File attached successfully.');
+      $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title[LANGUAGE_NONE][0]['value'])), 'File attached successfully.');
     }
   }
 
