@@ -2801,15 +2801,8 @@ function _locale_translate_seek() {
     );
   }
 
-  if (count($rows)) {
-    $output .= theme('table', array('header' => $header, 'rows' => $rows));
-    if ($pager = theme('pager', array('tags' => NULL))) {
-      $output .= $pager;
-    }
-  }
-  else {
-    $output .= t('No strings found for your search.');
-  }
+  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No strings available.')));
+  $output .= theme('pager', array('tags' => NULL));
 
   return $output;
 }

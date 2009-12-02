@@ -2338,6 +2338,7 @@ function theme_container($variables) {
 function theme_tableselect($variables) {
   $element = $variables['element'];
   $rows = array();
+  $header = $element['#header'];
   if (!empty($element['#options'])) {
     // Generate a table row for each selectable item in #options.
     foreach ($element['#options'] as $key => $value) {
@@ -2360,15 +2361,9 @@ function theme_tableselect($variables) {
     // Add an empty header or a "Select all" checkbox to provide room for the
     // checkboxes/radios in the first table column.
     $first_col = $element['#js_select'] ? array(theme('table_select_header_cell')) : array('');
-    $header = array_merge($first_col, $element['#header']);
+    $header = array_merge($first_col, $header);
   }
-  else {
-    // If there are no selectable options, display the empty text over the
-    // entire width of the table.
-    $header = $element['#header'];
-    $rows[] = array(array('data' => $element['#empty'], 'colspan' => count($header)));
-  }
-  return theme('table', array('header' => $header, 'rows' => $rows));
+  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => $element['#empty']));
 }
 
 /**

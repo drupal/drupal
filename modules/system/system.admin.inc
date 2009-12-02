@@ -2493,12 +2493,7 @@ function theme_system_modules_uninstall($variables) {
     );
   }
 
-  // Only display table if there are modules that can be uninstalled.
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No modules are available to uninstall.'), 'colspan' => '3', 'align' => 'center', 'class' => array('message')));
-  }
-
-  $output  = theme('table', array('header' => $header, 'rows' => $rows));
+  $output  = theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No modules are available to uninstall.')));
   $output .= drupal_render_children($form);
 
   return $output;
@@ -2648,14 +2643,11 @@ function system_date_time_formats() {
     }
   }
 
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No custom date formats available. <a href="@link">Add date format</a>.', array('@link' => url('admin/config/regional/date-time/formats/add'))), 'colspan' => '5', 'class' => array('message')));
-  }
-
   $build['date_formats_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#empty' => ('No custom date formats available.'),
   );
 
   return $build;
@@ -3012,4 +3004,3 @@ function system_actions_remove_orphans() {
   actions_synchronize(TRUE);
   drupal_goto('admin/config/system/actions/manage');
 }
-

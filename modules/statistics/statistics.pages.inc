@@ -38,15 +38,12 @@ function statistics_node_tracker() {
       );
     }
 
-    if (empty($rows)) {
-      $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
-    }
-
     drupal_set_title($node->title[FIELD_LANGUAGE_NONE][0]['value']);
     $build['statistics_table'] = array(
       '#theme' => 'table',
       '#header' => $header,
-      '#rows' => $rows
+      '#rows' => $rows,
+      '#empty' => t('No statistics available.'),
     );
     $build['statistics_pager'] = array('#theme' => 'pager');
     return $build;
@@ -79,15 +76,12 @@ function statistics_user_tracker() {
         l(t('details'), "admin/reports/access/$log->aid"));
     }
 
-    if (empty($rows)) {
-      $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 3));
-    }
-
     drupal_set_title(format_username($account));
     $build['statistics_table'] = array(
       '#theme' => 'table',
       '#header' => $header,
-      '#rows' => $rows
+      '#rows' => $rows,
+      '#empty' => t('No statistics available.'),
     );
     $build['statistics_pager'] = array('#theme' => 'pager');
     return $build;

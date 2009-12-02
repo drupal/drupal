@@ -5427,7 +5427,7 @@ function drupal_common_theme() {
       'variables' => array('links' => NULL),
     ),
     'table' => array(
-      'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE),
+      'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'empty' => ''),
     ),
     'table_select_header_cell' => array(
       'variables' => array(),

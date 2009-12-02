@@ -35,14 +35,11 @@ function statistics_recent_hits() {
       l(t('details'), "admin/reports/access/$log->aid"));
   }
 
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
-  }
-
   $build['statistics_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#empty' => t('No statistics available.'),
   );
   $build['statistics_pager'] = array('#theme' => 'pager');
   return $build;
@@ -82,15 +79,12 @@ function statistics_top_pages() {
     $rows[] = array($page->hits, _statistics_format_item($page->title, $page->path), t('%time ms', array('%time' => round($page->average_time))), format_interval(round($page->total_time / 1000)));
   }
 
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
-  }
-
   drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
   $build['statistics_top_pages_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#empty' => t('No statistics available.'),
   );
   $build['statistics_top_pages_pager'] = array('#theme' => 'pager');
   return $build;
@@ -136,15 +130,12 @@ function statistics_top_visitors() {
     $rows[] = array($account->hits, ($account->uid ? theme('username', array('account' => $account)) : $account->hostname), format_interval(round($account->total / 1000)), (user_access('block IP addresses') && !$account->uid) ? $ban_link : '');
   }
 
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
-  }
-
   drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
   $build['statistics_top_visitors_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#empty' => t('No statistics available.'),
   );
   $build['statistics_top_visitors_pager'] = array('#theme' => 'pager');
   return $build;
@@ -186,14 +177,11 @@ function statistics_top_referrers() {
     $rows[] = array($referrer->hits, _statistics_link($referrer->url), t('@time ago', array('@time' => format_interval(REQUEST_TIME - $referrer->last))));
   }
 
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 3));
-  }
-
   $build['statistics_top_referrers_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#empty' => t('No statistics available.'),
   );
   $build['statistics_top_referrers_pager'] = array('#theme' => 'pager');
   return $build;

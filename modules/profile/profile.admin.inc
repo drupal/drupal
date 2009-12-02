@@ -148,9 +148,6 @@ function theme_profile_admin_overview($variables) {
       $rows[] = array('data' => $row, 'class' => array('draggable'));
     }
   }
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No fields available.'), 'colspan' => 7));
-  }
 
   $header = array(t('Title'), t('Name'), t('Type'));
   if (isset($form['submit'])) {
@@ -159,7 +156,7 @@ function theme_profile_admin_overview($variables) {
   }
   $header[] = array('data' => t('Operations'), 'colspan' => 2);
 
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'profile-fields')));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No fields available.'), 'attributes' => array('id' => 'profile-fields')));
   $output .= drupal_render_children($form);
 
   return $output;

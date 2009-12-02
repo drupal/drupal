@@ -1706,6 +1706,8 @@ function theme_submenu($variables) {
  *     within a table. For example, one may easily group three columns and
  *     apply same background style to all.
  *   - sticky: Use a "sticky" table header.
+ *   - empty: The message to display in an extra row if table does not have any
+ *     rows.
  *
  * @return
  *   An HTML string representing the table.
@@ -1717,6 +1719,7 @@ function theme_table($variables) {
   $caption = $variables['caption'];
   $colgroups = $variables['colgroups'];
   $sticky = $variables['sticky'];
+  $empty = $variables['empty'];
 
   // Add sticky headers, if applicable.
   if (count($header) && $sticky) {
@@ -1782,6 +1785,11 @@ function theme_table($variables) {
   }
   else {
     $ts = array();
+  }
+
+  // Add the 'empty' row message if available.
+  if (!count($rows) && $empty) {
+    $rows[] = array(array('data' => $empty, 'colspan' => count($header), 'class' => array('empty', 'message')));
   }
 
   // Format the table rows:

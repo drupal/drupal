@@ -79,17 +79,13 @@ function theme_taxonomy_overview_vocabularies($variables) {
     }
   }
 
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/structure/taxonomy/add'))), 'colspan' => '5'));
-  }
-
   $header = array(t('Vocabulary name'));
   if (isset($form['submit'])) {
     $header[] = t('Weight');
     drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
   }
   $header[] = array('data' => t('Operations'), 'colspan' => '3');
-  return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'taxonomy'))) . drupal_render_children($form);
+  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No vocabularies available.'),'attributes' => array('id' => 'taxonomy'))) . drupal_render_children($form);
 }
 
 /**
@@ -704,7 +700,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
       '#default_value' => $parent,
       '#multiple' => TRUE,
     );
-    
+
   }
   $form['advanced']['weight'] = array(
     '#type' => 'textfield',

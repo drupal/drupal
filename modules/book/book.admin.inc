@@ -19,12 +19,7 @@ function book_admin_overview() {
     $rows[] = array(l($book['title'], $book['href'], $book['options']), l(t('edit order and titles'), 'admin/content/book/' . $book['nid']));
   }
 
-  // If no books were found, let the user know.
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No books available.'), 'colspan' => 2));
-  }
-
-  return theme('table', array('header' => $headers, 'rows' => $rows));
+  return theme('table', array('header' => $headers, 'rows' => $rows, 'empty' => t('No books available.')));
 }
 
 /**
@@ -260,4 +255,3 @@ function theme_book_admin_table($variables) {
 
   return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'book-outline')));
 }
-

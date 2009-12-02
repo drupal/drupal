@@ -554,18 +554,11 @@ function node_admin_nodes() {
   }
   // Otherwise, use a simple table.
   else {
-    // Display an empty message like in the tableselect.
-    if (empty($options)) {
-      $row = array(
-        'data' => t('No content available.'),
-        'colspan' => count($header),
-      );
-      $options = array($row);
-    }
     $form['nodes'] = array(
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $options,
+      '#empty' => t('No content available.'),
     );
   }
 

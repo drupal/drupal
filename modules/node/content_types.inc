@@ -44,14 +44,11 @@ function node_overview_types() {
     }
   }
 
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No content types available. <a href="@link">Add content type</a>.', array('@link' => url('admin/structure/types/add'))), 'colspan' => '5', 'class' => array('message')));
-  }
-
   $build['node_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
-    '#rows' => $rows
+    '#rows' => $rows,
+    '#empty' => t('No content types available.'),
   );
 
   return $build;
@@ -130,7 +127,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#title' => t('Description'),
     '#type' => 'textarea',
     '#default_value' => $type->description,
-    '#description' => t('Describe this content type. It will be displayed on the <em>Add new content</em> page.'),    
+    '#description' => t('Describe this content type. It will be displayed on the <em>Add new content</em> page.'),
   );
 
   $form['additional_settings'] = array(
