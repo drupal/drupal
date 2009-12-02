@@ -1,6 +1,48 @@
 <?php
 // $Id$
 
+/**
+ * Perform basic XML-RPC tests that do not require addition callbacks.
+ */
+class XMLRPCBasicTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name'  => 'XML-RPC basic',
+      'description'  => 'Perform basic XML-RPC tests that do not require additional callbacks.',
+      'group' => 'XML-RPC',
+    );
+  }
+
+  /**
+   * Ensure that a basic XML-RPC call with no parameters works.
+   */
+  protected function testListMethods() {
+    // Minimum list of methods that should be included.
+    $minimum = array(
+      'system.multicall',
+      'system.methodSignature',
+      'system.getCapabilities',
+      'system.listMethods',
+      'system.methodHelp',
+    );
+
+    // Invoke XML-RPC call to get list of methods.
+    $url = url(NULL, array('absolute' => TRUE)) . 'xmlrpc.php';
+    $methods = xmlrpc($url, 'system.listMethods');
+
+    // Ensure that the minimum methods were found.
+    $count = 0;
+    foreach ($methods as $method) {
+      if (in_array($method, $minimum)) {
+        $count++;
+      }
+    }
+
+    $this->assertEqual($count, count($minimum), 'system.listMethods returned at least the minimum listing');
+  }
+}
+
 class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
