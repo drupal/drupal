@@ -413,7 +413,7 @@ function block_admin_configure_submit($form, &$form_state) {
       db_merge('block')
         ->key(array('theme' => $theme, 'delta' => $form_state['values']['delta'], 'module' => $form_state['values']['module']))
         ->fields(array(
-          'region' => $region,
+          'region' => ($region == BLOCK_REGION_NONE ? '' : $region),
           'pages' => trim($form_state['values']['pages']),
           'status' => (int) ($region != BLOCK_REGION_NONE),
         ))
@@ -498,7 +498,7 @@ function block_add_block_form_submit($form, &$form_state) {
     db_merge('block')
       ->key(array('theme' => $theme, 'delta' => $delta, 'module' => $form_state['values']['module']))
       ->fields(array(
-        'region' => $region,
+        'region' => ($region == BLOCK_REGION_NONE ? '' : $region),
         'pages' => trim($form_state['values']['pages']),
         'status' => (int) ($region != BLOCK_REGION_NONE),
       ))
