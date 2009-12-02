@@ -194,7 +194,7 @@ function user_admin_account() {
       $users_roles[] = $roles[$user_role->rid];
     }
     asort($users_roles);
-    
+
     $options[$account->uid] = array(
       'username' => theme('username', array('account' => $account)),
       'status' =>  $status[$account->status],
@@ -204,7 +204,7 @@ function user_admin_account() {
       'operations' => array('data' => array('#type' => 'link', '#title' => t('edit'), '#href' => "user/$account->uid/edit", '#options' => array('query' => $destination))),
     );
   }
-  
+
   $form['accounts'] = array(
     '#type' => 'tableselect',
     '#header' => $header,
@@ -613,7 +613,7 @@ function user_admin_settings() {
   $form['email_canceled']['settings'] = array(
     '#type' => 'container',
     '#states' => array(
-      // Hide the settings when the cancel notify checkbox is disabled. 
+      // Hide the settings when the cancel notify checkbox is disabled.
       'invisible' => array(
         'input[name="user_mail_status_canceled_notify"]' => array('checked' => FALSE),
       ),
@@ -661,7 +661,16 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
   $options = array();
   $module_info = system_get_info('module');
   $hide_descriptions = !system_admin_compact_mode();
+
+  // Get a list of all the modules implementing a hook_permission() and sort by
+  // display name.
+  $modules = array();
   foreach (module_implements('permission') as $module) {
+    $modules[$module_info[$module]['name']] = $module;
+  }
+  ksort($modules);
+
+  foreach ($modules as $display_name => $module) {
     if ($permissions = module_invoke($module, 'permission')) {
       $form['permission'][] = array(
         '#markup' => $module_info[$module]['name'],
