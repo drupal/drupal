@@ -2003,7 +2003,7 @@ class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInt
  *   the order of placeholders in the query string.
  * @param $options
  *   An array of options to control how the query operates.
- * @return
+ * @return DatabaseStatementInterface
  *   A prepared statement object, already executed.
  */
 function db_query($query, array $args = array(), array $options = array()) {
@@ -2033,7 +2033,7 @@ function db_query($query, array $args = array(), array $options = array()) {
  *   the order of placeholders in the query string.
  * @param $options
  *   An array of options to control how the query operates.
- * @return
+ * @return DatabaseStatementInterface
  *   A prepared statement object, already executed.
  */
 function db_query_range($query, $from, $count, array $args = array(), array $options = array()) {
@@ -2077,7 +2077,7 @@ function db_query_temporary($query, array $args = array(), array $options = arra
  *   The table into which to insert.
  * @param $options
  *   An array of options to control how the query operates.
- * @return
+ * @return InsertQuery
  *   A new InsertQuery object for this connection.
  */
 function db_insert($table, array $options = array()) {
@@ -2094,7 +2094,7 @@ function db_insert($table, array $options = array()) {
  *   The table into which to merge.
  * @param $options
  *   An array of options to control how the query operates.
- * @return
+ * @return MergeQuery
  *   A new MergeQuery object for this connection.
  */
 function db_merge($table, array $options = array()) {
@@ -2111,7 +2111,7 @@ function db_merge($table, array $options = array()) {
  *   The table to update.
  * @param $options
  *   An array of options to control how the query operates.
- * @return
+ * @return UpdateQuery
  *   A new UpdateQuery object for this connection.
  */
 function db_update($table, array $options = array()) {
@@ -2128,7 +2128,7 @@ function db_update($table, array $options = array()) {
  *   The table from which to delete.
  * @param $options
  *   An array of options to control how the query operates.
- * @return
+ * @return DeleteQuery
  *   A new DeleteQuery object for this connection.
  */
 function db_delete($table, array $options = array()) {
@@ -2145,7 +2145,7 @@ function db_delete($table, array $options = array()) {
  *   The table from which to delete.
  * @param $options
  *   An array of options to control how the query operates.
- * @return
+ * @return TruncateQuery
  *   A new TruncateQuery object for this connection.
  */
 function db_truncate($table, array $options = array()) {
@@ -2165,7 +2165,7 @@ function db_truncate($table, array $options = array()) {
  *   The alias for the base table of this query.
  * @param $options
  *   An array of options to control how the query operates.
- * @return
+ * @return SelectQuery
  *   A new SelectQuery object for this connection.
  */
 function db_select($table, $alias = NULL, array $options = array()) {
@@ -2185,7 +2185,7 @@ function db_select($table, $alias = NULL, array $options = array()) {
  * @param $options
  *   An array of options to control how the transaction operates.  Only the
  *   target key has any meaning in this case.
- * @return
+ * @return DatabaseTransaction
  *   A new DatabaseTransaction object for this connection.
  */
 function db_transaction($required = FALSE, Array $options = array()) {
