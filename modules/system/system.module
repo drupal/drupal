@@ -223,7 +223,7 @@ function system_permission() {
       'title' => t('Administer user-uploaded files'),
     ),
     'access administration pages' => array(
-      'title' => t('Use the  administration pages and help'),
+      'title' => t('Use the administration pages and help'),
     ),
     'access contextual links' => array(
       'title' => t('Use contextual links'),
