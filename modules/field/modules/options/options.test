@@ -1,5 +1,5 @@
 <?php
-// $Id: options.test,v 1.5 2009/11/20 23:29:28 webchick Exp $
+// $Id: options.test,v 1.6 2009/12/02 19:26:21 dries Exp $
 
 class OptionsWidgetsTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -68,7 +68,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -124,7 +124,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -210,7 +210,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -264,7 +264,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -347,7 +347,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();

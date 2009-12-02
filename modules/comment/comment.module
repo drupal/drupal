@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.812 2009/12/01 16:03:35 dries Exp $
+// $Id: comment.module,v 1.813 2009/12/02 19:26:21 dries Exp $
 
 /**
  * @file
@@ -1672,7 +1672,7 @@ function comment_form($form, &$form_state, $comment) {
     'comment' => '',
     'cid' => NULL,
     'pid' => NULL,
-    'language' => '',
+    'language' => LANGUAGE_NONE,
     'uid' => 0,
   );
   $comment = (object) $comment;

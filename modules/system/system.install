@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.426 2009/12/01 19:19:49 webchick Exp $
+// $Id: system.install,v 1.427 2009/12/02 19:26:22 dries Exp $
 
 /**
  * @file
@@ -2810,6 +2810,16 @@ function system_update_7046() {
  */
 function system_update_7047() {
   variable_set('site_frontpage', drupal_get_normal_path(variable_get('site_frontpage', 'node')));
+}
+
+/**
+ * Convert path languages from the empty string to LANGUAGE_NONE.
+ */
+function system_update_7048() {
+  db_update('url_alias')
+    ->fields(array('language' => LANGUAGE_NONE))
+    ->condition('language', '')
+    ->execute();
 }
 
 /**

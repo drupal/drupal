@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.35 2009/10/11 03:07:16 webchick Exp $
+// $Id: aggregator.test,v 1.36 2009/12/02 19:26:21 dries Exp $
 
 /**
  * @file
@@ -249,7 +249,7 @@ EOF;
   }
 
   function createSampleNodes() {
-    $langcode = FIELD_LANGUAGE_NONE;
+    $langcode = LANGUAGE_NONE;
     // Post 5 articles.
     for ($i = 0; $i < 5; $i++) {
       $edit = array();

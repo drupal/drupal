@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.330 2009/11/22 08:20:51 dries Exp $
+// $Id: bootstrap.inc,v 1.331 2009/12/02 19:26:21 dries Exp $
 
 /**
  * @file
@@ -177,6 +177,13 @@ define('DRUPAL_AUTHENTICATED_RID', 2);
  * http://en.wikipedia.org/wiki/Kilobyte.
  */
 define('DRUPAL_KILOBYTE', 1024);
+
+/**
+ * The language code used when no language is explicitly assigned.
+ *
+ * Defined by ISO639-2 for "No linguistic content / Not applicable".
+ */
+define('LANGUAGE_NONE', 'zxx');
 
 /**
  * The type of language used to define the content language.

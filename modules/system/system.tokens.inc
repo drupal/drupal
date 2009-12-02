@@ -1,5 +1,5 @@
 <?php
-// $Id: system.tokens.inc,v 1.4 2009/10/11 03:07:20 webchick Exp $
+// $Id: system.tokens.inc,v 1.5 2009/12/02 19:26:22 dries Exp $
 
 /**
  * @file
@@ -283,7 +283,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
         case 'node':
           if ($nid = $file->nid) {
             $node = node_load($file->nid);
-            $replacements[$original] = $sanitize ? filter_xss($node->title[FIELD_LANGUAGE_NONE][0]['value']) : $node->title[FIELD_LANGUAGE_NONE][0]['value'];
+            $replacements[$original] = $sanitize ? filter_xss($node->title[LANGUAGE_NONE][0]['value']) : $node->title[LANGUAGE_NONE][0]['value'];
           }
           break;
 

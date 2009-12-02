@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.49 2009/12/02 08:08:11 webchick Exp $
+// $Id: field.module,v 1.50 2009/12/02 19:26:21 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -68,13 +68,6 @@ module_load_include('inc', 'field', 'field.form');
  * unlimited number of values.
  */
 define('FIELD_CARDINALITY_UNLIMITED', -1);
-
-/**
- * The language code assigned to untranslatable fields.
- *
- * Defined by ISO639-2 for "No linguistic content / Not applicable".
- */
-define('FIELD_LANGUAGE_NONE', 'zxx');
 
 /**
  * TODO
