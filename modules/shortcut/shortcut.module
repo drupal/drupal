@@ -105,10 +105,6 @@ function shortcut_menu() {
  */
 function shortcut_theme() {
   return array(
-    'shortcut_set_switch' => array(
-      'render element' => 'form',
-      'file' => 'shortcut.admin.inc',
-    ),
     'shortcut_set_customize' => array(
       'render element' => 'form',
       'file' => 'shortcut.admin.inc',

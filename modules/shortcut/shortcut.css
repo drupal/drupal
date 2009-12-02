@@ -82,3 +82,12 @@ div.add-or-remove-shortcuts a:hover span.text {
   -webkit-border-bottom-right-radius: 5px;
 }
 
+#shortcut-set-switch .form-type-radios {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+#shortcut-set-switch .form-item-new {
+  padding-top: 0;
+  padding-left: 17px;
+}

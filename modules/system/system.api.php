@@ -320,6 +320,8 @@ function hook_cron_queue_info() {
  *  - "#pre_render": array of callback functions taking $element and $form_state.
  *  - "#post_render": array of callback functions taking $element and $form_state.
  *  - "#submit": array of callback functions taking $form and $form_state.
+ *  - "#title_display": optional string indicating if and how #title should be
+ *    displayed, see theme_form_element() and theme_form_element_label().
  *
  * @see hook_element_info_alter()
  * @see system_element_info()

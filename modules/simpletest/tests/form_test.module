@@ -94,6 +94,14 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form_test/form-labels'] = array(
+    'title' => 'Form label test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_label_test_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -472,6 +480,62 @@ function form_test_storage_form_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
   $form_state['storage']['step']++;
   drupal_set_message("Form constructions: ". $_SESSION['constructions']);
+}
+
+ /**
+ * A form for testing form labels and required marks.
+ */
+function form_label_test_form(&$form_state) {
+  $form['form_checkboxes_test'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Checkboxes test'),
+    '#options' => array(
+      'first-checkbox' => t('First checkbox'),
+      'second-checkbox' => t('Second checkbox'),
+      'third-checkbox' => t('Third checkbox'),
+    ),
+  );
+  $form['form_radios_test'] = array(
+    '#type' => 'radios',
+    '#title' => t('Radios test'),
+    '#options' => array(
+      'first-radio' => t('First radio'),
+      'second-radio' => t('Second radio'),
+      'third-radio' => t('Third radio'),
+    ),
+  );
+  $form['form_checkbox_test'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Checkbox test'),
+  );
+  $form['form_textfield_test_title_and_required'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Textfield test for required with title'),
+    '#required' => TRUE,
+  );
+  $form['form_textfield_test_no_title_required'] = array(
+    '#type' => 'textfield',
+    // We use an empty title, since not setting #title supresses the label
+    // and required marker.
+    '#title' => '',
+    '#required' => TRUE,
+  );
+  $form['form_textfield_test_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Textfield test for title only'),
+    // Not required.
+  );
+  $form['form_textfield_test_title_after'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Textfield test for title after element'),
+    '#title_display' => 'after',
+  );
+  // Textfield test for title set not to display
+  $form['form_textfield_test_title_no_show'] = array(
+    '#type' => 'textfield',
+  );
+
+  return $form;
 }
 
 /**

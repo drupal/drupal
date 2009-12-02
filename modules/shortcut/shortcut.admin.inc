@@ -133,25 +133,6 @@ function shortcut_set_switch_submit($form, &$form_state) {
 }
 
 /**
- * Theme function for the form that switches shortcut sets.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: An array representing the form.
- * @return
- *   A themed HTML string representing the content of the form.
- *
- * @ingroup themeable
- * @see shortcut_set_switch()
- */
-function theme_shortcut_set_switch($variables) {
-  $form = $variables['form'];
-  // Render the textfield for adding a new set inline with the radio button.
-  $form['set']['new']['#title'] = t('New set: !textfield', array('!textfield' => drupal_render($form['new'])));
-  return drupal_render_children($form);
-}
-
-/**
  * Menu callback; Build the form for customizing shortcut sets.
  *
  * @param $form

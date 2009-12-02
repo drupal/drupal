@@ -207,6 +207,62 @@ class FormValidationTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Test form element labels, required markers and associated output.
+ */
+class FormsElementsLabelsTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Form element and label output test',
+      'description' => 'Test form element labels, required markers and associated output.',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Test form elements, labels, title attibutes and required marks output
+   * correctly and have the correct label option class if needed.
+   */
+  function testFormLabels() {
+    $this->drupalGet('form_test/form-labels');
+
+    // Check that the checkbox/radio processing is not interfering with
+    // basic placement.
+    $elements = $this->xpath('//input[@id="edit-form-checkboxes-test-third-checkbox"]/following-sibling::label[@for="edit-form-checkboxes-test-third-checkbox" and @class="option"]');
+    $this->assertTrue(isset($elements[0]), t("Label follows field and label option class correct for regular checkboxes."));
+
+    $elements = $this->xpath('//input[@id="edit-form-radios-test-second-radio"]/following-sibling::label[@for="edit-form-radios-test-second-radio" and @class="option"]');
+    $this->assertTrue(isset($elements[0]), t("Label follows field and label option class correct for regular radios."));
+
+    // Exercise various defaults for checkboxes and modifications to ensure
+    // appropriate override and correct behaviour.
+    $elements = $this->xpath('//input[@id="edit-form-checkbox-test"]/following-sibling::label[@for="edit-form-checkbox-test" and @class="option"]');
+    $this->assertTrue(isset($elements[0]), t("Label follows field and label option class correct for a checkbox by default."));
+
+    // Exercise various defaults for textboxes and modifications to ensure
+    // appropriate override and correct behaviour.
+    $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-and-required"]/child::span[@class="form-required"]/parent::*/following-sibling::input[@id="edit-form-textfield-test-title-and-required"]');
+    $this->assertTrue(isset($elements[0]), t("Label preceeds textfield, with required marker inside label."));
+
+    $elements = $this->xpath('//input[@id="edit-form-textfield-test-no-title-required"]/preceding-sibling::label[@for="edit-form-textfield-test-no-title-required"]/span[@class="form-required"]');
+    $this->assertTrue(isset($elements[0]), t("Label tag with required marker preceeds required textfield with no title."));
+
+    $elements = $this->xpath('//input[@id="edit-form-textfield-test-title"]/preceding-sibling::span[@class="form-required"]');
+    $this->assertFalse(isset($elements[0]), t("No required marker on non-required field."));
+
+    $elements = $this->xpath('//input[@id="edit-form-textfield-test-title-after"]/following-sibling::label[@for="edit-form-textfield-test-title-after" and @class="option"]');
+    $this->assertTrue(isset($elements[0]), t("Label after field and label option class correct for text field."));
+
+    $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-no-show"]');
+    $this->assertFalse(isset($elements[0]), t("No label tag when title set not to display."));
+  }
+}
+
+/**
  * Test the tableselect form element for expected behavior.
  */
 class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {

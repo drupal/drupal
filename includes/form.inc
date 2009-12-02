@@ -1065,6 +1065,7 @@ function form_builder($form_id, $element, &$form_state) {
   $element += array(
     '#required' => FALSE,
     '#attributes' => array(),
+    '#title_display' => 'before',
   );
 
   // Special handling if we're on the top level form element.
@@ -1687,7 +1688,6 @@ function form_options_flatten($array, $reset = TRUE) {
  */
 function theme_select($variables) {
   $element = $variables['element'];
-  $select = '';
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
   _form_set_class($element, array('form-select'));
   $multiple = $element['#multiple'];
@@ -1843,10 +1843,6 @@ function theme_radio($variables) {
   $output .= 'value="' . $element['#return_value'] . '" ';
   $output .= (check_plain($element['#value']) == $element['#return_value']) ? ' checked="checked" ' : ' ';
   $output .= drupal_attributes($element['#attributes']) . ' />';
-
-  if (isset($element['#title'])) {
-    $output = '<label class="option" for="' . $element['#id'] . '">' . $output . ' ' . $element['#title'] . '</label>';
-  }
 
   return $output;
 }
@@ -2197,11 +2193,6 @@ function theme_checkbox($variables) {
   }
   $checkbox .= drupal_attributes($element['#attributes']) . ' />';
 
-  if (isset($element['#title'])) {
-    $required = !empty($element['#required']) ? ' <span class="form-required" title="' . $t('This field is required.') . '">*</span>' : '';
-    $checkbox = '<label class="option" for="' . $element['#id'] . '">' . $checkbox . ' ' . $element['#title'] . $required . '</label>';
-  }
-
   return $checkbox;
 }
 
@@ -2235,6 +2226,15 @@ function theme_checkboxes($variables) {
  * This is used as a pre render function for checkboxes and radios.
  */
 function form_pre_render_conditional_form_element($element) {
+  // Set the element's title attribute to show #title as a tooltip, if needed.
+  if (isset($element['#title']) && $element['#title_display'] == 'attribute') {
+    $element['#attributes']['title'] = $element['#title'];
+    if (!empty($element['#required'])) {
+      // Append an indication that this field is required.
+      $element['#attributes']['title'] .= ' (' . $t('Required') . ')';
+    }
+  }
+
   if (isset($element['#title']) || isset($element['#description'])) {
     unset($element['#id']);
     $element['#theme_wrappers'][] = 'form_element';
@@ -2827,10 +2827,37 @@ function theme_file($variables) {
 /**
  * Theme a form element.
  *
+ * Each form element is wrapped in a DIV with #type and #name classes. In
+ * addition to the element itself, the div contains a label before or after
+ * the element based on the optional #title_display property. After the label
+ * and fields this function outputs the optional element #description.
+ *
+ * The optional #title_display property can have these values:
+ * - before: The label is output before the element. This is the default.
+ *   The label includes the #title and the required marker, if #required.
+ * - after: The label is output after the element. For example, this is used
+ *   for radio and checkbox #type elements as set in system_element_info().
+ *   If the #title is empty but the field is #required, the label will
+ *   contain only the required marker.
+ * - attribute: Set the title attribute on the element to create a tooltip
+ *   but output no label element. This is supported only for checkboxes
+ *   and radios in form_pre_render_conditional_form_element(). It is used
+ *   where a visual label is not needed, such as a table of checkboxes where
+ *   the row and column provide the context. The tooltip will include the
+ *   title and required marker.
+ *
+ * If the #title property is not set, then the label and any required marker
+ * will not be output, regardless of the #title_display or #required values.
+ * This can be useful in cases such as the password_confirm element, which
+ * creates children elements that have their own labels and required markers,
+ * but the parent element should have neither. Use this carefully because a
+ * field without an associated label can cause accessibility challenges.
+ *
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #description, #id, #required, #children
+ *     Properties used: #title, #title_display, #description, #id, #required,
+ *     #children, #type, #name.
  *
  * @return
  *   A string representing the form element.
@@ -2851,20 +2878,30 @@ function theme_form_element($variables) {
     $class[] = 'form-item-' . strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
   }
 
-  $output = '<div class="' . implode(' ', $class) . '">' . "\n";
-  $required = !empty($element['#required']) ? theme('form_required_marker', array('element' => $element)) : '';
-
-  if (!empty($element['#title']) && empty($element['#form_element_skip_title'])) {
-    $title = $element['#title'];
-    if (!empty($element['#id'])) {
-      $output .= ' <label for="' . $element['#id'] . '">' . $t('!title !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
-    }
-    else {
-      $output .= ' <label>' . $t('!title !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
-    }
+  // If #title is not set, we don't display any label or required marker.
+  if (!isset($element['#title'])) {
+    $element['#title_display'] = 'none';
   }
 
-  $output .= " " . $element['#children'] . "\n";
+  $output = '<div class="' . implode(' ', $class) . '">' . "\n";
+
+  switch ($element['#title_display']) {
+    case 'before':
+      $output .= ' ' . theme('form_element_label', $variables);
+      $output .= ' ' . $element['#children'] . "\n";
+      break;
+
+    case 'after':
+      $output .= ' ' . $element['#children'];
+      $output .= ' ' . theme('form_element_label', $variables) . "\n";
+      break;
+
+    case 'none':
+    case 'attribute':
+      // Output no label and no required marker, only the children.
+      $output .= ' ' . $element['#children'] . "\n";
+      break;
+  }
 
   if (!empty($element['#description'])) {
     $output .= ' <div class="description">' . $element['#description'] . "</div>\n";
@@ -2894,6 +2931,58 @@ function theme_form_required_marker($variables) {
     'title' => $t('This field is required.'),
   );
   return '<span' . drupal_attributes($attributes) . '>*</span>';
+}
+
+/**
+ * Theme a form element label and required marker.
+ *
+ * Form element labels include the #title and a #required marker. The label is
+ * associated with the element itself by the element #id. Labels may appear
+ * before or after elements, depending on theme_form_element() and #title_display.
+ *
+ * This function will not be called for elements with no labels, depending on
+ * #title_display. For elements that have an empty #title and are not required,
+ * this function will output no label (''). For required elements that have an
+ * empty #title, this will output the required marker alone within the label.
+ * The label will use the #id to associate the marker with the field that is
+ * required. That is especially important for screenreader users to know
+ * which field is required.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #required, #title, #id, #value, #description.
+ * @return
+ *   A string representing the form element label.
+ *
+ * @ingroup themeable
+ */
+function theme_form_element_label($variables) {
+  $element = $variables['element'];
+  // This is also used in the installer, pre-database setup.
+  $t = get_t();
+
+  // If title and required marker are both empty, output no label.
+  if (empty($element['#title']) && empty($element['#required'])) {
+    return '';
+  }
+
+  // If the element is required, a required marker is appended to the label.
+  $required = !empty($element['#required']) ? theme('form_required_marker', array('element' => $element)) : '';
+
+  $title = filter_xss_admin($element['#title']);
+
+  $attributes = array();
+  if ($element['#title_display'] == 'after') {
+    // Style the label as class option to display inline with the element.
+    $attributes['class'] = 'option';
+  }
+  if (!empty($element['#id'])) {
+    $attributes['for'] = $element['#id'];
+  }
+
+  // The leading whitespace helps visually separate fields from inline labels.
+  return ' <label' . drupal_attributes($attributes) . '>' . $t('!title !required', array('!title' => $title, '!required' => $required)) . "</label>\n";
 }
 
 /**

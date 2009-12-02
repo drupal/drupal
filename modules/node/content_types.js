@@ -22,7 +22,7 @@ Drupal.behaviors.contentTypes = {
     });
     $('fieldset#edit-display', context).setSummary(function(context) {
       var vals = [];
-      $('input:checked', context).parent().each(function() {
+      $('input:checked', context).next('label').each(function() {
         vals.push(Drupal.checkPlain($(this).text()));
       });
       if (!$('#edit-node-submitted', context).is(':checked')) {

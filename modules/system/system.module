@@ -56,7 +56,6 @@ define('REGIONS_VISIBLE', 'visible');
  */
 define('REGIONS_ALL', 'all');
 
-
 /**
  * Implement hook_help().
  */
@@ -399,7 +398,7 @@ function system_element_info() {
     '#process' => array('ajax_process_form'),
     '#theme' => 'radio',
     '#theme_wrappers' => array('form_element'),
-    '#form_element_skip_title' => TRUE,
+    '#title_display' => 'after',
   );
   $types['checkboxes'] = array(
     '#input' => TRUE,
@@ -414,7 +413,7 @@ function system_element_info() {
     '#process' => array('ajax_process_form'),
     '#theme' => 'checkbox',
     '#theme_wrappers' => array('form_element'),
-    '#form_element_skip_title' => TRUE,
+    '#title_display' => 'after',
   );
   $types['select'] = array(
     '#input' => TRUE,
