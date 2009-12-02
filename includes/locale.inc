@@ -712,14 +712,13 @@ function locale_language_providers_url_form() {
   $form = array();
 
   $form['locale_language_negotiation_url_part'] = array(
-    '#title' => t('URL language indicator'),
+    '#title' => t('The part of the URL that will determine the language.'),
     '#type' => 'radios',
     '#options' => array(
       LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX => t('Path prefix'),
       LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN => t('Domain'),
     ),
     '#default_value' => variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX),
-    '#description' => t('Select which part of the URL will determine the language.'),
   );
 
   $form['#redirect'] = 'admin/config/regional/language/configure';
@@ -737,7 +736,7 @@ function locale_language_providers_session_form() {
     '#title' => t('Request/session parameter'),
     '#type' => 'textfield',
     '#default_value' => variable_get('locale_language_negotiation_session_param', 'language'),
-    '#description' => t('This value will be the name of the request/session parameter which will be used to determine the desired language.'),
+    '#description' => t('Name of the request/session parameter used to determine the desired language.'),
   );
 
   $form['#redirect'] = 'admin/config/regional/language/configure';
