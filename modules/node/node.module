@@ -924,13 +924,15 @@ function node_validate($node, $form = array()) {
 }
 
 /**
- * Prepare node for save and allow modules to make changes.
+ * Prepare node for saving by populating author and creation date.
  */
 function node_submit($node) {
   global $user;
 
-  if (user_access('administer nodes')) {
-    // Populate the "authored by" field.
+  // A user with 'administer nodes' permission might assign the node author by
+  // entering a user name in the node form, which we then need to translate to a
+  // user ID, unless we've already been provided a user ID by other means.
+  if (user_access('administer nodes') && !isset($node->uid)) {
     if ($account = user_load_by_name($node->name)) {
       $node->uid = $account->uid;
     }

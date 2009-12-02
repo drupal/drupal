@@ -840,7 +840,11 @@ class NodeSaveTestCase extends DrupalWebTestCase {
       'nid' => $test_nid,
       'is_new' => TRUE,
     );
-    $node = (object)$node;
+    $node = node_submit((object)$node);
+
+    // Verify that node_submit did not overwrite the user ID.
+    $this->assertEqual($node->uid, $this->web_user->uid, t('Function node_submit() preserves user ID'));
+
     node_save($node);
     // Test the import.
     $node_by_nid = node_load($test_nid);
