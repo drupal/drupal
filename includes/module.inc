@@ -8,7 +8,7 @@
 
 /**
  * Load all the modules that have been enabled in the system table.
- * 
+ *
  * @param $bootstrap
  *   Whether to load only the reduced set of modules loaded in "bootstrap mode"
  *   for cached pages. See bootstrap.inc.
@@ -115,7 +115,7 @@ function system_list($type) {
       $bootstrap_list = db_query("SELECT name, filename FROM {system} WHERE status = 1 AND bootstrap = 1 AND type = 'module' ORDER BY weight ASC, name ASC")->fetchAllAssoc('name');
       cache_set('bootstrap_modules', $bootstrap_list, 'cache_bootstrap');
     }
-    // To avoid a separate database lookup for the filepath, prime the 
+    // To avoid a separate database lookup for the filepath, prime the
     // drupal_get_filename() static cache for bootstrap modules only.
     // The rest is stored separately to keep the bootstrap module cache small.
     foreach ($bootstrap_list as $module) {
@@ -126,7 +126,7 @@ function system_list($type) {
     $lists['bootstrap'] = array_keys($bootstrap_list);
   }
   // Otherwise build the list for enabled modules and themes.
-  elseif (!isset($lists['module_enable'])) {
+  elseif (!isset($lists['module_enabled'])) {
     if ($cached = cache_get('system_list', 'cache_bootstrap')) {
       $lists = $cached->data;
     }
@@ -158,7 +158,7 @@ function system_list($type) {
       }
       cache_set('system_list', $lists, 'cache_bootstrap');
     }
-    // To avoid a separate database lookup for the filepath, prime the 
+    // To avoid a separate database lookup for the filepath, prime the
     // drupal_get_filename() static cache with all enabled modules and themes.
     foreach ($lists['filepaths'] as $item) {
       drupal_get_filename($item['type'], $item['name'], $item['filepath']);
