@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.34 2009/11/23 22:31:42 dries Exp $
+// $Id: query.inc,v 1.35 2009/12/02 23:05:13 dries Exp $
 
 /**
  * @ingroup database
@@ -1353,6 +1353,8 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
 
 /**
  * Returns a new DatabaseCondition, set to "OR" all conditions together.
+ * 
+ * @return DatabaseCondition
  */
 function db_or() {
   return new DatabaseCondition('OR');
@@ -1360,6 +1362,8 @@ function db_or() {
 
 /**
  * Returns a new DatabaseCondition, set to "AND" all conditions together.
+ * 
+ * @return DatabaseCondition
  */
 function db_and() {
   return new DatabaseCondition('AND');
@@ -1367,6 +1371,8 @@ function db_and() {
 
 /**
  * Returns a new DatabaseCondition, set to "XOR" all conditions together.
+ * 
+ * @return DatabaseCondition
  */
 function db_xor() {
   return new DatabaseCondition('XOR');
@@ -1377,6 +1383,7 @@ function db_xor() {
  *
  * @param
  *   The conjunction (AND, OR, XOR, etc.) to use on conditions.
+ * @return DatabaseCondition
  */
 function db_condition($conjunction) {
   return new DatabaseCondition($conjunction);
