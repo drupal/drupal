@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.850 2009/12/01 22:30:30 dries Exp $
+// $Id: system.module,v 1.851 2009/12/02 00:14:26 dries Exp $
 
 /**
  * @file
@@ -223,7 +223,7 @@ function system_permission() {
       'title' => t('Administer user-uploaded files'),
     ),
     'access administration pages' => array(
-      'title' => t('Use the  administration pages and help'),
+      'title' => t('Use the administration pages and help'),
     ),
     'access contextual links' => array(
       'title' => t('Use contextual links'),
