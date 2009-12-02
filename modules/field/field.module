@@ -57,7 +57,7 @@ module_load_include('inc', 'field', 'field.form');
  *   pluggable back-end storage system for actual field data. The
  *   default implementation, field_sql_storage.module, stores field data
  *   in the local SQL database.
-
+ *
  * - @link field_purge Field API bulk data deletion @endlink. Cleans
  *   up after bulk deletion operations such as field_delete_field()
  *   and field_delete_instance().
@@ -148,7 +148,27 @@ function field_flush_caches() {
 function field_help($path, $arg) {
   switch ($path) {
     case 'admin/help#field':
-      $output = '<p>' . t('The Field API allows custom data fields to be attached to Drupal objects and takes care of storing, loading, editing, and rendering field data. Any object type (node, user, etc.) can use the Field API to make itself "fieldable" and thus allow fields to be attached to it.') . '</p>';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Field module allows custom data fields to be attached to Drupal <em>objects</em> (content nodes, users, taxonomy vocabularies, etc.) and takes care of storing, loading, editing, and rendering field data. Most users will not interact with the Field module directly, but will instead use the <a href="@field-ui-help">Field UI module</a> user interface. Module developers can use the Field API to make new objects "fieldable" and thus allow fields to be attached to their objects. For more information, see the online handbook entry for <a href="@field">Field module</a>.', array('@field-ui-help' => url('admin/help/field_ui'), '@field' => 'http://drupal.org/handbook/modules/field')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Enabling field types') . '</dt>';
+      $output .= '<dd>' . t('The Field module provides the infrastructure for fields and field attachment, but the field types themselves are provided by additional modules. Some of the modules are required; the optional modules can be enabled from the <a href="@modules">Modules administration page</a>. Drupal core includes the following field type modules:', array('@modules' => url('admin/config/modules')));
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Number (required)') . '</dt>';
+      $output .= '<dd>' . t('Fields for storing numbers, in integer, decimal or floating point form. You may define a set of allowed inputs, or specify an allowable range of values. Several common formats for displaying numeric data are available.') . '</dd>';
+      $output .= '<dt>' . t('Text (required)') . '</dt>';
+      $output .= '<dd>' . t( "Fields for storing text. A text field may contain plain text only, or optionally, may use Drupal's input format filters to securely manage HTML output. Text input fields may be either a single line (text field), multiple lines (text area), or for greater input control, a select box, checkbox, or radio buttons. If desired, the field can be validated, so that it is limited to a set of allowed values.") . '</dd>';
+      $output .= '<dt>' . t('List (required)') . '</dt>';
+      $output .= '<dd>' . t('Fields for storing a list of items. Usually these items are inputted through a select list, checkboxes, or radio buttons.') . '</dd>';
+      $output .= '<dt>' . t('Image') . '</dt>';
+      $output .= '<dd>' . t('Fields for storing images.') . '</dd>';
+      $output .= '<dt>' . t('File') . '</dt>';
+      $output .= '<dd>' . t('Fields for attaching files to content.') . '</dd>';
+      $output .= '</dl></dd>';
+      $output .= '<dd>' . t('Additional fields may be provided by contributed modules, which you can find in the <a href="@contrib">contributed module section of drupal.org</a>.', array('@contrib' => 'http://drupal.org/project/modules')) . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
