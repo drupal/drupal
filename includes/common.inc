@@ -5600,7 +5600,7 @@ function drupal_common_theme() {
  */
 
 /**
- * Create all tables that a module defines in its hook_schema().
+ * Creates all tables in a module's hook_schema() implementation.
  *
  * Note: This function does not pass the module's schema through
  * hook_schema_alter(). The module's tables will be created exactly as the
@@ -5608,10 +5608,6 @@ function drupal_common_theme() {
  *
  * @param $module
  *   The module for which the tables will be created.
- * @return
- *   An array of arrays with the following key/value pairs:
- *    - success: a boolean indicating whether the query succeeded.
- *    - query: the SQL query(s) executed, passed through check_plain().
  */
 function drupal_install_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
