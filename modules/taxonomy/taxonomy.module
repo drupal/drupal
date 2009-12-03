@@ -646,6 +646,12 @@ function taxonomy_get_parents($tid, $key = 'tid') {
  * Find all ancestors of a given term ID.
  */
 function taxonomy_get_parents_all($tid) {
+  $cache = &drupal_static(__FUNCTION__, array());
+
+  if (isset($cache[$tid])) {
+    return $cache[$tid];
+  }
+
   $parents = array();
   if ($term = taxonomy_term_load($tid)) {
     $parents[] = $term;
@@ -655,6 +661,9 @@ function taxonomy_get_parents_all($tid) {
       $n++;
     }
   }
+
+  $cache[$tid] = $parents;
+
   return $parents;
 }
 

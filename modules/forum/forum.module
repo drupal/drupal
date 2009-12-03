@@ -137,6 +137,62 @@ function forum_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  global $user;
+
+  // Add action link to 'node/add/forum' on 'forum' page.
+  if ($root_path == 'forum') {
+    $tid = (isset($router_item['page_arguments'][0]) ? $router_item['page_arguments'][0] : 0);
+    $forums = forum_get_forums($tid);
+    $parents = taxonomy_get_parents_all($tid);
+    if ($forums || $parents) {
+      $vid = variable_get('forum_nav_vocabulary', 0);
+      $vocabulary = taxonomy_vocabulary_load($vid);
+
+      $links = array();
+      // Loop through all bundles for forum taxonomy vocabulary field.
+      $field = field_info_field('taxonomy_' . $vocabulary->machine_name);
+      foreach ($field['bundles']['node'] as $type) {
+        if (node_access('create', $type)) {
+          $links[$type] = array(
+            '#theme' => 'menu_local_action',
+            '#link' => array(
+              'title' => t('Add new @node_type', array('@node_type' => node_type_get_name($type))),
+              'href' => 'node/add/' . str_replace('_', '-', $type) . '/' . $tid,
+            ),
+          );
+        }
+      }
+      if (empty($links)) {
+        // Authenticated user does not have access to create new topics.
+        if ($user->uid) {
+          $links['disallowed'] = array(
+            '#theme' => 'menu_local_action',
+            '#link' => array(
+              'title' => t('You are not allowed to post new content in the forum.'),
+            ),
+          );
+        }
+        // Anonymous user does not have access to create new topics.
+        else {
+          $links['login'] = array(
+            '#theme' => 'menu_local_action',
+            '#link' => array(
+              'title' => t('<a href="@login">Login</a> to post new content in the forum.', array(
+                '@login' => url('user/login', array('query' => drupal_get_destination())),
+              )),
+              'localized_options' => array('html' => TRUE),
+            ),
+          );
+        }
+      }
+      $data['actions']['output'] = array_merge($data['actions']['output'], $links);
+    }
+  }
+}
 
 /**
  * Implement hook_init().
@@ -647,6 +703,11 @@ function forum_url_outbound_alter(&$path, &$options, $original_path) {
  *   Array of object containing the forum information.
  */
 function forum_get_forums($tid = 0) {
+  $cache = &drupal_static(__FUNCTION__, array());
+
+  if (isset($cache[$tid])) {
+    return $cache[$tid];
+  }
 
   $forums = array();
   $vid = variable_get('forum_nav_vocabulary', 0);
@@ -707,6 +768,8 @@ function forum_get_forums($tid = 0) {
 
     $forums[$forum->tid] = $forum;
   }
+
+  $cache[$tid] = $forums;
 
   return $forums;
 }
@@ -846,32 +909,6 @@ function template_preprocess_forums(&$variables) {
   drupal_set_title($title);
 
   if ($variables['forums_defined'] = count($variables['forums']) || count($variables['parents'])) {
-    // Format the "post new content" links listing.
-    $forum_types = array();
-
-    // Loop through all bundles for forum taxonomy vocabulary field.
-    $field = field_info_field('taxonomy_' . $vocabulary->machine_name);
-    foreach ($field['bundles']['node'] as $type) {
-      // Check if the current user has the 'create' permission for this node type.
-      if (node_access('create', $type)) {
-        // Fetch the "General" name of the content type;
-        // Push the link with title and url to the array.
-        $forum_types[$type] = array('title' => t('Add new @node_type', array('@node_type' => node_type_get_name($type))), 'href' => 'node/add/' . str_replace('_', '-', $type) . '/' . $variables['tid']);
-      }
-    }
-
-    if (empty($forum_types)) {
-      // The user is logged-in; but denied access to create any new forum content type.
-      if ($user->uid) {
-        $forum_types['disallowed'] = array('title' => t('You are not allowed to post new content in the forum.'));
-      }
-      // The user is not logged-in; and denied access to create any new forum content type.
-      else {
-        $forum_types['login'] = array('title' => t('<a href="@login">Login</a> to post new content in the forum.', array('@login' => url('user/login', array('query' => drupal_get_destination())))), 'html' => TRUE);
-      }
-    }
-    $variables['links'] = $forum_types;
-
     if (!empty($variables['forums'])) {
       $variables['forums'] = theme('forum_list', $variables);
     }
@@ -905,8 +942,7 @@ function template_preprocess_forums(&$variables) {
 
   }
   else {
-    drupal_set_title(t('No forums defined'), PASS_THROUGH);
-    $variables['links'] = array();
+    drupal_set_title(t('No forums defined'));
     $variables['forums'] = '';
     $variables['topics'] = '';
   }

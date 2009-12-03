@@ -1953,6 +1953,22 @@ function node_menu() {
 }
 
 /**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function node_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  // Add action link to 'node/add' on 'admin/content' page.
+  if ($root_path == 'admin/content') {
+    $item = menu_get_item('node/add');
+    if ($item['access']) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+}
+
+/**
  * Title callback for a node type.
  */
 function node_type_page_title($type) {

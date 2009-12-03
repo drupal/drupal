@@ -1446,7 +1446,20 @@ function theme_menu_local_task($variables) {
  */
 function theme_menu_local_action($variables) {
   $link = $variables['element']['#link'];
-  return '<li>' . l($link['title'], $link['href'], $link['localized_options']) . "</li>\n";
+
+  $output = '<li>';
+  if (isset($link['href'])) {
+    $output .= l($link['title'], $link['href'], isset($link['localized_options']) ? $link['localized_options'] : array());
+  }
+  elseif (!empty($link['localized_options']['html'])) {
+    $output .= $link['title'];
+  }
+  else {
+    $output .= check_plain($link['title']);
+  }
+  $output .= "</li>\n";
+
+  return $output;
 }
 
 /**
@@ -1797,6 +1810,11 @@ function menu_local_tasks($level = 0) {
       'actions' => $data['actions'],
       'root_path' => $root_path,
     );
+  }
+  // @todo If there are no tabs, then there still can be actions; for example,
+  //   when added via hook_menu_local_tasks_alter().
+  elseif (!empty($data['actions']['output'])) {
+    return array('actions' => $data['actions']) + $empty;
   }
   return $empty;
 }

@@ -187,7 +187,7 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->assertResponse(200);
     $this->assertTitle('Blogs | Drupal', t('Blog page was displayed'));
     $this->assertText(t('Home'), t('Breadcrumbs were displayed'));
-    $this->assertLink(t('Create new blog entry.'));
+    $this->assertLink(t('Create new blog entry'));
 
     // Confirm a blog page was displayed per user.
     $this->drupalGet('blog/' . $user->uid);
