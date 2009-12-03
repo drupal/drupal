@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.24 2009/11/01 21:26:44 webchick Exp $
+// $Id: blog.pages.inc,v 1.25 2009/12/03 20:21:50 dries Exp $
 
 /**
  * @file
@@ -69,15 +69,6 @@ function blog_page_user($account) {
 function blog_page_last() {
   global $user;
   $build = array();
-
-  if (user_access('create blog content')) {
-    $items[] = l(t('Create new blog entry.'), "node/add/blog");
-    $build['blog_actions'] = array(
-      '#items' => $items,
-      '#theme' => 'item_list',
-      '#weight' => -1,
-    );
-  }
 
   $query = db_select('node', 'n')->extend('PagerDefault');
   $nids = $query

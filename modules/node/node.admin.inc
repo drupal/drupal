@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.80 2009/12/02 19:26:22 dries Exp $
+// $Id: node.admin.inc,v 1.81 2009/12/03 20:21:50 dries Exp $
 
 /**
  * @file
@@ -391,11 +391,6 @@ function node_admin_content($form, $form_state) {
   if (isset($form_state['values']['operation']) && $form_state['values']['operation'] == 'delete') {
     return node_multiple_delete_confirm($form, $form_state, array_filter($form_state['values']['nodes']));
   }
-  // Show the 'add new content' link.
-  $form['add_content'] = array(
-    '#access' => _node_add_access(),
-    '#markup' => theme('links', array('links' => array(array('title' => t('Add new content'), 'href' => 'node/add')), 'attributes' => array('class' => array('action-links')))),
-  );
   $form['filter'] = node_filter_form();
   $form['#submit'][] = 'node_filter_form_submit';
   $form['#theme'] = 'node_filter_form';

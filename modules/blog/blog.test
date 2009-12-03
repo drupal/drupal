@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.test,v 1.23 2009/12/02 19:26:21 dries Exp $
+// $Id: blog.test,v 1.24 2009/12/03 20:21:50 dries Exp $
 
 class BlogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -187,7 +187,7 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->assertResponse(200);
     $this->assertTitle('Blogs | Drupal', t('Blog page was displayed'));
     $this->assertText(t('Home'), t('Breadcrumbs were displayed'));
-    $this->assertLink(t('Create new blog entry.'));
+    $this->assertLink(t('Create new blog entry'));
 
     // Confirm a blog page was displayed per user.
     $this->drupalGet('blog/' . $user->uid);
