@@ -1,5 +1,5 @@
 <?php
-// $Id: expert.install,v 1.5 2009/11/10 17:27:54 webchick Exp $
+// $Id: expert.install,v 1.6 2009/12/03 15:33:42 dries Exp $
 
 /**
  * Implement hook_install().
@@ -7,6 +7,28 @@
  * Perform actions to set up the site for this profile.
  */
 function expert_install() {
+  // Add text formats.
+  $plain_text_format = array(
+    'name' => 'Plain text',
+    'weight' => 10,
+    'filters' => array(
+      // Escape all HTML.
+      'filter_html_escape' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+    ),
+  );
+  $plain_text_format = (object) $plain_text_format;
+  filter_format_save($plain_text_format);
+
+  // Set the fallback format to plain text.
+  variable_set('filter_fallback_format', $plain_text_format->format);
 
   // Enable some standard blocks.
   $values = array(
