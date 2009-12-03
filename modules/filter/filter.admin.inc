@@ -135,7 +135,8 @@ function filter_admin_format_form($form, &$form_state, $format) {
   }
   // Table with filters
   $filter_info = filter_get_filters();
-  $filters = filter_list_format($format->format);
+  // Load all configured filters for existing text formats.
+  $filters = !empty($format->format) ? filter_list_format($format->format) : array();
 
   $form['filters'] = array('#type' => 'fieldset',
     '#title' => t('Filters'),

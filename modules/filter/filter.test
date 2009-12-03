@@ -97,8 +97,9 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     foreach ($filters as $name => $filter) {
       // If this filter is not cacheable, update $cacheable accordingly, so we
       // can verify $format->cache after iterating over all filters.
-      if (isset($filter_info[$name]['cache']) && !$filter_info[$name]['cache']) {
+      if ($filter->status && isset($filter_info[$name]['cache']) && !$filter_info[$name]['cache']) {
         $cacheable = FALSE;
+        break;
       }
     }
     $this->assertEqual($filter_format->cache, $cacheable, t('Text format contains proper cache property.'));
@@ -114,18 +115,11 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     foreach ($filters as $name => $filter) {
       $t_args = array('%format' => $format->name, '%filter' => $name);
 
-      // Check whether the filter is contained in the saved $format.
-      if (isset($format_filters[$name])) {
-        // Verify that filter status is properly stored.
-        $this->assertEqual($filter->status, $format_filters[$name]['status'], t('Database: Proper status for %filter in text format %format.', $t_args));
+      // Verify that filter status is properly stored.
+      $this->assertEqual($filter->status, $format_filters[$name]['status'], t('Database: Proper status for %filter in text format %format.', $t_args));
 
-        // Verify that filter settings were properly stored.
-        $this->assertEqual(unserialize($filter->settings), isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), t('Database: Proper filter settings for %filter in text format %format.', $t_args));
-      }
-      // Otherwise, the stored filter must be disabled.
-      else {
-        $this->assertTrue($filter->status == 0, t('Database: Proper status for disabled %filter in text format %format.', $t_args));
-      }
+      // Verify that filter settings were properly stored.
+      $this->assertEqual(unserialize($filter->settings), isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), t('Database: Proper filter settings for %filter in text format %format.', $t_args));
 
       // Verify that each filter has a module name assigned.
       $this->assertTrue(!empty($filter->module), t('Database: Proper module name for %filter in text format %format.', $t_args));
@@ -143,18 +137,11 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     foreach ($filters as $name => $filter) {
       $t_args = array('%format' => $format->name, '%filter' => $name);
 
-      // Check whether the filter is contained in the saved $format.
-      if (isset($format_filters[$name])) {
-        // Verify that filter status is properly stored.
-        $this->assertEqual($filter->status, $format_filters[$name]['status'], t('filter_list_format: Proper status for %filter in text format %format.', $t_args));
+      // Verify that filter status is properly stored.
+      $this->assertEqual($filter->status, $format_filters[$name]['status'], t('filter_list_format: Proper status for %filter in text format %format.', $t_args));
 
-        // Verify that filter settings were properly stored.
-        $this->assertEqual($filter->settings, isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), t('filter_list_format: Proper filter settings for %filter in text format %format.', $t_args));
-      }
-      // Otherwise, the stored filter must be disabled.
-      else {
-        $this->assertTrue($filter->status == 0, t('filter_list_format: Proper status for disabled %filter in text format %format.', $t_args));
-      }
+      // Verify that filter settings were properly stored.
+      $this->assertEqual($filter->settings, isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), t('filter_list_format: Proper filter settings for %filter in text format %format.', $t_args));
 
       // Verify that each filter has a module name assigned.
       $this->assertTrue(!empty($filter->module), t('filter_list_format: Proper module name for %filter in text format %format.', $t_args));

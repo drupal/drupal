@@ -590,16 +590,14 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     $expected = 'font-size:254px;';
 
     // Create a node, using the PHP filter that tests drupal_add_css().
+    $php_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'PHP code'))->fetchField();
     $settings = array(
       'type' => 'page',
       'body' => array(
         LANGUAGE_NONE => array(
           array(
             'value' => t('This tests the inline CSS!') . "<?php drupal_add_css('$css', 'inline'); ?>",
-            // The "PHP code" format is always the most recent one added, since
-            // the PHP module was enabled in the setUp() method of the current
-            // test.
-            'format' => db_query("SELECT MAX(format) FROM {filter_format}")->fetchField(),
+            'format' => $php_format_id,
           ),
         ),
       ),

@@ -7,6 +7,81 @@
  * Perform actions to set up the site for this profile.
  */
 function default_install() {
+  // Add text formats.
+  $filtered_html_format = array(
+    'name' => 'Filtered HTML',
+    'weight' => 0,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // HTML filter.
+      'filter_html' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 2,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $filtered_html_format = (object) $filtered_html_format;
+  filter_format_save($filtered_html_format);
+
+  $full_html_format = array(
+    'name' => 'Full HTML',
+    'weight' => 1,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $full_html_format = (object) $full_html_format;
+  filter_format_save($full_html_format);
+
+  $plain_text_format = array(
+    'name' => 'Plain text',
+    'weight' => 10,
+    'filters' => array(
+      // Escape all HTML.
+      'filter_html_escape' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+    ),
+  );
+  $plain_text_format = (object) $plain_text_format;
+  filter_format_save($plain_text_format);
+
+  // Set the fallback format to plain text.
+  variable_set('filter_fallback_format', $plain_text_format->format);
 
   // Enable some standard blocks.
   $values = array(
@@ -313,8 +388,9 @@ function default_install() {
   field_create_instance($instance);
 
   // Enable default permissions for system roles.
-  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'use text format 1'));
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'post comments without approval', 'use text format 1'));
+  $filtered_html_permission = filter_permission_name($filtered_html_format);
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', $filtered_html_permission));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'post comments without approval', $filtered_html_permission));
 
   // Create a default role for site administrators, with all available permissions assigned.
   $admin_role = new stdClass();

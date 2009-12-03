@@ -59,7 +59,7 @@ function filter_schema() {
       'fmn' => array('format', 'module', 'name'),
     ),
     'indexes' => array(
-      'list' => array('format', 'weight', 'module', 'name'),
+      'list' => array('weight', 'module', 'name'),
     ),
   );
   $schema['filter_format'] = array(
@@ -348,6 +348,14 @@ function filter_update_7005() {
   // We do not delete the 'filter_default_format' variable, since other modules
   // may need it in their update functions.
   // @todo This variable can be deleted in Drupal 8.
+}
+
+/**
+ * Remove the 'format' column from 'list' index on {filter}.
+ */
+function filter_update_7006() {
+  db_drop_index('filter', 'list');
+  db_add_index('filter', 'list', array('weight', 'module', 'name'));
 }
 
 /**

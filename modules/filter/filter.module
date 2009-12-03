@@ -193,22 +193,47 @@ function filter_format_save(&$format) {
   }
 
   // Get the current filters in the format, to add new filters to the bottom.
-  $current = filter_list_format($format->format);
+  $current = ($return != SAVED_NEW ? filter_list_format($format->format) : array());
   $filter_info = filter_get_filters();
+  // Programmatic saves may not contain any filters.
   if (!isset($format->filters)) {
     $format->filters = array();
   }
-  foreach ($format->filters as $name => $filter) {
-    $fields = array();
-    // Add new filters to the bottom.
-    $fields['weight'] = isset($current[$name]->weight) ? $current[$name]->weight : 10;
-    $fields['status'] = $filter['status'];
-    $fields['module'] = $filter_info[$name]['module'];
-    $format->filters[$name]['module'] = $filter_info[$name]['module'];
-    // Only update settings if there are any.
-    if (!empty($filter['settings'])) {
-      $fields['settings'] = serialize($filter['settings']);
+  foreach ($filter_info as $name => $filter) {
+    // As of now, only programmatic saves may contain weight (see below). If
+    // there is no weight, either fall back to the currently stored weight or
+    // add new filters to the bottom.
+    if (!isset($format->filters[$name]['weight'])) {
+      $format->filters[$name]['weight'] = isset($current[$name]->weight) ? $current[$name]->weight : 10;
     }
+    $format->filters[$name]['status'] = isset($format->filters[$name]['status']) ? $format->filters[$name]['status'] : 0;
+    $format->filters[$name]['module'] = $filter['module'];
+
+    // Since filter configuration/order lives on separate pages, there may be no
+    // filter settings contained. In that case, we either fall back to currently
+    // stored settings, default settings (if existent), or an empty array.
+    // @see http://drupal.org/node/558666
+    // If settings were passed, only ensure default settings.
+    if (isset($format->filters[$name]['settings'])) {
+      if (isset($filter['default settings'])) {
+        $format->filters[$name]['settings'] = array_merge($filter['default settings'], $format->filters[$name]['settings']);
+      }
+    }
+    // If we have existing settings, take them over directly.
+    elseif (isset($current[$name]->settings)) {
+      $format->filters[$name]['settings'] = $current[$name]->settings;
+    }
+    // Otherwise, use default settings or fall back to an empty array.
+    else {
+      $format->filters[$name]['settings'] = isset($filter['default settings']) ? $filter['default settings'] : array();
+    }
+
+    $fields = array();
+    $fields['weight'] = $format->filters[$name]['weight'];
+    $fields['status'] = $format->filters[$name]['status'];
+    $fields['module'] = $format->filters[$name]['module'];
+    $fields['settings'] = serialize($format->filters[$name]['settings']);
+
     db_merge('filter')
       ->key(array(
         'format' => $format->format,
@@ -530,7 +555,7 @@ function _filter_format_is_cacheable($format) {
   $filter_info = filter_get_filters();
   foreach ($format->filters as $name => $filter) {
     // By default, 'cache' is TRUE for all filters unless specified otherwise.
-    if (isset($filter_info[$name]['cache']) && !$filter_info[$name]['cache']) {
+    if (!empty($filter['status']) && isset($filter_info[$name]['cache']) && !$filter_info[$name]['cache']) {
       return FALSE;
     }
   }
@@ -556,24 +581,21 @@ function filter_list_format($format_id) {
   $filters = &drupal_static(__FUNCTION__, array());
   $filter_info = filter_get_filters();
 
+  if (!isset($filters['all'])) {
+    $result = db_query('SELECT * FROM {filter} ORDER BY weight, module, name');
+    foreach ($result as $record) {
+      $filters['all'][$record->format][$record->name] = $record;
+    }
+  }
+
   if (!isset($filters[$format_id])) {
     $format_filters = array();
-    $query = db_select('filter', 'filter')
-      ->fields('filter')
-      ->condition('format', $format_id)
-      ->orderBy('weight')
-      ->orderBy('module')
-      ->orderBy('name');
-    $result = $query->execute()->fetchAllAssoc('name');
-    foreach ($result as $name => $filter) {
+    foreach ($filters['all'][$format_id] as $name => $filter) {
       if (isset($filter_info[$name])) {
         $filter->title = $filter_info[$name]['title'];
         // Unpack stored filter settings.
         $filter->settings = (isset($filter->settings) ? unserialize($filter->settings) : array());
-        // Apply default filter settings.
-        if (isset($filter_info[$name]['default settings'])) {
-          $filter->settings = array_merge($filter_info[$name]['default settings'], $filter->settings);
-        }
+
         $format_filters[$name] = $filter;
       }
     }

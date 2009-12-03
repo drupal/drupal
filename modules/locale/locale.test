@@ -1716,7 +1716,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     // Check if node body is showed.
     $this->drupalGet("node/$node->nid");
     $body_xpath = '//div[@id="node-' . $node->nid . '"]//div[@property="content:encoded"]/p';
-    $this->assertEqual(current($this->xpath($body_xpath)), $node->body['en'][0]['value'], 'Node body is correctly showed.', 'Node');
+    $this->assertEqual(current($this->xpath($body_xpath)), $node->body['en'][0]['value'], 'Node body is correctly showed.');
 
     $settings['body[full][type]'] = 'hidden';
     $this->drupalPost('admin/structure/types/manage/page/display', $settings, t('Save'));
