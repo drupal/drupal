@@ -194,7 +194,7 @@
  */
 
 /**
- * Create a field.
+ * Creates a field.
  *
  * This function does not bind the field to any bundle; use
  * field_create_instance() for that.
@@ -360,8 +360,8 @@ function field_create_field($field) {
   return $field;
 }
 
-/*
- * Update a field.
+/**
+ * Updates a field.
  *
  * Any module may forbid any update for any reason. For example, the
  * field's storage module might forbid an update if it would change
@@ -447,8 +447,9 @@ function field_update_field($field) {
 }
 
 /**
- * Read a single field record directly from the database. Generally,
- * you should use the field_info_field() instead.
+ * Reads a single field record directly from the database.
+ *
+ * Generally, you should use the field_info_field() instead.
  *
  * This function will not return deleted fields. Use
  * field_read_fields() instead for this purpose.
@@ -469,7 +470,7 @@ function field_read_field($field_name, $include_additional = array()) {
 }
 
 /**
- * Read in fields that match an array of conditions.
+ * Reads in fields that match an array of conditions.
  *
  * @param array $params
  *   An array of conditions to match against.
@@ -536,8 +537,7 @@ function field_read_fields($params = array(), $include_additional = array()) {
 }
 
 /**
- * Mark a field for deletion, including all its instances and all data
- * associated with it.
+ * Marks a field and its instances and data for deletion.
  *
  * @param $field_name
  *   The field name to delete.
@@ -645,8 +645,8 @@ function field_create_instance($instance) {
   return $instance;
 }
 
-/*
- * Update an instance of a field.
+/**
+ * Updates an instance of a field.
  *
  * @param $instance
  *   An associative array represeting an instance structure. The required
@@ -684,7 +684,7 @@ function field_update_instance($instance) {
 }
 
 /**
- * Store an instance record in the field configuration database.
+ * Stores an instance record in the field configuration database.
  *
  * @param $instance
  *   An instance structure.
@@ -768,8 +768,9 @@ function _field_write_instance($instance, $update = FALSE) {
 }
 
 /**
- * Read a single instance record directly from the database. Generally,
- * you should use the field_info_instance() instead.
+ * Reads a single instance record directly from the database.
+ *
+ * Generally, you should use the field_info_instance() instead.
  *
  * This function will not return deleted instances. Use
  * field_read_instances() instead for this purpose.
@@ -795,7 +796,7 @@ function field_read_instance($obj_type, $field_name, $bundle, $include_additiona
 }
 
 /**
- * Read in field instances that match an array of conditions.
+ * Reads in field instances that match an array of conditions.
  *
  * @param $param
  *   An array of properties to use in selecting a field
@@ -848,8 +849,7 @@ function field_read_instances($params = array(), $include_additional = array()) 
 }
 
 /**
- * Mark a field instance for deletion, including all data associated with
- * it.
+ * Marks a field instance and its data for deletion.
  *
  * @param $instance
  *   An instance structure.
@@ -877,7 +877,7 @@ function field_delete_instance($instance) {
  * @} End of "defgroup field_crud".
  */
 
-/*
+/**
  * @defgroup field_purge Field API bulk data deletion
  * @{
  * Clean up after Field API bulk deletion operations.
@@ -945,7 +945,7 @@ function field_delete_instance($instance) {
  */
 
 /**
- * Purge some deleted Field API data, instances, or fields.
+ * Purges a batch of deleted Field API data, instances, or fields.
  *
  * This function will purge deleted field data on up to a specified maximum
  * number of objects and then return. If a deleted field instance with no
@@ -1002,7 +1002,7 @@ function field_purge_batch($batch_size) {
 }
 
 /**
- * Purge the field data for a single field on a single pseudo-object.
+ * Purges the field data for a single field on a single pseudo-object.
  *
  * This is basically the same as field_attach_delete() except it only applies
  * to a single field. The object itself is not being deleted, and it is quite
@@ -1034,7 +1034,7 @@ function field_purge_data($obj_type, $object, $field, $instance) {
 }
 
 /**
- * Purge a field instance record from the database.
+ * Purges a field instance record from the database.
  *
  * This function assumes all data for the instance has already been purged, and
  * should only be called by field_purge_batch().
@@ -1059,7 +1059,7 @@ function field_purge_instance($instance) {
 }
 
 /**
- * Purge a field record from the database.
+ * Purges a field record from the database.
  *
  * This function assumes all instances for the field has already been purged,
  * and should only be called by field_purge_batch().
