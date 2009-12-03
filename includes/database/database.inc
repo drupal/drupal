@@ -2442,22 +2442,22 @@ function db_field_set_no_default($table, $field) {
 }
 
 /**
- * Add a primary key.
+ * Adds a primary key to a database table.
  *
  * @param $table
- *   The table to be altered.
+ *   Name of the table to be altered.
  * @param $fields
- *   Fields for the primary key.
+ *   Array of fields for the primary key.
  */
 function db_add_primary_key($table, $fields) {
   return Database::getConnection()->schema()->addPrimaryKey($table, $fields);
 }
 
 /**
- * Drop the primary key.
+ * Drops the primary key of a database table.
  *
  * @param $table
- *   The table to be altered.
+ *   Name of the table to be altered.
  */
 function db_drop_primary_key($table) {
   return Database::getConnection()->schema()->dropPrimaryKey($table);
