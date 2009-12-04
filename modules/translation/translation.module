@@ -26,7 +26,7 @@
 define('TRANSLATION_ENABLED', 2);
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function translation_help($path, $arg) {
   switch ($path) {
@@ -51,7 +51,7 @@ function translation_help($path, $arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function translation_menu() {
   $items = array();
@@ -83,7 +83,7 @@ function _translation_tab_access($node) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function translation_permission() {
   return array(
@@ -94,7 +94,7 @@ function translation_permission() {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function translation_form_node_type_form_alter(&$form, &$form_state) {
   // Add translation option to content type form.
@@ -104,7 +104,7 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  *
  * - Add translation option to content type form.
  * - Alters language fields on node forms when a translation
@@ -162,7 +162,7 @@ function translation_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implement hook_node_view().
+ * Implements hook_node_view().
  *
  * Display translation links with native language names, if this node
  * is part of a translation set.
@@ -185,7 +185,7 @@ function translation_node_view($node, $build_mode) {
 }
 
 /**
- * Implement hook_node_prepare().
+ * Implements hook_node_prepare().
  */
 function translation_node_prepare($node) {
   // Only act if we are dealing with a content type supporting translations.
@@ -215,7 +215,7 @@ function translation_node_prepare($node) {
 }
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function translation_node_insert($node) {
   // Only act if we are dealing with a content type supporting translations.
@@ -248,7 +248,7 @@ function translation_node_insert($node) {
 }
 
 /**
- * Implement hook_node_update().
+ * Implements hook_node_update().
  */
 function translation_node_update($node) {
   // Only act if we are dealing with a content type supporting translations.
@@ -275,7 +275,7 @@ function translation_node_update($node) {
 }
 
 /**
- * Implement hook_node_validate().
+ * Implements hook_node_validate().
  *
  * Ensure that duplicate translations can not be created for the same source.
  */
@@ -291,7 +291,7 @@ function translation_node_validate($node, $form) {
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function translation_node_delete($node) {
   // Only act if we are dealing with a content type supporting translations.
@@ -400,7 +400,7 @@ function translation_path_get_translations($path) {
 }
 
 /**
- * Implement hook_language_switch_link_alter().
+ * Implements hook_language_switch_link_alter().
  *
  * Replaces links with pointers to translated versions of the content.
  */

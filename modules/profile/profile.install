@@ -7,14 +7,14 @@
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function profile_uninstall() {
   variable_del('profile_block_author_fields');
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function profile_schema() {
   $schema['profile_field'] = array(

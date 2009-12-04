@@ -24,7 +24,7 @@ function toolbar_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_permission().
+ * Implements hook_permission().
  */
 function toolbar_permission() {
   return array(
@@ -35,7 +35,7 @@ function toolbar_permission() {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function toolbar_theme($existing, $type, $theme, $path) {
   $items['toolbar'] = array(
@@ -53,7 +53,7 @@ function toolbar_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function toolbar_menu() {
   $items['toolbar/toggle'] = array(
@@ -113,7 +113,7 @@ function _toolbar_is_collapsed() {
 }
 
 /**
- * Implement hook_page_build().
+ * Implements hook_page_build().
  *
  * Add admin toolbar to the page_top region automatically.
  */
@@ -137,7 +137,7 @@ function toolbar_pre_render($toolbar) {
 }
 
 /**
- * Implement hook_preprocess_html().
+ * Implements hook_preprocess_html().
  *
  * Add some page classes, so global page theming can adjust to the toolbar.
  */

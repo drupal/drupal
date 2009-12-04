@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_field_info().
+ * Implements hook_field_info().
  *
  * Field settings:
  *   - max_length: the maximum length for a varchar field.
@@ -47,7 +47,7 @@ function text_field_info() {
 }
 
 /**
- * Implement hook_field_schema().
+ * Implements hook_field_schema().
  */
 function text_field_schema($field) {
   switch ($field['type']) {
@@ -100,7 +100,7 @@ function text_field_schema($field) {
 }
 
 /**
- * Implement hook_field_settings_form().
+ * Implements hook_field_settings_form().
  */
 function text_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
@@ -121,7 +121,7 @@ function text_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
- * Implement hook_field_instance_settings_form().
+ * Implements hook_field_instance_settings_form().
  */
 function text_field_instance_settings_form($field, $instance) {
   $settings = $instance['settings'];
@@ -148,7 +148,7 @@ function text_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Implement hook_field_validate().
+ * Implements hook_field_validate().
  *
  * Possible error codes:
  * - 'text_value_max_length': The value exceeds the maximum length.
@@ -181,7 +181,7 @@ function text_field_validate($obj_type, $object, $field, $instance, $langcode, $
 }
 
 /**
- * Implement hook_field_load().
+ * Implements hook_field_load().
  *
  * Where possible, generate the sanitized version of each field early so that
  * it is cached in the field cache. This avoids looking up from the filter cache
@@ -213,7 +213,7 @@ function text_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
 }
 
 /**
- * Implement hook_field_sanitize().
+ * Implements hook_field_sanitize().
  *
  * @see text_field_load()
  */
@@ -241,7 +241,7 @@ function text_field_sanitize($obj_type, $object, $field, $instance, $langcode, &
 }
 
 /**
- * Implement hook_field_is_empty().
+ * Implements hook_field_is_empty().
  */
 function text_field_is_empty($item, $field) {
   if (empty($item['value']) && (string)$item['value'] !== '0') {
@@ -251,7 +251,7 @@ function text_field_is_empty($item, $field) {
 }
 
 /**
- * Implement hook_field_formatter_info().
+ * Implements hook_field_formatter_info().
  */
 function text_field_formatter_info() {
   return array(
@@ -457,7 +457,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
 }
 
 /**
- * Implement hook_field_widget_info().
+ * Implements hook_field_widget_info().
  */
 function text_field_widget_info() {
   return array(
@@ -480,7 +480,7 @@ function text_field_widget_info() {
 }
 
 /**
- * Implement hook_field_widget_settings_form().
+ * Implements hook_field_widget_settings_form().
  */
 function text_field_widget_settings_form($field, $instance) {
   $widget = $instance['widget'];
@@ -509,7 +509,7 @@ function text_field_widget_settings_form($field, $instance) {
 }
 
 /**
- * Implement hook_field_widget().
+ * Implements hook_field_widget().
  */
 function text_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
   $element = $base;
@@ -565,7 +565,7 @@ function text_field_widget(&$form, &$form_state, $field, $instance, $langcode, $
 }
 
 /**
- * Implement hook_field_widget_error().
+ * Implements hook_field_widget_error().
  */
 function text_field_widget_error($element, $error) {
   switch ($error['error']) {

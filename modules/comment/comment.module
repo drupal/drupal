@@ -71,7 +71,7 @@ define('COMMENT_NODE_CLOSED', 1);
 define('COMMENT_NODE_OPEN', 2);
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function comment_help($path, $arg) {
   switch ($path) {
@@ -90,7 +90,7 @@ function comment_help($path, $arg) {
 }
 
 /**
- * Implement hook_entity_info().
+ * Implements hook_entity_info().
  */
 function comment_entity_info() {
   $return =  array(
@@ -121,7 +121,7 @@ function comment_entity_info() {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function comment_theme() {
   return array(
@@ -146,7 +146,7 @@ function comment_theme() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function comment_menu() {
   $items['admin/content/comment'] = array(
@@ -236,14 +236,14 @@ function comment_count_unpublished() {
 }
 
 /**
- * Implement hook_node_type_insert().
+ * Implements hook_node_type_insert().
  */
 function comment_node_type_insert($info) {
   field_attach_create_bundle('comment', 'comment_node_' . $info->type);
 }
 
 /**
- * Implement hook_node_type_update().
+ * Implements hook_node_type_update().
  */
 function comment_node_type_update($info) {
   if (!empty($info->old_type) && $info->type != $info->old_type) {
@@ -252,7 +252,7 @@ function comment_node_type_update($info) {
 }
 
 /**
- * Implement hook_node_type_delete().
+ * Implements hook_node_type_delete().
  */
 function comment_node_type_delete($info) {
   field_attach_delete_bundle('comment', 'comment_node_' . $info->type);
@@ -271,7 +271,7 @@ function comment_node_type_delete($info) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function comment_permission() {
   return array(
@@ -291,7 +291,7 @@ function comment_permission() {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function comment_block_info() {
   $blocks['recent']['info'] = t('Recent comments');
@@ -300,7 +300,7 @@ function comment_block_info() {
 }
 
 /**
- * Implement hook_block_configure().
+ * Implements hook_block_configure().
  */
 function comment_block_configure($delta = '') {
   $form['comment_block_count'] = array(
@@ -314,14 +314,14 @@ function comment_block_configure($delta = '') {
 }
 
 /**
- * Implement hook_block_save().
+ * Implements hook_block_save().
  */
 function comment_block_save($delta = '', $edit = array()) {
   variable_set('comment_block_count', (int)$edit['comment_block_count']);
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  *
  * Generates a block with the most recent comments.
  */
@@ -466,7 +466,7 @@ function theme_comment_block() {
 }
 
 /**
- * Implement hook_node_view().
+ * Implements hook_node_view().
  */
 function comment_node_view($node, $build_mode) {
   $links = array();
@@ -940,7 +940,7 @@ function comment_build_multiple($comments, $node, $build_mode = 'full', $weight 
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_node_type_form_alter(&$form, $form_state) {
   if (isset($form['identity']['type'])) {
@@ -1011,7 +1011,7 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  */
 function comment_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
@@ -1078,7 +1078,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implement hook_node_load().
+ * Implements hook_node_load().
  */
 function comment_node_load($nodes, $types) {
   $comments_enabled = array();
@@ -1111,7 +1111,7 @@ function comment_node_load($nodes, $types) {
 }
 
 /**
- * Implement hook_node_prepare().
+ * Implements hook_node_prepare().
  */
 function comment_node_prepare($node) {
   if (!isset($node->comment)) {
@@ -1120,7 +1120,7 @@ function comment_node_prepare($node) {
 }
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function comment_node_insert($node) {
   db_insert('node_comment_statistics')
@@ -1136,7 +1136,7 @@ function comment_node_insert($node) {
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function comment_node_delete($node) {
   $cids = db_query('SELECT cid FROM {comment} WHERE nid = :nid', array(':nid' => $node->nid))->fetchCol();
@@ -1147,7 +1147,7 @@ function comment_node_delete($node) {
 }
 
 /**
- * Implement hook_node_update_index().
+ * Implements hook_node_update_index().
  */
 function comment_node_update_index($node) {
   $text = '';
@@ -1164,7 +1164,7 @@ function comment_node_update_index($node) {
 }
 
 /**
- * Implement hook_update_index().
+ * Implements hook_update_index().
  */
 function comment_update_index() {
   // Store the maximum possible comments per thread (used for ranking by reply count)
@@ -1172,7 +1172,7 @@ function comment_update_index() {
 }
 
 /**
- * Implement hook_node_search_result().
+ * Implements hook_node_search_result().
  */
 function comment_node_search_result($node) {
   if ($node->comment != COMMENT_NODE_HIDDEN) {
@@ -1183,7 +1183,7 @@ function comment_node_search_result($node) {
 }
 
 /**
- * Implement hook_user_cancel().
+ * Implements hook_user_cancel().
  */
 function comment_user_cancel($edit, $account, $method) {
   switch ($method) {
@@ -2270,7 +2270,7 @@ function vancode2int($c = '00') {
 }
 
 /**
- * Implement hook_action_info().
+ * Implements hook_action_info().
  *
  * @ingroup actions
  */
@@ -2416,7 +2416,7 @@ function comment_save_action($comment) {
 }
 
 /**
- * Implement hook_ranking().
+ * Implements hook_ranking().
  */
 function comment_ranking() {
   return array(
@@ -2436,7 +2436,7 @@ function comment_ranking() {
 }
 
 /**
- * Implement hook_menu_alter().
+ * Implements hook_menu_alter().
  */
 function comment_menu_alter(&$items) {
   // Add comments to the description for admin/content.
@@ -2444,7 +2444,7 @@ function comment_menu_alter(&$items) {
 }
 
 /**
- * Implement hook_filter_format_delete().
+ * Implements hook_filter_format_delete().
  */
 function comment_filter_format_delete($format, $fallback) {
   db_update('comment')

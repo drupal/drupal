@@ -35,7 +35,7 @@ function shortcut_help($path, $arg) {
 }
   
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function shortcut_permission() {
   return array(
@@ -52,7 +52,7 @@ function shortcut_permission() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function shortcut_menu() {
   $items['admin/config/system/shortcut'] = array(
@@ -121,7 +121,7 @@ function shortcut_menu() {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function shortcut_theme() {
   return array(
@@ -133,7 +133,7 @@ function shortcut_theme() {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function shortcut_block_info() {
   $blocks['shortcuts']['info'] = t('Shortcuts');
@@ -144,7 +144,7 @@ function shortcut_block_info() {
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  */
 function shortcut_block_view($delta = '') {
   if ($delta == 'shortcuts') {
@@ -522,7 +522,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
 }
 
 /**
- * Implement hook_page_build().
+ * Implements hook_page_build().
  */
 function shortcut_page_build(&$page) {
   if (shortcut_set_edit_access()) {
@@ -610,7 +610,7 @@ function shortcut_toolbar_pre_render($toolbar) {
 }
 
 /**
- * Implement hook_preprocess_page().
+ * Implements hook_preprocess_page().
  */
 function shortcut_preprocess_page(&$variables) {
   if (isset($variables['page']['add_or_remove_shortcut'])) {

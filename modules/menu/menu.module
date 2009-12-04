@@ -13,7 +13,7 @@
 define('MENU_MAX_MENU_NAME_LENGTH_UI', 27);
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function menu_help($path, $arg) {
   switch ($path) {
@@ -40,7 +40,7 @@ function menu_help($path, $arg) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function menu_permission() {
   return array(
@@ -51,7 +51,7 @@ function menu_permission() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function menu_menu() {
   $items['admin/structure/menu'] = array(
@@ -159,7 +159,7 @@ function menu_menu() {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function menu_theme() {
   return array(
@@ -175,7 +175,7 @@ function menu_theme() {
 }
 
 /**
- * Implement hook_enable().
+ * Implements hook_enable().
  *
  * Add a link for each custom menu.
  */
@@ -411,7 +411,7 @@ function menu_reset_item($item) {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function menu_block_info() {
   $menus = menu_get_menus(FALSE);
@@ -428,7 +428,7 @@ function menu_block_info() {
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  */
 function menu_block_view($delta = '') {
   $menus = menu_get_menus(FALSE);
@@ -442,7 +442,7 @@ function menu_block_view($delta = '') {
 }
 
 /**
- * Implement hook_block_view_alter().
+ * Implements hook_block_view_alter().
  */
 function menu_block_view_alter(&$data, $block) {
   // Add contextual links for system menu blocks.
@@ -455,14 +455,14 @@ function menu_block_view_alter(&$data, $block) {
 }
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function menu_node_insert($node) {
   menu_node_save($node);
 }
 
 /**
- * Implement hook_node_update().
+ * Implements hook_node_update().
  */
 function menu_node_update($node) {
   menu_node_save($node);
@@ -494,7 +494,7 @@ function menu_node_save($node) {
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function menu_node_delete($node) {
   // Delete all menu module links that point to this node.
@@ -505,7 +505,7 @@ function menu_node_delete($node) {
 }
 
 /**
- * Implement hook_node_prepare().
+ * Implements hook_node_prepare().
  */
 function menu_node_prepare($node) {
   if (empty($node->menu)) {
@@ -557,7 +557,7 @@ function _menu_parent_depth_limit($item) {
 }
 
 /**
- * Implement hook_form_alter(). Adds menu item fields to the node form.
+ * Implements hook_form_alter(). Adds menu item fields to the node form.
  */
 function menu_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
@@ -648,7 +648,7 @@ function menu_node_form_submit($form, &$form_state) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter() for the node type form.
+ * Implements hook_form_FORM_ID_alter() for the node type form.
  * Adds menu options to the node type form.
  */
 function menu_form_node_type_form_alter(&$form, $form_state) {

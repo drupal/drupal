@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function taxonomy_uninstall() {
   // Remove variables.
@@ -16,7 +16,7 @@ function taxonomy_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function taxonomy_schema() {
   $schema['taxonomy_term_data'] = array(

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_locale().
+ * Implements hook_locale().
  */
 function locale_test_locale($op = 'groups') {
   switch ($op) {

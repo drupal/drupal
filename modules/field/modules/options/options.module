@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function options_theme() {
   return array(
@@ -18,7 +18,7 @@ function options_theme() {
 }
 
 /**
- * Implement hook_field_widget_info().
+ * Implements hook_field_widget_info().
  */
 function options_field_widget_info() {
   return array(
@@ -47,7 +47,7 @@ function options_field_widget_info() {
 }
 
 /**
- * Implement hook_field_widget().
+ * Implements hook_field_widget().
  */
 function options_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   // Abstract over the actual field columns, to allow different field types to
@@ -250,7 +250,7 @@ function options_array_transpose($array) {
 }
 
 /**
- * Implement hook_field_widget_error().
+ * Implements hook_field_widget_error().
  */
 function options_field_widget_error($element, $error) {
   form_error($element, $error['message']);

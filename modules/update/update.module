@@ -72,7 +72,7 @@ define('UPDATE_MAX_FETCH_ATTEMPTS', 2);
 define('UPDATE_MAX_FETCH_TIME', 5);
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function update_help($path, $arg) {
   switch ($path) {
@@ -150,7 +150,7 @@ function update_help($path, $arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function update_menu() {
   $items = array();
@@ -253,7 +253,7 @@ function update_manager_access() {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function update_theme() {
   return array(
@@ -277,7 +277,7 @@ function update_theme() {
 }
 
 /**
- * Implement hook_requirements().
+ * Implements hook_requirements().
  *
  * @return
  *   An array describing the status of the site regarding available updates.
@@ -391,7 +391,7 @@ function _update_requirement_check($project, $type) {
 }
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  */
 function update_cron() {
   $frequency = variable_get('update_check_frequency', 1);
@@ -411,7 +411,7 @@ function update_cron() {
 }
 
 /**
- * Implement hook_themes_enabled().
+ * Implements hook_themes_enabled().
  *
  * If themes are enabled, we invalidate the cache of available updates.
  */
@@ -421,7 +421,7 @@ function update_themes_enabled($themes) {
 }
 
 /**
- * Implement hook_themes_disabled().
+ * Implements hook_themes_disabled().
  *
  * If themes are disabled, we invalidate the cache of available updates.
  */
@@ -431,7 +431,7 @@ function update_themes_disabled($themes) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  *
  * Adds a submit handler to the system modules form, so that if a site admin
  * saves the form, we invalidate the cache of available updates.
@@ -583,7 +583,7 @@ function _update_get_cached_available_releases() {
 }
 
 /**
- * Implement hook_mail().
+ * Implements hook_mail().
  *
  * Constructs the email notification message when the site is out of date.
  *
@@ -871,7 +871,7 @@ function _update_cache_clear($cid = NULL, $wildcard = FALSE) {
 }
 
 /**
- * Implement hook_flush_caches().
+ * Implements hook_flush_caches().
  *
  * Called from update.php (among others) to flush the caches.
  * Since we're running update.php, we are likely to install a new version of

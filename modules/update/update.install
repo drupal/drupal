@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function update_install() {
   $queue = DrupalQueue::get('update_fetch_tasks');
@@ -15,7 +15,7 @@ function update_install() {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function update_uninstall() {
   // Clear any variables that might be in use
@@ -37,7 +37,7 @@ function update_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function update_schema() {
   $schema['cache_update'] = drupal_get_schema_unprocessed('system', 'cache');

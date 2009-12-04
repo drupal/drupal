@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function aggregator_uninstall() {
   variable_del('aggregator_allowed_html_tags');
@@ -21,7 +21,7 @@ function aggregator_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function aggregator_schema() {
   $schema['aggregator_category'] = array(

@@ -236,7 +236,7 @@ function field_test_field_formatter_info() {
 }
 
 /**
- * Implement hook_field_formatter_prepare_view().
+ * Implements hook_field_formatter_prepare_view().
  */
 function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $build_mode) {
   foreach ($items as $id => $item) {

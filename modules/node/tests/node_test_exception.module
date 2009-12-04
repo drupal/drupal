@@ -8,7 +8,7 @@
  */
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function node_test_exception_node_insert($node) {
   if ($node->title['zxx'][0]['value'] == 'testing_transaction_exception') {

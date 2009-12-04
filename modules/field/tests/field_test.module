@@ -87,7 +87,7 @@ function field_test_field_test_op_multiple($obj_type, $objects, $field, $instanc
 }
 
 /**
- * Implement hook_field_languages().
+ * Implements hook_field_languages().
  */
 function field_test_field_languages($obj_type, $field, &$languages) {
   if ($field['settings']['test_hook_in']) {

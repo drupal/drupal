@@ -8,7 +8,7 @@
  */
 
 /**
- * Implement hook_node_view().
+ * Implements hook_node_view().
  */
 function node_test_node_view($node, $build_mode) {
   if ($build_mode == 'rss') {
@@ -35,7 +35,7 @@ function node_test_node_view($node, $build_mode) {
 }
 
 /**
- * Implement hook_node_grants().
+ * Implements hook_node_grants().
  */
 function node_test_node_grants($account, $op) {
   // Give everyone full grants so we don't break other node tests.
@@ -49,7 +49,7 @@ function node_test_node_grants($account, $op) {
 }
 
 /**
- * Implement hook_node_access_records().
+ * Implements hook_node_access_records().
  */
 function node_test_node_access_records($node) {
   $grants = array();
@@ -79,7 +79,7 @@ function node_test_node_access_records($node) {
 }
 
 /**
- * Implement hook_node_access_records_alter().
+ * Implements hook_node_access_records_alter().
  */
 function node_test_node_access_records_alter(&$grants, $node) {
   if (!empty($grants)) {
@@ -94,7 +94,7 @@ function node_test_node_access_records_alter(&$grants, $node) {
 }
 
 /**
- * Implement hook_node_grants_alter().
+ * Implements hook_node_grants_alter().
  */
 function node_test_node_grants_alter(&$grants, $account, $op) {
   // Return an empty array of grants to prove that we can alter by reference.

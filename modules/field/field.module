@@ -129,14 +129,14 @@ class FieldException extends Exception {}
 class FieldUpdateForbiddenException extends FieldException {}
 
 /**
- * Implement hook_flush_caches.
+ * Implements hook_flush_caches().
  */
 function field_flush_caches() {
   return array('cache_field');
 }
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function field_help($path, $arg) {
   switch ($path) {
@@ -167,7 +167,7 @@ function field_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function field_theme() {
   $path = drupal_get_path('module', 'field') . '/theme';
@@ -194,7 +194,7 @@ function field_theme() {
 }
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  *
  * Purges some deleted Field API data, if any exists.
  */
@@ -204,14 +204,14 @@ function field_cron() {
 }
 
 /**
- * Implement hook_modules_installed().
+ * Implements hook_modules_installed().
  */
 function field_modules_installed($modules) {
   field_cache_clear();
 }
 
 /**
- * Implement hook_modules_uninstalled().
+ * Implements hook_modules_uninstalled().
  */
 function field_modules_uninstalled($modules) {
   module_load_include('inc', 'field', 'field.crud');
@@ -222,7 +222,7 @@ function field_modules_uninstalled($modules) {
 }
 
 /**
- * Implement hook_modules_enabled().
+ * Implements hook_modules_enabled().
  */
 function field_modules_enabled($modules) {
   foreach ($modules as $module) {
@@ -232,7 +232,7 @@ function field_modules_enabled($modules) {
 }
 
 /**
- * Implement hook_modules_disabled().
+ * Implements hook_modules_disabled().
  */
 function field_modules_disabled($modules) {
   foreach ($modules as $module) {

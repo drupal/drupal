@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_multilingual_settings_changed().
+ * Implements hook_multilingual_settings_changed().
  */
 function field_multilingual_settings_changed() {
   field_info_cache_clear();

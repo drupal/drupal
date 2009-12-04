@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function statistics_uninstall() {
   // Remove variables.
@@ -21,7 +21,7 @@ function statistics_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function statistics_schema() {
   $schema['accesslog'] = array(

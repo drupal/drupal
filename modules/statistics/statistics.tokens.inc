@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_token_info().
+ * Implements hook_token_info().
  */
 function statistics_token_info() {
   $node['views'] = array(
@@ -30,7 +30,7 @@ function statistics_token_info() {
 }
 
 /**
- * Implement hook_tokens().
+ * Implements hook_tokens().
  */
 function statistics_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function filter_help($path, $arg) {
   switch ($path) {
@@ -33,7 +33,7 @@ function filter_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function filter_theme() {
   return array(
@@ -59,7 +59,7 @@ function filter_theme() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function filter_menu() {
   $items['filter/tips'] = array(
@@ -293,7 +293,7 @@ function filter_admin_format_title($format) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function filter_permission() {
   $perms['administer filters'] = array(
@@ -335,7 +335,7 @@ function filter_permission_name($format) {
 }
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  *
  * Expire outdated filter cache entries
  */
@@ -879,7 +879,7 @@ function theme_filter_guidelines($variables) {
  */
 
 /**
- * Implement hook_filter_info().
+ * Implements hook_filter_info().
  */
 function filter_filter_info() {
   $filters['filter_html'] = array(

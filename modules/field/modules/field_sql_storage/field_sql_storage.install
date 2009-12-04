@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function field_sql_storage_schema() {
   $schema = array();

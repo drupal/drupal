@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function contact_schema() {
   $schema['contact'] = array(
@@ -67,7 +67,7 @@ function contact_schema() {
 }
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function contact_install() {
   // Insert a default contact category.
@@ -82,7 +82,7 @@ function contact_install() {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function contact_uninstall() {
   variable_del('contact_default_status');

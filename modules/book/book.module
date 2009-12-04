@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function book_help($path, $arg) {
   switch ($path) {
@@ -34,7 +34,7 @@ function book_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function book_theme() {
   return array(
@@ -64,7 +64,7 @@ function book_theme() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function book_permission() {
   return array(
@@ -121,7 +121,7 @@ function book_node_view_link($node, $build_mode) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function book_menu() {
   $items['admin/content/book'] = array(
@@ -213,14 +213,14 @@ function _book_outline_remove_access($node) {
 }
 
 /**
- * Implement hook_init().
+ * Implements hook_init().
  */
 function book_init() {
   drupal_add_css(drupal_get_path('module', 'book') . '/book.css');
 }
 
 /**
- * Implement hook_field_build_modes().
+ * Implements hook_field_build_modes().
  */
 function book_field_build_modes($obj_type) {
   $modes = array();
@@ -233,7 +233,7 @@ function book_field_build_modes($obj_type) {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function book_block_info() {
   $block = array();
@@ -244,7 +244,7 @@ function book_block_info() {
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  *
  * Displays the book table of contents in a block when the current page is a
  * single-node view of a book node.
@@ -298,7 +298,7 @@ function book_block_view($delta = '') {
 }
 
 /**
- * Implement hook_block_configure().
+ * Implements hook_block_configure().
  */
 function book_block_configure($delta = '') {
   $block = array();
@@ -318,7 +318,7 @@ function book_block_configure($delta = '') {
 }
 
 /**
- * Implement hook_block_save().
+ * Implements hook_block_save().
  */
 function book_block_save($delta = '', $edit = array()) {
   $block = array();
@@ -377,7 +377,7 @@ function book_get_books() {
 }
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  *
  * Adds the book fieldset to the node form.
  *
@@ -744,7 +744,7 @@ function book_menu_name($bid) {
 }
 
 /**
- * Implement hook_node_load().
+ * Implements hook_node_load().
  */
 function book_node_load($nodes, $types) {
   $result = db_query("SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid IN (:nids)", array(':nids' =>  array_keys($nodes)), array('fetch' => PDO::FETCH_ASSOC));
@@ -757,7 +757,7 @@ function book_node_load($nodes, $types) {
 }
 
 /**
- * Implement hook_node_view().
+ * Implements hook_node_view().
  */
 function book_node_view($node, $build_mode) {
   if ($build_mode == 'full') {
@@ -775,7 +775,7 @@ function book_node_view($node, $build_mode) {
 }
 
 /**
- * Implement hook_page_alter().
+ * Implements hook_page_alter().
  *
  * Add the book menu to the list of menus used to build the active trail when
  * viewing a book page.
@@ -789,7 +789,7 @@ function book_page_alter(&$page) {
 }
 
 /**
- * Implement hook_node_presave().
+ * Implements hook_node_presave().
  */
 function book_node_presave($node) {
   // Always save a revision for non-administrators.
@@ -807,7 +807,7 @@ function book_node_presave($node) {
 }
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function book_node_insert($node) {
   if (!empty($node->book['bid'])) {
@@ -822,7 +822,7 @@ function book_node_insert($node) {
 }
 
 /**
- * Implement hook_node_update().
+ * Implements hook_node_update().
  */
 function book_node_update($node) {
   if (!empty($node->book['bid'])) {
@@ -837,7 +837,7 @@ function book_node_update($node) {
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function book_node_delete($node) {
   if (!empty($node->book['bid'])) {
@@ -860,7 +860,7 @@ function book_node_delete($node) {
 }
 
 /**
- * Implement hook_node_prepare().
+ * Implements hook_node_prepare().
  */
 function book_node_prepare($node) {
   // Prepare defaults for the add/edit form.
@@ -1141,7 +1141,7 @@ function book_type_is_allowed($type) {
 }
 
 /**
- * Implement hook_node_type_update().
+ * Implements hook_node_type_update().
  *
  * Update book module's persistent variables if the machine-readable name of a
  * node type is changed.

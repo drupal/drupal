@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function statistics_help($path, $arg) {
   switch ($path) {
@@ -44,7 +44,7 @@ function statistics_help($path, $arg) {
 
 
 /**
- * Implement hook_exit().
+ * Implements hook_exit().
  *
  * This is where statistics are gathered on page accesses.
  */
@@ -87,7 +87,7 @@ function statistics_exit() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function statistics_permission() {
   return array(
@@ -104,7 +104,7 @@ function statistics_permission() {
 }
 
 /**
- * Implement hook_node_view().
+ * Implements hook_node_view().
  */
 function statistics_node_view($node, $build_mode) {
   if ($build_mode != 'rss') {
@@ -125,7 +125,7 @@ function statistics_node_view($node, $build_mode) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function statistics_menu() {
   $items['admin/reports/hits'] = array(
@@ -198,7 +198,7 @@ function statistics_menu() {
 }
 
 /**
- * Implement hook_user_cancel().
+ * Implements hook_user_cancel().
  */
 function statistics_user_cancel($edit, $account, $method) {
   switch ($method) {
@@ -218,7 +218,7 @@ function statistics_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  */
 function statistics_cron() {
   $statistics_timestamp = variable_get('statistics_day_timestamp', '');
@@ -297,7 +297,7 @@ function statistics_get($nid) {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function statistics_block_info() {
   if (variable_get('statistics_count_content_views', 0)) {
@@ -309,7 +309,7 @@ function statistics_block_info() {
 }
 
 /**
- * Implement hook_block_configure().
+ * Implements hook_block_configure().
  */
 function statistics_block_configure($delta = '') {
   // Popular content block settings
@@ -321,7 +321,7 @@ function statistics_block_configure($delta = '') {
 }
 
 /**
- * Implement hook_block_save().
+ * Implements hook_block_save().
  */
 function statistics_block_save($delta = '', $edit = array()) {
   variable_set('statistics_block_top_day_num', $edit['statistics_block_top_day_num']);
@@ -330,7 +330,7 @@ function statistics_block_save($delta = '', $edit = array()) {
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  */
 function statistics_block_view($delta = '') {
   if (user_access('access content')) {
@@ -377,7 +377,7 @@ function _statistics_format_item($title, $path) {
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function statistics_node_delete($node) {
   // clean up statistics table when node is deleted
@@ -387,7 +387,7 @@ function statistics_node_delete($node) {
 }
 
 /**
- * Implement hook_ranking().
+ * Implements hook_ranking().
  */
 function statistics_ranking() {
   if (variable_get('statistics_count_content_views', 0)) {
@@ -409,7 +409,7 @@ function statistics_ranking() {
 }
 
 /**
- * Implement hook_update_index().
+ * Implements hook_update_index().
  */
 function statistics_update_index() {
   variable_set('node_cron_views_scale', 1.0 / max(1, db_query('SELECT MAX(totalcount) FROM {node_counter}')->fetchField()));

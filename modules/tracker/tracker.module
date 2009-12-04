@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function tracker_help($path, $arg) {
   switch ($path) {
@@ -28,7 +28,7 @@ function tracker_help($path, $arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function tracker_menu() {
   $items['tracker'] = array(
@@ -70,7 +70,7 @@ function tracker_menu() {
 }
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  */
 function tracker_cron() {
   $max_nid = variable_get('tracker_index_nid', 0);
@@ -164,28 +164,28 @@ function _tracker_user_access($account) {
 }
 
 /**
- * Implement hook_nodeapi_insert().
+ * Implements hook_nodeapi_insert().
  */
 function tracker_node_insert($node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
 }
 
 /**
- * Implement hook_nodeapi_update().
+ * Implements hook_nodeapi_update().
  */
 function tracker_node_update($node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
 }
 
 /**
- * Implement hook_nodeapi_delete().
+ * Implements hook_nodeapi_delete().
  */
 function tracker_node_delete($node, $arg = 0) {
   _tracker_remove($node->nid, $node->uid, $node->changed);
 }
 
 /**
- * Implement hook_comment_update().
+ * Implements hook_comment_update().
  *
  * Comment module doesn't call hook_comment_unpublish() when saving individual
  * comments so we need to check for those here.
@@ -199,7 +199,7 @@ function tracker_comment_update($comment) {
 }
 
 /**
- * Implement hook_comment_publish().
+ * Implements hook_comment_publish().
  *
  * This actually handles the insert and update of published nodes since
  * comment_save() calls hook_comment_publish() for all published comments.
@@ -209,14 +209,14 @@ function tracker_comment_publish($comment) {
 }
 
 /**
- * Implement hook_comment_unpublish().
+ * Implements hook_comment_unpublish().
  */
 function tracker_comment_unpublish($comment) {
   _tracker_remove($comment->nid, $comment->uid, $comment->changed);
 }
 
 /**
- * Implement hook_comment_delete().
+ * Implements hook_comment_delete().
  */
 function tracker_comment_delete($comment) {
   _tracker_remove($comment->nid, $comment->uid, $comment->changed);

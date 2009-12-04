@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_requirements().
+ * Implements hook_requirements().
  *
  * Display information about getting upload progress bars working.
  */

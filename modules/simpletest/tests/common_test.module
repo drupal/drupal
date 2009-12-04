@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function common_test_menu() {
   $items['common-test/drupal_goto'] = array(
@@ -61,7 +61,7 @@ function common_test_drupal_goto_land_fail() {
 }
 
 /**
- * Implement hook_drupal_goto_alter().
+ * Implements hook_drupal_goto_alter().
  */
 function common_test_drupal_goto_alter(&$path, &$options, &$http_response_code) {
   if ($path == 'common-test/drupal_goto/fail') {
@@ -70,7 +70,7 @@ function common_test_drupal_goto_alter(&$path, &$options, &$http_response_code) 
 }
 
 /**
- * Implement hook_TYPE_alter().
+ * Implements hook_TYPE_alter().
  */
 function common_test_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
   // Alter first argument.
@@ -101,7 +101,7 @@ function common_test_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
 }
 
 /**
- * Implement hook_TYPE_alter() on behalf of Garland theme.
+ * Implements hook_TYPE_alter() on behalf of Garland theme.
  *
  * Same as common_test_drupal_alter_alter(), but here, we verify that themes
  * can also alter and come last.
@@ -135,7 +135,7 @@ function garland_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function common_test_theme() {
   return array(
@@ -153,7 +153,7 @@ function theme_common_test_foo($variables) {
 }
 
 /**
- * Implementation of hook_library_alter().
+ * Implements hook_library_alter().
  */
 function common_test_library_alter(&$libraries, $module) {
   if ($module == 'system' && isset($libraries['farbtastic'])) {
@@ -165,7 +165,7 @@ function common_test_library_alter(&$libraries, $module) {
 }
 
 /**
- * Implementation of hook_library().
+ * Implements hook_library().
  *
  * Adds Farbtastic in a different version.
  */

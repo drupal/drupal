@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function path_help($path, $arg) {
   switch ($path) {
@@ -36,7 +36,7 @@ function path_help($path, $arg) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function path_permission() {
   return array(
@@ -50,7 +50,7 @@ function path_permission() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function path_menu() {
   $items['admin/config/search/path'] = array(
@@ -93,7 +93,7 @@ function path_menu() {
 }
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  */
 function path_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
@@ -180,7 +180,7 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
 }
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function path_node_insert($node) {
   if (isset($node->path)) {
@@ -197,7 +197,7 @@ function path_node_insert($node) {
 }
 
 /**
- * Implement hook_node_update().
+ * Implements hook_node_update().
  */
 function path_node_update($node) {
   if (isset($node->path)) {
@@ -218,7 +218,7 @@ function path_node_update($node) {
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function path_node_delete($node) {
   // Delete all aliases associated with this node.
@@ -226,7 +226,7 @@ function path_node_delete($node) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function path_form_taxonomy_form_term_alter(&$form, $form_state) {
   // Make sure this does not show up on the delete confirmation form.
@@ -261,7 +261,7 @@ function path_form_taxonomy_form_term_alter(&$form, $form_state) {
 }
 
 /**
- * Implement hook_taxonomy_term_insert().
+ * Implements hook_taxonomy_term_insert().
  */
 function path_taxonomy_term_insert($term) {
   if (isset($term->path)) {
@@ -278,7 +278,7 @@ function path_taxonomy_term_insert($term) {
 }
 
 /**
- * Implement hook_taxonomy_term_update().
+ * Implements hook_taxonomy_term_update().
  */
 function path_taxonomy_term_update($term) {
   if (isset($term->path)) {
@@ -299,7 +299,7 @@ function path_taxonomy_term_update($term) {
 }
 
 /**
- * Implement hook_taxonomy_term_delete().
+ * Implements hook_taxonomy_term_delete().
  */
 function path_taxonomy_term_delete($term) {
   // Delete all aliases associated with this term.

@@ -12,7 +12,7 @@
 define('BLOCK_REGION_NONE', -1);
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function block_help($path, $arg) {
   switch ($path) {
@@ -43,7 +43,7 @@ function block_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function block_theme() {
   return array(
@@ -60,7 +60,7 @@ function block_theme() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function block_permission() {
   return array(
@@ -71,7 +71,7 @@ function block_permission() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function block_menu() {
   $default_theme = variable_get('theme_default', 'garland');
@@ -166,7 +166,7 @@ function _block_custom_theme($theme = NULL) {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function block_block_info() {
   $blocks = array();
@@ -181,7 +181,7 @@ function block_block_info() {
 }
 
 /**
- * Implement hook_block_configure().
+ * Implements hook_block_configure().
  */
 function block_block_configure($delta = 0) {
   $custom_block = array('format' => filter_default_format());
@@ -192,14 +192,14 @@ function block_block_configure($delta = 0) {
 }
 
 /**
- * Implement hook_block_save().
+ * Implements hook_block_save().
  */
 function block_block_save($delta = 0, $edit = array()) {
   block_custom_block_save($edit, $delta);
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  *
  * Generates the administrator-defined blocks for display.
  */
@@ -210,7 +210,7 @@ function block_block_view($delta = 0, $edit = array()) {
 }
 
 /**
- * Implement hook_page_build().
+ * Implements hook_page_build().
  *
  * Render blocks into their regions.
  */
@@ -461,7 +461,7 @@ function block_custom_block_save($edit, $delta) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function block_form_user_profile_form_alter(&$form, &$form_state) {
   if ($form['#user_category'] == 'account') {
@@ -626,7 +626,7 @@ function _block_load_blocks() {
 }
 
 /**
- * Implement hook_block_info_alter().
+ * Implements hook_block_info_alter().
  *
  * Check the page, user role, content type and user specific visibilty settings.
  * Remove the block if the visibility conditions are not met.
@@ -833,7 +833,7 @@ function _block_get_cache_id($block) {
 }
 
 /**
- * Implement hook_flush_caches().
+ * Implements hook_flush_caches().
  */
 function block_flush_caches() {
   return array('cache_block');
@@ -878,7 +878,7 @@ function template_preprocess_block(&$variables) {
 }
 
 /**
- * Implement hook_user_role_delete().
+ * Implements hook_user_role_delete().
  *
  * Remove deleted role from blocks that use it.
  */
@@ -889,7 +889,7 @@ function block_user_role_delete($role) {
 }
 
 /**
- * Implement hook_filter_format_delete().
+ * Implements hook_filter_format_delete().
  */
 function block_filter_format_delete($format, $fallback) {
   db_update('block_custom')
@@ -899,7 +899,7 @@ function block_filter_format_delete($format, $fallback) {
 }
 
 /**
- * Implement hook_menu_delete().
+ * Implements hook_menu_delete().
  */
 function block_menu_delete($menu) {
   db_delete('block')
@@ -913,7 +913,7 @@ function block_menu_delete($menu) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function block_form_system_performance_settings_alter(&$form, &$form_state) {
   $disabled = count(module_implements('node_grants'));

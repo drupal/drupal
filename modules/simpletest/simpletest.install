@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function simpletest_install() {
   // Check for files directory.
@@ -98,7 +98,7 @@ function simpletest_get_file_count($directory, $filename) {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function simpletest_uninstall() {
   simpletest_clean_environment();

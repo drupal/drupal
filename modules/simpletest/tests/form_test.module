@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function form_test_menu() {
   $items['form-test/validate'] = array(

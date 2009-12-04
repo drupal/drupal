@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_node_info().
+ * Implements hook_node_info().
  */
 function blog_node_info() {
   return array(
@@ -20,7 +20,7 @@ function blog_node_info() {
 }
 
 /**
- * Implement hook_user_view().
+ * Implements hook_user_view().
  */
 function blog_user_view($account) {
   if (user_access('create blog content', $account)) {
@@ -34,7 +34,7 @@ function blog_user_view($account) {
 }
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function blog_help($path, $arg) {
   switch ($path) {
@@ -57,14 +57,14 @@ function blog_help($path, $arg) {
 }
 
 /**
- * Implement hook_form().
+ * Implements hook_form().
  */
 function blog_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
 /**
- * Implement hook_view().
+ * Implements hook_view().
  */
 function blog_view($node, $build_mode) {
   if ((bool)menu_get_object()) {
@@ -75,7 +75,7 @@ function blog_view($node, $build_mode) {
 }
 
 /**
- * Implement hook_node_view().
+ * Implements hook_node_view().
  */
 function blog_node_view($node, $build_mode = 'full') {
   if ($build_mode != 'rss') {
@@ -95,7 +95,7 @@ function blog_node_view($node, $build_mode = 'full') {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function blog_menu() {
   $items['blog'] = array(
@@ -176,7 +176,7 @@ function _blog_post_exists($account) {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function blog_block_info() {
   $block['recent']['info'] = t('Recent blog posts');
@@ -184,7 +184,7 @@ function blog_block_info() {
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  *
  * Displays the most recent 10 blog titles.
  */

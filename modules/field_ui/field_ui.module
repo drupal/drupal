@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function field_ui_help($path, $arg) {
   switch ($path) {
@@ -29,7 +29,7 @@ function field_ui_help($path, $arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function field_ui_menu() {
   $items['admin/reports/fields'] = array(
@@ -152,7 +152,7 @@ function field_ui_menu_label($instance) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function field_ui_theme() {
   return array(
@@ -203,7 +203,7 @@ function field_ui_build_modes_tabs($obj_type, $tab_selector = NULL) {
 }
 
 /**
- * Implement hook_field_ui_build_modes_tabs() on behalf of other core modules.
+ * Implements hook_field_ui_build_modes_tabs() on behalf of other core modules.
  *
  * @return
  *   An array describing the build modes defined by the module, grouped by tabs.
@@ -245,7 +245,7 @@ function field_ui_field_ui_build_modes_tabs() {
 }
 
 /**
- * Implement hook_field_attach_create_bundle().
+ * Implements hook_field_attach_create_bundle().
  */
 function field_ui_field_attach_create_bundle($bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add our
@@ -254,7 +254,7 @@ function field_ui_field_attach_create_bundle($bundle) {
 }
 
 /**
- * Implement hook_field_attach_rename_bundle().
+ * Implements hook_field_attach_rename_bundle().
  */
 function field_ui_field_attach_rename_bundle($bundle_old, $bundle_new) {
   if ($bundle_old !== $bundle_new && $extra = variable_get("field_extra_weights_$bundle_old", array())) {
@@ -264,7 +264,7 @@ function field_ui_field_attach_rename_bundle($bundle_old, $bundle_new) {
 }
 
 /**
- * Implement hook_field_attach_delete_bundle().
+ * Implements hook_field_attach_delete_bundle().
  */
 function field_ui_field_attach_delete_bundle($bundle) {
   variable_del('field_extra_weights_' . $bundle);

@@ -2,14 +2,14 @@
 // $Id$
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function tracker_install() {
   drupal_install_schema('tracker');
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function tracker_uninstall() {
   drupal_uninstall_schema('tracker');
@@ -19,7 +19,7 @@ function tracker_uninstall() {
 }
 
 /**
- * Implement hook_enable().
+ * Implements hook_enable().
  */
 function tracker_enable() {
   $max_nid = db_query('SELECT MAX(nid) FROM {node}')->fetchField();
@@ -32,7 +32,7 @@ function tracker_enable() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function tracker_schema() {
   $schema['tracker_node'] = array(

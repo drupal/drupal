@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_image_effect_info().
+ * Implements hook_image_effect_info().
  */
 function image_image_effect_info() {
   $effects = array(

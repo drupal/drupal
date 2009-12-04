@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function menu_test_menu() {
   // The name of the menu changes during the course of the test. Using a $_GET.
@@ -139,7 +139,7 @@ function menu_test_menu_name($new_name = '') {
 }
 
 /**
- * Implement hook_menu_link_insert().
+ * Implements hook_menu_link_insert().
  *
  * @return
  *  A random string.
@@ -149,7 +149,7 @@ function menu_test_menu_link_insert($item) {
 }
 
 /**
- * Implement hook_menu_link_update().
+ * Implements hook_menu_link_update().
  *
  * @return
  *  A random string.
@@ -159,7 +159,7 @@ function menu_test_menu_link_update($item) {
 }
 
 /**
- * Implement hook_menu_link_delete().
+ * Implements hook_menu_link_delete().
  *
  * @return
  *  A random string.

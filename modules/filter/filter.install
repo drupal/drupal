@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function filter_schema() {
   $schema['filter'] = array(

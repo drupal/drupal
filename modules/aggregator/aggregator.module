@@ -12,7 +12,7 @@
 define('AGGREGATOR_CLEAR_NEVER', 0);
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function aggregator_help($path, $arg) {
   switch ($path) {
@@ -46,7 +46,7 @@ function aggregator_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function aggregator_theme() {
   return array(
@@ -94,7 +94,7 @@ function aggregator_theme() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function aggregator_menu() {
   $items['admin/config/services/aggregator'] = array(
@@ -282,7 +282,7 @@ function _aggregator_category_title($category) {
 }
 
 /**
- * Implement hook_init().
+ * Implements hook_init().
  */
 function aggregator_init() {
   drupal_add_css(drupal_get_path('module', 'aggregator') . '/aggregator.css');
@@ -299,7 +299,7 @@ function _aggregator_has_categories() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function aggregator_permission() {
   return array(
@@ -313,7 +313,7 @@ function aggregator_permission() {
 }
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  *
  * Queues news feeds for updates once their refresh interval has elapsed.
  */
@@ -329,7 +329,7 @@ function aggregator_cron() {
 }
 
 /**
- * Implement hook_cron_queue_info().
+ * Implements hook_cron_queue_info().
  */
 function aggregator_cron_queue_info() {
   $queues['aggregator_feeds'] = array(
@@ -340,7 +340,7 @@ function aggregator_cron_queue_info() {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function aggregator_block_info() {
   $block = array();
@@ -356,7 +356,7 @@ function aggregator_block_info() {
 }
 
 /**
- * Implement hook_block_configure().
+ * Implements hook_block_configure().
  */
 function aggregator_block_configure($delta = '') {
   list($type, $id) = explode('-', $delta);
@@ -373,7 +373,7 @@ function aggregator_block_configure($delta = '') {
 }
 
 /**
- * Implement hook_block_save().
+ * Implements hook_block_save().
  */
 function aggregator_block_save($delta = '', $edit = array()) {
   list($type, $id) = explode('-', $delta);
@@ -386,7 +386,7 @@ function aggregator_block_save($delta = '', $edit = array()) {
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  *
  * Generates blocks for the latest news items in each category and feed.
  */

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function node_schema() {
   $schema['node'] = array(

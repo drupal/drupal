@@ -10,7 +10,7 @@
 module_load_include('inc', 'file', 'file.field');
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function file_menu() {
   $items = array();
@@ -32,7 +32,7 @@ function file_menu() {
 }
 
 /**
- * Implement hook_element_info().
+ * Implements hook_element_info().
  *
  * The managed file element may be used independently anywhere in Drupal.
  */
@@ -59,7 +59,7 @@ function file_element_info() {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function file_theme() {
   return array(
@@ -88,7 +88,7 @@ function file_theme() {
 }
 
 /**
- * Implement hook_file_download().
+ * Implements hook_file_download().
  *
  * This function takes an extra parameter $field_type so that it may
  * be re-used by other File-like modules, such as Image.
@@ -295,7 +295,7 @@ function file_progress_implementation() {
 }
 
 /**
- * Implement hook_file_references().
+ * Implements hook_file_references().
  */
 function file_file_references($file) {
   $count = file_get_file_reference_count($file);
@@ -303,7 +303,7 @@ function file_file_references($file) {
 }
 
 /**
- * Implement hook_file_delete().
+ * Implements hook_file_delete().
  */
 function file_file_delete($file) {
   // TODO: Remove references to a file that is in-use.

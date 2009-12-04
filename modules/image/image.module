@@ -64,7 +64,7 @@ function image_help($path, $arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function image_menu() {
   $items = array();
@@ -166,7 +166,7 @@ function image_menu() {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function image_theme() {
   return array(
@@ -225,7 +225,7 @@ function image_theme() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function image_permission() {
   return array(
@@ -237,14 +237,14 @@ function image_permission() {
 }
 
 /**
- * Implement hook_flush_caches().
+ * Implements hook_flush_caches().
  */
 function image_flush_caches() {
   return array('cache_image');
 }
 
 /**
- * Implement hook_file_download().
+ * Implements hook_file_download().
  *
  * Control the access to files underneath the styles directory.
  */
@@ -295,7 +295,7 @@ function image_file_download($uri) {
 }
 
 /**
- * Implement hook_file_move().
+ * Implements hook_file_move().
  */
 function image_file_move($file, $source) {
   // Delete any image derivatives at the original image path.
@@ -303,7 +303,7 @@ function image_file_move($file, $source) {
 }
 
 /**
- * Implement hook_file_delete().
+ * Implements hook_file_delete().
  */
 function image_file_delete($file) {
   // Delete any image derivatives of this image.
@@ -311,7 +311,7 @@ function image_file_delete($file) {
 }
 
 /**
- * Implement hook_file_references().
+ * Implements hook_file_references().
  */
 function image_file_references($file) {
   $count = file_get_file_reference_count($file, NULL, 'image');
@@ -319,7 +319,7 @@ function image_file_references($file) {
 }
 
 /**
- * Implement hook_image_default_styles().
+ * Implements hook_image_default_styles().
  */
 function image_image_default_styles() {
   $styles = array();

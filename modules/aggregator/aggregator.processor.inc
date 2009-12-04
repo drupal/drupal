@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_aggregator_process_info().
+ * Implements hook_aggregator_process_info().
  */
 function aggregator_aggregator_process_info() {
   return array(
@@ -17,7 +17,7 @@ function aggregator_aggregator_process_info() {
 }
 
 /**
- * Implement hook_aggregator_process().
+ * Implements hook_aggregator_process().
  */
 function aggregator_aggregator_process($feed) {
   if (is_object($feed)) {
@@ -45,7 +45,7 @@ function aggregator_aggregator_process($feed) {
 }
 
 /**
- * Implement hook_aggregator_remove().
+ * Implements hook_aggregator_remove().
  */
 function aggregator_aggregator_remove($feed) {
   $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchCol();
@@ -62,7 +62,7 @@ function aggregator_aggregator_remove($feed) {
 }
 
 /**
- * Implement hook_form_aggregator_admin_form_alter().
+ * Implements hook_form_aggregator_admin_form_alter().
  *
  * Form alter aggregator module's own form to keep processor functionality
  * separate from aggregator API functionality.

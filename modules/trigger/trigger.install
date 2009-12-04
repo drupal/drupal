@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function trigger_schema() {
   $schema['trigger_assignments'] = array(
@@ -43,7 +43,7 @@ function trigger_schema() {
 }
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function trigger_install() {
   // Do initial synchronization of actions in code and the database.

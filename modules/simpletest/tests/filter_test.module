@@ -7,21 +7,21 @@
  */
 
 /**
- * Implement hook_filter_format_insert().
+ * Implements hook_filter_format_insert().
  */
 function filter_test_filter_format_insert($format) {
   drupal_set_message('hook_filter_format_insert invoked.');
 }
 
 /**
- * Implement hook_filter_format_update().
+ * Implements hook_filter_format_update().
  */
 function filter_test_filter_format_update($format) {
   drupal_set_message('hook_filter_format_update invoked.');
 }
 
 /**
- * Implement hook_filter_format_delete().
+ * Implements hook_filter_format_delete().
  */
 function filter_test_filter_format_delete($format, $default) {
   drupal_set_message('hook_filter_format_delete invoked.');

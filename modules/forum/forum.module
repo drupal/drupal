@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function forum_help($path, $arg) {
   switch ($path) {
@@ -36,7 +36,7 @@ function forum_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function forum_theme() {
   return array(
@@ -68,7 +68,7 @@ function forum_theme() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function forum_menu() {
   $items['forum'] = array(
@@ -195,7 +195,7 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 }
 
 /**
- * Implement hook_init().
+ * Implements hook_init().
  */
 function forum_init() {
   drupal_add_css(drupal_get_path('module', 'forum') . '/forum.css');
@@ -218,7 +218,7 @@ function _forum_node_check_node_type($node) {
 }
 
 /**
- * Implement hook_node_view().
+ * Implements hook_node_view().
  */
 function forum_node_view($node, $build_mode) {
   $vid = variable_get('forum_nav_vocabulary', 0);
@@ -241,7 +241,7 @@ function forum_node_view($node, $build_mode) {
 }
 
 /**
- * Implement hook_node_prepare().
+ * Implements hook_node_prepare().
  */
 function forum_node_prepare($node) {
   if (_forum_node_check_node_type($node)) {
@@ -253,7 +253,7 @@ function forum_node_prepare($node) {
 }
 
 /**
- * Implement hook_node_validate().
+ * Implements hook_node_validate().
  *
  * Check in particular that only a "leaf" term in the associated taxonomy.
  */
@@ -279,7 +279,7 @@ function forum_node_validate($node, $form) {
 }
 
 /**
- * Implement hook_node_presave().
+ * Implements hook_node_presave().
  *
  * Assign forum taxonomy when adding a topic from within a forum.
  */
@@ -300,7 +300,7 @@ function forum_node_presave($node) {
 }
 
 /**
- * Implement hook_node_update().
+ * Implements hook_node_update().
  */
 function forum_node_update($node) {
   if (_forum_node_check_node_type($node)) {
@@ -348,7 +348,7 @@ function forum_node_update($node) {
 }
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function forum_node_insert($node) {
   if (_forum_node_check_node_type($node)) {
@@ -365,7 +365,7 @@ function forum_node_insert($node) {
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function forum_node_delete($node) {
   if (_forum_node_check_node_type($node)) {
@@ -379,7 +379,7 @@ function forum_node_delete($node) {
 }
 
 /**
- * Implement hook_node_load().
+ * Implements hook_node_load().
  */
 function forum_node_load($nodes) {
   $node_vids = array();
@@ -401,7 +401,7 @@ function forum_node_load($nodes) {
 }
 
 /**
- * Implement hook_node_info().
+ * Implements hook_node_info().
  */
 function forum_node_info() {
   return array(
@@ -415,7 +415,7 @@ function forum_node_info() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function forum_permission() {
   $perms = array(
@@ -427,7 +427,7 @@ function forum_permission() {
 }
 
 /**
- * Implement hook_taxonomy().
+ * Implements hook_taxonomy().
  */
 function forum_taxonomy_term_delete($tid) {
   // For containers, remove the tid from the forum_containers variable.
@@ -440,7 +440,7 @@ function forum_taxonomy_term_delete($tid) {
 }
 
 /**
- * Implement hook_comment_publish().
+ * Implements hook_comment_publish().
  *
  * This actually handles the insert and update of published nodes since
  * comment_save() calls hook_comment_publish() for all published comments.
@@ -450,7 +450,7 @@ function forum_comment_publish($comment) {
 }
 
 /**
- * Implement forum_comment_update().
+ * Implements hook_comment_update().
  *
  * Comment module doesn't call hook_comment_unpublish() when saving individual
  * comments so we need to check for those here.
@@ -464,21 +464,21 @@ function forum_comment_update($comment) {
 }
 
 /**
- * Implements forum_comment_unpublish().
+ * Implements hook_comment_unpublish().
  */
 function forum_comment_unpublish($comment) {
   _forum_update_forum_index($comment->nid);
 }
 
 /**
- * Implement forum_comment_delete().
+ * Implements hook_comment_delete().
  */
 function forum_comment_delete($comment) {
   _forum_update_forum_index($comment->nid);
 }
 
 /**
- * Implement hook_field_storage_pre_insert().
+ * Implements hook_field_storage_pre_insert().
  */
 function forum_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
   if ($obj_type == 'node' && $object->status && _forum_node_check_node_type($object)) {
@@ -501,7 +501,7 @@ function forum_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
 }
 
 /**
- * Implement hook_field_storage_pre_update().
+ * Implements hook_field_storage_pre_update().
  */
 function forum_field_storage_pre_update($obj_type, $object, &$skip_fields) {
   $first_call = &drupal_static(__FUNCTION__, array());
@@ -539,7 +539,7 @@ function forum_field_storage_pre_update($obj_type, $object, &$skip_fields) {
 }
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  */
 function forum_form_alter(&$form, $form_state, $form_id) {
   $vid = variable_get('forum_nav_vocabulary', 0);
@@ -567,7 +567,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function forum_block_info() {
   $blocks['active'] = array(
@@ -582,7 +582,7 @@ function forum_block_info() {
 }
 
 /**
- * Implement hook_block_configure().
+ * Implements hook_block_configure().
  */
 function forum_block_configure($delta = '') {
   $form['forum_block_num_' . $delta] = array('#type' => 'select', '#title' => t('Number of topics'), '#default_value' => variable_get('forum_block_num_' . $delta, '5'), '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
@@ -590,14 +590,14 @@ function forum_block_configure($delta = '') {
 }
 
 /**
- * Implement hook_block_save().
+ * Implements hook_block_save().
  */
 function forum_block_save($delta = '', $edit = array()) {
   variable_set('forum_block_num_' . $delta, $edit['forum_block_num_' . $delta]);
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  *
  * Generates a block containing the currently active forum topics and the
  * most recently added forum topics.
@@ -658,7 +658,7 @@ function forum_block_view_pre_render($elements) {
 }
 
 /**
- * Implement hook_form().
+ * Implements hook_form().
  */
 function forum_form($node, $form_state) {
   $type = node_type_get_type($node);
@@ -678,7 +678,7 @@ function forum_form($node, $form_state) {
 }
 
 /**
- * Implement hook_url_outbound_alter().
+ * Implements hook_url_outbound_alter().
  */
 function forum_url_outbound_alter(&$path, &$options, $original_path) {
   if (preg_match('!^taxonomy/term/(\d+)!', $path, $matches)) {

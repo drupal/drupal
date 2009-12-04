@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_theme_alter().
+ * Implements hook_theme_alter().
  */
 function number_theme_registry_alter(&$theme_registry) {
   // The number_integer and number_decimal formatters use the same function.
@@ -16,7 +16,7 @@ function number_theme_registry_alter(&$theme_registry) {
 }
 
 /**
- * Implement hook_field_info().
+ * Implements hook_field_info().
  */
 function number_field_info() {
   return array(
@@ -47,7 +47,7 @@ function number_field_info() {
 }
 
 /**
- * Implement hook_field_schema().
+ * Implements hook_field_schema().
  */
 function number_field_schema($field) {
   switch ($field['type']) {
@@ -86,7 +86,7 @@ function number_field_schema($field) {
 }
 
 /**
- * Implement hook_field_settings_form().
+ * Implements hook_field_settings_form().
  */
 function number_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
@@ -128,7 +128,7 @@ function number_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
- * Implement hook_field_instance_settings_form().
+ * Implements hook_field_instance_settings_form().
  */
 function number_field_instance_settings_form($field, $instance) {
   $settings = $instance['settings'];
@@ -166,7 +166,7 @@ function number_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Implement hook_field_validate().
+ * Implements hook_field_validate().
  *
  * Possible error codes:
  * - 'number_min': The value is smaller than the allowed minimum value.
@@ -207,7 +207,7 @@ function number_field_presave($obj_type, $object, $field, $instance, $langcode, 
 }
 
 /**
- * Implement hook_content_is_empty().
+ * Implements hook_content_is_empty().
  */
 function number_field_is_empty($item, $field) {
   if (empty($item['value']) && (string)$item['value'] !== '0') {
@@ -217,7 +217,7 @@ function number_field_is_empty($item, $field) {
 }
 
 /**
- * Implement hook_field_formatter_info().
+ * Implements hook_field_formatter_info().
  */
 function number_field_formatter_info() {
   return array(
@@ -285,7 +285,7 @@ function theme_field_formatter_number($variables) {
 }
 
 /**
- * Implement hook_field_widget_info().
+ * Implements hook_field_widget_info().
  */
 function number_field_widget_info() {
   return array(
@@ -297,7 +297,7 @@ function number_field_widget_info() {
 }
 
 /**
- * Implement hook_field_widget().
+ * Implements hook_field_widget().
  */
 function number_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $value = isset($items[$delta]['value']) ? $items[$delta]['value'] : '';
@@ -370,7 +370,7 @@ function number_field_widget_validate($element, &$form_state) {
 }
 
 /**
- * Implement hook_field_widget_error().
+ * Implements hook_field_widget_error().
  */
 function number_field_widget_error($element, $error) {
   form_error($element['value'], $error['message']);

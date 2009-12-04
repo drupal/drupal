@@ -22,7 +22,7 @@ function dashboard_help($path, $arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function dashboard_menu() {
   $items['admin/dashboard'] = array(
@@ -60,7 +60,7 @@ function dashboard_menu() {
 }
 
 /**
- * Implement hook_block_info_alter().
+ * Implements hook_block_info_alter().
  *
  * Skip rendering dashboard blocks when not on the dashboard page itself. This
  * prevents expensive dashboard blocks from causing performance issues on pages
@@ -77,7 +77,7 @@ function dashboard_block_info_alter(&$blocks) {
 }
 
 /**
- * Implement hook_page_build().
+ * Implements hook_page_build().
  *
  * Display dashboard blocks in the main content region.
  */
@@ -141,7 +141,7 @@ function dashboard_page_build(&$page) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function dashboard_permission() {
   return array(
@@ -153,7 +153,7 @@ function dashboard_permission() {
 }
 
 /**
- * Implement hook_system_info_alter().
+ * Implements hook_system_info_alter().
  *
  * Add regions to each theme to store the dashboard blocks.
  */
@@ -167,7 +167,7 @@ function dashboard_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function dashboard_theme() {
   return array(
@@ -257,7 +257,7 @@ function dashboard_regions() {
 }
 
 /**
- * Implement hook_dashboard_regions().
+ * Implements hook_dashboard_regions().
  */
 function dashboard_dashboard_regions() {
   return array(

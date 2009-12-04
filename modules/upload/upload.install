@@ -12,7 +12,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function upload_schema() {
   $schema['upload'] = array(

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function php_help($path, $arg) {
   switch ($path) {
@@ -21,7 +21,7 @@ function php_help($path, $arg) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function php_permission() {
   return array(
@@ -120,7 +120,7 @@ else {
 }
 
 /**
- * Implement hook_filter_info().
+ * Implements hook_filter_info().
  *
  * Provide PHP code filter. Use with care.
  */

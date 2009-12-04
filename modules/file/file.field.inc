@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_field_info().
+ * Implements hook_field_info().
  */
 function file_field_info() {
   return array(
@@ -32,7 +32,7 @@ function file_field_info() {
 }
 
 /**
- * Implement hook_field_schema().
+ * Implements hook_field_schema().
  */
 function file_field_schema($field) {
   return array(
@@ -64,7 +64,7 @@ function file_field_schema($field) {
 }
 
 /**
- * Implement hook_field_settings_form().
+ * Implements hook_field_settings_form().
  */
 function file_field_settings_form($field, $instance, $has_data) {
   $defaults = field_info_field_settings($field['type']);
@@ -104,7 +104,7 @@ function file_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
- * Implement hook_field_instance_settings_form().
+ * Implements hook_field_instance_settings_form().
  */
 function file_field_instance_settings_form($field, $instance) {
   $settings = $instance['settings'];
@@ -204,7 +204,7 @@ function _file_generic_settings_file_directory_validate($element, &$form_state) 
 }
 
 /**
- * Implement hook_field_load().
+ * Implements hook_field_load().
  */
 function file_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
   foreach ($objects as $obj_id => $object) {
@@ -228,7 +228,7 @@ function file_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
 }
 
 /**
- * Implement hook_field_sanitize().
+ * Implements hook_field_sanitize().
  */
 function file_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
   // Remove files from being displayed if they're not displayed.
@@ -243,14 +243,14 @@ function file_field_sanitize($obj_type, $object, $field, $instance, $langcode, &
 }
 
 /**
- * Implement hook_field_insert().
+ * Implements hook_field_insert().
  */
 function file_field_insert($obj_type, $object, $field, $instance, $langcode, &$items) {
   file_field_update($obj_type, $object, $field, $instance, $langcode, $items);
 }
 
 /**
- * Implement hook_field_update().
+ * Implements hook_field_update().
  */
 function file_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
   // Check for files that have been removed from the object.
@@ -284,7 +284,7 @@ function file_field_update($obj_type, $object, $field, $instance, $langcode, &$i
 }
 
 /**
- * Implement hook_field_delete().
+ * Implements hook_field_delete().
  */
 function file_field_delete($obj_type, $object, $field, $instance, $langcode, &$items) {
   list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
@@ -300,7 +300,7 @@ function file_field_delete($obj_type, $object, $field, $instance, $langcode, &$i
 }
 
 /**
- * Implement hook_field_delete_revision().
+ * Implements hook_field_delete_revision().
  */
 function file_field_delete_revision($obj_type, $object, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
@@ -338,7 +338,7 @@ function file_field_delete_file($item, $field) {
 }
 
 /**
- * Implement hook_field_is_empty().
+ * Implements hook_field_is_empty().
  */
 function file_field_is_empty($item, $field) {
   return empty($item['fid']);
@@ -362,7 +362,7 @@ function file_field_displayed($item, $field) {
 }
 
 /**
- * Implement hook_field_formatter_info().
+ * Implements hook_field_formatter_info().
  */
 function file_field_formatter_info() {
   return array(
@@ -385,7 +385,7 @@ function file_field_formatter_info() {
 }
 
 /**
- * Implement hook_field_widget_info().
+ * Implements hook_field_widget_info().
  */
 function file_field_widget_info() {
   return array(
@@ -404,7 +404,7 @@ function file_field_widget_info() {
 }
 
 /**
- * Implement hook_field_widget_settings_form().
+ * Implements hook_field_widget_settings_form().
  */
 function file_field_widget_settings_form($field, $instance) {
   $widget = $instance['widget'];
@@ -427,7 +427,7 @@ function file_field_widget_settings_form($field, $instance) {
 }
 
 /**
- * Implementation of hook_field_widget().
+ * Implements hook_field_widget().
  */
 function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $form['#attributes'] = array('enctype' => 'multipart/form-data');

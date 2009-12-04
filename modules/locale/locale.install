@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function locale_install() {
   // locales_source.source and locales_target.target are not used as binary
@@ -88,7 +88,7 @@ function locale_update_7001() {
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function locale_uninstall() {
   // Delete all JavaScript translation files.
@@ -132,7 +132,7 @@ function locale_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function locale_schema() {
   $schema['languages'] = array(

@@ -31,7 +31,7 @@ function user_module_invoke($type, &$edit, $account, $category = NULL) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function user_theme() {
   return array(
@@ -80,7 +80,7 @@ function user_theme() {
 }
 
 /**
- * Implement hook_entity_info().
+ * Implements hook_entity_info().
  */
 function user_entity_info() {
   $return = array(
@@ -107,7 +107,7 @@ function user_entity_info() {
 }
 
 /**
- * Implement hook_field_build_modes().
+ * Implements hook_field_build_modes().
  */
 function user_field_build_modes($obj_type) {
   $modes = array();
@@ -120,7 +120,7 @@ function user_field_build_modes($obj_type) {
 }
 
 /**
- * Implement hook_field_extra_fields().
+ * Implements hook_field_extra_fields().
  */
 function user_field_extra_fields($bundle) {
   $extra = array();
@@ -720,7 +720,7 @@ function user_is_blocked($name) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function user_permission() {
   return array(
@@ -750,7 +750,7 @@ function user_permission() {
 }
 
 /**
- * Implement hook_file_download().
+ * Implements hook_file_download().
  *
  * Ensure that user pictures (avatars) are always downloadable.
  */
@@ -762,7 +762,7 @@ function user_file_download($uri) {
 }
 
 /**
- * Implement hook_file_references().
+ * Implements hook_file_references().
  */
 function user_file_references($file) {
   // Determine if the file is used by this module.
@@ -774,7 +774,7 @@ function user_file_references($file) {
 }
 
 /**
- * Implement hook_file_delete().
+ * Implements hook_file_delete().
  */
 function user_file_delete($file) {
   // Remove any references to the file.
@@ -785,7 +785,7 @@ function user_file_delete($file) {
 }
 
 /**
- * Implement hook_search_info().
+ * Implements hook_search_info().
  */
 function user_search_info() {
   return array(
@@ -794,14 +794,14 @@ function user_search_info() {
 }
 
 /**
- * Implement hook_search_access().
+ * Implements hook_search_access().
  */
 function user_search_access() {
   return user_access('access user profiles');
 }
 
 /**
- * Implement hook_search_execute().
+ * Implements hook_search_execute().
  */
 function user_search_execute($keys = NULL) {
   $find = array();
@@ -828,7 +828,7 @@ function user_search_execute($keys = NULL) {
 }
 
 /**
- * Implement hook_element_info().
+ * Implements hook_element_info().
  */
 function user_element_info() {
   $types['user_profile_category'] = array(
@@ -841,7 +841,7 @@ function user_element_info() {
 }
 
 /**
- * Implement hook_user_view().
+ * Implements hook_user_view().
  */
 function user_user_view($account) {
   $account->content['user_picture'] = array(
@@ -1049,7 +1049,7 @@ function user_account_form_validate($form, &$form_state) {
 }
 
 /**
- * Implement hook_user_presave().
+ * Implements hook_user_presave().
  */
 function user_user_presave(&$edit, $account, $category) {
   if ($category == 'account' || $category == 'register') {
@@ -1072,7 +1072,7 @@ function user_user_presave(&$edit, $account, $category) {
 }
 
 /**
- * Implement hook_user_categories().
+ * Implements hook_user_categories().
  */
 function user_user_categories() {
   return array(array(
@@ -1112,7 +1112,7 @@ function user_login_block($form) {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function user_block_info() {
   global $user;
@@ -1130,7 +1130,7 @@ function user_block_info() {
 }
 
 /**
- * Implement hook_block_configure().
+ * Implements hook_block_configure().
  */
 function user_block_configure($delta = '') {
   global $user;
@@ -1154,7 +1154,7 @@ function user_block_configure($delta = '') {
 }
 
 /**
- * Implement hook_block_save().
+ * Implements hook_block_save().
  */
 function user_block_save($delta = '', $edit = array()) {
   global $user;
@@ -1172,7 +1172,7 @@ function user_block_save($delta = '', $edit = array()) {
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  */
 function user_block_view($delta = '') {
   global $user;
@@ -1343,7 +1343,7 @@ function user_load_self($arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function user_menu() {
   $items['user/autocomplete'] = array(
@@ -1561,7 +1561,7 @@ function user_menu() {
 }
 
 /**
- * Implement hook_init().
+ * Implements hook_init().
  */
 function user_init() {
   drupal_add_css(drupal_get_path('module', 'user') . '/user.css');
@@ -2137,7 +2137,7 @@ function user_build_content($account, $build_mode = 'full') {
 }
 
 /**
- * Implement hook_mail().
+ * Implements hook_mail().
  */
 function user_mail($key, &$message, $params) {
   $language = $message['language'];
@@ -2532,7 +2532,7 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
 }
 
 /**
- * Implement hook_user_operations().
+ * Implements hook_user_operations().
  */
 function user_user_operations($form = array(), $form_state = array()) {
   $operations = array(
@@ -2731,7 +2731,7 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function user_help($path, $arg) {
   global $user;
@@ -2854,7 +2854,7 @@ function user_build_filter_query(SelectQuery $query) {
 }
 
 /**
- * Implement hook_forms().
+ * Implements hook_forms().
  */
 function user_forms() {
   $forms['user_admin_access_add_form']['callback'] = 'user_admin_access_form';
@@ -2864,7 +2864,7 @@ function user_forms() {
 }
 
 /**
- * Implement hook_comment_view().
+ * Implements hook_comment_view().
  */
 function user_comment_view($comment) {
   if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
@@ -3000,7 +3000,7 @@ function user_form_process_password_confirm($element) {
 }
 
 /**
- * Implementation of hook_node_load().
+ * Implements hook_node_load().
  */
 function user_node_load($nodes, $types) {
   // Build an array of all uids for node authors, keyed by nid.
@@ -3021,7 +3021,7 @@ function user_node_load($nodes, $types) {
 }
 
 /**
- * Implement hook_image_style_delete().
+ * Implements hook_image_style_delete().
  */
 function user_image_style_delete($style) {
   // If a style is deleted, update the variables.
@@ -3030,7 +3030,7 @@ function user_image_style_delete($style) {
 }
 
 /**
- * Implement hook_image_style_save().
+ * Implements hook_image_style_save().
  */
 function user_image_style_save($style) {
   // If a style is renamed, update the variables that use it.
@@ -3040,7 +3040,7 @@ function user_image_style_save($style) {
 }
 
 /**
- * Implement hook_action_info().
+ * Implements hook_action_info().
  */
 function user_action_info() {
   return array(
@@ -3206,7 +3206,7 @@ function user_register_submit($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_modules_installed().
+ * Implements hook_modules_installed().
  */
 function user_modules_installed($modules) {
   // Assign all available permissions to the administrator role.
@@ -3227,7 +3227,7 @@ function user_modules_installed($modules) {
 }
 
 /**
- * Implement hook_modules_uninstalled().
+ * Implements hook_modules_uninstalled().
  */
 function user_modules_uninstalled($modules) {
   $permissions = array();
@@ -3276,7 +3276,7 @@ function user_cookie_save(array $values, array $fields = array('name', 'mail', '
 }
 
 /**
- * Implementation of hook_rdf_mapping().
+ * Implements hook_rdf_mapping().
  */
 function user_rdf_mapping() {
   return array(

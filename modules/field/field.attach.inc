@@ -1264,7 +1264,7 @@ function field_attach_extra_weight($bundle, $pseudo_field) {
 }
 
 /**
- * Implement hook_node_prepare_translation.
+ * Implements hook_node_prepare_translation().
  *
  * TODO D7: We do not yet know if this really belongs in Field API.
  */

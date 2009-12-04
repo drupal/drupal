@@ -15,7 +15,7 @@ define('FILE_URL_TEST_CDN_2', 'http://cdn2.example.com');
 
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function file_test_menu() {
   $items['file-test/upload'] = array(
@@ -29,7 +29,7 @@ function file_test_menu() {
 }
 
 /**
- * Implement hook_stream_wrappers().
+ * Implements hook_stream_wrappers().
  */
 function file_test_stream_wrappers() {
   return array(
@@ -199,7 +199,7 @@ function file_test_set_return($op, $value) {
 }
 
 /**
- * Implement hook_file_load().
+ * Implements hook_file_load().
  */
 function file_test_file_load($files) {
   foreach ($files as $file) {
@@ -211,7 +211,7 @@ function file_test_file_load($files) {
 }
 
 /**
- * Implement hook_file_validate().
+ * Implements hook_file_validate().
  */
 function file_test_file_validate($file) {
   _file_test_log_call('validate', array($file));
@@ -219,7 +219,7 @@ function file_test_file_validate($file) {
 }
 
 /**
- * Implement hook_file_download().
+ * Implements hook_file_download().
  */
 function file_test_file_download($uri) {
   _file_test_log_call('download', array($uri));
@@ -227,7 +227,7 @@ function file_test_file_download($uri) {
 }
 
 /**
- * Implement hook_file_references().
+ * Implements hook_file_references().
  */
 function file_test_file_references($file) {
   _file_test_log_call('references', array($file));
@@ -235,42 +235,42 @@ function file_test_file_references($file) {
 }
 
 /**
- * Implement hook_file_insert().
+ * Implements hook_file_insert().
  */
 function file_test_file_insert($file) {
   _file_test_log_call('insert', array($file));
 }
 
 /**
- * Implement hook_file_update().
+ * Implements hook_file_update().
  */
 function file_test_file_update($file) {
   _file_test_log_call('update', array($file));
 }
 
 /**
- * Implement hook_file_copy().
+ * Implements hook_file_copy().
  */
 function file_test_file_copy($file, $source) {
   _file_test_log_call('copy', array($file, $source));
 }
 
 /**
- * Implement hook_file_move().
+ * Implements hook_file_move().
  */
 function file_test_file_move($file, $source) {
   _file_test_log_call('move', array($file, $source));
 }
 
 /**
- * Implement hook_file_delete().
+ * Implements hook_file_delete().
  */
 function file_test_file_delete($file) {
   _file_test_log_call('delete', array($file));
 }
 
 /**
- *  Implement hook_file_url_alter().
+ * Implements hook_file_url_alter().
  */
 function file_test_file_url_alter(&$uri) {
   // Only run this hook when this variable is set. Otherwise, we'd have to add
@@ -315,7 +315,7 @@ function file_test_file_url_alter(&$uri) {
 }
 
 /**
- * Implementation of hook_file_mimetype_mapping_alter().
+ * Implements hook_file_mimetype_mapping_alter().
  */
 function file_test_file_mimetype_mapping_alter(&$mapping) {
   // Add new mappings.

@@ -299,7 +299,7 @@ function node_type_form_validate($form, &$form_state) {
 }
 
 /**
- * Implement hook_form_submit().
+ * Implements hook_form_submit().
  */
 function node_type_form_submit($form, &$form_state) {
   $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
@@ -379,7 +379,7 @@ function node_type_form_submit($form, &$form_state) {
 }
 
 /**
- * Implement hook_node_type_insert().
+ * Implements hook_node_type_insert().
  */
 function node_node_type_insert($info) {
   if (!empty($info->old_type) && $info->old_type != $info->type) {
@@ -392,7 +392,7 @@ function node_node_type_insert($info) {
 }
 
 /**
- * Implement hook_node_type_update().
+ * Implements hook_node_type_update().
  */
 function node_node_type_update($info) {
   if (!empty($info->old_type) && $info->old_type != $info->type) {

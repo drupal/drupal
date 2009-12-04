@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_field_info().
+ * Implements hook_field_info().
  */
 function list_field_info() {
   return array(
@@ -43,7 +43,7 @@ function list_field_info() {
 }
 
 /**
- * Implement hook_field_schema().
+ * Implements hook_field_schema().
  */
 function list_field_schema($field) {
   switch ($field['type']) {
@@ -84,7 +84,7 @@ function list_field_schema($field) {
 }
 
 /**
- * Implement hook_field_settings_form().
+ * Implements hook_field_settings_form().
  *
  * @todo: If $has_data, add a form validate function to verify that the
  * new allowed values do not exclude any keys for which data already
@@ -131,7 +131,7 @@ function list_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
- * Implement hook_field_create_field().
+ * Implements hook_field_create_field().
  */
 function list_field_create_field($field) {
   if (array_key_exists($field['type'], list_field_info())) {
@@ -142,7 +142,7 @@ function list_field_create_field($field) {
 }
 
 /**
- * Implement hook_field_update_field().
+ * Implements hook_field_update_field().
  */
 function list_field_update_field($field, $prior_field, $has_data) {
   if (array_key_exists($field['type'], list_field_info())) {
@@ -252,7 +252,7 @@ function list_allowed_values_validate($element, &$form_state) {
 }
 
 /**
- * Implement hook_field_validate().
+ * Implements hook_field_validate().
  *
  * Possible error codes:
  * - 'list_illegal_value': The value is not part of the list of allowed values.
@@ -272,7 +272,7 @@ function list_field_validate($obj_type, $object, $field, $instance, $langcode, $
 }
 
 /**
- * Implement hook_field_is_empty().
+ * Implements hook_field_is_empty().
  */
 function list_field_is_empty($item, $field) {
   if (empty($item['value']) && (string)$item['value'] !== '0') {
@@ -282,7 +282,7 @@ function list_field_is_empty($item, $field) {
 }
 
 /**
- * Implement hook_field_formatter_info().
+ * Implements hook_field_formatter_info().
  */
 function list_field_formatter_info() {
   return array(

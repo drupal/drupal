@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_enable().
+ * Implements hook_enable().
  */
 function shortcut_enable() {
   if (shortcut_set_load(SHORTCUT_DEFAULT_SET_NAME)) {
@@ -40,7 +40,7 @@ function shortcut_enable() {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function shortcut_uninstall() {
   // Delete the menu links associated with each shortcut set.
@@ -50,7 +50,7 @@ function shortcut_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function shortcut_schema() {
   $schema['shortcut_set'] = array(

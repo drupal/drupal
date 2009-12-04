@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function openid_schema() {
   $schema['openid_association'] = array(
@@ -59,7 +59,7 @@ function openid_schema() {
 }
 
 /**
- * Implement hook_requirements().
+ * Implements hook_requirements().
  */
 function openid_requirements($phase) {
   $requirements = array();

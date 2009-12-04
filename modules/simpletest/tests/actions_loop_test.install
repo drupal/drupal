@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function actions_loop_test_install() {
    db_update('system')

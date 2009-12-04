@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_token_info().
+ * Implements hook_token_info().
  */
 function taxonomy_token_info() {
   $types['term'] = array(
@@ -91,7 +91,7 @@ function taxonomy_token_info() {
 }
 
 /**
- * Implement hook_tokens().
+ * Implements hook_tokens().
  */
 function taxonomy_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $replacements = array();

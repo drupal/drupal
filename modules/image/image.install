@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function image_install() {
   // Create the styles directory and ensure it's writable.
@@ -16,7 +16,7 @@ function image_install() {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function image_uninstall() {
   // Remove the styles directory and generated images.
@@ -25,7 +25,7 @@ function image_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function image_schema() {
   $schema = array();

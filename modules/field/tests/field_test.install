@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function field_test_install() {
   // hook_entity_info_alter() needs to be executed as last.
@@ -18,7 +18,7 @@ function field_test_install() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function field_test_schema() {
   $schema['test_entity'] = array(

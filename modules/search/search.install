@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function search_uninstall() {
   variable_del('minimum_word_size');
@@ -16,7 +16,7 @@ function search_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function search_schema() {
   $schema['search_dataset'] = array(

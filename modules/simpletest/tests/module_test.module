@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function module_test_permission() {
   return array(

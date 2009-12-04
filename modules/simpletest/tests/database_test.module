@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implement hook_query_alter().
+ * Implements hook_query_alter().
  */
 function database_test_query_alter(QueryAlterableInterface $query) {
 
@@ -34,14 +34,16 @@ function database_test_query_alter(QueryAlterableInterface $query) {
 
 
 /**
- * Implement hook_query_TAG_alter(). Called by DatabaseTestCase::testAlterRemoveRange.
+ * Implements hook_query_TAG_alter().
+ *
+ * Called by DatabaseTestCase::testAlterRemoveRange.
  */
 function database_test_query_database_test_alter_remove_range_alter(QueryAlterableInterface $query) {
   $query->range();
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function database_test_menu() {
   $items['database_test/db_query_temporary'] = array(

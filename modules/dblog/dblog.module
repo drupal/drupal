@@ -13,7 +13,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function dblog_help($path, $arg) {
   switch ($path) {
@@ -28,7 +28,7 @@ function dblog_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function dblog_theme() {
   return array(
@@ -39,7 +39,7 @@ function dblog_theme() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function dblog_menu() {
   $items['admin/reports/dblog'] = array(
@@ -87,7 +87,7 @@ function dblog_init() {
 
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  *
  * Remove expired log messages and flood control events.
  */
@@ -102,7 +102,7 @@ function dblog_cron() {
 }
 
 /**
- * Implement hook_user_cancel().
+ * Implements hook_user_cancel().
  */
 function dblog_user_cancel($edit, $account, $method) {
   switch ($method) {
@@ -133,7 +133,7 @@ function _dblog_get_message_types() {
 }
 
 /**
- * Implement hook_watchdog().
+ * Implements hook_watchdog().
  *
  * Note some values may be truncated for database column size restrictions.
  */
@@ -155,7 +155,7 @@ function dblog_watchdog(array $log_entry) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function dblog_form_system_logging_settings_alter(&$form, $form_state) {
   $form['dblog_row_limit'] = array(

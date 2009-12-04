@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_field_info().
+ * Implements hook_field_info().
  */
 function image_field_info() {
   return array(
@@ -34,7 +34,7 @@ function image_field_info() {
 }
 
 /**
- * Implement hook_field_schema().
+ * Implements hook_field_schema().
  */
 function image_field_schema($field) {
   return array(
@@ -65,7 +65,7 @@ function image_field_schema($field) {
 }
 
 /**
- * Implement hook_field_settings_form().
+ * Implements hook_field_settings_form().
  */
 function image_field_settings_form($field, $instance) {
   $defaults = field_info_field_settings($field['type']);
@@ -98,7 +98,7 @@ function image_field_settings_form($field, $instance) {
 }
 
 /**
- * Implement hook_field_instance_settings_form().
+ * Implements hook_field_instance_settings_form().
  */
 function image_field_instance_settings_form($field, $instance) {
   $settings = $instance['settings'];
@@ -203,14 +203,14 @@ function _image_field_resolution_validate($element, &$form_state) {
 }
 
 /**
- * Implement hook_field_load().
+ * Implements hook_field_load().
  */
 function image_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
   file_field_load($obj_type, $objects, $field, $instances, $langcode, $items, $age);
 }
 
 /**
- * Implement hook_field_sanitize().
+ * Implements hook_field_sanitize().
  */
 function image_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
   // If there are no files specified at all, use the default.
@@ -226,42 +226,42 @@ function image_field_sanitize($obj_type, $object, $field, $instance, $langcode, 
 }
 
 /**
- * Implement hook_field_insert().
+ * Implements hook_field_insert().
  */
 function image_field_insert($obj_type, $object, $field, $instance, $langcode, &$items) {
   image_field_update($obj_type, $object, $field, $instance, $langcode, $items);
 }
 
 /**
- * Implement hook_field_update().
+ * Implements hook_field_update().
  */
 function image_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
   file_field_update($obj_type, $object, $field, $instance, $langcode, $items);
 }
 
 /**
- * Implement hook_field_delete().
+ * Implements hook_field_delete().
  */
 function image_field_delete($obj_type, $object, $field, $instance, $langcode, &$items) {
   file_field_delete($obj_type, $object, $field, $instance, $langcode, $items);
 }
 
 /**
- * Implement hook_field_delete_revision().
+ * Implements hook_field_delete_revision().
  */
 function image_field_delete_revision($obj_type, $object, $field, $instance, $langcode, &$items) {
   file_field_delete_revision($obj_type, $object, $field, $instance, $langcode, $items);
 }
 
 /**
- * Implement hook_field_is_empty().
+ * Implements hook_field_is_empty().
  */
 function image_field_is_empty($item, $field) {
   return file_field_is_empty($item, $field);
 }
 
 /**
- * Implement hook_field_widget_info().
+ * Implements hook_field_widget_info().
  */
 function image_field_widget_info() {
   return array(
@@ -281,7 +281,7 @@ function image_field_widget_info() {
 }
 
 /**
- * Implement hook_field_widget_settings_form().
+ * Implements hook_field_widget_settings_form().
  */
 function image_field_widget_settings_form($field, $instance) {
   $widget = $instance['widget'];
@@ -303,7 +303,7 @@ function image_field_widget_settings_form($field, $instance) {
 }
 
 /**
- * Implementation of hook_field_widget().
+ * Implements hook_field_widget().
  */
 function image_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $elements = file_field_widget($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
@@ -411,7 +411,7 @@ function theme_image_widget($variables) {
 }
 
 /**
- * Implement hook_field_formatter_info().
+ * Implements hook_field_formatter_info().
  */
 function image_field_formatter_info() {
   $formatters = array(

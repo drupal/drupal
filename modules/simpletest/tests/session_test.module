@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function session_test_menu() {
   $items['session-test/get'] = array(
@@ -54,7 +54,7 @@ function session_test_menu() {
 }
 
 /**
- * Implement hook_boot().
+ * Implements hook_boot().
  */
 function session_test_boot() {
   header('X-Session-Empty: ' . intval(empty($_SESSION)));
@@ -133,7 +133,7 @@ function _session_test_set_not_started() {
 }
 
 /**
- * Implement hook_user().
+ * Implements hook_user().
  */
 function session_test_user_login($edit = array(), $user = NULL) {
   if ($user->name == 'session_test_user') {
@@ -144,14 +144,14 @@ function session_test_user_login($edit = array(), $user = NULL) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function session_test_form_user_login_alter(&$form) {
   $form['#https'] = TRUE;
 }
 
 /**
- * Implement hook_drupal_goto_alter().
+ * Implements hook_drupal_goto_alter().
  *
  * Force the redirection to go to a non-secure page after being on a secure
  * page through https.php.

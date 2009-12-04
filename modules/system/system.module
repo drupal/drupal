@@ -57,7 +57,7 @@ define('REGIONS_VISIBLE', 'visible');
 define('REGIONS_ALL', 'all');
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function system_help($path, $arg) {
   global $base_url;
@@ -138,7 +138,7 @@ function system_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function system_theme() {
   return array_merge(drupal_common_theme(), array(
@@ -201,7 +201,7 @@ function system_theme() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function system_permission() {
   return array(
@@ -243,7 +243,7 @@ function system_permission() {
 }
 
 /**
- * Implement hook_rdf_namespaces().
+ * Implements hook_rdf_namespaces().
  */
 function system_rdf_namespaces() {
   return array(
@@ -265,7 +265,7 @@ function system_rdf_namespaces() {
 }
 
 /**
- * Implement hook_hook_info().
+ * Implements hook_hook_info().
  */
 function system_hook_info() {
   $hooks['token_info'] = array(
@@ -278,7 +278,7 @@ function system_hook_info() {
 }
 
 /**
- * Implement hook_entity_info().
+ * Implements hook_entity_info().
  */
 function system_entity_info() {
   return array(
@@ -294,7 +294,7 @@ function system_entity_info() {
 }
 
 /**
- * Implement hook_element_info().
+ * Implements hook_element_info().
  */
 function system_element_info() {
   // Top level elements.
@@ -501,7 +501,7 @@ function system_element_info() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function system_menu() {
   $items['system/files'] = array(
@@ -1059,7 +1059,7 @@ function _system_batch_theme() {
 }
 
 /**
- * Implementation of hook_library().
+ * Implements hook_library().
  */
 function system_library() {
   // jQuery.
@@ -1458,7 +1458,7 @@ function system_library() {
 }
 
 /**
- * Implement hook_stream_wrappers().
+ * Implements hook_stream_wrappers().
  */
 function system_stream_wrappers() {
   return array(
@@ -1626,7 +1626,7 @@ function system_authorized_batch_process() {
  */
 
 /**
- * Implement hook_updater_info().
+ * Implements hook_updater_info().
  */
 function system_updater_info() {
   return array(
@@ -1644,7 +1644,7 @@ function system_updater_info() {
 }
 
 /**
- * Implement hook_filetransfer_backends().
+ * Implements hook_filetransfer_backends().
  */
 function system_filetransfer_backends() {
   $backends = array();
@@ -1745,7 +1745,7 @@ function _system_filetransfer_backend_form_common() {
 }
 
 /**
- * Implement hook_init().
+ * Implements hook_init().
  */
 function system_init() {
   // Add the CSS for this module.
@@ -1781,7 +1781,7 @@ function system_init() {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_profile_form_alter(&$form, &$form_state) {
   if ($form['#user_category'] == 'account') {
@@ -1793,7 +1793,7 @@ function system_form_user_profile_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_register_form_alter(&$form, &$form_state) {
   if (variable_get('configurable_timezones', 1)) {
@@ -1811,7 +1811,7 @@ function system_form_user_register_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_user_login().
+ * Implements hook_user_login().
  */
 function system_user_login(&$edit, $account) {
   // If the user has a NULL time zone, notify them to set a time zone.
@@ -1849,7 +1849,7 @@ function system_user_timezone(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function system_block_info() {
   $blocks['main'] = array(
@@ -1877,7 +1877,7 @@ function system_block_info() {
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  *
  * Generate a block with a promotional link to Drupal.org and
  * all system menu blocks.
@@ -2441,7 +2441,7 @@ function system_region_list($theme_key, $show = REGIONS_ALL) {
 }
 
 /**
- * Implement hook_system_info_alter().
+ * Implements hook_system_info_alter().
  */
 function system_system_info_alter(&$info, $file, $type) {
   // Remove page-top from the blocks UI since it is reserved for modules to
@@ -2682,7 +2682,7 @@ function system_get_module_admin_tasks($module) {
 }
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  *
  * Remove older rows from flood and batch table. Remove old temporary files.
  */
@@ -2737,7 +2737,7 @@ function system_flush_caches() {
 }
 
 /**
- * Implement hook_action_info().
+ * Implements hook_action_info().
  */
 function system_action_info() {
   return array(
@@ -2843,7 +2843,7 @@ function system_send_email_action_submit($form, $form_state) {
 }
 
 /**
- * Implement a configurable Drupal action. Sends an email.
+ * Implements a configurable Drupal action: sends an email.
  */
 function system_send_email_action($object, $context) {
   if (empty($context['node'])) {
@@ -2864,7 +2864,7 @@ function system_send_email_action($object, $context) {
 }
 
 /**
- * Implement hook_mail().
+ * Implements hook_mail().
  */
 function system_mail($key, &$message, $params) {
   $context = $params['context'];
@@ -2905,7 +2905,7 @@ function system_message_action(&$object, $context = array()) {
 }
 
 /**
- * Implement a configurable Drupal action. Redirect user to a URL.
+ * Implements a configurable Drupal action: redirect user to a URL.
  */
 function system_goto_action_form($context) {
   $form['url'] = array(
@@ -2929,8 +2929,7 @@ function system_goto_action($object, $context) {
 }
 
 /**
- * Implement a Drupal action.
- * Blocks the user's IP address.
+ * Implements a Drupal action: blocks the user's IP address.
  */
 function system_block_ip_action() {
   $ip = ip_address();
@@ -3021,7 +3020,7 @@ function theme_system_compact_link() {
 }
 
 /**
- * Implement hook_image_toolkits().
+ * Implements hook_image_toolkits().
  */
 function system_image_toolkits() {
   include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'system') . '/' . 'image.gd.inc';
@@ -3072,7 +3071,7 @@ function system_retrieve_file($url, $destination = NULL, $overwrite = TRUE) {
 }
 
 /**
- * Implement hook_page_build().
+ * Implements hook_page_build().
  */
 function system_page_build(&$page) {
   // Automatic cron runs.
@@ -3327,7 +3326,7 @@ function system_date_format_locale($langcode = NULL, $type = NULL) {
 function _system_date_format_types_build() {
   $types = array();
 
-  // Get list of modules which implement hook_date_format_types().
+  // Get list of modules that implement hook_date_format_types().
   $modules = module_implements('date_format_types');
 
   foreach ($modules as $module) {
@@ -3539,7 +3538,7 @@ function system_date_format_delete($dfid) {
 }
 
 /**
- * Implement hook_archiver_info().
+ * Implements hook_archiver_info().
  */
 function system_archiver_info() {
   return array(
@@ -3685,7 +3684,7 @@ function system_build_contextual_links($element) {
 }
 
 /**
- * Implement hook_admin_paths().
+ * Implements hook_admin_paths().
  */
 function system_admin_paths() {
   $paths = array(

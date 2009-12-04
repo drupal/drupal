@@ -332,7 +332,7 @@ function system_requirements($phase) {
 }
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function system_install() {
   // Create tables.
@@ -423,7 +423,7 @@ function system_install() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function system_schema() {
   // NOTE: {variable} needs to be created before all other tables, as

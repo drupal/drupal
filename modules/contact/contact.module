@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function contact_help($path, $arg) {
   switch ($path) {
@@ -38,7 +38,7 @@ function contact_help($path, $arg) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function contact_permission() {
   return array(
@@ -55,7 +55,7 @@ function contact_permission() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function contact_menu() {
   $items['admin/structure/contact'] = array(
@@ -160,14 +160,14 @@ function contact_load($cid) {
 }
 
 /**
- * Implement hook_user_insert().
+ * Implements hook_user_insert().
  */
 function contact_user_insert(&$edit, $account, $category) {
   $edit['contact'] = variable_get('contact_default_status', 1);
 }
 
 /**
- * Implement hook_mail().
+ * Implements hook_mail().
  */
 function contact_mail($key, &$message, $params) {
   $language = $message['language'];
@@ -210,7 +210,7 @@ function contact_mail($key, &$message, $params) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  *
  * Add the enable personal contact form to an individual user's account page.
  */

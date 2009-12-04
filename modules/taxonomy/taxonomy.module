@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function taxonomy_help($path, $arg) {
   switch ($path) {
@@ -57,7 +57,7 @@ function taxonomy_help($path, $arg) {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function taxonomy_permission() {
   $permissions = array(
@@ -81,7 +81,7 @@ function taxonomy_permission() {
 }
 
 /**
- * Implement hook_entity_info().
+ * Implements hook_entity_info().
  */
 function taxonomy_entity_info() {
   $return = array(
@@ -179,7 +179,7 @@ function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = arr
 }
 
 /**
- * Implement hook_field_build_modes();
+ * Implements hook_field_build_modes().
  *
  * @TODO: build mode for display as a field (when attached to nodes etc.).
  */
@@ -194,7 +194,7 @@ function taxonomy_field_build_modes($obj_type) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function taxonomy_theme() {
   return array(
@@ -208,7 +208,7 @@ function taxonomy_theme() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function taxonomy_menu() {
   $items['admin/structure/taxonomy'] = array(
@@ -931,7 +931,7 @@ function _taxonomy_get_tid_from_term($term) {
 }
 
 /**
- * Implode a list of tags of a certain vocabulary into a string.
+ * Implodes a list of tags of a certain vocabulary into a string.
  */
 function taxonomy_implode_tags($tags, $vid = NULL) {
   $typed_tags = array();
@@ -951,7 +951,7 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
 }
 
 /**
- * Implement hook_field_info().
+ * Implements hook_field_info().
  *
  * Field settings:
  * - allowed_values: a list array of one or more vocabulary trees:
@@ -981,7 +981,7 @@ function taxonomy_field_info() {
 }
 
 /**
- * Implement hook_field_widget_info().
+ * Implements hook_field_widget_info().
  *
  * We need custom handling of multiple values because we need
  * to combine them into a options list rather than display
@@ -1010,7 +1010,7 @@ function taxonomy_field_widget_info() {
 }
 
 /**
- * Implement hook_field_widget_info_alter().
+ * Implements hook_field_widget_info_alter().
  */
 function taxonomy_field_widget_info_alter(&$info) {
   $info['options_select']['field types'][] = 'taxonomy_term';
@@ -1018,7 +1018,7 @@ function taxonomy_field_widget_info_alter(&$info) {
 }
 
 /**
- * Implement hook_field_schema().
+ * Implements hook_field_schema().
  */
 function taxonomy_field_schema($field) {
   return array(
@@ -1036,7 +1036,7 @@ function taxonomy_field_schema($field) {
 }
 
 /**
- * Implement hook_field_validate().
+ * Implements hook_field_validate().
  *
  * Possible error codes:
  * - 'taxonomy_term_illegal_value': The value is not part of the list of allowed values.
@@ -1069,7 +1069,7 @@ function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcod
 }
 
 /**
- * Implement hook_field_is_empty().
+ * Implements hook_field_is_empty().
  */
 function taxonomy_field_is_empty($item, $field) {
   if (!is_array($item) || (empty($item['tid']) && (string) $item['tid'] !== '0')) {
@@ -1079,7 +1079,7 @@ function taxonomy_field_is_empty($item, $field) {
 }
 
 /**
- * Implement hook_field_formatter_info().
+ * Implements hook_field_formatter_info().
  */
 function taxonomy_field_formatter_info() {
   return array(
@@ -1139,7 +1139,7 @@ function taxonomy_allowed_values($field) {
 }
 
 /**
- * Implement hook_field_load().
+ * Implements hook_field_load().
  *
  * This preloads all taxonomy terms for multiple loaded objects at once and
  * unsets values for invalid terms that do not exist.
@@ -1229,7 +1229,7 @@ function taxonomy_term_title($term) {
 }
 
 /**
- * Implement hook_field_widget().
+ * Implements hook_field_widget().
  */
 function taxonomy_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $tags = array();
@@ -1292,14 +1292,14 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
 }
 
 /**
- * Implement hook_field_widget_error().
+ * Implements hook_field_widget_error().
  */
 function taxonomy_field_widget_error($element, $error) {
   form_error($element, $error['message']);
 }
 
 /**
- * Implement hook_field_settings_form().
+ * Implements hook_field_settings_form().
  */
 function taxonomy_field_settings_form($field, $instance, $has_data) {
   // Get proper values for 'allowed_values_function', which is a core setting.
@@ -1332,7 +1332,7 @@ function taxonomy_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
- * Implement hook_rdf_mapping().
+ * Implements hook_rdf_mapping().
  *
  * @return array
  *   The rdf mapping for vocabularies and terms.
@@ -1390,7 +1390,7 @@ function taxonomy_rdf_mapping() {
  */
 
 /**
- * Implement hook_field_insert().
+ * Implements hook_field_insert().
  */
 function taxonomy_field_insert($obj_type, $object, $field, $instance, $langcode, &$items) {
   // We maintain a denormalized table of term/node relationships, containing
@@ -1410,7 +1410,7 @@ function taxonomy_field_insert($obj_type, $object, $field, $instance, $langcode,
 }
 
 /**
- * Implement hook_field_update().
+ * Implements hook_field_update().
  */
 function taxonomy_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
   if (variable_get('taxonomy_maintain_index_table', TRUE) && $field['storage']['type'] == 'field_sql_storage' && $obj_type = 'node') {
@@ -1440,7 +1440,7 @@ function taxonomy_field_update($obj_type, $object, $field, $instance, $langcode,
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function taxonomy_node_delete($node) {
   if (variable_get('taxonomy_maintain_index_table', TRUE)) {
@@ -1450,7 +1450,7 @@ function taxonomy_node_delete($node) {
 }
 
 /**
- * Implement hook_taxonomy_term_delete().
+ * Implements hook_taxonomy_term_delete().
  */
 function taxonomy_taxonomy_term_delete($term) {
   if (variable_get('taxonomy_maintain_index_table', TRUE)) {

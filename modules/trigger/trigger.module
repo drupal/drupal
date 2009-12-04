@@ -8,7 +8,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function trigger_help($path, $arg) {
   $explanation = '<p>' . t('Triggers are system events, such as when new content is added or when a user logs in. The trigger module associates these triggers with actions (functional tasks), such as unpublishing content or e-mailing an administrator. The <a href="@url">Actions settings page</a> contains a list of existing actions and provides the ability to create and configure additional actions.', array('@url' => url('admin/config/system/actions'))) . '</p>';
@@ -32,7 +32,7 @@ function trigger_help($path, $arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function trigger_menu() {
   $items['admin/structure/trigger'] = array(
@@ -82,7 +82,7 @@ function trigger_menu() {
 }
 
 /**
- * Implement hook_trigger_info().
+ * Implements hook_trigger_info().
  *
  * Defines all the triggers that this module implements triggers for.
  */
@@ -181,7 +181,7 @@ function trigger_get_assigned_actions($hook) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function trigger_theme() {
   return array(
@@ -193,7 +193,7 @@ function trigger_theme() {
 }
 
 /**
- * Implement hook_forms().
+ * Implements hook_forms().
  *
  * We re-use code by using the same assignment form definition for each hook.
  */
@@ -288,35 +288,35 @@ function _trigger_node($node, $hook, $a3 = NULL, $a4 = NULL) {
 }
 
 /**
- * Implement hook_node_view().
+ * Implements hook_node_view().
  */
 function trigger_node_view($node, $build_mode) {
   _trigger_node($node, 'node_view', $build_mode);
 }
 
 /**
- * Implement hook_node_update().
+ * Implements hook_node_update().
  */
 function trigger_node_update($node) {
   _trigger_node($node, 'node_update');
 }
 
 /**
- * Implement hook_node_presave().
+ * Implements hook_node_presave().
  */
 function trigger_node_presave($node) {
   _trigger_node($node, 'node_presave');
 }
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function trigger_node_insert($node) {
   _trigger_node($node, 'node_insert');
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function trigger_node_delete($node) {
   _trigger_node($node, 'node_delete');
@@ -352,35 +352,35 @@ function _trigger_normalize_comment_context($type, $comment) {
 }
 
 /**
- * Implement hook_comment_presave().
+ * Implements hook_comment_presave().
  */
 function trigger_comment_presave($comment) {
   _trigger_comment($comment, 'comment_presave');
 }
 
 /**
- * Implement hook_comment_insert().
+ * Implements hook_comment_insert().
  */
 function trigger_comment_insert($comment) {
   _trigger_comment($comment, 'comment_insert');
 }
 
 /**
- * Implement hook_comment_update().
+ * Implements hook_comment_update().
  */
 function trigger_comment_update($comment) {
   _trigger_comment($comment, 'comment_update');
 }
 
 /**
- * Implement hook_comment_delete().
+ * Implements hook_comment_delete().
  */
 function trigger_comment_delete($comment) {
   _trigger_comment($comment, 'comment_delete');
 }
 
 /**
- * Implement hook_comment_view().
+ * Implements hook_comment_view().
  */
 function trigger_comment_view($comment) {
   _trigger_comment($comment, 'comment_view');
@@ -423,7 +423,7 @@ function _trigger_comment($a1, $hook) {
 }
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  */
 function trigger_cron() {
   $aids = trigger_get_assigned_actions('cron');
@@ -468,42 +468,42 @@ function _trigger_normalize_user_context($type, $account) {
 }
 
 /**
- * Implement hook_user_login().
+ * Implements hook_user_login().
  */
 function trigger_user_login(&$edit, $account, $category) {
   _trigger_user('user_login', $edit, $account, $category);
 }
 
 /**
- * Implement hook_user_logout().
+ * Implements hook_user_logout().
  */
 function trigger_user_logout($account) {
   _trigger_user('user_logout', $edit = NULL, $account);
 }
 
 /**
- * Implement hook_user_presave().
+ * Implements hook_user_presave().
  */
 function trigger_user_presave(&$edit, $account, $category) {
   _trigger_user('user_presave', $edit, $account, $category);
 }
 
 /**
- * Implement hook_user_insert().
+ * Implements hook_user_insert().
  */
 function trigger_user_insert(&$edit, $account, $category) {
   _trigger_user('user_insert', $edit, $account, $category);
 }
 
 /**
- * Implement hook_user_update().
+ * Implements hook_user_update().
  */
 function trigger_user_update(&$edit, $account, $category) {
   _trigger_user('user_update', $edit, $account, $category);
 }
 
 /**
- * Implement hook_user_cancel().
+ * Implements hook_user_cancel().
  */
 function trigger_user_cancel($edit, $account, $method) {
   switch ($method) {
@@ -515,7 +515,7 @@ function trigger_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implement hook_user_view().
+ * Implements hook_user_view().
  */
 function trigger_user_view($account) {
   _trigger_user('user_view', $edit = NULL, $account, NULL);
@@ -568,28 +568,28 @@ function _trigger_taxonomy($hook, $array) {
 }
 
 /**
- * Implement hook_taxonomy_term_insert().
+ * Implements hook_taxonomy_term_insert().
  */
 function trigger_taxonomy_term_insert($term) {
   _trigger_taxonomy('taxonomy_term_insert', (array) $term);
 }
 
 /**
- * Implement hook_taxonomy_term_update().
+ * Implements hook_taxonomy_term_update().
  */
 function trigger_taxonomy_term_update($term) {
   _trigger_taxonomy('taxonomy_term_update', (array) $term);
 }
 
 /**
- * Implement hook_taxonomy_term_delete().
+ * Implements hook_taxonomy_term_delete().
  */
 function trigger_taxonomy_term_delete($term) {
   _trigger_taxonomy('taxonomy_term_delete', (array) $term);
 }
 
 /**
- * Implement hook_actions_delete().
+ * Implements hook_actions_delete().
  *
  * Removes all trigger entries for the given action, when an action is deleted.
  */

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_action_info().
+ * Implements hook_action_info().
  */
 function trigger_test_action_info() {
   // Register an action that can be assigned to the trigger "cron".

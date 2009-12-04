@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function menu_schema() {
   $schema['menu_custom'] = array(
@@ -42,7 +42,7 @@ function menu_schema() {
 }
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function menu_install() {
   $system_menus = menu_list_system_menus();
@@ -65,7 +65,7 @@ function menu_install() {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function menu_uninstall() {
   menu_rebuild();

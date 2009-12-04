@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_token_info().
+ * Implements hook_token_info().
  */
 function upload_token_info() {
   $results['tokens']['node'] = array(
@@ -21,7 +21,7 @@ function upload_token_info() {
 }
 
 /**
- * Implement hook_tokens().
+ * Implements hook_tokens().
  */
 function upload_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $replacements = array();

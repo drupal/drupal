@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function update_test_menu() {
   $items = array();
@@ -18,7 +18,7 @@ function update_test_menu() {
 }
 
 /**
- * Implement hook_system_info_alter().
+ * Implements hook_system_info_alter().
  *
  * This checks the 'update_test_system_info' variable and sees if we need to
  * alter the system info for the given $file based on the setting. The setting

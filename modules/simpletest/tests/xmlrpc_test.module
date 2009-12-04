@@ -47,7 +47,7 @@ function xmlrpc_test_simpleStructReturnTest($number) {
 }
 
 /**
- * Implement hook_xmlrpc()
+ * Implements hook_xmlrpc().
  */
 function xmlrpc_test_xmlrpc() {
   return array(

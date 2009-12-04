@@ -14,7 +14,7 @@ function phptemplate_init($template) {
 }
 
 /**
- * Implement hook_theme to tell Drupal what templates the engine
+ * Implements hook_theme to tell Drupal what templates the engine
  * and the current theme use. The $existing argument will contain hooks
  * pre-defined by Drupal so that we can use that information if
  * we need to.

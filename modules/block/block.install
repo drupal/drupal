@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function block_schema() {
   $schema['block'] = array(
@@ -204,7 +204,7 @@ function block_schema() {
 }
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function block_install() {
 

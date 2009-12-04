@@ -8,7 +8,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function upload_help($path, $arg) {
   switch ($path) {
@@ -23,7 +23,7 @@ function upload_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function upload_theme() {
   return array(
@@ -40,7 +40,7 @@ function upload_theme() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function upload_permission() {
   return array(
@@ -82,7 +82,7 @@ function upload_node_links($node, $build_mode) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function upload_menu() {
   $items['upload/js'] = array(
@@ -146,7 +146,7 @@ function _upload_file_limits($user) {
 }
 
 /**
- * Implement hook_file_download().
+ * Implements hook_file_download().
  */
 function upload_file_download($uri) {
   $file = db_query("SELECT f.*, u.nid FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :uri", array(':uri' => $uri))->fetchObject();
@@ -262,7 +262,7 @@ function upload_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implement hook_file_load().
+ * Implements hook_file_load().
  */
 function upload_file_load($files) {
   // Add the upload specific data into the file object.
@@ -275,7 +275,7 @@ function upload_file_load($files) {
 }
 
 /**
- * Implement hook_file_references().
+ * Implements hook_file_references().
  */
 function upload_file_references($file) {
   // If upload.module is still using a file, do not let other modules delete it.
@@ -287,7 +287,7 @@ function upload_file_references($file) {
 }
 
 /**
- * Implement hook_file_delete().
+ * Implements hook_file_delete().
  */
 function upload_file_delete($file) {
   // Delete all information associated with the file.
@@ -295,7 +295,7 @@ function upload_file_delete($file) {
 }
 
 /**
- * Implement hook_node_load().
+ * Implements hook_node_load().
  */
 function upload_node_load($nodes, $types) {
   // Collect all the revision ids for nodes with upload enabled.
@@ -333,7 +333,7 @@ function upload_node_load($nodes, $types) {
 }
 
 /**
- * Implement hook_node_view().
+ * Implements hook_node_view().
  */
 function upload_node_view($node, $build_mode) {
   if (!isset($node->files)) {
@@ -379,7 +379,7 @@ function upload_node_view($node, $build_mode) {
 }
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function upload_node_insert($node) {
   if (user_access('upload files')) {
@@ -388,7 +388,7 @@ function upload_node_insert($node) {
 }
 
 /**
- * Implement hook_node_update().
+ * Implements hook_node_update().
  */
 function upload_node_update($node) {
   if (user_access('upload files')) {
@@ -397,7 +397,7 @@ function upload_node_update($node) {
 }
 
 /**
- * Implement hook_node_delete().
+ * Implements hook_node_delete().
  */
 function upload_node_delete($node) {
   db_delete('upload')->condition('nid', $node->nid)->execute();
@@ -410,7 +410,7 @@ function upload_node_delete($node) {
 }
 
 /**
- * Implement hook_node_revision_delete().
+ * Implements hook_node_revision_delete().
  */
 function upload_node_revision_delete($node) {
   db_delete('upload')->condition('vid', $node->vid)->execute();
@@ -423,7 +423,7 @@ function upload_node_revision_delete($node) {
 }
 
 /**
- * Implement hook_node_search_result().
+ * Implements hook_node_search_result().
  */
 function upload_node_search_result($node) {
   return isset($node->files) && is_array($node->files) ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;

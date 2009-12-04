@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function simpletest_help($path, $arg) {
   switch ($path) {
@@ -26,7 +26,7 @@ function simpletest_help($path, $arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function simpletest_menu() {
   $items['admin/config/development/testing'] = array(
@@ -62,7 +62,7 @@ function simpletest_menu() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function simpletest_permission() {
   return array(
@@ -74,7 +74,7 @@ function simpletest_permission() {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function simpletest_theme() {
   return array(
@@ -90,7 +90,7 @@ function simpletest_theme() {
 }
 
 /**
- * Implementation of hook_stream_wrappers().
+ * Implements hook_stream_wrappers().
  */
 function simpletest_test_stream_wrappers() {
   return array(
@@ -103,7 +103,7 @@ function simpletest_test_stream_wrappers() {
 }
 
 /**
- * Implement hook_js_alter().
+ * Implements hook_js_alter().
  */
 function simpletest_js_alter(&$javascript) {
   // Since SimpleTest is a special use case for the table select, stick the
@@ -375,7 +375,7 @@ function simpletest_test_get_all() {
 }
 
 /**
- * Implementation of hook_registry_files_alter().
+ * Implements hook_registry_files_alter().
  *
  * Add the test files for disabled modules so that we get a list containing
  * all the avialable tests.

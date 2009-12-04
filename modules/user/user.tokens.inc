@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_token_info().
+ * Implements hook_token_info().
  */
 function user_token_info() {
   $types['user'] = array(
@@ -60,7 +60,7 @@ function user_token_info() {
 }
 
 /**
- * Implement hook_tokens().
+ * Implements hook_tokens().
  */
 function user_tokens($type, $tokens, array $data = array(), array $options = array()) {
   global $user;

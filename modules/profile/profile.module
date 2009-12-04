@@ -27,7 +27,7 @@ define('PROFILE_PUBLIC_LISTINGS', 3);
 define('PROFILE_HIDDEN', 4);
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function profile_help($path, $arg) {
   switch ($path) {
@@ -49,7 +49,7 @@ function profile_help($path, $arg) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function profile_theme() {
   return array(
@@ -73,7 +73,7 @@ function profile_theme() {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function profile_menu() {
   $items['profile'] = array(
@@ -133,7 +133,7 @@ function profile_menu() {
 }
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
  function profile_block_info() {
   $blocks['author-information']['info'] = t('Author information');
@@ -142,7 +142,7 @@ function profile_menu() {
 }
 
 /**
- * Implement hook_block_configure().
+ * Implements hook_block_configure().
  */
 function profile_block_configure($delta = '') {
   // Compile a list of fields to show
@@ -163,14 +163,14 @@ function profile_block_configure($delta = '') {
 }
 
 /**
- * Implement hook_block_save().
+ * Implements hook_block_save().
  */
 function profile_block_save($delta = '', $edit = array()) {
   variable_set('profile_block_author_fields', $edit['profile_block_author_fields']);
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  */
 function profile_block_view($delta = '') {
   if (user_access('access user profiles')) {
@@ -210,7 +210,7 @@ function profile_block_view($delta = '') {
 }
 
 /**
- * Implement hook_user_presave().
+ * Implements hook_user_presave().
  */
 function profile_user_presave(&$edit, $account, $category) {
   if ($account->uid) {
@@ -219,14 +219,14 @@ function profile_user_presave(&$edit, $account, $category) {
 }
 
 /**
- * Implement hook_user_insert().
+ * Implements hook_user_insert().
  */
 function profile_user_insert(&$edit, $account, $category) {
   profile_save_profile($edit, $account, $category, TRUE);
 }
 
 /**
- * Implement hook_user_cancel().
+ * Implements hook_user_cancel().
  */
 function profile_user_cancel(&$edit, $account, $method) {
   switch ($method) {
@@ -240,7 +240,7 @@ function profile_user_cancel(&$edit, $account, $method) {
 }
 
 /**
- * Implement hook_user_load().
+ * Implements hook_user_load().
  */
 function profile_user_load($users) {
   $result = db_query('SELECT f.name, f.type, v.uid, v.value FROM {profile_field} f INNER JOIN {profile_value} v ON f.fid = v.fid WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
@@ -317,7 +317,7 @@ function profile_view_field($account, $field) {
 }
 
 /**
- * Implement hook_user_view().
+ * Implements hook_user_view().
  */
 function profile_user_view($account) {
   // Show private fields to administrators and people viewing their own account.
@@ -367,7 +367,7 @@ function _profile_form_explanation($field) {
 }
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  */
 function profile_form_alter(&$form, &$form_state, $form_id) {
   if (!($form_id == 'user_register_form' || $form_id == 'user_profile_form')) {
@@ -489,7 +489,7 @@ function profile_user_form_validate($form, &$form_state) {
 }
 
 /**
- * Implement hook_user_categories().
+ * Implements hook_user_categories().
  */
 function profile_user_categories() {
   $result = db_query("SELECT DISTINCT(category) FROM {profile_field}");

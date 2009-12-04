@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  *
  * Allows the profile to alter the site-configuration form. This is
  * called through custom invocation, so $form_state is not populated.

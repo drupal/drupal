@@ -42,7 +42,7 @@ define('LOCALE_LANGUAGE_NEGOTIATION_SESSION', 'locale-session');
 // Hook implementations
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function locale_help($path, $arg) {
   switch ($path) {
@@ -89,7 +89,7 @@ function locale_help($path, $arg) {
 }
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function locale_menu() {
   // Manage languages
@@ -294,7 +294,7 @@ function locale_inc_callback() {
 }
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function locale_permission() {
   return array(
@@ -308,7 +308,7 @@ function locale_permission() {
 }
 
 /**
- * Implement hook_locale().
+ * Implements hook_locale().
  */
 function locale_locale($op = 'groups') {
   switch ($op) {
@@ -354,7 +354,7 @@ function locale_language_selector_form(&$form, &$form_state, $user) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function locale_form_path_admin_form_alter(&$form, &$form_state) {
   $form['language'] = array(
@@ -368,7 +368,7 @@ function locale_form_path_admin_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function locale_form_node_type_form_alter(&$form, &$form_state) {
   if (isset($form['identity']['type'])) {
@@ -393,7 +393,7 @@ function locale_multilingual_node_type($type_name) {
 }
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  *
  * Adds language fields to forms.
  */
@@ -441,7 +441,7 @@ function locale_field_node_form_submit($form, &$form_state) {
 }
 
 /**
- * Implement hook_theme().
+ * Implements hook_theme().
  */
 function locale_theme() {
   return array(
@@ -461,7 +461,7 @@ function locale_theme() {
 }
 
 /**
- * Implement hook_field_attach_view_alter().
+ * Implements hook_field_attach_view_alter().
  */
 function locale_field_attach_view_alter(&$output, $context) {
   // In locale_field_fallback_view() we might call field_attach_view(). The
@@ -479,7 +479,7 @@ function locale_field_attach_view_alter(&$output, $context) {
 }
 
 /**
- * Implement hook_entity_info_alter().
+ * Implements hook_entity_info_alter().
  */
 function locale_entity_info_alter(&$entity_info) {
   $enabled = drupal_multilingual();
@@ -489,7 +489,7 @@ function locale_entity_info_alter(&$entity_info) {
 }
 
 /**
- * Implement hook_language_types_info().
+ * Implements hook_language_types_info().
  */
 function locale_language_types_info() {
   return array(
@@ -508,7 +508,7 @@ function locale_language_types_info() {
 }
 
 /**
- * Implement hook_language_negotiation_info().
+ * Implements hook_language_negotiation_info().
  */
 function locale_language_negotiation_info() {
   $file = 'includes/locale.inc';
@@ -764,7 +764,7 @@ function locale_system_update($components) {
 }
 
 /**
- * Implement hook_js_alter().
+ * Implements hook_js_alter().
  *
  * This function checks all JavaScript files currently added via drupal_add_js()
  * and invokes parsing if they have not yet been parsed for Drupal.t()
@@ -826,7 +826,7 @@ function locale_js_alter(&$javascript) {
 }
 
 /*
- * Implement hook_css_alter().
+ * Implements hook_css_alter().
  *
  * This function checks all CSS files currently added via drupal_add_css() and
  * and checks to see if a related right to left CSS file should be included.
@@ -856,7 +856,7 @@ function locale_css_alter(&$css) {
 // Language switcher block
 
 /**
- * Implement hook_block_info().
+ * Implements hook_block_info().
  */
 function locale_block_info() {
   include_once DRUPAL_ROOT . '/includes/language.inc';
@@ -873,7 +873,7 @@ function locale_block_info() {
 }
 
 /**
- * Implement hook_block_view().
+ * Implements hook_block_view().
  *
  * Displays a language switcher. Only show if we have at least two languages.
  */
@@ -1065,7 +1065,7 @@ function locale_date_format_reset_form_submit($form, &$form_state) {
 }
 
 /**
- * Implement hook_url_outbound_alter().
+ * Implements hook_url_outbound_alter().
  *
  * Rewrite outbound URLs with language based prefixes.
  */
@@ -1104,7 +1104,7 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
 }
 
 /*
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function locale_form_comment_form_alter(&$form, &$form_state, $form_id) {
   // If a content type has multilingual support we set the content language as

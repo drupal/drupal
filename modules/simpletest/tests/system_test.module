@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function system_test_menu() {
   $items['admin/system-test/batch-theme'] = array(
@@ -175,7 +175,7 @@ function system_test_destination() {
 }
 
 /**
- * Implement hook_modules_installed().
+ * Implements hook_modules_installed().
  */
 function system_test_modules_installed($modules) {
   if (in_array('aggregator', $modules)) {
@@ -184,7 +184,7 @@ function system_test_modules_installed($modules) {
 }
 
 /**
- * Implement hook_modules_enabled().
+ * Implements hook_modules_enabled().
  */
 function system_test_modules_enabled($modules) {
   if (in_array('aggregator', $modules)) {
@@ -193,7 +193,7 @@ function system_test_modules_enabled($modules) {
 }
 
 /**
- * Implement hook_modules_disabled().
+ * Implements hook_modules_disabled().
  */
 function system_test_modules_disabled($modules) {
   if (in_array('aggregator', $modules)) {
@@ -202,7 +202,7 @@ function system_test_modules_disabled($modules) {
 }
 
 /**
- * Implement hook_modules_uninstalled().
+ * Implements hook_modules_uninstalled().
  */
 function system_test_modules_uninstalled($modules) {
   if (in_array('aggregator', $modules)) {
@@ -211,14 +211,14 @@ function system_test_modules_uninstalled($modules) {
 }
 
 /**
- * Implement hook_boot().
+ * Implements hook_boot().
  */
 function system_test_boot() {
   watchdog('system_test', 'hook_boot');
 }
 
 /**
- * Implement hook_init().
+ * Implements hook_init().
  */
 function system_test_init() {
   // Used by FrontPageTestCase to get the results of drupal_is_front_page().
@@ -228,14 +228,14 @@ function system_test_init() {
 }
 
 /**
- * Implement hook_exit().
+ * Implements hook_exit().
  */
 function system_test_exit() {
   watchdog('system_test', 'hook_exit');
 }
 
 /**
- * Implement hook_system_info_alter().
+ * Implements hook_system_info_alter().
  */
 function system_test_system_info_alter(&$info, $file, $type) {
   // We need a static otherwise the last test will fail to alter common_test.
@@ -282,7 +282,7 @@ function system_test_lock_exit() {
 }
 
 /**
- * Implement hook_page_build().
+ * Implements hook_page_build().
  */
 function system_test_page_build(&$page) {
   $menu_item = menu_get_item();

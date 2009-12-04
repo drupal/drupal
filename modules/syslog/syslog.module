@@ -14,7 +14,7 @@ else {
 }
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function syslog_help($path, $arg) {
   switch ($path) {
@@ -34,7 +34,7 @@ function syslog_help($path, $arg) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
   if (defined('LOG_LOCAL0')) {
@@ -69,7 +69,7 @@ function syslog_facility_list() {
 }
 
 /**
- * Implement hook_watchdog().
+ * Implements hook_watchdog().
  */
 function syslog_watchdog(array $log_entry) {
   $log_init = &drupal_static(__FUNCTION__, FALSE);

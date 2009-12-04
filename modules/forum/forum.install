@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function forum_install() {
   // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
@@ -57,7 +57,7 @@ function forum_enable() {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function forum_uninstall() {
   // Load the dependent Taxonomy module, in case it has been disabled.
@@ -78,7 +78,7 @@ function forum_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function forum_schema() {
   $schema['forum'] = array(

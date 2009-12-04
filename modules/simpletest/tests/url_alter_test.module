@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_url_inbound_alter().
+ * Implements hook_url_inbound_alter().
  */
 function url_alter_test_url_inbound_alter(&$path, $original_path, $path_language) {
   // Rewrite user/username to user/uid.
@@ -25,7 +25,7 @@ function url_alter_test_url_inbound_alter(&$path, $original_path, $path_language
 }
 
 /**
- * Implement hook_url_outbound_alter().
+ * Implements hook_url_outbound_alter().
  */
 function url_alter_test_url_outbound_alter(&$path, &$options, $original_path) {
   // Rewrite user/uid to user/username.
