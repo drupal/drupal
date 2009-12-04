@@ -563,7 +563,12 @@ Drupal.overlay.isAdminLink = function (url) {
   var self = this;
   // Create a native Link object, so we can use its object methods.
   var link = $(url.link(url)).get(0);
-  var path = link.pathname.replace(new RegExp(Drupal.settings.basePath), '');
+  var path = link.pathname;
+  // Ensure a leading slash on the path, omitted in some browsers.
+  if (path.substr(0, 1) != '/') {
+    path = '/' + path;
+  }
+  path = path.replace(new RegExp(Drupal.settings.basePath), '');
   if (path == '') {
     // If the path appears empty, it might mean the path is represented in the
     // query string (clean URLs are not used).
