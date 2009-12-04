@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.76 2009/11/14 20:20:06 dries Exp $
+// $Id: pager.inc,v 1.77 2009/12/04 16:31:04 dries Exp $
 
 /**
  * @file
@@ -127,8 +127,8 @@ class PagerDefault extends SelectQueryExtender {
    * The count query may be specified manually or, by default, taken from the
    * query we are extending.
    *
-   * @return
-   *   A count SelectQueryInterface object.
+   * @return SelectQueryInterface
+   *   A count query object.
    */
   protected function getCountQuery() {
     if ($this->customCountQuery) {

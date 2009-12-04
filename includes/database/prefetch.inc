@@ -1,5 +1,5 @@
 <?php
-// $Id: prefetch.inc,v 1.6 2009/07/03 10:57:46 dries Exp $
+// $Id: prefetch.inc,v 1.7 2009/12/04 16:31:04 dries Exp $
 
 /**
  * @file
@@ -221,7 +221,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
    *   The query.
    * @param array $args
    *   An array of arguments.
-   * @return
+   * @return PDOStatement
    *   A PDOStatement object.
    */
   protected function getStatement($query, &$args = array()) {

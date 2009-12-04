@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.22 2009/10/08 02:44:54 dries Exp $
+// $Id: schema.inc,v 1.23 2009/12/04 16:31:04 dries Exp $
 
 /**
  * @file
@@ -183,7 +183,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   The name of the table to explode.
    * @param $operator
    *   The operator to apply on the 'table' part of the condition.
-   * @return
+   * @return QueryConditionInterface
    *   A DatabaseCondition object.
    */
   protected function buildTableNameCondition($table_name, $operator = '=') {

@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.41 2009/11/10 22:06:09 dries Exp $
+// $Id: cache.inc,v 1.42 2009/12/04 16:31:04 dries Exp $
 
 /**
  * Get the cache object for a cache bin.
@@ -12,6 +12,8 @@
  *
  * @param $bin
  *   The cache bin for which the cache object should be returned.
+ * @return DrupalCacheInterface
+ *   The cache object associated with the specified bin.
  */
 function _cache_get_object($bin) {
   // We do not use drupal_static() here because we do not want to change the

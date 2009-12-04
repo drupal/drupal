@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.56 2009/10/09 00:59:54 dries Exp $
+// $Id: tablesort.inc,v 1.57 2009/12/04 16:31:04 dries Exp $
 
 /**
  * @file
@@ -37,6 +37,8 @@ class TableSort extends SelectQueryExtender {
    * @see theme_table()
    * @param $header
    *   Table header array.
+   * @return SelectQueryInterface
+   *   The called object.
    */
   public function orderByHeader(Array $header) {
     $this->header = $header;
