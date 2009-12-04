@@ -27,10 +27,11 @@ abstract class FileTransfer {
   abstract static function factory($jail, $settings);
 
   /**
-   * Implementation of the magic __get() method. If the connection isn't set to
-   * anything, this will call the connect() method and set it to and return the
-   * result; afterwards, the connection will be returned directly without using
-   * this method.
+   * Implementation of the magic __get() method.
+   *
+   * If the connection isn't set to anything, this will call the connect() method
+   * and set it to and return the result; afterwards, the connection will be
+   * returned directly without using this method.
    */
   function __get($name) {
     if ($name == 'connection') {
@@ -80,7 +81,7 @@ abstract class FileTransfer {
     $this->checkPath($path);
     $this->chmodJailed($path, $mode, $recursive);
   }
-  
+
   /**
    * Creates a directory.
    *
@@ -156,7 +157,7 @@ abstract class FileTransfer {
    * @param $path
    * @param $strip_chroot
    *
-   * @return string;
+   * @return string
    */
   protected final function fixRemotePath($path, $strip_chroot = TRUE) {
     $path = $this->sanitizePath($path);
@@ -173,7 +174,7 @@ abstract class FileTransfer {
   * Changes backslahes to slashes, also removes a trailing slash.
   *
   * @param string $path
-  * @return string;
+  * @return string
   */
   function sanitizePath($path) {
     $path = str_replace('\\', '/', $path); // Windows path sanitiation.

@@ -221,7 +221,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
    *   The query.
    * @param array $args
    *   An array of arguments.
-   * @return
+   * @return PDOStatement
    *   A PDOStatement object.
    */
   protected function getStatement($query, &$args = array()) {

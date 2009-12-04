@@ -183,7 +183,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   The name of the table to explode.
    * @param $operator
    *   The operator to apply on the 'table' part of the condition.
-   * @return
+   * @return QueryConditionInterface
    *   A DatabaseCondition object.
    */
   protected function buildTableNameCondition($table_name, $operator = '=') {

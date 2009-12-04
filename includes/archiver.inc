@@ -27,7 +27,7 @@ interface ArchiverInterface {
    * @param $file_path
    *   The full system path of the file or directory to add. Only local files
    *   and directories are supported.
-   * @return
+   * @return ArchiverInterface
    *   The called object.
    */
   public function add($file_path);
@@ -37,7 +37,7 @@ interface ArchiverInterface {
    *
    * @param $path
    *   The file name relative to the root of the archive to remove.
-   * @return
+   * @return ArchiverInterface
    *   The called object.
    */
   public function remove($path);
@@ -51,7 +51,7 @@ interface ArchiverInterface {
    *   Optionally specify a list of files to be extracted. Files are
    *   relative to the root of the archive. If not specified, all files
    *   in the archive will be extracted
-   * @return
+   * @return ArchiverInterface
    *   The called object.
    */
   public function extract($path, Array $files = array());

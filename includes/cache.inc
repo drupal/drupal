@@ -12,6 +12,8 @@
  *
  * @param $bin
  *   The cache bin for which the cache object should be returned.
+ * @return DrupalCacheInterface
+ *   The cache object associated with the specified bin.
  */
 function _cache_get_object($bin) {
   // We do not use drupal_static() here because we do not want to change the

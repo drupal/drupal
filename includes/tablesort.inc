@@ -37,6 +37,8 @@ class TableSort extends SelectQueryExtender {
    * @see theme_table()
    * @param $header
    *   Table header array.
+   * @return SelectQueryInterface
+   *   The called object.
    */
   public function orderByHeader(Array $header) {
     $this->header = $header;

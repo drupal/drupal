@@ -5,7 +5,7 @@
  * Base class for FTP implementations.
  */
 abstract class FileTransferFTP extends FileTransfer {
-  
+
   public function __construct($jail, $username, $password, $hostname, $port) {
     $this->username = $username;
     $this->password = $password;
@@ -19,7 +19,7 @@ abstract class FileTransferFTP extends FileTransfer {
    *
    * @param string $jail
    * @param array $settings
-   * @return
+   * @return FileTransferFTP
    *   The appropriate FileTransferFTP subclass based on the available
    *   options.  If the FTP PHP extension is available, use it.  Otherwise, we
    *   try to use the FTP file stream support.
@@ -27,7 +27,7 @@ abstract class FileTransferFTP extends FileTransfer {
   static function factory($jail, $settings) {
     $settings['hostname'] = empty($settings['hostname']) ? 'localhost' : $settings['hostname'];
     $settings['port'] = empty($settings['port']) ? 21 : $settings['port'];
-    
+
     if (function_exists('ftp_connect')) {
       $class = 'FileTransferFTPExtension';
     }
@@ -46,7 +46,7 @@ abstract class FileTransferFTP extends FileTransfer {
  * Connection class using the FTP URL wrapper.
  */
 class FileTransferFTPWrapper extends FileTransferFTP {
-  
+
   function connect() {
     $this->connection = 'ftp://' . urlencode($this->username) . ':' . urlencode($this->password) . '@' . $this->hostname . ':' . $this->port . '/';
     if (!is_dir($this->connection)) {

@@ -8,7 +8,7 @@
  * Normally, the FileTransfer is provided when the site owner is redirected to
  * authorize.php as part of a multistep process.
  */
- 
+
 /**
  * Interface for a class which can update a Drupal project.
  *
@@ -36,7 +36,8 @@ interface DrupalUpdaterInterface {
   public static function getProjectName($directory);
 
   /**
-   * @return string an absolute path to the default install location.
+   * @return string
+   *   An absolute path to the default install location.
    */
   public function getInstallDirectory();
 
@@ -71,7 +72,7 @@ class Updater {
    * @var string $source Directory to install from.
    */
   public $source;
-  
+
   public function __construct($source) {
     $this->source = $source;
     $this->name = self::getProjectName($source);
@@ -87,7 +88,7 @@ class Updater {
    * @param string $source
    *   Directory of a Drupal project.
    *
-   * @return object Updater
+   * @return Updater
    */
   public static function factory($source) {
     if (is_dir($source)) {
@@ -214,7 +215,7 @@ class Updater {
       if ($args['make_backup']) {
         $this->makeBackup($args['install_dir'], $args['backup_dir']);
       }
-      
+
       if (!$this->name) {
         // This is bad, don't want to delete the install directory.
         throw new UpdaterException(t('Fatal error in update, cowardly refusing to wipe out the install directory.'));

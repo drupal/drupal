@@ -26,7 +26,7 @@ interface QueryExtendableInterface {
    *   against the current database connection to allow driver-specific subclasses
    *   as well, using the same logic as the query objects themselves.  For example,
    *   PagerDefault_mysql is the MySQL-specific override for PagerDefault.
-   * @return
+   * @return QueryExtendableInterface
    *   The extender object, which now contains a reference to this object.
    */
   public function extend($extender_name);
@@ -149,7 +149,7 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *
    * @param $distinct
    *   TRUE to flag this query DISTINCT, FALSE to disable it.
-   * @return
+   * @return SelectQueryInterface
    *   The called object.
    */
   public function distinct($distinct = TRUE);
@@ -191,7 +191,7 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *   An indexed array of fields present in the specified table that should be
    *   included in this query. If not specified, $table_alias.* will be generated
    *   without any aliases.
-   * @return
+   * @return SelectQueryInterface
    *   The called object.
    */
   public function fields($table_alias, array $fields = array());
@@ -342,7 +342,7 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *   The field on which to order.
    * @param $direction
    *   The direction to sort. Legal values are "ASC" and "DESC".
-   * @return
+   * @return SelectQueryInterface
    *   The called object.
    */
   public function orderBy($field, $direction = 'ASC');
@@ -364,7 +364,7 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *
    * for an example of such an alternate sorting mechanism.
    *
-   * @return
+   * @return SelectQueryInterface
    *   The called object
    */
   public function orderRandom();
@@ -380,7 +380,7 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *   range directives that are set.
    * @param $limit
    *   The number of records to return from the result set.
-   * @return
+   * @return SelectQueryInterface
    *   The called object.
    */
   public function range($start = NULL, $length = NULL);
@@ -405,7 +405,7 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    * @param $type
    *   The type of UNION to add to the query. Defaults to plain
    *   UNION.
-   * @return
+   * @return SelectQueryInterface
    *   The called object.
    */
   public function union(SelectQueryInterface $query, $type = '');
@@ -415,7 +415,7 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *
    * @param $field
    *   The field on which to group. This should be the field as aliased.
-   * @return
+   * @return SelectQueryInterface
    *   The called object.
    */
   public function groupBy($field);
@@ -423,13 +423,16 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
   /**
    * Get the equivalent COUNT query of this query as a new query object.
    *
-   * @return
+   * @return SelectQueryInterface
    *   A new SelectQuery object with no fields or expressions besides COUNT(*).
    */
   public function countQuery();
 
   /**
    * Indicates if preExecute() has already been called on that object.
+   *
+   * @return
+   *   TRUE is this query has already been prepared, FALSE otherwise.
    */
   public function isPrepared();
 

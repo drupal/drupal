@@ -446,7 +446,7 @@ abstract class DatabaseConnection extends PDO {
    *   Whether or not to cache the prepared statement for later reuse in this
    *   same request.  Usually we want to, but queries that require preprocessing
    *   cannot be safely cached.
-   * @return
+   * @return DatabaseStatementInterface
    *   A PDO prepared statement ready for its execute() method.
    */
   public function prepareQuery($query, $cache = TRUE) {
@@ -499,7 +499,7 @@ abstract class DatabaseConnection extends PDO {
   /**
    * Get the current logging object for this connection.
    *
-   * @return
+   * @return DatabaseLog
    *   The current logging object for this connection. If there isn't one,
    *   NULL is returned.
    */
@@ -548,7 +548,7 @@ abstract class DatabaseConnection extends PDO {
    * @param $options
    *   An associative array of options to control how the query is run. See
    *   the documentation for DatabaseConnection::defaultOptions() for details.
-   * @return
+   * @return DatabaseStatementInterface
    *   This method will return one of: The executed statement, the number of
    *   rows affected by the query (not the number matched), or the generated
    *   insert id of the last query, depending on the value of $options['return'].
@@ -670,7 +670,7 @@ abstract class DatabaseConnection extends PDO {
    *   The alias of the base table of this query.
    * @param $options
    *   An array of options on the query.
-   * @return
+   * @return SelectQueryInterface
    *   A new SelectQuery object.
    */
   public function select($table, $alias = NULL, array $options = array()) {
@@ -694,7 +694,7 @@ abstract class DatabaseConnection extends PDO {
    * @see InsertQuery
    * @param $options
    *   An array of options on the query.
-   * @return
+   * @return InsertQuery
    *   A new InsertQuery object.
    */
   public function insert($table, array $options = array()) {
@@ -714,7 +714,7 @@ abstract class DatabaseConnection extends PDO {
    * @see MergeQuery
    * @param $options
    *   An array of options on the query.
-   * @return
+   * @return MergeQuery
    *   A new MergeQuery object.
    */
   public function merge($table, array $options = array()) {
@@ -735,7 +735,7 @@ abstract class DatabaseConnection extends PDO {
    * @see UpdateQuery
    * @param $options
    *   An array of options on the query.
-   * @return
+   * @return UpdateQuery
    *   A new UpdateQuery object.
    */
   public function update($table, array $options = array()) {
@@ -755,7 +755,7 @@ abstract class DatabaseConnection extends PDO {
    * @see DeleteQuery
    * @param $options
    *   An array of options on the query.
-   * @return
+   * @return DeleteQuery
    *   A new DeleteQuery object.
    */
   public function delete($table, array $options = array()) {
@@ -775,7 +775,7 @@ abstract class DatabaseConnection extends PDO {
    * @see TruncateQuery
    * @param $options
    *   An array of options on the query.
-   * @return
+   * @return TruncateQuery
    *   A new DeleteQuery object.
    */
   public function truncate($table, array $options = array()) {
@@ -794,7 +794,7 @@ abstract class DatabaseConnection extends PDO {
    *
    * This method will lazy-load the appropriate schema library file.
    *
-   * @return
+   * @return DatabaseSchema
    *   The DatabaseSchema object for this connection.
    */
   public function schema() {
@@ -888,7 +888,7 @@ abstract class DatabaseConnection extends PDO {
         $severity = $logging['default_severity'];
       }
     }
-    
+
     // Record in an array to send to the log after transaction rollback. Messages written
     // directly to a log (with a database back-end) will roll back during the following
     // transaction rollback. This is an array because rollback could be requested multiple
@@ -973,11 +973,11 @@ abstract class DatabaseConnection extends PDO {
             // Log the failed rollback.
             $logging_callback('database', 'Explicit rollback failed: not supported on active connection.', array(), $logging['error_severity']);
           }
-          
+
           // It would be nice to throw an exception here if logging failed,
           // but throwing exceptions in destructors is not supported.
         }
-        
+
         if (isset($logging_callback)) {
           // Play back the logged errors to the specified logging callback post-rollback.
           foreach ($this->rollbackLogs as $log_item) {
@@ -987,7 +987,7 @@ abstract class DatabaseConnection extends PDO {
 
         // Reset any scheduled rollback.
         $this->willRollback = FALSE;
-  
+
         // Reset the error logs.
         $this->rollbackLogs = array();
       }
@@ -1015,7 +1015,7 @@ abstract class DatabaseConnection extends PDO {
    *   The maximum number of result rows to return.
    * @param $options
    *   An array of options on the query.
-   * @return
+   * @return DatabaseStatementInterface
    *   A database query result resource, or NULL if the query was not executed
    *   correctly.
    */
@@ -1257,7 +1257,7 @@ abstract class Database {
    *   The logging key to log.
    * @param $key
    *   The database connection key for which we want to log.
-   * @return
+   * @return DatabaseLog
    *   The query log object. Note that the log object does support richer
    *   methods than the few exposed through the Database class, so in some
    *   cases it may be desirable to access it directly.
@@ -1297,7 +1297,7 @@ abstract class Database {
       'error_severity' => $error_severity,
     );
   }
-  
+
   /**
    * Get the logging callback for notices and errors.
    *
@@ -1309,7 +1309,7 @@ abstract class Database {
   final public static function getLoggingCallback() {
     return self::$logging_callback;
   }
-  
+
   /**
    * Retrieve the queries logged on for given logging key.
    *
@@ -1323,7 +1323,7 @@ abstract class Database {
    *   The logging key to log.
    * @param $key
    *   The database connection key for which we want to log.
-   * @return
+   * @return array
    *   The query log for the specified logging key and connection.
    */
   final public static function getLog($logging_key, $key = 'default') {
@@ -1343,7 +1343,7 @@ abstract class Database {
    * @param $key
    *   The database connection key. Defaults to NULL which means the active
    *   key.
-   * @return
+   * @return DatabaseConnection
    *   The corresponding connection object.
    */
   final public static function getConnection($target = 'default', $key = NULL) {
