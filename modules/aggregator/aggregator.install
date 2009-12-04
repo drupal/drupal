@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.27 2009/09/29 15:13:54 dries Exp $
+// $Id: aggregator.install,v 1.28 2009/12/04 16:49:45 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function aggregator_uninstall() {
   variable_del('aggregator_allowed_html_tags');
@@ -21,7 +21,7 @@ function aggregator_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function aggregator_schema() {
   $schema['aggregator_category'] = array(

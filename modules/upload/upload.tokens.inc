@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.tokens.inc,v 1.1 2009/08/19 20:19:37 dries Exp $
+// $Id: upload.tokens.inc,v 1.2 2009/12/04 16:49:48 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_token_info().
+ * Implements hook_token_info().
  */
 function upload_token_info() {
   $results['tokens']['node'] = array(
@@ -21,7 +21,7 @@ function upload_token_info() {
 }
 
 /**
- * Implement hook_tokens().
+ * Implements hook_tokens().
  */
 function upload_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $replacements = array();

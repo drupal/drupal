@@ -1,5 +1,5 @@
 <?php
-// $Id: filter_test.module,v 1.3 2009/11/30 00:42:01 dries Exp $
+// $Id: filter_test.module,v 1.4 2009/12/04 16:49:47 dries Exp $
 
 /**
  * @file
@@ -7,21 +7,21 @@
  */
 
 /**
- * Implement hook_filter_format_insert().
+ * Implements hook_filter_format_insert().
  */
 function filter_test_filter_format_insert($format) {
   drupal_set_message('hook_filter_format_insert invoked.');
 }
 
 /**
- * Implement hook_filter_format_update().
+ * Implements hook_filter_format_update().
  */
 function filter_test_filter_format_update($format) {
   drupal_set_message('hook_filter_format_update invoked.');
 }
 
 /**
- * Implement hook_filter_format_delete().
+ * Implements hook_filter_format_delete().
  */
 function filter_test_filter_format_delete($format, $default) {
   drupal_set_message('hook_filter_format_delete invoked.');

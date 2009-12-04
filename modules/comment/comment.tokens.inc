@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tokens.inc,v 1.7 2009/12/02 19:26:21 dries Exp $
+// $Id: comment.tokens.inc,v 1.8 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_token_info().
+ * Implements hook_token_info().
  */
 function comment_token_info() {
   $type = array(
@@ -108,7 +108,7 @@ function comment_token_info() {
 }
 
 /**
- * Implement hook_tokens().
+ * Implements hook_tokens().
  */
 function comment_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);

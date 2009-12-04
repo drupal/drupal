@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.24 2009/10/17 12:07:31 dries Exp $
+// $Id: statistics.install,v 1.25 2009/12/04 16:49:47 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function statistics_uninstall() {
   // Remove variables.
@@ -21,7 +21,7 @@ function statistics_uninstall() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function statistics_schema() {
   $schema['accesslog'] = array(

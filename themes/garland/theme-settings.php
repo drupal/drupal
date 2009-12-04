@@ -1,8 +1,8 @@
 <?php
-// $Id: theme-settings.php,v 1.1 2009/12/01 15:57:40 webchick Exp $
+// $Id: theme-settings.php,v 1.2 2009/12/04 16:49:48 dries Exp $
 
 /**
- * Implement hook_form_system_theme_settings_alter().
+ * Implements hook_form_system_theme_settings_alter().
  *
  * @param $form
  *   The form.

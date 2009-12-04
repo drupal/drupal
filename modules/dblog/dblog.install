@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.19 2009/10/17 12:07:31 dries Exp $
+// $Id: dblog.install,v 1.20 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function dblog_schema() {
   $schema['watchdog'] = array(

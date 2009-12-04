@@ -1,8 +1,8 @@
 <?php
-// $Id: actions_loop_test.install,v 1.1 2009/08/22 16:16:19 webchick Exp $
+// $Id: actions_loop_test.install,v 1.2 2009/12/04 16:49:47 dries Exp $
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function actions_loop_test_install() {
    db_update('system')

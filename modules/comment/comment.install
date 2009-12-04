@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.53 2009/12/01 13:35:24 dries Exp $
+// $Id: comment.install,v 1.54 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function comment_uninstall() {
   // Remove variables.
@@ -27,7 +27,7 @@ function comment_uninstall() {
 }
 
 /**
- * Implement hook_enable().
+ * Implements hook_enable().
  */
 function comment_enable() {
   // Insert records into the node_comment_statistics for nodes that are missing.
@@ -220,7 +220,7 @@ function comment_update_7011() {
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function comment_schema() {
   $schema['comment'] = array(

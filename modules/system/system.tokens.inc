@@ -1,5 +1,5 @@
 <?php
-// $Id: system.tokens.inc,v 1.5 2009/12/02 19:26:22 dries Exp $
+// $Id: system.tokens.inc,v 1.6 2009/12/04 16:49:47 dries Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  */
 
 /**
- * Implement hook_token_info().
+ * Implements hook_token_info().
  */
 function system_token_info() {
   $types['site'] = array(
@@ -148,7 +148,7 @@ function system_token_info() {
 }
 
 /**
- * Implement hook_tokens().
+ * Implements hook_tokens().
  */
 function system_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);

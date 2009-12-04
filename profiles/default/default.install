@@ -1,8 +1,8 @@
 <?php
-// $Id: default.install,v 1.19 2009/12/03 15:33:42 dries Exp $
+// $Id: default.install,v 1.20 2009/12/04 16:49:48 dries Exp $
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  *
  * Perform actions to set up the site for this profile.
  */

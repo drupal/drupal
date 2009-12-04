@@ -1,8 +1,8 @@
 <?php
-// $Id: expert.profile,v 1.14 2009/10/13 18:45:04 dries Exp $
+// $Id: expert.profile,v 1.15 2009/12/04 16:49:48 dries Exp $
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  *
  * Allows the profile to alter the site-configuration form. This is
  * called through custom invocation, so $form_state is not populated.

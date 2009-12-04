@@ -1,5 +1,5 @@
 <?php
-// $Id: image.effects.inc,v 1.2 2009/07/21 07:09:46 webchick Exp $
+// $Id: image.effects.inc,v 1.3 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_image_effect_info().
+ * Implements hook_image_effect_info().
  */
 function image_image_effect_info() {
   $effects = array(

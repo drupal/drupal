@@ -1,5 +1,5 @@
 <?php
-// $Id: image_test.module,v 1.4 2009/09/01 17:49:11 webchick Exp $
+// $Id: image_test.module,v 1.5 2009/12/04 16:49:47 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_image_toolkits().
+ * Implements hook_image_toolkits().
  */
 function image_test_image_toolkits() {
   return array(

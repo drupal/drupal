@@ -1,8 +1,8 @@
 <?php
-// $Id: aggregator_test.module,v 1.5 2009/11/10 17:27:53 webchick Exp $
+// $Id: aggregator_test.module,v 1.6 2009/12/04 16:49:45 dries Exp $
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function aggregator_test_menu() {
   $items['aggregator/test-feed'] = array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.field.inc,v 1.1 2009/11/20 23:29:28 webchick Exp $
+// $Id: field_test.field.inc,v 1.2 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -236,7 +236,7 @@ function field_test_field_formatter_info() {
 }
 
 /**
- * Implement hook_field_formatter_prepare_view().
+ * Implements hook_field_formatter_prepare_view().
  */
 function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $build_mode) {
   foreach ($items as $id => $item) {

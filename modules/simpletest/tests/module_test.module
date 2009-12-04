@@ -1,8 +1,8 @@
 <?php
-// $Id: module_test.module,v 1.2 2009/07/05 18:00:10 dries Exp $
+// $Id: module_test.module,v 1.3 2009/12/04 16:49:47 dries Exp $
 
 /**
- * Implement hook_permission().
+ * Implements hook_permission().
  */
 function module_test_permission() {
   return array(

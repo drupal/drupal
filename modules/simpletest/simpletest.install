@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.27 2009/09/10 06:38:19 dries Exp $
+// $Id: simpletest.install,v 1.28 2009/12/04 16:49:47 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function simpletest_install() {
   // Check for files directory.
@@ -98,7 +98,7 @@ function simpletest_get_file_count($directory, $filename) {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function simpletest_uninstall() {
   simpletest_clean_environment();

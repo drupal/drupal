@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.59 2009/11/08 19:11:56 webchick Exp $
+// $Id: field.attach.inc,v 1.60 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -1264,7 +1264,7 @@ function field_attach_extra_weight($bundle, $pseudo_field) {
 }
 
 /**
- * Implement hook_node_prepare_translation.
+ * Implements hook_node_prepare_translation().
  *
  * TODO D7: We do not yet know if this really belongs in Field API.
  */

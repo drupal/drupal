@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.fetcher.inc,v 1.10 2009/10/12 15:54:59 dries Exp $
+// $Id: aggregator.fetcher.inc,v 1.11 2009/12/04 16:49:45 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_aggregator_fetch_info().
+ * Implements hook_aggregator_fetch_info().
  */
 function aggregator_aggregator_fetch_info() {
   return array(
@@ -17,7 +17,7 @@ function aggregator_aggregator_fetch_info() {
 }
 
 /**
- * Implement hook_aggregator_fetch().
+ * Implements hook_aggregator_fetch().
  */
 function aggregator_aggregator_fetch($feed) {
   $feed->source_string = FALSE;

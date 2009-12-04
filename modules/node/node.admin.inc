@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.81 2009/12/03 20:21:50 dries Exp $
+// $Id: node.admin.inc,v 1.82 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function node_configure_rebuild_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Implement hook_node_operations().
+ * Implements hook_node_operations().
  */
 function node_node_operations() {
   $operations = array(
@@ -637,7 +637,7 @@ function node_multiple_delete_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Implement hook_modules_installed()
+ * Implements hook_modules_installed().
  */
 function node_modules_installed($modules) {
   // Clear node type cache for node permissions.

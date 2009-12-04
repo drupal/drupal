@@ -1,8 +1,8 @@
 <?php
-// $Id: update_test.module,v 1.3 2009/10/13 08:02:49 webchick Exp $
+// $Id: update_test.module,v 1.4 2009/12/04 16:49:47 dries Exp $
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function update_test_menu() {
   $items = array();
@@ -18,7 +18,7 @@ function update_test_menu() {
 }
 
 /**
- * Implement hook_system_info_alter().
+ * Implements hook_system_info_alter().
  *
  * This checks the 'update_test_system_info' variable and sees if we need to
  * alter the system info for the given $file based on the setting. The setting

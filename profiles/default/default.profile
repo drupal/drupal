@@ -1,8 +1,8 @@
 <?php
-// $Id: default.profile,v 1.63 2009/08/21 07:50:08 webchick Exp $
+// $Id: default.profile,v 1.64 2009/12/04 16:49:48 dries Exp $
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  *
  * Allows the profile to alter the site-configuration form. This is
  * called through custom invocation, so $form_state is not populated.

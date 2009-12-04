@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.31 2009/10/18 06:56:24 webchick Exp $
+// $Id: user.install,v 1.32 2009/12/04 16:49:48 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function user_schema() {
   $schema['authmap'] = array(

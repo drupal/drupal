@@ -1,5 +1,5 @@
 <?php
-// $Id: node_test_exception.module,v 1.1 2009/11/19 04:00:47 webchick Exp $
+// $Id: node_test_exception.module,v 1.2 2009/12/04 16:49:47 dries Exp $
 
 /**
  * @file
@@ -8,7 +8,7 @@
  */
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function node_test_exception_node_insert($node) {
   if ($node->title['zxx'][0]['value'] == 'testing_transaction_exception') {

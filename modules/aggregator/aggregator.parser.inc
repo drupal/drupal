@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.parser.inc,v 1.6 2009/10/12 15:54:59 dries Exp $
+// $Id: aggregator.parser.inc,v 1.7 2009/12/04 16:49:45 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_aggregator_parse_info().
+ * Implements hook_aggregator_parse_info().
  */
 function aggregator_aggregator_parse_info() {
   return array(
@@ -17,7 +17,7 @@ function aggregator_aggregator_parse_info() {
 }
 
 /**
- * Implement hook_aggregator_parse().
+ * Implements hook_aggregator_parse().
  */
 function aggregator_aggregator_parse($feed) {
   global $channel, $image;

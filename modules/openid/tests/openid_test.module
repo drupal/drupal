@@ -1,5 +1,5 @@
 <?php
-// $Id: openid_test.module,v 1.7 2009/11/16 05:08:47 webchick Exp $
+// $Id: openid_test.module,v 1.8 2009/12/04 16:49:47 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@
  */
 
 /**
- * Implement hook_menu().
+ * Implements hook_menu().
  */
 function openid_test_menu() {
   $items['openid-test/yadis/xrds'] = array(

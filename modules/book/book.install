@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.33 2009/09/10 06:38:17 dries Exp $
+// $Id: book.install,v 1.34 2009/12/04 16:49:45 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function book_install() {
   // Add the node type.
@@ -15,7 +15,7 @@ function book_install() {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function book_uninstall() {
   // Delete menu links.
@@ -45,7 +45,7 @@ function _book_install_type_create() {
 }
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function book_schema() {
   $schema['book'] = array(

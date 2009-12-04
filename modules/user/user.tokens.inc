@@ -1,5 +1,5 @@
 <?php
-// $Id: user.tokens.inc,v 1.2 2009/09/30 18:37:30 dries Exp $
+// $Id: user.tokens.inc,v 1.3 2009/12/04 16:49:48 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_token_info().
+ * Implements hook_token_info().
  */
 function user_token_info() {
   $types['user'] = array(
@@ -60,7 +60,7 @@ function user_token_info() {
 }
 
 /**
- * Implement hook_tokens().
+ * Implements hook_tokens().
  */
 function user_tokens($type, $tokens, array $data = array(), array $options = array()) {
   global $user;

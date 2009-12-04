@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.2 2009/11/26 05:54:48 webchick Exp $
+// $Id: field_test.module,v 1.3 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -87,7 +87,7 @@ function field_test_field_test_op_multiple($obj_type, $objects, $field, $instanc
 }
 
 /**
- * Implement hook_field_languages().
+ * Implements hook_field_languages().
  */
 function field_test_field_languages($obj_type, $field, &$languages) {
   if ($field['settings']['test_hook_in']) {

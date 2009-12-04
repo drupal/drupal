@@ -1,5 +1,5 @@
 <?php
-// $Id: php.install,v 1.15 2009/12/03 15:33:42 dries Exp $
+// $Id: php.install,v 1.16 2009/12/04 16:49:47 dries Exp $
 
 /**
  * @file
@@ -38,7 +38,7 @@ function php_enable() {
 }
 
 /**
- * Implement hook_disable().
+ * Implements hook_disable().
  */
 function php_disable() {
   drupal_set_message(t('The PHP module has been disabled. Please note that any existing content that was using the PHP filter will now be visible in plain text. This might pose a security risk by exposing sensitive information, if any, used in the PHP code.'));

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale_test.module,v 1.4 2009/08/18 11:22:36 dries Exp $
+// $Id: locale_test.module,v 1.5 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_locale().
+ * Implements hook_locale().
  */
 function locale_test_locale($op = 'groups') {
   switch ($op) {

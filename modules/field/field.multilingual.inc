@@ -1,5 +1,5 @@
 <?php
-// $Id: field.multilingual.inc,v 1.5 2009/12/02 19:26:21 dries Exp $
+// $Id: field.multilingual.inc,v 1.6 2009/12/04 16:49:46 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implement hook_multilingual_settings_changed().
+ * Implements hook_multilingual_settings_changed().
  */
 function field_multilingual_settings_changed() {
   field_info_cache_clear();

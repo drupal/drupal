@@ -1,8 +1,8 @@
 <?php
-// $Id: actions_loop_test.module,v 1.2 2009/09/19 11:07:36 dries Exp $
+// $Id: actions_loop_test.module,v 1.3 2009/12/04 16:49:47 dries Exp $
 
 /**
- * Implement hook_trigger_info().
+ * Implements hook_trigger_info().
  */
 function actions_loop_test_trigger_info() {
   return array(
@@ -15,7 +15,7 @@ function actions_loop_test_trigger_info() {
 }
 
 /**
- * Implement hook_watchdog().
+ * Implements hook_watchdog().
  */
 function actions_loop_test_watchdog(array $log_entry) {
   // If the triggering actions are not explicitly enabled, abort.
@@ -36,7 +36,7 @@ function actions_loop_test_watchdog(array $log_entry) {
 }
 
 /**
- * Implement hook_init().
+ * Implements hook_init().
  */
 function actions_loop_test_init() {
   if (!empty($_GET['trigger_actions_on_watchdog'])) {
@@ -45,7 +45,7 @@ function actions_loop_test_init() {
 }
 
 /**
- * Implement hook_action_info().
+ * Implements hook_action_info().
  */
 function actions_loop_test_action_info() {
   return array(
