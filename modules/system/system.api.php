@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.107 2009/12/02 19:26:22 dries Exp $
+// $Id: system.api.php,v 1.108 2009/12/04 22:46:28 dries Exp $
 
 /**
  * @file
@@ -119,7 +119,7 @@ function hook_entity_info() {
       'id key' => 'nid',
       'revision key' => 'vid',
       'fieldable' => TRUE,
-      'bundle key' => 'type',
+      'bundle key' => array('bundle' => 'type'),
       // Node.module handles its own caching.
       // 'cacheable' => FALSE,
       // Bundles must provide human readable name so
