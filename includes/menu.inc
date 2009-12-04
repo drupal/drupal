@@ -3180,7 +3180,7 @@ function _menu_router_build($callbacks) {
  */
 function _menu_router_save($menu, $masks) {
   // Delete the existing router since we have some data to replace it.
-  db_delete('menu_router')->execute();
+  db_truncate('menu_router')->execute();
 
   // Prepare insert object.
   $insert = db_insert('menu_router')
