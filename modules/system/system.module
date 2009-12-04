@@ -989,6 +989,15 @@ function system_menu() {
     'file' => 'system.admin.inc',
     'weight' => -10,
   );
+  $items['admin/config/user-interface'] = array(
+    'title' => 'User interface',
+    'description' => 'Tools that enhance the user interface.',
+    'position' => 'right',
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'weight' => -5,
+  );
 
   // Reports.
   $items['admin/reports'] = array(
