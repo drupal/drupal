@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.854 2009/12/02 15:09:16 dries Exp $
+// $Id: system.module,v 1.855 2009/12/04 16:00:44 dries Exp $
 
 /**
  * @file
@@ -988,6 +988,15 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
     'weight' => -10,
+  );
+  $items['admin/config/user-interface'] = array(
+    'title' => 'User interface',
+    'description' => 'Tools that enhance the user interface.',
+    'position' => 'right',
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'weight' => -5,
   );
 
   // Reports.
