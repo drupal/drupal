@@ -14,11 +14,11 @@
 /**
  * Act on taxonomy vocabularies when loaded.
  *
- * Modules implementing this hook can act on the vocabulary object returned by
- * taxonomy_vocabulary_load().
+ * Modules implementing this hook can act on the vocabulary objects before they
+ * are returned by taxonomy_vocabulary_load_multiple().
  *
  * @param $vocabulary
- *   A taxonomy vocabulary object.
+ *   An array of taxonomy vocabulary objects.
  */
 function hook_taxonomy_vocabulary_load($vocabularies) {
   foreach ($vocabularies as $vocabulary) {
@@ -30,7 +30,7 @@ function hook_taxonomy_vocabulary_load($vocabularies) {
  * Act on taxonomy vocabularies when inserted.
  *
  * Modules implementing this hook can act on the vocabulary object when saved
- *  to the database.
+ * to the database.
  *
  * @param $vocabulary
  *   A taxonomy vocabulary object.
@@ -44,12 +44,12 @@ function hook_taxonomy_vocabulary_insert($vocabulary) {
 /**
  * Act on taxonomy vocabularies when updated.
  *
- * Modules implementing this hook can act on the term object when updated.
+ * Modules implementing this hook can act on the vocabulary object when updated.
  *
- * @param $term
- *   A taxonomy term object, passed by reference.
+ * @param $vocabulary
+ *   A taxonomy vocabulary object.
  */
-function hook_taxonomy_vocabulary_update($term) {
+function hook_taxonomy_vocabulary_update($vocabulary) {
   $status = $vocabulary->synonyms ? TRUE : FALSE;
   if ($vocabulary->synonyms) {
     variable_set('taxonomy_' . $vocabulary->vid . '_synonyms', $status);
@@ -74,14 +74,15 @@ function hook_taxonomy_vocabulary_delete($vocabulary) {
 /**
  * Act on taxonomy terms when loaded.
  *
- * Modules implementing this hook can act on the term object returned by
- * taxonomy_term_load().
+ * Modules implementing this hook can act on the term objects returned by
+ * taxonomy_term_load_multiple().
+ *
  * For performance reasons, information to be added to term objects should be
  * loaded in a single query for all terms where possible.
  *
  * Since terms are stored and retrieved from cache during a page request, avoid
- * altering properties provided by the {taxonomy_term_data} table, since this may
- * affect the way results are loaded from cache in subsequent calls.
+ * altering properties provided by the {taxonomy_term_data} table, since this
+ * may affect the way results are loaded from cache in subsequent calls.
  *
  * @param $terms
  *   An array of term objects, indexed by tid.

@@ -9,7 +9,7 @@
 /**
  * Implement hook_taxonomy_term_load().
  */
-function taxonomy_test_taxonomy_term_load(&$terms) {
+function taxonomy_test_taxonomy_term_load($terms) {
   foreach ($terms as $term) {
     $antonym = taxonomy_test_get_antonym($term->tid);
     if ($antonym) {
