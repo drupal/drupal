@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy_test.module,v 1.6 2009/08/03 20:19:29 webchick Exp $
+// $Id: taxonomy_test.module,v 1.7 2009/12/04 15:54:37 dries Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
 /**
  * Implement hook_taxonomy_term_load().
  */
-function taxonomy_test_taxonomy_term_load(&$terms) {
+function taxonomy_test_taxonomy_term_load($terms) {
   foreach ($terms as $term) {
     $antonym = taxonomy_test_get_antonym($term->tid);
     if ($antonym) {
