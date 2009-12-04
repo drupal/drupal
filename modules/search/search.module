@@ -826,8 +826,9 @@ function search_get_keys() {
  *   by hook_view() and hook_node_view(). This is usually sufficient. You should
  *   only use this mechanism if you want additional, non-visible data to be
  *   indexed.
- * - Implement hook_search(). This will create a search tab for your module on
- *   the /search page with a simple keyword search form.
+ * - Implement hook_search_info(). This will create a search tab for your module on
+ *   the /search page with a simple keyword search form. You will also need to
+ *   implement hook_search_execute() to perform the search.
  * - Implement hook_update_index(). This allows your module to use Drupal's
  *   HTML indexing mechanism for searching full text efficiently.
  *
