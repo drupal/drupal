@@ -119,7 +119,7 @@ function hook_entity_info() {
       'id key' => 'nid',
       'revision key' => 'vid',
       'fieldable' => TRUE,
-      'bundle key' => 'type',
+      'bundle key' => array('bundle' => 'type'),
       // Node.module handles its own caching.
       // 'cacheable' => FALSE,
       // Bundles must provide human readable name so
