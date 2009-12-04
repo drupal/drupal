@@ -15,17 +15,21 @@
  * Define menu items and page callbacks.
  *
  * This hook enables modules to register paths in order to define how URL
- * requests are handled. Paths may be registered for URL handling only, but can
- * also register a link to be placed in a menu (usually the Navigation menu). A
+ * requests are handled. Paths may be registered for URL handling only, or they
+ * can register a link to be placed in a menu (usually the Navigation menu). A
  * path and its associated information is commonly called a "menu router item".
+ * This hook is rarely called (for example, when modules are enabled), and
+ * its results are cached in the database.
  *
  * hook_menu() implementations return an associative array whose keys define
- * paths and whose values are an associative array defining properties for each
- * path. The definition for each path may refer to a callback function that is
- * invoked when the registered path is requested. In case there is no other
+ * paths and whose values are an associative array of properties for each
+ * path. (The complete list of properties is in the return value section below.)
+ *
+ * The definition for each path may include a page callback function, which is
+ * invoked when the registered path is requested. If there is no other
  * registered path that fits the requested path better, any further path
- * components are optionally passed to the callback function by default.
- * For example, when registering the path 'abc/def':
+ * components are passed to the callback function. For example, your module
+ * could register path 'abc/def':
  * @code
  *   function mymodule_menu() {
  *     $items['abc/def'] = array(
@@ -37,18 +41,22 @@
  *     // ...
  *   }
  * @endcode
- * When the path 'abc/def' was requested, then no further arguments would be
- * passed to the callback function, so $ghi and $jkl would take the default
- * values as defined in the function signature.
- * In case 'abc/def/123/foo' was requested, then $ghi would be '123' and $jkl
- * would be 'foo'.
+ * When path 'abc/def' is requested, no further path components are in the
+ * request, and no additional arguments are passed to the callback function (so
+ * $ghi and $jkl would take the default values as defined in the function
+ * signature). When 'abc/def/123/foo' is requested, $ghi will be '123' and
+ * $jkl will be 'foo'. Note that this automatic passing of optional path
+ * arguments applies only to page and theme callback functions.
  *
- * In addition to optional path arguments, the definition for each path may
- * specify a list of arguments for each callback function as an array. These
- * argument lists may contain fixed/hard-coded argument values, but may also
- * contain integers that correspond to path components. When integers are used
- * and the callback function is called, the corresponding path components will
- * be substituted. For example:
+ * In addition to optional path arguments, the page callback and other callback
+ * functions may specify argument lists as arrays. These argument lists may
+ * contain both fixed/hard-coded argument values and integers that correspond
+ * to path components. When integers are used and the callback function is
+ * called, the corresponding path components will be substituted for the
+ * integers. That is, the integer 0 in an argument list will be replaced with
+ * the first path component, integer 1 with the second, and so on (path
+ * components are numbered starting from zero). This substitution feature allows
+ * you to re-use a callback function for several different paths. For example:
  * @code
  *   function mymodule_menu() {
  *     $items['abc/def'] = array(
@@ -57,57 +65,16 @@
  *     );
  *   }
  * @endcode
- * When the path 'abc/def' was requested, the callback function would get 'def'
- * as first argument and (always) 'foo' as second argument.
- * The integer 1 in an argument list would be replaced with 'def' and integer 0
- * would be replaced with 'abc', i.e. path components are counted from zero.
- * This allows to re-use a callback function for several different paths.
+ * When path 'abc/def' is requested, the page callback function will get 'def'
+ * as the first argument and (always) 'foo' as the second argument.
  *
- * Arguments may also be used to replace wildcards within paths. For example,
- * when registering the path 'my-module/%/edit':
- * @code
- *   $items['my-module/%/edit'] = array(
- *     'page callback' => 'mymodule_abc_edit',
- *     'page arguments' => array(1),
- *   );
- * @endcode
- * When the path 'my-module/foo/edit' is requested, then integer 1 will be
- * replaced with 'foo' and passed to the callback function.
- *
- * Registered paths may also contain special "auto-loader" wildcard components
- * in the form of '%mymodule_abc', where the '%' part means that this path
- * component is a wildcard, and the 'mymodule_abc' part defines the prefix for a
- * menu argument loader function, which here would be mymodule_abc_load().
- * For example, when registering the path 'my-module/%mymodule_abc/edit':
- * @code
- *   $items['my-module/%mymodule_abc/edit'] = array(
- *     'page callback' => 'mymodule_abc_edit',
- *     'page arguments' => array(1),
- *   );
- * @endcode
- * When the path 'my-module/123/edit' is requested, then the argument loader
- * function mymodule_abc_load() will be invoked with the argument '123', and it
- * is supposed to take that value to load and return data for "abc" having the
- * internal id 123:
- * @code
- *   function mymodule_abc_load($abc_id) {
- *     return db_query("SELECT * FROM {mymodule_abc} WHERE abc_id = :abc_id", array(':abc_id' => $abc_id))->fetchObject();
- *   }
- * @endcode
- * The returned data of the argument loader will be passed in place of the
- * original path component to all callback functions referring to that (integer)
- * component in their argument list.
- * Menu argument loader functions may also be passed additional arguments; see
- * "load arguments" below.
- *
- * If a registered path defines an argument list, then those defined arguments
- * will always be passed first to the callback function. In case there are any
- * further components contained in the requested path, then those will always
- * come last.
+ * Note that if a page or theme callback function has an argument list array,
+ * these arguments will be passed first to the function, followed by any
+ * any arguments generated by optional path arguments as described above.
  *
  * Special care should be taken for the page callback drupal_get_form(), because
- * the callback function will always receive $form and &$form_state as the very
- * first function arguments:
+ * your specific form callback function will always receive $form and
+ * &$form_state as the first function arguments:
  * @code
  *   function mymodule_abc_form($form, &$form_state) {
  *     // ...
@@ -116,6 +83,42 @@
  * @endcode
  * See @link form_api Form API documentation @endlink for details.
  *
+ * Wildcards within paths also work with integer substitution. For example,
+ * your module could register path 'my-module/%/edit':
+ * @code
+ *   $items['my-module/%/edit'] = array(
+ *     'page callback' => 'mymodule_abc_edit',
+ *     'page arguments' => array(1),
+ *   );
+ * @endcode
+ * When path 'my-module/foo/edit' is requested, integer 1 will be replaced
+ * with 'foo' and passed to the callback function.
+ *
+ * Registered paths may also contain special "auto-loader" wildcard components
+ * in the form of '%mymodule_abc', where the '%' part means that this path
+ * component is a wildcard, and the 'mymodule_abc' part defines the prefix for a
+ * load function, which here would be named mymodule_abc_load(). When a matching
+ * path is requested, your load function will receive as its first argument the
+ * path component in the position of the wildcard; load functions may also be
+ * passed additional arguments (see "load arguments" in the return value
+ * section below). For example, your module could register path
+ * 'my-module/%mymodule_abc/edit':
+ * @code
+ *   $items['my-module/%mymodule_abc/edit'] = array(
+ *     'page callback' => 'mymodule_abc_edit',
+ *     'page arguments' => array(1),
+ *   );
+ * @endcode
+ * When path 'my-module/123/edit' is requested, your load function
+ * mymodule_abc_load() will be invoked with the argument '123', and should
+ * load and return an "abc" object with internal id 123:
+ * @code
+ *   function mymodule_abc_load($abc_id) {
+ *     return db_query("SELECT * FROM {mymodule_abc} WHERE abc_id = :abc_id", array(':abc_id' => $abc_id))->fetchObject();
+ *   }
+ * @endcode
+ * This 'abc' object will then be passed into the page callback function
+ * mymodule_abc_edit() to replace the integer 1 in the page arguments.
  *
  * You can also make groups of menu items to be rendered (by default) as tabs
  * on a page. To do that, first create one menu item of type MENU_NORMAL_ITEM,
@@ -125,28 +128,27 @@
  * the additional tab items, with paths such as "foo/tab2" etc., with type
  * MENU_LOCAL_TASK. Example:
  * @code
- * // This will make "Foo settings" appear on the admin Config page
+ * // Make "Foo settings" appear on the admin Config page
  * $items['admin/config/foo'] = array(
  *   'title' => 'Foo settings',
  *   'type' => MENU_NORMAL_ITEM,
  *   // page callback, etc. need to be added here
  * );
- * // When you go to "Foo settings", "Global settings" will be the main tab
+ * // Make "Global settings" the main tab on the "Foo settings" page
  * $items['admin/config/foo/global'] = array(
  *   'title' => 'Global settings',
  *   'type' => MENU_DEFAULT_LOCAL_TASK,
- *   // page callback, etc. need to be added here
+ *   // access callback, page callback, and theme callback will be inherited
+ *   // from 'admin/config/foo', if not specified here to override
  * );
- * // Make an additional tab called "Node settings"
+ * // Make an additional tab called "Node settings" on "Foo settings"
  * $items['admin/config/foo/node'] = array(
  *   'title' => 'Node settings',
  *   'type' => MENU_LOCAL_TASK,
- *   // page callback, etc. need to be added here
+ *   // access callback, page callback, and theme callback will be inherited
+ *   // from 'admin/config/foo', if not specified here to override
  * );
  * @endcode
- *
- * This hook is rarely called (for example, when modules are enabled), and
- * its results are cached in the database.
  *
  * @return
  *   An array of menu items. Each menu item has a key corresponding to the
@@ -179,24 +181,38 @@
  *     inherited from a parent menu item.
  *   - "theme arguments": An array of arguments to pass to the theme callback
  *     function, with path component substitution as described above.
- *   - "file": A file that will be included before the callbacks are accessed;
- *     this allows callback functions to be in separate files. The file should
- *     be relative to the implementing module's directory unless otherwise
- *     specified by the "file path" option. Note: This does not apply to the
- *     'access callback'.
- *   - "file path": The path to the folder containing the file specified in
+ *   - "file": A file that will be included before the page callback is called;
+ *     this allows page callback functions to be in separate files. The file
+ *     should be relative to the implementing module's directory unless
+ *     otherwise specified by the "file path" option. Does not apply to other
+ *     callbacks (only page callback).
+ *   - "file path": The path to the directory containing the file specified in
  *     "file". This defaults to the path to the module implementing the hook.
  *   - "load arguments": An array of arguments to be passed to each of the
- *     wildcard object loaders in the path. For example, for the path
- *     node/%node/revisions/%/view, a "load arguments" value of array(1, 3) will
- *     call node_load() with the second and fourth path components passed in (as
- *     described above, integers are automatically replaced with path
- *     components). There are also two "magic" values: "%index" will correspond
- *     to the index of the wildcard path component, and "%map" will correspond
- *     to the full menu map, passed in by reference.
+ *     wildcard object loaders in the path, after the path argument itself. 
+ *     For example, if a module registers path node/%node/revisions/%/view
+ *     with load arguments set to array(3), the '%node' in the path indicates
+ *     that the loader function node_load() will be called with the second
+ *     path component as the first argument. The 3 in the load arguments
+ *     indicates that the fourth path component will also be passed to
+ *     node_load() (numbering of path components starts at zero). So, if path
+ *     node/12/revisions/29/view is requested, node_load(12, 29) will be called.
+ *     There are also two "magic" values that can be used in load arguments.
+ *     "%index" indicates the index of the wildcard path component. "%map"
+ *     indicates the path components as an array. For example, if a module
+ *     registers for several paths of the form 'user/%user_category/edit/*', all
+ *     of them can use the same load function user_category_load(), by setting
+ *     the load arguments to array('%map', '%index'). For instance, if the user
+ *     is editing category 'foo' by requesting path 'user/32/edit/foo', the load
+ *     function user_category_load() will be called with 23 as its first
+ *     argument, the array ('user', 32, 'edit', 'foo') as the map argument,
+ *     and 1 as the index argument (because %user_category is the second path
+ *     component and numbering starts at zero). user_category_load() can then
+ *     use these values to extract the information that 'foo' is the category
+ *     being requested.
  *   - "weight": An integer that determines the relative position of items in
- *     the menu; higher-weighted items sink. Defaults to 0. When in doubt, leave
- *     this alone; the default alphabetical order is usually best.
+ *     the menu; higher-weighted items sink. Defaults to 0. Menu items with the
+ *     same weight are ordered alphabetically.
  *   - "menu_name": Optional. Set this to a custom menu if you don't want your
  *     item to be placed in Navigation.
  *   - "context": (optional) Defines the context a tab may appear in. By
@@ -228,12 +244,12 @@
  *     - MENU_NORMAL_ITEM: Normal menu items show up in the menu tree and can be
  *       moved/hidden by the administrator.
  *     - MENU_CALLBACK: Callbacks simply register a path so that the correct
- *       function is fired when the path is accessed.
+ *       information is generated when the path is accessed.
  *     - MENU_SUGGESTED_ITEM: Modules may "suggest" menu items that the
  *       administrator may enable.
  *     - MENU_LOCAL_TASK: Local tasks are rendered as tabs by default.
  *     - MENU_DEFAULT_LOCAL_TASK: Every set of local tasks should provide one
- *       "default" task, that links to the same path as its parent when clicked.
+ *       "default" task, which should display the same page as the parent item.
  *     If the "type" element is omitted, MENU_NORMAL_ITEM is assumed.
  *
  * For a detailed usage example, see page_example.module.
