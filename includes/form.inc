@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.413 2009/12/02 15:09:16 dries Exp $
+// $Id: form.inc,v 1.414 2009/12/04 16:29:15 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -969,7 +969,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
 }
 
 /**
- * File an error against a form element.
+ * Files an error against a form element.
  *
  * @param $name
  *   The name of the form element. If the #parents property of your form
@@ -978,11 +978,9 @@ function form_execute_handlers($type, &$form, &$form_state) {
  *   element where the #parents array starts with 'foo'.
  * @param $message
  *   The error message to present to the user.
- * @param $reset
- *   Reset the form errors static cache.
  * @return
- *   Never use the return value of this function, use form_get_errors and
- *   form_get_error instead.
+ *   Return value is for internal use only. To get a list of errors, use 
+ *   form_get_errors() or form_get_error().
  */
 function form_set_error($name = NULL, $message = '') {
   $form = &drupal_static(__FUNCTION__, array());
