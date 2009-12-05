@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.225 2009/11/29 19:50:24 webchick Exp $
+// $Id: install.php,v 1.226 2009/12/05 19:27:34 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -267,7 +267,6 @@ function install_begin_request(&$install_state) {
   // suspect, due to the fact that Drupal is not fully set up yet.
   require_once DRUPAL_ROOT . '/includes/cache.inc';
   require_once DRUPAL_ROOT . '/includes/cache-install.inc';
-  $conf['cache_inc'] = 'includes/cache.inc';
   $conf['cache_default_class'] = 'DrupalFakeCache';
 
   // Prepare for themed output, if necessary. We need to run this at the
