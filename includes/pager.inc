@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.77 2009/12/04 16:31:04 dries Exp $
+// $Id: pager.inc,v 1.78 2009/12/05 20:17:02 dries Exp $
 
 /**
  * @file
@@ -180,7 +180,7 @@ class PagerDefault extends SelectQueryExtender {
 function pager_get_query_parameters() {
   $query = &drupal_static(__FUNCTION__);
   if (!isset($query)) {
-    $query = drupal_get_query_parameters($_REQUEST, array_merge(array('q', 'page'), array_keys($_COOKIE)));
+    $query = drupal_get_query_parameters($_GET, array('q', 'page'));
   }
   return $query;
 }
