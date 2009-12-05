@@ -191,7 +191,7 @@ function token_generate($type, array $tokens, array $data = array(), array $opti
 function token_find_with_prefix(array $tokens, $prefix, $delimiter = ':') {
   $results = array();
   foreach ($tokens as $token => $raw) {
-    $parts = split($delimiter, $token, 2);
+    $parts = explode($delimiter, $token, 2);
     if (count($parts) == 2 && $parts[0] == $prefix) {
       $results[$parts[1]] = $raw;
     }
