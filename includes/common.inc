@@ -3106,78 +3106,72 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  * Calling drupal_static_reset('drupal_add_css') will clear all cascading
  * stylesheets added so far.
  *
+ * If preprocessing is turned on, the cascading style sheets added using this
+ * function will be preprocessed before they are added to the HTML header of the
+ * page. Preprocessing merges all the CSS files into one file, which is then
+ * compressed by removing all extraneous white space. Note that preprocessed
+ * inline stylesheets will not be aggregated into this single file; instead,
+ * they will just be compressed when being output on the page. External
+ * stylesheets will also not be aggregated.
+ *
+ * The reason for merging the CSS files is outlined quite thoroughly here:
+ * http://www.die.net/musings/page_load_time/ "Load fewer external objects. Due
+ * to request overhead, one bigger file just loads faster than two smaller ones
+ * half its size."
+ *
+ * However, you should *not* preprocess every file as this can lead to redundant
+ * caches. You should set $options['preprocess'] to FALSE when your styles are
+ * only used on a few pages of the site. This could be a special admin page, the
+ * homepage, or a handful of pages that does not represent the majority of the
+ * pages on your site.
+ *
+ * Typical candidates for preprocessing are for example styles for nodes across
+ * the site, or styles used in the theme.
+ *
  * @param $data
  *   (optional) The stylesheet data to be added, depending on what is passed
  *   through to the $options['type'] parameter:
- *   - 'file': The path to the CSS file relative to the base_path(),
- *     e.g., "modules/devel/devel.css".
- *
- *     Modules should always prefix the names of their CSS files with the
- *     module name, for example: system-menus.css rather than simply menus.css.
- *     Themes can override module-supplied CSS files based on their filenames,
- *     and this prefixing helps prevent confusing name collisions for theme
- *     developers. See drupal_get_css where the overrides are performed.
- *
- *     If the direction of the current language is right-to-left (Hebrew,
- *     Arabic, etc.), the function will also look for an RTL CSS file and append
- *     it to the list. The name of this file should have an '-rtl.css' suffix.
- *     For example a CSS file called 'mymodule-name.css' will have a
+ *   - 'file': The path to the CSS file relative to the base_path(), e.g.,
+ *     "modules/devel/devel.css". Note that Modules should always prefix the
+ *     names of their CSS files with the module name; for example,
+ *     system-menus.css rather than simply menus.css. Themes can override
+ *     module-supplied CSS files based on their filenames, and this prefixing
+ *     helps prevent confusing name collisions for theme developers. See
+ *     drupal_get_css() where the overrides are performed. Also, if the
+ *     direction of the current language is right-to-left (Hebrew, Arabic,
+ *     etc.), the function will also look for an RTL CSS file and append it to
+ *     the list. The name of this file should have an '-rtl.css' suffix.  For
+ *     example a CSS file called 'mymodule-name.css' will have a
  *     'mymodule-name-rtl.css' file added to the list, if exists in the same
  *     directory. This CSS file should contain overrides for properties which
  *     should be reversed or otherwise different in a right-to-left display.
  *   - 'inline': A string of CSS that should be placed in the given scope. Note
- *     that it is better practice to use 'file' stylesheets, rather than 'inline'
- *     as the CSS would then be aggregated and cached.
+ *     that it is better practice to use 'file' stylesheets, rather than
+ *     'inline', as the CSS would then be aggregated and cached.
  *   - 'external': The absolute path to an external CSS file that is not hosted
- *     on the local server. These files will not be aggregated if CSS aggregation
- *     is enabled.
- *
+ *     on the local server. These files will not be aggregated if CSS
+ *     aggregation is enabled.
  * @param $options
  *   (optional) A string defining the 'type' of CSS that is being added in the
- *   $data parameter ('file'/'inline'), or an array which can have any or all of
- *   the following keys:
+ *   $data parameter ('file', 'inline', or 'external'), or an array which can
+ *   have any or all of the following keys:
  *   - 'type': The type of stylesheet being added. Available options are 'file',
  *     'inline' or 'external'. Defaults to 'file'.
  *   - 'weight': The weight of the stylesheet specifies the order in which the
- *     CSS will appear when presented on the page.
- *
- *       Available constants are:
- *       - CSS_SYSTEM: Any system-layer CSS.
- *       - CSS_DEFAULT: Any module-layer CSS.
- *       - CSS_THEME: Any theme-layer CSS.
- *
- *       If you need to embed a CSS file before any other module's stylesheets,
- *       for example, you would use CSS_DEFAULT - 1. Note that inline CSS is
- *       simply appended to the end of the specified scope (region), so they
- *       always come last.
- *
+ *     CSS will appear when presented on the page. Available constants are:
+ *     - CSS_SYSTEM: Any system-layer CSS.
+ *     - CSS_DEFAULT: Any module-layer CSS.
+ *     - CSS_THEME: Any theme-layer CSS.
+ *     If you need to embed a CSS file before any other module's stylesheets,
+ *     for example, you would use CSS_DEFAULT - 1. Note that inline CSS is
+ *     simply appended to the end of the specified scope (region), so they
+ *     always come last.
  *   - 'media': The media type for the stylesheet, e.g., all, print, screen.
  *     Defaults to 'all'.
- *   - 'preprocess': Allows the CSS to be aggregated and compressed if the
- *     Optimize CSS feature has been turned on under the performance section.
- *     Defaults to TRUE.
+ *   - 'preprocess': If TRUE, Allows the CSS to be aggregated and compressed if
+ *     the Optimize CSS feature has been turned on under the performance
+ *     section.  Defaults to TRUE.
  *
- *     What does this actually mean?
- *     CSS preprocessing is the process of aggregating a bunch of separate CSS
- *     files into one file that is then compressed by removing all extraneous
- *     white space. Note that preprocessed inline stylesheets will not be
- *     aggregated into this single file, instead it will just be compressed
- *     when being output on the page. External stylesheets will not be
- *     aggregated.
- *
- *     The reason for merging the CSS files is outlined quite thoroughly here:
- *     http://www.die.net/musings/page_load_time/
- *     "Load fewer external objects. Due to request overhead, one bigger file
- *     just loads faster than two smaller ones half its size."
- *
- *     However, you should *not* preprocess every file as this can lead to
- *     redundant caches. You should set $preprocess = FALSE when your styles
- *     are only used rarely on the site. This could be a special admin page,
- *     the homepage, or a handful of pages that does not represent the
- *     majority of the pages on your site.
- *
- *     Typical candidates for caching are for example styles for nodes across
- *     the site, or used in the theme.
  * @return
  *   An array of queued cascading stylesheets.
  */
