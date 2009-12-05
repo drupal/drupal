@@ -58,16 +58,6 @@ Drupal.behaviors.formUpdated = {
   }
 };
 
-Drupal.behaviors.multiselectSelector = {
-  attach: function (context, settings) {
-    // Automatically selects the right radio button in a multiselect control.
-    $('.multiselect select', context).once('multiselect').change(function () {
-        $('.multiselect input:radio[value="' + this.id.substr(5) + '"]')
-          .attr('checked', true);
-    });
-  }
-};
-
 /**
  * Automatically display the guidelines of the selected text format.
  */
