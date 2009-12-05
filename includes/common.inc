@@ -2837,6 +2837,14 @@ function drupal_deliver_page($page_callback_result, $default_delivery_callback =
  * @see drupal_deliver_page
  */
 function drupal_deliver_html_page($page_callback_result) {
+  // Emit the correct charset HTTP header, but not if the page callback
+  // result is NULL, since that likely indicates that it printed something
+  // in which case, no further headers may be sent, and not if code running
+  // for this page request has already set the content type header.
+  if (isset($page_callback_result) && is_null(drupal_get_http_header('Content-Type'))) {
+    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+  }
+
   // Menu status constants are integers; page content is a string or array.
   if (is_int($page_callback_result)) {
     // @todo: Break these up into separate functions?
@@ -4506,8 +4514,6 @@ function _drupal_bootstrap_full() {
   set_error_handler('_drupal_error_handler');
   set_exception_handler('_drupal_exception_handler');
 
-  // Emit the correct charset HTTP header.
-  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
   // Detect string handling method
   unicode_check();
   // Undo magic quotes
