@@ -180,7 +180,7 @@ class PagerDefault extends SelectQueryExtender {
 function pager_get_query_parameters() {
   $query = &drupal_static(__FUNCTION__);
   if (!isset($query)) {
-    $query = drupal_get_query_parameters($_REQUEST, array_merge(array('q', 'page'), array_keys($_COOKIE)));
+    $query = drupal_get_query_parameters($_GET, array('q', 'page'));
   }
   return $query;
 }
