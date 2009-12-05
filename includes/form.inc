@@ -1620,27 +1620,31 @@ function form_type_token_value($element, $input = FALSE) {
 }
 
 /**
- * Change submitted form values during the form processing cycle.
+ * Change submitted form values during form validation.
  *
- * Use this function to change the submitted value of a form item in the
- * validation phase so that it persists in $form_state through to the
- * submission handlers in the submission phase.
+ * Use this function to change the submitted value of a form element in a form
+ * validation function, so that the changed value persists in $form_state
+ * through to the submission handlers.
  *
- * Since $form_state['values'] can either be a flat array of values, or a tree
- * of nested values, some care must be taken when using this function.
- * Specifically, $element['#parents'] is an array that describes the branch of
- * the tree whose value should be updated. For example, if we wanted to update
- * $form_state['values']['one']['two'] to 'new value', we'd pass in
- * $element['#parents'] = array('one', 'two') and $value = 'new value'.
+ * Note that form validation functions are specified in the '#validate'
+ * component of the form array (the value of $form['#validate'] is an array of
+ * validation function names). If the form does not originate in your module,
+ * you can implement hook_form_FORM_ID_alter() to add a validation function
+ * to $form['#validate'].
  *
  * @param $element
- *   The form item that should have its value updated. Keys used: #parents,
- *   #value. In most cases you can just pass in the right element from the $form
- *   array.
+ *   The form element that should have its value updated; in most cases you can
+ *   just pass in the element from the $form array, although the only component
+ *   that is actually used is '#parents'. If constructing yourself, set
+ *   $element['#parents'] to be an array giving the path through the form
+ *   array's keys to the element whose value you want to update. For instance,
+ *   if you want to update the value of $form['elem1']['elem2'], which should be
+ *   stored in $form_state['values']['elem1']['elem2'], you would set
+ *   $element['#parents'] = array('elem1','elem2').
  * @param $value
- *   The new value for the form item.
+ *   The new value for the form element.
  * @param $form_state
- *   The array where the value change should be recorded.
+ *   Form state array where the value change should be recorded.
  */
 function form_set_value($element, $value, &$form_state) {
   _form_set_value($form_state['values'], $element, $element['#parents'], $value);
