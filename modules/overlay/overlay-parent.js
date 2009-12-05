@@ -371,8 +371,12 @@ Drupal.overlay.bindChild = function (iFrameWindow, isClosing) {
     // Make the link overlay-friendly.
     var $link = $('a', addToShortcuts);
     $link.attr('href', Drupal.overlay.fragmentizeLink($link.get(0)));
-    // Move the button markup to the title section.
-    $('.overlay .ui-dialog-title').after(addToShortcuts);
+    // Move the button markup to the title section. We need to copy markup
+    // instead of moving the DOM element, because Webkit browsers will not
+    // move DOM elements between two DOM documents.
+    var shortcutsMarkup = '<div class="' + $(addToShortcuts).attr('class') + '">' + $(addToShortcuts).html() + '</div>';
+    $('.overlay .ui-dialog-title').after(shortcutsMarkup);
+    $('.add-or-remove-shortcuts', $iFrameDocument).remove();
   }
 
   // Remove any existing tabs.
