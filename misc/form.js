@@ -1,4 +1,4 @@
-// $Id: form.js,v 1.12 2009/10/16 16:37:00 dries Exp $
+// $Id: form.js,v 1.13 2009/12/05 15:04:33 webchick Exp $
 (function ($) {
 
 /**
@@ -55,16 +55,6 @@ Drupal.behaviors.formUpdated = {
       .unbind(events).bind(events, function () {
         $(this).trigger('formUpdated');
       });
-  }
-};
-
-Drupal.behaviors.multiselectSelector = {
-  attach: function (context, settings) {
-    // Automatically selects the right radio button in a multiselect control.
-    $('.multiselect select', context).once('multiselect').change(function () {
-        $('.multiselect input:radio[value="' + this.id.substr(5) + '"]')
-          .attr('checked', true);
-    });
   }
 };
 
