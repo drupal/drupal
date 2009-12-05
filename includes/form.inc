@@ -94,7 +94,9 @@ function drupal_get_form($form_id) {
  * @param &$form_state
  *   An array which stores information about the form. This is passed as a
  *   reference so that the caller can use it to examine what in the form changed
- *   when the form submission process is complete.
+ *   when the form submission process is complete. Furthermore, it may be used
+ *   to store information related to the processed data in the form, which will
+ *   persist across page requests when the 'cache' or 'rebuild' flag is set.
  *   The following parameters may be set in $form_state to affect how the form
  *   is rendered:
  *   - build_info: A keyed array of build information that is necessary to
@@ -104,10 +106,6 @@ function drupal_get_form($form_id) {
  *     - file: An optional include file that contains the form and is
  *       automatically loaded by form_get_cache(). Defaults to the current menu
  *       router item's 'file' definition, if existent.
- *   - storage: An array that may be used to store information related to the
- *     processed data in the form, which can be accessed and used within the
- *     same page request, but also persist across multiple steps in a multi-step
- *     form.
  *   - rebuild: Normally, after the entire form processing is completed and
  *     submit handlers ran, a form is considered to be done and
  *     drupal_redirect_form() will redirect the user to a new page using a GET
@@ -141,6 +139,10 @@ function drupal_get_form($form_id) {
  *     times when a form is resubmitted internally and should be validated
  *     again. Setting this to TRUE will force that to happen. This is most
  *     likely to occur during AHAH or AJAX operations.
+ *   - temporary: An array holding temporary data accessible during the current
+ *     page request only. It may be used to temporary save any data that doesn't
+ *     need to or shouldn't be cached during the whole form workflow, e.g. data
+ *     that needs to be accessed during the current form build process only.
  *   - wrapper_callback: Modules that wish to pre-populate certain forms with
  *     common elements, such as back/next/save buttons in multi-step form
  *     wizards, may define a form builder function name that returns a form
@@ -269,11 +271,10 @@ function drupal_build_form($form_id, &$form_state) {
  */
 function form_state_defaults() {
   return array(
-    'args' => array(),
     'rebuild' => FALSE,
     'redirect' => NULL,
-    'build_info' => array(),
-    'storage' => array(),
+    'build_info' => array('args' => array()),
+    'temporary' => array(),
     'submitted' => FALSE,
     'programmed' => FALSE,
     'cache'=> FALSE,
@@ -301,8 +302,7 @@ function form_state_defaults() {
  *   different $form_id values to the proper form constructor function. Examples
  *   may be found in node_forms(), search_forms(), and user_forms().
  * @param $form_state
- *   A keyed array containing the current state of the form. Most
- *   important is the $form_state['storage'] collection.
+ *   A keyed array containing the current state of the form.
  * @param $form_build_id
  *   If the AHAH callback calling this function only alters part of the form,
  *   then pass in the existing form_build_id so we can re-cache with the same
@@ -355,8 +355,7 @@ function form_get_cache($form_build_id, &$form_state) {
     if ((isset($form['#cache_token']) && drupal_valid_token($form['#cache_token'])) || (!isset($form['#cache_token']) && !$user->uid)) {
       if ($cached = cache_get('form_state_' . $form_build_id, 'cache_form')) {
         // Re-populate $form_state for subsequent rebuilds.
-        $form_state['build_info'] = $cached->data['build_info'];
-        $form_state['storage'] = $cached->data['storage'];
+        $form_state = $cached->data + $form_state;
 
         // If the original form is contained in an include file, load the file.
         // @see drupal_build_form()
@@ -385,13 +384,37 @@ function form_set_cache($form_build_id, $form, $form_state) {
   }
 
   // Cache form state.
-  if (!empty($form_state['build_info']) || !empty($form_state['storage'])) {
-    $data = array(
-      'build_info' => $form_state['build_info'],
-      'storage' => $form_state['storage'],
-    );
+  if ($data = array_diff_key($form_state, array_flip(form_state_keys_no_cache()))) {
     cache_set('form_state_' . $form_build_id, $data, 'cache_form', REQUEST_TIME + $expire);
   }
+}
+
+/**
+ * Returns an array of $form_state keys that shouldn't be cached.
+ */
+function form_state_keys_no_cache() {
+  return array(
+    // Public properties defined by form constructors and form handlers.
+    'always_process',
+    'cache',
+    'no_cache',
+    'must_validate',
+    'rebuild',
+    'redirect',
+    'no_redirect',
+    'temporary',
+    // Internal properties defined by form processing.
+    'buttons',
+    'clicked_button',
+    'complete form',
+    'groups',
+    'input',
+    'method',
+    'submit_handlers',
+    'submitted',
+    'validate_handlers',
+    'values',
+  );
 }
 
 /**
@@ -449,14 +472,14 @@ function drupal_form_submit($form_id, &$form_state) {
     array_shift($args);
     $form_state['build_info']['args'] = $args;
   }
+  // Merge in default values.
+  $form_state += form_state_defaults();
 
   $form = drupal_retrieve_form($form_id, $form_state);
   $form_state['input'] = $form_state['values'];
   $form_state['programmed'] = TRUE;
   // Programmed forms are always submitted.
   $form_state['submitted'] = TRUE;
-  // Merge in default values.
-  $form_state += form_state_defaults();
 
   drupal_prepare_form($form_id, $form, $form_state);
   drupal_process_form($form_id, $form, $form_state);

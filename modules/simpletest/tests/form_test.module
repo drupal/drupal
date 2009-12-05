@@ -102,6 +102,14 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form-test/state-persist'] = array(
+    'title' => 'Form state persistence without storage',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_state_persist'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -741,4 +749,46 @@ function form_test_form_rebuild_preserve_values_form_add_more($form, &$form_stat
 function form_test_form_rebuild_preserve_values_form_submit($form, &$form_state) {
   // Finish the workflow. Do not rebuild.
   drupal_set_message(t('Form values: %values', array('%values' => var_export($form_state['values'], TRUE))));
+}
+
+/**
+ * Form constructor for testing form state persistence.
+ */
+function form_test_state_persist($form, &$form_state) {
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => 'title',
+    '#default_value' => 'DEFAULT',
+    '#required' => TRUE,
+  );
+  $form_state['value'] = 'State persisted.';
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+/**
+ * Submit handler.
+ * 
+ * @see form_test_state_persist()
+ */
+function form_test_state_persist_submit($form, &$form_state) {
+  drupal_set_message($form_state['value']);
+  $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * 
+ * @see form_test_state_persist()
+ */
+function form_test_form_form_test_state_persist_alter(&$form, &$form_state) {
+  // Simulate a form alter implementation inserting form elements that enable
+  // caching of the form, e.g. elements having #ajax.
+  if (!empty($_REQUEST['cache'])) {
+    $form_state['cache'] = TRUE;
+  }
 }

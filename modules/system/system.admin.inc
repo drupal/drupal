@@ -1181,7 +1181,7 @@ function system_modules_uninstall($form, $form_state = NULL) {
   include_once DRUPAL_ROOT . '/includes/install.inc';
 
   // Display the confirm form if any modules have been submitted.
-  if (!empty($form_state) && $confirm_form = system_modules_uninstall_confirm_form($form_state['storage'])) {
+  if (!empty($form_state['storage']) && $confirm_form = system_modules_uninstall_confirm_form($form_state['storage'])) {
     return $confirm_form;
   }
 
