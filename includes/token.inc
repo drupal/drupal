@@ -1,5 +1,5 @@
 <?php
-// $Id: token.inc,v 1.6 2009/10/16 03:01:54 dries Exp $
+// $Id: token.inc,v 1.7 2009/12/05 03:49:17 webchick Exp $
 
 /**
  * @file
@@ -191,7 +191,7 @@ function token_generate($type, array $tokens, array $data = array(), array $opti
 function token_find_with_prefix(array $tokens, $prefix, $delimiter = ':') {
   $results = array();
   foreach ($tokens as $token => $raw) {
-    $parts = split($delimiter, $token, 2);
+    $parts = explode($delimiter, $token, 2);
     if (count($parts) == 2 && $parts[0] == $prefix) {
       $results[$parts[1]] = $raw;
     }
