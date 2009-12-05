@@ -2713,19 +2713,14 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
 }
 
 /**
- * This function will call module invoke to get a list of grants and then
- * write them to the database. It is called at node save, and should be
- * called by modules whenever something other than a node_save causes
- * the permissions on a node to change.
+ * Gets the list of node access grants and writes them to the database.
  *
- * After the default grants have been loaded, we allow modules to alter
- * the grants array by reference. This hook allows for complex business
- * logic to be applied when integrating multiple node access modules.
- *
- * @see hook_node_access_records()
- *
- * This function is the only function that should write to the node_access
- * table.
+ * This function is called when a node is saved, and can also be called by
+ * modules if something other than a node save causes node access permissions to
+ * change. It collects all node access grants for the node from
+ * hook_node_access_records() implementations, allows these grants to be altered
+ * via hook_node_access_records_alter() implementations, and saves the collected
+ * and altered grants to the database.
  *
  * @param $node
  *   The $node to acquire grants for.
@@ -2752,12 +2747,12 @@ function node_access_acquire_grants($node) {
 }
 
 /**
- * This function will write a list of grants to the database, deleting
- * any pre-existing grants. If a realm is provided, it will only
- * delete grants from that realm, but it will always delete a grant
- * from the 'all' realm. Modules which utilize node_access can
- * use this function when doing mass updates due to widespread permission
- * changes.
+ * Writes a list of grants to the database, deleting any previously saved ones.
+ *
+ * If a realm is provided, it will only delete grants from that realm, but it
+ * will always delete a grant from the 'all' realm. Modules that utilize
+ * node_access can use this function when doing mass updates due to widespread
+ * permission changes.
  *
  * @param $node
  *   The $node being written to. All that is necessary is that it contains a
