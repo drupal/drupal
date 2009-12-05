@@ -1566,7 +1566,10 @@ function _drupal_bootstrap_page_cache() {
 
   // Allow specifying special cache handlers in settings.php, like
   // using memcached or files for storing cache information.
-  require_once DRUPAL_ROOT . '/' . variable_get('cache_inc', 'includes/cache.inc');
+  require_once DRUPAL_ROOT . '/includes/cache.inc';
+  foreach (variable_get('cache_backends', array()) as $include) {
+    require_once DRUPAL_ROOT . '/' . $include;
+  }
   // Check for a cache mode force from settings.php.
   if (variable_get('page_cache_without_database')) {
     $cache_mode = CACHE_NORMAL;
