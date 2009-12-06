@@ -23,10 +23,16 @@ function trigger_help($path, $arg) {
       return $explanation . '<p>' . t('Below you can assign actions to run when certain taxonomy-related triggers happen. For example, you could send an e-mail to an administrator when a term is deleted.') . '</p>';
     case 'admin/structure/trigger/user':
       return $explanation . '<p>' . t("Below you can assign actions to run when certain user-related triggers happen. For example, you could send an e-mail to an administrator when a user account is deleted.") . '</p>';
+
     case 'admin/help#trigger':
-      $output = '<p>' . t('The Trigger module provides the ability to trigger <a href="@actions">actions</a> upon system events, such as when new content is added or when a user logs in.', array('@actions' => url('admin/config/system/actions'))) . '</p>';
-      $output .= '<p>' . t('The combination of actions and triggers can perform many useful tasks, such as e-mailing an administrator if a user account is deleted, or automatically unpublishing comments that contain certain words. By default, there are five "contexts" of events (Comments, Content, Cron, Taxonomy, and Users), but more may be added by additional modules.') . '</p>';
-      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@trigger">Trigger module</a>.', array('@trigger' => 'http://drupal.org/handbook/modules/trigger/')) . '</p>';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Trigger module provides the ability to trigger actions upon system events, such as when new content is added or when a user logs in. For more information, see the online handbook entry for <a href="@trigger">Trigger module</a>.', array('@trigger' => 'http://drupal.org/handbook/modules/trigger/')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Configuring triggers') . '</dt>';
+      $output .= '<dd>' . t('The combination of actions and triggers can perform many useful tasks, such as e-mailing an administrator if a user account is deleted, or automatically unpublishing comments that contain certain words. By default, there are five <em>contexts</em> of events (Comments, Content, Cron, Taxonomy, and Users), but more may be added by additional modules. Users with the appropriate permissions can configure triggers on the <a href="@triggers-page">Triggers configuration page</a>, and actions on the <a href="@actions-page">Actions configuration page</a>.', array('@triggers-page' => url('admin/structure/trigger'), '@actions-page' => url('admin/config/system/actions'))) . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
