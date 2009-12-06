@@ -1281,7 +1281,7 @@ function node_language_negotiation_info() {
  *   A valid language code on succes, FALSE otherwise.
  */
 function node_language_provider($languages) {
-  require_once DRUPAL_ROOT . '/includes/path.inc';
+  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
 
   $path = isset($_GET['q']) ? $_GET['q'] : '';
   list($language, $path) = language_url_split_prefix($path, $languages);

@@ -4491,7 +4491,7 @@ function _drupal_bootstrap_full() {
     return;
   }
   $called = 1;
-  require_once DRUPAL_ROOT . '/includes/path.inc';
+  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
   require_once DRUPAL_ROOT . '/includes/theme.inc';
   require_once DRUPAL_ROOT . '/includes/pager.inc';
   require_once DRUPAL_ROOT . '/includes/menu.inc';
