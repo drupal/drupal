@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.51 2009/12/02 19:26:21 dries Exp $
+// $Id: path.inc,v 1.52 2009/12/06 23:56:47 dries Exp $
 
 /**
  * @file
@@ -161,7 +161,7 @@ function drupal_cache_system_paths() {
   // Check if the system paths for this page were loaded from cache in this
   // request to avoid writing to cache on every request.
   $cache = &drupal_static('drupal_lookup_path', array());
-  if (!$cache['system_paths']) {
+  if (empty($cache['system_paths'])) {
     // Generate a cache ID (cid) specifically for this page.
     $cid = current_path();
     // The static $map array used by drupal_lookup_path() includes all
