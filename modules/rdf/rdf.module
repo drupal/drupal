@@ -7,6 +7,19 @@
  */
 
 /**
+ * Implement hook_help().
+ */
+function rdf_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#rdf':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The RDF module enriches your content with metadata to let other applications (e.g. search engines, aggregators) better understand its relationships and attributes. This semantically enriched, machine-readable RDF output for Drupal sites uses the <a href="@rdfa">RDFa specification</a>. Other modules can define mappings of their data to RDFa properties, and the RDF module makes the data available to the theme. The core Drupal modules define RDF mappings for their information, and the core Drupal themes output the RDF meta-data information along with the human-readable visual information. For more information, see the online handbook entry for <a href="@rdf">RDF module</a>.', array('@rdfa' => 'http://www.w3.org/TR/xhtml-rdfa-primer/', '@rdf' => 'http://drupal.org/handbook/modules/rdf')) . '</p>';
+      return $output;
+  }
+}
+
+/**
  * @defgroup rdf RDFa API
  * @{
  * Functions to describe entities and bundles for RDFa.
