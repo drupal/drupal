@@ -12,12 +12,27 @@
 function forum_help($path, $arg) {
   switch ($path) {
     case 'admin/help#forum':
-      $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Forum module lets you create threaded discussion forums with functionality similar to other message board systems. Forums are useful because they allow community members to discuss topics with one another while ensuring those conversations are archived for later reference. Forums behave by posting topics and threads in nested hierarchies, which allow many discussions to be categorized in various ways. The <a href="@create-topic">forum topic</a> link on the <a href="@content-add">Add new content</a> page creates the first post of a new threaded discussion, or thread. For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@create-topic' => url('node/add/forum'), '@content-add' => url('node/add'), '@forum' => 'http://drupal.org/handbook/modules/forum/')) . '</p>';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Forum module lets you create threaded discussion forums with functionality similar to other message board systems. Forums are useful because they allow community members to discuss topics with one another while ensuring those conversations are archived for later reference. In a forum, users post topics and threads in nested hierarchies, allowing discussions to be categorized and grouped. The forum hierarchy consists of:') . '</p>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('Optional containers (for example, <em>Support</em>), which can hold:') . '</li>';
+      $output .= '<ul><li>' . t('Forums (for example, <em>Installing Drupal</em>), which can hold:') . '</li>';
+      $output .= '<ul><li>' . t('Forum topics submitted by users (for example, <em>How to start a Drupal 6 Multisite</em>), which start discussions and are starting points for:') . '</li>';
+      $output .= '<ul><li>' . t('Threaded comments submitted by users (for example, <em>You have these options...</em>).') . '</li>';
+      $output .= '</ul>';
+      $output .= '</ul>';
+      $output .= '</ul>';
+      $output .= '</ul>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
+      $output .= '<dt>' . t('Setting up forum structure') . '</dt>';
+      $output .= '<dd>' . t('Visit the <a href="@forums">Forums page</a> to set up containers and forums to hold your discussion topics.', array('@forums' => url('admin/structure/forum'))) . '</dd>';
+      $output .= '<dt>' . t('Starting a discussion') . '</dt>';
+      $output .= '<dd>' . t('The <a href="@create-topic">Forum topic</a> link on the <a href="@content-add">Add new content</a> page creates the first post of a new threaded discussion, or thread.', array('@create-topic' => url('node/add/forum'), '@content-add' => url('node/add'))) . '</dd>';
       $output .= '<dt>' . t('Navigation') . '</dt>';
-      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu item in the navigation menu that links to the <a href="@forums">main forums page</a>.', array('@forums' => url('forum'))) . '</dd>';
+      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu item in the navigation menu that links to the <a href="@forums">Forums page</a>.', array('@forums' => url('forum'))) . '</dd>';
       $output .= '<dt>' . t('Moving forum topics') . '</dt>';
       $output .= '<dd>' . t('A forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic. When moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</dd>';
       $output .= '<dt>' . t('Locking and disabling comments') . '</dt>';
