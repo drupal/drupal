@@ -528,6 +528,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
   function testAccessDenied() {
     $this->drupalGet('admin');
     $this->assertText(t('Access denied'), t('Found the default 403 page'));
+    $this->assertReponse(403);
 
     $edit = array(
       'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(10)))),
@@ -557,6 +558,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('admin');
     $this->assertText(t('Access denied'), t('Found the default 403 page'));
+    $this->assertReponse(403);
     $this->assertText(t('User login'), t('Blocks are shown on the default 403 page'));
 
     // Log back in, set the custom 403 page to /user and remove the block

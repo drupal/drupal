@@ -20,7 +20,8 @@ function contact_site_form($form, &$form_state) {
   $window = variable_get('contact_threshold_window', 3600);
   if (!flood_is_allowed('contact', $limit, $window) && !user_access('administer contact forms')) {
     drupal_set_message(t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window))), 'error');
-    return drupal_access_denied();
+    drupal_access_denied();
+    drupal_exit();
   }
 
   // Get an array of the categories and the current default category.
@@ -39,7 +40,8 @@ function contact_site_form($form, &$form_state) {
       drupal_set_message(t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array('@add' => url('admin/structure/contact/add'))), 'error');
     }
     else {
-      return drupal_not_found();
+      drupal_not_found();
+      drupal_exit();
     }
   }
 
@@ -177,7 +179,8 @@ function contact_personal_form($form, &$form_state, stdClass $recipient) {
   $window = variable_get('contact_threshold_window', 3600);
   if (!flood_is_allowed('contact', $limit, $window) && !user_access('administer contact forms') && !user_access('administer users')) {
     drupal_set_message(t("You cannot send more than %limit messages in @interval. Please try again later.", array('%limit' => $limit, '@interval' => format_interval($window))), 'error');
-    return drupal_access_denied();
+    drupal_access_denied();
+    drupal_exit();
   }
 
   drupal_set_title(t('Contact @username', array('@username' => format_username($recipient))), PASS_THROUGH);
