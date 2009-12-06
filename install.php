@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.226 2009/12/05 19:27:34 dries Exp $
+// $Id: install.php,v 1.227 2009/12/06 18:27:23 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -240,7 +240,7 @@ function install_begin_request(&$install_state) {
   require_once DRUPAL_ROOT . '/modules/system/system.install';
   require_once DRUPAL_ROOT . '/includes/common.inc';
   require_once DRUPAL_ROOT . '/includes/file.inc';
-  require_once DRUPAL_ROOT . '/includes/path.inc';
+  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
 
   // Load module basics (needed for hook invokes).
   include_once DRUPAL_ROOT . '/includes/module.inc';

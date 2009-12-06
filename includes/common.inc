@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1059 2009/12/06 17:01:52 webchick Exp $
+// $Id: common.inc,v 1.1060 2009/12/06 18:27:23 webchick Exp $
 
 /**
  * @file
@@ -4491,7 +4491,7 @@ function _drupal_bootstrap_full() {
     return;
   }
   $called = 1;
-  require_once DRUPAL_ROOT . '/includes/path.inc';
+  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
   require_once DRUPAL_ROOT . '/includes/theme.inc';
   require_once DRUPAL_ROOT . '/includes/pager.inc';
   require_once DRUPAL_ROOT . '/includes/menu.inc';

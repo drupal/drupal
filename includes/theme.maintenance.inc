@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.48 2009/12/01 15:57:40 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.49 2009/12/06 18:27:23 webchick Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@ function _drupal_maintenance_theme() {
     return;
   }
 
-  require_once DRUPAL_ROOT . '/includes/path.inc';
+  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
   require_once DRUPAL_ROOT . '/includes/theme.inc';
   require_once DRUPAL_ROOT . '/includes/common.inc';
   require_once DRUPAL_ROOT . '/includes/unicode.inc';
