@@ -31,21 +31,23 @@ define('TRANSLATION_ENABLED', 2);
 function translation_help($path, $arg) {
   switch ($path) {
     case 'admin/help#translation':
-      $output = '<p>' . t('The content translation module allows content to be translated into different languages. Working with the <a href="@locale">locale module</a> (which manages enabled languages and provides translation for the site interface), the content translation module is key to creating and maintaining translated site content.', array('@locale' => url('admin/help/locale'))) . '</p>';
-      $output .= '<p>' . t('Configuring content translation and translation-enabled content types:') . '</p>';
-      $output .= '<ul><li>' . t('Assign the <em>translate content</em> permission to the appropriate user roles at the <a href="@permissions">Permissions configuration page</a>.', array('@permissions' => url('admin/config/people/permissions'))) . '</li>';
-      $output .= '<li>' . t('Add and enable desired languages at the <a href="@languages">Languages configuration page</a>.', array('@languages' => url('admin/config/regional/language'))) . '</li>';
-      $output .= '<li>' . t('Determine which <a href="@content-types">content types</a> should support translation features. To enable translation support for a content type, edit the type and at the <em>Multilingual support</em> drop down, select <em>Enabled, with translation</em>. (<em>Multilingual support</em> is located within <em>Publishing options</em>.) Be sure to save each content type after enabling multilingual support.', array('@content-types' => url('admin/structure/types'))) . '</li></ul>';
-      $output .= '<p>' . t('Working with translation-enabled content types:') . '</p>';
-      $output .= '<ul><li>' . t('Use the <em>Language</em> drop down to select the appropriate language when creating or editing posts.') . '</li>';
-      $output .= '<li>' . t('Provide new or edit current translations for existing posts via the <em>Translation</em> tab. Only visible while viewing a post as a user with the <em>translate content</em> permission, this tab allows translations to be added or edited using a specialized editing form that also displays the content being translated.') . '</li>';
-      $output .= '<li>' . t('Update translations as needed, so that they accurately reflect changes in the content of the original post. The translation status flag provides a simple method for tracking outdated translations. After editing a post, for example, select the <em>Flag translations as outdated</em> check box to mark all of its translations as outdated and in need of revision. Individual translations may be marked for revision by selecting the <em>This translation needs to be updated</em> check box on the translation editing form.') . '</li>';
-      $output .= '<li>' . t('The <a href="@content-node">Content management administration page</a> displays the language of each post, and also allows filtering by language or translation status.', array('@content-node' => url('admin/content'))) . '</li></ul>';
-      $output .= '<p>' . t('Use the <a href="@blocks">language switcher block</a> provided by locale module to allow users to select a language. If available, both the site interface and site content are presented in the language selected.', array('@blocks' => url('admin/structure/block'))) . '</p>';
-      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@translation">Translation module</a>.', array('@translation' => 'http://drupal.org/handbook/modules/translation/')) . '</p>';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Content translation module allows content to be translated into different languages. Working with the <a href="@locale">Locale module</a> (which manages enabled languages and provides translation for the site interface), the Content translation module is key to creating and maintaining translated site content. For more information, see the online handbook entry for <a href="@translation">Content translation module</a>.', array('@locale' => url('admin/help/locale'), '@translation' => 'http://drupal.org/handbook/modules/translation/')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Configuring content types for translation') . '</dt>';
+      $output .= '<dd>' . t('To configure a particular content type for translation, visit the <a href="@content-types">Content types</a> page, and click the <em>edit</em> link for the content type. In the <em>Publishing options</em> section, select <em>Enabled, with translation</em> under <em>Multilingual support</em>.', array('@content-types' => url('admin/structure/types'))) . '</li></ul><dd>';
+      $output .= '<dt>' . t('Assigning a language to content') . '</dt>';
+      $output .= '<dd>' . t('Use the <em>Language</em> drop down to select the appropriate language when creating or editing content.') . '</dd>';
+      $output .= '<dt>' . t('Translating content') . '</dt>';
+      $output .= '<dd>' . t('Users with the <em>translate content</em> permission can translate content, if the content type has been configured to allow translations. To translate content, select the <em>Translation</em> tab when viewing the content, select the language for which you wish to provide content, and then enter the content.') . '</dd>';
+      $output .= '<dt>' . t('Maintaining translations') . '</dt>';
+      $output .= '<dd>' . t('If editing content in one language requires that translated versions also be updated to reflect the change, use the <em>Flag translations as outdated</em> check box to mark the translations as outdated and in need of revision. Individual translations may also be marked for revision by selecting the <em>This translation needs to be updated</em> check box on the translation editing form.') . '</dd>';
+      $output .= '</dl>';
       return $output;
     case 'node/%/translate':
-      $output = '<p>' . t('Translations of a piece of content are managed with translation sets. Each translation set has one source post and any number of translations in any of the <a href="!languages">enabled languages</a>. All translations are tracked to be up to date or outdated based on whether the source post was modified significantly.', array('!languages' => url('admin/settings/language'))) . '</p>';
+      $output = '<p>' . t('Translations of a piece of content are managed with translation sets. Each translation set has one source post and any number of translations in any of the <a href="!languages">enabled languages</a>. All translations are tracked to be up to date or outdated based on whether the source post was modified significantly.', array('!languages' => url('admin/config/regional/language'))) . '</p>';
       return $output;
   }
 }
@@ -100,7 +102,7 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
   // Add translation option to content type form.
   $form['workflow']['language_content_type']['#options'][TRANSLATION_ENABLED] = t('Enabled, with translation');
   // Description based on text from locale.module.
-  $form['workflow']['language_content_type']['#description'] = t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. You can also turn on translation for this content type, which lets you have content translated to any of the enabled languages. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/settings/language')));
+  $form['workflow']['language_content_type']['#description'] = t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. You can also turn on translation for this content type, which lets you have content translated to any of the enabled languages. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/config/regional/language')));
 }
 
 /**
