@@ -5875,8 +5875,10 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
     }
   }
   // If we have a single-field primary key but got no insert ID, the
-  // query failed.
-  elseif (count($primary_keys) == 1) {
+  // query failed. Note that we explicitly check for FALSE, because
+  // a valid update query which doesn't change any values will return
+  // zero (0) affected rows.
+  elseif ($last_insert_id === FALSE && count($primary_keys) == 1) {
     $return = FALSE;
   }
 
