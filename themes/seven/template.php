@@ -5,7 +5,7 @@
  * Override or insert variables into the page template.
  */
 function seven_process_html(&$vars) {
-  $vars['ie_styles'] = '<!--[if lt IE 7]><style type="text/css" media="screen">@import ' . path_to_theme() . '/ie6.css";</style><![endif]-->';
+  $vars['styles'] .= "\n<!--[if lt IE 7]>\n" . '<link type="text/css" rel="stylesheet" media="all" href="' . file_create_url(path_to_theme() . '/ie6.css') . '" />' . "\n" . "<![endif]-->\n";
 }
 function seven_preprocess_page(&$vars) {
   $vars['primary_local_tasks'] = menu_primary_local_tasks();
