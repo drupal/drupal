@@ -107,7 +107,7 @@ function _color_page_alter(&$vars) {
   // Override logo.
   $logo = variable_get('color_' . $theme_key . '_logo');
   if ($logo && $vars['logo'] && preg_match('!' . $theme_key . '/logo.png$!', $vars['logo'])) {
-    $vars['logo'] = base_path() . $logo;
+    $vars['logo'] = file_create_url($logo);
   }
 }
 
