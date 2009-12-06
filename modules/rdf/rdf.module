@@ -637,8 +637,8 @@ function theme_rdf_template_variable_wrapper($variables) {
  * Sometimes it is useful to export data which is not semantically present in
  * the HTML output. For example, a hierarchy of comments is visible for a human
  * but not for machines because this hiearchy is not present in the DOM tree.
- * We can express it in RDFa via empty span tags. These won't be visible and
- * will give machines extra information about the content and its structure.
+ * We can express it in RDFa via empty span tags. These aren't visible and give
+ * machines extra information about the content and its structure.
  *
  * @param $variables
  *   An associative array containing:
@@ -647,13 +647,7 @@ function theme_rdf_template_variable_wrapper($variables) {
  *     element.
  *
  * @return
- *   A string of HTML containing markup that can be understood by an RDF parser.
- *
- * Tip for themers: while this default implementation results in valid markup
- * for the XHTML+RDFa doctype, you may need to override this in your theme to be
- * valid for doctypes that don't support empty spans. Or, if empty spans create
- * visual problems in your theme, you may want to override this to set a
- * class on them, and apply a CSS rule of display:none for that class.
+ *   A string of HTML containing markup that can be understood by RDFa parsers.
  *
  * @see rdf_process()
  *
@@ -662,7 +656,14 @@ function theme_rdf_template_variable_wrapper($variables) {
 function theme_rdf_metadata($variables) {
   $output = '';
   foreach ($variables['metadata'] as $attributes) {
-    $output .= '<span' . drupal_attributes($attributes) . ' />';
+    // Add a class, so developers viewing html source have a reference for why
+    // there are empty spans in the document. Also can be used to set a CSS
+    // display:none rule in a theme where empty spans affect display.
+    $attributes['class'][] = 'rdf-meta';
+    // XHTML+RDFa doctype allows either <span></span> or <span />, but for
+    // maximum browser compatibility, W3C recommends the former when serving
+    // pages using the text/html media type: http://www.w3.org/TR/xhtml1/#C_3.
+    $output .= '<span' . drupal_attributes($attributes) . '></span>';
   }
   return $output;
 }
