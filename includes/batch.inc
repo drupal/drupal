@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.46 2009/11/03 06:47:22 webchick Exp $
+// $Id: batch.inc,v 1.47 2009/12/06 16:21:58 dries Exp $
 
 
 /**
@@ -448,10 +448,12 @@ function _batch_finished() {
   $_batch = $batch;
   $batch = NULL;
 
-  // Clean-up the session.
-  unset($_SESSION['batches'][$batch['id']]);
-  if (empty($_SESSION['batches'])) {
-    unset($_SESSION['batches']);
+  // Clean-up the session. Not needed for CLI updates.
+  if (isset($_SESSION)) {
+    unset($_SESSION['batches'][$batch['id']]);
+    if (empty($_SESSION['batches'])) {
+      unset($_SESSION['batches']);
+    }
   }
 
   // Redirect if needed.
