@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.94 2009/12/03 15:33:42 dries Exp $
+// $Id: common.test,v 1.95 2009/12/06 17:01:52 webchick Exp $
 
 /**
  * @file
@@ -1475,6 +1475,12 @@ class DrupalDataApiTest extends DrupalWebTestCase {
     $vocabulary->name = 'testing';
     $update_result = drupal_write_record('taxonomy_vocabulary', $vocabulary, array('vid'));
     $this->assertTrue($update_result == SAVED_UPDATED, t('Correct value returned when a record updated with drupal_write_record() for table with single-field primary key.'));
+
+    // Run an update query where no field values are changed. The database
+    // layer should return zero for number of affected rows, but
+    // db_write_record() should still return SAVED_UPDATED.
+    $update_result = drupal_write_record('taxonomy_vocabulary', $vocabulary, array('vid'));
+    $this->assertTrue($update_result == SAVED_UPDATED, t('Correct value returned when a valid update is run without changing any values.'));
 
     // Insert an object record for a table with a multi-field primary key.
     $node_access = new stdClass();

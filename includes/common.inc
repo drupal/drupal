@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1058 2009/12/05 22:16:44 dries Exp $
+// $Id: common.inc,v 1.1059 2009/12/06 17:01:52 webchick Exp $
 
 /**
  * @file
@@ -5875,8 +5875,10 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
     }
   }
   // If we have a single-field primary key but got no insert ID, the
-  // query failed.
-  elseif (count($primary_keys) == 1) {
+  // query failed. Note that we explicitly check for FALSE, because
+  // a valid update query which doesn't change any values will return
+  // zero (0) affected rows.
+  elseif ($last_insert_id === FALSE && count($primary_keys) == 1) {
     $return = FALSE;
   }
 
