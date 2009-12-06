@@ -12,15 +12,16 @@
 function field_ui_help($path, $arg) {
   switch ($path) {
     case 'admin/help#field_ui':
-       $output = '';
-       $output .= '<p>' . t('The Field UI module provides an administrative interface for adding custom fields to content types, users, comments, and other types of data. In the case of content types, a few fields are provided by default, such as the "Summary and Body" field. The Field UI module lets administrators edit or delete the default fields attached to content, as well as create new fields for storing any additional information. Field configuration is accessible through tabs on the <a href="@content-types">content types administration page</a>. (See the <a href="@node-help">node module help page</a> for more information about content types.)', array('@content-types' => url('admin/content/types'), '@node-help' => url('admin/help/node'))) . '</p>';
-       $output .= '<p>' . t('When adding a custom field to a content type, you determine its type (whether it will contain text, numbers, lists, etc.) and how it will be displayed (either as a text field or text area, a select box, checkboxes, radio buttons, or an auto-complete text field). A field may have multiple values (i.e., a "person" may have multiple e-mail addresses) or a single value (i.e., an "employee" has a single employee identification number).') . '</p>';
-       $output .= '<p>' . t('Custom field types may be provided by additional modules. Drupal core includes the following field types:') . '</p>';
-       $output .= '<ul>';
-       $output .= '<li>' . t('<em>Number</em>: Adds numeric field types, in integer, decimal or floating point form. You may define a set of allowed inputs, or specify an allowable range of values. A variety of common formats for displaying numeric data are available.') . '</li>';
-       $output .= '<li>' . t("<em>Text</em>: Adds text field types. A text field may contain plain text only, or optionally, may use Drupal's input format filters to securely manage HTML output. Text input fields may be either a single line (text field), multiple lines (text area), or for greater input control, a select box, checkbox, or radio buttons. If desired, CCK can validate the input to a set of allowed values.") . '</li>';
-       $output .= '<li>' . t('<em>List</em>: Provides storage mechanisms to store a list of items. Usually these items are input through a select list, checkboxes, or radio buttons.') . '</li>';
-       $output .= '</ul>';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Field UI module provides an administrative user interface (UI) for adding custom fields to content types, users, comments, and other types of data. For more information, see the online handbook entry for <a href="@field-ui">Field UI module</a>.', array('field-ui' => 'http://drupal.org/handbook/modules/field-ui')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Defining custom fields') . '</dt>';
+      $output .= '<dd>' . t('When adding a custom field, you need to determine whether the field type will contain text, numbers, lists, etc., as well as how it will be input (as a text field, text area, select box, checkboxes, radio buttons, etc.). A field may have a single value or multiple values. For example, an employee field might have a single employee identification number, whereas a phone number field might have multiple phone numbers.') . '</dd>';
+      $output .= '<dt>' . t('Adding fields to content types') . '</dt>';
+      $output .= '<dd>' . t("Some fields are provided by default when you create a content type, such as the Title and Body fields. The Field UI module lets administrators edit or delete the default fields attached to content, as well as create new fields for storing any additional information. Field configuration is accessible through tabs on each specific content type's configuration page, listed on the <a href='@content-types'>Content types administration page</a>. See the <a href='@node-help'>Node module help page</a> for more information about content types.", array('@content-types' => url('admin/structure/types'), '@node-help' => url('admin/help/node'))) . '</dd>';
+      $output .= '</dl>';
       return $output;
 
     case 'admin/reports/fields':
