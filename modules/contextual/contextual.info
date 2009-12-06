@@ -1,0 +1,7 @@
+; $Id: contextual.info,v 1.1 2009/12/06 01:00:27 dries Exp $
+name = Contextual links
+description = Provides contextual links to perform actions related to elements on a page.
+package = Core
+version = VERSION
+core = 7.x
+files[] = contextual.module

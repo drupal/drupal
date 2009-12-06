@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.28 2009/10/19 20:33:21 dries Exp $
+// $Id: node.tpl.php,v 1.29 2009/12/06 01:00:27 dries Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@
 
   <?php print $user_picture; ?>
 
-  <?php if (!$page && $contextual_links): ?>
+  <?php if (!$page && !empty($contextual_links)): ?>
     <?php print render($contextual_links); ?>
   <?php endif; ?>
 

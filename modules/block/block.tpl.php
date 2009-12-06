@@ -1,5 +1,5 @@
 <?php
-// $Id: block.tpl.php,v 1.6 2009/10/19 01:30:06 dries Exp $
+// $Id: block.tpl.php,v 1.7 2009/12/06 01:00:27 dries Exp $
 
 /**
  * @file
@@ -38,7 +38,7 @@
 ?>
 <div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
  
-<?php if ($contextual_links): ?>
+<?php if (!empty($contextual_links)): ?>
   <?php print render($contextual_links); ?>
 <?php endif; ?>
  

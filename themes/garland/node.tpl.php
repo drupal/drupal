@@ -1,9 +1,9 @@
 <?php
-// $Id: node.tpl.php,v 1.19 2009/10/19 01:30:07 dries Exp $
+// $Id: node.tpl.php,v 1.20 2009/12/06 01:00:27 dries Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
-  <?php if (!$page && $contextual_links): ?>
+  <?php if (!$page && !empty($contextual_links)): ?>
     <?php print render($contextual_links); ?>
   <?php endif; ?>
 

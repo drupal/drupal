@@ -1,4 +1,4 @@
-/* $Id: contextual_links.css,v 1.2 2009/12/01 13:25:28 dries Exp $ */
+/* $Id: contextual.css,v 1.1 2009/12/06 01:00:27 dries Exp $ */
 
 /**
  * Contextual links regions.
@@ -26,7 +26,7 @@ html.js div.contextual-links-wrapper {
   display: block;
 }
 a.contextual-links-trigger {
-  background: transparent url(cog-select.png) no-repeat center center;
+  background: transparent url(images/cog-select.png) no-repeat center center;
   display: none;
   height: 20px;
   margin-top: 2px;

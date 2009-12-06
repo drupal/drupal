@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.365 2009/12/04 16:47:15 dries Exp $
+// $Id: menu.inc,v 1.366 2009/12/06 01:00:27 dries Exp $
 
 /**
  * @file
@@ -1854,7 +1854,7 @@ function menu_local_tasks($level = 0) {
  * @return
  *   A list of menu router items that are local tasks for the passed in path.
  *
- * @see system_preprocess()
+ * @see contextual_links_preprocess()
  */
 function menu_contextual_links($module, $parent_path, $args) {
   static $path_empty = array();

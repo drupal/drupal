@@ -1,4 +1,4 @@
-// $Id: contextual_links.js,v 1.2 2009/12/01 13:25:28 dries Exp $
+// $Id: contextual.js,v 1.1 2009/12/06 01:00:27 dries Exp $
 (function ($) {
 
 Drupal.contextualLinks = Drupal.contextualLinks || {};
