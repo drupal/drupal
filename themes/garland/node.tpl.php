@@ -3,7 +3,7 @@
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
-  <?php if (!$page && $contextual_links): ?>
+  <?php if (!$page && !empty($contextual_links)): ?>
     <?php print render($contextual_links); ?>
   <?php endif; ?>
 

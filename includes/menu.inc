@@ -1854,7 +1854,7 @@ function menu_local_tasks($level = 0) {
  * @return
  *   A list of menu router items that are local tasks for the passed in path.
  *
- * @see system_preprocess()
+ * @see contextual_links_preprocess()
  */
 function menu_contextual_links($module, $parent_path, $args) {
   static $path_empty = array();

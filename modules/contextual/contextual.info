@@ -1,0 +1,7 @@
+; $Id$
+name = Contextual links
+description = Provides contextual links to perform actions related to elements on a page.
+package = Core
+version = VERSION
+core = 7.x
+files[] = contextual.module

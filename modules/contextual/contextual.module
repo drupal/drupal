@@ -1,0 +1,143 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Adds contextual links to perform actions related to elements on a page.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function contextual_permission() {
+  return array(
+    'access contextual links' => array(
+      'title' => t('Use contextual links'),
+      'description' => t('Use contextual links to perform actions related to elements on a page.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_library().
+ */
+function contextual_library() {
+  $path = drupal_get_path('module', 'contextual');
+  $libraries['contextual-links'] = array(
+    'title' => 'Contextual links',
+    'website' => 'http://drupal.org/node/473268',
+    'version' => '1.0',
+    'js' => array(
+      $path . '/contextual.js' => array(),
+    ),
+    'css' => array(
+      $path . '/contextual.css' => array(),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Template variable preprocessor for contextual links.
+ *
+ * @see contextual_links_build()
+ */
+function contextual_preprocess(&$variables, $hook) {
+  static $hooks;
+
+  // Initialize the $contextual_links template variable.
+  $variables['contextual_links'] = array();
+
+  // Nothing to do here if the user is not permitted to access contextual links.
+  if (!user_access('access contextual links')) {
+    return;
+  }
+
+  if (!isset($hooks)) {
+    $hooks = theme_get_registry();
+  }
+
+  // Determine the primary theme function argument.
+  if (isset($hooks[$hook]['variables'])) {
+    $keys = array_keys($hooks[$hook]['variables']);
+    $key = $keys[0];
+  }
+  else {
+    $key = $hooks[$hook]['render element'];
+  }
+  if (isset($variables[$key])) {
+    $element = $variables[$key];
+  }
+
+  if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
+    $variables['contextual_links'] = contextual_links_build($element);
+    if (!empty($variables['contextual_links'])) {
+      $variables['classes_array'][] = 'contextual-links-region';
+    }
+  }
+}
+
+/**
+ * Build a renderable array for contextual links.
+ *
+ * @param $element
+ *   A renderable array containing a #contextual_links property, which is a
+ *   keyed array. Each key is the name of the implementing module, and each
+ *   value is an array that forms the function arguments for
+ *   menu_contextual_links(). For example:
+ *   @code
+ *     array('#contextual_links' => array(
+ *       'block' => array('admin/structure/block/manage', array('system', 'navigation')),
+ *       'menu' => array('admin/structure/menu/manage', array('navigation')),
+ *     ))
+ *   @endcode
+ *
+ * @return
+ *   A renderable array representing contextual links.
+ *
+ * @see menu_contextual_links()
+ */
+function contextual_links_build($element) {
+  static $destination;
+
+  // Retrieve contextual menu links.
+  $items = array();
+  foreach ($element['#contextual_links'] as $module => $args) {
+    $items += menu_contextual_links($module, $args[0], $args[1]);
+  }
+
+  // Transform contextual links into parameters suitable for theme_link().
+  if (!isset($destination)) {
+    $destination = drupal_get_destination();
+  }
+
+  $links = array();
+  foreach ($items as $class => $item) {
+    $class = drupal_html_class($class);
+    $links[$class] = array(
+      'title' => $item['title'],
+      'href' => $item['href'],
+    );
+    // @todo theme_links() should *really* use the same parameters as l()...
+    if (!isset($item['localized_options']['query'])) {
+      $item['localized_options']['query'] = array();
+    }
+    $item['localized_options']['query'] += $destination;
+    $links[$class] += $item['localized_options'];
+  }
+  $build = array();
+  if ($links) {
+    $build = array(
+      '#prefix' => '<div class="contextual-links-wrapper">',
+      '#suffix' => '</div>',
+      '#theme' => 'links',
+      '#links' => $links,
+      '#attributes' => array('class' => array('contextual-links')),
+      '#attached' => array(
+        'library' => array(array('contextual', 'contextual-links')),
+      ),
+    );
+  }
+  return $build;
+}
+

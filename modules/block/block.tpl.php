@@ -38,7 +38,7 @@
 ?>
 <div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
  
-<?php if ($contextual_links): ?>
+<?php if (!empty($contextual_links)): ?>
   <?php print render($contextual_links); ?>
 <?php endif; ?>
  

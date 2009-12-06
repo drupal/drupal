@@ -26,7 +26,7 @@ html.js div.contextual-links-wrapper {
   display: block;
 }
 a.contextual-links-trigger {
-  background: transparent url(cog-select.png) no-repeat center center;
+  background: transparent url(images/cog-select.png) no-repeat center center;
   display: none;
   height: 20px;
   margin-top: 2px;

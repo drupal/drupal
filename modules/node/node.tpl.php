@@ -75,7 +75,7 @@
 
   <?php print $user_picture; ?>
 
-  <?php if (!$page && $contextual_links): ?>
+  <?php if (!$page && !empty($contextual_links)): ?>
     <?php print render($contextual_links); ?>
   <?php endif; ?>
 
