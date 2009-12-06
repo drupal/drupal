@@ -1409,7 +1409,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   /**
    * Retrieve a Drupal path or an absolute path and JSON decode the result.
    */
-  function drupalGetAJAX($path, array $options = array(), array $headers = array()) {
+  protected function drupalGetAJAX($path, array $options = array(), array $headers = array()) {
     return drupal_json_decode($this->drupalGet($path, $options, $headers));
   }
 
