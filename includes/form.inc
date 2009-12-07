@@ -2315,11 +2315,17 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *     array('my_function_2', array()),
  *   ),
  *   'finished' => 'my_finished_callback',
+ *   'file' => 'path_to_file_containing_myfunctions',
  * );
  * batch_set($batch);
  * // only needed if not inside a form _submit handler :
  * batch_process();
  * @endcode
+ *
+ * Note: if the batch 'title', 'init_message', 'progress_message', or
+ * 'error_message' could contain any user input, it is the responsibility of
+ * the code calling batch_set() to sanitize them first with a function like
+ * check_plain() or filter_xss().
  *
  * Sample batch operations:
  * @code
@@ -2388,38 +2394,37 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  */
 
 /**
- * Open a new batch.
+ * Opens a new batch.
  *
  * @param $batch
- *   An array defining the batch. The following keys can be used:
- *     'operations': an array of function calls to be performed.
- *        Example:
- *        @code
- *        array(
- *          array('my_function_1', array($arg1)),
- *          array('my_function_2', array($arg2_1, $arg2_2)),
- *        )
- *        @endcode
- *     All the other values below are optional.
- *     batch_init() provides default values for the messages.
- *     'title': title for the progress page.
- *       Defaults to t('Processing').
- *     'init_message': message displayed while the processing is initialized.
- *       Defaults to t('Initializing.').
- *     'progress_message': message displayed while processing the batch.
- *       Available placeholders are @current, @remaining, @total and @percent.
- *       Defaults to t('Remaining @remaining of @total.').
- *     'error_message': message displayed if an error occurred while processing
- *       the batch.
- *       Defaults to t('An error has occurred.').
- *     'finished': the name of a function to be executed after the batch has
- *       completed. This should be used to perform any result massaging that
- *       may be needed, and possibly save data in $_SESSION for display after
- *       final page redirection.
- *     'file': the path to the file containing the definitions of the
- *       'operations' and 'finished' functions, for instance if they don't
- *       reside in the original '.module' file. The path should be relative to
- *       the base_path(), and thus should be built using drupal_get_path().
+ *   An array defining the batch. The following keys can be used -- only
+ *   'operations' is required, and batch_init() provides default values for
+ *   the messages.
+ *   - 'operations': Array of function calls to be performed.
+ *     Example:
+ *     @code
+ *     array(
+ *       array('my_function_1', array($arg1)),
+ *       array('my_function_2', array($arg2_1, $arg2_2)),
+ *     )
+ *     @endcode
+ *   - 'title': Title for the progress page. Only safe strings should be passed.
+ *     Defaults to t('Processing').
+ *   - 'init_message': Message displayed while the processing is initialized.
+ *     Defaults to t('Initializing.').
+ *   - 'progress_message': Message displayed while processing the batch.
+ *     Available placeholders are @current, @remaining, @total, @percentage,
+ *     @estimate and @elapsed. Defaults to t('Completed @current of @total.').
+ *   - 'error_message': Message displayed if an error occurred while processing
+ *     the batch. Defaults to t('An error has occurred.').
+ *   - 'finished': Name of a function to be executed after the batch has
+ *     completed. This should be used to perform any result massaging that
+ *     may be needed, and possibly save data in $_SESSION for display after
+ *     final page redirection.
+ *   - 'file': Path to the file containing the definitions of the
+ *     'operations' and 'finished' functions, for instance if they don't
+ *     reside in the main .module file. The path should be relative to
+ *     base_path(), and thus should be built using drupal_get_path().
  *
  * Operations are added as new batch sets. Batch sets are used to ensure
  * clean code independence, ensuring that several batches submitted by
@@ -2474,7 +2479,7 @@ function batch_set($batch_definition) {
 }
 
 /**
- * Process the batch.
+ * Processes the batch.
  *
  * Unless the batch has been marked with 'progressive' = FALSE, the function
  * issues a drupal_goto and thus ends page execution.
@@ -2541,7 +2546,7 @@ function batch_process($redirect = NULL, $url = NULL) {
 }
 
 /**
- * Retrieve the current batch.
+ * Retrieves the current batch.
  */
 function &batch_get() {
   static $batch = array();
