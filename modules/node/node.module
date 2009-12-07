@@ -95,7 +95,7 @@ function node_help($path, $arg) {
       $output .= '<dd>' . t('The Node module also enables you to create multiple versions of any content, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
       $output .= '<dt>' . t('User permissions') . '</dt>';
       $output .= '<dd>' . t('The Node module makes a number of permissions available for each content type, which can be set by role on the <a href="@permissions">permissions page</a>.', array('@permissions' => url('admin/settings/permissions'))) . '</dd>';
-      $output .= '</dl>'; 
+      $output .= '</dl>';
       return $output;
 
     case 'admin/content':
@@ -997,7 +997,7 @@ function node_save($node) {
     }
     // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
     $node->changed = REQUEST_TIME;
-  
+
     $node->timestamp = REQUEST_TIME;
     $update_node = TRUE;
 
@@ -1032,30 +1032,30 @@ function node_save($node) {
         ->condition('nid', $node->nid)
         ->execute();
     }
-  
+
     // Restore the title field data structure after db storage.
     $node->title = $title_field;
-  
+
     // Call the node specific callback (if any). This can be
     // node_invoke($node, 'insert') or
     // node_invoke($node, 'update').
     node_invoke($node, $op);
-  
+
     // Save fields.
     $function = "field_attach_$op";
     $function('node', $node);
-  
+
     module_invoke_all('node_' . $op, $node);
-  
+
     // Update the node access table for this node.
     node_access_acquire_grants($node);
-  
+
     // Clear internal properties.
     unset($node->is_new);
-  
+
     // Clear the page and block caches.
     cache_clear_all();
-  
+
     // Ignore slave server temporarily to give time for the
     // saved node to be propagated to the slave.
     db_ignore_slave();
