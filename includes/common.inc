@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1060 2009/12/06 18:27:23 webchick Exp $
+// $Id: common.inc,v 1.1061 2009/12/07 08:46:59 webchick Exp $
 
 /**
  * @file
@@ -1067,6 +1067,11 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
       E_STRICT => 'Strict warning',
       E_RECOVERABLE_ERROR => 'Recoverable fatal error'
     );
+    // E_DEPRECATED and E_USER_DEPRECATED were added in PHP 5.3.0.
+    if (defined('E_DEPRECATED')) {
+      $types[E_DEPRECATED] = 'Deprecated function';
+      $types[E_USER_DEPRECATED] = 'User deprecated function';
+    }
     $caller = _drupal_get_last_caller(debug_backtrace());
 
     // We treat recoverable errors as fatal.
