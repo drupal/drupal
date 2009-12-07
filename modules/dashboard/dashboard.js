@@ -65,8 +65,8 @@ Drupal.behaviors.dashboard = {
    * Helper for enterCustomizeMode; sets up drag-and-drop and close button.
    */
   setupDrawer: function () {
-    $('div.customize .canvas-content').prepend('<a class="button" href="">' + Drupal.t('Done') + '</a>');
     $('div.customize .canvas-content input').click(Drupal.behaviors.dashboard.exitCustomizeMode);
+    $('div.customize .canvas-content').append('<a class="button" href="">' + Drupal.t('Done') + '</a>');
 
     // Initialize drag-and-drop.
     var regions = $('#dashboard div.region');
@@ -76,7 +76,7 @@ Drupal.behaviors.dashboard = {
       cursorAt: {top:0},
       dropOnEmpty: true,
       items: '>div.block, div.disabled-block',
-      opacity: 0.8,
+      opacity: 1,
       helper: 'block-dragging',
       placeholder: 'block-placeholder clearfix',
       start: Drupal.behaviors.dashboard.start,

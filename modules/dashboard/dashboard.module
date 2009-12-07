@@ -435,7 +435,7 @@ function theme_dashboard_region($variables) {
  */
 function theme_dashboard_disabled_blocks($variables) {
   extract($variables);
-  $output = '<div class="canvas-content"><p>' . t('Drag and drop dashboard blocks to their place. Changes are automatically saved. You can also <a href="@add-block">add a custom block</a>.', array('@add-block' => url('admin/structure/block/add', array('query' => array('destination' => 'admin/dashboard/customize'))))) . '</p>';
+  $output = '<div class="canvas-content"><p>' . t('Drag and drop these to the columns below. Changes are automatically saved.') . '</p>';
   $output .= '<div id="disabled-blocks"><div class="section region disabled-blocks clearfix">';
   foreach ($blocks as $block) {
     $output .= theme('dashboard_disabled_block', array('block' => $block));
