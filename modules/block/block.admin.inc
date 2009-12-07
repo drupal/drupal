@@ -23,7 +23,7 @@ function block_admin_demo($theme = NULL) {
  */
 function block_admin_display($theme = NULL) {
   global $theme_key;
-  
+
   drupal_theme_initialize();
 
   if (!isset($theme)) {
@@ -142,14 +142,14 @@ function block_admin_display_form_submit($form, &$form_state) {
  */
 function _block_compare($a, $b) {
   global $theme_key;
-  
+
   // Theme should be set before calling this function, or the current theme
   // is being used.
   $theme = &drupal_static(__FUNCTION__ . ':theme');
   if (!isset($theme)) {
     $theme = $theme_key;
   }
-  
+
   $regions = &drupal_static(__FUNCTION__ . ':regions');
   // We need the region list to correctly order by region.
   if (!isset($regions)) {
@@ -189,12 +189,13 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#value' => $block->delta,
   );
 
-  $form['block_settings'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Block specific settings'),
-    '#collapsible' => TRUE,
-  );
-  $form['block_settings']['title'] = array(
+  // Get the block subject for the page title.
+  $info = module_invoke($block->module, 'block_info');
+  if (isset($info[$block->delta])) {
+    drupal_set_title(t("'%name' block", array('%name' => $info[$block->delta]['info'])), PASS_THROUGH);
+  }
+
+  $form['settings']['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Block title'),
     '#maxlength' => 64,
@@ -203,19 +204,23 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#weight' => -18,
   );
 
-  // Allow the user to define this block's region directly
+  // Module-specific block configuration.
+  if ($settings = module_invoke($block->module, 'block_configure', $block->delta)) {
+    foreach ($settings as $k => $v) {
+      $form['settings'][$k] = $v;
+    }
+  }
+
+  // Region settings.
   $form['regions'] = array(
     '#type' => 'fieldset',
     '#title' => t('Region settings'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#description' => t('Specify in which region this block is displayed.'),
+    '#collapsible' => FALSE,
+    '#description' => t('Specify in which themes and regions this block is displayed.'),
     '#tree' => TRUE,
   );
 
   $theme_default = variable_get('theme_default', 'garland');
-
-  // Create a select list for each theme
   foreach (list_themes() as $key => $theme) {
     // Only display enabled themes
     if ($theme->status) {
@@ -224,10 +229,10 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
         ':delta' => $block->delta,
         ':theme' => $key,
       ))->fetchField();
-  
+
       $form['regions'][$key] = array(
         '#type' => 'select',
-        '#title' => t('!theme region', array('!theme' => $theme->info['name'])),
+        '#title' => $theme->info['name'],
         '#default_value' => (!empty($region) ? $region : BLOCK_REGION_NONE),
         '#options' => array(BLOCK_REGION_NONE => t('Disabled')) + $theme->info['regions'],
         '#expandable' => ($key !== $theme_default),
@@ -236,70 +241,97 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     }
   }
 
-  // Module-specific block configurations.
-  if ($settings = module_invoke($block->module, 'block_configure', $block->delta)) {
-    foreach ($settings as $k => $v) {
-      $form['block_settings'][$k] = $v;
-    }
-  }
+  // Visibility settings.
+  $form['visibility_title'] = array(
+    '#type' => 'item',
+    '#title' => t('Visibility settings'),
+  );
+  $form['visibility'] = array(
+    '#type' => 'vertical_tabs',
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'block') . '/block.js'),
+    ),
+  );
 
-  // Get the block subject for the page title.
-  $info = module_invoke($block->module, 'block_info');
-  if (isset($info[$block->delta])) {
-    drupal_set_title(t("'%name' block", array('%name' => $info[$block->delta]['info'])), PASS_THROUGH);
-  }
-
-  $form['page_vis_settings'] = array(
+  // Per-path visibility.
+  $form['visibility']['path'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Page specific visibility settings'),
+    '#title' => t('Pages'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+    '#group' => 'visibility_settings',
   );
 
   $access = user_access('use PHP for settings');
   if (isset($block->visibility) && $block->visibility == 2 && !$access) {
-    $form['page_vis_settings'] = array();
-    $form['page_vis_settings']['visibility'] = array('#type' => 'value', '#value' => 2);
-    $form['page_vis_settings']['pages'] = array(
+    $form['visibility']['path']['visibility'] = array(
+      '#type' => 'value',
+      '#value' => 2,
+    );
+    $form['visibility']['path']['pages'] = array(
       '#type' => 'value',
       '#value' => isset($block->pages) ? $block->pages : '',
     );
   }
   else {
-    $options = array(t('Every page except those specified below.'), t('Only the pages specified below.'));
-    $description = t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>'));
+    $options = array(
+      t('On every page except those specified'),
+      t('Show only on specified pages'),
+    );
+    $description = t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>'));
 
     if (module_exists('php') && $access) {
-      $options[] = t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).');
+      $options[] = t('If the PHP code returns <code>TRUE</code> (PHP-mode, experts only)');
       $description .= ' ' . t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => '<?php ?>'));
     }
-    $form['page_vis_settings']['visibility'] = array(
+    $form['visibility']['path']['visibility'] = array(
       '#type' => 'radios',
       '#title' => t('Show block on specific pages'),
       '#options' => $options,
-      '#default_value' => isset($block->visibility) ? $block->visibility : '',
+      '#default_value' => isset($block->visibility) ? $block->visibility : 0,
     );
-    $form['page_vis_settings']['pages'] = array(
+    $form['visibility']['path']['pages'] = array(
       '#type' => 'textarea',
-      '#title' => t('Pages'),
+      '#title' => t('Paths'),
       '#default_value' => isset($block->pages) ? $block->pages : '',
       '#description' => $description,
     );
   }
 
-  // Role-based visibility settings.
+  // Per-content type visibility.
+  $default_type_options = db_query("SELECT type FROM {block_node_type} WHERE module = :module AND delta = :delta", array(
+    ':module' => $block->module,
+    ':delta' => $block->delta,
+  ))->fetchCol();
+  $form['visibility']['node_type'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Content types'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#group' => 'visibility_settings',
+  );
+  $form['visibility']['node_type']['types'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Show block for specific content types'),
+    '#default_value' => $default_type_options,
+    '#options' => node_type_get_names(),
+    '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type specific limitation.'),
+  );
+
+  // Per-role visibility.
   $default_role_options = db_query("SELECT rid FROM {block_role} WHERE module = :module AND delta = :delta", array(
     ':module' => $block->module,
     ':delta' => $block->delta,
   ))->fetchCol();
   $role_options = db_query('SELECT rid, name FROM {role} ORDER BY name')->fetchAllKeyed();
-  $form['role_vis_settings'] = array(
+  $form['visibility']['role'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Role specific visibility settings'),
+    '#title' => t('Roles'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+    '#group' => 'visibility_settings',
   );
-  $form['role_vis_settings']['roles'] = array(
+  $form['visibility']['role']['roles'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Show block for specific roles'),
     '#default_value' => $default_role_options,
@@ -307,42 +339,24 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#description' => t('Show this block only for the selected role(s). If you select no roles, the block will be visible to all users.'),
   );
 
-  // Content type specific configuration.
-  $default_type_options = db_query("SELECT type FROM {block_node_type} WHERE module = :module AND delta = :delta", array(
-    ':module' => $block->module,
-    ':delta' => $block->delta,
-  ))->fetchCol();
-  $form['content_type_vis_settings'] = array(
+  // Per-user visibility.
+  $form['visibility']['user'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Content type specific visibility settings'),
+    '#title' => t('Users'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+    '#group' => 'visibility_settings',
   );
-  $form['content_type_vis_settings']['types'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Show block for specific content types'),
-    '#default_value' => $default_type_options,
-    '#options' => node_type_get_names(),
-    '#description' => t('Show this block only when on a page displaying a post of the given type(s). If you select no types, there will be no type specific limitation.'),
-  );
-
-  // Standard block configurations.
-  $form['user_vis_settings'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('User specific visibility settings'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-  );
-  $form['user_vis_settings']['custom'] = array(
+  $form['visibility']['user']['custom'] = array(
     '#type' => 'radios',
-    '#title' => t('Custom visibility settings'),
+    '#title' => t('Customizable per user'),
     '#options' => array(
-      t('Users cannot control whether or not they see this block.'),
-      t('Show this block by default, but let individual users hide it.'),
-      t('Hide this block by default but let individual users show it.')
+      t('Not customizable'),
+      t('Customizable, visible by default'),
+      t('Customizable, hidden by default'),
     ),
     '#description' => t('Allow individual users to customize the visibility of this block in their account settings.'),
-    '#default_value' => isset($block->custom) ? $block->custom : '',
+    '#default_value' => isset($block->custom) ? $block->custom : 0,
   );
 
   $form['submit'] = array(
@@ -461,12 +475,12 @@ function block_add_block_form_submit($form, &$form_state) {
         'visibility' => (int) $form_state['values']['visibility'],
         'pages' => trim($form_state['values']['pages']),
         'custom' => (int) $form_state['values']['custom'],
-        'title' => $form_state['values']['title'], 
+        'title' => $form_state['values']['title'],
         'module' => $form_state['values']['module'],
-        'theme' => $theme->name, 
+        'theme' => $theme->name,
         'status' => 0,
         'weight' => 0,
-        'delta' => $delta, 
+        'delta' => $delta,
         'cache' => DRUPAL_NO_CACHE,
       ));
     }
@@ -492,7 +506,7 @@ function block_add_block_form_submit($form, &$form_state) {
     ));
   }
   $query->execute();
-  
+
   // Store regions per theme for this block
   foreach ($form_state['values']['regions'] as $theme => $region) {
     db_merge('block')

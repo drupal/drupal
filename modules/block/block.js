@@ -2,6 +2,54 @@
 (function ($) {
 
 /**
+ * Provide the summary information for the block settings vertical tabs.
+ */
+Drupal.behaviors.blockSettingsSummary = {
+  attach: function (context) {
+    $('fieldset#edit-path', context).setSummary(function (context) {
+      if (!$('textarea[name="pages"]', context).val()) {
+        return Drupal.t('Not restricted');
+      }
+      else {
+        return Drupal.t('Restricted to certain pages');
+      }
+    });
+
+    $('fieldset#edit-node-type', context).setSummary(function (context) {
+      var vals = [];
+      $('input[type="checkbox"]:checked', context).each(function () {
+        vals.push($.trim($(this).next('label').text()));
+      });
+      if (!vals.length) {
+        vals.push(Drupal.t('Not restricted'));
+      }
+      return vals.join(', ');
+    });
+
+    $('fieldset#edit-role', context).setSummary(function (context) {
+      var vals = [];
+      $('input[type="checkbox"]:checked', context).each(function () {
+        vals.push($.trim($(this).next('label').text()));
+      });
+      if (!vals.length) {
+        vals.push(Drupal.t('Not restricted'));
+      }
+      return vals.join(', ');
+    });
+
+    $('fieldset#edit-user', context).setSummary(function (context) {
+      var $radio = $('input[name="custom"]:checked', context);
+      if ($radio.val() == 0) {
+        return Drupal.t('Not customizable');
+      }
+      else {
+        return $radio.next('label').text();
+      }
+    });
+  }
+};
+
+/**
  * Move a block in the blocks table from one region to another via select list.
  *
  * This behavior is dependent on the tableDrag behavior, since it uses the
@@ -9,6 +57,11 @@
  */
 Drupal.behaviors.blockDrag = {
   attach: function (context, settings) {
+    // tableDrag is required for this behavior.
+    if (typeof Drupal.tableDrag == 'undefined') {
+      return;
+    }
+
     var table = $('table#blocks');
     var tableDrag = Drupal.tableDrag.blocks; // Get the blocks tableDrag object.
 
