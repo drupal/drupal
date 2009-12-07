@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.38 2009/10/16 03:01:54 dries Exp $
+// $Id: contact.test,v 1.39 2009/12/07 06:07:19 webchick Exp $
 
 /**
  * Test the sitewide contact form.
@@ -144,6 +144,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     }
     // Submit contact form one over limit.
     $this->drupalGet('contact');
+    $this->assertResponse(403, t('Access denied to anonymous user after reaching message treshold.'));
     $this->assertRaw(t('You cannot send more than %number messages in @interval. Please try again later.', array('%number' => variable_get('contact_threshold_limit', 3), '@interval' => format_interval(600))), t('Message threshold reached.'));
 
     // Delete created categories.
