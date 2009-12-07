@@ -1,6 +1,6 @@
-; $Id: default.info,v 1.10 2009/12/06 01:00:27 dries Exp $
-name = Drupal
-description = Create a Drupal site with the most commonly used features pre-installed.
+; $Id: default.info,v 1.11 2009/12/07 06:19:20 webchick Exp $
+name = Standard
+description = Install with commonly used features pre-configured.
 version = VERSION
 core = 7.x
 dependencies[] = block
