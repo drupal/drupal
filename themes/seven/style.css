@@ -833,6 +833,12 @@ body.in-maintenance .form-radios .form-type-radio {
   padding: 2px 0;
 }
 
+body.in-maintenance div.form-item:after {
+  content: "";
+  display: none;
+  clear: none;
+}
+
 body.in-maintenance .form-submit {
   display: block;
 }
