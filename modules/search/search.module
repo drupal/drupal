@@ -1072,7 +1072,6 @@ function search_box(&$form_state, $form_id) {
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
   $form['#submit'][] = 'search_box_form_submit';
-  $form['#validate'][] = 'search_box_form_validate';
 
   return $form;
 }
