@@ -424,7 +424,10 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     $this->assertText('Your search yielded no results');
 
     // Test a search from the block on a 404 page.
-    $this->drupalPost('foo', $terms, t('Search'));
+    $this->drupalGet('foo');
+    $this->assertResponse(404);
+    $this->drupalPost(NULL, $terms, t('Search'));
+    $this->assertNoResponse(404);
     $this->assertText('Your search yielded no results');
 
     // Test a search from the block when it doesn't appear on the search page.

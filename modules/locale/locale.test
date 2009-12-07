@@ -85,13 +85,12 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $edit = array(
       'site_default' => $langcode,
     );
-    $this->drupalPost($path, $edit, t('Save configuration'));
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
     // Ensure we can't delete the default language.
-    $path = 'admin/config/regional/language/delete/' . $langcode;
-    $this->drupalGet($path);
+    $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
     $this->assertText(t('The default language cannot be deleted.'), t('Failed to delete the default language.'));
 
@@ -106,53 +105,45 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $edit = array(
       'site_default' => 'en',
     );
-    $this->drupalPost($path, $edit, t('Save configuration'));
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertFieldChecked('edit-enabled-en', t('Default language re-enabled.'));
 
     // Ensure 'edit' link works.
     $this->clickLink(t('edit'));
     $this->assertTitle(t('Edit language | Drupal'), t('Page title is "Edit language".'));
     // Edit a language.
-    $path = 'admin/config/regional/language/edit/' . $langcode;
     $name = $this->randomName(16);
     $edit = array(
       'name' => $name,
     );
-    $this->drupalPost($path, $edit, t('Save language'));
+    $this->drupalPost('admin/config/regional/language/edit/' . $langcode, $edit, t('Save language'));
     $this->assertRaw($name, t('The language has been updated.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
     // Ensure 'delete' link works.
-    $path = 'admin/config/regional/language';
-    $this->drupalGet($path);
+    $this->drupalGet('admin/config/regional/language');
     $this->clickLink(t('delete'));
     $this->assertText(t('Are you sure you want to delete the language'), t('"delete" link is correct.'));
     // Delete the language.
-    $path = 'admin/config/regional/language/delete/' . $langcode;
-    $this->drupalGet($path);
+    $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     // First test the 'cancel' link.
     $this->clickLink(t('Cancel'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
     $this->assertRaw($name, t('The language was not deleted.'));
     // Delete the language for real. This a confirm form, we do not need any
     // fields changed.
-    $this->drupalPost($path, array(), t('Delete'));
+    $this->drupalPost('admin/config/regional/language/delete/' . $langcode, array(), t('Delete'));
     // We need raw here because %locale will add HTML.
     $this->assertRaw(t('The language %locale has been removed.', array('%locale' => $name)), t('The test language has been removed.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-    // Reload to remove $name.
-    $this->drupalGet($path);
-    $this->assertNoText($langcode, t('Language code not found.'));
-    $this->assertNoText($name, t('Name not found.'));
-    $this->assertNoText($native, t('Native not found.'));
+    // Verify that language is no longer found.
+    $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
+    $this->assertResponse(404, t('Language no longer found.'));
 
     // Ensure we can't delete the English language.
-    $path = 'admin/config/regional/language/delete/en';
-    $this->drupalGet($path);
+    $this->drupalGet('admin/config/regional/language/delete/en');
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
     $this->assertText(t('The English language cannot be deleted.'), t('Failed to delete English language.'));
-
-    $this->drupalLogout();
   }
 
 }
@@ -1323,7 +1314,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
     // User to create a node.
-    $web_user = $this->drupalCreateUser(array('create page content', 'edit any page content'));
+    $web_user = $this->drupalCreateUser(array('create article content', 'create page content', 'edit any page content'));
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -1382,12 +1373,12 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $this->drupalLogin($web_user);
     $this->drupalGet('node/add/article');
     // Verify language select list is not present.
-    $this->assertNoRaw('<select name="language" class="form-select" id="edit-language" >', t('Language select not present on add article form.'));
+    $this->assertNoFieldByName('language', '', t('Language select not present on add article form.'));
 
     // Verify language selection appears on add page form.
     $this->drupalGet('node/add/page');
     // Verify language select list is present.
-    $this->assertRaw('<select name="language" class="form-select" id="edit-language" >', t('Language select present on add page form.'));
+    $this->assertFieldByName('language', '', t('Language select present on add page form.'));
     // Ensure enabled language appears.
     $this->assertText($name, t('Enabled language present.'));
     // Ensure disabled language doesn't appear.

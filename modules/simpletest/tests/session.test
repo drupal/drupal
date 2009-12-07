@@ -309,12 +309,14 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     $this->curlClose();
     $this->drupalGet($this->httpsUrl('admin'), array(), array('Cookie: ' . $cookie));
     $this->assertText(t('Administer'));
+    $this->assertNoResponse(403);
 
     // Verify that user is not logged in on non-secure URL.
     if (!$is_https) {
       $this->curlClose();
       $this->drupalGet('admin', array(), array('Cookie: ' . $cookie));
       $this->assertNoText(t('Administer'));
+      $this->assertResponse(403);
     }
 
     // Clear browser cookie jar.
@@ -373,9 +375,11 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
         $this->drupalGet($url, array(), array('Cookie: ' . $cookie));
         if ($cookie_key == $url_key) {
           $this->assertText(t('Administer'));
+          $this->assertNoResponse(403);
         }
         else {
           $this->assertNoText(t('Administer'));
+          $this->assertResponse(403);
         }
       }
     }

@@ -144,6 +144,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     }
     // Submit contact form one over limit.
     $this->drupalGet('contact');
+    $this->assertResponse(403, t('Access denied to anonymous user after reaching message treshold.'));
     $this->assertRaw(t('You cannot send more than %number messages in @interval. Please try again later.', array('%number' => variable_get('contact_threshold_limit', 3), '@interval' => format_interval(600))), t('Message threshold reached.'));
 
     // Delete created categories.
