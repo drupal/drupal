@@ -167,22 +167,17 @@ function drupal_set_installed_schema_version($module, $version) {
 }
 
 /**
- * Loads the install profile definition, extracting its defined name.
+ * Loads the install profile, extracting its defined distribution name.
  *
  * @return
- *   The name defined in the profile's _profile_details() hook.
+ *   The distribution name defined in the profile's .info file. Defaults to
+ *   "Drupal" if none is explicitly provided by the install profile.
+ *
+ * @see install_profile_info()
  */
-function drupal_install_profile_name() {
+function drupal_install_profile_distribution_name() {
   global $install_state;
-
-  if (isset($install_state['profile_info']['name'])) {
-    $name = $install_state['profile_info']['name'];
-  }
-  else {
-    $name = 'Drupal';
-  }
-
-  return $name;
+  return $install_state['profile_info']['distribution_name'];
 }
 
 /**
@@ -1063,15 +1058,22 @@ function drupal_check_module($module) {
 /**
  * Retrieve info about an install profile from its .info file.
  *
- * Information stored in the profile.info file:
+ * The information stored in a profile .info file is similar to that stored in
+ * a normal Drupal module .info file. For example:
  * - name: The real name of the install profile for display purposes.
  * - description: A brief description of the profile.
  * - dependencies: An array of shortnames of other modules this install profile requires.
  *
+ * Additional, less commonly-used information that can appear in a profile.info
+ * file but not in a normal Drupal module .info file includes:
+ * - distribution_name: The name of the Drupal distribution that is being
+ *   installed, to be shown throughout the installation process. Defaults to
+ *   'Drupal'.
+ *
  * Example of .info file:
  * @verbatim
- *    name = Drupal (minimal)
- *    description = Create a Drupal site with only required modules enabled.
+ *    name = Minimal
+ *    description = Start fresh, with only a few modules enabled.
  *    dependencies[] = block
  *    dependencies[] = dblog
  * @endverbatim
@@ -1091,6 +1093,7 @@ function install_profile_info($profile, $locale = 'en') {
     $defaults = array(
       'dependencies' => array(),
       'description' => '',
+      'distribution_name' => 'Drupal',
       'version' => NULL,
       'php' => DRUPAL_MINIMUM_PHP,
     );

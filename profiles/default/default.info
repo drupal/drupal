@@ -1,6 +1,6 @@
 ; $Id$
-name = Drupal
-description = Create a Drupal site with the most commonly used features pre-installed.
+name = Standard
+description = Install with commonly used features pre-configured.
 version = VERSION
 core = 7.x
 dependencies[] = block

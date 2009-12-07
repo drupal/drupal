@@ -844,7 +844,7 @@ function install_settings_form($form, &$form_state, &$install_state) {
       '#required' => TRUE,
       '#options' => $drivers,
       '#default_value' => !empty($database['driver']) ? $database['driver'] : current(array_keys($drivers)),
-      '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_name())),
+      '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
     );
     if (count($drivers) == 1) {
       $form['basic_options']['driver']['#disabled'] = TRUE;
@@ -858,7 +858,7 @@ function install_settings_form($form, &$form_state, &$install_state) {
       '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
       '#required' => TRUE,
-      '#description' => st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_name())),
+      '#description' => st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_distribution_name())),
     );
 
     // Database username
@@ -915,7 +915,7 @@ function install_settings_form($form, &$form_state, &$install_state) {
       '#title' => st('Table prefix'),
       '#default_value' => '',
       '#size' => 45,
-      '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name(), '%prefix' => $db_prefix)),
+      '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_distribution_name(), '%prefix' => $db_prefix)),
     );
 
     $form['save'] = array(
@@ -960,7 +960,7 @@ function install_database_errors($database, $settings_file) {
   $database_types = drupal_detect_database_types();
   $driver = $database['driver'];
   if (!isset($database_types[$driver])) {
-    $errors['driver'] = st("In your %settings_file file you have configured @drupal to use a %driver server, however your PHP installation currently does not support this database type.", array('%settings_file' => $settings_file, '@drupal' => drupal_install_profile_name(), '%driver' => $database['driver']));
+    $errors['driver'] = st("In your %settings_file file you have configured @drupal to use a %driver server, however your PHP installation currently does not support this database type.", array('%settings_file' => $settings_file, '@drupal' => drupal_install_profile_distribution_name(), '%driver' => $database['driver']));
   }
   else {
     // Run tasks associated with the database type. Any errors are caught in the
@@ -1103,8 +1103,22 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
     $names[$profile->name] = $name;
   }
 
-  // Display radio buttons alphabetically by human-readable name.
+  // Display radio buttons alphabetically by human-readable name, but always
+  // put the core profiles first (if they are present in the filesystem).
   natcasesort($names);
+  if (isset($names['expert'])) {
+    // If the expert ("Minimal") core profile is present, put it in front of
+    // any non-core profiles rather than including it with them alphabetically,
+    // since the other profiles might be intended to group together in a
+    // particular way.
+    $names = array('expert' => $names['expert']) + $names;
+  }
+  if (isset($names['default'])) {
+    // If the default ("Standard") core profile is present, put it at the very
+    // top of the list. This profile will have its radio button pre-selected,
+    // so we want it to always appear at the top.
+    $names = array('default' => $names['default']) + $names;
+  }
 
   foreach ($names as $profile => $name) {
     $form['profile'][$name] = array(
@@ -1323,7 +1337,7 @@ function install_profile_modules(&$install_state) {
   }
   $batch = array(
     'operations' => $operations,
-    'title' => st('Installing @drupal', array('@drupal' => drupal_install_profile_name())),
+    'title' => st('Installing @drupal', array('@drupal' => drupal_install_profile_distribution_name())),
     'error_message' => st('The installation has encountered an error.'),
   );
   return $batch;
@@ -1435,9 +1449,9 @@ function install_import_locales_remaining(&$install_state) {
  *   A message informing the user that the installation is complete.
  */
 function install_finished(&$install_state) {
-  drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())), PASS_THROUGH);
+  drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_distribution_name())), PASS_THROUGH);
   $messages = drupal_set_message();
-  $output = '<p>' . st('Congratulations, you installed @drupal!', array('@drupal' => drupal_install_profile_name())) . '</p>';
+  $output = '<p>' . st('Congratulations, you installed @drupal!', array('@drupal' => drupal_install_profile_distribution_name())) . '</p>';
   $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => url(''))) : st('<a href="@url">Visit your new site</a>.', array('@url' => url('')))) . '</p>';
 
   // Rebuild the module and theme data, in case any newly-installed modules
@@ -1524,7 +1538,7 @@ function install_check_requirements($install_state) {
         'title'       => st('Settings file'),
         'value'       => st('The settings file does not exist.'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '%default_file' => $conf_path . '/default.settings.php', '@install_txt' => base_path() . 'INSTALL.txt')),
+        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '%default_file' => $conf_path . '/default.settings.php', '@install_txt' => base_path() . 'INSTALL.txt')),
       );
     }
     else {
@@ -1537,7 +1551,7 @@ function install_check_requirements($install_state) {
           'title'       => st('Settings file'),
           'value'       => st('The settings file is not writable.'),
           'severity'    => REQUIREMENT_ERROR,
-          'description' => st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')),
+          'description' => st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')),
         );
       }
       else {
