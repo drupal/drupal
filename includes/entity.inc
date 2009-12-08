@@ -100,7 +100,6 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
       $this->revisionId = FALSE;
     }
 
-
     // Create a new variable which is either a prepared version of the $ids
     // array for later comparison with the entity cache, or FALSE if no $ids
     // were passed. The $ids array is reduced as items are loaded from cache,
@@ -141,16 +140,17 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
       if (!empty($queried_entities) && !$this->revisionId) {
         $this->cacheSet($queried_entities);
       }
-      // Ensure that the returned array is ordered the same as the original
-      // $ids array if this was passed in and remove any invalid ids.
-      if ($passed_ids) {
-        // Remove any invalid ids from the array.
-        $passed_ids = array_intersect_key($passed_ids, $entities);
-        foreach ($entities as $entity) {
-          $passed_ids[$entity->{$this->idKey}] = $entity;
-        }
-        $entities = $passed_ids;
+    }
+
+    // Ensure that the returned array is ordered the same as the original
+    // $ids array if this was passed in and remove any invalid ids.
+    if ($passed_ids) {
+      // Remove any invalid ids from the array.
+      $passed_ids = array_intersect_key($passed_ids, $entities);
+      foreach ($entities as $entity) {
+        $passed_ids[$entity->{$this->idKey}] = $entity;
       }
+      $entities = $passed_ids;
     }
 
     return $entities;

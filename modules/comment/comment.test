@@ -660,6 +660,106 @@ class CommentPagerTest extends CommentHelperCase {
 
     $this->drupalLogout();
   }
+
+  /**
+   * Test comment ordering and threading.
+   */
+  function testCommentOrderingThreading() {
+    $this->drupalLogin($this->admin_user);
+
+    // Set comment variables.
+    $this->setCommentForm(TRUE);
+    $this->setCommentSubject(TRUE);
+    $this->setCommentPreview(FALSE);
+
+    // Display all the comments on the same page.
+    $this->setCommentsPerPage(1000);
+
+    // Create a node and three comments.
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $comments = array();
+    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
+
+    // Post a reply to the second comment.
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[1]->id);
+    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+
+    // Post a reply to the first comment.
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[0]->id);
+    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+
+    // Post a reply to the last comment.
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[2]->id);
+    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+
+    // Post a reply to the second comment.
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[3]->id);
+    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+
+    // At this point, the comment tree is:
+    // - 0
+    //   - 4
+    // - 1
+    //   - 3
+    //     - 6
+    // - 2
+    //   - 5
+
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_FLAT, t('Comment paging changed.'));
+
+    $expected_order = array(
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+    );
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertCommentOrder($comments, $expected_order);
+
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Switched to threaded mode.'));
+
+    $expected_order = array(
+      0,
+      4,
+      1,
+      3,
+      6,
+      2,
+      5,
+    );
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertCommentOrder($comments, $expected_order);
+  }
+
+  /**
+   * Helper function: assert that the comments are displayed in the correct order.
+   *
+   * @param $comments
+   *   And array of comments.
+   * @param $expected_order
+   *   An array of keys from $comments describing the expected order.
+   */
+  function assertCommentOrder(array $comments, array $expected_order) {
+    $expected_cids = array();
+
+    // First, rekey the expected order by cid.
+    foreach ($expected_order as $key) {
+      $expected_cids[] = $comments[$key]->id;
+    }
+
+    $comment_anchors = $this->xpath("//a[starts-with(@id,'comment-')]");
+    $result_order = array();
+    foreach ($comment_anchors as $anchor) {
+      $result_order[] = substr($anchor['id'], 8);
+    }
+
+    return $this->assertIdentical($expected_cids, $result_order, t('Comment order: expected @expected, returned @returned.', array('@expected' => implode(',', $expected_cids), '@returned' => implode(',', $result_order))));
+  }
 }
 
 class CommentApprovalTest extends CommentHelperCase {
