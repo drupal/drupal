@@ -352,15 +352,15 @@ function user_update_7002(&$sandbox) {
         }
       }
       if ($timezone) {
-      	db_update('users')
-      	  ->fields(array('timezone' => $timezone))
-      	  ->condition('uid', $account->uid)
-      	  ->execute();
+        db_update('users')
+          ->fields(array('timezone' => $timezone))
+          ->condition('uid', $account->uid)
+          ->execute();
       }
       else {
         $sandbox['user_not_migrated']++;
         db_update('users')
-          ->fields(array('timezone', NULL))
+          ->fields(array('timezone' => NULL))
           ->condition('uid', $account->uid)
           ->execute();
       }

@@ -226,7 +226,7 @@ function block_install() {
  */
 function block_update_7000() {
   db_update('system')
-    ->fields(array('weight', '-5'))
+    ->fields(array('weight' => '-5'))
     ->condition('name', 'block')
     ->execute();
 }

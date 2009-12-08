@@ -73,7 +73,7 @@ function comment_update_7001() {
 
   foreach ($changes as $old => $new) {
   db_update('comments')
-    ->fields(array('status', $new))
+    ->fields(array('status' => $new))
     ->condition('status', $old)
     ->execute();
   }

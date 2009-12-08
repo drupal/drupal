@@ -194,11 +194,11 @@ function filter_update_7003() {
   // Loop through each filter and make changes to the core filter table.
   foreach ($renamed_deltas as $module => $deltas) {
     foreach ($deltas as $old_delta => $new_delta) {
-    	db_update('filter')
-    	  ->fields(array('name', $new_delta))
-    	  ->condition('module', $module)
-    	  ->condition('name', $old_delta)
-    	  ->execute();
+      db_update('filter')
+        ->fields(array('name' => $new_delta))
+        ->condition('module', $module)
+        ->condition('name', $old_delta)
+        ->execute();
     }
   }
 }
