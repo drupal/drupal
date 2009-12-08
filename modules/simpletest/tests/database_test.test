@@ -1855,6 +1855,34 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
   }
 
   /**
+   * Test that countQuery properly removes 'all_fields' statements and
+   * ordering clauses.
+   */
+  function testCountQueryRemovals() {
+    $query = db_select('test');
+    $query->fields('test');
+    $query->orderBy('name');
+    $count = $query->countQuery();
+    
+    // Check that the 'all_fields' statement is handled properly.
+    $tables = $query->getTables();
+    $this->assertEqual($tables['test']['all_fields'], 1, t('Query correctly sets \'all_fields\' statement.'));
+    $tables = $count->getTables();
+    $this->assertFalse(isset($tables['test']['all_fields']), t('Count query correctly unsets \'all_fields\' statement.'));  
+
+    // Check that the ordering clause is handled properly.
+    $orderby = $query->getOrderBy();
+    $this->assertEqual($orderby['name'], 'ASC', t('Query correctly sets ordering clause.'));
+    $orderby = $count->getOrderBy();
+    $this->assertFalse(isset($orderby['name']), t('Count query correctly unsets ordering caluse.'));
+    
+    // Make sure that the count query works.
+    $count = $count->execute()->fetchField();
+
+    $this->assertEqual($count, 4, t('Counted the correct number of records.'));
+  }
+
+  /**
    * Confirm that we can properly nest conditional clauses.
    */
   function testNestedConditions() {
