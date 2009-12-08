@@ -921,7 +921,7 @@ function menu_tree_output($tree) {
     $element['#attributes']['class'] = $class;
     $element['#title'] = $data['link']['title'];
     $element['#href'] = $data['link']['href'];
-    $element['#localized_options'] = !empty($data['localized_options']) ? $data['localized_options'] : array();
+    $element['#localized_options'] = !empty($data['link']['localized_options']) ? $data['link']['localized_options'] : array();
     $element['#below'] = $data['below'] ? menu_tree_output($data['below']) : $data['below'];
     $element['#original_link'] = $data['link'];
     // Index using the link's unique mlid.

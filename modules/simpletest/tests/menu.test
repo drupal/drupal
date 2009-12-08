@@ -240,6 +240,31 @@ class MenuIncTestCase extends DrupalWebTestCase {
     $this->assertEqual(menu_test_static_variable(), 'delete', t('hook_menu_link_delete() fired correctly'));
   }
 
+  /**
+   * Test menu link 'options' storage and rendering.
+   */
+  function testMenuLinkOptions() {
+    // Create a menu link with options.
+    $menu_link = array(
+      'link_title' => 'Menu link options test',
+      'link_path' => 'node',
+      'module' => 'menu_test',
+      'options' => array(
+        'attributes' => array(
+          'title' => 'Test title attribute',
+        ),
+        'query' => array(
+          'testparam' => 'testvalue',
+        ),
+      ),
+    );
+    menu_link_save($menu_link);
+
+    // Load front page.
+    $this->drupalGet('node');
+    $this->assertRaw('title="Test title attribute"', t('Title attribute of a menu link renders.'));
+    $this->assertRaw('testparam=testvalue', t('Query parameter added to menu link.'));
+  }
 }
 
 /**
