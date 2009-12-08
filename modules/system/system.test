@@ -195,6 +195,32 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->assertTableCount('languages', TRUE);
     $this->assertTableCount('locale', TRUE);
   }
+
+  /**
+   * Attempt to enable a module with a missing dependency.
+   */
+  function testMissingModules() {
+    // Test that the system_dependencies_test module is marked
+    // as missing a dependency.
+    $this->drupalGet('admin/config/modules');
+    $this->assertRaw(t('@module (<span class="admin-missing">missing</span>)', array('@module' => drupal_ucfirst('_missing_dependency'))), t('A module with missing dependencies is marked as such.'));
+    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Testing][system_dependencies_test][enable]"]');
+    $this->assert(count($checkbox) == 1, t('Checkbox for the module is disabled.'));
+
+    // Force enable the system_dependencies_test module.
+    module_enable(array('system_dependencies_test'));
+
+    // Verify that the module is forced to be disabled when submitting
+    // the module page.
+    $this->drupalPost('admin/config/modules', array(), t('Save configuration'));
+    $this->assertText(t('The @module module is missing, so the following module will be disabled: @depends.', array('@module' => '_missing_dependency', '@depends' => 'system_dependencies_test')), t('The module missing dependencies will be disabled.'));
+
+    // Confirm.
+    $this->drupalPost(NULL, NULL, t('Continue'));
+
+    // Verify that the module has been disabled.
+    $this->assertModules(array('system_dependencies_test'), FALSE);
+  }
 }
 
 /**

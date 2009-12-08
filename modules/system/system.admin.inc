@@ -992,6 +992,15 @@ function system_modules_confirm_form($modules, $storage) {
     );
     $items[] = format_plural(count($info['requires']), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', $t_argument);
   }
+
+  foreach ($storage['missing_modules'] as $name => $info) {
+    $t_argument = array(
+      '@module' => $name,
+      '@depends' => implode(', ', $info['depends']),
+    );
+    $items[] = format_plural(count($info['depends']), 'The @module module is missing, so the following module will be disabled: @depends.', 'The @module module is missing, so the following module will be disabled: @depends.', $t_argument);
+  }
+
   $form['text'] = array('#markup' => theme('item_list', array('items' => $items)));
 
   if ($form) {
@@ -1000,7 +1009,7 @@ function system_modules_confirm_form($modules, $storage) {
       $form,
       t('Some required modules must be enabled'),
       'admin/config/modules',
-      t('Would you like to continue with enabling the above?'),
+      t('Would you like to continue with the above?'),
       t('Continue'),
       t('Cancel'));
     return $form;
@@ -1039,6 +1048,8 @@ function system_modules_submit($form, &$form_state) {
   $new_modules = array();
   // Modules that need to be switched on because other modules require them.
   $more_modules = array();
+  $missing_modules = array();
+
   // Go through each module, finding out if we should enable, install, or
   // disable it. Also, we find out if there are modules it requires that are
   // not enabled.
@@ -1052,18 +1063,26 @@ function system_modules_submit($form, &$form_state) {
       elseif (!module_exists($name)) {
         $modules_to_be_enabled[$name] = $name;
       }
+
       // If we're not coming from a confirmation form, search for modules the
       // new ones require and see whether there are any that additionally
       // need to be switched on.
       if (empty($form_state['storage'])) {
         foreach ($form['modules'][$module['group']][$name]['#requires'] as $requires => $v) {
-          if (!$modules[$requires]['enabled']) {
-            if (!isset($more_modules[$name])) {
-              $more_modules[$name]['name'] = $files[$name]->info['name'];
-            }
-            $more_modules[$name]['requires'][$requires] = $files[$requires]->info['name'];
+          if (!isset($files[$requires])) {
+            // The required module is missing, mark this module as disabled.
+            $missing_modules[$requires]['depends'][] = $name;
+            $modules[$name]['enabled'] = FALSE;
           }
-          $modules[$requires] = array('group' => $files[$requires]->info['package'], 'enabled' => TRUE);
+          else {
+            if (!$modules[$requires]['enabled']) {
+              if (!isset($more_modules[$name])) {
+                $more_modules[$name]['name'] = $files[$name]->info['name'];
+              }
+              $more_modules[$name]['requires'][$requires] = $files[$requires]->info['name'];
+            }
+            $modules[$requires] = array('group' => $files[$requires]->info['package'], 'enabled' => TRUE);
+          }
         }
       }
     }
@@ -1075,28 +1094,18 @@ function system_modules_submit($form, &$form_state) {
       $disable_modules[$name] = $name;
     }
   }
-  if ($more_modules) {
+
+  if ($more_modules || $missing_modules) {
     // If we need to switch on more modules because other modules require
     // them and they haven't confirmed, don't process the submission yet. Store
     // the form submission data needed later.
-    if (!isset($form_state['values']['confirm'])) {
-      $form_state['storage'] = array('more_modules' => $more_modules, 'modules' => $modules);
-      $form_state['rebuild'] = TRUE;
-      return;
-    }
-    // Otherwise, install or enable the modules.
-    else {
-      foreach ($form_state['storage']['more_modules'] as $info) {
-        foreach ($info['requires'] as $requires => $name) {
-          if (drupal_get_installed_schema_version($name) == SCHEMA_UNINSTALLED) {
-            $new_modules[$name] = $name;
-          }
-          else {
-            $modules_to_be_enabled[$name] = $name;
-          }
-        }
-      }
-    }
+    $form_state['storage'] = array(
+      'more_modules' => $more_modules,
+      'missing_modules' => $missing_modules,
+      'modules' => $modules
+    );
+    $form_state['rebuild'] = TRUE;
+    return;
   }
 
   $old_module_list = module_list();
