@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.35 2009/12/04 16:49:45 dries Exp $
+// $Id: block.install,v 1.36 2009/12/08 06:52:37 webchick Exp $
 
 /**
  * @file
@@ -226,7 +226,7 @@ function block_install() {
  */
 function block_update_7000() {
   db_update('system')
-    ->fields(array('weight', '-5'))
+    ->fields(array('weight' => '-5'))
     ->condition('name', 'block')
     ->execute();
 }

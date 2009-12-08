@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.32 2009/12/04 16:49:48 dries Exp $
+// $Id: user.install,v 1.33 2009/12/08 06:52:38 webchick Exp $
 
 /**
  * @file
@@ -352,15 +352,15 @@ function user_update_7002(&$sandbox) {
         }
       }
       if ($timezone) {
-      	db_update('users')
-      	  ->fields(array('timezone' => $timezone))
-      	  ->condition('uid', $account->uid)
-      	  ->execute();
+        db_update('users')
+          ->fields(array('timezone' => $timezone))
+          ->condition('uid', $account->uid)
+          ->execute();
       }
       else {
         $sandbox['user_not_migrated']++;
         db_update('users')
-          ->fields(array('timezone', NULL))
+          ->fields(array('timezone' => NULL))
           ->condition('uid', $account->uid)
           ->execute();
       }

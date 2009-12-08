@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.54 2009/12/04 16:49:46 dries Exp $
+// $Id: comment.install,v 1.55 2009/12/08 06:52:38 webchick Exp $
 
 /**
  * @file
@@ -73,7 +73,7 @@ function comment_update_7001() {
 
   foreach ($changes as $old => $new) {
   db_update('comments')
-    ->fields(array('status', $new))
+    ->fields(array('status' => $new))
     ->condition('status', $old)
     ->execute();
   }
