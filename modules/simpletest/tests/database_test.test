@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.73 2009/11/23 22:31:42 dries Exp $
+// $Id: database_test.test,v 1.74 2009/12/08 03:14:57 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1852,6 +1852,34 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $record = $query->execute()->fetch();
     $this->assertEqual($record->$name_field, 'George', t('Correct data retrieved.'));
     $this->assertEqual($record->$age_field, 27, t('Correct data retrieved.'));
+  }
+
+  /**
+   * Test that countQuery properly removes 'all_fields' statements and
+   * ordering clauses.
+   */
+  function testCountQueryRemovals() {
+    $query = db_select('test');
+    $query->fields('test');
+    $query->orderBy('name');
+    $count = $query->countQuery();
+    
+    // Check that the 'all_fields' statement is handled properly.
+    $tables = $query->getTables();
+    $this->assertEqual($tables['test']['all_fields'], 1, t('Query correctly sets \'all_fields\' statement.'));
+    $tables = $count->getTables();
+    $this->assertFalse(isset($tables['test']['all_fields']), t('Count query correctly unsets \'all_fields\' statement.'));  
+
+    // Check that the ordering clause is handled properly.
+    $orderby = $query->getOrderBy();
+    $this->assertEqual($orderby['name'], 'ASC', t('Query correctly sets ordering clause.'));
+    $orderby = $count->getOrderBy();
+    $this->assertFalse(isset($orderby['name']), t('Count query correctly unsets ordering caluse.'));
+    
+    // Make sure that the count query works.
+    $count = $count->execute()->fetchField();
+
+    $this->assertEqual($count, 4, t('Counted the correct number of records.'));
   }
 
   /**
