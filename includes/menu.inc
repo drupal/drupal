@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.366 2009/12/06 01:00:27 dries Exp $
+// $Id: menu.inc,v 1.367 2009/12/08 07:09:43 webchick Exp $
 
 /**
  * @file
@@ -921,7 +921,7 @@ function menu_tree_output($tree) {
     $element['#attributes']['class'] = $class;
     $element['#title'] = $data['link']['title'];
     $element['#href'] = $data['link']['href'];
-    $element['#localized_options'] = !empty($data['localized_options']) ? $data['localized_options'] : array();
+    $element['#localized_options'] = !empty($data['link']['localized_options']) ? $data['link']['localized_options'] : array();
     $element['#below'] = $data['below'] ? menu_tree_output($data['below']) : $data['below'];
     $element['#original_link'] = $data['link'];
     // Index using the link's unique mlid.
