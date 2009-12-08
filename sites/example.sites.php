@@ -40,7 +40,5 @@
  * Edit the lines below to define directory aliases. Remove the leading hash
  * signs to enable.
  */
-#$sites = array(
-#  'devexample.com' => 'example.com',
-#  'localhost/example' => 'example.com',
-#);
+# $sites['devexample.com'] = 'example.com';
+# $sites['localhost/example'] = 'example.com';
