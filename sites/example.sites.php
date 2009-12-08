@@ -1,5 +1,5 @@
 <?php
-// $Id: example.sites.php,v 1.1 2009/11/10 19:25:51 webchick Exp $
+// $Id: example.sites.php,v 1.2 2009/12/08 06:28:50 webchick Exp $
 
 /**
  * @file
@@ -40,7 +40,5 @@
  * Edit the lines below to define directory aliases. Remove the leading hash
  * signs to enable.
  */
-#$sites = array(
-#  'devexample.com' => 'example.com',
-#  'localhost/example' => 'example.com',
-#);
+# $sites['devexample.com'] = 'example.com';
+# $sites['localhost/example'] = 'example.com';
