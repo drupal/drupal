@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.51 2009/12/03 15:33:42 dries Exp $
+// $Id: filter.test,v 1.52 2009/12/08 03:10:51 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -265,7 +265,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     }
     $this->assertTrue(($filters[0]->name == $second_filter && $filters[1]->name == $first_filter), t('Order confirmed.'));
 
-    // Add filter.
+    // Add format.
     $edit = array();
     $edit['name'] = $this->randomName();
     $edit['roles[2]'] = 1;
