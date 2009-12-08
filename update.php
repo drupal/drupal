@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.312 2009/11/29 06:32:45 dries Exp $
+// $Id: update.php,v 1.313 2009/12/08 07:07:15 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -294,6 +294,7 @@ require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 require_once DRUPAL_ROOT . '/includes/update.inc';
 require_once DRUPAL_ROOT . '/includes/common.inc';
 require_once DRUPAL_ROOT . '/includes/entity.inc';
+require_once DRUPAL_ROOT . '/includes/unicode.inc';
 update_prepare_d7_bootstrap();
 
 // Determine if the current user has access to run update.php.
