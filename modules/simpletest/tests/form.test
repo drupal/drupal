@@ -149,6 +149,33 @@ class FormsTestCase extends DrupalWebTestCase {
       )));
     }
   }
+
+  /**
+   * Test handling of disabled elements.
+   *
+   * @see _form_test_disabled_elements().
+   */
+  function testDisabledElements() {
+    // Submit the form, and fetch the default values.
+    $this->drupalPost('form-test/disabled-elements', array(), t('Submit'));
+    $returned_values = drupal_json_decode($this->content);
+
+    // Get the default value from the form.
+    $form_state = array();
+    $form = _form_test_disabled_elements(array(), $form_state);
+
+    foreach (element_children($form) as $key) {
+      if (isset($form[$key]['#default_value'])) {
+        $expected_value = $form[$key]['#default_value'];
+
+        if ($key == 'checkboxes_multiple') {
+          // Checkboxes values are not filtered out.
+          $returned_values[$key] = array_filter($returned_values[$key]);
+        }
+        $this->assertEqual($expected_value, $returned_values[$key], t('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($returned_values[$key], TRUE))));
+      }
+    }
+  }
 }
 
 /**

@@ -86,6 +86,14 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form-test/disabled-elements'] = array(
+    'title' => t('Form test'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_form_test_disabled_elements'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['form-test/form-rebuild-preserve-values'] = array(
     'title' => 'Form values preservation during rebuild test',
     'page callback' => 'drupal_get_form',
@@ -669,6 +677,104 @@ function _form_test_checkbox($form, &$form_state) {
  * Return the form values via JSON.
  */
 function _form_test_checkbox_submit($form, &$form_state) {
+  drupal_json_output($form_state['values']);
+  exit();
+}
+
+/**
+ * Build a form to test disabled elements.
+ */
+function _form_test_disabled_elements($form, &$form_state) {
+  // Elements that take a simple default value.
+  foreach (array('textfield', 'textarea', 'hidden') as $type) {
+    $form[$type] = array(
+      '#type' => $type,
+      '#title' => $type,
+      '#default_value' => $type,
+      '#disabled' => TRUE,
+    );
+  }
+
+  // Multiple values option elements.
+  foreach (array('checkboxes', 'select') as $type) {
+    $form[$type . '_multiple'] = array(
+      '#type' => $type,
+      '#title' => $type . ' (multiple)',
+      '#options' => array(
+        'test_1' => 'Test 1',
+        'test_2' => 'Test 2',
+      ),
+      '#multiple' => TRUE,
+      '#default_value' => array('test_2' => 'test_2'),
+      '#disabled' => TRUE,
+    );
+  }
+
+  // Single values option elements.
+  foreach (array('radios', 'select') as $type) {
+    $form[$type . '_single'] = array(
+      '#type' => $type,
+      '#title' => $type . ' (single)',
+      '#options' => array(
+        'test_1' => 'Test 1',
+        'test_2' => 'Test 2',
+      ),
+      '#multiple' => FALSE,
+      '#default_value' => 'test_2',
+      '#disabled' => TRUE,
+    );
+  }
+
+  // Checkbox and radio.
+  foreach (array('checkbox', 'radio') as $type) {
+    $form[$type . '_unchecked'] = array(
+      '#type' => $type,
+      '#title' => $type . ' (unchecked)',
+      '#return_value' => 1,
+      '#default_value' => 0,
+      '#disabled' => TRUE,
+    );
+    $form[$type . '_checked'] = array(
+      '#type' => $type,
+      '#title' => $type . ' (checked)',
+      '#return_value' => 1,
+      '#default_value' => 1,
+      '#disabled' => TRUE,
+    );
+  }
+
+  // Weight.
+  $form['weight'] = array(
+    '#type' => 'weight',
+    '#title' => 'weight',
+    '#default_value' => 10,
+    '#disabled' => TRUE,
+  );
+
+  // Date.
+  $form['date'] = array(
+    '#type' => 'date',
+    '#title' => 'date',
+    '#disabled' => TRUE,
+    '#default_value' => array(
+      'day' => 19,
+      'month' => 11,
+      'year' => 1978,
+    ),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Return the form values via JSON.
+ */
+function _form_test_disabled_elements_submit($form, &$form_state) {
   drupal_json_output($form_state['values']);
   exit();
 }
