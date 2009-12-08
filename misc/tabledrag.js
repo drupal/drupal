@@ -56,8 +56,8 @@ Drupal.tableDrag = function (table, tableSettings) {
   // this table. For efficiency, large sections of code can be skipped if we
   // don't need to track horizontal movement and indentations.
   this.indentEnabled = false;
-  for (group in tableSettings) {
-    for (n in tableSettings[group]) {
+  for (var group in tableSettings) {
+    for (var n in tableSettings[group]) {
       if (tableSettings[group][n].relationship == 'parent') {
         this.indentEnabled = true;
       }
@@ -147,7 +147,7 @@ Drupal.tableDrag.prototype.hideColumns = function () {
  */
 Drupal.tableDrag.prototype.rowSettings = function (group, row) {
   var field = $('.' + group, row);
-  for (delta in this.tableSettings[group]) {
+  for (var delta in this.tableSettings[group]) {
     var targetClass = this.tableSettings[group][delta].target;
     if (field.is('.' + targetClass)) {
       // Return a copy of the row settings.
@@ -442,7 +442,7 @@ Drupal.tableDrag.prototype.dropRow = function (event, self) {
       for (var group in self.tableSettings) {
         var rowSettings = self.rowSettings(group, droppedRow);
         if (rowSettings.relationship == 'group') {
-          for (n in self.rowObject.children) {
+          for (var n in self.rowObject.children) {
             self.updateField(self.rowObject.children[n], group);
           }
         }
@@ -535,7 +535,7 @@ Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
     if ((y > (rowY - rowHeight)) && (y < (rowY + rowHeight))) {
       if (this.indentEnabled) {
         // Check that this row is not a child of the row being dragged.
-        for (n in this.rowObject.group) {
+        for (var n in this.rowObject.group) {
           if (this.rowObject.group[n] == row) {
             return null;
           }
@@ -761,12 +761,10 @@ Drupal.tableDrag.prototype.restripeTable = function () {
   // :even and :odd are reversed because jQuery counts from 0 and
   // we count from 1, so we're out of sync.
   // Match immediate children of the parent element to allow nesting.
-  $('> tbody > tr.draggable, > tr.draggable', this.table)
-    .filter(':odd').filter('.odd')
-      .removeClass('odd').addClass('even')
-    .end().end()
-    .filter(':even').filter('.even')
-      .removeClass('even').addClass('odd');
+  $('> tbody > tr.draggable:visible, > tr.draggable:visible', this.table)
+    .removeClass('odd even')
+    .filter(':odd').addClass('even').end()
+    .filter(':even').addClass('odd');
 };
 
 /**
@@ -1037,7 +1035,7 @@ Drupal.tableDrag.prototype.row.prototype.findSiblings = function (rowSettings) {
  * Remove indentation helper classes from the current row group.
  */
 Drupal.tableDrag.prototype.row.prototype.removeIndentClasses = function () {
-  for (n in this.children) {
+  for (var n in this.children) {
     $('.indentation', this.children[n])
       .removeClass('tree-child')
       .removeClass('tree-child-first')

@@ -265,7 +265,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     }
     $this->assertTrue(($filters[0]->name == $second_filter && $filters[1]->name == $first_filter), t('Order confirmed.'));
 
-    // Add filter.
+    // Add format.
     $edit = array();
     $edit['name'] = $this->randomName();
     $edit['roles[2]'] = 1;

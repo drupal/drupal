@@ -109,6 +109,9 @@ function filter_admin_format_form($form, &$form_state, $format) {
     $help = t('All roles for this text format must be enabled and cannot be changed.');
   }
 
+  $form['#format'] = $format;
+  $form['#tree'] = TRUE;
+
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
@@ -117,42 +120,46 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#required' => TRUE,
   );
 
-  // Add a row of checkboxes for form group.
-  $form['roles'] = array('#type' => 'fieldset',
+  // Add user role access selection.
+  $form['roles'] = array(
+    '#type' => 'checkboxes',
     '#title' => t('Roles'),
     '#description' => $is_fallback ? $help : t('Choose which roles may use this text format. Note that roles with the "administer filters" permission can always use all text formats.'),
-    '#tree' => TRUE,
+    '#options' => user_roles(),
+    '#default_value' => array_keys(filter_get_roles_by_format($format)),
+    '#disabled' => $is_fallback,
   );
-  $checked = filter_get_roles_by_format($format);
-  foreach (user_roles() as $rid => $name) {
-    $form['roles'][$rid] = array('#type' => 'checkbox',
-      '#title' => $name,
-      '#default_value' => ($is_fallback || isset($checked[$rid])),
-    );
-    if ($is_fallback) {
-      $form['roles'][$rid]['#disabled'] = TRUE;
-    }
-  }
+
   // Table with filters
   $filter_info = filter_get_filters();
   // Load all configured filters for existing text formats.
   $filters = !empty($format->format) ? filter_list_format($format->format) : array();
 
-  $form['filters'] = array('#type' => 'fieldset',
+  $form['filters'] = array(
+    '#type' => 'fieldset',
     '#title' => t('Filters'),
     '#description' => t('Choose the filters that will be used in this text format.'),
-    '#tree' => TRUE,
   );
+
   foreach ($filter_info as $name => $filter) {
+    // Create an empty filter object for new/unconfigured filters.
+    if (!isset($filters[$name])) {
+      $filters[$name] = new stdClass;
+      $filters[$name]->status = 0;
+      $filters[$name]->weight = 0;
+      $filters[$name]->settings = array();
+    }
+    $form['filters'][$name]['#filter'] = $filters[$name];
     $form['filters'][$name]['status'] = array(
       '#type' => 'checkbox',
       '#title' => $filter['title'],
-      '#default_value' => !empty($filters[$name]->status),
+      '#default_value' => $filters[$name]->status,
       '#description' => $filter['description'],
     );
   }
+
   if (!empty($format->format)) {
-    $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
+    $form['format'] = array('#type' => 'value', '#value' => $format->format);
 
     // Composition tips (guidelines)
     $tips = _filter_tips($format->format, FALSE);
@@ -178,6 +185,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
 function filter_admin_format_form_validate($form, &$form_state) {
   if (!isset($form_state['values']['format'])) {
     $format_name = trim($form_state['values']['name']);
+    form_set_value($form['name'], $format_name, $form_state);
     $result = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $format_name))->fetchField();
     if ($result) {
       form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
@@ -189,10 +197,17 @@ function filter_admin_format_form_validate($form, &$form_state) {
  * Process text format form submissions.
  */
 function filter_admin_format_form_submit($form, &$form_state) {
+  // Remove unnecessary values.
+  form_state_values_clean($form_state);
+
+  // Save text format.
   $format = (object) $form_state['values'];
-  $format->format = isset($form_state['values']['format']) ? $form_state['values']['format'] : NULL;
+  if (!isset($form_state['values']['format'])) {
+    $format->format = NULL;
+  }
   $status = filter_format_save($format);
 
+  // Save user permissions.
   if ($permission = filter_permission_name($format)) {
     foreach ($format->roles as $rid => $enabled) {
       user_role_change_permissions($rid, array($permission => $enabled));
@@ -262,10 +277,11 @@ function filter_admin_configure($form, &$form_state, $format) {
   $form['#format'] = $format;
   foreach ($filters as $name => $filter) {
     if ($filter->status && isset($filter_info[$name]['settings callback']) && function_exists($filter_info[$name]['settings callback'])) {
+      $function = $filter_info[$name]['settings callback'];
       // Pass along stored filter settings and default settings, but also the
       // format object and all filters to allow for complex implementations.
       $defaults = (isset($filter_info[$name]['default settings']) ? $filter_info[$name]['default settings'] : array());
-      $settings_form = $filter_info[$name]['settings callback']($form, $form_state, $filters[$name], $defaults, $format, $filters);
+      $settings_form = $function($form, $form_state, $filters[$name], $format, $defaults, $filters);
       if (!empty($settings_form)) {
         $form['settings'][$name] = array(
           '#type' => 'fieldset',
