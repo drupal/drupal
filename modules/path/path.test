@@ -64,7 +64,7 @@ class PathTestCase extends DrupalWebTestCase {
     // Confirm that the alias works.
     $this->drupalGet($edit['alias']);
     $this->assertText($node1->title[LANGUAGE_NONE][0]['value'], 'Alias works.');
-    $this->assertNoResponse(404);
+    $this->assertResponse(200);
 
     // Change alias.
     $pid = $this->getPID($edit['alias']);
@@ -76,7 +76,7 @@ class PathTestCase extends DrupalWebTestCase {
     // Confirm that the alias works.
     $this->drupalGet($edit['alias']);
     $this->assertText($node1->title[LANGUAGE_NONE][0]['value'], 'Changed alias works.');
-    $this->assertNoResponse(404);
+    $this->assertResponse(200);
 
     drupal_static_reset('drupal_lookup_path');
     // Confirm that previous alias no longer works.
@@ -119,7 +119,7 @@ class PathTestCase extends DrupalWebTestCase {
     // Confirm that the alias works.
     $this->drupalGet($edit['path[alias]']);
     $this->assertText($node1->title[LANGUAGE_NONE][0]['value'], 'Alias works.');
-    $this->assertNoResponse(404);
+    $this->assertResponse(200);
 
     // Change alias.
     $previous = $edit['path[alias]'];
@@ -129,7 +129,7 @@ class PathTestCase extends DrupalWebTestCase {
     // Confirm that the alias works.
     $this->drupalGet($edit['path[alias]']);
     $this->assertText($node1->title[LANGUAGE_NONE][0]['value'], 'Changed alias works.');
-    $this->assertNoResponse(404);
+    $this->assertResponse(200);
 
     // Make sure that previous alias no longer works.
     $this->drupalGet($previous);
