@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.29 2009/12/04 16:49:47 dries Exp $
+// $Id: taxonomy.install,v 1.30 2009/12/09 15:52:25 dries Exp $
 
 /**
  * @file
@@ -335,6 +335,7 @@ function taxonomy_update_7004() {
         'label' => $vocabulary->name,
         'field_name' => $field_name,
         'bundle' => $bundle,
+        'object_type' => 'node',
         'description' => $vocabulary->help,
         'widget' => array(
           'type' => $vocabulary->tags ? 'taxonomy_autocomplete' : 'select',
