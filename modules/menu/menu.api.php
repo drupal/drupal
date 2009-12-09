@@ -204,7 +204,7 @@
  *     of them can use the same load function user_category_load(), by setting
  *     the load arguments to array('%map', '%index'). For instance, if the user
  *     is editing category 'foo' by requesting path 'user/32/edit/foo', the load
- *     function user_category_load() will be called with 23 as its first
+ *     function user_category_load() will be called with 32 as its first
  *     argument, the array ('user', 32, 'edit', 'foo') as the map argument,
  *     and 1 as the index argument (because %user_category is the second path
  *     component and numbering starts at zero). user_category_load() can then
