@@ -934,7 +934,6 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
-
   $items['admin/config/search'] = array(
     'title' => 'Search and metadata',
     'description' => 'Local site search, metadata and SEO.',
@@ -1025,6 +1024,14 @@ function system_menu() {
     'page callback' => 'system_php',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
+  );
+  // Addititional categories
+  $items['admin/config/workflow'] = array(
+    'title' => 'Workflow',
+    'description' => 'Content workflow, editorial workflow tools.',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   // Default page for batch operations.
