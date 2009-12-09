@@ -29,7 +29,10 @@ Drupal.behaviors.overlayParent = {
     // Resize the overlay when the toolbar drawer is toggled.
     $('#toolbar a.toggle', context).once('overlay').click(function () {
       setTimeout(function () {
-        Drupal.overlay.resize(Drupal.overlay.iframe.documentSize);
+        // Resize the overlay, if it's open.
+        if (Drupal.overlay.iframe.documentSize) {
+          Drupal.overlay.resize(Drupal.overlay.iframe.documentSize);
+        }
       }, 150);
 
     });
