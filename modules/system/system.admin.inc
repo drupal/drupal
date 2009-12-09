@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.234 2009/12/08 06:39:34 webchick Exp $
+// $Id: system.admin.inc,v 1.235 2009/12/09 15:40:06 dries Exp $
 
 /**
  * @file
@@ -2778,7 +2778,7 @@ function system_actions_manage() {
   foreach ($result as $action) {
     $row[] = array(
       array('data' => $action->type),
-      array('data' => $action->label),
+      array('data' => check_plain($action->label)),
       array('data' => $action->parameters ? l(t('configure'), "admin/config/system/actions/configure/$action->aid") : ''),
       array('data' => $action->parameters ? l(t('delete'), "admin/config/system/actions/delete/$action->aid") : '')
     );
