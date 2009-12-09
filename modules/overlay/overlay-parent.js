@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.3 2009/12/05 15:07:05 webchick Exp $
+// $Id: overlay-parent.js,v 1.4 2009/12/09 17:43:01 dries Exp $
 
 (function ($) {
 
@@ -29,7 +29,10 @@ Drupal.behaviors.overlayParent = {
     // Resize the overlay when the toolbar drawer is toggled.
     $('#toolbar a.toggle', context).once('overlay').click(function () {
       setTimeout(function () {
-        Drupal.overlay.resize(Drupal.overlay.iframe.documentSize);
+        // Resize the overlay, if it's open.
+        if (Drupal.overlay.iframe.documentSize) {
+          Drupal.overlay.resize(Drupal.overlay.iframe.documentSize);
+        }
       }, 150);
 
     });
