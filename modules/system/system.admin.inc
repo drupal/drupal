@@ -2778,7 +2778,7 @@ function system_actions_manage() {
   foreach ($result as $action) {
     $row[] = array(
       array('data' => $action->type),
-      array('data' => $action->label),
+      array('data' => check_plain($action->label)),
       array('data' => $action->parameters ? l(t('configure'), "admin/config/system/actions/configure/$action->aid") : ''),
       array('data' => $action->parameters ? l(t('delete'), "admin/config/system/actions/delete/$action->aid") : '')
     );
