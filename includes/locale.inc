@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.237 2009/12/06 23:56:47 dries Exp $
+// $Id: locale.inc,v 1.238 2009/12/09 15:35:48 dries Exp $
 
 /**
  * @file
@@ -2371,7 +2371,7 @@ function _locale_import_shorten_comments($comment) {
       break;
     }
   }
-  return substr($comm, 0, -2);
+  return trim(substr($comm, 0, -2));
 }
 
 /**
