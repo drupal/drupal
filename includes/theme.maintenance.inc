@@ -11,11 +11,11 @@
  * in maintenance mode. It also applies when the database is unavailable.
  *
  * Seven is always used for the initial install and update operations. In
- * other cases, Minnelli is used, but this can be overridden by setting a
+ * other cases, Garland is used, but this can be overridden by setting a
  * "maintenance_theme" key in the $conf variable in settings.php.
  */
 function _drupal_maintenance_theme() {
-  global $theme, $theme_key;
+  global $theme, $theme_key, $conf;
 
   // If $theme is already set, assume the others are set too, and do nothing.
   if (isset($theme)) {
@@ -33,7 +33,7 @@ function _drupal_maintenance_theme() {
 
   // Install and update pages are treated differently to prevent theming overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
-    $custom_theme = 'seven';
+    $custom_theme = (isset($conf['maintenance_theme']) ? $conf['maintenance_theme'] : 'seven');
   }
   else {
     if (!db_is_active()) {
@@ -44,7 +44,9 @@ function _drupal_maintenance_theme() {
       drupal_load('module', 'system');
     }
 
-    $custom_theme = variable_get('maintenance_theme', 'garland');
+    // We use the default theme as the maintenance theme. If a default theme
+    // isn't specified in the database or in settings.php, we use Garland.
+    $custom_theme = variable_get('maintenance_theme', variable_get('theme_default', 'garland'));
   }
 
   $themes = list_themes();
@@ -159,13 +161,20 @@ function theme_install_page($variables) {
     $variables['messages'] .= theme('status_messages', array('display' => 'status'));
   }
 
-  // This was called as a theme hook (not template), so we need to
-  // fix path_to_theme() for the template, to point at the actual
-  // theme rather than system module as owner of the hook.
-  global $theme_path;
-  $theme_path = 'themes/seven';
+  // This was called as a theme hook (not template), so we need to fix
+  // path_to_theme() for the template, to point at the actual theme rather than
+  // system module as owner of the hook. Additionally, figure out the
+  // maintenance page template to use.
+  global $theme_path, $theme_info, $base_theme_info;
+  $theme_path = dirname($theme_info->uri);
+  $base_themes = $base_theme_info;
+  // Make sure a maintenance-page.tpl.php is always found.
+  $base_themes[] = 'modules/system';
+  while (!file_exists($theme_path . '/maintenance-page.tpl.php') && $base_theme = array_shift($base_themes)) {
+    $theme_path = dirname($base_theme->uri);
+  }
 
-  return theme_render_template('themes/seven/maintenance-page.tpl.php', $variables);
+  return theme_render_template($theme_path . '/maintenance-page.tpl.php', $variables);
 }
 
 /**
@@ -197,13 +206,20 @@ function theme_update_page($variables) {
     $variables['messages'] .= theme('status_messages', array('display' => 'warning'));
   }
 
-  // This was called as a theme hook (not template), so we need to
-  // fix path_to_theme() for the template, to point at the actual
-  // theme rather than system module as owner of the hook.
-  global $theme_path;
-  $theme_path = 'themes/seven';
+  // This was called as a theme hook (not template), so we need to fix
+  // path_to_theme() for the template, to point at the actual theme rather than
+  // system module as owner of the hook. Additionally, figure out the
+  // maintenance page template to use.
+  global $theme_path, $theme_info, $base_theme_info;
+  $theme_path = dirname($theme_info->uri);
+  $base_themes = $base_theme_info;
+  // Make sure a maintenance-page.tpl.php is always found.
+  $base_themes[] = 'modules/system';
+  while (!file_exists($theme_path . '/maintenance-page.tpl.php') && $base_theme = array_shift($base_themes)) {
+    $theme_path = dirname($base_theme->uri);
+  }
 
-  return theme_render_template('themes/seven/maintenance-page.tpl.php', $variables);
+  return theme_render_template($theme_path . '/maintenance-page.tpl.php', $variables);
 }
 
 /**
