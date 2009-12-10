@@ -54,14 +54,6 @@ Drupal.behaviors.overlayChild = {
     // Ok, now we can tell the parent window we're ready.
     parent.Drupal.overlay.bindChild(window);
 
-    // If a form is being displayed, it has a hidden field for the parent
-    // window's location. Pass it that information. Letting the server side
-    // know the parent window's location lets us avoid unnecessary redirects
-    // when the overlay window is being closed automatically.
-    var re = new RegExp('^' + parent.Drupal.settings.basePath);
-    var path = parent.window.location.pathname.replace(re, '');
-    $('#edit-overlay-parent-url').val(path);
-
     // Install onBeforeUnload callback, if module is present.
     if ($.isObject(Drupal.onBeforeUnload) && !Drupal.onBeforeUnload.callbackExists('overlayChild')) {
       Drupal.onBeforeUnload.addCallback('overlayChild', function () {

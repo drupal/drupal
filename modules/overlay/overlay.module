@@ -146,20 +146,6 @@ function overlay_library() {
 }
 
 /**
- * Implements hook_form_alter().
- *
- * For forms displayed in the overlay, add a hidden form field that lets us pass
- * the parent window's URL into the form.
- */
-function overlay_form_alter(&$form, &$form_state, $form_id) {
-  if (overlay_get_mode() == 'child') {
-    $form['overlay_parent_url'] = array(
-      '#type' => 'hidden',
-    );
-  }
-}
-
-/**
  * Implements hook_drupal_goto_alter().
  *
  * If the current page request is inside the overlay, add ?render=overlay to
@@ -381,11 +367,6 @@ function overlay_form_submit($form, &$form_state) {
       // Tell the child window to perform the redirection when requested to.
       if (!empty($form_state['redirect'])) {
         $settings['overlayChild']['redirect'] = url($url, $settings);
-      }
-      // If the redirect destination is the same as the parent window, just
-      // close the overlay without redirecting the parent.
-      if (url($form['overlay_parent_url']['#value']) == $settings['overlayChild']['redirect']) {
-        unset($settings['overlayChild']['redirect']);
       }
       drupal_add_js($settings, array('type' => 'setting'));
     }
