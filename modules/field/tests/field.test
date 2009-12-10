@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.5 2009/12/02 19:26:22 dries Exp $
+// $Id: field.test,v 1.6 2009/12/10 15:39:43 dries Exp $
 
 /**
  * @file
@@ -17,8 +17,9 @@ class FieldTestCase extends DrupalWebTestCase {
    */
   function setUp() {
     // Call parent::setUp().
+    // @see http://www.php.net/manual/en/function.call-user-func-array.php#73105
     $args = func_get_args();
-    call_user_func_array(array('parent', 'setUp'), $args);
+    call_user_func_array(array($this, 'parent::setUp'), $args);
     // Set default storage backend.
     variable_set('field_storage_default', $this->default_storage);
   }

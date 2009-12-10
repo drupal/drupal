@@ -1,5 +1,5 @@
 <?php
-// $Id: session.test,v 1.21 2009/12/09 19:22:04 dries Exp $
+// $Id: session.test,v 1.22 2009/12/10 15:39:43 dries Exp $
 
 /**
  * @file
@@ -345,7 +345,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
 
     // Check that user login form action is secure.
     $this->drupalGet('user');
-    $form = &$this->xpath('//form[@id="user-login"]');
+    $form = $this->xpath('//form[@id="user-login"]');
     $this->assertEqual(substr($form[0]['action'], 0, 6), 'https:', 'Login form action is secure');
     $form[0]['action'] = $this->httpsUrl('user');
 

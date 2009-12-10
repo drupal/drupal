@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.55 2009/12/08 06:33:11 webchick Exp $
+// $Id: comment.test,v 1.56 2009/12/10 15:39:43 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -21,8 +21,11 @@ class CommentHelperCase extends DrupalWebTestCase {
    * @param string $comment Comment body.
    * @param string $subject Comment subject.
    * @param mixed $contact Set to NULL for no contact info, TRUE to ignore success checking, and array of values to set contact info.
+   *
+   * This needs to be static to be invoked via CommentHelperCase::postComment()
+   * in other tests.
    */
-  function postComment($node, $comment, $subject = '', $contact = NULL) {
+  public static function postComment($node, $comment, $subject = '', $contact = NULL) {
     $edit = array();
     $edit['comment'] = $comment;
 

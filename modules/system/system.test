@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.95 2009/12/08 06:39:34 webchick Exp $
+// $Id: system.test,v 1.96 2009/12/10 15:39:43 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -235,7 +235,7 @@ class ModuleVersionTestCase extends ModuleTestCase {
     );
   }
 
-  function setup() {
+  function setUp() {
     parent::setUp('module_test');
   }
 

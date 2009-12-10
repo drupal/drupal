@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.6 2009/08/31 05:47:33 dries Exp $
+// $Id: stream_wrappers.inc,v 1.7 2009/12/10 15:39:42 dries Exp $
 
 /**
  * @file
@@ -500,7 +500,12 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
   public function url_stat($uri, $flags) {
     $this->uri = $uri;
     if ($flags & STREAM_URL_STAT_QUIET) {
-      return @stat($this->getLocalPath());
+      if (file_exists($this->getLocalPath())) {
+        return stat($this->getLocalPath());
+      }
+      else {
+        return FALSE;
+      }
     }
     else {
       return stat($this->getLocalPath());
