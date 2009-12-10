@@ -21,11 +21,14 @@ function forum_install() {
 }
 
 function forum_enable() {
+  // Get info on the field "taxonomy_forums".
+  $field_check = field_info_field("taxonomy_forums");
   if ($vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', 0))) {
     // Save the vocabulary to create the default field instance.
     taxonomy_vocabulary_save($vocabulary);
   }
-  else {
+  // Create fields if info on "taxonomy_forums" field turns out empty.
+  elseif (empty($field_check)) {
     // Create the forum vocabulary if it does not exist. Assign the vocabulary
     // a low weight so it will appear first in forum topic create and edit
     // forms.
@@ -63,12 +66,7 @@ function forum_uninstall() {
   // Load the dependent Taxonomy module, in case it has been disabled.
   drupal_load('module', 'taxonomy');
 
-  // Delete the vocabulary.
-  $vid = variable_get('forum_nav_vocabulary', 0);
-  taxonomy_vocabulary_delete($vid);
-
   variable_del('forum_containers');
-  variable_del('forum_nav_vocabulary');
   variable_del('forum_hot_topic');
   variable_del('forum_per_page');
   variable_del('forum_order');
