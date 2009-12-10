@@ -1,16 +1,9 @@
-// $Id: drupal.js,v 1.60 2009/11/03 05:34:37 webchick Exp $
+// $Id: drupal.js,v 1.61 2009/12/10 17:29:29 webchick Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
 // Allow other JavaScript libraries to use $.
 jQuery.noConflict();
-
-// Indicate when other scripts use $ with out wrapping their code.
-if ($ === undefined) {
-  $ = function () {
-    alert('Please wrap your JavaScript code in (function ($) { ... })(jQuery); to be compatible. See http://docs.jquery.com/Using_jQuery_with_Other_Libraries.');
-  };
-}
 
 (function ($) {
 
