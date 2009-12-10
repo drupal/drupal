@@ -235,7 +235,7 @@ class ModuleVersionTestCase extends ModuleTestCase {
     );
   }
 
-  function setup() {
+  function setUp() {
     parent::setUp('module_test');
   }
 

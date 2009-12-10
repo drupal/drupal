@@ -100,7 +100,9 @@ function locale_uninstall() {
     }
   }
   // Delete the JavaScript translations directory if empty.
-  @rmdir($locale_js_directory);
+  if (!file_scan_directory($locale_js_directory, '/.*/')) {
+    rmdir($locale_js_directory);
+  }
 
   // Clear variables.
   variable_del('language_default');

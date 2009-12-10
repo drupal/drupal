@@ -500,7 +500,12 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
   public function url_stat($uri, $flags) {
     $this->uri = $uri;
     if ($flags & STREAM_URL_STAT_QUIET) {
-      return @stat($this->getLocalPath());
+      if (file_exists($this->getLocalPath())) {
+        return stat($this->getLocalPath());
+      }
+      else {
+        return FALSE;
+      }
     }
     else {
       return stat($this->getLocalPath());

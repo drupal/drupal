@@ -2137,6 +2137,7 @@ function _system_rebuild_module_data() {
 
   // Include the install profile in modules that are loaded.
   $profile = drupal_get_profile();
+  $modules[$profile] = new stdClass;
   $modules[$profile]->name = $profile;
   $modules[$profile]->uri = 'profiles/' . $profile . '/' . $profile . '.profile';
   $modules[$profile]->filename = $profile . '.profile';

@@ -468,7 +468,8 @@ function filter_default_format($account = NULL) {
   }
   // Get a list of formats for this user, ordered by weight. The first one
   // available is the user's default format.
-  $format = array_shift(filter_formats($account));
+  $formats = filter_formats($account);
+  $format = reset($formats);
   return $format->format;
 }
 
@@ -825,10 +826,12 @@ function _filter_tips($format_id, $long = FALSE) {
  *   A DOMDocument that represents the loaded (X)HTML snippet.
  */
 function filter_dom_load($text) {
-  // Ignore warnings during HTML soup loading.
-  $dom_document = @DOMDocument::loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
+  // Suppress all libxml warnings during loading of HTML.
+  libxml_use_internal_errors(TRUE);
+  $document = new DOMDocument();
+  $document->loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
 
-  return $dom_document;
+  return $document;
 }
 
 /**

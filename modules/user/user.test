@@ -26,7 +26,8 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPost('user/register', $edit, t('Create new account'));
     $this->assertText(t('Your password and further instructions have been sent to your e-mail address.'), t('User registered successfully.'));
-    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $new_user = reset($accounts);
     $this->assertTrue($new_user->status, t('New account is active after registration.'));
 
     // Allow registration by site visitors, but require administrator approval.
@@ -35,7 +36,8 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPost('user/register', $edit, t('Create new account'));
-    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $new_user = reset($accounts);
     $this->assertFalse($new_user->status, t('New account is blocked until approved by an administrator.'));
   }
 
@@ -59,7 +61,8 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $edit['pass[pass1]'] = $new_pass = $this->randomName();
     $edit['pass[pass2]'] = $new_pass;
     $this->drupalPost('user/register', $edit, t('Create new account'));
-    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $new_user = reset($accounts);
     $this->assertText(t('Registration successful. You are now logged in.'), t('Users are logged in after registering.'));
     $this->drupalLogout();
 
@@ -82,7 +85,8 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertText(t('The username @name has not been activated or is blocked.', array('@name' => $name)), t('User cannot login yet.'));
 
     // Activate the new account.
-    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $new_user = reset($accounts);
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
     $edit = array(
@@ -115,7 +119,8 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->drupalPost('user/register', $edit, t('Create new account'));
 
     // Check user fields.
-    $new_user = reset(user_load_multiple(array(), array('name' => $name, 'mail' => $mail)));
+    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $new_user = reset($accounts);
     $this->assertEqual($new_user->name, $name, t('Username matches.'));
     $this->assertEqual($new_user->mail, $mail, t('E-mail address matches.'));
     $this->assertEqual($new_user->theme, '', t('Correct theme field.'));
@@ -371,7 +376,8 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $bogus_timestamp = $timestamp - 86400 - 60;
     $this->drupalGet("user/$account->uid/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), t('Expired cancel account request rejected.'));
-    $this->assertTrue(reset(user_load_multiple(array($account->uid), array('status' => 1))), t('User account was not canceled.'));
+    $accounts = user_load_multiple(array($account->uid), array('status' => 1));
+    $this->assertTrue(reset($accounts), t('User account was not canceled.'));
 
     // Confirm user's content has not been altered.
     $test_node = node_load($node->nid, NULL, TRUE);
@@ -725,7 +731,8 @@ class UserPictureTestCase extends DrupalWebTestCase {
 
         // Images are sorted first by size then by name. We need an image
         // bigger than 1 KB so we'll grab the last one.
-        $image = end($this->drupalGetTestFiles('image'));
+        $files = $this->drupalGetTestFiles('image');
+        $image = end($files);
         $info = image_get_info($image->uri);
 
         // Set new variables: valid dimensions, invalid filesize.

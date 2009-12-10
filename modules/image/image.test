@@ -84,14 +84,17 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     // Make the default scheme neither "public" nor "private" to verify the
     // functions work for other than the default scheme.
     variable_set('file_default_scheme', 'temporary');
-    file_prepare_directory($d = 'temporary://', FILE_CREATE_DIRECTORY);
+    $d = 'temporary://';
+    file_prepare_directory($d, FILE_CREATE_DIRECTORY);
 
     // Create the directories for the styles.
-    $status = file_prepare_directory($d = $scheme . '://styles/' . $this->style_name, FILE_CREATE_DIRECTORY);
+    $d = $scheme . '://styles/' . $this->style_name;
+    $status = file_prepare_directory($d, FILE_CREATE_DIRECTORY);
     $this->assertNotIdentical(FALSE, $status, t('Created the directory for the generated images for the test style.' ));
 
     // Create a working copy of the file.
-    $file = reset($this->drupalGetTestFiles('image'));
+    $files = $this->drupalGetTestFiles('image');
+    $file = reset($files);
     $image_info = image_get_info($file->uri);
     $original_uri = file_unmanaged_copy($file->uri, $scheme . '://', FILE_EXISTS_RENAME);
     $this->assertNotIdentical(FALSE, $original_uri, t('Created the generated image file.'));
@@ -273,7 +276,8 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
     // First, we need to make sure we have an image in our testing
     // file directory. Copy over an image on the first run.
     if (!isset($file_path)) {
-      $file = reset($this->drupalGetTestFiles('image'));
+      $files = $this->drupalGetTestFiles('image');
+      $file = reset($files);
       $file_path = file_unmanaged_copy($file->uri);
     }
 

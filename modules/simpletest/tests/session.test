@@ -345,7 +345,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
 
     // Check that user login form action is secure.
     $this->drupalGet('user');
-    $form = &$this->xpath('//form[@id="user-login"]');
+    $form = $this->xpath('//form[@id="user-login"]');
     $this->assertEqual(substr($form[0]['action'], 0, 6), 'https:', 'Login form action is secure');
     $form[0]['action'] = $this->httpsUrl('user');
 

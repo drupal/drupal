@@ -288,16 +288,22 @@ class FileSpaceUsedTest extends FileTestCase {
     parent::setUp();
 
     // Create records for a couple of users with different sizes.
-    drupal_write_record('file', $file = array('uid' => 2, 'uri' => 'public://example1.txt', 'filesize' => 50, 'status' => FILE_STATUS_PERMANENT));
-    drupal_write_record('file', $file = array('uid' => 2, 'uri' => 'public://example2.txt', 'filesize' => 20, 'status' => FILE_STATUS_PERMANENT));
-    drupal_write_record('file', $file = array('uid' => 3, 'uri' => 'public://example3.txt', 'filesize' => 100, 'status' => FILE_STATUS_PERMANENT));
-    drupal_write_record('file', $file = array('uid' => 3, 'uri' => 'public://example4.txt', 'filesize' => 200, 'status' => FILE_STATUS_PERMANENT));
+    $file = array('uid' => 2, 'uri' => 'public://example1.txt', 'filesize' => 50, 'status' => FILE_STATUS_PERMANENT);
+    drupal_write_record('file', $file);
+    $file = array('uid' => 2, 'uri' => 'public://example2.txt', 'filesize' => 20, 'status' => FILE_STATUS_PERMANENT);
+    drupal_write_record('file', $file);
+    $file = array('uid' => 3, 'uri' => 'public://example3.txt', 'filesize' => 100, 'status' => FILE_STATUS_PERMANENT);
+    drupal_write_record('file', $file);
+    $file = array('uid' => 3, 'uri' => 'public://example4.txt', 'filesize' => 200, 'status' => FILE_STATUS_PERMANENT);
+    drupal_write_record('file', $file);
 
     // Now create some with other statuses. These values were chosen arbitrarily
     // for the sole purpose of testing that bitwise operators were used
     // correctly on the field.
-    drupal_write_record('file', $file = array('uid' => 2, 'uri' => 'public://example5.txt', 'filesize' => 1, 'status' => 2 | 8));
-    drupal_write_record('file', $file = array('uid' => 3, 'uri' => 'public://example6.txt', 'filesize' => 3, 'status' => 2 | 4));
+    $file = array('uid' => 2, 'uri' => 'public://example5.txt', 'filesize' => 1, 'status' => 2 | 8);
+    drupal_write_record('file', $file);
+    $file = array('uid' => 3, 'uri' => 'public://example6.txt', 'filesize' => 3, 'status' => 2 | 4);
+    drupal_write_record('file', $file);
   }
 
   /**
@@ -722,7 +728,9 @@ class FileDirectoryTest extends FileTestCase {
 
     // Remove .htaccess file to then test that it gets re-created.
     $directory = file_directory_path();
-    @unlink($directory . '/.htaccess');
+    if (file_exists($directory . '/.htaccess')) {
+      unlink($directory . '/.htaccess');
+    }
     $this->assertFalse(is_file($directory . '/.htaccess'), t('Successfully removed the .htaccess file in the files directory.'), 'File');
     file_ensure_htaccess();
     $this->assertTrue(is_file($directory . '/.htaccess'), t('Successfully re-created the .htaccess file in the files directory.'), 'File');
@@ -1582,7 +1590,8 @@ class FileLoadTest extends FileHookTestCase {
    * Try to load a non-existent file by URI.
    */
   function testLoadMissingFilepath() {
-    $this->assertFalse(reset(file_load_multiple(array(), array('uri' => 'foobar://misc/druplicon.png'))), t("Try to load a file that doesn't exist in the database fails."));
+    $files = file_load_multiple(array(), array('uri' => 'foobar://misc/druplicon.png'));
+    $this->assertFalse(reset($files), t("Try to load a file that doesn't exist in the database fails."));
     $this->assertFileHooksCalled(array());
   }
 
@@ -1590,7 +1599,8 @@ class FileLoadTest extends FileHookTestCase {
    * Try to load a non-existent file by status.
    */
   function testLoadInvalidStatus() {
-    $this->assertFalse(reset(file_load_multiple(array(), array('status' => -99))), t("Trying to load a file with an invalid status fails."));
+    $files = file_load_multiple(array(), array('status' => -99));
+    $this->assertFalse(reset($files), t("Trying to load a file with an invalid status fails."));
     $this->assertFileHooksCalled(array());
   }
 

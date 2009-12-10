@@ -903,7 +903,8 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
  *   Results are statically cached.
  */
 function taxonomy_vocabulary_load($vid) {
-  return reset(taxonomy_vocabulary_load_multiple(array($vid)));
+  $vocabularies = taxonomy_vocabulary_load_multiple(array($vid));
+  return reset($vocabularies);
 }
 
 /**

@@ -91,32 +91,28 @@ class ListFieldTestCase extends DrupalWebTestCase {
 /**
 * List module UI tests.
 */
-class ListFieldUITestCase extends DrupalWebTestCase {
-    public static function getInfo() {
+class ListFieldUITestCase extends FieldUITestCase {
+  public static function getInfo() {
     return array(
       'name' => 'List field UI tests',
       'description' => 'Test the List field UI functionality.',
       'group' => 'Field types',
     );
   }
-  
-  function setUp() {
-    FieldUITestCase::setUp();
-  }
-   
+
   /**
    * Tests that allowed values are properly validated in the UI.
    */
   function testAllowedValues() {
     $element_name = "field[settings][allowed_values]";
-    
+
     //Test 'List' field type.
     $admin_path = $this->createListFieldAndEdit('list');
     //Check that non-integer keys are rejected.
     $edit = array($element_name => "1.1|one\n");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
     $this->assertText("keys must be integers", t('Form vaildation failed.'));
-    
+
     // Test 'List (number)' field type.
     $admin_path = $this->createListFieldAndEdit('list_number');
     //Check that non-numeric keys are rejected.
