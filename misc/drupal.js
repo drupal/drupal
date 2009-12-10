@@ -5,13 +5,6 @@ var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 // Allow other JavaScript libraries to use $.
 jQuery.noConflict();
 
-// Indicate when other scripts use $ with out wrapping their code.
-if ($ === undefined) {
-  $ = function () {
-    alert('Please wrap your JavaScript code in (function ($) { ... })(jQuery); to be compatible. See http://docs.jquery.com/Using_jQuery_with_Other_Libraries.');
-  };
-}
-
 (function ($) {
 
 /**
