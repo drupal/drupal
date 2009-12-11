@@ -6,6 +6,25 @@
  * Adds contextual links to perform actions related to elements on a page.
  */
 
+
+/**
+ * Implements hook_help().
+ */
+function contextual_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#contextual':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Contextual links module displays links related to regions of pages on your site to users with <em>access contextual links</em> permission. For more information, see the online handbook entry for <a href="@contextual">Contextual links module</a>.', array('@contextual' => 'http://drupal.org/handbook/modules/contextual')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Displaying contextual links') . '</dt>';
+      $output .= '<dd>' . t('Contextual links are supplied by modules, to give you quick access to tasks associated with regions of pages on your site. For instance, if you have a custom menu block displayed in a sidebar of your site, the Blocks and Menus modules will supply links to configure the block and edit the menu. The Contextual links module collects these links into a list for display by your theme, and also adds JavaScript code to the page to hide the links initially, and display them when your mouse hovers over the block.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
 /**
  * Implements hook_permission().
  */
