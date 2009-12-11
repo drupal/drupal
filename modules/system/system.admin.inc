@@ -1414,17 +1414,18 @@ function system_site_information_settings() {
     '#default_value' => variable_get('site_name', 'Drupal'),
     '#required' => TRUE
   );
+  $form['site_slogan'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Slogan'),
+    '#default_value' => variable_get('site_slogan', ''),
+    '#description' => t("How this is used depends on your site's theme."),
+  );
   $form['site_mail'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
     '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
     '#description' => t("The <em>From</em> address in automated e-mails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this e-mail being flagged as spam.)"),
     '#required' => TRUE,
-  );
-  $form['site_slogan'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Slogan'),
-    '#default_value' => variable_get('site_slogan', ''),
   );
   $form['site_frontpage'] = array(
     '#type' => 'textfield',
@@ -1439,7 +1440,7 @@ function system_site_information_settings() {
     '#type' => 'select', '#title' => t('Number of posts on front page'),
     '#default_value' => variable_get('default_nodes_main', 10),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    '#description' => t('The maximum number of posts displayed on overview pages like the frontpage.')
+    '#description' => t('The maximum number of posts displayed on overview pages such as the front page.')
   );
   $form['site_403'] = array(
     '#type' => 'textfield',
