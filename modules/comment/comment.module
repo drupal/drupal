@@ -423,19 +423,35 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
     $pageno =  $count / $comments_per_page;
   }
   else {
-    // Threaded comments.
-    // Find the first thread with a new comment.
-    $result = db_query_range('SELECT thread FROM (SELECT thread
-      FROM {comment}
-      WHERE nid = :nid
-        AND status = 0
-      ORDER BY changed DESC) AS thread
-      ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 0, $new_replies, array(':nid' => $node->nid))->fetchField();
-    $thread = substr($result, 0, -1);
-    $count = db_query('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
+    // Threaded comments: we build a query with a subquery to find the first
+    // thread with a new comment.
+
+    // 1. Find all the threads with a new comment.
+    $unread_threads_query = db_select('comment')
+      ->fields('comment', array('thread'))
+      ->condition('nid', $node->nid)
+      ->condition('status', COMMENT_PUBLISHED)
+      ->orderBy('changed', 'DESC')
+      ->range(0, $new_replies);
+
+    // 2. Find the first thread.
+    $first_thread = db_select($unread_threads_query, 'thread')
+      ->fields('thread', array('thread'))
+      ->orderBy('SUBSTRING(thread, 1, (LENGTH(thread) - 1))')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+
+    // Remove the final '/'.
+    $first_thread = substr($first_thread, 0, -1);
+
+    // Find the number of the first comment of the first unread thread.
+    $count = db_query('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND status = :status AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
+      ':status' => COMMENT_PUBLISHED,
       ':nid' => $node->nid,
-      ':thread' => $thread,
+      ':thread' => $first_thread,
     ))->fetchField();
+
     $pageno =  $count / $comments_per_page;
   }
 
