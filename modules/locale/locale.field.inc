@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.field.inc,v 1.4 2009/12/02 19:26:22 dries Exp $
+// $Id: locale.field.inc,v 1.5 2009/12/11 16:49:40 dries Exp $
 
 /**
  * @file
@@ -52,7 +52,7 @@ function locale_field_fallback_view(&$output, $context) {
 
     // If the items array is empty then we have a missing field translation.
     // @todo: Verify this assumption.
-    if (isset($output[$field_name]) && empty($output[$field_name]['items'])) {
+    if (isset($output[$field_name]) && count(element_children($output[$field_name])) == 0) {
       if (!isset($fallback_candidates)) {
         require_once DRUPAL_ROOT . '/includes/language.inc';
         $fallback_candidates = language_fallback_get_candidates();

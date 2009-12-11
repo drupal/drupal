@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.13 2009/12/04 16:49:46 dries Exp $
+// $Id: file.module,v 1.14 2009/12/11 16:49:40 dries Exp $
 
 /**
  * @file
@@ -80,6 +80,9 @@ function file_theme() {
     ),
     'file_widget_multiple' => array(
       'render element' => 'element',
+    ),
+    'file_formatter_table' => array(
+      'variables' => array('items' => NULL),
     ),
     'file_upload_help' => array(
       'variables' => array('description' => NULL, 'upload_validators' => NULL),

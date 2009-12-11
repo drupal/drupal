@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1180 2009/12/07 03:42:27 webchick Exp $
+// $Id: node.module,v 1.1181 2009/12/11 16:49:40 dries Exp $
 
 /**
  * @file
@@ -2203,7 +2203,11 @@ function node_page_default() {
 function node_page_view($node) {
   $return = node_show($node);
   if (isset($return['nodes'][$node->nid]['title'])) {
-    drupal_set_title($return['nodes'][$node->nid]['title']['items'][0]['#item']['value']);
+    // Get the language that was determined by language fallback logic during the
+    // field_attach_display() workflow.
+    // @todo That logic should be made available separately.
+    $langcode = $return['nodes'][$node->nid]['title']['#language'];
+    drupal_set_title($node->title[$langcode][0]['value']);
   }
   // Set the node path as the canonical URL to prevent duplicate content.
   drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url('node/' . $node->nid)), TRUE);

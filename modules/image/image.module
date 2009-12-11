@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.29 2009/12/04 16:49:46 dries Exp $
+// $Id: image.module,v 1.30 2009/12/11 16:49:40 dries Exp $
 
 /**
  * @file
@@ -212,14 +212,8 @@ function image_theme() {
     'image_widget' => array(
       'render element' => 'element',
     ),
-    'field_formatter_image' => array(
-      'render element' => 'element',
-    ),
-    'field_formatter_image_link_content' => array(
-      'render element' => 'element',
-    ),
-    'field_formatter_image_link_file' => array(
-      'render element' => 'element',
+    'image_formatter' => array(
+      'variables' => array('item' => NULL, 'path' => NULL, 'image_style' => NULL),
     ),
   );
 }
