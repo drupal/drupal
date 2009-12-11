@@ -5070,14 +5070,15 @@ function drupal_render(&$elements) {
 
   $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
   $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
+  $output = $prefix . $elements['#children'] . $suffix;
 
   // Cache the processed element if #cache is set.
   if (isset($elements['#cache'])) {
-    drupal_render_cache_set($prefix . $elements['#children'] . $suffix, $elements);
+    drupal_render_cache_set($output, $elements);
   }
 
   $elements['#printed'] = TRUE;
-  return $prefix . $elements['#children'] . $suffix;
+  return $output;
 }
 
 /**
@@ -5198,13 +5199,19 @@ function drupal_render_cache_get($elements) {
  * @param $elements
  *   A renderable array.
  */
-function drupal_render_cache_set($markup, $elements) {
+function drupal_render_cache_set(&$markup, $elements) {
   // Create the cache ID for the element.
   if (!in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) || !$cid = drupal_render_cid_create($elements)) {
     return FALSE;
   }
 
-  $data['#markup'] = $markup;
+  // Cache implementations are allowed to modify the markup, to support
+  // replacing markup with edge-side include commands. The supporting cache
+  // backend will store the markup in some other key (like
+  // $data['#real-value']) and return an include command instead. When the
+  // ESI command is executed by the content accelerator, the real value can
+  // be retrieved and used.
+  $data['#markup'] = &$markup;
   // Persist attached data associated with this element.
   if (isset($elements['#attached'])) {
     $data['#attached'] = $elements['#attached'];
