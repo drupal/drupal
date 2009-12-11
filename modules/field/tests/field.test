@@ -808,7 +808,7 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
   }
 
   /**
-   * Test field_attach_view() and field_atach_prepare_view().
+   * Test field_attach_view() and field_attach_prepare_view().
    */
   function testFieldAttachView() {
     $entity_type = 'test_entity';
@@ -893,7 +893,7 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $this->content = $output;
     $this->assertRaw($display, "Multiple formatter: all values are displayed, formatter settings are applied.");
 
-    // Test a formatter that uses hook_field_formatter_prepare_view()..
+    // Test a formatter that uses hook_field_formatter_prepare_view().
     $entity = clone($entity_init);
     $formatter_setting = $this->randomName();
     $this->instance['display'] = array(

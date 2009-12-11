@@ -60,19 +60,23 @@ function field_default_prepare_view($obj_type, $objects, $field, $instances, $la
   // Group objects, instances and items by formatter module.
   $modules = array();
   foreach ($instances as $id => $instance) {
-    $module = $instance['display'][$build_mode]['module'];
-    $modules[$module] = $module;
-    $grouped_objects[$module][$id] = $objects[$id];
-    $grouped_instances[$module][$id] = $instance;
-    // hook_field_formatter_prepare_view() alters $items by reference.
-    $grouped_items[$module][$id] = &$items[$id];
+    $display = $instance['display'][$build_mode];
+    if ($display['type'] !== 'hidden') {
+      $module = $display['module'];
+      $modules[$module] = $module;
+      $grouped_objects[$module][$id] = $objects[$id];
+      $grouped_instances[$module][$id] = $instance;
+      $grouped_displays[$module][$id] = $display;
+      // hook_field_formatter_prepare_view() alters $items by reference.
+      $grouped_items[$module][$id] = &$items[$id];
+    }
   }
 
   foreach ($modules as $module) {
     // Invoke hook_field_formatter_prepare_view().
     $function = $module . '_field_formatter_prepare_view';
     if (function_exists($function)) {
-      $function($obj_type, $grouped_objects[$module], $field, $grouped_instances[$module], $langcode, $grouped_items[$module], $build_mode);
+      $function($obj_type, $grouped_objects[$module], $field, $grouped_instances[$module], $langcode, $grouped_items[$module], $grouped_displays[$module]);
     }
   }
 }
@@ -89,57 +93,38 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
   $display = $instance['display'][$build_mode];
 
   if ($display['type'] !== 'hidden') {
-    $theme = 'field_formatter_' . $display['type'];
-    $single = (field_behaviors_formatter('multiple values', $display) == FIELD_BEHAVIOR_DEFAULT);
-
-    $label_display = $display['label'];
     if ($build_mode == 'search_index') {
-      $label_display = 'hidden';
+      $display['label'] = 'hidden';
     }
 
-    $info = array(
+    $element = array(
+      '#theme' => 'field',
+      '#weight' => $display['weight'],
+      '#title' => t($instance['label']),
+      '#access' => field_access('view', $field, $obj_type, $object),
+      '#label_display' => $display['label'],
+      '#build_mode' => $build_mode,
+      '#language' => $langcode,
       '#field_name' => $field['field_name'],
+      '#field_type' => $field['type'],
       '#object_type' => $obj_type,
       '#bundle' => $bundle,
       '#object' => $object,
-    );
-
-    $element = $info + array(
-      '#theme' => 'field',
-      '#weight' => $display['weight'],
-      '#title' => check_plain(t($instance['label'])),
-      '#access' => field_access('view', $field, $obj_type, $object),
-      '#label_display' => $label_display,
-      '#build_mode' => $build_mode,
-      '#language' => $langcode,
-      '#formatter_single' => $single,
-      'items' => array(),
-    );
-
-    // Fill-in items.
-    foreach ($items as $delta => $item) {
-      $element['items'][$delta] = array(
-        '#item' => $item,
-        '#weight' => $delta,
-      );
-    }
-
-    // Append formatter information either on each item ('single-value' formatter)
-    // or at the upper 'items' level ('multiple-value' formatter)
-    $format_info = $info + array(
-      '#theme' => $theme,
+      '#items' => $items,
       '#formatter' => $display['type'],
-      '#settings' => $display['settings'],
     );
 
-    if ($single) {
+    // Calling the formatter function through module_invoke() can have a
+    // performance impact on pages with many fields and values.
+    $formatter_function = $display['module'] . '_field_formatter';
+    if (field_behaviors_formatter('multiple values', $display) == FIELD_BEHAVIOR_DEFAULT) {
       foreach ($items as $delta => $item) {
-        $element['items'][$delta] += $format_info;
-        $element['items'][$delta]['#item']['#delta'] = $delta;
+        $element[$delta] = $formatter_function($obj_type, $object, $field, $instance, $langcode, $display, $items, $delta);
+        $element[$delta]['#weight'] = $delta;
       }
     }
     else {
-      $element['items'] += $format_info;
+      $element[0] = $formatter_function($obj_type, $object, $field, $instance, $langcode, $display, $items, 0);
     }
 
     $addition = array($field['field_name'] => $element);

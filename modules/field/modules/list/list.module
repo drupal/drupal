@@ -298,22 +298,29 @@ function list_field_formatter_info() {
 }
 
 /**
- * Theme function for 'default' list field formatter.
+ * Implements hook_field_formatter().
  */
-function theme_field_formatter_list_default($variables) {
-  $element = $variables['element'];
-  $field = field_info_field($element['#field_name']);
-  if (($allowed_values = list_allowed_values($field)) && isset($allowed_values[$element['#item']['value']])) {
-    return $allowed_values[$element['#item']['value']];
-  }
-  // If no match was found in allowed values, fall back to the key.
-  return $element['#item']['safe'];
-}
+function list_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
+  $value = $items[$delta]['value'];
 
-/**
- * Theme function for 'key' list field formatter.
- */
-function theme_field_formatter_list_key($variables) {
-  $element = $variables['element'];
-  return $element['#item']['safe'];
+  switch ($display['type']) {
+    case 'list_default':
+      $allowed_values = list_allowed_values($field);
+      if (isset($allowed_values[$value])) {
+        $output = $allowed_values[$value];
+      }
+      else {
+        // If no match was found in allowed values, fall back to the key.
+        $output = $value;
+      }
+      break;
+
+    case 'list_key':
+      $output = $value;
+      break;
+  }
+
+  return array(
+    '#markup' => $output,
+  );
 }

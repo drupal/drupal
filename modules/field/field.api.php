@@ -688,30 +688,14 @@ function hook_field_widget_error($element, $error) {
 /**
  * Expose Field API formatter types.
  *
- * Formatters are mainly theme functions that handle the output of individual
- * field values. These theme calls are typically triggered during the execution
- * of drupal_render() on the render structure built by field_attach_view().
- *
- * The name of the theme hook invoked when displaying the values is derived
- * from formatter type names, using the pattern field_formatter_FORMATTER_NAME.
- * field.module takes care of exposing the corresponding theme functions
- * through hook_theme(). Specifically, field.module defines the theme
- * hook:
- *
- * @code
- *   'field_formatter_FORMATTER_NAME' => array(
- *     'render_element' => 'element',
- *   )
- * @code
- *
- * If a formatter requires a different theme hook definition,
- * implement hook_theme_registry_alter().
+ * Formatters handle the display of field values. Formatter hooks are typically
+ * called by the Field Attach API field_attach_prepare_view() and
+ * field_attach_view() functions.
  *
  * @see hook_field_formatter_info().
  * @see hook_field_formatter_info_alter().
- * @see theme_field_formatter_FORMATTER_NAME().
- * @see hook_theme().
- * @see hook_theme_registry_alter().
+ * @see hook_field_formatter().
+ * @see hook_field_formatter_prepare_view().
  *
  * @return
  *   An array describing the formatter types implemented by the module.
@@ -733,8 +717,8 @@ function hook_field_widget_error($element, $error) {
  *       field value (most common case). The formatter theme will be invoked
  *       iteratively on each of the field valies.
  *       FIELD_BEHAVIOR_CUSTOM if one single invocation of the formatter theme
- *       takes care of displays all the field values. Examples: points on
- *       a generated graph picture, a Google map, a single link to a popup...
+ *       takes care of displaying all the field values. Examples: points on a
+ *       generated graph picture, a Google map, a single link to a popup...
  */
 function hook_field_formatter_info() {
   return array(
@@ -799,61 +783,7 @@ function hook_field_formatter_info_alter(&$info) {
 }
 
 /**
- * Theme function for a field formatter.
- *
- * This is an example of a 'single' formatter, displaying one single field
- * value (the hook_field_formatter_info() entry uses
- * 'multiple values' = FIELD_BEHAVIOR_DEFAULT).
- *
- * @param $variables
- *   An associative array containing:
- *   - element: A render structure sub-array, containing the following keys:
- *     - #item: The field value being displayed.
- *     - #delta: The index of the value being displayed within the object's
- *       values for the field.
- *     - #field_name: The name of the field being displayed.
- *     - #bundle: The bundle of the object being displayed.
- *     - #object: The object being displayed.
- *     - #object_type: The type of the object being displayed.
- *     - #formatter: The name of the formatter being used.
- *     - #settings: The array of formatter settings.
- */
-function theme_field_formatter_FORMATTER_SINGLE($variables) {
-  // This relies on a 'safe' element being prepared in hook_field_sanitize().
-  return $variables['element']['#item']['safe'];
-}
-
-/**
- * Theme function for a field formatter.
- *
- * This is an example of a 'single' formatter, displaying all the field values
- * (the hook_field_formatter_info() entry uses
- * 'multiple values' = FIELD_BEHAVIOR_CUSTOM).
- *
- * @param $variables
- *   An associative array containing:
- *   - element: A render structure sub-array, containing the following keys:
- *     - #field_name: The name of the field being displayed.
- *     - #bundle: The bundle of the object being displayed.
- *     - #object: The object being displayed.
- *     - #object_type: The type of the object being displayed.
- *     - #formatter: The name of the formatter being used.
- *     - #settings: The array of formatter settings.
- *     - numeric indexes: the field values being displayed.
- */
-function theme_field_formatter_FORMATTER_MULTIPLE($variables) {
-  $element = $variables['element'];
-
-  $items = array();
-  foreach (element_children($element) as $key) {
-    $items[$key] = $key .':'. $element[$key]['#item']['value'];
-  }
-  $output = implode('|', $items);
-  return $output;
-}
-
-/**
- * Allow formatters to load information for multiple objects.
+ * Allow formatters to load information for field values being displayed.
  *
  * This should be used when a formatter needs to load additional information
  * from the database in order to render a field, for example a reference field
@@ -866,18 +796,77 @@ function theme_field_formatter_FORMATTER_MULTIPLE($variables) {
  * @param $field
  *   The field structure for the operation.
  * @param $instances
- *   Array of instance structures for $field for each object, keyed by object id.
+ *   Array of instance structures for $field for each object, keyed by object
+ *   id.
  * @param $langcode
  *   The language the field values are to be shown in. If no language is
  *   provided the current language is used.
  * @param $items
  *   Array of field values for the objects, keyed by object id.
+ * @param $displays
+ *   Array of display settings to use for each object display, keyed by object
+ *   id.
  * @return
  *   Changes or additions to field values are done by altering the $items
  *   parameter by reference.
  */
-function hook_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $build_mode) {
+function hook_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $displays) {
 
+}
+
+/**
+ * Builds a renderable array for a field value.
+ *
+ * @param $obj_type
+ *   The type of $object.
+ * @param $object
+ *   The object being displayed.
+ * @param $field
+ *   The field structure.
+ * @param $instance
+ *   The field instance.
+ * @param $langcode
+ *   The language associated to $items.
+ * @param $display
+ *   The display settings to use, as found in the 'display' entry of instance
+ *   definitions.
+ * @param $items
+ *   Array of values for this field.
+ * @param $delta
+ *
+ * @return
+ */
+function hook_field_formatter($obj_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
+  $settings = $display['settings'];
+
+  switch ($display['type']) {
+    case 'field_test_default':
+      // Sample code for a 'single' formatter, displaying one single field
+      // value (the hook_field_formatter_info() entry uses
+      // 'multiple values' = FIELD_BEHAVIOR_DEFAULT).
+      $item = $items[$delta];
+      $result = array(
+        '#markup' => $item['value'],
+      );
+      break;
+
+    case 'field_test_multiple':
+      // Sample code for a 'multiple' formatter, displaying all the field
+      // values (the hook_field_formatter_info() entry uses
+      // 'multiple values' = FIELD_BEHAVIOR_CUSTOM).
+      $array = array();
+      foreach ($items as $delta => $item) {
+        $array[] = $delta .':'. $item['value'];
+      }
+      $result = array(
+        '#markup' => implode('|', $array),
+      );
+      break;
+  }
+
+  return array(
+    '#markup' => $output,
+  );
 }
 
 /**

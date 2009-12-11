@@ -191,49 +191,12 @@ function text_field_validate($obj_type, $object, $field, $instance, $langcode, $
 function text_field_load($obj_type, $objects, $field, $instances, $langcode, &$items) {
   foreach ($objects as $id => $object) {
     foreach ($items[$id] as $delta => $item) {
-      if (!empty($instances[$id]['settings']['text_processing'])) {
-        // Only process items with a cacheable format, the rest will be
-        // handled by text_field_sanitize().
-        $format_id = $item['format'];
-        if (filter_format_allowcache($format_id)) {
-          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format_id, $langcode) : '';
-          if ($field['type'] == 'text_with_summary') {
-            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format_id, $langcode) : '';
-          }
-        }
-      }
-      else {
-        $items[$id][$delta]['safe'] = check_plain($item['value']);
+      // Only process items with a cacheable format, the rest will be
+      // handled by formatters if needed.
+      if (empty($instances[$id]['settings']['text_processing']) || filter_format_allowcache($item['format'])) {
+        $items[$id][$delta]['safe_value'] = isset($item['value']) ? _text_sanitize($instances[$id], $langcode, $item, 'value') : '';
         if ($field['type'] == 'text_with_summary') {
-          $items[$id][$delta]['safe_summary'] = check_plain($item['summary']);
-        }
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_field_sanitize().
- *
- * @see text_field_load()
- */
-function text_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
-  foreach ($items as $delta => $item) {
-    // Only sanitize items which were not already processed inside
-    // text_field_load(), i.e. items with uncacheable text formats, or coming
-    // from a form preview.
-    if (!isset($items[$delta]['safe'])) {
-      if (!empty($instance['settings']['text_processing'])) {
-        $format_id = $item['format'];
-        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format_id, $langcode, TRUE) : '';
-        if ($field['type'] == 'text_with_summary') {
-          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format_id, $langcode, TRUE) : '';
-        }
-      }
-      else {
-        $items[$delta]['safe'] = check_plain($item['value']);
-        if ($field['type'] == 'text_with_summary') {
-          $items[$delta]['safe_summary'] = check_plain($item['summary']);
+          $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? _text_sanitize($instances[$id], $langcode, $item, 'summary') : '';
         }
       }
     }
@@ -286,49 +249,66 @@ function text_field_formatter_info() {
 }
 
 /**
- * Theme function for 'default' text field formatter.
+ * Implements hook_field_formatter().
  */
-function theme_field_formatter_text_default($variables) {
-  $element = $variables['element'];
-  return $element['#item']['safe'];
-}
+function text_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
+  $item = $items[$delta];
 
-/**
- * Theme function for 'plain' text field formatter.
- */
-function theme_field_formatter_text_plain($variables) {
-  $element = $variables['element'];
-  return strip_tags($element['#item']['safe']);
-}
+  switch ($display['type']) {
+    case 'text_default':
+    case 'text_trimmed':
+      $output = _text_sanitize($instance, $langcode, $item, 'value');
+      if ($display['type'] == 'text_trimemd') {
+        $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL);
+      }
+      break;
 
-/**
- * Theme function for 'trimmed' text field formatter.
- */
-function theme_field_formatter_text_trimmed($variables) {
-  $element = $variables['element'];
-  $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
-  return text_summary($element['#item']['safe'], $instance['settings']['text_processing'] ? $element['#item']['format'] : NULL);
-}
+    case 'text_summary_or_trimmed':
+      if (!empty($item['summary'])) {
+        $output = _text_sanitize($instance, $langcode, $item, 'summary');
+      }
+      else {
+        $output = _text_sanitize($instance, $langcode, $item, 'value');
+        $size = variable_get('teaser_length_' . $instance['bundle'], 600);
+        $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL, $size);
+      }
+      break;
 
-/**
- * Theme function for 'summary or trimmed' field formatter for
- * text_with_summary fields. This formatter returns the summary
- * element of the field or, if the summary is empty, the trimmed
- * version of the full element of the field.
- */
-function theme_field_formatter_text_summary_or_trimmed($variables) {
-  $element = $variables['element'];
-  $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
-
-  if (!empty($element['#item']['safe_summary'])) {
-    return $element['#item']['safe_summary'];
+    case 'text_plain':
+      $output = strip_tags($item['value']);
+      break;
   }
-  else {
-    $size = variable_get('teaser_length_' . $element['#bundle'], 600);
-    return text_summary($element['#item']['safe'], $instance['settings']['text_processing'] ? $element['#item']['format'] : NULL, $size);
+
+  return array(
+    '#markup' => $output,
+  );
+}
+
+/**
+ * Sanitizes the 'value' or 'summary' data of a text value.
+ *
+ * Depending on whether the field instance uses text processing, data is run
+ * through check_plain() or check_markup().
+ *
+ * @param $instance
+ *   The instance definition.
+ * @param $langcode
+ *  The language associated to $item.
+ * @param $item
+ *   The field value to sanitize.
+ * @param $column
+ *   The column to sanitize (either 'value' or 'summary').
+ *
+ * @return
+ *  The sanitized string.
+ */
+function _text_sanitize($instance, $langcode, $item, $column) {
+  // If the value uses a cacheable text format, text_field_load() precomputes
+  // the sanitized string.
+  if (isset($item["safe_$column"])) {
+    return $item["safe_$column"];
   }
+  return $instance['settings']['text_processing'] ? check_markup($item[$column], $item['format'], $langcode, TRUE) : check_plain($item[$column]);
 }
 
 /**

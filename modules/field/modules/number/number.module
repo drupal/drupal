@@ -7,15 +7,6 @@
  */
 
 /**
- * Implements hook_theme_alter().
- */
-function number_theme_registry_alter(&$theme_registry) {
-  // The number_integer and number_decimal formatters use the same function.
-  $theme_registry['field_formatter_number_default']['function'] = 'theme_field_formatter_number';
-  $theme_registry['field_formatter_number_decimal']['function'] = 'theme_field_formatter_number';
-}
-
-/**
  * Implements hook_field_info().
  */
 function number_field_info() {
@@ -25,7 +16,7 @@ function number_field_info() {
       'description' => t('This field stores a number in the database as an integer.'),
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
-      'default_formatter' => 'number_default',
+      'default_formatter' => 'number_integer',
     ),
     'number_decimal' => array(
       'label' => t('Decimal'),
@@ -221,7 +212,7 @@ function number_field_is_empty($item, $field) {
  */
 function number_field_formatter_info() {
   return array(
-    'number_default' => array(
+    'number_integer' => array(
       'label' => t('default'),
       'field types' => array('number_integer'),
       'settings' =>  array(
@@ -249,39 +240,36 @@ function number_field_formatter_info() {
 }
 
 /**
- * Theme function for 'unformatted' number field formatter.
+ * Implements hook_field_formatter().
  */
-function theme_field_formatter_number_unformatted($variables) {
-  $element = $variables['element'];
-  return $element['#item']['value'];
-}
+function number_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
+  $value = $items[$delta]['value'];
 
-/**
- * Proxy theme function for number field formatters.
- */
-function theme_field_formatter_number($variables) {
-  $element = $variables['element'];
-  $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
-  $value = $element['#item']['value'];
-  $settings = $element['#settings'];
-  $formatter_type = $element['#formatter'];
+  switch ($display['type']) {
+    case 'number_integer':
+    case 'number_decimal':
+      $settings = $display['settings'];
+      if (empty($value) && $value !== '0') {
+        return '';
+      }
+      $output = number_format($value, $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
+      if ($settings['prefix_suffix']) {
+        $prefixes = isset($instance['settings']['prefix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['prefix'])) : array('');
+        $suffixes = isset($instance['settings']['suffix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['suffix'])) : array('');
+        $prefix = (count($prefixes) > 1) ? format_plural($value, $prefixes[0], $prefixes[1]) : $prefixes[0];
+        $suffix = (count($suffixes) > 1) ? format_plural($value, $suffixes[0], $suffixes[1]) : $suffixes[0];
+        $output = $prefix . $output . $suffix;
+      }
+      break;
 
-  if (empty($value) && $value !== '0') {
-    return '';
+    case 'number_unformatted':
+      $output = $value;
+      break;
   }
 
-  $output = number_format($value, $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
-
-  if ($settings['prefix_suffix']) {
-    $prefixes = isset($instance['settings']['prefix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['prefix'])) : array('');
-    $suffixes = isset($instance['settings']['suffix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['suffix'])) : array('');
-    $prefix = (count($prefixes) > 1) ? format_plural($value, $prefixes[0], $prefixes[1]) : $prefixes[0];
-    $suffix = (count($suffixes) > 1) ? format_plural($value, $suffixes[0], $suffixes[1]) : $suffixes[0];
-    $output = $prefix . $output . $suffix;
-  }
-
-  return $output;
+  return array(
+    '#markup' => $output,
+  );
 }
 
 /**

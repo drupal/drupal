@@ -181,15 +181,7 @@ function field_theme() {
       'render element' => 'element',
     ),
   );
-  $field_formatters = field_info_formatter_types(NULL);
-  foreach ($field_formatters as $key => $field_formatter) {
-    $items['field_formatter_' . $key] = array(
-      'render element' => 'element',
-    );
-    if (isset($field_formatter['theme'])) {
-      $items['field_formatter_' . $key] += $field_formatter['theme'];
-    }
-  }
+
   return $items;
 }
 
@@ -686,24 +678,18 @@ function field_extract_bundle($obj_type, $bundle) {
  */
 function template_preprocess_field(&$variables) {
   $element = $variables['element'];
-  list(, , $bundle) = entity_extract_ids($element['#object_type'], $element['#object']);
-  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $bundle);
+  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
   $field = field_info_field($element['#field_name']);
 
+  // @todo Convert to using drupal_html_class() after benchmarking the impact of
+  //   doing so.
   $field_type_css = strtr($field['type'], '_', '-');
   $field_name_css = strtr($field['field_name'], '_', '-');
 
   // Prepare an $items variable that the template can simply loop on.
-  if ($element['#formatter_single']) {
-    // Filter out non-children properties that might have been added if the
-    // renderable array has gone through form_builder().
-    $items = array_intersect_key($element['items'], array_flip(element_children($element['items'])));
-  }
-  else {
-    // If the formatter is multiple, the template sees only one 'item', which
-    // will include all values.
-    $items = array($element['items']);
-  }
+  // Filter out non-children properties that might have been added if the
+  // renderable array has gone through form_builder().
+  $items = array_intersect_key($element, array_flip(element_children($element)));
 
   $additions = array(
     'object' => $element['#object'],
@@ -715,7 +701,7 @@ function template_preprocess_field(&$variables) {
     'field_name' => $field['field_name'],
     'field_type_css' => $field_type_css,
     'field_name_css' => $field_name_css,
-    'label' => $element['#title'],
+    'label' => check_plain($element['#title']),
     'label_display' => $element['#label_display'],
     'label_hidden' => $element['#label_display'] == 'hidden',
     'field_language' => $element['#language'],
@@ -728,8 +714,8 @@ function template_preprocess_field(&$variables) {
     'template_files' => array(
       'field',
       'field-' . $element['#field_name'],
-      'field-' . $bundle,
-      'field-' . $element['#field_name'] . '-' . $bundle,
+      'field-' . $element['#bundle'],
+      'field-' . $element['#field_name'] . '-' . $element['#bundle'],
     ),
   );
   $variables = array_merge($variables, $additions);

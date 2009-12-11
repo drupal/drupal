@@ -844,33 +844,47 @@ function theme_file_upload_help($variables) {
 }
 
 /**
- * Theme function for 'default' file field formatter.
+ * Implements hook_field_formatter().
  */
-function theme_field_formatter_file_default($variables) {
-  $element = $variables['element'];
-  return theme('file_link', array('file' => (object) $element['#item']));
-}
+function file_field_formatter($obj_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
+  $item = $items[$delta];
 
-/**
- * Theme function for 'url_plain' file field formatter.
- */
-function theme_field_formatter_file_url_plain($variables) {
-  $element = $variables['element'];
-  return empty($element['#item']['uri']) ? '' : file_create_url($element['#item']['uri']);
+  switch ($display['type']) {
+    case 'file_default':
+      $result = array(
+        '#theme' => 'file_link',
+        '#file' => (object) $item,
+      );
+      break;
+
+    case 'file_url_plain':
+      $result = array(
+        '#markup' => empty($item['uri']) ? '' : file_create_url($item['uri']),
+      );
+      break;
+
+    case 'file_table':
+      // Multiple formatter, dealing with all $items.
+      $result = array(
+        '#theme' => 'file_formatter_table',
+        '#items' => $items,
+      );
+      break;
+  }
+
+  return $result;
 }
 
 /**
  * Theme function for the 'table' formatter.
  */
-function theme_field_formatter_file_table($variables) {
-  $element = $variables['element'];
-
+function theme_file_formatter_table($variables) {
   $header = array(t('Attachment'), t('Size'));
   $rows = array();
-  foreach (element_children($element) as $key) {
+  foreach ($variables['items'] as $delta => $item) {
     $rows[] = array(
-      theme('file_link', array('file' => (object) $element[$key]['#item'])),
-      format_size($element[$key]['#item']['filesize']),
+      theme('file_link', array('file' => (object) $item)),
+      format_size($item['filesize']),
     );
   }
 

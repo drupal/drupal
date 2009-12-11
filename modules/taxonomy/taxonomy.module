@@ -1102,20 +1102,36 @@ function taxonomy_field_formatter_info() {
 }
 
 /**
- * Theme function for 'link' term field formatter.
+ * Implements hook_field_formatter().
  */
-function theme_field_formatter_taxonomy_term_link($variables) {
-  $term = $variables['element']['#item']['taxonomy_term'];
-  $attributes = empty($variables['link_options']) ? array() : $variables['link_options'];
-  return l($term->name, 'taxonomy/term/' . $term->tid, $attributes);
-}
+function taxonomy_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
+  $item = $items[$delta];
 
-/**
- * Theme function for 'plain' term field formatter.
- */
-function theme_field_formatter_taxonomy_term_plain($variables) {
-  $term = $variables['element']['#item']['taxonomy_term'];
-  return check_plain($term->name);
+  switch ($display['type']) {
+    case 'taxonomy_term_link':
+      // @todo Remove this when "node_build() does not call
+      // field_attach_prepare_view()" bug is fixed.
+      // See http://drupal.org/node/493314.
+      if (!isset($item['taxonomy_term'])) {
+        $item['taxonomy_term'] = taxonomy_term_load($item['tid']);
+      }
+      $term = $item['taxonomy_term'];
+      $result = array(
+        '#type' => 'link',
+        '#title' => $term->name,
+        '#href' => 'taxonomy/term/' . $term->tid,
+      );
+      break;
+
+    case 'taxonomy_term_plain':
+      $term = $item['taxonomy_term'];
+      $result = array(
+        '#markup' => check_plain($term->name),
+      );
+      break;
+  }
+
+  return $result;
 }
 
 /**
@@ -1140,12 +1156,12 @@ function taxonomy_allowed_values($field) {
 }
 
 /**
- * Implements hook_field_load().
+ * Implements hook_field_formatter_prepare_view().
  *
  * This preloads all taxonomy terms for multiple loaded objects at once and
  * unsets values for invalid terms that do not exist.
  */
-function taxonomy_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
+function taxonomy_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $displays) {
   $tids = array();
 
   // Collect every possible term attached to any of the fieldable entities.

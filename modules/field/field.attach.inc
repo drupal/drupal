@@ -1113,10 +1113,39 @@ function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
 }
 
 /**
- * Generate and return a structured content array tree suitable for
- * drupal_render() for all of the fields on an object. The format of
- * each field's rendered content depends on the display formatter and
- * its settings.
+ * Returns a renderable array for the fields on an object.
+ *
+ * Each field is displayed according to the display options specified in the
+ * $instance definition for the given $build_mode.
+ *
+ * Sample structure:
+ * @code
+ * array(
+ *   'field_foo' => array(
+ *     '#theme' => 'field',
+ *     '#title' => the label of the field instance,
+ *     '#label_display' => the label display mode,
+ *     '#object' => the fieldable object being displayed,
+ *     '#object_type' => the type of the object being displayed,
+ *     '#language' => the language of the field values being displayed,
+ *     '#build_mode' => the build mode,
+ *     '#field_name' => the name of the field,
+ *     '#field_type' => the type of the field,
+ *     '#formatter' => the name of the formatter,
+ *     '#items' => the field values being displayed,
+ *     // The element's children are the formatted values returned by
+ *     // hook_field_formatter(), keyed by delta.
+ *     0 => array(
+ *       // Renderable array for value 0, or for all values if the formatter
+ *       // is 'multiple-values'.
+ *     ),
+ *     1 => array(
+ *       // Renderable array for value 1 (only for 'single-value' formatters).
+ *     ),
+ *     // ...
+ *   ),
+ * );
+ * @endcode
  *
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
@@ -1128,56 +1157,7 @@ function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
  *   The language the field values are to be shown in. If no language is
  *   provided the current language is used.
  * @return
- *   A structured content array tree for drupal_render().
- *   Sample structure:
- *   @code
- *   array(
- *     'field_foo' => array(
- *       // The structure of the array differs slightly depending on whether
- *       // the formatter is 'single-value' (displays one single field value,
- *       // most common case) or 'multiple-values' (displays all the field's
- *       // values, e.g. points on a graph or a map).
- *       '#theme' => 'field',
- *       '#title' => the label of the field instance,
- *       '#label_display' => the label display mode,
- *       '#object' => the fieldable object being displayed,
- *       '#object_type' => the type of the object being displayed,
- *       '#language' => the language of the field values being displayed,
- *       '#build_mode' => the build mode,
- *       '#field_name' => the name of the field,
- *       '#formatter_single' => boolean indicating whether the formatter is single or
- *          multiple,
- *       'items' => array(
- *         // One sub-array per field value, keyed by delta.
- *         0 => array(
- *           '#item' => the field value for delta 0,
- *
- *           // Only for 'single-value' formatters:
- *           '#theme' => the formatter's theme function,
- *           '#formatter' => name of the formatter,
- *           '#settings' => array of formatter settings,
- *           '#object' => the fieldable object being displayed,
- *           '#object_type' => the type of the object being displayed,
- *           '#field_name' => the name of the field,
- *           '#bundle' => the object's bundle,
- *           '#delta' => 0,
- *         ),
- *         1 => array(
- *           ...
- *         ),
- *
- *         // Only for 'multiple-values' formatters:
- *         '#theme' => the formatter's theme function,
- *         '#formatter' => name of the formatter,
- *         '#settings' => array of formatter settings,
- *         '#object' => the fieldable object being displayed,
- *         '#object_type' => the type of the object being displayed,
- *         '#field_name' => the name of the field,
- *         '#bundle' => the object's bundle,
- *       ),
- *     ),
- *   );
- *   @endcode
+ *   A renderable array for the field values.
  */
 function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode = NULL) {
   // If no language is provided use the current UI language.

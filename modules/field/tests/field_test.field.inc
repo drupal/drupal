@@ -92,16 +92,6 @@ function field_test_field_validate($obj_type, $object, $field, $instance, $langc
 }
 
 /**
- * Implements hook_field_sanitize().
- */
-function field_test_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
-  foreach ($items as $delta => $item) {
-    $value = check_plain($item['value']);
-    $items[$delta]['safe'] = $value;
-  }
-}
-
-/**
  * Implements hook_field_is_empty().
  */
 function field_test_field_is_empty($item, $field) {
@@ -238,11 +228,11 @@ function field_test_field_formatter_info() {
 /**
  * Implements hook_field_formatter_prepare_view().
  */
-function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $build_mode) {
+function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $displays) {
   foreach ($items as $id => $item) {
     // To keep the test non-intrusive, only act on the
     // 'field_test_needs_additional_data' formatter.
-    if ($instances[$id]['display'][$build_mode]['type'] == 'field_test_needs_additional_data') {
+    if ($displays[$id]['type'] == 'field_test_needs_additional_data') {
       foreach ($item as $delta => $value) {
         // Don't add anything on empty values.
         if ($value) {
@@ -254,47 +244,38 @@ function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $i
 }
 
 /**
- * Theme function for 'field_test_default' formatter.
+ * Implements hook_field_formatter().
  */
-function theme_field_formatter_field_test_default($variables) {
-  $element = $variables['element'];
+function field_test_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
+  $settings = $display['settings'];
 
-  $value = $element['#item']['value'];
-  $settings = $element['#settings'];
+  switch ($display['type']) {
+    case 'field_test_default':
+      $item = $items[$delta];
+      $output = $settings['test_formatter_setting'] . '|' . $item['value'];
+      break;
 
-  return $settings['test_formatter_setting'] . '|' . $value;
-}
+    case 'field_test_needs_additional_data':
+      $item = $items[$delta];
+      $output = $settings['test_formatter_setting_additional'] . '|' . $item['value'] . '|' . $item['additional_formatter_value'];
+      break;
 
-/**
- * Theme function for 'field_test_multiple' formatter.
- */
-function theme_field_formatter_field_test_multiple($variables) {
-  $element = $variables['element'];
-
-  $settings = $element['#settings'];
-
-  $items = array();
-  foreach (element_children($element) as $key) {
-    $items[$key] = $key .':'. $element[$key]['#item']['value'];
+    case 'field_test_multiple':
+      $array = array();
+      foreach ($items as $delta => $item) {
+        $array[] = $delta .':'. $item['value'];
+      }
+      $output = $settings['test_formatter_setting_multiple'] . '|' . implode('|', $array);
+      break;
   }
-  $output = implode('|', $items);
-  return $settings['test_formatter_setting_multiple'] . '|' . $output;
+
+  return array(
+    '#markup' => $output,
+  );
 }
 
 /**
- * Theme function for 'field_test_needs_additional_data' formatter.
- */
-function theme_field_formatter_field_test_needs_additional_data($variables) {
-  $element = $variables['element'];
-  $value = $element['#item']['value'];
-  $additional = $element['#item']['additional_formatter_value'];
-  $settings = $element['#settings'];
-
-  return $settings['test_formatter_setting_additional'] . '|' . $value . '|' . $additional;
-}
-
-/**
- * Sample 'default vale' callback.
+ * Sample 'default value' callback.
  */
 function field_test_default_value($obj_type, $object, $field, $instance) {
   return array(array('value' => 99));

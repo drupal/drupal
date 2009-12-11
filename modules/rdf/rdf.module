@@ -427,12 +427,11 @@ function rdf_preprocess_field(&$variables) {
   $instance = $variables['instance'];
   $mapping = rdf_mapping_load($entity_type, $instance['bundle']);
   $field_name = $instance['field_name'];
+  $items = $variables['element']['#items'];
 
   if (!empty($mapping) && !empty($mapping[$field_name])) {
-    foreach ($variables['items'] as $delta => $item) {
-      if (!empty($item['#item'])) {
-        $variables['item_attributes_array'][$delta] = rdf_rdfa_attributes($mapping[$field_name], $item['#item']);
-      }
+    foreach ($items as $delta => $item) {
+      $variables['item_attributes_array'][$delta] = rdf_rdfa_attributes($mapping[$field_name], $item);
     }
   }
 }
@@ -554,15 +553,29 @@ function rdf_preprocess_comment(&$variables) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
+ * Implements hook_field_attach_view_alter().
  */
-function rdf_preprocess_field_formatter_taxonomy_term_link(&$variables) {
-  $term = $variables['element']['#item']['taxonomy_term'];
-  if (!empty($term->rdf_mapping['rdftype'])) {
-    $variables['link_options']['attributes']['typeof'] = $term->rdf_mapping['rdftype'];
-  }
-  if (!empty($term->rdf_mapping['name']['predicates'])) {
-    $variables['link_options']['attributes']['property'] = $term->rdf_mapping['name']['predicates'];
+function rdf_field_attach_view_alter(&$output, $context) {
+  // Append term mappings on displayed taxonomy links.
+  foreach (element_children($output) as $field_name) {
+    $element = &$output[$field_name];
+    if ($element['#field_type'] == 'taxonomy_term' && $element['#formatter'] == 'taxonomy_term_link') {
+      foreach ($element['#items'] as $delta => $item) {
+        // @todo Remove this when "node_build() does not call
+        // field_attach_prepare_view()" bug is fixed.
+        // See http://drupal.org/node/493314.
+        if (!isset($item['taxonomy_term'])) {
+          $item['taxonomy_term'] = taxonomy_term_load($item['tid']);
+        }
+        $term = $item['taxonomy_term'];
+        if (!empty($term->rdf_mapping['rdftype'])) {
+          $element[$delta]['#options']['attributes']['typeof'] = $term->rdf_mapping['rdftype'];
+        }
+        if (!empty($term->rdf_mapping['name']['predicates'])) {
+          $element[$delta]['#options']['attributes']['property'] = $term->rdf_mapping['name']['predicates'];
+        }
+      }
+    }
   }
 }
 
