@@ -1,10 +1,23 @@
 <?php
-// $Id: overlay.module,v 1.2 2009/12/10 17:26:04 webchick Exp $
+// $Id: overlay.module,v 1.3 2009/12/11 17:08:27 dries Exp $
 
 /**
  * @file
  * Displays the Drupal administration interface in an overlay.
  */
+
+/**
+ * Implements hook_help().
+ */
+function overlay_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#overlay':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Overlay module makes the administration pages on your site display in a JavaScript overlay of the page you were viewing when you clicked the administrative link, instead of replacing the page in your browser window. Use the close link on the overlay to return to the page you were viewing when you clicked the link. For more information, see the online handbook entry for <a href="@overlay">Overlay module</a>.', array('@overlay' => 'http://drupal.org/handbook/modules/overlay')) . '</p>';
+      return $output;
+  }
+}
 
 /**
  * Implements hook_menu().
