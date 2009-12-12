@@ -968,13 +968,11 @@ function search_data($keys = NULL, $type = 'node') {
   if (isset($keys)) {
     if (module_hook($type, 'search_execute')) {
       $results = module_invoke($type, 'search_execute', $keys);
-      if (isset($results) && is_array($results) && count($results)) {
-        if (module_hook($type, 'search_page')) {
-          return module_invoke($type, 'search_page', $results);
-        }
-        else {
-          return theme('search_results', array('results' => $results, 'type' => $type));
-        }
+      if (module_hook($type, 'search_page')) {
+        return module_invoke($type, 'search_page', $results);
+      }
+      else {
+        return theme('search_results', array('results' => $results, 'type' => $type));
       }
     }
   }

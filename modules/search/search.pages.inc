@@ -35,8 +35,7 @@ function search_view($type = 'node') {
       $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $type);
       $build['search_results'] = array(
         '#theme' => 'search_results_listing',
-        '#title' => empty($results) ? t('Your search yielded no results') : t('Search results'),
-        '#content' => empty($results) ? search_help('search#noresults', drupal_help_arg()) : $results,
+        '#content' => $results,
       );
 
       return $build;
