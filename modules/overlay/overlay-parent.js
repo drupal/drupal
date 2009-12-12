@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.4 2009/12/09 17:43:01 dries Exp $
+// $Id: overlay-parent.js,v 1.5 2009/12/12 19:19:09 dries Exp $
 
 (function ($) {
 
@@ -25,7 +25,6 @@ Drupal.behaviors.overlayParent = {
       window.location.href = this.href;
     });
 
-
     // Resize the overlay when the toolbar drawer is toggled.
     $('#toolbar a.toggle', context).once('overlay').click(function () {
       setTimeout(function () {
@@ -34,7 +33,6 @@ Drupal.behaviors.overlayParent = {
           Drupal.overlay.resize(Drupal.overlay.iframe.documentSize);
         }
       }, 150);
-
     });
 
     // Make sure the onhashchange handling below is only processed once.
@@ -886,12 +884,5 @@ Drupal.theme.prototype.overlayContainer = function () {
 Drupal.theme.prototype.overlayTitleHeader = function (text) {
   return '<h1 id="ui-dialog-title-overlay-container" class="ui-dialog-title" tabindex="-1" unselectable="on">' + text + '</h1>';
 };
-
-/**
- * Theme function for the shortcuts button next to the overlay title.
- */
-Drupal.theme.prototype.overlayShortcutsButton = function (text) {
-  return '<div class="add-or-remove-shortcuts">' + text + '</div>';
-}
 
 })(jQuery);
