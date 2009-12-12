@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.6 2009/11/26 03:05:42 webchick Exp $
+// $Id: ajax.js,v 1.7 2009/12/12 23:36:28 webchick Exp $
 (function ($) {
 
 /**
@@ -393,6 +393,13 @@ Drupal.ajax.prototype.commands = {
    */
   alert: function (ajax, response, status) {
     alert(response.text, response.title);
+  },
+
+  /**
+   * Command to provide the jQuery css() function.
+   */
+  css: function (ajax, response, status) {
+    $(response.selector).css(response.argument);
   },
 
   /**
