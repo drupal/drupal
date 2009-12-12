@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.73 2009/11/04 05:05:52 webchick Exp $
+// $Id: session.inc,v 1.74 2009/12/12 20:55:18 dries Exp $
 
 /**
  * @file
@@ -307,30 +307,6 @@ function drupal_session_regenerate() {
       ->condition('sid', $old_session_id)
       ->execute();
   }
-}
-
-/**
- * Counts how many users are active on the site.
- *
- * Counts how many users have sessions which have been active since the
- * specified time. Can count either anonymous sessions or
- * authenticated sessions.
- *
- * @param int $timestamp.
- *   A Unix timestamp. Users who have been active since this time will be
- *   counted. The default is 0, which counts all existing sessions.
- * @param boolean $anonymous
- *   TRUE counts only anonymous users.
- *   FALSE counts only authenticated users.
- * @return int
- *   The number of users with sessions.
- */
-function drupal_session_count($timestamp = 0, $anonymous = TRUE) {
-  $query = db_select('sessions');
-  $query->addExpression('COUNT(sid)', 'count');
-  $query->condition('timestamp', $timestamp, '>=');
-  $query->condition('uid', 0, $anonymous ? '=' : '>');
-  return $query->execute()->fetchField();
 }
 
 /**
