@@ -14,7 +14,7 @@ function field_ui_help($path, $arg) {
     case 'admin/help#field_ui':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Field UI module provides an administrative user interface (UI) for adding custom fields to content types, users, comments, and other types of data. For more information, see the online handbook entry for <a href="@field-ui">Field UI module</a>.', array('field-ui' => 'http://drupal.org/handbook/modules/field-ui')) . '</p>';
+      $output .= '<p>' . t('The Field UI module provides an administrative user interface (UI) for adding custom fields to content types, users, comments, and other types of data. The field types are defined by other modules, and collected and managed by the <a href="@field">Field module</a>. For more information, see the online handbook entry for <a href="@field-ui">Field UI module</a>.', array('@field-ui' => 'http://drupal.org/handbook/modules/field-ui', '@field' => url('admin/help/field'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Defining custom fields') . '</dt>';
