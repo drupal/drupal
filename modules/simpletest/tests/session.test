@@ -73,16 +73,11 @@ class SessionTestCase extends DrupalWebTestCase {
    * drupal_session_count() since session data is already generated here.
    */
   function testDataPersistence() {
-    // At the very start, we have no session.
-    $expected_anonymous = 0;
-    $expected_authenticated = 0;
-
     $user = $this->drupalCreateUser(array('access content'));
     // Enable sessions.
     $this->sessionReset($user->uid);
 
     $this->drupalLogin($user);
-    $expected_authenticated++;
 
     $value_1 = $this->randomName();
     $this->drupalGet('session-test/set/' . $value_1);
@@ -105,8 +100,6 @@ class SessionTestCase extends DrupalWebTestCase {
 
     // Logout the user and make sure the stored value no longer persists.
     $this->drupalLogout();
-    $expected_authenticated--;
-
     $this->sessionReset();
     $this->drupalGet('session-test/get');
     $this->assertNoText($value_1, t("After logout, previous user's session data is not available."), t('Session'));
@@ -117,8 +110,6 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertText($value_3, t('Session data stored for anonymous user.'), t('Session'));
     $this->drupalGet('session-test/get');
     $this->assertText($value_3, t('Session correctly returned the stored data for an anonymous user.'), t('Session'));
-    // Session count should go up since we have started an anonymous session now.
-    $expected_anonymous++;
 
     // Try to store data when drupal_save_session(FALSE).
     $value_4 = $this->randomName();
@@ -129,8 +120,6 @@ class SessionTestCase extends DrupalWebTestCase {
 
     // Login, the data should persist.
     $this->drupalLogin($user);
-    $expected_anonymous--;
-    $expected_authenticated++;
     $this->sessionReset($user->uid);
     $this->drupalGet('session-test/get');
     $this->assertNoText($value_1, t('Session has persisted for an authenticated user after logging out and then back in.'), t('Session'));
@@ -139,23 +128,6 @@ class SessionTestCase extends DrupalWebTestCase {
     $user2 = $this->drupalCreateUser(array('access content'));
     $this->sessionReset($user2->uid);
     $this->drupalLogin($user2);
-    $expected_authenticated++;
-
-    // Perform drupal_session_count tests here in order to use the session data already generated.
-    // Test absolute count.
-    $anonymous = drupal_session_count(0, TRUE);
-    $authenticated = drupal_session_count(0, FALSE);
-    $this->assertEqual($anonymous + $authenticated, $expected_anonymous + $expected_authenticated, t('@count total sessions (expected @expected).', array('@count' => $anonymous + $authenticated, '@expected' => $expected_anonymous + $expected_authenticated)), t('Session'));
-
-    // Test anonymous count.
-    $this->assertEqual($anonymous, $expected_anonymous, t('@count anonymous sessions (expected @expected).', array('@count' => $anonymous, '@expected' => $expected_anonymous)), t('Session'));
-
-    // Test authenticated count.
-    $this->assertEqual($authenticated, $expected_authenticated, t('@count authenticated sessions (expected @expected).', array('@count' => $authenticated, '@expected' => $expected_authenticated)), t('Session'));
-
-    // Should return 0 sessions from 1 second from now.
-    $this->assertEqual(drupal_session_count(time() + 1), 0, t('0 sessions newer than the current time.'), t('Session'));
-
   }
 
   /**
