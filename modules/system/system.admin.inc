@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.236 2009/12/11 16:52:01 dries Exp $
+// $Id: system.admin.inc,v 1.237 2009/12/12 21:05:20 dries Exp $
 
 /**
  * @file
@@ -2790,7 +2790,7 @@ function system_actions_manage() {
     if (!empty($pager)) {
       $row[] = array(array('data' => $pager, 'colspan' => '3'));
     }
-    $build['system_actions_header'] = array('#markup' => '<h3>' . t('Actions available to Drupal:') . '</h3>');
+    $build['system_actions_header'] = array('#markup' => '<h3>' . t('Available actions:') . '</h3>');
     $build['system_actions_table'] = array('#markup' => theme('table', array('header' => $header, 'rows' => $row)));
   }
 
@@ -2817,7 +2817,7 @@ function system_actions_manage() {
 function system_actions_manage_form($form, &$form_state, $options = array()) {
   $form['parent'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Make a new advanced action available'),
+    '#title' => t('Create an advanced action'),
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
   );
