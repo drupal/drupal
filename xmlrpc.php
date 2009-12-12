@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.php,v 1.17 2009/02/08 20:27:51 webchick Exp $
+// $Id: xmlrpc.php,v 1.18 2009/12/12 19:20:52 dries Exp $
 
 /**
  * @file
@@ -16,4 +16,6 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 include_once DRUPAL_ROOT . '/includes/xmlrpc.inc';
 include_once DRUPAL_ROOT . '/includes/xmlrpcs.inc';
 
-xmlrpc_server(module_invoke_all('xmlrpc'));
+$services = module_invoke_all('xmlrpc');
+drupal_alter('xmlrpc_alter', $services);
+xmlrpc_server($services);
