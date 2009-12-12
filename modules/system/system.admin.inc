@@ -2790,7 +2790,7 @@ function system_actions_manage() {
     if (!empty($pager)) {
       $row[] = array(array('data' => $pager, 'colspan' => '3'));
     }
-    $build['system_actions_header'] = array('#markup' => '<h3>' . t('Actions available to Drupal:') . '</h3>');
+    $build['system_actions_header'] = array('#markup' => '<h3>' . t('Available actions:') . '</h3>');
     $build['system_actions_table'] = array('#markup' => theme('table', array('header' => $header, 'rows' => $row)));
   }
 
@@ -2817,7 +2817,7 @@ function system_actions_manage() {
 function system_actions_manage_form($form, &$form_state, $options = array()) {
   $form['parent'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Make a new advanced action available'),
+    '#title' => t('Create an advanced action'),
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
   );
