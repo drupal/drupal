@@ -450,31 +450,37 @@ function image_field_formatter_info() {
 /**
  * Implements hook_field_formatter().
  */
-function image_field_formatter($obj_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
-  $item = $items[$delta];
-  $image_style = '';
-  $path = '';
+function image_field_formatter($obj_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
 
-  // Check if this requires a particular image style.
+  // Check if the formatter involves a particular image style.
   $matches = array();
   if (preg_match('/__([a-z0-9_]+)/', $display['type'], $matches)) {
     $image_style = $matches[1];
   }
 
+  // Check if the formatter involves a link.
   if (strpos($display['type'], 'image_link_content') === 0) {
     list($id) = entity_extract_ids($obj_type, $object);
     $path = $obj_type . '/' . $id;
   }
   elseif (strpos($display['type'], 'image_link_file') === 0) {
-    $path = file_create_url($item['uri']);
+    $link_file = TRUE;
   }
 
-  return array(
-    '#theme' => 'image_formatter',
-    '#item' => $item,
-    '#image_style' => $image_style,
-    '#path' => $path,
-  );
+  foreach ($items as $delta => $item) {
+    if (isset($link_file)) {
+      $path = file_create_url($item['uri']);
+    }
+    $element[$delta] = array(
+      '#theme' => 'image_formatter',
+      '#item' => $item,
+      '#image_style' => isset($image_style) ? $image_style : '',
+      '#path' => isset($path) ? $path : '',
+    );
+  }
+
+   return $element;
 }
 
 /**

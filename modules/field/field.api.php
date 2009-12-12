@@ -711,30 +711,16 @@ function hook_field_widget_error($element, $error) {
  *   - settings: An array whose keys are the names of the settings available
  *     for the formatter type, and whose values are the default values for
  *     those settings.
- *   - behaviors: (optional) An array describing behaviors of the formatter.
- *     - multiple values:
- *       FIELD_BEHAVIOR_DEFAULT (default) if the formatter displays one single
- *       field value (most common case). The formatter theme will be invoked
- *       iteratively on each of the field valies.
- *       FIELD_BEHAVIOR_CUSTOM if one single invocation of the formatter theme
- *       takes care of displaying all the field values. Examples: points on a
- *       generated graph picture, a Google map, a single link to a popup...
  */
 function hook_field_formatter_info() {
   return array(
     'text_default' => array(
       'label' => t('Default'),
       'field types' => array('text', 'text_long', 'text_with_summary'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
     'text_plain' => array(
       'label' => t('Plain text'),
       'field types' => array('text', 'text_long', 'text_with_summary'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
 
     // The text_trimmed formatter displays the trimmed version of the
@@ -745,9 +731,6 @@ function hook_field_formatter_info() {
     'text_trimmed' => array(
       'label' => t('Trimmed'),
       'field types' => array('text', 'text_long', 'text_with_summary'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
 
     // The 'summary or trimmed' field formatter for text_with_summary
@@ -757,9 +740,6 @@ function hook_field_formatter_info() {
     'text_summary_or_trimmed' => array(
       'label' => t('Summary or trimmed'),
       'field types' => array('text_with_summary'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
   );
 }
@@ -827,46 +807,60 @@ function hook_field_formatter_prepare_view($obj_type, $objects, $field, $instanc
  *   The field instance.
  * @param $langcode
  *   The language associated to $items.
- * @param $display
- *   The display settings to use, as found in the 'display' entry of instance
- *   definitions.
  * @param $items
  *   Array of values for this field.
- * @param $delta
+ * @param $display
+ *   The display settings to use, as found in the 'display' entry of instance
+ *   definitions. The array notably contains the following keys and values;
+ *   - type: The name of the formatter to use.
+ *   - settings: The array of formatter settings.
  *
  * @return
+ *   A renderable array for the $items, as an array of child elements keyed
+ *   by numeric indexes starting from 0.
  */
-function hook_field_formatter($obj_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
+function hook_field_formatter($obj_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
   $settings = $display['settings'];
 
   switch ($display['type']) {
-    case 'field_test_default':
-      // Sample code for a 'single' formatter, displaying one single field
-      // value (the hook_field_formatter_info() entry uses
-      // 'multiple values' = FIELD_BEHAVIOR_DEFAULT).
-      $item = $items[$delta];
-      $result = array(
-        '#markup' => $item['value'],
-      );
+    case 'sample_field_formatter_simple':
+      // Common case: each value is displayed individually in a sub-element
+      // keyed by delta. The field.tpl.php template specifies the markup
+      // wrapping each value.
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => $settings['some_setting'] . $item['value']);
+      }
       break;
 
-    case 'field_test_multiple':
-      // Sample code for a 'multiple' formatter, displaying all the field
-      // values (the hook_field_formatter_info() entry uses
-      // 'multiple values' = FIELD_BEHAVIOR_CUSTOM).
-      $array = array();
+    case 'sample_field_formatter_themeable':
+      // More elaborate formatters can defer to a theme function for easier
+      // customization.
       foreach ($items as $delta => $item) {
-        $array[] = $delta .':'. $item['value'];
+        $element[$delta] = array(
+          '#theme' => 'mymodule_theme_sample_field_formatter_themeable',
+          '#data' => $item['value'],
+          '#some_setting' => $settings['some_setting'],
+        );
       }
-      $result = array(
-        '#markup' => implode('|', $array),
+      break;
+
+    case 'sample_field_formatter_combined':
+      // Some formatters might need to display all values within a single piece
+      // of markup.
+      $rows = array();
+      foreach ($items as $delta => $item) {
+        $rows[] = array($delta, $item['value']);
+      }
+      $element[0] = array(
+        '#theme' => 'table',
+        '#header' => array(t('Delta'), t('Value')),
+        '#rows' => $rows,
       );
       break;
   }
 
-  return array(
-    '#markup' => $output,
-  );
+  return $element;
 }
 
 /**

@@ -327,25 +327,6 @@ function field_behaviors_widget($op, $instance) {
 }
 
 /**
- * Determines the behavior of a formatter with respect to an operation.
- *
- * @param $op
- *   The name of the operation. Currently supported: 'multiple values'.
- * @param $display
- *   The $instance['display'][$build_mode] array.
- *
- * @return
- *   One of these values:
- *   - FIELD_BEHAVIOR_NONE: Do nothing for this operation.
- *   - FIELD_BEHAVIOR_CUSTOM: Use the formatter's callback function.
- *   - FIELD_BEHAVIOR_DEFAULT: Use field module default behavior.
- */
-function field_behaviors_formatter($op, $display) {
-  $info = field_info_formatter_types($display['type']);
-  return isset($info['behaviors'][$op]) ? $info['behaviors'][$op] : FIELD_BEHAVIOR_DEFAULT;
-}
-
-/**
  * Returns information about field types from hook_field_info().
  *
  * @param $field_type

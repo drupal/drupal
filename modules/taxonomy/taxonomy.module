@@ -1087,16 +1087,10 @@ function taxonomy_field_formatter_info() {
     'taxonomy_term_link' => array(
       'label' => t('Link'),
       'field types' => array('taxonomy_term'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
     'taxonomy_term_plain' => array(
       'label' => t('Plain text'),
       'field types' => array('taxonomy_term'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
   );
 }
@@ -1104,34 +1098,38 @@ function taxonomy_field_formatter_info() {
 /**
  * Implements hook_field_formatter().
  */
-function taxonomy_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
-  $item = $items[$delta];
+function taxonomy_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
 
   switch ($display['type']) {
     case 'taxonomy_term_link':
-      // @todo Remove this when "node_build() does not call
-      // field_attach_prepare_view()" bug is fixed.
-      // See http://drupal.org/node/493314.
-      if (!isset($item['taxonomy_term'])) {
-        $item['taxonomy_term'] = taxonomy_term_load($item['tid']);
+      foreach ($items as $delta => $item) {
+        // @todo Remove this when "node_build() does not call
+        // field_attach_prepare_view()" bug is fixed.
+        // See http://drupal.org/node/493314.
+        if (!isset($item['taxonomy_term'])) {
+          $item['taxonomy_term'] = taxonomy_term_load($item['tid']);
+        }
+        $term = $item['taxonomy_term'];
+        $element[$delta] = array(
+          '#type' => 'link',
+          '#title' => $term->name,
+          '#href' => 'taxonomy/term/' . $term->tid,
+        );
       }
-      $term = $item['taxonomy_term'];
-      $result = array(
-        '#type' => 'link',
-        '#title' => $term->name,
-        '#href' => 'taxonomy/term/' . $term->tid,
-      );
       break;
 
     case 'taxonomy_term_plain':
-      $term = $item['taxonomy_term'];
-      $result = array(
-        '#markup' => check_plain($term->name),
-      );
+      foreach ($items as $delta => $item) {
+        $term = $item['taxonomy_term'];
+        $element[$delta] = array(
+          '#markup' => check_plain($term->name),
+        );
+      }
       break;
   }
 
-  return $result;
+  return $element;
 }
 
 /**

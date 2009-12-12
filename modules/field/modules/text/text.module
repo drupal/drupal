@@ -251,37 +251,43 @@ function text_field_formatter_info() {
 /**
  * Implements hook_field_formatter().
  */
-function text_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
-  $item = $items[$delta];
+function text_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
 
   switch ($display['type']) {
     case 'text_default':
     case 'text_trimmed':
-      $output = _text_sanitize($instance, $langcode, $item, 'value');
-      if ($display['type'] == 'text_trimemd') {
-        $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL);
+      foreach ($items as $delta => $item) {
+        $output = _text_sanitize($instance, $langcode, $item, 'value');
+        if ($display['type'] == 'text_trimemd') {
+          $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL);
+        }
+        $element[$delta] = array('#markup' => $output);
       }
       break;
 
     case 'text_summary_or_trimmed':
-      if (!empty($item['summary'])) {
-        $output = _text_sanitize($instance, $langcode, $item, 'summary');
-      }
-      else {
-        $output = _text_sanitize($instance, $langcode, $item, 'value');
-        $size = variable_get('teaser_length_' . $instance['bundle'], 600);
-        $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL, $size);
+      foreach ($items as $delta => $item) {
+        if (!empty($item['summary'])) {
+          $output = _text_sanitize($instance, $langcode, $item, 'summary');
+        }
+        else {
+          $output = _text_sanitize($instance, $langcode, $item, 'value');
+          $size = variable_get('teaser_length_' . $instance['bundle'], 600);
+          $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL, $size);
+        }
+        $element[$delta] = array('#markup' => $output);
       }
       break;
 
     case 'text_plain':
-      $output = strip_tags($item['value']);
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => strip_tags($item['value']));
+      }
       break;
   }
 
-  return array(
-    '#markup' => $output,
-  );
+  return $element;
 }
 
 /**

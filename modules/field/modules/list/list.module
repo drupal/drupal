@@ -300,27 +300,30 @@ function list_field_formatter_info() {
 /**
  * Implements hook_field_formatter().
  */
-function list_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
-  $value = $items[$delta]['value'];
+function list_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
 
   switch ($display['type']) {
     case 'list_default':
       $allowed_values = list_allowed_values($field);
-      if (isset($allowed_values[$value])) {
-        $output = $allowed_values[$value];
-      }
-      else {
-        // If no match was found in allowed values, fall back to the key.
-        $output = $value;
+      foreach ($items as $delta => $item) {
+        if (isset($allowed_values[$item['value']])) {
+          $output = $allowed_values[$item['value']];
+        }
+        else {
+          // If no match was found in allowed values, fall back to the key.
+          $output = $value;
+        }
+        $element[$delta] = array('#markup' => $output);
       }
       break;
 
     case 'list_key':
-      $output = $value;
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => $item['value']);
+      }
       break;
   }
 
-  return array(
-    '#markup' => $output,
-  );
+  return $element;
 }

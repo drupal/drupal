@@ -1134,15 +1134,7 @@ function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
  *     '#formatter' => the name of the formatter,
  *     '#items' => the field values being displayed,
  *     // The element's children are the formatted values returned by
- *     // hook_field_formatter(), keyed by delta.
- *     0 => array(
- *       // Renderable array for value 0, or for all values if the formatter
- *       // is 'multiple-values'.
- *     ),
- *     1 => array(
- *       // Renderable array for value 1 (only for 'single-value' formatters).
- *     ),
- *     // ...
+ *     // hook_field_formatter().
  *   ),
  * );
  * @endcode

@@ -242,34 +242,34 @@ function number_field_formatter_info() {
 /**
  * Implements hook_field_formatter().
  */
-function number_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
-  $value = $items[$delta]['value'];
+function number_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
 
   switch ($display['type']) {
     case 'number_integer':
     case 'number_decimal':
-      $settings = $display['settings'];
-      if (empty($value) && $value !== '0') {
-        return '';
-      }
-      $output = number_format($value, $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
-      if ($settings['prefix_suffix']) {
-        $prefixes = isset($instance['settings']['prefix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['prefix'])) : array('');
-        $suffixes = isset($instance['settings']['suffix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['suffix'])) : array('');
-        $prefix = (count($prefixes) > 1) ? format_plural($value, $prefixes[0], $prefixes[1]) : $prefixes[0];
-        $suffix = (count($suffixes) > 1) ? format_plural($value, $suffixes[0], $suffixes[1]) : $suffixes[0];
-        $output = $prefix . $output . $suffix;
+      foreach ($items as $delta => $item) {
+        $output = number_format($item['value'], $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
+        if ($settings['prefix_suffix']) {
+          $prefixes = isset($instance['settings']['prefix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['prefix'])) : array('');
+          $suffixes = isset($instance['settings']['suffix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['suffix'])) : array('');
+          $prefix = (count($prefixes) > 1) ? format_plural($item['value'], $prefixes[0], $prefixes[1]) : $prefixes[0];
+          $suffix = (count($suffixes) > 1) ? format_plural($item['value'], $suffixes[0], $suffixes[1]) : $suffixes[0];
+          $output = $prefix . $output . $suffix;
+        }
+        $element[$delta] = array('#markup' => $output);
       }
       break;
 
     case 'number_unformatted':
-      $output = $value;
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => $item['value']);
+      }
       break;
   }
 
-  return array(
-    '#markup' => $output,
-  );
+  return $element;
 }
 
 /**

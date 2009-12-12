@@ -211,9 +211,6 @@ function field_test_field_formatter_info() {
       'settings' => array(
         'test_formatter_setting_multiple' => 'dummy test string',
       ),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
-      ),
     ),
     'field_test_needs_additional_data' => array(
       'label' => t('Tests hook_field_formatter_prepare_view()'),
@@ -246,32 +243,33 @@ function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $i
 /**
  * Implements hook_field_formatter().
  */
-function field_test_field_formatter($object_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
+function field_test_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
   $settings = $display['settings'];
 
   switch ($display['type']) {
     case 'field_test_default':
-      $item = $items[$delta];
-      $output = $settings['test_formatter_setting'] . '|' . $item['value'];
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => $settings['test_formatter_setting'] . '|' . $item['value']);
+      }
       break;
 
     case 'field_test_needs_additional_data':
-      $item = $items[$delta];
-      $output = $settings['test_formatter_setting_additional'] . '|' . $item['value'] . '|' . $item['additional_formatter_value'];
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => $settings['test_formatter_setting_additional'] . '|' . $item['value'] . '|' . $item['additional_formatter_value']);
+      }
       break;
 
     case 'field_test_multiple':
       $array = array();
       foreach ($items as $delta => $item) {
-        $array[] = $delta .':'. $item['value'];
+        $array[] = $delta . ':' . $item['value'];
       }
-      $output = $settings['test_formatter_setting_multiple'] . '|' . implode('|', $array);
+      $element[0] = array('#markup' => $settings['test_formatter_setting_multiple'] . '|' . implode('|', $array));
       break;
   }
 
-  return array(
-    '#markup' => $output,
-  );
+  return $element;
 }
 
 /**

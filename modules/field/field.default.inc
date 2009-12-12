@@ -90,44 +90,41 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
   list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
 
   $addition = array();
-  $display = $instance['display'][$build_mode];
 
+  $display = $instance['display'][$build_mode];
   if ($display['type'] !== 'hidden') {
+    // We never want to index fields labels.
     if ($build_mode == 'search_index') {
       $display['label'] = 'hidden';
     }
 
-    $element = array(
-      '#theme' => 'field',
-      '#weight' => $display['weight'],
-      '#title' => t($instance['label']),
-      '#access' => field_access('view', $field, $obj_type, $object),
-      '#label_display' => $display['label'],
-      '#build_mode' => $build_mode,
-      '#language' => $langcode,
-      '#field_name' => $field['field_name'],
-      '#field_type' => $field['type'],
-      '#object_type' => $obj_type,
-      '#bundle' => $bundle,
-      '#object' => $object,
-      '#items' => $items,
-      '#formatter' => $display['type'],
-    );
-
     // Calling the formatter function through module_invoke() can have a
     // performance impact on pages with many fields and values.
-    $formatter_function = $display['module'] . '_field_formatter';
-    if (field_behaviors_formatter('multiple values', $display) == FIELD_BEHAVIOR_DEFAULT) {
-      foreach ($items as $delta => $item) {
-        $element[$delta] = $formatter_function($obj_type, $object, $field, $instance, $langcode, $display, $items, $delta);
-        $element[$delta]['#weight'] = $delta;
-      }
-    }
-    else {
-      $element[0] = $formatter_function($obj_type, $object, $field, $instance, $langcode, $display, $items, 0);
+    $function = $display['module'] . '_field_formatter';
+    if (function_exists($function)) {
+      $elements = $function($obj_type, $object, $field, $instance, $langcode, $items, $display);
     }
 
-    $addition = array($field['field_name'] => $element);
+    if ($elements) {
+      $info = array(
+        '#theme' => 'field',
+        '#weight' => $display['weight'],
+        '#title' => t($instance['label']),
+        '#access' => field_access('view', $field, $obj_type, $object),
+        '#label_display' => $display['label'],
+        '#build_mode' => $build_mode,
+        '#language' => $langcode,
+        '#field_name' => $field['field_name'],
+        '#field_type' => $field['type'],
+        '#object_type' => $obj_type,
+        '#bundle' => $bundle,
+        '#object' => $object,
+        '#items' => $items,
+        '#formatter' => $display['type']
+      );
+
+      $addition[$field['field_name']] = array_merge($info, $elements);
+    }
   }
 
   return $addition;
