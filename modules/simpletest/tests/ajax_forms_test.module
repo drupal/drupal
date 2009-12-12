@@ -149,11 +149,9 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
   );
 
   // Shows the AJAX 'css' command.
-  // @todo Note that this won't work until http://drupal.org/node/623320 lands.
   $form['css_command_example'] = array(
-    '#title' => t("AJAX CSS: Choose the color you'd like the '#box' div to be."),
-    '#type' => 'select',
-    '#options' => array('green' => 'green', 'blue' => 'blue'),
+    '#value' => t("Set the the '#box' div to be blue."),
+    '#type' => 'submit',
     '#ajax' => array(
       'callback' => 'ajax_forms_test_advanced_commands_css_callback',
     ),
@@ -289,7 +287,7 @@ function ajax_forms_test_advanced_commands_changed_asterisk_callback($form, $for
  */
 function ajax_forms_test_advanced_commands_css_callback($form, $form_state) {
   $selector = '#css_div';
-  $color = $form_state['values']['css_command_example'];
+  $color = 'blue';
 
   $commands = array();
   $commands[] = ajax_command_css($selector, array('background-color' => $color));

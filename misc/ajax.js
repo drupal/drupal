@@ -396,6 +396,13 @@ Drupal.ajax.prototype.commands = {
   },
 
   /**
+   * Command to provide the jQuery css() function.
+   */
+  css: function (ajax, response, status) {
+    $(response.selector).css(response.argument);
+  },
+
+  /**
    * Command to set the settings that will be used for other commands in this response.
    */
   settings: function (ajax, response, status) {
