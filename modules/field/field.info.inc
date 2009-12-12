@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.32 2009/12/04 22:46:28 dries Exp $
+// $Id: field.info.inc,v 1.33 2009/12/12 20:16:03 dries Exp $
 
 /**
  * @file
@@ -323,25 +323,6 @@ function _field_info_prepare_instance($instance, $field) {
  */
 function field_behaviors_widget($op, $instance) {
   $info = field_info_widget_types($instance['widget']['type']);
-  return isset($info['behaviors'][$op]) ? $info['behaviors'][$op] : FIELD_BEHAVIOR_DEFAULT;
-}
-
-/**
- * Determines the behavior of a formatter with respect to an operation.
- *
- * @param $op
- *   The name of the operation. Currently supported: 'multiple values'.
- * @param $display
- *   The $instance['display'][$build_mode] array.
- *
- * @return
- *   One of these values:
- *   - FIELD_BEHAVIOR_NONE: Do nothing for this operation.
- *   - FIELD_BEHAVIOR_CUSTOM: Use the formatter's callback function.
- *   - FIELD_BEHAVIOR_DEFAULT: Use field module default behavior.
- */
-function field_behaviors_formatter($op, $display) {
-  $info = field_info_formatter_types($display['type']);
   return isset($info['behaviors'][$op]) ? $info['behaviors'][$op] : FIELD_BEHAVIOR_DEFAULT;
 }
 

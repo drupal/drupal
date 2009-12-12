@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.61 2009/12/11 16:49:40 dries Exp $
+// $Id: field.attach.inc,v 1.62 2009/12/12 20:16:03 dries Exp $
 
 /**
  * @file
@@ -1134,15 +1134,7 @@ function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
  *     '#formatter' => the name of the formatter,
  *     '#items' => the field values being displayed,
  *     // The element's children are the formatted values returned by
- *     // hook_field_formatter(), keyed by delta.
- *     0 => array(
- *       // Renderable array for value 0, or for all values if the formatter
- *       // is 'multiple-values'.
- *     ),
- *     1 => array(
- *       // Renderable array for value 1 (only for 'single-value' formatters).
- *     ),
- *     // ...
+ *     // hook_field_formatter().
  *   ),
  * );
  * @endcode

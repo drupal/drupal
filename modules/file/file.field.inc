@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.12 2009/12/11 16:49:40 dries Exp $
+// $Id: file.field.inc,v 1.13 2009/12/12 20:16:03 dries Exp $
 
 /**
  * @file
@@ -373,9 +373,6 @@ function file_field_formatter_info() {
     'file_table' => array(
       'label' => t('Table of files'),
       'field types' => array('file'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
-      ),
     ),
     'file_url_plain' => array(
       'label' => t('URL to file'),
@@ -846,33 +843,35 @@ function theme_file_upload_help($variables) {
 /**
  * Implements hook_field_formatter().
  */
-function file_field_formatter($obj_type, $object, $field, $instance, $langcode, $display, $items, $delta) {
-  $item = $items[$delta];
+function file_field_formatter($obj_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
 
   switch ($display['type']) {
     case 'file_default':
-      $result = array(
-        '#theme' => 'file_link',
-        '#file' => (object) $item,
-      );
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          '#theme' => 'file_link',
+          '#file' => (object) $item,
+        );
+      }
       break;
 
     case 'file_url_plain':
-      $result = array(
-        '#markup' => empty($item['uri']) ? '' : file_create_url($item['uri']),
-      );
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => empty($item['uri']) ? '' : file_create_url($item['uri']));
+      }
       break;
 
     case 'file_table':
-      // Multiple formatter, dealing with all $items.
-      $result = array(
+      // Display all values in a single element..
+      $element[0] = array(
         '#theme' => 'file_formatter_table',
         '#items' => $items,
       );
       break;
   }
 
-  return $result;
+  return $element;
 }
 
 /**
