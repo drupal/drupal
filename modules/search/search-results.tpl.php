@@ -1,5 +1,5 @@
 <?php
-// $Id: search-results.tpl.php,v 1.3 2008/12/30 16:43:18 dries Exp $
+// $Id: search-results.tpl.php,v 1.4 2009/12/12 20:49:34 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,13 @@
  * @see template_preprocess_search_results()
  */
 ?>
-<dl class="search-results <?php print $type; ?>-results">
-  <?php print $search_results; ?>
-</dl>
-<?php print $pager; ?>
+<?php if ($search_results) : ?>
+  <h2><?php print t('Search results');?></h2>
+  <dl class="search-results <?php print $type; ?>-results">
+    <?php print $search_results; ?>  
+  </dl>
+  <?php print $pager; ?>
+<?php else : ?>
+  <h2><?php print t('Your search yielded no results');?></h2>
+  <?php print search_help('search#noresults', drupal_help_arg()); ?>
+<?php endif; ?>
