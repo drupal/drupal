@@ -346,6 +346,11 @@ ul.secondary li.active a.active {
   background: #999;
 }
 
+#block-system-main ul.links li,
+#block-system-main ul.inline li {
+  padding-right: 1em;
+}
+
 #block-system-main ul.menu li a {
   background: #f8f8f8;
   color: #05a;
