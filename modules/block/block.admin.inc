@@ -275,14 +275,18 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   }
   else {
     $options = array(
-      t('On every page except those specified'),
-      t('Show only on specified pages'),
+      t('All pages except those listed'),
+      t('Only the listed pages'),
     );
     $description = t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>'));
 
     if (module_exists('php') && $access) {
-      $options[] = t('If the PHP code returns <code>TRUE</code> (PHP-mode, experts only)');
-      $description .= ' ' . t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => '<?php ?>'));
+      $options[] = t('Pages on which this PHP code returns <code>TRUE</code> (experts only)');
+      $title = t('Pages or PHP code');
+      $description .= ' ' . t('If the PHP option is chosen, enter PHP code between %php. Note that executing incorrect PHP code can break your Drupal site.', array('%php' => '<?php ?>'));
+    }
+    else {
+      $title = t('Pages');
     }
     $form['visibility']['path']['visibility'] = array(
       '#type' => 'radios',
@@ -292,7 +296,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     );
     $form['visibility']['path']['pages'] = array(
       '#type' => 'textarea',
-      '#title' => t('Paths'),
+      '#title' => '<span class="element-invisible">' . $title . '</span>',
       '#default_value' => isset($block->pages) ? $block->pages : '',
       '#description' => $description,
     );
