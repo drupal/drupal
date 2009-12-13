@@ -6,7 +6,7 @@ class ListFieldTestCase extends DrupalWebTestCase {
     return array(
       'name'  => 'List field',
       'description'  => "Test the List field type.",
-      'group' => 'Field Types'
+      'group' => 'Field types'
     );
   }
 

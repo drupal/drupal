@@ -6,7 +6,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     return array(
       'name'  => 'Options widgets',
       'description'  => "Test the Options widgets.",
-      'group' => 'Field Types'
+      'group' => 'Field types'
     );
   }
 

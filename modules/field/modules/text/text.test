@@ -8,9 +8,9 @@ class TextFieldTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name'  => 'Text Field',
+      'name'  => 'Text field',
       'description'  => "Test the creation of text fields.",
-      'group' => 'Field Types'
+      'group' => 'Field types'
     );
   }
 
@@ -224,7 +224,7 @@ class TextSummaryTestCase extends DrupalWebTestCase {
     return array(
       'name' => 'Text summary',
       'description' => 'Test text_summary() with different strings and lengths.',
-      'group' => 'Field Types',
+      'group' => 'Field types',
     );
   }
 
