@@ -1355,6 +1355,10 @@ class SelectQuery extends Query implements SelectQueryInterface {
     }
 
     // RANGE
+    // There is no universal SQL standard for handling range or limit clauses.
+    // Fortunately, all core-supported databases use the same range syntax.
+    // Databases that need a different syntax can override this method and
+    // do whatever alternate logic they need to.
     if (!empty($this->range)) {
       $query .= "\nLIMIT " . $this->range['length'] . " OFFSET " . $this->range['start'];
     }
