@@ -26,32 +26,55 @@ html.js div.contextual-links-wrapper {
   display: block;
 }
 a.contextual-links-trigger {
-  background: transparent url(images/cog-select.png) no-repeat center center;
+  background: transparent url(images/gear-select.png) no-repeat top left;
   display: none;
-  height: 20px;
-  margin-top: 2px;
+  height: 18px;
+  margin: 2px 1px 0 1px;
   outline: none;
   text-indent: 34px;
-  width: 30px;
+  width: 28px;
   overflow: hidden;
 }
 a.contextual-links-trigger:hover,
 div.contextual-links-active a.contextual-links-trigger {
+  background-position: 0 -18px;
+}
+div.contextual-links-active a.contextual-links-trigger {
   background-color: #fff;
+  border: #ccc 1px solid;
+  border-bottom: none;
+  padding: 0;
+  margin: 1px 0 0 0;
+  position: relative;
+  z-index: 1;
+  border-radius-topleft: 4px;
+  border-radius-topright: 4px;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-topright: 4px;
+  -webkit-border-radius-topleft: 4px;
+  -webkit-border-radius-topright: 4px;
 }
 div.contextual-links-wrapper ul.contextual-links {
+  background-color: #fff;
+  border: #ccc 1px solid;
   display: none;
   margin: 0;
-  padding: 5px 10px;
+  padding: 0.25em 0;
   position: absolute;
   right: 0;
-  top: 20px;
+  top: 19px;
   white-space: nowrap;
+  -moz-border-radius: 4px;
+  -moz-border-radius-topright: 0;
+  -webkit-border-radius: 4px;
+  -webkit-border-radius-topright: 0;
+  border-radius: 4px;
+  border-radius-topright: 0;
 }
 .contextual-links-region:hover a.contextual-links-trigger,
 div.contextual-links-active a.contextual-links-trigger,
 div.contextual-links-active ul.contextual-links {
-  display: block;	
+  display: block;
 }
 ul.contextual-links li {
   line-height: 100%;
@@ -64,12 +87,11 @@ div.contextual-links-wrapper a {
   text-decoration: none;
 }
 ul.contextual-links li a {
-  background: #fff;
-  color: #666;
+  color: #333;
   display: block;
-  margin: 0.5em 0;
-  padding: 0.3em;
+  margin: 0.25em 0;
+  padding: 0.25em;
 }
 ul.contextual-links li a:hover {
-  text-decoration: underline;
+  background-color: #bfdcee;
 }

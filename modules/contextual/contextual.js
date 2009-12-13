@@ -10,6 +10,8 @@ Drupal.behaviors.contextualLinks = {
   attach: function (context) {
     $('div.contextual-links-wrapper', context).once('contextual-links', function () {
       var $wrapper = $(this);
+      var $region = $wrapper.closest('.contextual-links-region');
+      var $links = $wrapper.find('ul.contextual-links');
       var $trigger = $('<a class="contextual-links-trigger" href="#" />').text(Drupal.t('Configure')).click(
         function () {
           $wrapper.find('ul.contextual-links').slideToggle(100);
@@ -17,24 +19,24 @@ Drupal.behaviors.contextualLinks = {
           return false;
         }
       );
-      $wrapper.prepend($trigger)
-        .closest('.contextual-links-region').hover(Drupal.contextualLinks.hover, Drupal.contextualLinks.hoverOut);
+      // Attach hover behavior to trigger and ul.contextual-links.
+      $trigger.add($links).hover(
+        function () { $region.addClass('contextual-links-region-active'); },
+        function () { $region.removeClass('contextual-links-region-active'); }
+      );
+      // Hide the contextual links when user rolls out of the ul.contextual-links or .contextual-links-region.
+      $links.add($region).bind('mouseleave', Drupal.contextualLinks.mouseleave);
+      // Prepend the trigger.
+      $links.end().prepend($trigger);
     });
   }
 };
 
 /**
- * Enables outline for the region contextual links are associated with.
- */
-Drupal.contextualLinks.hover = function () {
-  $(this).closest('.contextual-links-region').addClass('contextual-links-region-active');
-};
-
-/**
  * Disables outline for the region contextual links are associated with.
  */
-Drupal.contextualLinks.hoverOut = function () {
-  $(this).closest('.contextual-links-region').removeClass('contextual-links-region-active')
+Drupal.contextualLinks.mouseleave = function () {
+  $(this).closest('.contextual-links-region')
     .find('.contextual-links-active').removeClass('contextual-links-active')
     .find('ul.contextual-links').hide();
 };
