@@ -157,20 +157,56 @@ function field_test_field_widget_info() {
  * Implements hook_field_widget().
  */
 function field_test_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $element = array(
-    'value' => $element + array(
-      '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : '',
-    ),
-  );
-  return $element;
+  switch ($instance['widget']['type']) {
+    case 'test_field_widget':
+      $element += array(
+        '#type' => 'textfield',
+        '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : '',
+      );
+      return array('value' => $element);
+
+    case 'test_field_widget_multiple':
+      $values = array();
+      foreach ($items as $delta => $value) {
+        $values[] = $value['value'];
+      }
+      $element += array(
+        '#type' => 'textfield',
+        '#default_value' => implode(', ', $values),
+        '#element_validate' => array('field_test_widget_multiple_validate'),
+      );
+      return $element;
+  }
+}
+
+/**
+ * Form element validation handler for 'test_field_widget_multiple' widget.
+ */
+function field_test_widget_multiple_validate($element, &$form_state) {
+  $values = array_map('trim', explode(',', $element['#value']));
+  $items = array();
+  foreach($values as $value) {
+    $items[] = array('value' => $value);
+  }
+  form_set_value($element, $items, $form_state);
 }
 
 /**
  * Implements hook_field_widget_error().
  */
 function field_test_field_widget_error($element, $error) {
-  form_error($element['value'], $error['message']);
+  // @todo No easy way to differenciate widget types, we should receive it as a
+  // parameter.
+  if (isset($element['value'])) {
+    // Widget is test_field_widget.
+    $error_element = $element['value'];
+  }
+  else {
+    // Widget is test_field_widget_multiple.
+    $error_element = $element;
+  }
+
+  form_error($error_element, $error['message']);
 }
 
 /**

@@ -347,10 +347,6 @@ function hook_field_sanitize($obj_type, $object, $field, $instance, $langcode, &
  *   The type of $object.
  * @param $object
  *   The object for the operation.
- *   Note that this might not be a full-fledged 'object'. When invoked through
- *   field_attach_query(), the $object will only include properties that the
- *   Field API knows about: bundle, id, revision id, and field values (no node
- *   title, user name...).
  * @param $field
  *   The field structure for the operation.
  * @param $instance
@@ -927,11 +923,6 @@ function hook_field_attach_form($obj_type, $object, &$form, &$form_state, $langc
  * indexed by object id. For performance reasons, information for all available
  * objects should be loaded in a single query where possible.
  *
- * Note that $objects might not be full-fledged 'objects'. When invoked through
- * field_attach_query(), each object only includes properties that the Field
- * API knows about: bundle, id, revision id, and field values (no node title,
- * user name...)
-
  * The changes made to the objects' field values get cached by the field cache
  * for subsequent loads.
  *

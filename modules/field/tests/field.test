@@ -40,6 +40,32 @@ class FieldTestCase extends DrupalWebTestCase {
     }
     return $values;
   }
+
+  /**
+   * Assert that a field has the expected values in an entity.
+   *
+   * This function only checks a single column in the field values.
+   *
+   * @param $entity
+   *   The entity to test.
+   * @param $field_name
+   *   The name of the field to test
+   * @param $langcode
+   *   The language code for the values.
+   * @param $expected_values
+   *   The array of expected values.
+   * @param $column
+   *   (Optional) the name of the column to check.
+   */
+  function assertFieldValues($entity, $field_name, $langcode, $expected_values, $column = 'value') {
+    $e = clone $entity;
+    field_attach_load('test_entity', array($e->ftid => $e));
+    $values = isset($e->{$field_name}[$langcode]) ? $e->{$field_name}[$langcode] : array();
+    $this->assertEqual(count($values), count($expected_values), t('Expected number of values were saved.'));
+    foreach ($expected_values as $key => $value) {
+      $this->assertEqual($values[$key][$column], $value, t('Value @value was saved correctly.', array('@value' => $value)));
+    }
+  }
 }
 
 class FieldAttachTestCase extends FieldTestCase {
@@ -1036,7 +1062,6 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $values = array();
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
       $values[$delta]['value'] = -1;
-      $values[$delta]['_error_element'] = 'field_error_' . $delta;
     }
     // Arrange for item 1 not to generate an error
     $values[1]['value'] = 1;
@@ -1060,6 +1085,17 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
       }
     }
     $this->assertEqual(count($errors[$this->field_name][$langcode]), 0, 'No extraneous errors set');
+
+    // Check that cardinality is validated.
+    $entity->{$this->field_name}[$langcode] = $this->_generateTestFieldValues($this->field['cardinality'] + 1);
+    try {
+      field_attach_validate($entity_type, $entity);
+    }
+    catch (FieldValidationException $e) {
+      $errors = $e->errors;
+    }
+    $this->assertEqual($errors[$this->field_name][$langcode][0][0]['error'], 'field_cardinality', t('Cardinality validation failed.'));
+
   }
 
   /**
@@ -1538,11 +1574,6 @@ class FieldFormTestCase extends FieldTestCase {
     // Test with several multiple fields in a form
   }
 
-  // Check with a multiple widget (implement a textfield with comma separated values).
-
-  // Check inaccessible fields are preserved on update.
-  // Check inaccessible fields get default value on insert (not implemented yet).
-
   function testFieldFormJSAddMore() {
     $this->field = $this->field_unlimited;
     $this->field_name = $this->field['field_name'];
@@ -1595,6 +1626,46 @@ class FieldFormTestCase extends FieldTestCase {
     $this->assertFieldByName("$this->field_name[$langcode][$delta][value]", '', "New widget is displayed");
     $this->assertFieldByName("$this->field_name[$langcode][$delta][_weight]", $delta, "New widget has the right weight");
     $this->assertNoField("$this->field_name[$langcode][" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
+  }
+
+  /**
+   * Tests widgets handling multiple values.
+   */
+  function testFieldFormMultipleWidget() {
+    // Create a field with fixed cardinality and an instance using a multiple
+    // widget.
+    $this->field = $this->field_multiple;
+    $this->field_name = $this->field['field_name'];
+    $this->instance['field_name'] = $this->field_name;
+    $this->instance['widget']['type'] = 'test_field_widget_multiple';
+    field_create_field($this->field);
+    field_create_instance($this->instance);
+    $langcode = LANGUAGE_NONE;
+
+    // Display creation form.
+    $this->drupalGet('test-entity/add/test-bundle');
+    $this->assertFieldByName("{$this->field_name}[$langcode]", '', t('Widget is displayed.'));
+
+    // Create entity with three values.
+    $edit = array("{$this->field_name}[$langcode]" => '1, 2, 3');
+    $this->drupalPost(NULL, $edit, t('Save'));
+    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    $id = $match[1];
+
+    // Check that the values were saved.
+    $entity_init = field_test_create_stub_entity($id);
+    $this->assertFieldValues($entity_init, $this->field_name, $langcode, array(1, 2, 3));
+
+    // Display the form, check that the values are correctly filled in.
+    $this->drupalGet('test-entity/' . $id . '/edit');
+    $this->assertFieldByName("{$this->field_name}[$langcode]", '1, 2, 3', t('Widget is displayed.'));
+
+    // Submit the form with more values than the field accepts.
+    $edit = array("{$this->field_name}[$langcode]" => '1, 2, 3, 4, 5');
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertRaw('this field cannot hold more than 4 values', t('Form validation failed.'));
+    // Check that the field values were not submitted.
+    $this->assertFieldValues($entity_init, $this->field_name, $langcode, array(1, 2, 3));
   }
 
   /**

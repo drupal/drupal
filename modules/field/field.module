@@ -303,23 +303,22 @@ function field_get_default_value($obj_type, $object, $field, $instance, $langcod
 }
 
 /**
- * Helper function to filter out empty values.
+ * Helper function to filter out empty field values.
  *
- * On order to keep marker rows in the database, the function ensures
- * that the right number of 'all columns NULL' values is kept.
+ * @param $field
+ *   The field definition.
+ * @param $items
+ *   The field values to filter.
  *
- * @param array $field
- * @param array $items
- * @return array
- *   returns filtered and adjusted item array
- *
- * TODO D7: poorly named...
+ * @return
+ *   The array of items without empty field values. The function also renumbers
+ *   the array keys to ensure sequential deltas.
  */
-function field_set_empty($field, $items) {
+function _field_filter_items($field, $items) {
   $function = $field['module'] . '_field_is_empty';
-  // We ensure the function is loaded, but explicitly break if it is missing.
   function_exists($function);
   foreach ((array) $items as $delta => $item) {
+    // Explicitly break if the function is undefined.
     if ($function($item, $field)) {
       unset($items[$delta]);
     }

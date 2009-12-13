@@ -128,20 +128,10 @@ function options_field_widget(&$form, &$form_state, $field, $instance, $langcode
  * Form element validation handler for options element.
  */
 function options_field_widget_validate($element, &$form_state) {
-  $field = $form_state['complete form']['#fields'][$element['#field_name']]['field'];
-  $instance = $form_state['complete form']['#fields'][$element['#field_name']]['instance'];
-
   // Transpose selections from field => delta to delta => field, turning
   // multiple selected options into multiple parent elements.
   $items = _options_form_to_storage($element);
   form_set_value($element, $items, $form_state);
-
-  // Check that we don't exceed the allowed number of values.
-  if ($field['cardinality'] >= 2 && $field['cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
-    if (count($items) > $field['cardinality']) {
-      form_error($element, t('%name: this field cannot hold more than @count values.', array('%name' => t($instance['label']), '@count' => $field['cardinality'])));
-    }
-  }
 }
 
 /**

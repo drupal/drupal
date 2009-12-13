@@ -85,7 +85,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // Select first option.
     $edit = array("card_1[$langcode]" => 0);
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_1', $langcode, array(0));
+    $this->assertFieldValues($entity_init, 'card_1', $langcode, array(0));
 
     // Check that the selected button is checked.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
@@ -96,7 +96,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // Unselect option.
     $edit = array("card_1[$langcode]" => '_none');
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_1', $langcode, array());
+    $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
 
     // Required radios with one option is auto-selected.
     $this->card_1['settings']['allowed_values'] = '99|Only allowed value';
@@ -145,7 +145,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
       "card_2[$langcode][2]" => TRUE,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_2', $langcode, array(0, 2));
+    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0, 2));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
@@ -160,7 +160,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
       "card_2[$langcode][2]" => FALSE,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_2', $langcode, array(0));
+    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
@@ -185,7 +185,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     // Check that the value was saved.
-    $this->assertListValues($entity_init, 'card_2', $langcode, array());
+    $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
 
     // Required checkbox with one option is auto-selected.
     $this->card_2['settings']['allowed_values'] = '99|Only allowed value';
@@ -227,7 +227,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // Submit form: select first option.
     $edit = array("card_1[$langcode]" => 0);
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_1', $langcode, array(0));
+    $this->assertFieldValues($entity_init, 'card_1', $langcode, array(0));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
@@ -238,7 +238,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // Submit form: Unselect the option.
     $edit = array("card_1[$langcode]" => '_none');
     $this->drupalPost('test-entity/' . $entity->ftid .'/edit', $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_1', $langcode, array());
+    $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
 
     // A required select list does not have an empty key.
     $instance['required'] = TRUE;
@@ -281,7 +281,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // Submit form: select first and third options.
     $edit = array("card_2[$langcode][]" => array(0 => 0, 2 => 2));
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_2', $langcode, array(0, 2));
+    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0, 2));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
@@ -292,7 +292,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // Submit form: select only first option.
     $edit = array("card_2[$langcode][]" => array(0 => 0));
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_2', $langcode, array(0));
+    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
@@ -308,7 +308,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // Submit form: uncheck all options.
     $edit = array("card_2[$langcode][]" => array());
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_2', $langcode, array());
+    $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
 
     // Test the 'None' option.
 
@@ -316,12 +316,12 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // as well.
     $edit = array("card_2[$langcode][]" => array('_none' => '_none', 0 => 0));
     $this->drupalPost('test-entity/' . $entity->ftid .'/edit', $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_2', $langcode, array(0));
+    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
 
     // Check that selecting the 'none' option empties the field.
     $edit = array("card_2[$langcode][]" => array('_none' => '_none'));
     $this->drupalPost('test-entity/' . $entity->ftid .'/edit', $edit, t('Save'));
-    $this->assertListValues($entity_init, 'card_2', $langcode, array());
+    $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
 
     // A required select list does not have an empty key.
     $instance['required'] = TRUE;
@@ -362,7 +362,7 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // Submit form: check the option.
     $edit = array("bool[$langcode]" => TRUE);
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'bool', $langcode, array(0));
+    $this->assertFieldValues($entity_init, 'bool', $langcode, array(0));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
@@ -371,33 +371,11 @@ class OptionsWidgetsTestCase extends DrupalWebTestCase {
     // Submit form: uncheck the option.
     $edit = array("bool[$langcode]" => FALSE);
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertListValues($entity_init, 'bool', $langcode, array(1));
+    $this->assertFieldValues($entity_init, 'bool', $langcode, array(1));
 
     // Display form: with 'off' value, option is unchecked.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
     $this->assertNoFieldChecked("edit-bool-$langcode");
-  }
-
-  /**
-   * Assert that a 'list' field has the expected values in an entity.
-   *
-   * @param $entity
-   *   The entity to test.
-   * @param $field_name
-   *   The name of the field to test
-   * @param $langcode
-   *   The language code for the values.
-   * @param $expected_values
-   *   The array of expected values.
-   */
-  function assertListValues($entity, $field_name, $langcode, $expected_values) {
-    $e = clone $entity;
-    field_attach_load('test_entity', array($e->ftid => $e));
-    $values = isset($e->{$field_name}[$langcode]) ? $e->{$field_name}[$langcode] : array();
-    $this->assertEqual(count($values), count($expected_values), t('Expected number of values were saved.'));
-    foreach ($expected_values as $key => $value) {
-      $this->assertEqual($values[$key]['value'], $value, t('Option @value was saved correctly.', array('@value' => $value)));
-    }
   }
 }
 
