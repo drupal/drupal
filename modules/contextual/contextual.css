@@ -26,10 +26,11 @@ html.js div.contextual-links-wrapper {
   display: block;
 }
 a.contextual-links-trigger {
-  background: transparent url(images/gear-select.png) no-repeat top left;
+  background: transparent url(images/gear-select.png) no-repeat 2px 0;
   display: none;
   height: 18px;
   margin: 2px 1px 0 1px;
+  padding: 0 2px;
   outline: none;
   text-indent: 34px;
   width: 28px;
@@ -37,13 +38,13 @@ a.contextual-links-trigger {
 }
 a.contextual-links-trigger:hover,
 div.contextual-links-active a.contextual-links-trigger {
-  background-position: 0 -18px;
+  background-position: 2px -18px;
 }
 div.contextual-links-active a.contextual-links-trigger {
   background-color: #fff;
   border: #ccc 1px solid;
   border-bottom: none;
-  padding: 0;
+  padding: 0 2px;
   margin: 1px 0 0 0;
   position: relative;
   z-index: 1;
@@ -90,7 +91,7 @@ ul.contextual-links li a {
   color: #333;
   display: block;
   margin: 0.25em 0;
-  padding: 0.25em;
+  padding: 0.25em 1em 0.25em 0.5em;
 }
 ul.contextual-links li a:hover {
   background-color: #bfdcee;

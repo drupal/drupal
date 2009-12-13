@@ -24,8 +24,8 @@ Drupal.behaviors.contextualLinks = {
         function () { $region.addClass('contextual-links-region-active'); },
         function () { $region.removeClass('contextual-links-region-active'); }
       );
-      // Hide the contextual links when user rolls out of the ul.contextual-links or .contextual-links-region.
-      $links.add($region).bind('mouseleave', Drupal.contextualLinks.mouseleave);
+      // Hide the contextual links when user rolls out of the .contextual-links-region.
+      $region.bind('mouseleave', Drupal.contextualLinks.mouseleave);
       // Prepend the trigger.
       $links.end().prepend($trigger);
     });
