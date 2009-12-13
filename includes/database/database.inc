@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.85 2009/12/04 16:31:04 dries Exp $
+// $Id: database.inc,v 1.86 2009/12/13 18:10:42 webchick Exp $
 
 /**
  * @file
@@ -817,6 +817,34 @@ abstract class DatabaseConnection extends PDO {
    */
   public function escapeTable($table) {
     return preg_replace('/[^A-Za-z0-9_]+/', '', $table);
+  }
+
+  /**
+   * Escape characters that work as wildcard characters in a LIKE pattern.
+   *
+   * The wildcard characters "%" and "_" as well as backslash are prefixed with
+   * a backslash. Use this to do a seach for a verbatim string without any
+   * wildcard behavior.
+   *
+   * For example, the following does a case-insensitive query for all rows whose
+   * name starts with $prefix:
+   * @code
+   * $result = db_query(
+   *   'SELECT * FROM person WHERE name LIKE :pattern',
+   *   array(':pattern' => db_like($prefix) . '%')
+   * );
+   * @endcode
+   *
+   * Backslash is defined as escape character for LIKE patterns in
+   * DatabaseCondition::mapConditionOperator().
+   *
+   * @param $string
+   *   The string to escape.
+   * @return
+   *   The escaped string.
+   */
+  public function escapeLike($string) {
+    return addcslashes($string, '\%_');
   }
 
   /**
@@ -2232,6 +2260,34 @@ function db_is_active() {
  */
 function db_escape_table($table) {
   return Database::getConnection()->escapeTable($table);
+}
+
+/**
+ * Escape characters that work as wildcard characters in a LIKE pattern.
+ *
+ * The wildcard characters "%" and "_" as well as backslash are prefixed with
+ * a backslash. Use this to do a seach for a verbatim string without any
+ * wildcard behavior.
+ *
+ * For example, the following does a case-insensitive query for all rows whose
+ * name starts with $prefix:
+ * @code
+ * $result = db_query(
+ *   'SELECT * FROM person WHERE name LIKE :pattern',
+ *   array(':pattern' => db_like($prefix) . '%')
+ * );
+ * @endcode
+ *
+ * Backslash is defined as escape character for LIKE patterns in
+ * DatabaseCondition::mapConditionOperator().
+ *
+ * @param $string
+ *   The string to escape.
+ * @return
+ *   The escaped string.
+ */
+function db_like($string) {
+  return Database::getConnection()->escapeLike($string);
 }
 
 /**

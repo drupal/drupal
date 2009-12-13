@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.77 2009/12/09 19:01:14 dries Exp $
+// $Id: database_test.test,v 1.78 2009/12/13 18:10:43 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2642,6 +2642,63 @@ class DatabaseAnsiSyntaxTestCase extends DatabaseTestCase {
       ':age' => 25,
     ));
     $this->assertIdentical($result->fetchField(), 'The age of John is 25.', t('Field ANSI Concat works.'));
+  }
+
+  /**
+   * Test escaping of LIKE wildcards.
+   */
+  function testLikeEscape() {
+    db_insert('test')
+      ->fields(array(
+        'name' => 'Ring_',
+      ))
+      ->execute();
+
+    // Match both "Ringo" and "Ring_".
+    $num_matches = db_select('test', 't')
+      ->condition('name', 'Ring_', 'LIKE')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Found 2 records.'));
+    // Match only "Ring_" using a LIKE expression with no wildcards.
+    $num_matches = db_select('test', 't')
+      ->condition('name', db_like('Ring_'), 'LIKE')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical($num_matches, '1', t('Found 1 record.'));
+  }
+
+  /**
+   * Test LIKE query containing a backslash.
+   */
+  function testLikeBackslash() {
+    db_insert('test')
+      ->fields(array('name'))
+      ->values(array(
+        'name' => 'abcde\f',
+      ))
+      ->values(array(
+        'name' => 'abc%\_',
+      ))
+      ->execute();
+
+    // Match both rows using a LIKE expression with two wildcards and a verbatim
+    // backslash.
+    $num_matches = db_select('test', 't')
+      ->condition('name', 'abc%\\\\_', 'LIKE')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Found 2 records.'));
+    // Match only the former using a LIKE expression with no wildcards.
+    $num_matches = db_select('test', 't')
+      ->condition('name', db_like('abc%\_'), 'LIKE')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical($num_matches, '1', t('Found 1 record.'));
   }
 }
 
