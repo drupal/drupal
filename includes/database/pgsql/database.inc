@@ -120,8 +120,9 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
   public function mapConditionOperator($operator) {
     static $specials = array(
       // In PostgreSQL, 'LIKE' is case-sensitive. For case-insensitive LIKE
-      // statements, we need to use ILIKE instead.
-      'LIKE' => array('operator' => 'ILIKE'),
+      // statements, we need to use ILIKE instead. Use backslash for escaping
+      // wildcard characters.
+      'LIKE' => array('operator' => 'ILIKE', 'postfix' => " ESCAPE '\\\\'"),
     );
 
     return isset($specials[$operator]) ? $specials[$operator] : NULL;

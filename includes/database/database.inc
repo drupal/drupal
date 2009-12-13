@@ -820,6 +820,34 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
+   * Escape characters that work as wildcard characters in a LIKE pattern.
+   *
+   * The wildcard characters "%" and "_" as well as backslash are prefixed with
+   * a backslash. Use this to do a seach for a verbatim string without any
+   * wildcard behavior.
+   *
+   * For example, the following does a case-insensitive query for all rows whose
+   * name starts with $prefix:
+   * @code
+   * $result = db_query(
+   *   'SELECT * FROM person WHERE name LIKE :pattern',
+   *   array(':pattern' => db_like($prefix) . '%')
+   * );
+   * @endcode
+   *
+   * Backslash is defined as escape character for LIKE patterns in
+   * DatabaseCondition::mapConditionOperator().
+   *
+   * @param $string
+   *   The string to escape.
+   * @return
+   *   The escaped string.
+   */
+  public function escapeLike($string) {
+    return addcslashes($string, '\%_');
+  }
+
+  /**
    * Determine if there is an active transaction open.
    *
    * @return
@@ -2232,6 +2260,34 @@ function db_is_active() {
  */
 function db_escape_table($table) {
   return Database::getConnection()->escapeTable($table);
+}
+
+/**
+ * Escape characters that work as wildcard characters in a LIKE pattern.
+ *
+ * The wildcard characters "%" and "_" as well as backslash are prefixed with
+ * a backslash. Use this to do a seach for a verbatim string without any
+ * wildcard behavior.
+ *
+ * For example, the following does a case-insensitive query for all rows whose
+ * name starts with $prefix:
+ * @code
+ * $result = db_query(
+ *   'SELECT * FROM person WHERE name LIKE :pattern',
+ *   array(':pattern' => db_like($prefix) . '%')
+ * );
+ * @endcode
+ *
+ * Backslash is defined as escape character for LIKE patterns in
+ * DatabaseCondition::mapConditionOperator().
+ *
+ * @param $string
+ *   The string to escape.
+ * @return
+ *   The escaped string.
+ */
+function db_like($string) {
+  return Database::getConnection()->escapeLike($string);
 }
 
 /**
