@@ -17,15 +17,17 @@ class CommentHelperCase extends DrupalWebTestCase {
   /**
    * Post comment.
    *
-   * @param object $node Node to post comment on.
-   * @param string $comment Comment body.
-   * @param string $subject Comment subject.
-   * @param mixed $contact Set to NULL for no contact info, TRUE to ignore success checking, and array of values to set contact info.
-   *
-   * This needs to be static to be invoked via CommentHelperCase::postComment()
-   * in other tests.
+   * @param $node
+   *   Node to post comment on.
+   * @param $comment
+   *   Comment body.
+   * @param $subject
+   *   Comment subject.
+   * @param $contact
+   *   Set to NULL for no contact info, TRUE to ignore success checking, and
+   *   array of values to set contact info.
    */
-  public static function postComment($node, $comment, $subject = '', $contact = NULL) {
+  function postComment($node, $comment, $subject = '', $contact = NULL) {
     $edit = array();
     $edit['comment'] = $comment;
 

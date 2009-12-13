@@ -302,6 +302,9 @@ class UserLoginTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Test cancelling a user.
+ */
 class UserCancelTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -309,6 +312,10 @@ class UserCancelTestCase extends DrupalWebTestCase {
       'description' => 'Ensure that account cancellation methods work as expected.',
       'group' => 'User',
     );
+  }
+
+  function setUp() {
+    parent::setUp('comment');
   }
 
   /**
@@ -521,7 +528,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     variable_set('user_cancel_method', 'user_cancel_delete');
 
     // Create a user.
-    $account = $this->drupalCreateUser(array('cancel account'));
+    $account = $this->drupalCreateUser(array('cancel account', 'post comments', 'post comments without approval'));
     $this->drupalLogin($account);
     // Load real user object.
     $account = user_load($account->uid, TRUE);
@@ -530,9 +537,16 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
 
     // Create comment.
-    module_load_include('test', 'comment');
-    $comment = CommentHelperCase::postComment($node, $this->randomName(32), '', TRUE);
-    $this->assertTrue(comment_load($comment->id), t('Comment found.'));
+    $edit = array(
+      'subject' => $this->randomString(),
+      'comment' => $this->randomString(),
+    );
+    $this->drupalPost('comment/reply/' . $node->nid, $edit, t('Preview'));
+    $this->drupalPost(NULL, array(), t('Save'));
+    $this->assertText(t('Your comment has been posted.'));
+    $comments = comment_load_multiple(array(), array('subject' => $edit['subject']));
+    $comment = reset($comments);
+    $this->assertTrue($comment->cid, t('Comment found.'));
 
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
@@ -562,7 +576,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $this->assertFalse(node_load($node->nid, NULL, TRUE), t('Node of the user has been deleted.'));
     $this->assertFalse(node_load($node->nid, $revision, TRUE), t('Node revision of the user has been deleted.'));
     $this->assertTrue(node_load($revision_node->nid, NULL, TRUE), t("Current revision of the user's node was not deleted."));
-    $this->assertFalse(comment_load($comment->id), t('Comment of the user has been deleted.'));
+    $this->assertFalse(comment_load($comment->cid), t('Comment of the user has been deleted.'));
 
     // Confirm that user is logged out.
     $this->assertNoText($account->name, t('Logged out.'));

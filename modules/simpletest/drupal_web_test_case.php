@@ -430,20 +430,22 @@ abstract class DrupalTestCase {
    * @see set_error_handler
    */
   public function errorHandler($severity, $message, $file = NULL, $line = NULL) {
-    $error_map = array(
-      E_STRICT => 'Run-time notice',
-      E_WARNING => 'Warning',
-      E_NOTICE => 'Notice',
-      E_CORE_ERROR => 'Core error',
-      E_CORE_WARNING => 'Core warning',
-      E_USER_ERROR => 'User error',
-      E_USER_WARNING => 'User warning',
-      E_USER_NOTICE => 'User notice',
-      E_RECOVERABLE_ERROR => 'Recoverable error',
-    );
+    if ($severity & error_reporting()) {
+      $error_map = array(
+        E_STRICT => 'Run-time notice',
+        E_WARNING => 'Warning',
+        E_NOTICE => 'Notice',
+        E_CORE_ERROR => 'Core error',
+        E_CORE_WARNING => 'Core warning',
+        E_USER_ERROR => 'User error',
+        E_USER_WARNING => 'User warning',
+        E_USER_NOTICE => 'User notice',
+        E_RECOVERABLE_ERROR => 'Recoverable error',
+      );
 
-    $backtrace = debug_backtrace();
-    $this->error($message, $error_map[$severity], _drupal_get_last_caller($backtrace));
+      $backtrace = debug_backtrace();
+      $this->error($message, $error_map[$severity], _drupal_get_last_caller($backtrace));
+    }
     return TRUE;
   }
 
@@ -535,11 +537,6 @@ class DrupalUnitTestCase extends DrupalTestCase {
     // Store necessary current values before switching to prefixed database.
     $this->originalPrefix = $db_prefix;
     $this->originalFileDirectory = file_directory_path();
-
-    // Log fatal errors.
-    ini_set('log_errors', 1);
-    // Make all errors visible.
-    error_reporting(E_ALL);
 
     // Reset all statics so that test is performed with a clean environment.
     drupal_static_reset();
@@ -1057,8 +1054,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Log fatal errors.
     ini_set('log_errors', 1);
     ini_set('error_log', $directory . '/error.log');
-    // Make all errors visible.
-    error_reporting(E_ALL);
 
     // Reset all statics so that test is performed with a clean environment.
     drupal_static_reset();
