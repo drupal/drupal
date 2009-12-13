@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.416 2009/12/05 16:03:51 dries Exp $
+// $Id: form.inc,v 1.417 2009/12/13 14:18:31 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2388,7 +2388,7 @@ function theme_tableselect($variables) {
     $first_col = $element['#js_select'] ? array(theme('table_select_header_cell')) : array('');
     $header = array_merge($first_col, $header);
   }
-  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => $element['#empty']));
+  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => $element['#empty'], 'attributes' => $element['#attributes']));
 }
 
 /**
