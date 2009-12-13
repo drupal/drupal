@@ -7,6 +7,19 @@
  */
 
 /**
+ * Implements hook_help().
+ */
+function options_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#options':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Options module defines checkbox, selection, and other input widgets for the Field module. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
+      return $output;
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function options_theme() {

@@ -147,20 +147,27 @@ function field_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling field types') . '</dt>';
-      $output .= '<dd>' . t('The Field module provides the infrastructure for fields and field attachment, but the field types themselves are provided by additional modules. Some of the modules are required; the optional modules can be enabled from the <a href="@modules">Modules administration page</a>. Drupal core includes the following field type modules:', array('@modules' => url('admin/config/modules')));
-      $output .= '<dl>';
-      $output .= '<dt>' . t('Number (required)') . '</dt>';
-      $output .= '<dd>' . t('Fields for storing numbers, in integer, decimal or floating point form. You may define a set of allowed inputs, or specify an allowable range of values. Several common formats for displaying numeric data are available.') . '</dd>';
-      $output .= '<dt>' . t('Text (required)') . '</dt>';
-      $output .= '<dd>' . t( "Fields for storing text. A text field may contain plain text only, or optionally, may use Drupal's input format filters to securely manage HTML output. Text input fields may be either a single line (text field), multiple lines (text area), or for greater input control, a select box, checkbox, or radio buttons. If desired, the field can be validated, so that it is limited to a set of allowed values.") . '</dd>';
-      $output .= '<dt>' . t('List (required)') . '</dt>';
-      $output .= '<dd>' . t('Fields for storing a list of items. Usually these items are inputted through a select list, checkboxes, or radio buttons.') . '</dd>';
-      $output .= '<dt>' . t('Image') . '</dt>';
-      $output .= '<dd>' . t('Fields for storing images.') . '</dd>';
-      $output .= '<dt>' . t('File') . '</dt>';
-      $output .= '<dd>' . t('Fields for attaching files to content.') . '</dd>';
-      $output .= '</dl></dd>';
-      $output .= '<dd>' . t('Additional fields may be provided by contributed modules, which you can find in the <a href="@contrib">contributed module section of drupal.org</a>.', array('@contrib' => 'http://drupal.org/project/modules')) . '</dd>';
+      $output .= '<dd>' . t('The Field module provides the infrastructure for fields and field attachment; the field types and input widgets themselves are provided by additional modules. Some of the modules are required; the optional modules can be enabled from the <a href="@modules">Modules administration page</a>. Drupal core includes the following field type modules: Number (required), Text (required), List (required), Taxonomy (optional), Image (optional), and File (optional); the required Options module provides input widgets for other field modules. Additional fields and widgets may be provided by contributed modules, which you can find in the <a href="@contrib">contributed module section of Drupal.org</a>. Currently enabled field and input widget modules:', array('@modules' => url('admin/config/modules'), '@contrib' => 'http://drupal.org/project/modules', '@options' => url('admin/help/options')));
+
+      // Make a list of all widget and field modules currently enabled, in
+      // order by displayed module name (module names are not translated).
+      $items = array();
+      $info = system_get_info('module');
+      $modules = array_merge(module_implements('field_info'), module_implements('field_widget_info'));
+      $modules = array_unique($modules);
+      sort($modules);
+      foreach ($modules as $module) {
+        $display = $info[$module]['name'];
+        if (module_hook($module, 'help')) {
+          $items['items'][] = l($display, 'admin/help/' . $module);
+        }
+        else {
+          $items['items'][] = $display;
+        }
+      }
+      $output .= theme('item_list', $items) . '</dd>';
+      $output .= '<dt>' . t('Managing field data storage') . '</dt>';
+      $output .= '<dd>' . t('Developers of field modules can either use the default <a href="@sql-store">Field SQL storage module</a> to store data for their fields, or a contributed or custom module developed using the <a href="@storage-api">field storage API</a>.', array('@storage-api' => 'http://api.drupal.org/api/group/field_storage/7', '@sql-store' => url('admin/help/field_sql_storage'))) . '</dd>';
       $output .= '</dl>';
       return $output;
   }

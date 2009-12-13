@@ -7,6 +7,19 @@
  */
 
 /**
+ * Implements hook_help().
+ */
+function list_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#list':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The List module defines various fields for storing a list of items, for use with the Field module. Usually these items are entered through a select list, checkboxes, or radio buttons. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
+      return $output;
+  }
+}
+
+/**
  * Implements hook_field_info().
  */
 function list_field_info() {
