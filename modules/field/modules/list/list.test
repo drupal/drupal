@@ -1,12 +1,12 @@
 <?php
-// $Id: list.test,v 1.6 2009/12/10 15:39:43 dries Exp $
+// $Id: list.test,v 1.7 2009/12/13 09:04:55 webchick Exp $
 
 class ListFieldTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name'  => 'List field',
       'description'  => "Test the List field type.",
-      'group' => 'Field Types'
+      'group' => 'Field types'
     );
   }
 

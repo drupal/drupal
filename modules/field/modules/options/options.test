@@ -1,12 +1,12 @@
 <?php
-// $Id: options.test,v 1.6 2009/12/02 19:26:21 dries Exp $
+// $Id: options.test,v 1.7 2009/12/13 09:04:55 webchick Exp $
 
 class OptionsWidgetsTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name'  => 'Options widgets',
       'description'  => "Test the Options widgets.",
-      'group' => 'Field Types'
+      'group' => 'Field types'
     );
   }
 
