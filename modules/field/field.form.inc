@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.36 2009/12/01 03:07:33 dries Exp $
+// $Id: field.form.inc,v 1.37 2009/12/13 12:41:08 dries Exp $
 
 /**
  * @file
@@ -141,7 +141,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
   // Determine the number of widgets to display.
   switch ($field['cardinality']) {
     case FIELD_CARDINALITY_UNLIMITED:
-      $filled_items = field_set_empty($field, $items);
+      $filled_items = _field_filter_items($field, $items);
       $current_item_count = isset($form_state['field_item_count'][$field_name])
                             ? $form_state['field_item_count'][$field_name]
                             : count($items);

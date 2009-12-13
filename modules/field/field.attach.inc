@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.62 2009/12/12 20:16:03 dries Exp $
+// $Id: field.attach.inc,v 1.63 2009/12/13 12:41:08 dries Exp $
 
 /**
  * @file
@@ -685,11 +685,16 @@ function field_attach_load_revision($obj_type, $objects, $options = array()) {
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
  *   The object with fields to validate.
- * @return
- *   Throws a FieldValidationException if validation errors are found.
+ * @throws FieldValidationException
+ *   If validation errors are found, a FieldValidationException is thrown. The
+ *   'errors' property contains the array of errors, keyed by field name,
+ *   language and delta.
  */
 function field_attach_validate($obj_type, $object) {
   $errors = array();
+  // Check generic, field-type-agnostic errors first.
+  _field_invoke_default('validate', $obj_type, $object, $errors);
+  // Check field-type specific errors.
   _field_invoke('validate', $obj_type, $object, $errors);
 
   // Let other modules validate the object.

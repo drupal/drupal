@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.548 2009/12/12 20:16:03 dries Exp $
+// $Id: taxonomy.module,v 1.549 2009/12/13 12:41:08 dries Exp $
 
 /**
  * @file
@@ -1045,17 +1045,6 @@ function taxonomy_field_schema($field) {
 function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
   $allowed_values = taxonomy_allowed_values($field);
   $widget = field_info_widget_types($instance['widget']['type']);
-
-  // Check we don't exceed the allowed number of values for widgets with custom
-  // behavior for multiple values (taxonomy_autocomplete widget).
-  if ($widget['behaviors']['multiple values'] == FIELD_BEHAVIOR_CUSTOM && $field['cardinality'] >= 2) {
-    if (count($items) > $field['cardinality']) {
-      $errors[$field['field_name']][$langcode][0][] = array(
-        'error' => 'taxonomy_term_illegal_value',
-        'message' => t('%name: this field cannot hold more that @count values.', array('%name' => t($instance['label']), '@count' => $field['cardinality'])),
-      );
-    }
-  }
 
   foreach ($items as $delta => $item) {
     if (!empty($item['tid'])) {
