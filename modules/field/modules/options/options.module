@@ -1,10 +1,23 @@
 <?php
-// $Id: options.module,v 1.19 2009/12/04 16:49:46 dries Exp $
+// $Id: options.module,v 1.20 2009/12/13 02:04:14 webchick Exp $
 
 /**
  * @file
  * Defines selection, check box and radio button widgets for text and numeric fields.
  */
+
+/**
+ * Implements hook_help().
+ */
+function options_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#options':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Options module defines checkbox, selection, and other input widgets for the Field module. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
+      return $output;
+  }
+}
 
 /**
  * Implements hook_theme().
