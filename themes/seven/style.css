@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.35 2009/12/07 05:08:12 webchick Exp $ */
+/* $Id: style.css,v 1.36 2009/12/13 19:48:53 dries Exp $ */
 
 /**
  * Generic elements
@@ -344,6 +344,11 @@ ul.secondary li.active a.active {
 
 #secondary-links ul.links li a:hover {
   background: #999;
+}
+
+#block-system-main ul.links li,
+#block-system-main ul.inline li {
+  padding-right: 1em;
 }
 
 #block-system-main ul.menu li a {
