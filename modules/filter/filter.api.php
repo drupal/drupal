@@ -81,17 +81,18 @@
  * in $filter->settings.
  *
  * 'settings callback' is invoked with the following arguments (most filter
- * implementations will only need the first 3):
+ * implementations will only need $form_state, $filter and $defaults):
+ * - $form: The prepopulated form array, which will usually have no use here.
  * - &$form_state: The form state of the (entire) configuration form.
  * - $filter: The filter object containing settings for the given format.
+ * - $format: The format object being configured.
  * - $defaults: The default settings for the filter, as defined in 'default
  *   settings' in hook_filter_info().
- * - $format: The format object being configured.
  * - $filters: Complete list of filter objects that are enabled for the given
  *   format.
  *
  * @code
- *   function mymodule_filter_settings($form, &$form_state, $filter, $defaults) {
+ *   function mymodule_filter_settings($form, &$form_state, $filter, $format, $defaults, $filters) {
  *     $settings['mymodule_url_length'] = array(
  *       '#type' => 'textfield',
  *       '#title' => t('Maximum link text length'),
