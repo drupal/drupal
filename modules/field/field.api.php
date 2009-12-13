@@ -87,7 +87,7 @@ function hook_field_extra_fields($bundle) {
  * @see hook_field_update().
  * @see hook_field_delete().
  * @see hook_field_delete_revision().
- * @see hook_field_sanitize().
+ * @see hook_field_prepare_view().
  * @see hook_field_is_empty().
  *
  * The Field Types API also defines two kinds of pluggable handlers: widgets
@@ -241,9 +241,9 @@ function hook_field_schema($field) {
 }
 
 /**
- * Define custom load behavior for this module's field types.
+ * Defines custom load behavior for this module's field types.
  *
- * Unlike other field hooks, this hook operates on multiple objects. The
+ * Unlike most other field hooks, this hook operates on multiple objects. The
  * $objects, $instances and $items parameters are arrays keyed by object id.
  * For performance reasons, information for all available objects should be
  * loaded in a single query where possible.
@@ -261,7 +261,8 @@ function hook_field_schema($field) {
  * @param $field
  *   The field structure for the operation.
  * @param $instances
- *   Array of instance structures for $field for each object, keyed by object id.
+ *   Array of instance structures for $field for each object, keyed by object
+ *   id.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
@@ -274,23 +275,16 @@ function hook_field_schema($field) {
  *   parameter by reference.
  */
 function hook_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
+  // Sample code from text.module: precompute sanitized strings so they are
+  // stored in the field cache.
   foreach ($objects as $id => $object) {
     foreach ($items[$id] as $delta => $item) {
-      if (!empty($instances[$id]['settings']['text_processing'])) {
-        // Only process items with a cacheable format, the rest will be
-        // handled by hook_field_sanitize().
-        $format = $item['format'];
-        if (filter_format_allowcache($format)) {
-          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode) : '';
-          if ($field['type'] == 'text_with_summary') {
-            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode) : '';
-          }
-        }
-      }
-      else {
-        $items[$id][$delta]['safe'] = check_plain($item['value']);
+      // Only process items with a cacheable format, the rest will be handled
+      // by formatters if needed.
+      if (empty($instances[$id]['settings']['text_processing']) || filter_format_allowcache($item['format'])) {
+        $items[$id][$delta]['safe_value'] = isset($item['value']) ? _text_sanitize($instances[$id], $langcode, $item, 'value') : '';
         if ($field['type'] == 'text_with_summary') {
-          $items[$id][$delta]['safe_summary'] = check_plain($item['summary']);
+          $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? _text_sanitize($instances[$id], $langcode, $item, 'summary') : '';
         }
       }
     }
@@ -298,43 +292,43 @@ function hook_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
 }
 
 /**
- * Define custom sanitize behavior for this module's field types.
+ * Prepares field values prior to display.
  *
- * This hook is invoked just before the field values are handed to formatters
- * for display. Formatters being essentially theme functions, it is important
- * that any data sanitization happens outside the theme layer.
+ * This hook is invoked before the field values are handed to formatters
+ * for display, and runs before the formatters' own
+ * hook_field_formatter_prepare_view().
+ * @see hook_field_formatter_prepare_view()
+ *
+ * Unlike most other field hooks, this hook operates on multiple objects. The
+ * $objects, $instances and $items parameters are arrays keyed by object id.
+ * For performance reasons, information for all available objects should be
+ * loaded in a single query where possible.
  *
  * @param $obj_type
  *   The type of $object.
- * @param $object
- *   The object for the operation.
+ * @param $objects
+ *   Array of objects being displayed, keyed by object id.
  * @param $field
  *   The field structure for the operation.
- * @param $instance
- *   The instance structure for $field on $object's bundle.
+ * @param $instances
+ *   Array of instance structures for $field for each object, keyed by object
+ *   id.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
  *   $object->{$field['field_name']}, or an empty array if unset.
  */
-function hook_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
-  foreach ($items as $delta => $item) {
-    // Only sanitize items which were not already processed inside
-    // hook_field_load(), i.e. items with uncacheable text formats, or coming
-    // from a form preview.
-    if (!isset($items[$delta]['safe'])) {
-      if (!empty($instance['settings']['text_processing'])) {
-        $format = $item['format'];
-        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode, TRUE) : '';
-        if ($field['type'] == 'text_with_summary') {
-          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode, TRUE) : '';
-        }
-      }
-      else {
-        $items[$delta]['safe'] = check_plain($item['value']);
-        if ($field['type'] == 'text_with_summary') {
-          $items[$delta]['safe_summary'] = check_plain($item['summary']);
-        }
+function hook_field_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items) {
+  // Sample code from image.module: if there are no images specified at all,
+  // use the default.
+  foreach ($objects as $id => $object) {
+    if (empty($items[$id]) && $field['settings']['default_image']) {
+      if ($file = file_load($field['settings']['default_image'])) {
+        $items[$id][0] = (array) $file + array(
+          'is_default' => TRUE,
+          'alt' => '',
+          'title' => '',
+        );
       }
     }
   }
@@ -765,6 +759,14 @@ function hook_field_formatter_info_alter(&$info) {
  * from the database in order to render a field, for example a reference field
  * which displays properties of the referenced objects such as name or type.
  *
+ * This hook is called after the field type's own hook_field_prepare_view().
+ * @see hook_field_prepare_view()
+ *
+ * Unlike most other field hooks, this hook operates on multiple objects. The
+ * $objects, $instances and $items parameters are arrays keyed by object id.
+ * For performance reasons, information for all available objects should be
+ * loaded in a single query where possible.
+ *
  * @param $obj_type
  *   The type of $object.
  * @param $objects
@@ -780,8 +782,7 @@ function hook_field_formatter_info_alter(&$info) {
  * @param $items
  *   Array of field values for the objects, keyed by object id.
  * @param $displays
- *   Array of display settings to use for each object display, keyed by object
- *   id.
+ *   Array of display settings to use for each object, keyed by object id.
  * @return
  *   Changes or additions to field values are done by altering the $items
  *   parameter by reference.

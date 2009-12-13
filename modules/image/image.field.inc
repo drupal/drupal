@@ -210,17 +210,19 @@ function image_field_load($obj_type, $objects, $field, $instances, $langcode, &$
 }
 
 /**
- * Implements hook_field_sanitize().
+ * Implements hook_field_prepare_view().
  */
-function image_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
+function image_field_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items) {
   // If there are no files specified at all, use the default.
-  if (empty($items) && $field['settings']['default_image']) {
-    if ($file = file_load($field['settings']['default_image'])) {
-      $items[0] = (array) $file + array(
-        'is_default' => TRUE,
-        'alt' => '',
-        'title' => '',
-      );
+  foreach ($objects as $id => $object) {
+    if (empty($items[$id]) && $field['settings']['default_image']) {
+      if ($file = file_load($field['settings']['default_image'])) {
+        $items[$id][0] = (array) $file + array(
+          'is_default' => TRUE,
+          'alt' => '',
+          'title' => '',
+        );
+      }
     }
   }
 }

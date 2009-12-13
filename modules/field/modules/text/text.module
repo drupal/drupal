@@ -199,13 +199,13 @@ function text_field_validate($obj_type, $object, $field, $instance, $langcode, $
  * Where possible, generate the sanitized version of each field early so that
  * it is cached in the field cache. This avoids looking up from the filter cache
  * separately.
- * @see text_field_sanitize().
+ * @see text_field_formatter().
  */
 function text_field_load($obj_type, $objects, $field, $instances, $langcode, &$items) {
   foreach ($objects as $id => $object) {
     foreach ($items[$id] as $delta => $item) {
-      // Only process items with a cacheable format, the rest will be
-      // handled by formatters if needed.
+      // Only process items with a cacheable format, the rest will be handled
+      // by formatters if needed.
       if (empty($instances[$id]['settings']['text_processing']) || filter_format_allowcache($item['format'])) {
         $items[$id][$delta]['safe_value'] = isset($item['value']) ? _text_sanitize($instances[$id], $langcode, $item, 'value') : '';
         if ($field['type'] == 'text_with_summary') {

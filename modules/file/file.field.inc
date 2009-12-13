@@ -228,18 +228,19 @@ function file_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
 }
 
 /**
- * Implements hook_field_sanitize().
+ * Implements hook_field_prepare_view().
  */
-function file_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
-  // Remove files from being displayed if they're not displayed.
-  foreach ($items as $delta => $item) {
-    if (!file_field_displayed($item, $field)) {
-      unset($items[$delta]);
+function file_field_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items) {
+  // Remove files specified to not be displayed.
+  foreach ($objects as $id => $object) {
+    foreach ($items[$id] as $delta => $item) {
+      if (!file_field_displayed($item, $field)) {
+        unset($items[$id][$delta]);
+      }
+      // Ensure consecutive deltas.
+      $items[$id] = array_values($items[$id]);
     }
   }
-
-  // Return the items including only displayed files.
-  $items = array_values($items);
 }
 
 /**
