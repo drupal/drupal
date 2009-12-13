@@ -17,5 +17,5 @@ include_once DRUPAL_ROOT . '/includes/xmlrpc.inc';
 include_once DRUPAL_ROOT . '/includes/xmlrpcs.inc';
 
 $services = module_invoke_all('xmlrpc');
-drupal_alter('xmlrpc_alter', $services);
+drupal_alter('xmlrpc', $services);
 xmlrpc_server($services);
