@@ -2388,7 +2388,7 @@ function theme_tableselect($variables) {
     $first_col = $element['#js_select'] ? array(theme('table_select_header_cell')) : array('');
     $header = array_merge($first_col, $header);
   }
-  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => $element['#empty']));
+  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => $element['#empty'], 'attributes' => $element['#attributes']));
 }
 
 /**
