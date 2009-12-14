@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.3 2009/12/11 17:08:27 dries Exp $
+// $Id: overlay.module,v 1.4 2009/12/14 16:36:56 webchick Exp $
 
 /**
  * @file
@@ -282,6 +282,7 @@ function overlay_preprocess_page(&$variables) {
  */
 function overlay_preprocess_toolbar(&$variables) {
   $variables['classes_array'][] = "overlay-displace-top";
+  $variables['toolbar']['toolbar_toggle']['#attributes']['class'][] = 'overlay-displace-no-click';
 }
 
 /**
