@@ -14,7 +14,7 @@ Drupal.behaviors.contextualLinks = {
       var $links = $wrapper.find('ul.contextual-links');
       var $trigger = $('<a class="contextual-links-trigger" href="#" />').text(Drupal.t('Configure')).click(
         function () {
-          $wrapper.find('ul.contextual-links').slideToggle(100);
+          $wrapper.find('ul.contextual-links').stop(true, true).slideToggle(100);
           $wrapper.toggleClass('contextual-links-active');
           return false;
         }
