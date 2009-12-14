@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1181 2009/12/11 16:49:40 dries Exp $
+// $Id: node.module,v 1.1182 2009/12/14 20:46:43 dries Exp $
 
 /**
  * @file
@@ -1905,6 +1905,7 @@ function node_menu() {
     'page arguments' => array('node_delete_confirm', 1),
     'access callback' => 'node_access',
     'access arguments' => array('delete', 1),
+    'theme callback' => '_node_custom_theme',
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
