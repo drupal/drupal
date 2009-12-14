@@ -316,18 +316,26 @@ Drupal.getSelection = function (element) {
  * Build an error message from an AJAX response.
  */
 Drupal.ajaxError = function (xmlhttp, uri) {
-  if (xmlhttp.status == 200 || (xmlhttp.status == 500 && xmlhttp.statusText == 'Service unavailable (with message)')) {
-    if ($.trim(xmlhttp.responseText)) {
-      var message = Drupal.t("An error occurred. \nPath: @uri\nMessage: !text", { '@uri': uri, '!text': xmlhttp.responseText });
-    }
-    else {
-      var message = Drupal.t("An error occurred. \nPath: @uri\n(no information available).", {'@uri': uri });
-    }
+  var statusCode, statusText, pathText, responseText, readyStateText, message;
+  if (xmlhttp.status) {
+    statusCode = "\n" + Drupal.t("An AJAX HTTP error occurred.") +  "\n" + Drupal.t("HTTP Result Code: !status", {'!status': xmlhttp.status});
   }
   else {
-    var message = Drupal.t("An HTTP error @status occurred. \nPath: @uri", { '@uri': uri, '@status': xmlhttp.status });
+    statusCode = "\n" + Drupal.t("An AJAX HTTP request terminated abnormally.");
   }
-  return message.replace(/\n/g, '<br />');
+  statusCode += "\n" + Drupal.t("Debugging information follows.");
+  pathText = "\n" + Drupal.t("Path: !uri", {'!uri': uri} );
+  statusText = xmlhttp.statusText ? ("\n" + Drupal.t("StatusText: !statusText", {'!statusText': $.trim(xmlhttp.statusText)})) : "";
+  responseText = xmlhttp.responseText ? ("\n" + Drupal.t("ResponseText: !responseText", {'!responseText': $.trim(xmlhttp.responseText)})) : "";
+  // Make the responseText more readable by stripping HTML tags and newlines.
+  responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi,"");
+  responseText = responseText.replace(/[\n]+\s+/g,"\n");
+
+  // We don't need readyState except for status == 0.
+  readyStateText = xmlhttp.status == 0 ? ("\n" + Drupal.t("ReadyState: !readyState", {'!readyState': xmlhttp.readyState})) : "";
+
+  message = statusCode + pathText + statusText + responseText + readyStateText;
+  return message;
 };
 
 // Class indicating that JS is enabled; used for styling purpose.
