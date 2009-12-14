@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.37 2009/12/06 23:56:47 dries Exp $
+// $Id: contact.pages.inc,v 1.38 2009/12/14 13:51:57 dries Exp $
 
 /**
  * @file
@@ -61,7 +61,6 @@ function contact_site_form($form, &$form_state) {
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
-  $form['#token'] = $user->uid ? $user->name . $user->mail : '';
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Your name'),
@@ -171,7 +170,7 @@ function contact_site_form_submit($form, &$form_state) {
  * @see contact_personal_form_validate()
  * @see contact_personal_form_submit()
  */
-function contact_personal_form($form, &$form_state, stdClass $recipient) {
+function contact_personal_form($form, &$form_state, $recipient) {
   global $user;
 
   // Check if flood control has been activated for sending e-mails.
@@ -190,7 +189,6 @@ function contact_personal_form($form, &$form_state, stdClass $recipient) {
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
-  $form['#token'] = $user->uid ? $user->name . $user->mail : '';
   $form['recipient'] = array(
     '#type' => 'value',
     '#value' => $recipient,
