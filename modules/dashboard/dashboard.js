@@ -1,4 +1,4 @@
-// $Id: dashboard.js,v 1.4 2009/12/07 12:06:52 dries Exp $
+// $Id: dashboard.js,v 1.5 2009/12/14 22:31:17 dries Exp $
 (function ($) {
 
 /**
@@ -23,7 +23,7 @@ Drupal.behaviors.dashboard = {
       // If the region is empty
       if ($('.block', this).length == 0) {
         // Check if we are in customize mode and grab the correct empty text
-        if ($('#dashboard').hasClass('customize_mode')) {
+        if ($('#dashboard').hasClass('customize-mode')) {
           empty_text = Drupal.settings.dashboard.emptyRegionTextActive;
         } else {
           empty_text = Drupal.settings.dashboard.emptyRegionTextInactive;
@@ -44,7 +44,7 @@ Drupal.behaviors.dashboard = {
    * Enter "customize" mode by displaying disabled blocks.
    */
   enterCustomizeMode: function () {
-    $('#dashboard').addClass('customize_mode');
+    $('#dashboard').addClass('customize-mode');
     Drupal.behaviors.dashboard.addPlaceholders();
     // Hide the customize link
     $('#dashboard .customize .action-links').hide();
@@ -56,7 +56,7 @@ Drupal.behaviors.dashboard = {
    * Exit "customize" mode by simply forcing a page refresh.
    */
   exitCustomizeMode: function () {
-    $('#dashboard').removeClass('customize_mode');
+    $('#dashboard').removeClass('customize-mode');
     Drupal.behaviors.dashboard.addPlaceholders();
     location.href = Drupal.settings.dashboard.dashboard;
   },
