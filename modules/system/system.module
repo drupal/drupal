@@ -1739,7 +1739,7 @@ function _system_filetransfer_backend_form_common() {
  */
 function system_init() {
   // Add the CSS for this module.
-  if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit'))) {
+  if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit' || arg(2) == 'delete'))) {
     drupal_add_css(drupal_get_path('module', 'system') . '/admin.css', array('weight' => CSS_SYSTEM));
   }
   drupal_add_css(drupal_get_path('module', 'system') . '/defaults.css', array('weight' => CSS_SYSTEM));

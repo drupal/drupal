@@ -1905,6 +1905,7 @@ function node_menu() {
     'page arguments' => array('node_delete_confirm', 1),
     'access callback' => 'node_access',
     'access arguments' => array('delete', 1),
+    'theme callback' => '_node_custom_theme',
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
