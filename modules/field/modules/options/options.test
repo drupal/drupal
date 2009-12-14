@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-class OptionsWidgetsTestCase extends DrupalWebTestCase {
+class OptionsWidgetsTestCase extends FieldTestCase {
   public static function getInfo() {
     return array(
       'name'  => 'Options widgets',
