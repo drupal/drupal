@@ -688,21 +688,25 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   // authenticated users. This ensures that any submitted form was actually
   // requested previously by the user and protects against cross site request
   // forgeries.
-  if (isset($form['#token'])) {
-    if ($form['#token'] === FALSE || $user->uid == 0 || $form_state['programmed']) {
+  // This does not apply to programmatically submitted forms. Furthermore, since
+  // tokens are session-bound and forms displayed to anonymous users are very
+  // likely cached, we cannot assign a token for them.
+  // During installation, there is no $user yet.
+  if (!empty($user->uid) && !$form_state['programmed']) {
+    // Form constructors may explicitly set #token to FALSE when cross site
+    // request forgery is irrelevant to the form, such as search forms.
+    if (isset($form['#token']) && $form['#token'] === FALSE) {
       unset($form['#token']);
     }
+    // Otherwise, generate a public token based on the form id.
     else {
-      $form['form_token'] = array('#type' => 'token', '#default_value' => drupal_get_token($form['#token']));
+      $form['#token'] = $form_id;
+      $form['form_token'] = array(
+        '#id' => drupal_html_id('edit-' . $form_id . '-form-token'),
+        '#type' => 'token',
+        '#default_value' => drupal_get_token($form['#token']),
+      );
     }
-  }
-  elseif (isset($user->uid) && $user->uid && !$form_state['programmed']) {
-    $form['#token'] = $form_id;
-    $form['form_token'] = array(
-      '#id' => drupal_html_id('edit-' . $form_id . '-form-token'),
-      '#type' => 'token',
-      '#default_value' => drupal_get_token($form['#token']),
-    );
   }
 
   if (isset($form_id)) {

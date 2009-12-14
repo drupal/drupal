@@ -1845,7 +1845,7 @@ function comment_form($form, &$form_state, $comment) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
-    '#access' => variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['comment_preview'])),
+    '#access' => ($comment->cid && user_access('administer comments')) || variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['comment_preview'])),
     '#weight' => 19,
   );
   $form['preview'] = array(
