@@ -1,5 +1,5 @@
 <?php
-// $Id: default.install,v 1.20 2009/12/04 16:49:48 dries Exp $
+// $Id: default.install,v 1.21 2009/12/14 20:31:51 dries Exp $
 
 /**
  * Implements hook_install().
@@ -201,6 +201,16 @@ function default_install() {
       'theme' => 'seven',
       'status' => 1,
       'weight' => 0,
+      'region' => 'dashboard_sidebar',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'search',
+      'delta' => 'form',
+      'theme' => 'seven',
+      'status' => 1,
+      'weight' => 1,
       'region' => 'dashboard_sidebar',
       'pages' => '',
       'cache' => -1,
