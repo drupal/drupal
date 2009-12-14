@@ -2390,10 +2390,10 @@ function system_update_7030() {
 }
 
 /**
- * Add a missing index on the {menu_router} table.
+ * Removed in favour of Drupal 6 backport.
+ * @see system_update_6052()
  */
 function system_update_7031() {
-  db_add_index('menu_router', 'tab_root_weight_title', array(array('tab_root', 64), 'weight', 'title'));
 }
 
 /**
