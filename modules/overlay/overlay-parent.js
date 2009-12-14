@@ -19,8 +19,8 @@ Drupal.behaviors.overlayParent = {
 
     // Simulate the native click event for all links that appear outside the
     // overlay. jQuery UI Dialog prevents all clicks outside a modal dialog.
-    $('.overlay-displace-top a', context)
-    .add('.overlay-displace-bottom a', context)
+    $('.overlay-displace-top a:not(.overlay-displace-no-click)', context)
+    .add('.overlay-displace-bottom a:not(.overlay-displace-no-click)', context)
     .click(function () {
       window.location.href = this.href;
     });

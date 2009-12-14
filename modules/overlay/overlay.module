@@ -282,6 +282,7 @@ function overlay_preprocess_page(&$variables) {
  */
 function overlay_preprocess_toolbar(&$variables) {
   $variables['classes_array'][] = "overlay-displace-top";
+  $variables['toolbar']['toolbar_toggle']['#attributes']['class'][] = 'overlay-displace-no-click';
 }
 
 /**
