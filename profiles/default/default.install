@@ -205,6 +205,16 @@ function default_install() {
       'pages' => '',
       'cache' => -1,
     ),
+    array(
+      'module' => 'search',
+      'delta' => 'form',
+      'theme' => 'seven',
+      'status' => 1,
+      'weight' => 1,
+      'region' => 'dashboard_sidebar',
+      'pages' => '',
+      'cache' => -1,
+    ),
   );
   $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
   foreach ($values as $record) {
