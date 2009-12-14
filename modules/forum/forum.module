@@ -36,7 +36,7 @@ function forum_help($path, $arg) {
       $output .= '<dt>' . t('Moving forum topics') . '</dt>';
       $output .= '<dd>' . t('A forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic. When moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</dd>';
       $output .= '<dt>' . t('Locking and disabling comments') . '</dt>';
-      $output .= '<dd>' . t('Selecting <em>Closed</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments on) the thread. Selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') . '</dd>';
+      $output .= '<dd>' . t('Selecting <em>Closed</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments on) the thread. Selecting <em>Hidden</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') . '</dd>';
       $output .= '</dl>';
       return $output;
     case 'admin/structure/forum':

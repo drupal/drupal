@@ -29,7 +29,7 @@ function aggregator_help($path, $arg) {
       $output .= '<dt>' . t('OPML integration') . '</dt>';
       $output .= '<dd>' .  t('A <a href="@aggregator-opml">machine-readable OPML file</a> of all feeds is available. OPML is an XML-based file format used to share outline-structured information such as a list of RSS feeds. Feeds can also be <a href="@import-opml">imported via an OPML file</a>.', array('@aggregator-opml' => url('aggregator/opml'), '@import-opml' => url('admin/config/services/aggregator'))) . '</dd>';
       $output .= '<dt>' . t('Configuring cron') . '</dt>';
-      $output .= '<dd>' .  t('A correctly configured <a href="@cron">cron maintenance task</a> is required to update feeds automatically.', array('@cron' => url('admin/reports/status'))) . '</dd>';
+      $output .= '<dd>' .  t('A correctly configured <a href="@cron">cron maintenance task</a> is required to update feeds automatically.', array('@cron' => 'http://drupal.org/cron')) . '</dd>';
       $output .= '</dl>';
       return $output;
     case 'admin/config/services/aggregator':

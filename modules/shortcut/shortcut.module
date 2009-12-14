@@ -21,7 +21,7 @@ function shortcut_help($path, $arg) {
   switch ($path) {
     case 'admin/help#shortcut':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Shortcut module allows users to create sets of <em>shortcut</em> links to commonly-visited pages of the site. Shortcuts are contained within <em>sets</em>, and each user with <em>switch shortcut sets</em> permissions can select a preferred set of shortcuts. For more information, see the online handbook entry for <a href="@shortcut">Shortcut module</a>.', array('@shortcut' => 'http://drupal.org/handbook/modules/shortcut/')) . '</p>';
+      $output .= '<p>' . t('The Shortcut module allows users to create sets of <em>shortcut</em> links to commonly-visited pages of the site. Shortcuts are contained within <em>sets</em>, and each user with <em>Select own shortcut set</em> permission can select a preferred set of shortcuts. For more information, see the online handbook entry for <a href="@shortcut">Shortcut module</a>.', array('@shortcut' => 'http://drupal.org/handbook/modules/shortcut/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl><dt>' . t('Creating and modifying shortcuts and sets') . '</dt>';
       $output .= '<dd>' . t('Users with the appropriate permissions can manage shortcut sets, choose a preferred shortcut set, and edit the shortcuts within sets from the <a href="@shortcuts">Shortcuts administration page</a>.', array('@shortcuts' => url('admin/config/system/shortcut'))) . '</dd>';
