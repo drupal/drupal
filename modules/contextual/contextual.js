@@ -1,4 +1,4 @@
-// $Id: contextual.js,v 1.3 2009/12/13 20:08:30 dries Exp $
+// $Id: contextual.js,v 1.4 2009/12/14 10:38:19 dries Exp $
 (function ($) {
 
 Drupal.contextualLinks = Drupal.contextualLinks || {};
@@ -14,7 +14,7 @@ Drupal.behaviors.contextualLinks = {
       var $links = $wrapper.find('ul.contextual-links');
       var $trigger = $('<a class="contextual-links-trigger" href="#" />').text(Drupal.t('Configure')).click(
         function () {
-          $wrapper.find('ul.contextual-links').slideToggle(100);
+          $wrapper.find('ul.contextual-links').stop(true, true).slideToggle(100);
           $wrapper.toggleClass('contextual-links-active');
           return false;
         }
