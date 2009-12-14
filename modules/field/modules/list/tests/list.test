@@ -1,103 +1,131 @@
 <?php
 // $Id$
 
-class ListFieldTestCase extends DrupalWebTestCase {
+/**
+ * @file
+ * Tests for the 'List' field types.
+ */
+
+/**
+ * Tests for the 'List' field types.
+ */
+class ListFieldTestCase extends FieldTestCase {
   public static function getInfo() {
     return array(
-      'name'  => 'List field',
-      'description'  => "Test the List field type.",
-      'group' => 'Field types'
+      'name' => 'List field',
+      'description' => 'Test the List field type.',
+      'group' => 'Field types',
     );
   }
 
   function setUp() {
     parent::setUp('field_test');
 
-    $this->card_1 = array(
-      'field_name' => 'card_1',
+    $this->field_name = 'field_test';
+    $this->field = array(
+      'field_name' => $this->field_name,
       'type' => 'list',
       'cardinality' => 1,
       'settings' => array(
         'allowed_values' => "1|One\n2|Two\n3|Three\n",
       ),
     );
-    $this->card_1 = field_create_field($this->card_1);
+    $this->field = field_create_field($this->field);
 
-    $this->instance_1 = array(
-      'field_name' => $this->card_1['field_name'],
+    $this->instance = array(
+      'field_name' => $this->field_name,
       'object_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_buttons',
       ),
     );
-    $this->instance_1 = field_create_instance($this->instance_1);
+    $this->instance = field_create_instance($this->instance);
   }
 
   /**
-   * Test that allowed values can be updated and that the updates are
-   * reflected in generated forms.
+   * Test that allowed values can be updated.
    */
   function testUpdateAllowedValues() {
+    $langcode = LANGUAGE_NONE;
+
     // All three options appear.
     $entity = field_test_create_stub_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][1]), t('Option 1 exists'));
-    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][2]), t('Option 2 exists'));
-    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][3]), t('Option 3 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
 
     // Removed options do not appear.
-    $this->card_1['settings']['allowed_values'] = "2|Two";
-    field_update_field($this->card_1);
+    $this->field['settings']['allowed_values'] = "2|Two";
+    field_update_field($this->field);
     $entity = field_test_create_stub_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][1]), t('Option 1 does not exist'));
-    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][2]), t('Option 2 exists'));
-    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][3]), t('Option 3 does not exist'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
 
     // Completely new options appear.
-    $this->card_1['settings']['allowed_values'] = "10|Update\n20|Twenty";
-    field_update_field($this->card_1);
+    $this->field['settings']['allowed_values'] = "10|Update\n20|Twenty";
+    field_update_field($this->field);
     $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][1]), t('Option 1 does not exist'));
-    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][2]), t('Option 2 does not exist'));
-    $this->assertTrue(empty($form['card_1'][LANGUAGE_NONE][3]), t('Option 3 does not exist'));
-    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][10]), t('Option 10 exists'));
-    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][20]), t('Option 20 exists'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][2]), t('Option 2 does not exist'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][10]), t('Option 10 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][20]), t('Option 20 exists'));
 
     // Options are reset when a new field with the same name is created.
-    field_delete_field($this->card_1['field_name']);
-    unset($this->card_1['id']);
-    $this->card_1['settings']['allowed_values'] = "1|One\n2|Two\n3|Three\n";
-    $this->card_1 = field_create_field($this->card_1);
-    $this->instance_1 = array(
-      'field_name' => $this->card_1['field_name'],
+    field_delete_field($this->field_name);
+    unset($this->field['id']);
+    $this->field['settings']['allowed_values'] = "1|One\n2|Two\n3|Three\n";
+    $this->field = field_create_field($this->field);
+    $this->instance = array(
+      'field_name' => $this->field_name,
       'object_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_buttons',
       ),
     );
-    $this->instance_1 = field_create_instance($this->instance_1);
+    $this->instance = field_create_instance($this->instance);
     $entity = field_test_create_stub_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][1]), t('Option 1 exists'));
-    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][2]), t('Option 2 exists'));
-    $this->assertTrue(!empty($form['card_1'][LANGUAGE_NONE][3]), t('Option 3 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
   }
-  
 }
 
 /**
 * List module UI tests.
 */
-class ListFieldUITestCase extends FieldUITestCase {
+class ListFieldUITestCase extends FieldTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'List field UI tests',
+      'name' => 'List field UI',
       'description' => 'Test the List field UI functionality.',
       'group' => 'Field types',
     );
+  }
+
+  function setUp() {
+    parent::setUp('field_test', 'field_ui');
+
+    // Create test user.
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
+    $this->drupalLogin($admin_user);
+
+    // Create content type, with underscores.
+    $type_name = strtolower($this->randomName(8)) . '_' .'test';
+    $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
+    $this->type = $type->type;
+    // Store a valid URL name, with hyphens instead of underscores.
+    $this->hyphen_type = str_replace('_', '-', $this->type);
+
+    // Create random field name.
+    $this->field_label = $this->randomName(8);
+    $this->field_name = 'field_' . strtolower($this->randomName(8));
   }
 
   /**
@@ -126,23 +154,23 @@ class ListFieldUITestCase extends FieldUITestCase {
     $edit = array($element_name => "1|one\n" . $this->randomName(255) . "|two");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
     $this->assertText("each key must be a string less than 255 characters", t('Form vaildation failed.'));
-    
+
     // Test 'List (boolean)' field type.
-    $admin_path = $this->createListFieldAndEdit('list_boolean');    
+    $admin_path = $this->createListFieldAndEdit('list_boolean');
     // Check that invalid option keys are rejected.
     $edit = array($element_name => "1|one\n2|two");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
     $this->assertText("keys must be either 0 or 1", t('Form vaildation failed.'));
-    
+
     //Check that missing option causes failure.
     $edit = array($element_name => "1|one");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("two values are required", t('Form vaildation failed.'));    
+    $this->assertText("two values are required", t('Form vaildation failed.'));
   }
-  
+
   /**
    * Helper function to create list field of a given type and get the edit page.
-   * 
+   *
    * @param string $type
    *   'list', 'list_boolean', 'list_number', or 'list_text'
    */
@@ -164,6 +192,6 @@ class ListFieldUITestCase extends FieldUITestCase {
     $admin_path = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields/' . $field_name;
     return $admin_path;
   }
-  
+
 }
 

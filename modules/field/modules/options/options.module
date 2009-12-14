@@ -32,26 +32,32 @@ function options_theme() {
 
 /**
  * Implements hook_field_widget_info().
+ *
+ * Field type modules willing to use those widgets should:
+ * - Use hook_field_widget_info_alter() to append their field own types to the
+ *   list of types supported by the widgets,
+ * - Implement hook_options_list() to provide the list of options.
+ * See list.module.
  */
 function options_field_widget_info() {
   return array(
     'options_select' => array(
       'label' => t('Select list'),
-      'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
+      'field types' => array(),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
       ),
     ),
     'options_buttons' => array(
       'label' => t('Check boxes/radio buttons'),
-      'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
+      'field types' => array(),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
       ),
     ),
     'options_onoff' => array(
       'label' => t('Single on/off checkbox'),
-      'field types' => array('list_boolean'),
+      'field types' => array(),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
       ),
@@ -66,60 +72,63 @@ function options_field_widget(&$form, &$form_state, $field, $instance, $langcode
   // Abstract over the actual field columns, to allow different field types to
   // reuse those widgets.
   $value_key = key($field['columns']);
-  $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
-  // Form API 'checkboxes' do not suport 0 as an option, so we replace it with
-  // a placeholder within the form workflow.
-  $zero_placeholder = $instance['widget']['type'] == 'options_buttons' && $multiple;
-  // Collect available options for the field.
-  $options = options_get_options($field, $instance, $zero_placeholder);
-  // Put current field values in shape.
-  $default_value = _options_storage_to_form($items, $options, $value_key, $zero_placeholder);
 
-  switch ($instance['widget']['type']) {
-    case 'options_select':
+  $type = str_replace('options_', '', $instance['widget']['type']);
+  $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
+  $required = $element['#required'];
+  $properties = _options_properties($type, $multiple, $required);
+
+  // Prepare the list of options.
+  $options = _options_get_options($field, $instance, $properties);
+
+  // Put current field values in shape.
+  $default_value = _options_storage_to_form($items, $options, $value_key, $properties);
+
+  switch ($type) {
+    case 'select':
       $element += array(
         '#type' => 'select',
         '#default_value' => $default_value,
         // Do not display a 'multiple' select box if there is only one option.
         '#multiple' => $multiple && count($options) > 1,
         '#options' => $options,
-        '#value_key' => $value_key,
-        '#element_validate' => array('options_field_widget_validate'),
       );
       break;
 
-    case 'options_buttons':
-      $type = $multiple ? 'checkboxes' : 'radios';
+    case 'buttons':
       // If required and there is one single option, preselect it.
-      if ($element['#required'] && count($options) == 1) {
+      if ($required && count($options) == 1) {
+        reset($options);
         $default_value = array(key($options));
       }
       $element += array(
-        '#type' => $type,
+        '#type' => $multiple ? 'checkboxes' : 'radios',
         // Radio buttons need a scalar value.
-        '#default_value' => ($type == 'radios') ? reset($default_value) : $default_value,
+        '#default_value' => $multiple ? $default_value : reset($default_value),
         '#options' => $options,
-        '#zero_placeholder' => $zero_placeholder,
-        '#value_key' => $value_key,
-        '#element_validate' => array('options_field_widget_validate'),
       );
       break;
 
-    case 'options_onoff':
+    case 'onoff':
       $keys = array_keys($options);
-      $off_value = (!empty($keys) && isset($keys[0])) ? $keys[0] : NULL;
-      $on_value = (!empty($keys) && isset($keys[1])) ? $keys[1] : NULL;
+      $off_value = array_shift($keys);
+      $on_value = array_shift($keys);
       $element += array(
         '#type' => 'checkbox',
-        '#title' => isset($options[$on_value]) ? $options[$on_value] : '',
         '#default_value' => (isset($default_value[0]) && $default_value[0] == $on_value) ? 1 : 0,
         '#on_value' => $on_value,
         '#off_value' => $off_value,
-        '#value_key' => $value_key,
-        '#element_validate' => array('options_field_widget_validate'),
       );
+      // Override the title from the incoming $element.
+      $element['#title'] = isset($options[$on_value]) ? $options[$on_value] : '';
       break;
   }
+
+  $element += array(
+    '#value_key' => $value_key,
+    '#element_validate' => array('options_field_widget_validate'),
+    '#properties' => $properties,
+  );
 
   return $element;
 }
@@ -135,54 +144,123 @@ function options_field_widget_validate($element, &$form_state) {
 }
 
 /**
- * Prepares the options for a field.
+ * Describes the preparation steps required by each widget.
  */
-function options_get_options($field, $instance, $zero_placeholder) {
-  // Check if there is a module hook for the option values, otherwise try
-  // list_allowed_values() for an options list.
-  // @todo This should be turned into a hook_options_allowed_values(), exposed
-  // by options.module.
-  $function = $field['module'] . '_allowed_values';
-  $options = function_exists($function) ? $function($field) : (array) list_allowed_values($field);
+function _options_properties($type, $multiple, $required) {
+  $base = array(
+    'zero_placeholder' => FALSE,
+    'filter_xss' => FALSE,
+    'strip_tags' => FALSE,
+    'empty_value' => FALSE,
+    'optgroups' => FALSE,
+  );
 
+  switch ($type) {
+    case 'select':
+      $properties = array(
+        // Select boxes do not support any HTML tag.
+        'strip_tags' => TRUE,
+        'empty_value' => !$required,
+        'optgroups' => TRUE,
+      );
+      break;
+
+    case 'buttons':
+      $properties = array(
+        'filter_xss' => TRUE,
+        // Form API 'checkboxes' do not suport 0 as an option, so we replace it with
+        // a placeholder within the form workflow.
+        'zero_placeholder' => $multiple,
+        // Checkboxes do not need a 'none' choice.
+        'empty_value' => !$required && !$multiple,
+      );
+      break;
+
+    case 'onoff':
+      $properties = array(
+        'filter_xss' => TRUE,
+      );
+      break;
+  }
+
+  return $properties + $base;
+}
+
+/**
+ * Collects the options for a field.
+ */
+function _options_get_options($field, $instance, $properties) {
+  // Get the list of options.
+  $options = (array) module_invoke($field['module'], 'options_list', $field);
+
+  // Sanitize the options.
+  _options_prepare_options($options, $properties);
+
+  if (!$properties['optgroups']) {
+    $options = options_array_flatten($options);
+  }
+
+  if ($properties['empty_value']) {
+    $options = array('_none' => theme('options_none', array('instance' => $instance))) + $options;
+  }
+
+  return $options;
+}
+
+/**
+ * Sanitizes the options.
+ *
+ * The function is recursive to support optgroups.
+ */
+function _options_prepare_options(&$options, $properties) {
   // Substitute the '_0' placeholder.
-  if ($zero_placeholder) {
+  if ($properties['zero_placeholder']) {
     $values = array_keys($options);
+    $labels = array_values($options);
     // Use a strict comparison, because 0 == 'any string'.
     $index = array_search(0, $values, TRUE);
-    if ($index !== FALSE) {
+    if ($index !== FALSE && !is_array($options[$index])) {
       $values[$index] = '_0';
-      $options = array_combine($values, array_values($options));
+      $options = array_combine($values, $labels);
     }
   }
 
-  // Add an empty choice for
-  // - non required radios
-  // - non required selects
-  if (!$instance['required']) {
-    if (($instance['widget']['type'] == 'options_buttons' && ($field['cardinality'] == 1)) || ($instance['widget']['type'] == 'options_select')) {
-      $options = array('_none' => theme('options_none', array('instance' => $instance))) + $options;
+  foreach ($options as $value => $label) {
+    // Recurse for optgroups.
+    if (is_array($label)) {
+      _options_prepare_options($options[$value], $properties);
+    }
+    else {
+      if ($properties['strip_tags']) {
+        $options[$value] = strip_tags($label);
+      }
+      if ($properties['filter_xss']) {
+        $options[$value] = field_filter_xss($label);
+      }
     }
   }
-  return $options;
 }
 
 /**
  * Transforms stored field values into the format the widgets need.
  */
-function _options_storage_to_form($items, $options, $column, $zero_placeholder) {
+function _options_storage_to_form($items, $options, $column, $properties) {
   $items_transposed = options_array_transpose($items);
   $values = (isset($items_transposed[$column]) && is_array($items_transposed[$column])) ? $items_transposed[$column] : array();
 
   // Substitute the '_0' placeholder.
-  if ($zero_placeholder) {
+  if ($properties['zero_placeholder']) {
     $index = array_search('0', $values);
     if ($index !== FALSE) {
       $values[$index] = '_0';
     }
   }
 
-  // Discard values that are not in the current list of options.
+  // Discard values that are not in the current list of options. Flatten the
+  // array if needed.
+  if ($properties['optgroups']) {
+    $options = options_array_flatten($options);
+  }
   $values = array_values(array_intersect($values, array_keys($options)));
   return $values;
 }
@@ -192,6 +270,7 @@ function _options_storage_to_form($items, $options, $column, $zero_placeholder) 
  */
 function _options_form_to_storage($element) {
   $values = array_values((array) $element['#value']);
+  $properties = $element['#properties'];
 
   // On/off checkbox: transform '0 / 1' into the 'on / off' values.
   if ($element['#type'] == 'checkbox') {
@@ -199,7 +278,7 @@ function _options_form_to_storage($element) {
   }
 
   // Substitute the '_0' placeholder.
-  if (!empty($element['#zero_placeholder'])) {
+  if ($properties['zero_placeholder']) {
     $index = array_search('_0', $values);
     if ($index !== FALSE) {
       $values[$index] = 0;
@@ -208,9 +287,11 @@ function _options_form_to_storage($element) {
 
   // Filter out the 'none' option. Use a strict comparison, because
   // 0 == 'any string'.
-  $index = array_search('_none', $values, TRUE);
-  if ($index !== FALSE) {
-    unset($values[$index]);
+  if ($properties['empty_value']) {
+    $index = array_search('_none', $values, TRUE);
+    if ($index !== FALSE) {
+      unset($values[$index]);
+    }
   }
 
   // Make sure we populate at least an empty value.
@@ -246,6 +327,29 @@ function options_array_transpose($array) {
           }
           $result[$key2][$key1] = $value2;
         }
+      }
+    }
+  }
+  return $result;
+}
+
+/**
+ * Flattens an array of allowed values.
+ *
+ * @param $array
+ *   A single or multidimensional array.
+ * @return
+ *   A flattened array.
+ */
+function options_array_flatten($array) {
+  $result = array();
+  if (is_array($array)) {
+    foreach ($array as $key => $value) {
+      if (is_array($value)) {
+        $result += options_array_flatten($value);
+      }
+      else {
+        $result[$key] = $value;
       }
     }
   }

@@ -983,16 +983,6 @@ function taxonomy_field_info() {
 
 /**
  * Implements hook_field_widget_info().
- *
- * We need custom handling of multiple values because we need
- * to combine them into a options list rather than display
- * cardinality elements. We will use the field module's default
- * handling for default values.
- *
- * Callbacks can be omitted if default handing is used.
- * They're included here just so this module can be used
- * as an example for custom modules that might do things
- * differently.
  */
 function taxonomy_field_widget_info() {
   return array(
@@ -1016,6 +1006,13 @@ function taxonomy_field_widget_info() {
 function taxonomy_field_widget_info_alter(&$info) {
   $info['options_select']['field types'][] = 'taxonomy_term';
   $info['options_buttons']['field types'][] = 'taxonomy_term';
+}
+
+/**
+ * Implements hook_options_list().
+ */
+function taxonomy_options_list($field) {
+  return taxonomy_allowed_values($field);
 }
 
 /**
@@ -1122,12 +1119,12 @@ function taxonomy_field_formatter($object_type, $object, $field, $instance, $lan
 }
 
 /**
- * Create an array of the allowed values for this field.
+ * Returns the set of valid terms for a taxonomy field.
  *
- * Call the field's allowed_values function to retrieve the allowed
- * values array.
- *
- * @see _taxonomy_term_select()
+ * @param $field
+ *   The field definition.
+ * @return
+ *   The array of valid terms for this field, keyed by term id.
  */
 function taxonomy_allowed_values($field) {
   $options = array();

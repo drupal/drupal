@@ -1,0 +1,24 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Helper module for the List module tests.
+ */
+
+/**
+ * Allowed values callback.
+ */
+function list_test_allowed_values_callback($field) {
+  $values = array(
+    'Group 1' => array(
+      0 => 'Zero',
+    ),
+    1 => 'One',
+    'Group 2' => array(
+      2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
+    ),
+  );
+
+  return $values;
+}
