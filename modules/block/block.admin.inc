@@ -259,7 +259,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#title' => t('Pages'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#group' => 'visibility_settings',
+    '#group' => 'visibility',
   );
 
   $access = user_access('use PHP for settings');
@@ -312,7 +312,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#title' => t('Content types'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#group' => 'visibility_settings',
+    '#group' => 'visibility',
   );
   $form['visibility']['node_type']['types'] = array(
     '#type' => 'checkboxes',
@@ -333,7 +333,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#title' => t('Roles'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#group' => 'visibility_settings',
+    '#group' => 'visibility',
   );
   $form['visibility']['role']['roles'] = array(
     '#type' => 'checkboxes',
@@ -349,7 +349,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#title' => t('Users'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#group' => 'visibility_settings',
+    '#group' => 'visibility',
   );
   $form['visibility']['user']['custom'] = array(
     '#type' => 'radios',

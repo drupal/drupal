@@ -25,17 +25,14 @@ function filter_help($path, $arg) {
       $output .= '<dd>' . t('Users with access to more than one text format can use the <em>Text format</em> fieldset to choose between available text formats when creating or editing multi-line content. Administrators can determine the text formats available to each user role, and control the order of formats listed in the <em>Text format</em> fieldset on the <a href="@text-formats">Text formats page</a>.', array('@text-formats' => url('admin/config/content/formats'))) . '</dd>';
       $output .= '</dl>';
       return $output;
+
     case 'admin/config/content/formats':
       $output = '<p>' . t("Control which HTML tags and other formatting can be used for text input. Don't allow too much formatting for untrusted users. This can be a serious security risk.") . '</p>';
       $output .= '<p>' . t('Text formats are presented in the order you arrange them below. Configure a text format to change its behavior.') . '</p>';
       return $output;
+
     case 'admin/config/content/formats/%':
-      return '<p>' . t('Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this format. If you notice some filters are causing conflicts in the output, you can <a href="@rearrange">rearrange them</a>.', array('@rearrange' => url('admin/config/content/formats/' . $arg[4] . '/order'))) . '</p>';
-    case 'admin/config/content/formats/%/configure':
-      return '<p>' . t('If you cannot find the settings for a certain filter, make sure you have enabled it on the <a href="@url">edit tab</a> first.', array('@url' => url('admin/config/content/formats/' . $arg[4]))) . '</p>';
-    case 'admin/config/content/formats/%/order':
-      $output = '<p>' . t('Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted to a clickable link. When this happens, rearrange the order of the filters.') . '</p>';
-      $output .= '<p>' . t("Filters are executed from top-to-bottom. To change the order of the filters, modify the values in the <em>Weight</em> column or grab a drag-and-drop handle under the <em>Name</em> column and drag filters to new locations in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") . '</p>';
+      $output = '<p>' . t('A text format contains filters that change the user input, for example stripping out malicious HTML or making URLs clickable. Filters are executed from top to bottom and the order is important, since one filter may prevent another filter from doing its job. For example, when URLs are converted into links before disallowed HTML tags are removed, all links may be removed. When this happens, the order of filters may need to be re-arranged.') . '</p>';
       return $output;
   }
 }
@@ -49,8 +46,8 @@ function filter_theme() {
       'render element' => 'form',
       'file' => 'filter.admin.inc',
     ),
-    'filter_admin_order' => array(
-      'render element' => 'form',
+    'filter_admin_format_filter_order' => array(
+      'render element' => 'element',
       'file' => 'filter.admin.inc',
     ),
     'filter_tips' => array(
@@ -104,29 +101,6 @@ function filter_menu() {
     'page callback' => 'filter_admin_format_page',
     'page arguments' => array(4),
     'access arguments' => array('administer filters'),
-    'file' => 'filter.admin.inc',
-  );
-  $items['admin/config/content/formats/%filter_format/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => 0,
-  );
-  $items['admin/config/content/formats/%filter_format/configure'] = array(
-    'title' => 'Configure',
-    'page callback' => 'filter_admin_configure_page',
-    'page arguments' => array(4),
-    'access arguments' => array('administer filters'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
-    'file' => 'filter.admin.inc',
-  );
-  $items['admin/config/content/formats/%filter_format/order'] = array(
-    'title' => 'Rearrange',
-    'page callback' => 'filter_admin_order_page',
-    'page arguments' => array(4),
-    'access arguments' => array('administer filters'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
     'file' => 'filter.admin.inc',
   );
   $items['admin/config/content/formats/%filter_format/delete'] = array(
@@ -200,36 +174,24 @@ function filter_format_save(&$format) {
     $return = drupal_write_record('filter_format', $format, 'format');
   }
 
-  // Get the current filters in the format, to add new filters to the bottom.
-  $current = ($return != SAVED_NEW ? filter_list_format($format->format) : array());
   $filter_info = filter_get_filters();
   // Programmatic saves may not contain any filters.
   if (!isset($format->filters)) {
     $format->filters = array();
   }
   foreach ($filter_info as $name => $filter) {
-    // As of now, only programmatic saves may contain weight (see below). If
-    // there is no weight, either fall back to the currently stored weight or
-    // add new filters to the bottom.
+    // Add new filters without weight to the bottom.
     if (!isset($format->filters[$name]['weight'])) {
-      $format->filters[$name]['weight'] = isset($current[$name]->weight) ? $current[$name]->weight : 10;
+      $format->filters[$name]['weight'] = 10;
     }
     $format->filters[$name]['status'] = isset($format->filters[$name]['status']) ? $format->filters[$name]['status'] : 0;
     $format->filters[$name]['module'] = $filter['module'];
 
-    // Since filter configuration/order lives on separate pages, there may be no
-    // filter settings contained. In that case, we either fall back to currently
-    // stored settings, default settings (if existent), or an empty array.
-    // @see http://drupal.org/node/558666
     // If settings were passed, only ensure default settings.
     if (isset($format->filters[$name]['settings'])) {
       if (isset($filter['default settings'])) {
         $format->filters[$name]['settings'] = array_merge($filter['default settings'], $format->filters[$name]['settings']);
       }
-    }
-    // If we have existing settings, take them over directly.
-    elseif (isset($current[$name]->settings)) {
-      $format->filters[$name]['settings'] = $current[$name]->settings;
     }
     // Otherwise, use default settings or fall back to an empty array.
     else {
@@ -503,9 +465,14 @@ function filter_get_filters() {
     foreach (module_implements('filter_info') as $module) {
       $info = module_invoke($module, 'filter_info');
       if (isset($info) && is_array($info)) {
-        // Assign the name of the module implementing the filters.
+        // Assign the name of the module implementing the filters and ensure
+        // default values.
         foreach (array_keys($info) as $name) {
           $info[$name]['module'] = $module;
+          $info[$name] += array(
+            'description' => '',
+            'weight' => 0,
+          );
         }
         $filters = array_merge($filters, $info);
       }
@@ -895,7 +862,6 @@ function theme_filter_guidelines($variables) {
 function filter_filter_info() {
   $filters['filter_html'] = array(
     'title' => t('Limit allowed HTML tags'),
-    'description' => t('Allows you to restrict the HTML tags the user can use. It will also remove harmful content such as JavaScript events, JavaScript URLs and CSS styles from those tags that are not removed.'),
     'process callback' => '_filter_html',
     'settings callback' => '_filter_html_settings',
     'default settings' => array(
@@ -904,16 +870,15 @@ function filter_filter_info() {
       'filter_html_nofollow' => 0,
     ),
     'tips callback' => '_filter_html_tips',
+    'weight' => -10,
   );
   $filters['filter_autop'] = array(
-    'title' => t('Convert line breaks'),
-    'description' => t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt;) tags.'),
+    'title' => t('Convert line breaks into HTML (i.e. <code>&lt;br&gt;</code> and <code>&lt;p&gt;</code>)'),
     'process callback' => '_filter_autop',
     'tips callback' => '_filter_autop_tips',
   );
   $filters['filter_url'] = array(
     'title' => t('Convert URLs into links'),
-    'description' => t('Turns web and e-mail addresses into clickable links.'),
     'process callback' => '_filter_url',
     'settings callback' => '_filter_url_settings',
     'default settings' => array(
@@ -922,15 +887,15 @@ function filter_filter_info() {
     'tips callback' => '_filter_url_tips',
   );
   $filters['filter_htmlcorrector'] = array(
-    'title' =>  t('Correct broken HTML'),
-    'description' => t('Corrects faulty and chopped off HTML in postings.'),
+    'title' =>  t('Correct faulty and chopped off HTML'),
     'process callback' => '_filter_htmlcorrector',
+    'weight' => 10,
   );
   $filters['filter_html_escape'] = array(
-    'title' => t('Escape all HTML'),
-    'description' => t('Escapes all HTML tags, so they will be visible instead of being effective.'),
+    'title' => t('Display any HTML as plain text'),
     'process callback' => '_filter_html_escape',
     'tips callback' => '_filter_html_escape_tips',
+    'weight' => -10,
   );
   return $filters;
 }
@@ -943,21 +908,18 @@ function _filter_html_settings($form, &$form_state, $filter, $format, $defaults)
     '#type' => 'textfield',
     '#title' => t('Allowed HTML tags'),
     '#default_value' => isset($filter->settings['allowed_html']) ? $filter->settings['allowed_html'] : $defaults['allowed_html'],
-    '#size' => 64,
     '#maxlength' => 1024,
-    '#description' => t('Specify a list of tags which should not be stripped. (Note that JavaScript event attributes are always stripped.)'),
+    '#description' => t('A list of HTML tags that can be used. JavaScript event attributes, JavaScript URLs, and CSS are always stripped.'),
   );
   $settings['filter_html_help'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Display HTML help'),
+    '#title' => t('Display basic HTML help in long filter tips'),
     '#default_value' => isset($filter->settings['filter_html_help']) ? $filter->settings['filter_html_help'] : $defaults['filter_html_help'],
-    '#description' => t('If enabled, Drupal will display some basic HTML help in the long filter tips.'),
   );
   $settings['filter_html_nofollow'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Spam link deterrent'),
+    '#title' => t('Add rel="nofollow" to all links'),
     '#default_value' => isset($filter->settings['filter_html_nofollow']) ? $filter->settings['filter_html_nofollow'] : $defaults['filter_html_nofollow'],
-    '#description' => t('If enabled, Drupal will add rel="nofollow" to all links, as a measure to reduce the effectiveness of spam links. Note: this will also prevent valid links from being followed by search engines, therefore it is likely most effective when enabled for anonymous users.'),
   );
   return $settings;
 }
@@ -1089,7 +1051,9 @@ function _filter_url_settings($form, &$form_state, $filter, $format, $defaults) 
     '#type' => 'textfield',
     '#title' => t('Maximum link text length'),
     '#default_value' => isset($filter->settings['filter_url_length']) ? $filter->settings['filter_url_length'] : $defaults['filter_url_length'],
+    '#size' => 5,
     '#maxlength' => 4,
+    '#field_suffix' => t('characters'),
     '#description' => t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained; just the text portion of the link will be truncated.'),
   );
   return $settings;

@@ -2463,9 +2463,10 @@ function form_process_tableselect($element) {
  * Adds fieldsets to the specified group or adds group members to this
  * fieldset.
  *
- * @param $element
+ * @param &$element
  *   An associative array containing the properties and children of the
- *   fieldset.
+ *   fieldset. Note that $element must be taken by reference here, so processed
+ *   child elements are taken over into $form_state.
  * @param $form_state
  *   The $form_state array for the form this fieldset belongs to.
  * @return
@@ -2474,39 +2475,17 @@ function form_process_tableselect($element) {
 function form_process_fieldset(&$element, &$form_state) {
   $parents = implode('][', $element['#parents']);
 
-  // Add this fieldset to a group if one is set and if it's not being
-  // added to itself.
-  if (isset($element['#group']) && $element['#group'] != $parents) {
-    if (isset($form_state['groups'][$element['#group']]) && !empty($form_state['groups'][$element['#group']]['#group_exists'])) {
-      // Trick drupal_render() into believing this has already been output.
-      // The group widget will rerender this later. This only happens when the
-      // group is actually defined ('#group_exists' is TRUE). This prevents
-      // fieldsets from disappearing when the group they are associated to
-      // does not exist.
-      // If the group does not exist yet, the element's #printed value is left
-      // as is. As soon as the group is processed (fieldsets are also groups;
-      // see below), this element's #printed value is set to TRUE to prevent
-      // rendering in the original context.
-      $element['#printed'] = TRUE;
-    }
-
-    // Store a reference to this fieldset for the vertical tabs processing
-    // function.
-    $form_state['groups'][$element['#group']][] = &$element;
-  }
-
-  // Each fieldset can be a group itself and gets a reference to all
-  // elements in its group.
+  // Each fieldset forms a new group. The #type 'vertical_tabs' basically only
+  // injects a new fieldset.
   $form_state['groups'][$parents]['#group_exists'] = TRUE;
-  // There might already be elements associated with this group. Since the
-  // group did not exist yet at the time they were added to this group, they
-  // couldn't set #printed to TRUE (see above). We now know that this group
-  // does in fact exist and set #printed to TRUE to prevent rendering in the
-  // original context.
-  foreach (element_children($form_state['groups'][$parents]) as $key) {
-    $form_state['groups'][$parents][$key]['#printed'] = TRUE;
+  $element['#groups'] = &$form_state['groups'];
+
+  // Process vertical tabs group member fieldsets.
+  if (isset($element['#group'])) {
+    // Add this fieldset to the defined group (by reference).
+    $group = $element['#group'];
+    $form_state['groups'][$group][] = &$element;
   }
-  $element['#group_members'] = &$form_state['groups'][$parents];
 
   // Contains form element summary functionalities.
   $element['#attached']['js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
@@ -2534,22 +2513,47 @@ function form_process_fieldset(&$element, &$form_state) {
  * @param $element
  *   An associative array containing the properties and children of the
  *   fieldset.
+ *
  * @return
  *   The modified element with all group members.
  */
 function form_pre_render_fieldset($element) {
-  if (!empty($element['#group_members'])) {
-    // Add the group members to this fieldset for rendering purposes only.
-    foreach (element_children($element['#group_members']) as $key) {
-      // This was set in form_process_fieldset so that fieldsets which are
-      // added to groups are not rendered at their original location.
-      // drupal_render_children() will set this back to TRUE.
-      unset($element['#group_members'][$key]['#printed']);
-      $element[] = &$element['#group_members'][$key];
-    }
+  // Inject group member elements belonging to this group.
+  $parents = implode('][', $element['#parents']);
+  $children = element_children($element['#groups'][$parents]);
+  if (!empty($children)) {
+    foreach ($children as $key) {
+      // Break references and indicate that the element should be rendered as
+      // group member.
+      $child = (array) $element['#groups'][$parents][$key];
+      $child['#group_fieldset'] = TRUE;
+      // Inject the element as new child element.
+      $element[] = $child;
 
-    // Resort the element's children after the group members have been added.
-    $element['#sorted'] = FALSE;
+      $sort = TRUE;
+    }
+    // Re-sort the element's children if we injected group member elements.
+    if (isset($sort)) {
+      $element['#sorted'] = FALSE;
+    }
+  }
+
+  if (isset($element['#group'])) {
+    $group = $element['#group'];
+    // If this element belongs to a group, but the group-holding element does
+    // not exist, we need to render it (at its original location).
+    if (!isset($element['#groups'][$group]['#group_exists'])) {
+      // Intentionally empty to clarify the flow; we simply return $element.
+    }
+    // If we injected this element into the group, then we want to render it.
+    elseif (!empty($element['#group_fieldset'])) {
+      // Intentionally empty to clarify the flow; we simply return $element.
+    }
+    // Otherwise, this element belongs to a group and the group exists, so we do
+    // not render it.
+    elseif (element_children($element['#groups'][$group])) {
+      $element['#printed'] = TRUE;
+    }
   }
 
   return $element;
@@ -2567,10 +2571,8 @@ function form_pre_render_fieldset($element) {
  *   The processed element.
  */
 function form_process_vertical_tabs($element, &$form_state) {
-  // To save us from modifying the existing element and changing its #type,
-  // a new form element is created as a child. The default #process hooks
-  // are called automatically by the form renderer and we don't have to do
-  // that manually.
+  // Inject a new fieldset as child, so that form_process_fieldset() processes
+  // this fieldset like any other fieldset.
   $element['group'] = array(
     '#type' => 'fieldset',
     '#theme_wrappers' => array(),
@@ -2599,11 +2601,8 @@ function form_process_vertical_tabs($element, &$form_state) {
  *
  * @param $variables
  *   An associative array containing:
- *
- *   - element
- *     An associative array containing the properties and children of the
- *     fieldset.
- *     Properties used: #children.
+ *   - element: An associative array containing the properties and children of the
+ *     fieldset. Properties used: #children.
  *
  * @return
  *   A themed HTML string representing the form element.

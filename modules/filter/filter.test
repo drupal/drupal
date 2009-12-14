@@ -222,39 +222,22 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->assertTrue(filter_access(filter_format_load($full), $this->admin_user), t('Admin user may use Full HTML.'));
     $this->assertFalse(filter_access(filter_format_load($full), $this->web_user), t('Web user may not use Full HTML.'));
 
-    // Verify that disabled filters are not displayed.
-    $edit = array();
-    $edit['filters[filter_url][status]'] = FALSE;
-    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
-    $this->drupalGet('admin/config/content/formats/' . $filtered . '/configure');
-    $this->assertNoText(t('Convert URLs into links'), t('Disabled URL filter cannot be configured.'));
-    $this->drupalGet('admin/config/content/formats/' . $filtered . '/order');
-    $this->assertNoText(t('Convert URLs into links'), t('Disabled URL filter cannot be re-ordered.'));
-    $edit = array();
-    $edit['filters[filter_url][status]'] = 1;
-    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
-    $this->drupalGet('admin/config/content/formats/' . $filtered . '/configure');
-    $this->assertText(t('Convert URLs into links'), t('Enabled URL filter can be configured.'));
-    $this->drupalGet('admin/config/content/formats/' . $filtered . '/order');
-    $this->assertText(t('Convert URLs into links'), t('Enabled URL filter can be re-ordered.'));
-
     // Add an additional tag.
     $edit = array();
-    $edit['settings[filter_html][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
-    $this->drupalPost('admin/config/content/formats/' . $filtered . '/configure', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Allowed HTML tag added.'));
-
-    $this->assertRaw(htmlentities($edit['settings[filter_html][allowed_html]']), t('Tag displayed.'));
+    $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
+    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], t('Allowed HTML tag added.'));
 
     $result = db_query('SELECT * FROM {cache_filter}')->fetchObject();
     $this->assertFalse($result, t('Cache cleared.'));
 
     // Reorder filters.
     $edit = array();
-    $edit['weights[' . $second_filter . ']'] = 1;
-    $edit['weights[' . $first_filter . ']'] = 2;
-    $this->drupalPost('admin/config/content/formats/' . $filtered . '/order', $edit, t('Save configuration'));
-    $this->assertText(t('The filter ordering has been saved.'), t('Order saved successfully.'));
+    $edit['filters[' . $second_filter . '][weight]'] = 1;
+    $edit['filters[' . $first_filter . '][weight]'] = 2;
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->assertFieldByName('filters[' . $second_filter . '][weight]', 1, t('Order saved successfully.'));
+    $this->assertFieldByName('filters[' . $first_filter . '][weight]', 2, t('Order saved successfully.'));
 
     $result = db_query('SELECT * FROM {filter} WHERE format = :format ORDER BY weight ASC', array(':format' => $filtered));
     $filters = array();
@@ -333,22 +316,24 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Clean up.
     // Allowed tags.
     $edit = array();
-    $edit['settings[filter_html][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
-    $this->drupalPost('admin/config/content/formats/' . $filtered . '/configure', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Changes reverted.'));
+    $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
+    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], t('Changes reverted.'));
 
     // Full HTML.
     $edit = array();
     $edit['roles[2]'] = FALSE;
     $this->drupalPost('admin/config/content/formats/' . $full, $edit, t('Save configuration'));
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), t('Full HTML format successfully reverted.'));
+    $this->assertFieldByName('roles[2]', $edit['roles[2]'], t('Changes reverted.'));
 
     // Filter order.
     $edit = array();
-    $edit['weights[' . $second_filter . ']'] = 2;
-    $edit['weights[' . $first_filter . ']'] = 1;
-    $this->drupalPost('admin/config/content/formats/' . $filtered . '/order', $edit, t('Save configuration'));
-    $this->assertText(t('The filter ordering has been saved.'), t('Order successfully reverted.'));
+    $edit['filters[' . $second_filter . '][weight]'] = 2;
+    $edit['filters[' . $first_filter . '][weight]'] = 1;
+    $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], t('Changes reverted.'));
+    $this->assertFieldByName('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]'], t('Changes reverted.'));
   }
 
   /**

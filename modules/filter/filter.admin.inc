@@ -105,18 +105,16 @@ function filter_admin_format_page($format = NULL) {
  */
 function filter_admin_format_form($form, &$form_state, $format) {
   $is_fallback = ($format->format == filter_fallback_format());
-  if ($is_fallback) {
-    $help = t('All roles for this text format must be enabled and cannot be changed.');
-  }
 
   $form['#format'] = $format;
   $form['#tree'] = TRUE;
+  $form['#attached']['js'][] = drupal_get_path('module', 'filter') . '/filter.admin.js';
+  $form['#attached']['css'][] = drupal_get_path('module', 'filter') . '/filter.css';
 
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
     '#default_value' => $format->name,
-    '#description' => t('Specify a unique name for this text format.'),
     '#required' => TRUE,
   );
 
@@ -124,59 +122,129 @@ function filter_admin_format_form($form, &$form_state, $format) {
   $form['roles'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Roles'),
-    '#description' => $is_fallback ? $help : t('Choose which roles may use this text format. Note that roles with the "administer filters" permission can always use all text formats.'),
     '#options' => user_roles(),
     '#default_value' => array_keys(filter_get_roles_by_format($format)),
     '#disabled' => $is_fallback,
   );
+  if ($is_fallback) {
+    $form['roles']['#description'] = t('All roles for this text format must be enabled and cannot be changed.');
+  }
 
-  // Table with filters
+  // Retrieve available filters and load all configured filters for existing
+  // text formats.
   $filter_info = filter_get_filters();
-  // Load all configured filters for existing text formats.
   $filters = !empty($format->format) ? filter_list_format($format->format) : array();
 
-  $form['filters'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Filters'),
-    '#description' => t('Choose the filters that will be used in this text format.'),
-  );
-
+  // Prepare filters for form sections.
   foreach ($filter_info as $name => $filter) {
     // Create an empty filter object for new/unconfigured filters.
     if (!isset($filters[$name])) {
       $filters[$name] = new stdClass;
       $filters[$name]->status = 0;
-      $filters[$name]->weight = 0;
+      $filters[$name]->weight = $filter['weight'];
       $filters[$name]->settings = array();
     }
-    $form['filters'][$name]['#filter'] = $filters[$name];
-    $form['filters'][$name]['status'] = array(
+  }
+  $form['#filters'] = $filters;
+
+  // Filter status.
+  $form['filters']['status'] = array(
+    '#type' => 'item',
+    '#title' => t('Enabled filters'),
+    '#prefix' => '<div id="filters-status-wrapper">',
+    '#suffix' => '</div>',
+  );
+  foreach ($filter_info as $name => $filter) {
+    $form['filters']['status'][$name] = array(
       '#type' => 'checkbox',
       '#title' => $filter['title'],
       '#default_value' => $filters[$name]->status,
+      '#parents' => array('filters', $name, 'status'),
       '#description' => $filter['description'],
+      '#weight' => $filter['weight'],
     );
+  }
+
+  // Filter order (tabledrag).
+  $form['filters']['order'] = array(
+    '#type' => 'item',
+    '#title' => t('Filter processing order'),
+    '#theme' => 'filter_admin_format_filter_order',
+  );
+  foreach ($filter_info as $name => $filter) {
+    $form['filters']['order'][$name]['filter'] = array(
+      '#markup' => $filter['title'],
+    );
+    $form['filters']['order'][$name]['weight'] = array(
+      '#type' => 'weight',
+      '#delta' => 50,
+      '#default_value' => $filters[$name]->weight,
+      '#parents' => array('filters', $name, 'weight'),
+    );
+  }
+
+  // Filter settings.
+  $form['filter_settings_title'] = array(
+    '#type' => 'item',
+    '#title' => t('Filter settings'),
+  );
+  $form['filter_settings'] = array(
+    '#type' => 'vertical_tabs',
+  );
+
+  foreach ($filter_info as $name => $filter) {
+    if (isset($filter['settings callback']) && function_exists($filter['settings callback'])) {
+      $function = $filter['settings callback'];
+      // Pass along stored filter settings and default settings, but also the
+      // format object and all filters to allow for complex implementations.
+      $defaults = (isset($filter['default settings']) ? $filter['default settings'] : array());
+      $settings_form = $function($form, $form_state, $filters[$name], $format, $defaults, $filters);
+      if (!empty($settings_form)) {
+        $form['filters']['settings'][$name] = array(
+          '#type' => 'fieldset',
+          '#title' => $filter['title'],
+          '#parents' => array('filters', $name, 'settings'),
+          '#weight' => $filter['weight'],
+          '#group' => 'filter_settings',
+        );
+        $form['filters']['settings'][$name] += $settings_form;
+      }
+    }
   }
 
   if (!empty($format->format)) {
     $form['format'] = array('#type' => 'value', '#value' => $format->format);
-
-    // Composition tips (guidelines)
-    $tips = _filter_tips($format->format, FALSE);
-    $tiplist = theme('filter_tips', array('tips' => $tips, 'long' => FALSE));
-    if (!$tiplist) {
-      $tiplist = '<p>' . t('No guidelines available.') . '</p>';
-    }
-    else {
-      $tiplist .= theme('filter_tips_more_info');
-    }
-    $group = '<p>' . t('These are the guidelines that users will see for posting in this text format. They are automatically generated from the filter settings.') . '</p>';
-    $group .= $tiplist;
-    $form['tips'] = array('#markup' => '<h2>' . t('Formatting guidelines') . '</h2>' . $group);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   return $form;
+}
+
+/**
+ * Theme text format filter order form elements as tabledrag.
+ *
+ * @ingroup themeable
+ */
+function theme_filter_admin_format_filter_order($variables) {
+  $element = $variables['element'];
+
+  // Filter order (tabledrag).
+  $rows = array();
+  foreach (element_children($element, TRUE) as $name) {
+    $element[$name]['weight']['#attributes']['class'][] = 'filter-order-weight';
+    $rows[] = array(
+      'data' => array(
+        drupal_render($element[$name]['filter']),
+        drupal_render($element[$name]['weight']),
+      ),
+      'class' => array('draggable'),
+    );
+  }
+  $output = drupal_render_children($element);
+  $output .= theme('table', array('rows' => $rows, 'attributes' => array('id' => 'filter-order')));
+  drupal_add_tabledrag('filter-order', 'order', 'sibling', 'filter-order-weight', NULL, NULL, TRUE);
+
+  return $output;
 }
 
 /**
@@ -254,155 +322,3 @@ function filter_admin_delete_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/content/formats';
 }
 
-/**
- * Menu callback; display settings defined by a format's filters.
- */
-function filter_admin_configure_page($format) {
-  drupal_set_title(t("Configure %format", array('%format' => $format->name)), PASS_THROUGH);
-  return drupal_get_form('filter_admin_configure', $format);
-}
-
-/**
- * Build a form to change the settings for filters in a text format.
- *
- * The form is built by merging the results of 'settings callback' for each
- * enabled filter in the given format.
- *
- * @ingroup forms
- */
-function filter_admin_configure($form, &$form_state, $format) {
-  $filters = filter_list_format($format->format);
-  $filter_info = filter_get_filters();
-
-  $form['#format'] = $format;
-  foreach ($filters as $name => $filter) {
-    if ($filter->status && isset($filter_info[$name]['settings callback']) && function_exists($filter_info[$name]['settings callback'])) {
-      $function = $filter_info[$name]['settings callback'];
-      // Pass along stored filter settings and default settings, but also the
-      // format object and all filters to allow for complex implementations.
-      $defaults = (isset($filter_info[$name]['default settings']) ? $filter_info[$name]['default settings'] : array());
-      $settings_form = $function($form, $form_state, $filters[$name], $format, $defaults, $filters);
-      if (!empty($settings_form)) {
-        $form['settings'][$name] = array(
-          '#type' => 'fieldset',
-          '#title' => check_plain($filter->title),
-        );
-        $form['settings'][$name] += $settings_form;
-      }
-    }
-  }
-
-  if (empty($form['settings'])) {
-    $form['error'] = array('#markup' => t('No settings are available.'));
-    return $form;
-  }
-  $form['settings']['#tree'] = TRUE;
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
-
-  return $form;
-}
-
-/**
- * Form submit handler for text format filter configuration form.
- *
- * @see filter_admin_configure()
- */
-function filter_admin_configure_submit($form, &$form_state) {
-  $format = $form['#format'];
-
-  foreach ($form_state['values']['settings'] as $name => $settings) {
-    db_update('filter')
-      ->fields(array(
-        'settings' => serialize($settings),
-      ))
-      ->condition('format', $format->format)
-      ->condition('name', $name)
-      ->execute();
-  }
-
-  // Clear the filter's cache when configuration settings are saved.
-  cache_clear_all($format->format . ':', 'cache_filter', TRUE);
-
-  drupal_set_message(t('The configuration options have been saved.'));
-}
-
-/**
- * Menu callback; display form for ordering filters for a format.
- */
-function filter_admin_order_page($format) {
-  drupal_set_title(t("Rearrange %format", array('%format' => $format->name)), PASS_THROUGH);
-  return drupal_get_form('filter_admin_order', $format);
-}
-
-/**
- * Build the form for ordering filters for a format.
- *
- * @ingroup forms
- * @see theme_filter_admin_order()
- * @see filter_admin_order_submit()
- */
-function filter_admin_order($form, &$form_state, $format = NULL) {
-  // Get list (with forced refresh).
-  $filters = filter_list_format($format->format);
-
-  $form['weights'] = array('#tree' => TRUE);
-  foreach ($filters as $id => $filter) {
-    if ($filter->status) {
-      $form['names'][$id] = array('#markup' => $filter->title);
-      $form['weights'][$id] = array('#type' => 'weight', '#default_value' => $filter->weight);
-    }
-  }
-  $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
-
-  return $form;
-}
-
-/**
- * Theme filter order configuration form.
- *
- * @ingroup themeable
- */
-function theme_filter_admin_order($variables) {
-  $form = $variables['form'];
-
-  $header = array(t('Name'), t('Weight'));
-  $rows = array();
-  foreach (element_children($form['names']) as $id) {
-    // Don't take form control structures.
-    if (is_array($form['names'][$id])) {
-      $form['weights'][$id]['#attributes']['class'] = array('filter-order-weight');
-      $rows[] = array(
-        'data' => array(drupal_render($form['names'][$id]), drupal_render($form['weights'][$id])),
-        'class' => array('draggable'),
-      );
-    }
-  }
-
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'filter-order')));
-  $output .= drupal_render_children($form);
-
-  drupal_add_tabledrag('filter-order', 'order', 'sibling', 'filter-order-weight', NULL, NULL, FALSE);
-
-  return $output;
-}
-
-/**
- * Process filter order configuration form submission.
- */
-function filter_admin_order_submit($form, &$form_state) {
-  foreach ($form_state['values']['weights'] as $name => $weight) {
-    db_merge('filter')
-      ->key(array(
-        'format' => $form_state['values']['format'],
-        'name' => $name,
-      ))
-      ->fields(array(
-        'weight' => $weight,
-      ))
-      ->execute();
-  }
-  drupal_set_message(t('The filter ordering has been saved.'));
-
-  cache_clear_all($form_state['values']['format'] . ':', 'cache_filter', TRUE);
-}

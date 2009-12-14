@@ -35,3 +35,14 @@
 .text-format-wrapper .description {
   margin-top: 0.5em;
 }
+
+#filter-order tr .form-item {
+  padding: 0.5em 0 0 3em;
+  white-space: normal;
+}
+#filter-order tr .form-type-checkbox .description {
+  padding: 0 0 0 2.5em;
+}
+input#edit-filters-filter-html-settings-allowed-html {
+  width: 100%;
+}
