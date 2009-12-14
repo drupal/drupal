@@ -162,7 +162,7 @@ define('MENU_SUGGESTED_ITEM', MENU_VISIBLE_IN_BREADCRUMB | 0x0010);
  * parent item. An example is the path "node/52/edit", which performs the
  * "edit" task on "node/52".
  */
-define('MENU_LOCAL_TASK', MENU_IS_LOCAL_TASK);
+define('MENU_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
  * Menu type -- The "default" local task, which is initially active.
@@ -170,7 +170,7 @@ define('MENU_LOCAL_TASK', MENU_IS_LOCAL_TASK);
  * Every set of local tasks should provide one "default" task, that links to the
  * same path as its parent when clicked.
  */
-define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT);
+define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
  * Menu type -- An action specific to the parent, usually rendered as a link.
@@ -178,7 +178,7 @@ define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT);
  * Local actions are menu items that describe actions on the parent item such
  * as adding a new user, taxonomy term, etc.
  */
-define('MENU_LOCAL_ACTION', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION);
+define('MENU_LOCAL_ACTION', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
  * @} End of "Menu item types".
@@ -2318,11 +2318,13 @@ function menu_get_router() {
  * Builds a link from a router item.
  */
 function _menu_link_build($item) {
-  if ($item['type'] == MENU_CALLBACK) {
-    $item['hidden'] = -1;
-  }
-  elseif ($item['type'] == MENU_SUGGESTED_ITEM) {
+  // Suggested items are disabled by default.
+  if ($item['type'] == MENU_SUGGESTED_ITEM) {
     $item['hidden'] = 1;
+  }
+  // Hide all items that are not visible in the tree.
+  elseif (!($item['type'] & MENU_VISIBLE_IN_TREE)) {
+    $item['hidden'] = -1;
   }
   // Note, we set this as 'system', so that we can be sure to distinguish all
   // the menu links generated automatically from entries in {menu_router}.
@@ -2374,8 +2376,9 @@ function _menu_navigation_links_rebuild($menu) {
           $item['plid'] = $existing_item['plid'];
         }
         else {
-          // If it moved, put it at the top level in the new menu.
-          $item['plid'] = 0;
+          // It moved to a new menu. Let menu_link_save() try to find a new
+          // parent based on the path.
+          unset($item['plid']);
         }
         $item['has_children'] = $existing_item['has_children'];
         $item['updated'] = $existing_item['updated'];
@@ -2574,7 +2577,6 @@ function _menu_delete_item($item, $force = FALSE) {
  *   saved.
  */
 function menu_link_save(&$item) {
-
   drupal_alter('menu_link', $item);
 
   // This is the easiest way to handle the unique internal path '<front>',
@@ -2600,15 +2602,17 @@ function menu_link_save(&$item) {
     }
   }
 
+  // If we have a parent link ID, we use it to inherit 'menu_name' and 'depth'.
   if (isset($item['plid'])) {
     if ($item['plid']) {
       $parent = db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $item['plid']))->fetchAssoc();
     }
+    // If the parent link ID is zero, then this link lives at the top-level.
     else {
-      // Don't bother with the query - mlid can never equal zero..
       $parent = FALSE;
     }
   }
+  // Otherwise, try to find a valid parent link for this link.
   else {
     $query = db_select('menu_links');
     // Only links derived from router items should have module == 'system', and
@@ -2616,10 +2620,9 @@ function menu_link_save(&$item) {
     if ($item['module'] == 'system') {
       $query->condition('module', 'system');
     }
-    else {
-      // If not derived from a router item, we respect the specified menu name.
-      $query->condition('menu_name', $item['menu_name']);
-    }
+    // We always respect the link's 'menu_name'; inheritance for router items is
+    // ensured in _menu_router_build().
+    $query->condition('menu_name', $item['menu_name']);
 
     // Find the parent - it must be unique.
     $parent_path = $item['link_path'];
@@ -2634,18 +2637,16 @@ function menu_link_save(&$item) {
       }
     } while ($parent === FALSE && $parent_path);
   }
-  if ($parent !== FALSE) {
+  // If a parent link was found, assign it and derive its menu.
+  if (!empty($parent['mlid'])) {
+    $item['plid'] = $parent['mlid'];
     $item['menu_name'] = $parent['menu_name'];
   }
-  $menu_name = $item['menu_name'];
-  // Menu callbacks need to be in the links table for breadcrumbs, but can't
-  // be parents if they are generated directly from a router item.
-  if (empty($parent['mlid']) || $parent['hidden'] < 0) {
-    $item['plid'] =  0;
-  }
+  // If no corresponding parent link was found, move the link to the top-level.
   else {
-    $item['plid'] = $parent['mlid'];
+    $item['plid'] = 0;
   }
+  $menu_name = $item['menu_name'];
 
   if (!$existing_item) {
     $item['mlid'] = db_insert('menu_links')
@@ -2667,15 +2668,17 @@ function menu_link_save(&$item) {
       ->execute();
   }
 
-  if (!$item['plid']) {
+  // Directly fill parents for top-level links.
+  if ($item['plid'] == 0) {
     $item['p1'] = $item['mlid'];
     for ($i = 2; $i <= MENU_MAX_DEPTH; $i++) {
       $item["p$i"] = 0;
     }
     $item['depth'] = 1;
   }
+  // Otherwise, ensure that this link's depth is not beyond the maximum depth
+  // and fill parents based on the parent link.
   else {
-    // Cannot add beyond the maximum depth.
     if ($item['has_children'] && $existing_item) {
       $limit = MENU_MAX_DEPTH - menu_link_children_relative_depth($existing_item) - 1;
     }
@@ -3083,8 +3086,24 @@ function _menu_router_build($callbacks) {
       $parent_path = implode('/', array_slice($item['_parts'], 0, $i));
       if (isset($menu[$parent_path])) {
 
-        $parent = $menu[$parent_path];
+        $parent = &$menu[$parent_path];
 
+        // If we have no menu name, try to inherit it from parent items.
+        if (!isset($item['menu_name'])) {
+          // If the parent item of this item does not define a menu name (and no
+          // previous iteration assigned one already), try to find the menu name
+          // of the parent item in the currently stored menu links.
+          if (!isset($parent['menu_name'])) {
+            $menu_name = db_query("SELECT menu_name FROM {menu_links} WHERE router_path = :router_path", array(':router_path' => $parent_path))->fetchField();
+            if ($menu_name) {
+              $parent['menu_name'] = $menu_name;
+            }
+          }
+          // If the parent item defines a menu name, inherit it.
+          if (!empty($parent['menu_name'])) {
+            $item['menu_name'] = $parent['menu_name'];
+          }
+        }
         if (!isset($item['tab_parent'])) {
           // Parent stores the parent of the path.
           $item['tab_parent'] = $parent_path;

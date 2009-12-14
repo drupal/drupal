@@ -252,10 +252,9 @@ class MenuTestCase extends DrupalWebTestCase {
     );
 
     // Add menu link.
-    $this->drupalPost("admin/structure/menu/manage/$menu_name/add", $edit, t('Save'));
+    $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertResponse(200);
     // Unlike most other modules, there is no confirmation message displayed.
-
     $this->assertText($title, 'Menu link was added');
 
     // Retrieve menu link.
@@ -267,7 +266,10 @@ class MenuTestCase extends DrupalWebTestCase {
     // We know link1 is at the top level, so $item1['deptj'] == 1 and $item1['plid'] == 0.
     // We know that the parent of link2 is link1, so $item2['plid'] == $item1['mlid'].
     // Both menu links were created in the navigation menu.
-    $this->assertTrue($item['menu_name'] == $menu_name && $item['plid'] == $plid && $item['link_path'] == $link && $item['link_title'] == $title, 'Menu link has correct data');
+    $this->assertEqual($item['menu_name'], $menu_name);
+    $this->assertEqual($item['plid'], $plid);
+    $this->assertEqual($item['link_path'], $link);
+    $this->assertEqual($item['link_title'], $title);
     if ($plid == 0) {
       $this->assertTrue($item['depth'] == 1 && !$item['has_children'] && $item['p1'] == $item['mlid'] && $item['p2'] == 0, 'Menu link has correct data');
     }
@@ -370,9 +372,6 @@ class MenuTestCase extends DrupalWebTestCase {
     // Verify menu link.
     $this->drupalGet('');
     $this->assertNoText($title, 'Menu link was reset');
-
-    // Verify menu link.
-    $this->drupalGet('');
     $this->assertText($old_title, 'Menu link was reset');
   }
 
