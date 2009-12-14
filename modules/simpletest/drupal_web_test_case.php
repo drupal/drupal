@@ -148,7 +148,11 @@ abstract class DrupalTestCase {
    * the method behaves just like DrupalTestCase::assert() in terms of storing
    * the assertion.
    *
+   * @return
+   *   Message ID of the stored assertion.
+   *
    * @see DrupalTestCase::assert()
+   * @see DrupalTestCase::deleteAssert()
    */
   public static function insertAssert($test_id, $test_class, $status, $message = '', $group = 'Other', array $caller = array()) {
     // Convert boolean status to string status.
@@ -173,8 +177,24 @@ abstract class DrupalTestCase {
       'file' => $caller['file'],
     );
 
-    db_insert('simpletest')
+    return db_insert('simpletest')
       ->fields($assertion)
+      ->execute();
+  }
+
+  /**
+   * Delete an assertion record by message ID.
+   * 
+   * @param $message_id
+   *   Message ID of the assertion to delete.
+   * @return
+   *   TRUE if the assertion was deleted, FALSE otherwise.
+   * 
+   * @see DrupalTestCase::insertAssert()
+   */
+  public static function deleteAssert($message_id) {
+    return (bool) db_delete('simpletest')
+      ->condition('message_id', $message_id)
       ->execute();
   }
 
@@ -402,11 +422,20 @@ abstract class DrupalTestCase {
     }
 
     set_error_handler(array($this, 'errorHandler'));
-    $methods = array();
+    $class = get_class($this);
     // Iterate through all the methods in this class.
-    foreach (get_class_methods(get_class($this)) as $method) {
+    foreach (get_class_methods($class) as $method) {
       // If the current method starts with "test", run it - it's a test.
       if (strtolower(substr($method, 0, 4)) == 'test') {
+        // Insert a fail record. This will be deleted on completion to ensure
+        // that testing completed.
+        $method_info = new ReflectionMethod($class, $method);
+        $caller = array(
+          'file' => $method_info->getFileName(),
+          'line' => $method_info->getStartLine(),
+          'function' => $class . '->' . $method . '()',
+        );
+        $completion_check_id = DrupalTestCase::insertAssert($this->testId, $class, FALSE, t('The test did not complete due to a fatal error.'), 'Completion check', $caller);
         $this->setUp();
         try {
           $this->$method();
@@ -416,6 +445,8 @@ abstract class DrupalTestCase {
           $this->exceptionHandler($e);
         }
         $this->tearDown();
+        // Remove the completion check record.
+        DrupalTestCase::deleteAssert($completion_check_id);
       }
     }
     // Clear out the error messages and restore error handler.
