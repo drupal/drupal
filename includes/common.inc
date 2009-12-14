@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1063 2009/12/11 16:56:10 dries Exp $
+// $Id: common.inc,v 1.1064 2009/12/14 13:32:53 dries Exp $
 
 /**
  * @file
@@ -4984,7 +4984,7 @@ function drupal_render(&$elements) {
   }
 
   // Do not print elements twice.
-  if (isset($elements['#printed']) && $elements['#printed']) {
+  if (!empty($elements['#printed'])) {
     return;
   }
 
@@ -5014,6 +5014,11 @@ function drupal_render(&$elements) {
         $elements = $function($elements);
       }
     }
+  }
+
+  // Allow #pre_render to abort rendering.
+  if (!empty($elements['#printed'])) {
+    return;
   }
 
   // Get the children of the element, sorted by weight.

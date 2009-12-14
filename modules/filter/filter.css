@@ -1,4 +1,4 @@
-/* $Id: filter.css,v 1.1 2009/03/30 03:15:40 webchick Exp $ */
+/* $Id: filter.css,v 1.2 2009/12/14 13:32:53 dries Exp $ */
 
 .text-format-wrapper .form-item {
   margin-bottom: 0;
@@ -34,4 +34,15 @@
 }
 .text-format-wrapper .description {
   margin-top: 0.5em;
+}
+
+#filter-order tr .form-item {
+  padding: 0.5em 0 0 3em;
+  white-space: normal;
+}
+#filter-order tr .form-type-checkbox .description {
+  padding: 0 0 0 2.5em;
+}
+input#edit-filters-filter-html-settings-allowed-html {
+  width: 100%;
 }
