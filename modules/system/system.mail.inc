@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.sending.inc,v 1.4 2009/11/02 04:10:51 webchick Exp $
+// $Id: system.mail.inc,v 1.1 2009/12/15 08:37:18 dries Exp $
 
 /**
  * @file
