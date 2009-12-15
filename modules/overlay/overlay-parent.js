@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.6 2009/12/14 16:36:56 webchick Exp $
+// $Id: overlay-parent.js,v 1.7 2009/12/15 05:28:59 webchick Exp $
 
 (function ($) {
 
@@ -254,6 +254,12 @@ Drupal.overlay.create = function () {
 Drupal.overlay.load = function (url) {
   var self = this;
   var iframe = self.iframe.$element.get(0);
+  
+  // Add a loaded class to the overlay once the iframe is loaded.
+  $(iframe).load(function () {
+    $('.overlay').addClass('overlay-loaded');
+  });
+  
   // Get the document object of the iframe window.
   // @see http://xkr.us/articles/dom/iframe-document/
   var doc = (iframe.contentWindow || iframe.contentDocument);
