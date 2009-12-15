@@ -2373,6 +2373,18 @@ function db_field_names($fields) {
 }
 
 /**
+ * Check if an index exists.
+ *
+ * @param $name
+ *   Index name.
+ * @return
+ *   TRUE if the given index exists, otherwise FALSE.
+ */
+function db_index_exists($name) {
+  return Database::getConnection()->schema()->indexExists($name);
+}
+
+/**
  * Check if a table exists.
  */
 function db_table_exists($table) {

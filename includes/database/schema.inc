@@ -338,6 +338,18 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
   abstract public function fieldSetNoDefault($table, $field);
 
   /**
+   * Checks if an index exists.
+   *
+   * @param $table
+   *   Name of the table.
+   * @param $name
+   *   Name of the index.
+   * @return
+   *   Index name if the table exists. Otherwise FALSE.
+   */
+  abstract public function indexExists($table, $name);
+
+  /**
    * Add a primary key.
    *
    * @param $table

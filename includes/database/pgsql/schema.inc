@@ -275,11 +275,11 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   function renameTable($table, $new_name) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
+    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
   }
 
   public function dropTable($table) {
-  	$this->connection->query('DROP TABLE {' . $table . '}');
+    $this->connection->query('DROP TABLE {' . $table . '}');
   }
 
   /**
@@ -320,14 +320,14 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
         ->execute();
     }
     if ($fixnull) {
-    	$this->connection->query("ALTER TABLE {" . $table . "} ALTER $field SET NOT NULL");
+      $this->connection->query("ALTER TABLE {" . $table . "} ALTER $field SET NOT NULL");
     }
     if (isset($new_keys)) {
       $this->_createKeys($table, $new_keys);
     }
     // Add column comment.
     if (!empty($spec['description'])) {
-    	$this->connection->query('COMMENT ON COLUMN {' . $table . '}.' . $field . ' IS ' . $this->prepareComment($spec['description']));
+      $this->connection->query('COMMENT ON COLUMN {' . $table . '}.' . $field . ' IS ' . $this->prepareComment($spec['description']));
     }
   }
 
@@ -340,7 +340,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   The field to be dropped.
    */
   public function dropField($table, $field) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} DROP COLUMN "' . $field . '"');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP COLUMN "' . $field . '"');
   }
 
   /**
@@ -373,7 +373,11 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   The field to be altered.
    */
   public function fieldSetNoDefault($table, $field) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
+    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
+  }
+
+  public function indexExists($table, $name) {
+    return $this->connection->query("SELECT COUNT(indexname) FROM pg_indexes WHERE indexname = '$name'")->fetchField();
   }
 
   /**
@@ -385,7 +389,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   Fields for the primary key.
    */
   public function addPrimaryKey($table, $fields) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . implode(',', $fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . implode(',', $fields) . ')');
   }
 
   /**
@@ -395,7 +399,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   The table to be altered.
    */
   public function dropPrimaryKey($table) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT {' . $table . '}_pkey');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT {' . $table . '}_pkey');
   }
 
   /**
@@ -437,7 +441,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   An array of field names.
    */
   public function addIndex($table, $name, $fields) {
-  	$this->connection->query($this->_createIndexSql($table, $name, $fields));
+    $this->connection->query($this->_createIndexSql($table, $name, $fields));
   }
 
   /**
@@ -534,7 +538,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     $this->connection->query("UPDATE {" . $table . "} SET $field_new = CAST(" . $field . "_old as " . $typecast . ")");
 
     if ($not_null) {
-    	$this->connection->query("ALTER TABLE {" . $table . "} ALTER $field_new SET NOT NULL");
+      $this->connection->query("ALTER TABLE {" . $table . "} ALTER $field_new SET NOT NULL");
     }
 
     $this->dropField($table, $field . '_old');

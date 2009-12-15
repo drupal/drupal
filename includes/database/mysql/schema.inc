@@ -269,11 +269,11 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function renameTable($table, $new_name) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
+    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
   }
 
   public function dropTable($table) {
-  	$this->connection->query('DROP TABLE {' . $table . '}');
+    $this->connection->query('DROP TABLE {' . $table . '}');
   }
 
   public function addField($table, $field, $spec, $keys_new = array()) {
@@ -300,7 +300,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function dropField($table, $field) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} DROP `' . $field . '`');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP `' . $field . '`');
   }
 
   public function fieldSetDefault($table, $field, $default) {
@@ -315,31 +315,35 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function fieldSetNoDefault($table, $field) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` DROP DEFAULT');
+    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` DROP DEFAULT');
+  }
+
+  public function indexExists($table, $name) {
+    return $this->connection->query('SHOW INDEX FROM {' . $table . "} WHERE key_name = '$name'")->fetchField();
   }
 
   public function addPrimaryKey($table, $fields) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . $this->createKeySql($fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . $this->createKeySql($fields) . ')');
   }
 
   public function dropPrimaryKey($table) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} DROP PRIMARY KEY');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP PRIMARY KEY');
   }
 
   public function addUniqueKey($table, $name, $fields) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} ADD UNIQUE KEY `' . $name . '` (' . $this->createKeySql($fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD UNIQUE KEY `' . $name . '` (' . $this->createKeySql($fields) . ')');
   }
 
   public function dropUniqueKey($table, $name) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} DROP KEY `' . $name . '`');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP KEY `' . $name . '`');
   }
 
   public function addIndex($table, $name, $fields) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} ADD INDEX `' . $name . '` (' . $this->createKeySql($fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD INDEX `' . $name . '` (' . $this->createKeySql($fields) . ')');
   }
 
   public function dropIndex($table, $name) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} DROP INDEX `' . $name . '`');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP INDEX `' . $name . '`');
   }
 
   public function changeField($table, $field, $field_new, $spec, $keys_new = array()) {

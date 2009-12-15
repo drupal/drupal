@@ -220,7 +220,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
   *   The new name for the table.
   */
   public function renameTable($table, $new_name) {
-  	$this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
+    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
   }
 
   /**
@@ -230,7 +230,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    *   The table to be dropped.
    */
   public function dropTable($table) {
-  	$this->connection->query('DROP TABLE {' . $table . '}');
+    $this->connection->query('DROP TABLE {' . $table . '}');
   }
 
   /**
@@ -429,8 +429,12 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     $schema['indexes'][$name] = $fields;
     $statements = $this->createIndexSql($table, $schema);
     foreach ($statements as $statement) {
-    	$this->connection->query($statement);
+      $this->connection->query($statement);
     }
+  }
+
+  public function indexExists($table, $name) {
+    return ($this->connection->query("PRAGMA index_info($name)")->fetchField() != '');
   }
 
   /**
@@ -442,7 +446,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    *   The name of the index.
    */
   public function dropIndex($table, $name) {
-  	$this->connection->query('DROP INDEX ' . '{' . $table . '}_' . $name);
+    $this->connection->query('DROP INDEX ' . '{' . $table . '}_' . $name);
   }
 
   /**
@@ -459,7 +463,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     $schema['unique keys'][$name] = $fields;
     $statements = $this->createIndexSql($table, $schema);
     foreach ($statements as $statement) {
-    	$this->connection->query($statement);
+      $this->connection->query($statement);
     }
   }
 
@@ -472,7 +476,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    *   The name of the key.
    */
   public function dropUniqueKey($table, $name) {
-  	$this->connection->query('DROP INDEX ' . '{' . $table . '}_' . $name);
+    $this->connection->query('DROP INDEX ' . '{' . $table . '}_' . $name);
   }
 
   /**
