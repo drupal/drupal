@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1064 2009/12/14 13:32:53 dries Exp $
+// $Id: common.inc,v 1.1065 2009/12/15 05:22:05 webchick Exp $
 
 /**
  * @file
@@ -807,16 +807,20 @@ function drupal_http_request($url, array $options = array()) {
 
   $result = new stdClass();
 
-  // Validate the passed URL. FILTER_VALIDATE_URL uses parse_url() internally,
-  // but unlike parse_url() itself, it will not throw a run-time notice for
-  // bogus URLs.
-  if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+  // Parse the URL and make sure we can handle the schema.
+  $uri = @parse_url($url);
+
+  if ($uri == FALSE) {
     $result->error = 'unable to parse URL';
     $result->code = -1001;
     return $result;
   }
 
-  $uri = parse_url($url);
+  if (!isset($uri['scheme'])) {
+    $result->error = 'missing schema';
+    $result->code = -1002;
+    return $result;
+  }
 
   timer_start(__FUNCTION__);
 

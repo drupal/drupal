@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.311 2009/12/14 13:32:53 dries Exp $
+// $Id: filter.module,v 1.312 2009/12/15 05:22:05 webchick Exp $
 
 /**
  * @file
@@ -793,12 +793,10 @@ function _filter_tips($format_id, $long = FALSE) {
  *   A DOMDocument that represents the loaded (X)HTML snippet.
  */
 function filter_dom_load($text) {
-  // Suppress all libxml warnings during loading of HTML.
-  libxml_use_internal_errors(TRUE);
-  $document = new DOMDocument();
-  $document->loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
+  // Ignore warnings during HTML soup loading.
+  $dom_document = @DOMDocument::loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
 
-  return $document;
+  return $dom_document;
 }
 
 /**
