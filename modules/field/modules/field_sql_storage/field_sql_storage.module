@@ -489,11 +489,7 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $options)
   foreach ($conditions as $condition) {
     // A condition is either a (column, value, operator) triple, or a
     // (column, value) pair with implied operator.
-    list($column, $value) = $condition;
-    $operator = NULL;
-    if (isset($condition[2])) {
-      $operator = $condition[2];
-    }
+    @list($column, $value, $operator) = $condition;
     // Translate operator and value if needed.
     switch ($operator) {
       case 'STARTS_WITH':

@@ -1387,16 +1387,14 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function parse() {
     if (!$this->elements) {
-      // Suppress all libxml warnings during loading of HTML.
-      // @todo Remove this when core produces XHTML valid output.
-      libxml_use_internal_errors(TRUE);
-      $document = new DOMDocument();
-      $result = $document->loadHTML($this->content);
-      if ($result) {
+      // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
+      // them.
+      @$htmlDom = DOMDocument::loadHTML($this->content);
+      if ($htmlDom) {
         $this->pass(t('Valid HTML found on "@path"', array('@path' => $this->getUrl())), t('Browser'));
         // It's much easier to work with simplexml than DOM, luckily enough
         // we can just simply import our DOM tree.
-        $this->elements = simplexml_import_dom($document);
+        $this->elements = simplexml_import_dom($htmlDom);
       }
     }
     if (!$this->elements) {
