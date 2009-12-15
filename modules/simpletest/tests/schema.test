@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.test,v 1.9 2009/09/29 15:13:56 dries Exp $
+// $Id: schema.test,v 1.10 2009/12/15 08:30:53 dries Exp $
 
 /**
  * @file
@@ -127,5 +127,16 @@ class SchemaTestCase extends DrupalWebTestCase {
       $comment = Database::getConnection()->schema()->getComment($table, $column);
       $this->assertEqual($comment, $description, t('The comment matches the schema description.'));
     }
+  }
+
+  /**
+   * Test index status.
+   */
+  function testCheckIndex() {
+    $node_changed_index = Database::getConnection()->schema()->indexExists('node', 'node_changed');
+    $this->assertTrue($node_changed_index, t('Node index exists'));
+
+    $node_fake_index = Database::getConnection()->schema()->indexExists('node', 'node_not_exists');
+    $this->assertFalse($node_fake_index, t('Fake index does not exists'));
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.86 2009/12/13 18:10:42 webchick Exp $
+// $Id: database.inc,v 1.87 2009/12/15 08:30:53 dries Exp $
 
 /**
  * @file
@@ -2370,6 +2370,18 @@ function db_create_table($name, $table) {
  */
 function db_field_names($fields) {
   return Database::getConnection()->schema()->fieldNames($fields);
+}
+
+/**
+ * Check if an index exists.
+ *
+ * @param $name
+ *   Index name.
+ * @return
+ *   TRUE if the given index exists, otherwise FALSE.
+ */
+function db_index_exists($name) {
+  return Database::getConnection()->schema()->indexExists($name);
 }
 
 /**

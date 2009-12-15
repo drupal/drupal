@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.23 2009/12/04 16:31:04 dries Exp $
+// $Id: schema.inc,v 1.24 2009/12/15 08:30:53 dries Exp $
 
 /**
  * @file
@@ -336,6 +336,18 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   The field to be altered.
    */
   abstract public function fieldSetNoDefault($table, $field);
+
+  /**
+   * Checks if an index exists.
+   *
+   * @param $table
+   *   Name of the table.
+   * @param $name
+   *   Name of the index.
+   * @return
+   *   Index name if the table exists. Otherwise FALSE.
+   */
+  abstract public function indexExists($table, $name);
 
   /**
    * Add a primary key.
