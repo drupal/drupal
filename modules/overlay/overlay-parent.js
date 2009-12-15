@@ -254,6 +254,12 @@ Drupal.overlay.create = function () {
 Drupal.overlay.load = function (url) {
   var self = this;
   var iframe = self.iframe.$element.get(0);
+  
+  // Add a loaded class to the overlay once the iframe is loaded.
+  $(iframe).load(function () {
+    $('.overlay').addClass('overlay-loaded');
+  });
+  
   // Get the document object of the iframe window.
   // @see http://xkr.us/articles/dom/iframe-document/
   var doc = (iframe.contentWindow || iframe.contentDocument);
