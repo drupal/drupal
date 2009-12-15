@@ -3082,7 +3082,7 @@ function base_path() {
  * which on normal pages is up through the preprocess step of theme('html').
  * Adding a link will overwrite a prior link with the exact same 'rel' and
  * 'href' attributes.
- * 
+ *
  * @param $attributes
  *   Associative array of element attributes including 'href' and 'rel'.
  * @param $header
@@ -3482,7 +3482,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     $contents = preg_replace('{
       (?<=\\\\\*/)([^/\*]+/\*)([^\*/]+\*/)  # Add a backslash also at the end ie-mac hack comment, so the next pass will not touch it.
                                             # The added backshlash does not affect the effectiveness of the hack.
-      }x', '\1\\\\\2', $contents);    
+      }x', '\1\\\\\2', $contents);
     $contents = preg_replace('<
       \s*([@{}:;,]|\)\s|\s\()\s* |          # Remove whitespace around separators, but keep space around parentheses.
       /\*[^*\\\\]*\*+([^/*][^*]*\*+)*/ |    # Remove comments that are not CSS hacks.
@@ -4571,6 +4571,10 @@ function drupal_page_set_cache() {
     $header_names = _drupal_set_preferred_header_name();
     foreach (drupal_get_http_header() as $name_lower => $value) {
       $cache->headers[$header_names[$name_lower]] = $value;
+      if ($name_lower == 'expires') {
+        // Use the actual timestamp from an Expires header if available.
+        $cache->expire = strtotime($value);
+      }
     }
 
     if ($cache->data) {

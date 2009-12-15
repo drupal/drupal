@@ -211,4 +211,3 @@ Drupal.behaviors.machineReadableValue = {
 };
 
 })(jQuery);
-

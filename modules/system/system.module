@@ -190,9 +190,6 @@ function system_theme() {
     'system_compact_link' => array(
       'variables' => array(),
     ),
-    'system_run_cron_image' => array(
-      'variables' => array('image_path' => NULL),
-    ),
     'system_date_time_settings' => array(
       'render element' => 'form',
       'file' => 'system.admin.inc',
@@ -530,10 +527,10 @@ function system_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
-  $items['system/run-cron-image'] = array(
+  $items['system/run-cron-check'] = array(
     'title' => 'Execute cron',
-    'page callback' => 'system_run_cron_image',
-    'access callback' => 'system_run_cron_image_access',
+    'page callback' => 'system_run_cron_check',
+    'access callback' => 'system_run_cron_check_access',
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
@@ -2420,6 +2417,10 @@ function system_region_list($theme_key, $show = REGIONS_ALL) {
 
   if (empty($list[$theme_key][$show])) {
     $themes = list_themes();
+    if (!isset($themes[$theme_key])) {
+      $list[$theme_key][$show] = array();
+      return $list[$theme_key][$show];
+    }
     $info = $themes[$theme_key]->info;
     // If requested, suppress hidden regions. @see block_admin_display_form().
     foreach ($info['regions'] as $name => $label) {
@@ -3066,17 +3067,23 @@ function system_retrieve_file($url, $destination = NULL, $overwrite = TRUE) {
  */
 function system_page_build(&$page) {
   // Automatic cron runs.
-  // @see system_run_cron_image()
-  if (system_run_cron_image_access()) {
+  $cron_threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
+  if ($cron_threshold) {
     $page['page_bottom']['run_cron'] = array(
       // Trigger cron run via AJAX.
       '#attached' => array(
         'js' => array(
-          '(function($){ $.get(' . drupal_json_encode(url('system/run-cron-image')) . '); })(jQuery);' => array('type' => 'inline', 'scope' => 'header'),
+          drupal_get_path('module', 'system') . '/system.cron.js' => array('weight' => JS_DEFAULT - 5),
+          array(
+            'data' => array(
+              // Add the timestamp for the next automatic cron run.
+              'cronCheck' => variable_get('cron_last', 0) + $cron_threshold,
+            ),
+            'type' => 'setting',
+          ),
+
         ),
       ),
-      // Trigger cron run for clients not supporting JavaScript (fall-back).
-      '#markup' => theme('system_run_cron_image', array('image_path' => 'system/run-cron-image')),
     );
   }
 }
@@ -3097,27 +3104,18 @@ function system_page_alter(&$page) {
 }
 
 /**
- * Menu callback; executes cron via an image callback.
+ * Menu callback; executes cron via an AJAX callback.
  *
  * This callback runs cron in a separate HTTP request to prevent "mysterious"
- * slow-downs of regular HTTP requests. It is either invoked via an AJAX request
- * (if the client's browser supports JavaScript) or by an IMG tag directly in
- * the page output (for clients not supporting JavaScript). For the latter case,
- * we need to output a transparent 1x1 image, so the browser does not render the
- * image's alternate text or a 'missing image placeholder'. The AJAX request
+ * slow-downs of regular HTTP requests. It is invoked via an AJAX request and
  * does not process the returned output.
  *
  * @see system_page_alter()
- * @see theme_system_run_cron_image()
- * @see system_run_cron_image_access()
+ * @see system_run_cron_check_access()
  */
-function system_run_cron_image() {
-  drupal_page_is_cacheable(FALSE);
-
-  // Output a transparent 1x1 image to the browser; required for clients not
-  // supporting JavaScript.
-  drupal_add_http_header('Content-Type', 'image/gif');
-  echo "\x47\x49\x46\x38\x39\x61\x1\x0\x1\x0\x80\xff\x0\xc0\xc0\xc0\x0\x0\x0\x21\xf9\x4\x1\x0\x0\x0\x0\x2c\x0\x0\x0\x0\x1\x0\x1\x0\x0\x2\x2\x44\x1\x0\x3b";
+function system_run_cron_check() {
+  $cron_run = FALSE;
+  $cron_threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
 
   // Cron threshold semaphore is used to avoid errors every time the image
   // callback is displayed when a previous cron is still running.
@@ -3133,19 +3131,23 @@ function system_run_cron_image() {
     }
   }
   else {
-    // Run cron automatically if it has never run or threshold was crossed.
     $cron_last = variable_get('cron_last', NULL);
-    $cron_threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
+    // Run cron automatically if it has never run or threshold was crossed.
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $cron_threshold)) {
       // Lock cron threshold semaphore.
       variable_set('cron_threshold_semaphore', REQUEST_TIME);
-      drupal_cron_run();
+      $cron_run = drupal_cron_run();
       // Release the cron threshold semaphore.
       variable_del('cron_threshold_semaphore');
     }
   }
 
-  drupal_exit();
+  // Add an expires header with the time of the next cron run.
+  $cron_last = variable_get('cron_last', NULL);
+  drupal_add_http_header('Expires', gmdate(DATE_RFC1123, $cron_last + $cron_threshold));
+
+  drupal_json_output(array('cron_run' => $cron_run));
+  drupal_page_footer();
 }
 
 /**
@@ -3156,26 +3158,11 @@ function system_run_cron_image() {
  * @return
  *   TRUE if cron threshold is enabled, FALSE otherwise.
  *
- * @see system_run_cron_image()
+ * @see system_run_cron_check()
  * @see system_page_alter()
  */
-function system_run_cron_image_access() {
+function system_run_cron_check_access() {
   return variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD) > 0;
-}
-
-/**
- * Display image used to run cron automatically.
- *
- * Renders an image pointing to the automatic cron run menu callback for
- * graceful degradation when Javascript is not available. The wrapping NOSCRIPT
- * tag ensures that only browsers not supporting JavaScript render the image.
- *
- * @see system_page_alter()
- * @see system_run_cron_image()
- * @ingroup themeable
- */
-function theme_system_run_cron_image($variables) {
-  return '<noscript><div id="system-cron-image">' . theme('image', array('path' => $variables['image_path'], 'getsize' => FALSE)) . '</div></noscript>';
 }
 
 /**

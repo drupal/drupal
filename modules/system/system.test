@@ -415,47 +415,61 @@ class CronRunTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Follow every image paths in the previously retrieved content.
-   */
-  function drupalGetAllImages() {
-    foreach ($this->xpath('//img') as $image) {
-      $this->drupalGet($this->getAbsoluteUrl($image['src']));
-    }
-  }
-
-  /**
-   * Ensure that the cron image callback to run it automatically is working.
+   * Ensure that the automatic cron run callback is working.
    *
    * In these tests we do not use REQUEST_TIME to track start time, because we
    * need the exact time when cron is triggered.
    */
-  function testCronThreshold() {
+  function testAutomaticCron() {
     // Ensure cron does not run when the cron threshold is enabled and was
     // not passed.
-    $start_cron_last = time();
-    variable_set('cron_last', $start_cron_last);
-    variable_set('cron_safe_threshold', 10);
+    $cron_last = time();
+    $cron_safe_threshold = 100;
+    variable_set('cron_last', $cron_last);
+    variable_set('cron_safe_threshold', $cron_safe_threshold);
     $this->drupalGet('');
-    // Follow every image path on the page.
-    $this->drupalGetAllImages();
-    $this->assertTrue($start_cron_last == variable_get('cron_last', NULL), t('Cron does not run when the cron threshold is not passed.'));
+    $this->assertRaw('"cronCheck":' . ($cron_last + $cron_safe_threshold));
+    $this->drupalGet('system/run-cron-check');
+    $this->assertExpiresHeader($cron_last + $cron_safe_threshold);
+    $this->assertTrue($cron_last == variable_get('cron_last', NULL), t('Cron does not run when the cron threshold is not passed.'));
 
     // Test if cron runs when the cron threshold was passed.
-    $start_cron_last = time() - 15;
-    variable_set('cron_last', $start_cron_last);
+    $cron_last = time() - 200;
+    variable_set('cron_last', $cron_last);
     $this->drupalGet('');
-    // Follow every image path on the page.
-    $this->drupalGetAllImages();
-    $this->assertTrue(variable_get('cron_last', NULL) > $start_cron_last, t('Cron runs when the cron threshold is passed.'));
+    $this->assertRaw('"cronCheck":' . ($cron_last + $cron_safe_threshold));
+    sleep(1);
+    $this->drupalGet('system/run-cron-check');
+    $this->assertExpiresHeader(variable_get('cron_last', NULL) + $cron_safe_threshold);
+    $this->assertTrue($cron_last < variable_get('cron_last', NULL), t('Cron runs when the cron threshold is passed.'));
 
-    // Test if cron does not run when the cron threshold was is disabled.
-    $start_cron_last = time() - 15;
-    variable_set('cron_safe_threshold', 0);
-    variable_set('cron_last', $start_cron_last);
+    // Disable the cron threshold through the interface.
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+    $this->drupalPost('admin/config/system/site-information', array('cron_safe_threshold' => 0), t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'));
+    $this->drupalLogout();
+
+    // Test if cron does not run when the cron threshold is disabled.
+    $cron_last = time() - 200;
+    variable_set('cron_last', $cron_last);
     $this->drupalGet('');
-    // Follow every image path on the page.
-    $this->drupalGetAllImages();
-    $this->assertTrue($start_cron_last == variable_get('cron_last', NULL), t('Cron does not run when the cron threshold is disabled.'));
+    $this->assertNoRaw('cronCheck');
+    $this->drupalGet('system/run-cron-check');
+    $this->assertResponse(403);
+    $this->assertTrue($cron_last == variable_get('cron_last', NULL), t('Cron does not run when the cron threshold is disabled.'));
+  }
+
+  /**
+   * Assert that the Expires header is a specific timestamp.
+   *
+   * @param $timestamp
+   *   The timestamp value to match against the header.
+   */
+  private function assertExpiresHeader($timestamp) {
+    $expires = $this->drupalGetHeader('Expires');
+    $expires = strtotime($expires);
+    $this->assertEqual($expires, $timestamp, t('Expires header expected @expected got @actual.', array('@expected' => $timestamp, '@actual' => $expires)));
   }
 
   /**

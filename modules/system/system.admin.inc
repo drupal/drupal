@@ -1496,7 +1496,7 @@ function system_site_information_settings_submit($form, &$form_state) {
   // Clear caches when the cron threshold is changed to ensure that the cron
   // image is not contained in cached pages.
   $cron_threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
-  if (($cron_threshold > 0 && $form_state['input']['cron_safe_threshold'] == 0) || ($cron_threshold == 0 && $form_state['input']['cron_safe_threshold'] > 0)) {
+  if ($cron_threshold != $form_state['input']['cron_safe_threshold']) {
     cache_clear_all();
   }
 }
