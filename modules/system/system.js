@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.37 2009/10/16 19:20:34 dries Exp $
+// $Id: system.js,v 1.38 2009/12/15 08:45:32 dries Exp $
 (function ($) {
 
 /**
@@ -211,4 +211,3 @@ Drupal.behaviors.machineReadableValue = {
 };
 
 })(jQuery);
-

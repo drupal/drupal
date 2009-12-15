@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.237 2009/12/12 21:05:20 dries Exp $
+// $Id: system.admin.inc,v 1.238 2009/12/15 08:45:32 dries Exp $
 
 /**
  * @file
@@ -1496,7 +1496,7 @@ function system_site_information_settings_submit($form, &$form_state) {
   // Clear caches when the cron threshold is changed to ensure that the cron
   // image is not contained in cached pages.
   $cron_threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
-  if (($cron_threshold > 0 && $form_state['input']['cron_safe_threshold'] == 0) || ($cron_threshold == 0 && $form_state['input']['cron_safe_threshold'] > 0)) {
+  if ($cron_threshold != $form_state['input']['cron_safe_threshold']) {
     cache_clear_all();
   }
 }
