@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1182 2009/12/14 20:46:43 dries Exp $
+// $Id: node.module,v 1.1183 2009/12/16 19:53:53 dries Exp $
 
 /**
  * @file
@@ -809,6 +809,9 @@ function node_rdf_mapping() {
         ),
         'name' => array(
           'predicates' => array('foaf:name'),
+        ),
+        'comment_count' => array(
+          'predicates' => array('sioc:num_replies'),
         ),
       ),
     ),
