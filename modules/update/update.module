@@ -557,7 +557,7 @@ function _update_cache_set($cid, $data, $expire) {
   }
 }
 
-/** 
+/**
  * Retrieve data from the private update status cache table.
  *
  * @param $cid
@@ -585,7 +585,7 @@ function _update_cache_get($cid) {
  */
 function _update_cache_clear($cid = NULL) {
   if (empty($cid)) {
-    db_query("DELETE FROM {cache_update}");
+    db_query("TRUNCATE TABLE {cache_update}");
   }
   else {
     db_query("DELETE FROM {cache_update} WHERE cid = '%s'", $cid);

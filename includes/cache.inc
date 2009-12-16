@@ -169,7 +169,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
   else {
     if ($wildcard) {
       if ($cid == '*') {
-        db_query("DELETE FROM {". $table ."}");
+        db_query("TRUNCATE TABLE {". $table ."}");
       }
       else {
         db_query("DELETE FROM {". $table ."} WHERE cid LIKE '%s%%'", $cid);
