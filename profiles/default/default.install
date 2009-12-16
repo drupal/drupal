@@ -210,7 +210,7 @@ function default_install() {
       'delta' => 'form',
       'theme' => 'seven',
       'status' => 1,
-      'weight' => 1,
+      'weight' => -10,
       'region' => 'dashboard_sidebar',
       'pages' => '',
       'cache' => -1,
