@@ -1,7 +1,9 @@
 // $Id$
 
-Drupal 6.15-dev, xxxx-xx-xx (development release)
+Drupal 6.15, 2009-12-16
 ----------------------
+- Fixed security issues (Cross site scripting), see SA-CORE-2009-009.
+- Fixed a variety of other bugs.
 
 Drupal 6.14, 2009-09-16
 ----------------------
@@ -92,7 +94,7 @@ Drupal 6.3, 2008-07-09
 - Fixed Views compatibility issues (Views for Drupal 6 requires Drupal 6.3+).
 - Fixed a variety of small bugs.
 
-Drupal 6.2, 2008-04-09 
+Drupal 6.2, 2008-04-09
 ----------------------
 - Fixed a variety of small bugs.
 - Fixed a security issue (Access bypasses), see SA-2008-026.
@@ -204,6 +206,11 @@ Drupal 6.0, 2008-02-13
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
 
+Drupal 5.21, 2009-12-16
+-----------------------
+- Fixed a security issue (Cross site scripting), see SA-CORE-2009-009.
+- Fixed a variety of small bugs.
+
 Drupal 5.20, 2009-09-16
 -----------------------
 - Avoid security problems resulting from writing Drupal 6-style menu declarations.
@@ -245,7 +252,7 @@ Drupal 5.13, 2008-12-10
 -----------------------
 - fixed a variety of small bugs.
 - fixed security issues, (Cross site request forgery and Cross site scripting), see SA-2008-073
-- updated robots.txt and .htaccess to match current file use. 
+- updated robots.txt and .htaccess to match current file use.
 
 Drupal 5.12, 2008-10-22
 -----------------------

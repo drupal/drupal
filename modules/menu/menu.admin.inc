@@ -15,6 +15,7 @@ function menu_overview_page() {
   while ($menu = db_fetch_array($result)) {
     $menu['href'] = 'admin/build/menu-customize/'. $menu['menu_name'];
     $menu['localized_options'] = array();
+    $menu['description'] = filter_xss_admin($menu['description']);
     $content[] = $menu;
   }
   return theme('admin_block_content', $content);
