@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1089 2009/12/07 03:45:16 webchick Exp $
+// $Id: user.module,v 1.1090 2009/12/16 19:57:45 dries Exp $
 
 /**
  * @file
@@ -1562,8 +1562,6 @@ function user_menu() {
 
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
-    'title callback' => 'user_page_title',
-    'title arguments' => array(1),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_profile_form', 1),
     'access callback' => 'user_edit_access',
