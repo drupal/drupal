@@ -1088,10 +1088,32 @@ class CommentRdfaTestCase extends CommentHelperCase {
   }
 
   /**
+   * Tests the presence of the RDFa markup for the number of comments.
+   */
+  function testNumberOfCommentsRdfaMarkup() {
+    // Posts 2 comments as a registered user.
+    $this->drupalLogin($this->web_user);
+    $this->postComment($this->node1, $this->randomName(), $this->randomName());
+    $this->postComment($this->node1, $this->randomName(), $this->randomName());
+
+    // Tests number of comments in teaser view.
+    $this->drupalGet('node');
+    $comment_count_teaser = $this->xpath("//div[contains(@typeof, 'sioc:Item')]//li[contains(@class, 'comment_comments')]/a[contains(@property, 'sioc:num_replies') and contains(@content, '2')]");
+    $this->assertTrue(!empty($comment_count_teaser), t('RDFa markup for the number of comments found on teaser view.'));
+
+    // Tests number of comments in full node view.
+    $this->drupalGet('node/' . $this->node1->nid);
+    $node_url = url('node/' . $this->node1->nid);
+    $comment_count_teaser = $this->xpath("/html/head/meta[@about='$node_url' and @property='sioc:num_replies' and @content='2']");
+    $this->assertTrue(!empty($comment_count_teaser), t('RDFa markup for the number of comments found on full node view.'));
+  }
+
+
+  /**
    * Tests the presence of the RDFa markup for the title, date and author and
    * homepage on registered users and anonymous comments.
    */
-  function testAttributesInRdfaMarkup() {
+  function testCommentRdfaMarkup() {
 
     // Posts comment #1 as a registered user.
     $this->drupalLogin($this->web_user);
@@ -1141,7 +1163,7 @@ class CommentRdfaTestCase extends CommentHelperCase {
   }
 
   /**
-   * Helper function for testAttributesInRdfaMarkup().
+   * Helper function for testCommentRdfaMarkup().
    *
    * Tests the current page for basic comment RDFa markup.
    *

@@ -810,6 +810,9 @@ function node_rdf_mapping() {
         'name' => array(
           'predicates' => array('foaf:name'),
         ),
+        'comment_count' => array(
+          'predicates' => array('sioc:num_replies'),
+        ),
       ),
     ),
   );
