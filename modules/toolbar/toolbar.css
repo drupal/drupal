@@ -73,6 +73,16 @@ body.toolbar-drawer {
   position: relative;
 }
 
+#toolbar-home a span {
+  vertical-align: text-bottom;
+  width: 15px;
+  height: 14px;
+  display: block;
+  background: url(toolbar.png) no-repeat 0px -61px;
+  text-indent: -9999px;
+  margin: 3px 0px;
+}
+
 #toolbar-user {
   float: right;
 }

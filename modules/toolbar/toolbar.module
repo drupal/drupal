@@ -197,7 +197,7 @@ function toolbar_build() {
     '#heading' => array('text' => t($system_menus['management']), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 
-  // Add logout & user account links or login link
+  // Add logout & user account links or login link.
   if ($user->uid) {
     $links = array(
       'account' => array(
@@ -223,6 +223,20 @@ function toolbar_build() {
     '#theme' => 'links',
     '#links' => $links,
     '#attributes' => array('id' => 'toolbar-user'),
+  );
+  
+  // Add a "home" link.
+  $link = array(
+    'home' => array(
+      'title' => '<span class="home-link">Home</span>',
+      'href' => '<front>',
+      'html' => TRUE,
+    ),
+  );
+  $build['toolbar_home'] = array(
+    '#theme' => 'links',
+    '#links' => $link,
+    '#attributes' => array('id' => 'toolbar-home'),
   );
 
   // Add an anchor to be able to toggle the visibility of the drawer.
@@ -259,6 +273,7 @@ function toolbar_get_menu_tree() {
     $admin_link = array_pop($tree);
     $tree = $admin_link['below'] ? $admin_link['below'] : array();
   }
+  
   return $tree;
 }
 
