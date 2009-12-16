@@ -75,7 +75,7 @@ function openid_redirect_form(&$form_state, $url, $message) {
  */
 function _openid_is_xri($identifier) {
   // Strip the xri:// scheme from the identifier if present.
-  if (stripos($identifier, 'xri://') !== FALSE) {
+  if (strpos(strtolower($identifier), 'xri://') !== FALSE) {
     $identifier = substr($identifier, 6);
   }
 
