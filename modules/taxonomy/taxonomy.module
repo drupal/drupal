@@ -248,9 +248,7 @@ function taxonomy_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
-    'title' => 'Edit term',
-    'title callback' => 'taxonomy_term_title',
-    'title arguments' => array(2),
+    'title' => 'Edit',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_term', 2),
     'access callback' => 'taxonomy_term_edit_access',

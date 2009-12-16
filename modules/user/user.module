@@ -1562,8 +1562,6 @@ function user_menu() {
 
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
-    'title callback' => 'user_page_title',
-    'title arguments' => array(1),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_profile_form', 1),
     'access callback' => 'user_edit_access',
