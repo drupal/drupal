@@ -136,6 +136,15 @@ interface DrupalQueueInterface {
   public function deleteItem($item);
 
   /**
+   * Release an item that the worker could not process, so another
+   * worker can come in and process it before the timeout expires.
+   *
+   * @param $item
+   * @return boolean
+   */
+  public function releaseItem($item);
+
+  /**
    * Create a queue.
    *
    * Called during installation and should be used to perform any necessary
@@ -214,6 +223,15 @@ class SystemQueue implements DrupalQueueInterface {
         return FALSE;
       }
     }
+  }
+
+  public function releaseItem($item) {
+    $update = db_update('queue')
+      ->fields(array(
+        'expire' => 0,
+      ))
+      ->condition('item_id', $item->item_id);
+      return $update->execute();
   }
 
   public function deleteItem($item) {
