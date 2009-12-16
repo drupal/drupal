@@ -1,4 +1,4 @@
-/* $Id: toolbar.css,v 1.11 2009/12/05 20:41:41 dries Exp $ */
+/* $Id: toolbar.css,v 1.12 2009/12/16 19:41:22 dries Exp $ */
 
 body.toolbar {
   padding-top: 2.2em;
@@ -71,6 +71,16 @@ body.toolbar-drawer {
   line-height: 1.84;
   padding: 5px 50px 5px 10px;
   position: relative;
+}
+
+#toolbar-home a span {
+  vertical-align: text-bottom;
+  width: 15px;
+  height: 14px;
+  display: block;
+  background: url(toolbar.png) no-repeat 0px -61px;
+  text-indent: -9999px;
+  margin: 3px 0px;
 }
 
 #toolbar-user {

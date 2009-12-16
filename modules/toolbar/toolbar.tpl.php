@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.tpl.php,v 1.7 2009/11/15 21:13:26 webchick Exp $
+// $Id: toolbar.tpl.php,v 1.8 2009/12/16 19:41:22 dries Exp $
 
 /**
  * @file
@@ -24,6 +24,7 @@
 ?>
 <div id="toolbar" class="<?php print $classes; ?> clearfix">
   <div class="toolbar-menu clearfix">
+    <?php print render($toolbar['toolbar_home']); ?>
     <?php print render($toolbar['toolbar_user']); ?>
     <?php print render($toolbar['toolbar_menu']); ?>
     <?php if ($toolbar['toolbar_drawer']):?>
