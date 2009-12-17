@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.419 2009/12/14 13:51:56 dries Exp $
+// $Id: form.inc,v 1.420 2009/12/17 17:18:02 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -231,12 +231,12 @@ function drupal_build_form($form_id, &$form_state) {
   // the form will simply be re-rendered with the values still in its
   // fields.
   //
-  // If $form_state['rebuild'] has been set and the form has been submitted, we
+  // If $form_state['rebuild'] has been set and input has been processed, we
   // know that we're in a multi-part process of some sort and the form's
   // workflow is not complete. We need to construct a fresh copy of the form,
   // passing in the latest $form_state in addition to any other variables passed
   // into drupal_get_form().
-  if ($form_state['rebuild'] && $form_state['submitted'] && !form_get_errors()) {
+  if ($form_state['rebuild'] && $form_state['process_input'] && !form_get_errors()) {
     $form = drupal_rebuild_form($form_id, $form_state);
   }
   // After processing the form, the form builder or a #process callback may
