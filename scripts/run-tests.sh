@@ -117,7 +117,8 @@ All arguments are long options.
 
   --url       Immediately preceeds a URL to set the host and path. You will
               need this parameter if Drupal is in a subdirectory on your
-              localhost and you have not set \$base_url in settings.php.
+              localhost and you have not set \$base_url in settings.php. Tests
+              can be run under SSL by including https:// in the URL.
 
   --php       The absolute path to the PHP executable. Usually not needed.
 
@@ -264,6 +265,12 @@ function simpletest_script_init($server_software) {
     $parsed_url = parse_url($args['url']);
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = $parsed_url['path'];
+
+    // If the passed URL schema is 'https' then setup the $_SERVER variables
+    // properly so that testing will run under https.
+    if ($parsed_url['scheme'] == 'https') {
+      $_SERVER['HTTPS'] = 'on';
+    }
   }
 
   $_SERVER['HTTP_HOST'] = $host;
@@ -276,6 +283,13 @@ function simpletest_script_init($server_software) {
   $_SERVER['SCRIPT_NAME'] = $path .'/index.php';
   $_SERVER['PHP_SELF'] = $path .'/index.php';
   $_SERVER['HTTP_USER_AGENT'] = 'Drupal command line';
+
+  if ($_SERVER['HTTPS'] == 'on') {
+    // Ensure that any and all environment variables are changed to https://.
+    foreach ($_SERVER as $key => $value) {
+      $_SERVER[$key] = str_replace('http://', 'https://', $_SERVER[$key]);
+    }
+  }
 
   chdir(realpath(dirname(__FILE__) . '/..'));
   define('DRUPAL_ROOT', getcwd());
