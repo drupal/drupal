@@ -58,8 +58,8 @@ function hook_hook_info() {
  *   properties of those types that the  system needs to know about:
  *   - name: The human-readable name of the type.
  *   - controller class: The name of the class that is used to load the objects.
- *     The class has to implement the DrupalEntityController interface. Leave
- *     blank to use the DefaultDrupalEntityController implementation.
+ *     The class has to implement the DrupalEntityControllerInterface interface.
+ *     Leave blank to use the DefaultDrupalEntityController implementation.
  *   - base table: (used by DefaultDrupalEntityController) The name of the
  *     entity type's base table.
  *   - static cache: (used by DefaultDrupalEntityController) FALSE to disable
