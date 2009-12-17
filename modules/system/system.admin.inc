@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.238 2009/12/15 08:45:32 dries Exp $
+// $Id: system.admin.inc,v 1.239 2009/12/17 13:10:19 dries Exp $
 
 /**
  * @file
@@ -1483,8 +1483,7 @@ function system_site_information_settings_validate($form, &$form_state) {
   // Get the normal path of the front page.
   form_set_value($form['site_frontpage'], drupal_get_normal_path($form_state['values']['site_frontpage']), $form_state);
   // Validate front page path.
-  $item = array('link_path' => $form_state['values']['site_frontpage']);
-  if (!menu_valid_path($item)) {
+  if (!drupal_valid_path($form_state['values']['site_frontpage'])) {
     form_set_error('site_frontpage', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $item['link_path'])));
   }
 }

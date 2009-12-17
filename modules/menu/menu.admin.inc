@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.68 2009/11/04 04:43:58 webchick Exp $
+// $Id: menu.admin.inc,v 1.69 2009/12/17 13:10:19 dries Exp $
 
 /**
  * @file
@@ -363,7 +363,7 @@ function menu_edit_item_validate($form, &$form_state) {
       $item['link_path'] = $parsed_link['path'];
     }
   }
-  if (!trim($item['link_path']) || !menu_valid_path($item)) {
+  if (!trim($item['link_path']) || !drupal_valid_path($item['link_path'], TRUE)) {
     form_set_error('link_path', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $item['link_path'])));
   }
 }
