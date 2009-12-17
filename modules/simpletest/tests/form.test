@@ -559,11 +559,28 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
    * Tests using the form in a usual way.
    */
   function testForm() {
-    $this->drupalPost('form_test/form-storage', array('title' => 'new', 'value' => 'value_is_set'), 'Continue');
-    $this->assertText('Form constructions: 2', t('The form has been constructed two times till now.'));
+    $this->drupalGet('form_test/form-storage');
+    $this->assertText('Form constructions: 1');
 
-    $this->drupalPost(NULL, array(), 'Save');
-    $this->assertText('Form constructions: 3', t('The form has been constructed three times till now.'));
+    $edit = array('title' => 'new', 'value' => 'value_is_set');
+    // Reload the form, but don't rebuild.
+    $this->drupalPost(NULL, $edit, 'Reload');
+    $this->assertText('Form constructions: 2');
+
+    // Now use form rebuilding triggered by a submit button.
+    $this->drupalPost(NULL, $edit, 'Continue submit');
+    $this->assertText('Form constructions: 3');
+    $this->assertText('Form constructions: 4');
+
+    // Reset the form to the values of the storage, using a form rebuild
+    // triggered by button of type button.
+    $this->drupalPost(NULL, array('title' => 'changed'), 'Reset');
+    $this->assertFieldByName('title', 'new', 'Values have been resetted.');
+    // After rebuilding, the form has been cached.
+    $this->assertText('Form constructions: 5');
+
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertText('Form constructions: 5');
     $this->assertText('Title: new', t('The form storage has stored the values.'));
   }
 
@@ -571,11 +588,26 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
    * Tests using the form with an activated $form_state['cache'] property.
    */
   function testFormCached() {
-    $this->drupalPost('form_test/form-storage', array('title' => 'new', 'value' => 'value_is_set'), 'Continue', array('query' => array('cache' => 1)));
-    $this->assertText('Form constructions: 1', t('The form has been constructed one time till now.'));
+    $this->drupalGet('form_test/form-storage', array('query' => array('cache' => 1)));
+    $this->assertText('Form constructions: 1');
 
-    $this->drupalPost(NULL, array(), 'Save', array('query' => array('cache' => 1)));
-    $this->assertText('Form constructions: 2', t('The form has been constructed two times till now.'));
+    $edit = array('title' => 'new', 'value' => 'value_is_set');
+    // Reload the form, but don't rebuild.
+    $this->drupalPost(NULL, $edit, 'Reload');
+    $this->assertNoText('Form constructions');
+
+    // Now use form rebuilding triggered by a submit button.
+    $this->drupalPost(NULL, $edit, 'Continue submit');
+    $this->assertText('Form constructions: 2');
+
+    // Reset the form to the values of the storage, using a form rebuild
+    // triggered by button of type button.
+    $this->drupalPost(NULL, array('title' => 'changed'), 'Reset');
+    $this->assertFieldByName('title', 'new', 'Values have been resetted.');
+    $this->assertText('Form constructions: 3');
+
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertText('Form constructions: 3');
     $this->assertText('Title: new', t('The form storage has stored the values.'));
   }
 
@@ -583,8 +615,8 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
    * Tests validation when form storage is used.
    */
   function testValidation() {
-    $this->drupalPost('form_test/form-storage', array('title' => '', 'value' => 'value_is_set'), 'Continue');
-    $this->assertPattern('/value_is_set/', t("The input values have been kept."));
+    $this->drupalPost('form_test/form-storage', array('title' => '', 'value' => 'value_is_set'), 'Continue submit');
+    $this->assertPattern('/value_is_set/', t('The input values have been kept.'));
   }
 
   /**
@@ -605,7 +637,7 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
     // 'title' into form storage, but we want to verify that changes in the form
     // storage are updated in the cache during form validation.
     $edit = array('title' => 'foo');
-    $this->drupalPost(NULL, $edit, 'Continue');
+    $this->drupalPost(NULL, $edit, 'Continue submit');
 
     // In step 2, trigger a validation error for the required 'title' field, and
     // post the special 'change_title' value for the 'value' field, which
@@ -616,13 +648,10 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
 
     // At this point, the form storage should contain updated values, but we do
     // not see them, because the form has not been rebuilt yet due to the
-    // validation error. Post again with an arbitrary 'title' (which is only
-    // updated in form storage in step 1) and verify that the rebuilt form
-    // contains the values of the updated form storage.
-    $edit = array('title' => 'foo', 'value' => '');
-    $this->drupalPost(NULL, $edit, 'Save');
-    $this->assertFieldByName('title', 'title_changed', t('The altered form storage value was updated in cache and taken over.'));
-    $this->assertText('Title: title_changed', t('The form storage has stored the values.'));
+    // validation error. Post again and verify that the rebuilt form contains
+    // the values of the updated form storage.
+    $this->drupalPost(NULL, array('title' => 'foo', 'value' => 'bar'), 'Save');
+    $this->assertText("The thing has been changed.", 'The altered form storage value was updated in cache and taken over.');
   }
 
   /**

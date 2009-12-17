@@ -420,11 +420,10 @@ function form_test_storage_form($form, &$form_state) {
         'value' => '',
       ),
     );
-    $form_state['storage'] += array('step' => 1);
   }
-
-  // Count how often the form is constructed
+  // Count how often the form is constructed.
   $_SESSION['constructions']++;
+  drupal_set_message("Form constructions: ". $_SESSION['constructions']);
 
   $form['title'] = array(
     '#type' => 'textfield',
@@ -438,22 +437,26 @@ function form_test_storage_form($form, &$form_state) {
     '#default_value' => $form_state['storage']['thing']['value'],
     '#element_validate' => array('form_test_storage_element_validate_value_cached'),
   );
-  if ($form_state['storage']['step'] == 1) {
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#value' => 'Continue',
-    );
-  }
-  else {
-    $form['body'] = array(
-      '#type' => 'item',
-      '#value' => 'This is the second step.',
-    );
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#value' => 'Save',
-    );
-  }
+  $form['button'] = array(
+    '#type' => 'button',
+    '#value' => 'Reload',
+    // Reload the form (don't rebuild), thus we start at the initial step again.
+  );
+  $form['continue_button'] = array(
+    '#type' => 'button',
+    '#value' => 'Reset',
+    // Rebuilds the form without keeping the values.
+    '#validate' => array('form_storage_test_form_continue_validate'),
+  );
+  $form['continue_submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Continue submit',
+    '#submit' => array('form_storage_test_form_continue_submit'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save',
+  );
 
   if (isset($_REQUEST['cache'])) {
     // Manually activate caching, so we can test that the storage keeps working
@@ -470,12 +473,12 @@ function form_test_storage_form($form, &$form_state) {
  * Tests updating of cached form storage during validation.
  */
 function form_test_storage_element_validate_value_cached($element, &$form_state) {
-  // If caching is enabled and we receive a certain value, change the value of
-  // 'title'. This presumes that another submitted form value triggers a
-  // validation error elsewhere in the form. Form API should still update the
-  // cached form storage though.
+  // If caching is enabled and we receive a certain value, change the storage.
+  // This presumes that another submitted form value triggers a validation error
+  // elsewhere in the form. Form API should still update the cached form storage
+  // though.
   if (isset($_REQUEST['cache']) && $form_state['values']['value'] == 'change_title') {
-    $form_state['storage']['thing']['title'] = 'title_changed';
+    $form_state['storage']['thing']['changed'] = TRUE;
     // @todo Fix FAPI to make it unnecessary to explicitly set the cache flag in
     //   this situation. @see http://drupal.org/node/641356.
     $form_state['cache'] = TRUE;
@@ -483,19 +486,33 @@ function form_test_storage_element_validate_value_cached($element, &$form_state)
 }
 
 /**
- * Form submit handler for form_test_storage_form().
+ * Form submit handler to continue multi-step form.
+ */
+function form_storage_test_form_continue_submit($form, &$form_state) {
+  $form_state['storage']['thing']['title'] = $form_state['values']['title'];
+  $form_state['storage']['thing']['value'] = $form_state['values']['value'];
+  $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Form validation handler, which doesn't preserve the values but rebuilds the
+ * form. We cannot use a submit handler here, as buttons of type button don't
+ * submit the form.
+ */
+function form_storage_test_form_continue_validate($form, &$form_state) {
+  $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Form submit handler to finish multi-step form.
  */
 function form_test_storage_form_submit($form, &$form_state) {
-  if ($form_state['storage']['step'] == 1) {
-    $form_state['storage']['thing']['title'] = $form_state['values']['title'];
-    $form_state['storage']['thing']['value'] = $form_state['values']['value'];
-  }
-  else {
-    drupal_set_message("Title: ". check_plain($form_state['storage']['thing']['title']));
-  }
-  $form_state['rebuild'] = TRUE;
-  $form_state['storage']['step']++;
+  drupal_set_message("Title: ". check_plain($form_state['values']['title']));
   drupal_set_message("Form constructions: ". $_SESSION['constructions']);
+  if (isset($form_state['storage']['thing']['changed'])) {
+    drupal_set_message("The thing has been changed.");
+  }
+  $form_state['redirect'] = 'node';
 }
 
  /**
