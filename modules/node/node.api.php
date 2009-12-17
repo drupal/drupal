@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.47 2009/12/01 19:00:18 dries Exp $
+// $Id: node.api.php,v 1.48 2009/12/17 19:14:42 dries Exp $
 
 /**
  * @file
@@ -999,7 +999,7 @@ function hook_validate($node, &$form) {
  * For a detailed usage example, see node_example.module.
  */
 function hook_view($node, $build_mode = 'full') {
-  if ((bool)menu_get_object()) {
+  if (node_is_page($node)) {
     $breadcrumb = array();
     $breadcrumb[] = array('path' => 'example', 'title' => t('example'));
     $breadcrumb[] = array('path' => 'example/' . $node->field1,
