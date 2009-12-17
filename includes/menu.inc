@@ -430,7 +430,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
 
 /**
  * Execute the page callback associated with the current path.
- * 
+ *
  * @param $path
  *   The drupal path whose handler is to be be executed. If set to NULL, then
  *   the current path is used.
@@ -3312,39 +3312,6 @@ function _menu_site_is_offline($check_only = FALSE) {
     }
   }
   return FALSE;
-}
-
-/**
- * Validates the path of a menu link being created or edited.
- *
- * @return
- *   TRUE if it is a valid path AND the current user has access permission,
- *   FALSE otherwise.
- */
-function menu_valid_path($form_item) {
-  global $menu_admin;
-  $item = array();
-  $path = $form_item['link_path'];
-  // We indicate that a menu administrator is running the menu access check.
-  $menu_admin = TRUE;
-  if ($path == '<front>' || url_is_external($path)) {
-    $item = array('access' => TRUE);
-  }
-  elseif (preg_match('/\/\%/', $path)) {
-    // Path is dynamic (ie 'user/%'), so check directly against menu_router table.
-    if ($item = db_query("SELECT * FROM {menu_router} where path = :path", array(':path' => $path))->fetchAssoc()) {
-      $item['link_path']  = $form_item['link_path'];
-      $item['link_title'] = $form_item['link_title'];
-      $item['external']   = FALSE;
-      $item['options'] = '';
-      _menu_link_translate($item);
-    }
-  }
-  else {
-    $item = menu_get_item($path);
-  }
-  $menu_admin = FALSE;
-  return $item && $item['access'];
 }
 
 /**

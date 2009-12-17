@@ -547,3 +547,39 @@ function path_get_admin_paths() {
   }
   return $patterns;
 }
+
+/**
+ * Checks a path exists and the current user has access to it.
+ *
+ * @param $path
+ *   The path to check.
+ * @param $dynamic_allowed
+ *   Whether paths with menu wildcards (like user/%) should be allowed.
+ *
+ * @return
+ *   TRUE if it is a valid path AND the current user has access permission,
+ *   FALSE otherwise.
+ */
+function drupal_valid_path($path, $dynamic_allowed = FALSE) {
+  global $menu_admin;
+  // We indicate that a menu administrator is running the menu access check.
+  $menu_admin = TRUE;
+  if ($path == '<front>' || url_is_external($path)) {
+    $item = array('access' => TRUE);
+  }
+  elseif ($dynamic_allowed && preg_match('/\/\%/', $path)) {
+    // Path is dynamic (ie 'user/%'), so check directly against menu_router table.
+    if ($item = db_query("SELECT * FROM {menu_router} where path = :path", array(':path' => $path))->fetchAssoc()) {
+      $item['link_path']  = $form_item['link_path'];
+      $item['link_title'] = $form_item['link_title'];
+      $item['external']   = FALSE;
+      $item['options'] = '';
+      _menu_link_translate($item);
+    }
+  }
+  else {
+    $item = menu_get_item($path);
+  }
+  $menu_admin = FALSE;
+  return $item && $item['access'];
+}
