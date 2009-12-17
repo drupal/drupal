@@ -67,7 +67,7 @@ function blog_form($node, $form_state) {
  * Implements hook_view().
  */
 function blog_view($node, $build_mode) {
-  if ((bool)menu_get_object()) {
+  if (node_is_page($node)) {
     // Breadcrumb navigation.
     drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("!name's blog", array('!name' => format_username($node))), 'blog/' . $node->uid)));
   }
