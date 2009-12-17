@@ -577,7 +577,8 @@ function comment_node_view($node, $build_mode) {
     // page. We compare $node and $page_node to ensure that comments are not
     // appended to other nodes shown on the page, for example a node_reference
     // displayed in 'full' build mode within another node.
-    if ($node->comment && node_is_page($node) && empty($node->in_preview) && user_access('access comments')) {
+    $page_node = menu_get_object();
+    if ($node->comment && isset($page_node->nid) && $page_node->nid == $node->nid && empty($node->in_preview) && user_access('access comments')) {
       $node->content['comments'] = comment_node_page_additions($node);
     }
   }

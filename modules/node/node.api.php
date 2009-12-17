@@ -999,7 +999,7 @@ function hook_validate($node, &$form) {
  * For a detailed usage example, see node_example.module.
  */
 function hook_view($node, $build_mode = 'full') {
-  if (node_is_page($node)) {
+  if ((bool)menu_get_object()) {
     $breadcrumb = array();
     $breadcrumb[] = array('path' => 'example', 'title' => t('example'));
     $breadcrumb[] = array('path' => 'example/' . $node->field1,
