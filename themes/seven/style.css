@@ -417,7 +417,6 @@ table {
   font-size: 12px;
   margin: 0 0 10px;
   border: 1px solid #bebfb9;
-  border-top: 0;
 }
 
 table.system-status-report th,
