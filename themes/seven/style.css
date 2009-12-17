@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.36 2009/12/13 19:48:53 dries Exp $ */
+/* $Id: style.css,v 1.37 2009/12/17 13:03:05 dries Exp $ */
 
 /**
  * Generic elements
@@ -417,7 +417,6 @@ table {
   font-size: 12px;
   margin: 0 0 10px;
   border: 1px solid #bebfb9;
-  border-top: 0;
 }
 
 table.system-status-report th,
