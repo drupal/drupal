@@ -14,9 +14,6 @@ Drupal.behaviors.tableHeader = {
       return;
     }
 
-    // Keep track of all cloned table headers.
-    var headers = [];
-
     $('table.sticky-enabled thead', context).once('tableheader', function () {
       // Clone the table header so it inherits original jQuery properties. Hide
       // the table to avoid a flash of the header clone upon page load.
@@ -26,7 +23,6 @@ Drupal.behaviors.tableHeader = {
       });
 
       headerClone = $(headerClone)[0];
-      headers.push(headerClone);
 
       // Store parent table.
       var table = $(this).parent('table')[0];
@@ -94,7 +90,7 @@ Drupal.behaviors.tableHeader = {
 
     // Track scrolling.
     Drupal.tableHeaderOnScroll = function () {
-      $(headers).each(function () {
+      $('table.sticky-header').each(function () {
         tracker(this);
       });
     };
