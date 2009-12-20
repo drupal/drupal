@@ -368,6 +368,8 @@ function simpletest_test_get_all() {
         uksort($tests, 'strnatcasecmp');
       }
 
+      // Allow modules extending core tests to disable originals.
+      drupal_alter('simpletest', $groups);
       cache_set('simpletest', $groups);
     }
   }
