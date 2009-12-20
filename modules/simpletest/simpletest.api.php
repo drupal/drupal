@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.api.php,v 1.3 2009/07/11 13:56:21 dries Exp $
+// $Id: simpletest.api.php,v 1.4 2009/12/20 21:12:54 dries Exp $
 
 /**
  * @file
@@ -10,6 +10,21 @@
  * @addtogroup hooks
  * @{
  */
+
+/**
+ * Alter the list of tests.
+ *
+ * @param $groups
+ *   A two dimension array, the first key is the test group (as defined in
+ *   getInfo) the second is the name of the class and the value is the return
+ *   value of the getInfo method.
+ */
+function hook_simpletest_alter(&$groups) {
+  // An alternative session handler module would not want to run the original
+  // Session https handling test because it checks the sessions table in the
+  // database.
+  unset($groups['Session']['testHttpsSession']);
+}
 
 /**
  * A test group has started.
