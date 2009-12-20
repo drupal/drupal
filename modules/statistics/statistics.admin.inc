@@ -56,7 +56,7 @@ function statistics_top_pages() {
     array('data' => t('Total page generation time'), 'field' => 'total_time')
   );
 
-  $query = db_select('accesslog', array('target' => 'slave'))->extend('PagerDefault')->extend('TableSort');
+  $query = db_select('accesslog', 'a', array('target' => 'slave'))->extend('PagerDefault')->extend('TableSort');
   $query->addExpression('COUNT(path)', 'hits');
   // MAX(title) avoids having empty node titles which otherwise causes duplicates in the top pages list
   $query->addExpression('MAX(title)', 'title');
@@ -64,12 +64,12 @@ function statistics_top_pages() {
   $query->addExpression('SUM(timer)', 'total_time');
 
   $query
-    ->fields('accesslog', array('path'))
+    ->fields('a', array('path'))
     ->groupBy('path')
     ->limit(30)
     ->orderByHeader($header);
 
-  $count_query = db_select('accesslog', array('target' => 'slave'));
+  $count_query = db_select('accesslog', 'a', array('target' => 'slave'));
   $count_query->addExpression('COUNT(DISTINCT path)');
   $query->setCountQuery($count_query);
 
@@ -164,7 +164,7 @@ function statistics_top_referrers() {
     ->limit(30)
     ->orderByHeader($header);
 
-  $count_query = db_select('accesslog', array('target' => 'slave'));
+  $count_query = db_select('accesslog', 'a', array('target' => 'slave'));
   $count_query->addExpression('COUNT(DISTINCT url)');
   $count_query
     ->where('LOWER(url) NOT LIKE :host', array(':host' => '%' . $_SERVER['HTTP_HOST'] . '%'))

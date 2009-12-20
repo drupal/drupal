@@ -1,20 +1,19 @@
 <?php
 // $Id$
 
-class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Top visitor blocking',
-      'description' => 'Tests blocking of IP addresses via the top visitors report.',
-      'group' => 'Statistics'
-    );
-  }
+/**
+ * Sets up a base class for the Statistics module.
+ */
+class StatisticsTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('statistics');
 
     // Create user.
     $this->blocking_user = $this->drupalCreateUser(array('block IP addresses', 'access statistics'));
+
+    // Enable access logging.
+    variable_set('statistics_enable_access_log', 1);
 
     // Insert dummy access by anonymous user into access log.
     db_insert('accesslog')
@@ -30,16 +29,91 @@ class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
       ))
       ->execute();
   }
+}
+
+/**
+ * Tests that report pages render properly, and that access logging works.
+ */
+class StatisticsReportsTestCase extends StatisticsTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Statistics reports tests',
+      'description' => 'Tests display of statistics report pages and access logging.',
+      'group' => 'Statistics'
+    );
+  }
+  
+  /**
+   * Verifies that 'Recent hits' renders properly and displays the added hit.
+   */
+  function testRecentHits() {
+    $this->drupalLogin($this->blocking_user);
+    $this->drupalGet('admin/reports/hits');
+    $this->assertText('test', t('Hit title found.'));
+    $this->assertText('node/1', t('Hit URL found.'));
+    $this->assertText('Anonymous', t('Hit user found.'));
+  }
 
   /**
-   * Blocks an IP address via the top visitors report then uses the same page to unblock it.
+   * Verifies that 'Top pages' renders properly and displays the added hit.
+   */
+  function testTopPages() {
+    $this->drupalLogin($this->blocking_user);
+    $this->drupalGet('admin/reports/pages');
+    $this->assertText('test', t('Hit title found.'));
+    $this->assertText('node/1', t('Hit URL found.'));
+  }
+
+  /**
+   * Verifies that 'Top referrers' renders properly and displays the added hit.
+   */
+  function testTopReferrers() {
+    $this->drupalLogin($this->blocking_user);
+    $this->drupalGet('admin/reports/referrers');
+    $this->assertText('http://example.com', t('Hit referrer found.'));
+  }
+
+  /**
+   * Verifies that 'Details' page renders properly and displays the added hit.
+   */
+  function testDetails() {
+    $this->drupalLogin($this->blocking_user);
+    $this->drupalGet('admin/reports/access/1');
+    $this->assertText('test', t('Hit title found.'));
+    $this->assertText('node/1', t('Hit URL found.'));
+    $this->assertText('Anonymous', t('Hit user found.'));
+  }
+
+  /**
+   * Verifies that access logging is working and is reported correctly.
+   */
+  function testAccessLogging() {
+    $this->drupalLogin($this->blocking_user);
+    $this->drupalGet('admin/reports/referrers');
+    $this->drupalGet('admin/reports/hits');
+    $this->assertText('Top referrers in the past 3 days', t('Hit title found.'));
+    $this->assertText('admin/reports/referrers', t('Hit URL found.'));
+  }
+}
+
+/**
+ * Tests that the visitor blocking functionality works.
+ */
+class StatisticsBlockVisitorsTestCase extends StatisticsTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Top visitor blocking',
+      'description' => 'Tests blocking of IP addresses via the top visitors report.',
+      'group' => 'Statistics'
+    );
+  }
+
+  /**
+   * Blocks an IP address via the top visitors report and then unblocks it.
    */
   function testIPAddressBlocking() {
     // IP address for testing.
     $test_ip_address = '192.168.1.1';
-
-    // Enable access logging (redundant since we insert the data manually).
-    variable_set('statistics_enable_access_log', 1);
 
     // Verify the IP address from accesslog appears on the top visitors page
     // and that a 'block IP address' link is displayed.
@@ -58,7 +132,8 @@ class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
     $this->assertNotEqual($ip, FALSE, t('IP address found in database'));
     $this->assertRaw(t('The IP address %ip has been blocked.', array('%ip' => $edit['ip'])), t('IP address was blocked.'));
 
-    // Verify that the block/unblock link on the top visitors page has been altered.
+    // Verify that the block/unblock link on the top visitors page has been
+    // altered.
     $this->drupalGet('admin/reports/visitors');
     $this->assertText(t('unblock IP address'), t('Unblock IP address link displayed'));
 
