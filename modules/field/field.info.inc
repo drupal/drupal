@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.34 2009/12/20 21:08:26 dries Exp $
+// $Id: field.info.inc,v 1.35 2009/12/20 22:38:05 dries Exp $
 
 /**
  * @file
@@ -359,6 +359,7 @@ function _field_info_prepare_instance_widget($field, $widget) {
   return $widget;
 }
 
+/**
  * Determines the behavior of a widget with respect to an operation.
  *
  * @param $op
