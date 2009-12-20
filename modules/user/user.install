@@ -124,7 +124,7 @@ function user_schema() {
       ),
       'mail' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 254,
         'not null' => FALSE,
         'default' => '',
         'description' => "User's email address.",
@@ -476,6 +476,14 @@ function user_update_7004(&$sandbox) {
     db_drop_field('user', 'picture');
     db_change_field('user', 'picture_fid', 'picture', $picture_field);
   }
+}
+
+/**
+ * Change the users table to allow longer email addresses - 254 characters instead of 64.
+ */
+function user_update_7005(&$sandbox) {
+  $schema = user_schema();
+  db_change_field('users', 'mail', 'mail', $schema['users']['fields']['mail']);
 }
 
 /**

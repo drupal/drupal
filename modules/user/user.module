@@ -14,7 +14,7 @@ define('USERNAME_MAX_LENGTH', 60);
 /**
  * Maximum length of user e-mail text field.
  */
-define('EMAIL_MAX_LENGTH', 64);
+define('EMAIL_MAX_LENGTH', 254);
 
 /**
  * Implement hook_help().
