@@ -1,4 +1,4 @@
-// $Id: README.txt,v 1.1 2009/01/30 23:06:23 webchick Exp $
+// $Id: README.txt,v 1.2 2009/12/20 19:43:10 dries Exp $
 
 ABOUT STARK
 -----------
@@ -20,7 +20,7 @@ ABOUT DRUPAL THEMING
 --------------------
 
 To learn how to build your own custom theme and override Drupal's default code,
-you should start reading the Theming Guide: http://drupal.org/theme-guide
+see the Theming Guide: http://drupal.org/theme-guide
 
 See the sites/all/themes/README.txt for more information on where to place your
 custom themes to ensure easy maintenance and upgrades.
