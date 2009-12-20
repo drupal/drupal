@@ -1,7 +1,7 @@
 <?php
 // $Id$
 ?>
-  <p class="element-invisible"><a id="main-content"></a></p>
+  <div class="element-invisible"><a id="main-content"></a></div>
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>
     <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
