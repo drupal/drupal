@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.42 2009/12/03 02:30:18 dries Exp $
+// $Id: field.crud.inc,v 1.43 2009/12/20 19:45:07 dries Exp $
 
 /**
  * @file
@@ -589,7 +589,7 @@ function field_delete_field($field_name) {
  *       hook_field_widget_info().
  *   - display:
  *     Settings for the 'full' build mode will be added, and each build mode
- *     will be completed with the follwong default values:
+ *     will be completed with the following default values:
  *     - label: 'above'
  *     - type: the default formatter specified in hook_field_info().
  *     - settings: each omitted setting is given the default value specified in
