@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1091 2009/12/18 07:19:49 dries Exp $
+// $Id: user.module,v 1.1092 2009/12/20 20:07:59 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ define('USERNAME_MAX_LENGTH', 60);
 /**
  * Maximum length of user e-mail text field.
  */
-define('EMAIL_MAX_LENGTH', 64);
+define('EMAIL_MAX_LENGTH', 254);
 
 /**
  * Implement hook_help().
