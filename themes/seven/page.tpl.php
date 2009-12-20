@@ -1,7 +1,7 @@
 <?php
-// $Id: page.tpl.php,v 1.10 2009/12/18 15:44:02 dries Exp $
+// $Id: page.tpl.php,v 1.11 2009/12/20 22:36:50 dries Exp $
 ?>
-  <p class="element-invisible"><a id="main-content"></a></p>
+  <div class="element-invisible"><a id="main-content"></a></div>
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>
     <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
