@@ -1728,6 +1728,107 @@ class FieldFormTestCase extends FieldTestCase {
   }
 }
 
+class FieldDisplayAPITestCase extends FieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Field Display API tests',
+      'description' => 'Test the display API.',
+      'group' => 'Field API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field_test');
+
+    // Create a field and instance.
+    $this->field_name = 'test_field';
+    $this->label = $this->randomName();
+    $this->cardinality = 4;
+
+    $this->field = array(
+      'field_name' => $this->field_name,
+      'type' => 'test_field',
+      'cardinality' => $this->cardinality,
+    );
+    $this->instance = array(
+      'field_name' => $this->field_name,
+      'object_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+      'label' => $this->label,
+      'display' => array(
+        'full' => array(
+          'type' => 'field_test_default',
+          'settings' => array(
+            'test_formatter_setting' => $this->randomName(),
+          ),
+        ),
+      ),
+    );
+    field_create_field($this->field);
+    field_create_instance($this->instance);
+
+    // Create an entity with values.
+    $this->values = $this->_generateTestFieldValues($this->cardinality);
+    $this->entity = field_test_create_stub_entity();
+    $this->is_new = TRUE;
+    $this->entity->{$this->field_name}[LANGUAGE_NONE] = $this->values;
+    field_test_entity_save($this->entity);
+  }
+
+  /**
+   * Test the field_view_field() function.
+   */
+  function testFieldBuildField() {
+    // No display settings: check that default display settings are used.
+    $output = field_view_field('test_entity', $this->entity, $this->field_name);
+    $this->drupalSetContent(drupal_render($output));
+    $settings = field_info_formatter_settings('field_test_default');
+    $setting = $settings['test_formatter_setting'];
+    $this->assertText($this->label, t('Label was displayed.'));
+    foreach($this->values as $delta => $value) {
+      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+    }
+
+    // Check that explicit display settings are used.
+    $display = array(
+      'label' => 'hidden',
+      'type' => 'field_test_multiple',
+      'settings' => array(
+        'test_formatter_setting_multiple' => $this->randomName(),
+      ),
+    );
+    $output = field_view_field('test_entity', $this->entity, $this->field_name, $display);
+    $this->drupalSetContent(drupal_render($output));
+    $setting = $display['settings']['test_formatter_setting_multiple'];
+    $this->assertNoText($this->label, t('Label was not displayed.'));
+    $array = array();
+    foreach($this->values as $delta => $value) {
+      $array[] = $delta . ':' . $value['value'];
+    }
+    $this->assertText($setting . '|' . implode('|', $array), t('Values were displayed with expected setting.'));
+
+    // Build mode: check that display settings specified in the instance are
+    // used.
+    $output = field_view_field('test_entity', $this->entity, $this->field_name, 'full');
+    $this->drupalSetContent(drupal_render($output));
+    $setting = $this->instance['display']['full']['settings']['test_formatter_setting'];
+    $this->assertText($this->label, t('Label was displayed.'));
+    foreach($this->values as $delta => $value) {
+      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+    }
+
+    // Unknown build mode: check that display settings for 'full' build mode
+    // are used.
+    $output = field_view_field('test_entity', $this->entity, $this->field_name, 'unknown_build_mode');
+    $this->drupalSetContent(drupal_render($output));
+    $setting = $this->instance['display']['full']['settings']['test_formatter_setting'];
+    $this->assertText($this->label, t('Label was displayed.'));
+    foreach($this->values as $delta => $value) {
+      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+    }
+  }
+}
+
 class FieldCrudTestCase extends FieldTestCase {
   public static function getInfo() {
     return array(

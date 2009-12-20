@@ -565,45 +565,103 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
 }
 
 /**
- * Return a single field, fully themed with label and multiple values.
+ * Returns a renderable array for the value of a single field in an object.
  *
- * To be used by third-party code (Views, Panels...) that needs to output
- * an isolated field. Do *not* use inside node templates, use
- * render($content[FIELD_NAME]) instead.
+ * The resulting output is a fully themed field with label and multiple values.
  *
- * The field will be displayed using the display options (label display,
- * formatter settings...) specified in the $instance structure for the given
- * build mode: $instance['display'][$build_mode].
+ * This function can be used by third-party modules that need to output an
+ * isolated field.
+ * - Do not use inside node (or other entities) templates, use
+ *   render($content[FIELD_NAME]) instead.
+ * - Do not use to display all fields in an object, use
+ *   field_attach_prepare_view() and field_attach_view() instead.
  *
+ * The function takes care of invoking the prepare_view steps. It also respects
+ * field access permissions.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
- *   The object containing the field to display. Must at least contain the id key,
- *   revision key (if applicable), bundle key, and the field data.
- * @param $field
- *   The field structure.
- * @param $instance
- *   The instance structure for $field on $object's bundle.
- * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser'...
+ *   The object containing the field to display. Must at least contain the id
+ *   key and the field data to display.
+ * @param $field_name
+ *   The name of the field to display.
+ * @param $display
+ *   Can be either:
+ *   - The name of a build mode. The field will be displayed according to the
+ *     display settings specified for this build mode in the $instance
+ *     definition for the field in the object's bundle.
+ *     If no display settings are found for the build mode, the settings for
+ *     the 'full' build mode will be used.
+ *   - An array of display settings, as found in the 'display' entry of
+ *     $instance definitions. The following kay/value pairs are allowed:
+ *     - label: (string) Position of the label. The default 'field' theme
+ *       implementation supports the values 'inline', 'above' and 'hidden'.
+ *       Defaults to 'above'.
+ *     - type: (string) The formatter to use. Defaults to the
+ *       'default_formatter' for the field type, specified in
+ *       hook_field_info(). The default formatter will also be used if the
+ *       requested formatter is not available.
+ *     - settings: (array) Settings specific to the formatter. Defaults to the
+ *       formatter's default settings, specified in
+ *       hook_field_formatter_info().
+ *     - weight: (float) The weight to assign to the renderable element.
+ *       Defaults to 0.
+ * @param $langcode
+ *   (Optional) The language the field values are to be shown in. The site's
+ *   current language fallback logic will be applied no values are available
+ *   for the language. If no language is provided the current language will be
+ *   used.
  * @return
- *   The themed output for the field.
+ *   A renderable array for the field value.
  */
-function field_view_field($obj_type, $object, $field, $instance, $build_mode = 'full') {
-  $output = '';
-  if (isset($object->$field['field_name'])) {
-    $items = $object->$field['field_name'];
+function field_view_field($obj_type, $object, $field_name, $display = array(), $langcode = NULL) {
+  $output = array();
 
-    // One-field equivalent to _field_invoke('sanitize').
-    $function = $field['module'] . '_field_sanitize';
-    if (function_exists($function)) {
-      $function($obj_type, $object, $field, $instance, $items);
-      $object->$field['field_name'] = $items;
+  if ($field = field_info_field($field_name)) {
+    if (is_array($display)) {
+      // When using custom display settings, fill in default values.
+      $display = _field_info_prepare_instance_display($field, $display);
+    }
+    else {
+      // When using a build mode, make sure we have settings for it, or fall
+      // back to the 'full' build mode.
+      list(, , $bundle) = entity_extract_ids($obj_type, $object);
+      $instance = field_info_instance($obj_type, $field_name, $bundle);
+      if (!isset($instance['display'][$display])) {
+        $display = 'full';
+      }
     }
 
-    $view = field_default_view($obj_type, $object, $field, $instance, $items, $build_mode);
-    // TODO : what about hook_field_attach_view ?
+    // Hook invocations are done through the _field_invoke() functions in
+    // 'single field' mode, to reuse the language fallback logic.
+    $options = array('field_name' => $field_name, 'language' => field_multilingual_valid_language($langcode, FALSE));
+    $null = NULL;
+    list($id) = entity_extract_ids($obj_type, $object);
 
-    $output = $view[$field['field_name']];
+    // First let the field types do their preparation.
+    _field_invoke_multiple('prepare_view', $obj_type, array($id => $object), $display, $null, $options);
+    // Then let the formatters do their own specific massaging.
+    _field_invoke_multiple_default('prepare_view', $obj_type, array($id => $object), $display, $null, $options);
+    // Build the renderable array.
+    $result = _field_invoke_default('view', $obj_type, $object, $display, $null, $options);
+
+    // Invoke hook_field_attach_view_alter() to tet other modules alter the
+    // renderable array, as in a full field_attach_view() execution.
+    $context = array(
+      'obj_type' => $obj_type,
+      'object' => $object,
+      'build_mode' => '_custom',
+      'langcode' => $langcode,
+    );
+    drupal_alter('field_attach_view', $result, $context);
+
+    if (isset($result[$field_name])) {
+      $output = $result[$field_name];
+      $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
+    }
   }
+
   return $output;
 }
 

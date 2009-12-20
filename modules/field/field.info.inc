@@ -278,22 +278,10 @@ function _field_info_prepare_instance($instance, $field) {
     $instance['default_value'] = NULL;
   }
 
-  // Fallback to default widget if widget type is not available.
-  if (!field_info_widget_types($instance['widget']['type'])) {
-    $instance['widget']['type'] = $field_type['default_widget'];
-  }
-  // Make sure all expected widget settings are present.
-  $instance['widget']['settings'] += field_info_widget_settings($instance['widget']['type']);
+  $instance['widget'] = _field_info_prepare_instance_widget($field, $instance['widget']);
 
   foreach ($instance['display'] as $build_mode => $display) {
-    if ($display['type'] != 'hidden') {
-      // Fallback to default formatter if formatter type is not available.
-      if (!field_info_formatter_types($instance['display'][$build_mode]['type'])) {
-        $instance['display'][$build_mode]['type'] = $field_type['default_formatter'];
-      }
-      // Make sure all expected formatter settings are present.
-      $instance['display'][$build_mode]['settings'] += field_info_formatter_settings($instance['display'][$build_mode]['type']);
-    }
+    $instance['display'][$build_mode] = _field_info_prepare_instance_display($field, $display);
   }
 
   // Fallback to 'full' display settings for unspecified build modes.
@@ -307,6 +295,70 @@ function _field_info_prepare_instance($instance, $field) {
 }
 
 /**
+ * Adapts display specifications to the current run-time context.
+ *
+ * @param $field
+ *   The field structure for the instance.
+ * @param $display
+ *   Display specifications as found in
+ *   $instance['display']['some_build_mode'].
+ */
+function _field_info_prepare_instance_display($field, $display) {
+  $field_type = field_info_field_types($field['type']);
+
+  // Fill in default values.
+  $display += array(
+    'label' => 'above',
+    'type' => $field_type['default_formatter'],
+    'settings' => array(),
+    'weight' => 0,
+  );
+  if ($display['type'] != 'hidden') {
+    $formatter_type = field_info_formatter_types($display['type']);
+    // Fallback to default formatter if formatter type is not available.
+    if (!$formatter_type) {
+      $display['type'] = $field_type['default_formatter'];
+      $formatter_type = field_info_formatter_types($display['type']);
+    }
+    $display['module'] = $formatter_type['module'];
+    // Fill in default settings for the formatter.
+    $display['settings'] += field_info_formatter_settings($display['type']);
+  }
+
+  return $display;
+}
+
+/**
+ * Prepares widget specifications for the current run-time context.
+ *
+ * @param $field
+ *   The field structure for the instance.
+ * @param $widget
+ *   Widget specifications as found in $instance['widget'].
+ */
+function _field_info_prepare_instance_widget($field, $widget) {
+  $field_type = field_info_field_types($field['type']);
+
+  // Fill in default values.
+  $widget += array(
+    'type' => $field_type['default_widget'],
+    'settings' => array(),
+    'weight' => 0,
+  );
+
+  $widget_type = field_info_widget_types($widget['type']);
+  // Fallback to default formatter if formatter type is not available.
+  if (!$widget_type) {
+    $widget['type'] = $field_type['default_widget'];
+    $widget_type = field_info_widget_types($widget['type']);
+  }
+  $widget['module'] = $widget_type['module'];
+  // Fill in default settings for the widget.
+  $widget['settings'] += field_info_widget_settings($widget['type']);
+
+  return $widget;
+}
+
  * Determines the behavior of a widget with respect to an operation.
  *
  * @param $op

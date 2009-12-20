@@ -338,7 +338,7 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
     if (function_exists($function)) {
       // Iterate over all the field translations.
       foreach ($grouped_items[$field_id] as $langcode => $items) {
-        $results = $function($obj_type, $grouped_objects[$field_id], $field, $grouped_instances[$field_id], $langcode, $grouped_items[$field_id][$langcode], $options, $a, $b);
+        $results = $function($obj_type, $grouped_objects[$field_id], $field, $grouped_instances[$field_id], $langcode, $grouped_items[$field_id][$langcode], $a, $b);
         if (isset($results)) {
           // Collect results by object.
           // For hooks with array results, we merge results together.
@@ -1177,7 +1177,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
   $output['#pre_render'][] = '_field_extra_weights_pre_render';
   $output['#extra_fields'] = field_extra_fields($bundle);
 
-  // Let other modules make changes after rendering the view.
+  // Let other modules alter the renderable array.
   $context = array(
     'obj_type' => $obj_type,
     'object' => $object,
