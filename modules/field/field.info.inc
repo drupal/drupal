@@ -359,6 +359,7 @@ function _field_info_prepare_instance_widget($field, $widget) {
   return $widget;
 }
 
+/**
  * Determines the behavior of a widget with respect to an operation.
  *
  * @param $op
