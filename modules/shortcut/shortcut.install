@@ -30,11 +30,6 @@ function shortcut_enable() {
       'link_title' => $t('Find content'),
       'weight' => -19,
     ),
-    array(
-      'link_path' => 'admin/dashboard',
-      'link_title' => $t('Dashboard'),
-      'weight' => -18,
-    ),
   );
   shortcut_set_save($shortcut_set);
 }
