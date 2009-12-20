@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.install,v 1.2 2009/12/04 16:49:47 dries Exp $
+// $Id: shortcut.install,v 1.3 2009/12/20 20:17:11 dries Exp $
 
 /**
  * @file
@@ -29,11 +29,6 @@ function shortcut_enable() {
       'link_path' => 'admin/content',
       'link_title' => $t('Find content'),
       'weight' => -19,
-    ),
-    array(
-      'link_path' => 'admin/dashboard',
-      'link_title' => $t('Dashboard'),
-      'weight' => -18,
     ),
   );
   shortcut_set_save($shortcut_set);
