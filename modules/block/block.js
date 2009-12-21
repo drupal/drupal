@@ -6,6 +6,13 @@
  */
 Drupal.behaviors.blockSettingsSummary = {
   attach: function (context) {
+    // The setSummary method required for this behavior is not available
+    // on the Blocks administration page, so we need to make sure this
+    // behavior is processed only if setSummary is defined.
+    if (typeof jQuery.fn.setSummary == 'undefined') {
+      return;
+    }
+
     $('fieldset#edit-path', context).setSummary(function (context) {
       if (!$('textarea[name="pages"]', context).val()) {
         return Drupal.t('Not restricted');
