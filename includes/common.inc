@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1066 2009/12/15 08:45:32 dries Exp $
+// $Id: common.inc,v 1.1067 2009/12/21 07:58:59 dries Exp $
 
 /**
  * @file
@@ -5759,7 +5759,7 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
  * @param $object
  *   The object to write. This is a reference, as defaults according to
  *   the schema may be filled in on the object, as well as ID on the serial
- *   type(s). Both array an object types may be passed.
+ *   type(s). Both array and object types may be passed.
  * @param $primary_keys
  *   If this is an update, specify the primary keys' field names. It is the
  *   caller's responsibility to know if a record for this object already
