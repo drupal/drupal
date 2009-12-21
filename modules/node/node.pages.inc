@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.103 2009/12/02 19:26:22 dries Exp $
+// $Id: node.pages.inc,v 1.104 2009/12/21 13:47:32 dries Exp $
 
 /**
  * @file
@@ -397,8 +397,8 @@ function theme_node_preview($variables) {
 
   $preview_trimmed_version = FALSE;
 
-  $trimmed = drupal_render(node_build(clone $node, 'teaser'));
-  $full = drupal_render(node_build($node, 'full'));
+  $trimmed = drupal_render(node_view(clone $node, 'teaser'));
+  $full = drupal_render(node_view($node, 'full'));
 
   // Do we need to preview trimmed version of post as well as full version?
   if ($trimmed != $full) {

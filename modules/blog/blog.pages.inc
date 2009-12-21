@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.25 2009/12/03 20:21:50 dries Exp $
+// $Id: blog.pages.inc,v 1.26 2009/12/21 13:47:31 dries Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function blog_page_user($account) {
 
   if (!empty($nids)) {
     $nodes = node_load_multiple($nids);
-    $build += node_build_multiple($nodes);
+    $build += node_view_multiple($nodes);
     $build['pager'] = array(
       '#theme' => 'pager',
       '#weight' => 5,
@@ -84,7 +84,7 @@ function blog_page_last() {
 
   if (!empty($nids)) {
     $nodes = node_load_multiple($nids);
-    $build += node_build_multiple($nodes);
+    $build += node_view_multiple($nodes);
     $build['pager'] = array(
       '#theme' => 'pager',
       '#weight' => 5,

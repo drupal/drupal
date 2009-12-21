@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.14 2009/12/13 12:42:28 dries Exp $
+// $Id: file.field.inc,v 1.15 2009/12/21 13:47:32 dries Exp $
 
 /**
  * @file
@@ -425,9 +425,9 @@ function file_field_widget_settings_form($field, $instance) {
 }
 
 /**
- * Implements hook_field_widget().
+ * Implements hook_field_widget_form().
  */
-function file_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+function file_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
   $defaults = array(
@@ -842,9 +842,9 @@ function theme_file_upload_help($variables) {
 }
 
 /**
- * Implements hook_field_formatter().
+ * Implements hook_field_formatter_view().
  */
-function file_field_formatter($obj_type, $object, $field, $instance, $langcode, $items, $display) {
+function file_field_formatter_view($obj_type, $object, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {

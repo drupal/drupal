@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.45 2009/11/13 09:24:06 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.46 2009/12/21 13:47:32 dries Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function taxonomy_term_page($term) {
   );
   if ($nids = taxonomy_select_nodes($term->tid, TRUE, variable_get('default_nodes_main', 10))) {
     $nodes = node_load_multiple($nids);
-    $build += node_build_multiple($nodes);
+    $build += node_view_multiple($nodes);
     $build['pager'] = array(
       '#markup' => theme('pager', array('tags' => NULL)),
       '#weight' => 5,

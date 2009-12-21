@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.field.inc,v 1.5 2009/12/13 12:41:08 dries Exp $
+// $Id: field_test.field.inc,v 1.6 2009/12/21 13:47:32 dries Exp $
 
 /**
  * @file
@@ -154,9 +154,9 @@ function field_test_field_widget_info() {
 }
 
 /**
- * Implements hook_field_widget().
+ * Implements hook_field_widget_form().
  */
-function field_test_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+function field_test_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   switch ($instance['widget']['type']) {
     case 'test_field_widget':
       $element += array(
@@ -277,9 +277,9 @@ function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $i
 }
 
 /**
- * Implements hook_field_formatter().
+ * Implements hook_field_formatter_view().
  */
-function field_test_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function field_test_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
   $element = array();
   $settings = $display['settings'];
 

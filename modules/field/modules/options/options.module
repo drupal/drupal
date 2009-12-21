@@ -1,5 +1,5 @@
 <?php
-// $Id: options.module,v 1.22 2009/12/14 20:18:55 dries Exp $
+// $Id: options.module,v 1.23 2009/12/21 13:47:32 dries Exp $
 
 /**
  * @file
@@ -66,9 +66,9 @@ function options_field_widget_info() {
 }
 
 /**
- * Implements hook_field_widget().
+ * Implements hook_field_widget_form().
  */
-function options_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+function options_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   // Abstract over the actual field columns, to allow different field types to
   // reuse those widgets.
   $value_key = key($field['columns']);

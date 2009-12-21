@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.23 2009/12/14 20:18:55 dries Exp $
+// $Id: list.module,v 1.24 2009/12/21 13:47:32 dries Exp $
 
 /**
  * @file
@@ -330,9 +330,9 @@ function list_field_formatter_info() {
 }
 
 /**
- * Implements hook_field_formatter().
+ * Implements hook_field_formatter_view().
  */
-function list_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function list_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {

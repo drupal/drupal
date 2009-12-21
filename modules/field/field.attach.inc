@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.65 2009/12/20 21:08:26 dries Exp $
+// $Id: field.attach.inc,v 1.66 2009/12/21 13:47:32 dries Exp $
 
 /**
  * @file
@@ -1144,7 +1144,7 @@ function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
  *     '#formatter' => the name of the formatter,
  *     '#items' => the field values being displayed,
  *     // The element's children are the formatted values returned by
- *     // hook_field_formatter().
+ *     // hook_field_formatter_view().
  *   ),
  * );
  * @endcode
