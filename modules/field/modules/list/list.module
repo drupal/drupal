@@ -330,9 +330,9 @@ function list_field_formatter_info() {
 }
 
 /**
- * Implements hook_field_formatter().
+ * Implements hook_field_formatter_view().
  */
-function list_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function list_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {

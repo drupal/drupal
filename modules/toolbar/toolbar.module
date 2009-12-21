@@ -132,7 +132,7 @@ function toolbar_page_build(&$page) {
  * rendering to ensure that it is built only if it will be displayed.
  */
 function toolbar_pre_render($toolbar) {
-  $toolbar = array_merge($toolbar, toolbar_build());
+  $toolbar = array_merge($toolbar, toolbar_view());
   return $toolbar;
 }
 
@@ -166,7 +166,7 @@ function toolbar_system_info_alter(&$info, $file, $type) {
 /**
  * Build the admin menu as a structured array ready for drupal_render().
  */
-function toolbar_build() {
+function toolbar_view() {
   global $user;
 
   $module_path = drupal_get_path('module', 'toolbar');

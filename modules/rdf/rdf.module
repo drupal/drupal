@@ -584,7 +584,7 @@ function rdf_field_attach_view_alter(&$output, $context) {
     $element = &$output[$field_name];
     if ($element['#field_type'] == 'taxonomy_term' && $element['#formatter'] == 'taxonomy_term_link') {
       foreach ($element['#items'] as $delta => $item) {
-        // @todo Remove this when "node_build() does not call
+        // @todo Remove this when "node_view() does not call
         // field_attach_prepare_view()" bug is fixed.
         // See http://drupal.org/node/493314.
         if (!isset($item['taxonomy_term'])) {

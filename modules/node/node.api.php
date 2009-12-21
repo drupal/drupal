@@ -445,7 +445,7 @@ function hook_node_prepare_translation($node) {
  * Act on a node being displayed as a search result.
  *
  * This hook is invoked from node_search_execute(), after node_load()
- * and node_build() have been called.
+ * and node_view() have been called.
  *
  * @param $node
  *   The node being displayed in a search result.
@@ -497,7 +497,7 @@ function hook_node_update($node) {
  * Act on a node being indexed for searching.
  *
  * This hook is invoked during search indexing, after node_load(), and after
- * the result of node_build() is added as $node->rendered to the node object.
+ * the result of node_view() is added as $node->rendered to the node object.
  *
  * @param $node
  *   The node being indexed.
@@ -563,7 +563,7 @@ function hook_node_validate($node, $form) {
  * @param $node
  *   The node that is being assembled for rendering.
  * @param $build_mode
- *   The $build_mode parameter from node_build().
+ *   The $build_mode parameter from node_view().
  */
 function hook_node_view($node, $build_mode) {
   $node->content['my_additional_field'] = array(
@@ -574,7 +574,7 @@ function hook_node_view($node, $build_mode) {
 }
 
 /**
- * Alter the results of node_build().
+ * Alter the results of node_view().
  *
  * This hook is called after the content has been assembled in a structured
  * array and may be used for doing processing which requires that the complete
@@ -588,9 +588,9 @@ function hook_node_view($node, $build_mode) {
  * @param $build
  *   A renderable array representing the node content.
  *
- * @see node_build()
+ * @see node_view()
  */
-function hook_node_build_alter($build) {
+function hook_node_view_alter($build) {
   if ($build['#build_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
@@ -990,9 +990,9 @@ function hook_validate($node, &$form) {
  *   by assembling a structured array, formatted as in the Form API, in
  *   $node->content. As with Form API arrays, the #weight property can be
  *   used to control the relative positions of added elements. After this
- *   hook is invoked, node_build() calls field_attach_view() to add field
+ *   hook is invoked, node_view() calls field_attach_view() to add field
  *   views to $node->content, and then invokes hook_node_view() and
- *   hook_node_build_alter(), so if you want to affect the final
+ *   hook_node_view_alter(), so if you want to affect the final
  *   view of the node, you might consider implementing one of these hooks
  *   instead.
  *

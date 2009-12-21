@@ -253,9 +253,9 @@ function number_field_formatter_info() {
 }
 
 /**
- * Implements hook_field_formatter().
+ * Implements hook_field_formatter_view().
  */
-function number_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function number_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
   $element = array();
   $settings = $display['settings'];
 
@@ -298,9 +298,9 @@ function number_field_widget_info() {
 }
 
 /**
- * Implements hook_field_widget().
+ * Implements hook_field_widget_form().
  */
-function number_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+function number_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $value = isset($items[$delta]['value']) ? $items[$delta]['value'] : '';
   // Substitute the decimal separator.
   if ($field['type'] == 'number_decimal' || $field['type'] == 'number_float') {

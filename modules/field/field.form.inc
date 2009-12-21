@@ -47,7 +47,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
     // make it the $delta value.
     else {
       $delta = isset($get_delta) ? $get_delta : 0;
-      $function = $instance['widget']['module'] . '_field_widget';
+      $function = $instance['widget']['module'] . '_field_widget_form';
       if (function_exists($function)) {
         $element = array(
           '#object_type' => $instance['object_type'],
@@ -161,7 +161,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
   $wrapper_id = drupal_html_class($field_name) . '-wrapper';
   $field_elements = array();
 
-  $function = $instance['widget']['module'] . '_field_widget';
+  $function = $instance['widget']['module'] . '_field_widget_form';
   if (function_exists($function)) {
     for ($delta = 0; $delta <= $max; $delta++) {
       $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;

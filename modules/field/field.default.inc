@@ -187,7 +187,7 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
 
     // Calling the formatter function through module_invoke() can have a
     // performance impact on pages with many fields and values.
-    $function = $display['module'] . '_field_formatter';
+    $function = $display['module'] . '_field_formatter_view';
     if (function_exists($function)) {
       $elements = $function($obj_type, $object, $field, $instance, $langcode, $items, $display);
     }

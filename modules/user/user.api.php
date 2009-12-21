@@ -343,9 +343,9 @@ function hook_user_view($account, $build_mode) {
  * @param $build
  *   A renderable array representing the user.
  *
- * @see user_build()
+ * @see user_view()
  */
-function hook_user_build_alter($build) {
+function hook_user_view_alter($build) {
   // Check for the existence of a field added by another module.
   if (isset($build['an_additional_field'])) {
     // Change its weight.

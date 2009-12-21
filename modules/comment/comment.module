@@ -602,7 +602,7 @@ function comment_node_page_additions($node) {
     if ($cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
-      $build = comment_build_multiple($comments, $node);
+      $build = comment_view_multiple($comments, $node);
       $build['#attached']['css'][] = drupal_get_path('module', 'comment') . '/comment.css';
       $build['pager']['#theme'] = 'pager';
       $additions['comments'] = $build;
@@ -785,7 +785,7 @@ function comment_prepare_thread(&$comments) {
  * @return
  *   An array as expected by drupal_render().
  */
-function comment_build($comment, $node, $build_mode = 'full') {
+function comment_view($comment, $node, $build_mode = 'full') {
   // Populate $comment->content with a render() array.
   comment_build_content($comment, $node, $build_mode);
 
@@ -823,7 +823,7 @@ function comment_build($comment, $node, $build_mode = 'full') {
   }
 
   // Allow modules to modify the structured comment.
-  drupal_alter('comment_build', $build);
+  drupal_alter('comment_view', $build);
 
   return $build;
 }
@@ -941,14 +941,14 @@ function comment_links($comment, $node) {
  * @return
  *   An array in the format expected by drupal_render().
  */
-function comment_build_multiple($comments, $node, $build_mode = 'full', $weight = 0) {
+function comment_view_multiple($comments, $node, $build_mode = 'full', $weight = 0) {
   field_attach_prepare_view('comment', $comments, $build_mode);
 
   $build = array(
     '#sorted' => TRUE,
   );
   foreach ($comments as $comment) {
-    $build[$comment->cid] = comment_build($comment, $node, $build_mode);
+    $build[$comment->cid] = comment_view($comment, $node, $build_mode);
     $build[$comment->cid]['#weight'] = $weight;
     $weight++;
   }
@@ -1315,7 +1315,7 @@ function comment_save($comment) {
     }
     else {
       // Add the comment to database. This next section builds the thread field.
-      // Also see the documentation for comment_build().
+      // Also see the documentation for comment_view().
       if ($comment->pid == 0) {
         // This is a comment with no parent comment (depth 0): we start
         // by retrieving the maximum thread level.
@@ -1628,7 +1628,7 @@ function comment_get_display_ordinal($cid, $node_type) {
   else {
     // For threaded comments, the c.thread column is used for ordering. We can
     // use the vancode for comparison, but must remove the trailing slash.
-    // @see comment_build_multiple().
+    // @see comment_view_multiple().
     $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) -1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) -1))');
   }
 
@@ -1904,7 +1904,7 @@ function comment_preview($comment) {
     $comment->created = !empty($comment->created) ? $comment->created : REQUEST_TIME;
     $comment->changed = REQUEST_TIME;
     $comment->in_preview = TRUE;
-    $comment_build = comment_build($comment, $node);
+    $comment_build = comment_view($comment, $node);
     $comment_build += array(
       '#weight' => -100,
       '#prefix' => '<div class="preview">',
@@ -1918,11 +1918,11 @@ function comment_preview($comment) {
     $build = array();
     if ($comments = comment_load_multiple(array($comment->pid), array('status' => COMMENT_PUBLISHED))) {
       $parent_comment = $comments[$comment->pid];
-      $build = comment_build($parent_comment, $node);
+      $build = comment_view($parent_comment, $node);
     }
   }
   else {
-    $build = node_build($node);
+    $build = node_view($node);
   }
 
   $form['comment_output_below'] = $build;

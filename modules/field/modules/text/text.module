@@ -199,7 +199,7 @@ function text_field_validate($obj_type, $object, $field, $instance, $langcode, $
  * Where possible, generate the sanitized version of each field early so that
  * it is cached in the field cache. This avoids looking up from the filter cache
  * separately.
- * @see text_field_formatter().
+ * @see text_field_formatter_view().
  */
 function text_field_load($obj_type, $objects, $field, $instances, $langcode, &$items) {
   foreach ($objects as $id => $object) {
@@ -262,9 +262,9 @@ function text_field_formatter_info() {
 }
 
 /**
- * Implements hook_field_formatter().
+ * Implements hook_field_formatter_view().
  */
-function text_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function text_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {
@@ -508,9 +508,9 @@ function text_field_widget_settings_form($field, $instance) {
 }
 
 /**
- * Implements hook_field_widget().
+ * Implements hook_field_widget_form().
  */
-function text_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
+function text_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
   $element = $base;
 
   switch ($instance['widget']['type']) {

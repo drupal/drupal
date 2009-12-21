@@ -1080,15 +1080,15 @@ function taxonomy_field_formatter_info() {
 }
 
 /**
- * Implements hook_field_formatter().
+ * Implements hook_field_formatter_view().
  */
-function taxonomy_field_formatter($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function taxonomy_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {
     case 'taxonomy_term_link':
       foreach ($items as $delta => $item) {
-        // @todo Remove this when "node_build() does not call
+        // @todo Remove this when "node_view() does not call
         // field_attach_prepare_view()" bug is fixed.
         // See http://drupal.org/node/493314.
         if (!isset($item['taxonomy_term'])) {
@@ -1228,9 +1228,9 @@ function taxonomy_term_title($term) {
 }
 
 /**
- * Implements hook_field_widget().
+ * Implements hook_field_widget_form().
  */
-function taxonomy_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+function taxonomy_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $tags = array();
   foreach ($items as $item) {
     $tags[$item['tid']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['tid']);

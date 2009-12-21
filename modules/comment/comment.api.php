@@ -87,9 +87,9 @@ function hook_comment_view($comment) {
  * @param $build
  *   A renderable array representing the comment.
  *
- * @see comment_build()
+ * @see comment_view()
  */
-function hook_comment_build_alter($build) {
+function hook_comment_view_alter($build) {
   // Check for the existence of a field added by another module.
   if ($build['#build_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.

@@ -305,10 +305,10 @@ function image_field_widget_settings_form($field, $instance) {
 }
 
 /**
- * Implements hook_field_widget().
+ * Implements hook_field_widget_form().
  */
-function image_field_widget(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $elements = file_field_widget($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
+function image_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $elements = file_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
   $settings = $instance['settings'];
 
   foreach (element_children($elements) as $delta) {
@@ -450,9 +450,9 @@ function image_field_formatter_info() {
 }
 
 /**
- * Implements hook_field_formatter().
+ * Implements hook_field_formatter_view().
  */
-function image_field_formatter($obj_type, $object, $field, $instance, $langcode, $items, $display) {
+function image_field_formatter_view($obj_type, $object, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   // Check if the formatter involves a particular image style.

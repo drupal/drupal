@@ -1525,7 +1525,7 @@ function user_menu() {
     'title' => 'My account',
     'title callback' => 'user_page_title',
     'title arguments' => array(1),
-    'page callback' => 'user_build',
+    'page callback' => 'user_view',
     'page arguments' => array(1),
     'access callback' => 'user_view_access',
     'access arguments' => array(1),
@@ -2135,7 +2135,7 @@ function _user_cancel($edit, $account, $method) {
  * @return
  *   An array as expected by drupal_render().
  */
-function user_build($account, $build_mode = 'full') {
+function user_view($account, $build_mode = 'full') {
   // Retrieve all profile fields and attach to $account->content.
   user_build_content($account, $build_mode);
 
@@ -2150,7 +2150,7 @@ function user_build($account, $build_mode = 'full') {
   );
 
   // Allow modules to modify the structured user.
-  drupal_alter('user_build', $build);
+  drupal_alter('user_view', $build);
 
   return $build;
 }

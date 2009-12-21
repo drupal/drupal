@@ -59,7 +59,7 @@ function contextual_library() {
 /**
  * Template variable preprocessor for contextual links.
  *
- * @see contextual_links_build()
+ * @see contextual_links_view()
  */
 function contextual_preprocess(&$variables, $hook) {
   static $hooks;
@@ -89,7 +89,7 @@ function contextual_preprocess(&$variables, $hook) {
   }
 
   if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
-    $variables['contextual_links'] = contextual_links_build($element);
+    $variables['contextual_links'] = contextual_links_view($element);
     if (!empty($variables['contextual_links'])) {
       $variables['classes_array'][] = 'contextual-links-region';
     }
@@ -116,7 +116,7 @@ function contextual_preprocess(&$variables, $hook) {
  *
  * @see menu_contextual_links()
  */
-function contextual_links_build($element) {
+function contextual_links_view($element) {
   static $destination;
 
   // Retrieve contextual menu links.
