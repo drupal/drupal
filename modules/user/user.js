@@ -109,10 +109,10 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
   var usernameBox = $('input.username');
   var username = (usernameBox.length > 0) ? usernameBox.val() : translate.username;
 
-  // Lose 10 points for every character less than 6.
+  // Lose 5 points for every character less than 6, plus a 30 point penalty.
   if (password.length < 6) {
     msg.push(translate.tooShort);
-    strength -= (6 - password.length) * 10;
+    strength -= ((6 - password.length) * 5) + 30;
   }
 
   // Count weaknesses.
@@ -166,7 +166,7 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
     indicatorText = translate.fair;
   } else if (strength < 80) {
     indicatorText = translate.good;
-  } else if (strength < 100) {
+  } else if (strength <= 100) {
     indicatorText = translate.strong;
   }
 
