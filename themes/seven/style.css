@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.37 2009/12/17 13:03:05 dries Exp $ */
+/* $Id: style.css,v 1.38 2009/12/22 19:45:00 dries Exp $ */
 
 /**
  * Generic elements
@@ -814,11 +814,11 @@ div.admin-options div.form-item {
 
 /* Maintenance theming */
 body.in-maintenance #sidebar-first {
-  float: right;
+  float: left;
   width: 200px;
 }
 body.in-maintenance #content {
-  float: left;
+  float: right;
   width: 550px;
   padding-right: 20px;
 }
