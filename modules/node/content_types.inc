@@ -76,11 +76,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
   // Make the type object available to implementations of hook_form_alter.
   $form['#node_type'] = $type;
 
-  $form['identity'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Identification'),
-  );
-  $form['identity']['name'] = array(
+  $form['name'] = array(
     '#title' => t('Name'),
     '#type' => 'textfield',
     '#default_value' => $type->name,
@@ -104,7 +100,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
         ),
       ),
     );
-    $form['identity']['type'] = array(
+    $form['type'] = array(
       '#title' => t('Machine name'),
       '#type' => 'textfield',
       '#default_value' => $type->type,
@@ -117,13 +113,13 @@ function node_type_form($form, &$form_state, $type = NULL) {
     );
   }
   else {
-    $form['identity']['type'] = array(
+    $form['type'] = array(
       '#type' => 'value',
       '#value' => $type->type,
     );
   }
 
-  $form['identity']['description'] = array(
+  $form['description'] = array(
     '#title' => t('Description'),
     '#type' => 'textarea',
     '#default_value' => $type->description,
