@@ -561,7 +561,6 @@ function search_index($sid, $type, $text) {
             if (preg_match('!(?:node|book)/(?:view/)?([0-9]+)!i', $path, $match)) {
               $linknid = $match[1];
               if ($linknid > 0) {
-                // Note: ignore links to uncacheable nodes to avoid redirect bugs.
                 $node = db_query('SELECT title, nid, vid FROM {node} WHERE nid = :nid', array(':nid' => $linknid), array('target' => 'slave'))->fetchObject();
                 $link = TRUE;
                 $linktitle = $node->title;
