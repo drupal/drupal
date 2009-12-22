@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.331 2009/12/21 08:01:23 dries Exp $
+// $Id: search.module,v 1.332 2009/12/22 15:09:37 dries Exp $
 
 /**
  * @file
@@ -561,7 +561,6 @@ function search_index($sid, $type, $text) {
             if (preg_match('!(?:node|book)/(?:view/)?([0-9]+)!i', $path, $match)) {
               $linknid = $match[1];
               if ($linknid > 0) {
-                // Note: ignore links to uncacheable nodes to avoid redirect bugs.
                 $node = db_query('SELECT title, nid, vid FROM {node} WHERE nid = :nid', array(':nid' => $linknid), array('target' => 'slave'))->fetchObject();
                 $link = TRUE;
                 $linktitle = $node->title;
