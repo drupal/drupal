@@ -75,16 +75,12 @@ body.toolbar-drawer {
 
 #toolbar-home a span {
   vertical-align: text-bottom;
-  width: 16px;
+  width: 11px;
   height: 14px;
   display: block;
-  background: url(toolbar.png) no-repeat -3px -62px;
+  background: url(toolbar.png) no-repeat -6px -63px;
   text-indent: -9999px;
   margin: 3px 0px;
-}
-
-#toolbar-home a.active span {
-    background-position:  -29px -62px;
 }
 
 #toolbar-user {
