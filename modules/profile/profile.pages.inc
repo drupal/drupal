@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.21 2009/10/09 01:00:02 dries Exp $
+// $Id: profile.pages.inc,v 1.22 2009/12/22 14:47:14 dries Exp $
 
 /**
  * @file
@@ -77,7 +77,7 @@ function profile_browse() {
     $output .= theme('pager', array('tags' => NULL));
 
     if ($field->type == 'selection' || $field->type == 'list' || $field->type == 'textfield') {
-      $title = strtr(check_plain($field->page), array('%value' => theme('placeholder', array('text' => $value))));
+      $title = strtr(check_plain($field->page), array('%value' => drupal_placeholder(array('text' => $value))));
     }
     else {
       $title = check_plain($field->page);

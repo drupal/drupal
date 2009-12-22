@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1186 2009/12/21 13:47:32 dries Exp $
+// $Id: node.module,v 1.1187 2009/12/22 14:47:14 dries Exp $
 
 /**
  * @file
@@ -1423,7 +1423,7 @@ function node_permission() {
     ),
     'administer nodes' => array(
       'title' => t('Administer content'),
-      'description' => theme('placeholder', array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'access content' => array(
       'title' => t('View published content'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.25 2009/12/06 18:11:41 webchick Exp $
+// $Id: php.module,v 1.26 2009/12/22 14:47:14 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ function php_permission() {
   return array(
     'use PHP for settings' => array(
       'title' => t('Use PHP for settings'),
-      'description' => theme('placeholder', array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
   );
 }

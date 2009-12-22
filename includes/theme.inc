@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.557 2009/12/02 14:56:32 dries Exp $
+// $Id: theme.inc,v 1.558 2009/12/22 14:47:14 dries Exp $
 
 /**
  * @file
@@ -1373,21 +1373,6 @@ function theme_disable($theme_list) {
  * @see theme()
  * @see hook_theme()
  */
-
-/**
- * Formats text for emphasized display in a placeholder inside a sentence.
- * Used automatically by t().
- *
- * @param $variables
- *   An associative array containing:
- *   - text: The text to format (plain-text).
- *
- * @return
- *   The formatted text (html).
- */
-function theme_placeholder($variables) {
-  return '<em>' . check_plain($variables['text']) . '</em>';
-}
 
 /**
  * Return a themed set of status and/or error messages. The messages are grouped

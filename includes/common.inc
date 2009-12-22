@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1067 2009/12/21 07:58:59 dries Exp $
+// $Id: common.inc,v 1.1068 2009/12/22 14:47:14 dries Exp $
 
 /**
  * @file
@@ -1546,7 +1546,7 @@ function t($string, array $args = array(), array $options = array()) {
         case '%':
         default:
           // Escaped and placeholder.
-          $args[$key] = theme('placeholder', array('text' => $value));
+          $args[$key] = drupal_placeholder(array('text' => $value));
           break;
 
         case '!':
