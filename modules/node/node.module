@@ -1326,6 +1326,17 @@ function node_show($node, $message = FALSE) {
 }
 
 /**
+ * Returns whether the current page is the full page view of the passed in node.
+ *
+ * @param $node
+ *   A node object.
+ */
+function node_is_page($node) {
+  $page_node = menu_get_object();
+  return (!empty($page_node) ? $page_node->nid == $node->nid : FALSE);
+}
+
+/**
  * Process variables for node.tpl.php
  *
  * Most themes utilize their own copy of node.tpl.php. The default is located
@@ -1350,7 +1361,7 @@ function template_preprocess_node(&$variables) {
   $variables['name']      = theme('username', array('account' => $node));
   $variables['node_url']  = url('node/' . $node->nid);
   $variables['node_title'] = check_plain($node->title[LANGUAGE_NONE][0]['value']);
-  $variables['page']      = (bool)menu_get_object();
+  $variables['page']      = node_is_page($node);
 
   if (!empty($node->in_preview)) {
     unset($node->content['links']);
