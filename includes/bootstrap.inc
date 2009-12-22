@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.333 2009/12/07 07:25:24 webchick Exp $
+// $Id: bootstrap.inc,v 1.334 2009/12/22 14:19:25 dries Exp $
 
 /**
  * @file
@@ -181,9 +181,9 @@ define('DRUPAL_KILOBYTE', 1024);
 /**
  * The language code used when no language is explicitly assigned.
  *
- * Defined by ISO639-2 for "No linguistic content / Not applicable".
+ * Defined by ISO639-2 for "Undetermined".
  */
-define('LANGUAGE_NONE', 'zxx');
+define('LANGUAGE_NONE', 'und');
 
 /**
  * The type of language used to define the content language.
