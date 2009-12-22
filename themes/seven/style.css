@@ -814,11 +814,11 @@ div.admin-options div.form-item {
 
 /* Maintenance theming */
 body.in-maintenance #sidebar-first {
-  float: right;
+  float: left;
   width: 200px;
 }
 body.in-maintenance #content {
-  float: left;
+  float: right;
   width: 550px;
   padding-right: 20px;
 }
