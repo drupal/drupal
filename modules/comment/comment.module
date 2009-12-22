@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.819 2009/12/21 13:47:32 dries Exp $
+// $Id: comment.module,v 1.820 2009/12/22 20:38:23 dries Exp $
 
 /**
  * @file
@@ -577,8 +577,7 @@ function comment_node_view($node, $build_mode) {
     // page. We compare $node and $page_node to ensure that comments are not
     // appended to other nodes shown on the page, for example a node_reference
     // displayed in 'full' build mode within another node.
-    $page_node = menu_get_object();
-    if ($node->comment && isset($page_node->nid) && $page_node->nid == $node->nid && empty($node->in_preview) && user_access('access comments')) {
+    if ($node->comment && node_is_page($node) && empty($node->in_preview) && user_access('access comments')) {
       $node->content['comments'] = comment_node_page_additions($node);
     }
   }
