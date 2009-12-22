@@ -2247,3 +2247,18 @@ function drupal_static_reset($name = NULL) {
 function drupal_is_cli() {
   return (!isset($_SERVER['SERVER_SOFTWARE']) && (php_sapi_name() == 'cli' || (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0)));
 }
+
+/**
+ * Formats text for emphasized display in a placeholder inside a sentence.
+ * Used automatically by t().
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - text: The text to format (plain-text).
+ *
+ * @return
+ *   The formatted text (html).
+ */
+function drupal_placeholder($variables) {
+  return '<em class="placeholder">' . check_plain($variables['text']) . '</em>';
+}

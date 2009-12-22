@@ -1546,7 +1546,7 @@ function t($string, array $args = array(), array $options = array()) {
         case '%':
         default:
           // Escaped and placeholder.
-          $args[$key] = theme('placeholder', array('text' => $value));
+          $args[$key] = drupal_placeholder(array('text' => $value));
           break;
 
         case '!':

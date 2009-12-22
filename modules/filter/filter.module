@@ -268,7 +268,7 @@ function filter_admin_format_title($format) {
 function filter_permission() {
   $perms['administer filters'] = array(
     'title' => t('Administer and use any text formats and filters'),
-    'description' => theme('placeholder', array('text' => t('Warning: This permission may have security implications depending on how the text format is configured.'))),
+    'description' => drupal_placeholder(array('text' => t('Warning: This permission may have security implications depending on how the text format is configured.'))),
   );
 
   // Generate permissions for each text format. Warn the administrator that any
@@ -278,10 +278,10 @@ function filter_permission() {
     if (!empty($permission)) {
       // Only link to the text format configuration page if the user who is
       // viewing this will have access to that page.
-      $format_name_replacement = user_access('administer filters') ? l($format->name, 'admin/config/content/formats/' . $format->format) : theme('placeholder', array('text' => $format->name));
+      $format_name_replacement = user_access('administer filters') ? l($format->name, 'admin/config/content/formats/' . $format->format) : drupal_placeholder(array('text' => $format->name));
       $perms[$permission] = array(
         'title' => t("Use the !text_format text format", array('!text_format' => $format_name_replacement,)),
-        'description' => theme('placeholder', array('text' => t('Warning: This permission may have security implications depending on how the text format is configured.'))),
+        'description' => drupal_placeholder(array('text' => t('Warning: This permission may have security implications depending on how the text format is configured.'))),
       );
     }
   }

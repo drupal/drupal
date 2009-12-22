@@ -23,8 +23,8 @@ function filter_admin_overview($form) {
     // to all roles and cannot be deleted via the admin interface.
     $form['formats'][$id]['#is_fallback'] = ($id == $fallback_format);
     if ($form['formats'][$id]['#is_fallback']) {
-      $form['formats'][$id]['name'] = array('#markup' => theme('placeholder', array('text' => $format->name)));
-      $roles_markup = theme('placeholder', array('text' => t('All roles may use this format')));
+      $form['formats'][$id]['name'] = array('#markup' => drupal_placeholder(array('text' => $format->name)));
+      $roles_markup = drupal_placeholder(array('text' => t('All roles may use this format')));
     }
     else {
       $form['formats'][$id]['name'] = array('#markup' => check_plain($format->name));

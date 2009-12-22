@@ -1375,21 +1375,6 @@ function theme_disable($theme_list) {
  */
 
 /**
- * Formats text for emphasized display in a placeholder inside a sentence.
- * Used automatically by t().
- *
- * @param $variables
- *   An associative array containing:
- *   - text: The text to format (plain-text).
- *
- * @return
- *   The formatted text (html).
- */
-function theme_placeholder($variables) {
-  return '<em>' . check_plain($variables['text']) . '</em>';
-}
-
-/**
  * Return a themed set of status and/or error messages. The messages are grouped
  * by type.
  *

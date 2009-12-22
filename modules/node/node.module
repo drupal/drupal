@@ -1423,7 +1423,7 @@ function node_permission() {
     ),
     'administer nodes' => array(
       'title' => t('Administer content'),
-      'description' => theme('placeholder', array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'access content' => array(
       'title' => t('View published content'),
