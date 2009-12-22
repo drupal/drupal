@@ -555,9 +555,10 @@ class MenuNodeTestCase extends DrupalWebTestCase {
 
     // Create a node.
     $node_title = $this->randomName();
+    $language = LANGUAGE_NONE;
     $edit = array(
-      'title[zxx][0][value]' => $node_title,
-      'body[zxx][0][value]' => $this->randomString(),
+      "title[$language][0][value]" => $node_title,
+      "body[$language][0][value]" => $this->randomString(),
     );
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($node_title);

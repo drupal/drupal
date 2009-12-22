@@ -181,9 +181,9 @@ define('DRUPAL_KILOBYTE', 1024);
 /**
  * The language code used when no language is explicitly assigned.
  *
- * Defined by ISO639-2 for "No linguistic content / Not applicable".
+ * Defined by ISO639-2 for "Undetermined".
  */
-define('LANGUAGE_NONE', 'zxx');
+define('LANGUAGE_NONE', 'und');
 
 /**
  * The type of language used to define the content language.
