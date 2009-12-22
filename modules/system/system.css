@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.68 2009/12/01 00:39:34 dries Exp $ */
+/* $Id: system.css,v 1.69 2009/12/22 14:11:46 dries Exp $ */
 
 /*
 ** HTML elements
@@ -219,6 +219,9 @@ dl.multiselect dt, dl.multiselect dd {
 dl.multiselect .form-item {
   height: 1.75em;
   margin: 0;
+}
+.compact-link {
+  margin: 0 0 0.5em 0;
 }
 
 /*
