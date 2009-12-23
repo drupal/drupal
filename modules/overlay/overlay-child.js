@@ -99,43 +99,51 @@ Drupal.overlayChild.behaviors.scrollToTop = function (context, settings) {
  * @see Drupal.overlay.isAdminLink()
  */
 Drupal.overlayChild.behaviors.parseLinks = function (context, settings) {
-  $('a:not(.overlay-exclude)', context).once('overlay').each(function () {
-    // Non-admin links should close the overlay and open in the main window.
-    if (!parent.Drupal.overlay.isAdminLink(this.href)) {
-      $(this).click(function () {
-        // We need to store the parent variable locally because it will
-        // disappear as soon as we close the iframe.
-        var parentWindow = parent;
-        if (parentWindow.Drupal.overlay.close(false)) {
-          parentWindow.Drupal.overlay.redirect($(this).attr('href'));
-        }
-        return false;
-      });
+  var closeAndRedirectOnClick = function (event) {
+    // We need to store the parent variable locally because it will
+    // disappear as soon as we close the iframe.
+    var parentWindow = parent;
+    if (parentWindow.Drupal.overlay.close(false)) {
+      parentWindow.Drupal.overlay.redirect($(this).attr('href'));
+    }
+    return false;
+  };
+  var redirectOnClick = function (event) {
+    parent.Drupal.overlay.redirect($(this).attr('href'));
+    return false;
+  };
+
+  $('a:not(.overlay-exclude)', context).once('overlay', function () {
+    var href = $(this).attr('href');
+    // Skip links that don't have an href attribute.
+    if (href == undefined) {
       return;
     }
+    // Non-admin links should close the overlay and open in the main window.
+    else if (!parent.Drupal.overlay.isAdminLink(href)) {
+      $(this).click(closeAndRedirectOnClick);
+    }
+    // Open external links in a new window.
+    else if (href.indexOf('http') > 0 || href.indexOf('https') > 0) {
+      $(this).attr('target', '_new');
+    }
+    // Open admin links in the overlay.
     else {
-      var href = $(this).attr('href');
-      if (href.indexOf('http') > 0 || href.indexOf('https') > 0) {
-        $(this).attr('target', '_new');
-      }
-      else {
-        $(this).each(function(){
-          this.href = parent.Drupal.overlay.fragmentizeLink(this);
-        }).click(function () {
-          parent.window.location.href = this.href;
-          return false;
-        });
-      }
+      $(this)
+        .attr('href', parent.Drupal.overlay.fragmentizeLink(this))
+        .click(redirectOnClick);
     }
   });
-  $('form:not(.overlay-processed)', context).addClass('overlay-processed').each(function () {
+
+  $('form', context).once('overlay', function () {
     // Obtain the action attribute of the form.
     var action = $(this).attr('action');
-    if (action.indexOf('http') != 0 && action.indexOf('https') != 0) {
-      // Keep internal forms in the overlay.
+    // Keep internal forms in the overlay.
+    if (action == undefined || (action.indexOf('http') != 0 && action.indexOf('https') != 0)) {
       action += (action.indexOf('?') > -1 ? '&' : '?') + 'render=overlay';
       $(this).attr('action', action);
     }
+    // Submit external forms into a new window.
     else {
       $(this).attr('target', '_new');
     }
