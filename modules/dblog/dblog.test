@@ -242,14 +242,13 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Verify events were recorded.
     // Add user.
     // Default display includes name and email address; if too long then email is replaced by three periods.
-    // $this->assertRaw(t('New user: %name (%mail)', array('%name' => $edit['name'], '%mail' => $edit['mail'])), t('DBLog event was recorded: [add user]'));
-    $this->assertRaw(t('New user: %name', array('%name' => $name)), t('DBLog event was recorded: [add user]'));
+    $this->assertLogMessage(t('New user: %name (%email).', array('%name' => $name, '%email' => $user->mail)), t('DBLog event was recorded: [add user]'));
     // Login user.
-    $this->assertRaw(t('Session opened for %name', array('%name' => $name)), t('DBLog event was recorded: [login user]'));
+    $this->assertLogMessage(t('Session opened for %name', array('%name' => $name)), t('DBLog event was recorded: [login user]'));
     // Logout user.
-    $this->assertRaw(t('Session closed for %name', array('%name' => $name)), t('DBLog event was recorded: [logout user]'));
+    $this->assertLogMessage(t('Session closed for %name', array('%name' => $name)), t('DBLog event was recorded: [logout user]'));
     // Delete user.
-    $this->assertRaw(t('Deleted user: %name', array('%name' => $name)), t('DBLog event was recorded: [delete user]'));
+    $this->assertLogMessage(t('Deleted user: %name', array('%name' => $name)), t('DBLog event was recorded: [delete user]'));
   }
 
   /**
@@ -295,11 +294,11 @@ class DBLogTestCase extends DrupalWebTestCase {
 
     // Verify events were recorded.
     // Content added.
-    $this->assertRaw(t('@type: added %title', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content added]'));
+    $this->assertLogMessage(t('@type: added %title.', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content added]'));
     // Content updated.
-    $this->assertRaw(t('@type: updated %title', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content updated]'));
+    $this->assertLogMessage(t('@type: updated %title.', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content updated]'));
     // Content deleted.
-    $this->assertRaw(t('@type: deleted %title', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content deleted]'));
+    $this->assertLogMessage(t('@type: deleted %title.', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content deleted]'));
 
     // View dblog access-denied report node.
     $this->drupalGet('admin/reports/access-denied');
@@ -555,4 +554,19 @@ class DBLogTestCase extends DrupalWebTestCase {
     }
     return trim(html_entity_decode(strip_tags($element->asXML())));
   }
+
+  /**
+   * Assert messages appear on the log overview screen.
+   *
+   * @param $log_message
+   *   The message to check.
+   * @param $message
+   *   The message to pass to simpletest.
+   */
+  protected function assertLogMessage($log_message, $message) {
+    // Truncate at 56 characters to compare with dblog's HTML output.
+    // @todo: Check the database instead for the exact error string.
+    $this->assertRaw(truncate_utf8($log_message, 56, TRUE, TRUE), $message);
+  }
 }
+
