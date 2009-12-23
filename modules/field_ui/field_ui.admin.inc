@@ -1071,14 +1071,12 @@ function field_ui_field_edit_form($form, &$form_state, $obj_type, $bundle, $inst
     '#title' => t('Label'),
     '#default_value' => !empty($instance['label']) ? $instance['label'] : $field['field_name'],
     '#required' => TRUE,
-    '#description' => t('The human-readable label for this field.'),
     '#weight' => -20,
   );
   $form['instance']['required'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Required'),
+    '#title' => t('Required field'),
     '#default_value' => !empty($instance['required']),
-    '#description' => t('Check if a value must be provided.'),
     '#weight' => -10,
   );
 
