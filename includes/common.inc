@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1068 2009/12/22 14:47:14 dries Exp $
+// $Id: common.inc,v 1.1069 2009/12/23 15:39:57 dries Exp $
 
 /**
  * @file
@@ -1525,9 +1525,6 @@ function t($string, array $args = array(), array $options = array()) {
     $string = $custom_strings[$options['langcode']][$options['context']][$string];
   }
   // Translate with locale module if enabled.
-  // We don't use function_exists() here, because it breaks the testing
-  // framework if the locale module is enabled in the parent site (we cannot
-  // unload functions in PHP).
   elseif (function_exists('locale') && $options['langcode'] != 'en') {
     $string = locale($string, $options['context'], $options['langcode']);
   }
