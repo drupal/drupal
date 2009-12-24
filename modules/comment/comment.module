@@ -958,7 +958,7 @@ function comment_view_multiple($comments, $node, $build_mode = 'full', $weight =
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_node_type_form_alter(&$form, $form_state) {
-  if (isset($form['identity']['type'])) {
+  if (isset($form['type'])) {
     $form['comment'] = array(
       '#type' => 'fieldset',
       '#title' => t('Comment settings'),
