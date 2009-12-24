@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.820 2009/12/22 20:38:23 dries Exp $
+// $Id: comment.module,v 1.821 2009/12/24 14:00:03 dries Exp $
 
 /**
  * @file
@@ -958,7 +958,7 @@ function comment_view_multiple($comments, $node, $build_mode = 'full', $weight =
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_node_type_form_alter(&$form, $form_state) {
-  if (isset($form['identity']['type'])) {
+  if (isset($form['type'])) {
     $form['comment'] = array(
       '#type' => 'fieldset',
       '#title' => t('Comment settings'),
