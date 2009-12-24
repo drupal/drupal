@@ -103,7 +103,7 @@ Drupal.overlay = Drupal.overlay || {
  *   - autoFit: boolean indicating whether the overlay should be resized to
  *     fit the contents of the document loaded.
  *   - onOverlayOpen: callback to invoke when the overlay is opened.
- *   - onOverlayCanClose: callback to allow external scripts decide if the
+ *   - onOverlayCanClose: callback to allow external scripts to decide if the
  *     overlay can be closed.
  *   - onOverlayClose: callback to invoke when the overlay is closed.
  *   - customDialogOptions: an object with custom jQuery UI Dialog options.
@@ -218,8 +218,9 @@ Drupal.overlay.create = function () {
       return false;
     }
 
-    // Allow external scripts decide if the overlay can be closed.
-    // The external script should call Drupal.overlay.close() again when it is ready for closing.
+    // Allow external scripts to decide if the overlay can be closed.
+    // The external script should call Drupal.overlay.close() again when it is
+    // ready for closing.
     if ($.isFunction(self.options.onOverlayCanClose) && self.options.onOverlayCanClose(self) === false) {
       return false;
     }
@@ -267,7 +268,8 @@ Drupal.overlay.create = function () {
     title: Drupal.t('Loading...'),
     zIndex: 500,
 
-    // When not set use a empty string so it is not applied and CSS can handle it.
+    // When the width is not set, use an empty string instead, so that CSS will
+    // be able to handle it.
     width: self.options.width || '',
     height: self.options.height,
 
@@ -280,7 +282,7 @@ Drupal.overlay.create = function () {
   self.$iframe = $(Drupal.theme('overlayElement'));
   self.$container = $(Drupal.theme('overlayContainer')).append(self.$iframe);
 
-  // Allow external script override default jQuery UI Dialog options.
+  // Allow external script to override the default jQuery UI Dialog options.
   $.extend(dialogOptions, self.options.customDialogOptions);
 
   // Create the jQuery UI Dialog.
@@ -312,12 +314,10 @@ Drupal.overlay.load = function (url) {
   // Change the overlay title.
   self.$container.dialog('option', 'title', Drupal.t('Loading...'));
 
-  // When a new overlay is opened and loaded, we add a loaded class to
-  // the dialog. The loaded class is not removed and added back again
-  // while switching between pages with the overlay already open,
-  // due to performance issues.
-
-  //self.$dialog.removeClass('overlay-loaded');
+  // When a new overlay is opened and loaded, we add a loaded class to the
+  // dialog. The loaded class is not removed and added back again while
+  // switching between pages with the overlay already open, due to
+  // performance issues (see http://drupal.org/node/615130).
   self.$iframe
     .css('opacity', 0.2)
     .load(function () {
@@ -614,10 +614,10 @@ Drupal.overlay.isAdminLink = function (url) {
 /**
  * Resize overlay according to the size of its content.
  *
- * @todo: Watch for experience in the way we compute the size of the
- * iframed document. There are many ways to do it, and none of them
- * seem to be perfect. Note though, that the size of the iframe itself
- * may affect the size of the child document, especially on fluid layouts.
+ * @todo: Watch for experience in the way we compute the size of the iframed
+ * document. There are many ways to do it, and none of them seem to be perfect.
+ * Note, though, that the size of the iframe itself may affect the size of the
+ * child document, especially on fluid layouts.
  */
 Drupal.overlay.innerResize = function () {
   var self = Drupal.overlay;
@@ -663,7 +663,7 @@ Drupal.overlay.outerResize = function () {
 
   self.$wrapper.css('top', displaceTopHeight);
 
-  // When the overlay has no height yet make it fit exactly in the window,
+  // When the overlay has no height yet, make it fit exactly in the window,
   // or the configured height when autoFit is disabled.
   if (!self.lastHeight) {
     var titleBarHeight = self.$dialogTitlebar.outerHeight(true);
