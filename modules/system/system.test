@@ -1225,6 +1225,33 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
+   * Test the theme settings form.
+   */
+  function testThemeSettings() {
+    // Specify a filesystem path to be used for the logo.
+    $file = current($this->drupalGetTestFiles('image'));
+    $edit = array(
+      'default_logo' => FALSE,
+      'logo_path' => $file->uri,
+    );
+    $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'));
+    $this->drupalGet('node');
+    $this->assertRaw($file->uri, t('Logo path successfully changed.'));
+  
+    // Upload a file to use for the logo.
+    $file = current($this->drupalGetTestFiles('image'));
+    $edit = array(
+      'default_logo' => FALSE,
+      'logo_path' => '',
+      'files[logo_upload]' => drupal_realpath($file->uri),
+    );
+    $options = array();
+    $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'), $options);
+    $this->drupalGet('node');
+    $this->assertRaw($file->name, t('Logo file successfully uploaded.'));
+  }
+
+  /**
    * Test the administration theme functionality.
    */
   function testAdministrationTheme() {
