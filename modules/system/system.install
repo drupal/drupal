@@ -629,6 +629,9 @@ function system_schema() {
       ),
     ),
     'primary key' => array('type'),
+    'indexes' => array(
+      'title' => array('title'),
+    ),
   );
 
   // This table's name is plural as some versions of MySQL can't create a
