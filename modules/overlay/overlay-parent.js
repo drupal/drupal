@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.8 2009/12/23 21:33:52 webchick Exp $
+// $Id: overlay-parent.js,v 1.9 2009/12/24 07:45:49 dries Exp $
 
 (function ($) {
 
@@ -543,6 +543,11 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
 
     clearTimeout(self.resizeTimeoutID);
     self.resizeTimeoutID = setTimeout(delayedResize, 150);
+  }
+  
+  // Scroll to anchor in overlay. This needs to be done after delayedResize().
+  if (iframeWindow.document.location.hash) {
+    window.scrollTo(0, self.$iframeWindow(iframeWindow.document.location.hash).position().top);
   }
 };
 
