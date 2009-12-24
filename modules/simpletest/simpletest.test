@@ -389,7 +389,7 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
 class SimpleTestMissingDependentModuleUnitTest extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'title' => 'Testing dependent module test',
+      'name' => 'Testing dependent module test',
       'description' => 'This test should not load since it requires a module that is not found.',
       'group' => 'SimpleTest',
       'dependencies' => array('simpletest_missing_module'),
