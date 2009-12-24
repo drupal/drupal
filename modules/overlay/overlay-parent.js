@@ -544,6 +544,11 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
     clearTimeout(self.resizeTimeoutID);
     self.resizeTimeoutID = setTimeout(delayedResize, 150);
   }
+  
+  // Scroll to anchor in overlay. This needs to be done after delayedResize().
+  if (iframeWindow.document.location.hash) {
+    window.scrollTo(0, self.$iframeWindow(iframeWindow.document.location.hash).position().top);
+  }
 };
 
 /**
