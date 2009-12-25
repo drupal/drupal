@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.10 2009/12/24 13:32:46 dries Exp $
+// $Id: overlay-parent.js,v 1.11 2009/12/25 10:15:23 webchick Exp $
 
 (function ($) {
 
@@ -318,14 +318,15 @@ Drupal.overlay.load = function (url) {
   // dialog. The loaded class is not removed and added back again while
   // switching between pages with the overlay already open, due to
   // performance issues (see http://drupal.org/node/615130).
+  self.$dialog.removeClass('overlay-loaded');
   self.$iframe
-    .css('opacity', 0.2)
+    .css('visibility', 'hidden')
     .load(function () {
       self.isLoading = false;
 
       // Only continue when overlay is still open and not closing.
       if (self.isOpen && !self.isClosing) {
-        self.$iframe.css('opacity', 1);
+        self.$iframe.css('visibility', '');
         self.$dialog.addClass('overlay-loaded');
       }
       else {
