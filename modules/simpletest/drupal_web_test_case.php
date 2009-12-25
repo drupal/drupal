@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.182 2009/12/15 05:25:47 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.183 2009/12/25 10:24:29 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1082,10 +1082,12 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Use temporary files directory with the same prefix as the database.
     $public_files_directory  = $this->originalFileDirectory . '/simpletest/' . substr($db_prefix, 10);
     $private_files_directory = $public_files_directory . '/private';
+    $temp_files_directory    = $private_files_directory . '/temp';
 
     // Create the directories
     file_prepare_directory($public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     file_prepare_directory($private_files_directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($temp_files_directory, FILE_CREATE_DIRECTORY);
 
     // Log fatal errors.
     ini_set('log_errors', 1);
@@ -1150,6 +1152,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Set path variables
     variable_set('file_public_path', $public_files_directory);
     variable_set('file_private_path', $private_files_directory);
+    variable_set('file_temporary_path', $temp_files_directory);
 
     // Use the test mail class instead of the default mail handler class.
     variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
