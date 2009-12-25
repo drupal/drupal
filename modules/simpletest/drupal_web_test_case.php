@@ -1426,7 +1426,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
 
     // Replace original page output with new output from redirected page(s).
-    if (($new = $this->checkForMetaRefresh())) {
+    if ($new = $this->checkForMetaRefresh()) {
       $out = $new;
     }
     $this->verbose('GET request to: ' . $path .
@@ -1501,7 +1501,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $submit_matches = FALSE;
     $ajax = is_array($submit);
     if (isset($path)) {
-      $html = $this->drupalGet($path, $options);
+      $this->drupalGet($path, $options);
     }
     if ($this->parse()) {
       $edit_save = $edit;
@@ -1554,7 +1554,7 @@ class DrupalWebTestCase extends DrupalTestCase {
           $this->refreshVariables();
 
           // Replace original page output with new output from redirected page(s).
-          if (($new = $this->checkForMetaRefresh())) {
+          if ($new = $this->checkForMetaRefresh()) {
             $out = $new;
           }
           $this->verbose('POST request to: ' . $path .
@@ -2725,7 +2725,11 @@ function simpletest_verbose($message, $original_file_directory = NULL, $test_cla
     $class = $test_class;
     $verbose = variable_get('simpletest_verbose', FALSE);
     $directory = $file_directory . '/simpletest/verbose';
-    return file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    if ($writable && !file_exists($directory . '/.htaccess')) {
+      file_put_contents($directory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
+    }
+    return $writable;
   }
   return FALSE;
 }
