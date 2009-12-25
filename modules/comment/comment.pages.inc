@@ -72,10 +72,6 @@ function comment_reply($node, $pid = NULL) {
           drupal_goto("node/$node->nid");
         }
       }
-      // This is the case where the comment is in response to a node. Display the node.
-      elseif (user_access('access content')) {
-        $build['comment_node'] = node_view($node);
-      }
 
       // Should we show the reply box?
       if ($node->comment != COMMENT_NODE_OPEN) {
