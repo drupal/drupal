@@ -2195,7 +2195,7 @@ class StreamWrapperTest extends DrupalWebTestCase {
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'public://foo/bar.txt', t('Expected scheme was added.'));
     $this->assertEqual(file_directory_path(), variable_get('file_public_path'), t('Expected default directory path was returned.'));
     $this->assertEqual(file_directory_path('public'), variable_get('file_public_path'), t('Expected public directory path was returned.'));
-    $this->assertEqual(file_directory_path('temporary'), conf_path() . '/private/temp', t('Expected temporary directory path was returned.'));
+    $this->assertEqual(file_directory_path('temporary'), variable_get('file_temporary_path'), t('Expected temporary directory path was returned.'));
     $this->assertEqual(file_directory_path($this->scheme), variable_get('stream_public_path', 'sites/default/files'), t('Expected dummy directory path was returned.'));
     $this->assertFalse(file_directory_path('non-existent'), t('No directory path returned for invalid scheme.'));
     variable_set('file_default_scheme', 'private');
