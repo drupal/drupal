@@ -742,13 +742,11 @@ function field_extract_bundle($obj_type, $bundle) {
  */
 function template_preprocess_field(&$variables) {
   $element = $variables['element'];
-  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
-  $field = field_info_field($element['#field_name']);
 
   // @todo Convert to using drupal_html_class() after benchmarking the impact of
   //   doing so.
-  $field_type_css = strtr($field['type'], '_', '-');
-  $field_name_css = strtr($field['field_name'], '_', '-');
+  $field_type_css = strtr($element['#field_type'], '_', '-');
+  $field_name_css = strtr($element['#field_name'], '_', '-');
 
   // Prepare an $items variable that the template can simply loop on.
   // Filter out non-children properties that might have been added if the
@@ -757,20 +755,19 @@ function template_preprocess_field(&$variables) {
 
   $additions = array(
     'object' => $element['#object'],
-    'field' => $field,
-    'instance' => $instance,
     'build_mode' => $element['#build_mode'],
     'items' => $items,
-    'field_type' => $field['type'],
-    'field_name' => $field['field_name'],
+    'field_type' => $element['#field_type'],
+    'field_name' => $element['#field_name'],
     'field_type_css' => $field_type_css,
     'field_name_css' => $field_name_css,
     'label' => check_plain($element['#title']),
     'label_display' => $element['#label_display'],
     'label_hidden' => $element['#label_display'] == 'hidden',
     'field_language' => $element['#language'],
-    'field_translatable' => $field['translatable'],
+    'field_translatable' => $element['#field_translatable'],
     'classes_array' => array(
+      'field',
       'field-name-' . $field_name_css,
       'field-type-' . $field_type_css,
       'field-label-' . $element['#label_display'],
@@ -785,6 +782,7 @@ function template_preprocess_field(&$variables) {
   $variables = array_merge($variables, $additions);
 
   // Initialize attributes for each item.
+  $variables['item_attributes_array'] = array();
   foreach ($variables['items'] as $delta => $item) {
     $variables['item_attributes_array'][$delta] = array();
   }

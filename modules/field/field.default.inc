@@ -203,6 +203,7 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
         '#language' => $langcode,
         '#field_name' => $field['field_name'],
         '#field_type' => $field['type'],
+        '#field_translatable' => $field['translatable'],
         '#object_type' => $obj_type,
         '#bundle' => $bundle,
         '#object' => $object,

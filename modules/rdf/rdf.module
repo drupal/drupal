@@ -446,14 +446,12 @@ function rdf_preprocess_node(&$variables) {
  * Implements MODULE_preprocess_HOOK().
  */
 function rdf_preprocess_field(&$variables) {
-  $entity_type = $variables['element']['#object_type'];
-  $instance = $variables['instance'];
-  $mapping = rdf_mapping_load($entity_type, $instance['bundle']);
-  $field_name = $instance['field_name'];
-  $items = $variables['element']['#items'];
+  $element = $variables['element'];
+  $mapping = rdf_mapping_load($element['#object_type'], $element['#bundle']);
+  $field_name = $element['#field_name'];
 
   if (!empty($mapping) && !empty($mapping[$field_name])) {
-    foreach ($items as $delta => $item) {
+    foreach ($element['#items'] as $delta => $item) {
       $variables['item_attributes_array'][$delta] = rdf_rdfa_attributes($mapping[$field_name], $item);
     }
   }

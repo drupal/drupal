@@ -13,6 +13,7 @@
  *   CSS. It can be manipulated through the variable $classes_array from
  *   preprocess functions. The default values can be one or more of the
  *   following:
+ *   - field: The current template type, i.e., "theming hook".
  *   - field-name-[field_name]: The current field name. For example, if the
  *     field name is "field_description" it would result in
  *     "field-name-field-description".
@@ -23,7 +24,6 @@
  *
  * Other variables:
  * - $object: The object to which the field is attached.
- * - $field: The field array.
  * - $build_mode: Build mode, e.g. 'full', 'teaser'...
  * - $field_name: The field name.
  * - $field_type: The field type.
@@ -38,7 +38,7 @@
  * @see template_preprocess_field()
  */
 ?>
-<div class="field <?php print $classes; ?> clearfix"<?php print $attributes; ?>>
+<div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
   <?php if (!$label_hidden) : ?>
     <div class="field-label"<?php print $title_attributes; ?>><?php print $label ?>:&nbsp;</div>
   <?php endif; ?>
