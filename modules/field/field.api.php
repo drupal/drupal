@@ -542,7 +542,7 @@ function hook_field_is_empty($item, $field) {
  *   - settings: An array whose keys are the names of the settings available
  *     for the widget type, and whose values are the default values for those
  *     settings.
- *   - behaviors: (optional) An array describing behaviors of the formatter.
+ *   - behaviors: (optional) An array describing behaviors of the widget.
  *     - multiple values:
  *       FIELD_BEHAVIOR_DEFAULT (default) if the widget allows the input of one
  *       single field value (most common case). The widget will be repeated for
