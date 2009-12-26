@@ -10,8 +10,8 @@
 /**
  * Implements hook_node_view().
  */
-function node_test_node_view($node, $build_mode) {
-  if ($build_mode == 'rss') {
+function node_test_node_view($node, $view_mode) {
+  if ($view_mode == 'rss') {
     // Add RSS elements and namespaces when building the RSS feed.
     $node->rss_elements[] = array(
       'key' => 'testElement',
@@ -26,7 +26,7 @@ function node_test_node_view($node, $build_mode) {
     );
   }
 
-  if ($build_mode != 'rss') {
+  if ($view_mode != 'rss') {
     // Add content that should NOT be displayed in the RSS feed.
     $node->content['extra_non_feed_content'] = array(
       '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node !nid.', array('!nid' => $node->nid)) . '</p>',

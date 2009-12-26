@@ -11,6 +11,15 @@
  */
 function field_test_entity_info() {
   $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
+  $test_entity_modes = array(
+    'full' => array(
+      'label' => t('Full object'),
+    ),
+    'teaser' => array(
+      'label' => t('Teaser'),
+    ),
+  );
+
   return array(
     'test_entity' => array(
       'name' => t('Test Entity'),
@@ -22,6 +31,7 @@ function field_test_entity_info() {
       'cacheable' => FALSE,
       'bundles' => $bundles,
       'fieldable' => TRUE,
+      'view modes' => $test_entity_modes,
     ),
     // This entity type doesn't get form handling for now...
     'test_cacheable_entity' => array(
@@ -34,6 +44,7 @@ function field_test_entity_info() {
       'fieldable' => TRUE,
       'cacheable' => TRUE,
       'bundles' => $bundles,
+      'view modes' => $test_entity_modes,
     ),
   );
 }
@@ -107,20 +118,6 @@ function field_test_delete_bundle($bundle) {
   foreach ($info as $type => $type_info) {
     field_attach_delete_bundle($type, $bundle);
   }
-}
-
-/**
- * Implements hook_field_build_modes().
- */
-function field_test_field_build_modes($obj_type) {
-  $modes = array();
-  if ($obj_type == 'test_entity' || $obj_type == 'test_cacheable_entity') {
-    $modes = array(
-      'full' => t('Full node'),
-      'teaser' => t('Teaser'),
-    );
-  }
-  return $modes;
 }
 
 /**

@@ -55,7 +55,7 @@ function hook_hook_info() {
  *
  * @return
  *   An array whose keys are entity type names and whose values identify
- *   properties of those types that the  system needs to know about:
+ *   properties of those types that the system needs to know about:
  *   - name: The human-readable name of the type.
  *   - controller class: The name of the class that is used to load the objects.
  *     The class has to implement the DrupalEntityControllerInterface interface.
@@ -109,6 +109,15 @@ function hook_hook_info() {
  *       - access callback: As in hook_menu(). 'user_access' will be assumed if
  *         no value is provided.
  *       - access arguments: As in hook_menu().
+ *   - view modes: An array describing the view modes for the entity type. View
+ *     modes let entities be displayed differently depending on the context.
+ *     For instance, a node can be displayed differently on its own page
+ *     ('full' mode), on the home page or taxonomy listings ('teaser' mode), or
+ *     in an RSS feed ('rss' mode). Modules taking part in the display of the
+ *     entity (notably the Field API) can adjust their behavior depending on
+ *     the requested view mode. Keys of the array are view mode names. Each
+ *     view mode is described by an array with the following key/value pairs:
+ *     - label: The human-readable name of the view mode
  */
 function hook_entity_info() {
   $return = array(

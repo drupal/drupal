@@ -368,18 +368,6 @@ function _field_sort_items_value_helper($a, $b) {
 }
 
 /**
- * Registry of available build modes.
- */
-function field_build_modes($obj_type) {
-  $info = &drupal_static(__FUNCTION__, array());
-
-  if (!isset($info[$obj_type])) {
-    $info[$obj_type] = module_invoke_all('field_build_modes', $obj_type);
-  }
-  return $info[$obj_type];
-}
-
-/**
  * Registry of pseudo-field components in a given bundle.
  *
  * @param $bundle_name
@@ -393,7 +381,7 @@ function field_extra_fields($bundle_name) {
   if (empty($info)) {
     $info = array();
     $bundles = field_info_bundles();
-    foreach ($bundles as $bundle => $bundle_label) {
+    foreach ($bundles as $bundle => $bundle_info) {
       // Gather information about non-field object additions.
       $extra = module_invoke_all('field_extra_fields', $bundle);
       drupal_alter('field_extra_fields', $extra, $bundle);
@@ -588,11 +576,11 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
  *   The name of the field to display.
  * @param $display
  *   Can be either:
- *   - The name of a build mode. The field will be displayed according to the
- *     display settings specified for this build mode in the $instance
+ *   - The name of a view mode. The field will be displayed according to the
+ *     display settings specified for this view mode in the $instance
  *     definition for the field in the object's bundle.
- *     If no display settings are found for the build mode, the settings for
- *     the 'full' build mode will be used.
+ *     If no display settings are found for the view mode, the settings for
+ *     the 'full' view mode will be used.
  *   - An array of display settings, as found in the 'display' entry of
  *     $instance definitions. The following kay/value pairs are allowed:
  *     - label: (string) Position of the label. The default 'field' theme
@@ -624,8 +612,8 @@ function field_view_field($obj_type, $object, $field_name, $display = array(), $
       $display = _field_info_prepare_instance_display($field, $display);
     }
     else {
-      // When using a build mode, make sure we have settings for it, or fall
-      // back to the 'full' build mode.
+      // When using a view mode, make sure we have settings for it, or fall
+      // back to the 'full' view mode.
       list(, , $bundle) = entity_extract_ids($obj_type, $object);
       $instance = field_info_instance($obj_type, $field_name, $bundle);
       if (!isset($instance['display'][$display])) {
@@ -651,7 +639,7 @@ function field_view_field($obj_type, $object, $field_name, $display = array(), $
     $context = array(
       'obj_type' => $obj_type,
       'object' => $object,
-      'build_mode' => '_custom',
+      'view_mode' => '_custom',
       'langcode' => $langcode,
     );
     drupal_alter('field_attach_view', $result, $context);
@@ -755,7 +743,7 @@ function template_preprocess_field(&$variables) {
 
   $additions = array(
     'object' => $element['#object'],
-    'build_mode' => $element['#build_mode'],
+    'view_mode' => $element['#view_mode'],
     'items' => $items,
     'field_type' => $element['#field_type'],
     'field_name' => $element['#field_name'],

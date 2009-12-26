@@ -65,7 +65,7 @@ function locale_field_fallback_view(&$output, $context) {
           // Cache fallback values per language as fields might have different
           // fallback values.
           if (!isset($fallback_values[$langcode])) {
-            $fallback_values[$langcode] = field_attach_view($context['obj_type'], $context['object'], $context['build_mode'], $langcode);
+            $fallback_values[$langcode] = field_attach_view($context['obj_type'], $context['object'], $context['view_mode'], $langcode);
           }
           // We are done, skip to the next field.
           $output[$field_name] = $fallback_values[$langcode][$field_name];

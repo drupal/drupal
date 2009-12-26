@@ -1712,8 +1712,8 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $settings['body[full][type]'] = 'hidden';
     $this->drupalPost('admin/structure/types/manage/page/display', $settings, t('Save'));
     $select_xpath = '//select[@id="edit-body-full-type"]/option[@selected="selected"]';
-    // Check if body display is actually "hidden" for the "full" build mode.
-    $this->assertEqual(current($this->xpath($select_xpath)), '<Hidden>', 'Body display is actually "hidden" for the "full" build mode');
+    // Check if body display is actually "hidden" for the "full" view mode.
+    $this->assertEqual(current($this->xpath($select_xpath)), '<Hidden>', 'Body display is actually "hidden" for the "full" view mode');
     $this->drupalGet("node/$node->nid");
     // Check if node body is not showed.
     $this->assertFalse(is_array($this->xpath($body_xpath)), 'Body correctly not showed.');

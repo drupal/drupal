@@ -24,7 +24,7 @@
  *
  * Other variables:
  * - $object: The object to which the field is attached.
- * - $build_mode: Build mode, e.g. 'full', 'teaser'...
+ * - $view_mode: View mode, e.g. 'full', 'teaser'...
  * - $field_name: The field name.
  * - $field_type: The field type.
  * - $field_name_css: The css-compatible field name.

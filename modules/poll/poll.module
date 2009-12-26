@@ -598,7 +598,7 @@ function poll_block_latest_poll_view($node) {
 /**
  * Implements hook_view().
  */
-function poll_view($node, $build_mode = 'full') {
+function poll_view($node, $view_mode = 'full') {
   global $user;
   $output = '';
 
@@ -606,7 +606,7 @@ function poll_view($node, $build_mode = 'full') {
     $node->content['poll_view_voting'] = drupal_get_form('poll_view_voting', $node);
   }
   else {
-    $node->content['poll_view_results'] = array('#markup' => poll_view_results($node, $build_mode));
+    $node->content['poll_view_results'] = array('#markup' => poll_view_results($node, $view_mode));
   }
   return $node;
 }
@@ -726,7 +726,7 @@ function template_preprocess_poll_vote(&$variables) {
 /**
  * Generates a graphical representation of the results of a poll.
  */
-function poll_view_results($node, $build_mode, $block = FALSE) {
+function poll_view_results($node, $view_mode, $block = FALSE) {
   // Count the votes and find the maximum
   $total_votes = 0;
   $max_votes = 0;

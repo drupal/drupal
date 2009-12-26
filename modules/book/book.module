@@ -87,11 +87,11 @@ function book_permission() {
 /**
  * Inject links into $node as needed.
  */
-function book_node_view_link($node, $build_mode) {
+function book_node_view_link($node, $view_mode) {
   $links = array();
 
   if (isset($node->book['depth'])) {
-    if ($build_mode == 'full') {
+    if ($view_mode == 'full') {
       $child_type = variable_get('book_child_type', 'book');
       if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', $child_type) && $node->status == 1 && $node->book['depth'] < MENU_MAX_DEPTH) {
         $links['book_add_child'] = array(
@@ -220,16 +220,15 @@ function book_init() {
 }
 
 /**
- * Implements hook_field_build_modes().
+ * Implements hook_entity_info_alter().
  */
-function book_field_build_modes($obj_type) {
-  $modes = array();
-  if ($obj_type == 'node') {
-    $modes = array(
-      'print' => t('Print'),
-    );
-  }
-  return $modes;
+function book_entity_info_alter(&$info) {
+  // Add the 'Print' view mode for nodes.
+  $info['node']['view modes'] += array(
+    'print' => array(
+      'label' => t('Print'),
+    ),
+  );
 }
 
 /**
@@ -759,8 +758,8 @@ function book_node_load($nodes, $types) {
 /**
  * Implements hook_node_view().
  */
-function book_node_view($node, $build_mode) {
-  if ($build_mode == 'full') {
+function book_node_view($node, $view_mode) {
+  if ($view_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
       $node->content['book_navigation'] = array(
         '#markup' => theme('book_navigation', array('book_link' => $node->book)),
@@ -769,8 +768,8 @@ function book_node_view($node, $build_mode) {
     }
   }
 
-  if ($build_mode != 'rss') {
-    book_node_view_link($node, $build_mode);
+  if ($view_mode != 'rss') {
+    book_node_view_link($node, $view_mode);
   }
 }
 

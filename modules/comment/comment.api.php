@@ -91,7 +91,7 @@ function hook_comment_view($comment) {
  */
 function hook_comment_view_alter($build) {
   // Check for the existence of a field added by another module.
-  if ($build['#build_mode'] == 'full' && isset($build['an_additional_field'])) {
+  if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
   }

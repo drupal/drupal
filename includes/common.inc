@@ -6296,6 +6296,7 @@ function entity_get_info($entity_type = NULL) {
           'static cache' => TRUE,
           'load hook' => $name . '_load',
           'bundles' => array(),
+          'view modes' => array(),
           'object keys' => array(),
           'cacheable' => TRUE,
           'translation' => array(),
@@ -6325,6 +6326,7 @@ function entity_get_info($entity_type = NULL) {
 function entity_info_cache_clear() {
   drupal_static_reset('entity_get_info');
   cache_clear_all('entity_info', 'cache');
+  drupal_static_reset('entity_view_mode_info');
 }
 
 /**

@@ -142,22 +142,14 @@ function user_entity_info() {
           ),
         ),
       ),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('User account'),
+        ),
+      ),
     ),
   );
   return $return;
-}
-
-/**
- * Implements hook_field_build_modes().
- */
-function user_field_build_modes($obj_type) {
-  $modes = array();
-  if ($obj_type == 'user') {
-    $modes = array(
-      'full' => t('User account'),
-    );
-  }
-  return $modes;
 }
 
 /**
@@ -2129,15 +2121,15 @@ function _user_cancel($edit, $account, $method) {
  *
  * @param $account
  *   A user object.
- * @param $build_mode
- *   Build mode, e.g. 'full'.
+ * @param $view_mode
+ *   View mode, e.g. 'full'.
  *
  * @return
  *   An array as expected by drupal_render().
  */
-function user_view($account, $build_mode = 'full') {
+function user_view($account, $view_mode = 'full') {
   // Retrieve all profile fields and attach to $account->content.
-  user_build_content($account, $build_mode);
+  user_build_content($account, $view_mode);
 
   $build = $account->content;
   // We don't need duplicate rendering info in account->content.
@@ -2146,7 +2138,7 @@ function user_view($account, $build_mode = 'full') {
   $build += array(
     '#theme' => 'user_profile',
     '#account' => $account,
-    '#build_mode' => $build_mode,
+    '#view_mode' => $view_mode,
   );
 
   // Allow modules to modify the structured user.
@@ -2160,19 +2152,19 @@ function user_view($account, $build_mode = 'full') {
  *
  * @param $account
  *   A user object.
- * @param $build_mode
- *   Build mode, e.g. 'full'.
+ * @param $view_mode
+ *   View mode, e.g. 'full'.
  */
-function user_build_content($account, $build_mode = 'full') {
+function user_build_content($account, $view_mode = 'full') {
   // Remove previously built content, if exists.
   $account->content = array();
 
   // Build fields content.
-  field_attach_prepare_view('user', array($account->uid => $account), $build_mode);
-  $account->content += field_attach_view('user', $account, $build_mode);
+  field_attach_prepare_view('user', array($account->uid => $account), $view_mode);
+  $account->content += field_attach_view('user', $account, $view_mode);
 
   // Populate $account->content with a render() array.
-  module_invoke_all('user_view', $account, $build_mode);
+  module_invoke_all('user_view', $account, $view_mode);
 }
 
 /**

@@ -545,13 +545,11 @@ function hook_node_validate($node, $form) {
 /**
  * Act on a node that is being assembled before rendering.
  *
- * TODO D7 This needs work to clearly explain the different build modes.
- *
  * The module may add elements to $node->content prior to rendering. This hook
  * will be called after hook_view(). The structure of $node->content is a
  * renderable array as expected by drupal_render().
  *
- * When $build_mode is 'rss', modules can also add extra RSS elements and
+ * When $view_mode is 'rss', modules can also add extra RSS elements and
  * namespaces to $node->rss_elements and $node->rss_namespaces respectively for
  * the RSS item generated for this node.
  * For details on how this is used @see node_feed()
@@ -562,10 +560,10 @@ function hook_node_validate($node, $form) {
  *
  * @param $node
  *   The node that is being assembled for rendering.
- * @param $build_mode
- *   The $build_mode parameter from node_view().
+ * @param $view_mode
+ *   The $view_mode parameter from node_view().
  */
-function hook_node_view($node, $build_mode) {
+function hook_node_view($node, $view_mode) {
   $node->content['my_additional_field'] = array(
     '#value' => $additional_field,
     '#weight' => 10,
@@ -591,7 +589,7 @@ function hook_node_view($node, $build_mode) {
  * @see node_view()
  */
 function hook_node_view_alter($build) {
-  if ($build['#build_mode'] == 'full' && isset($build['an_additional_field'])) {
+  if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
   }
@@ -982,8 +980,8 @@ function hook_validate($node, &$form) {
  *
  * @param $node
  *   The node to be displayed, as returned by node_load().
- * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser', ...
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser', ...
  * @return
  *   $node. The passed $node parameter should be modified as necessary and
  *   returned so it can be properly presented. Nodes are prepared for display
@@ -998,7 +996,7 @@ function hook_validate($node, &$form) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_view($node, $build_mode = 'full') {
+function hook_view($node, $view_mode = 'full') {
   if (node_is_page($node)) {
     $breadcrumb = array();
     $breadcrumb[] = array('path' => 'example', 'title' => t('example'));

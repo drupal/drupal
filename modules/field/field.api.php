@@ -1030,7 +1030,7 @@ function hook_field_attach_delete_revision($obj_type, $object) {
  *   An associative array containing:
  *   - obj_type: The type of $object; e.g. 'node' or 'user'.
  *   - object: The object with fields to render.
- *   - build_mode: Build mode, e.g. 'full', 'teaser'...
+ *   - view_mode: View mode, e.g. 'full', 'teaser'...
  *   - langcode: The language in which the field values will be displayed.
  */
 function hook_field_attach_view_alter(&$output, $context) {
@@ -1577,16 +1577,6 @@ function hook_field_read_instance($instance) {
 /**********************************************************************
  * TODO: I'm not sure where these belong yet.
  **********************************************************************/
-
-/**
- * TODO
- *
- * Note : Right now this belongs to the "Fieldable Type API".
- * Whether 'build modes' is actually a 'fields' concept is to be debated
- * in a separate overhaul patch for core.
- */
-function hook_field_build_modes($obj_type) {
-}
 
 /**
  * Determine whether the user has access to a given field.

@@ -296,8 +296,8 @@ function _trigger_node($node, $hook, $a3 = NULL, $a4 = NULL) {
 /**
  * Implements hook_node_view().
  */
-function trigger_node_view($node, $build_mode) {
-  _trigger_node($node, 'node_view', $build_mode);
+function trigger_node_view($node, $view_mode) {
+  _trigger_node($node, 'node_view', $view_mode);
 }
 
 /**

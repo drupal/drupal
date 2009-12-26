@@ -235,7 +235,7 @@ function _forum_node_check_node_type($node) {
 /**
  * Implements hook_node_view().
  */
-function forum_node_view($node, $build_mode) {
+function forum_node_view($node, $view_mode) {
   $vid = variable_get('forum_nav_vocabulary', 0);
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_node_check_node_type($node)) {

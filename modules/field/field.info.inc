@@ -29,7 +29,6 @@ function field_info_cache_clear() {
   entity_info_cache_clear();
 
   _field_info_collate_types(TRUE);
-  drupal_static_reset('field_build_modes');
   _field_info_collate_fields(TRUE);
 }
 
@@ -280,14 +279,15 @@ function _field_info_prepare_instance($instance, $field) {
 
   $instance['widget'] = _field_info_prepare_instance_widget($field, $instance['widget']);
 
-  foreach ($instance['display'] as $build_mode => $display) {
-    $instance['display'][$build_mode] = _field_info_prepare_instance_display($field, $display);
+  foreach ($instance['display'] as $view_mode => $display) {
+    $instance['display'][$view_mode] = _field_info_prepare_instance_display($field, $display);
   }
 
-  // Fallback to 'full' display settings for unspecified build modes.
-  foreach (field_build_modes($instance['object_type']) as $build_mode => $label) {
-    if (!isset($instance['display'][$build_mode])) {
-      $instance['display'][$build_mode] = $instance['display']['full'];
+  // Fallback to 'full' display settings for unspecified view modes.
+  $entity_info = entity_get_info($instance['object_type']);
+  foreach ($entity_info['view modes'] as $view_mode => $info) {
+    if (!isset($instance['display'][$view_mode])) {
+      $instance['display'][$view_mode] = $instance['display']['full'];
     }
   }
 
@@ -301,7 +301,7 @@ function _field_info_prepare_instance($instance, $field) {
  *   The field structure for the instance.
  * @param $display
  *   Display specifications as found in
- *   $instance['display']['some_build_mode'].
+ *   $instance['display']['some_view_mode'].
  */
 function _field_info_prepare_instance_display($field, $display) {
   $field_type = field_info_field_types($field['type']);

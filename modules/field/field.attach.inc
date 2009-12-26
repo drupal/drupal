@@ -143,7 +143,7 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *   The fully formed $obj_type object.
  * @param $a
  *   - The $form in the 'form' operation.
- *   - The value of $build_mode in the 'view' operation.
+ *   - The value of $view_mode in the 'view' operation.
  *   - Otherwise NULL.
  * @param $b
  *   - The $form_state in the 'submit' operation.
@@ -1113,20 +1113,20 @@ function field_attach_query_revisions($field_id, $conditions, $options = array()
 /**
  * Allow formatters to act on fieldable objects prior to rendering.
  */
-function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
+function field_attach_prepare_view($obj_type, $objects, $view_mode = 'full') {
   // First let the field types do their preparation.
   _field_invoke_multiple('prepare_view', $obj_type, $objects);
   // Then let the formatters do their own specific massaging.
   // field_default_prepare_view() takes care of dispatching to the correct
-  // formatters according to the display settings for the build mode.
-  _field_invoke_multiple_default('prepare_view', $obj_type, $objects, $build_mode);
+  // formatters according to the display settings for the view mode.
+  _field_invoke_multiple_default('prepare_view', $obj_type, $objects, $view_mode);
 }
 
 /**
  * Returns a renderable array for the fields on an object.
  *
  * Each field is displayed according to the display options specified in the
- * $instance definition for the given $build_mode.
+ * $instance definition for the given $view_mode.
  *
  * Sample structure:
  * @code
@@ -1138,7 +1138,7 @@ function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
  *     '#object' => the fieldable object being displayed,
  *     '#object_type' => the type of the object being displayed,
  *     '#language' => the language of the field values being displayed,
- *     '#build_mode' => the build mode,
+ *     '#view_mode' => the view mode,
  *     '#field_name' => the name of the field,
  *     '#field_type' => the type of the field,
  *     '#formatter' => the name of the formatter,
@@ -1153,15 +1153,15 @@ function field_attach_prepare_view($obj_type, $objects, $build_mode = 'full') {
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
  *   The object with fields to render.
- * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser'...
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  * @param $langcode
  *   The language the field values are to be shown in. If no language is
  *   provided the current language is used.
  * @return
  *   A renderable array for the field values.
  */
-function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode = NULL) {
+function field_attach_view($obj_type, $object, $view_mode = 'full', $langcode = NULL) {
   // If no language is provided use the current UI language.
   $options = array('language' => field_multilingual_valid_language($langcode, FALSE));
 
@@ -1169,7 +1169,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
   $null = NULL;
   _field_invoke('sanitize', $obj_type, $object, $null, $null, $options);
 
-  $output = _field_invoke_default('view', $obj_type, $object, $build_mode, $null, $options);
+  $output = _field_invoke_default('view', $obj_type, $object, $view_mode, $null, $options);
 
   // Add custom weight handling.
   list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
@@ -1181,7 +1181,7 @@ function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode =
   $context = array(
     'obj_type' => $obj_type,
     'object' => $object,
-    'build_mode' => $build_mode,
+    'view_mode' => $view_mode,
     'langcode' => $langcode,
   );
   drupal_alter('field_attach_view', $output, $context);

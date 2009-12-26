@@ -98,6 +98,12 @@ function taxonomy_entity_info() {
         'bundle' => 'machine_name',
       ),
       'bundles' => array(),
+      'view modes' => array(
+        // @todo View mode for display as a field (when attached to nodes etc).
+        'full' => array(
+          'label' => t('Taxonomy term page'),
+        ),
+      ),
     ),
   );
   foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocabulary) {
@@ -176,21 +182,6 @@ function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = arr
     $query->addField($table_alias, $name);
   }
   return $query->execute()->fetchCol();
-}
-
-/**
- * Implements hook_field_build_modes().
- *
- * @TODO: build mode for display as a field (when attached to nodes etc.).
- */
-function taxonomy_field_build_modes($obj_type) {
-  $modes = array();
-  if ($obj_type == 'term') {
-    $modes = array(
-      'full' => t('Taxonomy term page'),
-    );
-  }
-  return $modes;
 }
 
 /**

@@ -114,7 +114,7 @@ function field_default_insert($obj_type, $object, $field, $instance, $langcode, 
  *   Array of field values already loaded for the objects, keyed by object id.
  * @param $display
  *   Can be either:
- *   - the name of a build mode
+ *   - the name of a view mode
  *   - or an array of display settings to use for display, as found in the
  *     'display' entry of $instance definitions.
 */
@@ -161,7 +161,7 @@ function field_default_prepare_view($obj_type, $objects, $field, $instances, $la
  *   Array of field values already loaded for the objects, keyed by object id.
  * @param $display
  *   Can be either:
- *   - the name of a build mode;
+ *   - the name of a view mode;
  *   - or an array of custom display settings, as found in the 'display' entry
  *     of $instance definitions.
  */
@@ -172,16 +172,16 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
 
   // Prepare incoming display specifications.
   if (is_string($display)) {
-    $build_mode = $display;
-    $display = $instance['display'][$build_mode];
+    $view_mode = $display;
+    $display = $instance['display'][$view_mode];
   }
   else {
-    $build_mode = '_custom_display';
+    $view_mode = '_custom_display';
   }
 
   if ($display['type'] !== 'hidden') {
     // We never want to index fields labels.
-    if ($build_mode == 'search_index') {
+    if ($view_mode == 'search_index') {
       $display['label'] = 'hidden';
     }
 
@@ -199,7 +199,7 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
         '#title' => t($instance['label']),
         '#access' => field_access('view', $field, $obj_type, $object),
         '#label_display' => $display['label'],
-        '#build_mode' => $build_mode,
+        '#view_mode' => $view_mode,
         '#language' => $langcode,
         '#field_name' => $field['field_name'],
         '#field_type' => $field['type'],

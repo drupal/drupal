@@ -204,8 +204,33 @@ function node_entity_info() {
       // Node.module handles its own caching.
       // 'cacheable' => FALSE,
       'bundles' => array(),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Full node'),
+        ),
+        'teaser' => array(
+          'label' => t('Teaser'),
+        ),
+        'rss' => array(
+          'label' => t('RSS'),
+        ),
+      ),
     ),
   );
+
+  // Search integration is provided by node.module, so search-related
+  // view modes for nodes are defined here and not in search.module.
+  if (module_exists('search')) {
+    $return['node']['view modes'] += array(
+      'search_index' => array(
+        'label' => t('Search Index'),
+      ),
+      'search_result' => array(
+        'label' => t('Search Result'),
+      ),
+    );
+  }
+
   // Bundles must provide a human readable name so we can create help and error
   // messages, and the path to attach Field admin pages to.
   foreach (node_type_get_names() as $type => $name) {
@@ -219,31 +244,8 @@ function node_entity_info() {
       ),
     );
   }
+
   return $return;
-}
-
-
-/**
- * Implements hook_field_build_modes().
- */
-function node_field_build_modes($obj_type) {
-  $modes = array();
-  if ($obj_type == 'node') {
-    $modes = array(
-      'teaser' => t('Teaser'),
-      'full' => t('Full node'),
-      'rss' => t('RSS'),
-    );
-    // Search integration is provided by node.module, so search-related
-    // build-modes for nodes are defined here and not in search.module.
-    if (module_exists('search')) {
-      $modes += array(
-        'search_index' => t('Search Index'),
-        'search_result' => t('Search Result'),
-      );
-    }
-  }
-  return $modes;
 }
 
 /**
@@ -1167,15 +1169,15 @@ function node_revision_delete($revision_id) {
  *
  * @param $node
  *   A node object.
- * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser'...
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  *
  * @return
  *   An array as expected by drupal_render().
  */
-function node_view($node, $build_mode = 'full') {
+function node_view($node, $view_mode = 'full') {
   // Populate $node->content with a render() array.
-  node_build_content($node, $build_mode);
+  node_build_content($node, $view_mode);
 
   $build = $node->content;
   // We don't need duplicate rendering info in node->content.
@@ -1184,10 +1186,10 @@ function node_view($node, $build_mode = 'full') {
   $build += array(
     '#theme' => 'node',
     '#node' => $node,
-    '#build_mode' => $build_mode,
+    '#view_mode' => $view_mode,
   );
   // Add contextual links for this node.
-  // @todo Make this configurable per build mode.
+  // @todo Make this configurable per view mode.
   $build['#contextual_links']['node'] = array('node', array($node->nid));
 
   // Allow modules to modify the structured node.
@@ -1200,9 +1202,9 @@ function node_view($node, $build_mode = 'full') {
  * Builds a structured array representing the node's content.
  *
  * The content built for the node (field values, comments, file attachments or
- * other node components) will vary depending on the $build_mode parameter.
+ * other node components) will vary depending on the $view_mode parameter.
  *
- * Drupal core defines the following build modes for nodes, with the following
+ * Drupal core defines the following view modes for nodes, with the following
  * default use cases:
  *   - full (default): node is being displayed on its own page (node/123)
  *   - teaser: node is being displayed on the default home page listing, on
@@ -1213,34 +1215,34 @@ function node_view($node, $build_mode = 'full') {
  *   - search_result: node is being displayed as a search result.
  *   If book.module is enabled:
  *   - print: node is being displayed in print-friendly mode.
- * Contributed modules might define additional build modes, or use existing
- * build modes in additional contexts.
+ * Contributed modules might define additional view modes, or use existing
+ * view modes in additional contexts.
  *
  * @param $node
  *   A node object.
- * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser'...
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  */
-function node_build_content($node, $build_mode = 'full') {
+function node_build_content($node, $view_mode = 'full') {
   // Remove previously built content, if exists.
   $node->content = array();
 
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
   if (node_hook($node, 'view')) {
-    $node = node_invoke($node, 'view', $build_mode);
+    $node = node_invoke($node, 'view', $view_mode);
   }
 
   // Build fields content.
   // @todo field_attach_prepare_view() is only invoked by node_view_multiple(),
   //   all other entities invoke it _here_.
-  //field_attach_prepare_view('node', array($node->nid => $node), $build_mode);
-  $node->content += field_attach_view('node', $node, $build_mode);
+  //field_attach_prepare_view('node', array($node->nid => $node), $view_mode);
+  $node->content += field_attach_view('node', $node, $view_mode);
 
   // Always display a read more link on teasers because we have no way
   // to know when a teaser view is different than a full view.
   $links = array();
-  if ($build_mode == 'teaser') {
+  if ($view_mode == 'teaser') {
     $links['node_readmore'] = array(
       'title' => t('Read more'),
       'href' => 'node/' . $node->nid,
@@ -1254,7 +1256,7 @@ function node_build_content($node, $build_mode = 'full') {
   );
 
   // Allow modules to make their own additions to the node.
-  module_invoke_all('node_view', $node, $build_mode);
+  module_invoke_all('node_view', $node, $view_mode);
 }
 
 /**
@@ -1345,15 +1347,15 @@ function node_is_page($node) {
  *
  * The $variables array contains the following arguments:
  * - $node
- * - $build_mode
+ * - $view_mode
  * - $page
  *
  * @see node.tpl.php
  */
 function template_preprocess_node(&$variables) {
-  $variables['build_mode'] = $variables['elements']['#build_mode'];
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
   // Provide a distinct $teaser boolean.
-  $variables['teaser'] = $variables['build_mode'] == 'teaser';
+  $variables['teaser'] = $variables['view_mode'] == 'teaser';
   $variables['node'] = $variables['elements']['#node'];
   $node = $variables['node'];
 
@@ -2140,18 +2142,18 @@ function node_feed($nids = FALSE, $channel = array()) {
  *
  * @param $nodes
  *   An array of nodes as returned by node_load_multiple().
- * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser'...
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  * @param $weight
  *   An integer representing the weight of the first node in the list.
  * @return
  *   An array in the format expected by drupal_render().
  */
-function node_view_multiple($nodes, $build_mode = 'teaser', $weight = 0) {
-  field_attach_prepare_view('node', $nodes, $build_mode);
+function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0) {
+  field_attach_prepare_view('node', $nodes, $view_mode);
   $build = array();
   foreach ($nodes as $node) {
-    $build['nodes'][$node->nid] = node_view($node, $build_mode);
+    $build['nodes'][$node->nid] = node_view($node, $view_mode);
     $build['nodes'][$node->nid]['#weight'] = $weight;
     $weight++;
   }

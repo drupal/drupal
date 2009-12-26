@@ -117,7 +117,7 @@ function field_ui_menu() {
             'weight' => 2,
             'file' => 'field_ui.admin.inc',
           ) + $access;
-          $tabs = field_ui_build_modes_tabs($obj_type);
+          $tabs = field_ui_view_modes_tabs($obj_type);
           foreach ($tabs as $key => $tab) {
             $items["$path/display/$key"] = array(
               'title' => $tab['title'],
@@ -171,26 +171,26 @@ function field_ui_theme() {
 }
 
 /**
- * Group available build modes on tabs on the 'Manage display' page.
+ * Group available view modes on tabs on the 'Manage display' page.
  *
  * @todo Remove this completely and use vertical tabs?
  */
-function field_ui_build_modes_tabs($obj_type, $tab_selector = NULL) {
+function field_ui_view_modes_tabs($obj_type, $tab_selector = NULL) {
   $info = &drupal_static(__FUNCTION__);
 
   if (!isset($info[$obj_type])) {
-    $info[$obj_type] = module_invoke_all('field_ui_build_modes_tabs');
-    // Collect titles, and filter out non active modes.
-    $active_modes = field_build_modes($obj_type);
+    $info[$obj_type] = module_invoke_all('field_ui_view_modes_tabs', $obj_type);
+    // Filter out inactive modes.
+    $entity_info = entity_get_info($obj_type);
     foreach ($info[$obj_type] as $tab => $values) {
       $modes = array();
-      foreach ($info[$obj_type][$tab]['build modes'] as $mode) {
-        if (isset($active_modes[$mode])) {
-          $modes[$mode] = $active_modes[$mode];
+      foreach ($info[$obj_type][$tab]['view modes'] as $mode) {
+        if (isset($entity_info['view modes'][$mode])) {
+          $modes[] = $mode;
         }
       }
       if ($modes) {
-        $info[$obj_type][$tab]['build modes'] = $modes;
+        $info[$obj_type][$tab]['view modes'] = $modes;
       }
       else {
         unset($info[$obj_type][$tab]);
@@ -198,16 +198,16 @@ function field_ui_build_modes_tabs($obj_type, $tab_selector = NULL) {
     }
   }
   if ($tab_selector) {
-    return isset($info[$obj_type][$tab_selector]) ? $info[$obj_type][$tab_selector]['build modes'] : array();
+    return isset($info[$obj_type][$tab_selector]) ? $info[$obj_type][$tab_selector]['view modes'] : array();
   }
   return $info[$obj_type];
 }
 
 /**
- * Implements hook_field_ui_build_modes_tabs() on behalf of other core modules.
+ * Implements hook_field_ui_view_modes_tabs() on behalf of other core modules.
  *
  * @return
- *   An array describing the build modes defined by the module, grouped by tabs.
+ *   An array describing the view modes defined by the module, grouped by tabs.
  *
  * A module can add its render modes to a tab defined by another module.
  * Expected format:
@@ -215,7 +215,7 @@ function field_ui_build_modes_tabs($obj_type, $tab_selector = NULL) {
  *   array(
  *     'tab1' => array(
  *       'title' => t('The human-readable title of the tab'),
- *       'build modes' => array('mymodule_mode1', 'mymodule_mode2'),
+ *       'view modes' => array('mymodule_mode1', 'mymodule_mode2'),
  *     ),
  *     'tab2' => array(
  *       // ...
@@ -223,23 +223,23 @@ function field_ui_build_modes_tabs($obj_type, $tab_selector = NULL) {
  *   );
  * @endcode
  */
-function field_ui_field_ui_build_modes_tabs() {
+function field_ui_field_ui_view_modes_tabs() {
   $modes = array(
     'basic' => array(
       'title' => t('Basic'),
-      'build modes' => array('teaser', 'full'),
+      'view modes' => array('teaser', 'full'),
     ),
     'rss' => array(
       'title' => t('RSS'),
-      'build modes' => array('rss'),
+      'view modes' => array('rss'),
     ),
     'print' => array(
       'title' => t('Print'),
-      'build modes' => array('print'),
+      'view modes' => array('print'),
     ),
     'search' => array(
       'title' => t('Search'),
-      'build modes' => array('search_index', 'search_result'),
+      'view modes' => array('search_index', 'search_result'),
     ),
   );
   return $modes;

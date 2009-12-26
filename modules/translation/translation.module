@@ -169,7 +169,7 @@ function translation_form_alter(&$form, &$form_state, $form_id) {
  * Display translation links with native language names, if this node
  * is part of a translation set.
  */
-function translation_node_view($node, $build_mode) {
+function translation_node_view($node, $view_mode) {
   if (isset($node->tnid) && $translations = translation_node_get_translations($node->tnid)) {
     $path = 'node/' . $node->nid;
     $links = language_negotiation_get_switch_links(LANGUAGE_TYPE_CONTENT, $path);

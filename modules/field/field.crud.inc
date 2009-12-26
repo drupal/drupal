@@ -149,11 +149,11 @@
  *     - module (string, read-only)
  *         The name of the module that implements the widget type.
  * - display (array)
- *     A sub-array of key/value pairs identifying build modes and the way the
- *     field values should be displayed in each build mode.
+ *     A sub-array of key/value pairs identifying view modes and the way the
+ *     field values should be displayed in each mode.
  *     - full (array)
  *         A sub-array of key/value pairs of the display options to be used
- *         when the field is being displayed in the "full" build mode.
+ *         when the field is being displayed in the "full" view mode.
  *         - label (string)
  *             Position of the label. 'inline', 'above' and 'hidden' are the
  *             values recognized by the default 'field' theme implementation.
@@ -164,12 +164,12 @@
  *             the formatter.
  *        - weight (float)
  *            The weight of the field relative to the other object components
- *            displayed in this build mode.
+ *            displayed in this view mode.
  *         - module (string, read-only)
  *             The name of the module which implements the display formatter.
  *     - teaser
  *         - ...
- *     - other_build_mode
+ *     - other_mode
  *        - ...
  *
  * Bundles are represented by two strings, an entity type and a bundle name.
@@ -588,7 +588,7 @@ function field_delete_field($field_name) {
  *     - settings: each omitted setting is given the default value specified in
  *       hook_field_widget_info().
  *   - display:
- *     Settings for the 'full' build mode will be added, and each build mode
+ *     Settings for the 'full' view mode will be added, and each view mode
  *     will be completed with the following default values:
  *     - label: 'above'
  *     - type: the default formatter specified in hook_field_info().
@@ -621,7 +621,7 @@ function field_create_instance($instance) {
 
   // TODO: Check that the widget type is known and can handle the field type ?
   // TODO: Check that the formatters are known and can handle the field type ?
-  // TODO: Check that the display build modes are known for the object type ?
+  // TODO: Check that the display view modes are known for the object type ?
   // Those checks should probably happen in _field_write_instance() ?
   // Problem : this would mean that a UI module cannot update an instance with a disabled formatter.
 
@@ -722,23 +722,23 @@ function _field_write_instance($instance, $update = FALSE) {
   $instance['widget']['module'] = $widget_type['module'];
   $instance['widget']['settings'] += field_info_widget_settings($instance['widget']['type']);
 
-  // Make sure there is at least display info for the 'full' build mode.
+  // Make sure there is at least display info for the 'full' view mode.
   $instance['display'] += array(
     'full' => array(),
   );
-  // Set default display settings for each build mode.
-  foreach ($instance['display'] as $build_mode => $display) {
-    $instance['display'][$build_mode] += array(
+  // Set default display settings for each view mode.
+  foreach ($instance['display'] as $view_mode => $display) {
+    $instance['display'][$view_mode] += array(
       'label' => 'above',
       // TODO: what if no 'default_formatter' specified ?
       'type' => $field_type['default_formatter'],
       'settings' => array(),
       'weight' => 0,
     );
-    $formatter_type = field_info_formatter_types($instance['display'][$build_mode]['type']);
+    $formatter_type = field_info_formatter_types($instance['display'][$view_mode]['type']);
     // TODO : 'hidden' will raise PHP warnings.
-    $instance['display'][$build_mode]['module'] = $formatter_type['module'];
-    $instance['display'][$build_mode]['settings'] += field_info_formatter_settings($instance['display'][$build_mode]['type']);
+    $instance['display'][$view_mode]['module'] = $formatter_type['module'];
+    $instance['display'][$view_mode]['settings'] += field_info_formatter_settings($instance['display'][$view_mode]['type']);
   }
 
   // The serialized 'data' column contains everything from $instance that does

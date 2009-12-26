@@ -107,6 +107,11 @@ function comment_entity_info() {
         'bundle' => 'type',
       ),
       'bundles' => array(),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Full comment'),
+        ),
+      ),
       'static cache' => FALSE,
     ),
   );
@@ -484,11 +489,11 @@ function theme_comment_block() {
 /**
  * Implements hook_node_view().
  */
-function comment_node_view($node, $build_mode) {
+function comment_node_view($node, $view_mode) {
   $links = array();
 
   if ($node->comment) {
-    if ($build_mode == 'rss') {
+    if ($view_mode == 'rss') {
       if ($node->comment != COMMENT_NODE_HIDDEN) {
         // Add a comments RSS element which is a URL to the comments of this node.
         $node->rss_elements[] = array(
@@ -497,7 +502,7 @@ function comment_node_view($node, $build_mode) {
         );
       }
     }
-    elseif ($build_mode == 'teaser') {
+    elseif ($view_mode == 'teaser') {
       // Main page: display the number of comments that have been posted.
       if (user_access('access comments')) {
         if (!empty($node->comment_count)) {
@@ -576,7 +581,7 @@ function comment_node_view($node, $build_mode) {
     // Only append comments when we are building a node on its own node detail
     // page. We compare $node and $page_node to ensure that comments are not
     // appended to other nodes shown on the page, for example a node_reference
-    // displayed in 'full' build mode within another node.
+    // displayed in 'full' view mode within another node.
     if ($node->comment && node_is_page($node) && empty($node->in_preview) && user_access('access comments')) {
       $node->content['comments'] = comment_node_page_additions($node);
     }
@@ -778,15 +783,15 @@ function comment_prepare_thread(&$comments) {
  *   A comment object.
  * @param $node
  *   The node the comment is attached to.
- * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser'...
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  *
  * @return
  *   An array as expected by drupal_render().
  */
-function comment_view($comment, $node, $build_mode = 'full') {
+function comment_view($comment, $node, $view_mode = 'full') {
   // Populate $comment->content with a render() array.
-  comment_build_content($comment, $node, $build_mode);
+  comment_build_content($comment, $node, $view_mode);
 
   $build = $comment->content;
   // We don't need duplicate rendering info in comment->content.
@@ -796,7 +801,7 @@ function comment_view($comment, $node, $build_mode = 'full') {
     '#theme' => 'comment',
     '#comment' => $comment,
     '#node' => $node,
-    '#build_mode' => $build_mode,
+    '#view_mode' => $view_mode,
   );
 
   $prefix = '';
@@ -831,16 +836,16 @@ function comment_view($comment, $node, $build_mode = 'full') {
  * Builds a structured array representing the comment's content.
  *
  * The content built for the comment (field values, comments, file attachments or
- * other comment components) will vary depending on the $build_mode parameter.
+ * other comment components) will vary depending on the $view_mode parameter.
  *
  * @param $comment
  *   A comment object.
  * @param $node
  *   The node the comment is attached to.
- * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser'...
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  */
-function comment_build_content($comment, $node, $build_mode = 'full') {
+function comment_build_content($comment, $node, $view_mode = 'full') {
   // Remove previously built content, if exists.
   $comment->content = array();
 
@@ -850,8 +855,8 @@ function comment_build_content($comment, $node, $build_mode = 'full') {
   );
 
   // Build fields content.
-  field_attach_prepare_view('comment', array($comment->cid => $comment), $build_mode);
-  $comment->content += field_attach_view('comment', $comment, $build_mode);
+  field_attach_prepare_view('comment', array($comment->cid => $comment), $view_mode);
+  $comment->content += field_attach_view('comment', $comment, $view_mode);
 
   if (empty($comment->in_preview)) {
     $comment->content['links']['comment'] = array(
@@ -862,7 +867,7 @@ function comment_build_content($comment, $node, $build_mode = 'full') {
   }
 
   // Allow modules to make their own additions to the comment.
-  module_invoke_all('comment_view', $comment, $build_mode);
+  module_invoke_all('comment_view', $comment, $view_mode);
 }
 
 /**
@@ -933,21 +938,21 @@ function comment_links($comment, $node) {
  *   An array of comments as returned by comment_load_multiple().
  * @param $node
  *   The node the comments are attached to.
- * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser'...
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  * @param $weight
  *   An integer representing the weight of the first comment in the list.
  * @return
  *   An array in the format expected by drupal_render().
  */
-function comment_view_multiple($comments, $node, $build_mode = 'full', $weight = 0) {
-  field_attach_prepare_view('comment', $comments, $build_mode);
+function comment_view_multiple($comments, $node, $view_mode = 'full', $weight = 0) {
+  field_attach_prepare_view('comment', $comments, $view_mode);
 
   $build = array(
     '#sorted' => TRUE,
   );
   foreach ($comments as $comment) {
-    $build[$comment->cid] = comment_view($comment, $node, $build_mode);
+    $build[$comment->cid] = comment_view($comment, $node, $view_mode);
     $build[$comment->cid]['#weight'] = $weight;
     $weight++;
   }
@@ -1408,7 +1413,7 @@ function comment_save($comment) {
   catch (Exception $e) {
     $transaction->rollback('comment', $e->getMessage(), array(), WATCHDOG_ERROR);
   }
-  
+
 }
 
 /**

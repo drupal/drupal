@@ -630,11 +630,11 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('rss.xml');
 
-    // Check that content added in 'rss' build mode appear in RSS feed.
+    // Check that content added in 'rss' view mode appear in RSS feed.
     $rss_only_content = t('Extra data that should appear only in the RSS feed for node !nid.', array('!nid' => $node->nid));
     $this->assertText($rss_only_content, t('Node content designated for RSS appear in RSS feed.'));
 
-    // Check that content added in build modes other than 'rss' doesn't
+    // Check that content added in view modes other than 'rss' doesn't
     // appear in RSS feed.
     $non_rss_content = t('Extra data that should appear everywhere except the RSS feed for node !nid.', array('!nid' => $node->nid));
     $this->assertNoText($non_rss_content, t('Node content not designed for RSS doesn\'t appear in RSS feed.'));
@@ -648,7 +648,7 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
     $this->assertRaw(format_xml_elements(array($test_element)), t('Extra RSS elements appear in RSS feed.'));
     $this->assertRaw($test_ns, t('Extra namespaces appear in RSS feed.'));
 
-    // Check that content added in 'rss' build mode doesn't appear when
+    // Check that content added in 'rss' view mode doesn't appear when
     // viewing node.
     $this->drupalGet("node/$node->nid");
     $this->assertNoText($rss_only_content, t('Node content designed for RSS doesn\'t appear when viewing node.'));

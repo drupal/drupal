@@ -469,8 +469,8 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     if (in_array($key, $form['#fields'])) {
       $instance = field_read_instance($obj_type, $key, $bundle);
       $instance['widget']['weight'] = $values['weight'];
-      foreach($instance['display'] as $build_mode => $display) {
-        $instance['display'][$build_mode]['weight'] = $values['weight'];
+      foreach($instance['display'] as $view_mode => $display) {
+        $instance['display'][$view_mode]['weight'] = $values['weight'];
       }
       field_update_instance($instance);
     }
@@ -568,9 +568,9 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
  * Menu callback; presents a listing of fields display settings for a content type.
  *
  * This form includes form widgets to select which fields appear in teaser and
- * full build modes, and how the field labels should be rendered.
+ * full view modes, and how the field labels should be rendered.
  */
-function field_ui_display_overview_form($form, &$form_state, $obj_type, $bundle, $build_modes_selector = 'basic') {
+function field_ui_display_overview_form($form, &$form_state, $obj_type, $bundle, $view_modes_selector = 'basic') {
   $bundle = field_extract_bundle($obj_type, $bundle);
 
   field_ui_inactive_message($obj_type, $bundle);
@@ -579,14 +579,14 @@ function field_ui_display_overview_form($form, &$form_state, $obj_type, $bundle,
   // Gather type information.
   $instances = field_info_instances($obj_type, $bundle);
   $field_types = field_info_field_types();
-  $build_modes = field_ui_build_modes_tabs($obj_type, $build_modes_selector);
+  $view_modes = field_ui_view_modes_tabs($obj_type, $view_modes_selector);
 
   $form += array(
     '#tree' => TRUE,
     '#object_type' => $obj_type,
     '#bundle' => $bundle,
     '#fields' => array_keys($instances),
-    '#contexts' => $build_modes_selector,
+    '#contexts' => $view_modes_selector,
   );
 
   if (empty($instances)) {
@@ -612,14 +612,14 @@ function field_ui_display_overview_form($form, &$form_state, $obj_type, $bundle,
 
     $formatter_options = field_ui_formatter_options($field['type']);
     $formatter_options['hidden'] = t('<Hidden>');
-    foreach ($build_modes as $build_mode => $label) {
-      $display = isset($instance['display'][$build_mode]) ? $instance['display'][$build_mode] : $instance['display']['full'];
-      $form[$name][$build_mode]['label'] = array(
+    foreach ($view_modes as $view_mode) {
+      $display = isset($instance['display'][$view_mode]) ? $instance['display'][$view_mode] : $instance['display']['full'];
+      $form[$name][$view_mode]['label'] = array(
         '#type' => 'select',
         '#options' => $label_options,
         '#default_value' => $display['label'],
       );
-      $form[$name][$build_mode]['type'] = array(
+      $form[$name][$view_mode]['type'] = array(
         '#type' => 'select',
         '#options' => $formatter_options,
         '#default_value' => $display['type'],
@@ -631,7 +631,6 @@ function field_ui_display_overview_form($form, &$form_state, $obj_type, $bundle,
   return $form;
 }
 
-
 /**
  * Theme preprocess function for field_ui-display-overview-form.tpl.php.
  */
@@ -639,7 +638,13 @@ function template_preprocess_field_ui_display_overview_form(&$vars) {
   $form = &$vars['form'];
 
   $contexts_selector = $form['#contexts'];
-  $vars['contexts'] = field_ui_build_modes_tabs($form['#object_type'], $contexts_selector);
+  $view_modes = field_ui_view_modes_tabs($form['#object_type'], $contexts_selector);
+  $entity_info = entity_get_info($form['#object_type']);
+  $view_modes_info = $entity_info['view modes'];
+  $vars['contexts'] = array();
+  foreach ($view_modes as $view_mode) {
+    $vars['contexts'][$view_mode] = $view_modes_info[$view_mode]['label'];
+  }
 
   $order = _field_ui_overview_order($form, $form['#fields']);
   if (empty($order)) {
@@ -676,9 +681,9 @@ function field_ui_display_overview_form_submit($form, &$form_state) {
   foreach ($form_values as $key => $values) {
     if (in_array($key, $form['#fields'])) {
       $instance = field_info_instance($form['#object_type'], $key, $form['#bundle']);
-      foreach ($instance['display'] as $build_mode => $display) {
-        if (isset($values[$build_mode])) {
-          $instance['display'][$build_mode] = array_merge($instance['display'][$build_mode], $values[$build_mode]);
+      foreach ($instance['display'] as $view_mode => $display) {
+        if (isset($values[$view_mode])) {
+          $instance['display'][$view_mode] = array_merge($instance['display'][$view_mode], $values[$view_mode]);
         }
       }
       field_update_instance($instance);
