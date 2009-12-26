@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.api.php,v 1.14 2009/12/21 13:47:32 dries Exp $
+// $Id: comment.api.php,v 1.15 2009/12/26 16:50:08 dries Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function hook_comment_view($comment) {
  */
 function hook_comment_view_alter($build) {
   // Check for the existence of a field added by another module.
-  if ($build['#build_mode'] == 'full' && isset($build['an_additional_field'])) {
+  if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
   }

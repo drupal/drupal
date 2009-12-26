@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.field.inc,v 1.5 2009/12/11 16:49:40 dries Exp $
+// $Id: locale.field.inc,v 1.6 2009/12/26 16:50:09 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function locale_field_fallback_view(&$output, $context) {
           // Cache fallback values per language as fields might have different
           // fallback values.
           if (!isset($fallback_values[$langcode])) {
-            $fallback_values[$langcode] = field_attach_view($context['obj_type'], $context['object'], $context['build_mode'], $langcode);
+            $fallback_values[$langcode] = field_attach_view($context['obj_type'], $context['object'], $context['view_mode'], $langcode);
           }
           // We are done, skip to the next field.
           $output[$field_name] = $fallback_values[$langcode][$field_name];

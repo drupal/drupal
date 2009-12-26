@@ -1,5 +1,5 @@
 <?php
-// $Id: field.tpl.php,v 1.9 2009/12/26 12:48:14 dries Exp $
+// $Id: field.tpl.php,v 1.10 2009/12/26 16:50:08 dries Exp $
 
 /**
  * @file field.tpl.php
@@ -24,7 +24,7 @@
  *
  * Other variables:
  * - $object: The object to which the field is attached.
- * - $build_mode: Build mode, e.g. 'full', 'teaser'...
+ * - $view_mode: View mode, e.g. 'full', 'teaser'...
  * - $field_name: The field name.
  * - $field_type: The field type.
  * - $field_name_css: The css-compatible field name.
