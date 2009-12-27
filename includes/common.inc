@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1070 2009/12/26 16:50:08 dries Exp $
+// $Id: common.inc,v 1.1071 2009/12/27 15:23:49 dries Exp $
 
 /**
  * @file
@@ -6326,7 +6326,6 @@ function entity_get_info($entity_type = NULL) {
 function entity_info_cache_clear() {
   drupal_static_reset('entity_get_info');
   cache_clear_all('entity_info', 'cache');
-  drupal_static_reset('entity_view_mode_info');
 }
 
 /**
