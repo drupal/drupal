@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.32 2009/12/25 10:17:22 webchick Exp $
+// $Id: comment.pages.inc,v 1.33 2009/12/27 03:43:45 webchick Exp $
 
 /**
  * @file
@@ -71,6 +71,10 @@ function comment_reply($node, $pid = NULL) {
           drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
           drupal_goto("node/$node->nid");
         }
+      }
+      // This is the case where the comment is in response to a node. Display the node.
+      elseif (user_access('access content')) {
+        $build['comment_node'] = node_view($node);
       }
 
       // Should we show the reply box?
