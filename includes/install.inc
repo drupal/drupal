@@ -479,21 +479,6 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 }
 
 /**
- * Get list of all .install files.
- *
- * @param $module_list
- *   An array of modules to search for their .install files.
- */
-function drupal_get_install_files($module_list = array()) {
-  $installs = array();
-  foreach ($module_list as $module) {
-    $installs = array_merge($installs, drupal_system_listing('/' . $module . '.install$/', 'modules'));
-  }
-  return $installs;
-}
-
-
-/**
  * Verify an install profile for installation.
  *
  * @param $install_state
@@ -988,14 +973,11 @@ function drupal_check_profile($profile) {
 
   $info = install_profile_info($profile);
 
-  // Get a list of all .install files.
-  $installs = drupal_get_install_files($info['dependencies']);
-
-  // Collect requirement testing results
+  // Collect requirement testing results.
   $requirements = array();
-  foreach ($installs as $install) {
-    require_once DRUPAL_ROOT . '/' . $install->uri;
-    $function = $install->name . '_requirements';
+  foreach ($info['dependencies'] as $module) {
+    module_load_install($module);
+    $function = $module . '_requirements';
     if (function_exists($function)) {
       $requirements = array_merge($requirements, $function('install'));
     }
@@ -1031,11 +1013,8 @@ function drupal_requirements_severity(&$requirements) {
  *   TRUE/FALSE depending on the requirements are in place.
  */
 function drupal_check_module($module) {
-  // Include install file
-  $install = drupal_get_install_files(array($module));
-  if (isset($install[$module])) {
-    require_once DRUPAL_ROOT . '/' . $install[$module]->uri;
-
+  module_load_install($module);
+  if (module_hook($module, 'requirements')) {
     // Check requirements
     $requirements = module_invoke($module, 'requirements', 'install');
     if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {

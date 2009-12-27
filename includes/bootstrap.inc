@@ -658,12 +658,14 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   // when a database connection fails.
   else {
     try {
-      $file = db_query("SELECT filename FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField();
-      if (file_exists($file)) {
-        $files[$type][$name] = $file;
+      if (function_exists('db_query')) {
+        $file = db_query("SELECT filename FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField();
+        if (file_exists($file)) {
+          $files[$type][$name] = $file;
+        }
       }
     }
-    catch (PDOException $e) {
+    catch (Exception $e) {
       // The database table may not exist because Drupal is not yet installed,
       // or the database might be down. We have a fallback for this case so we
       // hide the error completely.
@@ -675,21 +677,25 @@ function drupal_get_filename($type, $name, $filename = NULL) {
       $dir = $type . 's';
       if ($type == 'theme_engine') {
         $dir = 'themes/engines';
-        $mask = "/$name\.engine$/";
+        $extension = 'engine';
       }
       elseif ($type == 'theme') {
-        $mask = "/$name\.info$/";
+        $extension = 'info';
       }
       else {
-        $mask = "/$name\.$type$/";
+        $extension = $type;
       }
 
       if (!function_exists('drupal_system_listing')) {
         require_once DRUPAL_ROOT . '/includes/common.inc';
       }
-      $matches = drupal_system_listing($mask, $dir, 'name', 0);
-      if (!empty($matches[$name]->uri)) {
-        $files[$type][$name] = $matches[$name]->uri;
+      // Scan the appropriate directories for all files with the requested
+      // extension, not just the file we are currently looking for. This
+      // prevents unnecessary scans from being repeated when this function is
+      // called more than once in the same page request.
+      $matches = drupal_system_listing("/\.$extension$/", $dir, 'name', 0);
+      foreach ($matches as $matched_name => $file) {
+        $files[$type][$matched_name] = $file->uri;
       }
     }
   }
