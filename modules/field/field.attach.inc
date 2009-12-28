@@ -134,7 +134,6 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *   - update
  *   - delete
  *   - delete revision
- *   - sanitize
  *   - view
  *   - prepare translation
  * @param $obj_type
@@ -240,6 +239,7 @@ function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $options
  * @param $op
  *   Possible operations include:
  *   - load
+ *   - prepare_view
  *   For all other operations, use _field_invoke() / field_invoke_default()
  *   instead.
  * @param $obj_type
@@ -1162,20 +1162,19 @@ function field_attach_prepare_view($obj_type, $objects, $view_mode = 'full') {
  *   A renderable array for the field values.
  */
 function field_attach_view($obj_type, $object, $view_mode = 'full', $langcode = NULL) {
-  // If no language is provided use the current UI language.
+  // Invoke field_default_view(). If no language is provided, use the current
+  // UI language.
   $options = array('language' => field_multilingual_valid_language($langcode, FALSE));
-
-  // Let field modules sanitize their data for output.
   $null = NULL;
-  _field_invoke('sanitize', $obj_type, $object, $null, $null, $options);
-
   $output = _field_invoke_default('view', $obj_type, $object, $view_mode, $null, $options);
 
   // Add custom weight handling.
   list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
-  $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $output['#pre_render'][] = '_field_extra_weights_pre_render';
   $output['#extra_fields'] = field_extra_fields($bundle);
+
+  // Include CSS styles.
+  $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
 
   // Let other modules alter the renderable array.
   $context = array(
