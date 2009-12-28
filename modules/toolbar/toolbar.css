@@ -1,4 +1,4 @@
-/* $Id: toolbar.css,v 1.14 2009/12/22 14:05:09 dries Exp $ */
+/* $Id: toolbar.css,v 1.15 2009/12/28 20:42:40 dries Exp $ */
 
 body.toolbar {
   padding-top: 2.2em;
@@ -68,7 +68,7 @@ body.toolbar-drawer {
  */
 #toolbar div.toolbar-menu {
   background: #000;
-  line-height: 1.84;
+  line-height: 20px;
   padding: 5px 50px 5px 10px;
   position: relative;
 }
