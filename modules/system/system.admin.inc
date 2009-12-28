@@ -2342,7 +2342,7 @@ function theme_admin_block_content($variables) {
     $output = '<dl class="admin-list">';
     foreach ($content as $item) {
       $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
-      $output .= '<dd>' . $item['description'] . '</dd>';
+      $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
     }
     $output .= '</dl>';
   }
