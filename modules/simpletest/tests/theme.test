@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.test,v 1.9 2009/10/16 08:27:41 webchick Exp $
+// $Id: theme.test,v 1.10 2009/12/28 20:58:08 dries Exp $
 
 /**
  * @file
@@ -91,5 +91,33 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
     $this->assertFalse(isset($js['misc/tableheader.js']), t('tableheader.js was not included because $sticky = FALSE.'));
     $this->assertNoRaw('sticky-enabled',  t('Table does not have a class of sticky-enabled because $sticky = FALSE.'));
     drupal_static_reset('drupal_add_js');
+  }
+}
+
+/**
+ * Unit tests for theme_item_list().
+ */
+class ThemeItemListUnitTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Theme item list',
+      'description' => 'Test the theme_item_list() function.',
+      'group' => 'Theme',
+    );
+  }
+
+  /**
+   * Test nested list rendering.
+   */
+  function testNestedList() {
+    $items = array('a', array('data' => 'b', 'children' => array('c', 'd')), 'e');
+    $expected = '<div class="item-list"><ul><li class="first">a</li>
+<li>b<div class="item-list"><ul><li class="first">c</li>
+<li class="last">d</li>
+</ul></div></li>
+<li class="last">e</li>
+</ul></div>';
+    $output = theme('item_list', array('items' => $items, 'type' => 'ul', 'title' => NULL, 'attributes' => array()));
+    $this->assertIdentical($expected, $output, 'Nested list is rendered correctly.');
   }
 }
