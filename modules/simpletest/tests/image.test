@@ -21,7 +21,8 @@ class ImageToolkitTestCase extends DrupalWebTestCase {
     $this->toolkit = 'test';
 
     // Pick a file for testing.
-    $this->file = $this->originalFileDirectory . '/simpletest/image-test.png';
+    $file = current($this->drupalGetTestFiles('image'));
+    $this->file = $file->uri;
 
     // Setup a dummy image to work with, this replicate image_load() so we
     // can avoid calling it.
@@ -382,7 +383,7 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
     foreach ($files as $file) {
       foreach ($operations as $op => $values) {
         // Load up a fresh image.
-        $image = image_load($this->originalFileDirectory . '/simpletest/' . $file, 'gd');
+        $image = image_load(drupal_get_path('module', 'simpletest') . '/files/' . $file, 'gd');
         if (!$image) {
           $this->fail(t('Could not load image %file.', array('%file' => $file)));
           continue 2;
