@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.184 2009/12/25 10:30:07 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.185 2009/12/28 12:06:49 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -691,6 +691,11 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected $session_id = NULL;
 
   /**
+   * Whether the files were copied to the test files directory.
+   */
+  protected $generatedTestFiles = FALSE;
+
+  /**
    * Constructor for DrupalWebTestCase.
    */
   function __construct($test_id = NULL) {
@@ -839,13 +844,36 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   List of files that match filter.
    */
   protected function drupalGetTestFiles($type, $size = NULL) {
-    $files = array();
+    if (empty($this->generatedTestFiles)) {
+      // Generate binary test files.
+      $lines = array(64, 1024);
+      $count = 0;
+      foreach ($lines as $line) {
+        simpletest_generate_file('binary-' . $count++, 64, $line, 'binary');
+      }
 
+      // Generate text test files.
+      $lines = array(16, 256, 1024, 2048, 20480);
+      $count = 0;
+      foreach ($lines as $line) {
+        simpletest_generate_file('text-' . $count++, 64, $line);
+      }
+
+      // Copy other test files from simpletest.
+      $original = drupal_get_path('module', 'simpletest') . '/files';
+      $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
+      $destination_path = file_directory_path('public');
+      foreach ($files as $file) {
+        file_unmanaged_copy($file->uri, $destination_path);
+      }
+
+      $this->generatedTestFiles = TRUE;
+    }
+
+    $files = array();
     // Make sure type is valid.
     if (in_array($type, array('binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'))) {
-      // Use original file directory instead of one created during setUp().
-      $path = $this->originalFileDirectory . '/simpletest';
-      $files = file_scan_directory($path, '/' . $type . '\-.*/');
+      $files = file_scan_directory(file_directory_path('public'), '/' . $type . '\-.*/');
 
       // If size is set then remove any files that are not of that size.
       if ($size !== NULL) {
@@ -1088,6 +1116,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     file_prepare_directory($public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     file_prepare_directory($private_files_directory, FILE_CREATE_DIRECTORY);
     file_prepare_directory($temp_files_directory, FILE_CREATE_DIRECTORY);
+    $this->generatedTestFiles = FALSE;
 
     // Log fatal errors.
     ini_set('log_errors', 1);
