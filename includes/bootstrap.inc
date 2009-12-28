@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.336 2009/12/27 03:37:54 webchick Exp $
+// $Id: bootstrap.inc,v 1.337 2009/12/28 10:48:51 dries Exp $
 
 /**
  * @file
@@ -2098,8 +2098,22 @@ function _registry_check_code($type, $name = NULL) {
  * each interface or class in the database.
  */
 function registry_rebuild() {
+  system_rebuild_module_data();
+  registry_update();
+}
+
+/**
+ * Update the registry based on the latest files listed in the database.
+ *
+ * This function should be used when system_rebuild_module_data() does not need
+ * to be called, because it is already known that the list of files in the
+ * {system} table matches those in the file system.
+ *
+ * @see registry_rebuild()
+ */
+function registry_update() {
   require_once DRUPAL_ROOT . '/includes/registry.inc';
-  _registry_rebuild();
+  _registry_update();
 }
 
 /**
