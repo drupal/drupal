@@ -273,9 +273,9 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     $this->assertTrue($this->cookies[$secure_session_name]['secure'], 'The secure cookie has the secure attribute');
     // Check insecure cookie is not set.
     $this->assertFalse(isset($this->cookies[$insecure_session_name]));
-    $args = array_fill_keys(array(':sid', ':ssid'), $this->cookies[$secure_session_name]['value']);
-    $this->assertTrue(db_query('SELECT sid FROM {sessions} WHERE sid = :sid AND ssid = :ssid', $args)->fetchField(), 'Session has both SIDs');
-    $cookie = $secure_session_name . '=' . $args[':ssid'];
+    $ssid = $this->cookies[$secure_session_name]['value'];
+    $this->assertSessionIds($ssid, $ssid, 'Session has two secure SIDs');
+    $cookie = $secure_session_name . '=' . $ssid;
 
     // Verify that user is logged in on secure URL.
     $this->curlClose();
@@ -330,14 +330,13 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     $this->assertTrue($this->cookies[$secure_session_name]['secure'], 'The secure cookie has the secure attribute');
     // Check insecure cookie on secure page.
     $this->assertFalse($this->cookies[$insecure_session_name]['secure'], 'The insecure cookie does not have the secure attribute');
-    $args = array(
-      ':sid' => $this->cookies[$insecure_session_name]['value'],
-      ':ssid' => $this->cookies[$secure_session_name]['value'],
-    );
-    $this->assertTrue(db_query('SELECT sid FROM {sessions} WHERE sid = :sid AND ssid = :ssid', $args)->fetchField(), 'Session has both SIDs');
+
+    $sid = $this->cookies[$insecure_session_name]['value'];
+    $ssid = $this->cookies[$secure_session_name]['value'];
+    $this->assertSessionIds($sid, $ssid, 'Session has both secure and insecure SIDs');
     $cookies = array(
-      $insecure_session_name . '=' . $args[':sid'],
-      $secure_session_name . '=' . $args[':ssid'],
+      $insecure_session_name . '=' . $sid,
+      $secure_session_name . '=' . $ssid,
     );
 
     foreach ($cookies as $cookie_key => $cookie) {
@@ -355,6 +354,28 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
         }
       }
     }
+  }
+
+  /**
+   * Test that there exists a session with two specific session IDs.
+   *
+   * @param $sid
+   *   The insecure session ID to search for.
+   * @param $ssid
+   *   The secure session ID to search for.
+   * @param $assertion_text
+   *   The text to display when we perform the assertion.
+   *
+   * @return
+   *   The result of assertTrue() that there's a session in the system that
+   *   has the given insecure and secure session IDs.
+   */
+  protected function assertSessionIds($sid, $ssid, $assertion_text) {
+    $args = array(
+      ':sid' => $sid,
+      ':ssid' => $ssid,
+    );
+    return $this->assertTrue(db_query('SELECT sid FROM {sessions} WHERE sid = :sid AND ssid = :ssid', $args)->fetchField(), $assertion_text);
   }
 
   protected function httpsUrl($url) {
