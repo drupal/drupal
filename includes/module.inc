@@ -319,8 +319,8 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
     system_list_reset();
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
-    // Force to regenerate the stored list of hook implementations.
-    registry_rebuild();
+    // Update the registry to include the new enabled module.
+    registry_update();
     // Refresh the schema to include the new enabled module.
     drupal_get_schema(NULL, TRUE);
 
@@ -383,8 +383,8 @@ function module_disable($module_list) {
     // Invoke hook_modules_disabled before disabling modules,
     // so we can still call module hooks to get information.
     module_invoke_all('modules_disabled', $invoke_modules);
-    // Force to regenerate the stored list of hook implementations.
-    registry_rebuild();
+    // Update the registry to remove the newly-disabled module.
+    registry_update();
   }
 
   // If there remains no more node_access module, rebuilding will be

@@ -17,9 +17,9 @@
  */
 
 /**
- * @see registry_rebuild.
+ * @see registry_update().
  */
-function _registry_rebuild() {
+function _registry_update() {
 
   // The registry serves as a central autoloader for all classes, including
   // the database query builders. However, the registry rebuild process
@@ -35,11 +35,12 @@ function _registry_rebuild() {
   require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/query.inc';
 
   // Get current list of modules and their files.
-  $modules = system_rebuild_module_data();
+  $modules = db_query("SELECT * FROM {system} WHERE type = 'module'")->fetchAll();
   // Get the list of files we are going to parse.
   $files = array();
   foreach ($modules as &$module) {
-    $dir = dirname($module->uri);
+    $module->info = unserialize($module->info);
+    $dir = dirname($module->filename);
 
     // Store the module directory for use in hook_registry_files_alter().
     $module->dir = $dir;

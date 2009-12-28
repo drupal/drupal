@@ -2192,7 +2192,7 @@ function hook_disable() {
  *   files found in each enabled module's info file and the core includes
  *   directory. The array is keyed by the file path and contains an array of
  *   the related module's name and weight as used internally by
- *   _registry_rebuild() and related functions.
+ *   _registry_update() and related functions.
  *
  *   For example:
  *   @code
@@ -2202,17 +2202,17 @@ function hook_disable() {
  *     );
  *   @endcode
  * @param $modules
- *   List of all the modules provided as returned by drupal_system_listing().
- *   The list also contains the .info file information in the property 'info'.
- *   An additional 'dir' property has been added to the module information
- *   which provides the path to the directory in which the module resides. The
- *   example shows how to take advantage of the property both properties.
+ *   An array containing all module information stored in the {system} table.
+ *   Each element of the array also contains the module's .info file
+ *   information in the property 'info'. An additional 'dir' property has been
+ *   added to the module information which provides the path to the directory
+ *   in which the module resides. The example shows how to take advantage of
+ *   both properties.
  *
- * @see _registry_rebuild()
- * @see drupal_system_listing()
+ * @see _registry_update()
  * @see simpletest_test_get_all()
  */
-function hook_registry_files_alter(&$files, $module_cache) {
+function hook_registry_files_alter(&$files, $modules) {
   foreach ($modules as $module) {
     // Only add test files for disabled modules, as enabled modules should
     // already include any test files they provide.
