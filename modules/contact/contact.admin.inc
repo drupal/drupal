@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.18 2009/10/09 02:34:07 dries Exp $
+// $Id: contact.admin.inc,v 1.19 2009/12/28 11:53:49 dries Exp $
 
 /**
  * @file
@@ -24,8 +24,8 @@ function contact_category_list() {
   // Loop through the categories and add them to the table.
   foreach ($categories as $category) {
     $rows[] = array(
-      $category->category,
-      $category->recipients,
+      check_plain($category->category),
+      check_plain($category->recipients),
       ($category->selected ? t('Yes') : t('No')),
       l(t('Edit'), 'admin/structure/contact/edit/' . $category->cid),
       l(t('Delete'), 'admin/structure/contact/delete/' . $category->cid),
