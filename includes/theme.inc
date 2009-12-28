@@ -1926,7 +1926,8 @@ function theme_item_list($variables) {
         $data = $item;
       }
       if (count($children) > 0) {
-        $data .= theme_item_list($children, NULL, $type, $attributes); // Render nested list
+        // Render nested list.
+        $data .= theme_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
       }
       if ($i == 0) {
         $attributes['class'][] = 'first';

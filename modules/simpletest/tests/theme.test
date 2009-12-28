@@ -93,3 +93,31 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
     drupal_static_reset('drupal_add_js');
   }
 }
+
+/**
+ * Unit tests for theme_item_list().
+ */
+class ThemeItemListUnitTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Theme item list',
+      'description' => 'Test the theme_item_list() function.',
+      'group' => 'Theme',
+    );
+  }
+
+  /**
+   * Test nested list rendering.
+   */
+  function testNestedList() {
+    $items = array('a', array('data' => 'b', 'children' => array('c', 'd')), 'e');
+    $expected = '<div class="item-list"><ul><li class="first">a</li>
+<li>b<div class="item-list"><ul><li class="first">c</li>
+<li class="last">d</li>
+</ul></div></li>
+<li class="last">e</li>
+</ul></div>';
+    $output = theme('item_list', array('items' => $items, 'type' => 'ul', 'title' => NULL, 'attributes' => array()));
+    $this->assertIdentical($expected, $output, 'Nested list is rendered correctly.');
+  }
+}
