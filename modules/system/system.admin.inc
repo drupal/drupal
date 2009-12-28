@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.241 2009/12/24 16:54:56 webchick Exp $
+// $Id: system.admin.inc,v 1.242 2009/12/28 20:51:18 dries Exp $
 
 /**
  * @file
@@ -2342,7 +2342,7 @@ function theme_admin_block_content($variables) {
     $output = '<dl class="admin-list">';
     foreach ($content as $item) {
       $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
-      $output .= '<dd>' . $item['description'] . '</dd>';
+      $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
     }
     $output .= '</dl>';
   }
