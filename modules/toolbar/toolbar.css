@@ -68,7 +68,7 @@ body.toolbar-drawer {
  */
 #toolbar div.toolbar-menu {
   background: #000;
-  line-height: 1.84;
+  line-height: 20px;
   padding: 5px 50px 5px 10px;
   position: relative;
 }
