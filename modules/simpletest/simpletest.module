@@ -400,6 +400,35 @@ function simpletest_registry_files_alter(&$files, $modules) {
 }
 
 /**
+ * Generate test file.
+ */
+function simpletest_generate_file($filename, $width, $lines, $type = 'binary-text') {
+  $size = $width * $lines - $lines;
+
+  // Generate random text
+  $text = '';
+  for ($i = 0; $i < $size; $i++) {
+    switch ($type) {
+      case 'text':
+        $text .= chr(rand(32, 126));
+        break;
+      case 'binary':
+        $text .= chr(rand(0, 31));
+        break;
+      case 'binary-text':
+      default:
+        $text .= rand(0, 1);
+        break;
+    }
+  }
+  $text = wordwrap($text, $width - 1, "\n", TRUE) . "\n"; // Add \n for symetrical file.
+
+  // Create filename.
+  file_put_contents(file_directory_path() . '/' . $filename . '.txt', $text);
+  return $filename;
+}
+
+/**
  * Remove all temporary database tables and directories.
  */
 function simpletest_clean_environment() {
