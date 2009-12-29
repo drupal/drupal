@@ -1,5 +1,5 @@
 <?php
-// $Id: update.fetch.inc,v 1.25 2009/10/13 08:02:49 webchick Exp $
+// $Id: update.fetch.inc,v 1.26 2009/12/29 07:21:34 webchick Exp $
 
 /**
  * @file
@@ -309,7 +309,7 @@ function _update_get_fetch_url_base($project) {
  * @see update_requirements()
  */
 function _update_cron_notify() {
-  include_once DRUPAL_ROOT . '/includes/install.inc';
+  module_load_install('update');
   $status = update_requirements('runtime');
   $params = array();
   $notify_all = (variable_get('update_notification_threshold', 'all') == 'all');
