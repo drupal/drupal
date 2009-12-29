@@ -1,5 +1,5 @@
 <?php
-// $Id: updater.inc,v 1.2 2009/12/04 16:31:04 dries Exp $
+// $Id: updater.inc,v 1.3 2009/12/29 07:01:56 webchick Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ class Updater {
     $updaters = drupal_get_updaters();
     foreach ($updaters as $updater) {
       $class = $updater['class'];
-      if (call_user_func("{$class}::canUpdateDirectory", $directory)) {
+      if (call_user_func(array($class, 'canUpdateDirectory'), $directory)) {
         return $class;
       }
     }
