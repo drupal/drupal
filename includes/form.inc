@@ -1673,21 +1673,21 @@ function _form_set_value(&$form_values, $element, $parents, $value) {
   }
 }
 
-function form_options_flatten($array, $reset = TRUE) {
-  // $reset has been ignored here as the function recurses, retaining
-  // its value while recursing and resetting itself when called.
-  static $return;
+function form_options_flatten($array) {
+  // Always reset static var when first entering the recursion.
+  drupal_static_reset('_form_options_flatten');
+  return _form_options_flatten($array);
+}
 
-  if ($reset) {
-    $return = array();
-  }
+function _form_options_flatten($array) {
+  $return = &drupal_static(__FUNCTION__);
 
   foreach ($array as $key => $value) {
     if (is_object($value)) {
-      form_options_flatten($value->option, FALSE);
+      _form_options_flatten($value->option);
     }
     elseif (is_array($value)) {
-      form_options_flatten($value, FALSE);
+      _form_options_flatten($value);
     }
     else {
       $return[$key] = 1;
