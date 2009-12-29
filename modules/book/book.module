@@ -213,6 +213,17 @@ function _book_outline_remove_access($node) {
 }
 
 /**
+ * Implements hook_admin_paths().
+ */
+function book_admin_paths() {
+  $paths = array(
+    'node/*/outline' => TRUE,
+    'node/*/outline/remove' => TRUE,
+  );
+  return $paths;
+}
+
+/**
  * Implements hook_init().
  */
 function book_init() {

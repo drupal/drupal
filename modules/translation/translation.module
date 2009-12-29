@@ -85,6 +85,16 @@ function _translation_tab_access($node) {
 }
 
 /**
+ * Implements hook_admin_paths().
+ */
+function translation_admin_paths() {
+  $paths = array(
+    'node/*/translate' => TRUE,
+  );
+  return $paths;
+}
+
+/**
  * Implements hook_permission().
  */
 function translation_permission() {

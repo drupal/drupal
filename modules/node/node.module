@@ -253,9 +253,11 @@ function node_entity_info() {
  */
 function node_admin_paths() {
   $paths = array(
-    'node/*/add' => TRUE,
     'node/*/edit' => TRUE,
     'node/*/delete' => TRUE,
+    'node/*/revisions' => TRUE,
+    'node/*/revisions/*/revert' => TRUE,
+    'node/*/revisions/*/delete' => TRUE,
     'node/add' => TRUE,
     'node/add/*' => TRUE,
   );
