@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1190 2009/12/26 16:50:09 dries Exp $
+// $Id: node.module,v 1.1191 2009/12/29 04:23:53 webchick Exp $
 
 /**
  * @file
@@ -253,9 +253,11 @@ function node_entity_info() {
  */
 function node_admin_paths() {
   $paths = array(
-    'node/*/add' => TRUE,
     'node/*/edit' => TRUE,
     'node/*/delete' => TRUE,
+    'node/*/revisions' => TRUE,
+    'node/*/revisions/*/revert' => TRUE,
+    'node/*/revisions/*/delete' => TRUE,
     'node/add' => TRUE,
     'node/add/*' => TRUE,
   );

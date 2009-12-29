@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.532 2009/12/26 16:50:08 dries Exp $
+// $Id: book.module,v 1.533 2009/12/29 04:23:53 webchick Exp $
 
 /**
  * @file
@@ -210,6 +210,17 @@ function _book_outline_access($node) {
  */
 function _book_outline_remove_access($node) {
   return isset($node->book) && ($node->book['bid'] != $node->nid) && _book_outline_access($node);
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function book_admin_paths() {
+  $paths = array(
+    'node/*/outline' => TRUE,
+    'node/*/outline/remove' => TRUE,
+  );
+  return $paths;
 }
 
 /**

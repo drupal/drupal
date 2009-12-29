@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.69 2009/12/26 16:50:09 dries Exp $
+// $Id: translation.module,v 1.70 2009/12/29 04:23:53 webchick Exp $
 
 /**
  * @file
@@ -82,6 +82,16 @@ function _translation_tab_access($node) {
     return user_access('translate content');
   }
   return FALSE;
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function translation_admin_paths() {
+  $paths = array(
+    'node/*/translate' => TRUE,
+  );
+  return $paths;
 }
 
 /**
