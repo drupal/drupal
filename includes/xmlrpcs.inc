@@ -235,7 +235,7 @@ function xmlrpc_server_multicall($methodcalls) {
       );
     }
     else {
-      $return[] = $result;
+      $return[] = array($result);
     }
   }
   return $return;

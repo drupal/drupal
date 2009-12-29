@@ -433,13 +433,15 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
  *     An array of call arrays. Each call array follows the pattern of the single
  *     request: method name followed by the arguments to the method.
  * @return
- *   For one request:
- *     Either the return value of the method on success, or FALSE.
- *     If FALSE is returned, see xmlrpc_errno() and xmlrpc_error_msg().
- *   For multiple requests:
- *     An array of results. Each result will either be the result
- *     returned by the method called, or an xmlrpc_error object if the call
- *     failed. See xmlrpc_error().
+ *   Either the return value of the method on success, or FALSE.  If FALSE is
+ *   returned, see xmlrpc_errno() and xmlrpc_error_msg().
+ *   - For a non-multicall request: the result just as if this had been a local
+ *     function call.
+ *   - For a multicall request: an array of results. Each result will either be
+ *     a one-element array containing the result returned by the method called,
+ *     or an xmlrpc_error object if the call failed.
+ *
+ * @see xmlrpc_error()
  */
 function _xmlrpc() {
   $args = func_get_args();
@@ -479,8 +481,23 @@ function _xmlrpc() {
     xmlrpc_error($message->fault_code, $message->fault_string);
     return FALSE;
   }
-  // Message must be OK
-  return $message->params[0];
+  // We now know that the message is well-formed and a non-fault result.
+  if ($method == 'system.multicall') {
+    // Return per-method results or error objects.
+    $return = array();
+    foreach ($message->params[0] as $result) {
+      if (array_keys($result) == array(0)) {
+        $return[] = $result[0];
+      }
+      else {
+        $return[] = xmlrpc_error($result['faultCode'], $result['faultString']);
+      }
+    }
+  }
+  else {
+    $return = $message->params[0];
+  }
+  return $return;
 }
 
 /**
