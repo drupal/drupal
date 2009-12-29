@@ -156,8 +156,8 @@ function list_allowed_values_setting_validate($element, &$form_state) {
       form_error($element, t('Allowed values list: each key must be a valid integer or decimal.'));
       break;
     }
-    elseif ($field_type == 'list_text' && strlen($key) > 255) {
-      form_error($element, t('Allowed values list: each key must be a string less than 255 characters.'));
+    elseif ($field_type == 'list_text' && drupal_strlen($key) > 255) {
+      form_error($element, t('Allowed values list: each key must be a string at most 255 characters long.'));
       break;
     }
     elseif ($field_type == 'list' && !preg_match('/^-?\d+$/', $key)) {

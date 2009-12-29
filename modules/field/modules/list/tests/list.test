@@ -139,33 +139,33 @@ class ListFieldUITestCase extends FieldTestCase {
     //Check that non-integer keys are rejected.
     $edit = array($element_name => "1.1|one\n");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("keys must be integers", t('Form vaildation failed.'));
+    $this->assertText("keys must be integers", t('Form validation failed.'));
 
     // Test 'List (number)' field type.
     $admin_path = $this->createListFieldAndEdit('list_number');
     //Check that non-numeric keys are rejected.
     $edit = array($element_name => "1|one\nB|two");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("each key must be a valid integer or decimal", t('Form vaildation failed.'));
+    $this->assertText("each key must be a valid integer or decimal", t('Form validation failed.'));
 
     //Test 'List (text)' field type.
     $admin_path = $this->createListFieldAndEdit('list_text');
     //Check that over long keys are rejected.
-    $edit = array($element_name => "1|one\n" . $this->randomName(255) . "|two");
+    $edit = array($element_name => "1|one\n" . $this->randomName(256) . "|two");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("each key must be a string less than 255 characters", t('Form vaildation failed.'));
+    $this->assertText("each key must be a string at most 255 characters long", t('Form validation failed.'));
 
     // Test 'List (boolean)' field type.
     $admin_path = $this->createListFieldAndEdit('list_boolean');
     // Check that invalid option keys are rejected.
     $edit = array($element_name => "1|one\n2|two");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("keys must be either 0 or 1", t('Form vaildation failed.'));
+    $this->assertText("keys must be either 0 or 1", t('Form validation failed.'));
 
     //Check that missing option causes failure.
     $edit = array($element_name => "1|one");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("two values are required", t('Form vaildation failed.'));
+    $this->assertText("two values are required", t('Form validation failed.'));
   }
 
   /**
