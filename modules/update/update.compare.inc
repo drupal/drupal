@@ -174,7 +174,9 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
       // project can have multiple modules or themes.
       $projects[$project_name] = array(
         'name' => $project_name,
-        'info' => $file->info,
+        // Only save attributes from the .info file we care about so we do not
+        // bloat our RAM usage needlessly.
+        'info' => update_filter_project_info($file->info),
         'datestamp' => $file->info['datestamp'],
         'includes' => array($file->name => $file->info['name']),
         'project_type' => $project_display_type,
@@ -739,4 +741,30 @@ function update_project_cache($cid) {
     }
   }
   return $projects;
+}
+
+/**
+ * Filter the project .info data to only save attributes we need.
+ *
+ * @param array $info
+ *   Array of .info file data as returned by drupal_parse_info_file().
+ *
+ * @return
+ *   Array of .info file data we need for the Update manager.
+ *
+ * @see _update_process_info_list()
+ */
+function update_filter_project_info($info) {
+  $whitelist = array(
+    '_info_file_ctime',
+    'datestamp',
+    'hidden',
+    'major',
+    'name',
+    'package',
+    'project',
+    'project status url',
+    'version', 
+  );
+  return array_intersect_key($info, drupal_map_assoc($whitelist));
 }
