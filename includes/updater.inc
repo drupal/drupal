@@ -113,7 +113,7 @@ class Updater {
     $updaters = drupal_get_updaters();
     foreach ($updaters as $updater) {
       $class = $updater['class'];
-      if (call_user_func("{$class}::canUpdateDirectory", $directory)) {
+      if (call_user_func(array($class, 'canUpdateDirectory'), $directory)) {
         return $class;
       }
     }
