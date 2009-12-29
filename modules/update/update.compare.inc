@@ -758,7 +758,6 @@ function update_filter_project_info($info) {
   $whitelist = array(
     '_info_file_ctime',
     'datestamp',
-    'hidden',
     'major',
     'name',
     'package',
