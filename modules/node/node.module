@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1191 2009/12/29 04:23:53 webchick Exp $
+// $Id: node.module,v 1.1192 2009/12/29 20:23:10 dries Exp $
 
 /**
  * @file
@@ -223,10 +223,10 @@ function node_entity_info() {
   if (module_exists('search')) {
     $return['node']['view modes'] += array(
       'search_index' => array(
-        'label' => t('Search Index'),
+        'label' => t('Search index'),
       ),
       'search_result' => array(
-        'label' => t('Search Result'),
+        'label' => t('Search result'),
       ),
     );
   }
