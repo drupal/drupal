@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.13 2009/12/04 16:49:47 dries Exp $
+// $Id: update.install,v 1.14 2009/12/29 06:59:14 webchick Exp $
 
 /**
  * @file
@@ -31,7 +31,6 @@ function update_uninstall() {
   foreach ($variables as $variable) {
     variable_del($variable);
   }
-  menu_rebuild();
   $queue = DrupalQueue::get('update_fetch_tasks');
   $queue->deleteQueue();
 }
