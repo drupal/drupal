@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.36 2009/12/29 04:25:10 webchick Exp $
+// $Id: update.compare.inc,v 1.37 2009/12/29 06:34:14 webchick Exp $
 
 /**
  * @file
@@ -758,7 +758,6 @@ function update_filter_project_info($info) {
   $whitelist = array(
     '_info_file_ctime',
     'datestamp',
-    'hidden',
     'major',
     'name',
     'package',
