@@ -1,4 +1,4 @@
-/* $Id: overlay-parent.css,v 1.4 2009/12/23 21:33:52 webchick Exp $ */
+/* $Id: overlay-parent.css,v 1.5 2009/12/29 20:19:35 dries Exp $ */
 
 /**
  * ui-dialog overlay.
@@ -33,7 +33,7 @@ body.overlay-autofit {
   position: static;
   padding-right: 26px;
   margin: 0 auto;
-  width: 78%;
+  width: 85%;
   min-width: 700px;
   min-height: 100px;
 }
