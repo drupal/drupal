@@ -223,10 +223,10 @@ function node_entity_info() {
   if (module_exists('search')) {
     $return['node']['view modes'] += array(
       'search_index' => array(
-        'label' => t('Search Index'),
+        'label' => t('Search index'),
       ),
       'search_result' => array(
-        'label' => t('Search Result'),
+        'label' => t('Search result'),
       ),
     );
   }

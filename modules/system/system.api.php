@@ -56,13 +56,13 @@ function hook_hook_info() {
  * @return
  *   An array whose keys are entity type names and whose values identify
  *   properties of those types that the system needs to know about:
- *   - name: The human-readable name of the type.
+ *   - label: The human-readable name of the type.
  *   - controller class: The name of the class that is used to load the objects.
  *     The class has to implement the DrupalEntityControllerInterface interface.
- *     Leave blank to use the DefaultDrupalEntityController implementation.
- *   - base table: (used by DefaultDrupalEntityController) The name of the
+ *     Leave blank to use the DrupalDefaultEntityController implementation.
+ *   - base table: (used by DrupalDefaultEntityController) The name of the
  *     entity type's base table.
- *   - static cache: (used by DefaultDrupalEntityController) FALSE to disable
+ *   - static cache: (used by DrupalDefaultEntityController) FALSE to disable
  *     static caching of entities during a page request. Defaults to TRUE.
  *   - load hook: The name of the hook which should be invoked by
  *     DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
@@ -122,20 +122,63 @@ function hook_hook_info() {
 function hook_entity_info() {
   $return = array(
     'node' => array(
-      'name' => t('Node'),
+      'label' => t('Node'),
       'controller class' => 'NodeController',
       'base table' => 'node',
-      'id key' => 'nid',
-      'revision key' => 'vid',
+      'revision table' => 'node_revision',
       'fieldable' => TRUE,
-      'bundle key' => array('bundle' => 'type'),
+      'object keys' => array(
+        'id' => 'nid',
+        'revision' => 'vid',
+        'bundle' => 'type',
+      ),
+      'bundle keys' => array(
+        'bundle' => 'type',
+      ),
       // Node.module handles its own caching.
       // 'cacheable' => FALSE,
-      // Bundles must provide human readable name so
-      // we can create help and error messages about them.
-      'bundles' => node_type_get_names(),
+      'bundles' => array(),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Full node'),
+        ),
+        'teaser' => array(
+          'label' => t('Teaser'),
+        ),
+        'rss' => array(
+          'label' => t('RSS'),
+        ),
+      ),
     ),
   );
+
+  // Search integration is provided by node.module, so search-related
+  // view modes for nodes are defined here and not in search.module.
+  if (module_exists('search')) {
+    $return['node']['view modes'] += array(
+      'search_index' => array(
+        'label' => t('Search index'),
+      ),
+      'search_result' => array(
+        'label' => t('Search result'),
+      ),
+    );
+  }
+
+  // Bundles must provide a human readable name so we can create help and error
+  // messages, and the path to attach Field admin pages to.
+  foreach (node_type_get_names() as $type => $name) {
+    $return['node']['bundles'][$type] = array(
+      'label' => $name,
+      'admin' => array(
+        'path' => 'admin/structure/types/manage/%node_type',
+        'real path' => 'admin/structure/types/manage/' . str_replace('_', '-', $type),
+        'bundle argument' => 4,
+        'access arguments' => array('administer content types'),
+      ),
+    );
+  }
+
   return $return;
 }
 
