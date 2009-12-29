@@ -319,7 +319,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
   }
 }
 
-class PageCreationTestCase extends DrupalWebTestCase {
+class NodeCreationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node creation',
@@ -339,7 +339,7 @@ class PageCreationTestCase extends DrupalWebTestCase {
   /**
    * Create a page node and verify its consistency in the database.
    */
-  function testPageCreation() {
+  function testNodeCreation() {
     // Create a node.
     $edit = array();
     $langcode = LANGUAGE_NONE;
