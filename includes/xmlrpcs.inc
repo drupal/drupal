@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.34 2009/12/02 00:31:47 dries Exp $
+// $Id: xmlrpcs.inc,v 1.35 2009/12/29 19:33:36 dries Exp $
 
 /**
  * The main entry point for XML-RPC requests.
@@ -235,7 +235,7 @@ function xmlrpc_server_multicall($methodcalls) {
       );
     }
     else {
-      $return[] = $result;
+      $return[] = array($result);
     }
   }
   return $return;
