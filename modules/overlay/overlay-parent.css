@@ -1,4 +1,4 @@
-/* $Id: overlay-parent.css,v 1.5 2009/12/29 20:19:35 dries Exp $ */
+/* $Id: overlay-parent.css,v 1.6 2009/12/30 14:02:37 dries Exp $ */
 
 /**
  * ui-dialog overlay.
@@ -49,7 +49,6 @@ body.overlay-autofit {
 }
 
 .overlay .ui-dialog-title {
-  font-family: Verdana,sans-serif;
   margin: 0;
   padding: 0.3em 0;
   color: #fff;
