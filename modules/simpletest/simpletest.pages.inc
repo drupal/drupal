@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.20 2009/11/08 13:23:41 webchick Exp $
+// $Id: simpletest.pages.inc,v 1.21 2009/12/30 11:41:52 dries Exp $
 
 /**
  * @file
@@ -442,18 +442,33 @@ function simpletest_settings_form($form, &$form_state) {
 
   $form['httpauth'] = array(
     '#type' => 'fieldset',
-    '#title' => t('HTTP authentication credentials'),
+    '#title' => t('HTTP authentication'),
     '#description' => t('HTTP auth settings to be used by the SimpleTest browser during testing. Useful when the site requires basic HTTP authentication.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
-  $form['httpauth']['simpletest_username'] = array(
+  $form['httpauth']['simpletest_httpauth_method'] = array(
+    '#type' => 'select',
+    '#title' => t('Method'),
+    '#options' => array(
+      CURLAUTH_BASIC => t('Basic'),
+      CURLAUTH_DIGEST => t('Digest'),
+      CURLAUTH_GSSNEGOTIATE => t('GSS negotiate'),
+      CURLAUTH_NTLM => t('NTLM'),
+      CURLAUTH_ANY => t('Any'),
+      CURLAUTH_ANYSAFE => t('Any safe'),
+    ),
+    '#default_value' => variable_get('simpletest_httpauth_method', CURLAUTH_BASIC),
+  );
+  $form['httpauth']['simpletest_httpauth_username'] = array(
     '#type' => 'textfield',
     '#title' => t('Username'),
-    '#default_value' => variable_get('simpletest_username', ''),
+    '#default_value' => variable_get('simpletest_httpauth_username', ''),
   );
-  $form['httpauth']['simpletest_password'] = array(
+  $form['httpauth']['simpletest_httpauth_password'] = array(
     '#type' => 'textfield',
     '#title' => t('Password'),
-    '#default_value' => variable_get('simpletest_password', ''),
+    '#default_value' => variable_get('simpletest_httpauth_password', ''),
   );
 
   return system_settings_form($form);

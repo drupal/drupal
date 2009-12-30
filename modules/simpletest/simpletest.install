@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.29 2009/12/28 12:06:49 dries Exp $
+// $Id: simpletest.install,v 1.30 2009/12/30 11:41:52 dries Exp $
 
 /**
  * @file
@@ -13,8 +13,9 @@ function simpletest_uninstall() {
   simpletest_clean_environment();
 
   // Remove settings variables.
-  variable_del('simpletest_username');
-  variable_del('simpletest_password');
+  variable_del('simpletest_httpauth_method');
+  variable_del('simpletest_httpauth_username');
+  variable_del('simpletest_httpauth_password');
   variable_del('simpletest_clear_results');
   variable_del('simpletest_verbose');
 
