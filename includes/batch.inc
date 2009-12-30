@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.47 2009/12/06 16:21:58 dries Exp $
+// $Id: batch.inc,v 1.48 2009/12/30 08:16:55 dries Exp $
 
 
 /**
@@ -144,7 +144,7 @@ function _batch_progress_page_js() {
 }
 
 /**
- * Do one pass of execution in JavaScript-mode and return progress to the browser.
+ * Do one execution pass in JavaScript-mode and return progress to the browser.
  *
  * @see _batch_progress_page_js()
  * @see _batch_process()

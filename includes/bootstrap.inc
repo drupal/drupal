@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.337 2009/12/28 10:48:51 dries Exp $
+// $Id: bootstrap.inc,v 1.338 2009/12/30 08:16:55 dries Exp $
 
 /**
  * @file
@@ -37,8 +37,9 @@ define('DRUPAL_MINIMUM_MYSQL',  '5.0');
 define('DRUPAL_MINIMUM_PGSQL',  '8.3');
 
 /**
- * Indicates that the item should never be removed unless explicitly told to
- * using cache_clear_all() with a cache ID.
+ * Indicates that the item should never be removed unless explicitly selected.
+ *
+ * The item may be removed using cache_clear_all() with a cache ID.
  */
 define('CACHE_PERMANENT', 0);
 
