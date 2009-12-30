@@ -415,8 +415,9 @@ abstract class DrupalTestCase {
 
     // HTTP auth settings (<username>:<password>) for the simpletest browser
     // when sending requests to the test site.
-    $username = variable_get('simpletest_username', NULL);
-    $password = variable_get('simpletest_password', NULL);
+    $this->httpauth_method = variable_get('simpletest_httpauth_method', CURLAUTH_BASIC);
+    $username = variable_get('simpletest_httpauth_username', NULL);
+    $password = variable_get('simpletest_httpauth_password', NULL);
     if ($username && $password) {
       $this->httpauth_credentials = $username . ':' . $password;
     }
@@ -674,6 +675,11 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @var object
    */
   protected $originalUser = NULL;
+
+  /**
+   * HTTP authentication method
+   */
+  protected $httpauth_method = CURLAUTH_BASIC;
 
   /**
    * HTTP authentication credentials (<username>:<password>).
@@ -1305,6 +1311,7 @@ class DrupalWebTestCase extends DrupalTestCase {
         CURLOPT_HEADERFUNCTION => array(&$this, 'curlHeaderCallback'),
       );
       if (isset($this->httpauth_credentials)) {
+        $curl_options[CURLOPT_HTTPAUTH] = $this->httpauth_method;
         $curl_options[CURLOPT_USERPWD] = $this->httpauth_credentials;
       }
       curl_setopt_array($this->curlHandle, $this->additionalCurlOptions + $curl_options);
