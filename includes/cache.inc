@@ -30,9 +30,10 @@ function _cache_get_object($bin) {
 }
 
 /**
- * Return data from the persistent cache. Data may be stored as either plain
- * text or as serialized data. cache_get will automatically return
- * unserialized objects and arrays.
+ * Return data from the persistent cache
+ *
+ * Data may be stored as either plain text or as serialized data. cache_get
+ * will automatically return unserialized objects and arrays.
  *
  * @param $cid
  *   The cache ID of the data to retrieve.
@@ -42,7 +43,8 @@ function _cache_get_object($bin) {
  *   'cache_menu', 'cache_page', 'cache_path', 'cache_update' or 'cache' for
  *   the default cache.
  *
- * @return The cache or FALSE on failure.
+ * @return
+ *   The cache or FALSE on failure.
  */
 function cache_get($cid, $bin = 'cache') {
   return _cache_get_object($bin)->get($cid);
@@ -107,10 +109,10 @@ function cache_get_multiple(array &$cids, $bin = 'cache') {
  *
  * - smaller bins mean smaller database tables and allow for faster selects and
  *   inserts
- * - we try to put fast changing cache items and rather static ones into different
- *   bins. The effect is that only the fast changing bins will need a lot of
- *   writes to disk. The more static bins will also be better cacheable with
- *   MySQL's query cache.
+ * - we try to put fast changing cache items and rather static ones into
+ *   different bins. The effect is that only the fast changing bins will need a
+ *   lot of writes to disk. The more static bins will also be better cacheable
+ *   with MySQL's query cache.
  *
  * @param $cid
  *   The cache ID of the data to store.
@@ -188,21 +190,22 @@ function cache_is_empty($bin) {
 /**
  * Interface for cache implementations.
  *
- * All cache implementations have to implement this interface. DrupalDatabaseCache
- * provides the default implementation, which can be consulted as an example.
+ * All cache implementations have to implement this interface.
+ * DrupalDatabaseCache provides the default implementation, which can be
+ * consulted as an example.
  *
  * To make Drupal use your implementation for a certain cache bin, you have to
- * set a variable with the name of the cache bin as its key and the name of your
- * class as its value. For example, if your implementation of DrupalCacheInterface
- * was called MyCustomCache, the following line would make Drupal use it for the
- * 'cache_page' bin:
+ * set a variable with the name of the cache bin as its key and the name of
+ * your class as its value. For example, if your implementation of
+ * DrupalCacheInterface was called MyCustomCache, the following line would make
+ * Drupal use it for the 'cache_page' bin:
  * @code
  *  variable_set('cache_page', 'MyCustomCache');
  * @endcode
  *
- * Additionally, you can register your cache implementation to be used by default
- * for all cache bins by setting the variable 'cache_default_class' to the name
- * of your implementation of the DrupalCacheInterface, e.g.
+ * Additionally, you can register your cache implementation to be used by
+ * default for all cache bins by setting the variable 'cache_default_class' to
+ * the name of your implementation of the DrupalCacheInterface, e.g.
  * @code
  *  variable_set('cache_default_class', 'MyCustomCache');
  * @endcode
@@ -226,7 +229,8 @@ interface DrupalCacheInterface {
    *
    * @param $cid
    *   The cache ID of the data to retrieve.
-   * @return The cache or FALSE on failure.
+   * @return
+   *   The cache or FALSE on failure.
    */
   function get($cid);
 

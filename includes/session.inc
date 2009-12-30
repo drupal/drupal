@@ -314,7 +314,7 @@ function drupal_session_regenerate() {
  *
  * Cleanup a specific session.
  *
- * @param string $sid
+ * @param $sid
  *   Session ID.
  */
 function _drupal_session_destroy($sid) {
@@ -356,7 +356,7 @@ function _drupal_session_delete_cookie($name, $force_insecure = FALSE) {
 /**
  * End a specific user's session(s).
  *
- * @param string $uid
+ * @param $uid
  *   User ID.
  */
 function drupal_session_destroy_uid($uid) {
@@ -370,7 +370,7 @@ function drupal_session_destroy_uid($uid) {
  *
  * Cleanup stalled sessions.
  *
- * @param int $lifetime
+ * @param $lifetime
  *   The value of session.gc_maxlifetime, passed by PHP.
  *   Sessions not updated for more than $lifetime seconds will be removed.
  */

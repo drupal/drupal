@@ -144,7 +144,7 @@ function _batch_progress_page_js() {
 }
 
 /**
- * Do one pass of execution in JavaScript-mode and return progress to the browser.
+ * Do one execution pass in JavaScript-mode and return progress to the browser.
  *
  * @see _batch_progress_page_js()
  * @see _batch_process()

@@ -7,6 +7,8 @@
  */
 
 /**
+ * Manually include stream wrapper code.
+ *
  * Stream wrapper code is included here because there are cases where
  * File API is needed before a bootstrap, or in an alternate order (e.g.
  * maintenance theme).
@@ -60,10 +62,11 @@ define('FILE_EXISTS_REPLACE', 1);
 define('FILE_EXISTS_ERROR', 2);
 
 /**
- * File status -- This bit in the status indicates that the file is permanent
- * and should not be deleted during file garbage collection process. Temporary
- * files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during cron
- * runs.
+ * Indicates that the file is permanent and should not be deleted.
+ *
+ * Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed
+ * during cron runs, but permanent files will not be removed during the file
+ * garbage collection process.
  */
 define('FILE_STATUS_PERMANENT', 1);
 
@@ -227,7 +230,7 @@ function file_stream_wrapper_uri_normalize($uri) {
 }
 
 /**
- * Returns a reference to the stream wrapper class responsible for a given URI (stream).
+ * Returns a reference to the stream wrapper class responsible for a given URI.
  *
  * The scheme determines the stream wrapper class that should be
  * used by consulting the stream wrapper registry.
@@ -438,7 +441,7 @@ function file_create_htaccess($directory, $private = TRUE) {
  *   should be supplied in the form array('field_name' => 'field_value').
  *
  * @return
- *  An array of file objects, indexed by fid.
+ *   An array of file objects, indexed by fid.
  *
  * @see hook_file_load()
  * @see file_load()
@@ -451,7 +454,7 @@ function file_load_multiple($fids = array(), $conditions = array()) {
  * Load a file object from the database.
  *
  * @param $fid
- *  A file ID.
+ *   A file ID.
  * @return
  *   A file object.
  *
@@ -562,8 +565,7 @@ function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
 }
 
 /**
- * Copy a file to a new location without calling any hooks or making any
- * changes to the database.
+ * Copy a file to a new location without invoking the file API.
  *
  * This is a powerful function that in many ways performs like an advanced
  * version of copy().
@@ -1357,8 +1359,7 @@ function file_validate_is_image(stdClass $file) {
 }
 
 /**
- * If the file is an image verify that its dimensions are within the specified
- * maximum and minimum dimensions.
+ * Verify that image dimensions are within the specified maximum and minimum.
  *
  * Non-image files will be ignored. If a image toolkit is available the image
  * will be scalled to fit within the desired maximum dimensions.
@@ -1469,8 +1470,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
 }
 
 /**
- * Save a string to the specified destination without calling any hooks or
- * making any changes to the database.
+ * Save a string to the specified destination without invoking file API.
  *
  * This function is identical to file_save_data() except the file will not be
  * saved to the {file} table and none of the file_* hooks will be called.
@@ -1505,8 +1505,9 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
 }
 
 /**
- * Transfer file using HTTP to client. Pipes a file through Drupal to the
- * client.
+ * Transfer file using HTTP to client.
+ *
+ * Pipes a file through Drupal to the client.
  *
  * @param $uri
  *   String specifying the file URI to transfer.
@@ -1721,15 +1722,16 @@ function file_get_mimetype($uri, $mapping = NULL) {
  * Set the permissions on a file or directory.
  *
  * This function will use the 'file_chmod_directory' and 'file_chmod_file'
- * variables for the default modes for directories and uploaded/generated files.
- * By default these will give everyone read access so that users accessing the
- * files with a user account without the webserver group (e.g. via FTP) can read
- * these files, and give group write permissions so webserver group members
- * (e.g. a vhost account) can alter files uploaded and owned by the webserver.
+ * variables for the default modes for directories and uploaded/generated
+ * files. By default these will give everyone read access so that users
+ * accessing the files with a user account without the webserver group (e.g.
+ * via FTP) can read these files, and give group write permissions so webserver
+ * group members (e.g. a vhost account) can alter files uploaded and owned by
+ * the webserver.
  *
- * PHP's chmod does not support stream wrappers so we use our wrapper implementation
- * which interfaces with chmod() by default. Contrib wrappers may override this
- * bahavior in their implementations as needed.
+ * PHP's chmod does not support stream wrappers so we use our wrapper
+ * implementation which interfaces with chmod() by default. Contrib wrappers
+ * may override this bahavior in their implementations as needed.
  *
  * @param $uri
  *   A string containing a URI file, or directory path.
@@ -1823,7 +1825,7 @@ function drupal_realpath($uri) {
  * @ingroup php_wrappers
  */
 function drupal_dirname($uri) {
-	$scheme = file_uri_scheme($uri);
+  $scheme = file_uri_scheme($uri);
 
   if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
     $target  = file_uri_target($uri);
@@ -1899,7 +1901,7 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
  * @ingroup php_wrappers
  */
 function drupal_tempnam($directory, $prefix) {
- 	$scheme = file_uri_scheme($directory);
+  $scheme = file_uri_scheme($directory);
 
   if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
     $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);

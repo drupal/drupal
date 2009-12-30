@@ -328,7 +328,7 @@ function ajax_deliver($page_callback_result) {
   }
   elseif (is_array($page_callback_result) && isset($page_callback_result['#type']) && ($page_callback_result['#type'] == 'ajax_commands')) {
     // Complex AJAX callbacks can return a result that contains a specific
-    // set of commands to send to the browser. 
+    // set of commands to send to the browser.
     if (isset($page_callback_result['#ajax_commands'])) {
       $commands = $page_callback_result['#ajax_commands'];
     }
@@ -792,7 +792,7 @@ function ajax_command_settings($argument) {
  *   The name or key (in the key value pair) of the data attached to this
  *   selector.
  * @param $value
- *  The value of the data. Not just limited to strings can be any format.
+ *   The value of the data. Not just limited to strings can be any format.
  *
  * @return
  *   An array suitable for use with the ajax_render() function.

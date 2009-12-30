@@ -37,8 +37,9 @@ define('DRUPAL_MINIMUM_MYSQL',  '5.0');
 define('DRUPAL_MINIMUM_PGSQL',  '8.3');
 
 /**
- * Indicates that the item should never be removed unless explicitly told to
- * using cache_clear_all() with a cache ID.
+ * Indicates that the item should never be removed unless explicitly selected.
+ *
+ * The item may be removed using cache_clear_all() with a cache ID.
  */
 define('CACHE_PERMANENT', 0);
 
