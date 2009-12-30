@@ -72,6 +72,7 @@ function taxonomy_schema() {
     'indexes' => array(
       'taxonomy_tree' => array('vid', 'weight', 'name'),
       'vid_name' => array('vid', 'name'),
+      'name' => array('name'),
     ),
   );
 
@@ -427,5 +428,12 @@ function taxonomy_update_7006() {
     'default' => 0,
     'description' => 'The {filter_format}.format of the description.',
   ));
+}
+
+/**
+ * Add index on taxonomy_term_data.name column to speed up taxonomy_get_term_by_name().
+ */
+function taxonomy_update_7007() {
+  db_add_index('taxonomy_term_data', 'name', array('name'));
 }
 
