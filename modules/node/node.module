@@ -1236,9 +1236,10 @@ function node_build_content($node, $view_mode = 'full') {
   }
 
   // Build fields content.
-  // @todo field_attach_prepare_view() is only invoked by node_view_multiple(),
-  //   all other entities invoke it _here_.
-  //field_attach_prepare_view('node', array($node->nid => $node), $view_mode);
+  // In case of a multiple view, node_view_multiple() already ran the
+  // 'prepare_view' step. An internal flag prevents the operation from running
+  // twice.
+  field_attach_prepare_view('node', array($node->nid => $node), $view_mode);
   $node->content += field_attach_view('node', $node, $view_mode);
 
   // Always display a read more link on teasers because we have no way

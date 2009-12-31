@@ -1111,15 +1111,41 @@ function field_attach_query_revisions($field_id, $conditions, $options = array()
 }
 
 /**
- * Allow formatters to act on fieldable objects prior to rendering.
+ * Prepare field data prior to display.
+ *
+ * This function must be called before field_attach_view(). It lets field
+ * types and formatters load additional data needed for display, and
+ * therefore accepts an array of objects to allow query optimisation when
+ * displaying lists of objects.
+ *
+ * @param $obj_type
+ *   The type of $objects; e.g. 'node' or 'user'.
+ * @param $objects
+ *   An array of objects, keyed by object id.
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  */
 function field_attach_prepare_view($obj_type, $objects, $view_mode = 'full') {
+  // To ensure hooks are only run once per entity, only process items without
+  // the _field_view_prepared flag.
+  // @todo: resolve this more generally for both entity and field level hooks.
+  $prepare = array();
+  foreach ($objects as $id => $object) {
+    if (empty($object->_field_view_prepared)) {
+      // Add this entity to the items to be prepared.
+      $prepare[$id] = $object;
+
+      // Mark this item as prepared.
+      $object->_field_view_prepared = TRUE;
+    }
+  }
+
   // First let the field types do their preparation.
-  _field_invoke_multiple('prepare_view', $obj_type, $objects);
+  _field_invoke_multiple('prepare_view', $obj_type, $prepare);
   // Then let the formatters do their own specific massaging.
   // field_default_prepare_view() takes care of dispatching to the correct
   // formatters according to the display settings for the view mode.
-  _field_invoke_multiple_default('prepare_view', $obj_type, $objects, $view_mode);
+  _field_invoke_multiple_default('prepare_view', $obj_type, $prepare, $view_mode);
 }
 
 /**
@@ -1127,6 +1153,9 @@ function field_attach_prepare_view($obj_type, $objects, $view_mode = 'full') {
  *
  * Each field is displayed according to the display options specified in the
  * $instance definition for the given $view_mode.
+ *
+ * The object must have run through field_attach_prepare_view() beforehands.
+ * @see field_attach_prepare_view()
  *
  * Sample structure:
  * @code
@@ -1184,6 +1213,11 @@ function field_attach_view($obj_type, $object, $view_mode = 'full', $langcode = 
     'langcode' => $langcode,
   );
   drupal_alter('field_attach_view', $output, $context);
+
+  // Reset the _field_view_prepared flag set in field_attach_prepare_view(),
+  // in case the same object is displayed with different settings later in
+  // the request.
+  unset($object->_field_view_prepared);
 
   return $output;
 }

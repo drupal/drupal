@@ -1079,12 +1079,6 @@ function taxonomy_field_formatter_view($object_type, $object, $field, $instance,
   switch ($display['type']) {
     case 'taxonomy_term_link':
       foreach ($items as $delta => $item) {
-        // @todo Remove this when "node_view() does not call
-        // field_attach_prepare_view()" bug is fixed.
-        // See http://drupal.org/node/493314.
-        if (!isset($item['taxonomy_term'])) {
-          $item['taxonomy_term'] = taxonomy_term_load($item['tid']);
-        }
         $term = $item['taxonomy_term'];
         $element[$delta] = array(
           '#type' => 'link',
