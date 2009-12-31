@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Provides API for defining and handling XML-RPC requests.
+ */
+
+/**
  * The main entry point for XML-RPC requests.
  *
  * @param $callbacks
@@ -38,7 +43,7 @@ function xmlrpc_server($callbacks) {
   // We build an array of all method names by combining the built-ins
   // with those defined by modules implementing the _xmlrpc hook.
   // Built-in methods are overridable.
-  foreach (array_merge($defaults, (array)$callbacks) as $key => $callback) {
+  foreach (array_merge($defaults, (array) $callbacks) as $key => $callback) {
     // we could check for is_array($callback)
     if (is_int($key)) {
       $method = $callback[0];
@@ -138,6 +143,8 @@ function xmlrpc_server_get() {
  * Dispatch the request and any parameters to the appropriate handler.
  *
  * @param $xmlrpc_server
+ *   Contains information about this XML-RPC server, the methods it provides,
+ *   their signatures, etc.
  * @param $methodname
  *   The external XML-RPC method name, e.g. 'system.methodHelp'
  * @param $args
@@ -252,7 +259,8 @@ function xmlrpc_server_list_methods() {
 
 /**
  * XML-RPC method system.getCapabilities maps to this function.
- * See http://groups.yahoo.com/group/xml-rpc/message/2897
+ *
+ * @see http://groups.yahoo.com/group/xml-rpc/message/2897
  */
 function xmlrpc_server_get_capabilities() {
   return array(
@@ -280,7 +288,7 @@ function xmlrpc_server_get_capabilities() {
  *
  * @param $methodname
  *   Name of method for which we return a method signature.
- * @return array
+ * @return
  *   An array of types representing the method signature of the
  *   function that the methodname maps to. The methodSignature of
  *   this function is 'array', 'string' because it takes an array

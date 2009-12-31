@@ -328,7 +328,7 @@ function ajax_deliver($page_callback_result) {
   }
   elseif (is_array($page_callback_result) && isset($page_callback_result['#type']) && ($page_callback_result['#type'] == 'ajax_commands')) {
     // Complex AJAX callbacks can return a result that contains a specific
-    // set of commands to send to the browser.
+    // set of commands to send to the browser. 
     if (isset($page_callback_result['#ajax_commands'])) {
       $commands = $page_callback_result['#ajax_commands'];
     }

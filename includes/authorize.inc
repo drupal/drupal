@@ -19,7 +19,7 @@ function authorize_filetransfer_form($form_state) {
   // CSS we depend on lives in modules/system/maintenance.css, which is loaded
   // via the default maintenance theme.
   $form['#attached']['js'][] = $base_url . '/misc/authorize.js';
-
+  
   // Get all the available ways to transfer files.
   if (empty($_SESSION['authorize_filetransfer_backends'])) {
     drupal_set_message(t('Unable to continue, no available methods of file transfer'), 'error');
@@ -182,7 +182,7 @@ function authorize_filetransfer_form_submit($form, &$form_state) {
         variable_set('authorize_filetransfer_connection_settings_' . $filetransfer_backend, $connection_settings);
 
         $filetransfer = authorize_get_filetransfer($filetransfer_backend, $form_state['values']['connection_settings'][$filetransfer_backend]);
-
+        
         // Now run the operation.
         authorize_run_operation($filetransfer);
       }

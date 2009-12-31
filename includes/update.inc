@@ -10,8 +10,7 @@
  */
 
 /**
- * Disable anything in the {system} table that is not compatible with the
- * current version of Drupal core.
+ * Disable any items in the {system} table that are not core capatible.
  */
 function update_fix_compatibility() {
   $incompatible = array();
@@ -58,6 +57,8 @@ function update_check_incompatibility($name, $type = 'module') {
 }
 
 /**
+ * Performs extra steps required to bootstrap when using a Drupal 6 database.
+ *
  * Users who still have a Drupal 6 database (and are in the process of
  * updating to Drupal 7) need extra help before a full bootstrap can be
  * achieved. This function does the necessary preliminary work that allows
@@ -166,8 +167,8 @@ function update_prepare_d7_bootstrap() {
 function update_fix_d7_requirements() {
   global $conf;
 
-  // Rewrite the settings.php file if necessary.
-  // @see update_prepare_d7_bootstrap().
+  // Rewrite the settings.php file if necessary, see
+  // update_prepare_d7_bootstrap().
   global $update_rewrite_settings, $db_url;
   if (!empty($update_rewrite_settings)) {
     $databases = update_parse_db_url($db_url);
@@ -343,8 +344,8 @@ function update_fix_d7_requirements() {
     }
 
     // Rename 'site_offline_message' variable to 'maintenance_mode_message'.
-    // Old variable is removed in update for system.module.
-    // @see system_update_7036().
+    // Old variable is removed in update for system.module, see
+    // system_update_7036().
     if ($message = variable_get('site_offline_message', NULL)) {
       variable_set('maintenance_mode_message', $message);
     }
@@ -358,8 +359,8 @@ function update_fix_d7_requirements() {
 /**
  * Register the currently installed profile in the system table.
  *
- * Install profiles are now treated as modules by Drupal, and have an upgrade path
- * based on their schema version in the system table.
+ * Install profiles are now treated as modules by Drupal, and have an upgrade
+ * path based on their schema version in the system table.
  *
  * The install profile will be set to schema_version 0, as it has already been
  * installed. Any other hook_update_N functions provided by the install profile
@@ -423,8 +424,10 @@ function update_fix_d7_install_profile() {
 }
 
 /**
- * Parse database connection URLs (in the old, pre-Drupal 7 format) and
- * return them as an array of database connection information.
+ * Parase pre-Drupal 7 database connection URLs and return D7 compatible array.
+ *
+ * @return
+ *   Drupal 7 DBTNG compatible array of database connection information.
  */
 function update_parse_db_url($db_url) {
   $databases = array();
@@ -448,8 +451,7 @@ function update_parse_db_url($db_url) {
 }
 
 /**
- * Perform one update and store the results which will later be displayed on
- * the finished page.
+ * Perform one update and store the results for display on finished page.
  *
  * If an update function completes successfully, it should return a message
  * as a string indicating success, for example:
