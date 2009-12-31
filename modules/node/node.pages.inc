@@ -268,7 +268,7 @@ function node_form($form, &$form_state, $node) {
   }
 
   // Add the buttons.
-  $form['buttons'] = array();
+  $form['buttons'] = array('#type' => 'container');
   $form['buttons']['#weight'] = 100;
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
