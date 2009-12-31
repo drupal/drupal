@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.113 2009/12/29 20:23:10 dries Exp $
+// $Id: system.api.php,v 1.114 2009/12/31 13:22:35 dries Exp $
 
 /**
  * @file
@@ -213,7 +213,7 @@ function hook_entity_info_alter(&$entity_info) {
  */
 function hook_entity_load($entities, $type) {
   foreach ($entities as $entity) {
-    $entity->foo = mymodule_add_something($entity, $entity_type);
+    $entity->foo = mymodule_add_something($entity, $type);
   }
 }
 
