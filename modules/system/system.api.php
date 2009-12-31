@@ -213,7 +213,7 @@ function hook_entity_info_alter(&$entity_info) {
  */
 function hook_entity_load($entities, $type) {
   foreach ($entities as $entity) {
-    $entity->foo = mymodule_add_something($entity, $entity_type);
+    $entity->foo = mymodule_add_something($entity, $type);
   }
 }
 
