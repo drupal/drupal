@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.106 2009/12/28 11:12:55 dries Exp $
+// $Id: node.pages.inc,v 1.107 2009/12/31 13:35:23 dries Exp $
 
 /**
  * @file
@@ -268,7 +268,7 @@ function node_form($form, &$form_state, $node) {
   }
 
   // Add the buttons.
-  $form['buttons'] = array();
+  $form['buttons'] = array('#type' => 'container');
   $form['buttons']['#weight'] = 100;
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
