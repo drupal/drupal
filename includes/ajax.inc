@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.20 2009/12/30 08:16:55 dries Exp $
+// $Id: ajax.inc,v 1.21 2009/12/31 13:43:36 dries Exp $
 
 /**
  * @file
@@ -328,7 +328,7 @@ function ajax_deliver($page_callback_result) {
   }
   elseif (is_array($page_callback_result) && isset($page_callback_result['#type']) && ($page_callback_result['#type'] == 'ajax_commands')) {
     // Complex AJAX callbacks can return a result that contains a specific
-    // set of commands to send to the browser.
+    // set of commands to send to the browser. 
     if (isset($page_callback_result['#ajax_commands'])) {
       $commands = $page_callback_result['#ajax_commands'];
     }
