@@ -1,5 +1,5 @@
 <?php
-// $Id: module_test.module,v 1.3 2009/12/04 16:49:47 dries Exp $
+// $Id: module_test.module,v 1.4 2010/01/02 18:56:20 webchick Exp $
 
 /**
  * Implements hook_permission().
@@ -8,4 +8,32 @@ function module_test_permission() {
   return array(
     'module_test perm' => t('example perm for module_test module'),
   );
+}
+
+/**
+ * Implements hook_system_info_alter().
+ * 
+ * Manipulate module dependencies to test dependency chains.
+ */
+function module_test_system_info_alter(&$info, $file, $type) {
+  if (variable_get('dependency_test', FALSE) == 'missing dependency') {
+    if ($file->name == 'forum') {
+      // Make forum module depend on poll.
+      $info['dependencies'][] = 'poll';
+    }
+    elseif ($file->name == 'poll') {
+      // Make poll depend on a made-up module.
+      $info['dependencies'][] = 'foo';
+    }
+  }
+  elseif (variable_get('dependency_test', FALSE) == 'dependency') {
+    if ($file->name == 'forum') {
+      // Make the forum module depend on poll.
+      $info['dependencies'][] = 'poll';
+    }
+    elseif ($file->name == 'poll') {
+      // Make poll depend on php module.
+      $info['dependencies'][] = 'php';
+    }
+  }
 }
