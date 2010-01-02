@@ -443,15 +443,16 @@ html.js .no-js {
   font-weight: bold;
 }
 .progress .bar {
-  background: #fff url(../../misc/progress.gif);
-  border: 1px solid #00375a;
-  height: 1.5em;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  background: #ccc;
+  border: 1px solid #666;
   margin: 0 0.2em;
 }
 .progress .filled {
-  background: #0072b9;
-  height: 1.1em;
-  border-bottom: 0.5em solid #004a73;
+  background: #0072b9 url(../../misc/progress.gif);
+  height: 1.5em;
   width: 0%;
 }
 .progress .percentage {
