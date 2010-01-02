@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.422 2009/12/29 20:16:09 dries Exp $
+// $Id: form.inc,v 1.423 2010/01/02 10:41:56 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1179,8 +1179,8 @@ function form_builder($form_id, $element, &$form_state) {
   if (isset($element['#after_build']) && !isset($element['#after_build_done'])) {
     foreach ($element['#after_build'] as $function) {
       $element = $function($element, $form_state);
-      $element['#after_build_done'] = TRUE;
     }
+    $element['#after_build_done'] = TRUE;
   }
 
   // Now that we've processed everything, we can go back to handle the funky
