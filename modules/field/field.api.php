@@ -19,9 +19,7 @@
  * field_attach_extra_weight() to retrieve the user-defined weight when
  * inserting the component.
  *
- * @param $bundle
- *   The name of the bundle being considered.
- * @return
+ * @return @todo
  *   An array of 'pseudo-field' components. The keys are the name of the element
  *   as it appears in the form structure. The values are arrays with the
  *   following key/value pairs:
@@ -31,7 +29,7 @@
  *   - view: (optional) The name of the element as it appears in the rendered
  *     structure, if different from the name in the form.
  */
-function hook_field_extra_fields($bundle) {
+function hook_field_extra_fields() {
   $extra = array();
 
   if ($type = node_type_get_type($bundle)) {

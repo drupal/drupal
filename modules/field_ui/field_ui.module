@@ -248,7 +248,7 @@ function field_ui_field_ui_view_modes_tabs() {
 /**
  * Implements hook_field_attach_create_bundle().
  */
-function field_ui_field_attach_create_bundle($bundle) {
+function field_ui_field_attach_create_bundle($obj_type, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add our
   // menu item tabs.
   variable_set('menu_rebuild_needed', TRUE);
@@ -257,18 +257,26 @@ function field_ui_field_attach_create_bundle($bundle) {
 /**
  * Implements hook_field_attach_rename_bundle().
  */
-function field_ui_field_attach_rename_bundle($bundle_old, $bundle_new) {
-  if ($bundle_old !== $bundle_new && $extra = variable_get("field_extra_weights_$bundle_old", array())) {
-    variable_set("field_extra_weights_$bundle_new", $extra);
-    variable_del("field_extra_weights_$bundle_old");
+function field_ui_field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new) {
+  if ($bundle_old !== $bundle_new) {
+    $extra_weights = variable_get('field_extra_weights', array());
+    if (isset($info[$obj_type][$bundle_old])) {
+      $extra_weights[$obj_type][$bundle_new] = $extra_weights[$obj_type][$bundle_old];
+      unset($extra_weights[$obj_type][$bundle_old]);
+      variable_set('field_extra_weights', $extra_weights);
+    }
   }
 }
 
 /**
  * Implements hook_field_attach_delete_bundle().
  */
-function field_ui_field_attach_delete_bundle($bundle) {
-  variable_del('field_extra_weights_' . $bundle);
+function field_ui_field_attach_delete_bundle($obj_type, $bundle) {
+  $extra_weights = variable_get('field_extra_weights', array());
+  if (isset($extra_weights[$obj_type][$bundle])) {
+    unset($extra_weights[$obj_type][$bundle]);
+    variable_set('field_extra_weights', $extra_weights);
+  }
 }
 
 /**

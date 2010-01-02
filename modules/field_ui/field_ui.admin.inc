@@ -83,7 +83,7 @@ function field_ui_field_overview_form($form, &$form_state, $obj_type, $bundle) {
   $field_types = field_info_field_types();
   $widget_types = field_info_widget_types();
 
-  $extra = field_extra_fields($bundle);
+  $extra = field_extra_fields($obj_type, $bundle);
 
   // Store each default weight so that we can add the 'add new' rows after them.
   $weights = array();
@@ -479,12 +479,9 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     }
   }
 
-  if ($extra) {
-    variable_set("field_extra_weights_$bundle", $extra);
-  }
-  else {
-    variable_del("field_extra_weights_$bundle");
-  }
+  $extra_weights = variable_get('field_extra_weights', array());
+  $extra_weights[$obj_type][$bundle] = $extra;
+  variable_set('field_extra_weights', $extra_weights);
 
   $destinations = array();
 

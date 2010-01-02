@@ -491,7 +491,7 @@ function field_attach_form($obj_type, $object, &$form, &$form_state, $langcode =
   list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
   $form['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $form['#pre_render'][] = '_field_extra_weights_pre_render';
-  $form['#extra_fields'] = field_extra_fields($bundle);
+  $form['#extra_fields'] = field_extra_fields($obj_type, $bundle);
 
   // Let other modules make changes to the form.
   // Avoid module_invoke_all() to let parameters be taken by reference.
@@ -1200,7 +1200,7 @@ function field_attach_view($obj_type, $object, $view_mode = 'full', $langcode = 
   // Add custom weight handling.
   list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
   $output['#pre_render'][] = '_field_extra_weights_pre_render';
-  $output['#extra_fields'] = field_extra_fields($bundle);
+  $output['#extra_fields'] = field_extra_fields($obj_type, $bundle);
 
   // Include CSS styles.
   $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
@@ -1258,24 +1258,6 @@ function field_attach_preprocess($obj_type, $object, $element, &$variables) {
     'element' => $element,
   );
   drupal_alter('field_attach_preprocess', $variables, $context);
-}
-
-/**
- * Retrieve the user-defined weight for a 'pseudo-field' component.
- *
- * @param $bundle
- *   The bundle name.
- * @param $pseudo_field
- *   The name of the 'pseudo-field'.
- * @return
- *   The weight for the 'pseudo-field', respecting the user settings stored by
- *   field.module.
- */
-function field_attach_extra_weight($bundle, $pseudo_field) {
-  $extra = field_extra_fields($bundle);
-  if (isset($extra[$pseudo_field])) {
-    return $extra[$pseudo_field]['weight'];
-  }
 }
 
 /**

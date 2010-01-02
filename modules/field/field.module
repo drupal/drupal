@@ -370,38 +370,54 @@ function _field_sort_items_value_helper($a, $b) {
 /**
  * Registry of pseudo-field components in a given bundle.
  *
- * @param $bundle_name
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $bundle
  *   The bundle name.
  * @return
  *   The array of pseudo-field elements in the bundle.
  */
-function field_extra_fields($bundle_name) {
+function field_extra_fields($obj_type, $bundle) {
   $info = &drupal_static(__FUNCTION__, array());
 
   if (empty($info)) {
-    $info = array();
-    $bundles = field_info_bundles();
-    foreach ($bundles as $bundle => $bundle_info) {
-      // Gather information about non-field object additions.
-      $extra = module_invoke_all('field_extra_fields', $bundle);
-      drupal_alter('field_extra_fields', $extra, $bundle);
+    $info = (array) module_invoke_all('field_extra_fields');
+    drupal_alter('field_extra_fields', $info);
 
-      // Add saved weights.
-      foreach (variable_get("field_extra_weights_$bundle", array()) as $key => $value) {
-        // Some stored entries might not exist anymore, for instance if uploads
-        // have been disabled or vocabularies were deleted.
-        if (isset($extra[$key])) {
-          $extra[$key]['weight'] = $value;
+    // Add saved weights. The array is keyed by object type, bundle and
+    // element name.
+    $extra_weights = variable_get('field_extra_weights', array());
+    foreach ($extra_weights as $obj_type_name => $bundles) {
+      foreach ($bundles as $bundle_name => $weights) {
+        foreach ($weights as $key => $value) {
+          if (isset($info[$obj_type_name][$bundle_name][$key])) {
+            $info[$obj_type_name][$bundle_name][$key]['weight'] = $value;
+          }
         }
       }
-      $info[$bundle] = $extra;
     }
   }
-  if (array_key_exists($bundle_name, $info)) {
-    return $info[$bundle_name];
-  }
-  else {
-    return array();
+
+  return isset($info[$obj_type][$bundle]) ? $info[$obj_type][$bundle]: array();
+}
+
+/**
+ * Retrieve the user-defined weight for a 'pseudo-field' component.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $bundle
+ *   The bundle name.
+ * @param $pseudo_field
+ *   The name of the 'pseudo-field'.
+ * @return
+ *   The weight for the 'pseudo-field', respecting the user settings stored by
+ *   field.module.
+ */
+function field_extra_field_weight($obj_type, $bundle, $pseudo_field) {
+  $extra = field_extra_fields($obj_type, $bundle);
+  if (isset($extra[$pseudo_field])) {
+    return $extra[$pseudo_field]['weight'];
   }
 }
 
@@ -425,7 +441,7 @@ function _field_extra_weights_pre_render($elements) {
 }
 
 /**
- * Clear the field info and field date caches.
+ * Clear the field info and field data caches.
  */
 function field_cache_clear() {
   cache_clear_all('*', 'cache_field', TRUE);

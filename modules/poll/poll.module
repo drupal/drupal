@@ -193,21 +193,19 @@ function poll_node_info() {
 /**
  * Implements hook_field_extra_fields().
  */
-function poll_field_extra_fields($bundle) {
-  $extra = array();
-
-  if ($bundle == 'poll') {
-    $extra['choice_wrapper'] = array(
+function poll_field_extra_fields() {
+  $extra['node']['poll'] = array(
+    'choice_wrapper' => array(
       'label' => t('Poll choices'),
       'description' => t('Poll module choices.'),
       'weight' => -4,
-    );
-    $extra['settings'] = array(
+    ),
+    'settings' => array(
       'label' => t('Poll settings'),
       'description' => t('Poll module settings.'),
       'weight' => -3,
-    );
-  }
+    ),
+  );
 
   return $extra;
 }
