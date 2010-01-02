@@ -1140,17 +1140,14 @@ class DrupalWebTestCase extends DrupalTestCase {
     variable_set('install_profile', 'default');
     $profile_details = install_profile_info('default', 'en');
 
-    // Add the specified modules to the list of modules in the default profile.
     // Install the modules specified by the default profile.
     drupal_install_modules($profile_details['dependencies'], TRUE);
 
     drupal_static_reset('_node_types_build');
 
-    // Install additional modules one at a time in order to make sure that the
-    // list of modules is updated between each module's installation.
-    $modules = func_get_args();
-    foreach ($modules as $module) {
-      drupal_install_modules(array($module), TRUE);
+    if ($modules = func_get_args()) {
+      // Install modules needed for this test.
+      drupal_install_modules($modules, TRUE);
     }
 
     // Because the schema is static cached, we need to flush

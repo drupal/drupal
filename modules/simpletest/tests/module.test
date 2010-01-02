@@ -99,6 +99,30 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $this->drupalGet('');
     $this->assertTrue(cache_get('module_implements', 'cache_bootstrap'), t('The module implements cache is populated after requesting a page.'));
   }
+
+  /**
+   * Test drupal_install_modules() and dependency resolution.
+   */
+  function testDrupalInstallModules() {
+    drupal_install_modules(array('module_test'));
+    $this->assertTrue(module_exists('module_test'), t('Test module is enabled.'));
+
+    // First, create a fake missing dependency. Forum depends on poll, which
+    // depends on a made-up module, foo. Nothing should be installed.
+    variable_set('dependency_test', 'missing dependency');
+    $result = drupal_install_modules(array('forum'));
+    $this->assertFalse($result, t('drupal_install_modules() returns FALSE if dependencies are missing.'));
+    $this->assertFalse(module_exists('forum'), t('drupal_install_modules() aborts if dependencies are missing.'));
+
+    // Now, fix the missing dependency. drupal_install_modules() should work.
+    variable_set('dependency_test', 'dependency');
+    $result = drupal_install_modules(array('forum'));
+    $this->assertTrue($result, t('drupal_install_modules() returns the correct value.'));
+    // Verify that the fake dependency chain was installed.
+    $this->assertTrue(module_exists('poll') && module_exists('php'), t('Dependency chain was installed by drupal_install_modules().'));
+    // Finally, verify that the original module was installed.
+    $this->assertTrue(module_exists('forum'), t('Module installation with unlisted dependencies succeeded.'));
+  }
 }
 
 /**

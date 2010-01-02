@@ -537,6 +537,10 @@ function drupal_verify_profile($install_state) {
  *   The modules to install.
  * @param $disable_modules_installed_hook
  *   Normally just testing wants to set this to TRUE.
+ * 
+ * @return
+ *   TRUE if installation was attempted, FALSE if one or more dependencies are
+ *   missing.
  */
 function drupal_install_modules($module_list = array(), $disable_modules_installed_hook = FALSE) {
   $files = system_rebuild_module_data();
@@ -547,7 +551,18 @@ function drupal_install_modules($module_list = array(), $disable_modules_install
       $file = $files[$module];
       if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
         foreach ($file->info['dependencies'] as $dependency) {
-          if (isset($module_list[$dependency]) && $module_list[$module] < $module_list[$dependency] +1) {
+          if (!isset($module_list[$dependency])) {
+            if (!isset($files[$dependency])) {
+              // A dependency was not found, abort installation.
+              return FALSE;
+            }
+            elseif (!$files[$dependency]->status) {
+              // Add dependencies to $module_list and install them first.
+              $module_list[$dependency] = $weight - 1;
+              $moved = TRUE;
+            }
+          }
+          elseif ($module_list[$module] < $module_list[$dependency] +1) {
             $module_list[$module] = $module_list[$dependency] +1;
             $moved = TRUE;
           }
@@ -558,6 +573,7 @@ function drupal_install_modules($module_list = array(), $disable_modules_install
   asort($module_list);
   $module_list = array_keys($module_list);
   module_enable($module_list, $disable_modules_installed_hook);
+  return TRUE;
 }
 
 /**
