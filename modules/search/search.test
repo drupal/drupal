@@ -5,6 +5,7 @@
 // Here we test with _test_ and _test2_ as the type.
 define('SEARCH_TYPE', '_test_');
 define('SEARCH_TYPE_2', '_test2_');
+define('SEARCH_TYPE_JPN', '_test3_');
 
 class SearchMatchTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -41,6 +42,14 @@ class SearchMatchTestCase extends DrupalWebTestCase {
     }
     for ($i = 1; $i <= 5; ++$i) {
       search_index($i + 7, SEARCH_TYPE_2, $this->getText2($i));
+    }
+    // No getText builder function for Japanese text; just a simple array.
+    foreach (array(
+      13 => '以呂波耳・ほへとち。リヌルヲ。',
+      14 => 'ドルーパルが大好きよ！',
+      15 => 'コーヒーとケーキ',
+    ) as $i => $jpn) {
+      search_index($i, SEARCH_TYPE_JPN, $jpn);
     }
     search_update_totals();
   }
@@ -162,6 +171,29 @@ class SearchMatchTestCase extends DrupalWebTestCase {
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
     }
+    
+    // These queries are run against the third index type, SEARCH_TYPE_JPN.
+    $queries = array(
+      // Simple AND queries.
+      '呂波耳' => array(13),
+      '以呂波耳' => array(13),
+      'ほへと　ヌルヲ' => array(13),
+      'とちリ' => array(),
+      'ドルーパル' => array(14),
+      'パルが大' => array(14),
+      'コーヒー' => array(15),
+      'ヒーキ' => array(),
+    );
+    foreach ($queries as $query => $results) {
+      $result = db_select('search_index', 'i')
+        ->extend('SearchQuery')
+        ->searchExpression($query, SEARCH_TYPE_JPN)
+        ->execute();
+
+      $set = $result ? $result->fetchAll() : array();
+      $this->_testQueryMatching($query, $set, $results);
+      $this->_testQueryScores($query, $set, $results);
+    }      
   }
 
   /**
