@@ -271,7 +271,8 @@ function poll_form($node, &$form_state) {
     '#value' => t('More choices'),
     '#description' => t("If the amount of boxes above isn't enough, click here to add more choices."),
     '#weight' => 1,
-    '#submit' => array('poll_more_choices_submit'), // If no javascript action.
+    '#limit_validation_errors' => array(array('choice')),
+    '#submit' => array('poll_more_choices_submit'),
     '#ajax' => array(
       'callback' => 'poll_choice_js',
       'wrapper' => 'poll-choices',
@@ -322,9 +323,13 @@ function poll_form($node, &$form_state) {
 }
 
 /**
- * Submit handler to add more choices to a poll form. This handler is used when
- * javascript is not available. It makes changes to the form state and the
- * entire form is rebuilt during the page reload.
+ * Submit handler to add more choices to a poll form.
+ *
+ * This handler is run regardless of whether JS is enabled or not. It makes
+ * changes to the form state. If the button was clicked with JS disabled, then
+ * the page is reloaded with the complete rebuilt form. If the button was
+ * clicked with JS enabled, then ajax_form_callback() calls poll_choice_js() to
+ * return just the changed part of the form.
  */
 function poll_more_choices_submit($form, &$form_state) {
   include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'node') . '/node.pages.inc';
@@ -379,7 +384,12 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
 }
 
 /**
- * Menu callback for AHAH additions. Render the new poll choices.
+ * Ajax callback in response to new choices being added to the form.
+ *
+ * This returns the new page content to replace the page content made obsolete
+ * by the form submission.
+ *
+ * @see poll_more_choices_submit()
  */
 function poll_choice_js($form, $form_state) {
   return $form['choice_wrapper']['choice'];

@@ -231,6 +231,27 @@ class FormValidationTestCase extends DrupalWebTestCase {
     $this->assertNoFieldByName('name', t('Form element was hidden.'));
     $this->assertText('Name value: element_validate_access', t('Value for inaccessible form element exists.'));
   }
+
+  /**
+   * Tests partial form validation through #limit_validation_errors.
+   */
+  function testValidateLimitErrors() {
+    $edit = array('test' => 'invalid');
+    $path = 'form-test/limit-validation-errors';
+
+    // Submit the form by pressing the button with #limit_validation_errors and
+    // ensure that the title field is not validated, but the #element_validate
+    // handler for the 'test' field is triggered.
+    $this->drupalPost($path, $edit, t('Partial validate'));
+    $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
+    $this->assertText('Test element is invalid');
+
+    // Now test full form validation and ensure that the #element_validate
+    // handler is still triggered.
+    $this->drupalPost($path, $edit, t('Full validate'));
+    $this->assertText(t('!name field is required.', array('!name' => 'Title')));
+    $this->assertText('Test element is invalid');
+  }
 }
 
 /**

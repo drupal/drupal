@@ -888,19 +888,11 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
       _form_validate($elements[$key], $form_state);
     }
   }
+
   // Validate the current input.
   if (!isset($elements['#validated']) || !$elements['#validated']) {
+    // The following errors are always shown.
     if (isset($elements['#needs_validation'])) {
-      // Make sure a value is passed when the field is required.
-      // A simple call to empty() will not cut it here as some fields, like
-      // checkboxes, can return a valid value of '0'. Instead, check the
-      // length if it's a string, and the item count if it's an array.
-      // An unchecked checkbox has a #value of numeric 0, different than string
-      // '0', which could be a valid value.
-      if ($elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0) || $elements['#value'] === 0)) {
-        form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
-      }
-
       // Verify that the value is not longer than #maxlength.
       if (isset($elements['#maxlength']) && drupal_strlen($elements['#value']) > $elements['#maxlength']) {
         form_error($elements, $t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
@@ -929,6 +921,36 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
       }
     }
 
+    // While this element is being validated, it may be desired that some calls
+    // to form_set_error() be suppressed and not result in a form error, so
+    // that a button that implements low-risk functionality (such as "Previous"
+    // or "Add more") that doesn't require all user input to be valid can still
+    // have its submit handlers triggered. The clicked button's
+    // #limit_validation_errors property contains the information for which
+    // errors are needed, and all other errors are to be suppressed. The
+    // #limit_validation_errors property is ignored if the button doesn't also
+    // define its own submit handlers, because it's too large a security risk to
+    // have any invalid user input when executing form-level submit handlers.
+    if (isset($form_state['clicked_button']['#limit_validation_errors']) && isset($form_state['clicked_button']['#submit'])) {
+      form_set_error(NULL, '', $form_state['clicked_button']['#limit_validation_errors']);
+    }
+    else {
+      // As an extra security measure, explicitly turn off error suppression.
+      // Since this is also done at the end of this function, doing it here is
+      // only to handle the rare edge case where a validate handler invokes form
+      // processing of another form.
+      drupal_static_reset('form_set_error:limit_validation_errors');
+    }
+    // Make sure a value is passed when the field is required.
+    // A simple call to empty() will not cut it here as some fields, like
+    // checkboxes, can return a valid value of '0'. Instead, check the
+    // length if it's a string, and the item count if it's an array.
+    // An unchecked checkbox has a #value of numeric 0, different than string
+    // '0', which could be a valid value.
+    if (isset($elements['#needs_validation']) && $elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0) || $elements['#value'] === 0)) {
+      form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
+    }
+
     // Call user-defined form level validators.
     if (isset($form_id)) {
       form_execute_handlers('validate', $elements, $form_state);
@@ -944,6 +966,11 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     }
     $elements['#validated'] = TRUE;
   }
+
+  // Done validating this element, so turn off error suppression.
+  // _form_validate() turns it on again when starting on the next element, if
+  // it's still appropriate to do so.
+  drupal_static_reset('form_set_error:limit_validation_errors');
 }
 
 /**
@@ -1005,18 +1032,99 @@ function form_execute_handlers($type, &$form, &$form_state) {
  *   element where the #parents array starts with 'foo'.
  * @param $message
  *   The error message to present to the user.
+ * @param $limit_validation_errors
+ *   Internal use only. The #limit_validation_errors property of the clicked
+ *   button if it exists. Multistep forms not wanting to validate the whole form
+ *   can set the #limit_validation_errors property on buttons to avoid
+ *   validation errors of some elements preventing the button's submit handlers
+ *   from running. For example, pressing the "Previous" button should not fire
+ *   validation errors just because the current step has invalid values. AJAX is
+ *   another typical example.
+ *   If this property is set on the clicked button, the button must also define
+ *   its #submit property and those handlers will be executed even if there is
+ *   invalid input, so extreme care should be taken with respect to what is
+ *   performed by them. This is typically not a problem with buttons like
+ *   "Previous" or "Add more" that do not invoke persistent storage of the
+ *   submitted form values.
+ *   Do not use the #limit_validation_errors property on buttons that trigger
+ *   saving of form values to the database.
+ *   The #limit_validation_errors property is a list of "sections" within
+ *   $form_state['values'] that must contain valid values. Each "section" is an
+ *   array with the ordered set of keys needed to reach that part of
+ *   $form_state['values'] (i.e., the #parents property of the element).
+ *   For example:
+ *   @code
+ *     $form['actions']['previous']['#limit_validation_errors'] = array(
+ *       array('step1'),
+ *       array('foo', 'bar'),
+ *     );
+ *   @endcode
+ *   This will require $form_state['values']['step1'] and everything within it
+ *   (for example, $form_state['values']['step1']['choice']) to be valid, so
+ *   calls to form_set_error('step1', $message) or
+ *   form_set_error('step1][choice', $message) will prevent the submit handlers
+ *   from running, and result in the error message being displayed to the user.
+ *   However, calls to form_set_error('step2', $message) and
+ *   form_set_error('step2][groupX][choiceY', $message) will be suppressed,
+ *   resulting in the message not being displayed to the user, and the submit
+ *   handlers will run despite $form_state['values']['step2'] and
+ *   $form_state['values']['step2']['groupX']['choiceY'] containing invalid
+ *   values. Errors for an invalid $form_state['values']['foo'] will be
+ *   suppressed, but errors for invalid values for
+ *   $form_state['values']['foo']['bar'] and everything within it will be
+ *   recorded. If the button doesn't need any user input to be valid, then the
+ *   #limit_validation_errors can be set to an empty array, in which case, all
+ *   calls to form_set_error() will be suppressed.
+ *   Partial form validation is implemented by suppressing errors rather than by
+ *   skipping the input processing and validation steps entirely, because some
+ *   forms have button-level submit handlers that call Drupal API functions that
+ *   assume that certain data exists within $form_state['values'], and while not
+ *   doing anything with that data that requires it to be valid, PHP errors
+ *   would be triggered if the input processing and validation steps were fully
+ *   skipped. @see http://drupal.org/node/370537.
+ *
  * @return
- *   Return value is for internal use only. To get a list of errors, use 
+ *   Return value is for internal use only. To get a list of errors, use
  *   form_get_errors() or form_get_error().
  */
-function form_set_error($name = NULL, $message = '') {
+function form_set_error($name = NULL, $message = '', $limit_validation_errors = NULL) {
   $form = &drupal_static(__FUNCTION__, array());
+  $sections = &drupal_static(__FUNCTION__ . ':limit_validation_errors');
+  if (isset($limit_validation_errors)) {
+    $sections = $limit_validation_errors;
+  }
+
   if (isset($name) && !isset($form[$name])) {
-    $form[$name] = $message;
-    if ($message) {
-      drupal_set_message($message, 'error');
+    $record = TRUE;
+    if (isset($sections)) {
+      // #limit_validation_errors is an array of "sections" within which user
+      // input must be valid. If the element is within one of these sections,
+      // the error must be recorded. Otherwise, it can be suppressed.
+      // #limit_validation_errors can be an empty array, in which case all
+      // errors are suppressed. For example, a "Previous" button might want its
+      // submit action to be triggered even if none of the submitted values are
+      // valid.
+      $record = FALSE;
+      foreach ($sections as $section) {
+        // Exploding by '][' reconstructs the element's #parents. If the
+        // reconstructed #parents begin with the same keys as the specified
+        // section, then the element's values are within the part of
+        // $form_state['values'] that the clicked button requires to be valid,
+        // so errors for this element must be recorded.
+        if (array_slice(explode('][', $name), 0, count($section)) === $section) {
+          $record = TRUE;
+          break;
+        }
+      }
+    }
+    if ($record) {
+      $form[$name] = $message;
+      if ($message) {
+        drupal_set_message($message, 'error');
+      }
     }
   }
+
   return $form;
 }
 
@@ -3261,7 +3369,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
   $batch =& batch_get();
 
   drupal_theme_initialize();
-  
+
   if (isset($batch)) {
     // Add process information
     $process_info = array(
@@ -3276,7 +3384,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
     );
     $batch += $process_info;
 
-    // The batch is now completely built. Allow other modules to make changes to the 
+    // The batch is now completely built. Allow other modules to make changes to the
     // batch so that it is easier to reuse batch processes in other enviroments.
     drupal_alter('batch', $batch);
 

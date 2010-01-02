@@ -214,7 +214,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
           '#name' => $field_name . '_add_more',
           '#value' => t('Add another item'),
           '#attributes' => array('class' => array('field-add-more-submit')),
-          // Submit callback for disabled JavaScript.
+          '#limit_validation_errors' => array(array($field_name, $langcode)),
           '#submit' => array('field_add_more_submit'),
           '#ajax' => array(
             'callback' => 'field_add_more_js',
@@ -341,9 +341,13 @@ function field_default_form_errors($obj_type, $object, $field, $instance, $langc
 }
 
 /**
- * Submit handler to add more choices to a field form. This handler is used when
- * JavaScript is not available. It makes changes to the form state and the
- * entire form is rebuilt during the page reload.
+ * Submit handler for the "Add another item" button of a field form.
+ *
+ * This handler is run regardless of whether JS is enabled or not. It makes
+ * changes to the form state. If the button was clicked with JS disabled, then
+ * the page is reloaded with the complete rebuilt form. If the button was
+ * clicked with JS enabled, then ajax_form_callback() calls field_add_more_js()
+ * to return just the changed part of the form.
  */
 function field_add_more_submit($form, &$form_state) {
   // Set the form to rebuild and run submit handlers.
@@ -360,7 +364,12 @@ function field_add_more_submit($form, &$form_state) {
 }
 
 /**
- * Ajax callback for addition of new empty widgets.
+ * Ajax callback in response to a new empty widget being added to the form.
+ *
+ * This returns the new page content to replace the page content made obsolete
+ * by the form submission.
+ *
+ * @see field_add_more_submit()
  */
 function field_add_more_js($form, $form_state) {
   // Retrieve field information.

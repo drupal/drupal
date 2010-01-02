@@ -17,6 +17,13 @@ function form_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['form-test/limit-validation-errors'] = array(
+    'title' => 'Form validation with some error suppression',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_limit_validation_errors_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
 
   $items['form_test/tableselect/multiple-true'] = array(
     'title' => 'Tableselect checkboxes test',
@@ -200,6 +207,41 @@ function form_test_validate_form_validate(&$form, &$form_state) {
 
     // Trigger a form validation error to see our changes.
     form_set_error('');
+  }
+}
+
+/**
+ * Builds a simple form with a button triggering partial validation.
+ */
+function form_test_limit_validation_errors_form($form, &$form_state) {
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Title',
+    '#required' => TRUE,
+  );
+  $form['test'] = array(
+    '#type' => 'textfield',
+    '#element_validate' => array('form_test_limit_validation_errors_element_validate_test'),
+  );
+  $form['actions']['partial'] = array(
+    '#type' => 'submit',
+    '#limit_validation_errors' => array(array('test')),
+    '#submit' => array(),
+    '#value' => t('Partial validate'),
+  );
+  $form['actions']['full'] = array(
+    '#type' => 'submit',
+    '#value' => t('Full validate'),
+  );
+  return $form;
+}
+
+/**
+ * Form element validation handler for the 'test' element.
+ */
+function form_test_limit_validation_errors_element_validate_test(&$element, &$form_state) {
+  if ($element['#value'] == 'invalid') {
+    form_error($element, 'Test element is invalid');
   }
 }
 
@@ -895,7 +937,7 @@ function form_test_state_persist($form, &$form_state) {
 
 /**
  * Submit handler.
- * 
+ *
  * @see form_test_state_persist()
  */
 function form_test_state_persist_submit($form, &$form_state) {
@@ -905,7 +947,7 @@ function form_test_state_persist_submit($form, &$form_state) {
 
 /**
  * Implements hook_form_FORM_ID_alter().
- * 
+ *
  * @see form_test_state_persist()
  */
 function form_test_form_form_test_state_persist_alter(&$form, &$form_state) {
