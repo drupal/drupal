@@ -242,13 +242,13 @@ class MenuTestCase extends DrupalWebTestCase {
 
     $title = '!link_' . $this->randomName(16);
     $edit = array(
-      'menu[link_path]' => $link,
-      'menu[link_title]' => $title,
-      'menu[description]' => '',
-      'menu[enabled]' => TRUE, // Use this to disable the menu and test.
-      'menu[expanded]' => TRUE, // Setting this to true should test whether it works when we do the std_user tests.
-      'menu[parent]' =>  $menu_name . ':' . $plid,
-      'menu[weight]' => '0',
+      'link_path' => $link,
+      'link_title' => $title,
+      'description' => '',
+      'enabled' => TRUE, // Use this to disable the menu and test.
+      'expanded' => TRUE, // Setting this to true should test whether it works when we do the std_user tests.
+      'parent' =>  $menu_name . ':' . $plid,
+      'weight' => '0',
     );
 
     // Add menu link.
@@ -288,8 +288,8 @@ class MenuTestCase extends DrupalWebTestCase {
   function addInvalidMenuLink($menu_name = 'navigation') {
     foreach (array('-&-', 'admin/config/people/permissions') as $link_path) {
       $edit = array(
-        'menu[link_path]' => $link_path,
-        'menu[link_title]' => 'title',
+        'link_path' => $link_path,
+        'link_title' => 'title',
       );
       $this->drupalPost("admin/structure/menu/manage/$menu_name/add", $edit, t('Save'));
       $this->assertRaw(t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $link_path)), 'Menu link was not created');
@@ -344,7 +344,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Edit menu link.
     $edit = array();
-    $edit['menu[link_title]'] = $title;
+    $edit['link_title'] = $title;
     $this->drupalPost("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
     $this->assertResponse(200);
     // Unlike most other modules, there is no confirmation message displayed.
@@ -421,7 +421,7 @@ class MenuTestCase extends DrupalWebTestCase {
    */
   function disableMenuLink($item) {
     $mlid = $item['mlid'];
-    $edit['menu[enabled]'] = FALSE;
+    $edit['enabled'] = FALSE;
     $this->drupalPost("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
 
     // Unlike most other modules, there is no confirmation message displayed.
@@ -438,7 +438,7 @@ class MenuTestCase extends DrupalWebTestCase {
    */
   function enableMenuLink($item) {
     $mlid = $item['mlid'];
-    $edit['menu[enabled]'] = TRUE;
+    $edit['enabled'] = TRUE;
     $this->drupalPost("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
 
     // Verify in the database.
