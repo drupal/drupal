@@ -704,13 +704,14 @@ function field_has_data($field) {
 function field_access($op, $field, $obj_type, $object = NULL, $account = NULL) {
   global $user;
 
-  if (is_null($account)) {
+  if (!isset($account)) {
     $account = $user;
   }
 
-  $field_access = module_invoke_all('field_access', $op, $field, $obj_type, $object, $account);
-  foreach ($field_access as $value) {
-    if ($value === FALSE) {
+  foreach (module_implements('field_access') as $module) {
+    $function = $module . '_field_access';
+    $access = $function($op, $field, $obj_type, $object, $account);
+    if ($access === FALSE) {
       return FALSE;
     }
   }
