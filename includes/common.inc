@@ -5026,9 +5026,6 @@ function drupal_render(&$elements) {
     return;
   }
 
-  // Get the children of the element, sorted by weight.
-  $children = element_children($elements, TRUE);
-
   // Initialize this element's #children, unless a #pre_render callback already
   // preset #children.
   if (!isset($elements['#children'])) {
@@ -5043,7 +5040,8 @@ function drupal_render(&$elements) {
   // This is the same process as drupal_render_children() but is inlined
   // for speed.
   if ($elements['#children'] == '') {
-    foreach ($children as $key) {
+    // Iterate through the children of the element, sorted by weight.
+    foreach (element_children($elements, TRUE) as $key) {
       $elements['#children'] .= drupal_render($elements[$key]);
     }
   }
