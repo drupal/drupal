@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.242 2009/12/28 20:51:18 dries Exp $
+// $Id: system.admin.inc,v 1.243 2010/01/02 18:58:57 webchick Exp $
 
 /**
  * @file
@@ -288,6 +288,12 @@ function system_themes_page() {
           'href' => 'admin/appearance/enable',
           'query' => $query,
           'attributes' => array('title' => t('Enable !theme theme', array('!theme' => $theme->info['name']))),
+        );
+        $theme->operations[] = array(
+          'title' => t('Enable and set default'),
+          'href' => 'admin/appearance/default',
+          'query' => $query,
+          'attributes' => array('title' => t('Enable !theme as default theme', array('!theme' => $theme->info['name']))),
         );
       }
     }
