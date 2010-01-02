@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1095 2009/12/26 16:50:09 dries Exp $
+// $Id: user.module,v 1.1096 2010/01/02 15:00:34 dries Exp $
 
 /**
  * @file
@@ -155,28 +155,26 @@ function user_entity_info() {
 /**
  * Implements hook_field_extra_fields().
  */
-function user_field_extra_fields($bundle) {
-  $extra = array();
-
-  if ($bundle == 'user') {
-    $extra['account'] = array(
+function user_field_extra_fields() {
+  $return['user']['user'] = array(
+    'account' => array(
       'label' => 'User name and password',
       'description' => t('User module account form elements'),
       'weight' => -10,
-    );
-    $extra['timezone'] = array(
+    ),
+    'timezone' => array(
       'label' => 'Timezone',
       'description' => t('User module timezone form element.'),
       'weight' => 6,
-    );
-    $extra['summary'] = array(
+    ),
+    'summary' => array(
       'label' => 'History',
       'description' => t('User module history view element.'),
       'weight' => 5,
-    );
-  }
+    ),
+  );
 
-  return $extra;
+  return $return;
 }
 
 function user_external_load($authname) {
