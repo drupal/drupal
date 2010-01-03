@@ -1674,13 +1674,6 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#weight' => 15,
   );
 
-  // Allow the profile to alter this form. $form_state isn't available
-  // here, but to conform to the hook_form_alter() signature, we pass
-  // an empty array.
-  $hook_form_alter = $install_state['parameters']['profile'] . '_form_alter';
-  if (function_exists($hook_form_alter)) {
-    $hook_form_alter($form, array(), 'install_configure');
-  }
   return $form;
 }
 
