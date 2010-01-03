@@ -985,7 +985,7 @@ function system_menu() {
     'title' => 'User interface',
     'description' => 'Tools that enhance the user interface.',
     'position' => 'right',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
     'weight' => -5,
