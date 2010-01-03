@@ -156,6 +156,7 @@ function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = arr
   }
   $query = db_select('taxonomy_index', 't');
   $query->addTag('node_access');
+  $query->condition('tid', $tid);
   if ($pager) {
     $count_query = clone $query;
     $count_query->addExpression('COUNT(t.nid)');
@@ -171,7 +172,6 @@ function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = arr
       $query->range(0, $limit);
     }
   }
-  $query->condition('tid', $tid);
   $query->addField('t', 'nid');
   $query->addField('t', 'tid');
   foreach ($order as $field => $direction) {
