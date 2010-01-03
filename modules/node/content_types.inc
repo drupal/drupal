@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.106 2009/12/22 14:01:05 dries Exp $
+// $Id: content_types.inc,v 1.107 2010/01/03 00:44:53 webchick Exp $
 
 /**
  * @file
@@ -48,7 +48,7 @@ function node_overview_types() {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#empty' => t('No content types available.'),
+    '#empty' => t('No content types available. <a href="@link">Add content type</a>.', array('@link' => url('admin/structure/types/add'))),
   );
 
   return $build;

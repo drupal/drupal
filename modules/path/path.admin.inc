@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.39 2009/12/17 13:10:19 dries Exp $
+// $Id: path.admin.inc,v 1.40 2010/01/03 00:44:53 webchick Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function path_admin_overview($keys = NULL) {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#empty' => t('No URL aliases available.'),
+    '#empty' => t('No URL aliases available. <a href="@link">Add alias</a>.', array('@link' => url('admin/config/search/path/add'))),
   );
   $build['path_pager'] = array('#theme' => 'pager');
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.243 2010/01/02 18:58:57 webchick Exp $
+// $Id: system.admin.inc,v 1.244 2010/01/03 00:44:53 webchick Exp $
 
 /**
  * @file
@@ -2744,7 +2744,7 @@ function system_date_time_formats() {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#empty' => ('No custom date formats available.'),
+    '#empty' => t('No custom date formats available. <a href="@link">Add date format</a>.', array('@link' => url('admin/config/regional/date-time/formats/add'))),
   );
 
   return $build;
