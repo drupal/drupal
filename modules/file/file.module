@@ -292,7 +292,7 @@ function file_ajax_progress($key) {
     }
   }
 
-  drupal_json($progress);
+  drupal_json_output($progress);
 }
 
 /**
