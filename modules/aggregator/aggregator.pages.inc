@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.37 2009/10/09 00:59:55 dries Exp $
+// $Id: aggregator.pages.inc,v 1.38 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -184,7 +184,8 @@ function aggregator_categorize_items($items, $feed_source = '') {
       '#multiple' => TRUE
     );
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save categories'));
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save categories'));
 
   return $form;
 }

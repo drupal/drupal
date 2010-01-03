@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.16 2009/11/08 13:23:41 webchick Exp $
+// $Id: image.admin.inc,v 1.17 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -388,12 +388,12 @@ function image_effect_form($form, &$form_state, $style, $effect) {
     '#value' => isset($_GET['weight']) ? intval($_GET['weight']) : (isset($effect['weight']) ? $effect['weight'] : count($style['effects'])),
   );
 
-  $form['buttons'] = array('#tree' => FALSE);
-  $form['buttons']['submit'] = array(
+  $form['actions'] = array('#tree' => FALSE, '#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => isset($effect['ieid']) ? t('Update effect') : t('Add effect'),
   );
-  $form['buttons']['cancel'] = array(
+  $form['actions']['cancel'] = array(
     '#type' => 'link',
     '#title' => t('Cancel'),
     '#href' => 'admin/config/media/image-styles/edit/' . $style['name'],

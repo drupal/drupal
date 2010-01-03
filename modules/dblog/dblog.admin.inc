@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.32 2009/12/02 14:56:32 dries Exp $
+// $Id: dblog.admin.inc,v 1.33 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -274,7 +274,6 @@ function dblog_filter_form($form) {
   $form['filters'] = array(
     '#type' => 'fieldset',
     '#title' => t('Filter log messages'),
-    '#theme' => 'dblog_filters',
     '#collapsible' => TRUE,
     '#collapsed' => empty($session),
   );
@@ -291,12 +290,16 @@ function dblog_filter_form($form) {
     }
   }
 
-  $form['filters']['buttons']['submit'] = array(
+  $form['filters']['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+  );
+  $form['filters']['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
   );
   if (!empty($_SESSION['dblog_overview_filter'])) {
-    $form['filters']['buttons']['reset'] = array(
+    $form['filters']['actions']['reset'] = array(
       '#type' => 'submit',
       '#value' => t('Reset')
     );

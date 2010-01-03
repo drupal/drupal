@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.47 2010/01/03 00:44:53 webchick Exp $
+// $Id: aggregator.admin.inc,v 1.48 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -470,7 +470,8 @@ function aggregator_admin_form($form, $form_state) {
   // Implementing modules will expect an array at $form['modules'].
   $form['modules'] = array();
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );

@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.19 2009/12/28 11:53:49 dries Exp $
+// $Id: contact.admin.inc,v 1.20 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -97,7 +97,8 @@ function contact_category_edit_form($form, &$form_state, array $category = array
     '#type' => 'value',
     '#value' => $category['cid'],
   );
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );

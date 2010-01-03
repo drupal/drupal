@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.46 2009/12/06 18:11:41 webchick Exp $
+// $Id: dblog.module,v 1.47 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -32,17 +32,6 @@ function dblog_help($path, $arg) {
     case 'admin/reports/dblog':
       return '<p>' . t('The Database logging module monitors your website, capturing system events in a log (shown here) to be reviewed by an authorized individual at a later time. This log is a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the Recent log entries report on a regular basis, as it is often the only way to tell what is going on.') . '</p>';
   }
-}
-
-/**
- * Implements hook_theme().
- */
-function dblog_theme() {
-  return array(
-    'dblog_filters' => array(
-      'render element' => 'form',
-    ),
-  );
 }
 
 /**
@@ -172,21 +161,6 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
     '#options' => array(0 => t('All')) + drupal_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
     '#description' => t('The maximum number of entries to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
   );
-  $form['buttons']['#weight'] = 1;
+  $form['actions']['#weight'] = 1;
 }
 
-/**
- * Theme dblog administration filter selector.
- *
- * @ingroup themeable
- */
-function theme_dblog_filters($variables) {
-  $form = $variables['form'];
-  $output = '';
-
-  foreach (element_children($form['status']) as $key) {
-    $output .= drupal_render($form['status'][$key]);
-  }
-  $output .= '<div id="dblog-admin-buttons">' . drupal_render($form['buttons']) . '</div>';
-  return $output;
-}

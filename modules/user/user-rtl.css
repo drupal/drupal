@@ -1,11 +1,11 @@
-/* $Id: user-rtl.css,v 1.6 2009/11/17 02:50:41 webchick Exp $ */
+/* $Id: user-rtl.css,v 1.7 2010/01/03 21:01:04 webchick Exp $ */
 
 #permissions td.permission {
   padding-left: 0;
   padding-right: 1.5em;
 }
 
-#user-admin-filter dl.multiselect dd .form-item label {
+#user-filter-form dl.multiselect dd .form-item label {
   float: right;
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.34 2010/01/02 15:00:34 dries Exp $
+// $Id: field_ui.admin.inc,v 1.35 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -867,7 +867,8 @@ function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $
   $form['#object_type'] = $obj_type;
   $form['#bundle'] = $bundle;
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));
   return $form;
 }
 

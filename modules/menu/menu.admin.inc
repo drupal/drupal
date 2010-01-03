@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.70 2010/01/02 19:25:20 webchick Exp $
+// $Id: menu.admin.inc,v 1.71 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -63,8 +63,10 @@ function menu_overview_form($form, &$form_state, $menu) {
 
   $form = array_merge($form, _menu_overview_tree_form($tree));
   $form['#menu'] =  $menu;
+  
   if (element_children($form)) {
-    $form['submit'] = array(
+    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save configuration'),
     );

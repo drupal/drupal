@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.31 2009/12/04 16:49:47 dries Exp $
+// $Id: syslog.module,v 1.32 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
       '#options'       => syslog_facility_list(),
       '#description'   => t('Depending on the system configuration, Syslog and other logging tools use this code to identify or filter messages from within the entire system log.') . $help,
      );
-    $form['buttons']['#weight'] = 1;
+    $form['actions']['#weight'] = 1;
   }
 }
 

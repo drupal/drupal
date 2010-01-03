@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.107 2010/01/03 00:44:53 webchick Exp $
+// $Id: content_types.inc,v 1.108 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -234,7 +234,8 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#value' => $type->locked,
   );
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save content type'),
     '#weight' => 40,
@@ -242,7 +243,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
 
   if ($type->custom) {
     if (!empty($type->type)) {
-      $form['delete'] = array(
+      $form['actions']['delete'] = array(
         '#type' => 'submit',
         '#value' => t('Delete content type'),
         '#weight' => 45,

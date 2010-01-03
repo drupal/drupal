@@ -1,4 +1,4 @@
-/* $Id: dblog.css,v 1.7 2009/08/24 03:11:34 webchick Exp $ */
+/* $Id: dblog.css,v 1.8 2010/01/03 21:01:04 webchick Exp $ */
 
 .form-item-type, .form-item-severity {
   float: left; /* LTR */
@@ -11,9 +11,14 @@
    */
   width: 15em;
 }
-#dblog-filter-form .form-item select.form-select {
+#dblog-filter-form .form-type-select select {
   width: 100%;
 }
+#dblog-filter-form .form-actions {
+  float: left;
+  padding: 3ex 0 0 1em;
+}
+
 tr.dblog-user {
   background: #ffd;
 }

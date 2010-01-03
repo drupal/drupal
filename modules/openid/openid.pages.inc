@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.24 2009/11/04 04:56:54 webchick Exp $
+// $Id: openid.pages.inc,v 1.25 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -73,7 +73,8 @@ function openid_user_add() {
     '#type' => 'textfield',
     '#title' => t('OpenID'),
   );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Add an OpenID'));
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add an OpenID'));
   return $form;
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.36 2009/12/02 14:56:32 dries Exp $
+// $Id: profile.admin.inc,v 1.37 2010/01/03 21:01:04 webchick Exp $
 
 /**
  * @file
@@ -284,7 +284,9 @@ Unless you know what you are doing, it is highly recommended that you prefix the
     '#title' => t('Visible in user registration form.'),
     '#default_value' => $edit['register'],
   );
-  $form['submit'] = array('#type' => 'submit',
+
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit',
     '#value' => t('Save field'),
   );
   return $form;
