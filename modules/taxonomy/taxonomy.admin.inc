@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.87 2010/01/03 00:44:53 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.88 2010/01/03 00:45:51 webchick Exp $
 
 /**
  * @file
@@ -638,18 +638,13 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     return array_merge($form, taxonomy_term_confirm_parents($form, $form_state, $vocabulary));
   }
 
-  $form['identification'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Identification'),
-    '#collapsible' => TRUE,
-  );
-  $form['identification']['name'] = array(
+  $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Term name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
     '#required' => TRUE);
-  $form['identification']['description'] = array(
+  $form['description'] = array(
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
