@@ -29,7 +29,7 @@ function aggregator_view() {
   foreach ($result as $feed) {
     $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '@count items'), ($feed->checked ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->checked))) : t('never')), ($feed->checked && $feed->refresh ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - REQUEST_TIME))) : t('never')), l(t('edit'), "admin/config/services/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/config/services/aggregator/remove/$feed->fid"), l(t('update items'), "admin/config/services/aggregator/update/$feed->fid"));
   }
-  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No feeds available.')));
+  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => url('admin/config/services/aggregator/add/feed')))));
 
   $result = db_query('SELECT c.cid, c.title, COUNT(ci.iid) as items FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid GROUP BY c.cid, c.title ORDER BY title');
 
@@ -40,7 +40,7 @@ function aggregator_view() {
   foreach ($result as $category) {
     $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), format_plural($category->items, '1 item', '@count items'), l(t('edit'), "admin/config/services/aggregator/edit/category/$category->cid"));
   }
-  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No categories available.')));
+  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No categories available. <a href="@link">Add category</a>.', array('@link' => url('admin/config/services/aggregator/add/category')))));
 
   return $output;
 }

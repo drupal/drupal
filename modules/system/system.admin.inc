@@ -2744,7 +2744,7 @@ function system_date_time_formats() {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#empty' => ('No custom date formats available.'),
+    '#empty' => t('No custom date formats available. <a href="@link">Add date format</a>.', array('@link' => url('admin/config/regional/date-time/formats/add'))),
   );
 
   return $build;

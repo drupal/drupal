@@ -65,7 +65,7 @@ function path_admin_overview($keys = NULL) {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#empty' => t('No URL aliases available.'),
+    '#empty' => t('No URL aliases available. <a href="@link">Add alias</a>.', array('@link' => url('admin/config/search/path/add'))),
   );
   $build['path_pager'] = array('#theme' => 'pager');
 
