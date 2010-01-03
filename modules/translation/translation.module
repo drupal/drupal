@@ -78,7 +78,7 @@ function translation_menu() {
  * all languages).
  */
 function _translation_tab_access($node) {
-  if ($node->language != LANGUAGE_NONE && translation_supported_type($node->type)) {
+  if ($node->language != LANGUAGE_NONE && translation_supported_type($node->type) && node_access('view', $node)) {
     return user_access('translate content');
   }
   return FALSE;
@@ -201,28 +201,51 @@ function translation_node_view($node, $view_mode) {
  */
 function translation_node_prepare($node) {
   // Only act if we are dealing with a content type supporting translations.
-  if (translation_supported_type($node->type)) {
-    if (empty($node->nid) && isset($_GET['translation']) && isset($_GET['language']) &&
-        ($source_nid = $_GET['translation']) && ($language = $_GET['language']) &&
-        (user_access('translate content'))) {
-      // We are translating a node from a source node, so
-      // load the node to be translated and populate fields.
-      $source_node = node_load($source_nid);
-      // Ensure we don't have an existing translation in this language.
-      if (!empty($source_node->tnid)) {
-        $translations = translation_node_get_translations($source_node->tnid);
-        if (isset($translations[$language])) {
-          $languages = language_list();
-          drupal_set_message(t('A translation of %title in %language already exists, a new %type  will be created instead of a translation.', array('%title' => $source_node->title[LANGUAGE_NONE][0]['value'], '%language' => $languages[$language]->name, '%type' => $node->type)), 'error');
-          return;
-        }
-      }
-      $node->language = $language;
-      $node->translation_source = $source_node;
-      $node->title = $node->translation_source->title;
-      // Let every module add custom translated fields.
-      module_invoke_all('node_prepare_translation', $node);
+  if (translation_supported_type($node->type) &&
+    // And it's a new node.
+    empty($node->nid) &&
+    // And the user has permission to translate content.
+    user_access('translate content') &&
+    // And the $_GET variables are set properly.
+    isset($_GET['translation']) &&
+    isset($_GET['language']) &&
+    is_numeric($_GET['translation'])) {
+    
+    $source_node = node_load($_GET['translation']);
+    if (empty($source_node) || !node_access('view', $source_node)) {
+      // Source node not found or no access to view. We should not check
+      // for edit access, since the translator might not have permissions
+      // to edit the source node but should still be able to translate.
+      return;
     }
+    
+    $language_list = language_list();
+    if (!isset($language_list[$_GET['language']]) || ($source_node->language == $_GET['language'])) {
+      // If not supported language, or same language as source node, break.
+      return;
+    }
+    
+    // Ensure we don't have an existing translation in this language.
+    if (!empty($source_node->tnid)) {
+      $translations = translation_node_get_translations($source_node->tnid);
+      if (isset($translations[$_GET['language']])) {
+        drupal_set_message(t('A translation of %title in %language already exists, a new %type  will be created instead of a translation.', array('%title' => $source_node->title[LANGUAGE_NONE][0]['value'], '%language' => $language_list[$_GET['language']]->name, '%type' => $node->type)), 'error');
+        return;
+      }
+    }
+    
+    // Populate fields based on source node.
+    $node->language = $_GET['language'];
+    $node->translation_source = $source_node;
+    $node->title = $source_node->title;
+
+    // If user has no access to the filter used for the body, Drupal core
+    // does not let the edit form to appear, so we should avoid exposing
+    // the source text here too.
+    $formats = filter_formats();
+    $node->body = (filter_access($formats[$source_node->body[$source_node->language][0]['format']])) ? $source_node->body : '';
+    // Let every module add custom translated fields.
+    module_invoke_all('node_prepare_translation', $node);
   }
 }
 
