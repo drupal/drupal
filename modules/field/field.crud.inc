@@ -200,7 +200,7 @@
  * field_create_instance() for that.
  *
  * @param $field
- *   A field structure. The field_name and type properties are required.
+ *   A field definition array. The field_name and type properties are required.
  *   Other properties, if omitted, will be given the following default values:
  *   - cardinality: 1
  *   - locked: FALSE
@@ -219,7 +219,7 @@
  *     - settings: each omitted setting is given the default value specified in
  *       hook_field_storage_info().
  * @return
- *   The $field structure with the id property filled in.
+ *   The $field array with the id property filled in.
  * @throw
  *   FieldException
  */
@@ -462,7 +462,7 @@ function field_update_field($field) {
  *   $include_additional['include_inactive'] to TRUE will override this
  *   behavior.
  * @return
- *   A field structure, or FALSE.
+ *   A field definition array, or FALSE.
  */
 function field_read_field($field_name, $include_additional = array()) {
   $fields = field_read_fields(array('field_name' => $field_name), $include_additional);
@@ -482,7 +482,7 @@ function field_read_field($field_name, $include_additional = array()) {
  *   behavior.
  * @return
  *   An array of fields matching $params. If
- *   $include_additional['include_deletd'] is TRUE, the array is keyed
+ *   $include_additional['include_deleted'] is TRUE, the array is keyed
  *   by field id, otherwise it is keyed by field name.
  */
 function field_read_fields($params = array(), $include_additional = array()) {
@@ -573,7 +573,7 @@ function field_delete_field($field_name) {
  * Creates an instance of a field, binding it to a bundle.
  *
  * @param $instance
- *   A field instance structure. The field_name, object_type and
+ *   A field instance definition array. The field_name, object_type and
  *   bundle properties are required. Other properties, if omitted,
  *   will be given the following default values:
  *   - label: the field name
@@ -595,7 +595,7 @@ function field_delete_field($field_name) {
  *     - settings: each omitted setting is given the default value specified in
  *       hook_field_formatter_info().
  * @return
- *   The $instance structure with the id property filled in.
+ *   The $instance array with the id property filled in.
  * @throw
  *   FieldException
  */
@@ -649,7 +649,7 @@ function field_create_instance($instance) {
  * Updates an instance of a field.
  *
  * @param $instance
- *   An associative array represeting an instance structure. The required
+ *   An associative array representing an instance structure. The required
  *   keys and values are:
  *     field_name: The name of an existing field.
  *     bundle: The bundle this field belongs to.
