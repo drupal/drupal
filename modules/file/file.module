@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.15 2009/12/12 23:04:57 webchick Exp $
+// $Id: file.module,v 1.16 2010/01/03 22:01:46 webchick Exp $
 
 /**
  * @file
@@ -292,7 +292,7 @@ function file_ajax_progress($key) {
     }
   }
 
-  drupal_json($progress);
+  drupal_json_output($progress);
 }
 
 /**
