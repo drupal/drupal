@@ -292,6 +292,9 @@ function comment_permission() {
     'post comments without approval' => array(
       'title' => t('Post comments without approval'),
     ),
+    'edit own comments' => array(
+      'title' => t('Edit own comments'),
+    ),
   );
 }
 
@@ -1256,7 +1259,7 @@ function comment_access($op, $comment) {
   global $user;
 
   if ($op == 'edit') {
-    return ($user->uid && $user->uid == $comment->uid && comment_num_replies($comment->cid) == 0) || user_access('administer comments');
+    return ($user->uid && $user->uid == $comment->uid && user_access('edit own comments')) || user_access('administer comments');
   }
 }
 
@@ -1541,27 +1544,6 @@ class CommentController extends DrupalDefaultEntityController {
     }
     parent::attachLoad($comments);
   }
-}
-
-/**
- * Get replies count for a comment.
- *
- * @param $pid
- *   The comment id.
- * @return
- *   The replies count.
- */
-function comment_num_replies($pid) {
-  $cache = &drupal_static(__FUNCTION__, array());
-
-  if (!isset($cache[$pid])) {
-    $cache[$pid] = db_query('SELECT COUNT(cid) FROM {comment} WHERE pid = :pid AND status = :status', array(
-      ':pid' => $pid,
-      ':status' => COMMENT_PUBLISHED,
-    ))->fetchField();
-  }
-
-  return $cache[$pid];
 }
 
 /**

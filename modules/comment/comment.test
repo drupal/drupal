@@ -10,7 +10,7 @@ class CommentHelperCase extends DrupalWebTestCase {
     parent::setUp('comment', 'search');
     // Create users and test node.
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer blocks'));
-    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content'));
+    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments'));
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
   }
 
