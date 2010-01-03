@@ -737,12 +737,23 @@ function list_themes($refresh = FALSE) {
  *   the original registered function for the theme hook.
  *
  * @param $hook
- *   The name of the theme function to call. May be an array, in which
- *   case the first hook that actually has an implementation registered
- *   will be used. This can be used to choose 'fallback' theme implementations,
- *   so that if the specific theme hook isn't implemented anywhere, a more
- *   generic one will be used. This can allow themes to create specific theme
- *   implementations for named objects.
+ *   The name of the theme hook to call. If the name contains a
+ *   double-underscore ('__') and there isn't an implementation for the full
+ *   name, the part before the '__' is checked. This allows a fallback to a more
+ *   generic implementation. For example, if theme('links__node', ...) is
+ *   called, but there is no implementation of that hook, then the 'links'
+ *   implementation is used. This process is iterative, so if
+ *   theme('links__contextual__node', ...) is called, theme() checks for the
+ *   following implementations, and uses the first one that exists:
+ *   - links__contextual__node
+ *   - links__contextual
+ *   - links
+ *   This allows themes to create specific theme implementations for named
+ *   objects and contexts of otherwise generic theme hooks. The $hook parameter
+ *   may also be an array, in which case the first hook that has an
+ *   implementation is used. This allows for the code that calls theme() to
+ *   explicitly specify the fallback order in a situation where using the '__'
+ *   convention is not desired or insufficient.
  *
  * @param $variables
  *   An associative array of variables to merge with defaults from the theme
@@ -772,9 +783,21 @@ function theme($hook, $variables = array()) {
     $hook = $candidate;
   }
 
+  // If there's no implementation, check for more generic fallbacks. If there's
+  // still no implementation, log an error and return an empty string.
   if (!isset($hooks[$hook])) {
-    watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
-    return '';
+    // Iteratively strip everything after the last '__' delimiter, until an
+    // implementation is found.
+    while ($pos = strrpos($hook, '__')) {
+      $hook = substr($hook, 0, $pos);
+      if (isset($hooks[$hook])) {
+        break;
+      }
+    }
+    if (!isset($hooks[$hook])) {
+      watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
+      return '';
+    }
   }
 
   $info = $hooks[$hook];
@@ -993,8 +1016,9 @@ function drupal_find_theme_functions($cache, $prefixes) {
 
   foreach ($cache as $hook => $info) {
     foreach ($prefixes as $prefix) {
-      if (!empty($info['pattern'])) {
-        $matches = preg_grep('/^' . $prefix . '_' . $info['pattern'] . '/', $functions['user']);
+      $pattern = isset($info['pattern']) ? $info['pattern'] : ($hook . '__');
+      if (!empty($pattern)) {
+        $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $functions['user']);
         if ($matches) {
           foreach ($matches as $match) {
             $new_hook = str_replace($prefix . '_', '', $match);
@@ -1091,10 +1115,11 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   $patterns = array_keys($files);
 
   foreach ($cache as $hook => $info) {
-    if (!empty($info['pattern'])) {
+    $pattern = isset($info['pattern']) ? $info['pattern'] : ($hook . '__');
+    if (!empty($pattern)) {
       // Transform _ in pattern to - to match file naming scheme
       // for the purposes of searching.
-      $pattern = strtr($info['pattern'], '_', '-');
+      $pattern = strtr($pattern, '_', '-');
 
       $matches = preg_grep('/^' . $pattern . '/', $patterns);
       if ($matches) {
