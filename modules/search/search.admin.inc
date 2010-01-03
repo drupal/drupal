@@ -110,9 +110,12 @@ function search_admin_settings($form) {
     '#description' => t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.')
   );
 
-  $form['search_active_modules'] = array(
+  $form['active'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Active search modules ')
+  );
+  $form['active']['search_active_modules'] = array(
     '#type' => 'checkboxes',
-    '#title' => t('Active search modules'),
     '#default_value' => array('node', 'user'),
     '#options' => _search_get_module_names(),
     '#description' => t('Determine which search modules are active from the available modules.')
