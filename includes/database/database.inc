@@ -121,7 +121,7 @@
  *
  * Drupal also supports transactions, including a transparent fallback for
  * databases that do not support transactions. To start a new transaction,
- * simply call $txn = db_transaction(): in your own code. The transaction will
+ * simply call $txn = db_transaction(); in your own code. The transaction will
  * remain open for as long as the variable $txn remains in scope.  When $txn is
  * destroyed, the transaction will be committed.  If your transaction is nested
  * inside of another then Drupal will track each transaction and only commit
@@ -176,9 +176,10 @@
 /**
  * Base Database API class.
  *
- * This class provides a Drupal-specific extension of the PDO database abstraction class in PHP.
- * Every database driver implementation must provide a concrete implementation of it to support
- * special handling required by that database.
+ * This class provides a Drupal-specific extension of the PDO database
+ * abstraction class in PHP. Every database driver implementation must provide a
+ * concrete implementation of it to support special handling required by that
+ * database.
  *
  * @link http://php.net/manual/en/book.pdo.php
  */
@@ -350,12 +351,12 @@ abstract class DatabaseConnection extends PDO {
    *   If multiple databases connections are specified with the same target,
    *   one will be selected at random for the duration of the request.
    *
-   *   fetch - This element controls how rows from a result set will be returned.
-   *   legal values include PDO::FETCH_ASSOC, PDO::FETCH_BOTH, PDO::FETCH_OBJ,
-   *   PDO::FETCH_NUM, or a string representing the name of a class. If a string
-   *   is specified, each record will be fetched into a new object of that class.
-   *   The behavior of all other values is defined by PDO. See
-   *   http://www.php.net/PDOStatement-fetch
+   *   fetch - This element controls how rows from a result set will be
+   *   returned. Legal values include PDO::FETCH_ASSOC, PDO::FETCH_BOTH,
+   *   PDO::FETCH_OBJ, PDO::FETCH_NUM, or a string representing the name of a
+   *   class. If a string is specified, each record will be fetched into a new
+   *   object of that class. The behavior of all other values is defined by PDO.
+   *   See http://www.php.net/PDOStatement-fetch
    *
    *   return - Depending on the type of query, different return values may be
    *   meaningful. This directive instructs the system which type of return
@@ -364,16 +365,18 @@ abstract class DatabaseConnection extends PDO {
    *   need to specify this value. Setting it incorrectly will likely lead to
    *   unpredictable results or fatal errors. Legal values include:
    *
-   *     Database::RETURN_STATEMENT - Return the prepared statement object for the
-   *     query. This is usually only meaningful for SELECT queries, where the
-   *     statement object is how one accesses the result set returned by the query.
+   *     Database::RETURN_STATEMENT - Return the prepared statement object for
+   *     the query. This is usually only meaningful for SELECT queries, where
+   *     the statement object is how one accesses the result set returned by the
+   *     query.
    *
    *     Database::RETURN_AFFECTED - Return the number of rows affected by an
-   *     UPDATE or DELETE query. Be aware that means the number of rows
-   *     actually changed, not the number of rows matched by the WHERE clause.
+   *     UPDATE or DELETE query. Be aware that means the number of rows actually
+   *     changed, not the number of rows matched by the WHERE clause.
    *
    *     Database::RETURN_INSERT_ID - Return the sequence ID (primary key)
-   *     created by an INSERT statement on a table that contains a serial column.
+   *     created by an INSERT statement on a table that contains a serial
+   *     column.
    *
    *     Database::RETURN_NULL - Do not return anything, as there is no
    *     meaningful value to return. That is the case for INSERT queries on
@@ -382,7 +385,8 @@ abstract class DatabaseConnection extends PDO {
    *   throw_exception - By default, the database system will catch any errors
    *   on a query as an Exception, log it, and then rethrow it so that code
    *   further up the call chain can take an appropriate action. To suppress
-   *   that behavior and simply return NULL on failure, set this option to FALSE.
+   *   that behavior and simply return NULL on failure, set this option to
+   *   FALSE.
    *
    * @return
    *   An array of default query options.
@@ -527,16 +531,16 @@ abstract class DatabaseConnection extends PDO {
   /**
    * Executes a query string against the database.
    *
-   * This method provides a central handler for the actual execution
-   * of every query. All queries executed by Drupal are executed as
-   * PDO prepared statements.
+   * This method provides a central handler for the actual execution of every
+   * query. All queries executed by Drupal are executed as PDO prepared
+   * statements.
    *
    * @param $query
    *   The query to execute. In most cases this will be a string containing
    *   an SQL query with placeholders. An already-prepared instance of
-   *   DatabaseStatementInterface may also be passed in order to allow calling code
-   *   to manually bind variables to a query. If a DatabaseStatementInterface
-   *   is passed, the $args array will be ignored.
+   *   DatabaseStatementInterface may also be passed in order to allow calling
+   *   code to manually bind variables to a query. If a
+   *   DatabaseStatementInterface is passed, the $args array will be ignored.
    *
    *   It is extremely rare that module code will need to pass a statement
    *   object to this method. It is used primarily for database drivers for
@@ -549,12 +553,13 @@ abstract class DatabaseConnection extends PDO {
    *   An associative array of options to control how the query is run. See
    *   the documentation for DatabaseConnection::defaultOptions() for details.
    * @return DatabaseStatementInterface
-   *   This method will return one of: The executed statement, the number of
+   *   This method will return one of: the executed statement, the number of
    *   rows affected by the query (not the number matched), or the generated
-   *   insert id of the last query, depending on the value of $options['return'].
-   *   Typically that value will be set by default or a query builder and should
-   *   not be set by a user. If there is an error, this method will return NULL
-   *   and may throw an exception if $options['throw_exception'] is TRUE.
+   *   insert IT of the last query, depending on the value of
+   *   $options['return']. Typically that value will be set by default or a
+   *   query builder and should not be set by a user. If there is an error,
+   *   this method will return NULL and may throw an exception if
+   *   $options['throw_exception'] is TRUE.
    */
   public function query($query, array $args = array(), $options = array()) {
 
@@ -576,7 +581,8 @@ abstract class DatabaseConnection extends PDO {
       }
 
       // Depending on the type of query we may need to return a different value.
-      // See DatabaseConnection::defaultOptions() for a description of each value.
+      // See DatabaseConnection::defaultOptions() for a description of each
+      // value.
       switch ($options['return']) {
         case Database::RETURN_STATEMENT:
           return $stmt;
@@ -610,8 +616,8 @@ abstract class DatabaseConnection extends PDO {
   /**
    * Expand out shorthand placeholders.
    *
-   * Drupal supports an alternate syntax for doing arrays of values.  We therefore
-   * need to expand them out into a full, executable query string.
+   * Drupal supports an alternate syntax for doing arrays of values. We
+   * therefore need to expand them out into a full, executable query string.
    *
    * @param $query
    *   The query string to modify.
@@ -790,7 +796,8 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Returns a DatabaseSchema object for manipulating the schema of this database.
+   * Returns a DatabaseSchema object for manipulating the schema of this
+   * database.
    *
    * This method will lazy-load the appropriate schema library file.
    *
@@ -917,10 +924,11 @@ abstract class DatabaseConnection extends PDO {
       }
     }
 
-    // Record in an array to send to the log after transaction rollback. Messages written
-    // directly to a log (with a database back-end) will roll back during the following
-    // transaction rollback. This is an array because rollback could be requested multiple
-    // times during a transaction, and all such errors ought to be logged.
+    // Record in an array to send to the log after transaction rollback.
+    // Messages written directly to a log (with a database back-end) will roll
+    // back during the following transaction rollback. This is an array because
+    // rollback could be requested multiple times during a transaction, and all
+    // such errors ought to be logged.
     if (isset($message)) {
       $this->rollbackLogs[] = array(
         'type' => $type,
@@ -970,10 +978,11 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Decreases the depth of transaction nesting, committing or rolling back if necessary.
+   * Decreases the depth of transaction nesting, committing or rolling back if
+   * necessary.
    *
-   * If we pop off the last transaction layer, then we either commit or roll back
-   * the transaction as necessary.  If no transaction is active, we throw
+   * If we pop off the last transaction layer, then we either commit or roll
+   * back the transaction as necessary.  If no transaction is active, we throw
    * an exception.
    *
    * @see DatabaseTransaction
@@ -1007,7 +1016,8 @@ abstract class DatabaseConnection extends PDO {
         }
 
         if (isset($logging_callback)) {
-          // Play back the logged errors to the specified logging callback post-rollback.
+          // Play back the logged errors to the specified logging callback post-
+          // rollback.
           foreach ($this->rollbackLogs as $log_item) {
             $logging_callback($log_item['type'], $log_item['message'], $log_item['variables'], $log_item['severity'], $log_item['link']);
           }
@@ -1029,9 +1039,9 @@ abstract class DatabaseConnection extends PDO {
    * Runs a limited-range query on this database object.
    *
    * Use this as a substitute for ->query() when a subset of the query is to be
-   * returned.
-   * User-supplied arguments to the query should be passed in as separate parameters
-   * so that they can be properly escaped to avoid SQL injection attacks.
+   * returned. User-supplied arguments to the query should be passed in as
+   * separate parameters so that they can be properly escaped to avoid SQL
+   * injection attacks.
    *
    * @param $query
    *   A string containing an SQL query.
@@ -1064,9 +1074,9 @@ abstract class DatabaseConnection extends PDO {
    *
    * Use this as a substitute for ->query() when the results need to stored
    * in a temporary table. Temporary tables exist for the duration of the page
-   * request.
-   * User-supplied arguments to the query should be passed in as separate parameters
-   * so that they can be properly escaped to avoid SQL injection attacks.
+   * request. User-supplied arguments to the query should be passed in as
+   * separate parameters so that they can be properly escaped to avoid SQL
+   * injection attacks.
    *
    * Note that if you need to know how many results were returned, you should do
    * a SELECT COUNT(*) on the temporary table afterwards.
@@ -1086,10 +1096,10 @@ abstract class DatabaseConnection extends PDO {
   /**
    * Returns the type of database driver.
    *
-   * This is not necessarily the same as the type of the database itself.
-   * For instance, there could be two MySQL drivers, mysql and mysql_mock.
-   * This function would return different values for each, but both would
-   * return "mysql" for databaseType().
+   * This is not necessarily the same as the type of the database itself. For
+   * instance, there could be two MySQL drivers, mysql and mysql_mock. This
+   * function would return different values for each, but both would return
+   * "mysql" for databaseType().
    */
   abstract public function driver();
 
@@ -1109,7 +1119,8 @@ abstract class DatabaseConnection extends PDO {
    * DDL queries are those that change the schema, such as ALTER queries.
    *
    * @return
-   *   TRUE if this connection supports transactions for DDL queries, FALSE otherwise.
+   *   TRUE if this connection supports transactions for DDL queries, FALSE
+   *   otherwise.
    */
   public function supportsTransactionalDDL() {
     return $this->transactionalDDLSupport;
@@ -1171,11 +1182,10 @@ abstract class DatabaseConnection extends PDO {
     $transaction = $this->startTransaction();
     // We can safely use literal queries here instead of the slower query
     // builder because if a given database breaks here then it can simply
-    // override nextId. However, this is unlikely as we deal with short
-    // strings and integers and no known databases require special handling
-    // for those simple cases.
-    // If another transaction wants to write the same row, it will wait until
-    // this transaction commits.
+    // override nextId. However, this is unlikely as we deal with short strings
+    // and integers and no known databases require special handling for those
+    // simple cases. If another transaction wants to write the same row, it will
+    // wait until this transaction commits.
     $stmt = $this->query('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', array(
       ':existing_id' => $existing_id,
     ));
@@ -1184,8 +1194,8 @@ abstract class DatabaseConnection extends PDO {
         ':existing_id' => $existing_id,
       ));
     }
-    // The transaction gets committed when the transaction object gets
-    // destructed because it gets out of scope.
+    // The transaction gets committed when the transaction object gets destroyed
+    // because it gets out of scope.
     return $new_value;
   }
 }
@@ -1203,9 +1213,8 @@ abstract class Database {
   /**
    * Flag to indicate a query call should simply return NULL.
    *
-   * This is used for queries that have no reasonable return value
-   * anyway, such as INSERT statements to a table without a serial
-   * primary key.
+   * This is used for queries that have no reasonable return value anyway, such
+   * as INSERT statements to a table without a serial primary key.
    */
   const RETURN_NULL = 0;
 
@@ -1225,14 +1234,15 @@ abstract class Database {
   const RETURN_INSERT_ID = 3;
 
   /**
-   * An nested array of all active connections. It is keyed by database name and target.
+   * An nested array of all active connections. It is keyed by database name
+   * and target.
    *
    * @var array
    */
   static protected $connections = array();
 
   /**
-   * A processed copy of the database connection information from settings.php
+   * A processed copy of the database connection information from settings.php.
    *
    * @var array
    */
@@ -1255,8 +1265,8 @@ abstract class Database {
   /**
    * An array of active query log objects.
    *
-   * Every connection has one and only one logger object for all targets
-   * and logging keys.
+   * Every connection has one and only one logger object for all targets and
+   * logging keys.
    *
    * array(
    *   '$db_key' => DatabaseLog object.
@@ -1269,9 +1279,9 @@ abstract class Database {
   /**
    * A logging function callback array.
    *
-   * The function must accept the same function signature as Drupal's watchdog().
-   * The array containst key/value pairs for callback (string), default_severity (int),
-   * and error_severity (int).
+   * The function must accept the same function signature as Drupal's
+   * watchdog(). The array containst key/value pairs for callback (string),
+   * default_severity (int), and error_severity (int).
    *
    * @var string
    */
@@ -1294,8 +1304,8 @@ abstract class Database {
     if (empty(self::$logs[$key])) {
       self::$logs[$key] = new DatabaseLog($key);
 
-      // Every target already active for this connection key needs to have
-      // the logging object associated with it.
+      // Every target already active for this connection key needs to have the
+      // logging object associated with it.
       if (!empty(self::$connections[$key])) {
         foreach (self::$connections[$key] as $connection) {
           $connection->setLogger(self::$logs[$key]);
@@ -1369,8 +1379,7 @@ abstract class Database {
    * @param $target
    *   The database target name.
    * @param $key
-   *   The database connection key. Defaults to NULL which means the active
-   *   key.
+   *   The database connection key. Defaults to NULL which means the active key.
    * @return DatabaseConnection
    *   The corresponding connection object.
    */
@@ -1380,9 +1389,10 @@ abstract class Database {
       $key = self::$activeKey;
     }
     // If the requested target does not exist, or if it is ignored, we fall back
-    // to the default target. The target is typically either "default" or "slave",
-    // indicating to use a slave SQL server if one is available. If it's not
-    // available, then the default/master server is the correct server to use.
+    // to the default target. The target is typically either "default" or
+    // "slave", indicating to use a slave SQL server if one is available. If
+    // it's not available, then the default/master server is the correct server
+    // to use.
     if (!empty(self::$ignoreTargets[$key][$target]) || !isset(self::$databaseInfo[$key][$target])) {
       $target = 'default';
     }
@@ -1398,11 +1408,12 @@ abstract class Database {
   /**
    * Determine if there is an active connection.
    *
-   * Note that this method will return FALSE if no connection has been established
-   * yet, even if one could be.
+   * Note that this method will return FALSE if no connection has been
+   * established yet, even if one could be.
    *
    * @return
-   *   TRUE if there is at least one database connection established, FALSE otherwise.
+   *   TRUE if there is at least one database connection established, FALSE
+   *   otherwise.
    */
   final public static function isActiveConnection() {
     return !empty(self::$activeKey) && !empty(self::$connections) && !empty(self::$connections[self::$activeKey]);
@@ -1438,8 +1449,8 @@ abstract class Database {
     foreach ($databaseInfo as $index => $info) {
       foreach ($databaseInfo[$index] as $target => $value) {
         // If there is no "driver" property, then we assume it's an array of
-        // possible connections for this target. Pick one at random. That
-        // allows us to have, for example, multiple slave servers.
+        // possible connections for this target. Pick one at random. That allows
+        //  us to have, for example, multiple slave servers.
         if (empty($value['driver'])) {
           $databaseInfo[$index][$target] = $databaseInfo[$index][$target][mt_rand(0, count($databaseInfo[$index][$target]) - 1)];
         }
@@ -1466,10 +1477,10 @@ abstract class Database {
    * Add database connection info for a given key/target.
    *
    * This method allows the addition of new connection credentials at runtime.
-   * Under normal circumstances the preferred way to specify database credentials
-   * is via settings.php. However, this method allows them to be added at
-   * arbitrary times, such as during unit tests, when connecting to admin-defined
-   * third party databases, etc.
+   * Under normal circumstances the preferred way to specify database
+   * credentials is via settings.php. However, this method allows them to be
+   * added at arbitrary times, such as during unit tests, when connecting to
+   * admin-defined third party databases, etc.
    *
    * If the given key/target pair already exists, this method will be ignored.
    *
@@ -1478,9 +1489,9 @@ abstract class Database {
    * @param $target
    *   The database target name.
    * @param $info
-   *   The database connection information, as it would be defined in settings.php.
-   *   Note that the structure of this array will depend on the database driver
-   *   it is connecting to.
+   *   The database connection information, as it would be defined in
+   *   settings.php. Note that the structure of this array will depend on the
+   *   database driver it is connecting to.
    */
   public static function addConnectionInfo($key, $target, $info) {
     if (empty(self::$databaseInfo[$key][$target])) {
@@ -1509,8 +1520,8 @@ abstract class Database {
    * Open a connection to the server specified by the given key and target.
    *
    * @param $key
-   *   The database connection key, as specified in settings.php. The default
-   *   is "default".
+   *   The database connection key, as specified in settings.php. The default is
+   *   "default".
    * @param $target
    *   The database target to open.
    */
@@ -1521,7 +1532,8 @@ abstract class Database {
       self::parseConnectionInfo();
     }
     try {
-      // If the requested database does not exist then it is an unrecoverable error.
+      // If the requested database does not exist then it is an unrecoverable
+      // error.
       if (!isset(self::$databaseInfo[$key])) {
         throw new Exception('DB does not exist');
       }
@@ -1530,8 +1542,8 @@ abstract class Database {
         throw new Exception('Drupal is not set up');
       }
 
-      // We cannot rely on the registry yet, because the registry requires
-      // an open database connection.
+      // We cannot rely on the registry yet, because the registry requires an
+      // open database connection.
       $driver_class = 'DatabaseConnection_' . $driver;
       require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/database.inc';
       $new_connection = new $driver_class(self::$databaseInfo[$key][$target]);
@@ -1586,10 +1598,9 @@ abstract class Database {
   /**
    * Instruct the system to temporarily ignore a given key/target.
    *
-   * At times we need to temporarily disable slave queries. To do so,
-   * call this method with the database key and the target to disable.
-   * That database key will then always fall back to 'default' for that
-   * key, even if it's defined.
+   * At times we need to temporarily disable slave queries. To do so, call this
+   * method with the database key and the target to disable. That database key
+   * will then always fall back to 'default' for that key, even if it's defined.
    *
    * @param $key
    *   The database connection key.
@@ -1613,7 +1624,8 @@ abstract class Database {
 class TransactionsNotSupportedException extends Exception { }
 
 /**
- * Exception to throw when popTransaction() is called when no transaction is active.
+ * Exception to throw when popTransaction() is called when no transaction is
+ * active.
  */
 class NoActiveTransactionException extends Exception { }
 
@@ -1685,20 +1697,19 @@ class DatabaseTransaction {
   /**
    * Roll back the current transaction.
    *
-   * This is just a wrapper method to rollback whatever transaction stack we
-   * are currently in, which is managed by the connection object itself.
+   * This is just a wrapper method to rollback whatever transaction stack we are
+   * currently in, which is managed by the connection object itself.
    *
    * @param $type
    *   The category to which the rollback message belongs.
    * @param $message
-   *   The message to store in the log. Keep $message translatable
-   *   by not concatenating dynamic values into it! Variables in the
-   *   message should be added by using placeholder strings alongside
-   *   the variables argument to declare the value of the placeholders.
+   *   The message to store in the log. Keep $message translatable by not
+   *   concatenating dynamic values into it! Variables in the message should be
+   *   added by using placeholder strings alongside the variable's argument to
+   *   declare the value of the placeholders.
    * @param $variables
-   *   Array of variables to replace in the message on display or
-   *   NULL if message is already translated or not possible to
-   *   translate.
+   *   Array of variables to replace in the message on display or NULL if the
+   *   message is already translated or not possible to translate.
    * @param $severity
    *   The severity of the message, as per RFC 3164.
    * @param $link
@@ -1730,8 +1741,9 @@ class DatabaseTransaction {
  * A prepared statement.
  *
  * Some methods in that class are purposely commented out. Due to a change in
- * how PHP defines PDOStatement, we can't define a signature for those methods that
- * will work the same way between versions older than 5.2.6 and later versions.
+ * how PHP defines PDOStatement, we can't define a signature for those methods
+ * that will work the same way between versions older than 5.2.6 and later
+ * versions.
  *
  * Please refer to http://bugs.php.net/bug.php?id=42452 for more details.
  *
@@ -1740,8 +1752,9 @@ class DatabaseTransaction {
  * class DatabaseStatement_oracle extends PDOStatement implements DatabaseStatementInterface {}
  * @endcode
  *
- * or implement their own class, but in that case they will also have to implement
- * the Iterator or IteratorArray interfaces before DatabaseStatementInterface:
+ * …or implement their own class, but in that case they will also have to
+ * implement the Iterator or IteratorArray interfaces before
+ * DatabaseStatementInterface:
  * @code
  * class DatabaseStatement_oracle implements Iterator, DatabaseStatementInterface {}
  * @endcode
@@ -1752,7 +1765,8 @@ interface DatabaseStatementInterface extends Traversable {
    * Executes a prepared statement
    *
    * @param $args
-   *   An array of values with as many elements as there are bound parameters in the SQL statement being executed.
+   *   An array of values with as many elements as there are bound parameters in
+   *   the SQL statement being executed.
    * @param $options
    *   An array of options for this query.
    * @return
@@ -1773,7 +1787,7 @@ interface DatabaseStatementInterface extends Traversable {
    *
    * @return
    *   The number of rows affected by the last DELETE, INSERT, or UPDATE
-   *   statement executed
+   *   statement executed.
    */
   public function rowCount();
 
@@ -1835,9 +1849,9 @@ interface DatabaseStatementInterface extends Traversable {
   /**
    * Fetches the next row and returns it as an associative array.
    *
-   * This method corresponds to PDOStatement::fetchObject(),
-   * but for associative arrays. For some reason PDOStatement does
-   * not have a corresponding array helper method, so one is added.
+   * This method corresponds to PDOStatement::fetchObject(), but for associative
+   * arrays. For some reason PDOStatement does not have a corresponding array
+   * helper method, so one is added.
    *
    * @return
    *   An associative array.
@@ -1873,10 +1887,10 @@ interface DatabaseStatementInterface extends Traversable {
   /**
    * Returns the entire result set as a single associative array.
    *
-   * This method is only useful for two-column result sets. It will return
-   * an associative array where the key is one column from the result set
-   * and the value is another field. In most cases, the default of the first two
-   * columns is appropriate.
+   * This method is only useful for two-column result sets. It will return an
+   * associative array where the key is one column from the result set and the
+   * value is another field. In most cases, the default of the first two columns
+   * is appropriate.
    *
    * Note that this method will run the result set to the end.
    *
@@ -1890,7 +1904,8 @@ interface DatabaseStatementInterface extends Traversable {
   public function fetchAllKeyed($key_index = 0, $value_index = 1);
 
   /**
-   * Returns an entire result set as an associative array keyed by the named field.
+   * Returns an entire result set as an associative array keyed by the named
+   * field.
    *
    * If the given key appears multiple times, later records will overwrite
    * earlier ones.
@@ -1915,7 +1930,8 @@ interface DatabaseStatementInterface extends Traversable {
  * PDO allows us to extend the PDOStatement class to provide additional
  * functionality beyond that offered by default. We do need extra
  * functionality. By default, this class is not driver-specific. If a given
- * driver needs to set a custom statement class, it may do so in its constructor.
+ * driver needs to set a custom statement class, it may do so in its
+ * constructor.
  *
  * @link http://us.php.net/pdostatement
  */
@@ -2021,9 +2037,9 @@ class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInt
  *
  * @see DatabaseConnection::defaultOptions()
  * @param $query
- *   The prepared statement query to run. Although it will accept both
- *   named and unnamed placeholders, named placeholders are strongly preferred
- *   as they are more self-documenting.
+ *   The prepared statement query to run. Although it will accept both named and
+ *   unnamed placeholders, named placeholders are strongly preferred as they are
+ *   more self-documenting.
  * @param $args
  *   An array of values to substitute into the query. If the query uses named
  *   placeholders, this is an associative array in any order. If the query uses
@@ -2043,13 +2059,14 @@ function db_query($query, array $args = array(), array $options = array()) {
 }
 
 /**
- * Execute an arbitrary query string against the active database, restricted to a specified range.
+ * Execute an arbitrary query string against the active database, restricted to
+ * a specified range.
  *
  * @see DatabaseConnection::defaultOptions()
  * @param $query
- *   The prepared statement query to run. Although it will accept both
- *   named and unnamed placeholders, named placeholders are strongly preferred
- *   as they are more self-documenting.
+ *   The prepared statement query to run. Although it will accept both named and
+ *   unnamed placeholders, named placeholders are strongly preferred as they are
+ *   more self-documenting.
  * @param $from
  *   The first record from the result set to return.
  * @param $count
@@ -2073,13 +2090,14 @@ function db_query_range($query, $from, $count, array $args = array(), array $opt
 }
 
 /**
- * Execute a query string against the active database and save the result set to a temp table.
+ * Execute a query string against the active database and save the result set
+ * to a temp table.
  *
  * @see DatabaseConnection::defaultOptions()
  * @param $query
- *   The prepared statement query to run. Although it will accept both
- *   named and unnamed placeholders, named placeholders are strongly preferred
- *   as they are more self-documenting.
+ *   The prepared statement query to run. Although it will accept both named and
+ *   unnamed placeholders, named placeholders are strongly preferred as they are
+ *   more self-documenting.
  * @param $args
  *   An array of values to substitute into the query. If the query uses named
  *   placeholders, this is an associative array in any order. If the query uses
@@ -2208,8 +2226,8 @@ function db_select($table, $alias = NULL, array $options = array()) {
  *
  * @param $required
  *   TRUE if the calling code will not function properly without transaction
- *   support.  If set to TRUE and the active database does not support transactions
- *   a TransactionsNotSupportedException exception will be thrown.
+ *   support.  If set to TRUE and the active database does not support
+ *   transactions, a TransactionsNotSupportedException exception will be thrown.
  * @param $options
  *   An array of options to control how the transaction operates.  Only the
  *   target key has any meaning in this case.
@@ -2242,7 +2260,8 @@ function db_set_active($key = 'default') {
  * yet, even if one could be.
  *
  * @return
- *   TRUE if there is at least one database connection established, FALSE otherwise.
+ *   TRUE if there is at least one database connection established, FALSE
+ *   otherwise.
  */
 function db_is_active() {
   return Database::isActiveConnection();
@@ -2291,8 +2310,8 @@ function db_like($string) {
 }
 
 /**
- * Retrieve the name of the currently active database driver, such as
- * "mysql" or "pgsql".
+ * Retrieve the name of the currently active database driver, such as "mysql" or
+ * "pgsql".
  *
  * @return The name of the currently active database driver.
  */
@@ -2304,8 +2323,8 @@ function db_driver() {
  * Closes the active database connection.
  *
  * @param $options
- *   An array of options to control which connection is closed.  Only the
- *   target key has any meaning in this case.
+ *   An array of options to control which connection is closed.  Only the target
+ *   key has any meaning in this case.
  */
 function db_close(array $options = array()) {
   if (empty($options['target'])) {
@@ -2317,16 +2336,15 @@ function db_close(array $options = array()) {
 /**
  * Retrieves a unique id.
  *
- * Use this function if for some reason you can't use a serial field,
- * normally a serial field with db_last_insert_id is preferred.
+ * Use this function if for some reason you can't use a serial field, normally a
+ * serial field with db_last_insert_id is preferred.
  *
  * @param $existing_id
- *   After a database import, it might be that the sequences table is behind,
- *   so by passing in a minimum id, it can be assured that we never issue the
- *   same id.
+ *   After a database import, it might be that the sequences table is behind, so
+ *   by passing in a minimum ID, it can be assured that we never issue the same
+ *   ID.
  * @return
- *   An integer number larger than any number returned before for this
- *   sequence.
+ *   An integer number larger than any number returned before for this sequence.
  */
 function db_next_id($existing_id = 0) {
   return Database::getConnection()->nextId($existing_id);
@@ -2453,18 +2471,16 @@ function db_drop_table($table) {
  * @param $field
  *   Name of the field to be added.
  * @param $spec
- *   The field specification array, as taken from a schema definition.
- *   The specification may also contain the key 'initial', the newly
- *   created field will be set to the value of the key in all rows.
- *   This is most useful for creating NOT NULL columns with no default
- *   value in existing tables.
+ *   The field specification array, as taken from a schema definition. The
+ *   specification may also contain the key 'initial'; the newly-created field
+ *   will be set to the value of the key in all rows. This is most useful for
+ *   creating NOT NULL columns with no default value in existing tables.
  * @param $keys_new
- *   Optional keys and indexes specification to be created on the
- *   table along with adding the field. The format is the same as a
- *   table specification but without the 'fields' element. If you are
- *   adding a type 'serial' field, you MUST specify at least one key
- *   or index including it in this array. See db_change_field() for more
- *   explanation why.
+ *   Optional keys and indexes specification to be created on the table along
+ *   with adding the field. The format is the same as a table specification, but
+ *   without the 'fields' element. If you are adding a type 'serial' field, you
+ *   MUST specify at least one key or index including it in this array. See
+ *   db_change_field() for more explanation why.
  * @see db_change_field()
  */
 function db_add_field($table, $field, $spec, $keys_new = array()) {
@@ -2591,8 +2607,8 @@ function db_drop_index($table, $name) {
  *
  * That means that you have to drop all affected keys and indexes with
  * db_drop_{primary_key,unique_key,index}() before calling db_change_field().
- * To recreate the keys and indices, pass the key definitions as the
- * optional $keys_new argument directly to db_change_field().
+ * To recreate the keys and indices, pass the key definitions as the optional
+ * $keys_new argument directly to db_change_field().
  *
  * For example, suppose you have:
  * @code
@@ -2603,8 +2619,8 @@ function db_drop_index($table, $name) {
  *   'primary key' => array('bar')
  * );
  * @endcode
- * and you want to change foo.bar to be type serial, leaving it as the
- * primary key. The correct sequence is:
+ * and you want to change foo.bar to be type serial, leaving it as the primary
+ * key. The correct sequence is:
  * @code
  * db_drop_primary_key('foo');
  * db_change_field('foo', 'bar', 'bar',
@@ -2614,34 +2630,34 @@ function db_drop_index($table, $name) {
  *
  * The reasons for this are due to the different database engines:
  *
- * On PostgreSQL, changing a field definition involves adding a new field
- * and dropping an old one which* causes any indices, primary keys and
- * sequences (from serial-type fields) that use the changed field to be dropped.
+ * On PostgreSQL, changing a field definition involves adding a new field and
+ * dropping an old one which causes any indices, primary keys and sequences
+ * (from serial-type fields) that use the changed field to be dropped.
  *
- * On MySQL, all type 'serial' fields must be part of at least one key
- * or index as soon as they are created. You cannot use
- * db_add_{primary_key,unique_key,index}() for this purpose because
- * the ALTER TABLE command will fail to add the column without a key
- * or index specification. The solution is to use the optional
- * $keys_new argument to create the key or index at the same time as
- * field.
+ * On MySQL, all type 'serial' fields must be part of at least one key or index
+ * as soon as they are created. You cannot use
+ * db_add_{primary_key,unique_key,index}() for this purpose because the ALTER
+ * TABLE command will fail to add the column without a key or index
+ * specification. The solution is to use the optional $keys_new argument to
+ * create the key or index at the same time as field.
  *
- * You could use db_add_{primary_key,unique_key,index}() in all cases
- * unless you are converting a field to be type serial. You can use
- * the $keys_new argument in all cases.
+ * You could use db_add_{primary_key,unique_key,index}() in all cases unless you
+ * are converting a field to be type serial. You can use the $keys_new argument
+ * in all cases.
  *
  * @param $table
  *   Name of the table.
  * @param $field
  *   Name of the field to change.
  * @param $field_new
- *   New name for the field (set to the same as $field if you don't want to change the name).
+ *   New name for the field (set to the same as $field if you don't want to
+ *   change the name).
  * @param $spec
  *   The field specification for the new field.
  * @param $keys_new
- *   Optional keys and indexes specification to be created on the
- *   table along with changing the field. The format is the same as a
- *   table specification but without the 'fields' element.
+ *   Optional keys and indexes specification to be created on the table along
+ *   with changing the field. The format is the same as a table specification
+ *   but without the 'fields' element.
  */
 function db_change_field($table, $field, $field_new, $spec, $keys_new = array()) {
   return Database::getConnection()->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
@@ -2652,9 +2668,9 @@ function db_change_field($table, $field, $field_new, $spec, $keys_new = array())
  */
 
 /**
- * Prints a themed maintenance page with the 'Site offline' text,
- * adding the provided error message in the case of 'display_errors'
- * set to on. Ends the page request; no return.
+ * Prints a themed maintenance page with the 'Site offline' text, adding the
+ * provided error message in the case of 'display_errors' set to on. Ends the
+ * page request; no return.
  */
 function _db_error_page($error = '') {
   global $db_type;
@@ -2665,17 +2681,17 @@ function _db_error_page($error = '') {
 }
 
  /**
- * Helper function to get duration lag from variable
- * and set the session variable that contains the lag.
+ * Helper function to get duration lag from variable and set the session
+ * variable that contains the lag.
  */
 function db_ignore_slave() {
   $connection_info = Database::getConnectionInfo();
-  // Only set ignore_slave_server if there are slave servers
-  // being used, which is assumed if there are more than one.
+  // Only set ignore_slave_server if there are slave servers being used, which
+  // is assumed if there are more than one.
   if (count($connection_info) > 1) {
     // Five minutes is long enough to allow the slave to break and resume
-    // interrupted replication without causing problems on the Drupal site
-    // from the old data.
+    // interrupted replication without causing problems on the Drupal site from
+    // the old data.
     $duration = variable_get('maximum_replication_lag', 300);
     // Set session variable with amount of time to delay before using slave.
     $_SESSION['ignore_slave_server'] = REQUEST_TIME + $duration;
@@ -2683,9 +2699,11 @@ function db_ignore_slave() {
 }
 
 /**
- * Redirect the user to the installation script if Drupal has not been
- * installed yet (i.e., if no $databases array has been defined in the
- * settings file) and we are not already there. Otherwise, do nothing.
+ * Redirect the user to the installation script.
+ *
+ * This will check if Drupal has not been installed yet (i.e., if no $databases
+ * array has been defined in the settings.php file) and we are not already
+ * installing. If both are true, the user is redirected to install.php.
  */
 function _db_check_install_needed() {
   global $databases;
