@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1073 2010/01/03 06:54:41 dries Exp $
+// $Id: common.inc,v 1.1074 2010/01/03 11:04:58 dries Exp $
 
 /**
  * @file
@@ -6034,7 +6034,7 @@ function drupal_parse_info_format($data) {
 
       // Handle PHP constants.
       if (isset($constants[$value])) {
-        $value = constant($value);
+        $value = $constants[$value];
       }
 
       // Insert actual value
