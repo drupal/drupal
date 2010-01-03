@@ -35,17 +35,6 @@ function dblog_help($path, $arg) {
 }
 
 /**
- * Implements hook_theme().
- */
-function dblog_theme() {
-  return array(
-    'dblog_filters' => array(
-      'render element' => 'form',
-    ),
-  );
-}
-
-/**
  * Implements hook_menu().
  */
 function dblog_menu() {
@@ -172,21 +161,6 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
     '#options' => array(0 => t('All')) + drupal_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
     '#description' => t('The maximum number of entries to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
   );
-  $form['buttons']['#weight'] = 1;
+  $form['actions']['#weight'] = 1;
 }
 
-/**
- * Theme dblog administration filter selector.
- *
- * @ingroup themeable
- */
-function theme_dblog_filters($variables) {
-  $form = $variables['form'];
-  $output = '';
-
-  foreach (element_children($form['status']) as $key) {
-    $output .= drupal_render($form['status'][$key]);
-  }
-  $output .= '<div id="dblog-admin-buttons">' . drupal_render($form['buttons']) . '</div>';
-  return $output;
-}

@@ -97,7 +97,8 @@ function contact_category_edit_form($form, &$form_state, array $category = array
     '#type' => 'value',
     '#value' => $category['cid'],
   );
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );

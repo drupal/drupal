@@ -78,7 +78,8 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
     'js' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.js'),
   );
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit', 
     '#value' => t('Save configuration'),
   );
@@ -195,7 +196,8 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
     'js' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.js'),
   );
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit', 
     '#value' => t('Save Changes'),
   );

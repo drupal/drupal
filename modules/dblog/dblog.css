@@ -11,9 +11,14 @@
    */
   width: 15em;
 }
-#dblog-filter-form .form-item select.form-select {
+#dblog-filter-form .form-type-select select {
   width: 100%;
 }
+#dblog-filter-form .form-actions {
+  float: left;
+  padding: 3ex 0 0 1em;
+}
+
 tr.dblog-user {
   background: #ffd;
 }

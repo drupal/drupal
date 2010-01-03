@@ -63,8 +63,10 @@ function menu_overview_form($form, &$form_state, $menu) {
 
   $form = array_merge($form, _menu_overview_tree_form($tree));
   $form['#menu'] =  $menu;
+  
   if (element_children($form)) {
-    $form['submit'] = array(
+    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save configuration'),
     );

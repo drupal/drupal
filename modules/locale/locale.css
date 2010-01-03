@@ -16,8 +16,12 @@
    */
   width: 15em;
 }
-#locale-translation-filter-form .form-item select.form-select {
+#locale-translation-filter-form .form-type-select select {
   width: 100%;
+}
+#locale-translation-filter-form .form-actions {
+  float: left;
+  padding: 3ex 0 0 1em;
 }
 
 .language-switcher-locale-session .active a.active {

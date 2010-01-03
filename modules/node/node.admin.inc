@@ -196,31 +196,20 @@ function node_filter_form() {
     );
   }
 
-  $form['filters']['buttons']['submit'] = array('#type' => 'submit', '#value' => (count($session) ? t('Refine') : t('Filter')));
+  $form['filters']['actions'] = array(
+    '#type' => 'container',
+    '#id' => 'node-admin-buttons',
+    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+  );
+  $form['filters']['actions']['submit'] = array('#type' => 'submit', '#value' => (count($session) ? t('Refine') : t('Filter')));
   if (count($session)) {
-    $form['filters']['buttons']['undo'] = array('#type' => 'submit', '#value' => t('Undo'));
-    $form['filters']['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
+    $form['filters']['actions']['undo'] = array('#type' => 'submit', '#value' => t('Undo'));
+    $form['filters']['actions']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
   }
 
   drupal_add_js('misc/form.js');
 
   return $form;
-}
-
-/**
- * Theme node administration filter form.
- *
- * @ingroup themeable
- */
-function theme_node_filter_form($variables) {
-  $form = $variables['form'];
-  $output = '';
-
-  $output .= '<div id="node-admin-filter">';
-  $output .= drupal_render($form['filters']);
-  $output .= '</div>';
-  $output .= drupal_render_children($form);
-  return $output;
 }
 
 /**
@@ -250,7 +239,7 @@ function theme_node_filters($variables) {
   $output .= '</dd>';
 
   $output .= '</dl>';
-  $output .= '<div class="container-inline" id="node-admin-buttons">' . drupal_render($form['buttons']) . '</div>';
+  $output .= drupal_render($form['actions']);
 
   return $output;
 }
@@ -393,7 +382,6 @@ function node_admin_content($form, $form_state) {
   }
   $form['filter'] = node_filter_form();
   $form['#submit'][] = 'node_filter_form_submit';
-  $form['#theme'] = 'node_filter_form';
   $form['admin'] = node_admin_nodes();
 
   return $form;

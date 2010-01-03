@@ -460,9 +460,6 @@ function locale_theme() {
     'locale_languages_configure_form' => array(
       'render element' => 'form',
     ),
-    'locale_translation_filters' => array(
-      'render element' => 'form',
-    ),
     'locale_date_format_form' => array(
       'render element' => 'form',
     ),
@@ -902,22 +899,6 @@ function locale_block_view($type) {
 }
 
 /**
- * Theme locale translation filter selector.
- *
- * @ingroup themeable
- */
-function theme_locale_translation_filters($variables) {
-  $form = $variables['form'];
-  $output = '';
-
-  foreach (element_children($form['status']) as $key) {
-    $output .= drupal_render($form['status'][$key]);
-  }
-  $output .= '<div id="locale-translation-buttons">' . drupal_render($form['buttons']) . '</div>';
-  return $output;
-}
-
-/**
  * Theme locale date format form.
  *
  * @ingroup themeable
@@ -1019,7 +1000,8 @@ function locale_date_format_form($form, &$form_state, $langcode) {
     );
   }
 
-  $form['buttons']['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );

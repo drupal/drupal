@@ -55,9 +55,10 @@ function forum_form_forum($form, &$form_state, $edit = array()) {
   );
 
   $form['vid'] = array('#type' => 'hidden', '#value' => variable_get('forum_nav_vocabulary', ''));
-  $form['submit' ] = array('#type' => 'submit', '#value' => t('Save'));
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit' ] = array('#type' => 'submit', '#value' => t('Save'));
   if ($edit['tid']) {
-    $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
+    $form['actions']['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'hidden', '#value' => $edit['tid']);
   }
   $form['#submit'][] = 'forum_form_submit';
@@ -156,12 +157,13 @@ function forum_form_container($form, &$form_state, $edit = array()) {
     '#type' => 'hidden',
     '#value' => variable_get('forum_nav_vocabulary', ''),
   );
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save')
   );
   if ($edit['tid']) {
-    $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
+    $form['actions']['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'value', '#value' => $edit['tid']);
   }
   $form['#submit'][] = 'forum_form_submit';

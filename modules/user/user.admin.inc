@@ -72,16 +72,21 @@ function user_filter_form() {
     );
   }
 
-  $form['filters']['buttons']['submit'] = array(
+  $form['filters']['actions'] = array(
+    '#type' => 'container',
+    '#id' => 'user-admin-buttons',
+    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+  );
+  $form['filters']['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => (count($session) ? t('Refine') : t('Filter')),
   );
   if (count($session)) {
-    $form['filters']['buttons']['undo'] = array(
+    $form['filters']['actions']['undo'] = array(
       '#type' => 'submit',
       '#value' => t('Undo'),
     );
-    $form['filters']['buttons']['reset'] = array(
+    $form['filters']['actions']['reset'] = array(
       '#type' => 'submit',
       '#value' => t('Reset'),
     );
@@ -698,7 +703,9 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
     $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => isset($status[$rid]) ? $status[$rid] : array());
     $form['role_names'][$rid] = array('#markup' => $name, '#tree' => TRUE);
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
+  
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 
   $form['#attached']['js'][] = drupal_get_path('module', 'user') . '/user.permissions.js';
 
@@ -787,11 +794,12 @@ function user_admin_role() {
       '#type' => 'value',
       '#value' => $rid,
     );
-    $form['submit'] = array(
+    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save role'),
     );
-    $form['delete'] = array(
+    $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete role'),
     );
@@ -876,21 +884,6 @@ function theme_user_admin_new_role($variables) {
 }
 
 /**
- * Theme user administration filter form.
- *
- * @ingroup themeable
- */
-function theme_user_filter_form($variables) {
-  $form = $variables['form'];
-
-  $output = '<div id="user-admin-filter">';
-  $output .= drupal_render($form['filters']);
-  $output .= '</div>';
-  $output .= drupal_render_children($form);
-  return $output;
-}
-
-/**
  * Theme user administration filter selector.
  *
  * @ingroup themeable
@@ -916,7 +909,7 @@ function theme_user_filters($variables) {
   $output .= '</dd>';
 
   $output .= '</dl>';
-  $output .= '<div class="container-inline" id="user-admin-buttons">' . drupal_render($form['buttons']) . '</div>';
+  $output .= drupal_render($form['actions']);
 
   return $output;
 }

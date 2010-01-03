@@ -284,7 +284,9 @@ Unless you know what you are doing, it is highly recommended that you prefix the
     '#title' => t('Visible in user registration form.'),
     '#default_value' => $edit['register'],
   );
-  $form['submit'] = array('#type' => 'submit',
+
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit',
     '#value' => t('Save field'),
   );
   return $form;

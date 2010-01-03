@@ -144,10 +144,6 @@ function node_theme() {
     'node_search_admin' => array(
       'render element' => 'form',
     ),
-    'node_filter_form' => array(
-      'render element' => 'form',
-      'file' => 'node.admin.inc',
-    ),
     'node_filters' => array(
       'render element' => 'form',
       'file' => 'node.admin.inc',

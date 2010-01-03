@@ -1846,13 +1846,14 @@ function comment_form($form, &$form_state, $comment) {
   // already previewing the submission. However, if there are form errors,
   // we hide the save button no matter what, so that optional form elements
   // (e.g., captchas) can be updated.
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
     '#access' => ($comment->cid && user_access('administer comments')) || variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['comment_preview'])),
     '#weight' => 19,
   );
-  $form['preview'] = array(
+  $form['actions']['preview'] = array(
     '#type' => 'submit',
     '#value' => t('Preview'),
     '#access' => (variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_DISABLED),

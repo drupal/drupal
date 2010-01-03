@@ -2415,17 +2415,20 @@ function form_process_checkboxes($element) {
  *   The processed element.
  */
 function form_process_container($element, &$form_state) {
-  $element['#id'] = drupal_html_id(implode('-', $element['#parents']) . '-wrapper');
+  // Generate the ID of the element if it's not explicitly given.
+  if (!isset($element['#id'])) {
+    $element['#id'] = drupal_html_id(implode('-', $element['#parents']) . '-wrapper');
+  }
   return $element;
 }
 
 /**
- * Adds a container for grouped items
+ * Adds a container for grouped items.
  *
- * @param $element
- *   An associative array containing the properties and children of the
- *   group.
- *   Properties used: #id, #attributes, #children.
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #id, #attributes, #children.
  * @return
  *   A themed HTML string representing the form element.
  *

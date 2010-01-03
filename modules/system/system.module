@@ -2489,7 +2489,9 @@ function _system_settings_form_automatic_defaults($form) {
  *   The form structure.
  */
 function system_settings_form($form, $automatic_defaults = TRUE) {
-  $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
+  $form['actions']['#type'] = 'container';
+  $form['actions']['#attributes']['class'][] = 'form-actions';
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   if ($automatic_defaults) {
     $form = _system_settings_form_automatic_defaults($form);
@@ -2600,7 +2602,10 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   $form['description'] = array('#markup' => $description);
   $form[$name] = array('#type' => 'hidden', '#value' => 1);
 
-  $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
+  $form['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+  );
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
   $form['actions']['cancel'] = array('#markup' => $cancel);
   // By default, render the form using theme_confirm_form().

@@ -10,10 +10,10 @@
   white-space: normal;
 }
 /* Override the default multiselect layout in system.css. */
-#user-admin-filter dl.multiselect dd, dl.multiselect dd .form-item {
+#user-filter-form dl.multiselect dd, dl.multiselect dd .form-item {
   width: 20em; /* 6em label + 14em select */
 }
-#user-admin-filter dl.multiselect dd .form-item label {
+#user-filter-form dl.multiselect dd .form-item label {
   display: block;
   float: left; /* LTR */
   width: 6em;

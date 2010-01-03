@@ -867,7 +867,8 @@ function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $
   $form['#object_type'] = $obj_type;
   $form['#bundle'] = $bundle;
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));
   return $form;
 }
 

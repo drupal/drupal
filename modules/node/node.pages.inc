@@ -268,16 +268,19 @@ function node_form($form, &$form_state, $node) {
   }
 
   // Add the buttons.
-  $form['buttons'] = array('#type' => 'container');
-  $form['buttons']['#weight'] = 100;
-  $form['buttons']['submit'] = array(
+  $form['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions')),
+    '#weight' => 100,
+  );
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#access' => variable_get('node_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview'])),
     '#value' => t('Save'),
     '#weight' => 5,
     '#submit' => array('node_form_submit'),
   );
-  $form['buttons']['preview'] = array(
+  $form['actions']['preview'] = array(
     '#access' => variable_get('node_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_DISABLED,
     '#type' => 'submit',
     '#value' => t('Preview'),
@@ -285,7 +288,7 @@ function node_form($form, &$form_state, $node) {
     '#submit' => array('node_form_build_preview'),
   );
   if (!empty($node->nid) && node_access('delete', $node)) {
-    $form['buttons']['delete'] = array(
+    $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
       '#weight' => 15,

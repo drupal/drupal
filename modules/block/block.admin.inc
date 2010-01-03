@@ -102,7 +102,12 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
   // Do not allow disabling the main system content block.
   unset($form['system_main']['region']['#options'][BLOCK_REGION_NONE]);
 
-  $form['submit'] = array(
+  $form['actions'] = array(
+    '#tree' => FALSE,
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions')),
+  );
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save blocks'),
   );
@@ -363,7 +368,8 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#default_value' => isset($block->custom) ? $block->custom : 0,
   );
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save block'),
   );

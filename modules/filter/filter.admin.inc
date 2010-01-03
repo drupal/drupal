@@ -36,7 +36,8 @@ function filter_admin_overview($form) {
     $form['formats'][$id]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/config/content/formats/' . $id . '/delete', '#access' => !$form['formats'][$id]['#is_fallback']);
     $form['formats'][$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));
   return $form;
 }
 
@@ -215,7 +216,8 @@ function filter_admin_format_form($form, &$form_state, $format) {
   if (!empty($format->format)) {
     $form['format'] = array('#type' => 'value', '#value' => $format->format);
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   return $form;
 }

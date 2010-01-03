@@ -46,7 +46,7 @@ function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
       '#options'       => syslog_facility_list(),
       '#description'   => t('Depending on the system configuration, Syslog and other logging tools use this code to identify or filter messages from within the entire system log.') . $help,
      );
-    $form['buttons']['#weight'] = 1;
+    $form['actions']['#weight'] = 1;
   }
 }
 

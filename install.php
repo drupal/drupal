@@ -918,7 +918,8 @@ function install_settings_form($form, &$form_state, &$install_state) {
       '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_distribution_name(), '%prefix' => $db_prefix)),
     );
 
-    $form['save'] = array(
+    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+    $form['actions']['save'] = array(
       '#type' => 'submit',
       '#value' => st('Save and continue'),
     );
@@ -1130,7 +1131,8 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
       '#parents' => array('profile'),
     );
   }
-  $form['submit'] =  array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] =  array(
     '#type' => 'submit',
     '#value' => st('Save and continue'),
   );
@@ -1260,7 +1262,8 @@ function install_select_locale_form($form, &$form_state, $locales, $profilename 
       '#markup' => '<p><a href="install.php?profile=' . $profilename . '&amp;localize=true">' . st('Learn how to install Drupal in other languages') . '</a></p>',
     );
   }
-  $form['submit'] =  array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] =  array(
     '#type' => 'submit',
     '#value' => st('Save and continue'),
   );
@@ -1668,7 +1671,8 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#weight' => 15,
   );
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => st('Save and continue'),
     '#weight' => 15,

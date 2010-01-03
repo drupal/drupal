@@ -321,7 +321,7 @@ function field_ui_inactive_instances($obj_type, $bundle_name = NULL) {
 function field_ui_form_node_type_form_alter(&$form, $form_state) {
   // We want to display the button only on add page.
   if (empty($form['#node_type']->type)) {
-    $form['save_continue'] = array(
+    $form['actions']['save_continue'] = array(
       '#type' => 'submit',
       '#value' => t('Save and add fields'),
       '#weight' => 45,

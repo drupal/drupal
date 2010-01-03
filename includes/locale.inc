@@ -72,7 +72,8 @@ function locale_languages_overview_form() {
     '#options' => $options,
     '#default_value' => language_default('language'),
   );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
   $form['#theme'] = 'locale_languages_overview_form';
 
   return $form;
@@ -199,7 +200,8 @@ function locale_languages_predefined_form($form) {
     '#options' => $predefined,
     '#description' => t('Select the desired language and click the <em>Add language</em> button. (Use the <em>Custom language</em> options if your desired language does not appear in this list.)'),
   );
-  $form['language list']['submit'] = array('#type' => 'submit', '#value' => t('Add language'));
+  $form['language list']['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['language list']['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add language'));
   return $form;
 }
 
@@ -213,7 +215,8 @@ function locale_languages_custom_form($form) {
     '#collapsed' => TRUE,
   );
   _locale_languages_common_controls($form['custom language']);
-  $form['custom language']['submit'] = array(
+  $form['custom language']['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['custom language']['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Add custom language')
   );
@@ -232,7 +235,8 @@ function locale_languages_custom_form($form) {
 function locale_languages_edit_form($form, &$form_state, $langcode) {
   if ($language = db_query("SELECT * FROM {languages} WHERE language = :language", array(':language' => $langcode))->fetchObject()) {
     _locale_languages_common_controls($form, $language);
-    $form['submit'] = array(
+    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save language')
     );
@@ -513,7 +517,8 @@ function locale_languages_configure_form() {
     _locale_languages_configure_form_language_table($form, $type);
   }
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save settings'),
   );
@@ -1114,7 +1119,6 @@ function locale_translation_filter_form() {
   $form['filters'] = array(
     '#type' => 'fieldset',
     '#title' => t('Filter translatable strings'),
-    '#theme' => 'locale_translation_filters',
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
@@ -1141,12 +1145,13 @@ function locale_translation_filter_form() {
     }
   }
 
-  $form['filters']['buttons']['submit'] = array(
+  $form['filters']['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions', 'container-inline')));
+  $form['filters']['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
   );
   if (!empty($_SESSION['locale_translation_filter'])) {
-    $form['filters']['buttons']['reset'] = array(
+    $form['filters']['actions']['reset'] = array(
       '#type' => 'submit',
       '#value' => t('Reset')
     );

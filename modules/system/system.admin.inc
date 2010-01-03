@@ -349,7 +349,8 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
     '#title' => t('Use the administration theme when editing or creating content'),
     '#default_value' => variable_get('node_admin_theme', '0'),
   );
-  $form['admin_theme']['submit'] = array(
+  $form['admin_theme']['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['admin_theme']['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
@@ -950,7 +951,8 @@ function system_modules($form, $form_state = array()) {
     );
   }
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
@@ -1304,7 +1306,8 @@ function system_modules_uninstall($form, $form_state = NULL) {
       '#type' => 'checkboxes',
       '#options' => $options,
     );
-    $form['buttons']['submit'] = array(
+    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Uninstall'),
     );
@@ -2787,7 +2790,8 @@ function system_configure_date_formats_form($form, &$form_state, $dfid = 0) {
     ),
   );
 
-  $form['update'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['update'] = array(
     '#type' => 'submit',
     '#value' => ($dfid ? t('Save format') : t('Add format')),
   );
@@ -2914,7 +2918,8 @@ function system_actions_manage_form($form, &$form_state, $options = array()) {
     '#options' => $options,
     '#description' => '',
   );
-  $form['parent']['buttons']['submit'] = array(
+  $form['parent']['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['parent']['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Create'),
   );
@@ -3010,7 +3015,8 @@ function system_actions_configure($form, &$form_state, $action = NULL) {
     '#type' => 'hidden',
     '#value' => '1',
   );
-  $form['buttons']['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
     '#weight' => 13

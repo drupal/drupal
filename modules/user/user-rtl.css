@@ -5,7 +5,7 @@
   padding-right: 1.5em;
 }
 
-#user-admin-filter dl.multiselect dd .form-item label {
+#user-filter-form dl.multiselect dd .form-item label {
   float: right;
 }
 

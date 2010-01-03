@@ -184,7 +184,8 @@ function aggregator_categorize_items($items, $feed_source = '') {
       '#multiple' => TRUE
     );
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save categories'));
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save categories'));
 
   return $form;
 }

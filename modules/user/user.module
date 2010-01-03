@@ -106,10 +106,6 @@ function user_theme() {
       'render element' => 'form',
       'file' => 'user.admin.inc',
     ),
-    'user_filter_form' => array(
-      'render element' => 'form',
-      'file' => 'user.admin.inc',
-    ),
     'user_filters' => array(
       'render element' => 'form',
       'file' => 'user.admin.inc',

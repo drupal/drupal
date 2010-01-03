@@ -470,7 +470,8 @@ function aggregator_admin_form($form, $form_state) {
   // Implementing modules will expect an array at $form['modules'].
   $form['modules'] = array();
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
