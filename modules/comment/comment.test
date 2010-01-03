@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.59 2009/12/16 19:53:53 dries Exp $
+// $Id: comment.test,v 1.60 2010/01/03 22:30:26 webchick Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -10,7 +10,7 @@ class CommentHelperCase extends DrupalWebTestCase {
     parent::setUp('comment', 'search');
     // Create users and test node.
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer blocks'));
-    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content'));
+    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments'));
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
   }
 
