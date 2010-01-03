@@ -6034,7 +6034,7 @@ function drupal_parse_info_format($data) {
 
       // Handle PHP constants.
       if (isset($constants[$value])) {
-        $value = constant($value);
+        $value = $constants[$value];
       }
 
       // Insert actual value
