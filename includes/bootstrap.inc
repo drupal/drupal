@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.338 2009/12/30 08:16:55 dries Exp $
+// $Id: bootstrap.inc,v 1.339 2010/01/03 01:23:49 webchick Exp $
 
 /**
  * @file
@@ -580,9 +580,10 @@ function drupal_settings_initialize() {
     // Otherwise use $base_url as session name, without the protocol
     // to use the same session identifiers across http and https.
     list( , $session_name) = explode('://', $base_url, 2);
-    // We escape the hostname because it can be modified by a visitor.
+    // HTTP_HOST can be modified by a visitor, but we already sanitized it
+    // in drupal_settings_initialize().
     if (!empty($_SERVER['HTTP_HOST'])) {
-      $cookie_domain = check_plain($_SERVER['HTTP_HOST']);
+      $cookie_domain = $_SERVER['HTTP_HOST'];
     }
   }
   // Strip leading periods, www., and port numbers from cookie domain.
