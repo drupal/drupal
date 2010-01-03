@@ -2249,19 +2249,27 @@ function menu_rebuild() {
     return FALSE;
   }
 
-  list($menu, $masks) = menu_router_build();
-  _menu_router_save($menu, $masks);
-  _menu_navigation_links_rebuild($menu);
-  // Clear the menu, page and block caches.
-  menu_cache_clear_all();
-  _menu_clear_page_cache();
+  $transaction = db_transaction();
 
-  if (defined('MAINTENANCE_MODE')) {
-    variable_set('menu_rebuild_needed', TRUE);
+  try {
+    list($menu, $masks) = menu_router_build();
+    _menu_router_save($menu, $masks);
+    _menu_navigation_links_rebuild($menu);
+    // Clear the menu, page and block caches.
+    menu_cache_clear_all();
+    _menu_clear_page_cache();
+
+    if (defined('MAINTENANCE_MODE')) {
+      variable_set('menu_rebuild_needed', TRUE);
+    }
+    else {
+      variable_del('menu_rebuild_needed');
+    }
   }
-  else {
-    variable_del('menu_rebuild_needed');
+  catch (Exception $e) {
+    $transaction->rollback('menu', $e->getMessage(), array(), WATCHDOG_ERROR);
   }
+
   lock_release('menu_rebuild');
   return TRUE;
 }
@@ -3230,6 +3238,8 @@ function _menu_router_save($menu, $masks) {
       'file',
     ));
 
+  $num_records = 0;
+
   foreach ($menu as $path => $item) {
     // Fill in insert object values.
     $insert->values(array(
@@ -3258,8 +3268,15 @@ function _menu_router_save($menu, $masks) {
       'weight' => $item['weight'],
       'file' => $item['include file'],
     ));
+
+    // Execute in batches to avoid the memory overhead of all of those records
+    // in the query object.
+    if (++$num_records == 20) {
+      $insert->execute();
+      $num_records = 0;
+    }
   }
-  // Execute insert object.
+  // Insert any remaining records.
   $insert->execute();
   // Store the masks.
   variable_set('menu_masks', $masks);
