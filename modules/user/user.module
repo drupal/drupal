@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1096 2010/01/02 15:00:34 dries Exp $
+// $Id: user.module,v 1.1097 2010/01/03 20:29:00 webchick Exp $
 
 /**
  * @file
@@ -3213,16 +3213,14 @@ function user_modules_installed($modules) {
   // Assign all available permissions to the administrator role.
   $rid = variable_get('user_admin_role', 0);
   if ($rid) {
+    $permissions = array();
     foreach ($modules as $module) {
-      if ($permissions = module_invoke($module, 'permission')) {
-        foreach (array_keys($permissions) as $permission) {
-          db_insert('role_permission')
-            ->fields(array(
-              'rid' => $rid,
-              'permission' => $permission,
-            ))->execute();
-        }
+      if ($module_permissions = module_invoke($module, 'permission')) {
+        $permissions = array_merge($permissions, array_keys($module_permissions));
       }
+    }
+    if (!empty($permissions)) {
+      user_role_grant_permissions($rid, $permissions);
     }
   }
 }
