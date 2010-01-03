@@ -318,7 +318,7 @@ function node_tag_new($nid) {
  */
 function node_last_viewed($nid) {
   global $user;
-  static $history;
+  $history = &drupal_static(__FUNCTION__, array());
 
   if (!isset($history[$nid])) {
     $history[$nid] = db_query("SELECT timestamp FROM {history} WHERE uid = :uid AND nid = :nid", array(':uid' => $user->uid, ':nid' => $nid))->fetchObject();
@@ -339,7 +339,7 @@ function node_last_viewed($nid) {
  */
 function node_mark($nid, $timestamp) {
   global $user;
-  static $cache;
+  $cache = &drupal_static(__FUNCTION__, array());
 
   if (!$user->uid) {
     return MARK_READ;
@@ -744,7 +744,7 @@ function _node_types_build() {
  *  A node type object.
  */
 function node_type_set_defaults($info = array()) {
-  static $type;
+  $type = &drupal_static(__FUNCTION__);
 
   if (!isset($type)) {
     $type = new stdClass();
@@ -2658,7 +2658,7 @@ function node_access_grants($op, $account = NULL) {
  * Determine whether the user has a global viewing grant for all nodes.
  */
 function node_access_view_all_nodes() {
-  static $access;
+  $access = &drupal_static(__FUNCTION__);
 
   if (!isset($access)) {
     // If no modules implement the node access system, access is always true.
