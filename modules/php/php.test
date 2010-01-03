@@ -72,7 +72,7 @@ class PHPFilterTestCase extends PHPTestCase {
 
     // Make sure that the PHP code shows up as text.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText('print', t('PHP code was not evaluated.'));
+    $this->assertText('print "SimpleTest PHP was executed!"', t('PHP code is displayed.'));
 
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();
@@ -82,7 +82,7 @@ class PHPFilterTestCase extends PHPTestCase {
     $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title[LANGUAGE_NONE][0]['value'])), t('PHP code filter turned on.'));
 
     // Make sure that the PHP code shows up as text.
-    $this->assertNoText('print', t('PHP code isn\'t displayed.'));
+    $this->assertNoText('print "SimpleTest PHP was executed!"', t("PHP code isn't displayed."));
     $this->assertText('SimpleTest PHP was executed!', t('PHP code has been evaluated.'));
   }
 }
