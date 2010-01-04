@@ -642,20 +642,7 @@ function system_menu() {
     );
   }
 
-  // Configuration and modules.
-  $items['admin/config'] = array(
-    'title' => 'Configuration and modules',
-    'page callback' => 'system_admin_config_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/config'] = array(
-    'title' => 'Configuration',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-    'file' => 'system.admin.inc',
-  );
+  // Modules
   $items['admin/modules'] = array(
     'title' => 'Modules',
     'description' => 'Enable or disable add-on modules for your site.',
@@ -663,8 +650,7 @@ function system_menu() {
     'page arguments' => array('system_modules'),
     'access arguments' => array('administer modules'),
     'file' => 'system.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 10,
+    'weight' => -2,
   );
   $items['admin/modules/list'] = array(
     'title' => 'List',
@@ -689,44 +675,11 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
 
-  // Actions.
-  $items['admin/config/system/actions'] = array(
-    'title' => 'Actions',
-    'description' => 'Manage the actions defined for your site.',
-    'access arguments' => array('administer actions'),
-    'page callback' => 'system_actions_manage',
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/system/actions/manage'] = array(
-    'title' => 'Manage actions',
-    'description' => 'Manage the actions defined for your site.',
-    'page callback' => 'system_actions_manage',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -2,
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/system/actions/configure'] = array(
-    'title' => 'Configure an advanced action',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_actions_configure'),
-    'access arguments' => array('administer actions'),
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/system/actions/delete/%actions'] = array(
-    'title' => 'Delete action',
-    'description' => 'Delete an action.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_actions_delete_form', 5),
-    'access arguments' => array('administer actions'),
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/system/actions/orphan'] = array(
-    'title' => 'Remove orphans',
-    'page callback' => 'system_actions_remove_orphans',
-    'access arguments' => array('administer actions'),
-    'type' => MENU_CALLBACK,
+  // Configuration and modules.
+  $items['admin/config'] = array(
+    'title' => 'Configuration',
+    'page callback' => 'system_admin_config_page',
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
 
@@ -755,32 +708,7 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
 
-  // Configuration.
-  $items['admin/config/development'] = array(
-    'title' => 'Development',
-    'description' => 'Development tools.',
-    'position' => 'left',
-    'weight' => 10,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/development/maintenance'] = array(
-    'title' => 'Maintenance mode',
-    'description' => 'Take the site offline for maintenance or bring it back online.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_site_maintenance_mode'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/development/performance'] = array(
-    'title' => 'Performance',
-    'description' => 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_performance_settings'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
-  );
+  // Media settings.
   $items['admin/config/media'] = array(
     'title' => 'Media',
     'description' => 'Media tools.',
@@ -806,6 +734,8 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
+
+  // Service settings.
   $items['admin/config/services'] = array(
     'title' => 'Web services',
     'description' => 'Tools related to web services.',
@@ -818,6 +748,33 @@ function system_menu() {
     'description' => 'Configure the site description, the number of items per feed and whether feeds should be titles/teasers/full-text.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_rss_feeds_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+  );
+
+  // Development settings.
+  $items['admin/config/development'] = array(
+    'title' => 'Development',
+    'description' => 'Development tools.',
+    'position' => 'left',
+    'weight' => 10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/development/maintenance'] = array(
+    'title' => 'Maintenance mode',
+    'description' => 'Take the site offline for maintenance or bring it back online.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_site_maintenance_mode'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/development/performance'] = array(
+    'title' => 'Performance',
+    'description' => 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_performance_settings'),
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
@@ -931,6 +888,8 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
+
+  // Search settings.
   $items['admin/config/search'] = array(
     'title' => 'Search and metadata',
     'description' => 'Local site search, metadata and SEO.',
@@ -954,15 +913,8 @@ function system_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
-  $items['admin/config/content'] = array(
-    'title' => 'Content authoring',
-    'description' => 'Settings related to formatting and authoring content.',
-    'position' => 'right',
-    'weight' => 5,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-  );
+
+  // System settings.
   $items['admin/config/system'] = array(
     'title' => 'System',
     'description' => 'General system related configuration.',
@@ -970,6 +922,45 @@ function system_menu() {
     'weight' => -5,
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/system/actions'] = array(
+    'title' => 'Actions',
+    'description' => 'Manage the actions defined for your site.',
+    'access arguments' => array('administer actions'),
+    'page callback' => 'system_actions_manage',
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/system/actions/manage'] = array(
+    'title' => 'Manage actions',
+    'description' => 'Manage the actions defined for your site.',
+    'page callback' => 'system_actions_manage',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -2,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/system/actions/configure'] = array(
+    'title' => 'Configure an advanced action',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_actions_configure'),
+    'access arguments' => array('administer actions'),
+    'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/system/actions/delete/%actions'] = array(
+    'title' => 'Delete action',
+    'description' => 'Delete an action.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_actions_delete_form', 5),
+    'access arguments' => array('administer actions'),
+    'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/system/actions/orphan'] = array(
+    'title' => 'Remove orphans',
+    'page callback' => 'system_actions_remove_orphans',
+    'access arguments' => array('administer actions'),
+    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/system/site-information'] = array(
@@ -981,6 +972,8 @@ function system_menu() {
     'file' => 'system.admin.inc',
     'weight' => -10,
   );
+
+  // Addititional categories
   $items['admin/config/user-interface'] = array(
     'title' => 'User interface',
     'description' => 'Tools that enhance the user interface.',
@@ -989,6 +982,22 @@ function system_menu() {
     'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
     'weight' => -5,
+  );
+  $items['admin/config/workflow'] = array(
+    'title' => 'Workflow',
+    'description' => 'Content workflow, editorial workflow tools.',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/content'] = array(
+    'title' => 'Content authoring',
+    'description' => 'Settings related to formatting and authoring content.',
+    'position' => 'right',
+    'weight' => 5,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
   );
 
   // Reports.
@@ -1023,14 +1032,7 @@ function system_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
-  // Addititional categories
-  $items['admin/config/workflow'] = array(
-    'title' => 'Workflow',
-    'description' => 'Content workflow, editorial workflow tools.',
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-  );
+
   // Default page for batch operations.
   $items['batch'] = array(
     'page callback' => 'system_batch_page',
