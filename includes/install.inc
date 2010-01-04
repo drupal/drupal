@@ -1066,12 +1066,12 @@ function drupal_check_module($module) {
  *   'Drupal'.
  *
  * Example of .info file:
- * @verbatim
+ * @code
  *    name = Minimal
  *    description = Start fresh, with only a few modules enabled.
  *    dependencies[] = block
  *    dependencies[] = dblog
- * @endverbatim
+ * @endcode
  *
  * @param profile
  *   Name of profile.

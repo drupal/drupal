@@ -1670,7 +1670,7 @@ function theme_submenu($variables) {
  *     - "header": Indicates this cell is a header.
  *     - Any HTML attributes, such as "colspan", to apply to the table cell.
  *     Here's an example for $rows:
- *     @verbatim
+ *     @code
  *     $rows = array(
  *       // Simple row
  *       array(
@@ -1681,7 +1681,7 @@ function theme_submenu($variables) {
  *         'data' => array('Cell 1', array('data' => 'Cell 2', 'colspan' => 2)), 'class' => array('funky')
  *       )
  *     );
- *     @endverbatim
+ *     @endcode
  *   - attributes: An array of HTML attributes to apply to the table tag.
  *   - caption: A localized string to use for the <caption> tag.
  *   - colgroups: An array of column groups. Each element of the array can be
@@ -1693,7 +1693,7 @@ function theme_submenu($variables) {
  *       "data" attribute with an array of columns, each of which is an
  *       associative array of HTML attributes.
  *     Here's an example for $colgroup:
- *     @verbatim
+ *     @code
  *     $colgroup = array(
  *       // COLGROUP with one COL element.
  *       array(
@@ -1711,7 +1711,7 @@ function theme_submenu($variables) {
  *         'class' => array('jazzy'), // Attribute for the COLGROUP element.
  *       ),
  *     );
- *     @endverbatim
+ *     @endcode
  *     These optional tags are used to group and set properties on columns
  *     within a table. For example, one may easily group three columns and
  *     apply same background style to all.
