@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.11 2009/12/06 18:04:17 webchick Exp $
+// $Id: template.php,v 1.12 2010/01/04 03:46:31 webchick Exp $
 
 /**
  * Override or insert variables into the page template.
@@ -91,4 +91,14 @@ function seven_fieldset($variables) {
   }
   $output .= "</fieldset>\n";
   return $output;
+}
+
+/**
+ * Implements hook_css_alter().
+ */
+function seven_css_alter(&$css) {
+  // Use Seven's vertical tabs style instead of the default one.
+  if (isset($css['misc/vertical-tabs.css'])) {
+    $css['misc/vertical-tabs.css']['data'] = drupal_get_path('theme', 'seven') . '/vertical-tabs.css';
+  }
 }
