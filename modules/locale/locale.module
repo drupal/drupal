@@ -611,8 +611,9 @@ function locale($string = NULL, $context = NULL, $langcode = NULL, $reset = FALS
 
   $langcode = isset($langcode) ? $langcode : $language->language;
 
-  // Store database cached translations in a static var.
-  if (!isset($locale_t[$langcode])) {
+  // Store database cached translations in a static variable. Only build the 
+  // cache after $language has been set to avoid an unnecessary cache rebuild.
+  if (!isset($locale_t[$langcode]) && isset($language)) {
     $locale_t[$langcode] = array();
     // Disabling the usage of string caching allows a module to watch for
     // the exact list of strings used on a page. From a performance
