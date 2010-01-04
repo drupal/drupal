@@ -92,3 +92,13 @@ function seven_fieldset($variables) {
   $output .= "</fieldset>\n";
   return $output;
 }
+
+/**
+ * Implements hook_css_alter().
+ */
+function seven_css_alter(&$css) {
+  // Use Seven's vertical tabs style instead of the default one.
+  if (isset($css['misc/vertical-tabs.css'])) {
+    $css['misc/vertical-tabs.css']['data'] = drupal_get_path('theme', 'seven') . '/vertical-tabs.css';
+  }
+}

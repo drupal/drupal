@@ -7,7 +7,6 @@ core = 7.x
 engine = phptemplate
 stylesheets[screen][] = reset.css
 stylesheets[screen][] = style.css
-stylesheets[all][] = vertical-tabs.css
 regions[content] = Content
 regions[help] = Help
 regions[page_top] = Page top
