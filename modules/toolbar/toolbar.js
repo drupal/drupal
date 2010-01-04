@@ -48,7 +48,7 @@ Drupal.admin.toolbar.init = function() {
   else {
     Drupal.admin.toolbar.expand();
   }
-}
+};
 
 /**
  * Collapse the admin toolbar.
@@ -62,15 +62,15 @@ Drupal.admin.toolbar.collapse = function() {
     .html(toggle_text);
   $('body').removeClass('toolbar-drawer');
   $.cookie(
-    'Drupal.admin.toolbar.collapsed', 
-    1, 
+    'Drupal.admin.toolbar.collapsed',
+    1,
     {
       path: Drupal.settings.basePath,
       // The cookie should "never" expire.
       expires: 36500
     }
   );
-}
+};
 
 /**
  * Expand the admin toolbar.
@@ -84,15 +84,15 @@ Drupal.admin.toolbar.expand = function() {
     .html(toggle_text);
   $('body').addClass('toolbar-drawer');
   $.cookie(
-    'Drupal.admin.toolbar.collapsed', 
-    0, 
+    'Drupal.admin.toolbar.collapsed',
+    0,
     {
       path: Drupal.settings.basePath,
       // The cookie should "never" expire.
       expires: 36500
     }
   );
-}
+};
 
 /**
  * Toggle the admin toolbar.
@@ -104,10 +104,10 @@ Drupal.admin.toolbar.toggle = function() {
   else {
     Drupal.admin.toolbar.collapse();
   }
-}
+};
 
 Drupal.admin.toolbar.height = function() {
   return $("#toolbar").height();
-}
+};
 
 })(jQuery);

@@ -286,7 +286,7 @@ Drupal.ajax.prototype.getEffect = function (response) {
   }
 
   return effect;
-}
+};
 
 /**
  * Handler for the form redirection error.

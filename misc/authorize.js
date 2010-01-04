@@ -24,6 +24,6 @@ Drupal.behaviors.authorizeFileTransferForm = {
     $('#edit-submit-connection').hide();
     $('#edit-submit-process').show();
   }
-}
+};
 
 })(jQuery);

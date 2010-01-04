@@ -17,7 +17,7 @@ Drupal.hideEmailAdministratorCheckbox = function () {
   // Toggle the display as necessary when the checkbox is clicked.
   $('#edit-update-status-module-1').change( function () {
     $('.form-item-update-status-module-2').toggle();
-  })
+  });
 };
 
 /**
