@@ -1,5 +1,5 @@
 <?php
-// $Id: system.updater.inc,v 1.2 2009/10/27 04:08:41 webchick Exp $
+// $Id: system.updater.inc,v 1.3 2010/01/04 21:31:52 webchick Exp $
 
 /**
  * @file
@@ -67,7 +67,7 @@ class ModuleUpdater extends Updater implements DrupalUpdaterInterface {
 
   public function postInstallTasks() {
     return array(
-      l(t('Enable newly added modules in !project', array('!project' => $this->title)), 'admin/config/modules'),
+      l(t('Enable newly added modules in !project', array('!project' => $this->title)), 'admin/modules'),
     );
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.38 2009/12/29 06:53:04 webchick Exp $
+// $Id: update.compare.inc,v 1.39 2010/01/04 21:31:52 webchick Exp $
 
 /**
  * @file
@@ -741,7 +741,7 @@ function update_project_cache($cid) {
   // On certain paths, we should clear the cache and recompute the projects or
   // update status of the site to avoid presenting stale information.
   $q = $_GET['q'];
-  $paths = array('admin/config/modules', 'admin/appearance', 'admin/reports', 'admin/reports/updates', 'admin/reports/status', 'admin/reports/updates/check');
+  $paths = array('admin/modules', 'admin/appearance', 'admin/reports', 'admin/reports/updates', 'admin/reports/status', 'admin/reports/updates/check');
   if (in_array($q, $paths)) {
     _update_cache_clear($cid);
   }

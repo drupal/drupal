@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.72 2009/12/13 09:14:21 webchick Exp $
+// $Id: user.test,v 1.73 2010/01/04 21:31:52 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -946,7 +946,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     // permission is assigned by default.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = TRUE;
-    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertTrue(user_access('administer news feeds', $this->admin_user), t('The permission was automatically assigned to the administrator role'));
   }
 

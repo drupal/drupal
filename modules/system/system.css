@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.70 2010/01/02 10:39:01 dries Exp $ */
+/* $Id: system.css,v 1.71 2010/01/04 21:31:52 webchick Exp $ */
 
 /*
 ** HTML elements
@@ -517,7 +517,7 @@ html.js .js-hide {
 }
 
 /*
-** Styles for the system modules page (admin/config/modules)
+** Styles for the system modules page (admin/modules)
 */
 #system-modules div.incompatible {
   font-weight: bold;
