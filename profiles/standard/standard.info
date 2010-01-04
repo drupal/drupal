@@ -21,4 +21,4 @@ dependencies[] = overlay
 dependencies[] = field_ui
 dependencies[] = file
 dependencies[] = rdf
-files[] = default.profile
+files[] = standard.profile

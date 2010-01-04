@@ -2719,6 +2719,15 @@ function system_update_7048() {
 }
 
 /**
+ * Rename 'Default' profile to 'Standard.'
+ */
+function system_update_7049() {
+  if (variable_get('install_profile', 'standard') == 'default') {
+    variable_set('install_profile', 'standard');
+  }
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

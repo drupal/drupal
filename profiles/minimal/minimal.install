@@ -6,7 +6,7 @@
  *
  * Perform actions to set up the site for this profile.
  */
-function expert_install() {
+function minimal_install() {
   // Add text formats.
   $plain_text_format = array(
     'name' => 'Plain text',
@@ -93,5 +93,3 @@ function expert_install() {
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'use text format 1'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'post comments without approval', 'use text format 1'));
 }
-
-

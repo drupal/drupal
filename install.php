@@ -909,7 +909,7 @@ function install_settings_form($form, &$form_state, &$install_state) {
     );
 
     // Table prefix
-    $db_prefix = ($profile == 'default') ? 'drupal_' : $profile . '_';
+    $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
       '#title' => st('Table prefix'),
@@ -973,7 +973,7 @@ function install_database_errors($database, $settings_file) {
 
     try {
       db_run_tasks($database['driver']);
-    } 
+    }
     catch (DatabaseTaskException $e) {
       // These are generic errors, so we do not have any specific key of the
       // database connection array to attach them to; therefore, we just put
@@ -1094,7 +1094,7 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
   foreach ($profile_files as $profile) {
     // TODO: is this right?
     include_once DRUPAL_ROOT . '/' . $profile->uri;
-    
+
     $details = install_profile_info($profile->name);
     $profiles[$profile->name] = $details;
 
@@ -1107,24 +1107,24 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
   // Display radio buttons alphabetically by human-readable name, but always
   // put the core profiles first (if they are present in the filesystem).
   natcasesort($names);
-  if (isset($names['expert'])) {
+  if (isset($names['minimal'])) {
     // If the expert ("Minimal") core profile is present, put it in front of
     // any non-core profiles rather than including it with them alphabetically,
     // since the other profiles might be intended to group together in a
     // particular way.
-    $names = array('expert' => $names['expert']) + $names;
+    $names = array('minimal' => $names['minimal']) + $names;
   }
-  if (isset($names['default'])) {
+  if (isset($names['standard'])) {
     // If the default ("Standard") core profile is present, put it at the very
     // top of the list. This profile will have its radio button pre-selected,
     // so we want it to always appear at the top.
-    $names = array('default' => $names['default']) + $names;
+    $names = array('standard' => $names['standard']) + $names;
   }
 
   foreach ($names as $profile => $name) {
     $form['profile'][$name] = array(
       '#type' => 'radio',
-      '#value' => 'default',
+      '#value' => 'standard',
       '#return_value' => $profile,
       '#title' => $name,
       '#description' => isset($profiles[$profile]['description']) ? $profiles[$profile]['description'] : '',
@@ -1182,7 +1182,7 @@ function install_select_locale(&$install_state) {
     // the user that the installer can be localized. Otherwise we assume the
     // user knows what he is doing.
     if (count($locales) == 1) {
-      if ($profilename == 'default' && $install_state['interactive']) {
+      if ($profilename == 'standard' && $install_state['interactive']) {
         drupal_set_title(st('Choose language'));
         if (!empty($install_state['parameters']['localize'])) {
           $output = '<p>' . st('With the addition of an appropriate translation package, this installer is capable of proceeding in another language of your choice. To install and use Drupal in a language other than English:') . '</p>';
@@ -1240,7 +1240,7 @@ function install_select_locale(&$install_state) {
 /**
  * Form API array definition for language selection.
  */
-function install_select_locale_form($form, &$form_state, $locales, $profilename = 'default') {
+function install_select_locale_form($form, &$form_state, $locales, $profilename = 'standard') {
   include_once DRUPAL_ROOT . '/includes/iso.inc';
   $languages = _locale_get_predefined_list();
   foreach ($locales as $locale) {
@@ -1257,7 +1257,7 @@ function install_select_locale_form($form, &$form_state, $locales, $profilename 
       '#parents' => array('locale')
     );
   }
-  if ($profilename == 'default') {
+  if ($profilename == 'standard') {
     $form['help'] = array(
       '#markup' => '<p><a href="install.php?profile=' . $profilename . '&amp;localize=true">' . st('Learn how to install Drupal in other languages') . '</a></p>',
     );
@@ -1710,7 +1710,7 @@ function install_configure_form_submit($form, &$form_state) {
   // Enable update.module if this option was selected.
   if ($form_state['values']['update_status_module'][1]) {
     drupal_install_modules(array('update'));
- 
+
     // Add the site maintenance account's email address to the list of
     // addresses to be notified when updates are available, if selected.
     if ($form_state['values']['update_status_module'][2]) {

@@ -184,12 +184,12 @@ abstract class DrupalTestCase {
 
   /**
    * Delete an assertion record by message ID.
-   * 
+   *
    * @param $message_id
    *   Message ID of the assertion to delete.
    * @return
    *   TRUE if the assertion was deleted, FALSE otherwise.
-   * 
+   *
    * @see DrupalTestCase::insertAssert()
    */
   public static function deleteAssert($message_id) {
@@ -1137,8 +1137,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->preloadRegistry();
 
     // Include the default profile
-    variable_set('install_profile', 'default');
-    $profile_details = install_profile_info('default', 'en');
+    variable_set('install_profile', 'standard');
+    $profile_details = install_profile_info('standard', 'en');
 
     // Install the modules specified by the default profile.
     drupal_install_modules($profile_details['dependencies'], TRUE);
@@ -1158,7 +1158,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Run default profile tasks.
     $install_state = array();
-    drupal_install_modules(array('default'), TRUE);
+    drupal_install_modules(array('standard'), TRUE);
 
     // Rebuild caches.
     node_types_rebuild();
@@ -1173,7 +1173,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     $user = user_load(1);
 
     // Restore necessary variables.
-    variable_set('install_profile', 'default');
     variable_set('install_task', 'done');
     variable_set('clean_url', $clean_url_original);
     variable_set('site_mail', 'simpletest@example.com');

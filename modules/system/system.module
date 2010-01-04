@@ -642,7 +642,7 @@ function system_menu() {
     );
   }
 
-  // Modules
+  // Modules.
   $items['admin/modules'] = array(
     'title' => 'Modules',
     'description' => 'Enable or disable add-on modules for your site.',
@@ -675,7 +675,7 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
 
-  // Configuration and modules.
+  // Configuration.
   $items['admin/config'] = array(
     'title' => 'Configuration',
     'page callback' => 'system_admin_config_page',

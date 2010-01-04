@@ -228,7 +228,7 @@ function drupal_get_profile() {
     $profile = $install_state['parameters']['profile'];
   }
   else {
-    $profile = variable_get('install_profile', 'default');
+    $profile = variable_get('install_profile', 'standard');
   }
 
   return $profile;
@@ -4381,7 +4381,7 @@ function drupal_json_encode($var) {
  * Converts an HTML-safe JSON string into its PHP equivalent.
  *
  * @see drupal_json_encode()
- * @ingroup php_wrappers 
+ * @ingroup php_wrappers
  */
 function drupal_json_decode($var) {
   // json_decode() does not unescape <, > and &, so we do it with str_replace().

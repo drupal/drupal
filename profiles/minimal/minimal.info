@@ -5,4 +5,4 @@ version = VERSION
 core = 7.x
 dependencies[] = block
 dependencies[] = dblog
-files[] = expert.profile
+files[] = minimal.profile
