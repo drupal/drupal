@@ -332,7 +332,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
       ),
       'display' => array(
         'full' => array(
-          'type' => 'taxonomy_term_link',
+          'type' => 'taxonomy_term_reference_link',
         ),
       ),
     );
@@ -703,7 +703,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name'  => 'Taxonomy term field',
+      'name'  => 'Taxonomy term reference field',
       'description'  => 'Test the creation of term fields.',
       'group' => 'Taxonomy',
     );
@@ -726,7 +726,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     // Create a field with settings to validate.
     $this->field = array(
       'field_name' => $this->field_name,
-      'type' => 'taxonomy_term',
+      'type' => 'taxonomy_term_reference',
       'settings' => array(
         'allowed_values' => array(
           array(
@@ -746,7 +746,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
       ),
       'display' => array(
         'full' => array(
-          'type' => 'taxonomy_term_link',
+          'type' => 'taxonomy_term_reference_link',
         ),
       ),
     );
@@ -786,7 +786,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $this->field_name = drupal_strtolower($this->randomName());
     $this->field = array(
       'field_name' => $this->field_name,
-      'type' => 'taxonomy_term',
+      'type' => 'taxonomy_term_reference',
       'settings' => array(
         'allowed_values' => array(
           array(

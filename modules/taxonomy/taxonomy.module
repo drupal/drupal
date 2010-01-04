@@ -424,7 +424,7 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
 function taxonomy_vocabulary_create_field($vocabulary) {
   $field = array(
     'field_name' => 'taxonomy_' . $vocabulary->machine_name,
-    'type' => 'taxonomy_term',
+    'type' => 'taxonomy_term_reference',
     // Set cardinality to unlimited so that select
     // and autocomplete widgets behave as normal.
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -953,11 +953,11 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
  */
 function taxonomy_field_info() {
   return array(
-    'taxonomy_term' => array(
-      'label' => t('Taxonomy term'),
+    'taxonomy_term_reference' => array(
+      'label' => t('Term reference'),
       'description' => t('This field stores a reference to a taxonomy term.'),
       'default_widget' => 'options_select',
-      'default_formatter' => 'taxonomy_term_link',
+      'default_formatter' => 'taxonomy_term_reference_link',
       'settings' => array(
         'allowed_values' => array(
           array(
@@ -977,7 +977,7 @@ function taxonomy_field_widget_info() {
   return array(
     'taxonomy_autocomplete' => array(
       'label' => t('Autocomplete term widget (tagging)'),
-      'field types' => array('taxonomy_term'),
+      'field types' => array('taxonomy_term_reference'),
       'settings' => array(
         'size' => 60,
         'autocomplete_path' => 'taxonomy/autocomplete',
@@ -993,8 +993,8 @@ function taxonomy_field_widget_info() {
  * Implements hook_field_widget_info_alter().
  */
 function taxonomy_field_widget_info_alter(&$info) {
-  $info['options_select']['field types'][] = 'taxonomy_term';
-  $info['options_buttons']['field types'][] = 'taxonomy_term';
+  $info['options_select']['field types'][] = 'taxonomy_term_reference';
+  $info['options_buttons']['field types'][] = 'taxonomy_term_reference';
 }
 
 /**
@@ -1036,7 +1036,7 @@ function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcod
     if (!empty($item['tid'])) {
       if (!isset($allowed_values[$item['tid']])) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
-          'error' => 'taxonomy_term_illegal_value',
+          'error' => 'taxonomy_term_reference_illegal_value',
           'message' => t('%name: illegal value.', array('%name' => t($instance['label']))),
         );
       }
@@ -1059,13 +1059,13 @@ function taxonomy_field_is_empty($item, $field) {
  */
 function taxonomy_field_formatter_info() {
   return array(
-    'taxonomy_term_link' => array(
+    'taxonomy_term_reference_link' => array(
       'label' => t('Link'),
-      'field types' => array('taxonomy_term'),
+      'field types' => array('taxonomy_term_reference'),
     ),
-    'taxonomy_term_plain' => array(
+    'taxonomy_term_reference_plain' => array(
       'label' => t('Plain text'),
-      'field types' => array('taxonomy_term'),
+      'field types' => array('taxonomy_term_reference'),
     ),
   );
 }
@@ -1077,7 +1077,7 @@ function taxonomy_field_formatter_view($object_type, $object, $field, $instance,
   $element = array();
 
   switch ($display['type']) {
-    case 'taxonomy_term_link':
+    case 'taxonomy_term_reference_link':
       foreach ($items as $delta => $item) {
         $term = $item['taxonomy_term'];
         $element[$delta] = array(
@@ -1088,7 +1088,7 @@ function taxonomy_field_formatter_view($object_type, $object, $field, $instance,
       }
       break;
 
-    case 'taxonomy_term_plain':
+    case 'taxonomy_term_reference_plain':
       foreach ($items as $delta => $item) {
         $term = $item['taxonomy_term'];
         $element[$delta] = array(
@@ -1173,7 +1173,7 @@ function _taxonomy_clean_field_cache($term) {
   }
 
   // Load info for all taxonomy term fields.
-  $fields = field_read_fields(array('type' => 'taxonomy_term'));
+  $fields = field_read_fields(array('type' => 'taxonomy_term_reference'));
   foreach ($fields as $field_name => $field) {
 
     // Assemble an array of vocabulary IDs that are used in this field.
