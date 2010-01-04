@@ -423,7 +423,7 @@ table.system-status-report th,
 table td,
 table th {
   vertical-align: middle;
-  padding: 8px 5px 8px 10px;
+  padding: 8px 10px;
 }
 
 table.system-status-report th {
@@ -465,7 +465,7 @@ table th {
   border-width: 1px;
   border-style: solid;
   border-color: #bebfb9;
-  padding: 3px 3px 3px 10px;
+  padding: 3px 10px;
 }
 
 table th.active {
