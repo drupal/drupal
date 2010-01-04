@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.119 2010/01/02 18:56:20 webchick Exp $
+// $Id: install.inc,v 1.120 2010/01/04 16:20:20 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -1066,12 +1066,12 @@ function drupal_check_module($module) {
  *   'Drupal'.
  *
  * Example of .info file:
- * @verbatim
+ * @code
  *    name = Minimal
  *    description = Start fresh, with only a few modules enabled.
  *    dependencies[] = block
  *    dependencies[] = dblog
- * @endverbatim
+ * @endcode
  *
  * @param profile
  *   Name of profile.
