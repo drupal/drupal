@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.70 2010/01/02 15:00:34 dries Exp $
+// $Id: field.attach.inc,v 1.71 2010/01/04 15:56:28 webchick Exp $
 
 /**
  * @file
@@ -81,7 +81,7 @@ define('FIELD_STORAGE_INSERT', 'insert');
  * Operate on Field API data attached to Drupal objects.
  *
  * Field Attach API functions load, store, generate Form API
- * structures, display, and perform a vareity of other functions for
+ * structures, display, and perform a variety of other functions for
  * field data connected to individual objects.
  *
  * Field Attach API functions generally take $obj_type and $object
