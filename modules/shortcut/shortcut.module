@@ -522,9 +522,9 @@ function shortcut_renderable_links($shortcut_set = NULL) {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_preprocess_page().
  */
-function shortcut_page_build(&$page) {
+function shortcut_preprocess_page(&$variables) {
   if (shortcut_set_edit_access()) {
     $link = $_GET['q'];
     $query_parameters = drupal_get_query_parameters();
@@ -559,13 +559,13 @@ function shortcut_page_build(&$page) {
       $link_path = 'admin/config/system/shortcut/link/' . $mlid . '/delete';
     }
 
-    $page['add_or_remove_shortcut'] = array(
-     '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
-     '#type' => 'link',
-     '#title' => '<span class="icon"></span><span class="text">' . $link_text . '</span>',
-     '#href' => $link_path,
-     '#options' => array('query' => $query, 'html' => TRUE),
-     '#suffix' => '</div>',
+    $variables['title_suffix']['add_or_remove_shortcut'] = array(
+      '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
+      '#type' => 'link',
+      '#title' => '<span class="icon"></span><span class="text">' . $link_text . '</span>',
+      '#href' => $link_path,
+      '#options' => array('query' => $query, 'html' => TRUE),
+      '#suffix' => '</div>',
     );
   }
 }
@@ -609,24 +609,3 @@ function shortcut_toolbar_pre_render($toolbar) {
   return $toolbar;
 }
 
-/**
- * Implements hook_preprocess_page().
- */
-function shortcut_preprocess_page(&$variables) {
-  if (isset($variables['page']['add_or_remove_shortcut'])) {
-    $variables['add_or_remove_shortcut'] = drupal_render($variables['page']['add_or_remove_shortcut']);
-  }
-}
-
-/**
- * Implements hook_system_info_alter().
- *
- * If the overlay module is enabled, indicate that the link for adding or
- * removing shortcuts is one of the page "regions" that should display in the
- * overlay.
- */
-function shortcut_system_info_alter(&$info, $file, $type) {
-  if (module_exists('overlay') && $type == 'theme') {
-    $info['overlay_regions'][] = 'add_or_remove_shortcut';
-  }
-}

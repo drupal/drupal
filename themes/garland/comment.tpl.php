@@ -5,10 +5,6 @@
 
   <div class="clearfix">
 
-  <?php if ($contextual_links): ?>
-    <?php print render($contextual_links); ?>
-  <?php endif; ?>
-
     <span class="submitted"><?php print $created; ?> — <?php print $author; ?></span>
 
   <?php if ($new) : ?>
@@ -17,7 +13,9 @@
 
   <?php print $picture ?>
 
+    <?php print render($title_prefix); ?>
     <h3<?php print $title_attributes; ?>><?php print $title ?></h3>
+    <?php print render($title_suffix); ?>
 
     <div class="content"<?php print $content_attributes; ?>>
       <?php hide($content['links']); print render($content); ?>

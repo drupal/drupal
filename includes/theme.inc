@@ -2257,6 +2257,10 @@ function template_preprocess(&$variables, $hook) {
   $variables['title_attributes_array'] = array();
   $variables['content_attributes_array'] = array();
 
+  // Initialize 'title_prefix' and 'title_suffix' renderable arrays.
+  $variables['title_prefix'] = array();
+  $variables['title_suffix'] = array();
+
   // Set default variables that depend on the database.
   $variables['is_admin']            = FALSE;
   $variables['is_front']            = FALSE;

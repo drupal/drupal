@@ -18,7 +18,6 @@
  * - $node_url: Direct url of the current node.
  * - $terms: the themed list of taxonomy term links output from theme_links().
  * - $display_submitted: whether submission information should be displayed.
- * - $contextual_links (array): An array of contextual links for the node.
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
  *   preprocess functions. The default values can be one or more of the following:
@@ -32,6 +31,12 @@
  *   - node-promoted: Nodes promoted to the front page.
  *   - node-sticky: Nodes ordered above other non-sticky nodes in teaser listings.
  *   - node-unpublished: Unpublished nodes visible only to administrators.
+ * - $title_prefix (array): An array containing additional output populated by
+ *   modules, intended to be displayed in front of the main title tag that
+ *   appears in the template.
+ * - $title_suffix (array): An array containing additional output populated by
+ *   modules, intended to be displayed after the main title tag that appears in
+ *   the template.
  *
  * Other variables:
  * - $node: Full node object. Contains data that may not be safe.
@@ -75,13 +80,11 @@
 
   <?php print $user_picture; ?>
 
-  <?php if (!$page && !empty($contextual_links)): ?>
-    <?php print render($contextual_links); ?>
-  <?php endif; ?>
-
+  <?php print render($title_prefix); ?>
   <?php if (!$page): ?>
     <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $node_title; ?></a></h2>
   <?php endif; ?>
+  <?php print render($title_suffix); ?>
 
   <?php if ($display_submitted || !empty($content['links']['terms'])): ?>
     <div class="meta">

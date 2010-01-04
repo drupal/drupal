@@ -1186,9 +1186,11 @@ function node_view($node, $view_mode = 'full') {
     '#node' => $node,
     '#view_mode' => $view_mode,
   );
-  // Add contextual links for this node.
+  // Add contextual links for this node except for 'full' view mode.
   // @todo Make this configurable per view mode.
-  $build['#contextual_links']['node'] = array('node', array($node->nid));
+  if ($view_mode != 'full') {
+    $build['#contextual_links']['node'] = array('node', array($node->nid));
+  }
 
   // Allow modules to modify the structured node.
   drupal_alter('node_view', $build);
