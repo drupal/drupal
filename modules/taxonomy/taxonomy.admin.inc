@@ -255,8 +255,8 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
   // Terms from previous and next pages are shown if the term tree would have
   // been cut in the middle. Keep track of how many extra terms we show on each
   // page of terms.
-  $back_peddle    = NULL;
-  $forward_peddle = 0;
+  $back_step    = NULL;
+  $forward_step = 0;
 
   // An array of the terms to be displayed on this page.
   $current_page = array();
@@ -270,7 +270,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
       break;
     }
     // Count entries before the current page.
-    if ($page && ($page * $page_increment) > $before_entries && !isset($back_peddle)) {
+    if ($page && ($page * $page_increment) > $before_entries && !isset($back_step)) {
       $before_entries++;
       continue;
     }
@@ -281,28 +281,28 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
     }
 
     // Do not let a term start the page that is not at the root.
-    if (isset($term->depth) && ($term->depth > 0) && !isset($back_peddle)) {
-      $back_peddle = 0;
+    if (isset($term->depth) && ($term->depth > 0) && !isset($back_step)) {
+      $back_step = 0;
       while ($pterm = prev($tree)) {
         $before_entries--;
-        $back_peddle++;
+        $back_step++;
         if ($pterm->depth == 0) {
           prev($tree);
           continue 2; // Jump back to the start of the root level parent.
        }
       }
     }
-    $back_peddle = isset($back_peddle) ? $back_peddle : 0;
+    $back_step = isset($back_step) ? $back_step : 0;
 
     // Continue rendering the tree until we reach the a new root item.
-    if ($page_entries >= $page_increment + $back_peddle + 1 && $term->depth == 0 && $root_entries > 1) {
+    if ($page_entries >= $page_increment + $back_step + 1 && $term->depth == 0 && $root_entries > 1) {
       $complete_tree = TRUE;
       // This new item at the root level is the first item on the next page.
       $after_entries++;
       continue;
     }
-    if ($page_entries >= $page_increment + $back_peddle) {
-      $forward_peddle++;
+    if ($page_entries >= $page_increment + $back_step) {
+      $forward_step++;
     }
 
     // Finally, if we've gotten down this far, we're rendering a term on this page.
@@ -376,8 +376,8 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
   $form['#total_entries'] = $total_entries;
   $form['#page_increment'] = $page_increment;
   $form['#page_entries'] = $page_entries;
-  $form['#back_peddle'] = $back_peddle;
-  $form['#forward_peddle'] = $forward_peddle;
+  $form['#back_step'] = $back_step;
+  $form['#forward_step'] = $forward_step;
   $form['#empty_text'] = t('No terms available. <a href="@link">Add term</a>.', array('@link' => url('admin/structure/taxonomy/' . $vocabulary->vid . '/add')));
 
   if ($vocabulary->hierarchy < 2 && count($tree) > 1) {
@@ -523,15 +523,15 @@ function theme_taxonomy_overview_terms($variables) {
 
   $page_increment  = $form['#page_increment'];
   $page_entries    = $form['#page_entries'];
-  $back_peddle     = $form['#back_peddle'];
-  $forward_peddle  = $form['#forward_peddle'];
+  $back_step     = $form['#back_step'];
+  $forward_step  = $form['#forward_step'];
 
   // Add drag and drop if parent fields are present in the form.
   if ($form['#parent_fields']) {
     drupal_add_tabledrag('taxonomy', 'match', 'parent', 'term-parent', 'term-parent', 'term-id', FALSE);
     drupal_add_tabledrag('taxonomy', 'depth', 'group', 'term-depth', NULL, NULL, FALSE);
     drupal_add_js(drupal_get_path('module', 'taxonomy') . '/taxonomy.js');
-    drupal_add_js(array('taxonomy' => array('backPeddle' => $back_peddle, 'forwardPeddle' => $forward_peddle)), 'setting');
+    drupal_add_js(array('taxonomy' => array('backStep' => $back_step, 'forwardStep' => $forward_step)), 'setting');
     drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
   }
 
@@ -565,15 +565,15 @@ function theme_taxonomy_overview_terms($variables) {
     }
 
     // Add classes that mark which terms belong to previous and next pages.
-    if ($row_position < $back_peddle || $row_position >= $page_entries - $forward_peddle) {
+    if ($row_position < $back_step || $row_position >= $page_entries - $forward_step) {
       $rows[$key]['class'][] = 'taxonomy-term-preview';
     }
 
     if ($row_position !== 0 && $row_position !== count($rows) - 1) {
-      if ($row_position == $back_peddle - 1 || $row_position == $page_entries - $forward_peddle - 1) {
+      if ($row_position == $back_step - 1 || $row_position == $page_entries - $forward_step - 1) {
         $rows[$key]['class'][] = 'taxonomy-term-divider-top';
       }
-      elseif ($row_position == $back_peddle || $row_position == $page_entries - $forward_peddle) {
+      elseif ($row_position == $back_step || $row_position == $page_entries - $forward_step) {
         $rows[$key]['class'][] = 'taxonomy-term-divider-bottom';
       }
     }
