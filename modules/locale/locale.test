@@ -292,6 +292,68 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $this->assertNoText($name, t('Search now can not find the name.'));
   }
 
+  /*
+   * Adds a language and checks that the JavaScript translation files are
+   * properly created and rebuilt on deletion.
+   */
+  function testJavaScriptTranslation() {
+    $user = $this->drupalCreateUser(array('translate interface', 'administer languages', 'access administration pages'));
+    $this->drupalLogin($user);
+
+    $langcode = 'xx';
+    // The English name for the language. This will be translated.
+    $name = $this->randomName(16);
+    // The native name for the language.
+    $native = $this->randomName(16);
+    // The domain prefix.
+    $prefix = $langcode;
+
+    // Add custom language.
+    $edit = array(
+      'langcode' => $langcode,
+      'name' => $name,
+      'native' => $native,
+      'prefix' => $prefix,
+      'direction' => '0',
+    );
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+    drupal_static_reset('language_list');
+
+    // Build the JavaScript translation file.
+    $this->drupalGet('admin/config/regional/translate/translate');
+
+    // Retrieve the id of the first string available in the {locales_source}
+    // table and translate it.
+    $query = db_select('locales_source', 'l');
+    $query->addExpression('min(l.lid)', 'lid');
+    $result = $query->condition('l.location', '%.js%', 'LIKE')
+      ->condition('l.textgroup', 'default')
+      ->execute();
+    $url = 'admin/config/regional/translate/edit/' . $result->fetchObject()->lid;
+    $edit = array('translations['. $langcode .']' => $this->randomString());
+    $this->drupalPost($url, $edit, t('Save translations'));
+
+    // Trigger JavaScript translation parsing and building. 
+    locale_inc_callback('_locale_rebuild_js', $langcode);
+
+    // Retrieve the JavaScript translation hash code for the custom language to
+    // check that the translation file has been properly built.
+    $file = db_select('languages', 'l')
+      ->fields('l', array('javascript'))
+      ->condition('language', $langcode)
+      ->execute()
+      ->fetchObject();
+    $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/' . $langcode . '_' . $file->javascript . '.js';
+    $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('not found'))));
+
+    // Test JavaScript translation rebuilding.
+    file_unmanaged_delete($js_file);
+    $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
+    cache_clear_all();
+    locale_inc_callback('_locale_rebuild_js', $langcode);
+    $this->assertTrue($result = file_exists($js_file), t('JavaScript file rebuilt: %file', array('%file' => $result ? $js_file : t('not found'))));
+  }
+
   /**
    * Tests the validation of the translation input.
    */
