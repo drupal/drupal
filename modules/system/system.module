@@ -70,7 +70,7 @@ function system_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing modules') . '</dt>';
-      $output .= '<dd>' . t('The System module allows users with the appropriate permissions to enable and disable modules on the <a href="@modules">Modules administration page</a>. Drupal comes with a number of core modules, and each module provides a discrete set of features and may be enabled or disabled depending on the needs of the site. Many additional modules contributed by members of the Drupal community are available for download at the <a href="@drupal-modules">Drupal.org module page</a>.', array('@modules' => url('admin/config/modules'), '@drupal-modules' => 'http://drupal.org/project/modules')) . '</dd>';
+      $output .= '<dd>' . t('The System module allows users with the appropriate permissions to enable and disable modules on the <a href="@modules">Modules administration page</a>. Drupal comes with a number of core modules, and each module provides a discrete set of features and may be enabled or disabled depending on the needs of the site. Many additional modules contributed by members of the Drupal community are available for download at the <a href="@drupal-modules">Drupal.org module page</a>.', array('@modules' => url('admin/modules'), '@drupal-modules' => 'http://drupal.org/project/modules')) . '</dd>';
       $output .= '<dt>' . t('Managing themes') . '</dt>';
       $output .= '<dd>' . t('The System module allows users with the appropriate permissions to enable and disable themes on the <a href="@themes">Appearance administration page</a>. Themes determine the design and presentation of your site. Drupal comes packaged with several core themes, and additional contributed themes are available at the <a href="@drupal-themes">Drupal.org theme page</a>.', array('@themes' => url('admin/appearance'), '@drupal-themes' => 'http://drupal.org/project/themes')) . '</dd>';
       $output .= '<dt>' . t('Managing caching') . '</dt>';
@@ -94,7 +94,7 @@ function system_help($path, $arg) {
       return '<p>' . t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.', array('%template' => $theme, '@global' => url('admin/appearance/settings'))) . '</p>';
     case 'admin/appearance/settings':
       return '<p>' . t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') . '</p>';
-    case 'admin/config/modules':
+    case 'admin/modules':
       $output = '<p>' . t('Download additional <a href="@modules">contributed modules</a> to extend Drupal\'s functionality.', array('@modules' => 'http://drupal.org/project/modules')) . '</p>';
       if (module_exists('update')) {
         if (update_manager_access()) {
@@ -108,8 +108,8 @@ function system_help($path, $arg) {
         $output .= '<p>' . t('Regularly review available updates to maintain a secure and current site. Always run the <a href="@update-php">update script</a> each time a module is updated. Enable the Update manager module to update and install modules and themes.', array('@update-php' => $base_url . '/update.php')) . '</p>';
       }
       return $output;
-    case 'admin/config/modules/uninstall':
-      return '<p>' . t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it on the main <a href="@modules">Modules page</a>. Not all modules support this feature.', array('@modules' => url('admin/config/modules'))) . '</p>';
+    case 'admin/modules/uninstall':
+      return '<p>' . t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it on the main <a href="@modules">Modules page</a>. Not all modules support this feature.', array('@modules' => url('admin/modules'))) . '</p>';
     case 'admin/structure/block/manage':
       if ($arg[4] == 'system' && $arg[5] == 'powered-by') {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
@@ -656,7 +656,7 @@ function system_menu() {
     'weight' => -10,
     'file' => 'system.admin.inc',
   );
-  $items['admin/config/modules'] = array(
+  $items['admin/modules'] = array(
     'title' => 'Modules',
     'description' => 'Enable or disable add-on modules for your site.',
     'page callback' => 'drupal_get_form',
@@ -666,23 +666,23 @@ function system_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
   );
-  $items['admin/config/modules/list'] = array(
+  $items['admin/modules/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/config/modules/list/confirm'] = array(
+  $items['admin/modules/list/confirm'] = array(
     'title' => 'List',
     'access arguments' => array('administer modules'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/config/modules/uninstall'] = array(
+  $items['admin/modules/uninstall'] = array(
     'title' => 'Uninstall',
     'page arguments' => array('system_modules_uninstall'),
     'access arguments' => array('administer modules'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'system.admin.inc',
   );
-  $items['admin/config/modules/uninstall/confirm'] = array(
+  $items['admin/modules/uninstall/confirm'] = array(
     'title' => 'Uninstall',
     'access arguments' => array('administer modules'),
     'type' => MENU_CALLBACK,

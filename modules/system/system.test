@@ -114,7 +114,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
     $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
     // Check that hook_modules_installed and hook_modules_enabled hooks were invoked and check tables.
@@ -127,7 +127,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Disable aggregator, check tables, uninstall aggregator, check tables.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = FALSE;
-    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
     // Check that hook_modules_disabled hook was invoked and check tables.
@@ -139,7 +139,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Uninstall the module.
     $edit = array();
     $edit['uninstall[aggregator]'] = 'aggregator';
-    $this->drupalPost('admin/config/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
 
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
@@ -153,7 +153,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Reinstall (and enable) aggregator module.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
-    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
   }
 }
@@ -177,7 +177,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     // Attempt to enable content translation without locale enabled.
     $edit = array();
     $edit['modules[Core][translation][enable]'] = 'translation';
-    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('Some required modules must be enabled'), t('Dependecy required.'));
 
     $this->assertModules(array('translation', 'locale'), FALSE);
@@ -202,7 +202,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
   function testMissingModules() {
     // Test that the system_dependencies_test module is marked
     // as missing a dependency.
-    $this->drupalGet('admin/config/modules');
+    $this->drupalGet('admin/modules');
     $this->assertRaw(t('@module (<span class="admin-missing">missing</span>)', array('@module' => drupal_ucfirst('_missing_dependency'))), t('A module with missing dependencies is marked as such.'));
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Testing][system_dependencies_test][enable]"]');
     $this->assert(count($checkbox) == 1, t('Checkbox for the module is disabled.'));
@@ -212,7 +212,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
 
     // Verify that the module is forced to be disabled when submitting
     // the module page.
-    $this->drupalPost('admin/config/modules', array(), t('Save configuration'));
+    $this->drupalPost('admin/modules', array(), t('Save configuration'));
     $this->assertText(t('The @module module is missing, so the following module will be disabled: @depends.', array('@module' => '_missing_dependency', '@depends' => 'system_dependencies_test')), t('The module missing dependencies will be disabled.'));
 
     // Confirm.
@@ -277,7 +277,7 @@ class ModuleVersionTestCase extends ModuleTestCase {
     variable_set('dependencies', $dependencies);
     $n = count($dependencies);
     for ($i = 0; $i < $n; $i++) {
-      $this->drupalGet('admin/config/modules');
+      $this->drupalGet('admin/modules');
       $checkbox = $this->xpath('//input[@id="edit-modules-testing-module-test-enable"]');
       $this->assertEqual(!empty($checkbox[0]['disabled']), $i % 2, $dependencies[$i]);
     }
@@ -301,7 +301,7 @@ class ModuleRequiredTestCase extends ModuleTestCase {
    */
   function testDisableRequired() {
     $required_modules = drupal_required_modules();
-    $this->drupalGet('admin/config/modules');
+    $this->drupalGet('admin/modules');
     foreach ($required_modules as $module) {
       // Check to make sure the checkbox for required module is not found.
       $this->assertNoFieldByName('modules[Core][' . $module . '][enable]');
@@ -1082,11 +1082,11 @@ class SystemMainContentFallback extends DrupalWebTestCase {
     $edit = array();
     // Disable the dashboard module, which depends on the block module.
     $edit['modules[Core][dashboard][enable]'] = FALSE;
-    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
     // Disable the block module.
     $edit['modules[Core][block][enable]'] = FALSE;
-    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
     module_list(TRUE);
     $this->assertFalse(module_exists('block'), t('Block module disabled.'));
@@ -1120,7 +1120,7 @@ class SystemMainContentFallback extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
     $edit = array();
     $edit['modules[Core][block][enable]'] = 'block';
-    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
     module_list(TRUE);
     $this->assertTrue(module_exists('block'), t('Block module re-enabled.'));

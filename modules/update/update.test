@@ -133,7 +133,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Check the messages at admin/config/modules when the site is up to date.
+   * Check the messages at admin/modules when the site is up to date.
    */
   function testModulePageUpToDate() {
     $this->setSystemInfo7_0();
@@ -141,7 +141,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
     variable_set('update_test_xml_map', array('drupal' => '0'));
 
-    $this->drupalGet('admin/config/modules');
+    $this->drupalGet('admin/modules');
     $this->assertText(t('No update information available.'));
     $this->clickLink(t('check manually'));
     $this->assertText(t('Checked available update data for one project.'));
@@ -150,7 +150,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Check the messages at admin/config/modules when missing an update.
+   * Check the messages at admin/modules when missing an update.
    */
   function testModulePageRegularUpdate() {
     $this->setSystemInfo7_0();
@@ -158,7 +158,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
     variable_set('update_test_xml_map', array('drupal' => '1'));
 
-    $this->drupalGet('admin/config/modules');
+    $this->drupalGet('admin/modules');
     $this->assertText(t('No update information available.'));
     $this->clickLink(t('check manually'));
     $this->assertText(t('Checked available update data for one project.'));
@@ -167,7 +167,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Check the messages at admin/config/modules when missing a security update.
+   * Check the messages at admin/modules when missing a security update.
    */
   function testModulePageSecurityUpdate() {
     $this->setSystemInfo7_0();
@@ -175,7 +175,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
     variable_set('update_test_xml_map', array('drupal' => '2-sec'));
 
-    $this->drupalGet('admin/config/modules');
+    $this->drupalGet('admin/modules');
     $this->assertText(t('No update information available.'));
     $this->clickLink(t('check manually'));
     $this->assertText(t('Checked available update data for one project.'));

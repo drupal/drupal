@@ -80,7 +80,7 @@ function update_help($path, $arg) {
       return '<p>' . t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') . '</p>';
 
     case 'admin/appearance':
-    case 'admin/config/modules':
+    case 'admin/modules':
       module_load_install('update');
       $status = update_requirements('runtime');
       foreach (array('core', 'contrib') as $report_type) {
@@ -97,8 +97,8 @@ function update_help($path, $arg) {
 
     case 'admin/appearance/update':
     case 'admin/appearance/install':
-    case 'admin/config/modules/update':
-    case 'admin/config/modules/install':
+    case 'admin/modules/update':
+    case 'admin/modules/install':
     case 'admin/reports/updates/update':
     case 'admin/reports/updates/install':
     case 'admin/reports/updates/settings':
@@ -110,7 +110,7 @@ function update_help($path, $arg) {
     case 'admin/help#update':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t("The Update manager module periodically checks for new versions of your site's software (including contributed modules and themes), and alerts administrators to available updates. In order to provide update information, anonymous usage statistics are sent to Drupal.org. If desired, you may disable the Update manager module from the <a href='@modules'>Module administration page</a>. For more information, see the online handbook entry for <a href='@update'>Update manager module</a>.", array('@update' => 'http://drupal.org/handbook/modules/update', '@modules' => url('admin/config/modules'))) . '</p>';
+      $output .= '<p>' . t("The Update manager module periodically checks for new versions of your site's software (including contributed modules and themes), and alerts administrators to available updates. In order to provide update information, anonymous usage statistics are sent to Drupal.org. If desired, you may disable the Update manager module from the <a href='@modules'>Module administration page</a>. For more information, see the online handbook entry for <a href='@update'>Update manager module</a>.", array('@update' => 'http://drupal.org/handbook/modules/update', '@modules' => url('admin/modules'))) . '</p>';
       // Only explain the Update manager if it has not been disabled.
       if (update_manager_access()) {
         $output .= '<p>' . t('The Update manager also allows administrators to update and install modules and themes through the administration interface.') . '</p>';
@@ -122,9 +122,9 @@ function update_help($path, $arg) {
       // Only explain the Update manager if it has not been disabled.
       if (update_manager_access()) {
         $output .= '<dt>' . t('Performing updates through the user interface') . '</dt>';
-        $output .= '<dd>' . t('The Update manager module allows administrators to perform updates directly through the administration interface. At the top of the <a href="@modules_page">modules</a> and <a href="@themes_page">themes</a> pages you will see a link to update to new releases. This will direct you to the <a href="@update-page">update page</a> where you see a listing of all the missing updates and confirm which ones you want to upgrade. From there, you are prompted for your FTP/SSH password, which then transfers the files into your Drupal installation, overwriting your old files. More detailed instructions can be found in the <a href="@update">online handbook</a>.', array('@modules_page' => url('admin/config/modules'), '@themes_page' => url('admin/appearance'),  '@update-page' => url('admin/reports/updates/update'), '@update' => 'http://drupal.org/handbook/modules/update')) . '</dd>';
+        $output .= '<dd>' . t('The Update manager module allows administrators to perform updates directly through the administration interface. At the top of the <a href="@modules_page">modules</a> and <a href="@themes_page">themes</a> pages you will see a link to update to new releases. This will direct you to the <a href="@update-page">update page</a> where you see a listing of all the missing updates and confirm which ones you want to upgrade. From there, you are prompted for your FTP/SSH password, which then transfers the files into your Drupal installation, overwriting your old files. More detailed instructions can be found in the <a href="@update">online handbook</a>.', array('@modules_page' => url('admin/modules'), '@themes_page' => url('admin/appearance'),  '@update-page' => url('admin/reports/updates/update'), '@update' => 'http://drupal.org/handbook/modules/update')) . '</dd>';
         $output .= '<dt>' . t('Installing new modules and themes through the user interface') . '</dt>';
-        $output .= '<dd>' . t('You can also install new modules and themes in the same fashion, through the <a href="@install">install page</a>, or by clicking the <em>Install new module/theme</em> link at the top of the <a href="@modules_page">modules</a> and <a href="@themes_page">themes</a> pages. In this case, you are prompted to provide either the URL to the download, or to upload a packaged release file from your local computer.', array('@modules_page' => url('admin/config/modules'), '@themes_page' => url('admin/appearance'), '@install' => url('admin/reports/updates/install'))) . '</dd>';
+        $output .= '<dd>' . t('You can also install new modules and themes in the same fashion, through the <a href="@install">install page</a>, or by clicking the <em>Install new module/theme</em> link at the top of the <a href="@modules_page">modules</a> and <a href="@themes_page">themes</a> pages. In this case, you are prompted to provide either the URL to the download, or to upload a packaged release file from your local computer.', array('@modules_page' => url('admin/modules'), '@themes_page' => url('admin/appearance'), '@install' => url('admin/reports/updates/install'))) . '</dd>';
       }
       $output .= '</dl>';
       return $output;
@@ -192,7 +192,7 @@ function update_menu() {
   // customize the appearance as needed.
   $paths = array(
     'report' => 'admin/reports/updates',
-    'module' => 'admin/config/modules',
+    'module' => 'admin/modules',
     'theme' => 'admin/appearance',
   );
   foreach ($paths as $context => $path) {
@@ -218,8 +218,8 @@ function update_menu() {
   // Customize the titles of the action links depending on where they appear.
   $items['admin/reports/updates/install']['title'] = 'Install new module or theme';
   $items['admin/reports/updates/update']['title'] = 'Update existing modules and themes';
-  $items['admin/config/modules/install']['title'] = 'Install new module';
-  $items['admin/config/modules/update']['title'] = 'Update existing modules';
+  $items['admin/modules/install']['title'] = 'Install new module';
+  $items['admin/modules/update']['title'] = 'Update existing modules';
   $items['admin/appearance/install']['title'] = 'Install new theme';
   $items['admin/appearance/update']['title'] = 'Update existing themes';
 

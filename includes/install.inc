@@ -581,7 +581,7 @@ function drupal_install_modules($module_list = array(), $disable_modules_install
  *
  * Used during installation to install modules one at a time and then
  * enable them, or to install a number of modules at one time
- * from admin/config/modules.
+ * from admin/modules.
  *
  * @param $module
  *   The machine name of the module to install.
