@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.864 2010/01/03 21:01:04 webchick Exp $
+// $Id: system.module,v 1.865 2010/01/04 12:10:23 dries Exp $
 
 /**
  * @file
@@ -1194,7 +1194,7 @@ function system_library() {
     ),
   );
   $libraries['ui.draggable'] = array(
-    'title' => 'jQuery UI: Dialog',
+    'title' => 'jQuery UI: Draggable',
     'website' => 'http://jqueryui.com/demos/draggable/',
     'version' => '1.7.2',
     'js' => array(
@@ -1375,7 +1375,7 @@ function system_library() {
     ),
   );
   $libraries['effects.highlight'] = array(
-    'title' => 'jQuery UI: Effects Fold',
+    'title' => 'jQuery UI: Effects Highlight',
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.7.2',
     'js' => array(
@@ -1397,7 +1397,7 @@ function system_library() {
     ),
   );
   $libraries['effects.scale'] = array(
-    'title' => 'jQuery UI: Effects Pulsate',
+    'title' => 'jQuery UI: Effects Scale',
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.7.2',
     'js' => array(
@@ -1412,7 +1412,7 @@ function system_library() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.7.2',
     'js' => array(
-      'misc/ui/effects.scale.js' => array(),
+      'misc/ui/effects.shake.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
