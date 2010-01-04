@@ -999,11 +999,10 @@ function hook_validate($node, &$form) {
 function hook_view($node, $view_mode = 'full') {
   if (node_is_page($node)) {
     $breadcrumb = array();
-    $breadcrumb[] = array('path' => 'example', 'title' => t('example'));
-    $breadcrumb[] = array('path' => 'example/' . $node->field1,
-      'title' => t('%category', array('%category' => $node->field1)));
-    $breadcrumb[] = array('path' => 'node/' . $node->nid);
-    menu_set_location($breadcrumb);
+    $breadcrumb[] = l(t('Home'), NULL);
+    $breadcrumb[] = l(t('Example'), 'example');
+    $breadcrumb[] = l($node->field1, 'example/' . $node->field1);
+    drupal_set_breadcrumb($breadcrumb);
   }
 
   $node->content['myfield'] = array(
