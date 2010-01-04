@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.38 2009/12/22 19:45:00 dries Exp $ */
+/* $Id: style.css,v 1.39 2010/01/04 12:34:31 dries Exp $ */
 
 /**
  * Generic elements
@@ -423,7 +423,7 @@ table.system-status-report th,
 table td,
 table th {
   vertical-align: middle;
-  padding: 8px 5px 8px 10px;
+  padding: 8px 10px;
 }
 
 table.system-status-report th {
@@ -465,7 +465,7 @@ table th {
   border-width: 1px;
   border-style: solid;
   border-color: #bebfb9;
-  padding: 3px 3px 3px 10px;
+  padding: 3px 10px;
 }
 
 table th.active {
