@@ -4370,6 +4370,7 @@ function drupal_clear_js_cache() {
  * We use HTML-safe strings, i.e. with <, > and & escaped.
  *
  * @see drupal_json_decode()
+ * @ingroup php_wrappers
  */
 function drupal_json_encode($var) {
   // json_encode() does not escape <, > and &, so we do it with str_replace().
@@ -4380,6 +4381,7 @@ function drupal_json_encode($var) {
  * Converts an HTML-safe JSON string into its PHP equivalent.
  *
  * @see drupal_json_encode()
+ * @ingroup php_wrappers 
  */
 function drupal_json_decode($var) {
   // json_decode() does not unescape <, > and &, so we do it with str_replace().
