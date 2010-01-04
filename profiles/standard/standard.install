@@ -1,12 +1,12 @@
 <?php
-// $Id: default.install,v 1.23 2009/12/20 19:47:05 dries Exp $
+// $Id: standard.install,v 1.1 2010/01/04 23:08:34 webchick Exp $
 
 /**
  * Implements hook_install().
  *
  * Perform actions to set up the site for this profile.
  */
-function default_install() {
+function standard_install() {
   // Add text formats.
   $filtered_html_format = array(
     'name' => 'Filtered HTML',

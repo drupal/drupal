@@ -1,12 +1,12 @@
 <?php
-// $Id: expert.install,v 1.7 2009/12/04 16:49:48 dries Exp $
+// $Id: minimal.install,v 1.1 2010/01/04 23:08:34 webchick Exp $
 
 /**
  * Implements hook_install().
  *
  * Perform actions to set up the site for this profile.
  */
-function expert_install() {
+function minimal_install() {
   // Add text formats.
   $plain_text_format = array(
     'name' => 'Plain text',
@@ -93,5 +93,3 @@ function expert_install() {
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'use text format 1'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'post comments without approval', 'use text format 1'));
 }
-
-

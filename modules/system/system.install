@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.432 2010/01/04 21:31:52 webchick Exp $
+// $Id: system.install,v 1.433 2010/01/04 23:08:34 webchick Exp $
 
 /**
  * @file
@@ -2716,6 +2716,15 @@ function system_update_7048() {
     ->fields(array('language' => LANGUAGE_NONE))
     ->condition('language', '')
     ->execute();
+}
+
+/**
+ * Rename 'Default' profile to 'Standard.'
+ */
+function system_update_7049() {
+  if (variable_get('install_profile', 'standard') == 'default') {
+    variable_set('install_profile', 'standard');
+  }
 }
 
 /**
