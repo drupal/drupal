@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1075 2010/01/04 03:28:41 webchick Exp $
+// $Id: common.inc,v 1.1076 2010/01/04 12:27:33 dries Exp $
 
 /**
  * @file
@@ -4370,6 +4370,7 @@ function drupal_clear_js_cache() {
  * We use HTML-safe strings, i.e. with <, > and & escaped.
  *
  * @see drupal_json_decode()
+ * @ingroup php_wrappers
  */
 function drupal_json_encode($var) {
   // json_encode() does not escape <, > and &, so we do it with str_replace().
@@ -4380,6 +4381,7 @@ function drupal_json_encode($var) {
  * Converts an HTML-safe JSON string into its PHP equivalent.
  *
  * @see drupal_json_encode()
+ * @ingroup php_wrappers 
  */
 function drupal_json_decode($var) {
   // json_decode() does not unescape <, > and &, so we do it with str_replace().
