@@ -1,4 +1,4 @@
-// $Id: authorize.js,v 1.2 2009/10/22 00:52:03 dries Exp $
+// $Id: authorize.js,v 1.3 2010/01/04 16:08:52 webchick Exp $
 
 /**
  * @file
@@ -24,6 +24,6 @@ Drupal.behaviors.authorizeFileTransferForm = {
     $('#edit-submit-connection').hide();
     $('#edit-submit-process').show();
   }
-}
+};
 
 })(jQuery);

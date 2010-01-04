@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.7 2009/12/12 23:36:28 webchick Exp $
+// $Id: ajax.js,v 1.8 2010/01/04 16:08:52 webchick Exp $
 (function ($) {
 
 /**
@@ -286,7 +286,7 @@ Drupal.ajax.prototype.getEffect = function (response) {
   }
 
   return effect;
-}
+};
 
 /**
  * Handler for the form redirection error.

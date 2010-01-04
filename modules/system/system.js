@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.38 2009/12/15 08:45:32 dries Exp $
+// $Id: system.js,v 1.39 2010/01/04 16:08:52 webchick Exp $
 (function ($) {
 
 /**
@@ -17,7 +17,7 @@ Drupal.hideEmailAdministratorCheckbox = function () {
   // Toggle the display as necessary when the checkbox is clicked.
   $('#edit-update-status-module-1').change( function () {
     $('.form-item-update-status-module-2').toggle();
-  })
+  });
 };
 
 /**
