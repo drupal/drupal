@@ -81,7 +81,7 @@ define('FIELD_STORAGE_INSERT', 'insert');
  * Operate on Field API data attached to Drupal objects.
  *
  * Field Attach API functions load, store, generate Form API
- * structures, display, and perform a vareity of other functions for
+ * structures, display, and perform a variety of other functions for
  * field data connected to individual objects.
  *
  * Field Attach API functions generally take $obj_type and $object
