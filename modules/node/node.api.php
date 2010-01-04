@@ -28,7 +28,7 @@
  * A node access module may implement as many realms as necessary to
  * properly define the access privileges for the nodes.
  *
- * @param $user
+ * @param $account
  *   The user object whose grants are requested.
  * @param $op
  *   The node operation to be performed, such as "view", "update", or "delete".
@@ -45,7 +45,7 @@ function hook_node_grants($account, $op) {
   if (user_access('access private content', $account)) {
     $grants['example'] = array(1);
   }
-  $grants['example_owner'] = array($user->uid);
+  $grants['example_owner'] = array($account->uid);
   return $grants;
 }
 
