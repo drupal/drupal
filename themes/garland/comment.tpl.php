@@ -1,13 +1,9 @@
 <?php
-// $Id: comment.tpl.php,v 1.19 2009/10/19 01:30:07 dries Exp $
+// $Id: comment.tpl.php,v 1.20 2010/01/04 03:57:19 webchick Exp $
 ?>
 <div class="<?php print $classes . ' ' . $zebra; ?>"<?php print $attributes; ?>>
 
   <div class="clearfix">
-
-  <?php if ($contextual_links): ?>
-    <?php print render($contextual_links); ?>
-  <?php endif; ?>
 
     <span class="submitted"><?php print $created; ?> — <?php print $author; ?></span>
 
@@ -17,7 +13,9 @@
 
   <?php print $picture ?>
 
+    <?php print render($title_prefix); ?>
     <h3<?php print $title_attributes; ?>><?php print $title ?></h3>
+    <?php print render($title_suffix); ?>
 
     <div class="content"<?php print $content_attributes; ?>>
       <?php hide($content['links']); print render($content); ?>

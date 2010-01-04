@@ -1,17 +1,15 @@
 <?php
-// $Id: node.tpl.php,v 1.20 2009/12/06 01:00:27 dries Exp $
+// $Id: node.tpl.php,v 1.21 2010/01/04 03:57:19 webchick Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
-  <?php if (!$page && !empty($contextual_links)): ?>
-    <?php print render($contextual_links); ?>
-  <?php endif; ?>
-
   <?php print $user_picture; ?>
 
+  <?php print render($title_prefix); ?>
   <?php if (!$page): ?>
     <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $node_title; ?></a></h2>
   <?php endif; ?>
+  <?php print render($title_suffix); ?>
 
   <?php if ($display_submitted): ?>
     <span class="submitted"><?php print $date; ?> — <?php print $name; ?></span>

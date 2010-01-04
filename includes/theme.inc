@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.560 2010/01/03 01:16:07 webchick Exp $
+// $Id: theme.inc,v 1.561 2010/01/04 03:57:19 webchick Exp $
 
 /**
  * @file
@@ -2256,6 +2256,10 @@ function template_preprocess(&$variables, $hook) {
   $variables['attributes_array'] = array();
   $variables['title_attributes_array'] = array();
   $variables['content_attributes_array'] = array();
+
+  // Initialize 'title_prefix' and 'title_suffix' renderable arrays.
+  $variables['title_prefix'] = array();
+  $variables['title_suffix'] = array();
 
   // Set default variables that depend on the database.
   $variables['is_admin']            = FALSE;
