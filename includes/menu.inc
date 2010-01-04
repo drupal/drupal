@@ -403,13 +403,17 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     $original_map = arg(NULL, $path);
     $parts = array_slice($original_map, 0, MENU_MAX_PARTS);
     $ancestors = menu_get_ancestors($parts);
-    $router_item = db_select('menu_router')
-      ->fields('menu_router')
-      ->condition('path', $ancestors, 'IN')
-      ->orderBy('fit', 'DESC')
-      ->range(0, 1)
-      ->addTag('menu_get_item')
-      ->execute()->fetchAssoc();
+
+    // Since there is no limit to the length of $path, but the cids are
+    // restricted to 255 characters, use md5() to keep it short yet unique.
+    $cid = 'menu_item:' . md5($path);
+    if ($cached = cache_get($cid, 'cache_menu')) {
+      $router_item = $cached->data;
+    }
+    else {
+      $router_item = db_query_range('SELECT * FROM {menu_router} WHERE path IN (:ancestors) ORDER BY fit DESC', 0, 1, array(':ancestors' => $ancestors))->fetchAssoc();
+      cache_set($cid, $router_item, 'cache_menu');
+    }
     if ($router_item) {
       $map = _menu_translate($router_item, $original_map);
       $router_item['original_map'] = $original_map;
