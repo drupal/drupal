@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.824 2010/01/03 22:30:26 webchick Exp $
+// $Id: comment.module,v 1.825 2010/01/05 15:30:30 dries Exp $
 
 /**
  * @file
@@ -1467,21 +1467,21 @@ function comment_delete_multiple($cids) {
 function comment_operations($action = NULL) {
   if ($action == 'publish') {
     $operations = array(
-      'publish' => array(t('Publish the selected comments'), db_update('comment')->fields(array( 'status' => COMMENT_PUBLISHED)) ),
-      'delete' => array(t('Delete the selected comments'), '')
+      'publish' => array(t('Publish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_PUBLISHED))),
+      'delete' => array(t('Delete the selected comments'), ''),
     );
   }
   elseif ($action == 'unpublish') {
     $operations = array(
-      'unpublish' => array(t('Unpublish the selected comments'), db_update('comment')->fields(array( 'status' => COMMENT_NOT_PUBLISHED)) ),
-      'delete' => array(t('Delete the selected comments'), '')
+      'unpublish' => array(t('Unpublish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_NOT_PUBLISHED))),
+      'delete' => array(t('Delete the selected comments'), ''),
     );
   }
   else {
     $operations = array(
-      'publish' => array(t('Publish the selected comments'), db_update('comment')->fields(array( 'status' => COMMENT_PUBLISHED)) ),
-      'unpublish' => array(t('Unpublish the selected comments'), db_update('comment')->fields(array( 'status' => COMMENT_NOT_PUBLISHED)) ),
-      'delete' => array(t('Delete the selected comments'), '')
+      'publish' => array(t('Publish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_PUBLISHED))),
+      'unpublish' => array(t('Unpublish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_NOT_PUBLISHED))),
+      'delete' => array(t('Delete the selected comments'), ''),
     );
   }
 

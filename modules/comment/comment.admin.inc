@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.36 2009/11/03 05:27:18 webchick Exp $
+// $Id: comment.admin.inc,v 1.37 2010/01/05 15:30:30 dries Exp $
 
 /**
  * @file
@@ -134,7 +134,6 @@ function comment_admin_overview_validate($form, &$form_state) {
   // We can't execute any 'Update options' if no comments were selected.
   if (count($form_state['values']['comments']) == 0) {
     form_set_error('', t('Please select one or more comments to perform the update on.'));
-    drupal_goto('admin/content/comment');
   }
 }
 
@@ -146,7 +145,7 @@ function comment_admin_overview_validate($form, &$form_state) {
  */
 function comment_admin_overview_submit($form, &$form_state) {
   $operations = comment_operations();
-  if ($operations[$form_state['values']['operation']][1]) {
+  if (!empty($operations[$form_state['values']['operation']][1])) {
     // Extract the appropriate database query operation.
     $query = $operations[$form_state['values']['operation']][1];
     foreach ($form_state['values']['comments'] as $cid => $value) {
