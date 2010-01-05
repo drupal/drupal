@@ -23,18 +23,18 @@ class ModuleUnitTest extends DrupalWebTestCase {
    */
   function testModuleList() {
     // Build a list of modules, sorted alphabetically.
-    $profile_info = install_profile_info('default', 'en');
+    $profile_info = install_profile_info('standard', 'en');
     $module_list = $profile_info['dependencies'];
 
     // Install profile is a module that is expected to be loaded.
-    $module_list[] = 'default';
+    $module_list[] = 'standard';
 
     sort($module_list);
     // Compare this list to the one returned by module_list(). We expect them
     // to match, since all default profile modules have a weight equal to 0
     // (except for block.module, which has a lower weight but comes first in
     // the alphabet anyway).
-    $this->assertModuleList($module_list, t('Default profile'));
+    $this->assertModuleList($module_list, t('Standard profile'));
 
     // Try to install a new module.
     drupal_install_modules(array('contact'));
