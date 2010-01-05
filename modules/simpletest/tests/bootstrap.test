@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.test,v 1.26 2009/11/21 14:35:05 dries Exp $
+// $Id: bootstrap.test,v 1.27 2010/01/05 18:00:14 webchick Exp $
 
 class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
@@ -339,7 +339,7 @@ class BootstrapGetFilenameTestCase extends DrupalUnitTestCase {
     $this->assertIdentical(drupal_get_filename('theme_engine', 'phptemplate'), 'themes/engines/phptemplate/phptemplate.engine', t('Retrieve theme engine location.'));
 
     // Retrieving a file that is definitely not stored in the database.
-    $this->assertIdentical(drupal_get_filename('profile', 'default'), 'profiles/default/default.profile', t('Retrieve install profile location.'));
+    $this->assertIdentical(drupal_get_filename('profile', 'standard'), 'profiles/standard/standard.profile', t('Retrieve install profile location.'));
   }
 }
 

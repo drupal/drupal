@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.433 2010/01/04 23:08:34 webchick Exp $
+// $Id: system.install,v 1.434 2010/01/05 18:00:14 webchick Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@ function system_requirements($phase) {
     // Display the currently active install profile, if the site
     // is not running the default install profile.
     $profile = drupal_get_profile();
-    if ($profile != 'default') {
+    if ($profile != 'standard') {
       $info = install_profile_info($profile);
       $requirements['install_profile'] = array(
         'title' => $t('Install profile'),
