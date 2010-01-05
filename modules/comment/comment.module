@@ -2465,7 +2465,7 @@ function comment_rdf_mapping() {
       'type' => 'comment',
       'bundle' => RDF_DEFAULT_BUNDLE,
       'mapping' => array(
-        'rdftype' => array('sioct:Post'),
+        'rdftype' => array('sioc:Post'),
         'title' => array(
           'predicates' => array('dc:title'),
         ),
@@ -2474,14 +2474,21 @@ function comment_rdf_mapping() {
           'datatype' => 'xsd:dateTime',
           'callback' => 'date_iso8601',
         ),
+        'changed' => array(
+          'predicates' => array('dc:modified'),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
         'body' => array(
           'predicates' => array('content:encoded'),
         ),
         'pid' => array(
           'predicates' => array('sioc:reply_of'),
+          'type' => 'rel',
         ),
         'uid' => array(
           'predicates' => array('sioc:has_creator'),
+          'type' => 'rel',
         ),
         'name' => array(
           'predicates' => array('foaf:name'),

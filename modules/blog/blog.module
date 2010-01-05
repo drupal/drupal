@@ -219,7 +219,7 @@ function blog_rdf_mapping() {
       'type' => 'node',
       'bundle' => 'blog',
       'mapping' => array(
-        'rdftype' => array('sioct:Weblog'),
+        'rdftype' => array('sioc:Post', 'sioct:BlogPost'),
       ),
     ),
   );

@@ -1194,7 +1194,7 @@ function forum_rdf_mapping() {
       'type' => 'node',
       'bundle' => 'forum',
       'mapping' => array(
-        'rdftype' => array('sioct:Post', 'sioct:ForumTopic'),
+        'rdftype' => array('sioc:Post', 'sioct:BoardPost'),
         'taxonomy_forums' => array(
           'predicates' => array('sioc:has_container'),
           'type' => 'rel',
@@ -1205,7 +1205,7 @@ function forum_rdf_mapping() {
       'type' => 'taxonomy_term',
       'bundle' => 'forums',
       'mapping' => array(
-        'rdftype' => array('sioct:Container'),
+        'rdftype' => array('sioc:Container', 'sioc:Forum'),
       ),
     ),
   );

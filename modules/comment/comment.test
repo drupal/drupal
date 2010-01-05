@@ -1144,10 +1144,10 @@ class CommentRdfaTestCase extends CommentHelperCase {
     // Tests comment #2 as anonymous user.
     $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
     // Tests the RDFa markup for the homepage (specific to anonymous comments).
-    $comment_homepage = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/a[contains(@class, 'username') and @typeof='sioc:User' and @property='foaf:name' and @href='http://example.org/' and contains(@rel, 'foaf:page')]");
+    $comment_homepage = $this->xpath("//div[@typeof='sioc:Post']//span[@rel='sioc:has_creator']/a[contains(@class, 'username') and @typeof='sioc:User' and @property='foaf:name' and @href='http://example.org/' and contains(@rel, 'foaf:page')]");
     $this->assertTrue(!empty($comment_homepage), t('RDFa markup for the homepage of anonymous user found.'));
     // There should be no about attribute on anonymous comments.
-    $comment_homepage = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/a[@about]");
+    $comment_homepage = $this->xpath("//div[@typeof='sioc:Post']//span[@rel='sioc:has_creator']/a[@about]");
     $this->assertTrue(empty($comment_homepage), t('No about attribute is present on anonymous user comment.'));
 
     // Tests comment #2 as logged in user.
@@ -1155,10 +1155,10 @@ class CommentRdfaTestCase extends CommentHelperCase {
     $this->drupalGet('node/' . $this->node2->nid);
     $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
     // Tests the RDFa markup for the homepage (specific to anonymous comments).
-    $comment_homepage = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/a[contains(@class, 'username') and @typeof='sioc:User' and @property='foaf:name' and @href='http://example.org/' and contains(@rel, 'foaf:page')]");
+    $comment_homepage = $this->xpath("//div[@typeof='sioc:Post']//span[@rel='sioc:has_creator']/a[contains(@class, 'username') and @typeof='sioc:User' and @property='foaf:name' and @href='http://example.org/' and contains(@rel, 'foaf:page')]");
     $this->assertTrue(!empty($comment_homepage), t('RDFa markup for the homepage of anonymous user found.'));
     // There should be no about attribute on anonymous comments.
-    $comment_homepage = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/a[@about]");
+    $comment_homepage = $this->xpath("//div[@typeof='sioc:Post']//span[@rel='sioc:has_creator']/a[@about]");
     $this->assertTrue(empty($comment_homepage), t('No about attribute is present on anonymous user comment.'));
   }
 
@@ -1173,14 +1173,14 @@ class CommentRdfaTestCase extends CommentHelperCase {
    *   An array containing information about an anonymous user.
    */
   function _testBasicCommentRdfaMarkup($comment, $account = array()) {
-    $comment_container = $this->xpath("//div[contains(@class, 'comment') and @typeof='sioct:Post']");
+    $comment_container = $this->xpath("//div[contains(@class, 'comment') and @typeof='sioc:Post']");
     $this->assertTrue(!empty($comment_container));
-    $comment_title = $this->xpath("//div[@typeof='sioct:Post']//h3[@property='dc:title']");
+    $comment_title = $this->xpath("//div[@typeof='sioc:Post']//h3[@property='dc:title']");
     $this->assertEqual((string)$comment_title[0]->a, $comment->subject);
-    $comment_date = $this->xpath("//div[@typeof='sioct:Post']//*[contains(@property, 'dc:date') and contains(@property, 'dc:created')]");
+    $comment_date = $this->xpath("//div[@typeof='sioc:Post']//*[contains(@property, 'dc:date') and contains(@property, 'dc:created')]");
     $this->assertTrue(!empty($comment_date));
     // The author tag can be either a or span
-    $comment_author = $this->xpath("//div[@typeof='sioct:Post']//span[@rel='sioc:has_creator']/*[contains(@class, 'username') and @typeof='sioc:User' and @property='foaf:name']");
+    $comment_author = $this->xpath("//div[@typeof='sioc:Post']//span[@rel='sioc:has_creator']/*[contains(@class, 'username') and @typeof='sioc:User' and @property='foaf:name']");
     $name = empty($account['name']) ? $this->web_user->name : $account['name'] . ' (not verified)';
     $this->assertEqual((string)$comment_author[0], $name);
   }

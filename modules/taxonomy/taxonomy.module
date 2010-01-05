@@ -1329,14 +1329,21 @@ function taxonomy_rdf_mapping() {
       'mapping' => array(
         'rdftype' => array('skos:Concept'),
         'name'   => array(
-          'predicates' => array('skos:prefLabel'),
+          'predicates' => array('rdfs:label', 'skos:prefLabel'),
         ),
         'description'   => array(
           'predicates' => array('skos:definition'),
         ),
-        // The vocabulary this term belongs to.
+        // The vocabulary this term belongs to. The type 'rev' is used to denote
+        // the fact that the skos:member property domain is skos:Collection and
+        // its range is skos:Concept or skos:Collection.
         'vid'   => array(
           'predicates' => array('skos:member'),
+          'type' => 'rev',
+        ),
+        'parent'   => array(
+          'predicates' => array('skos:broader'),
+          'type' => 'rel',
         ),
       ),
     ),

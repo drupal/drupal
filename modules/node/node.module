@@ -800,12 +800,15 @@ function node_rdf_mapping() {
         ),
         'changed' => array(
           'predicates' => array('dc:modified'),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
         ),
         'body' => array(
           'predicates' => array('content:encoded'),
         ),
         'uid' => array(
           'predicates' => array('sioc:has_creator'),
+          'type' => 'rel',
         ),
         'name' => array(
           'predicates' => array('foaf:name'),
