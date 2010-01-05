@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.348 2009/12/26 16:50:08 dries Exp $
+// $Id: blog.module,v 1.349 2010/01/05 18:56:48 dries Exp $
 
 /**
  * @file
@@ -219,7 +219,7 @@ function blog_rdf_mapping() {
       'type' => 'node',
       'bundle' => 'blog',
       'mapping' => array(
-        'rdftype' => array('sioct:Weblog'),
+        'rdftype' => array('sioc:Post', 'sioct:BlogPost'),
       ),
     ),
   );

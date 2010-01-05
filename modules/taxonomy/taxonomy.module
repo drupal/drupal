@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.556 2010/01/04 18:03:12 webchick Exp $
+// $Id: taxonomy.module,v 1.557 2010/01/05 18:56:49 dries Exp $
 
 /**
  * @file
@@ -1329,14 +1329,21 @@ function taxonomy_rdf_mapping() {
       'mapping' => array(
         'rdftype' => array('skos:Concept'),
         'name'   => array(
-          'predicates' => array('skos:prefLabel'),
+          'predicates' => array('rdfs:label', 'skos:prefLabel'),
         ),
         'description'   => array(
           'predicates' => array('skos:definition'),
         ),
-        // The vocabulary this term belongs to.
+        // The vocabulary this term belongs to. The type 'rev' is used to denote
+        // the fact that the skos:member property domain is skos:Collection and
+        // its range is skos:Concept or skos:Collection.
         'vid'   => array(
           'predicates' => array('skos:member'),
+          'type' => 'rev',
+        ),
+        'parent'   => array(
+          'predicates' => array('skos:broader'),
+          'type' => 'rel',
         ),
       ),
     ),

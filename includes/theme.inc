@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.562 2010/01/04 16:20:20 webchick Exp $
+// $Id: theme.inc,v 1.563 2010/01/05 18:56:48 dries Exp $
 
 /**
  * @file
@@ -2341,7 +2341,7 @@ function template_preprocess_html(&$variables) {
   // mechanisms for extraction of this RDF content via XSLT transformation
   // using an associated GRDDL profile.
   $variables['rdf_namespaces']    = drupal_get_rdf_namespaces();
-  $variables['grddl_profile']     = 'http://ns.inria.fr/grddl/rdfa/';
+  $variables['grddl_profile']     = 'http://www.w3.org/1999/xhtml/vocab';
   $variables['language']          = $GLOBALS['language'];
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
 
