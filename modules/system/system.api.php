@@ -2906,5 +2906,66 @@ function hook_username_alter(&$name, $account) {
 }
 
 /**
+ * Provide replacement values for placeholder tokens.
+ *
+ * @param $type
+ *   The type of token being replaced. 'node', 'user', and 'date' are common.
+ * @param $tokens
+ *   An array of tokens to be replaced, keyed by the literal text of the token
+ *   as it appeared in the source text.
+ * @param $data
+ *   (optional) An array of keyed objects to be used when generating replacement
+ *   values.
+ * @param $options
+ *   (optional) A keyed array of settings and flags to control the token
+ *   replacement process. Common options are:
+ *   - 'language' A language object to be used when generating locale-sensitive
+ *     tokens.
+ *   - 'sanitize' A boolean flag indicating that tokens should be sanitized for
+ *     display to a web browser.
+ * @return
+ *   An associative array of replacement values, keyed by the original 'raw'
+ *   tokens that were found in the source text. For example:
+ *   $results['[node:title]'] = 'My new node';
+ */
+function hook_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  // TODO: sample code demonstrating simple tokens and use of token chaining
+}
+
+/**
+ * Provide metadata about available placeholder tokens and token types.
+ *
+ * @return
+ *   An associative array of available tokens and token types, each containing
+ *   the raw name of the token or type, its user-friendly name, and a verbose
+ *   description.
+ *
+ *   For example:
+ *   @code
+ *     $data['types'] = array(
+ *       'site' => array(
+ *         'name' => t('Site information')
+ *         'description' => t('Tokens for site-wide settings and other global information.'),
+ *       ),
+ *     );
+ *     
+ *     $data['tokens']['site'] = array(
+ *       'slogan' => array(
+ *         'name' => t('Slogan')
+ *         'description' => t('The slogan of the site.'),
+ *       ),
+ *       'login-url' => array(
+ *         'name' => t('Login page')
+ *         'description' => t('The url of the site login page.'),
+ *       ),
+ *     );
+ *   @endcode
+
+ */
+function hook_token_info() {
+  // TODO: sample code building token information
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
