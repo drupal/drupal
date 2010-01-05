@@ -4,9 +4,9 @@
  * ui-dialog overlay.
  */
 .ui-widget-overlay {
-  background-color: #000;
-  opacity: 0.7;
-  filter: alpha(opacity=80);
+  background-color: #222;
+  opacity: 0.85;
+  filter: alpha(opacity=85);
   background-image: none;
 }
 
@@ -33,7 +33,7 @@ body.overlay-autofit {
   position: static;
   padding-right: 26px;
   margin: 0 auto;
-  width: 85%;
+  width: 88%;
   min-width: 700px;
   min-height: 100px;
 }
