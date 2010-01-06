@@ -1,4 +1,4 @@
-/* $Id: overlay-parent.css,v 1.7 2010/01/05 15:50:20 dries Exp $ */
+/* $Id: overlay-parent.css,v 1.8 2010/01/06 19:01:43 dries Exp $ */
 
 /**
  * ui-dialog overlay.
@@ -97,6 +97,10 @@ body.overlay-autofit {
   overflow: hidden;
   width: 100%;
   height: 100%;
+  visibility: hidden;
+}
+.overlay-loaded #overlay-element {
+  visibility: visible;
 }
 
 /**
