@@ -531,26 +531,6 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
 };
 
 /**
- * Unbind the child window.
- *
- * Remove keyboard event handlers, reset title and hide the iframe.
- */
-Drupal.overlay.unbindChild = function (iframeWindow) {
-  var self = this;
-  var $iframeDocument = iframeWindow.jQuery(iframeWindow.document);
-
-  // Prevent memory leaks by explicitly unbinding keyboard event handler
-  // on the child document.
-  $iframeDocument.unbind('keydown.overlay-event');
-
-  // Change the overlay title.
-  self.$container.dialog('option', 'title', Drupal.t('Please wait...'));
-
-  // Hide the iframe element.
-  self.$iframe.fadeOut('fast');
-};
-
-/**
  * Check if the given link is in the administrative section of the site.
  *
  * @param url

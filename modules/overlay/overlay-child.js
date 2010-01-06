@@ -54,14 +54,6 @@ Drupal.behaviors.overlayChild = {
     // Ok, now we can tell the parent window we're ready.
     parent.Drupal.overlay.bindChild(window);
 
-    // Install onBeforeUnload callback, if module is present.
-    if ($.isObject(Drupal.onBeforeUnload) && !Drupal.onBeforeUnload.callbackExists('overlayChild')) {
-      Drupal.onBeforeUnload.addCallback('overlayChild', function () {
-        // Tell the parent window we're unloading.
-        parent.Drupal.overlay.unbindChild(window);
-      });
-    }
-
     // Attach child related behaviors to the iframe document.
     self.attachBehaviors(context, settings);
   }
