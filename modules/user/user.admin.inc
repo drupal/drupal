@@ -868,14 +868,14 @@ function theme_user_admin_new_role($variables) {
   $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => 2));
   foreach (user_roles() as $rid => $name) {
     $edit_permissions = l(t('edit permissions'), 'admin/config/people/permissions/' . $rid);
-    if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-      $rows[] = array($name, l(t('edit role'), 'admin/config/people/roles/edit/' . $rid), $edit_permissions);
+    if (in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+      $rows[] = array(t('!name %locked', array('!name' => $name, '%locked' => t('(locked)'))), '', $edit_permissions);
     }
     else {
-      $rows[] = array($name, t('locked'), $edit_permissions);
+      $rows[] = array($name, l(t('edit role'), 'admin/config/people/roles/edit/' . $rid), $edit_permissions);
     }
   }
-  $rows[] = array(drupal_render($form['name']), array('data' => drupal_render($form['submit']), 'colspan' => 2));
+  $rows[] = array(array('data' => drupal_render($form['name']) . drupal_render($form['submit']), 'colspan' => 3, 'class' => 'edit-name'));
 
   $output = drupal_render_children($form);
   $output .= theme('table', array('header' => $header, 'rows' => $rows));
