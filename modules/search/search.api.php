@@ -25,6 +25,9 @@
  * using a key:value syntax. This allows all search queries to have a clean
  * and permanent URL. See node_form_search_form_alter() for an example.
  *
+ * You can also alter the display of your module's search results
+ * by implementing hook_search_page().
+ *
  * The example given here is for node.module, which uses the indexed search
  * capabilities. To do this, node module also implements hook_update_index()
  * which is used to create and maintain the index.
@@ -201,6 +204,39 @@ function hook_search_execute($keys = NULL) {
     );
   }
   return $results;
+}
+
+/** 
+ * Override the rendering of search results.
+ *
+ * A module that implements hook_search() to define a type of search
+ * may implement this hook in order to override the default theming of
+ * its search results, which is otherwise themed using
+ * theme('search_results').
+ *
+ * Note that by default, theme('search_results') and
+ * theme('search_result') work together to create a definition
+ * list. So your hook_search_page() implementation should probably do
+ * this as well.
+ *
+ * @see search-result.tpl.php, search-results.tpl.php
+ *
+ * @param $results
+ *   An array of search results.
+ * @return
+ *   An HTML string containing the formatted search results, with
+ *   a pager included.
+ */
+function hook_search_page($results) {
+  $output = '<dl class="search-results">';
+
+  foreach ($results as $entry) {
+    $output .= theme('search_result', $entry, $type);
+  }
+  $output .= '</dl>';
+  $output .= theme('pager', NULL);
+
+  return $output;
 }
 
 /**
