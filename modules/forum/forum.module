@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.547 2010/01/05 18:56:49 dries Exp $
+// $Id: forum.module,v 1.548 2010/01/06 15:19:24 dries Exp $
 
 /**
  * @file
@@ -442,7 +442,7 @@ function forum_permission() {
 }
 
 /**
- * Implements hook_taxonomy().
+ * Implements hook_taxonomy_term_delete().
  */
 function forum_taxonomy_term_delete($tid) {
   // For containers, remove the tid from the forum_containers variable.
