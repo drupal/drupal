@@ -2993,20 +2993,11 @@ function drupal_exit($destination = NULL) {
  *   An associative array.
  */
 function drupal_map_assoc($array, $function = NULL) {
-  if (!isset($function)) {
-    $result = array();
-    foreach ($array as $value) {
-      $result[$value] = $value;
-    }
-    return $result;
+  $array = array_combine($array, $array);
+  if (is_callable($function)) {
+    $array = array_map($function, $array);
   }
-  elseif (function_exists($function)) {
-    $result = array();
-    foreach ($array as $value) {
-      $result[$value] = $function($value);
-    }
-    return $result;
-  }
+  return $array;
 }
 
 /**
