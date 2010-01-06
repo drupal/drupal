@@ -227,7 +227,6 @@ function block_page_build(&$page) {
   if ($item['path'] != 'admin/structure/block/demo/' . $theme) {
     // Load all region content assigned via blocks.
     foreach (array_keys($all_regions) as $region) {
-      $page[$region] = array();
       // Assign blocks to region.
       if ($blocks = block_get_blocks_by_region($region)) {
         $page[$region] = $blocks;
