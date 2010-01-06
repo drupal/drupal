@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.404 2009/12/18 07:17:50 dries Exp $
+// $Id: block.module,v 1.405 2010/01/06 04:26:42 webchick Exp $
 
 /**
  * @file
@@ -227,7 +227,6 @@ function block_page_build(&$page) {
   if ($item['path'] != 'admin/structure/block/demo/' . $theme) {
     // Load all region content assigned via blocks.
     foreach (array_keys($all_regions) as $region) {
-      $page[$region] = array();
       // Assign blocks to region.
       if ($blocks = block_get_blocks_by_region($region)) {
         $page[$region] = $blocks;
