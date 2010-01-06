@@ -1189,9 +1189,11 @@ function node_view($node, $view_mode = 'full') {
     '#node' => $node,
     '#view_mode' => $view_mode,
   );
-  // Add contextual links for this node except for 'full' view mode.
-  // @todo Make this configurable per view mode.
-  if ($view_mode != 'full') {
+  // Add contextual links for this node, except when the node is already being
+  // displayed on its own page. Modules may alter this behavior (for example,
+  // to restrict contextual links to certain view modes) by implementing
+  // hook_node_view_alter().
+  if (!node_is_page($node)) {
     $build['#contextual_links']['node'] = array('node', array($node->nid));
   }
 
