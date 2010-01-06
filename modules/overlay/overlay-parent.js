@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.12 2010/01/06 04:03:39 webchick Exp $
+// $Id: overlay-parent.js,v 1.13 2010/01/06 15:23:32 dries Exp $
 
 (function ($) {
 
@@ -528,26 +528,6 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
   if (iframeWindow.document.location.hash) {
     window.scrollTo(0, self.$iframeWindow(iframeWindow.document.location.hash).position().top);
   }
-};
-
-/**
- * Unbind the child window.
- *
- * Remove keyboard event handlers, reset title and hide the iframe.
- */
-Drupal.overlay.unbindChild = function (iframeWindow) {
-  var self = this;
-  var $iframeDocument = iframeWindow.jQuery(iframeWindow.document);
-
-  // Prevent memory leaks by explicitly unbinding keyboard event handler
-  // on the child document.
-  $iframeDocument.unbind('keydown.overlay-event');
-
-  // Change the overlay title.
-  self.$container.dialog('option', 'title', Drupal.t('Please wait...'));
-
-  // Hide the iframe element.
-  self.$iframe.fadeOut('fast');
 };
 
 /**
