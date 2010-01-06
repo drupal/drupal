@@ -1404,7 +1404,7 @@ function taxonomy_field_insert($obj_type, $object, $field, $instance, $langcode,
  * Implements hook_field_update().
  */
 function taxonomy_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
-  if (variable_get('taxonomy_maintain_index_table', TRUE) && $field['storage']['type'] == 'field_sql_storage' && $obj_type = 'node') {
+  if (variable_get('taxonomy_maintain_index_table', TRUE) && $field['storage']['type'] == 'field_sql_storage' && $obj_type == 'node') {
     $first_call = &drupal_static(__FUNCTION__, array());
 
     // We don't maintain data for old revisions, so clear all previous values
