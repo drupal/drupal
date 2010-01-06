@@ -116,7 +116,8 @@
 }
 
 #dashboard .ui-sortable .block {
-  cursor: move; 
+  cursor: move;
+  min-height: 1px;
 }
 
 #dashboard .ui-sortable .block h2 {
