@@ -155,7 +155,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
   public function mapConditionOperator($operator) {
     // We don't want to override any of the defaults.
-    return NULL;
+    static $specials = array(
+      'LIKE' => array('postfix' => " ESCAPE '\\'"),
+    );
+    return isset($specials[$operator]) ? $specials[$operator] : NULL;
   }
 
   public function prepareQuery($query, $cache = TRUE) {
