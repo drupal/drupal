@@ -38,7 +38,7 @@ function hook_locale($op = 'groups') {
  * @param $path
  *   The current path.
  */
-function hook_language_switch_link_alter(array &$links, $type, $path) {
+function hook_language_switch_links_alter(array &$links, $type, $path) {
   global $language;
 
   if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language])) {

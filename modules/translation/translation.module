@@ -435,7 +435,7 @@ function translation_path_get_translations($path) {
 }
 
 /**
- * Implements hook_language_switch_link_alter().
+ * Implements hook_language_switch_links_alter().
  *
  * Replaces links with pointers to translated versions of the content.
  */
