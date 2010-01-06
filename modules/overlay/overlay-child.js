@@ -87,54 +87,23 @@ Drupal.overlayChild.behaviors.scrollToTop = function (context, settings) {
 };
 
 /**
- * Modify links and forms depending on their relation to the overlay.
+ * Capture and handle clicks.
  *
- * By default, forms and links are assumed to keep the flow in the overlay.
- * Thus their action and href attributes respectively get a ?render=overlay
- * suffix. Non-administrative links should however close the overlay and
- * redirect the parent page to the given link. This would include links in a
- * content listing, where administration options are mixed with links to the
- * actual content to be shown on the site out of the overlay.
- *
- * @see Drupal.overlay.isAdminLink()
+ * Instead of binding a click event handler to every link we bind one to the
+ * document and handle events that bubble up. This also allows other scripts
+ * to bind their own handlers to links and also to prevent overlay's handling.
  */
-Drupal.overlayChild.behaviors.parseLinks = function (context, settings) {
-  var closeAndRedirectOnClick = function (event) {
-    // We need to store the parent variable locally because it will
-    // disappear as soon as we close the iframe.
-    var parentWindow = parent;
-    if (parentWindow.Drupal.overlay.close(false)) {
-      parentWindow.Drupal.overlay.redirect($(this).attr('href'));
-    }
-    return false;
-  };
-  var redirectOnClick = function (event) {
-    parent.Drupal.overlay.redirect($(this).attr('href'));
-    return false;
-  };
+Drupal.overlayChild.behaviors.addClickHandler = function (context, settings) {
+  $(document).bind('click.overlay-event', parent.Drupal.overlay.clickHandler);
+};
 
-  $('a:not(.overlay-exclude)', context).once('overlay', function () {
-    var href = $(this).attr('href');
-    // Skip links that don't have an href attribute.
-    if (href == undefined) {
-      return;
-    }
-    // Non-admin links should close the overlay and open in the main window.
-    else if (!parent.Drupal.overlay.isAdminLink(href)) {
-      $(this).click(closeAndRedirectOnClick);
-    }
-    // Open external links in a new window.
-    else if (href.indexOf('http') > 0 || href.indexOf('https') > 0) {
-      $(this).attr('target', '_new');
-    }
-    // Open admin links in the overlay.
-    else {
-      $(this)
-        .attr('href', parent.Drupal.overlay.fragmentizeLink(this))
-        .click(redirectOnClick);
-    }
-  });
-
+/**
+ * Modify forms depending on their relation to the overlay.
+ *
+ * By default, forms are assumed to keep the flow in the overlay. Thus their
+ * action attribute get a ?render=overlay suffix.
+ */
+Drupal.overlayChild.behaviors.parseForms = function (context, settings) {
   $('form', context).once('overlay', function () {
     // Obtain the action attribute of the form.
     var action = $(this).attr('action');

@@ -4,61 +4,28 @@
 
 /**
  * Open the overlay, or load content into it, when an admin link is clicked.
+ *
+ * http://docs.jquery.com/Namespaced_Events
  */
 Drupal.behaviors.overlayParent = {
   attach: function (context, settings) {
-    var $window = $(window);
-
-    // Alter all admin links so that they will open in the overlay.
-    $('a', context).filter(function () {
-      return Drupal.overlay.isAdminLink(this.href);
-    })
-    .once('overlay')
-    .each(function () {
-      // Move the link destination to a URL fragment.
-      this.href = Drupal.overlay.fragmentizeLink(this);
-    });
-
-    // Simulate the native click event for all links that appear outside the
-    // overlay. jQuery UI Dialog prevents all clicks outside a modal dialog.
-    $('.overlay-displace-top a:not(.overlay-displace-no-click)', context)
-    .add('.overlay-displace-bottom a:not(.overlay-displace-no-click)', context)
-    .click(function () {
-      window.location.href = this.href;
-    });
-
-    // Resize the overlay when the toolbar drawer is toggled.
-    $('#toolbar a.toggle', context).once('overlay').click(function () {
-      setTimeout(function () {
-        // Resize the overlay, if it's open.
-        if (Drupal.overlay.isOpen) {
-          Drupal.overlay.outerResize();
-        }
-      }, 10);
-    });
-
     // Make sure the onhashchange handling below is only processed once.
     if (this.processed) {
       return;
     }
     this.processed = true;
 
+    // Bind event handlers to the parent window.
+    $(window)
     // When the hash (URL fragment) changes, open the overlay if needed.
-    $window.bind('hashchange', function (e) {
-      // If we changed the hash to reflect an internal redirect in the overlay,
-      // its location has already been changed, so don't do anything.
-      if ($.data(window.location, window.location.href) === 'redirect') {
-        $.data(window.location, window.location.href, null);
-      }
-      // Otherwise, change the contents of the overlay to reflect the new hash.
-      else {
-        Drupal.overlay.trigger();
-      }
-    });
-
+    .bind('hashchange.overlay-event', Drupal.overlay.hashchangeHandler)
     // Trigger the hashchange event once, after the page is loaded, so that
     // permalinks open the overlay.
-    $window.trigger('hashchange');
+    .trigger('hashchange.overlay-event');
+    // Instead of binding a click event handler to every link we bind one to the
+    // document and only handle events that bubble up. This allows other scripts
+    // to bind their own handlers to links and also to prevent overlay's handling.
+    $(document).bind('click.overlay-event', Drupal.overlay.clickHandler);
   }
 };
 
@@ -187,7 +154,7 @@ Drupal.overlay.create = function () {
     $body.addClass('overlay-open');
 
     // Adjust overlay size when window is resized.
-    $window.bind('resize', delayedOuterResize);
+    $window.bind('resize.overlay-event', delayedOuterResize);
 
     if (self.options.autoFit) {
       $body.addClass('overlay-autofit');
@@ -228,7 +195,7 @@ Drupal.overlay.create = function () {
     self.isClosing = true;
 
     // Stop all animations.
-    $window.unbind('resize', delayedOuterResize);
+    $window.unbind('resize.overlay-event', delayedOuterResize);
     clearTimeout(self.resizeTimeoutID);
   };
 
@@ -241,6 +208,8 @@ Drupal.overlay.create = function () {
     // When the iframe is still loading don't destroy it immediately but after
     // the content is loaded (see self.load).
     if (!self.isLoading) {
+      // As the iframe is being removed we need to remove all load handlers, not
+      // just the ones namespaced with overlay-event.
       self.$iframe.unbind('load');
       self.destroy();
     }
@@ -321,7 +290,7 @@ Drupal.overlay.load = function (url) {
   self.$dialog.removeClass('overlay-loaded');
   self.$iframe
     .css('visibility', 'hidden')
-    .load(function () {
+    .bind('load.overlay-event', function () {
       self.isLoading = false;
 
       // Only continue when overlay is still open and not closing.
@@ -413,6 +382,18 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
   // Make sure the parent window URL matches the child window URL.
   self.syncChildLocation(iframeWindow.document.location);
 
+  // Unbind the mousedown handler installed by ui.dialog because the
+  // handler interferes with use of the scroll bar in Chrome & Safari.
+  // After unbinding from the document we bind a handler to the dialog overlay
+  // which returns false to prevent event bubbling.
+  // @see http://dev.jqueryui.com/ticket/4671
+  // @see https://bugs.webkit.org/show_bug.cgi?id=19033
+  // Do the same for the click handler as prevents default handling of clicks in
+  // displaced regions (e.g. opening a link in a new browser tab when CTRL was
+  // pressed while clicking).
+  $(document).unbind('mousedown.dialog-overlay click.dialog-overlay');
+  $('.ui-widget-overlay').bind('mousedown.dialog-overlay click.dialog-overlay', function (){return false;});
+
   // Reset the scroll to the top of the window so that the overlay is visible again.
   window.scrollTo(0, 0);
 
@@ -429,15 +410,12 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
   // If the shortcut add/delete button exists, move it to the dialog title.
   var $addToShortcuts = self.$iframeWindow('.add-or-remove-shortcuts');
   if ($addToShortcuts.length) {
-    // Make the link overlay-friendly.
-    var $link = $('a', $addToShortcuts);
-    $link.attr('href', Drupal.overlay.fragmentizeLink($link.get(0)));
     // Move the button markup to the title section. We need to copy markup
     // instead of moving the DOM element, because Webkit and IE browsers will
     // not move DOM elements between two DOM documents.
-    var shortcutsMarkup = '<div class="' + $($addToShortcuts).attr('class') + '">' + $($addToShortcuts).html() + '</div>';
-    self.$dialogTitlebar.find('.ui-dialog-title').after(shortcutsMarkup);
-    self.$iframeWindow('.add-or-remove-shortcuts').remove();
+    $addToShortcuts = $(self.$iframeWindow('<div>').append($addToShortcuts).remove().html());
+
+    self.$dialogTitlebar.find('.ui-dialog-title').after($addToShortcuts);
   }
 
   // Remove any existing tabs in the title section.
@@ -448,7 +426,7 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
     // Move the tabs markup to the title section. We need to copy markup
     // instead of moving the DOM element, because Webkit and IE browsers will
     // not move DOM elements between two DOM documents.
-    $tabs = $(self.$iframeWindow('<div>').append($tabs.clone()).remove().html());
+    $tabs = $(self.$iframeWindow('<div>').append($tabs).remove().html());
 
     self.$dialogTitlebar.append($tabs);
     if ($tabs.is('.primary')) {
@@ -545,7 +523,7 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
     clearTimeout(self.resizeTimeoutID);
     self.resizeTimeoutID = setTimeout(delayedResize, 150);
   }
-  
+
   // Scroll to anchor in overlay. This needs to be done after delayedResize().
   if (iframeWindow.document.location.hash) {
     window.scrollTo(0, self.$iframeWindow(iframeWindow.document.location.hash).position().top);
@@ -582,22 +560,7 @@ Drupal.overlay.unbindChild = function (iframeWindow) {
  */
 Drupal.overlay.isAdminLink = function (url) {
   var self = this;
-  // Create a native Link object, so we can use its object methods.
-  var link = $(url.link(url)).get(0);
-  var path = link.pathname;
-  // Ensure a leading slash on the path, omitted in some browsers.
-  if (path.substr(0, 1) != '/') {
-    path = '/' + path;
-  }
-  path = path.replace(new RegExp(Drupal.settings.basePath), '');
-  if (path == '') {
-    // If the path appears empty, it might mean the path is represented in the
-    // query string (clean URLs are not used).
-    var match = new RegExp("(\\?|&)q=(.+)(&|$)").exec(link.search);
-    if (match && match.length == 4) {
-      path = match[2];
-    }
-  }
+  var path = self.getPath(url);
 
   // Turn the list of administrative paths into a regular expression.
   if (!self.adminPathRegExp) {
@@ -688,39 +651,126 @@ Drupal.overlay.outerResize = function () {
 };
 
 /**
- * Add overlay rendering GET parameter to the given href.
+ * Click event handler.
+ *
+ * Instead of binding a click event handler to every link we bind one to the
+ * document and handle events that bubble up. This allows other scripts to bind
+ * their own handlers to links and also to prevent overlay's handling.
+ *
+ * This handler makes links in displaced regions work correctly, even when the
+ * overlay is open.
+ *
+ * This click event handler should be bound any document (for example the
+ * overlay iframe) of which you want links to open in the overlay.
+ *
+ * @see Drupal.overlayChild.behaviors.addClickHandler
  */
-Drupal.overlay.addOverlayParam = function (href) {
-  return $.param.querystring(href, {'render': 'overlay'});
-  // Do not process links with an empty href, or that only have the fragment or
-  // which are external links.
-  if (href.length > 0 && href.charAt(0) != '#' && href.indexOf('http') != 0 && href.indexOf('https') != 0) {
-    var fragmentIndex = href.indexOf('#');
-    var fragment = '';
-    if (fragmentIndex != -1) {
-      fragment = href.substr(fragmentIndex);
-      href = href.substr(0, fragmentIndex);
-    }
-    href += (href.indexOf('?') > -1 ? '&' : '?') + 'render=overlay' + fragment;
+Drupal.overlay.clickHandler = function (event) {
+  var self = Drupal.overlay;
+
+  var $target = $(event.target);
+
+  if (self.isOpen && $target.closest('.overlay-displace-top, .overlay-displace-bottom').length) {
+    // Click events in displaced regions could potentionally change the size of
+    // that region (e.g. the toggle button of the toolbar module). Trigger the
+    // resize event to force a recalculation of overlay's size/position.
+    $(window).triggerHandler('resize.overlay-event');
   }
-  return href;
+
+  // Only continue by left-click or right-click.
+  if (!(event.button == 0 || event.button == 2)) {
+    return;
+  }
+
+  // Only continue if clicked target (or one of its parents) is a link and does
+  // not have class overlay-exclude. The overlay-exclude class allows to prevent
+  // opening a link in the overlay.
+  if (!$target.is('a') || $target.hasClass('overlay-exclude')) {
+    $target = $target.closest('a');
+    if (!$target.length) {
+      return;
+    }
+  }
+
+  var href = $target.attr('href');
+  // Only continue if link has an href attribute.
+  if (href != undefined) {
+    // Open admin links in the overlay.
+    if (self.isAdminLink(href)) {
+      href = self.fragmentizeLink($target.get(0));
+      // Only override default behavior when left-clicking and user is not
+      // pressing the ALT, CTRL, META (Command key on the Macintosh keyboard)
+      // or SHIFT key.
+      if (event.button == 0 && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
+        // Redirect to a fragmentized href. This will trigger a hashchange event.
+        self.redirect(href);
+        // Prevent default action and further propagation of the event.
+        return false;
+      }
+      // Otherwise only alter clicked link's href. This is being picked up by
+      // the default action handler.
+      else {
+        $target.attr('href', href);
+      }
+    }
+    // Open external links in a new window.
+    else if ($target.get(0).hostname != window.location.hostname) {
+      // Add a target attribute to the clicked link. This is being picked up by
+      // the default action handler.
+      $target.attr('target', '_new');
+    }
+    // Non-admin links should close the overlay and open in the main window.
+    // Only handle them if the overlay is open and the clicked link is inside
+    // the overlay iframe, else default action will do fine.
+    else if (self.isOpen) {
+      var inFrame = false;
+      // W3C: http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-UIEvent-view
+      if (event.view && event.view.frameElement != null) {
+        inFrame = true;
+      }
+      // IE: http://msdn.microsoft.com/en-us/library/ms534331%28VS.85%29.aspx
+      else if (event.target.ownerDocument.parentWindow && event.target.ownerDocument.parentWindow.frameElement != null) {
+        inFrame = true;
+      }
+
+      // Add a target attribute to the clicked link. This is being picked up by
+      // the default action handler.
+      if (inFrame) {
+        // Make the link to be opening in the immediate parent of the frame.
+        $target.attr('target', '_parent');
+      }
+    }
+  }
 };
 
 /**
  * Open, reload, or close the overlay, based on the current URL fragment.
  */
-Drupal.overlay.trigger = function () {
+Drupal.overlay.hashchangeHandler = function (event) {
+  var self = Drupal.overlay;
+
+  // If we changed the hash to reflect an internal redirect in the overlay,
+  // its location has already been changed, so don't do anything.
+  if ($.data(window.location, window.location.href) === 'redirect') {
+    $.data(window.location, window.location.href, null);
+    return;
+  }
+
   // Get the overlay URL from the current URL fragment.
   var state = $.bbq.getState('overlay');
   if (state) {
     // Append render variable, so the server side can choose the right
     // rendering and add child modal frame code to the page if needed.
-    var linkURL = Drupal.overlay.addOverlayParam(Drupal.settings.basePath + state);
+    var linkURL = Drupal.settings.basePath + state;
+    linkURL = $.param.querystring(linkURL, {'render': 'overlay'});
+
+    var path = self.getPath(linkURL);
+    self.resetActiveClass(path);
 
     // If the modal frame is already open, replace the loaded document with
     // this new one.
-    if (Drupal.overlay.isOpen) {
-      Drupal.overlay.load(linkURL);
+    if (self.isOpen) {
+      self.load(linkURL);
     }
     else {
       // There is not an overlay opened yet; we should open a new one.
@@ -729,19 +779,17 @@ Drupal.overlay.trigger = function () {
         onOverlayClose: function () {
           // Clear the overlay URL fragment.
           $.bbq.pushState();
-          // Remove active class from all header buttons.
-          $('a.overlay-processed').each(function () {
-            $(this).removeClass('active');
-          });
+
+          self.resetActiveClass(self.getPath(window.location));
         }
       };
-      Drupal.overlay.open(overlayOptions);
+      self.open(overlayOptions);
     }
   }
   // If there is no overlay URL in the fragment and the overlay is (still)
   // open, close the overlay.
-  else if (Drupal.overlay.isOpen && !Drupal.overlay.isClosing) {
-    Drupal.overlay.close();
+  else if (self.isOpen && !self.isClosing) {
+    self.close();
   }
 };
 
@@ -755,32 +803,19 @@ Drupal.overlay.trigger = function () {
  *   /node/1#overlay=admin/config).
  */
 Drupal.overlay.fragmentizeLink = function (link) {
+  var self = this;
   // Don't operate on links that are already overlay-ready.
   var params = $.deparam.fragment(link.href);
   if (params.overlay) {
     return link.href;
   }
 
-  // Determine the link's original destination, and make it relative to the
-  // Drupal site.
-  var path = link.pathname;
-  // Ensure a leading slash on the path, omitted in some browsers.
-  if (path.substr(0, 1) != '/') {
-    path = '/' + path;
-  }
-  path = path.replace(new RegExp(Drupal.settings.basePath), '');
+  // Determine the link's original destination. Set ignorePathFromQueryString to
+  // true to prevent transforming this link into a clean URL while clean URLs
+  // may be disabled.
+  var path = self.getPath(link, true);
   // Preserve existing query and fragment parameters in the URL.
-  var fragment = link.hash;
-  var querystring = link.search;
-  // If the query includes ?render=overlay, leave it out.
-  if (querystring.indexOf('render=overlay') !== -1) {
-    querystring = querystring.replace(/render=overlay/, '');
-    if (querystring === '?') {
-      querystring = '';
-    }
-  }
-
-  var destination = path + querystring + fragment;
+  var destination = path + link.search + link.hash;
 
   // Assemble the overlay-ready link.
   var base = window.location.href;
@@ -835,6 +870,65 @@ Drupal.overlay.refreshRegions = function (data) {
       });
     });
   });
+};
+
+/**
+ * Reset the active class on links in displaced regions according to given path.
+ *
+ * @param activePath
+ *   Path to match links against.
+ */
+Drupal.overlay.resetActiveClass = function(activePath) {
+  var self = this;
+
+  $('.overlay-displace-top, .overlay-displace-bottom')
+  .find('a[href]')
+  // Remove active class from all links in displaced regions.
+  .removeClass('active')
+  // Add active class to links that match activePath.
+  .each(function () {
+    var windowDomain = window.location.protocol + window.location.hostname;
+    var linkDomain = this.protocol + this.hostname;
+    var linkPath = self.getPath(this);
+
+    if (linkDomain == windowDomain && linkPath == activePath) {
+      $(this).addClass('active');
+    }
+  });
+};
+
+/**
+ * Helper function to get the (corrected) Drupal path of a link.
+ *
+ * @param link
+ *   Link object or string to get the Drupal path from.
+ * @param ignorePathFromQueryString
+ *   Boolean whether to ignore path from query string if path appears empty.
+ * @return
+ *   The drupal path.
+ */
+Drupal.overlay.getPath = function (link, ignorePathFromQueryString) {
+  if (typeof link == 'string') {
+    // Create a native Link object, so we can use its object methods.
+    link = $(link.link(link)).get(0);
+  }
+
+  var path = link.pathname;
+  // Ensure a leading slash on the path, omitted in some browsers.
+  if (path.charAt(0) != '/') {
+    path = '/' + path;
+  }
+  path = path.replace(new RegExp(Drupal.settings.basePath), '');
+  if (path == '' && !ignorePathFromQueryString) {
+    // If the path appears empty, it might mean the path is represented in the
+    // query string (clean URLs are not used).
+    var match = new RegExp("([?&])q=(.+)([&#]|$)").exec(link.search);
+    if (match && match.length == 4) {
+      path = match[2];
+    }
+  }
+
+  return path;
 };
 
 /**

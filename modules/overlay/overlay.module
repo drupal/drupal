@@ -73,6 +73,9 @@ function overlay_init() {
       }
       // Indicate that we are viewing an overlay child page.
       overlay_set_mode('child');
+
+      // Unset the render parameter to avoid it being included in URLs on the page.
+      unset($_GET['render']);
     }
     else {
       // Otherwise add overlay parent code and our behavior.
@@ -282,7 +285,6 @@ function overlay_preprocess_page(&$variables) {
  */
 function overlay_preprocess_toolbar(&$variables) {
   $variables['classes_array'][] = "overlay-displace-top";
-  $variables['toolbar']['toolbar_toggle']['#attributes']['class'][] = 'overlay-displace-no-click';
 }
 
 /**
@@ -303,7 +305,7 @@ function overlay_preprocess_toolbar(&$variables) {
  * @ingroup forms
  */
 function overlay_form_after_build($form, &$form_state) {
-  if (isset($_GET['render']) && $_GET['render'] == 'overlay') {
+  if (overlay_get_mode() == 'child') {
     // Form API may have already captured submit handlers from the submitted
     // button before after_build callback is invoked. This may have been done
     // by _form_builder_handle_input_element(). If so, the list of submit
