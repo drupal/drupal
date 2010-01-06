@@ -1,4 +1,4 @@
-// $Id: toolbar.js,v 1.11 2010/01/04 16:08:52 webchick Exp $
+// $Id: toolbar.js,v 1.12 2010/01/06 04:03:39 webchick Exp $
 (function ($) {
 
 /**
@@ -11,19 +11,12 @@ Drupal.behaviors.admin = {
     $('#toolbar', context).once('toolbar', Drupal.admin.toolbar.init);
 
     // Toggling toolbar drawer.
-    $('#toolbar a.toggle', context).once('toolbar-toggle').click(function() {
+    $('#toolbar a.toggle', context).once('toolbar-toggle').click(function(e) {
       Drupal.admin.toolbar.toggle();
+      // As the toolbar is an overlay displaced region, overlay should be
+      // notified of it's height change to adapt its position.
+      $(window).triggerHandler('resize.overlay-event');
       return false;
-    });
-
-    // Set the most recently clicked item as active.
-    $('#toolbar a').once().click(function() {
-      $('#toolbar a').each(function() {
-        $(this).removeClass('active');
-      });
-      if ($(this).parents('div.toolbar-shortcuts').length) {
-        $(this).addClass('active');
-      }
     });
   }
 };
