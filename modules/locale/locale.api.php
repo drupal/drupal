@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.api.php,v 1.7 2009/10/16 15:47:46 webchick Exp $
+// $Id: locale.api.php,v 1.8 2010/01/06 03:53:40 webchick Exp $
 
 /**
  * @file
@@ -38,7 +38,7 @@ function hook_locale($op = 'groups') {
  * @param $path
  *   The current path.
  */
-function hook_language_switch_link_alter(array &$links, $type, $path) {
+function hook_language_switch_links_alter(array &$links, $type, $path) {
   global $language;
 
   if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language])) {

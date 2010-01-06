@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.71 2010/01/03 23:39:03 webchick Exp $
+// $Id: translation.module,v 1.72 2010/01/06 03:53:40 webchick Exp $
 
 /**
  * @file
@@ -435,7 +435,7 @@ function translation_path_get_translations($path) {
 }
 
 /**
- * Implements hook_language_switch_link_alter().
+ * Implements hook_language_switch_links_alter().
  *
  * Replaces links with pointers to translated versions of the content.
  */
