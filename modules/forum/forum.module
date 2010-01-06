@@ -442,7 +442,7 @@ function forum_permission() {
 }
 
 /**
- * Implements hook_taxonomy().
+ * Implements hook_taxonomy_term_delete().
  */
 function forum_taxonomy_term_delete($tid) {
   // For containers, remove the tid from the forum_containers variable.
