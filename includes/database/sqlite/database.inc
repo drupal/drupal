@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.20 2009/09/18 00:04:21 webchick Exp $
+// $Id: database.inc,v 1.21 2010/01/06 04:10:54 webchick Exp $
 
 /**
  * @file
@@ -155,7 +155,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
   public function mapConditionOperator($operator) {
     // We don't want to override any of the defaults.
-    return NULL;
+    static $specials = array(
+      'LIKE' => array('postfix' => " ESCAPE '\\'"),
+    );
+    return isset($specials[$operator]) ? $specials[$operator] : NULL;
   }
 
   public function prepareQuery($query, $cache = TRUE) {
