@@ -283,19 +283,17 @@ Drupal.overlay.load = function (url) {
   // Change the overlay title.
   self.$container.dialog('option', 'title', Drupal.t('Loading...'));
 
-  // When a new overlay is opened and loaded, we add a loaded class to the
-  // dialog. The loaded class is not removed and added back again while
-  // switching between pages with the overlay already open, due to
-  // performance issues (see http://drupal.org/node/615130).
+  // While the overlay is loading, we remove the loaded class from the dialog.
+  // After the loading is finished, the loaded class is added back. The loaded 
+  // class is being used to hide the iframe while loading.
+  // @see overlay-parent.css .overlay-loaded #overlay-element
   self.$dialog.removeClass('overlay-loaded');
   self.$iframe
-    .css('visibility', 'hidden')
     .bind('load.overlay-event', function () {
       self.isLoading = false;
 
       // Only continue when overlay is still open and not closing.
       if (self.isOpen && !self.isClosing) {
-        self.$iframe.css('visibility', '');
         self.$dialog.addClass('overlay-loaded');
       }
       else {
