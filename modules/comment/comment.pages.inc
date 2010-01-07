@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.33 2009/12/27 03:43:45 webchick Exp $
+// $Id: comment.pages.inc,v 1.34 2010/01/07 05:23:51 webchick Exp $
 
 /**
  * @file
@@ -108,7 +108,6 @@ function comment_reply($node, $pid = NULL) {
  */
 function comment_approve($comment) {
   $comment->status = COMMENT_PUBLISHED;
-  $comment->comment_format = $comment->format;
   comment_save($comment);
 
   drupal_set_message(t('Comment approved.'));

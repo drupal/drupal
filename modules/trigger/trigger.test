@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.test,v 1.22 2009/12/02 19:26:22 dries Exp $
+// $Id: trigger.test,v 1.23 2010/01/07 05:23:52 webchick Exp $
 
 class TriggerContentTestCase extends DrupalWebTestCase {
   var $_cleanup_roles = array();
@@ -255,7 +255,7 @@ class TriggerOtherTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $edit = array();
     $edit['subject'] = $this->randomName(10);
-    $edit['comment'] = $this->randomName(10) . ' ' . $this->randomName(10);
+    $edit['comment_body[' . LANGUAGE_NONE . '][0][value]'] = $this->randomName(10) . ' ' . $this->randomName(10);
     $this->drupalGet('comment/reply/' . $node->nid);
     $this->drupalPost(NULL, $edit, t('Save'));
 
