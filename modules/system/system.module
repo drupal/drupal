@@ -1939,11 +1939,16 @@ function system_admin_menu_block($item) {
     if (!$link['access']) {
       continue;
     }
-    // The link 'description' either derived from the hook_menu 'description' or
-    // entered by the user via menu module is saved as the title attribute.
+
+    // The link 'description' — either derived from the hook_menu 'description' or
+    // entered by the user via menu module — is saved as the title attribute.
+    // The title attribute is then unset to reduce redundancy in admin pages
+    // for screen readers.
     if (!empty($link['localized_options']['attributes']['title'])) {
       $link['description'] = $link['localized_options']['attributes']['title'];
+      unset($link['localized_options']['attributes']['title']);
     }
+
     // Prepare for sorting as in function _menu_tree_check_access().
     // The weight is offset so it is always positive, with a uniform 5-digits.
     $key = (50000 + $link['weight']) . ' ' . drupal_strtolower($link['title']) . ' ' . $link['mlid'];
