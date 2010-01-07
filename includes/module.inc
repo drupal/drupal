@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.177 2009/12/28 10:48:51 dries Exp $
+// $Id: module.inc,v 1.178 2010/01/07 04:54:18 webchick Exp $
 
 /**
  * @file
@@ -450,9 +450,11 @@ function module_hook($module, $hook) {
  */
 function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static = array();
-  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
-  $implementations = &$drupal_static[__FUNCTION__];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['implementations'] = &drupal_static(__FUNCTION__);
+  }
+  $implementations = &$drupal_static_fast['implementations'];
 
   // We maintain a persistent cache of hook implementations in addition to the
   // static cache to avoid looping through every module and every hook on each
