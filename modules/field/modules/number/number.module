@@ -226,7 +226,7 @@ function number_field_is_empty($item, $field) {
 function number_field_formatter_info() {
   return array(
     'number_integer' => array(
-      'label' => t('default'),
+      'label' => t('Default'),
       'field types' => array('number_integer'),
       'settings' =>  array(
         'thousand_separator' => ' ',
@@ -236,7 +236,7 @@ function number_field_formatter_info() {
       ),
     ),
     'number_decimal' => array(
-      'label' => t('default'),
+      'label' => t('Default'),
       'field types' => array('number_decimal', 'number_float'),
       'settings' =>  array(
         'thousand_separator' => ' ',
@@ -246,7 +246,7 @@ function number_field_formatter_info() {
       ),
     ),
     'number_unformatted' => array(
-      'label' => t('unformatted'),
+      'label' => t('Unformatted'),
       'field types' => array('number_integer', 'number_decimal', 'number_float'),
     ),
   );
