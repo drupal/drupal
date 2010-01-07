@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.14 2010/01/06 19:01:43 dries Exp $
+// $Id: overlay-parent.js,v 1.15 2010/01/07 04:47:38 webchick Exp $
 
 (function ($) {
 
@@ -796,8 +796,12 @@ Drupal.overlay.fragmentizeLink = function (link) {
   var destination = path + link.search + link.hash;
 
   // Assemble the overlay-ready link.
-  var base = window.location.href;
-  return $.param.fragment(base, {'overlay':destination});
+  var newLink = $.param.fragment(window.location.href, { overlay: destination });
+  // $.param.fragment() escaped slashes in the overlay part: unescape them.
+  var regexp = new RegExp("[#&]overlay=" + encodeURIComponent(path));
+  newLink = newLink.replace(regexp, decodeURIComponent);
+
+  return newLink;
 };
 
 /**
