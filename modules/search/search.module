@@ -302,7 +302,7 @@ function search_reindex($sid = NULL, $type = NULL, $reindex = FALSE) {
  * the search_total table, and need to be recounted.
  */
 function search_dirty($word = NULL) {
-  static $dirty = array();
+  $dirty = &drupal_static(__FUNCTION__, array());
   if ($word !== NULL) {
     $dirty[$word] = TRUE;
   }
@@ -429,8 +429,8 @@ function search_expand_cjk($matches) {
  * Splits a string into tokens for indexing.
  */
 function search_index_split($text) {
-  static $last = NULL;
-  static $lastsplit = NULL;
+  $last = &drupal_static(__FUNCTION__);
+  $lastsplit = &drupal_static(__FUNCTION__ . ':lastsplit');
 
   if ($last == $text) {
     return $lastsplit;
@@ -810,7 +810,7 @@ function search_expression_insert($keys, $option, $value = '') {
  * Helper function for grabbing search keys.
  */
 function search_get_keys() {
-  static $return;
+  $return = &drupal_static(__FUNCTION__);
   if (!isset($return)) {
     // Extract keys as remainder of path
     // Note: support old GET format of searches for existing links.
