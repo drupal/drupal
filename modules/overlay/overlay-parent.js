@@ -208,9 +208,9 @@ Drupal.overlay.create = function () {
     // When the iframe is still loading don't destroy it immediately but after
     // the content is loaded (see self.load).
     if (!self.isLoading) {
-      // As the iframe is being removed we need to remove all load handlers, not
-      // just the ones namespaced with overlay-event.
-      self.$iframe.unbind('load');
+      // As some browsers (webkit) fire a load event when the iframe is removed,
+      // load handlers need to be unbound before removing the iframe.
+      self.$iframe.unbind('load.overlay-event');
       self.destroy();
     }
 
@@ -671,8 +671,9 @@ Drupal.overlay.clickHandler = function (event) {
   }
 
   var href = $target.attr('href');
-  // Only continue if link has an href attribute.
-  if (href != undefined) {
+  // Only continue if link has an href attribute and is not just linking to
+  // an anchor.
+  if (href != undefined && href != '' && href.charAt(0) != '#') {
     // Open admin links in the overlay.
     if (self.isAdminLink(href)) {
       href = self.fragmentizeLink($target.get(0));
@@ -714,6 +715,16 @@ Drupal.overlay.clickHandler = function (event) {
       // Add a target attribute to the clicked link. This is being picked up by
       // the default action handler.
       if (inFrame) {
+        // When the link has a destination query parameter and that destination
+        // is an admin link we need to fragmentize it. This will make it reopen
+        // in the overlay.
+        var params = $.deparam.querystring(href);
+        if (params.destination && self.isAdminLink(params.destination)) {
+          var fragmentizedDestination = $.param.fragment(self.getPath(window.location), { overlay: params.destination });
+          href = $.param.querystring(href, { destination: fragmentizedDestination });
+          $target.attr('href', href);
+        }
+
         // Make the link to be opening in the immediate parent of the frame.
         $target.attr('target', '_parent');
       }
