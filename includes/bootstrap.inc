@@ -2188,16 +2188,35 @@ function registry_update() {
  * function is called many times (100+) during a single page request, so
  * every microsecond of execution time that can be removed from the function
  * counts. These functions can use a more cumbersome, but faster variant of
- * calling drupal_static(). For benchmarks and background on this variant,
- * please see http://drupal.org/node/619666.
+ * calling drupal_static(). It works by storing the reference returned by
+ * drupal_static() in the calling function's own static variable, thereby
+ * removing the need to call drupal_static() for each iteration of the function.
+ * Conceptually, it replaces:
+ * @code
+ * $foo = &drupal_static(__FUNCTION__);
+ * @endcode
+ * with:
+ * @code
+ * // Unfortunately, this does not work.
+ * static $foo = &drupal_static(__FUNCTION__);
+ * @endcode
+ * However, the above line of code does not work, because PHP only allows static
+ * variables to be initializied by literal values, and does not allow static
+ * variables to be assigned to references.
+ * - http://php.net/manual/en/language.variables.scope.php#language.variables.scope.static
+ * - http://php.net/manual/en/language.variables.scope.php#language.variables.scope.references
+ * The example below shows the syntax needed to work around both limitations.
+ * For benchmarks and more information, @see http://drupal.org/node/619666.
  *
  * Example:
  * @code
  * function user_access($string, $account = NULL) {
  *   // Use the advanced drupal_static() pattern, since this is called very often.
- *   static $drupal_static = array();
- *   isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
- *   $perm = &$drupal_static[__FUNCTION__];
+ *   static $drupal_static_fast;
+ *   if (!isset($drupal_static_fast)) {
+ *     $drupal_static_fast['perm'] = &drupal_static(__FUNCTION__);
+ *   }
+ *   $perm = &$drupal_static_fast['perm'];
  *   ...
  * }
  * @endcode

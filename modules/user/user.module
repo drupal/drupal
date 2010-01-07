@@ -719,9 +719,11 @@ function user_access($string, $account = NULL) {
   // To reduce the number of SQL queries, we cache the user's permissions
   // in a static variable.
   // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static = array();
-  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
-  $perm = &$drupal_static[__FUNCTION__];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['perm'] = &drupal_static(__FUNCTION__);
+  }
+  $perm = &$drupal_static_fast['perm'];
   if (!isset($perm[$account->uid])) {
     $role_permissions = user_role_permissions($account->roles);
 

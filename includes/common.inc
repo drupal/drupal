@@ -2278,9 +2278,11 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
  */
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
   // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static = array();
-  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
-  $timezones = &$drupal_static[__FUNCTION__];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['timezones'] = &drupal_static(__FUNCTION__);
+  }
+  $timezones = &$drupal_static_fast['timezones'];
 
   if (!isset($timezone)) {
     global $user;
@@ -2519,9 +2521,11 @@ function url($path = NULL, array $options = array()) {
 
   global $base_url, $base_secure_url, $base_insecure_url;
   // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static = array();
-  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
-  $script = &$drupal_static[__FUNCTION__];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['script'] = &drupal_static(__FUNCTION__);
+  }
+  $script = &$drupal_static_fast['script'];
 
   if (!isset($script)) {
     // On some web servers, such as IIS, we can't omit "index.php". So, we
@@ -4769,9 +4773,11 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
  */
 function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
   // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static = array();
-  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
-  $functions = &$drupal_static[__FUNCTION__];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['functions'] = &drupal_static(__FUNCTION__);
+  }
+  $functions = &$drupal_static_fast['functions'];
 
   // Some alter hooks are invoked many times per page request, so statically
   // cache the list of functions to call, and on subsequent calls, iterate
@@ -6271,9 +6277,11 @@ function drupal_check_incompatibility($v, $current_version) {
  */
 function entity_get_info($entity_type = NULL) {
   // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static = array();
-  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
-  $entity_info = &$drupal_static[__FUNCTION__];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['entity_info'] = &drupal_static(__FUNCTION__);
+  }
+  $entity_info = &$drupal_static_fast['entity_info'];
 
   if (empty($entity_info)) {
     if ($cache = cache_get('entity_info')) {

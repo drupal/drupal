@@ -46,9 +46,11 @@ function drupal_path_initialize() {
 function drupal_lookup_path($action, $path = '', $path_language = NULL) {
   global $language;
   // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static = array();
-  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
-  $cache = &$drupal_static[__FUNCTION__];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['cache'] = &drupal_static(__FUNCTION__);
+  }
+  $cache = &$drupal_static_fast['cache'];
 
   if (!isset($cache)) {
     $cache = array(
@@ -260,9 +262,11 @@ function arg($index = NULL, $path = NULL) {
   // information), it should be resettable anyway in case a module needs to
   // free up the memory used by it.
   // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static = array();
-  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
-  $arguments = &$drupal_static[__FUNCTION__];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['arguments'] = &drupal_static(__FUNCTION__);
+  }
+  $arguments = &$drupal_static_fast['arguments'];
 
   if (!isset($path)) {
     $path = $_GET['q'];
@@ -328,9 +332,11 @@ function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
  */
 function drupal_is_front_page() {
   // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static = array();
-  isset($drupal_static[__FUNCTION__]) || ($drupal_static[__FUNCTION__] = &drupal_static(__FUNCTION__));
-  $is_front_page = &$drupal_static[__FUNCTION__];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['is_front_page'] = &drupal_static(__FUNCTION__);
+  }
+  $is_front_page = &$drupal_static_fast['is_front_page'];
 
   if (!isset($is_front_page)) {
     // As drupal_path_initialize updates $_GET['q'] with the 'site_frontpage' path,
