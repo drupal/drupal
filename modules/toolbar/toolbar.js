@@ -53,7 +53,7 @@ Drupal.admin.toolbar.collapse = function() {
     .removeClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').removeClass('toolbar-drawer');
+  $('body').removeClass('toolbar-drawer').css('paddingTop', $('#toolbar').outerHeight());
   $.cookie(
     'Drupal.admin.toolbar.collapsed',
     1,
@@ -75,7 +75,7 @@ Drupal.admin.toolbar.expand = function() {
     .addClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').addClass('toolbar-drawer');
+  $('body').addClass('toolbar-drawer').css('paddingTop', $('#toolbar').outerHeight());
   $.cookie(
     'Drupal.admin.toolbar.collapsed',
     0,
