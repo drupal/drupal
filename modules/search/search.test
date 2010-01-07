@@ -385,7 +385,9 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     $this->refreshVariables();
 
     // Add a comment to one of the nodes.
-    $edit = array('subject' => 'my comment title', 'comment' => 'some random comment');
+    $edit = array();
+    $edit['subject'] = 'my comment title';
+    $edit['comment_body[' . LANGUAGE_NONE . '][0][value]'] = 'some random comment';
     $this->drupalGet('comment/reply/' . $nodes['comments'][1]->nid);
     $this->drupalPost(NULL, $edit, t('Preview'));
     $this->drupalPost(NULL, $edit, t('Save'));
@@ -520,18 +522,25 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Create a node.
     $node = $this->drupalCreateNode(array('type' => 'article'));
     // Post a comment using 'Full HTML' text format.
-    $edit_comment = array(
-      'subject' => $this->randomName(2),
-      'comment' => '<h1>' . $comment_body . '</h1>',
-      'comment_format' => 2,
-    );
+    $edit_comment = array();
+    $edit_comment['subject'] = $this->randomName(2);
+    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
+    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value_format]'] = 2;
     $this->drupalPost('comment/reply/' . $node->nid, $edit_comment, t('Save'));
 
     // Invoke search index update.
     $this->drupalLogout();
     $this->cronRun();
 
-    // Search for $title.
+    // Search for the comment subject.
+    $edit = array(
+      'search_block_form' => $edit_comment['subject'],
+    );
+    $this->drupalPost('', $edit, t('Search'));
+    $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Node found in search results.'));
+    $this->assertText($edit_comment['subject'], t('Comment subject found in search results.'));
+
+    // Search for the comment body.
     $edit = array(
       'search_block_form' => $comment_body,
     );
@@ -539,10 +548,9 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Node found in search results.'));
 
     // Verify that comment is rendered using proper format.
-    $this->assertText($edit_comment['subject'], t('Comment subject found in search results.'));
     $this->assertText($comment_body, t('Comment body text found in search results.'));
     $this->assertNoRaw(t('n/a'), t('HTML in comment body is not hidden.'));
-    $this->assertNoRaw(check_plain($edit_comment['comment']), t('HTML in comment body is not escaped.'));
+    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]']), t('HTML in comment body is not escaped.'));
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);

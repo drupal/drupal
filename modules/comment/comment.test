@@ -28,8 +28,9 @@ class CommentHelperCase extends DrupalWebTestCase {
    *   array of values to set contact info.
    */
   function postComment($node, $comment, $subject = '', $contact = NULL) {
+    $langcode = LANGUAGE_NONE;
     $edit = array();
-    $edit['comment'] = $comment;
+    $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
     $preview_mode = variable_get('comment_preview_article', DRUPAL_OPTIONAL);
     $subject_mode = variable_get('comment_subject_field_article', 1);
@@ -261,6 +262,7 @@ class CommentInterfaceTest extends CommentHelperCase {
    * Test comment interface.
    */
   function testCommentInterface() {
+    $langcode = LANGUAGE_NONE;
     // Set comments to have subject and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -360,7 +362,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->assertTrue($this->node, t('Article node created.'));
     $this->drupalGet('comment/reply/' . $this->node->nid);
     $this->assertNoText('This discussion is closed', t('Posting to node with comments enabled'));
-    $this->assertField('edit-comment', t('Comment body field found.'));
+    $this->assertField('edit-comment-body-' . $langcode . '-0-value', t('Comment body field found.'));
 
     // Delete comment and make sure that reply is also removed.
     $this->drupalLogout();
@@ -406,6 +408,8 @@ class CommentPreviewTest extends CommentHelperCase {
    * Test comment preview.
    */
   function testCommentPreview() {
+    $langcode = LANGUAGE_NONE;
+
     // As admin user, configure comment settings.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(TRUE);
@@ -418,23 +422,24 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->drupalLogin($this->web_user);
     $edit = array();
     $edit['subject'] = $this->randomName(8);
-    $edit['comment'] = $this->randomName(16);
+    $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
     $this->drupalPost('node/' . $this->node->nid, $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
     $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
     $this->assertText($edit['subject'], t('Subject displayed.'));
-    $this->assertText($edit['comment'], t('Comment displayed.'));
+    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], t('Comment displayed.'));
 
     // Check that the title and body fields are displayed with the correct values.
     $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
-    $this->assertFieldByName('comment', $edit['comment'], t('Comment field displayed.'));
+    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
   }
 
   /**
    * Test comment edit and preview.
    */
   function testCommentEditPreview() {
+    $langcode = LANGUAGE_NONE;
     $web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'post comments without approval'));
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(TRUE);
@@ -444,23 +449,23 @@ class CommentPreviewTest extends CommentHelperCase {
 
     $edit = array();
     $edit['subject'] = $this->randomName(8);
-    $edit['comment'] = $this->randomName(16);
+    $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
     $edit['name'] = $web_user->name;
     $edit['date'] = '2008-03-02 17:23 +0300';
     $expected_date = format_date(strtotime($edit['date']));
-    $comment = $this->postComment($this->node, $edit['subject'], $edit['comment'], TRUE);
+    $comment = $this->postComment($this->node, $edit['subject'], $edit['comment_body[' . $langcode . '][0][value]'], TRUE);
     $this->drupalPost('comment/' . $comment->id . '/edit', $edit, t('Preview'));
 
     // Check that the preview is displaying the subject, comment, author and date correctly.
     $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
     $this->assertText($edit['subject'], t('Subject displayed.'));
-    $this->assertText($edit['comment'], t('Comment displayed.'));
+    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], t('Comment displayed.'));
     $this->assertText($edit['name'], t('Author displayed.'));
     $this->assertText($expected_date, t('Date displayed.'));
 
     // Check that the title and body fields are displayed with the correct values.
     $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
-    $this->assertFieldByName('comment', $edit['comment'], t('Comment field displayed.'));
+    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
     $this->assertFieldByName('name', $edit['name'], t('Author field displayed.'));
     $this->assertFieldByName('date', $edit['date'], t('Date field displayed.'));
   }

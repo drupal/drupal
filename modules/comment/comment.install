@@ -10,6 +10,9 @@
  * Implements hook_uninstall().
  */
 function comment_uninstall() {
+  // Delete comment_body field.
+  field_delete_field('comment_body');
+
   // Remove variables.
   variable_del('comment_block_count');
   $node_types = array_keys(node_type_get_types());
@@ -43,6 +46,32 @@ function comment_enable() {
   db_insert('node_comment_statistics')
     ->from($query)
     ->execute();
+
+  // Create comment body field.
+  // @todo this should be done in comment_install, but causes exceptions
+  // in testing because the list of fields types is not available in
+  // hook_install(): _field_info_collate_types() returns an empty array.
+  if (!field_info_field('comment_body')) {
+    $field = array(
+      'field_name' => 'comment_body',
+      'type' => 'text_long',
+    );
+    field_create_field($field);
+  }
+
+  // There is a separate comment bundle for each node type to allow for
+  // per-node-type customization of comment fields. Each one of these bundles
+  // needs a comment body field instance. A comment bundle is needed even for
+  // node types whose comments are disabled by default, because individual nodes
+  // may override that default.
+  // @todo This should be changed to call field_attach_create_bundle() instead,
+  //   and a comment_field_attach_create_bundle() function should be added to
+  //   handle the creation of the comment body field instance.
+  foreach (node_type_get_types() as $type => $info) {
+    if (!field_info_instance('comment', 'comment_body', 'comment_node_' . $info->type)) {
+      _comment_body_field_instance_create($info);
+    }
+  }
 }
 
 /**
@@ -215,6 +244,81 @@ function comment_update_7011() {
 }
 
 /**
+ * Create the comment_body field.
+ */
+function comment_update_7012() {
+  // Create comment body field.
+  $field = array(
+    'field_name' => 'comment_body',
+    'type' => 'text_long',
+  );
+  field_create_field($field);
+
+  // Add the field to comments for all existing bundles.
+  $body_instance = array(
+    'field_name' => 'comment_body',
+    'label' => 'Comment',
+    'object_type' => 'comment',
+    'settings' => array('text_processing' => 1),
+    // Hide field label by default.
+    'display' => array(
+      'full' => array(
+        'label' => 'hidden',
+      ),
+    ),
+  );
+  foreach (node_type_get_types() as $info) {
+    $body_instance['bundle'] = 'comment_node_' . $info->type;
+    field_create_instance($body_instance);
+  }
+}
+
+/**
+ * Migrate data from the comment field to field storage.
+ */
+function comment_update_7013(&$sandbox) {
+  // This is a multipass update. First set up some comment variables.
+  if (empty($sandbox['total'])) {
+    $comments = (bool) db_query_range('SELECT 1 FROM {comment}', 0, 1)->fetchField();
+    $sandbox['types'] = array();
+    if ($comments) {
+      $sandbox['etid'] = _field_sql_storage_etid('comment');
+      $sandbox['types'] = node_type_get_types();
+    }
+    $sandbox['total'] = count($sandbox['types']);
+  }
+  if (!empty($sandbox['types'])) {
+    $type = array_shift($sandbox['types']);
+
+    $query = db_select('comment', 'c');
+    $query->innerJoin('node', 'n', 'c.nid = n.nid AND n.type = :type', array(':type' => $type->type));
+    $query->addField('c', 'cid', 'entity_id');
+    $query->addExpression("'comment_node_$type->type'", 'bundle');
+    $query->addExpression($sandbox['etid'], 'etid');
+    $query->addExpression('0', 'deleted');
+    $query->addExpression("'" . LANGUAGE_NONE . "'", 'language');
+    $query->addExpression('0', 'delta');
+    $query->addField('c', 'comment', 'comment_body_value');
+    $query->addField('c', 'format', 'comment_body_format');
+
+    $comment_body = field_info_field('comment_body');
+    $comment_body_table = _field_sql_storage_tablename($comment_body);
+
+    db_insert($comment_body_table)
+      ->from($query)
+      ->execute();
+  }
+
+  // On the last pass of the update, $sandbox['types'] will be empty.
+  if (empty($sandbox['types'])) {
+    db_drop_field('comment', 'comment');
+    db_drop_field('comment', 'format');
+  }
+
+  $sandbox['#finished'] = 1 - count($sandbox['types']) / $sandbox['total'];
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
@@ -256,12 +360,6 @@ function comment_schema() {
         'default' => '',
         'description' => 'The comment title.',
       ),
-      'comment' => array(
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-        'description' => 'The comment body.',
-      ),
       'hostname' => array(
         'type' => 'varchar',
         'length' => 128,
@@ -288,13 +386,6 @@ function comment_schema() {
         'default' => 1,
         'size' => 'tiny',
         'description' => 'The published status of a comment. (0 = Not Published, 1 = Published)',
-      ),
-      'format' => array(
-        'type' => 'int',
-        'size' => 'small',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {filter_format}.format of the comment body.',
       ),
       'thread' => array(
         'type' => 'varchar',

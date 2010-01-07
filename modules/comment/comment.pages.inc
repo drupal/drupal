@@ -108,7 +108,6 @@ function comment_reply($node, $pid = NULL) {
  */
 function comment_approve($comment) {
   $comment->status = COMMENT_PUBLISHED;
-  $comment->comment_format = $comment->format;
   comment_save($comment);
 
   drupal_set_message(t('Comment approved.'));

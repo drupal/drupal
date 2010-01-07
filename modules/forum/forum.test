@@ -78,7 +78,9 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Test adding a comment to a forum topic.
     $node = $this->createForumTopic($this->forum, FALSE);
-    $this->drupalPost("node/$node->nid", array('comment' => $this->randomName()), t('Save'));
+    $edit = array();
+    $edit['comment_body[' . LANGUAGE_NONE . '][0][value]'] = $this->randomName();
+    $this->drupalPost("node/$node->nid", $edit, t('Save'));
     $this->assertResponse(200);
 
     // Test editing a forum topic that has a comment.

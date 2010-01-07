@@ -18,6 +18,7 @@
  *   Preprocess functions can reformat it by calling format_date() with the
  *   desired parameters on the $comment->changed variable.
  * - $new: New comment marker.
+ * - $permalink: Comment permalink.
  * - $picture: Authors picture.
  * - $signature: Authors signature.
  * - $status: Comment status. Possible values are:
@@ -67,6 +68,7 @@
   <?php print render($title_suffix); ?>
 
   <div class="submitted">
+    <?php print $permalink; ?>
     <?php
       print t('Submitted by !username on !datetime.',
         array('!username' => $author, '!datetime' => $created));

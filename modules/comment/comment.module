@@ -245,6 +245,9 @@ function comment_count_unpublished() {
  */
 function comment_node_type_insert($info) {
   field_attach_create_bundle('comment', 'comment_node_' . $info->type);
+  // @todo Create a comment_field_attach_create_bundle() function, and have that
+  //   function create the comment body field instance.
+  _comment_body_field_instance_create($info);
 }
 
 /**
@@ -273,6 +276,28 @@ function comment_node_type_delete($info) {
   foreach ($settings as $setting) {
     variable_del($setting . '_' . $info->type);
   }
+}
+
+ /**
+ * Helper function which creates a comment body field instance for a given node
+ * type.
+ */
+function _comment_body_field_instance_create($info) {
+  // Attaches the body field by default.
+  $instance = array(
+    'field_name' => 'comment_body',
+    'label' => 'Comment',
+    'object_type' => 'comment',
+    'bundle' => 'comment_node_' . $info->type,
+    'settings' => array('text_processing' => 1),
+    // Hides field label by default.
+    'display' => array(
+      'full' => array(
+        'label' => 'hidden',
+      ),
+    ),
+  );
+  field_create_instance($instance);
 }
 
 /**
@@ -852,14 +877,36 @@ function comment_build_content($comment, $node, $view_mode = 'full') {
   // Remove previously built content, if exists.
   $comment->content = array();
 
-  // Build comment body.
-  $comment->content['comment_body'] = array(
-    '#markup' => check_markup($comment->comment, $comment->format, '', TRUE),
-  );
-
   // Build fields content.
   field_attach_prepare_view('comment', array($comment->cid => $comment), $view_mode);
   $comment->content += field_attach_view('comment', $comment, $view_mode);
+
+  // Prior to Drupal 7, the comment body was a simple text variable, but with
+  // Drupal 7, it has been upgraded to a field. However, using theme('field') to
+  // render the comment body results in a noticeable performance degradation for
+  // pages with many comments. By unsetting #theme, we avoid the overhead of
+  // theme('field') and instead settle for simply rendering the formatted field
+  // value that exists as a child element of the 'comment_body' render array,
+  // which results in equivalent markup and rendering speed as if the comment
+  // body had not been upgraded to a field. Modules that require the comment
+  // body to be rendered as a full field (and are willing to accept the
+  // corresponding performance impact) can restore #theme to 'field' within a
+  // hook_comment_view() or hook_comment_view_alter() implementation.
+  // @todo Bypassing theme('field') is not ideal, because:
+  //   - The field label is not displayed, even if its setting is to be
+  //     displayed.
+  //   - hook_preprocess_field() functions do not run, and therefore, attributes
+  //     added in those functions (for example, for RDF) are not output.
+  //   - The HTML markup that's within field.tpl.php is not output, so theme
+  //     developers must use different CSS rules for the comment body than for
+  //     all other fields.
+  //   The goal is for theme('field') to be sufficiently optimized prior to
+  //   Drupal 7 release, so that this code can be removed, and the comment body
+  //   can be rendered just like all other fields. Otherwise, another solution
+  //   to the above problems will be needed. @see http://drupal.org/node/659788.
+  if (isset($comment->content['comment_body']['#theme']) && ($comment->content['comment_body']['#theme'] === 'field')) {
+    unset($comment->content['comment_body']['#theme']);
+  }
 
   if (empty($comment->in_preview)) {
     $comment->content['links']['comment'] = array(
@@ -1173,17 +1220,14 @@ function comment_node_delete($node) {
  * Implements hook_node_update_index().
  */
 function comment_node_update_index($node) {
-  $text = '';
-  if ($node->comment != COMMENT_NODE_HIDDEN) {
-    $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(
-      ':nid' => $node->nid,
-      ':status' => COMMENT_PUBLISHED
-    ));
-    foreach ($comments as $comment) {
-      $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', TRUE);
-    }
+  $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
+  $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
+  if ($node->comment && $cids = comment_get_thread($node, $mode, $comments_per_page)) {
+    $comments = comment_load_multiple($cids);
+    comment_prepare_thread($comments);
+    $build = comment_view_multiple($comments, $node);
   }
-  return $text;
+  return drupal_render($build);
 }
 
 /**
@@ -1304,8 +1348,6 @@ function comment_save($comment) {
           'created' => $comment->created,
           'changed' => $comment->changed,
           'subject' => $comment->subject,
-          'comment' => $comment->comment,
-          'format' => $comment->comment_format,
           'uid' => $comment->uid,
           'name' => $comment->name,
           'mail' => $comment->mail,
@@ -1380,8 +1422,6 @@ function comment_save($comment) {
           'pid' => empty($comment->pid) ? 0 : $comment->pid,
           'uid' => $comment->uid,
           'subject' => $comment->subject,
-          'comment' => $comment->comment,
-          'format' => $comment->comment_format,
           'hostname' => ip_address(),
           'created' => $comment->created,
           'changed' => $comment->changed,
@@ -1700,6 +1740,11 @@ function comment_form($form, &$form_state, $comment) {
     );
   }
 
+  // Sets the author form elements above the subject.
+  $form['author'] = array(
+    '#weight' => -2,
+  );
+
   // Prepare default values for form elements.
   if ($is_admin) {
     $author = ($comment->uid && $comment->name ? $comment->name : $comment->registered_name);
@@ -1802,14 +1847,7 @@ function comment_form($form, &$form_state, $comment) {
     '#maxlength' => 64,
     '#default_value' => $comment->subject,
     '#access' => variable_get('comment_subject_field_' . $node->type, 1) == 1,
-  );
-  $form['comment'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Comment'),
-    '#default_value' => $comment->comment,
-    '#text_format' => isset($comment->format) ? $comment->format : filter_default_format(),
-    '#required' => TRUE,
-    '#rows' => 15,
+    '#weight' => -1,
   );
 
   // Used for conditional validation of author fields.
@@ -1870,8 +1908,7 @@ function comment_preview($comment) {
   $node = node_load($comment->nid);
 
   if (!form_get_errors()) {
-    $comment->format = $comment->comment_format;
-
+    $comment->format = $comment->comment_body[LANGUAGE_NONE][0]['format'];
     // Attach the user and time information.
     if (!empty($comment->name)) {
       $account = user_load_by_name($comment->name);
@@ -1998,7 +2035,8 @@ function comment_submit($comment) {
     // 1) Filter it into HTML
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
-    $comment['subject'] = truncate_utf8(trim(decode_entities(strip_tags(check_markup($comment['comment'], $comment['comment_format'])))), 29, TRUE);
+
+    $comment['subject'] = truncate_utf8(trim(decode_entities(strip_tags(check_markup($comment['comment_body'][LANGUAGE_NONE][0]['value'], $comment['comment_body'][LANGUAGE_NONE][0]['format'])))), 29, TRUE);
     // Edge cases where the comment body is populated only by HTML tags will
     // require a default subject.
     if ($comment['subject'] == '') {
@@ -2081,6 +2119,7 @@ function template_preprocess_comment(&$variables) {
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
   $variables['signature'] = $comment->signature;
   $variables['title']     = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
+  $variables['permalink'] = l('#', 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
   $variables['template_files'][] = 'comment-' . $variables['node']->type;
 
   // Helpful $content variable for templates.
@@ -2375,7 +2414,8 @@ function comment_unpublish_action($comment, $context = array()) {
  */
 function comment_unpublish_by_keyword_action($comment, $context) {
   foreach ($context['keywords'] as $keyword) {
-    if (strpos($comment->comment, $keyword) !== FALSE || strpos($comment->subject, $keyword) !== FALSE) {
+    $text = drupal_render($comment);
+    if (strpos($text, $keyword) !== FALSE) {
       $comment->status = COMMENT_NOT_PUBLISHED;
       watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject));
       break;
@@ -2444,16 +2484,6 @@ function comment_ranking() {
 function comment_menu_alter(&$items) {
   // Add comments to the description for admin/content.
   $items['admin/content']['description'] = "View, edit, and delete your site's content and comments.";
-}
-
-/**
- * Implements hook_filter_format_delete().
- */
-function comment_filter_format_delete($format, $fallback) {
-  db_update('comment')
-    ->fields(array('format' => $fallback->format))
-    ->condition('format', $format->format)
-    ->execute();
 }
 
 /**

@@ -537,10 +537,11 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
 
     // Create comment.
-    $edit = array(
-      'subject' => $this->randomString(),
-      'comment' => $this->randomString(),
-    );
+    $langcode = LANGUAGE_NONE;
+    $edit = array();
+    $edit['subject'] = $this->randomName(8);
+    $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
+
     $this->drupalPost('comment/reply/' . $node->nid, $edit, t('Preview'));
     $this->drupalPost(NULL, array(), t('Save'));
     $this->assertText(t('Your comment has been posted.'));
