@@ -167,6 +167,27 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     // DatabaseStatement_sqlite::execute() and cannot be cached.
     return $this->prepare($this->prefixTables($query));
   }
+
+  public function nextId($existing_id = 0) {
+    $transaction = $this->startTransaction();
+    // We can safely use literal queries here instead of the slower query
+    // builder because if a given database breaks here then it can simply
+    // override nextId. However, this is unlikely as we deal with short strings
+    // and integers and no known databases require special handling for those
+    // simple cases. If another transaction wants to write the same row, it will
+    // wait until this transaction commits.
+    $stmt = $this->query('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', array(
+      ':existing_id' => $existing_id,
+    ));
+    if (!$stmt->rowCount()) {
+      $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', array(
+        ':existing_id' => $existing_id,
+      ));
+    }
+    // The transaction gets committed when the transaction object gets destroyed
+    // because it gets out of scope.
+    return $new_value;
+  }
 }
 
 /**
