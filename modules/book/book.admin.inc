@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.29 2009/12/02 19:26:21 dries Exp $
+// $Id: book.admin.inc,v 1.30 2010/01/07 20:02:08 dries Exp $
 
 /**
  * @file
@@ -36,7 +36,7 @@ function book_admin_settings() {
     '#title' => t('Content types allowed in book outlines'),
     '#default_value' => array('book'),
     '#options' => $types,
-    '#description' => t('Users with the %outline-perm permission can add all content types.', array('%add-perm' => t('add content to books'),  '%outline-perm' => t('administer book outlines'))),
+    '#description' => t('Users with the %outline-perm permission can add all content types.', array('%outline-perm' => t('Administer book outlines'))),
     '#required' => TRUE,
   );
   $form['book_child_type'] = array(
