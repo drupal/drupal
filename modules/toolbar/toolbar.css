@@ -137,10 +137,11 @@ body.toolbar-drawer {
 /**
  * IE 6 Fix.
  *
- * IE 6 shows elements with position:fixed as position:static
- * so we remove the padding-top from the body
+ * IE 6 shows elements with position:fixed as position:static so we replace
+ * it with position:absolute; toolbar needs it's z-index to stay above overlay.
  */
-* html body.toolbar,
-* html body.toolbar-drawer {
-  padding-top: 0;
+* html #toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
