@@ -757,7 +757,9 @@ class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
    *
    * This can be enhanced by adding additional CSS files with variant test cases.
    * Currently, this is specifically testing to make sure that whitespace
-   * is treated with adequate respect (not arbitrarily removing linefeeds).
+   * is treated with adequate respect (see http://drupal.org/node/472820) and
+   * that image paths in imported files are preserved (see
+   * http://drupal.org/node/265719).
    */
   function testLoadCssBasic() {
     // Array of files to test living in 'simpletest/files/css_test_files/'.
@@ -766,6 +768,7 @@ class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
     // - Optimized expected content: name.css.optimized.css
     $testfiles = array(
       'css_input_without_import.css',
+      'css_input_with_import.css'
     );
     $path = drupal_get_path('module', 'simpletest') . '/files/css_test_files';
     foreach ($testfiles as $file) {
