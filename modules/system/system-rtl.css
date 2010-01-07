@@ -1,5 +1,11 @@
 /* $Id$ */
 
+th {
+  text-align: right;
+  padding-right: 0;
+  padding-left: 1em;
+}
+
 thead th {
   text-align: right;
   padding-left: 1em;
@@ -27,11 +33,6 @@ thead th {
   background-position: 100% 50%;
 }
 
-dl.multiselect dt, dl.multiselect dd {
-  float: right;
-  margin: 0 0 0 1em;
-}
-
 .block ul {
   padding: 0 1em 0.25em 0;
 }
@@ -48,47 +49,6 @@ ul.secondary li {
   padding: 0 1em;
   border-right: none;
   border-left: 1px solid #ccc;
-}
-html.js input.form-autocomplete {
-  background-position: 0% 2px;
-}
-html.js input.throbbing {
-  background-position: 0% -18px;
-}
-
-html.js fieldset.collapsible legend a {
-  padding-left: 0;
-  padding-right: 15px;
-  background-position: 98% 75%;
-}
-html.js fieldset.collapsed legend a {
-  background-image: url(../../misc/menu-collapsed-rtl.png);
-  background-position: 98% 50%;
-}
-
-.teaser-checkbox div.form-item {
-  float: left;
-  margin: 0 0 0 5%;
-}
-.progress .percentage {
-  float: left;
-}
-.progress-disabled {
-  float: right;
-}
-.ajax-progress {
-  float: right;
-}
-.ajax-progress .throbber {
-  float: right;
-}
-input.password-field {
-  margin-left: 10px;
-  margin-right: 0;
-}
-input.password-confirm {
-  margin-left: 10px;
-  margin-right: 0;
 }
 
 .system-themes-list-enabled .theme-selector .screenshot,
@@ -111,25 +71,4 @@ input.password-confirm {
 }
 .theme-selector .operations li.first {
   padding: 0 0 0 0.7em;
-}
-
-.password-strength-title {
-  float: right;
-}
-.password-parent {
-  float: right;
-}
-
-.draggable a.tabledrag-handle {
-  float: right;
-  margin: -0.4em -0.5em -0.4em 0;
-  padding: 0.42em 0.5em 0.42em 1.5em;
-}
-div.indentation {
-  margin: -0.4em -0.4em -0.4em 0.2em;
-  padding: 0.42em 0.6em 0.42em 0;
-  float: right;
-}
-div.tree-child, div.tree-child-last {
-  background-position: -65px center;
 }

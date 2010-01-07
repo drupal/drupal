@@ -9,7 +9,7 @@
 #permissions tr.odd .form-item, #permissions tr.even .form-item {
   white-space: normal;
 }
-/* Override the default multiselect layout in system.css. */
+/* Override the default multiselect layout in system-behavior.css. */
 #user-filter-form dl.multiselect dd, dl.multiselect dd .form-item {
   width: 20em; /* 6em label + 14em select */
 }

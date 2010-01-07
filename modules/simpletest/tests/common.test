@@ -618,13 +618,13 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
     // A few system CSS files, ordered in a strange way.
     $system_path = drupal_get_path('module', 'system');
-    drupal_add_css($system_path . '/defaults.css', array('weight' => CSS_SYSTEM));
+    drupal_add_css($system_path . '/system-behavior.css', array('weight' => CSS_SYSTEM));
     drupal_add_css($system_path . '/system.css', array('weight' => CSS_SYSTEM - 10));
     drupal_add_css($system_path . '/system-menus.css', array('weight' => CSS_SYSTEM));
 
     $expected = array(
       $system_path . '/system.css',
-      $system_path . '/defaults.css',
+      $system_path . '/system-behavior.css',
       $system_path . '/system-menus.css',
       drupal_get_path('module', 'simpletest') . '/simpletest.css',
     );

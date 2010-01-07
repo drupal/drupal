@@ -3,8 +3,28 @@
 /*
 ** HTML elements
 */
-body.drag {
-  cursor: move;
+fieldset {
+  margin-bottom: 1em;
+  padding: .5em;
+}
+form {
+  margin: 0;
+  padding: 0;
+}
+hr {
+  height: 1px;
+  border: 1px solid gray;
+}
+img {
+  border: 0;
+}
+table {
+  border-collapse: collapse;
+}
+th {
+  text-align: left; /* LTR */
+  padding-right: 1em; /* LTR */
+  border-bottom: 3px solid #ccc;
 }
 th.active img {
   display: inline;
@@ -43,22 +63,6 @@ thead th {
 */
 .breadcrumb {
   padding-bottom: .5em
-}
-div.indentation {
-  width: 20px;
-  height: 1.7em;
-  margin: -0.4em 0.2em -0.4em -0.4em; /* LTR */
-  padding: 0.42em 0 0.42em 0.6em; /* LTR */
-  float: left; /* LTR */
-}
-div.tree-child {
-  background: url(../../misc/tree.png) no-repeat 11px center; /* LTR */
-}
-div.tree-child-last {
-  background: url(../../misc/tree-bottom.png) no-repeat 11px center; /* LTR */
-}
-div.tree-child-horizontal {
-  background: url(../../misc/tree.png) no-repeat -11px center;
 }
 .error {
   color: #e55;
@@ -110,9 +114,6 @@ div.ok, tr.ok {
   margin: 0 0 0.25em 1.5em; /* LTR */
   padding: 0;
   list-style: disc;
-}
-ol.task-list li.active {
-  font-weight: bold;
 }
 .form-item {
   margin-top: 1em;
@@ -182,9 +183,6 @@ a.module-link-configure {
   margin-left: 1em; /* LTR */
   float: right; /* LTR */
 }
-.nowrap {
-  white-space: nowrap;
-}
 .item-list .pager {
   clear: both;
   text-align: center;
@@ -205,30 +203,8 @@ a.module-link-configure {
   padding-bottom: 0;
   font-size: 0.9em;
 }
-dl.multiselect dd, dl.multiselect dd .form-item, dl.multiselect dd select {
-  font-family: inherit;
-  font-size: inherit;
-  width: 14em;
-}
-dl.multiselect dt, dl.multiselect dd {
-  float: left; /* LTR */
-  line-height: 1.75em;
-  padding: 0;
-  margin: 0 1em 0 0; /* LTR */
-}
-dl.multiselect .form-item {
-  height: 1.75em;
-  margin: 0;
-}
 .compact-link {
   margin: 0 0 0.5em 0;
-}
-
-/*
-** Inline items (need to override above)
-*/
-.container-inline div, .container-inline label {
-  display: inline;
 }
 
 /*
@@ -286,207 +262,6 @@ ul.secondary a.active {
 }
 
 /*
-** Autocomplete styles
-*/
-/* Suggestion list */
-#autocomplete {
-  position: absolute;
-  border: 1px solid;
-  overflow: hidden;
-  z-index: 100;
-}
-#autocomplete ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  list-style-image: none;
-}
-#autocomplete li {
-  background: #fff;
-  color: #000;
-  white-space: pre;
-  cursor: default;
-}
-#autocomplete li.selected {
-  background: #0072b9;
-  color: #fff;
-}
-/* Animated throbber */
-html.js input.form-autocomplete {
-  background-image: url(../../misc/throbber.gif);
-  background-repeat: no-repeat;
-  background-position: 100% 2px; /* LTR */
-}
-html.js input.throbbing {
-  background-position: 100% -18px; /* LTR */
-}
-
-/*
-** Collapsing fieldsets
-*/
-html.js fieldset.collapsed {
-  border-bottom-width: 0;
-  border-left-width: 0;
-  border-right-width: 0;
-  margin-bottom: 0;
-  height: 1em;
-}
-html.js fieldset.collapsed * {
-  display: none;
-}
-html.js fieldset.collapsed legend, html.js fieldset.collapsed legend a span.element-invisible {
-  display: block;
-  overflow: hidden;
-}
-html.js fieldset.collapsible legend a {
-  display: inline;
-  padding-left: 15px; /* LTR */
-  background: url(../../misc/menu-expanded.png) 5px 75% no-repeat; /* LTR */
-}
-html.js fieldset.collapsible legend span.summary {
-  display: inline;
-  font-size: 0.9em;
-  color: #999;
-  margin-left: 0.5em;
-}
-html.js fieldset.collapsed legend a {
-  background-image: url(../../misc/menu-collapsed.png); /* LTR */
-  background-position: 5px 50%; /* LTR */
-}
-/* Note: IE-only fix due to '* html' (breaks Konqueror otherwise). */
-* html.js fieldset.collapsed legend,
-* html.js fieldset.collapsed legend *,
-* html.js fieldset.collapsed table * {
-  display: inline;
-}
-/* For Safari 2 to prevent collapsible fieldsets containing tables from dissapearing due to tableheader.js. */
-html.js fieldset.collapsible {
-  position: relative;
-}
-/* Avoid jumping around due to margins collapsing into collapsible fieldset border */
-html.js fieldset.collapsible .fieldset-wrapper {
-  overflow: auto;
-}
-
-/*
-** Resizable text areas
-*/
-.resizable-textarea {
-  width: 95%;
-}
-.resizable-textarea .grippie {
-  height: 9px;
-  overflow: hidden;
-  background: #eee url(../../misc/grippie.png) no-repeat center 2px;
-  border: 1px solid #ddd;
-  border-top-width: 0;
-  cursor: s-resize;
-}
-html.js .resizable-textarea textarea {
-  margin-bottom: 0;
-  width: 100%;
-  display: block;
-}
-
-/*
-** Table drag and drop.
-*/
-.draggable a.tabledrag-handle {
-  cursor: move;
-  float: left; /* LTR */
-  height: 1.7em;
-  margin: -0.4em 0 -0.4em -0.5em; /* LTR */
-  padding: 0.42em 1.5em 0.42em 0.5em; /* LTR */
-  text-decoration: none;
-}
-a.tabledrag-handle:hover {
-  text-decoration: none;
-}
-a.tabledrag-handle .handle {
-  margin-top: 4px;
-  height: 13px;
-  width: 13px;
-  background: url(../../misc/draggable.png) no-repeat 0 0;
-}
-a.tabledrag-handle-hover .handle {
-  background-position: 0 -20px;
-}
-
-/*
-** Teaser splitter
-*/
-.joined + .grippie {
-  height: 5px;
-  background-position: center 1px;
-  margin-bottom: -2px;
-}
-/* Keeps inner content contained in Opera 9. */
-.teaser-checkbox {
-  padding-top: 1px;
-}
-.teaser-checkbox div.form-item {
-  float: right; /* LTR */
-  margin: 0 5% 0 0; /* LTR */
-  padding: 0;
-}
-textarea.teaser {
-  display: none;
-}
-html.js .no-js {
-  display: none;
-}
-
-/*
-** Progressbar styles
-*/
-.progress {
-  font-weight: bold;
-}
-.progress .bar {
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  background: #ccc;
-  border: 1px solid #666;
-  margin: 0 0.2em;
-}
-.progress .filled {
-  background: #0072b9 url(../../misc/progress.gif);
-  height: 1.5em;
-  width: 0%;
-}
-.progress .percentage {
-  float: right; /* LTR */
-}
-.progress-disabled {
-  float: left; /* LTR */
-}
-.ajax-progress {
-  float: left; /* LTR */
-}
-.ajax-progress .throbber {
-  width: 15px;
-  height: 15px;
-  margin: 2px;
-  background: transparent url(../../misc/throbber.gif) no-repeat 0px -18px;
-  float: left; /* LTR */
-}
-tr .ajax-progress .throbber {
-  margin: 0 2px;
-}
-.ajax-progress-bar {
-  width: 16em;
-}
-
-/*
-** Formatting for welcome page
-*/
-#first-time strong {
-  display: block;
-  padding: 1.5em 0 .5em;
-}
-
-/*
 ** To be used with tableselect.js
 */
 tr.selected td {
@@ -499,21 +274,6 @@ tr.selected td {
 table.sticky-header {
   margin-top: 0;
   background: #fff;
-}
-
-/*
-** Installation clean URLs
-*/
-#clean-url.install {
-  display: none;
-}
-
-/*
-** For anything you want to hide on page load when JS is enabled, so
-** that you can use the JS to control visibility and avoid flicker.
-*/
-html.js .js-hide {
-  display: none;
 }
 
 /*
@@ -610,85 +370,26 @@ html.js .js-hide {
 }
 
 /*
-** Password strength indicator
+** Markup free clearing
+** Details: http://www.positioniseverything.net/easyclearing.html
 */
-#password-strength {
-  width: 17em;
-  float: right;  /* LTR */
-  margin-top: 1.4em;
-}
-.password-strength-title {
-  display: inline;
-}
-#password-strength-text {
-  float: right; /* LTR */
-  font-weight: bold;
-}
-#password-indicator {
-  background-color: #C4C4C4;
-  height: 0.3em;
-  width: 100%;
-}
-#password-indicator div {
-  height: 100%;
-  width: 0%;
-  background-color: #47C965;
-}
-input.password-confirm, input.password-field {
-  width: 16em;
-  margin-bottom: 0.4em;
-}
-div.password-confirm {
-  display: inline;
-  padding-left: 1em;
-}
-div.password-suggestions {
-  padding: 0.2em 0.5em;
-  margin: 0.7em 0;
-  width: 38.5em;
-  border: 1px solid #B4B4B4;
-}
-div.password-suggestions ul {
-  margin-bottom: 0;
-}
-.password-parent {
-  margin: 0;
-  width: 34.3em;
-}
-
-/*
-** Password confirmation checker
-*/
-.confirm-parent {
-  margin: 0;
-}
-div.password-confirm {
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
   visibility: hidden;
 }
 
-/**
- * Hide elements from all users.
- *
- * Used for elements which should not be immediately displayed to any user. An
- * example would be a collapsible fieldset that will be expanded with a click
- * from a user. The effect of this class can be toggled with the jQuery show()
- * and hide() functions.
- */
-.element-hidden {
-  display: none;
+.clearfix {
+  display: inline-block;
 }
 
-/**
- * Hide elements visually, but keep them available for screen-readers.
- *
- * Used for information required for screen-reader users to understand and use
- * the site where visual display is undesirable. Information provided in this
- * manner should be kept concise, to avoid unnecessary burden on the user. Must
- * not be used for focusable elements (such as links and form elements) as this
- * causes issues for keyboard only or voice recognition users.
- */
-.element-invisible {
-  height: 0;
-  overflow: hidden;
-  position: absolute;
+/* Hides from IE-mac \*/
+* html .clearfix {
+  height: 1%;
 }
+.clearfix {
+  display: block;
+}
+/* End hide from IE-mac */

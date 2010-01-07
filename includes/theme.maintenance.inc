@@ -70,8 +70,8 @@ function _drupal_maintenance_theme() {
 
   // These are usually added from system_init() -except maintenance.css.
   // When the database is inactive it's not called so we add it here.
-  drupal_add_css(drupal_get_path('module', 'system') . '/defaults.css');
   drupal_add_css(drupal_get_path('module', 'system') . '/system.css');
+  drupal_add_css(drupal_get_path('module', 'system') . '/system-behavior.css');
   drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css');
   drupal_add_css(drupal_get_path('module', 'system') . '/maintenance.css');
   drupal_add_css(drupal_get_path('module', 'system') . '/admin.css');

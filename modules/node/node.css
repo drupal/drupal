@@ -6,7 +6,7 @@
 .preview .node {
   background-color: #ffffea;
 }
-/* Override the default multiselect layout in system.css. */
+/* Override the default multiselect layout in system-behavior.css. */
 #node-admin-content dl.multiselect dd, dl.multiselect dd .form-item {
   width: 20em; /* 6em label + 14em select */
 }
