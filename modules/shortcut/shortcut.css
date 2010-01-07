@@ -1,6 +1,14 @@
 /* $Id$ */
-div#toolbar a#toolbar-customize {
+div#toolbar a#edit-shortcuts {
   float: right;
+  padding: 10px 10px 10px 5px;
+  line-height: 30px;
+  color: #bbb;
+}
+div#toolbar a#edit-shortcuts:focus,
+div#toolbar a#edit-shortcuts:hover,
+div#toolbar a#edit-shortcuts.active {
+  color: #fff;
 }
 
 div#toolbar div.toolbar-shortcuts ul {
