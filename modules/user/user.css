@@ -1,4 +1,4 @@
-/* $Id: user.css,v 1.17 2010/01/06 15:32:23 dries Exp $ */
+/* $Id: user.css,v 1.18 2010/01/07 07:41:46 webchick Exp $ */
 
 #permissions td.module {
   font-weight: bold;
@@ -9,7 +9,7 @@
 #permissions tr.odd .form-item, #permissions tr.even .form-item {
   white-space: normal;
 }
-/* Override the default multiselect layout in system.css. */
+/* Override the default multiselect layout in system-behavior.css. */
 #user-filter-form dl.multiselect dd, dl.multiselect dd .form-item {
   width: 20em; /* 6em label + 14em select */
 }
