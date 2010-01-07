@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tokens.inc,v 1.8 2009/12/04 16:49:46 dries Exp $
+// $Id: comment.tokens.inc,v 1.9 2010/01/07 20:55:49 dries Exp $
 
 /**
  * @file
@@ -180,11 +180,12 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
         // Comment related URLs.
         case 'url':
-          $replacements[$original] = url('comment/' . $comment->cid, array('absolute' => TRUE, 'fragment' => 'comment-' . $comment->cid));
+          $url_options['fragment']  = 'comment-' . $comment->cid;
+          $replacements[$original] = url('comment/' . $comment->cid, $url_options);
           break;
 
         case 'edit-url':
-          $replacements[$original] = url('comment/' . $comment->cid . '/edit', array('absolute' => TRUE));
+          $replacements[$original] = url('comment/' . $comment->cid . '/edit', $url_options);
           break;
 
         // Default values for the chained tokens handled below.

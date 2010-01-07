@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.tokens.inc,v 1.3 2009/12/04 16:49:47 dries Exp $
+// $Id: poll.tokens.inc,v 1.4 2010/01/07 20:55:49 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,6 @@ function poll_token_info() {
  * Implements hook_tokens().
  */
 function poll_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  $url_options = array('absolute' => TRUE);
   $sanitize = !empty($options['sanitize']);
   $replacements = array();
 

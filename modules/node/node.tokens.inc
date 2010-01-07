@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tokens.inc,v 1.8 2009/12/04 16:49:46 dries Exp $
+// $Id: node.tokens.inc,v 1.9 2010/01/07 20:55:49 dries Exp $
 
 /**
  * @file
@@ -163,11 +163,11 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'url':
-          $replacements[$original] = url('node/' . $node->nid, array('absolute' => TRUE));
+          $replacements[$original] = url('node/' . $node->nid, $url_options);
           break;
 
         case 'edit-url':
-          $replacements[$original] = url('node/' . $node->nid . '/edit', array('absolute' => TRUE));
+          $replacements[$original] = url('node/' . $node->nid . '/edit', $url_options);
           break;
 
         // Default values for the chained tokens handled below.
