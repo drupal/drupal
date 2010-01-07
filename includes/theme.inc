@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.563 2010/01/05 18:56:48 dries Exp $
+// $Id: theme.inc,v 1.564 2010/01/07 14:48:56 webchick Exp $
 
 /**
  * @file
@@ -472,6 +472,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
           }
           if (function_exists($name . '_' . $phase . '_' . $hook)) {
             $cache[$hook][$phase_key][] = $name . '_' . $phase . '_' . $hook;
+            $cache[$hook]['theme path'] = $path;
           }
           // Ensure uniqueness.
           $cache[$hook][$phase_key] = array_unique($cache[$hook][$phase_key]);
