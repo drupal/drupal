@@ -2914,22 +2914,75 @@ function hook_username_alter(&$name, $account) {
  *   An array of tokens to be replaced, keyed by the literal text of the token
  *   as it appeared in the source text.
  * @param $data
- *   (optional) An array of keyed objects to be used when generating replacement
+ *   (optional) An associative array of objects to be used when generating replacement
  *   values.
  * @param $options
- *   (optional) A keyed array of settings and flags to control the token
+ *   (optional) A associative array of options to control the token
  *   replacement process. Common options are:
  *   - 'language' A language object to be used when generating locale-sensitive
  *     tokens.
  *   - 'sanitize' A boolean flag indicating that tokens should be sanitized for
  *     display to a web browser.
+ *
  * @return
  *   An associative array of replacement values, keyed by the original 'raw'
  *   tokens that were found in the source text. For example:
  *   $results['[node:title]'] = 'My new node';
  */
 function hook_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  // TODO: sample code demonstrating simple tokens and use of token chaining
+  $url_options = array('absolute' => TRUE);
+  if (isset($options['language'])) {
+    $url_options['language'] = $options['language'];
+    $language_code = $options['language']->language;
+  }
+  else {
+    $language_code = NULL;
+  }
+  $sanitize = !empty($options['sanitize']);
+
+  $replacements = array();
+
+  if ($type == 'node' && !empty($data['node'])) {
+    $node = $data['node'];
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        // Simple key values on the node.
+        case 'nid':
+          $replacements[$original] = $node->nid;
+          break;
+
+        case 'title':
+          $replacements[$original] = $sanitize ? check_plain($node->title[LANGUAGE_NONE][0]['value']) : $node->title[LANGUAGE_NONE][0]['value'];
+          break;
+
+        case 'edit-url':
+          $replacements[$original] = url('node/' . $node->nid . '/edit', $url_options);
+          break;
+
+        // Default values for the chained tokens handled below.
+        case 'author':
+          $name = ($node->uid == 0) ? variable_get('anonymous', t('Anonymous')) : $node->name;
+          $replacements[$original] = $sanitize ? filter_xss($name) : $name;
+          break;
+
+        case 'created':
+          $replacements[$original] = format_date($node->created, 'medium', '', NULL, $language_code);
+          break;
+      }
+    }
+
+    if ($author_tokens = token_find_with_prefix($tokens, 'author')) {
+      $author = user_load($node->uid);
+      $replacements += token_generate('user', $author_tokens, array('user' => $author), $options);
+    }
+
+    if ($created_tokens = token_find_with_prefix($tokens, 'created')) {
+      $replacements += token_generate('date', $created_tokens, array('date' => $node->created), $options);
+    }
+  }
+
+  return $replacements;
 }
 
 /**
@@ -2940,30 +2993,72 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
  *   the raw name of the token or type, its user-friendly name, and a verbose
  *   description.
  *
- *   For example:
- *   @code
- *     $data['types'] = array(
- *       'site' => array(
- *         'name' => t('Site information')
- *         'description' => t('Tokens for site-wide settings and other global information.'),
- *       ),
- *     );
- *     
- *     $data['tokens']['site'] = array(
- *       'slogan' => array(
- *         'name' => t('Slogan')
- *         'description' => t('The slogan of the site.'),
- *       ),
- *       'login-url' => array(
- *         'name' => t('Login page')
- *         'description' => t('The url of the site login page.'),
- *       ),
- *     );
- *   @endcode
-
+ * @see hook_token_info_alter()
  */
 function hook_token_info() {
-  // TODO: sample code building token information
+  $type = array(
+    'name' => t('Nodes'),
+    'description' => t('Tokens related to individual nodes.'),
+    'needs-data' => 'node',
+  );
+
+  // Core tokens for nodes.
+  $node['nid'] = array(
+    'name' => t("Node ID"),
+    'description' => t("The unique ID of the node."),
+  );
+  $node['title'] = array(
+    'name' => t("Title"),
+    'description' => t("The title of the node."),
+  );
+  $node['edit-url'] = array(
+    'name' => t("Edit URL"),
+    'description' => t("The URL of the node's edit page."),
+  );
+
+  // Chained tokens for nodes.
+  $node['created'] = array(
+    'name' => t("Date created"),
+    'description' => t("The date the node was posted."),
+    'type' => 'date',
+  );
+  $node['author'] = array(
+    'name' => t("Author"),
+    'description' => t("The author of the node."),
+    'type' => 'user',
+  );
+
+  return array(
+    'types' => array('node' => $type),
+    'tokens' => array('node' => $node),
+  );
+}
+
+/**
+ * Alter the metadata about available placeholder tokens and token types.
+ *
+ * @param $data
+ *   The associative array of token definitions from hook_token_info().
+ *
+ * @see hook_token_info()
+ */
+function hook_token_info_alter(&$data) {
+  // Modify description of node tokens for our site.
+  $node['nid'] = array(
+    'name' => t("Node ID"),
+    'description' => t("The unique ID of the article."),
+  );
+  $node['title'] = array(
+    'name' => t("Title"),
+    'description' => t("The title of the article."),
+  );
+
+  // Chained tokens for nodes.
+  $node['created'] = array(
+    'name' => t("Date created"),
+    'description' => t("The date the article was posted."),
+    'type' => 'date',
+  );
 }
 
 /**
