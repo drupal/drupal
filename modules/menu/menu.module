@@ -30,12 +30,10 @@ function menu_help($path, $arg) {
       $output .= '</dl>';
       return $output;
     case 'admin/structure/menu/add':
-      return '<p>' . t('Enter the name for your new menu. Remember to enable the newly created block in the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</p>';
-    case 'admin/structure/menu/item/add':
-      return '<p>' . t('Enter the title and path for your new menu link.') . '</p>';
+      return '<p>' . t('You can enable the newly-created block for this menu on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</p>';
   }
   if ($path == 'admin/structure/menu' && module_exists('block')) {
-    return '<p>' . t('Each menu has a corresponding block that is managed on the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</p>';
+    return '<p>' . t('Each menu has a corresponding block that is managed on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</p>';
   }
 }
 
