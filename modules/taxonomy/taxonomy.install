@@ -134,14 +134,6 @@ function taxonomy_schema() {
         'description' => 'Description of the vocabulary.',
         'translatable' => TRUE,
       ),
-      'relations' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Whether or not related terms are enabled within the vocabulary. (0 = disabled, 1 = enabled)',
-      ),
       'hierarchy' => array(
         'type' => 'int',
         'unsigned' => TRUE,

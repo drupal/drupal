@@ -37,7 +37,6 @@ function forum_enable() {
       'machine_name' => 'forums',
       'description' => t('Forum navigation vocabulary'),
       'hierarchy' => 1,
-      'relations' => 0,
       'module' => 'forum',
       'weight' => -10,
     );
