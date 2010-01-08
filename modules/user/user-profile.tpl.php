@@ -1,5 +1,5 @@
 <?php
-// $Id: user-profile.tpl.php,v 1.12 2009/09/30 00:46:35 dries Exp $
+// $Id: user-profile.tpl.php,v 1.13 2010/01/08 07:04:09 webchick Exp $
 
 /**
  * @file
@@ -33,6 +33,6 @@
  * @see template_preprocess_user_profile()
  */
 ?>
-<div class="profile">
+<div class="profile"<?php print $attributes; ?>>
   <?php print render($user_profile); ?>
 </div>
