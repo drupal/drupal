@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.40 2010/01/08 16:03:24 webchick Exp $ */
+/* $Id: style.css,v 1.41 2010/01/08 20:19:43 webchick Exp $ */
 
 /**
  * Generic elements
@@ -1005,4 +1005,10 @@ div.add-or-remove-shortcuts {
   float: left;
   padding-top: 6px;
   padding-left: 6px;
+}
+
+/* Blocks */
+
+#page div.block h2 {
+  margin-top:0;
 }
