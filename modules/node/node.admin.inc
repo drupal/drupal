@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.83 2010/01/03 21:01:04 webchick Exp $
+// $Id: node.admin.inc,v 1.84 2010/01/08 05:57:12 webchick Exp $
 
 /**
  * @file
@@ -425,7 +425,7 @@ function node_admin_nodes() {
   $header = array(
     'title' => array('data' => t('Title'), 'field' => 'n.title'),
     'type' => array('data' => t('Type'), 'field' => 'n.type'),
-    'author' => array('data' => t('Author'), 'field' => 'u.name'),
+    'author' => t('Author'),
     'status' => array('data' => t('Status'), 'field' => 'n.status'),
     'changed' => array('data' => t('Updated'), 'field' => 'n.changed', 'sort' => 'desc')
   );
