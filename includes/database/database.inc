@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.90 2010/01/08 07:43:54 webchick Exp $
+// $Id: database.inc,v 1.91 2010/01/08 21:09:17 dries Exp $
 
 /**
  * @file
@@ -455,11 +455,17 @@ abstract class DatabaseConnection extends PDO {
    */
   public function prepareQuery($query, $cache = TRUE) {
     $query = $this->prefixTables($query);
-    if (empty($this->preparedStatements[$query])) {
-      // Call PDO::prepare.
-      $this->preparedStatements[$query] = parent::prepare($query);
+    if (isset($this->preparedStatements[$query])) {
+      $stmt = $this->preparedStatements[$query];
     }
-    return $this->preparedStatements[$query];
+    else {
+      // Call PDO::prepare.
+      $stmt = parent::prepare($query);
+      if ($cache) {
+        $this->preparedStatements[$query] = $stmt;
+      }
+    }
+    return $stmt;
   }
 
   /**
