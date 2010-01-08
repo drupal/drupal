@@ -58,7 +58,7 @@ function garland_process_html(&$vars) {
 function garland_preprocess_page(&$vars) {
   $vars['tabs2'] = menu_secondary_local_tasks();
   if (isset($vars['main_menu'])) {
-    $vars['primary_nav'] = theme('links', array(
+    $vars['primary_nav'] = theme('links__system_main_menu', array(
       'links' => $vars['main_menu'],
       'attributes' => array(
         'class' => array('links', 'main-menu'),
@@ -74,7 +74,7 @@ function garland_preprocess_page(&$vars) {
     $vars['primary_nav'] = FALSE;
   }
   if (isset($vars['secondary_menu'])) {
-    $vars['secondary_nav'] = theme('links', array(
+    $vars['secondary_nav'] = theme('links__system_secondary_menu', array(
       'links' => $vars['secondary_menu'],
       'attributes' => array(
         'class' => array('links', 'secondary-menu'),

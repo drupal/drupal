@@ -1256,7 +1256,7 @@ function node_build_content($node, $view_mode = 'full') {
     );
   }
   $node->content['links']['node'] = array(
-    '#theme' => 'links',
+    '#theme' => 'links__node',
     '#links' => $links,
     '#attributes' => array('class' => array('links', 'inline')),
   );

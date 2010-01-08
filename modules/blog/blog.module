@@ -86,7 +86,7 @@ function blog_node_view($node, $view_mode = 'full') {
         'attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => format_username($node)))),
       );
       $node->content['links']['blog'] = array(
-        '#theme' => 'links',
+        '#theme' => 'links__blog_node',
         '#links' => $links,
         '#attributes' => array('class' => array('links', 'inline')),
       );

@@ -300,7 +300,7 @@ function theme_update_version($variables) {
     'title' => t('Release notes'),
     'href' => $version['release_link'],
   );
-  $output .= theme('links', array('links' => $links));
+  $output .= theme('links__update_version', array('links' => $links));
   $output .= '</td>';
   $output .= '</tr>';
   $output .= "</table>\n";

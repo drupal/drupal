@@ -191,7 +191,7 @@ function toolbar_view() {
   $links = toolbar_menu_navigation_links(toolbar_get_menu_tree());
   $system_menus = menu_list_system_menus();
   $build['toolbar_menu'] = array(
-    '#theme' => 'links',
+    '#theme' => 'links__toolbar_menu',
     '#links' => $links,
     '#attributes' => array('id' => 'toolbar-menu'),
     '#heading' => array('text' => t($system_menus['management']), 'level' => 'h2', 'class' => 'element-invisible'),
@@ -220,7 +220,7 @@ function toolbar_view() {
     );
   }
   $build['toolbar_user'] = array(
-    '#theme' => 'links',
+    '#theme' => 'links__toolbar_user',
     '#links' => $links,
     '#attributes' => array('id' => 'toolbar-user'),
   );

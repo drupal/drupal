@@ -892,7 +892,7 @@ function locale_block_view($type) {
     if (isset($links->links) && count($links->links > 1)) {
       $class = "language-switcher-{$links->provider}";
       $variables = array('links' => $links->links, 'attributes' => array('class' => array($class)));
-      $block['content'] = theme('links', $variables);
+      $block['content'] = theme('links__locale_block', $variables);
       $block['subject'] = t('Languages');
       return $block;
     }

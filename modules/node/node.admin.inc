@@ -505,7 +505,7 @@ function node_admin_nodes() {
       // Render an unordered list of operations links.
       $options[$node->nid]['operations'] = array(
         'data' => array(
-          '#theme' => 'links',
+          '#theme' => 'links__node_operations',
           '#links' => $operations,
           '#attributes' => array('class' => array('links', 'inline')),
         ),

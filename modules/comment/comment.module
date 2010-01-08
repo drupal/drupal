@@ -601,7 +601,7 @@ function comment_node_view($node, $view_mode) {
     }
 
     $node->content['links']['comment'] = array(
-      '#theme' => 'links',
+      '#theme' => 'links__comment_node',
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );
@@ -910,7 +910,7 @@ function comment_build_content($comment, $node, $view_mode = 'full') {
 
   if (empty($comment->in_preview)) {
     $comment->content['links']['comment'] = array(
-      '#theme' => 'links',
+      '#theme' => 'links__comment',
       '#links' => comment_links($comment, $node),
       '#attributes' => array('class' => array('links', 'inline')),
     );

@@ -819,7 +819,7 @@ function theme_poll_choices($variables) {
  * @see theme_poll_results()
  */
 function template_preprocess_poll_results(&$variables) {
-  $variables['links'] = theme('links', array('links' => $variables['raw_links']));
+  $variables['links'] = theme('links__poll_results', array('links' => $variables['raw_links']));
   if (isset($variables['vote']) && $variables['vote'] > -1 && user_access('cancel own vote')) {
     $variables['cancel_form'] = drupal_render(drupal_get_form('poll_cancel_form', $variables['nid']));
   }

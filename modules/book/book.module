@@ -113,7 +113,7 @@ function book_node_view_link($node, $view_mode) {
 
   if (!empty($links)) {
     $node->content['links']['book'] = array(
-      '#theme' => 'links',
+      '#theme' => 'links__book_node',
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );

@@ -146,7 +146,7 @@ function contextual_links_view($element) {
     $build = array(
       '#prefix' => '<div class="contextual-links-wrapper">',
       '#suffix' => '</div>',
-      '#theme' => 'links',
+      '#theme' => 'links__contextual',
       '#links' => $links,
       '#attributes' => array('class' => array('contextual-links')),
       '#attached' => array(

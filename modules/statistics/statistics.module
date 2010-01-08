@@ -117,7 +117,7 @@ function statistics_node_view($node, $view_mode) {
     }
 
     $node->content['links']['statistics'] = array(
-      '#theme' => 'links',
+      '#theme' => 'links__statistics_node',
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );
