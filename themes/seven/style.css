@@ -1006,3 +1006,9 @@ div.add-or-remove-shortcuts {
   padding-top: 6px;
   padding-left: 6px;
 }
+
+/* Blocks */
+
+#page div.block h2 {
+  margin-top:0;
+}
