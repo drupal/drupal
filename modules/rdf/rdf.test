@@ -126,7 +126,7 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'RDF mapping definition functionality',
-      'description' => 'Test the different types of RDF mappings and ensure the proper RDFa markup in included in node pages.',
+      'description' => 'Test the different types of RDF mappings and ensure the proper RDFa markup in included in nodes and user profile pages.',
       'group' => 'RDF',
     );
   }
@@ -186,5 +186,21 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     // from the node default bundle definition.
     $this->assertRaw('property="dc:title"');
     $this->assertRaw('property="dc:date dc:created"');
+  }
+
+  /**
+   * Create a random user and ensure the default mapping for user is used.
+   */
+  function testUserProfilesAttributesInMarkup() {
+    // Create a user with access to user profiles.
+    $user = $this->drupalCreateUser(array('access user profiles'));
+    $this->drupalLogin($user);
+    // Browse to the user profile page.
+    $this->drupalGet('user/' . $user->uid);
+    // Ensure the default bundle mapping for user is used. These attributes come
+    // from the user default bundle definition.
+    $profile_url = url('user/' . $user->uid);
+    $user_profile_about = $this->xpath("//div[@class='profile' and @typeof='sioc:User' and @about='$profile_url']");
+    $this->assertTrue(!empty($user_profile_about), t('RDFa markup found on user profile page'));
   }
 }
