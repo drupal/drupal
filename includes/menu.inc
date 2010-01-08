@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.372 2010/01/08 05:14:03 webchick Exp $
+// $Id: menu.inc,v 1.373 2010/01/08 07:30:34 webchick Exp $
 
 /**
  * @file
@@ -921,7 +921,8 @@ function menu_tree_output($tree) {
       $data['localized_options']['attributes']['class'][] = 'active-trail';
     }
 
-    $element['#theme'] = 'menu_link';
+    // Allow menu-specific theme overrides.
+    $element['#theme'] = 'menu_link__' . $data['link']['menu_name'];
     $element['#attributes']['class'] = $class;
     $element['#title'] = $data['link']['title'];
     $element['#href'] = $data['link']['href'];
@@ -935,7 +936,8 @@ function menu_tree_output($tree) {
     // Make sure drupal_render() does not re-order the links.
     $build['#sorted'] = TRUE;
     // Add the theme wrapper for outer markup.
-    $build['#theme_wrappers'][] = 'menu_tree';
+    // Allow menu-specific theme overrides.
+    $build['#theme_wrappers'][] = 'menu_tree__' . $data['link']['menu_name'];
   }
 
   return $build;
