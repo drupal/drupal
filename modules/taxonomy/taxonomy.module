@@ -563,6 +563,8 @@ function taxonomy_term_delete($tid) {
 function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_term_count_nodes');
   drupal_static_reset('taxonomy_get_tree');
+  drupal_static_reset('taxonomy_get_parents');
+  drupal_static_reset('taxonomy_get_children');
   entity_get_controller('taxonomy_term')->resetCache();
 }
 
@@ -610,19 +612,25 @@ function taxonomy_vocabulary_get_names() {
  */
 function taxonomy_get_parents($tid, $key = 'tid') {
   if ($tid) {
-    $query = db_select('taxonomy_term_data', 't');
-    $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
-    $result = $query
-      ->addTag('translatable')
-      ->addTag('term_access')
-      ->fields('t')
-      ->condition('h.tid', $tid)
-      ->orderBy('weight')
-      ->orderBy('name')
-      ->execute();
-    $parents = array();
-    foreach ($result as $parent) {
-      $parents[$parent->$key] = $parent;
+    $tids = &drupal_static(__FUNCTION__, array());
+    if (isset($tids[$key][$tid])) {
+      $parents = $tids[$key][$tid];
+    }
+    else {
+      $query = db_select('taxonomy_term_data', 't');
+      $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
+      $result = $query
+        ->addTag('translatable')
+        ->addTag('term_access')
+        ->fields('t')
+        ->condition('h.tid', $tid)
+        ->orderBy('weight')
+        ->orderBy('name')
+        ->execute();
+      $parents = array();
+      foreach ($result as $parent) {
+        $parents[$parent->$key] = $parent;
+      }
     }
     return $parents;
   }
@@ -660,23 +668,30 @@ function taxonomy_get_parents_all($tid) {
  * Find all children of a term ID.
  */
 function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
-  $query = db_select('taxonomy_term_data', 't');
-  $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
-  $query
-    ->addTag('translatable')
-    ->addTag('term_access')
-    ->fields('t')
-    ->condition('parent', $tid)
-    ->orderBy('weight')
-    ->orderBy('name');
-  if ($vid) {
-    $query->condition('t.vid', $vid);
+  $tids = &drupal_static(__FUNCTION__, array());
+  if (isset($tids[$vid][$tid])) {
+    $children = $tids[$vid][$tid];
   }
-  $result = $query->execute();
+  else {
+    $query = db_select('taxonomy_term_data', 't');
+    $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
+    $query
+      ->addTag('translatable')
+      ->addTag('term_access')
+      ->fields('t')
+      ->condition('parent', $tid)
+      ->orderBy('weight')
+      ->orderBy('name');
+    if ($vid) {
+      $query->condition('t.vid', $vid);
+    }
+    $result = $query->execute();
 
-  $children = array();
-  foreach ($result as $term) {
-    $children[$term->$key] = $term;
+    $children = array();
+    foreach ($result as $term) {
+      $children[$term->$key] = $term;
+    }
+    $tids[$vid][$tid] = $children;
   }
   return $children;
 }
