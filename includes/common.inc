@@ -1036,6 +1036,35 @@ function drupal_http_request($url, array $options = array()) {
  */
 
 /**
+ * Map PHP error constants to watchdog severity levels.
+ * The error constants are documented at
+ * http://php.net/manual/en/errorfunc.constants.php
+ */
+function drupal_error_levels() {
+  $types = array(
+    E_ERROR => array('Error', WATCHDOG_ERROR),
+    E_WARNING => array('Warning', WATCHDOG_WARNING),
+    E_PARSE => array('Parse error', WATCHDOG_ERROR),
+    E_NOTICE => array('Notice', WATCHDOG_NOTICE),
+    E_CORE_ERROR => array('Core error', WATCHDOG_ERROR),
+    E_CORE_WARNING => array('Core warning', WATCHDOG_WARNING),
+    E_COMPILE_ERROR => array('Compile error', WATCHDOG_ERROR),
+    E_COMPILE_WARNING => array('Compile warning', WATCHDOG_WARNING),
+    E_USER_ERROR => array('User error', WATCHDOG_ERROR),
+    E_USER_WARNING => array('User warning', WATCHDOG_WARNING),
+    E_USER_NOTICE => array('User notice', WATCHDOG_NOTICE),
+    E_STRICT => array('Strict warning', WATCHDOG_DEBUG),
+    E_RECOVERABLE_ERROR => array('Recoverable fatal error', WATCHDOG_ERROR),
+  );
+  // E_DEPRECATED and E_USER_DEPRECATED were added in PHP 5.3.0.
+  if (defined('E_DEPRECATED')) {
+    $types[E_DEPRECATED] = array('Deprecated function', WATCHDOG_DEBUG);
+    $types[E_USER_DEPRECATED] = array('User deprecated function', WATCHDOG_DEBUG);
+  }
+  return $types;
+}
+
+/**
  * Custom PHP error handler.
  *
  * @param $error_level
@@ -1051,36 +1080,18 @@ function drupal_http_request($url, array $options = array()) {
  */
 function _drupal_error_handler($error_level, $message, $filename, $line, $context) {
   if ($error_level & error_reporting()) {
-    // All these constants are documented at http://php.net/manual/en/errorfunc.constants.php
-    $types = array(
-      E_ERROR => 'Error',
-      E_WARNING => 'Warning',
-      E_PARSE => 'Parse error',
-      E_NOTICE => 'Notice',
-      E_CORE_ERROR => 'Core error',
-      E_CORE_WARNING => 'Core warning',
-      E_COMPILE_ERROR => 'Compile error',
-      E_COMPILE_WARNING => 'Compile warning',
-      E_USER_ERROR => 'User error',
-      E_USER_WARNING => 'User warning',
-      E_USER_NOTICE => 'User notice',
-      E_STRICT => 'Strict warning',
-      E_RECOVERABLE_ERROR => 'Recoverable fatal error'
-    );
-    // E_DEPRECATED and E_USER_DEPRECATED were added in PHP 5.3.0.
-    if (defined('E_DEPRECATED')) {
-      $types[E_DEPRECATED] = 'Deprecated function';
-      $types[E_USER_DEPRECATED] = 'User deprecated function';
-    }
+    $types = drupal_error_levels();
+    list($severity_msg, $severity_level) = $types[$error_level];
     $caller = _drupal_get_last_caller(debug_backtrace());
 
     // We treat recoverable errors as fatal.
     _drupal_log_error(array(
-      '%type' => isset($types[$error_level]) ? $types[$error_level] : 'Unknown error',
+      '%type' => isset($types[$error_level]) ? $severity_msg : 'Unknown error',
       '%message' => $message,
       '%function' => $caller['function'],
       '%file' => $caller['file'],
       '%line' => $caller['line'],
+      'severity_level' => $severity_level,
     ), $error_level == E_RECOVERABLE_ERROR);
   }
 }
@@ -1181,7 +1192,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   }
 
   try {
-    watchdog('php', '%type: %message in %function (line %line of %file).', $error, WATCHDOG_ERROR);
+    watchdog('php', '%type: %message in %function (line %line of %file).', $error, $error['severity_level']);
   }
   catch (Exception $e) {
     // Ignore any additional watchdog exception, as that probably means
