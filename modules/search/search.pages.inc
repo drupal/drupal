@@ -25,10 +25,11 @@ function search_view($type = 'node') {
     // Only perform search if there is non-whitespace search term:
     $results = '';
     if (trim($keys)) {
-      // Log the search keys:
-      watchdog('search', '%keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name')), WATCHDOG_NOTICE, l(t('results'), 'search/' . $type . '/' . $keys));
+      // Log the search keys.
+      $info = search_get_info();
+      watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info[$type]['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $type . '/' . $keys));
 
-      // Collect the search results:
+      // Collect the search results.
       $results = search_data($keys, $type);
 
       // Construct the search form.
