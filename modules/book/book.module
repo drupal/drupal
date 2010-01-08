@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.534 2010/01/07 20:02:08 dries Exp $
+// $Id: book.module,v 1.535 2010/01/08 07:36:53 webchick Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ function book_node_view_link($node, $view_mode) {
 
   if (!empty($links)) {
     $node->content['links']['book'] = array(
-      '#theme' => 'links',
+      '#theme' => 'links__book_node',
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );

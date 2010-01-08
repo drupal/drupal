@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.72 2010/01/06 03:53:40 webchick Exp $
+// $Id: translation.module,v 1.73 2010/01/08 07:36:53 webchick Exp $
 
 /**
  * @file
@@ -188,7 +188,7 @@ function translation_node_view($node, $view_mode) {
       // Do not show link to the same node.
       unset($links[$node->language]);
       $node->content['links']['translation'] = array(
-        '#theme' => 'links',
+        '#theme' => 'links__translation_node',
         '#links' => $links,
         '#attributes' => array('class' => array('links', 'inline')),
       );

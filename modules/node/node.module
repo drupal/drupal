@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1199 2010/01/08 07:05:52 webchick Exp $
+// $Id: node.module,v 1.1200 2010/01/08 07:36:53 webchick Exp $
 
 /**
  * @file
@@ -1256,7 +1256,7 @@ function node_build_content($node, $view_mode = 'full') {
     );
   }
   $node->content['links']['node'] = array(
-    '#theme' => 'links',
+    '#theme' => 'links__node',
     '#links' => $links,
     '#attributes' => array('class' => array('links', 'inline')),
   );

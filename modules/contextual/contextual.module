@@ -1,5 +1,5 @@
 <?php
-// $Id: contextual.module,v 1.4 2010/01/04 03:57:19 webchick Exp $
+// $Id: contextual.module,v 1.5 2010/01/08 07:36:53 webchick Exp $
 
 /**
  * @file
@@ -146,7 +146,7 @@ function contextual_links_view($element) {
     $build = array(
       '#prefix' => '<div class="contextual-links-wrapper">',
       '#suffix' => '</div>',
-      '#theme' => 'links',
+      '#theme' => 'links__contextual',
       '#links' => $links,
       '#attributes' => array('class' => array('contextual-links')),
       '#attached' => array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.85 2010/01/08 07:05:52 webchick Exp $
+// $Id: node.admin.inc,v 1.86 2010/01/08 07:36:53 webchick Exp $
 
 /**
  * @file
@@ -505,7 +505,7 @@ function node_admin_nodes() {
       // Render an unordered list of operations links.
       $options[$node->nid]['operations'] = array(
         'data' => array(
-          '#theme' => 'links',
+          '#theme' => 'links__node_operations',
           '#links' => $operations,
           '#attributes' => array('class' => array('links', 'inline')),
         ),

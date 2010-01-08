@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.278 2010/01/04 00:05:18 webchick Exp $
+// $Id: locale.module,v 1.279 2010/01/08 07:36:53 webchick Exp $
 
 /**
  * @file
@@ -892,7 +892,7 @@ function locale_block_view($type) {
     if (isset($links->links) && count($links->links > 1)) {
       $class = "language-switcher-{$links->provider}";
       $variables = array('links' => $links->links, 'attributes' => array('class' => array($class)));
-      $block['content'] = theme('links', $variables);
+      $block['content'] = theme('links__locale_block', $variables);
       $block['subject'] = t('Languages');
       return $block;
     }

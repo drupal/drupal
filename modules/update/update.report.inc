@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.28 2009/12/22 14:47:14 dries Exp $
+// $Id: update.report.inc,v 1.29 2010/01/08 07:36:53 webchick Exp $
 
 /**
  * @file
@@ -300,7 +300,7 @@ function theme_update_version($variables) {
     'title' => t('Release notes'),
     'href' => $version['release_link'],
   );
-  $output .= theme('links', array('links' => $links));
+  $output .= theme('links__update_version', array('links' => $links));
   $output .= '</td>';
   $output .= '</tr>';
   $output .= "</table>\n";
