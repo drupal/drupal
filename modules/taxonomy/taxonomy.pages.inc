@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.46 2009/12/21 13:47:32 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.47 2010/01/08 16:54:06 dries Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@ function taxonomy_term_page($term) {
   else {
     $build['no_content'] = array(
       '#prefix' => '<p>',
-      '#markup' => t('There are currently no posts in this category.'),
+      '#markup' => t('There is currently no content classified with this term.'),
       '#suffix' => '</p>',
     );
   }

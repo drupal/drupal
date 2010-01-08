@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.89 2010/01/04 12:04:07 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.90 2010/01/08 16:54:06 dries Exp $
 
 /**
  * @file
@@ -133,10 +133,10 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
   );
   $form['machine_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Machine readable name'),
+    '#title' => t('Machine-readable name'),
     '#default_value' => $edit['machine_name'],
     '#maxlength' => 255,
-    '#description' => t('The unique machine readable name for this vocabulary, used for theme templates, can only contain lowercase letters, numbers and underscores.'),
+    '#description' => t('The unique machine-readable name for this vocabulary, used for theme templates. Can only contain lowercase letters, numbers, and underscores.'),
     '#required' => TRUE,
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
