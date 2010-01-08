@@ -599,9 +599,14 @@ function aggregator_refresh($feed) {
 
   // Fetch the feed.
   list($fetcher, $parser, $processors) = _aggregator_get_variables();
-  module_invoke($fetcher, 'aggregator_fetch', $feed);
+  $success = module_invoke($fetcher, 'aggregator_fetch', $feed);
 
-  if ($feed->source_string !== FALSE) {
+  // We store the md5 hash of feed data in the database. When refreshing a
+  // feed we compare stored hash and new hash calculated from downloaded
+  // data. If both are equal we say that feed is not updated.
+  $md5 = md5($feed->source_string);
+
+  if ($success && ($feed->hash != $md5)) {
     // Parse the feed.
     if (module_invoke($parser, 'aggregator_parse', $feed)) {
       // Update feed with parsed data.
@@ -613,7 +618,7 @@ function aggregator_refresh($feed) {
           'link' => empty($feed->link) ? $feed->url : $feed->link,
           'description' => empty($feed->description) ? '' : $feed->description,
           'image' => empty($feed->image) ? '' : $feed->image,
-          'hash' => md5($feed->source_string),
+          'hash' => $md5,
           'etag' => empty($feed->etag) ? '' : $feed->etag,
           'modified' => empty($feed->modified) ? 0 : $feed->modified,
         ))
@@ -635,6 +640,14 @@ function aggregator_refresh($feed) {
         }
       }
     }
+  }
+  else {
+    db_update('aggregator_feed')
+      ->fields(array('checked' => REQUEST_TIME))
+      ->condition('fid', $feed->fid)
+      ->execute();
+
+    drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed->title)));
   }
 
   // Expire old feed items.
