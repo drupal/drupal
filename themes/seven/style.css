@@ -22,32 +22,125 @@ a:hover {
 }
 
 hr {
-  display: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  height: 1px;
+  background: #CCCCCC;
 }
 
 legend {
   font-weight: bold;
 }
 
-#block-system-main h1,
-#block-system-main h2,
-#block-system-main h3,
-#block-system-main h4,
-#block-system-main h5,
-#block-system-main h6 {
-  font-size: 15px;
+#page h1,
+#page h2,
+#page h3,
+#page h4,
+#page h5,
+#page h6 {
   font-weight: bold;
-  margin:  10px 0;
+  margin: 10px 0;
 }
 
-#block-system-main dl {
+h1 {
+  font-size: 150%;
+}
+
+h2 {
+  font-size: 140%;
+}
+
+h3 {
+  font-size: 130%;
+}
+
+h4 {
+  font-size: 120%;
+}
+
+h5 {
+  font-size: 110%;
+}
+
+h6 {
+  font-size: 105%;
+}
+
+p {
+  margin: 1em 0;
+}
+
+dl {
   margin: 0 0 20px;
 }
 
-#block-system-main dl dd,
-#block-system-main dl dl {
+dl dd,
+dl dl {
   margin-left: 20px;
   margin-bottom: 10px;
+}
+
+blockquote {
+  margin: 1em 40px;
+}
+
+address {
+  font-style: italic;
+}
+
+u, ins {
+  text-decoration: underline;
+}
+
+s, strike, del {
+  text-decoration: line-through;
+}
+
+big {
+  font-size: larger;
+}
+
+small {
+  font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+  line-height: normal;
+}
+
+sup {
+  vertical-align: super;
+  font-size: smaller;
+  line-height: normal;
+}
+
+nobr {
+  white-space: nowrap;
+}
+
+abbr, acronym {
+  border-bottom: dotted 1px;
+}
+
+ul li, .item-list ul li {
+  list-style-type: disc;
+  margin: 0.25em 0 0.25em 1.5em;
+}
+
+ol {
+  list-style-type: decimal;
+  margin: 0.25em 0 0.25em 2em;
+}
+
+quote, code {
+  margin: .5em 0;
+}
+
+code, pre, kbd {
+  font-size: 1.25em;
 }
 
 /**
@@ -309,25 +402,25 @@ ul.secondary li.active a.active {
   position: relative;
 }
 
-#block-system-main {
+#page {
   padding: 20px 0;
   background: #fff;
   color: #333;
 }
 
-#block-system-main ul.menu li,
-#block-system-main ul.menu li a,
+#page ul.menu li,
+#page ul.menu li a,
 #secondary-links ul.links li,
 #secondary-links ul.links li a {
   float: left;
 }
 
-#block-system-main ul.menu li,
+#page ul.menu li,
 #secondary-links ul.links li {
   padding: 0 10px 10px 0;
 }
 
-#block-system-main ul.menu li a,
+#page ul.menu li a,
 #secondary-links ul.links li a {
   font-size: 9px;
   line-height: 10px;
@@ -346,17 +439,21 @@ ul.secondary li.active a.active {
   background: #999;
 }
 
-#block-system-main ul.links li,
-#block-system-main ul.inline li {
+#page ul.links li,
+#page ul.inline li {
   padding-right: 1em;
 }
 
-#block-system-main ul.menu li a {
+ul.inline li {
+  display: inline;
+}
+
+#page ul.menu li a {
   background: #f8f8f8;
   color: #05a;
 }
 
-#block-system-main ul.menu li a:hover {
+#page ul.menu li a:hover {
   background: #eee;
 }
 
@@ -365,8 +462,8 @@ ul.secondary li.active a.active {
   background: #333;
 }
 
-#block-system-main ul.node-type-list li,
-#block-system-main ul.admin-list li {
+#page ul.node-type-list li,
+#page ul.admin-list li {
   position: relative;
   padding-left: 30px;
   padding-top: 9px;
@@ -378,32 +475,32 @@ ul.secondary li.active a.active {
   list-style-image: none;
 }
 
-#block-system-main ul.admin-list.compact {
+#page ul.admin-list.compact {
   margin-bottom: 8px;
 }
 
-#block-system-main ul.admin-list.compact li {
+#page ul.admin-list.compact li {
   border: 0;
   background: none;
   margin-bottom: 2px;
   padding-top: 2px;
 }
 
-#block-system-main ul.admin-list li:last-child {
+#page ul.admin-list li:last-child {
   border-bottom: none;
 }
 
-#block-system-main ul.node-type-list .label {
+#page ul.node-type-list .label {
   font-size: 15px;
 }
 
-#block-system-main ul.node-type-list li a, #block-system-main ul.admin-list li a {
+#page ul.node-type-list li a, #page ul.admin-list li a {
   margin-left: -30px;
   padding: 0px 0 4px 30px;
   min-height: 0;
 }
 
-#block-system-main ul.node-type-list li div.description a, #block-system-main ul.admin-list li div.description a {
+#page ul.node-type-list li div.description a, #page ul.admin-list li div.description a {
   margin-left: 0px;
   padding: 0px;
   min-height: inherit;
@@ -696,10 +793,11 @@ html.js input.throbbing {
 ul.action-links {
   margin: 1em 0;
   padding: 0 20px 0 20px;
+  list-style-type: none;
   overflow: hidden;
 }
 
-#block-system-main ul.action-links {
+#page ul.action-links {
   padding: 0;
 }
 
@@ -716,7 +814,7 @@ ul.action-links a {
 
 /* Exceptions */
 #diff-inline-form select,
-#block-system-main div.filter-options select {
+#page div.filter-options select {
   padding: 0;
 }
 
@@ -742,7 +840,7 @@ div.admin-panel {
   border: 1px solid #ccc;
 }
 
-#block-system-main div.admin-panel h3 {
+#page div.admin-panel h3 {
   font-size: 12px;
   text-transform: uppercase;
   margin: 0;
@@ -754,28 +852,28 @@ div.admin-panel {
 }
 
 /* admin/appearance */
-#block-system-main #system-themes-page h2 {
+#page #system-themes-page h2 {
   font-weight: normal;
   text-transform: uppercase;
 }
-#block-system-main .theme-selector h3 {
+#page .theme-selector h3 {
   font-weight: normal;
 }
-#block-system-main .theme-default h3 {
+#page .theme-default h3 {
   font-weight: bold;
 }
-#block-system-main .system-themes-list-enabled .theme-selector h3 {
+#page .system-themes-list-enabled .theme-selector h3 {
   margin-top: 0;
 }
 
 /* admin/content and admin/people */
-#block-system-main dl.multiselect,
-#block-system-main dl.multiselect dt,
-#block-system-main dl.multiselect dd {
+#page dl.multiselect,
+#page dl.multiselect dt,
+#page dl.multiselect dd {
   margin: 0 10px 0 0;
 }
 
-#block-system-main dl.multiselect select {
+#page dl.multiselect select {
   font-size: 12px;
   background: #fff;
   border: 1px solid #ccc;
@@ -898,7 +996,7 @@ ol.task-list li.done {
 .overlay #content {
   padding: 0 20px;
 }
-.overlay #block-system-main {
+.overlay #page {
   padding: 0;
 }
 

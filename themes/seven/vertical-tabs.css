@@ -20,6 +20,12 @@ div.vertical-tabs .vertical-tabs-list {
   font-size: 11px;
   width: 25%;
   float: left;
+  list-style-type: none;
+}
+
+div.vertical-tabs ul li.vertical-tab-button {
+  list-style-type: none;
+  margin: 0;
 }
 
 div.vertical-tabs ul li.vertical-tab-button a {
@@ -36,6 +42,7 @@ div.vertical-tabs ul li.vertical-tab-button .summary {
   display: block;
   font-size: 9px;
   color: #666;
+  padding-top: 0.4em;
 }
 
 div.vertical-tabs ul li.vertical-tab-button a:hover {
@@ -49,7 +56,8 @@ div.vertical-tabs ul li.selected a:hover {
 }
 
 div.vertical-tabs .vertical-tabs-panes {
-  width: 75%;
+  width: 72%;
+  padding: 0 1em 0 0;
   float: right;
 }
 
