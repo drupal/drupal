@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.84 2010/01/08 05:57:12 webchick Exp $
+// $Id: node.admin.inc,v 1.85 2010/01/08 07:05:52 webchick Exp $
 
 /**
  * @file
@@ -133,8 +133,8 @@ function node_build_filter_query(SelectQueryInterface $query) {
     list($key, $value) = $filter;
     switch ($key) {
       case 'term':
-        $index = 'tn' . $counter++;
-        $query->join('taxonomy_term_node', $index, "n.nid = $index.nid");
+        $index = 'ti' . $counter++;
+        $query->join('taxonomy_index', $index, "n.nid = $index.nid");
         $query->condition($index . '.tid', $value);
         break;
       case 'status':

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.20 2010/01/06 14:07:50 dries Exp $
+// $Id: search.api.php,v 1.21 2010/01/08 07:05:52 webchick Exp $
 
 /**
  * @file
@@ -156,8 +156,8 @@ function hook_search_execute($keys = NULL) {
   // Insert special keywords.
   $query->setOption('type', 'n.type');
   $query->setOption('language', 'n.language');
-  if ($query->setOption('term', 'tn.nid')) {
-    $query->join('taxonomy_term_node', 'tn', 'n.vid = tn.vid');
+  if ($query->setOption('term', 'ti.tid')) {
+    $query->join('taxonomy_index', 'ti', 'n.nid = ti.nid');
   }
   // Only continue if the first pass query matches.
   if (!$query->executeFirstPass()) {

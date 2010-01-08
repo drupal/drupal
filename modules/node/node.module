@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1198 2010/01/06 14:32:54 dries Exp $
+// $Id: node.module,v 1.1199 2010/01/08 07:05:52 webchick Exp $
 
 /**
  * @file
@@ -1576,8 +1576,8 @@ function node_search_execute($keys = NULL) {
   // Insert special keywords.
   $query->setOption('type', 'n.type');
   $query->setOption('language', 'n.language');
-  if ($query->setOption('term', 'tn.nid')) {
-    $query->join('taxonomy_term_node', 'tn', 'n.vid = tn.vid');
+  if ($query->setOption('term', 'ti.tid')) {
+    $query->join('taxonomy_index', 'ti', 'n.nid = ti.nid');
   }
   // Only continue if the first pass query matches.
   if (!$query->executeFirstPass()) {
@@ -2383,10 +2383,10 @@ function node_search_validate($form, &$form_state) {
     }
   }
 
-  if (isset($form_state['values']['term']) && is_array($form_state['values']['term'])) {
+  if (isset($form_state['values']['term']) && is_array($form_state['values']['term']) && count($form_state['values']['term'])) {
     $keys = search_expression_insert($keys, 'term', implode(',', $form_state['values']['term']));
   }
-  if (isset($form_state['values']['language']) && is_array($form_state['values']['language'])) {
+  if (isset($form_state['values']['language']) && is_array($form_state['values']['language']) && count($form_state['values']['language'])) {
     $keys = search_expression_insert($keys, 'language', implode(',', array_filter($form_state['values']['language'])));
   }
   if ($form_state['values']['or'] != '') {

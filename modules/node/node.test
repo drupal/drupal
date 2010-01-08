@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.61 2009/12/29 19:14:27 dries Exp $
+// $Id: node.test,v 1.62 2010/01/08 07:05:52 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -1010,6 +1010,9 @@ class NodeAdminTestCase extends DrupalWebTestCase {
 
   /**
    * Tests content overview with different user permissions.
+   *
+   * Taxonomy filters are tested separately.
+   * @see TaxonomyNodeFilterTestCase
    */
   function testContentAdminPages() {
     $this->drupalLogin($this->admin_user);
