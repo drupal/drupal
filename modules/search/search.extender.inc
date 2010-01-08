@@ -404,7 +404,7 @@ class SearchQuery extends SelectQueryExtender {
       $this->executeFirstPass();
     }
     if (!$this->normalize) {
-      return FALSE;
+      return new DatabaseStatementEmpty();
     }
 
     $this->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type');

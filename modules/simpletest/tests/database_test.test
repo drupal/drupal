@@ -1889,19 +1889,19 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $query->fields('test');
     $query->orderBy('name');
     $count = $query->countQuery();
-    
+
     // Check that the 'all_fields' statement is handled properly.
     $tables = $query->getTables();
     $this->assertEqual($tables['test']['all_fields'], 1, t('Query correctly sets \'all_fields\' statement.'));
     $tables = $count->getTables();
-    $this->assertFalse(isset($tables['test']['all_fields']), t('Count query correctly unsets \'all_fields\' statement.'));  
+    $this->assertFalse(isset($tables['test']['all_fields']), t('Count query correctly unsets \'all_fields\' statement.'));
 
     // Check that the ordering clause is handled properly.
     $orderby = $query->getOrderBy();
     $this->assertEqual($orderby['name'], 'ASC', t('Query correctly sets ordering clause.'));
     $orderby = $count->getOrderBy();
     $this->assertFalse(isset($orderby['name']), t('Count query correctly unsets ordering caluse.'));
-    
+
     // Make sure that the count query works.
     $count = $count->execute()->fetchField();
 
@@ -3154,4 +3154,51 @@ class DatabaseNextIdCase extends DrupalWebTestCase {
     $result = db_next_id(1000);
     $this->assertEqual($result, 1001, t('Sequence provides a larger number than the existing ID.'));
   }
+}
+
+/**
+ * Tests the empty pseudo-statement class.
+ */
+class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Empty statement'),
+      'description' => t('Test the empty pseudo-statement class.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * Test that the empty result set behaves as empty.
+   */
+  function testEmpty() {
+    $result = new DatabaseStatementEmpty();
+
+    $this->assertTrue($result instanceof DatabaseStatementInterface, t('Class implements expected interface'));
+    $this->assertNull($result->fetchObject(), t('Null result returned.'));
+  }
+
+  /**
+   * Test that the empty result set iterates safely.
+   */
+  function testEmptyIteration() {
+    $result = new DatabaseStatementEmpty();
+
+    foreach ($result as $record) {
+      $this->fail(t('Iterating empty result set should not iterate.'));
+      return;
+    }
+
+    $this->pass(t('Iterating empty result set skipped iteration.'));
+  }
+
+  /**
+   * Test that the empty result set mass-fetches in an expected way.
+   */
+  function testEmptyFetchAll() {
+    $result = new DatabaseStatementEmpty();
+
+    $this->assertEqual($result->fetchAll(), array(), t('Empty array returned from empty result set.'));
+  }
+
 }
