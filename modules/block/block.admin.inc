@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.68 2010/01/03 21:01:04 webchick Exp $
+// $Id: block.admin.inc,v 1.69 2010/01/08 11:10:32 dries Exp $
 
 /**
  * @file
@@ -324,7 +324,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#title' => t('Show block for specific content types'),
     '#default_value' => $default_type_options,
     '#options' => node_type_get_names(),
-    '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type specific limitation.'),
+    '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type-specific limitation.'),
   );
 
   // Per-role visibility.
