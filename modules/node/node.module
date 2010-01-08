@@ -1576,8 +1576,8 @@ function node_search_execute($keys = NULL) {
   // Insert special keywords.
   $query->setOption('type', 'n.type');
   $query->setOption('language', 'n.language');
-  if ($query->setOption('term', 'tn.nid')) {
-    $query->join('taxonomy_term_node', 'tn', 'n.vid = tn.vid');
+  if ($query->setOption('term', 'ti.tid')) {
+    $query->join('taxonomy_index', 'ti', 'n.nid = ti.nid');
   }
   // Only continue if the first pass query matches.
   if (!$query->executeFirstPass()) {
@@ -2383,10 +2383,10 @@ function node_search_validate($form, &$form_state) {
     }
   }
 
-  if (isset($form_state['values']['term']) && is_array($form_state['values']['term'])) {
+  if (isset($form_state['values']['term']) && is_array($form_state['values']['term']) && count($form_state['values']['term'])) {
     $keys = search_expression_insert($keys, 'term', implode(',', $form_state['values']['term']));
   }
-  if (isset($form_state['values']['language']) && is_array($form_state['values']['language'])) {
+  if (isset($form_state['values']['language']) && is_array($form_state['values']['language']) && count($form_state['values']['language'])) {
     $keys = search_expression_insert($keys, 'language', implode(',', array_filter($form_state['values']['language'])));
   }
   if ($form_state['values']['or'] != '') {

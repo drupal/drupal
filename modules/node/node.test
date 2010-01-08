@@ -1010,6 +1010,9 @@ class NodeAdminTestCase extends DrupalWebTestCase {
 
   /**
    * Tests content overview with different user permissions.
+   *
+   * Taxonomy filters are tested separately.
+   * @see TaxonomyNodeFilterTestCase
    */
   function testContentAdminPages() {
     $this->drupalLogin($this->admin_user);

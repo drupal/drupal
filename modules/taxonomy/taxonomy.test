@@ -834,3 +834,131 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $this->assertText($term->name, t('Term name is displayed'));
   }
 }
+
+/**
+ * Test taxonomy filters in node forms.
+ */
+class TaxonomyNodeFilterTestCase extends TaxonomyWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name'  => 'Taxonomy term filters in node forms',
+      'description'  => 'Test node form filtering by taxonomy terms.',
+      'group' => 'Taxonomy',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'access content overview', 'bypass node access', 'search content', 'use advanced search'));
+    $this->drupalLogin($this->admin_user);
+    $this->vocabulary = $this->createVocabulary();
+
+    $this->langcode = LANGUAGE_NONE;
+    $this->instance = array(
+      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'bundle' => 'article',
+      'object_type' => 'node',
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+      'display' => array(
+        'full' => array(
+          'type' => 'taxonomy_term_reference_link',
+        ),
+      ),
+    );
+    field_create_instance($this->instance);
+  }
+
+  /**
+   * Test node administration page filtering by taxonomy terms.
+   */
+  function testContentAdminPage() {
+    // Create two taxonomy terms.
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary);
+
+    // Create nodes with various terms.
+    $nodes['article1'] = $this->drupalCreateNode(array('type' => 'article'));
+    $edit[$this->instance['field_name'] . '[' . $this->langcode . '][]'] = $term1->tid;
+    $this->drupalPost('node/' . $nodes['article1']->nid . '/edit', $edit, t('Save'));
+    
+    $nodes['article2'] = $this->drupalCreateNode(array('type' => 'article'));
+    $edit[$this->instance['field_name'] . '[' . $this->langcode . '][]'] = $term2->tid;
+    $this->drupalPost('node/' . $nodes['article2']->nid . '/edit', $edit, t('Save'));
+
+    $nodes['article1_2'] = $this->drupalCreateNode(array('type' => 'article'));
+    $edit[$this->instance['field_name'] . '[' . $this->langcode . '][]'] = array($term1->tid, $term2->tid);
+    $this->drupalPost('node/' . $nodes['article1_2']->nid . '/edit', $edit, t('Save'));
+
+    // Verify that nodes appear on content admin page.
+    $this->drupalGet('admin/content');
+    $this->assertResponse(200);
+    foreach ($nodes as $node) {
+      $this->assertLinkByHref('node/' . $node->nid);
+    }
+
+    // Verify filtering by term 1.
+    $edit = array(
+      'term' => $term1->tid,
+    );
+    $this->drupalPost(NULL, $edit, t('Filter'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%name</strong>', array('%type' => 'term', '%name' => $term1->name)), t('Content list is filtered by term 1.'));
+    $this->assertLinkByHref('node/' . $nodes['article1']->nid . '/edit');
+    $this->assertLinkByHref('node/' . $nodes['article1_2']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['article2']->nid . '/edit');
+
+    // Verify filtering by term 1 and term 2.
+    $edit = array(
+      'term' => $term2->tid,
+    );
+    $this->drupalPost(NULL, $edit, t('Refine'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%name</strong>', array('%type' => 'term', '%name' => $term1->name)), t('Content list is filtered by term 1.'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%name</strong>', array('%type' => 'term', '%name' => $term2->name)), t('Content list is filtered by term 2.'));
+    $this->assertLinkByHref('node/' . $nodes['article1_2']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['article1']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['article2']->nid . '/edit');
+
+    // Verify filtering by term 2.
+    $this->drupalPost(NULL, $edit, t('Reset'));
+    $edit = array(
+      'term' => $term2->tid,
+    );
+    $this->drupalPost(NULL, $edit, t('Filter'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%name</strong>', array('%type' => 'term', '%name' => $term2->name)), t('Content list is filtered by term 2.'));
+    $this->assertLinkByHref('node/' . $nodes['article2']->nid . '/edit');
+    $this->assertLinkByHref('node/' . $nodes['article1_2']->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $nodes['article1']->nid . '/edit');
+  }
+
+  /**
+   * Test advanced search filtering by taxonomy terms.
+   */
+  function testAdvancedSearch() {
+    // Create two taxonomy terms.
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary);
+
+    // Create a node with the term.
+    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $edit[$this->instance['field_name'] . '[' . $this->langcode . '][]'] = $term1->tid;
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+
+    // Update the search index.
+    node_update_index();
+    search_update_totals();
+    
+    // Search for the node title.
+    $this->drupalGet('search/node/' . $node->title[$this->langcode][0]['value']);
+    $this->assertText($node->title[$this->langcode][0]['value'], t('Article node found with search.'));
+
+    // Search for the node title, filtering by term 1.
+    $this->drupalGet('search/node/' . $node->title[$this->langcode][0]['value'] . ' term:' . $term1->tid);
+    $this->assertText($node->title[$this->langcode][0]['value'], t('Article node found with search filtering by term 1.'));
+
+    // Search for the node title, filtering by term 2.
+    $this->drupalGet('search/node/' . $node->title[$this->langcode][0]['value'] . ' term:' . $term2->tid);
+    $this->assertNoText($node->title[$this->langcode][0]['value'], t('Article node not found with search filtering by term 2.'));
+  }
+}
