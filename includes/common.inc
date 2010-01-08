@@ -5773,19 +5773,18 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
  * @param $table
  *   The name of the table; this must exist in schema API.
  * @param $object
- *   The object to write. This is a reference, as defaults according to
- *   the schema may be filled in on the object, as well as ID on the serial
- *   type(s). Both array and object types may be passed.
+ *   The object to write. This is a reference, as defaults according to the
+ *   schema may be filled in on the object, as well as ID on the serial type(s).
+ *   Both array and object types may be passed.
  * @param $primary_keys
  *   If this is an update, specify the primary keys' field names. It is the
- *   caller's responsibility to know if a record for this object already
- *   exists in the database. If there is only 1 key, you may pass a simple string.
+ *   caller's responsibility to know if a record for this object already exists
+ *   in the database. If there is only 1 key, you may pass a simple string.
  * @return
  *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
- *   SAVED_UPDATED is returned depending on the operation performed. The
- *   $object parameter contains values for any serial fields defined by
- *   the $table. For example, $object->nid will be populated after inserting
- *   a new node.
+ *   SAVED_UPDATED is returned depending on the operation performed. The $object
+ *   parameter contains values for any serial fields defined by the $table. For
+ *   example, $object->nid will be populated after inserting a new a new node.
  */
 function drupal_write_record($table, &$object, $primary_keys = array()) {
   // Standardize $primary_keys to an array.
@@ -5812,54 +5811,52 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
   // Go through our schema, build SQL, and when inserting, fill in defaults for
   // fields that are not set.
   foreach ($schema['fields'] as $field => $info) {
-    // Special case -- skip serial types if we are updating.
-    if ($info['type'] == 'serial' && !empty($primary_keys)) {
-      continue;
-    }
-
-    // For inserts, populate defaults from schema if not already provided.
-    if (!isset($object->$field) && empty($primary_keys) && isset($info['default'])) {
-      $object->$field = $info['default'];
-    }
-
-    // Track serial field so we can helpfully populate them after the query.
-    // NOTE: Each table should come with one serial field only.
     if ($info['type'] == 'serial') {
+      // Skip serial types if we are updating.
+      if (!empty($primary_keys)) {
+        continue;
+      }
+      // Track serial field so we can helpfully populate them after the query.
+      // NOTE: Each table should come with one serial field only.
       $serial = $field;
     }
 
-    // Build arrays for the fields and values in our query.
-    if (isset($object->$field)) {
-      if (empty($info['serialize'])) {
-        $fields[$field] = $object->$field;
+    if (!property_exists($object, $field)) {
+      // Skip fields that are not provided, unless we are inserting and a
+      // default value is provided by the schema.
+      if (!empty($primary_keys) || !isset($info['default'])) {
+        continue;
       }
-      elseif (!empty($object->$field)) {
-        $fields[$field] = serialize($object->$field);
-      }
-      else {
-        $fields[$field] = '';
-      }
+      $object->$field = $info['default'];
     }
 
-    // We don't need to care about type casting if value does not exist.
-    if (!isset($fields[$field])) {
-      continue;
+    // Build array of fields to update or insert.
+    if (empty($info['serialize'])) {
+      $fields[$field] = $object->$field;
     }
-
-    // Special case -- skip null value if field allows null.
-    if ($fields[$field] == NULL && $info['not null'] == FALSE) {
-      continue;
-    }
-
-    // Type cast if field does not allow null. Required by DB API.
-    if ($info['type'] == 'int' || $info['type'] == 'serial') {
-      $fields[$field] = (int) $fields[$field];
-    }
-    elseif ($info['type'] == 'float') {
-      $fields[$field] = (float) $fields[$field];
+    elseif (!empty($object->$field)) {
+      $fields[$field] = serialize($object->$field);
     }
     else {
-      $fields[$field] = (string) $fields[$field];
+      $fields[$field] = '';
+    }
+
+    // Type cast to proper datatype, except when the value is NULL and the
+    // column allows this.
+    //
+    // MySQL PDO silently casts e.g. FALSE and '' to 0 when inserting the value
+    // into an integer column, but PostgreSQL PDO does not. Also type cast NULL
+    // when the column does not allow this.
+    if (!is_null($object->$field) || !empty($info['not null'])) {
+      if ($info['type'] == 'int' || $info['type'] == 'serial') {
+        $fields[$field] = (int) $fields[$field];
+      }
+      elseif ($info['type'] == 'float') {
+        $fields[$field] = (float) $fields[$field];
+      }
+      else {
+        $fields[$field] = (string) $fields[$field];
+      }
     }
   }
 
