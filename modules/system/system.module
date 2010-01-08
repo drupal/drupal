@@ -2695,10 +2695,6 @@ function system_cron() {
   db_delete('flood')
     ->condition('expiration', REQUEST_TIME, '<')
     ->execute();
-  // Cleanup the batch table.
-  db_delete('batch')
-    ->condition('timestamp', REQUEST_TIME - 864000, '<')
-    ->execute();
 
   // Remove temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
   // Use separate placeholders for the status to avoid a bug in some versions
@@ -2721,6 +2717,15 @@ function system_cron() {
   foreach ($cache_tables as $table) {
     cache_clear_all(NULL, $table);
   }
+
+  // Cleanup the batch table and the queue for failed batches.
+  db_delete('batch')
+    ->condition('timestamp', REQUEST_TIME - 864000, '<')
+    ->execute();
+  db_delete('queue')
+    ->condition('created', REQUEST_TIME - 864000, '<')
+    ->condition('name', 'drupal_batch:%', 'LIKE')
+    ->execute();
 
   // Reset expired items in the default queue implementation table. If that's
   // not used, this will simply be a no-op.

@@ -6,7 +6,7 @@
  * @file
  * Batch processing API for processes to run in multiple HTTP requests.
  *
- * Please note that batches are usually invoked by form submissions, which is
+ * Note that batches are usually invoked by form submissions, which is
  * why the core interaction functions of the batch processing API live in
  * form.inc.
  *
@@ -62,8 +62,10 @@ function _batch_page() {
 
   // Add batch-specific CSS.
   foreach ($batch['sets'] as $batch_set) {
-    foreach ($batch_set['css'] as $css) {
-      drupal_add_css($css);
+    if (isset($batch_set['css'])) {
+      foreach ($batch_set['css'] as $css) {
+        drupal_add_css($css);
+      }
     }
   }
 
@@ -252,6 +254,12 @@ function _batch_process() {
     timer_start('batch_processing');
   }
 
+  if (empty($current_set['start'])) {
+    $current_set['start'] = microtime(TRUE);
+  }
+
+  $queue = _batch_queue($current_set);
+
   while (!$current_set['success']) {
     // If this is the first time we iterate this batch set in the current
     // request, we check if it requires an additional file for functions
@@ -261,42 +269,49 @@ function _batch_process() {
     }
 
     $task_message = '';
-    // We assume a single pass operation and set the completion level to 1 by
+    // Assume a single pass operation and set the completion level to 1 by
     // default.
     $finished = 1;
-    if ((list($function, $args) = reset($current_set['operations'])) && function_exists($function)) {
-      // Build the 'context' array, execute the function call, and retrieve the
-      // user message.
+
+    if ($item = $queue->claimItem()) {
+      list($function, $args) = $item->data;
+
+      // Build the 'context' array and execute the function call.
       $batch_context = array(
         'sandbox'  => &$current_set['sandbox'],
         'results'  => &$current_set['results'],
         'finished' => &$finished,
         'message'  => &$task_message,
       );
-      // Process the current operation.
       call_user_func_array($function, array_merge($args, array(&$batch_context)));
-    }
 
-    if ($finished == 1) {
-      // Make sure this step is not counted twice when computing $current.
-      $finished = 0;
-      // Remove the processed operation and clear the sandbox.
-      array_shift($current_set['operations']);
-      $current_set['sandbox'] = array();
+      if ($finished == 1) {
+        // Make sure this step is not counted twice when computing $current.
+        $finished = 0;
+        // Remove the processed operation and clear the sandbox.
+        $queue->deleteItem($item);
+        $current_set['count']--;
+        $current_set['sandbox'] = array();
+      }
     }
 
     // When all operations in the current batch set are completed, browse
-    // through the remaining sets until we find a set that contains operations.
-    // Note that _batch_next_set() executes stored form submit handlers in
-    // remaining batch sets, which can add new sets to the batch.
+    // through the remaining sets, marking them 'successfully processed'
+    // along the way, until we find a set that contains operations.
+    // _batch_next_set() executes form submit handlers stored in 'control'
+    // sets (see form_execute_handlers()), which can in turn add new sets to
+    // the batch.
     $set_changed = FALSE;
     $old_set = $current_set;
-    while (empty($current_set['operations']) && ($current_set['success'] = TRUE) && _batch_next_set()) {
+    while (empty($current_set['count']) && ($current_set['success'] = TRUE) && _batch_next_set()) {
       $current_set = &_batch_current_set();
+      $current_set['start'] = microtime(TRUE);
       $set_changed = TRUE;
     }
+
     // At this point, either $current_set contains operations that need to be
     // processed or all sets have been completed.
+    $queue = _batch_queue($current_set);
 
     // If we are in progressive mode, break processing after 1 second.
     if ($batch['progressive'] && timer_read('batch_processing') > 1000) {
@@ -312,33 +327,31 @@ function _batch_process() {
     // Reporting 100% progress will cause the whole batch to be considered
     // processed. If processing was paused right after moving to a new set,
     // we have to use the info from the new (unprocessed) set.
-    if ($set_changed && isset($current_set['operations'])) {
+    if ($set_changed && isset($current_set['queue'])) {
       // Processing will continue with a fresh batch set.
-      $remaining        = count($current_set['operations']);
+      $remaining        = $current_set['count'];
       $total            = $current_set['total'];
       $progress_message = $current_set['init_message'];
       $task_message     = '';
     }
     else {
       // Processing will continue with the current batch set.
-      $remaining        = count($old_set['operations']);
+      $remaining        = $old_set['count'];
       $total            = $old_set['total'];
       $progress_message = $old_set['progress_message'];
     }
 
-    $current = $total - $remaining + $finished;
+    $current    = $total - $remaining + $finished;
     $percentage = _batch_api_percentage($total, $current);
-
     $elapsed    = $current_set['elapsed'];
-    // Estimate remaining with percentage in floating format.
-    $estimate   = $elapsed * ($total - $current) / $current;
     $values     = array(
       '@remaining'  => $remaining,
       '@total'      => $total,
       '@current'    => floor($current),
       '@percentage' => $percentage,
       '@elapsed'    => format_interval($elapsed / 1000),
-      '@estimate'   => format_interval($estimate / 1000),
+      // If possible, estimate remaining processing time.
+      '@estimate'   => ($current > 0) ? format_interval(($elapsed * ($total - $current) / $current) / 1000) : '-',
     );
     $message = strtr($progress_message, $values);
     if (!empty($message)) {
@@ -410,7 +423,7 @@ function _batch_next_set() {
     if (isset($current_set['form_submit']) && ($function = $current_set['form_submit']) && function_exists($function)) {
       // We use our stored copies of $form and $form_state to account for
       // possible alterations by previous form submit handlers.
-      $function($batch['form'], $batch['form_state']);
+      $function($batch['form_state']['complete form'], $batch['form_state']);
     }
     return TRUE;
   }
@@ -426,15 +439,16 @@ function _batch_finished() {
   $batch = &batch_get();
 
   // Execute the 'finished' callbacks for each batch set, if defined.
-  foreach ($batch['sets'] as $key => $batch_set) {
+  foreach ($batch['sets'] as $batch_set) {
     if (isset($batch_set['finished'])) {
       // Check if the set requires an additional file for function definitions.
       if (isset($batch_set['file']) && is_file($batch_set['file'])) {
         include_once DRUPAL_ROOT . '/' . $batch_set['file'];
       }
       if (function_exists($batch_set['finished'])) {
-        // Format the elapsed time when batch complete.
-        $batch_set['finished']($batch_set['success'], $batch_set['results'], $batch_set['operations'], format_interval($batch_set['elapsed'] / 1000));
+        $queue = _batch_queue($batch_set);
+        $operations = $queue->getAllItems();
+        $batch_set['finished']($batch_set['success'], $batch_set['results'], $operations, format_interval($batch_set['elapsed'] / 1000));
       }
     }
   }
@@ -444,6 +458,11 @@ function _batch_finished() {
     db_delete('batch')
       ->condition('bid', $batch['id'])
       ->execute();
+    foreach ($batch['sets'] as $batch_set) {
+      if ($queue = _batch_queue($batch_set)) {
+        $queue->deleteQueue();
+      }
+    }
   }
   $_batch = $batch;
   $batch = NULL;

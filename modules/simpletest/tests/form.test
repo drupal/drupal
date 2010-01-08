@@ -512,45 +512,6 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
 }
 
 /**
- * Test using drupal_form_submit in a batch.
- */
-class FormAPITestCase extends DrupalWebTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Drupal Execute and Batch API',
-      'description' => 'Tests the compatibility of drupal_form_submit and the Batch API',
-      'group' => 'Form API',
-    );
-  }
-
-  /**
-   * Check that we can run drupal_form_submit during a batch.
-   */
-  function testDrupalFormSubmitInBatch() {
-
-    // Our test is going to modify the following variable.
-    variable_set('form_test_mock_submit', 'initial_state');
-
-    // This is a page that sets a batch, which calls drupal_form_submit, which
-    // modifies the variable we set up above.
-    $this->drupalGet('form_test/drupal_form_submit_batch_api');
-
-    // If the drupal_form_submit call executed correctly our test variable will be
-    // set to 'form_submitted'.
-    $this->assertEqual('form_submitted', variable_get('form_test_mock_submit', 'initial_state'), t('Check drupal_form_submit called submit handlers when running in a batch'));
-
-    // Clean our variable up.
-    variable_del('form_test_mock_submit');
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
-  }
-
-}
-
-/**
  * Test the form storage on a multistep form.
  *
  * The tested form puts data into the storage during the initial form

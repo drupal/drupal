@@ -634,12 +634,23 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // that is already being processed (if a batch operation performs a
       // drupal_form_submit).
       if ($batch =& batch_get() && !isset($batch['current_set'])) {
-        // The batch uses its own copies of $form and $form_state for
-        // late execution of submit handlers and post-batch redirection.
-        $batch['form'] = $form;
-        $batch['form_state'] = $form_state;
+        // Store $form_state information in the batch definition.
+        // We need the full $form_state when either:
+        // - Some submit handlers were saved to be called during batch
+        //   processing. See form_execute_handlers().
+        // - The form is multistep.
+        // In other cases, we only need the information expected by
+        // drupal_redirect_form().
+        if ($batch['has_form_submits'] || !empty($form_state['rebuild']) || !empty($form_state['storage'])) {
+          $batch['form_state'] = $form_state;
+        }
+        else {
+          $batch['form_state'] = array_intersect_key($form_state, array_flip(array('programmed', 'rebuild', 'storage', 'no_redirect', 'redirect')));
+        }
+
         $batch['progressive'] = !$form_state['programmed'];
         batch_process();
+
         // Execution continues only for programmatic forms.
         // For 'regular' forms, we get redirected to the batch processing
         // page. Form redirection will be handled in _batch_finished(),
@@ -1004,14 +1015,15 @@ function form_execute_handlers($type, &$form, &$form_state) {
 
   foreach ($handlers as $function) {
     if (function_exists($function))  {
-      // Check to see if a previous _submit handler has set a batch, but
-      // make sure we do not react to a batch that is already being processed
-      // (for instance if a batch operation performs a drupal_form_submit()).
-      if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['current_set'])) {
-        // Some previous _submit handler has set a batch. We store the call
-        // in a special 'control' batch set, for execution at the correct
-        // time during the batch processing workflow.
+      // Check if a previous _submit handler has set a batch, but make sure we
+      // do not react to a batch that is already being processed (for instance
+      // if a batch operation performs a drupal_form_submit()).
+      if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['id'])) {
+        // Some previous submit handler has set a batch. To ensure correct
+        // execution order, store the call in a special 'control' batch set.
+        // See _batch_next_set().
         $batch['sets'][] = array('form_submit' => $function);
+        $batch['has_form_submits'] = TRUE;
       }
       else {
         $function($form, $form_state);
@@ -3305,22 +3317,25 @@ function _form_set_class(&$element, $class = array()) {
 function batch_set($batch_definition) {
   if ($batch_definition) {
     $batch =& batch_get();
-    // Initialize the batch
+
+    // Initialize the batch if needed.
     if (empty($batch)) {
       $batch = array(
         'sets' => array(),
+        'has_form_submits' => FALSE,
       );
     }
 
+    // Base and default properties for the batch set.
+    // Use get_t() to allow batches at install time.
+    $t = get_t();
     $init = array(
       'sandbox' => array(),
       'results' => array(),
       'success' => FALSE,
-      'start' => microtime(TRUE),
+      'start' => 0,
       'elapsed' => 0,
     );
-    // Use get_t() to allow batches at install time.
-    $t = get_t();
     $defaults = array(
       'title' => $t('Processing'),
       'init_message' => $t('Initializing.'),
@@ -3330,20 +3345,29 @@ function batch_set($batch_definition) {
     );
     $batch_set = $init + $batch_definition + $defaults;
 
-    // Tweak init_message to avoid the bottom of the page flickering down after init phase.
+    // Tweak init_message to avoid the bottom of the page flickering down after
+    // init phase.
     $batch_set['init_message'] .= '<br/>&nbsp;';
-    $batch_set['total'] = count($batch_set['operations']);
 
-    // If the batch is being processed (meaning we are executing a stored submit handler),
-    // insert the new set after the current one.
-    if (isset($batch['current_set'])) {
-      // array_insert does not exist...
-      $slice1 = array_slice($batch['sets'], 0, $batch['current_set'] + 1);
-      $slice2 = array_slice($batch['sets'], $batch['current_set'] + 1);
-      $batch['sets'] = array_merge($slice1, array($batch_set), $slice2);
+    // The non-concurrent workflow of batch execution allows us to save
+    // numberOfItems() queries by handling our own counter.
+    $batch_set['total'] = count($batch_set['operations']);
+    $batch_set['count'] = $batch_set['total'];
+
+    // Add the set to the batch.
+    if (empty($batch['id'])) {
+      // The batch is not running yet. Simply add the new set.
+      $batch['sets'][] = $batch_set;
     }
     else {
-      $batch['sets'][] = $batch_set;
+      // The set is being added while the batch is running. Insert the new set
+      // right after the current one to ensure execution order, and store its
+      // operations in a queue.
+      $index = $batch['current_set'] + 1;
+      $slice1 = array_slice($batch['sets'], 0, $index);
+      $slice2 = array_slice($batch['sets'], $index);
+      $batch['sets'] = array_merge($slice1, array($batch_set), $slice2);
+      _batch_populate_queue($batch, $index);
     }
   }
 }
@@ -3387,11 +3411,28 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
     );
     $batch += $process_info;
 
-    // The batch is now completely built. Allow other modules to make changes to the
-    // batch so that it is easier to reuse batch processes in other enviroments.
+    // The batch is now completely built. Allow other modules to make changes
+    // to the batch so that it is easier to reuse batch processes in other
+    // enviroments.
     drupal_alter('batch', $batch);
 
+    // Assign an arbitrary id: don't rely on a serial column in the 'batch'
+    // table, since non-progressive batches skip database storage completely.
+    $batch['id'] = db_next_id();
+
+    // Move operations to a job queue. Non-progressive batches will use a
+    // memory-based queue.
+    foreach ($batch['sets'] as $key => $batch_set) {
+      _batch_populate_queue($batch, $key);
+    }
+
+    // Initiate processing.
     if ($batch['progressive']) {
+      // Now that we have a batch id, we can generate the redirection link in
+      // the generic error message.
+      $t = get_t();
+      $batch['error_message'] = $t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
+
       // Clear the way for the drupal_goto() redirection to the batch processing
       // page, by saving and unsetting the 'destination', if there is any.
       if (isset($_GET['destination'])) {
@@ -3399,24 +3440,11 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
         unset($_GET['destination']);
       }
 
-      // Initiate db storage in order to get a batch id. We have to provide
-      // at least an empty string for the (not null) 'token' column.
-      $batch['id'] = db_insert('batch')
+      // Store the batch.
+      db_insert('batch')
         ->fields(array(
-          'token' => '',
+          'bid' => $batch['id'],
           'timestamp' => REQUEST_TIME,
-        ))
-        ->execute();
-
-      // Now that we have a batch id, we can generate the redirection link in
-      // the generic error message.
-      $t = get_t();
-      $batch['error_message'] = $t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
-
-      // Actually store the batch data and the token generated form the batch id.
-      db_update('batch')
-        ->condition('bid', $batch['id'])
-        ->fields(array(
           'token' => drupal_get_token($batch['id']),
           'batch' => serialize($batch),
         ))
@@ -3425,6 +3453,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
       // Set the batch number in the session to guarantee that it will stay alive.
       $_SESSION['batches'][$batch['id']] = TRUE;
 
+      // Redirect for processing.
       $function = $batch['redirect_callback'];
       if (function_exists($function)) {
         $function($batch['url'], array('query' => array('op' => 'start', 'id' => $batch['id'])));
@@ -3451,6 +3480,70 @@ function &batch_get() {
   // not part of the Batch API can also do this, but shouldn't.
   static $batch = array();
   return $batch;
+}
+
+/**
+ * Populates a job queue with the operations of a batch set.
+ *
+ * Depending on whether the batch is progressive or not, the BatchQueue or
+ * BatchStaticQueue handler classes will be used.
+ *
+ * @param $batch
+ *   The batch array.
+ * @param $set_id
+ *   The id of the set to process.
+ * @return
+ *   The name and class of the queue are added by reference to the batch set.
+ */
+function _batch_populate_queue(&$batch, $set_id) {
+  $batch_set = &$batch['sets'][$set_id];
+
+  if (isset($batch_set['operations'])) {
+    $batch_set += array(
+      'queue' => array(
+        'name' => 'drupal_batch:' . $batch['id'] . ':' . $set_id,
+        'class' => $batch['progressive'] ? 'BatchQueue' : 'BatchMemoryQueue',
+      ),
+    );
+
+    $queue = _batch_queue($batch_set);
+    $queue->createQueue();
+    foreach ($batch_set['operations'] as $operation) {
+      $queue->createItem($operation);
+    }
+
+    unset($batch_set['operations']);
+  }
+}
+
+/**
+ * Returns a queue object for a batch set.
+ *
+ * @param $batch_set
+ *   The batch set.
+ * @return
+ *   The queue object.
+ */
+function _batch_queue($batch_set) {
+  static $queues;
+
+  // The class autoloader is not available when running update.php, so make
+  // sure the files are manually included.
+  if (is_null($queues)) {
+    $queues = array();
+    require_once DRUPAL_ROOT . '/modules/system/system.queue.inc';
+    require_once DRUPAL_ROOT . '/includes/batch.queue.inc';
+  }
+
+  if (isset($batch_set['queue'])) {
+    $name = $batch_set['queue']['name'];
+    $class = $batch_set['queue']['class'];
+
+    if (!isset($queues[$class][$name])) {
+      $queues[$class][$name] = new $class($name);
+    }
+    return $queues[$class][$name];
+  }
 }
 
 /**

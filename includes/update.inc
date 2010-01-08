@@ -338,6 +338,51 @@ function update_fix_d7_requirements() {
     db_create_table('date_formats', $schema['date_formats']);
     db_create_table('date_format_locale', $schema['date_format_locale']);
 
+    // Add the queue table.
+    $schema['queue'] = array(
+      'description' => 'Stores items in queues.',
+      'fields' => array(
+        'item_id' => array(
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'description' => 'Primary Key: Unique item ID.',
+        ),
+        'name' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'The queue name.',
+        ),
+        'data' => array(
+          'type' => 'text',
+          'not null' => FALSE,
+          'size' => 'big',
+          'serialize' => TRUE,
+          'description' => 'The arbitrary data for the item.',
+        ),
+        'expire' => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'Timestamp when the claim lease expires on the item.',
+        ),
+        'created' => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'Timestamp when the item was created.',
+        ),
+      ),
+      'primary key' => array('item_id'),
+      'indexes' => array(
+        'name_created' => array('name', 'created'),
+        'expire' => array('expire'),
+      ),
+    );
+    db_create_table('queue', $schema['queue']);
+
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
       db_add_field('locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));

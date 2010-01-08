@@ -496,7 +496,9 @@ function system_schema() {
     'fields' => array(
       'bid' => array(
         'description' => 'Primary Key: Unique batch ID.',
-        'type' => 'serial',
+        // This is not a serial column, to allow both progressive and
+        // non-progressive batches. See batch_process().
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
@@ -2257,50 +2259,7 @@ function system_update_7021() {
  * Add the queue tables.
  */
 function system_update_7022() {
-  $schema['queue'] = array(
-    'description' => 'Stores items in queues.',
-    'fields' => array(
-      'item_id' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique item ID.',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The queue name.',
-      ),
-      'data' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-        'serialize' => TRUE,
-        'description' => 'The arbitrary data for the item.',
-      ),
-      'expire' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Timestamp when the claim lease expires on the item.',
-      ),
-      'created' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Timestamp when the item was created.',
-      ),
-    ),
-    'primary key' => array('item_id'),
-    'indexes' => array(
-      'name_created' => array('name', 'created'),
-      'expire' => array('expire'),
-    ),
-  );
-
-  db_create_table('queue', $schema['queue']);
+  // Moved to update_fix_d7_requirements().
 }
 
 /**
@@ -2725,6 +2684,13 @@ function system_update_7049() {
   if (variable_get('install_profile', 'standard') == 'default') {
     variable_set('install_profile', 'standard');
   }
+}
+
+/**
+ * Change {batch}.id column from serial to regular int.
+ */
+function system_update_7050() {
+  db_change_field('batch', 'bid', 'bid', array('description' => 'Primary Key: Unique batch ID.', 'type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
 }
 
 /**
