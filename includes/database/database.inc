@@ -455,11 +455,17 @@ abstract class DatabaseConnection extends PDO {
    */
   public function prepareQuery($query, $cache = TRUE) {
     $query = $this->prefixTables($query);
-    if (empty($this->preparedStatements[$query])) {
-      // Call PDO::prepare.
-      $this->preparedStatements[$query] = parent::prepare($query);
+    if (isset($this->preparedStatements[$query])) {
+      $stmt = $this->preparedStatements[$query];
     }
-    return $this->preparedStatements[$query];
+    else {
+      // Call PDO::prepare.
+      $stmt = parent::prepare($query);
+      if ($cache) {
+        $this->preparedStatements[$query] = $stmt;
+      }
+    }
+    return $stmt;
   }
 
   /**
