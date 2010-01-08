@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.40 2009/12/10 15:52:56 dries Exp $
+// $Id: forum.install,v 1.41 2010/01/08 15:58:43 dries Exp $
 
 /**
  * @file
@@ -37,7 +37,6 @@ function forum_enable() {
       'machine_name' => 'forums',
       'description' => t('Forum navigation vocabulary'),
       'hierarchy' => 1,
-      'relations' => 0,
       'module' => 'forum',
       'weight' => -10,
     );

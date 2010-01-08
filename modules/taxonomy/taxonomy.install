@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.31 2009/12/30 08:12:20 dries Exp $
+// $Id: taxonomy.install,v 1.32 2010/01/08 15:58:43 dries Exp $
 
 /**
  * @file
@@ -133,14 +133,6 @@ function taxonomy_schema() {
         'size' => 'big',
         'description' => 'Description of the vocabulary.',
         'translatable' => TRUE,
-      ),
-      'relations' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Whether or not related terms are enabled within the vocabulary. (0 = disabled, 1 = enabled)',
       ),
       'hierarchy' => array(
         'type' => 'int',
