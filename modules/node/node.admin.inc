@@ -425,7 +425,7 @@ function node_admin_nodes() {
   $header = array(
     'title' => array('data' => t('Title'), 'field' => 'n.title'),
     'type' => array('data' => t('Type'), 'field' => 'n.type'),
-    'author' => array('data' => t('Author'), 'field' => 'u.name'),
+    'author' => t('Author'),
     'status' => array('data' => t('Status'), 'field' => 'n.status'),
     'changed' => array('data' => t('Updated'), 'field' => 'n.changed', 'sort' => 'desc')
   );
