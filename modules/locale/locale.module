@@ -108,8 +108,7 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_languages_overview_form'),
     'access arguments' => array('administer languages'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/language/overview'] = array(
     'title' => 'List',
@@ -122,8 +121,7 @@ function locale_menu() {
     'access arguments' => array('administer languages'),
     'weight' => 5,
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/language/configure'] = array(
     'title' => 'Configure',
@@ -131,8 +129,7 @@ function locale_menu() {
     'page arguments' => array('locale_languages_configure_form'),
     'access arguments' => array('administer languages'),
     'weight' => 10,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/config/regional/language/configure/url'] = array(
@@ -140,24 +137,21 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_language_providers_url_form'),
     'access arguments' => array('administer languages'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/language/configure/session'] = array(
     'title' => 'Session language provider configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_language_providers_session_form'),
     'access arguments' => array('administer languages'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/language/edit/%'] = array(
     'title' => 'Edit language',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_languages_edit_form', 5),
     'access arguments' => array('administer languages'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
     'type' => MENU_CALLBACK,
   );
   $items['admin/config/regional/language/delete/%'] = array(
@@ -165,8 +159,7 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_languages_delete_form', 5),
     'access arguments' => array('administer languages'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
     'type' => MENU_CALLBACK,
   );
 
@@ -174,11 +167,9 @@ function locale_menu() {
   $items['admin/config/regional/translate'] = array(
     'title' => 'Translate interface',
     'description' => 'Translate the built in interface and optionally other text.',
-    'page callback' => 'locale_inc_callback',
-    'page arguments' => array('locale_translate_overview_screen'), // not a form, just a table
+    'page callback' => 'locale_translate_overview_screen',
     'access arguments' => array('translate interface'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/translate/overview'] = array(
     'title' => 'Overview',
@@ -191,8 +182,7 @@ function locale_menu() {
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'locale_translate_seek_screen', // search results and form concatenated
     'access arguments' => array('translate interface'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/translate/import'] = array(
     'title' => 'Import',
@@ -201,8 +191,7 @@ function locale_menu() {
     'access arguments' => array('translate interface'),
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/translate/export'] = array(
     'title' => 'Export',
@@ -210,8 +199,7 @@ function locale_menu() {
     'access arguments' => array('translate interface'),
     'weight' => 30,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/translate/edit/%'] = array(
     'title' => 'Edit string',
@@ -219,8 +207,7 @@ function locale_menu() {
     'page arguments' => array('locale_translate_edit_form', 5),
     'access arguments' => array('translate interface'),
     'type' => MENU_CALLBACK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/translate/delete/%'] = array(
     'title' => 'Delete string',
@@ -228,8 +215,7 @@ function locale_menu() {
     'page arguments' => array(5),
     'access arguments' => array('translate interface'),
     'type' => MENU_CALLBACK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
 
   // Localize date formats.
@@ -240,8 +226,7 @@ function locale_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
     'weight' => -8,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/date-time/locale/%/edit'] = array(
     'title' => 'Localize date formats',
@@ -250,8 +235,7 @@ function locale_menu() {
     'page arguments' => array('locale_date_format_form', 5),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/date-time/locale/%/reset'] = array(
     'title' => 'Reset date formats',
@@ -260,8 +244,7 @@ function locale_menu() {
     'page arguments' => array('locale_date_format_reset_form', 5),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
+    'file' => 'locale.admin.inc',
   );
 
   return $items;
@@ -557,7 +540,7 @@ function locale_language_negotiation_info() {
 
   $providers[LOCALE_LANGUAGE_NEGOTIATION_BROWSER] = array(
     'callbacks' => array('language' => 'locale_language_from_browser'),
-    'name' => $file,
+    'file' => $file,
     'weight' => -2,
     'cache' => CACHE_DISABLED,
     'name' => t('Browser'),
@@ -611,7 +594,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL, $reset = FALS
 
   $langcode = isset($langcode) ? $langcode : $language->language;
 
-  // Store database cached translations in a static variable. Only build the 
+  // Store database cached translations in a static variable. Only build the
   // cache after $language has been set to avoid an unnecessary cache rebuild.
   if (!isset($locale_t[$langcode]) && isset($language)) {
     $locale_t[$langcode] = array();
@@ -897,163 +880,6 @@ function locale_block_view($type) {
       return $block;
     }
   }
-}
-
-/**
- * Theme locale date format form.
- *
- * @ingroup themeable
- */
-function theme_locale_date_format_form($variables) {
-  $form = $variables['form'];
-  $header = array(
-    t('Date type'),
-    t('Format'),
-  );
-
-  foreach (element_children($form['date_formats']) as $key) {
-    $row = array();
-    $row[] = $form['date_formats'][$key]['#title'];
-    unset($form['date_formats'][$key]['#title']);
-    $row[] = array('data' => drupal_render($form['date_formats'][$key]));
-    $rows[] = $row;
-  }
-
-  $output = drupal_render($form['language']);
-  $output .= theme('table', array('header' => $header, 'rows' => $rows));
-  $output .= drupal_render_children($form);
-
-  return $output;
-}
-
-/**
- * Display edit date format links for each language.
- */
-function locale_date_format_language_overview_page() {
-  $header = array(
-    t('Language'),
-    array('data' => t('Operations'), 'colspan' => '2'),
-  );
-
-  // Get list of languages.
-  $languages = locale_language_list('native');
-
-  foreach ($languages as $langcode => $info) {
-    $row = array();
-    $row[] = $languages[$langcode];
-    $row[] = l(t('edit'), 'admin/config/regional/date-time/locale/' . $langcode . '/edit');
-    $row[] = l(t('reset'), 'admin/config/regional/date-time/locale/' . $langcode . '/reset');
-    $rows[] = $row;
-  }
-
-  return theme('table', array('header' => $header, 'rows' => $rows));
-}
-
-/**
- * Provide date localization configuration options to users.
- */
-function locale_date_format_form($form, &$form_state, $langcode) {
-  $languages = locale_language_list('native');
-  $language_name = $languages[$langcode];
-
-  // Display the current language name.
-  $form['language'] = array(
-    '#type' => 'item',
-    '#title' => t('Language'),
-    '#markup' => check_plain($language_name),
-    '#weight' => -10,
-  );
-  $form['langcode'] = array(
-    '#type' => 'value',
-    '#value' => $langcode,
-  );
-
-  // Get list of date format types.
-  $types = system_get_date_types();
-
-  // Get list of available formats.
-  $formats = system_get_date_formats();
-  $choices = array();
-  foreach ($formats as $type => $list) {
-    foreach ($list as $f => $format) {
-      $choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
-    }
-  }
-
-  // Get configured formats for each language.
-  $locale_formats = system_date_format_locale($langcode);
-  // Display a form field for each format type.
-  foreach ($types as $type => $type_info) {
-    if (!empty($locale_formats) && in_array($type, array_keys($locale_formats))) {
-      $default = $locale_formats[$type];
-    }
-    else {
-      $default = variable_get('date_format_' . $type, array_shift(array_keys($formats)));
-    }
-
-    // Show date format select list.
-    $form['date_formats']['date_format_' . $type] = array(
-      '#type' => 'select',
-      '#title' => check_plain($type_info['title']),
-      '#attributes' => array('class' => array('date-format')),
-      '#default_value' => (isset($choices[$default]) ? $default : 'custom'),
-      '#options' => $choices,
-    );
-  }
-
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
-  );
-
-  return $form;
-}
-
-/**
- * Submit handler for configuring localized date formats on the locale_date_format_form.
- */
-function locale_date_format_form_submit($form, &$form_state) {
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
-  $langcode = $form_state['values']['langcode'];
-
-  // Get list of date format types.
-  $types = system_get_date_types();
-  foreach ($types as $type => $type_info) {
-    $format = $form_state['values']['date_format_' . $type];
-    if ($format == 'custom') {
-      $format = $form_state['values']['date_format_' . $type . '_custom'];
-    }
-    locale_date_format_save($langcode, $type, $format);
-  }
-  drupal_set_message(t('Configuration saved.'));
-  $form_state['redirect'] = 'admin/config/regional/date-time/locale';
-}
-
-/**
- * Reset locale specific date formats to the global defaults.
- *
- * @param $langcode
- *   Language code, e.g. 'en'.
- */
-function locale_date_format_reset_form($form, &$form_state, $langcode) {
-  $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-  $languages = language_list();
-  return confirm_form($form,
-    t('Are you sure you want to reset the date formats for %language to the global defaults?', array('%language' => $languages[$langcode]->name)),
-    'admin/config/regional/date-time/locale',
-    t('Resetting will remove all localized date formats for this language. This action cannot be undone.'),
-    t('Reset'), t('Cancel'));
-}
-
-/**
- * Reset date formats for a specific language to global defaults.
- */
-function locale_date_format_reset_form_submit($form, &$form_state) {
-  db_delete('date_format_locale')
-    ->condition('language', $form_state['values']['langcode'])
-    ->execute();
-  $form_state['redirect'] = 'admin/config/regional/date-time/locale';
 }
 
 /**
