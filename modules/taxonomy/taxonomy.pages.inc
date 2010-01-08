@@ -50,7 +50,7 @@ function taxonomy_term_page($term) {
   else {
     $build['no_content'] = array(
       '#prefix' => '<p>',
-      '#markup' => t('There are currently no posts in this category.'),
+      '#markup' => t('There is currently no content classified with this term.'),
       '#suffix' => '</p>',
     );
   }

@@ -133,10 +133,10 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
   );
   $form['machine_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Machine readable name'),
+    '#title' => t('Machine-readable name'),
     '#default_value' => $edit['machine_name'],
     '#maxlength' => 255,
-    '#description' => t('The unique machine readable name for this vocabulary, used for theme templates, can only contain lowercase letters, numbers and underscores.'),
+    '#description' => t('The unique machine-readable name for this vocabulary, used for theme templates. Can only contain lowercase letters, numbers, and underscores.'),
     '#required' => TRUE,
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
