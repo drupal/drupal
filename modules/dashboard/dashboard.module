@@ -476,11 +476,10 @@ function theme_dashboard_disabled_block($variables) {
  */
 function _dashboard_get_default_string($key) {
   $defaults = array(
-    'dashboard_empty_region_text_inactive' => 'This dashboard region is empty, click customize to add blocks to it.',
+    'dashboard_empty_region_text_inactive' => 'This dashboard region is empty. Click <em>Customize</em> to add blocks to it.',
     'dashboard_empty_block_text' => '(empty)',
     'dashboard_empty_region_text_active' => 'DRAG HERE',
   );
   return t(variable_get($key, $defaults[$key]));
-
 }
 
