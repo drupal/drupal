@@ -369,6 +369,11 @@ function ajax_deliver($page_callback_result) {
 function ajax_process_form($element, &$form_state) {
   $js_added = &drupal_static(__FUNCTION__, array());
 
+  // Nothing to do if there is neither a callback nor a path.
+  if (!(isset($element['#ajax']['callback']) || isset($element['#ajax']['path']))) {
+    return $element;
+  }
+
   // Add a reasonable default event handler if none was specified.
   if (isset($element['#ajax']) && !isset($element['#ajax']['event'])) {
     switch ($element['#type']) {
@@ -403,38 +408,45 @@ function ajax_process_form($element, &$form_state) {
 
   // Adding the same JavaScript settings twice will cause a recursion error,
   // we avoid the problem by checking if the JavaScript has already been added.
-  if (!isset($js_added[$element['#id']]) && (isset($element['#ajax']['callback']) || isset($element['#ajax']['path'])) && isset($element['#ajax']['event'])) {
-    drupal_add_library('system', 'form');
-    $element['#attached']['js'][] = 'misc/ajax.js';
+  if (!isset($js_added[$element['#id']]) && isset($element['#ajax']['event'])) {
+    $element['#attached']['library'][] = array('system', 'form');
+    $element['#attached']['js']['misc/ajax.js'] = array('weight' => JS_LIBRARY + 2);
 
-    $ajax_binding = array(
-      'url'      => isset($element['#ajax']['callback']) ? url('system/ajax') : url($element['#ajax']['path']),
-      'event'    => $element['#ajax']['event'],
-      'keypress' => empty($element['#ajax']['keypress']) ? NULL : $element['#ajax']['keypress'],
-      'wrapper'  => empty($element['#ajax']['wrapper']) ? NULL : $element['#ajax']['wrapper'],
-      'selector' => empty($element['#ajax']['selector']) ? '#' . $element['#id'] : $element['#ajax']['selector'],
-      'effect'   => empty($element['#ajax']['effect']) ? 'none' : $element['#ajax']['effect'],
-      'speed'    => empty($element['#ajax']['effect']) ? 'none' : $element['#ajax']['effect'],
-      'method'   => empty($element['#ajax']['method']) ? 'replace' : $element['#ajax']['method'],
-      'progress' => empty($element['#ajax']['progress']) ? array('type' => 'throbber') : $element['#ajax']['progress'],
-      'button'   => isset($element['#executes_submit_callback']) ? array($element['#name'] => $element['#value']) : FALSE,
+    $settings = $element['#ajax'];
+
+    // Assign default settings.
+    $settings += array(
+      'selector' => '#' . $element['#id'],
+      'effect' => 'none',
+      'speed' => 'none',
+      'method' => 'replace',
+      'progress' => array('type' => 'throbber'),
       'formPath' => implode('/', $element['#array_parents']),
     );
 
-    // Convert a simple #ajax['progress'] type string into an array.
-    if (is_string($ajax_binding['progress'])) {
-      $ajax_binding['progress'] = array('type' => $ajax_binding['progress']);
+    // Process special settings.
+    $settings['url'] = isset($settings['path']) ? url($settings['path']) : url('system/ajax');
+    unset($settings['path']);
+    $settings['button'] = isset($element['#executes_submit_callback']) ? array($element['#name'] => $element['#value']) : FALSE;
+
+    // Convert a simple #ajax['progress'] string into an array.
+    if (is_string($settings['progress'])) {
+      $settings['progress'] = array('type' => $settings['progress']);
     }
     // Change progress path to a full URL.
-    if (isset($ajax_binding['progress']['path'])) {
-      $ajax_binding['progress']['url'] = url($ajax_binding['progress']['path']);
+    if (isset($settings['progress']['path'])) {
+      $settings['progress']['url'] = url($settings['progress']['path']);
+      unset($settings['progress']['path']);
     }
     // Add progress.js if we're doing a bar display.
-    if ($ajax_binding['progress']['type'] == 'bar') {
-      drupal_add_js('misc/progress.js', array('cache' => FALSE));
+    if ($settings['progress']['type'] == 'bar') {
+      $element['#attached']['js']['misc/progress.js'] = array('cache' => FALSE);
     }
 
-    drupal_add_js(array('ajax' => array($element['#id'] => $ajax_binding)), 'setting');
+    // @todo This is incompatible with drupal_render() caching, but cannot be
+    //   assigned to #attached, because AJAX callbacks render the form in a way
+    //   so that #attached settings are not taken over.
+    drupal_add_js(array('ajax' => array($element['#id'] => $settings)), 'setting');
 
     $js_added[$element['#id']] = TRUE;
     $form_state['cache'] = TRUE;
