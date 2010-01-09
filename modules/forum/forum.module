@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.549 2010/01/09 21:54:00 webchick Exp $
+// $Id: forum.module,v 1.550 2010/01/09 23:09:51 webchick Exp $
 
 /**
  * @file
@@ -286,7 +286,7 @@ function forum_node_validate($node, $form) {
           ':vid' => $term->vid,
         ))->fetchField();
         if ($used && in_array($term->tid, $containers)) {
-          form_set_error('taxonomy_forums', t('The item %forum is only a forum container. Select one of the forums below it.', array('%forum' => $term->name)));
+          form_set_error('taxonomy_forums', t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->name)));
         }
       }
     }
