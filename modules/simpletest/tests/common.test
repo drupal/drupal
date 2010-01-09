@@ -1802,6 +1802,7 @@ class DrupalJSONTest extends DrupalUnitTestCase {
     }
     // Characters that must be escaped.
     $html_unsafe = array('<', '>', '&');
+    $html_unsafe_escaped = array('\u003c', '\u003e', '\u0026');
 
     // Verify there aren't character encoding problems with the source string.
     $this->assertIdentical(strlen($str), 128, t('A string with the full ASCII table has the correct length.'));
@@ -1823,6 +1824,10 @@ class DrupalJSONTest extends DrupalUnitTestCase {
     $json = drupal_json_encode($source);
     foreach ($html_unsafe as $char) {
       $this->assertTrue(strpos($json, $char) === FALSE, t('A JSON encoded string does not contain @s.', array('@s' => $char)));
+    }
+    // Verify that JSON encoding escapes the HTML unsafe characters
+    foreach ($html_unsafe_escaped as $char) {
+      $this->assertTrue(strpos($json, $char) > 0, t('A JSON encoded string contains @s.', array('@s' => $char)));
     }
     $json_decoded = drupal_json_decode($json);
     $this->assertNotIdentical($source, $json, t('An array encoded in JSON is not identical to the source.'));
