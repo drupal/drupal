@@ -241,12 +241,14 @@ function forum_overview($form, &$form_state) {
   foreach (element_children($form) as $key) {
     if (isset($form[$key]['#term'])) {
       $term = $form[$key]['#term'];
-      $form[$key]['view']['#markup'] = l($term['name'], 'forum/' . $term['tid']);
+      $form[$key]['view']['#href'] = 'forum/' . $term['tid'];
       if (in_array($form[$key]['#term']['tid'], variable_get('forum_containers', array()))) {
-        $form[$key]['edit']['#markup'] = l(t('edit container'), 'admin/structure/forum/edit/container/' . $term['tid']);
+        $form[$key]['edit']['#title'] = t('edit container');
+        $form[$key]['edit']['#href'] = 'admin/structure/forum/edit/container/' . $term['tid'];
       }
       else {
-        $form[$key]['edit']['#markup'] = l(t('edit forum'), 'admin/structure/forum/edit/forum/' . $term['tid']);
+        $form[$key]['edit']['#title'] = t('edit forum');
+        $form[$key]['edit']['#href'] = 'admin/structure/forum/edit/forum/' . $term['tid'];
       }
     }
   }
