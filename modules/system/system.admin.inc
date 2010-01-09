@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.246 2010/01/04 21:31:52 webchick Exp $
+// $Id: system.admin.inc,v 1.247 2010/01/09 09:46:09 dries Exp $
 
 /**
  * @file
@@ -1431,7 +1431,7 @@ function system_ip_blocking_form($form, $form_state) {
     '#type' => 'textfield',
     '#size' => 64,
     '#maxlength' => 32,
-    '#default_value' => arg(3),
+    '#default_value' => arg(4),
     '#description' => t('Enter a valid IP address.'),
   );
   $form['submit'] = array(
