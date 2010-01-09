@@ -41,5 +41,5 @@ function php_enable() {
  * Implements hook_disable().
  */
 function php_disable() {
-  drupal_set_message(t('The PHP module has been disabled. Please note that any existing content that was using the PHP filter will now be visible in plain text. This might pose a security risk by exposing sensitive information, if any, used in the PHP code.'));
+  drupal_set_message(t('The PHP module has been disabled. Any existing content that was using the PHP filter will now be visible in plain text. This might pose a security risk by exposing sensitive information, if any, used in the PHP code.'));
 }

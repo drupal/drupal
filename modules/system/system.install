@@ -66,7 +66,7 @@ function system_requirements($phase) {
     $requirements['php'] = array(
       'title' => $t('PHP'),
       'value' => $phpversion,
-      'description' => $t('The phpinfo() function has been disabled for security reasons. To see your server\'s phpinfo() information, change your PHP settings or contact your server administrator. For more information, please read the <a href="@phpinfo">Enabling and disabling phpinfo()</a> handbook page.', array('@phpinfo' => 'http://drupal.org/node/243993')),
+      'description' => $t('The phpinfo() function has been disabled for security reasons. To see your server\'s phpinfo() information, change your PHP settings or contact your server administrator. For more information, <a href="@phpinfo">Enabling and disabling phpinfo()</a> handbook page.', array('@phpinfo' => 'http://drupal.org/node/243993')),
       'severity' => REQUIREMENT_INFO,
     );
   }
@@ -241,7 +241,7 @@ function system_requirements($phase) {
       elseif ($phase == 'install') {
         // For the installer UI, we need different wording. 'value' will
         // be treated as version, so provide none there.
-        $description = $error . $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
+        $description = $error . $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
         $requirements['file system']['value'] = '';
       }
       if (!empty($description)) {
@@ -320,7 +320,7 @@ function system_requirements($phase) {
       $requirements['update status'] = array(
         'value' => $t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => $t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the update status module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information please read the <a href="@update">Update status handbook page</a>.', array('@update' => 'http://drupal.org/handbook/modules/update', '@module' => url('admin/modules'))),
+        'description' => $t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the update status module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href="@update">Update status handbook page</a>.', array('@update' => 'http://drupal.org/handbook/modules/update', '@module' => url('admin/modules'))),
       );
     }
     else {
@@ -1986,7 +1986,7 @@ function system_update_7013() {
     $timezone = 'UTC';
   }
   variable_set('date_default_timezone', $timezone);
-  drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Please check the ' . l('date and time configuration page', 'admin/config/regional/settings') . ' to configure it correctly.', 'warning');
+  drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Check the ' . l('date and time configuration page', 'admin/config/regional/settings') . ' to configure it correctly.', 'warning');
 }
 
 /**
@@ -2158,7 +2158,7 @@ function system_update_7021() {
         'cache' => -1,
       ));
     }
-    drupal_set_message('The contact form information setting was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the site-wide contact page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
+    drupal_set_message('The contact form information setting was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the site-wide contact page. The block was set to use the default text format, which might differ from the HTML based format used before. Check the block and ensure that the output is right.');
   }
   $insert->execute();
 
@@ -2181,7 +2181,7 @@ function system_update_7021() {
         'cache' => -1,
       ));
     }
-    drupal_set_message('The user registration guidelines were migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the user registration page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
+    drupal_set_message('The user registration guidelines were migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the user registration page. The block was set to use the default text format, which might differ from the HTML based format used before. Check the block and ensure that the output is right.');
     $insert->execute();
   }
 
@@ -2204,7 +2204,7 @@ function system_update_7021() {
         'cache' => -1,
       ));
     }
-    drupal_set_message('The site mission was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the front page in the highlighted content region. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a highlighted content region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
+    drupal_set_message('The site mission was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the front page in the highlighted content region. The block was set to use the default text format, which might differ from the HTML based format used before. Check the block and ensure that the output is right. If your theme does not have a highlighted content region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
     $insert->execute();
     // Migrate mission to RSS site description.
     variable_set('feed_description', $mission);
@@ -2230,7 +2230,7 @@ function system_update_7021() {
         'cache' => -1,
       ));
     }
-    drupal_set_message('The footer message was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to appear in the footer. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a footer region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
+    drupal_set_message('The footer message was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to appear in the footer. The block was set to use the default text format, which might differ from the HTML based format used before. Check the block and ensure that the output is right. If your theme does not have a footer region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
     $insert->execute();
   }
 
@@ -2363,7 +2363,7 @@ function system_update_7032() {
 function system_update_7033() {
   if (variable_get('cache') == 2) {
     variable_set('cache', CACHE_NORMAL);
-    return t('Aggressive caching was disabled and replaced with normal caching, please read the page caching section in default.settings.php for more information on how to enable similar functionality.');
+    return t('Aggressive caching was disabled and replaced with normal caching. Read the page caching section in default.settings.php for more information on how to enable similar functionality.');
   }
 }
 

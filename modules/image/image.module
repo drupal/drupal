@@ -609,7 +609,7 @@ function image_style_generate() {
       // to support Retry-After.
       drupal_add_http_header('503 Service Unavailable');
       drupal_add_http_header('Retry-After', 3);
-      print t('Image generation in progress, please try again shortly.');
+      print t('Image generation in progress. Try again shortly.');
       drupal_exit();
     }
   }

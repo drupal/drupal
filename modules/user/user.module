@@ -1842,11 +1842,11 @@ function user_login_final_validate($form, &$form_state) {
 
     if (isset($form_state['flood_control_triggered'])) {
       if ($form_state['flood_control_triggered'] == 'user') {
-        form_set_error('name', format_plural(variable_get('user_failed_login_user_limit', 5), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Please try again later, or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Please try again later, or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+        form_set_error('name', format_plural(variable_get('user_failed_login_user_limit', 5), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
       }
       else {
         // We did not find a uid, so the limit is IP-based.
-        form_set_error('name', t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Please try again later, or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+        form_set_error('name', t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
       }
     }
     else {

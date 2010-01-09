@@ -70,7 +70,7 @@ function openid_requirements($phase) {
       $requirements['bcmath'] = array(
         'value' => t('Not installed'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('OpenID requires the BC Math library for PHP which is missing or outdated. Please check the <a href="@url">PHP BC Math Library documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/en/book.bc.php')),
+        'description' => t('OpenID requires the BC Math library for PHP which is missing or outdated. Check the <a href="@url">PHP BC Math Library documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/en/book.bc.php')),
       );
     }
     else {

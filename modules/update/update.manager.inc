@@ -61,7 +61,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
   $available = update_get_available(TRUE);
   if (empty($available)) {
     $form['message'] = array(
-      '#markup' => t('There was a problem getting update information. Please try again later.'),
+      '#markup' => t('There was a problem getting update information. Try again later.'),
     );
     return $form;
   }

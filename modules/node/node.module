@@ -73,7 +73,7 @@ function node_help($path, $arg) {
       $message = t('The content access permissions need to be rebuilt.');
     }
     else {
-      $message = t('The content access permissions need to be rebuilt. Please visit <a href="@node_access_rebuild">this page</a>.', array('@node_access_rebuild' => url('admin/reports/status/rebuild')));
+      $message = t('The content access permissions need to be rebuilt. <a href="@node_access_rebuild">Rebuild permissions</a>.', array('@node_access_rebuild' => url('admin/reports/status/rebuild')));
     }
     drupal_set_message($message, 'error');
   }
@@ -3155,7 +3155,7 @@ function node_assign_owner_action_form($context) {
 function node_assign_owner_action_validate($form, $form_state) {
   $exists = (bool) db_query_range('SELECT 1 FROM {users} WHERE name = :name', 0, 1, array(':name' => $form_state['values']['owner_name']))->fetchField();
   if (!$exists) {
-    form_set_error('owner_name', t('Please enter a valid username.'));
+    form_set_error('owner_name', t('Enter a valid username.'));
   }
 }
 

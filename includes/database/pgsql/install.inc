@@ -42,7 +42,7 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
           '!link' => '<a href="INSTALL.pgsql.txt">INSTALL.pgsql.txt</a>'
         );
         $text  = 'The %driver database must use %encoding encoding to work with Drupal.';
-        $text .= 'Please recreate the database with %encoding encoding. See !link for more details.';
+        $text .= 'Recreate the database with %encoding encoding. See !link for more details.';
         $this->fail(st($text, $replacements));
       }
     } catch (Exception $e) {
@@ -100,7 +100,7 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
       $this->pass(st('PostgreSQL has initialized itself.'));
     }
     catch (Exception $e) {
-      $this->fail(st('Drupal could not be correctly setup with the existing database. Please revise any errors.'));
+      $this->fail(st('Drupal could not be correctly setup with the existing database. Revise any errors.'));
     }
   }
 }

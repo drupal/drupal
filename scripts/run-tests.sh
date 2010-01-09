@@ -226,7 +226,7 @@ function simpletest_script_parse_args() {
     exit;
   }
   elseif ($args['concurrency'] > 1 && !function_exists('pcntl_fork')) {
-    simpletest_script_print_error("Parallel test execution requires the Process Control extension to be compiled in PHP. Please see http://php.net/manual/en/intro.pcntl.php for more information.");
+    simpletest_script_print_error("Parallel test execution requires the Process Control extension to be compiled in PHP. See http://php.net/manual/en/intro.pcntl.php for more information.");
     exit;
   }
 
@@ -255,7 +255,7 @@ function simpletest_script_init($server_software) {
     list($php, ) = explode(' ', $_ENV['SUDO_COMMAND'], 2);
   }
   else {
-    simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Please supply the --php command line argument.');
+    simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Supply the --php command line argument.');
     simpletest_script_help();
     exit();
   }

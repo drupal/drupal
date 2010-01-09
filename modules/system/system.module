@@ -1805,7 +1805,7 @@ function system_form_user_register_form_alter(&$form, &$form_state) {
 function system_user_login(&$edit, $account) {
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->timezone && variable_get('configurable_timezones', 1) && variable_get('empty_timezone_message', 0)) {
-    drupal_set_message(t('Please configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
+    drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
   }
 }
 
@@ -1831,7 +1831,7 @@ function system_user_timezone(&$form, &$form_state) {
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   );
   if (!isset($account->timezone) && $account->uid == $user->uid && empty($form_state['input']['timezone'])) {
-    $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Please confirm the selection and click save.');
+    $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Confirm the selection and click save.');
     $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
     drupal_add_js('misc/timezone.js');
   }
@@ -2832,7 +2832,7 @@ function system_send_email_action_validate($form, $form_state) {
   // Validate the configuration form.
   if (!valid_email_address($form_values['recipient']) && $form_values['recipient'] != '%author') {
     // We want the literal %author placeholder to be emphasized in the error message.
-    form_set_error('recipient', t('Please enter a valid email address or %author.', array('%author' => '%author')));
+    form_set_error('recipient', t('Enter a valid email address or %author.', array('%author' => '%author')));
   }
 }
 

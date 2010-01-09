@@ -475,11 +475,11 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 
     $fp = fopen(DRUPAL_ROOT . '/' . $settings_file, 'w');
     if ($fp && fwrite($fp, $buffer) === FALSE) {
-      throw new Exception(st('Failed to modify %settings, please verify the file permissions.', array('%settings' => $settings_file)));
+      throw new Exception(st('Failed to modify %settings. Verify the file permissions.', array('%settings' => $settings_file)));
     }
   }
   else {
-    throw new Exception(st('Failed to open %settings, please verify the file permissions.', array('%settings' => $default_settings)));
+    throw new Exception(st('Failed to open %settings. Verify the file permissions.', array('%settings' => $default_settings)));
   }
 }
 
@@ -529,7 +529,7 @@ function drupal_verify_profile($install_state) {
       'title'       => st('Required modules'),
       'value'       => st('Required modules not found.'),
       'severity'    => REQUIREMENT_ERROR,
-      'description' => st('The following modules are required but were not found. Please move them into the appropriate modules subdirectory, such as <em>sites/all/modules</em>. Missing modules: !modules', array('!modules' => implode(', ', $modules))),
+      'description' => st('The following modules are required but were not found. Move them into the appropriate modules subdirectory, such as <em>sites/all/modules</em>. Missing modules: !modules', array('!modules' => implode(', ', $modules))),
     );
   }
   return $requirements;

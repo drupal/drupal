@@ -145,7 +145,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     // Submit contact form one over limit.
     $this->drupalGet('contact');
     $this->assertResponse(403, t('Access denied to anonymous user after reaching message treshold.'));
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Please try again later.', array('%number' => variable_get('contact_threshold_limit', 3), '@interval' => format_interval(600))), t('Message threshold reached.'));
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => variable_get('contact_threshold_limit', 3), '@interval' => format_interval(600))), t('Message threshold reached.'));
 
     // Delete created categories.
     $this->drupalLogin($admin_user);
@@ -371,12 +371,12 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
 
     // Submit contact form one over limit.
     $this->drupalGet('user/' . $this->contact_user->uid. '/contact');
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Please try again later.', array('%number' => $flood_limit, '@interval' => format_interval(variable_get('contact_threshold_window', 3600)))), 'Normal user denied access to flooded contact form.');
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => $flood_limit, '@interval' => format_interval(variable_get('contact_threshold_window', 3600)))), 'Normal user denied access to flooded contact form.');
 
     // Test that the admin user can still access the contact form even though
     // the flood limit was reached.
     $this->drupalLogin($this->admin_user);
-    $this->assertNoText('Please try again later.', 'Admin user not denied access to flooded contact form.');
+    $this->assertNoText('Try again later.', 'Admin user not denied access to flooded contact form.');
   }
 
   /**

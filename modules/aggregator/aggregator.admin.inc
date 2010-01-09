@@ -127,7 +127,7 @@ function aggregator_form_feed_validate($form, &$form_state) {
   if ($form_state['values']['op'] == t('Save')) {
     // Ensure URL is valid.
     if (!valid_url($form_state['values']['url'], TRUE)) {
-      form_set_error('url', t('The URL %url is invalid. Please enter a fully-qualified URL, such as http://www.example.com/feed.xml.', array('%url' => $form_state['values']['url'])));
+      form_set_error('url', t('The URL %url is invalid. Enter a fully-qualified URL, such as http://www.example.com/feed.xml.', array('%url' => $form_state['values']['url'])));
     }
     // Check for duplicate titles.
     if (isset($form_state['values']['fid'])) {
@@ -138,10 +138,10 @@ function aggregator_form_feed_validate($form, &$form_state) {
     }
     foreach ($result as $feed) {
       if (strcasecmp($feed->title, $form_state['values']['title']) == 0) {
-        form_set_error('title', t('A feed named %feed already exists. Please enter a unique title.', array('%feed' => $form_state['values']['title'])));
+        form_set_error('title', t('A feed named %feed already exists. Enter a unique title.', array('%feed' => $form_state['values']['title'])));
       }
       if (strcasecmp($feed->url, $form_state['values']['url']) == 0) {
-        form_set_error('url', t('A feed with this URL %url already exists. Please enter a unique URL.', array('%url' => $form_state['values']['url'])));
+        form_set_error('url', t('A feed with this URL %url already exists. Enter a unique URL.', array('%url' => $form_state['values']['url'])));
       }
     }
   }
@@ -525,7 +525,7 @@ function aggregator_form_category_validate($form, &$form_state) {
       $category = db_query("SELECT cid FROM {aggregator_category} WHERE title = :title", array(':title' => $form_state['values']['title']))->fetchObject();
     }
     if ($category) {
-      form_set_error('title', t('A category named %category already exists. Please enter a unique title.', array('%category' => $form_state['values']['title'])));
+      form_set_error('title', t('A category named %category already exists. Enter a unique title.', array('%category' => $form_state['values']['title'])));
     }
   }
 }

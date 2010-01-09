@@ -99,7 +99,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/structure/block/manage/block/' . $bid . '/configure');
     $this->assertNoText(t('Block body'));
     $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/configure', array(), t('Save block'));
-    $this->assertNoText(t('Please ensure that each block description is unique.'));
+    $this->assertNoText(t('Ensure that each block description is unique.'));
 
     // Confirm that the custom block is still being displayed using configured text format.
     $this->drupalGet('node');

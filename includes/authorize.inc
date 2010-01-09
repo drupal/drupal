@@ -43,7 +43,7 @@ function authorize_filetransfer_form($form_state) {
 
   $form['information']['main_header'] = array(
     '#prefix' => '<h3>',
-    '#markup' => t('To continue, please provide your server connection details'),
+    '#markup' => t('To continue, provide your server connection details'),
     '#suffix' => '</h3>',
   );
 

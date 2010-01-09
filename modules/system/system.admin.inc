@@ -1452,7 +1452,7 @@ function system_ip_blocking_form_validate($form, &$form_state) {
     form_set_error('ip', t('You may not block your own IP address.'));
   }
   elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
-    form_set_error('ip', t('Please enter a valid IP address.'));
+    form_set_error('ip', t('Enter a valid IP address.'));
   }
 }
 
@@ -1659,7 +1659,7 @@ function system_performance_settings() {
   $disabled = !$is_writable;
   $disabled_message = '';
   if(!$is_writable) {
-    $disabled_message = ' ' . t('<strong class="error">Please set up the <a href="!file-system">public files directory</a> to make these optimizations available.</strong>', array('!file-system' => url('admin/config/media/file-system')));
+    $disabled_message = ' ' . t('<strong class="error">Set up the <a href="!file-system">public files directory</a> to make these optimizations available.</strong>', array('!file-system' => url('admin/config/media/file-system')));
   }
 
   $form['bandwidth_optimization'] = array(
@@ -2102,7 +2102,7 @@ function system_add_date_format_type_form_validate($form, &$form_state) {
     }
     $types = system_get_date_types();
     if (in_array(trim($form_state['values']['machine_name']), array_keys($types))) {
-      form_set_error('machine_name', t('This date type already exists. Please enter a unique type.'));
+      form_set_error('machine_name', t('This date type already exists. Enter a unique type.'));
     }
   }
 }
@@ -2809,7 +2809,7 @@ function system_add_date_formats_form_validate($form, &$form_state) {
   $formats = system_get_date_formats('custom');
   $format = trim($form_state['values']['date_format']);
   if (!empty($formats) && in_array($format, array_keys($formats)) && (!isset($form_state['values']['dfid']) || $form_state['values']['dfid'] != $formats[$format]['dfid'])) {
-    form_set_error('date_format', t('This format already exists. Please enter a unique format string.'));
+    form_set_error('date_format', t('This format already exists. Enter a unique format string.'));
   }
 }
 

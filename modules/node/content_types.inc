@@ -284,7 +284,7 @@ function node_type_form_validate($form, &$form_state) {
     // 'theme' conflicts with theme_node_form().
     // '0' is invalid, since elsewhere we check it using empty().
     if (in_array($type->type, array('0', 'theme'))) {
-      form_set_error('type', t("Invalid machine-readable name. Please enter a name other than %invalid.", array('%invalid' => $type->type)));
+      form_set_error('type', t("Invalid machine-readable name. Enter a name other than %invalid.", array('%invalid' => $type->type)));
     }
   }
 

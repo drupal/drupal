@@ -860,7 +860,7 @@ function hook_form($node, $form_state) {
       2 => 'Option B',
       3 => 'Option C',
     ),
-    '#description' => t('Please choose an option.'),
+    '#description' => t('Choose an option.'),
   );
 
   return $form;

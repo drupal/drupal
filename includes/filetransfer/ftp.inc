@@ -112,10 +112,10 @@ class FileTransferFTPExtension extends FileTransferFTP implements FileTransferCh
     $this->connection = ftp_connect($this->hostname, $this->port);
 
     if (!$this->connection) {
-      throw new FileTransferException("Cannot connect to FTP Server, please check settings");
+      throw new FileTransferException("Cannot connect to FTP Server, check settings");
     }
     if (!ftp_login($this->connection, $this->username, $this->password)) {
-      throw new FileTransferException("Cannot login to FTP server, please check username and password");
+      throw new FileTransferException("Cannot login to FTP server. Check username and password");
     }
   }
 

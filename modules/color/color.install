@@ -23,14 +23,14 @@ function color_requirements($phase) {
       }
       else {
         $requirements['gd']['severity'] = REQUIREMENT_ERROR;
-        $requirements['gd']['description'] = t('The GD library for PHP is enabled, but was compiled without PNG support. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/ref.image.php'));
+        $requirements['gd']['description'] = t('The GD library for PHP is enabled, but was compiled without PNG support. Check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/ref.image.php'));
       }
     }
     else {
       $requirements['gd'] = array(
         'value' => t('Not installed'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('The GD library for PHP is missing or outdated. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/ref.image.php')),
+        'description' => t('The GD library for PHP is missing or outdated. Check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/ref.image.php')),
       );
     }
     $requirements['gd']['title'] = t('GD library');
