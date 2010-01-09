@@ -286,7 +286,7 @@ function forum_node_validate($node, $form) {
           ':vid' => $term->vid,
         ))->fetchField();
         if ($used && in_array($term->tid, $containers)) {
-          form_set_error('taxonomy_forums', t('The item %forum is only a forum container. Select one of the forums below it.', array('%forum' => $term->name)));
+          form_set_error('taxonomy_forums', t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->name)));
         }
       }
     }
