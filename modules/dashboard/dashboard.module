@@ -204,9 +204,9 @@ function dashboard_admin($launch_customize = FALSE) {
       'formToken' => drupal_get_token('dashboard-update'),
       'launchCustomize' => $launch_customize,
       'dashboard' => url('admin/dashboard'),
-      'emptyBlockText' => _dashboard_get_default_string('dashboard_empty_block_text'),
-      'emptyRegionTextInactive' => _dashboard_get_default_string('dashboard_empty_region_text_inactive'),
-      'emptyRegionTextActive' => _dashboard_get_default_string('dashboard_empty_region_text_active'),
+      'emptyBlockText' => t('(empty)'),
+      'emptyRegionTextInactive' => t('This dashboard region is empty. Click <em>Customize</em> to add blocks to it.'),
+      'emptyRegionTextActive' => t('DRAG HERE'),
     ),
   );
   $build = array(
@@ -466,20 +466,5 @@ function theme_dashboard_disabled_block($variables) {
     . '</div>';
   }
   return $output;
-}
-
-/**
- * Central storage for strings.
- *
- * @param <type> $key
- * @return string
- */
-function _dashboard_get_default_string($key) {
-  $defaults = array(
-    'dashboard_empty_region_text_inactive' => 'This dashboard region is empty. Click <em>Customize</em> to add blocks to it.',
-    'dashboard_empty_block_text' => '(empty)',
-    'dashboard_empty_region_text_active' => 'DRAG HERE',
-  );
-  return t(variable_get($key, $defaults[$key]));
 }
 
