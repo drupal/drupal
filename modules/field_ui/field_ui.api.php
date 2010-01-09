@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.api.php,v 1.3 2009/09/26 15:57:38 dries Exp $
+// $Id: field_ui.api.php,v 1.4 2010/01/09 23:15:26 webchick Exp $
 
 /**
  * @file
@@ -66,7 +66,7 @@ function hook_field_instance_settings_form($field, $instance) {
     '#default_value' => $settings['text_processing'],
     '#options' => array(
       t('Plain text'),
-      t('Filtered text (user selects input format)'),
+      t('Filtered text (user selects text format)'),
     ),
   );
   if ($field['type'] == 'text_with_summary') {
