@@ -1431,7 +1431,7 @@ function system_ip_blocking_form($form, $form_state) {
     '#type' => 'textfield',
     '#size' => 64,
     '#maxlength' => 32,
-    '#default_value' => arg(3),
+    '#default_value' => arg(4),
     '#description' => t('Enter a valid IP address.'),
   );
   $form['submit'] = array(
