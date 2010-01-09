@@ -640,7 +640,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
 
   $form['name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Term name'),
+    '#title' => t('Name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
     '#required' => TRUE);
@@ -648,7 +648,6 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
-    '#description' => t('A description of the term. To be displayed on taxonomy/term pages and RSS feeds.'),
     '#text_format' => $edit['format'],
   );
 
@@ -660,9 +659,9 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
 
   field_attach_form('taxonomy_term', (object) $edit, $form, $form_state);
 
-  $form['advanced'] = array(
+  $form['relations'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Advanced options'),
+    '#title' => t('Relations'),
     '#collapsible' => TRUE,
     '#collapsed' => $vocabulary->hierarchy < 2,
   );
@@ -688,7 +687,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
         $options[$term->tid] = str_repeat('-', $term->depth) . $term->name;
       }
     }
-    $form['advanced']['parent'] = array(
+    $form['relations']['parent'] = array(
       '#type' => 'select',
       '#title' => t('Parent terms'),
       '#options' => $options,
@@ -697,7 +696,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     );
 
   }
-  $form['advanced']['weight'] = array(
+  $form['relations']['weight'] = array(
     '#type' => 'textfield',
     '#title' => t('Weight'),
     '#size' => 6,
