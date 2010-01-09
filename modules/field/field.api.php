@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.59 2010/01/02 15:00:34 dries Exp $
+// $Id: field.api.php,v 1.60 2010/01/09 21:54:00 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -1333,7 +1333,7 @@ function hook_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
       foreach ($language as $delta) {
         $query->values(array(
           'nid' => $object->nid,
-          'title' => $object->title[LANGUAGE_NONE][0]['value'],
+          'title' => $object->title,
           'tid' => $delta['value'],
           'sticky' => $object->sticky,
           'created' => $object->created,

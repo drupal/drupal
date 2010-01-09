@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tokens.inc,v 1.9 2010/01/07 20:55:49 dries Exp $
+// $Id: comment.tokens.inc,v 1.10 2010/01/09 21:54:00 webchick Exp $
 
 /**
  * @file
@@ -210,7 +210,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
         case 'node':
           $node = node_load($comment->nid);
-          $title = $node->title[LANGUAGE_NONE][0]['value'];
+          $title = $node->title;
           $replacements[$original] = $sanitize ? filter_xss($title) : $title;
           break;
       }

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.86 2010/01/08 07:36:53 webchick Exp $
+// $Id: node.admin.inc,v 1.87 2010/01/09 21:54:00 webchick Exp $
 
 /**
  * @file
@@ -345,7 +345,7 @@ function _node_mass_update_batch_process($nodes, $updates, &$context) {
     $node = _node_mass_update_helper($nid, $updates);
 
     // Store result for post-processing in the finished callback.
-    $context['results'][] = l($node->title[LANGUAGE_NONE][0]['value'], 'node/' . $node->nid);
+    $context['results'][] = l($node->title, 'node/' . $node->nid);
 
     // Update our progress information.
     $context['sandbox']['progress']++;
@@ -470,7 +470,7 @@ function node_admin_nodes() {
       'title' => array(
         'data' => array(
           '#type' => 'link',
-          '#title' => $node->title[LANGUAGE_NONE][0]['value'],
+          '#title' => $node->title,
           '#href' => 'node/' . $node->nid,
           '#options' => $l_options,
           '#suffix' => ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
