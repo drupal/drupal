@@ -1853,30 +1853,7 @@ function system_update_7005() {
  * longer needed.
  */
 function system_update_7006() {
-  $schema['registry'] = array(
-    'fields' => array(
-      'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'type'   => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
-      'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'module'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'weight'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-    ),
-    'primary key' => array('name', 'type'),
-    'indexes' => array(
-      'hook' => array('type', 'weight', 'module'),
-    ),
-  );
-  $schema['registry_file'] = array(
-    'fields' => array(
-      'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
-      'filectime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'filemtime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-    ),
-    'primary key' => array('filename'),
-  );
-  db_create_table('registry', $schema['registry']);
-  db_create_table('registry_file', $schema['registry_file']);
-  registry_rebuild();
+  // Update moved to update_fix_d7_requirements().
 }
 
 /**

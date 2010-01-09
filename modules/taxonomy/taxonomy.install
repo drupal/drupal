@@ -208,26 +208,30 @@ function taxonomy_schema() {
 }
 
 /**
- * Add vocabulary machine_name column.
+ * Add {vocabulary}.machine_name column.
  */
 function taxonomy_update_7002() {
-  $field = array(
-    'type' => 'varchar',
-    'length' => 255,
-    'not null' => TRUE,
-    'default' => '',
-    'description' => 'The vocabulary machine name.',
-  );
+  if (!variable_get('taxonomy_update_7002_done', FALSE)) {
+    $field = array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => 'The vocabulary machine name.',
+    );
 
-  db_add_field('taxonomy_vocabulary', 'machine_name', $field);
+    db_add_field('taxonomy_vocabulary', 'machine_name', $field);
 
-  foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
-    $machine_name = 'vocabulary_' . $vid;
-    db_update('taxonomy_vocabulary')
-      ->fields(array('machine_name' => 'vocabulary_' . $vid))
-      ->condition('vid', $vid)
-      ->execute();
-    field_attach_create_bundle('taxonomy_term', $machine_name);
+    foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
+      $machine_name = 'vocabulary_' . $vid;
+      db_update('taxonomy_vocabulary')
+        ->fields(array('machine_name' => 'vocabulary_' . $vid))
+        ->condition('vid', $vid)
+        ->execute();
+      field_attach_create_bundle('taxonomy_term', $machine_name);
+    }
+
+    variable_set('taxonomy_update_7002_done', TRUE);
   }
 }
 
@@ -309,7 +313,7 @@ function taxonomy_update_7004() {
     $field_name = 'taxonomy_' . $vocabulary->machine_name;
     $field = array(
       'field_name' => $field_name,
-      'type' => 'taxonomy_term',
+      'type' => 'taxonomy_term_reference',
       'cardinality' => $vocabulary->multiple || $vocabulary->tags ? FIELD_CARDINALITY_UNLIMITED : 1,
       'settings' => array(
         'required' => $vocabulary->required ? TRUE : FALSE,
@@ -410,7 +414,7 @@ function taxonomy_update_7005(&$sandbox) {
 }
 
 /**
- * Add vocabulary machine_name column.
+ * Add {taxonomy_term_data}.format column.
  */
 function taxonomy_update_7006() {
   db_add_field('taxonomy_term_data', 'format', array(
@@ -423,7 +427,7 @@ function taxonomy_update_7006() {
 }
 
 /**
- * Add index on taxonomy_term_data.name column to speed up taxonomy_get_term_by_name().
+ * Add index on {taxonomy_term_data}.name column to speed up taxonomy_get_term_by_name().
  */
 function taxonomy_update_7007() {
   db_add_index('taxonomy_term_data', 'name', array('name'));

@@ -234,7 +234,7 @@ function filter_update_7004() {
 
   // Enable all existing filters ({filter} contained only enabled previously).
   db_update('filter')
-    ->fields('status', '1')
+    ->fields(array('status' => '1'))
     ->execute();
 
   // Move filter settings from system variables into {filter}.settings.
@@ -262,11 +262,11 @@ function filter_update_7004() {
       }
     }
     if (!empty($settings)) {
-    	db_upddate('filter')
-    	  ->fields(array('settings' => serialize($settings)))
-    	  ->condition('format', $filter->format)
-    	  ->condition('name', $filter->name)
-    	  ->execute();
+      db_update('filter')
+        ->fields(array('settings' => serialize($settings)))
+        ->condition('format', $filter->format)
+        ->condition('name', $filter->name)
+        ->execute();
     }
   }
 }

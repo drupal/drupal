@@ -427,13 +427,13 @@ function user_update_7004(&$sandbox) {
     // Initialize batch update information.
     $sandbox['progress'] = 0;
     $sandbox['last_user_processed'] = -1;
-    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {user} WHERE picture <> ''")->fetchField();
+    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE picture <> ''")->fetchField();
   }
 
   // As a batch operation move the photos into the {file} table and update the
   // {users} records.
   $limit = 500;
-  $result = db_query_range("SELECT uid, picture FROM {user} WHERE picture <> '' AND uid > :uid ORDER BY uid", 0, $limit, array(':uid' => $sandbox['last_user_processed']));
+  $result = db_query_range("SELECT uid, picture FROM {users} WHERE picture <> '' AND uid > :uid ORDER BY uid", 0, $limit, array(':uid' => $sandbox['last_user_processed']));
   foreach ($result as $user) {
     // Don't bother adding files that don't exist.
     if (!file_exists($user->picture)) {
@@ -473,8 +473,8 @@ function user_update_7004(&$sandbox) {
   // When we're finished, drop the old picture field and rename the new one to
   // replace it.
   if (isset($sandbox['#finished']) && $sandbox['#finished'] == 1) {
-    db_drop_field('user', 'picture');
-    db_change_field('user', 'picture_fid', 'picture', $picture_field);
+    db_drop_field('users', 'picture');
+    db_change_field('users', 'picture_fid', 'picture', $picture_field);
   }
 }
 

@@ -178,6 +178,7 @@ function update_fix_d7_requirements() {
     // Add the cache_path table.
     $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
     $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
+    db_create_table('cache_path', $schema['cache_path']);
 
     // system_update_7042() renames columns, but these are needed to bootstrap.
     // Add empty columns for now.
@@ -249,6 +250,31 @@ function update_fix_d7_requirements() {
       'primary key' => array('name'),
     );
     db_create_table('semaphore', $schema['semaphore']);
+
+    // Add registry tables since these are required during an update.
+    $schema['registry'] = array(
+      'fields' => array(
+        'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+        'type'   => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
+        'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+        'module'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+        'weight'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      ),
+      'primary key' => array('name', 'type'),
+      'indexes' => array(
+        'hook' => array('type', 'weight', 'module'),
+      ),
+    );
+    $schema['registry_file'] = array(
+      'fields' => array(
+        'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
+        'filectime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+        'filemtime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      ),
+      'primary key' => array('filename'),
+    );
+    db_create_table('registry', $schema['registry']);
+    db_create_table('registry_file', $schema['registry_file']);
 
     $schema['date_format_type'] = array(
       'description' => 'Stores configured date format types.',

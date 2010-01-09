@@ -369,6 +369,9 @@ function node_update_7000() {
     ->fields(array('module' => 'node_content'))
     ->condition('module', 'node')
     ->execute();
+
+  // Rename the module column to base.
+  db_change_field('node_type', 'module', 'base', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
 }
 
 /**
@@ -434,6 +437,8 @@ function node_update_7005() {
  * Convert body and teaser from node properties to fields, and migrate status/comment/promote and sticky columns to the {node_revision} table.
  */
 function node_update_7006(&$context) {
+  taxonomy_update_7002();
+
   $context['#finished'] = 0;
 
   // Get node type info for every invocation.
@@ -460,6 +465,12 @@ function node_update_7006(&$context) {
   }
   else {
     // Subsequent invocations.
+
+    // Save the field IDs for field_sql_storage_field_storage_write().
+    $title_field = field_info_field('title');
+    $title_field_id = $title_field['id'];
+    $body_field = field_info_field('body');
+    $body_field_id = $body_field['id'];
 
     $found = FALSE;
     if ($context['total']) {
@@ -507,7 +518,7 @@ function node_update_7006(&$context) {
           $node->body[LANGUAGE_NONE][0]['format'] = !empty($revision->format) ? $revision->format : variable_get('filter_default_format', 1);
           // This is a core update and no contrib modules are enabled yet, so
           // we can assume default field storage for a faster update.
-          field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array());
+          field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array($title_field_id, $body_field_id));
         }
 
         // Migrate the status columns to the {node_revision} table.

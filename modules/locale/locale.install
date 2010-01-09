@@ -33,10 +33,9 @@ function locale_install() {
  */
 
 /**
- * Add context field and allow longer location.
+ * Add context field index and allow longer location.
  */
 function locale_update_7000() {
-  db_add_field('locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
   db_drop_index('locales_source', 'source');
   db_add_index('locales_source', 'source_context', array(array('source', 30), 'context'));
   db_change_field('locales_source', 'location', 'location', array('type' => 'text', 'size' => 'big', 'not null' => FALSE));
