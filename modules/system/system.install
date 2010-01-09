@@ -94,6 +94,19 @@ function system_requirements($phase) {
   else {
     $requirements['php_register_globals']['value'] = $t('Disabled');
   }
+  
+  // Test PDO library availability.
+  $requirements['pdo'] = array(
+    'title' => $t('PDO library'),
+  );
+  if (extension_loaded('pdo')) {
+    $requirements['pdo']['value'] = $t('Enabled');
+  }
+  else {
+    $requirements['pdo']['value'] = $t('Disabled');
+    $requirements['pdo']['severity'] = REQUIREMENT_ERROR;
+    $requirements['pdo']['description'] = $t('Your server does not have the PHP PDO extension enabled. See the <a href="@system_requirements">system requirements page</a> for more information.', array('@system_requirements' => 'http://drupal.org/requirements'));
+  }
 
   // Test PHP memory_limit
   $memory_limit = ini_get('memory_limit');

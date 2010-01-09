@@ -571,7 +571,7 @@ function list_themes($refresh = FALSE) {
     $themes = array();
     // Extract from the database only when it is available.
     // Also check that the site is not in the middle of an install or update.
-    if (db_is_active() && !defined('MAINTENANCE_MODE')) {
+    if (!defined('MAINTENANCE_MODE') && db_is_active()) {
       foreach (system_list('theme') as $theme) {
         if (file_exists($theme->filename)) {
           $theme->info = unserialize($theme->info);
@@ -2266,7 +2266,7 @@ function template_preprocess(&$variables, $hook) {
   $variables['is_admin']            = FALSE;
   $variables['is_front']            = FALSE;
   $variables['logged_in']           = FALSE;
-  if ($variables['db_is_active'] = db_is_active()  && !defined('MAINTENANCE_MODE')) {
+  if ($variables['db_is_active'] = !defined('MAINTENANCE_MODE') && db_is_active()) {
     // Check for administrators.
     if (user_access('access administration pages')) {
       $variables['is_admin'] = TRUE;

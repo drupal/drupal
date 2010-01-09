@@ -208,6 +208,11 @@ function drupal_detect_baseurl($file = 'install.php') {
 function drupal_detect_database_types() {
   $databases = array();
 
+  // Initialize the database system if it has not been
+  // initialized yet. We do not initialize it earlier to make
+  // requirements check during the installation.
+  require_once DRUPAL_ROOT . '/includes/database/database.inc';
+
   // We define a driver as a directory in /includes/database that in turn
   // contains a database.inc file. That allows us to drop in additional drivers
   // without modifying the installer.
