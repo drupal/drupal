@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.564 2010/01/07 14:48:56 webchick Exp $
+// $Id: theme.inc,v 1.565 2010/01/09 06:35:38 dries Exp $
 
 /**
  * @file
@@ -2288,9 +2288,12 @@ function template_process(&$variables, $hook) {
   $variables['classes'] = implode(' ', $variables['classes_array']);
 
   // Flatten out attributes, title_attributes, and content_attributes.
-  $variables['attributes'] = drupal_attributes($variables['attributes_array']);
-  $variables['title_attributes'] = drupal_attributes($variables['title_attributes_array']);
-  $variables['content_attributes'] = drupal_attributes($variables['content_attributes_array']);
+  // Because this function can be called very often, and often with empty
+  // attributes, optimize performance by only calling drupal_attributes() if
+  // necessary.
+  $variables['attributes'] = $variables['attributes_array'] ? drupal_attributes($variables['attributes_array']) : '';
+  $variables['title_attributes'] = $variables['title_attributes_array'] ? drupal_attributes($variables['title_attributes_array']) : '';
+  $variables['content_attributes'] = $variables['content_attributes_array'] ? drupal_attributes($variables['content_attributes_array']) : '';
 }
 
 /**
