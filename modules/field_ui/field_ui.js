@@ -21,7 +21,7 @@ function attachUpdateSelects(context) {
   $('#field-overview .field-type-select', context).each(function () {
     this.targetSelect = $('.widget-type-select', $(this).parents('tr').eq(0));
 
-    $(this).bind('mouseup keyup', function () {
+    $(this).bind('change keyup', function () {
       var selectedFieldType = this.options[this.selectedIndex].value;
       var options = (selectedFieldType in widgetTypes ? widgetTypes[selectedFieldType] : []);
       this.targetSelect.fieldPopulateOptions(options);
@@ -29,7 +29,7 @@ function attachUpdateSelects(context) {
 
     // Trigger change on initial pageload to get the right widget options
     // when field type comes pre-selected (on failed validation).
-    $(this).trigger('mouseup');
+    $(this).trigger('change', false);
   });
 
   // 'Existing field' select updates its 'Widget' select and 'Label' textfield.
@@ -37,7 +37,7 @@ function attachUpdateSelects(context) {
     this.targetSelect = $('.widget-type-select', $(this).parents('tr').eq(0));
     this.targetTextfield = $('.label-textfield', $(this).parents('tr').eq(0));
 
-    $(this).change(function (e, updateText) {
+    $(this).bind('change keyup', function (e, updateText) {
       var updateText = (typeof updateText == 'undefined' ? true : updateText);
       var selectedField = this.options[this.selectedIndex].value;
       var selectedFieldType = (selectedField in fields ? fields[selectedField].type : null);
