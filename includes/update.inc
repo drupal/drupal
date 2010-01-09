@@ -383,6 +383,27 @@ function update_fix_d7_requirements() {
     );
     db_create_table('queue', $schema['queue']);
 
+    // Create the sequences table.
+    $schema['sequences'] = array(
+      'description' => 'Stores IDs.',
+      'fields' => array(
+        'value' => array(
+          'description' => 'The value of the sequence.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+       ),
+      'primary key' => array('value'),
+    );
+    db_create_table('sequences', $schema['sequences']);
+    // Initialize the table with the maximum current increment of the tables
+    // that will rely on it for their ids.
+    $max_aid = db_query('SELECT MAX(aid) FROM {actions_aid}')->fetchField();
+    $max_uid = db_query('SELECT MAX(uid) FROM {users}')->fetchField();
+    $max_batch_id = db_query('SELECT MAX(bid) FROM {batch}')->fetchField();
+    db_insert('sequences')->fields(array('value' => max($max_aid, $max_uid, $max_batch_id)))->execute();
+
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
       db_add_field('locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));

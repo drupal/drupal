@@ -179,13 +179,17 @@ class SystemQueue implements DrupalQueueInterface {
   }
 
   public function createItem($data) {
-    $record = new stdClass();
-    $record->name = $this->name;
-    $record->data = $data;
-    // We cannot rely on REQUEST_TIME because many items might be created by a
-    // single request which takes longer than 1 second.
-    $record->created = time();
-    return drupal_write_record('queue', $record) !== FALSE;
+    // During a Drupal 6.x to 7.x update, drupal_get_schema() does not contain
+    // the queue table yet, so we cannot rely on drupal_write_record().
+    $query = db_insert('queue')
+      ->fields(array(
+        'name' => $this->name,
+        'data' => serialize($data),
+        // We cannot rely on REQUEST_TIME because many items might be created
+        // by a single request which takes longer than 1 second.
+        'created' => time(),
+      ));
+    return (bool) $query->execute();
   }
 
   public function numberOfItems() {
