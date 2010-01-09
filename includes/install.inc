@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.121 2010/01/04 21:31:52 webchick Exp $
+// $Id: install.inc,v 1.122 2010/01/09 22:01:42 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -207,6 +207,11 @@ function drupal_detect_baseurl($file = 'install.php') {
  */
 function drupal_detect_database_types() {
   $databases = array();
+
+  // Initialize the database system if it has not been
+  // initialized yet. We do not initialize it earlier to make
+  // requirements check during the installation.
+  require_once DRUPAL_ROOT . '/includes/database/database.inc';
 
   // We define a driver as a directory in /includes/database that in turn
   // contains a database.inc file. That allows us to drop in additional drivers

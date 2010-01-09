@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.231 2010/01/04 23:08:34 webchick Exp $
+// $Id: install.php,v 1.232 2010/01/09 22:01:42 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -791,7 +791,7 @@ function install_verify_settings() {
   global $db_prefix, $databases;
 
   // Verify existing settings (if any).
-  if (!empty($databases)) {
+  if (!empty($databases) && install_verify_pdo()) {
     $database = $databases['default']['default'];
     drupal_static_reset('conf_path');
     $settings_file = './' . conf_path(FALSE) . '/settings.php';
@@ -801,6 +801,13 @@ function install_verify_settings() {
     }
   }
   return FALSE;
+}
+
+/**
+ * Verify PDO library.
+ */
+function install_verify_pdo() {
+  return extension_loaded('pdo');
 }
 
 /**

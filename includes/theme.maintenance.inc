@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.51 2010/01/07 07:41:45 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.52 2010/01/09 22:01:42 webchick Exp $
 
 /**
  * @file
@@ -28,7 +28,6 @@ function _drupal_maintenance_theme() {
   require_once DRUPAL_ROOT . '/includes/unicode.inc';
   require_once DRUPAL_ROOT . '/includes/file.inc';
   require_once DRUPAL_ROOT . '/includes/module.inc';
-  require_once DRUPAL_ROOT . '/includes/database/database.inc';
   unicode_check();
 
   // Install and update pages are treated differently to prevent theming overrides.
@@ -39,6 +38,7 @@ function _drupal_maintenance_theme() {
     if (!db_is_active()) {
       // Because we are operating in a crippled environment, we need to
       // bootstrap just enough to allow hook invocations to work.
+      require_once DRUPAL_ROOT . '/includes/database/database.inc';
       $module_list['system']['filename'] = 'modules/system/system.module';
       module_list(TRUE, FALSE, FALSE, $module_list);
       drupal_load('module', 'system');
