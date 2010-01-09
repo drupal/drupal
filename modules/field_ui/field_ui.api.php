@@ -66,7 +66,7 @@ function hook_field_instance_settings_form($field, $instance) {
     '#default_value' => $settings['text_processing'],
     '#options' => array(
       t('Plain text'),
-      t('Filtered text (user selects input format)'),
+      t('Filtered text (user selects text format)'),
     ),
   );
   if ($field['type'] == 'text_with_summary') {
