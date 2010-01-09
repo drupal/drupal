@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.25 2010/01/08 06:36:34 webchick Exp $
+// $Id: update.inc,v 1.26 2010/01/09 02:51:09 webchick Exp $
 
 /**
  * @file
@@ -382,6 +382,27 @@ function update_fix_d7_requirements() {
       ),
     );
     db_create_table('queue', $schema['queue']);
+
+    // Create the sequences table.
+    $schema['sequences'] = array(
+      'description' => 'Stores IDs.',
+      'fields' => array(
+        'value' => array(
+          'description' => 'The value of the sequence.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+       ),
+      'primary key' => array('value'),
+    );
+    db_create_table('sequences', $schema['sequences']);
+    // Initialize the table with the maximum current increment of the tables
+    // that will rely on it for their ids.
+    $max_aid = db_query('SELECT MAX(aid) FROM {actions_aid}')->fetchField();
+    $max_uid = db_query('SELECT MAX(uid) FROM {users}')->fetchField();
+    $max_batch_id = db_query('SELECT MAX(bid) FROM {batch}')->fetchField();
+    db_insert('sequences')->fields(array('value' => max($max_aid, $max_uid, $max_batch_id)))->execute();
 
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
