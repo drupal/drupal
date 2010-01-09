@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.69 2010/01/08 11:10:32 dries Exp $
+// $Id: block.admin.inc,v 1.70 2010/01/09 23:03:21 webchick Exp $
 
 /**
  * @file
@@ -384,7 +384,7 @@ function block_admin_configure_validate($form, &$form_state) {
       ':info' => $form_state['values']['info'],
     ))->fetchField();
     if (empty($form_state['values']['info']) || $custom_block_exists) {
-      form_set_error('info', t('Please ensure that each block description is unique.'));
+      form_set_error('info', t('Ensure that each block description is unique.'));
     }
   }
 }
@@ -462,7 +462,7 @@ function block_add_block_form_validate($form, &$form_state) {
   $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE info = :info', 0, 1, array(':info' => $form_state['values']['info']))->fetchField();
 
   if (empty($form_state['values']['info']) || $custom_block_exists) {
-    form_set_error('info', t('Please ensure that each block description is unique.'));
+    form_set_error('info', t('Ensure that each block description is unique.'));
   }
 }
 

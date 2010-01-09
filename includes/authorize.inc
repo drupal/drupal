@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.inc,v 1.6 2009/12/31 13:43:36 dries Exp $
+// $Id: authorize.inc,v 1.7 2010/01/09 23:03:21 webchick Exp $
 
 /**
  * @file
@@ -43,7 +43,7 @@ function authorize_filetransfer_form($form_state) {
 
   $form['information']['main_header'] = array(
     '#prefix' => '<h3>',
-    '#markup' => t('To continue, please provide your server connection details'),
+    '#markup' => t('To continue, provide your server connection details'),
     '#suffix' => '</h3>',
   );
 

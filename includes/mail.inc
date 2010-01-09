@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.29 2009/12/04 16:31:04 dries Exp $
+// $Id: mail.inc,v 1.30 2010/01/09 23:03:21 webchick Exp $
 
 /**
  * @file
@@ -151,7 +151,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
     // Log errors
     if (!$message['result']) {
       watchdog('mail', 'Error sending e-mail (from %from to %to).', array('%from' => $message['from'], '%to' => $message['to']), WATCHDOG_ERROR);
-      drupal_set_message(t('Unable to send e-mail. Please contact the site administrator if the problem persists.'), 'error');
+      drupal_set_message(t('Unable to send e-mail. Contact the site administrator if the problem persists.'), 'error');
     }
   }
 

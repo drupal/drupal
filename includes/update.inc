@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.27 2010/01/09 22:07:56 webchick Exp $
+// $Id: update.inc,v 1.28 2010/01/09 23:03:21 webchick Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function update_prepare_d7_bootstrap() {
         'title' => 'Settings file',
         'value' => $writable ? 'The settings file is writable.' : 'The settings file is not writable.',
         'severity' => $writable ? REQUIREMENT_OK : REQUIREMENT_ERROR,
-        'description' => $writable ? '' : 'Drupal requires write permissions to <em>' . $settings_file . '</em> during the update process. If you are unsure how to grant file permissions, please consult the <a href="http://drupal.org/server-permissions">online handbook</a>.',
+        'description' => $writable ? '' : 'Drupal requires write permissions to <em>' . $settings_file . '</em> during the update process. If you are unsure how to grant file permissions, consult the <a href="http://drupal.org/server-permissions">online handbook</a>.',
       ),
     );
     update_extra_requirements($requirements);

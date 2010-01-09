@@ -36,7 +36,7 @@
  * @author      Vincent Blavet <vincent@phpconcept.net>
  * @copyright   1997-2008 The Authors
  * @license     http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @version     CVS: $Id: system.tar.inc,v 1.2 2009/08/17 19:14:41 webchick Exp $
+ * @version     CVS: $Id: system.tar.inc,v 1.3 2010/01/09 23:03:21 webchick Exp $
  * @link        http://pear.php.net/package/Archive_Tar
  */
 
@@ -47,7 +47,7 @@ define ('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
 * Creates a (compressed) Tar archive
 *
 * @author   Vincent Blavet <vincent@phpconcept.net>
-* @version  $Revision: 1.2 $
+* @version  $Revision: 1.3 $
 * @license  http://www.opensource.org/licenses/bsd-license.php New BSD License
 * @package  Archive_Tar
 */
@@ -154,7 +154,7 @@ class Archive_Tar
             }
             if (!extension_loaded($extname)) {
                 die("The extension '$extname' couldn't be found.\n".
-                    "Please make sure your version of PHP was built ".
+                    "Make sure your version of PHP was built ".
                     "with '$extname' support.\n");
                 return false;
             }

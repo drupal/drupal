@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.54 2010/01/04 20:34:28 dries Exp $
+// $Id: node.api.php,v 1.55 2010/01/09 23:03:21 webchick Exp $
 
 /**
  * @file
@@ -860,7 +860,7 @@ function hook_form($node, $form_state) {
       2 => 'Option B',
       3 => 'Option C',
     ),
-    '#description' => t('Please choose an option.'),
+    '#description' => t('Choose an option.'),
   );
 
   return $form;

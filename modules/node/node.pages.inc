@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.109 2010/01/09 21:54:01 webchick Exp $
+// $Id: node.pages.inc,v 1.110 2010/01/09 23:03:21 webchick Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@ function theme_node_add_list($variables) {
     $output .= '</dl>';
   }
   else {
-    $output = '<p>' . t('You have not created any content types yet. Please go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
+    $output = '<p>' . t('You have not created any content types yet. Go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
   }
   return $output;
 }

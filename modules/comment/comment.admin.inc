@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.38 2010/01/07 05:23:51 webchick Exp $
+// $Id: comment.admin.inc,v 1.39 2010/01/09 23:03:21 webchick Exp $
 
 /**
  * @file
@@ -140,7 +140,7 @@ function comment_admin_overview_validate($form, &$form_state) {
   $form_state['values']['comments'] = array_diff($form_state['values']['comments'], array(0));
   // We can't execute any 'Update options' if no comments were selected.
   if (count($form_state['values']['comments']) == 0) {
-    form_set_error('', t('Please select one or more comments to perform the update on.'));
+    form_set_error('', t('Select one or more comments to perform the update on.'));
   }
 }
 

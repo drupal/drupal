@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.117 2010/01/09 21:54:01 webchick Exp $
+// $Id: system.api.php,v 1.118 2010/01/09 23:03:21 webchick Exp $
 
 /**
  * @file
@@ -1844,7 +1844,7 @@ function hook_requirements($phase) {
     }
     else {
       $requirements['cron'] = array(
-        'description' => $t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron')),
+        'description' => $t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron')),
         'severity' => REQUIREMENT_ERROR,
         'value' => $t('Never run'),
       );
