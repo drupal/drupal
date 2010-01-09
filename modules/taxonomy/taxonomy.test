@@ -379,13 +379,13 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // Post an article.
     $edit = array();
     $langcode = LANGUAGE_NONE;
-    $edit["title[$langcode][0][value]"] = $this->randomName();
+    $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit[$this->instance['field_name'] . '[' . $langcode .'][]'] = $term1->tid;
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the node is viewed.
-    $node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
+    $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($term1->name, t('Term is displayed when viewing the node.'));
 
@@ -414,13 +414,13 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     $edit = array();
     $langcode = LANGUAGE_NONE;
-    $edit["title[$langcode][0][value]"] = $this->randomName();
+    $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
     $edit[$instance['field_name'] . "[$langcode]"] = implode(', ', $terms);
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Page'), '%title' => $edit["title[$langcode][0][value]"])), t('The node was created successfully'));
+    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Page'), '%title' => $edit["title"])), t('The node was created successfully'));
     foreach ($terms as $term) {
       $this->assertText($term, t('The term was saved and appears on the node page'));
     }
@@ -950,15 +950,15 @@ class TaxonomyNodeFilterTestCase extends TaxonomyWebTestCase {
     search_update_totals();
     
     // Search for the node title.
-    $this->drupalGet('search/node/' . $node->title[$this->langcode][0]['value']);
-    $this->assertText($node->title[$this->langcode][0]['value'], t('Article node found with search.'));
+    $this->drupalGet('search/node/' . $node->title);
+    $this->assertText($node->title, t('Article node found with search.'));
 
     // Search for the node title, filtering by term 1.
-    $this->drupalGet('search/node/' . $node->title[$this->langcode][0]['value'] . ' term:' . $term1->tid);
-    $this->assertText($node->title[$this->langcode][0]['value'], t('Article node found with search filtering by term 1.'));
+    $this->drupalGet('search/node/' . $node->title . ' term:' . $term1->tid);
+    $this->assertText($node->title, t('Article node found with search filtering by term 1.'));
 
     // Search for the node title, filtering by term 2.
-    $this->drupalGet('search/node/' . $node->title[$this->langcode][0]['value'] . ' term:' . $term2->tid);
-    $this->assertNoText($node->title[$this->langcode][0]['value'], t('Article node not found with search filtering by term 2.'));
+    $this->drupalGet('search/node/' . $node->title . ' term:' . $term2->tid);
+    $this->assertNoText($node->title, t('Article node not found with search filtering by term 2.'));
   }
 }

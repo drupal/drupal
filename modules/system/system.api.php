@@ -1354,7 +1354,7 @@ function hook_mail($key, &$message, $params) {
       '%uid' => $node->uid,
       '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
       '%node_type' => node_type_get_name($node),
-      '%title' => $node->title[LANGUAGE_NONE][0]['value'],
+      '%title' => $node->title,
       '%teaser' => $node->teaser,
       '%body' => $node->body,
     );
@@ -2953,7 +2953,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? check_plain($node->title[LANGUAGE_NONE][0]['value']) : $node->title[LANGUAGE_NONE][0]['value'];
+          $replacements[$original] = $sanitize ? check_plain($node->title) : $node->title;
           break;
 
         case 'edit-url':

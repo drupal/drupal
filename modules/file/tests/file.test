@@ -90,7 +90,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   function uploadNodeFile($file, $field_name, $nid_or_type, $new_revision = TRUE) {
     $langcode = LANGUAGE_NONE;
     $edit = array(
-      "title[$langcode][0][value]" => $this->randomName(),
+      "title" => $this->randomName(),
       'revision' => (string) (int) $new_revision,
     );
 
@@ -347,7 +347,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
 
     // Try to post a new node without uploading a file.
     $langcode = LANGUAGE_NONE;
-    $edit = array("title[$langcode][0][value]" => $this->randomName());
+    $edit = array("title" => $this->randomName());
     $this->drupalPost('node/add/' . $type_name, $edit, t('Save'));
     $this->assertRaw(t('!title field is required.', array('!title' => $instance['label'])), t('Node save failed when required file field was empty.'));
 
@@ -364,7 +364,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     $this->createFileField($field_name, $type_name, array('cardinality' => FIELD_CARDINALITY_UNLIMITED), array('required' => '1'));
 
     // Try to post a new node without uploading a file in the multivalue field.
-    $edit = array("title[$langcode][0][value]" => $this->randomName());
+    $edit = array('title' => $this->randomName());
     $this->drupalPost('node/add/' . $type_name, $edit, t('Save'));
     $this->assertRaw(t('!title field is required.', array('!title' => $instance['label'])), t('Node save failed when required multiple value file field was empty.'));
 

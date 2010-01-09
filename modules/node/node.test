@@ -31,15 +31,15 @@ class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
 
     // Confirm that promoted nodes appear in the default node listing.
     $this->drupalGet('node');
-    $this->assertText($node1->title[LANGUAGE_NONE][0]['value'], t('Node title appears on the default listing.'));
-    $this->assertText($node2->title[LANGUAGE_NONE][0]['value'], t('Node title appears on the default listing.'));
-    $this->assertNoText($node3->title[LANGUAGE_NONE][0]['value'], t('Node title does not appear in the default listing.'));
-    $this->assertNoText($node4->title[LANGUAGE_NONE][0]['value'], t('Node title does not appear in the default listing.'));
+    $this->assertText($node1->title, t('Node title appears on the default listing.'));
+    $this->assertText($node2->title, t('Node title appears on the default listing.'));
+    $this->assertNoText($node3->title, t('Node title does not appear in the default listing.'));
+    $this->assertNoText($node4->title, t('Node title does not appear in the default listing.'));
 
     // Load nodes with only a condition. Nodes 3 and 4 will be loaded.
     $nodes = node_load_multiple(NULL, array('promote' => 0));
-    $this->assertEqual($node3->title[LANGUAGE_NONE][0]['value'], $nodes[$node3->nid]->title[LANGUAGE_NONE][0]['value'], t('Node was loaded.'));
-    $this->assertEqual($node4->title[LANGUAGE_NONE][0]['value'], $nodes[$node4->nid]->title[LANGUAGE_NONE][0]['value'], t('Node was loaded.'));
+    $this->assertEqual($node3->title, $nodes[$node3->nid]->title, t('Node was loaded.'));
+    $this->assertEqual($node4->title, $nodes[$node4->nid]->title, t('Node was loaded.'));
     $count = count($nodes);
     $this->assertTrue($count == 2, t('@count nodes loaded.', array('@count' => $count)));
 
@@ -58,9 +58,9 @@ class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
     $nodes = node_load_multiple(array(1, 2, 3, 4), array('type' => 'article'));
     $count = count($nodes);
     $this->assertTrue($count == 3, t('@count nodes loaded', array('@count' => $count)));
-    $this->assertEqual($nodes[$node1->nid]->title[LANGUAGE_NONE][0]['value'], $node1->title[LANGUAGE_NONE][0]['value'], t('Node successfully loaded.'));
-    $this->assertEqual($nodes[$node2->nid]->title[LANGUAGE_NONE][0]['value'], $node2->title[LANGUAGE_NONE][0]['value'], t('Node successfully loaded.'));
-    $this->assertEqual($nodes[$node3->nid]->title[LANGUAGE_NONE][0]['value'], $node3->title[LANGUAGE_NONE][0]['value'], t('Node successfully loaded.'));
+    $this->assertEqual($nodes[$node1->nid]->title, $node1->title, t('Node successfully loaded.'));
+    $this->assertEqual($nodes[$node2->nid]->title, $node2->title, t('Node successfully loaded.'));
+    $this->assertEqual($nodes[$node3->nid]->title, $node3->title, t('Node successfully loaded.'));
     $this->assertFalse(isset($nodes[$node4->nid]));
 
     // Now that all nodes have been loaded into the static cache, ensure that
@@ -68,16 +68,16 @@ class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
     $nodes = node_load_multiple(array(1, 2, 3, 4), array('type' => 'article'));
     $count = count($nodes);
     $this->assertTrue($count == 3, t('@count nodes loaded.', array('@count' => $count)));
-    $this->assertEqual($nodes[$node1->nid]->title[LANGUAGE_NONE][0]['value'], $node1->title[LANGUAGE_NONE][0]['value'], t('Node successfully loaded'));
-    $this->assertEqual($nodes[$node2->nid]->title[LANGUAGE_NONE][0]['value'], $node2->title[LANGUAGE_NONE][0]['value'], t('Node successfully loaded'));
-    $this->assertEqual($nodes[$node3->nid]->title[LANGUAGE_NONE][0]['value'], $node3->title[LANGUAGE_NONE][0]['value'], t('Node successfully loaded'));
+    $this->assertEqual($nodes[$node1->nid]->title, $node1->title, t('Node successfully loaded'));
+    $this->assertEqual($nodes[$node2->nid]->title, $node2->title, t('Node successfully loaded'));
+    $this->assertEqual($nodes[$node3->nid]->title, $node3->title, t('Node successfully loaded'));
     $this->assertFalse(isset($nodes[$node4->nid]), t('Node was not loaded'));
 
     // Load nodes by nid, where type = article and promote = 0.
     $nodes = node_load_multiple(array(1, 2, 3, 4), array('type' => 'article', 'promote' => 0));
     $count = count($nodes);
     $this->assertTrue($count == 1, t('@count node loaded', array('@count' => $count)));
-    $this->assertEqual($nodes[$node3->nid]->title[LANGUAGE_NONE][0]['value'], $node3->title[LANGUAGE_NONE][0]['value'], t('Node successfully loaded.'));
+    $this->assertEqual($nodes[$node3->nid]->title, $node3->title, t('Node successfully loaded.'));
   }
 }
 
@@ -152,7 +152,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
     // Confirm that revisions revert properly.
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
-                        array('@type' => 'Page', '%title' => $nodes[1]->title[LANGUAGE_NONE][0]['value'],
+                        array('@type' => 'Page', '%title' => $nodes[1]->title,
                               '%revision-date' => format_date($nodes[1]->revision_timestamp))), t('Revision reverted.'));
     $reverted_node = node_load($node->nid);
     $this->assertTrue(($nodes[1]->body[LANGUAGE_NONE][0]['value'] == $reverted_node->body[LANGUAGE_NONE][0]['value']), t('Node reverted correctly.'));
@@ -161,7 +161,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/delete", array(), t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
                         array('%revision-date' => format_date($nodes[1]->revision_timestamp),
-                              '@type' => 'Page', '%title' => $nodes[1]->title[LANGUAGE_NONE][0]['value'])), t('Revision deleted.'));
+                              '@type' => 'Page', '%title' => $nodes[1]->title)), t('Revision deleted.'));
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid', array(':nid' => $node->nid, ':vid' => $nodes[1]->vid))->fetchField() == 0, t('Revision not found.'));
   }
 }
@@ -187,7 +187,7 @@ class PageEditTestCase extends DrupalWebTestCase {
    */
   function testPageEdit() {
     $langcode = LANGUAGE_NONE;
-    $title_key = "title[$langcode][0][value]";
+    $title_key = "title";
     $body_key = "body[$langcode][0][value]";
     // Create node to edit.
     $edit = array();
@@ -229,13 +229,13 @@ class PageEditTestCase extends DrupalWebTestCase {
     // Edit the same node, creating a new revision.
     $this->drupalGet("node/$node->nid/edit");
     $edit = array();
-    $edit[$title_key] = $this->randomName(8);
+    $edit['title'] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
     $edit['revision'] = TRUE;
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Ensure that the node revision has been created.
-    $revised_node = $this->drupalGetNodeByTitle($edit[$title_key]);
+    $revised_node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertNotIdentical($node->vid, $revised_node->vid, 'A new revision has been created.');
     // Ensure that the node author is preserved when it was not changed in the
     // edit form.
@@ -269,7 +269,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
    */
   function testPagePreview() {
     $langcode = LANGUAGE_NONE;
-    $title_key = "title[$langcode][0][value]";
+    $title_key = "title";
     $body_key = "body[$langcode][0][value]";
 
     // Fill in node creation form and preview node.
@@ -293,7 +293,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
    */
   function testPagePreviewWithRevisions() {
     $langcode = LANGUAGE_NONE;
-    $title_key = "title[$langcode][0][value]";
+    $title_key = "title";
     $body_key = "body[$langcode][0][value]";
     // Force revision on page content.
     variable_set('node_options_page', array('status', 'revision'));
@@ -343,15 +343,15 @@ class NodeCreationTestCase extends DrupalWebTestCase {
     // Create a node.
     $edit = array();
     $langcode = LANGUAGE_NONE;
-    $edit["title[$langcode][0][value]"] = $this->randomName(8);
+    $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the page has been created.
-    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Page', '%title' => $edit["title[$langcode][0][value]"])), t('Page created.'));
+    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Page', '%title' => $edit["title"])), t('Page created.'));
 
     // Check that the node exists in the database.
-    $node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
+    $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->assertTrue($node, t('Node found in database.'));
   }
 
@@ -362,18 +362,18 @@ class NodeCreationTestCase extends DrupalWebTestCase {
     // Create a node.
     $edit = array();
     $langcode = LANGUAGE_NONE;
-    $edit["title[$langcode][0][value]"] = 'testing_transaction_exception';
+    $edit["title"] = 'testing_transaction_exception';
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     if (Database::getConnection()->supportsTransactions()) {
       // Check that the node does not exist in the database.
-      $node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
+      $node = $this->drupalGetNodeByTitle($edit["title"]);
       $this->assertFalse($node, t('Transactions supported, and node not found in database.'));
     }
     else {
       // Check that the node exists in the database.
-      $node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
+      $node = $this->drupalGetNodeByTitle($edit["title"]);
       $this->assertTrue($node, t('Transactions not supported, and node found in database.'));
 
       // Check that the failed rollback was logged.
@@ -484,20 +484,17 @@ class NodeTitleXSSTestCase extends DrupalWebTestCase {
 
     $xss = '<script>alert("xss")</script>';
     $title = $xss . $this->randomName();
-    $langcode = LANGUAGE_NONE;
-    $edit = array(
-      "title[$langcode][0][value]" => $title,
-    );
+    $edit = array("title" => $title);
 
     $this->drupalPost('node/add/page', $edit, t('Preview'));
     $this->assertNoRaw($xss, t('Harmful tags are escaped when previewing a node.'));
 
-    $settings = array('title' => array(LANGUAGE_NONE => array(array('value' => $title))));
+    $settings = array('title' => $title);
     $node = $this->drupalCreateNode($settings);
 
     $this->drupalGet('node/' . $node->nid);
     // assertTitle() decodes HTML-entities inside the <title> element.
-    $this->assertTitle($edit["title[$langcode][0][value]"] . ' | Drupal', t('Title is diplayed when viewing a node.'));
+    $this->assertTitle($edit["title"] . ' | Drupal', t('Title is diplayed when viewing a node.'));
     $this->assertNoRaw($xss, t('Harmful tags are escaped when viewing a node.'));
 
     $this->drupalGet('node/' . $node->nid . '/edit');
@@ -567,12 +564,12 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
     // Create a node.
     $edit = array();
     $langcode = LANGUAGE_NONE;
-    $edit["title[$langcode][0][value]"] = $this->randomName(8);
+    $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
-    $node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
+    $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->assertRaw('<span class="submitted">', t('Post information is displayed.'));
   }
 
@@ -589,12 +586,12 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
     // Create a node.
     $edit = array();
     $langcode = LANGUAGE_NONE;
-    $edit["title[$langcode][0][value]"] = $this->randomName(8);
+    $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
-    $node = $this->drupalGetNodeByTitle($edit["title[$langcode][0][value]"]);
+    $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->assertNoRaw('<span class="submitted">', t('Post information is not displayed.'));
   }
 }
@@ -833,7 +830,7 @@ class NodeSaveTestCase extends DrupalWebTestCase {
     $test_nid = $max_nid + mt_rand(1000, 1000000);
     $title = $this->randomName(8);
     $node = array(
-      'title' => array(LANGUAGE_NONE => array(array('value' => $title))),
+      'title' => $title,
       'body' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(32)))),
       'uid' => $this->web_user->uid,
       'type' => 'article',
@@ -1130,23 +1127,23 @@ class NodeTitleTestCase extends DrupalWebTestCase {
   function testNodeTitle() {
     // Create page content with title
     $settings = array(
-      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => $this->randomName(8),
     );
     $node = $this->drupalCreateNode($settings);
 
     // Test <title> tag.
     $this->drupalGet("node/$node->nid");
     $xpath = '//title';
-    $this->assertEqual(current($this->xpath($xpath)), $node->title[LANGUAGE_NONE][0]['value'] .' | Drupal', 'Page title is equal to node title.', 'Node');
+    $this->assertEqual(current($this->xpath($xpath)), $node->title .' | Drupal', 'Page title is equal to node title.', 'Node');
 
     // Test breadcrumb in comment preview.
     $this->drupalGet("comment/reply/$node->nid");
     $xpath = '//div[@class="breadcrumb"]/a[last()]';
-    $this->assertEqual(current($this->xpath($xpath)), $node->title[LANGUAGE_NONE][0]['value'], 'Node breadcrumb is equal to node title.', 'Node');
+    $this->assertEqual(current($this->xpath($xpath)), $node->title, 'Node breadcrumb is equal to node title.', 'Node');
 
     // Test node title in comment preview.
     $xpath = '//div[@id="node-'. $node->nid .'"]/h2/a';
-    $this->assertEqual(current($this->xpath($xpath)), $node->title[LANGUAGE_NONE][0]['value'], 'Node preview title is equal to node title.', 'Node');
+    $this->assertEqual(current($this->xpath($xpath)), $node->title, 'Node preview title is equal to node title.', 'Node');
   }
 }
 

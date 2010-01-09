@@ -443,9 +443,9 @@ function node_update_7006(&$context) {
   if (!isset($context['total'])) {
     // Initial invocation.
 
-    // Re-save node types to create title and body field instances.
+    // Re-save node types to create body field instances.
     foreach ($node_types as $type => $info) {
-      if ($info->has_title || $info->has_body) {
+      if ($info->has_body) {
         node_type_save($info);
       }
     }
@@ -490,7 +490,7 @@ function node_update_7006(&$context) {
             'vid' => $revision->vid,
             'type' => $revision->type,
           );
-          $node->title[LANGUAGE_NONE][0]['value'] = $revision->title;
+          $node->title = $revision->title;
           if (!empty($revision->teaser) && $revision->teaser != text_summary($revision->body)) {
             $node->body[LANGUAGE_NONE][0]['summary'] = $revision->teaser;
           }

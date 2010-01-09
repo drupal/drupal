@@ -72,7 +72,7 @@ function book_admin_settings_validate($form, &$form_state) {
  * @ingroup forms.
  */
 function book_admin_edit($form, $form_state, $node) {
-  drupal_set_title($node->title[LANGUAGE_NONE][0]['value']);
+  drupal_set_title($node->title);
   $form['#node'] = $node;
   _book_admin_table($node, $form);
   $form['save'] = array(
@@ -126,18 +126,18 @@ function book_admin_edit_submit($form, &$form_state) {
       if ($row['title']['#default_value'] != $values['title']) {
         $node = node_load($values['nid'], FALSE);
         $langcode = LANGUAGE_NONE;
-        $node->title = array($langcode => array(array('value' => $values['title'])));
+        $node->title = $values['title'];
         $node->book['link_title'] = $values['title'];
         $node->revision = 1;
-        $node->log = t('Title changed from %original to %current.', array('%original' => $node->title[$langcode][0]['value'], '%current' => $values['title']));
+        $node->log = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $values['title']));
 
         node_save($node);
-        watchdog('content', 'book: updated %title.', array('%title' => $node->title[$langcode][0]['value']), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
+        watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
       }
     }
   }
 
-  drupal_set_message(t('Updated book %title.', array('%title' => $form['#node']->title[$langcode][0]['value'])));
+  drupal_set_message(t('Updated book %title.', array('%title' => $form['#node']->title)));
 }
 
 /**

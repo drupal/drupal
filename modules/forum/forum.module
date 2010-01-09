@@ -502,7 +502,7 @@ function forum_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
       foreach ($language as $item) {
         $query->values(array(
           'nid' => $object->nid,
-          'title' => $object->title[LANGUAGE_NONE][0]['value'],
+          'title' => $object->title,
           'tid' => $item['tid'],
           'sticky' => $object->sticky,
           'created' => $object->created,
@@ -536,7 +536,7 @@ function forum_field_storage_pre_update($obj_type, $object, &$skip_fields) {
         foreach ($language as $item) {
           $query->values(array(
             'nid' => $object->nid,
-            'title' => $object->title[LANGUAGE_NONE][0]['value'],
+            'title' => $object->title,
             'tid' => $item['tid'],
             'sticky' => $object->sticky,
             'created' => $object->created,
@@ -677,6 +677,12 @@ function forum_block_view_pre_render($elements) {
  */
 function forum_form($node, $form_state) {
   $type = node_type_get_type($node);
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => check_plain($type->title_label),
+    '#default_value' => !empty($node->title) ? $node->title : '',
+    '#required' => TRUE, '#weight' => -5
+  );
 
   if (!empty($node->nid)) {
     $forum_terms = $node->taxonomy_forums;

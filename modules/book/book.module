@@ -511,7 +511,7 @@ function _book_add_form_elements(&$form, &$form_state, $node) {
 
   if (isset($node->nid) && ($nid == $node->book['original_bid']) && ($node->book['parent_depth_limit'] == 0)) {
     // This is the top level node in a maximum depth book and thus cannot be moved.
-    $options[$node->nid] = $node->title[LANGUAGE_NONE][0]['value'];
+    $options[$node->nid] = $node->title;
   }
   else {
     foreach (book_get_books() as $book) {
@@ -560,7 +560,7 @@ function _book_update_outline($node) {
   $new = empty($node->book['mlid']);
 
   $node->book['link_path'] = 'node/' . $node->nid;
-  $node->book['link_title'] = $node->title[LANGUAGE_NONE][0]['value'];
+  $node->book['link_title'] = $node->title;
   $node->book['parent_mismatch'] = FALSE; // The normal case.
 
   if ($node->book['bid'] == $node->nid) {
@@ -916,7 +916,7 @@ function book_form_node_delete_confirm_alter(&$form, $form_state) {
 
   if (isset($node->book) && $node->book['has_children']) {
     $form['book_warning'] = array(
-      '#markup' => '<p>' . t('%title is part of a book outline, and has associated child pages. If you proceed with deletion, the child pages will be relocated automatically.', array('%title' => $node->title[LANGUAGE_NONE][0]['value'])) . '</p>',
+      '#markup' => '<p>' . t('%title is part of a book outline, and has associated child pages. If you proceed with deletion, the child pages will be relocated automatically.', array('%title' => $node->title)) . '</p>',
       '#weight' => -10,
     );
   }
@@ -1139,7 +1139,7 @@ function book_node_export($node, $children = '') {
  */
 function template_preprocess_book_node_export_html(&$variables) {
   $variables['depth'] = $variables['node']->book['depth'];
-  $variables['title'] = check_plain($variables['node']->title[LANGUAGE_NONE][0]['value']);
+  $variables['title'] = check_plain($variables['node']->title);
   $variables['content'] = $variables['node']->rendered;
 }
 

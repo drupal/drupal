@@ -1340,11 +1340,11 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);
-    $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('English alias works.'));
+    $this->assertText($node->title, t('English alias works.'));
 
     // Confirm custom language path alias works.
     $this->drupalGet($prefix . '/' . $custom_language_path);
-    $this->assertText($node->title[LANGUAGE_NONE][0]['value'], t('Custom language alias works.'));
+    $this->assertText($node->title, t('Custom language alias works.'));
 
     $this->drupalLogout();
   }
@@ -1451,7 +1451,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $node_body =  $this->randomName();
     $edit = array(
       'type' => 'page',
-      'title' => array(LANGUAGE_NONE => array(array('value' => $node_title))),
+      'title' => $node_title,
       'body' => array($langcode => array(array('value' => $node_body))),
       'language' => $langcode,
     );
@@ -1711,7 +1711,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
   function testMultilingualNodeForm() {
     // Create page content.
     $langcode = LANGUAGE_NONE;
-    $title_key = "title[$langcode][0][value]";
+    $title_key = "title";
     $title_value = $this->randomName(8);
     $body_key = "body[$langcode][0][value]";
     $body_value = $this->randomName(16);
@@ -1750,7 +1750,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
   function testMultilingualDisplaySettings() {
     // Create page content.
     $langcode = LANGUAGE_NONE;
-    $title_key = "title[$langcode][0][value]";
+    $title_key = "title";
     $title_value = $this->randomName(8);
     $body_key = "body[$langcode][0][value]";
     $body_value = $this->randomName(16);

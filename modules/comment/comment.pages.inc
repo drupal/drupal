@@ -29,7 +29,7 @@
  */
 function comment_reply($node, $pid = NULL) {
   // Set the breadcrumb trail.
-  drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->title[LANGUAGE_NONE][0]['value'], 'node/' . $node->nid)));
+  drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->title, 'node/' . $node->nid)));
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $build = array();
 

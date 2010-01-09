@@ -138,29 +138,29 @@ class BlogTestCase extends DrupalWebTestCase {
     // View blog node.
     $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(200);
-    $this->assertTitle($node->title[LANGUAGE_NONE][0]['value'] . ' | Drupal', t('Blog node was displayed'));
+    $this->assertTitle($node->title . ' | Drupal', t('Blog node was displayed'));
     $this->assertText(t('Home ' . $crumb . ' Blogs ' . $crumb . ' @name' . $quote . 's blog', array('@name' => format_username($node_user))), t('Breadcrumbs were displayed'));
 
     // View blog edit node.
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertTitle('Edit Blog entry ' . $node->title[LANGUAGE_NONE][0]['value'] . ' | Drupal', t('Blog edit node was displayed'));
+      $this->assertTitle('Edit Blog entry ' . $node->title . ' | Drupal', t('Blog edit node was displayed'));
     }
 
     if ($response == 200) {
       // Edit blog node.
       $edit = array();
       $langcode = LANGUAGE_NONE;
-      $edit["title[$langcode][0][value]"] = 'node/' . $node->nid;
+      $edit["title"] = 'node/' . $node->nid;
       $edit["body[$langcode][0][value]"] = $this->randomName(256);
       $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-      $this->assertRaw(t('Blog entry %title has been updated.', array('%title' => $edit["title[$langcode][0][value]"])), t('Blog node was edited'));
+      $this->assertRaw(t('Blog entry %title has been updated.', array('%title' => $edit["title"])), t('Blog node was edited'));
 
       // Delete blog node.
       $this->drupalPost('node/' . $node->nid . '/delete', array(), t('Delete'));
       $this->assertResponse($response);
-      $this->assertRaw(t('Blog entry %title has been deleted.', array('%title' => $edit["title[$langcode][0][value]"])), t('Blog node was deleted'));
+      $this->assertRaw(t('Blog entry %title has been deleted.', array('%title' => $edit["title"])), t('Blog node was deleted'));
     }
   }
 

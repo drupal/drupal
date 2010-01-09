@@ -222,6 +222,14 @@ function poll_form($node, &$form_state) {
 
   $form_state['cache'] = TRUE;
 
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => check_plain($type->title_label),
+    '#required' => TRUE,
+    '#default_value' => $node->title,
+    '#weight' => -5,
+  );
+
   if (isset($form_state['choice_count'])) {
     $choice_count = $form_state['choice_count'];
   }
@@ -721,7 +729,7 @@ function poll_vote($form, &$form_state) {
 function template_preprocess_poll_vote(&$variables) {
   $form = $variables['form'];
   $variables['choice'] = drupal_render($form['choice']);
-  $variables['title'] = check_plain($form['#node']->title[LANGUAGE_NONE][0]['value']);
+  $variables['title'] = check_plain($form['#node']->title);
   $variables['vote'] = drupal_render($form['vote']);
   $variables['rest'] = drupal_render_children($form);
   $variables['block'] = $form['#block'];
@@ -753,7 +761,7 @@ function poll_view_results($node, $view_mode, $block = FALSE) {
     }
   }
 
-  return theme('poll_results', array('raw_title' => $node->title[LANGUAGE_NONE][0]['value'], 'results' => $poll_results, 'votes' => $total_votes, 'raw_links' => isset($node->links) ? $node->links : array(), 'block' => $block, 'nid' => $node->nid, 'vote' => isset($node->vote) ? $node->vote : NULL));
+  return theme('poll_results', array('raw_title' => $node->title, 'results' => $poll_results, 'votes' => $total_votes, 'raw_links' => isset($node->links) ? $node->links : array(), 'block' => $block, 'nid' => $node->nid, 'vote' => isset($node->vote) ? $node->vote : NULL));
 }
 
 

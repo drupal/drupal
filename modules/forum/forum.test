@@ -267,7 +267,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     $langcode = LANGUAGE_NONE;
     $edit = array(
-      "title[$langcode][0][value]" => $title,
+      "title" => $title,
       "body[$langcode][0][value]" => $body,
       "taxonomy_forums[$langcode]" => $tid,
     );
@@ -342,27 +342,27 @@ class ForumTestCase extends DrupalWebTestCase {
     // View forum node.
     $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(200);
-    $this->assertTitle($node->title[LANGUAGE_NONE][0]['value'] . ' | Drupal', t('Forum node was displayed'));
+    $this->assertTitle($node->title . ' | Drupal', t('Forum node was displayed'));
     $this->assertText(t('Home ' . $crumb . ' Forums ' . $crumb . ' @container ' . $crumb . ' @forum', array('@container' => $this->container['name'], '@forum' => $this->forum['name'])), t('Breadcrumbs were displayed'));
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertTitle('Edit Forum topic ' . $node->title[LANGUAGE_NONE][0]['value'] . ' | Drupal', t('Forum edit node was displayed'));
+      $this->assertTitle('Edit Forum topic ' . $node->title . ' | Drupal', t('Forum edit node was displayed'));
     }
 
     if ($response == 200) {
       // Edit forum node (including moving it to another forum).
       $edit = array();
       $langcode = LANGUAGE_NONE;
-      $edit["title[$langcode][0][value]"] = 'node/' . $node->nid;
+      $edit["title"] = 'node/' . $node->nid;
       $edit["body[$langcode][0][value]"] = $this->randomName(256);
       // Assume the topic is initially associated with $forum.
       $edit["taxonomy_forums[$langcode]"] = $this->root_forum['tid'];
       $edit['shadow'] = TRUE;
       $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-      $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit["title[$langcode][0][value]"])), t('Forum node was edited'));
+      $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit["title"])), t('Forum node was edited'));
 
       // Verify topic was moved to a different forum.
       $forum_tid = db_query("SELECT tid FROM {forum} WHERE nid = :nid AND vid = :vid", array(
@@ -374,7 +374,7 @@ class ForumTestCase extends DrupalWebTestCase {
       // Delete forum node.
       $this->drupalPost('node/' . $node->nid . '/delete', array(), t('Delete'));
       $this->assertResponse($response);
-      $this->assertRaw(t('Forum topic %title has been deleted.', array('%title' => $edit["title[$langcode][0][value]"])), t('Forum node was deleted'));
+      $this->assertRaw(t('Forum topic %title has been deleted.', array('%title' => $edit['title'])), t('Forum node was deleted'));
     }
   }
 

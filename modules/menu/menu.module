@@ -490,7 +490,7 @@ function menu_node_save($node) {
       $link['link_path'] = "node/$node->nid";
       // If not already set, use the node's title as link title attribute.
       if (empty($link['options']['attributes']['title']) && !$link['customized']) {
-        $link['options']['attributes']['title'] = trim($node->title[LANGUAGE_NONE][0]['value']);
+        $link['options']['attributes']['title'] = trim($node->title);
       }
       if (!menu_link_save($link)) {
         drupal_set_message(t('There was an error saving the menu link.'), 'error');
