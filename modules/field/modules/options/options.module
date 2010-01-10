@@ -155,6 +155,8 @@ function _options_properties($type, $multiple, $required) {
     'optgroups' => FALSE,
   );
 
+  $properties = array();
+
   switch ($type) {
     case 'select':
       $properties = array(
