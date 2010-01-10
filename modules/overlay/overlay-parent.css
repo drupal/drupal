@@ -97,10 +97,10 @@ body.overlay-autofit {
   overflow: hidden;
   width: 100%;
   height: 100%;
-  visibility: hidden;
+  display: none;
 }
 .overlay-loaded #overlay-element {
-  visibility: visible;
+  display: block;
 }
 
 /**
