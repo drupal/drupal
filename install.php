@@ -840,12 +840,7 @@ function install_settings_form($form, &$form_state, &$install_state) {
     throw new Exception(st('Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array('@drupal-databases' => 'http://drupal.org/node/270#database')));
   }
   else {
-    $form['basic_options'] = array(
-      '#type' => 'fieldset',
-      '#title' => st('Basic options'),
-    );
-
-    $form['basic_options']['driver'] = array(
+    $form['driver'] = array(
       '#type' => 'radios',
       '#title' => st('Database type'),
       '#required' => TRUE,
@@ -854,12 +849,12 @@ function install_settings_form($form, &$form_state, &$install_state) {
       '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
     );
     if (count($drivers) == 1) {
-      $form['basic_options']['driver']['#disabled'] = TRUE;
-      $form['basic_options']['driver']['#description'] .= ' ' . st('Your PHP configuration only supports the %driver database type so it has been automatically selected.', array('%driver' => current($drivers)));
+      $form['driver']['#disabled'] = TRUE;
+      $form['driver']['#description'] .= ' ' . st('Your PHP configuration only supports the %driver database type so it has been automatically selected.', array('%driver' => current($drivers)));
     }
 
     // Database name
-    $form['basic_options']['database'] = array(
+    $form['database'] = array(
       '#type' => 'textfield',
       '#title' => st('Database name'),
       '#default_value' => empty($database['database']) ? '' : $database['database'],
@@ -869,7 +864,7 @@ function install_settings_form($form, &$form_state, &$install_state) {
     );
 
     // Database username
-    $form['basic_options']['username'] = array(
+    $form['username'] = array(
       '#type' => 'textfield',
       '#title' => st('Database username'),
       '#default_value' => empty($database['username']) ? '' : $database['username'],
@@ -877,7 +872,7 @@ function install_settings_form($form, &$form_state, &$install_state) {
     );
 
     // Database password
-    $form['basic_options']['password'] = array(
+    $form['password'] = array(
       '#type' => 'password',
       '#title' => st('Database password'),
       '#default_value' => empty($database['password']) ? '' : $database['password'],
