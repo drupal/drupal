@@ -46,6 +46,9 @@ Khalid Baheyeldin 'kbahey' <http://drupal.org/user/4063>
 MENU SYSTEM
 Peter Wolanin <http://drupal.org/user/49851>
 
+PATH SYSTEM
+Dave Reid 'davereid' <http://drupal.org/user/53892>
+
 SECURITY COORDINATOR
 Heine Deelstra 'heine' <http://drupal.org/user/17943>
 
