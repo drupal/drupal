@@ -272,6 +272,7 @@ function shortcut_set_save(&$shortcut_set) {
       // since other modules may make them editable via the menu system.
       // However, we do need to specify the correct menu name.
       $link['menu_name'] = $shortcut_set->set_name;
+      $link['plid'] = 0;
       menu_link_save($link);
     }
     // Make sure that we have a return value, since if the links were updated
