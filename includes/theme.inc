@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.566 2010/01/09 22:01:42 webchick Exp $
+// $Id: theme.inc,v 1.567 2010/01/10 01:05:22 webchick Exp $
 
 /**
  * @file
@@ -2250,7 +2250,7 @@ function template_preprocess(&$variables, $hook) {
   $variables['directory'] = path_to_theme();
 
   // Initialize html class attribute for the current hook.
-  $variables['classes_array'] = array($hook);
+  $variables['classes_array'] = array(drupal_html_class($hook));
 
   // Initialize attributes for the top-level template entity and its title and
   // content.
