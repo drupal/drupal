@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.48 2010/01/09 21:54:01 webchick Exp $
+// $Id: search.test,v 1.49 2010/01/10 21:46:16 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -566,3 +566,37 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $this->assertNoText($comment_body, t('Comment body text not found in search results.'));
   }
 }
+
+/**
+ * Test search_simplify() on every Unicode character.
+ */
+class SearchSimplifyTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Search simplify',
+      'description' => 'Check that simplification works as intended.',
+      'group' => 'Search',
+    );
+  }
+
+  function testSearchSimplify() {
+    $input = file_get_contents(DRUPAL_ROOT . '/modules/search/tests/UnicodeTest.txt');
+    $strings = explode(chr(10), $input);
+    foreach ($strings as $key => $string) {
+      $simplified = search_simplify($string);
+      if ($key % 2) {
+        $this->assertIdentical($simplified, ' ', "Line $key is excluded from the index");
+      }
+      else {
+        $this->assertTrue(drupal_strlen($simplified) >= drupal_strlen($string), "Nothing is removed on line $key.");
+      }
+    }
+    $string = '';
+    for ($i = 0; $i < 32; $i++) {
+      $string .= chr($i);
+    }
+    // Diff really does not like files starting with \0 so test it separately.
+    $this->assertIdentical(' ', search_simplify($string), t('Search simplify works for ASCII control characters.'));
+  }
+}
+  
