@@ -277,6 +277,10 @@ Drupal.overlay.load = function (url) {
   self.$iframeDocument = null;
   self.$iframeBody = null;
 
+  // Reset lastHeight so the overlay fits user's viewport and the loading 
+  // spinner is centered.
+  self.lastHeight = 0;
+  self.outerResize();
   // No need to resize when loading.
   clearTimeout(self.resizeTimeoutID);
 
