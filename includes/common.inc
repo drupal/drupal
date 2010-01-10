@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1083 2010/01/09 23:36:55 webchick Exp $
+// $Id: common.inc,v 1.1084 2010/01/10 22:45:58 webchick Exp $
 
 /**
  * @file
@@ -5418,6 +5418,36 @@ function element_children(&$elements, $sort = FALSE) {
   }
 
   return array_keys($children);
+}
+
+/**
+ * Return the visibile children of an element.
+ *
+ * @param $elements
+ *   The parent element.
+ * @return
+ *   The array keys of the element's visible children.
+ */
+function element_get_visible_children(array $elements) {
+  $visible_children = array();
+
+  foreach (element_children($elements) as $key) {
+    $child = $elements[$key];
+
+    // Skip un-accessible children.
+    if (isset($child['#access']) && !$child['#access']) {
+      continue;
+    }
+
+    // Skip value and hidden elements, since they are not rendered.
+    if (isset($child['#type']) && in_array($child['#type'], array('value', 'hidden'))) {
+      continue;
+    }
+
+    $visible_children[$key] = $child;
+  }
+
+  return array_keys($visible_children);
 }
 
 /**
