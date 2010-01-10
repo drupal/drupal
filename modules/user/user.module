@@ -3100,6 +3100,8 @@ function user_register_form($form, &$form_state) {
   $form['#attached']['library'][] = array('system', 'cookie');
   $form['#attributes']['class'][] = 'user-info-from-cookie';
 
+  $form['#pre_render'] = array('user_register_form_pre_render');
+
   // Start with the default user account fields.
   user_account_form($form, $form_state);
 
@@ -3107,14 +3109,6 @@ function user_register_form($form, &$form_state) {
     // Redirect back to page which initiated the create request;
     // usually admin/people/create.
     $form_state['redirect'] = $_GET['q'];
-  }
-
-  // If the "account" fieldset is the only element at the top level, its
-  // borders are hidden for aesthetic reasons. We do not remove the fieldset but
-  // preserve the form structure so that modules implementing
-  // hook_form_FORM_ID_alter() know where to find the basic elements.
-  if (count(element_children($form)) == 1) {
-    $form['account']['#type'] = 'markup';
   }
 
   $form['submit'] = array(
@@ -3126,6 +3120,20 @@ function user_register_form($form, &$form_state) {
   // Add the final user registration form submit handler.
   $form['#submit'][] = 'user_register_submit';
 
+  return $form;
+}
+
+/**
+ * Form pre-render callback to clean up the user_register_form.
+ *
+ * If the "account" fieldset is the only element at the top level (apart from
+ * the submit button), its borders are hidden for aesthetic reasons.
+ */
+function user_register_form_pre_render($form) {
+  $visible_children = element_get_visible_children($form);
+  if (!count(array_diff($visible_children, array('account', 'submit')))) {
+    $form['account']['#theme_wrappers'] = array();
+  }
   return $form;
 }
 

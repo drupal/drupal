@@ -111,12 +111,17 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     variable_set('configurable_timezones', 1);
     variable_set('date_default_timezone', 'Europe/Brussels');
 
+    // Check that the account information fieldset's options are not displayed
+    // is a fieldset if there is not more than one fieldset in the form.
+    $this->drupalGet('user/register');
+    $this->assertNoRaw('<fieldset id="edit-account"><legend>Account information</legend>', t('Account settings fieldset was hidden.'));
+
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $edit['pass[pass1]'] = $new_pass = $this->randomName();
     $edit['pass[pass2]'] = $new_pass;
-    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->drupalPost(NULL, $edit, t('Create new account'));
 
     // Check user fields.
     $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
@@ -131,6 +136,14 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($new_user->language, '', t('Correct language field.'));
     $this->assertEqual($new_user->picture, '', t('Correct picture field.'));
     $this->assertEqual($new_user->init, $mail, t('Correct init field.'));
+
+    // Make the user timezone configurable, which will create a second fieldset
+    // on the registration page and cause the account information elements to
+    // be put in a fieldset.
+    variable_set('user_default_timezone', DRUPAL_USER_TIMEZONE_SELECT);
+    $this->drupalLogout();
+    $this->drupalGet('user/register');
+    $this->assertRaw('<fieldset id="edit-account"><legend>Account information</legend>', t('Account settings fieldset was not hidden.'));
   }
 }
 

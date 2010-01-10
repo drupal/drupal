@@ -5421,6 +5421,36 @@ function element_children(&$elements, $sort = FALSE) {
 }
 
 /**
+ * Return the visibile children of an element.
+ *
+ * @param $elements
+ *   The parent element.
+ * @return
+ *   The array keys of the element's visible children.
+ */
+function element_get_visible_children(array $elements) {
+  $visible_children = array();
+
+  foreach (element_children($elements) as $key) {
+    $child = $elements[$key];
+
+    // Skip un-accessible children.
+    if (isset($child['#access']) && !$child['#access']) {
+      continue;
+    }
+
+    // Skip value and hidden elements, since they are not rendered.
+    if (isset($child['#type']) && in_array($child['#type'], array('value', 'hidden'))) {
+      continue;
+    }
+
+    $visible_children[$key] = $child;
+  }
+
+  return array_keys($visible_children);
+}
+
+/**
  * Provide theme registration for themes across .inc files.
  */
 function drupal_common_theme() {
