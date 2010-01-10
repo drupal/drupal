@@ -118,7 +118,7 @@ function system_help($path, $arg) {
     case 'admin/config/development/maintenance':
       global $user;
       if ($user->uid == 1) {
-        return '<p>' . t('If you are upgrading to a newer version of Drupal or upgrading contributed modules or themes you may need to run !update-php.', array('!update-php' => l('update.php', 'update.php'))) . '</p>';
+        return '<p>' . t('If you are upgrading to a newer version of Drupal or upgrading contributed modules or themes, you may need to run the <a href="@update-php">update script</a>.', array('@update-php' => $base_url . '/update.php')) . '</p>';
       }
     case 'admin/config/system/actions':
     case 'admin/config/system/actions/manage':
