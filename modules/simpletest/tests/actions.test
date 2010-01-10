@@ -94,17 +94,18 @@ class ActionLoopTestCase extends DrupalWebTestCase {
     // Delete any existing watchdog messages to clear the plethora of
     // "Action added" messages from when Drupal was installed.
     db_delete('watchdog')->execute();
-    $this->triggerActions();
-
-    // Clear the log again for another test, this time with a random maximum.
-    db_delete('watchdog')->execute();
-    variable_set('actions_max_stack', mt_rand(10, 50));
+    // To prevent this test from failing when xdebug is enabled, the maximum
+    // recursion level should be kept low enough to prevent the xdebug
+    // infinite recursion protection mechanism from aborting the request.
+    // @see http://drupal.org/node/587634.
+    variable_set('actions_max_stack', mt_rand(3, 12));
     $this->triggerActions();
   }
 
   /**
    * Create an infinite loop by causing a watchdog message to be set,
-   * which causes the actions to be triggered again, up to default of 35 times.
+   * which causes the actions to be triggered again, up to actions_max_stack 
+   * times.
    */
   protected function triggerActions() {
     $this->drupalGet('<front>', array('query' => array('trigger_actions_on_watchdog' => TRUE)));
