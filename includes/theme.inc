@@ -2252,32 +2252,53 @@ function template_preprocess(&$variables, $hook) {
   // Initialize html class attribute for the current hook.
   $variables['classes_array'] = array(drupal_html_class($hook));
 
-  // Initialize attributes for the top-level template entity and its title and
-  // content.
-  $variables['attributes_array'] = array();
-  $variables['title_attributes_array'] = array();
-  $variables['content_attributes_array'] = array();
-
-  // Initialize 'title_prefix' and 'title_suffix' renderable arrays.
-  $variables['title_prefix'] = array();
-  $variables['title_suffix'] = array();
-
-  // Set default variables that depend on the database.
-  $variables['is_admin']            = FALSE;
-  $variables['is_front']            = FALSE;
-  $variables['logged_in']           = FALSE;
-  if ($variables['db_is_active'] = !defined('MAINTENANCE_MODE') && db_is_active()) {
-    // Check for administrators.
-    if (user_access('access administration pages')) {
-      $variables['is_admin'] = TRUE;
-    }
-    // Flag front page status.
-    $variables['is_front'] = drupal_is_front_page();
-    // Tell all templates by which kind of user they're viewed.
-    $variables['logged_in'] = ($user->uid > 0);
-    // Provide user object to all templates
-    $variables['user'] = $user;
+  // Merge in variables that don't depend on hook and don't change during a
+  // single page request.
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['default_variables'] = &drupal_static(__FUNCTION__);
   }
+  $default_variables = &$drupal_static_fast['default_variables'];
+  // Global $user object shouldn't change during a page request once rendering
+  // has started, but if there's an edge case where it does, re-fetch the
+  // variables appropriate for the new user.
+  if (!isset($default_variables) || ($user !== $default_variables['user'])) {
+    $default_variables = _template_preprocess_default_variables();
+  }
+  $variables += $default_variables;
+}
+
+/**
+ * Returns hook-independant variables to template_preprocess().
+ */
+function _template_preprocess_default_variables() {
+  global $user;
+
+  // Variables that don't depend on a database connection.
+  $variables = array(
+    'attributes_array' => array(),
+    'title_attributes_array' => array(),
+    'content_attributes_array' => array(),
+    'title_prefix' => array(),
+    'title_suffix' => array(),
+    'user' => $user,
+    'db_is_active' => !defined('MAINTENANCE_MODE') && db_is_active(),
+  );
+
+  // Variables that depend on a database connection.
+  if ($variables['db_is_active']) {
+    $variables['is_admin'] = user_access('access administration pages');
+    $variables['is_front'] = drupal_is_front_page();
+    $variables['logged_in'] = ($user->uid > 0);
+  }
+  else {
+    $variables['is_admin'] = FALSE;
+    $variables['is_front'] = FALSE;
+    $variables['logged_in'] = FALSE;
+  }
+
+  return $variables;
 }
 
 /**
