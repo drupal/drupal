@@ -294,7 +294,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit["body[$langcode][0][value]"] = $text;
     $edit["body[$langcode][0][value_format]"] = $filtered;
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been created.', array('%title' => $edit["title"])), t('Filtered node created.'));
+    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), t('Filtered node created.'));
 
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->assertTrue($node, t('Node found in database.'));

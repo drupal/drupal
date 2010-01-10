@@ -218,9 +218,9 @@ function standard_install() {
   $types = array(
     array(
       'type' => 'page',
-      'name' => st('Page'),
+      'name' => st('Basic page'),
       'base' => 'node_content',
-      'description' => st("Use <em>pages</em> for your static content, such as an 'About us' page."),
+      'description' => st("Use <em>basic pages</em> for your static content, such as an 'About us' page."),
       'custom' => 1,
       'modified' => 1,
       'locked' => 0,
@@ -262,11 +262,11 @@ function standard_install() {
     rdf_mapping_save($rdf_mapping);
   }
 
-  // Default page to not be promoted and have comments disabled.
+  // Default "Basic page" to not be promoted and have comments disabled.
   variable_set('node_options_page', array('status'));
   variable_set('comment_page', COMMENT_NODE_HIDDEN);
 
-  // Don't display date and author information for page nodes by default.
+  // Don't display date and author information for "Basic page" nodes by default.
   variable_set('node_submitted_page', FALSE);
 
   // Enable user picture support and set the default to a square thumbnail option.

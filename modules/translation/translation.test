@@ -7,7 +7,7 @@ class TranslationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Translation functionality',
-      'description' => 'Create a page with translation, modify the page outdating translation, and update translation.',
+      'description' => 'Create a basic page with translation, modify the page outdating translation, and update translation.',
       'group' => 'Translation'
     );
   }
@@ -17,7 +17,7 @@ class TranslationTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create a page with translation, modify the page outdating translation, and update translation.
+   * Create a basic page with translation, modify the basic page outdating translation, and update translation.
    */
   function testContentTranslation() {
     // Setup users.
@@ -30,17 +30,17 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->addLanguage('en');
     $this->addLanguage('es');
 
-    // Set page content type to use multilingual support with translation.
+    // Set "Basic page" content type to use multilingual support with translation.
     $this->drupalGet('admin/structure/types/manage/page');
     $edit = array();
     $edit['language_content_type'] = 2;
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Page')), t('Page content type has been updated.'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
 
     $this->drupalLogout();
     $this->drupalLogin($translator);
 
-    // Create page in English.
+    // Create Basic page in English.
     $node_title = $this->randomName();
     $node_body =  $this->randomName();
     $node = $this->createPage($node_title, $node_body, 'en');
@@ -71,7 +71,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $edit["body[$node->language][0][value]"] = $this->randomName();
     $edit['translation[retranslate]'] = TRUE;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been updated.', array('%title' => $node_title)), t('Original node updated.'));
+    $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_title)), t('Original node updated.'));
 
     // Check to make sure that interface shows translation as outdated
     $this->drupalGet('node/' . $node->nid . '/translate');
@@ -82,7 +82,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $edit["body[$node_translation->language][0][value]"] = $this->randomName();
     $edit['translation[status]'] = FALSE;
     $this->drupalPost('node/' . $node_translation->nid . '/edit', $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been updated.', array('%title' => $node_translation_title)), t('Translated node updated.'));
+    $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_translation_title)), t('Translated node updated.'));
   }
 
   /**
@@ -120,10 +120,10 @@ class TranslationTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create a page in the specified language.
+   * Create a "Basic page" in the specified language.
    *
-   * @param string $title Title of page in specified language.
-   * @param string $body Body of page in specified language.
+   * @param string $title Title of basic page in specified language.
+   * @param string $body Body of basic page in specified language.
    * @param string $language Language code.
    */
   function createPage($title, $body, $language) {
@@ -133,7 +133,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $edit["body[$langcode][0][value]"] = $body;
     $edit['language'] = $language;
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been created.', array('%title' => $title)), t('Page created.'));
+    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), t('Basic page created.'));
 
     // Check to make sure the node was created.
     $node = $this->drupalGetNodeByTitle($title);
@@ -143,11 +143,11 @@ class TranslationTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create a translation for the specified page in the specified language.
+   * Create a translation for the specified basic page in the specified language.
    *
-   * @param integer $nid Node id of page to create translation for.
-   * @param string $title Title of page in specified language.
-   * @param string $body Body of page in specified language.
+   * @param integer $nid Node id of basic page to create translation for.
+   * @param string $title Title of basic page in specified language.
+   * @param string $body Body of basic page in specified language.
    * @param string $language Language code.
    */
   function createTranslation($nid, $title, $body, $language) {
@@ -158,7 +158,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $edit["title"] = $title;
     $edit["body[$language][0][value]"] = $body;
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been created.', array('%title' => $title)), t('Translation created.'));
+    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), t('Translation created.'));
 
     // Check to make sure that translation was successful.
     $node = $this->drupalGetNodeByTitle($title);

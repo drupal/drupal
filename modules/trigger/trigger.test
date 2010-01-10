@@ -43,7 +43,7 @@ class TriggerContentTestCase extends DrupalWebTestCase {
       $edit[$info['property']] = !$info['expected'];
       $this->drupalPost('node/add/page', $edit, t('Save'));
       // Make sure the text we want appears.
-      $this->assertRaw(t('!post %title has been created.', array('!post' => 'Page', '%title' => $edit["title"])), t('Make sure the page has actually been created'));
+      $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), t('Make sure the Basic page has actually been created'));
       // Action should have been fired.
       $loaded_node = $this->drupalGetNodeByTitle($edit["title"]);;
       $this->assertTrue($loaded_node->$info['property'] == $info['expected'], t('Make sure the @action action fired.', array('@action' => $info['name'])));

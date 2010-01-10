@@ -79,7 +79,7 @@ class PHPFilterTestCase extends PHPTestCase {
     $langcode = LANGUAGE_NONE;
     $edit["body[$langcode][0][value_format]"] = $this->php_code_format;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title)), t('PHP code filter turned on.'));
+    $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node->title)), t('PHP code filter turned on.'));
 
     // Make sure that the PHP code shows up as text.
     $this->assertNoText('print "SimpleTest PHP was executed!"', t("PHP code isn't displayed."));

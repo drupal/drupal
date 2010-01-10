@@ -152,7 +152,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
     // Confirm that revisions revert properly.
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
-                        array('@type' => 'Page', '%title' => $nodes[1]->title,
+                        array('@type' => 'Basic page', '%title' => $nodes[1]->title,
                               '%revision-date' => format_date($nodes[1]->revision_timestamp))), t('Revision reverted.'));
     $reverted_node = node_load($node->nid);
     $this->assertTrue(($nodes[1]->body[LANGUAGE_NONE][0]['value'] == $reverted_node->body[LANGUAGE_NONE][0]['value']), t('Node reverted correctly.'));
@@ -161,7 +161,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/delete", array(), t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
                         array('%revision-date' => format_date($nodes[1]->revision_timestamp),
-                              '@type' => 'Page', '%title' => $nodes[1]->title)), t('Revision deleted.'));
+                              '@type' => 'Basic page', '%title' => $nodes[1]->title)), t('Revision deleted.'));
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid', array(':nid' => $node->nid, ':vid' => $nodes[1]->vid))->fetchField() == 0, t('Revision not found.'));
   }
 }
@@ -279,7 +279,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
-    $this->assertTitle(t('Preview | Drupal'), t('Page title is preview.'));
+    $this->assertTitle(t('Preview | Drupal'), t('Basic page title is preview.'));
     $this->assertText($edit[$title_key], t('Title displayed.'));
     $this->assertText($edit[$body_key], t('Body displayed.'));
 
@@ -295,7 +295,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
     $langcode = LANGUAGE_NONE;
     $title_key = "title";
     $body_key = "body[$langcode][0][value]";
-    // Force revision on page content.
+    // Force revision on "Basic page" content.
     variable_set('node_options_page', array('status', 'revision'));
 
     // Fill in node creation form and preview node.
@@ -306,7 +306,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
-    $this->assertTitle(t('Preview | Drupal'), t('Page title is preview.'));
+    $this->assertTitle(t('Preview | Drupal'), t('Basic page title is preview.'));
     $this->assertText($edit[$title_key], t('Title displayed.'));
     $this->assertText($edit[$body_key], t('Body displayed.'));
 
@@ -337,7 +337,7 @@ class NodeCreationTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create a page node and verify its consistency in the database.
+   * Create a "Basic page" node and verify its consistency in the database.
    */
   function testNodeCreation() {
     // Create a node.
@@ -347,8 +347,8 @@ class NodeCreationTestCase extends DrupalWebTestCase {
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
-    // Check that the page has been created.
-    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Page', '%title' => $edit["title"])), t('Page created.'));
+    // Check that the Basic page has been created.
+    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), t('Basic page created.'));
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
@@ -457,7 +457,7 @@ class SummaryLengthTestCase extends DrupalWebTestCase {
     $expected = 'What is a Drupalism?';
     $this->assertRaw($expected, t('Check that the summary is 600 characters in length'), 'Node');
 
-    // Edit the teaser lenght for 'page' content type
+    // Edit the teaser length for "Basic page" content type
     $edit = array (
       'teaser_length' => 200,
     );
@@ -552,11 +552,11 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Set page content type to display post information and confirm its presence on a new node.
+   * Set "Basic page" content type to display post information and confirm its presence on a new node.
    */
   function testPagePostInfo() {
 
-    // Set page content type to display post information.
+    // Set "Basic page" content type to display post information.
     $edit = array();
     $edit['node_submitted'] = TRUE;
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
@@ -574,11 +574,11 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Set page content type to not display post information and confirm its absence on a new node.
+   * Set "Basic page" content type to not display post information and confirm its absence on a new node.
    */
   function testPageNotPostInfo() {
 
-    // Set page content type to display post information.
+    // Set "Basic page" content type to display post information.
     $edit = array();
     $edit['node_submitted'] = FALSE;
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
@@ -752,9 +752,9 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
     $this->assertEqual($records[0]->realm, 'test_article_realm', t('Grant with article_realm acquired for node without alteration.'));
     $this->assertEqual($records[0]->gid, 1, t('Grant with gid = 1 acquired for node without alteration.'));
 
-    // Create an unpromoted page node.
+    // Create an unpromoted "Basic page" node.
     $node2 = $this->drupalCreateNode(array('type' => 'page', 'promote' => 0));
-    $this->assertTrue(node_load($node1->nid), t('Unpromoted page node created.'));
+    $this->assertTrue(node_load($node1->nid), t('Unpromoted basic page node created.'));
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node2->nid))->fetchAll();
@@ -762,9 +762,9 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
     $this->assertEqual($records[0]->realm, 'test_page_realm', t('Grant with page_realm acquired for node without alteration.'));
     $this->assertEqual($records[0]->gid, 1, t('Grant with gid = 1 acquired for node without alteration.'));
 
-    // Create an unpromoted, unpublished page node.
+    // Create an unpromoted, unpublished "Basic page" node.
     $node3 = $this->drupalCreateNode(array('type' => 'page', 'promote' => 0, 'status' => 0));
-    $this->assertTrue(node_load($node3->nid), t('Unpromoted, unpublished page node created.'));
+    $this->assertTrue(node_load($node3->nid), t('Unpromoted, unpublished basic page node created.'));
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node3->nid))->fetchAll();
@@ -772,9 +772,9 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
     $this->assertEqual($records[0]->realm, 'test_page_realm', t('Grant with page_realm acquired for node without alteration.'));
     $this->assertEqual($records[0]->gid, 1, t('Grant with gid = 1 acquired for node without alteration.'));
 
-    // Create a promoted page node.
+    // Create a promoted "Basic page" node.
     $node4 = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1));
-    $this->assertTrue(node_load($node4->nid), t('Promoted page node created.'));
+    $this->assertTrue(node_load($node4->nid), t('Promoted basic page node created.'));
 
     // Check to see if grant added by node_test_node_access_records was altered
     // by node_test_node_access_records_alter.
@@ -874,7 +874,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     $node_names = node_type_get_names();
 
     $this->assertTrue(isset($node_types['article']), t('Node type article is available.'));
-    $this->assertTrue(isset($node_types['page']), t('Node type page is available.'));
+    $this->assertTrue(isset($node_types['page']), t('Node type basic page is available.'));
 
     $this->assertEqual($node_types['article']->name, $node_names['article'], t('Correct node type base has been returned.'));
 
@@ -1046,7 +1046,7 @@ class NodeAdminTestCase extends DrupalWebTestCase {
     );
     $this->drupalPost(NULL, $edit, t('Refine'));
     $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('status'), '%value' => t('published'))), t('Content list is filtered by status.'));
-    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('type'), '%value' => 'Page')), t('Content list is filtered by content type.'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('type'), '%value' => 'Basic page')), t('Content list is filtered by content type.'));
     $this->assertLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
     $this->assertNoLinkByHref('node/' . $nodes['published_article']->nid . '/edit');
 
@@ -1125,7 +1125,7 @@ class NodeTitleTestCase extends DrupalWebTestCase {
    *  Create one node and test if the node title has the correct value.
    */
   function testNodeTitle() {
-    // Create page content with title
+    // Create "Basic page" content with title
     $settings = array(
       'title' => $this->randomName(8),
     );

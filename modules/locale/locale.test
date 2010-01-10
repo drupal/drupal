@@ -1421,14 +1421,14 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost($path, $edit, t('Save configuration'));
 
-    // Set page content type to use multilingual support.
+    // Set "Basic page" content type to use multilingual support.
     $this->drupalGet('admin/structure/types/manage/page');
     $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
     $edit = array(
       'language_content_type' => 1,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Page')), t('Page content type has been updated.'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
     $this->drupalLogout();
 
     // Verify language selection is not present on add article form.
@@ -1437,16 +1437,16 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     // Verify language select list is not present.
     $this->assertNoFieldByName('language', '', t('Language select not present on add article form.'));
 
-    // Verify language selection appears on add page form.
+    // Verify language selection appears on add "Basic page" form.
     $this->drupalGet('node/add/page');
     // Verify language select list is present.
-    $this->assertFieldByName('language', '', t('Language select present on add page form.'));
+    $this->assertFieldByName('language', '', t('Language select present on add Basic page form.'));
     // Ensure enabled language appears.
     $this->assertText($name, t('Enabled language present.'));
     // Ensure disabled language doesn't appear.
     $this->assertNoText($name_disabled, t('Disabled language not present.'));
 
-    // Create page content.
+    // Create "Basic page" content.
     $node_title = $this->randomName();
     $node_body =  $this->randomName();
     $edit = array(
@@ -1456,7 +1456,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
       'language' => $langcode,
     );
     $node = $this->drupalCreateNode($edit);
-    // Edit the page content and ensure correct language is selected.
+    // Edit the content and ensure correct language is selected.
     $path = 'node/' . $node->nid . '/edit';
     $this->drupalGet($path);
     $this->assertRaw('<option value="' . $langcode . '" selected="selected">' .  $name . '</option>', t('Correct language selected.'));
@@ -1465,7 +1465,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
       'language' => 'en',
     );
     $this->drupalPost($path, $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been updated.', array('%title' => $node_title)), t('Page updated.'));
+    $this->assertRaw(t('%title has been updated.', array('%title' => $node_title)), t('Basic page content updated.'));
 
     $this->drupalLogout();
   }
@@ -1695,21 +1695,21 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     require_once DRUPAL_ROOT . '/includes/locale.inc';
     locale_add_language('it', 'Italian', 'Italiano', LANGUAGE_LTR, '', '', TRUE, FALSE);
 
-    // Set page content type to use multilingual support.
+    // Set "Basic page" content type to use multilingual support.
     $this->drupalGet('admin/structure/types/manage/page');
     $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
     $edit = array(
       'language_content_type' => 1,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Page')), t('Page content type has been updated.'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
   }
 
   /**
    * Test if field languages are correctly set through the node form.
    */
   function testMultilingualNodeForm() {
-    // Create page content.
+    // Create "Basic page" content.
     $langcode = LANGUAGE_NONE;
     $title_key = "title";
     $title_value = $this->randomName(8);
@@ -1748,7 +1748,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
    * Test multilingual field display settings.
    */
   function testMultilingualDisplaySettings() {
-    // Create page content.
+    // Create "Basic page" content.
     $langcode = LANGUAGE_NONE;
     $title_key = "title";
     $title_value = $this->randomName(8);

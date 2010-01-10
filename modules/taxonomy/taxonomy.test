@@ -420,7 +420,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // free-tagging field created by the default profile.
     $edit[$instance['field_name'] . "[$langcode]"] = implode(', ', $terms);
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Page'), '%title' => $edit["title"])), t('The node was created successfully'));
+    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Basic page'), '%title' => $edit["title"])), t('The node was created successfully'));
     foreach ($terms as $term) {
       $this->assertText($term, t('The term was saved and appears on the node page'));
     }
