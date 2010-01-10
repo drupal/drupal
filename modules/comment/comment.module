@@ -2120,6 +2120,10 @@ function template_preprocess_comment(&$variables) {
   $variables['signature'] = $comment->signature;
   $variables['title']     = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
   $variables['permalink'] = l('#', 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
+
+  // Preprocess fields.
+  field_attach_preprocess('comment', $comment, $variables['elements'], $variables);
+
   $variables['template_files'][] = 'comment-' . $variables['node']->type;
 
   // Helpful $content variable for templates.
