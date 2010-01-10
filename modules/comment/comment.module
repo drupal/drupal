@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.828 2010/01/08 07:36:53 webchick Exp $
+// $Id: comment.module,v 1.829 2010/01/10 00:41:28 webchick Exp $
 
 /**
  * @file
@@ -2120,6 +2120,10 @@ function template_preprocess_comment(&$variables) {
   $variables['signature'] = $comment->signature;
   $variables['title']     = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
   $variables['permalink'] = l('#', 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
+
+  // Preprocess fields.
+  field_attach_preprocess('comment', $comment, $variables['elements'], $variables);
+
   $variables['template_files'][] = 'comment-' . $variables['node']->type;
 
   // Helpful $content variable for templates.
