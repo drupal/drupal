@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.58 2010/01/09 21:54:00 webchick Exp $
+// $Id: locale.test,v 1.59 2010/01/10 19:06:47 webchick Exp $
 
 /**
  * @file
@@ -201,7 +201,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // Add string.
     t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
-    locale(NULL, NULL, NULL, TRUE);
+    locale_reset();
     $this->assertText($langcode, t('Language code found.'));
     $this->assertText($name, t('Name found.'));
     $this->assertText($native, t('Native found.'));
@@ -456,7 +456,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // Add string.
     t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
-    locale(NULL, NULL, NULL, TRUE);
+    locale_reset();
     $this->drupalLogout();
 
     // Search for the name.
