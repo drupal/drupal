@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.560 2010/01/08 16:54:06 dries Exp $
+// $Id: taxonomy.module,v 1.561 2010/01/10 21:26:30 webchick Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function taxonomy_help($path, $arg) {
       $output .= '</dl>';
       return $output;
     case 'admin/structure/taxonomy':
-      $output = '<p>' . t('Configure the vocabularies and terms for your site.') . '</p>';
+      $output = '<p>' . t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
       return $output;
     case 'admin/structure/taxonomy/%':
       $vocabulary = taxonomy_vocabulary_load($arg[3]);
