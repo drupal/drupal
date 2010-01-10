@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.16 2010/01/07 19:59:56 webchick Exp $
+// $Id: overlay-parent.js,v 1.17 2010/01/10 23:56:00 webchick Exp $
 
 (function ($) {
 
@@ -277,6 +277,10 @@ Drupal.overlay.load = function (url) {
   self.$iframeDocument = null;
   self.$iframeBody = null;
 
+  // Reset lastHeight so the overlay fits user's viewport and the loading 
+  // spinner is centered.
+  self.lastHeight = 0;
+  self.outerResize();
   // No need to resize when loading.
   clearTimeout(self.resizeTimeoutID);
 
