@@ -201,7 +201,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // Add string.
     t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
-    locale(NULL, NULL, NULL, TRUE);
+    locale_reset();
     $this->assertText($langcode, t('Language code found.'));
     $this->assertText($name, t('Name found.'));
     $this->assertText($native, t('Native found.'));
@@ -456,7 +456,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // Add string.
     t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
-    locale(NULL, NULL, NULL, TRUE);
+    locale_reset();
     $this->drupalLogout();
 
     // Search for the name.

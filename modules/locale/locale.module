@@ -575,17 +575,10 @@ function locale_language_negotiation_info() {
  *   The context of this string.
  * @param $langcode
  *   Language code to use for the lookup.
- * @param $reset
- *   Set to TRUE to reset the in-memory cache.
  */
-function locale($string = NULL, $context = NULL, $langcode = NULL, $reset = FALSE) {
+function locale($string = NULL, $context = NULL, $langcode = NULL) {
   global $language;
-  static $locale_t;
-
-  if ($reset) {
-    // Reset in-memory cache.
-    $locale_t = NULL;
-  }
+  $locale_t = &drupal_static(__FUNCTION__);
 
   if (!isset($string)) {
     // Return all cached strings if no string was specified
@@ -666,6 +659,13 @@ function locale($string = NULL, $context = NULL, $langcode = NULL, $reset = FALS
 }
 
 /**
+ * Reset static variables used by locale().
+ */
+function locale_reset() {
+  drupal_static_reset('locale');
+}
+
+/**
  * Returns plural form index for a specific number.
  *
  * The index is computed from the formula of this language.
@@ -678,12 +678,13 @@ function locale($string = NULL, $context = NULL, $langcode = NULL, $reset = FALS
  */
 function locale_get_plural($count, $langcode = NULL) {
   global $language;
-  static $locale_formula, $plurals = array();
+  $locale_formula = &drupal_static(__FUNCTION__, array());
+  $plurals = &drupal_static(__FUNCTION__ . ':plurals', array());
 
   $langcode = $langcode ? $langcode : $language->language;
 
   if (!isset($plurals[$langcode][$count])) {
-    if (!isset($locale_formula)) {
+    if (empty($locale_formula)) {
       $language_list = language_list();
       $locale_formula[$langcode] = $language_list[$langcode]->formula;
     }
@@ -705,7 +706,7 @@ function locale_get_plural($count, $langcode = NULL) {
  * Returns a language name
  */
 function locale_language_name($lang) {
-  static $list = NULL;
+  $list = &drupal_static(__FUNCTION__);
   if (!isset($list)) {
     $list = locale_language_list();
   }
