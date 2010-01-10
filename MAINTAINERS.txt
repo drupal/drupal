@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.37 2009/11/02 23:14:51 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.38 2010/01/10 02:57:06 webchick Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -45,6 +45,9 @@ Khalid Baheyeldin 'kbahey' <http://drupal.org/user/4063>
 
 MENU SYSTEM
 Peter Wolanin <http://drupal.org/user/49851>
+
+PATH SYSTEM
+Dave Reid 'davereid' <http://drupal.org/user/53892>
 
 SECURITY COORDINATOR
 Heine Deelstra 'heine' <http://drupal.org/user/17943>
