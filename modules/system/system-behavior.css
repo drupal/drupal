@@ -163,7 +163,7 @@ div.tree-child-horizontal {
 .progress .filled {
   background: #0072b9 url(../../misc/progress.gif);
   height: 1.5em;
-  width: 0%;
+  width: 1px;
 }
 .progress .percentage {
   float: right; /* LTR */
