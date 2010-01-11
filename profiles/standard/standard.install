@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.2 2010/01/10 22:56:51 webchick Exp $
+// $Id: standard.install,v 1.3 2010/01/11 06:44:31 webchick Exp $
 
 /**
  * Implements hook_install().
@@ -102,6 +102,16 @@ function standard_install() {
       'status' => 1,
       'weight' => -1,
       'region' => 'sidebar_first',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'node',
+      'delta' => 'recent',
+      'theme' => 'seven',
+      'status' => 1,
+      'weight' => 10,
+      'region' => 'dashboard_main',
       'pages' => '',
       'cache' => -1,
     ),

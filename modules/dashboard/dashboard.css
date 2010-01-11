@@ -1,4 +1,4 @@
-/* $Id: dashboard.css,v 1.6 2010/01/06 15:01:57 dries Exp $ */
+/* $Id: dashboard.css,v 1.7 2010/01/11 06:44:31 webchick Exp $ */
 
 #dashboard div.dashboard-region {
   float: left;
@@ -146,4 +146,15 @@
 #dashboard #disabled-blocks .block-placeholder {
   width: 30px;
   height: 1.6em;
+}
+
+/* Recent content block */
+#dashboard #block-node-recent table,
+#dashboard #block-node-recent tr {
+  border: none;
+}
+
+#dashboard .list-all {
+  text-align: right;
+  margin: 0 10px 0 0;
 }
