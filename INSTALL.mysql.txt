@@ -14,7 +14,7 @@ is the name of the new database):
   mysqladmin -u username -p create databasename
 
 MySQL will prompt for the 'username' database password and then create the
-initial database files. Next you must login and set the access database rights:
+initial database files. Next you must log in and set the access database rights:
 
   mysql -u username -p
 

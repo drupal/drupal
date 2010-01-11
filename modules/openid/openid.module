@@ -44,9 +44,9 @@ function openid_menu() {
 function openid_help($path, $arg) {
   switch ($path) {
     case 'user/%/openid':
-      $output = '<p>' . t('This site supports <a href="@openid-net">OpenID</a>, a secure way to log into many websites using a single username and password. OpenID can reduce the necessity of managing many usernames and passwords for many websites.', array('@openid-net' => 'http://openid.net')) . '</p>';
+      $output = '<p>' . t('This site supports <a href="@openid-net">OpenID</a>, a secure way to log in to many websites using a single username and password. OpenID can reduce the necessity of managing many usernames and passwords for many websites.', array('@openid-net' => 'http://openid.net')) . '</p>';
       $output .= '<p>' . t('To use OpenID you must first establish an identity on a public or private OpenID server. If you do not have an OpenID and would like one, look into one of the <a href="@openid-providers">free public providers</a>. You can find out more about OpenID at <a href="@openid-net">this website</a>.', array('@openid-providers' => 'http://openid.net/get/', '@openid-net' => 'http://openid.net')) . '</p>';
-      $output .= '<p>' . t('If you already have an OpenID, enter the URL to your OpenID server below (e.g. myusername.openidprovider.com). Next time you login, you will be able to use this URL instead of a regular username and password. You can have multiple OpenID servers if you like; just keep adding them here.') . '</p>';
+      $output .= '<p>' . t('If you already have an OpenID, enter the URL to your OpenID server below (e.g. myusername.openidprovider.com). Next time you log in, you will be able to use this URL instead of a regular username and password. You can have multiple OpenID servers if you like; just keep adding them here.') . '</p>';
       return $output;
     case 'admin/help#openid':
       $output = '';
@@ -66,7 +66,7 @@ function openid_help($path, $arg) {
  */
 function openid_user_insert(&$edit, $account, $category) {
   if (isset($_SESSION['openid']['values'])) {
-    // The user has registered after trying to login via OpenID.
+    // The user has registered after trying to log in via OpenID.
     if (variable_get('user_email_verification', TRUE)) {
       drupal_set_message(t('Once you have verified your e-mail address, you may log in via OpenID.'));
     }

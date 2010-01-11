@@ -3184,7 +3184,7 @@ function user_register_submit($form, &$form_state) {
   if ($admin && !$notify) {
     drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
   }
-  // No e-mail verification required; login user immediately.
+  // No e-mail verification required; log in user immediately.
   elseif (!$admin && !variable_get('user_email_verification', TRUE) && $account->status) {
     _user_mail_notify('register_no_approval_required', $account);
     $form_state['uid'] = $account->uid;

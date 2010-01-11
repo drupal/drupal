@@ -580,7 +580,7 @@ class CommentAnonymous extends CommentHelperCase {
     ));
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertPattern('/<div ([^>]*?)id="comments"([^>]*?)>/', t('Comments were displayed.'));
-    $this->assertLink('Login', 1, t('Link to login was found.'));
+    $this->assertLink('Log in', 1, t('Link to log in was found.'));
     $this->assertLink('register', 1, t('Link to register was found.'));
   }
 }
