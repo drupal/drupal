@@ -287,6 +287,7 @@ function comment_update_7013(&$sandbox) {
     }
     $sandbox['total'] = count($sandbox['types']);
   }
+
   if (!empty($sandbox['types'])) {
     $type = array_shift($sandbox['types']);
 
@@ -307,6 +308,8 @@ function comment_update_7013(&$sandbox) {
     db_insert($comment_body_table)
       ->from($query)
       ->execute();
+
+    $sandbox['#finished'] = 1 - count($sandbox['types']) / $sandbox['total'];
   }
 
   // On the last pass of the update, $sandbox['types'] will be empty.
@@ -314,8 +317,6 @@ function comment_update_7013(&$sandbox) {
     db_drop_field('comment', 'comment');
     db_drop_field('comment', 'format');
   }
-
-  $sandbox['#finished'] = 1 - count($sandbox['types']) / $sandbox['total'];
 }
 
 /**
