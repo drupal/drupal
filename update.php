@@ -278,7 +278,7 @@ function update_check_requirements() {
     update_task_list('requirements');
     drupal_set_title('Requirements problem');
     $status_report = theme('status_report', array('requirements' => $requirements));
-    $status_report .= 'Check the error messages and <a href="' . request_uri() . '">try again</a>.';
+    $status_report .= 'Check the error messages and <a href="' . check_url(request_uri()) . '">try again</a>.';
     print theme('update_page', array('content' => $status_report));
     exit();
   }
