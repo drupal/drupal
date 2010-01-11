@@ -166,6 +166,12 @@ function node_theme() {
     'node_admin_overview' => array(
       'variables' => array('name' => NULL, 'type' => NULL),
     ),
+    'node_recent_block' => array(
+      'variables' => array('nodes' => NULL),
+    ),
+    'node_recent_content' => array(
+      'variables' => array('node' => NULL),
+    ),
   );
 }
 
@@ -2007,6 +2013,9 @@ function node_block_info() {
   $blocks['syndicate']['info'] = t('Syndicate');
   // Not worth caching.
   $blocks['syndicate']['cache'] = DRUPAL_NO_CACHE;
+
+  $blocks['recent']['info'] = t('Recent content');
+
   return $blocks;
 }
 
@@ -2014,10 +2023,142 @@ function node_block_info() {
  * Implements hook_block_view().
  */
 function node_block_view($delta = '') {
-  $block['subject'] = t('Syndicate');
-  $block['content'] = theme('feed_icon', array('url' => url('rss.xml'), 'title' => t('Syndicate')));
+  $block = array();
 
+  switch ($delta) {
+    case 'syndicate':
+      $block['subject'] = t('Syndicate');
+      $block['content'] = theme('feed_icon', array('url' => url('rss.xml'), 'title' => t('Syndicate')));
+      break;
+
+    case 'recent':
+      if (user_access('access content')) {
+        $block['subject'] = t('Recent content');
+        if ($nodes = node_get_recent(variable_get('node_recent_block_count', 10))) {
+          $block['content'] = theme('node_recent_block', array(
+            'nodes' => $nodes,
+          ));
+        } else {
+          $block['content'] = t('No content available.');
+        }
+      }
+      break;
+  }
   return $block;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function node_block_configure($delta = '') {
+  $form = array();
+  if ($delta == 'recent') {
+    $form['node_recent_block_count'] = array(
+      '#type' => 'select',
+      '#title' => t('Number of recent content items to display'),
+      '#default_value' => variable_get('node_recent_block_count', 10),
+      '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
+    );
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function node_block_save($delta = '', $edit = array()) {
+  if ($delta == 'recent') {
+    variable_set('node_recent_block_count', $edit['node_recent_block_count']);
+  }
+}
+
+/**
+ * Find the most recent nodes that are available to the current user.
+ *
+ * @param $number
+ *   (optional) The maximum number of nodes to find. Defaults to 10.
+ *
+ * @return
+ *   An array of partial node objects or an empty array if there are no recent
+ *   nodes visible to the current user.
+ */
+function node_get_recent($number = 10) {
+  $query = db_select('node', 'n');
+
+  if (!user_access('bypass node access')) {
+    // If the user is able to view their own unpublished nodes, allow them
+    // to see these in addition to published nodes. Check that they actually
+    // have some unpublished nodes to view before adding the condition.
+    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT nid FROM {node} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->uid, ':status' => NODE_NOT_PUBLISHED))->fetchCol()) {
+      $query->condition(db_or()
+        ->condition('n.status', NODE_PUBLISHED)
+        ->condition('n.nid', $own_unpublished, 'IN')
+      );
+    }
+    else {
+      // If not, restrict the query to published nodes.
+      $query->condition('n.status', NODE_PUBLISHED);
+    }
+  }
+  $nids = $query
+    ->fields('n', array('nid'))
+    ->orderBy('changed', 'DESC')
+    ->range(0, $number)
+    ->addTag('node_access')
+    ->execute()
+    ->fetchCol();
+
+  $nodes = node_load_multiple($nids);
+
+  return $nodes ? $nodes : array();
+}
+
+/**
+ * Returns a formatted list of recent nodes.
+ *
+ * @return
+ *   The recent content table HTML.
+ * @ingroup themeable
+ */
+function theme_node_recent_block($variables) {
+  $rows = array();
+  $output = '';
+
+  $l_options = array('query' => drupal_get_destination());
+  foreach ($variables['nodes'] as $node) {
+    $row = array();
+    $row[] = theme('node_recent_content', array('node' => $node));
+    $row[] = node_access('update', $node) ? l(t('edit'), 'node/' . $node->nid . '/edit', $l_options) : '';
+    $row[] = node_access('delete', $node) ? l(t('delete'), 'node/' . $node->nid . '/delete', $l_options) : '';
+    $rows[] = $row;
+  }
+
+  if ($rows) {
+    $output = theme('table', array('rows' => $rows));
+    $output .= '<div class="list-all">' . l(t('Show all content'), 'admin/content') . '</div>';
+  }
+
+  return $output;
+}
+
+/**
+ * Returns a formatted recent node to be displayed in the recent content block.
+ *
+ * @return
+ *   The recent content node's HTML.
+ * @ingroup themeable
+ */
+function theme_node_recent_content($variables) {
+  $node = $variables['node'];
+
+  $output = '<div class="node-title">';
+  $output .= l($node->title, 'node/' . $node->nid);
+  $output .= theme('mark', array('type' => node_mark($node->nid, $node->changed)));
+  $output .= '</div><div class="node-author">';
+  $output .= theme('username', array('account' => user_load($node->uid)));
+  $output .= '</div>';
+
+  return $output;
 }
 
 /**

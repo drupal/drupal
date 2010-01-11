@@ -106,6 +106,16 @@ function standard_install() {
       'cache' => -1,
     ),
     array(
+      'module' => 'node',
+      'delta' => 'recent',
+      'theme' => 'seven',
+      'status' => 1,
+      'weight' => 10,
+      'region' => 'dashboard_main',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
       'module' => 'user',
       'delta' => 'login',
       'theme' => 'garland',

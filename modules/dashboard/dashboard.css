@@ -147,3 +147,14 @@
   width: 30px;
   height: 1.6em;
 }
+
+/* Recent content block */
+#dashboard #block-node-recent table,
+#dashboard #block-node-recent tr {
+  border: none;
+}
+
+#dashboard .list-all {
+  text-align: right;
+  margin: 0 10px 0 0;
+}

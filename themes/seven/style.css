@@ -33,12 +33,7 @@ legend {
   font-weight: bold;
 }
 
-#page h1,
-#page h2,
-#page h3,
-#page h4,
-#page h5,
-#page h6 {
+h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   margin: 10px 0;
 }
@@ -125,14 +120,34 @@ abbr, acronym {
   border-bottom: dotted 1px;
 }
 
-ul li, .item-list ul li {
+ul, .block ul, .item-list ul, .item-list ul {
   list-style-type: disc;
+  list-style-image: none;
   margin: 0.25em 0 0.25em 1.5em;
+}
+
+.item-list ul li, li.leaf, ul.menu li {
+  list-style-type: disc;
+  list-style-image: none;
+}
+
+ul.menu li {
+  margin: 0;
 }
 
 ol {
   list-style-type: decimal;
   margin: 0.25em 0 0.25em 2em;
+}
+
+.item-list ul li.collapsed, ul.menu li.collapsed {
+  list-style-image:url(../../misc/menu-collapsed.png);
+  list-style-type:disc;
+}
+
+.item-list ul li.expanded, ul.menu li.expanded {
+  list-style-image:url(../../misc/menu-expanded.png);
+  list-style-type:circle;
 }
 
 quote, code {
@@ -292,6 +307,7 @@ div.status {
 
 #branding h1.page-title {
   color: #000;
+  margin: 0;
   padding-bottom: 10px;
   font-size: 18px;
   font-weight: normal;
@@ -396,31 +412,18 @@ ul.secondary li.active a.active {
  * Page layout.
  */
 #page {
-  padding-bottom: 40px;
+  padding: 20px 0 40px 0;
   margin-right: 40px;
   margin-left: 40px;
-  position: relative;
-}
-
-#page {
-  padding: 20px 0;
   background: #fff;
+  position: relative;
   color: #333;
 }
 
-#page ul.menu li,
-#page ul.menu li a,
-#secondary-links ul.links li,
-#secondary-links ul.links li a {
-  float: left;
-}
-
-#page ul.menu li,
 #secondary-links ul.links li {
   padding: 0 10px 10px 0;
 }
 
-#page ul.menu li a,
 #secondary-links ul.links li a {
   font-size: 9px;
   line-height: 10px;
@@ -439,8 +442,8 @@ ul.secondary li.active a.active {
   background: #999;
 }
 
-#page ul.links li,
-#page ul.inline li {
+ul.links li,
+ul.inline li {
   padding-right: 1em;
 }
 
@@ -448,22 +451,13 @@ ul.inline li {
   display: inline;
 }
 
-#page ul.menu li a {
-  background: #f8f8f8;
-  color: #05a;
-}
-
-#page ul.menu li a:hover {
-  background: #eee;
-}
-
 #secondary-links ul.links li.active-trail a,
 #secondary-links ul.links li a.active {
   background: #333;
 }
 
-#page ul.node-type-list li,
-#page ul.admin-list li {
+ul.node-type-list li,
+ul.admin-list li {
   position: relative;
   padding-left: 30px;
   padding-top: 9px;
@@ -475,32 +469,46 @@ ul.inline li {
   list-style-image: none;
 }
 
-#page ul.admin-list.compact {
+.admin-panel .item-list ul,
+ul.admin-list {
+  margin: 0;
+  padding: 0;
+}
+
+.admin-panel .item-list ul,
+ul.admin-list.compact {
   margin-bottom: 8px;
 }
 
-#page ul.admin-list.compact li {
-  border: 0;
+.admin-panel .item-list li,
+ul.admin-list.compact li {
+  border: none;
   background: none;
-  margin-bottom: 2px;
-  padding-top: 2px;
+  margin: 0.25em 0 0.25em 1.5em;
+  padding: 0;
+  list-style-type: disc;
 }
 
-#page ul.admin-list li:last-child {
+ul.admin-list li:last-child {
   border-bottom: none;
 }
 
-#page ul.node-type-list .label {
+ul.node-type-list .label {
   font-size: 15px;
 }
 
-#page ul.node-type-list li a, #page ul.admin-list li a {
+ul.node-type-list li a, ul.admin-list li a {
   margin-left: -30px;
   padding: 0px 0 4px 30px;
   min-height: 0;
 }
 
-#page ul.node-type-list li div.description a, #page ul.admin-list li div.description a {
+ul.admin-list.compact li a {
+  margin-left: 0;
+  padding: 0;
+}
+
+ul.node-type-list li div.description a, ul.admin-list li div.description a {
   margin-left: 0px;
   padding: 0px;
   min-height: inherit;
@@ -708,6 +716,10 @@ div.form-item div.description {
   color: #666;
 }
 
+ul.tips li {
+  margin: 0.25em 0 0.25em 1.5em;
+}
+
 body div.form-type-radio div.description, body div.form-type-checkbox div.description {
   margin-left: 1.5em;
 }
@@ -716,6 +728,7 @@ body div.form-type-radio div.description, body div.form-type-checkbox div.descri
 input.form-submit, a.button {
   cursor: pointer;
   padding: 4px 17px;
+  margin-bottom: 1em;
   color: #5a5a5a;
   text-align: center;
   font-weight: normal;
@@ -797,10 +810,6 @@ ul.action-links {
   overflow: hidden;
 }
 
-#page ul.action-links {
-  padding: 0;
-}
-
 ul.action-links li {
   float: left;
   margin: 0 1em 0 0;
@@ -814,7 +823,7 @@ ul.action-links a {
 
 /* Exceptions */
 #diff-inline-form select,
-#page div.filter-options select {
+div.filter-options select {
   padding: 0;
 }
 
@@ -840,7 +849,7 @@ div.admin-panel {
   border: 1px solid #ccc;
 }
 
-#page div.admin-panel h3 {
+div.admin-panel h3 {
   font-size: 12px;
   text-transform: uppercase;
   margin: 0;
@@ -852,28 +861,29 @@ div.admin-panel {
 }
 
 /* admin/appearance */
-#page #system-themes-page h2 {
+#system-themes-page h2 {
   font-weight: normal;
   text-transform: uppercase;
 }
-#page .theme-selector h3 {
+.theme-selector h3 {
   font-weight: normal;
 }
-#page .theme-default h3 {
+.theme-default h3 {
   font-weight: bold;
 }
-#page .system-themes-list-enabled .theme-selector h3 {
+.system-themes-list-enabled .theme-selector h3 {
   margin-top: 0;
 }
 
 /* admin/content and admin/people */
-#page dl.multiselect,
-#page dl.multiselect dt,
-#page dl.multiselect dd {
+dl.multiselect,
+dl.multiselect dt,
+dl.multiselect dd {
   margin: 0 10px 0 0;
 }
 
-#page dl.multiselect select {
+dl.multiselect select,
+dl.multiselect dd select {
   font-size: 12px;
   background: #fff;
   border: 1px solid #ccc;
@@ -976,12 +986,13 @@ ol.task-list li.done {
 }
 .overlay .primary,
 .overlay #branding h1.page-title,
-.overlay #page #left,
-.overlay #page #footer {
+.overlay #left,
+.overlay #footer {
   display: none;
 }
 .overlay #page {
   margin: 0;
+  padding: 0 20px;
 }
 .overlay #branding div.breadcrumb {
   float: left;
@@ -990,13 +1001,10 @@ ol.task-list li.done {
 }
 .overlay ul.secondary {
   background: transparent none;
-  margin: -2.4em 0 0;
+  margin: -2.4em 0 0.5em 0;
   padding: 3px 10px;
 }
 .overlay #content {
-  padding: 0 20px;
-}
-.overlay #page {
   padding: 0;
 }
 
@@ -1007,8 +1015,8 @@ div.add-or-remove-shortcuts {
   padding-left: 6px;
 }
 
-/* Blocks */
-
-#page div.block h2 {
-  margin-top:0;
+/* Dashboard */
+#dashboard div.block h2 {
+  margin: 0;
+  font-size: 1em;
 }

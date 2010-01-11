@@ -21,6 +21,7 @@ div.vertical-tabs .vertical-tabs-list {
   width: 25%;
   float: left;
   list-style-type: none;
+  margin: 0;
 }
 
 div.vertical-tabs ul li.vertical-tab-button {
