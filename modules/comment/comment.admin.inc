@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.39 2010/01/09 23:03:21 webchick Exp $
+// $Id: comment.admin.inc,v 1.40 2010/01/11 00:17:02 webchick Exp $
 
 /**
  * @file
@@ -75,6 +75,8 @@ function comment_admin_overview($form, &$form_state, $arg) {
     ->limit(50)
     ->orderByHeader($header)
     ->execute();
+	
+  $cids = array();
 
   // We collect a sorted list of node_titles during the query to attach to the
   // comments later.
@@ -89,7 +91,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
   $destination = drupal_get_destination();
 
   foreach ($comments as $comment) {
-    // Dequeue the first node title from the node_titles array and attach to
+    // Remove the first node title from the node_titles array and attach to
     // the comment.
     $comment->node_title = array_shift($node_titles);
     $options[$comment->cid] = array(
