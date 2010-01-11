@@ -263,10 +263,8 @@ function shortcut_set_save(&$shortcut_set) {
     $shortcut_set->set_name = shortcut_set_get_unique_name();
     $return = drupal_write_record('shortcut_set', $shortcut_set);
   }
-  // If links were provided for the set, save them, replacing any that were
-  // there before.
+  // If links were provided for the set, save them.
   if (isset($shortcut_set->links)) {
-    menu_delete_links($shortcut_set->set_name);
     foreach ($shortcut_set->links as &$link) {
       // Do not specifically associate these links with the shortcut module,
       // since other modules may make them editable via the menu system.
