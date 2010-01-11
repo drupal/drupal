@@ -1,5 +1,5 @@
 <?php
-// $Id: ftp.inc,v 1.11 2010/01/09 23:03:21 webchick Exp $
+// $Id: ftp.inc,v 1.12 2010/01/11 16:25:16 webchick Exp $
 
 /**
  * Base class for FTP implementations.
@@ -115,7 +115,7 @@ class FileTransferFTPExtension extends FileTransferFTP implements FileTransferCh
       throw new FileTransferException("Cannot connect to FTP Server, check settings");
     }
     if (!ftp_login($this->connection, $this->username, $this->password)) {
-      throw new FileTransferException("Cannot login to FTP server. Check username and password");
+      throw new FileTransferException("Cannot log in to FTP server. Check username and password");
     }
   }
 

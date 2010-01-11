@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.550 2010/01/09 23:09:51 webchick Exp $
+// $Id: forum.module,v 1.551 2010/01/11 16:25:16 webchick Exp $
 
 /**
  * @file
@@ -196,7 +196,7 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
           $links['login'] = array(
             '#theme' => 'menu_local_action',
             '#link' => array(
-              'title' => t('<a href="@login">Login</a> to post new content in the forum.', array(
+              'title' => t('<a href="@login">Log in</a> to post new content in the forum.', array(
                 '@login' => url('user/login', array('query' => drupal_get_destination())),
               )),
               'localized_options' => array('html' => TRUE),

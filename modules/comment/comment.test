@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.62 2010/01/07 05:23:51 webchick Exp $
+// $Id: comment.test,v 1.63 2010/01/11 16:25:16 webchick Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -580,7 +580,7 @@ class CommentAnonymous extends CommentHelperCase {
     ));
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertPattern('/<div ([^>]*?)id="comments"([^>]*?)>/', t('Comments were displayed.'));
-    $this->assertLink('Login', 1, t('Link to login was found.'));
+    $this->assertLink('Log in', 1, t('Link to log in was found.'));
     $this->assertLink('register', 1, t('Link to register was found.'));
   }
 }
