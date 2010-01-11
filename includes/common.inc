@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1084 2010/01/10 22:45:58 webchick Exp $
+// $Id: common.inc,v 1.1085 2010/01/11 02:28:42 webchick Exp $
 
 /**
  * @file
@@ -1150,6 +1150,7 @@ function _drupal_decode_exception($exception) {
     '%function' => $caller['function'],
     '%file' => $caller['file'],
     '%line' => $caller['line'],
+    'severity_level' => WATCHDOG_ERROR,
   );
 }
 
