@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.17 2010/01/10 23:56:00 webchick Exp $
+// $Id: overlay-parent.js,v 1.18 2010/01/11 16:49:47 webchick Exp $
 
 (function ($) {
 
@@ -568,7 +568,7 @@ Drupal.overlay.isAdminLink = function (url) {
 Drupal.overlay.innerResize = function () {
   var self = Drupal.overlay;
   // Proceed only if the dialog still exists.
-  if (!(self.isOpen || self.isOpening) || self.isClosing) {
+  if (!self.isOpen || self.isClosing || self.isLoading) {
     return;
   }
 
