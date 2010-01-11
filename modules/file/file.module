@@ -366,6 +366,7 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#value' => t('Upload'),
     '#validate' => array(),
     '#submit' => array('file_managed_file_submit'),
+    '#limit_validation_errors' => array($element['#parents']),
     '#ajax' => $ajax_settings,
     '#weight' => -5,
   );
@@ -379,6 +380,7 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#value' => t('Remove'),
     '#validate' => array(),
     '#submit' => array('file_managed_file_submit'),
+    '#limit_validation_errors' => array($element['#parents']),
     '#ajax' => $ajax_settings,
     '#weight' => -5,
   );
