@@ -98,10 +98,6 @@ function node_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/content':
-      // Return a non-null value so that the 'more help' link is shown.
-      return ' ';
-
     case 'admin/structure/types/add':
       return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
 
