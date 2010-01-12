@@ -570,7 +570,7 @@ function system_menu() {
   // Menu items that are basically just menu blocks.
   $items['admin/structure'] = array(
     'title' => 'Structure',
-    'description' => 'Control how your site looks and feels.',
+    'description' => 'Administer blocks, content types, menus, etc.',
     'position' => 'right',
     'weight' => -8,
     'page callback' => 'system_admin_menu_block_page',
@@ -580,7 +580,7 @@ function system_menu() {
   // Appearance.
   $items['admin/appearance'] = array(
     'title' => 'Appearance',
-    'description' => 'Select and configure your site theme.',
+    'description' => 'Select and configure your themes',
     'page callback' => 'system_themes_page',
     'access arguments' => array('administer themes'),
     'position' => 'left',
@@ -589,7 +589,7 @@ function system_menu() {
   );
   $items['admin/appearance/list'] = array(
     'title' => 'List',
-    'description' => 'Select and configure your site theme.',
+    'description' => 'Select and configure your theme',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -1,
     'file' => 'system.admin.inc',
@@ -645,7 +645,7 @@ function system_menu() {
   // Modules.
   $items['admin/modules'] = array(
     'title' => 'Modules',
-    'description' => 'Enable or disable add-on modules for your site.',
+    'description' => 'Enable or disable modules',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_modules'),
     'access arguments' => array('administer modules'),
@@ -678,6 +678,7 @@ function system_menu() {
   // Configuration.
   $items['admin/config'] = array(
     'title' => 'Configuration',
+    'description' => 'Administer settings',
     'page callback' => 'system_admin_config_page',
     'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
@@ -1003,7 +1004,7 @@ function system_menu() {
   // Reports.
   $items['admin/reports'] = array(
     'title' => 'Reports',
-    'description' => 'View reports from system logs and other status information.',
+    'description' => 'View reports, updates, and errors',
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access site reports'),
     'weight' => 5,

@@ -204,6 +204,7 @@ function toolbar_view() {
         'title' => t('Hello <strong>@username</strong>', array('@username' => format_username($user))),
         'href' => 'user',
         'html' => TRUE,
+        'attributes' => array('title' => t('User account')),
       ),
       'logout' => array(
         'title' => t('Log out'),
@@ -231,6 +232,7 @@ function toolbar_view() {
       'title' => '<span class="home-link">Home</span>',
       'href' => '<front>',
       'html' => TRUE,
+      'attributes' => array('title' => t('Home')),
     ),
   );
   $build['toolbar_home'] = array(

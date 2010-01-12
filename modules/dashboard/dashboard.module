@@ -27,6 +27,7 @@ function dashboard_help($path, $arg) {
 function dashboard_menu() {
   $items['admin/dashboard'] = array(
     'title' => 'Dashboard',
+    'description' => 'View and customize your dashboard',
     'page callback' => 'dashboard_admin',
     'access arguments' => array('access dashboard'),
     // Make this appear first, so for example, in admin menus, it shows up on
@@ -35,6 +36,7 @@ function dashboard_menu() {
   );
   $items['admin/dashboard/customize'] = array(
     'title' => 'Dashboard',
+    'description' => 'View and customize your dashboard',
     'page callback' => 'dashboard_admin',
     'page arguments' => array(TRUE),
     'access arguments' => array('access dashboard'),

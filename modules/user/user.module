@@ -1436,6 +1436,7 @@ function user_menu() {
   // User listing pages.
   $items['admin/people'] = array(
     'title' => 'People',
+    'description' => 'Manage user accounts',
     'page callback' => 'user_admin',
     'page arguments' => array('list'),
     'access arguments' => array('administer users'),
