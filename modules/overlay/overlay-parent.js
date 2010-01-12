@@ -286,6 +286,10 @@ Drupal.overlay.load = function (url) {
 
   // Change the overlay title.
   self.$container.dialog('option', 'title', Drupal.t('Loading...'));
+  // Remove any existing shortcut button markup in the title section.
+  self.$dialogTitlebar.find('.add-or-remove-shortcuts').remove();
+  // Remove any existing tabs in the title section.
+  self.$dialogTitlebar.find('ul').remove();
 
   // While the overlay is loading, we remove the loaded class from the dialog.
   // After the loading is finished, the loaded class is added back. The loaded 
@@ -407,8 +411,6 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
   // Add a title attribute to the iframe for accessibility.
   self.$iframe.attr('title', Drupal.t('@title dialog', { '@title': iframeTitle }));
 
-  // Remove any existing shortcut button markup in the title section.
-  self.$dialogTitlebar.find('.add-or-remove-shortcuts').remove();
   // If the shortcut add/delete button exists, move it to the dialog title.
   var $addToShortcuts = self.$iframeWindow('.add-or-remove-shortcuts');
   if ($addToShortcuts.length) {
@@ -420,8 +422,6 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
     self.$dialogTitlebar.find('.ui-dialog-title').after($addToShortcuts);
   }
 
-  // Remove any existing tabs in the title section.
-  self.$dialogTitlebar.find('ul').remove();
   // If there are tabs in the page, move them to the titlebar.
   var $tabs = self.$iframeWindow('ul.primary');
   if ($tabs.length) {
