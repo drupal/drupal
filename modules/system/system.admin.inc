@@ -50,12 +50,8 @@ function system_main_admin_page($arg = NULL) {
         // Only show blocks for items which are not containers, or those which
         // are containers and do have items we can show.
         $block['show'] = TRUE;
-        if (empty($content)) {
-          // If no items found below, but access checks did not fail, show.
-          $block['title'] = l($item['title'], $item['href'], $item['localized_options']);
-        }
-        else {
-          // Theme items below.
+        $block['title'] = l($item['title'], $item['href'], $item['localized_options']);
+        if (!empty($content)) {
           $block['content'] .= theme('admin_block_content', array('content' => $content));
         }
       }
