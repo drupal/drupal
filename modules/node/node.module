@@ -2299,7 +2299,7 @@ function node_page_default() {
 
     $default_links = array();
     if (_node_add_access()) {
-      $default_links[] = l(t('Create content'), 'node/add');
+      $default_links[] = l(t('Add new content'), 'node/add');
     }
     if (user_access('administer site configuration')) {
       $default_links[] = l(t('Change the default front page'), 'admin/config/system/site-information');
