@@ -767,8 +767,9 @@ function ajax_command_css($selector, $argument) {
 /**
  * Creates a Drupal AJAX 'settings' command.
  *
- * The 'settings' command instructs the client to extend Drupal.settings with
- * the given array.
+ * The 'settings' command instructs the client either to use the given array as
+ * the settings for ajax-loaded content or to extend Drupal.settings with the
+ * given array, depending on the value of the $merge parameter.
  *
  * This command is implemented by Drupal.ajax.prototype.commands.settings()
  * defined in misc/ajax.js.
@@ -777,14 +778,20 @@ function ajax_command_css($selector, $argument) {
  *   An array of key/value pairs to add to the settings. This will be utilized
  *   for all commands after this if they do not include their own settings
  *   array.
+ * @param $merge
+ *   Whether or not the passed settings in $argument should be merged into the
+ *   global Drupal.settings on the page. By default (FALSE), the settings that
+ *   are passed to Drupal.attachBehaviors will not include the global
+ *   Drupal.settings.
  *
  * @return
  *   An array suitable for use with the ajax_render() function.
  */
-function ajax_command_settings($argument) {
+function ajax_command_settings($argument, $merge = FALSE) {
   return array(
     'command' => 'settings',
     'settings' => $argument,
+    'merge' => $merge,
   );
 }
 
