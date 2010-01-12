@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.71 2010/01/04 15:56:28 webchick Exp $
+// $Id: field.attach.inc,v 1.72 2010/01/12 06:21:34 webchick Exp $
 
 /**
  * @file
@@ -999,8 +999,8 @@ function field_attach_delete_revision($obj_type, $object) {
  *   with all operators below. A FieldQueryException will be raised if an
  *   unsupported condition is specified.
  *   Supported columns:
- *     - any of the columns for $field_name's field type: condition on field
- *       value,
+ *     - any of the columns defined in hook_field_schema() for $field_name's 
+ *       field type: condition on field value,
  *     - 'type': condition on object type (e.g. 'node', 'user'...),
  *     - 'bundle': condition on object bundle (e.g. node type),
  *     - 'entity_id': condition on object id (e.g node nid, user uid...),
