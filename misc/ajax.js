@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.8 2010/01/04 16:08:52 webchick Exp $
+// $Id: ajax.js,v 1.9 2010/01/12 06:31:22 webchick Exp $
 (function ($) {
 
 /**
@@ -406,7 +406,12 @@ Drupal.ajax.prototype.commands = {
    * Command to set the settings that will be used for other commands in this response.
    */
   settings: function (ajax, response, status) {
-    ajax.settings = response.settings;
+    if (response.merge) {
+      $.extend(true, Drupal.settings, response.settings);
+    }
+    else {
+      ajax.settings = response.settings;
+    }
   },
 
   /**
