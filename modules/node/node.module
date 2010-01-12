@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1203 2010/01/11 06:44:31 webchick Exp $
+// $Id: node.module,v 1.1204 2010/01/12 06:09:04 webchick Exp $
 
 /**
  * @file
@@ -97,10 +97,6 @@ function node_help($path, $arg) {
       $output .= '<dd>' . t('The Node module makes a number of permissions available for each content type, which can be set by role on the <a href="@permissions">permissions page</a>.', array('@permissions' => url('admin/config/people/permissions', array('fragment' => 'module-node')))) . '</dd>';
       $output .= '</dl>';
       return $output;
-
-    case 'admin/content':
-      // Return a non-null value so that the 'more help' link is shown.
-      return ' ';
 
     case 'admin/structure/types/add':
       return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
