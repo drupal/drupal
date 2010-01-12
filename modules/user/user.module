@@ -2829,7 +2829,8 @@ function user_filters() {
  */
 function user_build_filter_query(SelectQuery $query) {
   $filters = user_filters();
-
+  $role_count = 0;
+  $permission_count = 0;
   // Extend Query with filter conditions.
   foreach (isset($_SESSION['user_overview_filter']) ? $_SESSION['user_overview_filter'] : array() as $filter) {
     list($key, $value) = $filter;
@@ -2843,8 +2844,19 @@ function user_build_filter_query(SelectQuery $query) {
       if (user_access($value, $account)) {
         continue;
       }
-      $query->leftJoin('role_permission', 'p', 'ur.rid = p.rid');
-      $query->condition(db_or()->condition('u.uid', 1)->condition('p.permission', $value));
+      $user_role_alias = 'ur' . $role_count;
+      $permission_alias = 'p' . $permission_count;
+      $query->innerJoin('users_roles', $user_role_alias, $user_role_alias . '.uid = u.uid');
+      $query->innerJoin('role_permission', $permission_alias , $user_role_alias . '.rid = ' . $permission_alias . '.rid');
+      $query->condition($permission_alias . '.permission', $value);
+      $role_count++;
+      $permission_count++;
+    }
+    else if ($key == 'role') {
+      $user_role_alias = 'ur' . $role_count;
+      $query->innerJoin('users_roles', $user_role_alias, $user_role_alias . '.uid = u.uid');
+      $query->condition($user_role_alias . '.rid' , $value);
+      $role_count++;
     }
     else {
       $query->condition($filters[$key]['field'], $value);

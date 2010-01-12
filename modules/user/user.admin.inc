@@ -151,12 +151,11 @@ function user_admin_account() {
   );
 
   $query = db_select('users', 'u');
-  $query->leftJoin('users_roles', 'ur', 'u.uid = ur.uid');
   $query->condition('u.uid', 0, '<>');
   user_build_filter_query($query);
 
   $count_query = clone $query;
-  $count_query->addExpression('COUNT(DISTINCT u.uid)');
+  $count_query->addExpression('COUNT(u.uid)');
 
   $query = $query->extend('PagerDefault')->extend('TableSort');
   $query
