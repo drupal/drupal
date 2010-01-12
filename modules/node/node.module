@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1205 2010/01/12 06:23:28 webchick Exp $
+// $Id: node.module,v 1.1206 2010/01/12 23:04:47 webchick Exp $
 
 /**
  * @file
@@ -1764,7 +1764,7 @@ function node_menu() {
   );
   $items['admin/content/node'] = array(
     'title' => 'Content',
-    'description' => "View, edit, and delete your site's content.",
+    'description' => "Administer content",
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );

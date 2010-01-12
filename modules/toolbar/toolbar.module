@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.31 2010/01/08 07:36:53 webchick Exp $
+// $Id: toolbar.module,v 1.32 2010/01/12 23:04:48 webchick Exp $
 
 /**
  * @file
@@ -204,6 +204,7 @@ function toolbar_view() {
         'title' => t('Hello <strong>@username</strong>', array('@username' => format_username($user))),
         'href' => 'user',
         'html' => TRUE,
+        'attributes' => array('title' => t('User account')),
       ),
       'logout' => array(
         'title' => t('Log out'),
@@ -231,6 +232,7 @@ function toolbar_view() {
       'title' => '<span class="home-link">Home</span>',
       'href' => '<front>',
       'html' => TRUE,
+      'attributes' => array('title' => t('Home')),
     ),
   );
   $build['toolbar_home'] = array(
