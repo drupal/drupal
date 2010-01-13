@@ -940,36 +940,43 @@ function node_save($node) {
     module_invoke_all('node_presave', $node);
     global $user;
 
+    // Determine if we will be inserting a new node.
     if (!isset($node->is_new)) {
       $node->is_new = empty($node->nid);
     }
 
-    // Apply filters to some default node fields:
-    if ($node->is_new) {
-      // Insert a new node.
-      $node->is_new = TRUE;
-
-      // When inserting a node, $node->log must be set because
-      // {node_revision}.log does not (and cannot) have a default
-      // value. If the user does not have permission to create
-      // revisions, however, the form will not contain an element for
-      // log so $node->log will be unset at this point.
+    if ($node->is_new || !empty($node->revision)) {
+      // When inserting either a new node or a new node revision, $node->log
+      // must be set because {node_revision}.log is a text column and therefore
+      // cannot have a default value. However, it might not be set at this
+      // point (for example, if the user submitting a node form does not have
+      // permission to create revisions), so we ensure that it is at least an
+      // empty string in that case.
+      // @todo: Make the {node_revision}.log column nullable so that we can
+      // remove this check.
       if (!isset($node->log)) {
         $node->log = '';
       }
     }
-    elseif (!empty($node->revision)) {
+    elseif (empty($node->log)) {
+      // If we are updating an existing node without adding a new revision, we
+      // need to make sure $node->log is unset whenever it is empty. As long as
+      // $node->log is unset, drupal_write_record() will not attempt to update
+      // the existing database column when re-saving the revision; therefore,
+      // this code allows us to avoid clobbering an existing log entry with an
+      // empty one.
+      unset($node->log);
+    }
+
+    // When saving a new node revision, unset any existing revision ID so as to
+    // ensure that a new revision will actually be created, and store the old
+    // revision ID in a separate property for use by node hook implementations.
+    if (!$node->is_new && !empty($node->revision) && $node->vid) {
       $node->old_vid = $node->vid;
       unset($node->vid);
     }
-    else {
-      // When updating a node, avoid clobbering an existing log entry with an empty one.
-      if (empty($node->log)) {
-        unset($node->log);
-      }
-    }
 
-    // Set some required fields:
+    // Set the timestamp fields.
     if (empty($node->created)) {
       $node->created = REQUEST_TIME;
     }
@@ -979,14 +986,21 @@ function node_save($node) {
     $node->timestamp = REQUEST_TIME;
     $update_node = TRUE;
 
-    // Generate the node table query and the node_revisions table query.
+    // Save the node and node revision.
     if ($node->is_new) {
+      // For new nodes, save new records for both the node itself and the node
+      // revision.
       drupal_write_record('node', $node);
       _node_save_revision($node, $user->uid);
       $op = 'insert';
     }
     else {
+      // For existing nodes, update the node record which matches the value of
+      // $node->nid.
       drupal_write_record('node', $node, 'nid');
+      // Then, if a new node revision was requested, save a new record for
+      // that; otherwise, update the node revision record which matches the
+      // value of $node->vid.
       if (!empty($node->revision)) {
         _node_save_revision($node, $user->uid);
       }
