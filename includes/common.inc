@@ -6489,7 +6489,7 @@ function entity_get_controller($entity_type) {
  *
  * If adding a new entity similar to nodes, comments or users, you should
  * invoke this function during the ENTITY_build_content() or
- * ENTITY_build_multiple() phases of rendering to allow other modules to alter
+ * ENTITY_view_multiple() phases of rendering to allow other modules to alter
  * the objects during this phase. This is needed for situations where
  * information needs to be loaded outside of ENTITY_load() - particularly
  * when loading entities into one another - i.e. a user object into a node, due
