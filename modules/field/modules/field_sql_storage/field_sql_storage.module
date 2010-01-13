@@ -494,17 +494,17 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $options)
     switch ($operator) {
       case 'STARTS_WITH':
         $operator = 'LIKE';
-        $value .= '%';
+        $value = db_like($value) . '%';
         break;
 
       case 'ENDS_WITH':
         $operator = 'LIKE';
-        $value = "$value%";
+        $value = '%' . db_like($value);
         break;
 
       case 'CONTAINS':
         $operator = 'LIKE';
-        $value = "%$value%";
+        $value = '%' . db_like($value) . '%';
         break;
     }
     // Translate field columns into prefixed db columns.

@@ -462,7 +462,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
         }
         else {
           db_delete($this->bin)
-            ->condition('cid', $cid . '%', 'LIKE')
+            ->condition('cid', db_like($cid) . '%', 'LIKE')
             ->execute();
         }
       }

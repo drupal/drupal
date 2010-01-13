@@ -813,6 +813,7 @@ class TaxonomyTermController extends DrupalDefaultEntityController {
       foreach ($conditions as $key => $condition) {
         if ($condition['field'] == 'base.name') {
           $conditions[$key]['operator'] = 'LIKE';
+          $conditions[$key]['value'] = db_like($conditions[$key]['value']);
         }
       }
     }

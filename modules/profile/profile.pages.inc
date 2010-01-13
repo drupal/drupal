@@ -53,7 +53,7 @@ function profile_browse() {
         $query->condition('v.value', $value);
         break;
       case 'list':
-        $query->condition('v.value', '%' . $value . '%', 'LIKE');
+        $query->condition('v.value', '%' . db_like($value) . '%', 'LIKE');
         break;
       default:
         drupal_not_found();

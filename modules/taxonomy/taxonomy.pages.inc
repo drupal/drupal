@@ -102,13 +102,11 @@ function taxonomy_autocomplete($field_name, $tags_typed = '') {
     if (!empty($tags_typed)) {
       $query->condition('t.name', $tags_typed, 'NOT IN');
     }
+    // Select rows that match by term name.
     $tags_return = $query
       ->fields('t', array('tid', 'name'))
       ->condition('t.vid', $vids)
-      // Select rows that match by term name.
-      ->condition(db_or()
-      ->where("t.name LIKE :last_string", array(':last_string' => '%' . $tag_last . '%'))
-      )
+      ->condition('t.name', '%' . db_like($tag_last) . '%', 'LIKE')
       ->range(0, 10)
       ->execute()
       ->fetchAllKeyed();
