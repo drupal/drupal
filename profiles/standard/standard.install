@@ -265,6 +265,14 @@ function standard_install() {
       'bundle' => 'article',
       'mapping' => array(
         'rdftype' => array('sioc:Item', 'foaf:Document'),
+        'field_image' => array(
+          'predicates' => array('rdfs:seeAlso'),
+          'type' => 'rel',
+        ),
+        'taxonomy_tags' => array(
+          'predicates' => array('sioc:topic'),
+          'type' => 'rel',
+        ),
       ),
     ),
   );
