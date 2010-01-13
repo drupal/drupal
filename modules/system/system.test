@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.102 2010/01/09 23:03:21 webchick Exp $
+// $Id: system.test,v 1.103 2010/01/13 05:08:29 webchick Exp $
 
 /**
  * Helper class for module test cases.
@@ -208,7 +208,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->assert(count($checkbox) == 1, t('Checkbox for the module is disabled.'));
 
     // Force enable the system_dependencies_test module.
-    module_enable(array('system_dependencies_test'));
+    module_enable(array('system_dependencies_test'), FALSE);
 
     // Verify that the module is forced to be disabled when submitting
     // the module page.
