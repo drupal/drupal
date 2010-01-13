@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.47 2010/01/08 16:54:06 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.48 2010/01/13 05:00:25 webchick Exp $
 
 /**
  * @file
@@ -31,6 +31,7 @@ function taxonomy_term_page($term) {
   drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
 
   field_attach_prepare_view('taxonomy_term', array($term->tid => $term), 'full');
+  entity_prepare_view('taxonomy_term', array($term->tid => $term));
   $build = array();
   $build += field_attach_view('taxonomy_term', $term);
   $build['term_description'] = array(
