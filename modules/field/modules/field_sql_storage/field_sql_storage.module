@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.36 2009/12/15 05:22:05 webchick Exp $
+// $Id: field_sql_storage.module,v 1.37 2010/01/13 04:37:03 webchick Exp $
 
 /**
  * @file
@@ -678,7 +678,7 @@ function field_sql_storage_field_storage_purge_field($field) {
 /**
  * Implements hook_field_storage_details().
  */
-function field_sql_storage_field_storage_details($field, $instance) {
+function field_sql_storage_field_storage_details($field) {
   $details = array();
 
   // Add field columns.

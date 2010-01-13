@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.36 2009/12/26 16:50:08 dries Exp $
+// $Id: field.info.inc,v 1.37 2010/01/13 04:37:03 webchick Exp $
 
 /**
  * @file
@@ -223,11 +223,6 @@ function _field_info_collate_fields($reset = FALSE) {
       // are thus not in $definitions['instances'].
       $info['fields'][$instance['field_name']]['bundles'][$instance['object_type']][] = $instance['bundle'];
       $info['field_ids'][$instance['field_id']]['bundles'][$instance['object_type']][] = $instance['bundle'];
-
-      // Add storage details.
-      $details = (array) module_invoke($field['storage']['module'], 'field_storage_details', $field, $instance);
-      drupal_alter('field_storage_details', $details, $field, $instance);
-      $info['instances'][$instance['object_type']][$instance['bundle']][$instance['field_name']]['storage_details'] = $details;
     }
   }
 
@@ -247,6 +242,11 @@ function _field_info_prepare_field($field) {
   // Make sure all expected field settings are present.
   $field['settings'] += field_info_field_settings($field['type']);
   $field['storage']['settings'] += field_info_storage_settings($field['storage']['type']);
+
+  // Add storage details.
+  $details = (array) module_invoke($field['storage']['module'], 'field_storage_details', $field);
+  drupal_alter('field_storage_details', $details, $field, $instance);
+  $field['storage']['details'] = $details;
 
   return $field;
 }
