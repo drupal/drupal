@@ -1,4 +1,4 @@
-/* $Id: system-behavior.css,v 1.2 2010/01/11 16:47:54 webchick Exp $ */
+/* $Id: system-behavior.css,v 1.3 2010/01/13 14:41:58 dries Exp $ */
 
 /**
  * Autocomplete
@@ -163,7 +163,7 @@ div.tree-child-horizontal {
 .progress .filled {
   background: #0072b9 url(../../misc/progress.gif);
   height: 1.5em;
-  width: 1px;
+  width: 5px;
 }
 .progress .percentage {
   float: right; /* LTR */
