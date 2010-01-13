@@ -101,14 +101,9 @@ function node_help($path, $arg) {
     case 'admin/structure/types/add':
       return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
 
-    case 'admin/structure/types/manage/' . $arg[3] . '/fields':
-      return '<p>' . t('This form allows you to add, edit, and arrange fields within the %type content type.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
-
-    case 'admin/structure/types/manage/' . $arg[3] . '/display':
-      return '<p>' . t('This form allows you to configure how fields should be displayed when %type content is rendered in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
-
-    case 'admin/structure/types/manage/' . $arg[3] . '/display/' . $arg[5]:
-      return '<p>' . t('This form allows you to configure how fields should be displayed when %type content is rendered in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
+    case 'admin/structure/types/manage/%/display':
+      return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' .
+        '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => node_type_get_name($arg[4]))) . '</p>';
 
     case 'node/%/revisions':
       return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert back to older versions.') . '</p>';
@@ -204,7 +199,7 @@ function node_entity_info() {
       'bundles' => array(),
       'view modes' => array(
         'full' => array(
-          'label' => t('Full node'),
+          'label' => t('Full content'),
         ),
         'teaser' => array(
           'label' => t('Teaser'),
