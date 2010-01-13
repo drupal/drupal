@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1105 2010/01/13 05:00:25 webchick Exp $
+// $Id: user.module,v 1.1106 2010/01/13 06:26:49 webchick Exp $
 
 /**
  * @file
@@ -146,6 +146,13 @@ function user_entity_info() {
     ),
   );
   return $return;
+}
+
+/**
+ * Entity path callback.
+ */
+function user_path($user) {
+  return 'user/' . $user->uid;
 }
 
 /**

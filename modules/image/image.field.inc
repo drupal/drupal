@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.9 2009/12/21 13:47:32 dries Exp $
+// $Id: image.field.inc,v 1.10 2010/01/13 06:26:49 webchick Exp $
 
 /**
  * @file
@@ -463,8 +463,7 @@ function image_field_formatter_view($obj_type, $object, $field, $instance, $lang
 
   // Check if the formatter involves a link.
   if (strpos($display['type'], 'image_link_content') === 0) {
-    list($id) = entity_extract_ids($obj_type, $object);
-    $path = $obj_type . '/' . $id;
+    $path = entity_path($obj_type, $object);
   }
   elseif (strpos($display['type'], 'image_link_file') === 0) {
     $link_file = TRUE;

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.833 2010/01/13 05:40:03 webchick Exp $
+// $Id: comment.module,v 1.834 2010/01/13 06:26:49 webchick Exp $
 
 /**
  * @file
@@ -97,6 +97,7 @@ function comment_entity_info() {
     'comment' => array(
       'label' => t('Comment'),
       'base table' => 'comment',
+      'path callback' => 'comment_path',
       'fieldable' => TRUE,
       'controller class' => 'CommentController',
       'object keys' => array(
@@ -123,6 +124,13 @@ function comment_entity_info() {
   }
 
   return $return;
+}
+
+/**
+ * Entity path callback.
+ */
+function comment_path($comment) {
+  return 'comment/' . $comment->cid;
 }
 
 /**
