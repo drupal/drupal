@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.286 2010/01/13 06:44:31 webchick Exp $
+// $Id: profile.module,v 1.287 2010/01/13 14:01:34 dries Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ function profile_help($path, $arg) {
       $output .= '</dl>';
       return $output;
     case 'admin/config/people/profile':
-      return '<p>' . t("This page displays a list of the existing custom profile fields to be displayed on a user's <em>My account</em> page. To provide structure, similar or related fields may be placed inside a category. To add a new category (or edit an existing one), edit a profile field and provide a new category name. Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") . '</p>';
+      return '<p>' . t("This page displays a list of the existing custom profile fields to be displayed on a user's <em>My account</em> page. To provide structure, similar or related fields may be placed inside a category. To add a new category (or edit an existing one), edit a profile field and provide a new category name.") . '</p>';
   }
 }
 
