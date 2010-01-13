@@ -1990,7 +1990,7 @@ function comment_form_validate($form, &$form_state) {
         $query = db_select('users', 'u');
         $query->addField('u', 'uid', 'uid');
         $taken = $query
-          ->where('LOWER(name) = :name', array(':name' => $form_state['values']['name']))
+          ->condition('name', db_like($form_state['values']['name']), 'LIKE')
           ->countQuery()
           ->execute()
           ->fetchField();

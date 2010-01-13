@@ -750,9 +750,11 @@ function user_access($string, $account = NULL) {
  * @return boolean TRUE for blocked users, FALSE for active.
  */
 function user_is_blocked($name) {
-  $deny = db_query("SELECT name FROM {users} WHERE status = 0 AND name = LOWER(:name)", array(':name' => $name))->fetchObject();
-
-  return $deny;
+  return db_select('users')
+    ->fields('users', array('name'))
+    ->condition('name', db_like($name), 'LIKE')
+    ->condition('status', 0)
+    ->execute()->fetchObject();
 }
 
 /**
@@ -1054,7 +1056,7 @@ function user_account_form_validate($form, &$form_state) {
       if ($error = user_validate_name($form_state['values']['name'])) {
         form_set_error('name', $error);
       }
-      elseif ((bool) db_query_range("SELECT 1 FROM {users} WHERE uid <> :uid AND LOWER(name) = LOWER(:name)", 0, 1, array(':uid' => $account->uid, ':name' => $form_state['values']['name']))->fetchField()) {
+      elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('name', db_like($form_state['values']['name']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
         form_set_error('name', t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
       }
     }

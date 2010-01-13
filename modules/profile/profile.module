@@ -610,8 +610,7 @@ function _profile_get_fields($category, $register = FALSE) {
     $query->condition('register', 1);
   }
   else {
-    // Use LOWER(:category) instead of PHP's strtolower() to avoid UTF-8 conversion issues.
-    $query->where('LOWER(category) = LOWER(:category)', array(':category' => $category));
+    $query->condition('category', db_like($category), 'LIKE');
   }
   if (!user_access('administer users')) {
     $query->condition('visibility', PROFILE_HIDDEN, '<>');

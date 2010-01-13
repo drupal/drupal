@@ -421,7 +421,12 @@ function profile_field_delete_submit($form, &$form_state) {
  */
 function profile_admin_settings_autocomplete($string) {
   $matches = array();
-  $result = db_query_range("SELECT category FROM {profile_field} WHERE LOWER(category) LIKE LOWER(:category)", 0, 10, array(':category' => $string . '%'));
+  $result = db_select('profile_field')
+    ->fields('profile_field', array('category'))
+    ->condition('category', db_like($string) . '%', 'LIKE')
+    ->range(0, 10)
+    ->execute();
+
   foreach ($result as $data) {
     $matches[$data->category] = check_plain($data->category);
   }
