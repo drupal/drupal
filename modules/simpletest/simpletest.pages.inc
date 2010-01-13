@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.21 2009/12/30 11:41:52 dries Exp $
+// $Id: simpletest.pages.inc,v 1.22 2010/01/13 14:25:59 dries Exp $
 
 /**
  * @file
@@ -430,7 +430,7 @@ function simpletest_settings_form($form, &$form_state) {
   $form['general']['simpletest_clear_results'] = array(
     '#type' => 'checkbox',
     '#title' => t('Clear results after each complete test suite run'),
-    '#description' => t('By default SimpleTest will clear the results after they have been viewed on the results page, but in some cases it may be useful to leave the results in the database. The results can then be viewed at <em>admin/config/development/testing/[test_id]</em>. The test ID can be found in the database, simpletest table, or kept track of when viewing the results the first time. Additionally, some modules may provide more analaysis or features that require this setting to be disabled.'),
+    '#description' => t('By default SimpleTest will clear the results after they have been viewed on the results page, but in some cases it may be useful to leave the results in the database. The results can then be viewed at <em>admin/config/development/testing/[test_id]</em>. The test ID can be found in the database, simpletest table, or kept track of when viewing the results the first time. Additionally, some modules may provide more analysis or features that require this setting to be disabled.'),
     '#default_value' => variable_get('simpletest_clear_results', TRUE),
   );
   $form['general']['simpletest_verbose'] = array(
