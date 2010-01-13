@@ -536,52 +536,6 @@ function drupal_verify_profile($install_state) {
 }
 
 /**
- * Calls the install function for a given list of modules.
- *
- * @param $module_list
- *   The modules to install.
- * @param $disable_modules_installed_hook
- *   Normally just testing wants to set this to TRUE.
- * 
- * @return
- *   TRUE if installation was attempted, FALSE if one or more dependencies are
- *   missing.
- */
-function drupal_install_modules($module_list = array(), $disable_modules_installed_hook = FALSE) {
-  $files = system_rebuild_module_data();
-  $module_list = array_flip(array_values($module_list));
-  do {
-    $moved = FALSE;
-    foreach ($module_list as $module => $weight) {
-      $file = $files[$module];
-      if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
-        foreach ($file->info['dependencies'] as $dependency) {
-          if (!isset($module_list[$dependency])) {
-            if (!isset($files[$dependency])) {
-              // A dependency was not found, abort installation.
-              return FALSE;
-            }
-            elseif (!$files[$dependency]->status) {
-              // Add dependencies to $module_list and install them first.
-              $module_list[$dependency] = $weight - 1;
-              $moved = TRUE;
-            }
-          }
-          elseif ($module_list[$module] < $module_list[$dependency] +1) {
-            $module_list[$module] = $module_list[$dependency] +1;
-            $moved = TRUE;
-          }
-        }
-      }
-    }
-  } while ($moved);
-  asort($module_list);
-  $module_list = array_keys($module_list);
-  module_enable($module_list, $disable_modules_installed_hook);
-  return TRUE;
-}
-
-/**
  * Callback to install an individual install profile module.
  *
  * Used during installation to install modules one at a time and then

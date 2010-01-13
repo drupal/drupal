@@ -208,7 +208,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->assert(count($checkbox) == 1, t('Checkbox for the module is disabled.'));
 
     // Force enable the system_dependencies_test module.
-    module_enable(array('system_dependencies_test'));
+    module_enable(array('system_dependencies_test'), FALSE);
 
     // Verify that the module is forced to be disabled when submitting
     // the module page.

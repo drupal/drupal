@@ -1136,18 +1136,18 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     $this->preloadRegistry();
 
-    // Include the default profile
+    // Include the default profile.
     variable_set('install_profile', 'standard');
     $profile_details = install_profile_info('standard', 'en');
 
     // Install the modules specified by the default profile.
-    drupal_install_modules($profile_details['dependencies'], TRUE);
+    module_enable($profile_details['dependencies'], FALSE, TRUE);
 
     drupal_static_reset('_node_types_build');
 
     if ($modules = func_get_args()) {
       // Install modules needed for this test.
-      drupal_install_modules($modules, TRUE);
+      module_enable($modules, TRUE, TRUE);
     }
 
     // Because the schema is static cached, we need to flush
@@ -1158,7 +1158,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Run default profile tasks.
     $install_state = array();
-    drupal_install_modules(array('standard'), TRUE);
+    module_enable(array('standard'), FALSE, TRUE);
 
     // Rebuild caches.
     node_types_rebuild();

@@ -2203,7 +2203,18 @@ function system_rebuild_module_data() {
   ksort($modules);
   system_get_files_database($modules, 'module');
   system_update_files_database($modules, 'module');
-  // Refresh bootstrap status.
+  $modules = _module_build_dependencies($modules);
+  return $modules;
+}
+
+/**
+ * Refresh bootstrap column in the system table.
+ *
+ * This is called internally by module_enable/disable() to flag modules that
+ * implement hooks used during bootstrap, such as hook_boot(). These modules
+ * are loaded earlier to invoke the hooks.
+ */
+function _system_update_bootstrap_status() {
   $bootstrap_modules = array();
   foreach (bootstrap_hooks() as $hook) {
     foreach (module_implements($hook) as $module) {
@@ -2219,8 +2230,6 @@ function system_rebuild_module_data() {
     $query->condition('name', $bootstrap_modules, 'NOT IN');
   }
   $query->execute();
-  $modules = _module_build_dependencies($modules);
-  return $modules;
 }
 
 /**

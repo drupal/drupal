@@ -37,7 +37,7 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $this->assertModuleList($module_list, t('Standard profile'));
 
     // Try to install a new module.
-    drupal_install_modules(array('contact'));
+    module_enable(array('contact'));
     $module_list[] = 'contact';
     sort($module_list);
     $this->assertModuleList($module_list, t('After adding a module'));
@@ -101,25 +101,25 @@ class ModuleUnitTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test drupal_install_modules() and dependency resolution.
+   * Test dependency resolution.
    */
-  function testDrupalInstallModules() {
-    drupal_install_modules(array('module_test'));
+  function testDependencyResolution() {
+    module_enable(array('module_test'), FALSE);
     $this->assertTrue(module_exists('module_test'), t('Test module is enabled.'));
 
     // First, create a fake missing dependency. Forum depends on poll, which
     // depends on a made-up module, foo. Nothing should be installed.
     variable_set('dependency_test', 'missing dependency');
-    $result = drupal_install_modules(array('forum'));
-    $this->assertFalse($result, t('drupal_install_modules() returns FALSE if dependencies are missing.'));
-    $this->assertFalse(module_exists('forum'), t('drupal_install_modules() aborts if dependencies are missing.'));
+    $result = module_enable(array('forum'));
+    $this->assertFalse($result, t('module_enable() returns FALSE if dependencies are missing.'));
+    $this->assertFalse(module_exists('forum'), t('module_enable() aborts if dependencies are missing.'));
 
-    // Now, fix the missing dependency. drupal_install_modules() should work.
+    // Now, fix the missing dependency. module_enable() should work.
     variable_set('dependency_test', 'dependency');
-    $result = drupal_install_modules(array('forum'));
-    $this->assertTrue($result, t('drupal_install_modules() returns the correct value.'));
+    $result = module_enable(array('forum'));
+    $this->assertTrue($result, t('module_enable() returns the correct value.'));
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue(module_exists('poll') && module_exists('php'), t('Dependency chain was installed by drupal_install_modules().'));
+    $this->assertTrue(module_exists('poll') && module_exists('php'), t('Dependency chain was installed by module_enable().'));
     // Finally, verify that the original module was installed.
     $this->assertTrue(module_exists('forum'), t('Module installation with unlisted dependencies succeeded.'));
   }

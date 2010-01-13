@@ -2082,8 +2082,7 @@ function system_update_7018() {
  */
 function system_update_7020() {
   $module_list = array('field_sql_storage', 'field');
-  drupal_install_modules($module_list);
-  module_enable($module_list);
+  module_enable($module_list, FALSE);
 }
 
 /**
@@ -2305,8 +2304,7 @@ function system_update_7027() {
     ->condition('type', 'module')
     ->condition('name', $module_list)
     ->execute();
-  drupal_install_modules($module_list);
-  module_enable($module_list);
+  module_enable($module_list, FALSE);
 }
 
 /**

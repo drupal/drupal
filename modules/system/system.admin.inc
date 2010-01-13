@@ -1203,7 +1203,7 @@ function system_modules_submit($form, &$form_state) {
       $sort[$module] = $files[$module]->sort;
     }
     array_multisort($sort, $modules_to_be_enabled);
-    module_enable($modules_to_be_enabled);
+    module_enable($modules_to_be_enabled, FALSE);
   }
   // Disable the modules that need disabling.
   if (!empty($disable_modules)) {
@@ -1225,7 +1225,7 @@ function system_modules_submit($form, &$form_state) {
       $sort[$module] = $files[$module]->sort;
     }
     array_multisort($sort, $new_modules);
-    drupal_install_modules($new_modules);
+    module_enable($new_modules, FALSE);
   }
 
   $current_module_list = module_list(TRUE);

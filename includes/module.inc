@@ -287,10 +287,53 @@ function module_load_all_includes($type, $name = NULL) {
  *
  * @param $module_list
  *   An array of module names.
+ * @param $enable_dependencies
+ *   If TRUE, dependencies will automatically be added and enabled in the
+ *   correct order. This incurs a significant performance cost, so use FALSE
+ *   if you know $module_list is already complete and in the correct order.
  * @param $disable_modules_installed_hook
  *   Normally just testing wants to set this to TRUE.
+ * @return
+ *   FALSE if one or more dependencies are missing, TRUE otherwise.
  */
-function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
+function module_enable($module_list, $enable_dependencies = TRUE, $disable_modules_installed_hook = FALSE) {
+  if ($enable_dependencies) {
+    // Get all module data so we can find dependencies and sort.
+    $module_data = system_rebuild_module_data();
+    // Create an associative array with weights as values.
+    $module_list = array_flip(array_values($module_list));
+
+    while (list($module) = each($module_list)) {
+      if (!isset($module_data[$module])) {
+        // This module is not found in the filesystem, abort.
+        return FALSE;
+      }
+      if ($module_data[$module]->status) {
+        // Skip already enabled modules.
+        unset($module_list[$module]);
+        continue;
+      }
+      $module_list[$module] = $module_data[$module]->sort;
+
+      // Add dependencies to the list, with a placeholder weight.
+      // The new modules will be processed as the while loop continues.
+      foreach ($module_data[$module]->info['dependencies'] as $dependency) {
+        if (!isset($module_list[$dependency])) {
+          $module_list[$dependency] = 0;
+        }
+      }
+    }
+
+    if (!$module_list) {
+      // Nothing to do. All modules already enabled.
+      return TRUE;
+    }
+
+    // Sort the module list by pre-calculated weights.
+    arsort($module_list);
+    $module_list = array_keys($module_list);
+  }
+
   $invoke_modules = array();
 
   // Try to install the enabled modules and collect which were installed.
@@ -328,6 +371,7 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
     if (!$disable_modules_installed_hook && !empty($modules_installed)) {
       module_invoke_all('modules_installed', $modules_installed);
     }
+    _system_update_bootstrap_status();
   }
 
   foreach ($invoke_modules as $module) {
@@ -346,6 +390,8 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
     // enabled.
     module_invoke_all('modules_enabled', $invoke_modules);
   }
+
+  return TRUE;
 }
 
 /**
@@ -353,9 +399,42 @@ function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
  *
  * @param $module_list
  *   An array of module names.
+ * @param $disable_dependents
+ *   If TRUE, dependent modules will automatically be added and disabled in the
+ *   correct order. This incurs a significant performance cost, so use FALSE
+ *   if you know $module_list is already complete and in the correct order.
  */
-function module_disable($module_list) {
+function module_disable($module_list, $disable_dependents = TRUE) {
+  if ($disable_dependents) {
+    // Get all module data so we can find dependents and sort.
+    $module_data = system_rebuild_module_data();
+    // Create an associative array with weights as values.
+    $module_list = array_flip(array_values($module_list));
+
+    while (list($module) = each($module_list)) {
+      if (!isset($module_data[$module]) || !$module_data[$module]->status) {
+        // This module doesn't exist or is already disabled, skip it.
+        unset($module_list[$module]);
+        continue;
+      }
+      $module_list[$module] = $module_data[$module]->sort;
+
+      // Add dependent modules to the list, with a placeholder weight.
+      // The new modules will be processed as the while loop continues.
+      foreach ($module_data[$module]->required_by as $dependent => $dependent_data) {
+        if (!isset($module_list[$dependent]) && !strstr($module_data[$dependent]->filename, '.profile')) {
+          $module_list[$dependent] = 0;
+        }
+      }
+    }
+
+    // Sort the module list by pre-calculated weights.
+    asort($module_list);
+    $module_list = array_keys($module_list);
+  }
+
   $invoke_modules = array();
+
   foreach ($module_list as $module) {
     if (module_exists($module)) {
       // Check if node_access table needs rebuilding.
@@ -385,6 +464,7 @@ function module_disable($module_list) {
     module_invoke_all('modules_disabled', $invoke_modules);
     // Update the registry to remove the newly-disabled module.
     registry_update();
+    _system_update_bootstrap_status();
   }
 
   // If there remains no more node_access module, rebuilding will be
