@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.875 2010/01/13 05:08:29 webchick Exp $
+// $Id: system.module,v 1.876 2010/01/13 23:03:31 webchick Exp $
 
 /**
  * @file
@@ -3591,6 +3591,7 @@ function system_admin_paths() {
   $paths = array(
     'admin' => TRUE,
     'admin/*' => TRUE,
+    'batch' => TRUE,
   );
   return $paths;
 }

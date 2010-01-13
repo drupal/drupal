@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.5 2010/01/06 04:03:39 webchick Exp $
+// $Id: overlay.module,v 1.6 2010/01/13 23:03:31 webchick Exp $
 
 /**
  * @file
@@ -517,8 +517,8 @@ function overlay_request_dialog_close($value = NULL) {
  *   The path that should open in the parent window after the overlay closes.
  */
 function overlay_close_dialog($redirect = NULL) {
-  if (empty($redirect)) {
-    $path = $_GET['q'];
+  if (!isset($redirect)) {
+    $redirect = current_path();
   }
   $settings = array(
     'overlayChild' => array(
