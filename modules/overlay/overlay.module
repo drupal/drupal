@@ -517,8 +517,8 @@ function overlay_request_dialog_close($value = NULL) {
  *   The path that should open in the parent window after the overlay closes.
  */
 function overlay_close_dialog($redirect = NULL) {
-  if (empty($redirect)) {
-    $path = $_GET['q'];
+  if (!isset($redirect)) {
+    $redirect = current_path();
   }
   $settings = array(
     'overlayChild' => array(

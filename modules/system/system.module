@@ -3591,6 +3591,7 @@ function system_admin_paths() {
   $paths = array(
     'admin' => TRUE,
     'admin/*' => TRUE,
+    'batch' => TRUE,
   );
   return $paths;
 }
