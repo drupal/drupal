@@ -554,7 +554,7 @@ function update_manager_install_form_submit($form, &$form_state) {
     $field = 'project_url';
     $local_cache = update_manager_file_get($form_state['values']['project_url']);
     if (!$local_cache) {
-      form_set_error($field, t('Unable to retreive Drupal project from %url.', array('%url' => $form_state['values']['project_url'])));
+      form_set_error($field, t('Unable to retrieve Drupal project from %url.', array('%url' => $form_state['values']['project_url'])));
       return;
     }
   }
@@ -703,7 +703,7 @@ function update_manager_archive_extract($file, $directory) {
 function update_manager_archive_verify($project, $archive_file, $directory) {
   $failures = module_invoke_all('verify_update_archive', $project, $archive_file, $directory);
   if (!empty($failures)) {
-    throw new Exception(t('Unable to extact %file', array('%file' => $file)));
+    throw new Exception(t('Unable to extract %file', array('%file' => $file)));
   }
 }
 
