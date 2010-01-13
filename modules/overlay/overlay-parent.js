@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.20 2010/01/13 05:10:46 webchick Exp $
+// $Id: overlay-parent.js,v 1.21 2010/01/13 23:13:18 webchick Exp $
 
 (function ($) {
 
@@ -417,6 +417,8 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
   // Add a title attribute to the iframe for accessibility.
   self.$iframe.attr('title', Drupal.t('@title dialog', { '@title': iframeTitle }));
 
+  // Remove any existing shortcut button markup in the title section.
+  self.$dialogTitlebar.find('.add-or-remove-shortcuts').remove();
   // If the shortcut add/delete button exists, move it to the dialog title.
   var $addToShortcuts = self.$iframeWindow('.add-or-remove-shortcuts');
   if ($addToShortcuts.length) {
@@ -428,6 +430,8 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
     self.$dialogTitlebar.find('.ui-dialog-title').after($addToShortcuts);
   }
 
+  // Remove any existing tabs in the title section.
+  self.$dialogTitlebar.find('ul').remove();
   // If there are tabs in the page, move them to the titlebar.
   var $tabs = self.$iframeWindow('ul.primary');
   if ($tabs.length) {
