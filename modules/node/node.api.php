@@ -222,28 +222,39 @@ function hook_node_grants_alter(&$grants, $account, $op) {
  */
 function hook_node_operations() {
   $operations = array(
-    'approve' => array(
-      'label' => t('Approve the selected posts'),
-      'callback' => 'node_operations_approve',
-    ),
-    'promote' => array(
-      'label' => t('Promote the selected posts'),
-      'callback' => 'node_operations_promote',
-    ),
-    'sticky' => array(
-      'label' => t('Make the selected posts sticky'),
-      'callback' => 'node_operations_sticky',
-    ),
-    'demote' => array(
-      'label' => t('Demote the selected posts'),
-      'callback' => 'node_operations_demote',
+    'publish' => array(
+      'label' => t('Publish selected content'),
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED)),
     ),
     'unpublish' => array(
-      'label' => t('Unpublish the selected posts'),
-      'callback' => 'node_operations_unpublish',
+      'label' => t('Unpublish selected content'),
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('status' => NODE_NOT_PUBLISHED)),
+    ),
+    'promote' => array(
+      'label' => t('Promote selected content to front page'),
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'promote' => NODE_PROMOTED)),
+    ),
+    'demote' => array(
+      'label' => t('Demote selected content from front page'),
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('promote' => NODE_NOT_PROMOTED)),
+    ),
+    'sticky' => array(
+      'label' => t('Make selected content sticky'),
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('status' => NODE_PUBLISHED, 'sticky' => NODE_STICKY)),
+    ),
+    'unsticky' => array(
+      'label' => t('Make selected content not sticky'),
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('sticky' => NODE_NOT_STICKY)),
     ),
     'delete' => array(
-      'label' => t('Delete the selected posts'),
+      'label' => t('Delete selected content'),
+      'callback' => NULL,
     ),
   );
   return $operations;
