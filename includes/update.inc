@@ -156,6 +156,96 @@ function update_prepare_d7_bootstrap() {
 }
 
 /**
+ * A helper function that modules can use to assist with the transformation
+ * from numeric block deltas to string block deltas during the 6.x -> 7.x
+ * upgrade.
+ *
+ * @todo This function should be removed in 8.x.
+ *
+ * @param $sandbox
+ *   An array holding data for the batch process.
+ * @param $renamed_deltas
+ *   An associative array.  Keys are module names, values an associative array
+ *   mapping the old block deltas to the new block deltas for the module.
+ *   Example:
+ *     $renamed_deltas = array(
+ *       'mymodule' =>
+ *         array(
+ *           0 => 'mymodule-block-1',
+ *           1 => 'mymodule-block-2',
+ *         );
+ *     );
+ */
+function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas) {
+  // Loop through each block and make changes to the block tables.
+  // Only run this the first time through the batch update.
+  if (!isset($sandbox['progress'])) {
+    $block_tables = array('blocks', 'blocks_roles');
+    foreach ($block_tables as $table) {
+      foreach ($renamed_deltas as $module => $deltas) {
+        foreach ($deltas as $old_delta => $new_delta) {
+          // Only do the update if the old block actually exists.
+          $block_exists = db_query("SELECT COUNT(*) FROM {" . $table . "} WHERE module = :module AND delta = :delta", array(
+            ':module' => $module,
+            ':delta' => $old_delta,
+          ))
+          ->fetchField();
+          if ($block_exists) {
+          	db_update($table)
+          	  ->fields(array('delta' => $new_delta))
+          	  ->condition('module', $module)
+          	  ->condition('delta', $old_delta)
+          	  ->execute();
+          }
+        }
+      }
+    }
+
+    // Initialize batch update information.
+    $sandbox['progress'] = 0;
+    $sandbox['last_user_processed'] = -1;
+    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE data IS NOT NULL")->fetchField();
+  }
+  // Now do the batch update of the user-specific block visibility settings.
+  $limit = 100;
+  $result = db_select('users', 'u')
+    ->fields('u', array('uid', 'data'))
+    ->condition('uid', $sandbox['last_user_processed'], '>')
+    ->where('data IS NOT NULL')
+    ->range(0, $limit)
+    ->execute();
+  foreach ($result as $row) {
+    $data = unserialize($row->data);
+    $user_needs_update = FALSE;
+    foreach ($renamed_deltas as $module => $deltas) {
+      foreach ($deltas as $old_delta => $new_delta) {
+        if (isset($data['block'][$module][$old_delta])) {
+          // Transfer the old block visibility settings to the newly-renamed
+          // block, and mark this user for a database update.
+          $data['block'][$module][$new_delta] = $data['block'][$module][$old_delta];
+          unset($data['block'][$module][$old_delta]);
+          $user_needs_update = TRUE;
+        }
+      }
+    }
+    // Update the current user.
+    if ($user_needs_update) {
+      db_update('users')
+        ->fields(array('data' => serialize($data)))
+        ->condition('uid', $row->uid)
+        ->execute();
+    }
+    // Update our progress information for the batch update.
+    $sandbox['progress']++;
+    $sandbox['last_user_processed'] = $row->uid;
+  }
+  // Indicate our current progress to the batch update system.
+  if ($sandbox['progress'] < $sandbox['max']) {
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
+  }
+}
+
+/**
  * Perform Drupal 6.x to 7.x updates that are required for update.php
  * to function properly.
  *
