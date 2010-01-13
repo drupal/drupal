@@ -181,8 +181,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
       'vid' => $node->vid,
       'uid' => $node->uid,
       'type' => $node->type,
-      'title' => array(LANGUAGE_NONE => array(array('value' => $new_title))),
-      'log' => '',
+      'title' => $new_title,
     );
     node_save($updated_node);
     $this->drupalGet('node/' . $node->nid);
@@ -201,14 +200,14 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
       'vid' => $node->vid,
       'uid' => $node->uid,
       'type' => $node->type,
-      'title' => array(LANGUAGE_NONE => array(array('value' => $new_title))),
+      'title' => $new_title,
       'revision' => 1,
     );
     node_save($updated_node);
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText($new_title, t('New node title appears on the page.'));
+    $this->assertText($new_title, 'New node title appears on the page.');
     $node_revision = node_load($node->nid, NULL, TRUE);
-    $this->assertTrue(empty($node_revision->log), t('After a new node revision is saved with an empty log message, the log message for the node is empty.'));
+    $this->assertTrue(empty($node_revision->log), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
   }
 }
 

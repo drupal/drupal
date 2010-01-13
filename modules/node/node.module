@@ -976,8 +976,8 @@ function node_save($node) {
       unset($node->log);
     }
 
-    // When saving a new node revision, unset any existing revision ID so as to
-    // ensure that a new revision will actually be created, and store the old
+    // When saving a new node revision, unset any existing $node->vid so as to
+    // ensure that a new revision will actually be created, then store the old
     // revision ID in a separate property for use by node hook implementations.
     if (!$node->is_new && !empty($node->revision) && $node->vid) {
       $node->old_vid = $node->vid;
