@@ -678,7 +678,7 @@ function field_sql_storage_field_storage_purge_field($field) {
 /**
  * Implements hook_field_storage_details().
  */
-function field_sql_storage_field_storage_details($field, $instance) {
+function field_sql_storage_field_storage_details($field) {
   $details = array();
 
   // Add field columns.

@@ -1134,8 +1134,6 @@ function hook_field_storage_info_alter(&$info) {
  *
  * @param $field
  *   A field structure.
- * @param $instance
- *   A field instance structure.
  * @return
  *   An array of details.
  *    - The first dimension is a store type (sql, solr, etc).
@@ -1143,24 +1141,19 @@ function hook_field_storage_info_alter(&$info) {
  *      FIELD_LOAD_CURRENT or FIELD_LOAD_REVISION.
  *    - Other dimensions are specific to the field storage module.
  */
-function hook_field_storage_details($field, $instance) {
+function hook_field_storage_details($field) {
 }
 
 /**
  * Perform alterations on Field API storage details.
- *
- * The storage details are appended to the field instance structure after this
- * hook is invoked. Read and alter the $details only.
  *
  * @param $details
  *   An array of storage details for fields as exposed by
  *   hook_field_storage_details() implementations.
  * @param $field
  *   A field structure.
- * @param $instance
- *   A field instance structure.
  */
-function hook_field_storage_details_alter(&$details, $field, $instance) {
+function hook_field_storage_details_alter(&$details, $field) {
 }
 
 /**

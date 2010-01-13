@@ -328,9 +328,9 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     $instance = field_info_instance($instance['object_type'], $instance['field_name'], $instance['bundle']);
 
     // The storage details are indexed by a storage engine type.
-    $this->assertTrue(array_key_exists('drupal_variables', $instance['storage_details']), t('The storage type is Drupal variables.'));
+    $this->assertTrue(array_key_exists('drupal_variables', $field['storage']['details']), t('The storage type is Drupal variables.'));
 
-    $details = $instance['storage_details']['drupal_variables'];
+    $details = $field['storage']['details']['drupal_variables'];
 
     // The field_test storage details are indexed by variable name. The details
     // are altered, so moon and mars are correct for this test.

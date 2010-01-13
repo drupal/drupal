@@ -26,7 +26,7 @@ function field_test_field_storage_info() {
 /**
  * Implements hook_field_storage_details().
  */
-function field_test_field_storage_details($field, $instance) {
+function field_test_field_storage_details($field) {
   $details = array();
 
   // Add field columns.
@@ -47,7 +47,7 @@ function field_test_field_storage_details($field, $instance) {
  *
  * @see FieldAttachStorageTestCase::testFieldStorageDetailsAlter()
  */
-function field_test_field_storage_details_alter(&$details, $field, $instance) {
+function field_test_field_storage_details_alter(&$details, $field) {
 
   // For testing, storage details are changed only because of the field name.
   if ($field['field_name'] == 'field_test_change_my_details') {

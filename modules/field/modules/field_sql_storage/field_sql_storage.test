@@ -383,10 +383,10 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $instance = field_info_instance($this->instance['object_type'], $this->instance['field_name'], $this->instance['bundle']);
 
     // The storage details are indexed by a storage engine type.
-    $this->assertTrue(array_key_exists('sql', $instance['storage_details']), t('The storage type is SQL.'));
+    $this->assertTrue(array_key_exists('sql', $field['storage']['details']), t('The storage type is SQL.'));
 
     // The SQL details are indexed by table name.
-    $details = $instance['storage_details']['sql'];
+    $details = $field['storage']['details']['sql'];
     $this->assertTrue(array_key_exists($current, $details[FIELD_LOAD_CURRENT]), t('Table name is available in the instance array.'));
     $this->assertTrue(array_key_exists($revision, $details[FIELD_LOAD_REVISION]), t('Revision table name is available in the instance array.'));
 
