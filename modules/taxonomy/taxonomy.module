@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.564 2010/01/13 14:25:59 dries Exp $
+// $Id: taxonomy.module,v 1.565 2010/01/13 23:19:54 dries Exp $
 
 /**
  * @file
@@ -813,6 +813,7 @@ class TaxonomyTermController extends DrupalDefaultEntityController {
       foreach ($conditions as $key => $condition) {
         if ($condition['field'] == 'base.name') {
           $conditions[$key]['operator'] = 'LIKE';
+          $conditions[$key]['value'] = db_like($conditions[$key]['value']);
         }
       }
     }

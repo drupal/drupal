@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.23 2010/01/13 06:44:31 webchick Exp $
+// $Id: profile.pages.inc,v 1.24 2010/01/13 23:19:54 dries Exp $
 
 /**
  * @file
@@ -53,7 +53,7 @@ function profile_browse() {
         $query->condition('v.value', $value);
         break;
       case 'list':
-        $query->condition('v.value', '%' . $value . '%', 'LIKE');
+        $query->condition('v.value', '%' . db_like($value) . '%', 'LIKE');
         break;
       default:
         drupal_not_found();

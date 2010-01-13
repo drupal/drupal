@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.241 2010/01/08 13:32:43 dries Exp $
+// $Id: locale.inc,v 1.242 2010/01/13 23:19:54 dries Exp $
 
 /**
  * @file
@@ -1480,12 +1480,12 @@ function _locale_translate_seek() {
   // Compute LIKE section.
   switch ($query['translation']) {
     case 'translated':
-      $sql_query->condition('t.translation', '%' . $query['string'] . '%', 'LIKE');
+      $sql_query->condition('t.translation', '%' . db_like($query['string']) . '%', 'LIKE');
       $sql_query->orderBy('t.translation', 'DESC');
       break;
     case 'untranslated':
       $sql_query->condition(db_and()
-        ->condition('s.source', '%' . $query['string'] . '%', 'LIKE')
+        ->condition('s.source', '%' . db_like($query['string']) . '%', 'LIKE')
         ->isNull('t.translation')
       );
       $sql_query->orderBy('s.source');
@@ -1493,10 +1493,10 @@ function _locale_translate_seek() {
     case 'all' :
     default:
       $condition = db_or()
-        ->condition('s.source', '%' . $query['string'] . '%', 'LIKE');
+        ->condition('s.source', '%' . db_like($query['string']) . '%', 'LIKE');
       if ($query['language'] != 'en') {
         // Only search in translations if the language is not forced to English.
-        $condition->condition('t.translation', '%' . $query['string'] . '%', 'LIKE');
+        $condition->condition('t.translation', '%' . db_like($query['string']) . '%', 'LIKE');
       }
       $sql_query->condition($condition);
       break;

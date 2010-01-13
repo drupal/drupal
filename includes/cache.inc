@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.43 2009/12/30 08:16:55 dries Exp $
+// $Id: cache.inc,v 1.44 2010/01/13 23:19:54 dries Exp $
 
 /**
  * Get the cache object for a cache bin.
@@ -462,7 +462,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
         }
         else {
           db_delete($this->bin)
-            ->condition('cid', $cid . '%', 'LIKE')
+            ->condition('cid', db_like($cid) . '%', 'LIKE')
             ->execute();
         }
       }
