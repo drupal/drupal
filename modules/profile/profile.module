@@ -46,7 +46,7 @@ function profile_help($path, $arg) {
       $output .= '</dl>';
       return $output;
     case 'admin/config/people/profile':
-      return '<p>' . t("This page displays a list of the existing custom profile fields to be displayed on a user's <em>My account</em> page. To provide structure, similar or related fields may be placed inside a category. To add a new category (or edit an existing one), edit a profile field and provide a new category name. Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") . '</p>';
+      return '<p>' . t("This page displays a list of the existing custom profile fields to be displayed on a user's <em>My account</em> page. To provide structure, similar or related fields may be placed inside a category. To add a new category (or edit an existing one), edit a profile field and provide a new category name.") . '</p>';
   }
 }
 
