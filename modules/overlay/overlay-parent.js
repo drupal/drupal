@@ -365,6 +365,12 @@ Drupal.overlay.redirect = function (link) {
     var absolute = location.href.match(/https?:\/\/[^\/]*/)[0];
     link = absolute + link;
   }
+
+  // If the link is already open, force the haschange event.
+  if (location.href == link) {
+    $(window).trigger('hashchange.overlay-event');
+  }
+
   location.href = link;
   return true;
 };
