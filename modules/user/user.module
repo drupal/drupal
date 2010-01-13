@@ -149,6 +149,13 @@ function user_entity_info() {
 }
 
 /**
+ * Entity path callback.
+ */
+function user_path($user) {
+  return 'user/' . $user->uid;
+}
+
+/**
  * Implements hook_field_extra_fields().
  */
 function user_field_extra_fields() {

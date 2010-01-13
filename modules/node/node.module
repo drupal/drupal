@@ -185,6 +185,7 @@ function node_entity_info() {
       'controller class' => 'NodeController',
       'base table' => 'node',
       'revision table' => 'node_revision',
+      'path callback' => 'node_path',
       'fieldable' => TRUE,
       'object keys' => array(
         'id' => 'nid',
@@ -239,6 +240,13 @@ function node_entity_info() {
   }
 
   return $return;
+}
+
+/**
+ * Entity path callback.
+ */
+function node_path($node) {
+  return 'node/' . $node->nid;
 }
 
 /**

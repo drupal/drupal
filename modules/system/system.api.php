@@ -66,6 +66,8 @@ function hook_hook_info() {
  *     static caching of entities during a page request. Defaults to TRUE.
  *   - load hook: The name of the hook which should be invoked by
  *     DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
+ *   - path callback: A function taking an entity as argument and returning the
+ *     path to the entity.
  *   - fieldable: Set to TRUE if you want your entity type to be fieldable.
  *   - object keys: An array describing how the Field API can extract the
  *     information it needs from the objects of the type. Elements:
@@ -126,6 +128,7 @@ function hook_entity_info() {
       'controller class' => 'NodeController',
       'base table' => 'node',
       'revision table' => 'node_revision',
+      'path callback' => 'node_path',
       'fieldable' => TRUE,
       'object keys' => array(
         'id' => 'nid',

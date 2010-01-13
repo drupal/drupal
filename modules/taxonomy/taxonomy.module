@@ -87,6 +87,7 @@ function taxonomy_entity_info() {
       'label' => t('Taxonomy term'),
       'controller class' => 'TaxonomyTermController',
       'base table' => 'taxonomy_term_data',
+      'path callback' => 'taxonomy_term_path',
       'fieldable' => TRUE,
       'object keys' => array(
         'id' => 'tid',
@@ -126,6 +127,13 @@ function taxonomy_entity_info() {
   );
 
   return $return;
+}
+
+/**
+ * Entity path callback.
+ */
+function taxonomy_term_path($term) {
+  return 'taxonomy/term/' . $term->tid;
 }
 
 /**

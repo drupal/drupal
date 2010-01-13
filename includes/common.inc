@@ -6525,6 +6525,23 @@ function entity_prepare_view($entity_type, $entities) {
 }
 
 /**
+ * Returns the path to an entity.
+ *
+ * @param $entity_type
+ *   The entity type; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The entity for which to generate a path.
+ * @return
+ *   The path for the entity, or NULL if the entity has no page of its own.
+ */
+function entity_path($entity_type, $entity) {
+  $info = entity_get_info($entity_type);
+  if (isset($info['path callback']) && function_exists($info['path callback'])) {
+    return $info['path callback']($entity);
+  }
+}
+
+/**
  * Performs one or more XML-RPC request(s).
  *
  * @param $url
