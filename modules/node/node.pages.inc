@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.110 2010/01/09 23:03:21 webchick Exp $
+// $Id: node.pages.inc,v 1.111 2010/01/13 04:35:28 webchick Exp $
 
 /**
  * @file
@@ -86,7 +86,10 @@ function node_object_prepare($node) {
   // If this is a new node, fill in the default values.
   if (!isset($node->nid)) {
     foreach (array('status', 'promote', 'sticky') as $key) {
-      $node->$key = (int) in_array($key, $node_options);
+      // Multistep node forms might have filled in something already.
+      if (!isset($node->$key)) {
+        $node->$key = (int) in_array($key, $node_options);
+      }
     }
     global $user;
     $node->uid = $user->uid;
