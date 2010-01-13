@@ -1382,8 +1382,8 @@ function template_preprocess_node(&$variables) {
   }
 
   // Clean up name so there are no underscores.
-  $variables['template_files'][] = 'node-' . str_replace('_', '-', $node->type);
-  $variables['template_files'][] = 'node-' . $node->nid;
+  $variables['theme_hook_suggestions'][] = 'node__' . $node->type;
+  $variables['theme_hook_suggestions'][] = 'node__' . $node->nid;
 }
 
 /**

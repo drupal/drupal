@@ -719,23 +719,18 @@ function list_themes($refresh = FALSE) {
  * need to be fast, and calling the non-hook-specific preprocess and process
  * functions for them would incur a noticeable performance penalty.
  *
- * For template-implemented theme hooks, there are two special variables that
- * these preprocess and process functions can set:
- *   'template_file' and 'template_files'. These will be merged together
- *   to form a list of 'suggested' alternate template files to use, in
- *   reverse order of priority. template_file will always be a higher
- *   priority than items in template_files. theme() will then look for these
- *   files, one at a time, and use the first one that exists. If none exists,
- *   theme() will use the original registered file for the theme hook.
- *
- * For function-implemented theme hooks, there are two special variables that
- * these preprocess and process functions can set:
- *   'theme_function' and 'theme_functions'. These will be merged together
- *   to form a list of 'suggested' alternate functions to use, in
- *   reverse order of priority. theme_function will always be a higher
- *   priority than items in theme_functions. theme() will then call the
- *   highest priority function that exists. If none exists, theme() will call
- *   the original registered function for the theme hook.
+ * There are two special variables that these preprocess and process functions
+ * can set:
+ *   'theme_hook_suggestion' and 'theme_hook_suggestions'. These will be merged
+ *   together to form a list of 'suggested' alternate hooks to use, in
+ *   reverse order of priority. theme_hook_suggestion will always be a higher
+ *   priority than items in theme_hook_suggestions. theme() will use the
+ *   highest priority implementation that exists. If none exists, theme() will
+ *   use the implementation for the theme hook it was called with. These
+ *   suggestions are similar to and are used for similar reasons as calling
+ *   theme() with an array as the $hook parameter (see below). The difference
+ *   is whether the suggestions are determined by the code that calls theme() or
+ *   by a preprocess or process function.
  *
  * @param $hook
  *   The name of the theme hook to call. If the name contains a
@@ -840,10 +835,9 @@ function theme($hook, $variables = array()) {
   }
 
   // Invoke the variable processors, if any. The processors may specify
-  // alternate suggestions for which function/template should be used.
+  // alternate suggestions for which hook's template/function to use.
   if (isset($info['preprocess functions']) || isset($info['process functions'])) {
-    $variables['theme_functions'] = array();
-    $variables['template_files'] = array();
+    $variables['theme_hook_suggestions'] = array();
     foreach (array('preprocess functions', 'process functions') as $phase) {
       if (!empty($info[$phase])) {
         foreach ($info[$phase] as $processor_function) {
@@ -855,21 +849,28 @@ function theme($hook, $variables = array()) {
         }
       }
     }
-    // Function suggestion takes priority over template suggestion.
-    // theme_function takes priority over theme_functions.
-    // theme_functions are in FILO order (least appropriate to most appropriate).
-    // Here, just look for function suggestions. Deal with template
-    // suggestions only after determining that the theme call is a template.
+    // If the preprocess/process functions specified hook suggestions, and the
+    // suggestion exists in the theme registry, use it instead of the hook that
+    // theme() was called with. This allows the preprocess/process step to
+    // route to a more specific theme hook. For example, a function may call
+    // theme('node', ...), but a preprocess function can add 'node__article' as
+    // a suggestion, enabling a theme to have an alternate template file for
+    // article nodes. Suggestions are checked in the following order:
+    // - The 'theme_hook_suggestion' variable is checked first. It overrides
+    //   all others.
+    // - The 'theme_hook_suggestions' variable is checked in FILO order, so the
+    //   last suggestion added to the array takes precedence over suggestions
+    //   added earlier.
     $suggestions = array();
-    if (!empty($variables['theme_functions'])) {
-      $suggestions = $variables['theme_functions'];
+    if (!empty($variables['theme_hook_suggestions'])) {
+      $suggestions = $variables['theme_hook_suggestions'];
     }
-    if (!empty($variables['theme_function'])) {
-      $suggestions[] = $variables['theme_function'];
+    if (!empty($variables['theme_hook_suggestion'])) {
+      $suggestions[] = $variables['theme_hook_suggestion'];
     }
     foreach (array_reverse($suggestions) as $suggestion) {
-      if (function_exists($suggestion)) {
-        $info['function'] = $suggestion;
+      if (isset($hooks[$suggestion])) {
+        $info = $hooks[$suggestion];
         break;
       }
     }
@@ -886,11 +887,9 @@ function theme($hook, $variables = array()) {
     $render_function = 'theme_render_template';
     $extension = '.tpl.php';
 
-    // Run through the theme engine variables, if necessary
+    // The theme engine may use a different extension and a different renderer.
     global $theme_engine;
     if (isset($theme_engine)) {
-      // If theme or theme engine is implementing this, it may have
-      // a different extension and a different renderer.
       if ($info['type'] != 'module') {
         if (function_exists($theme_engine . '_render_template')) {
           $render_function = $theme_engine . '_render_template';
@@ -902,82 +901,17 @@ function theme($hook, $variables = array()) {
       }
     }
 
-    // Find which template file exists and can be used. Priority order is:
-    // 1. $variables['template_file'].
-    // 2. $variables['template_files'] in FILO order (later in array is higher
-    //    priority).
-    // 3. $info['template'].
-    $suggestions = array();
-    if (isset($variables['template_files'])) {
-      $suggestions = $variables['template_files'];
+    // Render the output using the template file.
+    $template_file = $info['template'] . $extension;
+    if (isset($info['path'])) {
+      $template_file = $info['path'] . '/' . $template_file;
     }
-    if (isset($variables['template_file'])) {
-      $suggestions[] = $variables['template_file'];
-    }
-    if ($suggestions) {
-      $template_file = drupal_discover_template($info['theme paths'], $suggestions, $extension);
-    }
-    if (empty($template_file)) {
-      $template_file = $info['template'] . $extension;
-      if (isset($info['path'])) {
-        $template_file = $info['path'] . '/' . $template_file;
-      }
-    }
-
-    // Render the output using the found template file.
     $output = $render_function($template_file, $variables);
   }
 
   // restore path_to_theme()
   $theme_path = $temp;
   return $output;
-}
-
-/**
- * Determine and return which template file will generate the output.
- *
- * This helper allows the theme system to pick the template at runtime instead
- * of build time.
- *
- * @see template_page_suggestions()
- * @see template_preprocess_block()
- *
- * @param $paths
- *   The paths where templates can be found. See _theme_process_registry()
- *   'theme paths' for more information.
- * @param $suggestions
- *   The possible template names. These are derived from
- *   $variables['template_files'] and $variables['template_file], defined by
- *   preprocess functions. Each file is checked on every path in the order of
- *   precedence defined by theme().
- * @return
- *   The filepath to the template that will generate the output. If none is
- *   found, then theme() will use the 'template' as set by
- *   _theme_process_registry().
- *
- * @see _theme_process_registry()
- * @see theme()
- */
-function drupal_discover_template($paths, $suggestions, $extension = '.tpl.php') {
-  global $theme_engine;
-
-  // Remove slashes or null to prevent files from being included from
-  // an unexpected location (especially on Windows servers).
-  $extension = str_replace(array("/", "\\", "\0"), '', $extension);
-
-  // Loop through all paths and suggestions in FIFO order.
-  $suggestions = array_reverse($suggestions);
-  $paths = array_reverse($paths);
-  foreach ($suggestions as $suggestion) {
-    if (!empty($suggestion)) {
-      $suggestion = str_replace(array("/", "\\", "\0"), '', $suggestion);
-      foreach ($paths as $path) {
-        if (file_exists($file = $path . '/' . $suggestion . $extension)) {
-          return $file;
-        }
-      }
-    }
-  }
 }
 
 /**
@@ -1253,8 +1187,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
  * Render a system default template, which is essentially a PHP template.
  *
  * @param $template_file
- *   The filename of the template to render. Note that this will overwrite
- *   anything stored in $variables['template_file'] if using a variable processor hook.
+ *   The filename of the template to render.
  * @param $variables
  *   A keyed array of variables that will appear in the output.
  *
@@ -2346,7 +2279,7 @@ function template_preprocess_html(&$variables) {
   }
 
   // Populate the body classes.
-  if ($suggestions = template_page_suggestions(arg(), 'page')) {
+  if ($suggestions = theme_get_suggestions(arg(), 'page', '-')) {
     foreach ($suggestions as $suggestion) {
       if ($suggestion != 'page-front') {
         // Add current suggestion to page classes to make it possible to theme
@@ -2390,8 +2323,8 @@ function template_preprocess_html(&$variables) {
   $variables['head_title'] = implode(' | ', $head_title);
 
   // Populate the page template suggestions.
-  if ($suggestions = template_page_suggestions(arg(), 'html')) {
-    $variables['template_files'] = $suggestions;
+  if ($suggestions = theme_get_suggestions(arg(), 'html')) {
+    $variables['theme_hook_suggestions'] = $suggestions;
   }
 }
 
@@ -2452,8 +2385,8 @@ function template_preprocess_page(&$variables) {
   }
 
   // Populate the page template suggestions.
-  if ($suggestions = template_page_suggestions(arg(), 'page')) {
-    $variables['template_files'] = $suggestions;
+  if ($suggestions = theme_get_suggestions(arg(), 'page')) {
+    $variables['theme_hook_suggestions'] = $suggestions;
   }
 }
 /**
@@ -2481,26 +2414,39 @@ function template_process_html(&$variables) {
 }
 
 /**
- * Generate an array of page template suggestions.
+ * Generate an array of suggestions from path arguments.
+ *
+ * This is typically called for adding to the 'theme_hook_suggestions' or
+ * 'classes_array' variables from within preprocess functions, when wanting to
+ * base the additional suggestions on the path of the current page.
  *
  * @param $args
  *   An array of path arguments, such as from function arg().
+ * @param $base
+ *   A string identifying the base 'thing' from which more specific suggestions
+ *   are derived. For example, 'page' or 'html'.
+ * @param $delimiter
+ *   The string used to delimit increasingly specific information. The default
+ *   of '__' is appropriate for theme hook suggestions. '-' is appropriate for
+ *   extra classes.
  *
  * @return
- *   An array of suggested template files.
+ *   An array of suggestions, suitable for adding to
+ *   $variables['theme_hook_suggestions'] within a preprocess function or to
+ *   $variables['classes_array'] if the suggestions represent extra CSS classes.
  */
-function template_page_suggestions($args, $suggestion) {
+function theme_get_suggestions($args, $base, $delimiter = '__') {
 
-  // Build a list of suggested template files and body classes in order of
+  // Build a list of suggested theme hooks or body classes in order of
   // specificity. One suggestion is made for every element of the current path,
   // though numeric elements are not carried to subsequent suggestions. For
-  // example, http://www.example.com/node/1/edit would result in the following
-  // suggestions and body classes:
+  // example, for $base='page', http://www.example.com/node/1/edit would result
+  // in the following suggestions and body classes:
   //
-  // page-node-edit.tpl.php  page-node-edit
-  // page-node-1.tpl.php     page-node-1
-  // page-node.tpl.php       page-node
-  // page.tpl.php
+  // page__node              page-node
+  // page__node__%           page-node-%
+  // page__node__1           page-node-1
+  // page__node__edit        page-node-edit
 
   $suggestions = array();
   foreach ($args as $arg) {
@@ -2509,15 +2455,15 @@ function template_page_suggestions($args, $suggestion) {
     // The percent acts as a wildcard for numeric arguments since
     // asterisks are not valid filename characters on many filesystems.
     if (is_numeric($arg)) {
-      $suggestions[] = $suggestion . '-%';
+      $suggestions[] = $base . $delimiter . '%';
     }
-    $suggestions[] = $suggestion . '-' . $arg;
+    $suggestions[] = $base . $delimiter . $arg;
     if (!is_numeric($arg)) {
-      $suggestion .= '-' . $arg;
+      $base .= $delimiter . $arg;
     }
   }
   if (drupal_is_front_page()) {
-    $suggestions[] = $suggestion . '-front';
+    $suggestions[] = $base . $delimiter . 'front';
   }
 
   return $suggestions;
@@ -2529,7 +2475,7 @@ function template_page_suggestions($args, $suggestion) {
  * invoked. It is also used in theme_install_page() and theme_update_page() to
  * keep all the variables consistent.
  *
- * An alternate template file of "maintenance-page-offline.tpl.php" can be
+ * An alternate template file of "maintenance-page--offline.tpl.php" can be
  * used when the database is offline to hide errors and completely replace the
  * content.
  *
@@ -2617,7 +2563,7 @@ function template_preprocess_maintenance_page(&$variables) {
   // Dead databases will show error messages so supplying this template will
   // allow themers to override the page and the content completely.
   if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
-    $variables['template_file'] = 'maintenance-page-offline';
+    $variables['theme_hook_suggestion'] = 'maintenance_page__offline';
   }
 }
 
@@ -2638,5 +2584,5 @@ function template_preprocess_region(&$variables) {
 
   $region = drupal_region_class($variables['region']);
   $variables['classes_array'][] = $region;
-  $variables['template_files'][] = $region;
+  $variables['theme_hook_suggestions'][] = 'region__' . $region;
 }

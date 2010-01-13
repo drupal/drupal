@@ -19,36 +19,25 @@ class TemplateUnitTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test function template_page_suggestions() for SA-CORE-2009-003.
+   * Test function theme_get_suggestions() for SA-CORE-2009-003.
    */
-  function testTemplateSuggestions() {
+  function testThemeSuggestions() {
     // Set the front page as something random otherwise the CLI
     // test runner fails.
     variable_set('site_frontpage', 'nobody-home');
     $args = array('node', '1', 'edit');
-    $suggestions = template_page_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page-node', 'page-node-%', 'page-node-1', 'page-node-edit'), t('Found expected node edit page template suggestions'));
+    $suggestions = theme_get_suggestions($args, 'page');
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), t('Found expected node edit page suggestions'));
     // Check attack vectors.
     $args = array('node', '\\1');
-    $suggestions = template_page_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page-node', 'page-node-%', 'page-node-1'), t('Removed invalid \\ from template suggestions'));
+    $suggestions = theme_get_suggestions($args, 'page');
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\ from suggestions'));
     $args = array('node', '1/');
-    $suggestions = template_page_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page-node', 'page-node-%', 'page-node-1'), t('Removed invalid / from template suggestions'));
+    $suggestions = theme_get_suggestions($args, 'page');
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid / from suggestions'));
     $args = array('node', "1\0");
-    $suggestions = template_page_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page-node', 'page-node-%', 'page-node-1'), t('Removed invalid \\0 from template suggestions'));
-    // Tests for drupal_discover_template()
-    $suggestions = array('page');
-    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Safe template discovered'));
-    $suggestions = array('page');
-    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions, '\\.tpl.php'), 'themes/garland/page.tpl.php', t('Unsafe extension fixed'));
-    $suggestions = array('page\\');
-    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Unsafe template suggestion fixed'));
-    $suggestions = array('page/');
-    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Unsafe template suggestion fixed'));
-    $suggestions = array("page\0");
-    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Unsafe template suggestion fixed'));
+    $suggestions = theme_get_suggestions($args, 'page');
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\0 from suggestions'));
   }
 }
 

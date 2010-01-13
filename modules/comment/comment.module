@@ -2126,7 +2126,7 @@ function template_preprocess_comment(&$variables) {
   // Preprocess fields.
   field_attach_preprocess('comment', $comment, $variables['elements'], $variables);
 
-  $variables['template_files'][] = 'comment-' . $variables['node']->type;
+  $variables['theme_hook_suggestions'][] = 'comment__' . $variables['node']->type;
 
   // Helpful $content variable for templates.
   foreach (element_children($variables['elements']) as $key) {
@@ -2217,7 +2217,7 @@ function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.
   $variables['node'] = $variables['content']['#node'];
   $variables['display_mode'] = variable_get('comment_default_mode_' . $variables['node']->type, COMMENT_MODE_THREADED);
-  $variables['template_files'][] = 'comment-wrapper-' . $variables['node']->type;
+  $variables['theme_hook_suggestions'][] = 'comment_wrapper__' . $variables['node']->type;
 }
 
 /**

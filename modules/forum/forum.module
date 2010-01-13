@@ -948,17 +948,17 @@ function template_preprocess_forums(&$variables) {
     // Provide separate template suggestions based on what's being output. Topic id is also accounted for.
     // Check both variables to be safe then the inverse. Forums with topic ID's take precedence.
     if ($variables['forums'] && !$variables['topics']) {
-      $variables['template_files'][] = 'forums-containers';
-      $variables['template_files'][] = 'forums-' . $variables['tid'];
-      $variables['template_files'][] = 'forums-containers-' . $variables['tid'];
+      $variables['theme_hook_suggestions'][] = 'forums__containers';
+      $variables['theme_hook_suggestions'][] = 'forums__' . $variables['tid'];
+      $variables['theme_hook_suggestions'][] = 'forums__containers__' . $variables['tid'];
     }
     elseif (!$variables['forums'] && $variables['topics']) {
-      $variables['template_files'][] = 'forums-topics';
-      $variables['template_files'][] = 'forums-' . $variables['tid'];
-      $variables['template_files'][] = 'forums-topics-' . $variables['tid'];
+      $variables['theme_hook_suggestions'][] = 'forums__topics';
+      $variables['theme_hook_suggestions'][] = 'forums__' . $variables['tid'];
+      $variables['theme_hook_suggestions'][] = 'forums__topics__' . $variables['tid'];
     }
     else {
-      $variables['template_files'][] = 'forums-' . $variables['tid'];
+      $variables['theme_hook_suggestions'][] = 'forums__' . $variables['tid'];
     }
 
   }

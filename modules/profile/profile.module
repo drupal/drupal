@@ -585,8 +585,7 @@ function template_preprocess_profile_wrapper(&$variables) {
   $variables['current_field'] = '';
   if ($field = arg(1)) {
     $variables['current_field'] = $field;
-    // Supply an alternate template suggestion based on the browsable field.
-    $variables['template_files'][] = 'profile-wrapper-' . $field;
+    $variables['theme_hook_suggestions'][] = 'profile_wrapper__' . $field;
   }
 }
 

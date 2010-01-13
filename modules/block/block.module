@@ -871,9 +871,9 @@ function template_preprocess_block(&$variables) {
 
   $variables['classes_array'][] = drupal_html_class('block-' . $variables['block']->module);
 
-  $variables['template_files'][] = 'block-' . $variables['block']->region;
-  $variables['template_files'][] = 'block-' . $variables['block']->module;
-  $variables['template_files'][] = 'block-' . $variables['block']->module . '-' . $variables['block']->delta;
+  $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->region;
+  $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module;
+  $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module . '__' . $variables['block']->delta;
 }
 
 /**

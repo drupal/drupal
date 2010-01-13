@@ -77,8 +77,7 @@ function template_preprocess_search_results(&$variables) {
     $variables['search_results'] .= theme('search_result', array('result' => $result, 'type' => $variables['type']));
   }
   $variables['pager'] = theme('pager', array('tags' => NULL));
-  // Provide alternate search results template.
-  $variables['template_files'][] = 'search-results-' . $variables['type'];
+  $variables['theme_hook_suggestions'][] = 'search_results__' . $variables['type'];
 }
 
 /**
@@ -113,8 +112,7 @@ function template_preprocess_search_result(&$variables) {
   // Provide separated and grouped meta information..
   $variables['info_split'] = $info;
   $variables['info'] = implode(' - ', $info);
-  // Provide alternate search result template.
-  $variables['template_files'][] = 'search-result-' . $variables['type'];
+  $variables['theme_hook_suggestions'][] = 'search_result__' . $variables['type'];
 }
 
 /**
