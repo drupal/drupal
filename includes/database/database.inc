@@ -873,17 +873,9 @@ abstract class DatabaseConnection extends PDO {
   /**
    * Returns a new DatabaseTransaction object on this connection.
    *
-   * @param $required
-   *   If executing an operation that absolutely must use transactions, specify
-   *   TRUE for this parameter. If the connection does not support transactions,
-   *   this method will throw an exception and the operation will not be possible.
    * @see DatabaseTransaction
    */
-  public function startTransaction($required = FALSE) {
-    if ($required && !$this->supportsTransactions()) {
-      throw new TransactionsNotSupportedException();
-    }
-
+  public function startTransaction() {
     if (empty($this->transactionClass)) {
       $this->transactionClass = 'DatabaseTransaction_' . $this->driver();
       if (!class_exists($this->transactionClass)) {
@@ -1601,18 +1593,7 @@ abstract class Database {
 }
 
 /**
- * Exception to mark databases that do not support transations.
- *
- * This exception will be thrown when a transaction is started that does not
- * allow for the "silent fallback" of no transaction and the database connection
- * in use does not support transactions. The calling code must then take
- * appropriate action.
- */
-class TransactionsNotSupportedException extends Exception { }
-
-/**
- * Exception to throw when popTransaction() is called when no transaction is
- * active.
+ * Exception to throw when popTransaction() is called when no transaction is active.
  */
 class NoActiveTransactionException extends Exception { }
 

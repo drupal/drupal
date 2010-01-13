@@ -2908,49 +2908,6 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
   }
 
   /**
-   * Test that a database that claims to support transactions will return a transaction object.
-   *
-   * If the active connection does not support transactions, this test does nothing.
-   */
-  function testTransactionsSupported() {
-    try {
-      $connection = Database::getConnection();
-      if ($connection->supportsTransactions()) {
-
-        // Start a "required" transaction. This should fail if we do
-        // this on a database that does not actually support transactions.
-        $txn = db_transaction(TRUE);
-      }
-      $this->pass('Transaction started successfully.');
-    }
-    catch (TransactionsNotSupportedException $e) {
-      $this->fail("Exception thrown when it shouldn't have been.");
-    }
-  }
-
-  /**
-   * Test that a database that doesn't support transactions fails correctly.
-   *
-   * If the active connection supports transactions, this test does nothing.
-   */
-  function testTransactionsNotSupported() {
-    try {
-      $connection = Database::getConnection();
-      if (!$connection->supportsTransactions()) {
-
-        // Start a "required" transaction. This should fail if we do this
-        // on a database that does not actually support transactions, and
-        // the current database does claim to NOT support transactions.
-        $txn = db_transaction(TRUE);
-        $this->fail('No transaction failure registered.');
-      }
-    }
-    catch (TransactionsNotSupportedException $e) {
-      $this->pass('Exception thrown for unsupported transactions.');
-    }
-  }
-
-  /**
    * Test transaction rollback on a database that supports transactions.
    *
    * If the active connection does not support transactions, this test does nothing.

@@ -14,8 +14,8 @@
 class DatabaseConnection_mysql extends DatabaseConnection {
 
   public function __construct(array $connection_options = array()) {
-    // This driver defaults to non transaction support.
-    $this->transactionSupport = !empty($connection_options['transactions']);
+    // This driver defaults to transaction support, except if explicitly passed FALSE.
+    $this->transactionSupport = !isset($connection_options['transactions']) || ($connection_options['transactions'] !== FALSE);
 
     // MySQL never supports transactional DDL.
     $this->transactionalDDLSupport = FALSE;
