@@ -86,7 +86,10 @@ function node_object_prepare($node) {
   // If this is a new node, fill in the default values.
   if (!isset($node->nid)) {
     foreach (array('status', 'promote', 'sticky') as $key) {
-      $node->$key = (int) in_array($key, $node_options);
+      // Multistep node forms might have filled in something already.
+      if (!isset($node->$key)) {
+        $node->$key = (int) in_array($key, $node_options);
+      }
     }
     global $user;
     $node->uid = $user->uid;
