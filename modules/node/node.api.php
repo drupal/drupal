@@ -132,32 +132,21 @@ function hook_node_access_records($node) {
  *   The node for which the grants were acquired.
  *
  * The preferred use of this hook is in a module that bridges multiple node
- * access modules with a configurable behavior, as shown in the example
- * by the variable 'example_preview_terms'. This variable would
- * be a configuration setting for your module.
+ * access modules with a configurable behavior, as shown in the example with the
+ * 'is_preview' field.
  *
  * @ingroup node_access
  */
 function hook_node_access_records_alter(&$grants, $node) {
-  // Our module allows editors to tag specific articles as 'preview'
-  // content using the taxonomy system. If the node being saved
-  // contains one of the preview terms defined in our variable
-  // 'example_preview_terms', then only our grants are retained,
-  // and other grants are removed. Doing so ensures that our rules
-  // are enforced no matter what priority other grants are given.
-  $preview = variable_get('example_preview_terms', array());
-  // Check to see if we have enabled complex behavior.
-  if (!empty($preview)) {
-    foreach ($preview as $term_id) {
-      if (isset($node->taxonomy[$term_id])) {
-        // Our module grants are set in $grants['example'].
-        $temp = $grants['example'];
-        // Now remove all module grants but our own.
-        $grants = array('example' => $temp);
-        // No need to check additonal terms.
-        break;
-      }
-    }
+  // Our module allows editors to mark specific articles with the 'is_preview'
+  // field. If the node being saved has a TRUE value for that field, then only
+  // our grants are retained, and other grants are removed. Doing so ensures
+  // that our rules are enforced no matter what priority other grants are given.
+  if ($node->is_preview) {
+    // Our module grants are set in $grants['example'].
+    $temp = $grants['example'];
+    // Now remove all module grants but our own.
+    $grants = array('example' => $temp);
   }
 }
 

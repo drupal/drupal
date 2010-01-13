@@ -749,7 +749,6 @@ class DrupalWebTestCase extends DrupalTestCase {
       'sticky'    => 0,
       'type'      => 'page',
       'revisions' => NULL,
-      'taxonomy'  => NULL,
       'language'  => LANGUAGE_NONE,
     );
 
