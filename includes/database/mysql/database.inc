@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.22 2009/10/18 07:35:39 webchick Exp $
+// $Id: database.inc,v 1.23 2010/01/13 05:49:41 webchick Exp $
 
 /**
  * @file
@@ -14,8 +14,8 @@
 class DatabaseConnection_mysql extends DatabaseConnection {
 
   public function __construct(array $connection_options = array()) {
-    // This driver defaults to non transaction support.
-    $this->transactionSupport = !empty($connection_options['transactions']);
+    // This driver defaults to transaction support, except if explicitly passed FALSE.
+    $this->transactionSupport = !isset($connection_options['transactions']) || ($connection_options['transactions'] !== FALSE);
 
     // MySQL never supports transactional DDL.
     $this->transactionalDDLSupport = FALSE;
