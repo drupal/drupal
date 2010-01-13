@@ -31,6 +31,7 @@ function taxonomy_term_page($term) {
   drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
 
   field_attach_prepare_view('taxonomy_term', array($term->tid => $term), 'full');
+  entity_prepare_view('taxonomy_term', array($term->tid => $term));
   $build = array();
   $build += field_attach_view('taxonomy_term', $term);
   $build['term_description'] = array(

@@ -264,6 +264,28 @@ function hook_admin_paths_alter(&$paths) {
 }
 
 /**
+ * Act on entities as they are being prepared for view.
+ *
+ * Allows you to operate on multiple entities as they are being prepared for
+ * view. Only use this if attaching the data during the entity_load() phase
+ * is not appropriate, for example when attaching other 'entity' style objects.
+ *
+ * @param $entities
+ *   The entities keyed by entity ID.
+ * @param $type
+ *   The type of entities being loaded (i.e. node, user, comment).
+ */
+function hook_entity_prepare_view($entities, $type) {
+  // Load a specific node into the user object for later theming.
+  if ($type == 'user') {
+    $nodes = mymodule_get_user_nodes(array_keys($entities));
+    foreach ($entities as $uid => $entity) {
+      $entity->user_node = $nodes[$uid];
+    }
+  }
+}
+
+/**
  * Perform periodic actions.
  *
  * This hook will only be called if cron.php is run (e.g. by crontab).

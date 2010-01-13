@@ -6485,6 +6485,46 @@ function entity_get_controller($entity_type) {
 }
 
 /**
+ * Invoke hook_entity_prepare_view().
+ *
+ * If adding a new entity similar to nodes, comments or users, you should
+ * invoke this function during the ENTITY_build_content() or
+ * ENTITY_build_multiple() phases of rendering to allow other modules to alter
+ * the objects during this phase. This is needed for situations where
+ * information needs to be loaded outside of ENTITY_load() - particularly
+ * when loading entities into one another - i.e. a user object into a node, due
+ * to the potential for unwanted side-effects such as caching and infinite
+ * recursion. By convention, entity_prepare_view() is called after
+ * field_attach_prepare_view() to allow entity level hooks to act on content
+ * loaded by field API.
+ * @see hook_entity_prepare_view()
+ *
+ * @param $entity_type
+ *   The type of entity, i.e. 'node', 'user'.
+ * @param $entities
+ *   The entity objects which are being prepared for view, keyed by object ID.
+ */
+function entity_prepare_view($entity_type, $entities) {
+  // To ensure hooks are only run once per entity, check for an
+  // entity_view_prepared flag and only process items without it.
+  // @todo: resolve this more generally for both entity and field level hooks.
+  $prepare = array();
+  foreach ($entities as $id => $entity) {
+    if (empty($entity->entity_view_prepared)) {
+      // Add this entity to the items to be prepared.
+      $prepare[$id] = $entity;
+
+      // Mark this item as prepared.
+      $entity->entity_view_prepared = TRUE;
+    }
+  }
+
+  if (!empty($prepare)) {
+    module_invoke_all('entity_prepare_view', $prepare, $entity_type);
+  }
+}
+
+/**
  * Performs one or more XML-RPC request(s).
  *
  * @param $url

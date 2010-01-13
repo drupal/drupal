@@ -595,6 +595,25 @@ function rdf_field_attach_view_alter(&$output, $context) {
 }
 
 /**
+ * Implements hook_entity_prepare_view().
+ */
+function rdf_entity_prepare_view($entities, $entity_type) {
+  $uids = array();
+  // In the case of both nodes and comments, the full $account object for the
+  // author is needed in rdf_preprocess_username(), however this is not
+  // available from node_load() or comment_load(). If the users are loaded
+  // for the first time in rdf_preprocess_username() this will issue an
+  // individual user_load() for each account, so pre-load the users needed
+  // here where we can take advantage of user_load_multiple().
+  if ($entity_type == 'node' || $entity_type == 'comment') {
+    foreach ($entities as $entity) {
+      $uids[$entity->uid] = $entity->uid;
+    }
+    user_load_multiple($uids);
+  }
+}
+
+/**
  * Wraps a template variable in an HTML element with the desired attributes.
  *
  * This is called by rdf_process() shortly before the theme system renders

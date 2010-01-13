@@ -879,6 +879,7 @@ function comment_build_content($comment, $node, $view_mode = 'full') {
 
   // Build fields content.
   field_attach_prepare_view('comment', array($comment->cid => $comment), $view_mode);
+  entity_prepare_view('comment', array($comment->cid => $comment));
   $comment->content += field_attach_view('comment', $comment, $view_mode);
 
   // Prior to Drupal 7, the comment body was a simple text variable, but with
@@ -997,6 +998,7 @@ function comment_links($comment, $node) {
  */
 function comment_view_multiple($comments, $node, $view_mode = 'full', $weight = 0) {
   field_attach_prepare_view('comment', $comments, $view_mode);
+  entity_prepare_view('comment', $comments);
 
   $build = array(
     '#sorted' => TRUE,
