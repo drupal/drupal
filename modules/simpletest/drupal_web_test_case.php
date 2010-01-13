@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.191 2010/01/13 05:08:29 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.192 2010/01/13 06:10:43 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -749,7 +749,6 @@ class DrupalWebTestCase extends DrupalTestCase {
       'sticky'    => 0,
       'type'      => 'page',
       'revisions' => NULL,
-      'taxonomy'  => NULL,
       'language'  => LANGUAGE_NONE,
     );
 
