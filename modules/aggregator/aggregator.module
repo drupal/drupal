@@ -634,7 +634,6 @@ function aggregator_refresh($feed) {
 
       // If there are items on the feed, let all enabled processors do their work on it.
       if (@count($feed->items)) {
-        $processors = variable_get('aggregator_processors', array('aggregator'));
         foreach ($processors as $processor) {
           module_invoke($processor, 'aggregator_process', $feed);
         }
