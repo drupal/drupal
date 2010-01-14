@@ -215,7 +215,8 @@ function drupal_session_initialize() {
  * @ingroup php_wrappers
  */
 function drupal_session_start() {
-  if (!drupal_session_started()) {
+  // Command line clients do not support cookies nor sessions.
+  if (!drupal_session_started() && !drupal_is_cli()) {
     // Save current session data before starting it, as PHP will destroy it.
     $session_data = isset($_SESSION) ? $_SESSION : NULL;
 
