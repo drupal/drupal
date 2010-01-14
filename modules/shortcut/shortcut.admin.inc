@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.admin.inc,v 1.4 2010/01/03 21:01:04 webchick Exp $
+// $Id: shortcut.admin.inc,v 1.5 2010/01/14 04:04:30 webchick Exp $
 
 /**
  * @file
@@ -112,10 +112,10 @@ function shortcut_set_switch_submit($form, &$form_state) {
     if ($account->uid == $user->uid) {
       // Only administrators can create new shortcut sets, so we know they have
       // access to switch back.
-      drupal_set_message(t('Your are now using the new %set_name shortcut set. You can customize it from this page or <a href="@switch-url">switch back to a different one.</a>', $replacements));
+      drupal_set_message(t('You are now using the new %set_name shortcut set. You can edit it from this page or <a href="@switch-url">switch back to a different one.</a>', $replacements));
     }
     else {
-      drupal_set_message(t('%user is now using a new shortcut set called %set_name. You can customize it from this page.', $replacements));
+      drupal_set_message(t('%user is now using a new shortcut set called %set_name. You can edit it from this page.', $replacements));
     }
     $form_state['redirect'] = 'admin/config/system/shortcut/' . $set->set_name;
   }
