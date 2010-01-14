@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.6 2010/01/13 23:03:31 webchick Exp $
+// $Id: overlay.module,v 1.7 2010/01/14 03:25:43 webchick Exp $
 
 /**
  * @file
@@ -259,6 +259,18 @@ function overlay_preprocess_html(&$variables) {
     // Do not include site name or slogan in the overlay title.
     $variables['head_title'] = drupal_get_title();
   }
+}
+
+/**
+ * Preprocess template variables for maintenance-page.tpl.php.
+ *
+ * If the current page request is inside the overlay, add appropriate classes
+ * to the <body> element, and simplify the page title.
+ *
+ * @see overlay_preprocess_maintenance_page()
+ */
+function overlay_preprocess_maintenance_page(&$variables) {
+  overlay_preprocess_html($variables);
 }
 
 /**

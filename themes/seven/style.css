@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.42 2010/01/11 06:44:31 webchick Exp $ */
+/* $Id: style.css,v 1.43 2010/01/14 03:25:43 webchick Exp $ */
 
 /**
  * Generic elements
@@ -931,6 +931,7 @@ body.in-maintenance #content {
   padding-right: 20px;
 }
 body.in-maintenance #page {
+  overflow: auto;
   width: 770px;
   margin: 0 auto;
   padding-top: 2em;
