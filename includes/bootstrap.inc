@@ -1498,7 +1498,7 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   static $final_phase;
   // Not drupal_static(), because it's impossible to roll back to an earlier
   // bootstrap state.
-  static $completed_phase = -1;
+  static $stored_phase = -1;
 
   // When not recursing, store the phase name so it's not forgotten while
   // recursing.
@@ -1508,8 +1508,15 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   if (isset($phase)) {
     // Call a phase if it has not been called before and is below the requested
     // phase.
-    while ($phases && $phase > $completed_phase && $final_phase > $completed_phase) {
+    while ($phases && $phase > $stored_phase && $final_phase > $stored_phase) {
       $current_phase = array_shift($phases);
+
+      // This function is re-entrant. Only update the completed phase when the
+      // current call actually resulted in a progress in the bootstrap process.
+      if ($current_phase > $stored_phase) {
+        $stored_phase = $current_phase;
+      }
+
       switch ($current_phase) {
         case DRUPAL_BOOTSTRAP_CONFIGURATION:
           _drupal_bootstrap_configuration();
@@ -1545,14 +1552,9 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
           _drupal_bootstrap_full();
           break;
       }
-      // This function is reentrant. Only update the completed phase when the
-      // current call actually resulted in a progress in the bootstrap process.
-      if ($current_phase > $completed_phase) {
-        $completed_phase = $current_phase;
-      }
     }
   }
-  return $completed_phase;
+  return $stored_phase;
 }
 
 /**
