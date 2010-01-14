@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.38 2009/12/01 15:57:40 webchick Exp $
+// $Id: default.settings.php,v 1.39 2010/01/14 18:45:17 dries Exp $
 
 /**
  * @file
@@ -166,6 +166,25 @@ $db_prefix = '';
  * TRUE back to a FALSE!
  */
 $update_free_access = FALSE;
+
+/**
+ * Salt for one-time login links and cancel links, form tokens, etc.
+ *
+ * This variable will be set to a random value by the installer. All one-time
+ * login links will be invalidated if the value is changed.  Note that this
+ * variable must have the same value on every web server.  If this variable is
+ * empty, a hash of the serialized database credentials will be used as a
+ * fallback salt.
+ *
+ * For enhanced security, you may set this variable to a value using the
+ * contents of a file outside your docroot that is never saved together
+ * with any backups of your Drupal files and database.
+ *
+ * Example:
+ *   $drupal_hash_salt = file_get_contents('/home/example/salt.txt');
+ *   
+ */
+$drupal_hash_salt = '';
 
 /**
  * Base URL (optional).

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.234 2010/01/13 05:08:29 webchick Exp $
+// $Id: install.php,v 1.235 2010/01/14 18:45:17 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1000,6 +1000,10 @@ function install_settings_form_submit($form, &$form_state) {
   );
   $settings['db_prefix'] = array(
     'value'    => $form_state['values']['db_prefix'],
+    'required' => TRUE,
+  );
+  $settings['drupal_hash_salt'] = array(
+    'value'    => sha1(drupal_random_bytes(64)),
     'required' => TRUE,
   );
   drupal_rewrite_settings($settings);
