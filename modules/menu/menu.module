@@ -213,9 +213,32 @@ function menu_overview_title($menu) {
  *
  * @param $menu_name
  *   The unique name of a custom menu to load.
+ * @return
+ *   Array defining the custom menu, or FALSE if the menu doesn't exist.
  */
 function menu_load($menu_name) {
-  return db_query("SELECT * FROM {menu_custom} WHERE menu_name = :menu", array(':menu' => $menu_name))->fetchAssoc();
+  $all_menus = menu_load_all();
+  return isset($all_menus[$menu_name]) ? $all_menus[$menu_name] : FALSE;
+}
+
+/**
+ * Load all custom menu data.
+ *
+ * @return
+ *   Array of custom menu data.
+ */
+function menu_load_all() {
+  $custom_menus = &drupal_static(__FUNCTION__);
+  if (!isset($custom_menus)) {
+    if ($cached = cache_get('menu_custom', 'cache_menu')) {
+      $custom_menus = $cached->data;
+    }
+    else {
+      $custom_menus = db_query('SELECT * FROM {menu_custom}')->fetchAllAssoc('menu_name', PDO::FETCH_ASSOC);
+      cache_set('menu_custom', $custom_menus, 'cache_menu');
+    }
+  }
+  return $custom_menus;
 }
 
 /**
@@ -242,6 +265,7 @@ function menu_save($menu) {
       'description' => $menu['description'],
     ))
     ->execute();
+  menu_cache_clear_all();
 
   // Since custom menus are keyed by name and their machine-name cannot be
   // changed, there is no real differentiation between inserting and updating a
@@ -290,6 +314,7 @@ function menu_delete($menu) {
     ->condition('menu_name', $menu['menu_name'])
     ->execute();
 
+  menu_cache_clear_all();
   module_invoke_all('menu_delete', $menu);
 }
 
@@ -710,16 +735,14 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
  *   titles as the values.
  */
 function menu_get_menus($all = TRUE) {
-  $system_menus = array_keys(menu_list_system_menus());
-  $query = db_select('menu_custom');
-  $query->addTag('translatable');
-  $query->addField('menu_custom', 'menu_name', 'menu_name');
-  $query->addField('menu_custom', 'title', 'title');
-  if (!$all) {
-    $query->condition('menu_name', $system_menus, 'NOT IN');
+  if ($custom_menus = menu_load_all()) {
+    if (!$all) {
+      $custom_menus = array_diff_key($custom_menus, menu_list_system_menus());
+    }
+    foreach ($custom_menus as $menu_name => $menu) {
+      $custom_menus[$menu_name] = t($menu['title']);
+    }
+    asort($custom_menus);
   }
-  $query->orderBy('title');
-
-  return $query->execute()->fetchAllKeyed();
+  return $custom_menus;
 }
-

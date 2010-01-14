@@ -2225,6 +2225,7 @@ function menu_reset_static_cache() {
   drupal_static_reset('menu_tree');
   drupal_static_reset('menu_tree_all_data');
   drupal_static_reset('menu_tree_page_data');
+  drupal_static_reset('menu_load_all');
 }
 
 /**

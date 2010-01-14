@@ -1347,16 +1347,32 @@ function user_register_access() {
   return user_is_anonymous() && variable_get('user_register', 1);
 }
 
+
+/**
+ * User view access callback.
+ *
+ * @param $account
+ *   Can either be a full user object or a $uid.
+ */
 function user_view_access($account) {
-  return $account && $account->uid &&
-    (
-      // Always let users view their own profile.
-      ($GLOBALS['user']->uid == $account->uid) ||
-      // Administrators can view all accounts.
-      user_access('administer users') ||
-      // The user is not blocked and logged in at least once.
-      ($account->access && $account->status && user_access('access user profiles'))
-    );
+
+  $uid = is_object($account) ? $account->uid : (int) $account;
+
+  // Never allow access to view the anonymous user account.
+  if ($uid) {
+    // Admins can view all, users can view own profiles at all times.
+    if ($GLOBALS['user']->uid == $uid || user_access('administer users')) {
+      return TRUE;
+    }
+    elseif (user_access('access user profiles')) {
+      // At this point, load the complete account object.
+      if (!is_object($account)) {
+        $account = user_load($uid);
+      }
+      return (is_object($account) && $account->access && $account->status);
+    }
+  }
+  return FALSE;
 }
 
 /**
@@ -1520,17 +1536,18 @@ function user_menu() {
     'weight' => -8,
   );
 
-  $items['user/%user_uid_optional'] = array(
+  // Use %user_uid_only_optional here to avoid loading the full user for
+  // basic access checks.
+  $items['user/%user_uid_only_optional'] = array(
     'title' => 'My account',
     'title callback' => 'user_page_title',
     'title arguments' => array(1),
-    'page callback' => 'user_view',
+    'page callback' => 'user_view_page',
     'page arguments' => array(1),
     'access callback' => 'user_view_access',
     'access arguments' => array(1),
     'weight' => -10,
     'menu_name' => 'user-menu',
-    'file' => 'user.pages.inc',
   );
 
   $items['user/%user/view'] = array(
@@ -1616,6 +1633,7 @@ function user_init() {
  *   cannot be loaded.
  *
  * @see user_load()
+ * @todo rethink the naming of this in Drupal 8.
  */
 function user_uid_optional_load($uid = NULL) {
   if (!isset($uid)) {
@@ -1663,7 +1681,9 @@ function user_category_load($uid, &$map, $index) {
 }
 
 /**
- * Returns the user id of the currently logged in user.
+ * Returns $arg or the user ID of the current user if $arg is '%' or empty.
+ *
+ * @todo rethink the naming of this in Drupal 8.
  */
 function user_uid_optional_to_arg($arg) {
   // Give back the current user uid when called from eg. tracker, aka.
@@ -1673,10 +1693,25 @@ function user_uid_optional_to_arg($arg) {
 }
 
 /**
+ * Returns $arg or the user ID of the current user if $arg is '%' or empty.
+ *
+ * @todo rethink the naming of this in Drupal 8.
+ */
+function user_uid_only_optional_to_arg($arg) {
+  return user_uid_optional_to_arg($arg);
+}
+
+/**
  * Menu item title callback - use the user name.
  */
-function user_page_title($account) {
-  return format_username($account);
+function user_page_title($uid) {
+  if ($GLOBALS['user']->uid == $uid) {
+    $account = $GLOBALS['user'];
+  }
+  else {
+    $account = user_load($uid);
+  }
+  return is_object($account) ? format_username($account) : '';
 }
 
 /**
@@ -2105,6 +2140,16 @@ function _user_cancel($edit, $account, $method) {
 
   // Clear the cache for anonymous users.
   cache_clear_all();
+}
+
+/**
+ * Page callback wrapper for user_view().
+ */
+function user_view_page($uid) {
+  // An administrator may try to view a non-existent account,
+  // so we give them a 404 (versus a 403 for non-admins).
+  $account = user_load($uid);
+  return is_object($account) ? user_view($account) : MENU_NOT_FOUND;
 }
 
 /**
