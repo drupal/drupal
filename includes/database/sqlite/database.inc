@@ -186,7 +186,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     }
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.
-    return $new_value;
+    return (int) $this->query('SELECT value FROM {sequences}')->fetchField();
   }
 }
 
