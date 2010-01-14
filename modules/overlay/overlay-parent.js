@@ -366,7 +366,7 @@ Drupal.overlay.redirect = function (link) {
     link = absolute + link;
   }
 
-  // If the link is already open, force the haschange event.
+  // If the link is already open, force the hashchange event to simulate reload.
   if (location.href == link) {
     $(window).trigger('hashchange.overlay-event');
   }
