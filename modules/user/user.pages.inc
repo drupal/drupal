@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.64 2010/01/11 16:25:16 webchick Exp $
+// $Id: user.pages.inc,v 1.65 2010/01/14 19:21:55 dries Exp $
 
 /**
  * @file
@@ -248,7 +248,7 @@ function user_profile_form($form, &$form_state, $account, $category = 'account')
       '#value' => t('Cancel account'),
       '#weight' => 31,
       '#submit' => array('user_edit_cancel_submit'),
-      '#access' => ($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users'),
+      '#access' => $account->uid > 1 && (($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users')),
     );
   }
 
