@@ -7,6 +7,7 @@ core = 7.x
 engine = phptemplate
 stylesheets[screen][] = reset.css
 stylesheets[screen][] = style.css
+settings[shortcut_module_link] = 1
 regions[content] = Content
 regions[help] = Help
 regions[page_top] = Page top
