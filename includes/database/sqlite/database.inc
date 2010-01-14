@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.22 2010/01/07 04:51:26 webchick Exp $
+// $Id: database.inc,v 1.23 2010/01/14 19:49:14 webchick Exp $
 
 /**
  * @file
@@ -186,7 +186,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     }
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.
-    return $new_value;
+    return (int) $this->query('SELECT value FROM {sequences}')->fetchField();
   }
 }
 
