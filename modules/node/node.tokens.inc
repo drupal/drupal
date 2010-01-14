@@ -14,14 +14,14 @@
 function node_token_info() {
   $type = array(
     'name' => t('Nodes'),
-    'description' => t('Tokens related to individual nodes.'),
+    'description' => t('Tokens related to individual content items, or "nodes".'),
     'needs-data' => 'node',
   );
 
   // Core tokens for nodes.
   $node['nid'] = array(
-    'name' => t("Node ID"),
-    'description' => t("The unique ID of the node."),
+    'name' => t("Content ID"),
+    'description' => t('The unique ID of the content item, or "node".'),
   );
   $node['vid'] = array(
     'name' => t("Revision ID"),
