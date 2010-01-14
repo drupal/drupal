@@ -477,45 +477,46 @@ function rdf_preprocess_user_profile(&$variables) {
 function rdf_preprocess_username(&$variables) {
   // $variables['account'] is a pseudo account object, and as such, does not
   // contain the rdf mappings for the user; in the case of nodes and comments,
-  // it contains the mappings for the node or comment object instead. Therefore,
-  // the real account object for the user is needed. The real account object is
-  // needed for this function only; it should not replace $variables['account'].
-  if ($account = user_load($variables['uid'])) {
-    // An RDF resource for the user is created with the 'about' attribute and
-    // the profile URI is used to identify this resource. Even if the user
-    // profile is not accessible, we generate its URI regardless in order to
-    // be able to identify the user in RDF. We do not use this attribute for
-    // the anonymous user because we do not have a user profile URI for it (only
-    // a homepage which cannot be used as user profile in RDF).
-    if ($account->uid > 0) {
-      $variables['attributes_array']['about'] = url('user/' . $account->uid);
-    }
+  // it contains the mappings for the node or comment object instead. However
+  // while the rdf mappings are available from a full user_load(), this should
+  // be avoided for performance reasons. Since the type and bundle for
+  // users is already known, call rdf_mapping_load() directly.
+  $rdf_mapping = rdf_mapping_load('user', 'user');
 
-    // The remaining attributes are defined by RDFa as lists
-    // (http://www.w3.org/TR/rdfa-syntax/#rdfa-attributes). Therefore, merge
-    // rather than override, so as not to clobber values set by earlier
-    // preprocess functions.
-    $attributes = array();
-
-    // The 'typeof' attribute specifies the RDF type(s) of this resource. They
-    // are defined in the 'rdftype' property of the user object RDF mapping.
-    if (!empty($account->rdf_mapping['rdftype'])) {
-      $attributes['typeof'] = $account->rdf_mapping['rdftype'];
-    }
-
-    // Annotate the user name in RDFa. The attribute 'property' is used here
-    // because the user name is a literal.
-    if (!empty($account->rdf_mapping['name'])) {
-      $attributes['property'] = $account->rdf_mapping['name']['predicates'];
-    }
-
-    // Add the homepage RDFa markup if present.
-    if (!empty($variables['homepage']) && !empty($account->rdf_mapping['homepage'])) {
-      $attributes['rel'] = $account->rdf_mapping['homepage']['predicates'];
-    }
-
-    $variables['attributes_array'] = array_merge_recursive($variables['attributes_array'], $attributes);
+  // An RDF resource for the user is created with the 'about' attribute and
+  // the profile URI is used to identify this resource. Even if the user
+  // profile is not accessible, we generate its URI regardless in order to
+  // be able to identify the user in RDF. We do not use this attribute for
+  // the anonymous user because we do not have a user profile URI for it (only
+  // a homepage which cannot be used as user profile in RDF).
+  if ($variables['uid'] > 0) {
+    $variables['attributes_array']['about'] = url('user/' . $variables['uid']);
   }
+
+  // The remaining attributes are defined by RDFa as lists
+  // (http://www.w3.org/TR/rdfa-syntax/#rdfa-attributes). Therefore, merge
+  // rather than override, so as not to clobber values set by earlier
+  // preprocess functions.
+  $attributes = array();
+
+  // The 'typeof' attribute specifies the RDF type(s) of this resource. They
+  // are defined in the 'rdftype' property of the user RDF mapping.
+  if (!empty($rdf_mapping['rdftype'])) {
+    $attributes['typeof'] = $rdf_mapping['rdftype'];
+  }
+
+  // Annotate the user name in RDFa. The attribute 'property' is used here
+  // because the user name is a literal.
+  if (!empty($rdf_mapping['name'])) {
+    $attributes['property'] = $rdf_mapping['name']['predicates'];
+  }
+
+  // Add the homepage RDFa markup if present.
+  if (!empty($variables['homepage']) && !empty($rdf_mapping['homepage'])) {
+    $attributes['rel'] = $rdf_mapping['homepage']['predicates'];
+  }
+
+  $variables['attributes_array'] = array_merge_recursive($variables['attributes_array'], $attributes);
 }
 
 /**
@@ -591,25 +592,6 @@ function rdf_field_attach_view_alter(&$output, $context) {
         }
       }
     }
-  }
-}
-
-/**
- * Implements hook_entity_prepare_view().
- */
-function rdf_entity_prepare_view($entities, $entity_type) {
-  $uids = array();
-  // In the case of both nodes and comments, the full $account object for the
-  // author is needed in rdf_preprocess_username(), however this is not
-  // available from node_load() or comment_load(). If the users are loaded
-  // for the first time in rdf_preprocess_username() this will issue an
-  // individual user_load() for each account, so pre-load the users needed
-  // here where we can take advantage of user_load_multiple().
-  if ($entity_type == 'node' || $entity_type == 'comment') {
-    foreach ($entities as $entity) {
-      $uids[$entity->uid] = $entity->uid;
-    }
-    user_load_multiple($uids);
   }
 }
 
