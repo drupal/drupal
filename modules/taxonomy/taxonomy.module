@@ -473,7 +473,6 @@ function taxonomy_term_save($term) {
   }
   else {
     $status = drupal_write_record('taxonomy_term_data', $term);
-    _taxonomy_clean_field_cache($term);
     field_attach_insert('taxonomy_term', $term);
     module_invoke_all('taxonomy_term_insert', $term);
   }
@@ -550,7 +549,6 @@ function taxonomy_term_delete($tid) {
         ->execute();
 
       field_attach_delete('taxonomy_term', $term);
-      _taxonomy_clean_field_cache($term);
       module_invoke_all('taxonomy_term_delete', $term);
     }
 
@@ -1177,48 +1175,6 @@ function taxonomy_field_formatter_prepare_view($obj_type, $objects, $field, $ins
         }
       }
     }
-  }
-}
-
-/**
- * Helper function that clears field cache when terms are updated or deleted
- */
-function _taxonomy_clean_field_cache($term) {
-  $cids = array();
-
-  // Determine object types that are not cacheable.
-  $obj_types = array();
-  foreach (entity_get_info() as $obj_type => $info) {
-    if (isset($info['cacheable']) && !$info['cacheable']) {
-      $obj_types[] = $obj_type;
-    }
-  }
-
-  // Load info for all taxonomy term fields.
-  $fields = field_read_fields(array('type' => 'taxonomy_term_reference'));
-  foreach ($fields as $field_name => $field) {
-
-    // Assemble an array of vocabulary IDs that are used in this field.
-    foreach ($field['settings']['allowed_values'] as $tree) {
-      $vids[$tree['vid']] = $tree['vid'];
-    }
-
-    // Check this term's vocabulary against those used for the field's options.
-    if (in_array($term->vid, $vids)) {
-      $conditions = array(array('tid', $term->tid));
-      if ($obj_types) {
-        $conditions[] = array('type', $obj_types, 'NOT IN');
-      }
-      $results = field_attach_query($field['id'], $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-      foreach ($results as $obj_type => $objects) {
-        foreach (array_keys($objects) as $id) {
-          $cids[] = "field:$obj_type:$id";
-        }
-      }
-    }
-  }
-  if ($cids) {
-    cache_clear_all($cids, 'cache_field');
   }
 }
 
