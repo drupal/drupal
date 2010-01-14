@@ -2029,7 +2029,8 @@ function user_cancel_url($account) {
 }
 
 function user_pass_rehash($password, $timestamp, $login) {
-  return md5($timestamp . $password . $login);
+  // A single md5() is vulnerable to length-extension attacks, so use it twice.
+  return md5(drupal_get_hash_salt() . md5($timestamp . $password . $login));
 }
 
 /**

@@ -4461,6 +4461,19 @@ function drupal_random_bytes($count)  {
 }
 
 /**
+ * Get a salt useful for hardening against SQL injection.
+ *
+ * @return
+ *   A salt based on information in settings.php, not in the database.
+ */
+function drupal_get_hash_salt() {
+  global $drupal_hash_salt, $databases;
+  // If the $drupal_hash_salt variable is empty, a hash of the serialized
+  // database credentials is used as a fallback salt.
+  return empty($drupal_hash_salt) ? sha1(serialize($databases)) : $drupal_hash_salt;
+}
+
+/**
  * Ensure the private key variable used to generate tokens is set.
  *
  * @return
@@ -4482,7 +4495,9 @@ function drupal_get_private_key() {
  */
 function drupal_get_token($value = '') {
   $private_key = drupal_get_private_key();
-  return md5(session_id() . $value . $private_key);
+  // A single md5() is vulnerable to length-extension attacks, so use it twice.
+  // @todo:  add md5 and sha1 hmac functions to core.
+  return md5(drupal_get_hash_salt() . md5(session_id() . $value . $private_key));
 }
 
 /**
@@ -4500,7 +4515,7 @@ function drupal_get_token($value = '') {
  */
 function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
   global $user;
-  return (($skip_anonymous && $user->uid == 0) || ($token == md5(session_id() . $value . variable_get('drupal_private_key', ''))));
+  return (($skip_anonymous && $user->uid == 0) || ($token == drupal_get_token($value)));
 }
 
 function _drupal_bootstrap_full() {

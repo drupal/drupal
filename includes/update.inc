@@ -262,7 +262,8 @@ function update_fix_d7_requirements() {
   global $update_rewrite_settings, $db_url;
   if (!empty($update_rewrite_settings)) {
     $databases = update_parse_db_url($db_url);
-    file_put_contents(conf_path() . '/settings.php', "\n" . '$databases = ' . var_export($databases, TRUE) . ';', FILE_APPEND);
+    $salt = sha1(drupal_random_bytes(64));
+    file_put_contents(conf_path() . '/settings.php', "\n" . '$databases = ' . var_export($databases, TRUE) . ";\n\$drupal_hash_salt = '$salt';", FILE_APPEND);
   }
   if (drupal_get_installed_schema_version('system') < 7000 && !variable_get('update_d7_requirements', FALSE)) {
     // Add the cache_path table.

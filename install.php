@@ -1002,6 +1002,10 @@ function install_settings_form_submit($form, &$form_state) {
     'value'    => $form_state['values']['db_prefix'],
     'required' => TRUE,
   );
+  $settings['drupal_hash_salt'] = array(
+    'value'    => sha1(drupal_random_bytes(64)),
+    'required' => TRUE,
+  );
   drupal_rewrite_settings($settings);
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
