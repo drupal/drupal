@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.836 2010/01/13 14:25:59 dries Exp $
+// $Id: comment.module,v 1.837 2010/01/14 02:00:08 webchick Exp $
 
 /**
  * @file
@@ -298,6 +298,7 @@ function _comment_body_field_instance_create($info) {
     'object_type' => 'comment',
     'bundle' => 'comment_node_' . $info->type,
     'settings' => array('text_processing' => 1),
+    'required' => TRUE,
     // Hides field label by default.
     'display' => array(
       'full' => array(
