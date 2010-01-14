@@ -12,17 +12,26 @@
  */
 class ModuleUpdater extends Updater implements DrupalUpdaterInterface {
 
+  /**
+   * Return the directory where a module should be installed.
+   *
+   * If the module is already installed, drupal_get_path() will return
+   * a valid path and we should install it there (although we need to use an
+   * absolute path, so we prepend DRUPAL_ROOT). If we're installing a new
+   * module, we always want it to go into sites/all/modules, since that's
+   * where all the documentation recommends users install their modules, and
+   * there's no way that can conflict on a multi-site installation, since
+   * the Update manager won't let you install a new module if it's already
+   * found on your system, and if there was a copy in sites/all, we'd see it.
+   */
   public function getInstallDirectory() {
-    // If the module is installed in the configuration path (conf_path())
-    // we should install it there.  If it is located elsewhere, such as
-    // sites/all/modules we should install it in the conf_path/modules directory.
-    if ($this->isInstalled()) {
-      $installed_path = drupal_get_path('module', $this->name);
-      if (substr($installed_path, 0, strlen(conf_path())) === conf_path()) {
-        return dirname(DRUPAL_ROOT . '/' . $installed_path);
-      }
+    if ($relative_path = drupal_get_path('module', $this->name)) {
+      $relative_path = dirname($relative_path);
     }
-    return DRUPAL_ROOT . '/' . conf_path() . '/modules';
+    else {
+      $relative_path = 'sites/all/modules';
+    }
+    return DRUPAL_ROOT . '/' . $relative_path;
   }
 
   public function isInstalled() {
@@ -85,17 +94,26 @@ class ModuleUpdater extends Updater implements DrupalUpdaterInterface {
  */
 class ThemeUpdater extends Updater implements DrupalUpdaterInterface {
 
+  /**
+   * Return the directory where a theme should be installed.
+   *
+   * If the theme is already installed, drupal_get_path() will return
+   * a valid path and we should install it there (although we need to use an
+   * absolute path, so we prepend DRUPAL_ROOT). If we're installing a new
+   * theme, we always want it to go into sites/all/themes, since that's
+   * where all the documentation recommends users install their themes, and
+   * there's no way that can conflict on a multi-site installation, since
+   * the Update manager won't let you install a new theme if it's already
+   * found on your system, and if there was a copy in sites/all, we'd see it.
+   */
   public function getInstallDirectory() {
-    // If the theme is installed in the configuration path (conf_path())
-    // we should install it there.  If it is located elsewhere, such as
-    // sites/all/themes we should install it in the conf_path/themes directory.
-    if ($this->isInstalled()) {
-      $installed_path = drupal_get_path('theme', $this->name);
-      if (substr($installed_path, 0, strlen(conf_path())) === conf_path()) {
-        return dirname(DRUPAL_ROOT . '/' . $installed_path);
-      }
+    if ($relative_path = drupal_get_path('theme', $this->name)) {
+      $relative_path = dirname($relative_path);
     }
-    return DRUPAL_ROOT . '/' . conf_path() . '/themes';
+    else {
+      $relative_path = 'sites/all/themes';
+    }
+    return DRUPAL_ROOT . '/' . $relative_path;
   }
 
   public function isInstalled() {
