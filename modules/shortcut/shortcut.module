@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.module,v 1.18 2010/01/14 04:04:30 webchick Exp $
+// $Id: shortcut.module,v 1.19 2010/01/14 06:47:54 webchick Exp $
 
 /**
  * @file
@@ -558,15 +558,17 @@ function shortcut_preprocess_page(&$variables) {
       $link_path = 'admin/config/system/shortcut/link/' . $mlid . '/delete';
     }
 
-    $variables['title_suffix']['add_or_remove_shortcut'] = array(
-      '#attached' => array('css' => array(drupal_get_path('module', 'shortcut') . '/shortcut.css')),
-      '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
-      '#type' => 'link',
-      '#title' => '<span class="icon"></span><span class="text">' . $link_text . '</span>',
-      '#href' => $link_path,
-      '#options' => array('query' => $query, 'html' => TRUE),
-      '#suffix' => '</div>',
-    );
+    if (theme_get_setting('shortcut_module_link')) {
+      $variables['title_suffix']['add_or_remove_shortcut'] = array(
+        '#attached' => array('css' => array(drupal_get_path('module', 'shortcut') . '/shortcut.css')),
+        '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
+        '#type' => 'link',
+        '#title' => '<span class="icon"></span><span class="text">' . $link_text . '</span>',
+        '#href' => $link_path,
+        '#options' => array('query' => $query, 'html' => TRUE),
+        '#suffix' => '</div>',
+      );
+    }
   }
 }
 
