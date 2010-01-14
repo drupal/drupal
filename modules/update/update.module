@@ -103,7 +103,7 @@ function update_help($path, $arg) {
     case 'admin/reports/updates/install':
     case 'admin/reports/updates/settings':
     case 'admin/reports/status':
-    case 'admin/update/confirm':
+    case 'admin/update/ready':
       // These pages don't need additional nagging.
       break;
 
@@ -225,10 +225,10 @@ function update_menu() {
 
   // Menu callback used for the confirmation page after all the releases
   // have been downloaded, asking you to backup before installing updates.
-  $items['admin/update/confirm'] = array(
-    'title' => 'Confirm update',
+  $items['admin/update/ready'] = array(
+    'title' => 'Ready to update',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('update_manager_confirm_update_form'),
+    'page arguments' => array('update_manager_update_ready_form'),
     'access callback' => 'update_manager_access',
     'access arguments' => array(),
     'type' => MENU_CALLBACK,
