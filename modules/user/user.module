@@ -125,6 +125,7 @@ function user_entity_info() {
       'label' => t('User'),
       'controller class' => 'UserController',
       'base table' => 'users',
+      'path callback' => 'user_path',
       'fieldable' => TRUE,
       'object keys' => array(
         'id' => 'uid',
