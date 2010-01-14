@@ -931,6 +931,7 @@ body.in-maintenance #content {
   padding-right: 20px;
 }
 body.in-maintenance #page {
+  overflow: auto;
   width: 770px;
   margin: 0 auto;
   padding-top: 2em;

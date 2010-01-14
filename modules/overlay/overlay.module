@@ -262,6 +262,18 @@ function overlay_preprocess_html(&$variables) {
 }
 
 /**
+ * Preprocess template variables for maintenance-page.tpl.php.
+ *
+ * If the current page request is inside the overlay, add appropriate classes
+ * to the <body> element, and simplify the page title.
+ *
+ * @see overlay_preprocess_maintenance_page()
+ */
+function overlay_preprocess_maintenance_page(&$variables) {
+  overlay_preprocess_html($variables);
+}
+
+/**
  * Preprocess template variables for page.tpl.php.
  *
  * Display breadcrumbs correctly inside the overlay.
