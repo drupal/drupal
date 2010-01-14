@@ -9,7 +9,7 @@ function dashboard_help($path, $arg) {
     case 'admin/help#dashboard':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Dashboard module provides a <a href="@dashboard">Dashboard page</a> in the administrative interface for organizing administrative tasks and navigation, and tracking information within your site. The Dashboard page contains blocks, which you can add to and arrange using the drag and drop interface that appears when you click on the <em>Customize</em> link. For more information, see the online handbook entry for <a href="@handbook">Dashboard module</a>.', array('@handbook' => 'http://drupal.org/handbook/modules/dashboard', '@dashboard' => url('admin/dashboard'))) . '</p>';
+      $output .= '<p>' . t('The Dashboard module provides a <a href="@dashboard">Dashboard page</a> in the administrative interface for organizing administrative tasks and navigation, and tracking information within your site. The Dashboard page contains blocks, which you can add to and arrange using the drag and drop interface that appears when you click on the <em>Customize dashboard</em> link. For more information, see the online handbook entry for <a href="@handbook">Dashboard module</a>.', array('@handbook' => 'http://drupal.org/handbook/modules/dashboard', '@dashboard' => url('admin/dashboard'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Tracking user activity') . '</dt>';
@@ -207,13 +207,13 @@ function dashboard_admin($launch_customize = FALSE) {
       'launchCustomize' => $launch_customize,
       'dashboard' => url('admin/dashboard'),
       'emptyBlockText' => t('(empty)'),
-      'emptyRegionTextInactive' => t('This dashboard region is empty. Click <em>Customize</em> to add blocks to it.'),
+      'emptyRegionTextInactive' => t('This dashboard region is empty. Click <em>Customize dashboard</em> to add blocks to it.'),
       'emptyRegionTextActive' => t('DRAG HERE'),
     ),
   );
   $build = array(
     '#theme' => 'dashboard_admin',
-    '#message' => t('To customize the dashboard page, move blocks to the dashboard regions on !block-admin, or enable JavaScript on this page to use the drag-and-drop interface.', array('!block-admin' => l('the block administration page', 'admin/structure/block'))),
+    '#message' => t('To customize the dashboard page, move blocks to the dashboard regions on the <a href="@blocks">Blocks administration page</a>, or enable JavaScript on this page to use the drag-and-drop interface.', array('!blocks' => url('admin/structure/block'))),
     '#access' => user_access('administer blocks'),
     '#attached' => array(
       'js' => array(

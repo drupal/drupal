@@ -430,7 +430,7 @@ function user_admin_settings() {
     '#title' => t('Welcome (new user created by administrator)'),
     '#collapsible' => TRUE,
     '#collapsed' => (variable_get('user_register', 1) != 0),
-    '#description' => t('Customize welcome e-mail messages sent to new member accounts created by an administrator.') . ' ' . $email_token_help,
+    '#description' => t('Edit the welcome e-mail messages sent to new member accounts created by an administrator.') . ' ' . $email_token_help,
     '#group' => 'email',
   );
   $form['email_admin_created']['user_mail_register_admin_created_subject'] = array(
@@ -451,7 +451,7 @@ function user_admin_settings() {
     '#title' => t('Welcome (awaiting approval)'),
     '#collapsible' => TRUE,
     '#collapsed' => (variable_get('user_register', 1) != 2),
-    '#description' => t('Customize welcome e-mail messages sent to new members upon registering, when administrative approval is required.') . ' ' . $email_token_help,
+    '#description' => t('Edit the welcome e-mail messages sent to new members upon registering, when administrative approval is required.') . ' ' . $email_token_help,
     '#group' => 'email',
   );
   $form['email_pending_approval']['user_mail_register_pending_approval_subject'] = array(
@@ -472,7 +472,7 @@ function user_admin_settings() {
     '#title' => t('Welcome (no approval required)'),
     '#collapsible' => TRUE,
     '#collapsed' => (variable_get('user_register', 1) != 1),
-    '#description' => t('Customize welcome e-mail messages sent to new members upon registering, when no administrator approval is required.') . ' ' . $email_token_help,
+    '#description' => t('Edit the welcome e-mail messages sent to new members upon registering, when no administrator approval is required.') . ' ' . $email_token_help,
     '#group' => 'email',
   );
   $form['email_no_approval_required']['user_mail_register_no_approval_required_subject'] = array(
@@ -493,7 +493,7 @@ function user_admin_settings() {
     '#title' => t('Password recovery'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Customize e-mail messages sent to users who request a new password.') . ' ' . $email_token_help,
+    '#description' => t('Edit the e-mail messages sent to users who request a new password.') . ' ' . $email_token_help,
     '#group' => 'email',
     '#weight' => 10,
   );
@@ -515,7 +515,7 @@ function user_admin_settings() {
     '#title' => t('Account activation'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Enable and customize e-mail messages sent to users upon account activation (when an administrator activates an account of a user who has already registered, on a site where administrative approval is required).') . ' ' . $email_token_help,
+    '#description' => t('Enable and edit e-mail messages sent to users upon account activation (when an administrator activates an account of a user who has already registered, on a site where administrative approval is required).') . ' ' . $email_token_help,
     '#group' => 'email',
   );
   $form['email_activated']['user_mail_status_activated_notify'] = array(
@@ -550,7 +550,7 @@ function user_admin_settings() {
     '#title' => t('Account blocked'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are blocked.') . ' ' . $email_token_help,
+    '#description' => t('Enable and edit e-mail messages sent to users when their accounts are blocked.') . ' ' . $email_token_help,
     '#group' => 'email',
   );
   $form['email_blocked']['user_mail_status_blocked_notify'] = array(
@@ -585,7 +585,7 @@ function user_admin_settings() {
     '#title' => t('Account cancellation confirmation'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Customize e-mail messages sent to users when they attempt to cancel their accounts.') . ' ' . $email_token_help,
+    '#description' => t('Edit the e-mail messages sent to users when they attempt to cancel their accounts.') . ' ' . $email_token_help,
     '#group' => 'email',
   );
   $form['email_cancel_confirm']['user_mail_cancel_confirm_subject'] = array(
@@ -606,7 +606,7 @@ function user_admin_settings() {
     '#title' => t('Account canceled'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are canceled.') . ' ' . $email_token_help,
+    '#description' => t('Enable and edit e-mail messages sent to users when their accounts are canceled.') . ' ' . $email_token_help,
     '#group' => 'email',
   );
   $form['email_canceled']['user_mail_status_canceled_notify'] = array(

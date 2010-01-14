@@ -43,7 +43,7 @@ function shortcut_permission() {
       'title' => t('Administer shortcuts'),
     ),
     'customize shortcut links' => array(
-      'title' => t('Customize own shortcuts'),
+      'title' => t('Edit own shortcuts'),
     ),
     'switch shortcut sets' => array(
       'title' => t('Select own shortcut set'),
@@ -64,7 +64,7 @@ function shortcut_menu() {
     'file' => 'shortcut.admin.inc',
   );
   $items['admin/config/system/shortcut/%shortcut_set'] = array(
-    'title' => 'Customize shortcuts',
+    'title' => 'Edit shortcuts',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('shortcut_set_customize', 4),
     'access callback' => 'shortcut_set_edit_access',
