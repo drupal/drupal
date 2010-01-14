@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.75 2009/12/30 08:16:55 dries Exp $
+// $Id: session.inc,v 1.76 2010/01/14 02:05:34 webchick Exp $
 
 /**
  * @file
@@ -215,7 +215,8 @@ function drupal_session_initialize() {
  * @ingroup php_wrappers
  */
 function drupal_session_start() {
-  if (!drupal_session_started()) {
+  // Command line clients do not support cookies nor sessions.
+  if (!drupal_session_started() && !drupal_is_cli()) {
     // Save current session data before starting it, as PHP will destroy it.
     $session_data = isset($_SESSION) ? $_SESSION : NULL;
 
