@@ -298,6 +298,7 @@ function _comment_body_field_instance_create($info) {
     'object_type' => 'comment',
     'bundle' => 'comment_node_' . $info->type,
     'settings' => array('text_processing' => 1),
+    'required' => TRUE,
     // Hides field label by default.
     'display' => array(
       'full' => array(
