@@ -67,12 +67,9 @@ function locale_help($path, $arg) {
       $output = '<p>' . t('With multiple languages enabled, interface text can be translated, registered users may select their preferred language, and authors can assign a specific language to content. <a href="@translations">Download contributed translations</a> from Drupal.org.', array('@translations' => 'http://drupal.org/project/translations')) . '</p>';
       return $output;
     case 'admin/config/regional/language/add':
-      return '<p>' . t('Add all languages to be supported by your site. If your desired language is not available in the <em>Language name</em> drop-down, click <em>Custom language</em> and provide a language code and other details manually. When providing a language code manually, be sure to enter a standardized language code, since this code may be used by browsers to determine an appropriate display language.') . '</p>';
+      return '<p>' . t('Add a language to be supported by your site. If your desired language is not available in the <em>Language name</em> drop-down, click <em>Custom language</em> and provide a language code and other details manually. When providing a language code manually, be sure to enter a standardized language code, since this code may be used by browsers to determine an appropriate display language.') . '</p>';
     case 'admin/config/regional/language/configure':
-      $output = '<p>' . t("Set which languages to use for content and for the administrative interface. Drag the detection methods into the order they should test for languages. The first method that gets a result will set the language for the relevant part of the site. <strong>Changing these settings may break all incoming URLs, use with caution in a production environment.</strong>") . '</p>';
-      return $output;
-    case 'admin/config/regional/language/configure/url':
-      $output = '<p>' . t('Determine the language by examining the URL. Example: "http://example.com/de/contact" sets language to German based on the use of "de" as the path prefix. "http://de.example.com/contact" sets presentation language to German based on the use of "http://de.example.com" in the domain.') . '</p>';
+      $output = '<p>' . t("Define how to decide which language is used to display content (text that you create and edit) and user interface text (text provided by Drupal and modules, such as field labels and help text). This decision is made by evaluating a series of detection methods for languages; the first detection method that gets a result will determine which language is used for that type of text. Define the order of evaluation of language detection methods on this page.") . '</p>';
       return $output;
     case 'admin/config/regional/language/configure/session':
       $output = '<p>' . t('Determine the language from a request/session parameter. Example: "http://example.com?language=de" sets language to German based on the use of "de" within the "language" parameter.') . '</p>';
@@ -124,7 +121,7 @@ function locale_menu() {
     'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/language/configure'] = array(
-    'title' => 'Configure',
+    'title' => 'Detection and selection',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_languages_configure_form'),
     'access arguments' => array('administer languages'),
@@ -133,14 +130,14 @@ function locale_menu() {
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/config/regional/language/configure/url'] = array(
-    'title' => 'URL language provider configuration',
+    'title' => 'URL language detection configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_language_providers_url_form'),
     'access arguments' => array('administer languages'),
     'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/language/configure/session'] = array(
-    'title' => 'Session language provider configuration',
+    'title' => 'Session language detection configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_language_providers_session_form'),
     'access arguments' => array('administer languages'),
@@ -483,12 +480,12 @@ function locale_entity_info_alter(&$entity_info) {
 function locale_language_types_info() {
   return array(
     LANGUAGE_TYPE_CONTENT => array(
-      'name' => t('Content'),
-      'description' => t('If a piece of content is available in multiple languages, the one matching the <em>content</em> language will be used.'),
+      'name' => t('Content language detection'),
+      'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
     ),
     LANGUAGE_TYPE_INTERFACE => array(
-      'name' => t('Interface'),
-      'description' => t('The interface labels will be displayed in the <em>interface</em> language.'),
+      'name' => t('User interface text language detection'),
+      'description' => t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
     ),
     LANGUAGE_TYPE_URL => array(
       'fixed' => array(LOCALE_LANGUAGE_NEGOTIATION_URL),
@@ -526,7 +523,7 @@ function locale_language_negotiation_info() {
     'file' => $file,
     'weight' => -6,
     'name' => t('Session'),
-    'description' => t('The language is determined from a request/session parameter.'),
+    'description' => t('Determine the language from a request/session parameter.'),
     'config' => 'admin/config/regional/language/configure/session',
   );
 
@@ -535,7 +532,7 @@ function locale_language_negotiation_info() {
     'file' => $file,
     'weight' => -4,
     'name' => t('User'),
-    'description' => t("Show in this user's language preference."),
+    'description' => t("Follow the user's language preference."),
   );
 
   $providers[LOCALE_LANGUAGE_NEGOTIATION_BROWSER] = array(
@@ -544,7 +541,7 @@ function locale_language_negotiation_info() {
     'weight' => -2,
     'cache' => CACHE_DISABLED,
     'name' => t('Browser'),
-    'description' => t('The language is determined from the browser\'s language settings.'),
+    'description' => t("Determine the language from the browser's language settings."),
   );
 
   $providers[LOCALE_LANGUAGE_NEGOTIATION_CONTENT] = array(
@@ -553,7 +550,7 @@ function locale_language_negotiation_info() {
     'file' => $file,
     'weight' => 8,
     'name' => t('Content'),
-    'description' => t('The interface language is the same as the negotiated content language.'),
+    'description' => t('Use the detected content language.'),
   );
 
   return $providers;

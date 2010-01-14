@@ -169,7 +169,7 @@ function locale_languages_predefined_form($form) {
     '#title' => t('Language name'),
     '#default_value' => key($predefined),
     '#options' => $predefined,
-    '#description' => t('Select the desired language and click the <em>Add language</em> button. (Use the <em>Custom language</em> options if your desired language does not appear in this list.)'),
+    '#description' => t('Use the <em>Custom language</em> section below if your desired language does not appear in this list.'),
   );
   $form['language list']['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
   $form['language list']['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add language'));
@@ -270,16 +270,16 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
     '#description' => t('Name of the language in the language being added.'),
   );
   $form['prefix'] = array('#type' => 'textfield',
-    '#title' => t('Path prefix'),
+    '#title' => t('Path prefix language code'),
     '#maxlength' => 64,
     '#default_value' => @$language->prefix,
-    '#description' => t('Language code or other custom string for pattern matching within the path. With language negotiation set to <em>Path prefix only</em> or <em>Path prefix with language fallback</em>, this site is presented in this language when the Path prefix value matches an element in the path. For the default language, this value may be left blank. <strong>Modifying this value will break existing URLs and should be used with caution in a production environment.</strong> <em>Example: Specifying "deutsch" as the path prefix for German results in URLs in the form "www.example.com/deutsch/node".</em>')
+    '#description' => t('Language code or other custom text to use as a path prefix for URL language detection, if your <em>Detection and selection</em> settings use URL path prefixes. For the default language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "deutsch" as the path prefix code for German results in URLs like "example.com/deutsch/contact".')
   );
   $form['domain'] = array('#type' => 'textfield',
     '#title' => t('Language domain'),
     '#maxlength' => 128,
     '#default_value' => @$language->domain,
-    '#description' => t('Language-specific URL, with protocol. With language negotiation set to <em>Domain name only</em>, the site is presented in this language when the URL accessing the site references this domain. For the default language, this value may be left blank. <strong>This value must include a protocol as part of the string.</strong> <em>Example: Specifying "http://example.de" or "http://de.example.com" as language domains for German results in URLs in the forms "http://example.de/node" and "http://de.example.com/node", respectively.</em>'),
+    '#description' => t('URL <strong>including protocol</strong> to use for this language, if your <em>Detection and selection</em> settings use URL domains. For the default language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "http://example.de" or "http://de.example.com" as language domains for German results in URLs like "http://example.de/contact" and "http://de.example.com/contact", respectively.'),
   );
   $form['direction'] = array('#type' => 'radios',
     '#title' => t('Direction'),
@@ -504,7 +504,7 @@ function _locale_languages_configure_form_language_table(&$form, $type) {
   $info = $form['#language_types_info'][$type];
 
   $table_form = array(
-    '#title' => t('@type language', array('@type' => $info['name'])),
+    '#title' => t('@type', array('@type' => $info['name'])),
     '#tree' => TRUE,
     '#description' => $info['description'],
     '#language_providers' => array(),
@@ -690,13 +690,14 @@ function locale_language_providers_url_form() {
   $form = array();
 
   $form['locale_language_negotiation_url_part'] = array(
-    '#title' => t('The part of the URL that will determine the language.'),
+    '#title' => t('Part of the URL that determines language'),
     '#type' => 'radios',
     '#options' => array(
       LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX => t('Path prefix'),
       LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN => t('Domain'),
     ),
     '#default_value' => variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX),
+    '#description' => t('<em>Path prefix</em>: URLs like http://example.com/de/contact set language to German (de). <em>Domain</em>: URLs like http://de.example.com/contact set the language to German. <strong>Warning: Changing this setting may break incoming URLs. Use with caution on a production site.</strong>'),
   );
 
   $form['#redirect'] = 'admin/config/regional/language/configure';

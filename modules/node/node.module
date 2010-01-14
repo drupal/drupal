@@ -1265,8 +1265,8 @@ function node_language_negotiation_info() {
     'types' => array(LANGUAGE_TYPE_CONTENT),
     'callbacks' => array('language' => 'node_language_provider'),
     'file' => drupal_get_path('module', 'node') . '/node.module',
-    'name' => t('Node'),
-    'description' => t('The current node language is used.'),
+    'name' => t('Content'),
+    'description' => t('Use the language of the displayed content.'),
   );
 
   return $providers;

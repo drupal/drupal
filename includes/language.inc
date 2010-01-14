@@ -223,7 +223,7 @@ function language_negotiation_info() {
       'callbacks' => array('language' => 'language_from_default'),
       'weight' => 10,
       'name' => t('Default'),
-      'description' => t('The default site language (@language_name) is used.', array('@language_name' => language_default()->native)),
+      'description' => t('Use the default site language (@language_name).', array('@language_name' => language_default()->native)),
     );
 
     // Let other modules alter the list of language providers.
