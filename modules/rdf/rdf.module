@@ -236,14 +236,13 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
     // literal text.
     case 'property':
       $attributes['property'] = $mapping['predicates'];
-      if (isset($mapping['callback']) && isset($data)) {
+      // Convert $data to a specific format as per the callback function.
+      if (isset($data) && isset($mapping['callback']) && function_exists($mapping['callback'])) {
         $callback = $mapping['callback'];
-        if (function_exists($callback)) {
-          $attributes['content'] = $callback($data);
-        }
-        if (isset($mapping['datatype'])) {
-          $attributes['datatype'] = $mapping['datatype'];
-        }
+        $attributes['content'] = $callback($data);
+      }
+      if (isset($mapping['datatype'])) {
+        $attributes['datatype'] = $mapping['datatype'];
       }
       break;
   }

@@ -35,7 +35,7 @@ class RdfMappingHookTestCase extends DrupalWebTestCase {
       'datatype' => 'xsd:dateTime',
       'callback' => 'date_iso8601',
     ), t('Mapping for created is dc:created with datatype xsd:dateTime and callback date_iso8601.'));
-    $this->assertIdentical($mapping['uid'], array('predicates' => array('sioc:has_creator', 'dc:creator')), t('Mapping for uid is sioc:has_creator and dc:creator.'));
+    $this->assertIdentical($mapping['uid'], array('predicates' => array('sioc:has_creator', 'dc:creator'), 'type' => 'rel'), t('Mapping for uid is sioc:has_creator and dc:creator, and type is rel.'));
 
     $mapping = rdf_mapping_load('test_entity', 'test_bundle_no_mapping');
     $this->assertEqual($mapping, array(), t('Empty array returned when an entity type, bundle pair has no mapping.'));
@@ -60,19 +60,60 @@ class RdfMarkupTestCase extends DrupalWebTestCase {
    * Test rdf_rdfa_attributes().
    */
   function testDrupalRdfaAtributes() {
+    // Same value as the one in the HTML tag (no callback function).
+    $expected_attributes = array(
+      'property' => array('dc:title'),
+    );
+    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $attributes = rdf_rdfa_attributes($mapping['title']);
+    ksort($expected_attributes);
+    ksort($attributes);
+    $this->assertEqual($expected_attributes, $attributes);
+
+    // Value different from the one in the HTML tag (callback function).
     $date = 1252750327;
     $isoDate = date('c', $date);
-
-    $expected_type = 'xsd:dateTime';
-    $expected_property = array('dc:created');
-    $expected_value = $isoDate;
-
+    $expected_attributes = array(
+      'datatype' => 'xsd:dateTime',
+      'property' => array('dc:created'),
+      'content' => $isoDate,
+    );
     $mapping = rdf_mapping_load('test_entity', 'test_bundle');
     $attributes = rdf_rdfa_attributes($mapping['created'], $date);
+    ksort($expected_attributes);
+    ksort($attributes);
+    $this->assertEqual($expected_attributes, $attributes);
 
-    $this->assertEqual($expected_type, $attributes['datatype']);
-    $this->assertEqual($expected_property, $attributes['property']);
-    $this->assertEqual($expected_value, $attributes['content']);
+    // Same value as the one in the HTML tag with datatype.
+    $expected_attributes = array(
+      'datatype' => 'foo:bar1type',
+      'property' => array('foo:bar1'),
+    );
+    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $attributes = rdf_rdfa_attributes($mapping['foobar1']);
+    ksort($expected_attributes);
+    ksort($attributes);
+    $this->assertEqual($expected_attributes, $attributes);
+
+    // ObjectProperty mapping (rel).
+    $expected_attributes = array(
+      'rel' => array('sioc:has_creator', 'dc:creator'),
+    );
+    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $attributes = rdf_rdfa_attributes($mapping['foobar_objproperty1']);
+    ksort($expected_attributes);
+    ksort($attributes);
+    $this->assertEqual($expected_attributes, $attributes);
+
+    // Inverse ObjectProperty mapping (rev).
+    $expected_attributes = array(
+      'rev' => array('sioc:reply_of'),
+    );
+    $mapping = rdf_mapping_load('test_entity', 'test_bundle');
+    $attributes = rdf_rdfa_attributes($mapping['foobar_objproperty2']);
+    ksort($expected_attributes);
+    ksort($attributes);
+    $this->assertEqual($expected_attributes, $attributes);
   }
 
 }

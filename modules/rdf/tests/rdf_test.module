@@ -26,9 +26,22 @@ function rdf_test_rdf_mapping() {
         ),
         'uid' => array(
           'predicates' => array('sioc:has_creator', 'dc:creator'),
+          'type' => 'rel',
         ),
         'foobar' => array(
           'predicates' => array('foo:bar'),
+        ),
+        'foobar1' => array(
+          'datatype' => 'foo:bar1type',
+          'predicates' => array('foo:bar1'),
+        ),
+        'foobar_objproperty1' => array(
+          'predicates' => array('sioc:has_creator', 'dc:creator'),
+          'type' => 'rel',
+        ),
+        'foobar_objproperty2' => array(
+          'predicates' => array('sioc:reply_of'),
+          'type' => 'rev',
         ),
       ),
     ),
