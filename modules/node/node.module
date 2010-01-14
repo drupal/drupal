@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1212 2010/01/13 12:58:47 webchick Exp $
+// $Id: node.module,v 1.1213 2010/01/14 06:23:40 webchick Exp $
 
 /**
  * @file
@@ -795,6 +795,12 @@ function node_rdf_mapping() {
         ),
         'comment_count' => array(
           'predicates' => array('sioc:num_replies'),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array('sioc:last_activity_date'),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
         ),
       ),
     ),
