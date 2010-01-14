@@ -895,19 +895,17 @@ function node_validate($node, $form = array()) {
     form_set_error('changed', t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
   }
 
-  if (user_access('administer nodes')) {
-    // Validate the "authored by" field.
-    if (!empty($node->name) && !($account = user_load_by_name($node->name))) {
-      // The use of empty() is mandatory in the context of usernames
-      // as the empty string denotes the anonymous user. In case we
-      // are dealing with an anonymous user we set the user ID to 0.
-      form_set_error('name', t('The username %name does not exist.', array('%name' => $node->name)));
-    }
+  // Validate the "authored by" field.
+  if (!empty($node->name) && !($account = user_load_by_name($node->name))) {
+    // The use of empty() is mandatory in the context of usernames
+    // as the empty string denotes the anonymous user. In case we
+    // are dealing with an anonymous user we set the user ID to 0.
+    form_set_error('name', t('The username %name does not exist.', array('%name' => $node->name)));
+  }
 
-    // Validate the "authored on" field.
-    if (!empty($node->date) && strtotime($node->date) === FALSE) {
-      form_set_error('date', t('You have to specify a valid date.'));
-    }
+  // Validate the "authored on" field.
+  if (!empty($node->date) && strtotime($node->date) === FALSE) {
+    form_set_error('date', t('You have to specify a valid date.'));
   }
 
   // Do node-type-specific validation checks.
@@ -921,10 +919,10 @@ function node_validate($node, $form = array()) {
 function node_submit($node) {
   global $user;
 
-  // A user with 'administer nodes' permission might assign the node author by
-  // entering a user name in the node form, which we then need to translate to a
-  // user ID, unless we've already been provided a user ID by other means.
-  if (user_access('administer nodes') && !isset($node->uid)) {
+  // A user might assign the node author by entering a user name in the node
+  // form, which we then need to translate to a user ID, unless we've already
+  // been provided a user ID by other means.
+  if (!empty($node->name) && !isset($node->uid)) {
     if ($account = user_load_by_name($node->name)) {
       $node->uid = $account->uid;
     }
