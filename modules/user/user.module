@@ -2747,10 +2747,29 @@ function user_multiple_cancel_confirm($form, &$form_state) {
   $edit = $form_state['input'];
 
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
-  // array_filter() returns only elements with TRUE values.
-  foreach (array_filter($edit['accounts']) as $uid => $value) {
-    $user = db_query('SELECT name FROM {users} WHERE uid = :uid', array(':uid' => $uid))->fetchField();
-    $form['accounts'][$uid] = array('#type' => 'hidden', '#value' => $uid, '#prefix' => '<li>', '#suffix' => check_plain($user) . "</li>\n");
+  $accounts = user_load_multiple(array_keys(array_filter($edit['accounts'])));
+  foreach ($accounts as $uid => $account) {
+    // Prevent user 1 from being canceled.
+    if ($uid <= 1) {
+      continue;
+    }
+    $form['accounts'][$uid] = array(
+      '#type' => 'hidden',
+      '#value' => $uid,
+      '#prefix' => '<li>',
+      '#suffix' => check_plain($account->name) . "</li>\n",
+    );
+  }
+
+  // Output a notice that user 1 cannot be canceled.
+  if (isset($accounts[1])) {
+    $redirect = (count($accounts) == 1);
+    $message = t('The user account %name cannot be cancelled.', array('%name' => $accounts[1]->name));
+    drupal_set_message($message, $redirect ? 'error' : 'warning');
+    // If only user 1 was selected, redirect to the overview.
+    if ($redirect) {
+      drupal_goto('admin/people');
+    }
   }
 
   $form['operation'] = array('#type' => 'hidden', '#value' => 'cancel');
@@ -2799,6 +2818,10 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
 
   if ($form_state['values']['confirm']) {
     foreach ($form_state['values']['accounts'] as $uid => $value) {
+      // Prevent programmatic form submissions from cancelling user 1.
+      if ($uid <= 1) {
+        continue;
+      }
       // Prevent user administrators from deleting themselves without confirmation.
       if ($uid == $user->uid) {
         $admin_form_state = $form_state;
@@ -2812,7 +2835,6 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
     }
   }
   $form_state['redirect'] = 'admin/people';
-  return;
 }
 
 /**

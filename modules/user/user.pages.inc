@@ -248,7 +248,7 @@ function user_profile_form($form, &$form_state, $account, $category = 'account')
       '#value' => t('Cancel account'),
       '#weight' => 31,
       '#submit' => array('user_edit_cancel_submit'),
-      '#access' => ($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users'),
+      '#access' => $account->uid > 1 && (($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users')),
     );
   }
 

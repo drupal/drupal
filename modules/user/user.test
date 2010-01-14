@@ -363,6 +363,44 @@ class UserCancelTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests that user account for uid 1 cannot be cancelled.
+   *
+   * This should never be possible, or the site owner would become unable to
+   * administer the site.
+   */
+  function testUserCancelUid1() {
+    // Update uid 1's name and password to we know it.
+    $password = user_password();
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+    $account = array(
+      'name' => 'user1',
+      'pass' => user_hash_password(trim($password)),
+    );
+    // We cannot use user_save() here or the password would be hashed again.
+    db_update('users')
+      ->fields($account)
+      ->condition('uid', 1)
+      ->execute();
+
+    // Reload and log in uid 1.
+    $user1 = user_load(1, TRUE);
+    $user1->pass_raw = $password;
+
+    // Try to cancel uid 1's account with a different user.
+    $this->admin_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'operation' => 'cancel',
+      'accounts[1]' => TRUE,
+    );
+    $this->drupalPost('admin/people', $edit, t('Update'));
+
+    // Verify that uid 1's account was not cancelled.
+    $user1 = user_load(1, TRUE);
+    $this->assertEqual($user1->status, 1, t('User #1 still exists and is not blocked.'));
+  }
+
+  /**
    * Attempt invalid account cancellations.
    */
   function testUserCancelInvalid() {
@@ -647,6 +685,8 @@ class UserCancelTestCase extends DrupalWebTestCase {
       $edit['accounts[' . $uid . ']'] = TRUE;
     }
     $edit['accounts[' . $admin_user->uid . ']'] = TRUE;
+    // Also try to cancel uid 1.
+    $edit['accounts[1]'] = TRUE;
     $this->drupalPost('admin/people', $edit, t('Update'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), t('Confirmation form to cancel accounts displayed.'));
     $this->assertText(t('When cancelling these accounts'), t('Allows to select account cancellation method.'));
@@ -666,6 +706,10 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), t('Account cancellation request mailed message displayed.'));
     $admin_user = user_load($admin_user->uid);
     $this->assertTrue($admin_user->status == 1, t('Administrative user is found in the database and enabled.'));
+
+    // Verify that uid 1's account was not cancelled.
+    $user1 = user_load(1, TRUE);
+    $this->assertEqual($user1->status, 1, t('User #1 still exists and is not blocked.'));
   }
 }
 
