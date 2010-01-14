@@ -637,21 +637,10 @@ function forum_block_view($delta = '') {
       break;
   }
 
-  $cache_keys = array_merge(array('forum', $delta), drupal_render_cid_parts());
-  // Cache based on the altered query. Enables us to cache with node access enabled.
-  $query->preExecute();
-  $cache_keys[] = md5(serialize(array((string) $query, $query->getArguments())));
-
   $block['subject'] = $title;
-  $block['content'] = array(
-     '#access' => user_access('access content'),
-     '#pre_render' => array('forum_block_view_pre_render'),
-     '#cache' => array(
-        'keys' => $cache_keys,
-        'expire' => CACHE_TEMPORARY,
-     ),
-     '#query' => $query,
-  );
+  // Cache based on the altered query. Enables us to cache with node access enabled.
+  $block['content'] = drupal_render_cache_by_query($query, 'forum_block_view');
+  $block['content']['#access'] = user_access('access content');
   return $block;
 }
 
