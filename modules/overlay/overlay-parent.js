@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.21 2010/01/13 23:13:18 webchick Exp $
+// $Id: overlay-parent.js,v 1.22 2010/01/14 04:06:54 webchick Exp $
 
 (function ($) {
 
@@ -366,7 +366,7 @@ Drupal.overlay.redirect = function (link) {
     link = absolute + link;
   }
 
-  // If the link is already open, force the haschange event.
+  // If the link is already open, force the hashchange event to simulate reload.
   if (location.href == link) {
     $(window).trigger('hashchange.overlay-event');
   }
