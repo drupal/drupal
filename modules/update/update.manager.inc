@@ -471,14 +471,14 @@ function update_manager_install_form($form, &$form_state, $context) {
   }
   $form['help_text'] = array(
     '#prefix' => '<p>',
-    '#markup' => t('To install a new module or theme, either paste the URL of an archive file you wish to install, or upload the archive file that you have downloaded. You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> at <a href="@drupal_org_url">http://drupal.org</a>. The following archive extensions are supported: %extensions', array('@module_url' => 'http://drupal.org/project/modules', '@theme_url' => 'http://drupal.org/project/themes', '@drupal_org_url' => 'http://drupal.org', '%extensions' => implode(', ', $extensions))),
+    '#markup' => t('To install a new module or theme, either enter the URL of an archive file you wish to install, or upload the archive file that you have downloaded. You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> at <a href="@drupal_org_url">http://drupal.org</a>. The following archive extensions are supported: %extensions', array('@module_url' => 'http://drupal.org/project/modules', '@theme_url' => 'http://drupal.org/project/themes', '@drupal_org_url' => 'http://drupal.org', '%extensions' => implode(', ', $extensions))),
     '#suffix' => '</p>',
   );
 
   $form['project_url'] = array(
     '#type' => 'textfield',
-    '#title' => t('URL'),
-    '#description' => t('Paste the URL to a Drupal module or theme archive to install it (e.g http://ftp.drupal.org/files/projects/projectname.tar.gz).'),
+    '#title' => t('Install from a URL'),
+    '#description' => t('For example: %url', array('%url' => 'http://ftp.drupal.org/files/projects/name.tar.gz')),
   );
 
   $form['information'] = array(
@@ -489,8 +489,8 @@ function update_manager_install_form($form, &$form_state, $context) {
 
   $form['project_upload'] = array(
     '#type' => 'file',
-    '#title' => t('Upload a module or theme'),
-    '#description' => t('Upload a Drupal module or theme archive to install it.'),
+    '#title' => t('Upload a module or theme archive to install'),
+    '#description' => t('For example: %filename from your local computer', array('%filename' => 'name.tar.gz')),
   );
 
   $form['submit'] = array(
