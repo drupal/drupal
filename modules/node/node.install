@@ -467,8 +467,6 @@ function node_update_7006(&$context) {
     // Subsequent invocations.
 
     // Save the field IDs for field_sql_storage_field_storage_write().
-    $title_field = field_info_field('title');
-    $title_field_id = $title_field['id'];
     $body_field = field_info_field('body');
     $body_field_id = $body_field['id'];
 
@@ -518,13 +516,12 @@ function node_update_7006(&$context) {
           $node->body[LANGUAGE_NONE][0]['format'] = !empty($revision->format) ? $revision->format : variable_get('filter_default_format', 1);
           // This is a core update and no contrib modules are enabled yet, so
           // we can assume default field storage for a faster update.
-          field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array($title_field_id, $body_field_id));
+          field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array($body_field_id));
         }
 
         // Migrate the status columns to the {node_revision} table.
         db_update('node_revision')
           ->fields(array(
-            'vid' => $revision->vid,
             'status' => $revision->status,
             'comment' => $revision->comment,
             'promote' => $revision->promote,
