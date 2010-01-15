@@ -28,6 +28,7 @@
  * @see _update_cron_notify()
  */
 function update_requirements($phase) {
+  $requirements = array();
   if ($phase == 'runtime') {
     if ($available = update_get_available(FALSE)) {
       module_load_include('inc', 'update', 'update.compare');
@@ -53,8 +54,8 @@ function update_requirements($phase) {
       $requirements['update_core']['reason'] = UPDATE_UNKNOWN;
       $requirements['update_core']['description'] = _update_no_data();
     }
-    return $requirements;
   }
+  return $requirements;
 }
 
 /**
