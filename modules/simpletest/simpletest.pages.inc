@@ -190,7 +190,8 @@ function simpletest_test_form_submit($form, &$form_state) {
     }
   }
   if (count($tests_list) > 0 ) {
-    simpletest_run_tests($tests_list, 'drupal');
+    $test_id = simpletest_run_tests($tests_list, 'drupal');
+    $form_state['redirect'] = 'admin/config/development/testing/results/' . $test_id;
   }
   else {
     drupal_set_message(t('No test(s) selected.'), 'error');

@@ -165,13 +165,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
 
   module_invoke_all('test_group_started');
 
-  // Normally, the forms portion of the batch API takes care of calling
-  // batch_process(), but in the process it saves the whole $form into the
-  // database (which is huge for the test selection form).
-  // By calling batch_process() directly, we skip that behavior and ensure
-  // that we don't exceed the size of data that can be sent to the database
-  // (max_allowed_packet on MySQL).
-  batch_process('admin/config/development/testing/results/' . $test_id);
+  return $test_id;
 }
 
 /**
