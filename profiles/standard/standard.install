@@ -270,7 +270,7 @@ function standard_install() {
           'type' => 'rel',
         ),
         'taxonomy_tags' => array(
-          'predicates' => array('sioc:topic'),
+          'predicates' => array('dc:subject'),
           'type' => 'rel',
         ),
       ),
