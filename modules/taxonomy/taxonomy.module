@@ -1045,16 +1045,53 @@ function taxonomy_field_schema($field) {
 /**
  * Implements hook_field_validate().
  *
+ * Taxonomy field settings allow for either a single vocabulary ID, multiple
+ * vocabulary IDs, or sub-trees of a vocabulary to be specified as allowed
+ * values, although only the first of these is supported via the field UI.
+ * Confirm that terms entered as values meet at least one of these conditions.
+ *
  * Possible error codes:
  * - 'taxonomy_term_illegal_value': The value is not part of the list of allowed values.
  */
 function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
-  $allowed_values = taxonomy_allowed_values($field);
-  $widget = field_info_widget_types($instance['widget']['type']);
-
+  // Build an array of term IDs so they can be loaded with
+  // taxonomy_term_load_multiple();
   foreach ($items as $delta => $item) {
     if (!empty($item['tid'])) {
-      if (!isset($allowed_values[$item['tid']])) {
+      $tids[] = $item['tid'];
+    }
+  }
+  if (!empty($tids)) {
+    $terms = taxonomy_term_load_multiple($tids);
+
+    // Check each item to ensure it can be found in the allowed values for this
+    // field.
+    foreach ($items as $delta => $item) {
+      $validate = TRUE;
+      if (!empty($item['tid'])) {
+        $validate = FALSE;
+        foreach ($field['settings']['allowed_values'] as $settings) {
+          // If no parent is specified, check if the term is in the vocabulary.
+          if (isset($settings['vid']) && empty($settings['parent'])) {
+            if ($settings['vid'] == $terms[$item['tid']]->vid) {
+              $validate = TRUE;
+              break;
+            }
+          }
+          // If a parent is specified, then to validate it must appear in the
+          // array returned by taxonomy_get_parents_all().
+          elseif (!empty($settings['parent'])) {
+            $ancestors = taxonomy_get_parents_all($item['tid']);
+            foreach ($ancestors as $ancestor) {
+              if ($ancestor->tid == $settings['parent']) {
+                $validate = TRUE;
+                break 2;
+              }
+            }
+          }
+        }
+      }
+      if (!$validate) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'taxonomy_term_reference_illegal_value',
           'message' => t('%name: illegal value.', array('%name' => t($instance['label']))),
