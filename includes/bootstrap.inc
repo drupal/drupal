@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.343 2010/01/15 14:25:35 webchick Exp $
+// $Id: bootstrap.inc,v 1.344 2010/01/15 14:35:08 webchick Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
 /**
  * The current system version.
  */
-define('VERSION', '7.0-dev');
+define('VERSION', '7.0-alpha1');
 
 /**
  * Core API compatibility.
