@@ -284,7 +284,7 @@ function simpletest_script_init($server_software) {
   $_SERVER['PHP_SELF'] = $path .'/index.php';
   $_SERVER['HTTP_USER_AGENT'] = 'Drupal command line';
 
-  if ($_SERVER['HTTPS'] == 'on') {
+  if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
     // Ensure that any and all environment variables are changed to https://.
     foreach ($_SERVER as $key => $value) {
       $_SERVER[$key] = str_replace('http://', 'https://', $_SERVER[$key]);
