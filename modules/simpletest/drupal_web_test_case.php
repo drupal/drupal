@@ -1092,7 +1092,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   List of modules to enable for the duration of the test.
    */
   protected function setUp() {
-    global $db_prefix, $user, $language;
+    global $db_prefix, $user, $language, $conf;
 
     // Store necessary current values before switching to prefixed database.
     $this->originalLanguage = $language;
@@ -1127,7 +1127,9 @@ class DrupalWebTestCase extends DrupalTestCase {
     ini_set('log_errors', 1);
     ini_set('error_log', $public_files_directory . '/error.log');
 
-    // Reset all statics so that test is performed with a clean environment.
+    // Reset all statics and variables so that test is performed with a clean
+    // environment.
+    $conf = array();
     drupal_static_reset();
 
     include_once DRUPAL_ROOT . '/includes/install.inc';
