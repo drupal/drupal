@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.22 2010/01/13 14:25:59 dries Exp $
+// $Id: simpletest.pages.inc,v 1.23 2010/01/15 04:16:57 dries Exp $
 
 /**
  * @file
@@ -190,7 +190,8 @@ function simpletest_test_form_submit($form, &$form_state) {
     }
   }
   if (count($tests_list) > 0 ) {
-    simpletest_run_tests($tests_list, 'drupal');
+    $test_id = simpletest_run_tests($tests_list, 'drupal');
+    $form_state['redirect'] = 'admin/config/development/testing/results/' . $test_id;
   }
   else {
     drupal_set_message(t('No test(s) selected.'), 'error');
