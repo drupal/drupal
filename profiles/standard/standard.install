@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.4 2010/01/13 13:59:06 dries Exp $
+// $Id: standard.install,v 1.5 2010/01/15 10:09:03 dries Exp $
 
 /**
  * Implements hook_install().
@@ -270,7 +270,7 @@ function standard_install() {
           'type' => 'rel',
         ),
         'taxonomy_tags' => array(
-          'predicates' => array('sioc:topic'),
+          'predicates' => array('dc:subject'),
           'type' => 'rel',
         ),
       ),
