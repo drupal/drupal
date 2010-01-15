@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.15 2009/12/29 07:21:34 webchick Exp $
+// $Id: update.install,v 1.16 2010/01/15 10:12:36 dries Exp $
 
 /**
  * @file
@@ -28,6 +28,7 @@
  * @see _update_cron_notify()
  */
 function update_requirements($phase) {
+  $requirements = array();
   if ($phase == 'runtime') {
     if ($available = update_get_available(FALSE)) {
       module_load_include('inc', 'update', 'update.compare');
@@ -53,8 +54,8 @@ function update_requirements($phase) {
       $requirements['update_core']['reason'] = UPDATE_UNKNOWN;
       $requirements['update_core']['description'] = _update_no_data();
     }
-    return $requirements;
   }
+  return $requirements;
 }
 
 /**
