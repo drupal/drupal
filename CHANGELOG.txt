@@ -1,7 +1,7 @@
 // $Id$
 
-Drupal 7.0 alpha 1, 2010-01-15
-------------------------------
+Drupal 7.0, xxxx-xx-xx (development version)
+----------------------
 - Database:
     * Fully rewritten database layer utilizing PHP 5's PDO abstraction layer.
     * Drupal now requires MySQL >= 5.0 or PostgreSQL >= 8.3.
