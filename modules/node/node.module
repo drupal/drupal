@@ -2180,6 +2180,64 @@ function theme_node_recent_content($variables) {
 }
 
 /**
+ * Implements hook_form_FORMID_alter().
+ *
+ * Adds node-type specific visibility options to add block form.
+ */
+function node_form_block_add_block_form_alter(&$form, &$form_state) {
+  node_form_block_admin_configure_alter($form, $form_state);
+}
+
+/**
+ * Implements hook_form_FORMID_alter().
+ *
+ * Adds node-type specific visibility options to block configuration form.
+ */
+function node_form_block_admin_configure_alter(&$form, &$form_state) {
+  $default_type_options = db_query("SELECT type FROM {block_node_type} WHERE module = :module AND delta = :delta", array(
+    ':module' => $form['module']['#value'],
+    ':delta' => $form['delta']['#value'],
+  ))->fetchCol();
+  $form['visibility']['node_type'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Content types'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#group' => 'visibility',
+    '#weight' => 5,
+  );
+  $form['visibility']['node_type']['types'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Show block for specific content types'),
+    '#default_value' => $default_type_options,
+    '#options' => node_type_get_names(),
+    '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type-specific limitation.'),
+  );
+  $form['#submit'][] = 'node_block_admin_configure_submit';
+}
+
+/**
+ * Form submit handler for block configuration form.
+ */
+function node_block_admin_configure_submit($form, &$form_state) {
+  if (isset($form_state['values']['delta'])) {
+    db_delete('block_node_type')
+      ->condition('module', $form_state['values']['module'])
+      ->condition('delta', $form_state['values']['delta'])
+      ->execute();
+  }
+  $query = db_insert('block_node_type')->fields(array('type', 'module', 'delta'));
+  foreach (array_filter($form_state['values']['types']) as $type) {
+    $query->values(array(
+      'type' => $type,
+      'module' => $form_state['values']['module'],
+      'delta' => $form_state['values']['delta'],
+    ));
+  }
+  $query->execute();
+}
+
+/**
  * A generic function for generating RSS feeds from a set of nodes.
  *
  * @param $nids

@@ -265,6 +265,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'visibility',
+    '#weight' => 0,
   );
 
   $access = user_access('use PHP for settings');
@@ -307,26 +308,6 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     );
   }
 
-  // Per-content type visibility.
-  $default_type_options = db_query("SELECT type FROM {block_node_type} WHERE module = :module AND delta = :delta", array(
-    ':module' => $block->module,
-    ':delta' => $block->delta,
-  ))->fetchCol();
-  $form['visibility']['node_type'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Content types'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#group' => 'visibility',
-  );
-  $form['visibility']['node_type']['types'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Show block for specific content types'),
-    '#default_value' => $default_type_options,
-    '#options' => node_type_get_names(),
-    '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type-specific limitation.'),
-  );
-
   // Per-role visibility.
   $default_role_options = db_query("SELECT rid FROM {block_role} WHERE module = :module AND delta = :delta", array(
     ':module' => $block->module,
@@ -339,6 +320,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'visibility',
+    '#weight' => 10,
   );
   $form['visibility']['role']['roles'] = array(
     '#type' => 'checkboxes',
@@ -355,6 +337,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'visibility',
+    '#weight' => 20,
   );
   $form['visibility']['user']['custom'] = array(
     '#type' => 'radios',
@@ -412,20 +395,6 @@ function block_admin_configure_submit($form, &$form_state) {
     foreach (array_filter($form_state['values']['roles']) as $rid) {
       $query->values(array(
         'rid' => $rid,
-        'module' => $form_state['values']['module'],
-        'delta' => $form_state['values']['delta'],
-      ));
-    }
-    $query->execute();
-
-    db_delete('block_node_type')
-      ->condition('module', $form_state['values']['module'])
-      ->condition('delta', $form_state['values']['delta'])
-      ->execute();
-    $query = db_insert('block_node_type')->fields(array('type', 'module', 'delta'));
-    foreach (array_filter($form_state['values']['types']) as $type) {
-      $query->values(array(
-        'type' => $type,
         'module' => $form_state['values']['module'],
         'delta' => $form_state['values']['delta'],
       ));
@@ -501,16 +470,6 @@ function block_add_block_form_submit($form, &$form_state) {
   foreach (array_filter($form_state['values']['roles']) as $rid) {
     $query->values(array(
       'rid' => $rid,
-      'module' => $form_state['values']['module'],
-      'delta' => $delta,
-    ));
-  }
-  $query->execute();
-
-  $query = db_insert('block_node_type')->fields(array('type', 'module', 'delta'));
-  foreach (array_filter($form_state['values']['types']) as $type) {
-    $query->values(array(
-      'type' => $type,
       'module' => $form_state['values']['module'],
       'delta' => $delta,
     ));
