@@ -14,6 +14,7 @@
  */
 function overlay_enable() {
   if (strpos(current_path(), 'admin/modules') === 0) {
-    drupal_goto('<front>', array('fragment' => 'overlay=admin/modules'));
+    // Flag for a redirect to <front>#overlay=admin/modules on hook_init().
+    $_SESSION['overlay_enable_redirect'] = 1;
   }
 }

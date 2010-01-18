@@ -59,6 +59,13 @@ function overlay_init() {
   // Only act if the user has access to administration pages. Other modules can
   // also enable the overlay directly for other uses of the JavaScript.
   if (user_access('access overlay')) {
+    // After overlay is enabled on the modules page, redirect to
+    // <front>#overlay=admin/modules to actually enable the overlay.
+    if (isset($_SESSION['overlay_enable_redirect']) && $_SESSION['overlay_enable_redirect']) {
+      unset($_SESSION['overlay_enable_redirect']);
+      drupal_goto('<front>', array('fragment' => 'overlay=' . current_path()));
+    }
+
     if (isset($_GET['render']) && $_GET['render'] == 'overlay') {
       // If this page shouldn't be rendered here, redirect to the parent.
       if (!path_is_admin($_GET['q'])) {
