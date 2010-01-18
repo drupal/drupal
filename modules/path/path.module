@@ -241,12 +241,12 @@ function path_form_taxonomy_form_term_alter(&$form, $form_state) {
       'alias' => '',
       'language' => LANGUAGE_NONE,
     );
-    $form['identification']['path'] = array(
+    $form['path'] = array(
       '#access' => user_access('create url aliases') || user_access('administer url aliases'),
       '#tree' => TRUE,
       '#element_validate' => array('path_form_element_validate'),
     );
-    $form['identification']['path']['alias'] = array(
+    $form['path']['alias'] = array(
       '#type' => 'textfield',
       '#title' => t('URL alias'),
       '#default_value' => $path['alias'],
@@ -254,9 +254,9 @@ function path_form_taxonomy_form_term_alter(&$form, $form_state) {
       '#weight' => 0,
       '#description' => t("Optionally specify an alternative URL by which this term can be accessed. Use a relative path and don't add a trailing slash or the URL alias won't work."),
     );
-    $form['identification']['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
-    $form['identification']['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
-    $form['identification']['path']['language'] = array('#type' => 'value', '#value' => $path['language']);
+    $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
+    $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
+    $form['path']['language'] = array('#type' => 'value', '#value' => $path['language']);
   }
 }
 
@@ -305,4 +305,3 @@ function path_taxonomy_term_delete($term) {
   // Delete all aliases associated with this term.
   path_delete(array('source' => 'taxonomy/term/' . $term->tid));
 }
-

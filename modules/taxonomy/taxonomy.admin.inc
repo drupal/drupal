@@ -664,6 +664,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#title' => t('Relations'),
     '#collapsible' => TRUE,
     '#collapsed' => $vocabulary->hierarchy < 2,
+    '#weight' => 10,
   );
 
   // taxonomy_get_tree and taxonomy_get_parents may contain large numbers of
@@ -702,23 +703,35 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#size' => 6,
     '#default_value' => $edit['weight'],
     '#description' => t('Terms are displayed in ascending order by weight.'),
-    '#required' => TRUE);
+    '#required' => TRUE,
+  );
   $form['vid'] = array(
     '#type' => 'value',
-    '#value' => $vocabulary->vid);
-  $form['submit'] = array(
+    '#value' => $vocabulary->vid,
+  );
+  $form['tid'] = array(
+    '#type' => 'value',
+    '#value' => $edit['tid'],
+  );
+
+  $form['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions')),
+    '#weight' => 100,
+  );
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save'));
+    '#value' => t('Save'),
+    '#weight' => 5,
+  );
 
   if ($edit['tid']) {
-    $form['delete'] = array(
+    $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
       '#access' => user_access("delete terms in $vocabulary->vid") || user_access('administer taxonomy'),
+      '#weight' => 10,
     );
-    $form['tid'] = array(
-      '#type' => 'value',
-      '#value' => $edit['tid']);
   }
   else {
     $form_state['redirect'] = $_GET['q'];
