@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.38 2010/01/03 21:01:04 webchick Exp $
+// $Id: aggregator.pages.inc,v 1.39 2010/01/18 03:31:29 dries Exp $
 
 /**
  * @file
@@ -146,12 +146,10 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
  * @return
  *   The form structure.
  * @ingroup forms
- * @see aggregator_categorize_items_validate()
  * @see aggregator_categorize_items_submit()
  */
 function aggregator_categorize_items($items, $feed_source = '') {
   $form['#submit'][] = 'aggregator_categorize_items_submit';
-  $form['#validate'][] = 'aggregator_categorize_items_validate';
   $form['#theme'] = 'aggregator_categorize_items';
   $form['feed_source'] = array(
     '#value' => $feed_source,
@@ -188,15 +186,6 @@ function aggregator_categorize_items($items, $feed_source = '') {
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save categories'));
 
   return $form;
-}
-
-/**
- * Validate aggregator_categorize_items() form submissions.
- */
-function aggregator_categorize_items_validate($form, &$form_state) {
-  if (!user_access('administer news feeds')) {
-    form_error($form, t('You are not allowed to categorize this feed item.'));
-  }
 }
 
 /**
