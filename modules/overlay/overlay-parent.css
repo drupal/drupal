@@ -1,4 +1,4 @@
-/* $Id: overlay-parent.css,v 1.9 2010/01/10 16:42:45 webchick Exp $ */
+/* $Id: overlay-parent.css,v 1.10 2010/01/18 03:29:51 dries Exp $ */
 
 /**
  * ui-dialog overlay.
@@ -136,14 +136,13 @@ body.overlay-autofit {
   padding: 0 14px;
   text-decoration: none;
   font-size: 11px;
-  margin: 0 0 2px 0;
+  margin: 0;
 }
 .overlay .ui-dialog-titlebar ul li.active a,
 .overlay .ui-dialog-titlebar ul li.active a.active,
 .overlay .ui-dialog-titlebar ul li.active a:active,
 .overlay .ui-dialog-titlebar ul li.active a:visited {
   background-color: #fff;
-  padding-bottom: 2px;
   margin: 0;
 }
 .overlay .ui-dialog-titlebar ul li a:hover {
