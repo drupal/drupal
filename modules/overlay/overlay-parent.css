@@ -136,14 +136,13 @@ body.overlay-autofit {
   padding: 0 14px;
   text-decoration: none;
   font-size: 11px;
-  margin: 0 0 2px 0;
+  margin: 0;
 }
 .overlay .ui-dialog-titlebar ul li.active a,
 .overlay .ui-dialog-titlebar ul li.active a.active,
 .overlay .ui-dialog-titlebar ul li.active a:active,
 .overlay .ui-dialog-titlebar ul li.active a:visited {
   background-color: #fff;
-  padding-bottom: 2px;
   margin: 0;
 }
 .overlay .ui-dialog-titlebar ul li a:hover {
