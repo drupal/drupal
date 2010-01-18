@@ -345,7 +345,7 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
     $edit['ip'] = '192.168.1.1';
     $this->drupalPost('admin/config/people/ip-blocking', $edit, t('Save'));
     $ip = db_query("SELECT iid from {blocked_ips} WHERE ip = :ip", array(':ip' => $edit['ip']))->fetchField();
-    $this->assertNotNull($ip, t('IP address found in database'));
+    $this->assertTrue($ip, t('IP address found in database.'));
     $this->assertRaw(t('The IP address %ip has been blocked.', array('%ip' => $edit['ip'])), t('IP address was blocked.'));
 
     // Try to block an IP address that's already blocked.
