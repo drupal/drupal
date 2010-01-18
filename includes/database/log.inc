@@ -150,6 +150,8 @@ class DatabaseLog {
           'file' => $stack[$i]['file'],
           'line' => $stack[$i]['line'],
           'function' => $stack[$i + 1]['function'],
+          'class' => isset($stack[$i + 1]['class']) ? $stack[$i + 1]['class'] : NULL,
+          'type' => isset($stack[$i + 1]['type']) ? $stack[$i + 1]['type'] : NULL,
           'args' => $stack[$i + 1]['args'],
         );
         return $stack[$i];
