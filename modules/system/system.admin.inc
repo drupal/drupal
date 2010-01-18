@@ -1390,8 +1390,12 @@ function system_modules_uninstall_submit($form, &$form_state) {
 
 /**
  * Menu callback. Display blocked IP addresses.
+ *
+ * @param $default_ip
+ *   Optional IP address to be passed on to drupal_get_form() for
+ *   use as the default value of the IP address form field.
  */
-function system_ip_blocking() {
+function system_ip_blocking($default_ip = '') {
   $output = '';
   $rows = array();
   $header = array(t('IP address'), t('Operations'));
@@ -1403,7 +1407,7 @@ function system_ip_blocking() {
     );
   }
 
-  $build['system_ip_blocking_form'] = drupal_get_form('system_ip_blocking_form');
+  $build['system_ip_blocking_form'] = drupal_get_form('system_ip_blocking_form', $default_ip);
 
   $build['system_ip_blocking_table'] = array(
     '#theme' => 'table',
@@ -1421,13 +1425,13 @@ function system_ip_blocking() {
  * @see system_ip_blocking_form_validate()
  * @see system_ip_blocking_form_submit()
  */
-function system_ip_blocking_form($form, $form_state) {
+function system_ip_blocking_form($form, $form_state, $default_ip) {
   $form['ip'] = array(
     '#title' => t('IP address'),
     '#type' => 'textfield',
     '#size' => 64,
     '#maxlength' => 32,
-    '#default_value' => arg(4),
+    '#default_value' => $default_ip,
     '#description' => t('Enter a valid IP address.'),
   );
   $form['submit'] = array(

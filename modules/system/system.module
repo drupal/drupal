@@ -692,14 +692,6 @@ function system_menu() {
     'access arguments' => array('block IP addresses'),
     'file' => 'system.admin.inc',
   );
-  $items['admin/config/people/ip-blocking/%'] = array(
-    'title' => 'IP address blocking',
-    'description' => 'Manage blocked IP addresses.',
-    'page callback' => 'system_ip_blocking',
-    'access arguments' => array('block IP addresses'),
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
-  );
   $items['admin/config/people/ip-blocking/delete/%blocked_ip'] = array(
     'title' => 'Delete IP address',
     'page callback' => 'drupal_get_form',

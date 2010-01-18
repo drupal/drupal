@@ -372,6 +372,13 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/people/ip-blocking', $edit, t('Save'));
     $this->assertText(t('Enter a valid IP address.'));
 
+    // Pass an IP address as a URL parameter and submit it.
+    $submit_ip = '1.2.3.4';
+    $this->drupalPost('admin/config/people/ip-blocking/' . $submit_ip, NULL, t('Save'));
+    $ip = db_query("SELECT iid from {blocked_ips} WHERE ip = :ip", array(':ip' => $submit_ip))->fetchField();
+    $this->assertTrue($ip, t('IP address found in database'));
+    $this->assertRaw(t('The IP address %ip has been blocked.', array('%ip' => $submit_ip)), t('IP address was blocked.'));
+
     // Submit your own IP address. This fails, although it works when testing manually.
      // TODO: on some systems this test fails due to a bug or inconsistency in cURL.
      // $edit = array();
