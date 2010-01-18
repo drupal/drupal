@@ -87,7 +87,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
-    $this->assertText($this->web_user->name, t('User was logged in.'));
+    $this->assertLink($this->web_user->name, 0, t('User was logged in.'));
 
     // Test logging in via the user/login page.
     $this->drupalLogout();
@@ -99,7 +99,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
 
-    $this->assertText($this->web_user->name, t('User was logged in.'));
+    $this->assertLink($this->web_user->name, 0, t('User was logged in.'));
 
     // Verify user was redirected away from user/login to an accessible page.
     $this->assertResponse(200);
@@ -166,7 +166,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
         
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
-    $this->assertText('john', t('User was logged in.'));
+    $this->assertLink('john', 0, t('User was logged in.'));
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
