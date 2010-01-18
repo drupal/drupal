@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.251 2010/01/15 13:32:41 dries Exp $
+// $Id: system.admin.inc,v 1.252 2010/01/18 03:06:00 dries Exp $
 
 /**
  * @file
@@ -1596,13 +1596,14 @@ function system_site_information_settings_submit($form, &$form_state) {
 function system_logging_settings() {
   $form['error_level'] = array(
     '#type' => 'radios',
-    '#title' => t('Display PHP messages'),
+    '#title' => t('Error messages to display'),
     '#default_value' => ERROR_REPORTING_DISPLAY_ALL,
     '#options' => array(
       ERROR_REPORTING_HIDE => t('None'),
       ERROR_REPORTING_DISPLAY_SOME => t('Errors and warnings'),
       ERROR_REPORTING_DISPLAY_ALL => t('All messages'),
     ),
+    '#description' => t('It is recommended that sites running on production environments do not display any errors.'),
   );
 
   return system_settings_form($form);
