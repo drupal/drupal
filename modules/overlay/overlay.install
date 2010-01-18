@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.install,v 1.2 2010/01/04 21:31:52 webchick Exp $
+// $Id: overlay.install,v 1.3 2010/01/18 17:12:04 dries Exp $
 
 /**
  * @file
@@ -14,6 +14,7 @@
  */
 function overlay_enable() {
   if (strpos(current_path(), 'admin/modules') === 0) {
-    drupal_goto('<front>', array('fragment' => 'overlay=admin/modules'));
+    // Flag for a redirect to <front>#overlay=admin/modules on hook_init().
+    $_SESSION['overlay_enable_redirect'] = 1;
   }
 }
