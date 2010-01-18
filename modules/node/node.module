@@ -1731,8 +1731,17 @@ function theme_node_search_admin($variables) {
 function _node_revision_access($node, $op = 'view') {
   $access = &drupal_static(__FUNCTION__, array());
   if (!isset($access[$node->vid])) {
+    // To save additional calls to the database, return early if the user
+    // doesn't have the required permissions.
+    $map = array('view' => 'view revisions', 'update' => 'revert revisions', 'delete' => 'delete revisions');
+    if (isset($map[$op]) && (!user_access($map[$op]) && !user_access('administer nodes'))) {
+      $access[$node->vid] = FALSE;
+      return FALSE;
+    }
+
     $node_current_revision = node_load($node->nid);
     $is_current_revision = $node_current_revision->vid == $node->vid;
+
     // There should be at least two revisions. If the vid of the given node
     // and the vid of the current revision differs, then we already have two
     // different revisions so there is no need for a separate database check.
@@ -1745,11 +1754,9 @@ function _node_revision_access($node, $op = 'view') {
       $access[$node->vid] = TRUE;
     }
     else {
-      $map = array('view' => 'view revisions', 'update' => 'revert revisions', 'delete' => 'delete revisions');
-      // First check the user permission, second check the access to the
-      // current revision and finally, if the node passed in is not the current
-      // revision then access to that, too.
-      $access[$node->vid] = isset($map[$op]) && user_access($map[$op]) && node_access($op, $node_current_revision) && ($is_current_revision || node_access($op, $node));
+      // First check the access to the current revision and finally, if the
+      // node passed in is not the current revision then access to that, too.
+      $access[$node->vid] = node_access($op, $node_current_revision) && ($is_current_revision || node_access($op, $node));
     }
   }
   return $access[$node->vid];
