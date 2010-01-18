@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.877 2010/01/18 17:04:10 dries Exp $
+// $Id: system.module,v 1.878 2010/01/18 17:08:20 dries Exp $
 
 /**
  * @file
@@ -690,14 +690,6 @@ function system_menu() {
     'description' => 'Manage blocked IP addresses.',
     'page callback' => 'system_ip_blocking',
     'access arguments' => array('block IP addresses'),
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/people/ip-blocking/%'] = array(
-    'title' => 'IP address blocking',
-    'description' => 'Manage blocked IP addresses.',
-    'page callback' => 'system_ip_blocking',
-    'access arguments' => array('block IP addresses'),
-    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/people/ip-blocking/delete/%blocked_ip'] = array(
