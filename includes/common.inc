@@ -6444,7 +6444,6 @@ function entity_info_cache_clear() {
  * @return
  *   A numerically indexed array (not a hash table) containing these
  *   elements:
- *
  *   0: primary id of the entity
  *   1: revision id of the entity, or NULL if $entity_type is not versioned
  *   2: bundle name of the entity
