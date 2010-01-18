@@ -154,6 +154,9 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
 .form-type-radio .description, .form-type-checkbox .description {
   margin-left: 2.4em;
 }
+input.form-checkbox, input.form-radio {
+  vertical-align: middle;
+}
 .marker, .form-required {
   color: #f00;
 }
