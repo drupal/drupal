@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.35 2010/01/09 22:07:57 webchick Exp $
+// $Id: user.install,v 1.36 2010/01/18 03:35:34 dries Exp $
 
 /**
  * @file
@@ -413,7 +413,7 @@ function user_update_7004(&$sandbox) {
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,
-    'description' => t("Foriegn key: {file}.fid of user's picture."),
+    'description' => t("Foreign key: {file}.fid of user's picture."),
   );
 
   if (!isset($sandbox['progress'])) {
