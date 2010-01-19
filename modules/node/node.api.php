@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.57 2010/01/13 23:30:43 dries Exp $
+// $Id: node.api.php,v 1.58 2010/01/19 04:53:45 webchick Exp $
 
 /**
  * @file
@@ -565,7 +565,7 @@ function hook_node_validate($node, $form) {
  */
 function hook_node_view($node, $view_mode) {
   $node->content['my_additional_field'] = array(
-    '#value' => $additional_field,
+    '#markup' => $additional_field,
     '#weight' => 10,
     '#theme' => 'mymodule_my_additional_field',
   );
