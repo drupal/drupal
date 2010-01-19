@@ -565,7 +565,7 @@ function hook_node_validate($node, $form) {
  */
 function hook_node_view($node, $view_mode) {
   $node->content['my_additional_field'] = array(
-    '#value' => $additional_field,
+    '#markup' => $additional_field,
     '#weight' => 10,
     '#theme' => 'mymodule_my_additional_field',
   );
