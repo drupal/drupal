@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.23 2010/01/15 04:16:57 dries Exp $
+// $Id: simpletest.pages.inc,v 1.24 2010/01/20 04:15:51 dries Exp $
 
 /**
  * @file
@@ -360,6 +360,7 @@ function simpletest_result_form_submit($form, &$form_state) {
   }
 
   simpletest_test_form_submit(array(), $form_state_execute);
+  $form_state['redirect'] = $form_state_execute['redirect'];
 }
 
 /**
