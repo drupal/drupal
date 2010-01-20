@@ -88,7 +88,8 @@ div.contextual-links-wrapper a {
   text-decoration: none;
 }
 ul.contextual-links li a {
-  color: #333;
+  /* Color made important so not easily overriden with '#footer a' type selectors */
+  color: #333 !important;
   display: block;
   margin: 0.25em 0;
   padding: 0.25em 1em 0.25em 0.5em;
