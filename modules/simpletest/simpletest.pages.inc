@@ -360,6 +360,7 @@ function simpletest_result_form_submit($form, &$form_state) {
   }
 
   simpletest_test_form_submit(array(), $form_state_execute);
+  $form_state['redirect'] = $form_state_execute['redirect'];
 }
 
 /**
