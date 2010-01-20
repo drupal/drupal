@@ -244,20 +244,13 @@ function file_field_prepare_view($obj_type, $objects, $field, $instances, $langc
 }
 
 /**
- * Implements hook_field_insert().
- */
-function file_field_insert($obj_type, $object, $field, $instance, $langcode, &$items) {
-  file_field_update($obj_type, $object, $field, $instance, $langcode, $items);
-}
-
-/**
  * Implements hook_field_update().
+ *
+ * Check for files that have been removed from the object.
  */
 function file_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
-  // Check for files that have been removed from the object.
-
   // On new revisions, old files are always maintained in the previous revision.
-  if ($object->is_new || (isset($object->revision) && $object->revision)) {
+  if (!empty($object->revision)) {
     return;
   }
 
