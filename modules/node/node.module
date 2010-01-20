@@ -2648,6 +2648,8 @@ function node_search_validate($form, &$form_state) {
 function node_access($op, $node, $account = NULL) {
   global $user;
 
+  $rights = &drupal_static(__FUNCTION__, array());
+
   if (!$node || !in_array($op, array('view', 'update', 'delete', 'create'), TRUE)) {
     // If there was no node to check against, or the $op was not one of the
     // supported ones, we return access denied.
@@ -2658,11 +2660,24 @@ function node_access($op, $node, $account = NULL) {
     $account = $user;
   }
 
+  // $node may be either an object or a node type. Since node types cannot be
+  // an integer, use either nid or type as the static cache id.
+
+  $cid = is_object($node) ? $node->nid : $node;
+
+  // If we've already checked access for this node, user and op, return from
+  // cache.
+  if (isset($rights[$account->uid][$cid][$op])) {
+    return $rights[$account->uid][$cid][$op];
+  }
+
   if (user_access('bypass node access', $account)) {
+    $rights[$account->uid][$cid][$op] = TRUE;
     return TRUE;
   }
 
   if (!user_access('access content', $account)) {
+    $rights[$account->uid][$cid][$op] = FALSE;
     return FALSE;
   }
 
@@ -2673,45 +2688,58 @@ function node_access($op, $node, $account = NULL) {
   // node_access table.
   $access = module_invoke_all('node_access', $node, $op, $account);
   if (in_array(NODE_ACCESS_DENY, $access, TRUE)) {
+    $rights[$account->uid][$cid][$op] = FALSE;
     return FALSE;
   }
   elseif (in_array(NODE_ACCESS_ALLOW, $access, TRUE)) {
+    $rights[$account->uid][$cid][$op] = TRUE;
     return TRUE;
   }
 
   // Check if authors can view their own unpublished nodes.
   if ($op == 'view' && !$node->status && user_access('view own unpublished content', $account) && $account->uid == $node->uid && $account->uid != 0) {
+    $rights[$account->uid][$cid][$op] = TRUE;
     return TRUE;
   }
 
   // If the module did not override the access rights, use those set in the
   // node_access table.
   if ($op != 'create' && $node->nid) {
-    $query = db_select('node_access');
-    $query->addExpression('1');
-    $query->condition('grant_' . $op, 1, '>=');
-    $nids = db_or()->condition('nid', $node->nid);
-    if ($node->status) {
-      $nids->condition('nid', 0);
-    }
-    $query->condition($nids);
-    $query->range(0, 1);
-
-    $grants = db_or();
-    foreach (node_access_grants($op, $account) as $realm => $gids) {
-      foreach ($gids as $gid) {
-        $grants->condition(db_and()
-          ->condition('gid', $gid)
-          ->condition('realm', $realm)
-        );
+    if (module_implements('node_grants')) {
+      $query = db_select('node_access');
+      $query->addExpression('1');
+      $query->condition('grant_' . $op, 1, '>=');
+      $nids = db_or()->condition('nid', $node->nid);
+      if ($node->status) {
+        $nids->condition('nid', 0);
       }
+      $query->condition($nids);
+      $query->range(0, 1);
+
+      $grants = db_or();
+      foreach (node_access_grants($op, $account) as $realm => $gids) {
+        foreach ($gids as $gid) {
+          $grants->condition(db_and()
+            ->condition('gid', $gid)
+            ->condition('realm', $realm)
+          );
+        }
+      }
+      if (count($grants) > 0) {
+        $query->condition($grants);
+      }
+      $result =  (bool) $query
+        ->execute()
+        ->fetchField();
+      $rights[$account->uid][$cid][$op] = $result;
+      return $result;
     }
-    if (count($grants) > 0) {
-      $query->condition($grants);
+    elseif (is_object($node) && $op == 'view' && $node->status) {
+      // If no modules implement hook_node_grants(), the default behaviour is to
+      // allow all users to view published nodes, so reflect that here.
+      $rights[$account->uid][$cid][$op] = TRUE;
+      return TRUE;
     }
-    return (bool) $query
-      ->execute()
-      ->fetchField();
   }
 
   return FALSE;
