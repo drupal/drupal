@@ -121,26 +121,41 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
     '#type' => 'value',
     '#value' => $path['language']
   );
+
+  $form['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions')),
+  );
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
   if ($path['pid']) {
     $form['pid'] = array(
       '#type' => 'hidden',
       '#value' => $path['pid'],
     );
-    $form['submit'] = array(
+    $form['actions']['delete'] = array(
       '#type' => 'submit',
-      '#value' => t('Update alias'),
-    );
-  }
-  else {
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Create new alias'),
+      '#value' => t('Delete'),
+      '#submit' => array('path_admin_form_delete_submit'),
     );
   }
 
   return $form;
 }
 
+/**
+ * Submit function for the 'Delete' button on the URL alias editing form.
+ */
+function path_admin_form_delete_submit($form, &$form_state) {
+  $destination = array();
+  if (isset($_GET['destination'])) {
+    $destination = drupal_get_destination();
+    unset($_GET['destination']);
+  }
+  $form_state['redirect'] = array('admin/config/search/path/delete/' . $form_state['values']['pid'], array('query' => $destination));
+}
 
 /**
  * Verify that a URL alias is valid
@@ -206,7 +221,6 @@ function path_admin_delete_confirm_submit($form, &$form_state) {
     $form_state['redirect'] = 'admin/config/search/path';
   }
 }
-
 
 /**
  * Return a form to filter URL aliases.

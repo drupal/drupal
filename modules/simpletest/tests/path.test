@@ -165,7 +165,7 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
 
     // Test that alias source paths are normalized in the interface.
     $edit = array('source' => "user/$name/edit", 'alias' => 'alias/test2');
-    $this->drupalPost('admin/config/search/path/add', $edit, t('Create new alias'));
+    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
     $this->assertText(t('The alias has been saved.'));
 
     // Test that a path always uses its alias.

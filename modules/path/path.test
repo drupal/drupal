@@ -34,7 +34,7 @@ class PathTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['source'] = 'node/' . $node1->nid;
     $edit['alias'] = $this->randomName(8);
-    $this->drupalPost('admin/config/search/path/add', $edit, t('Create new alias'));
+    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
 
     // Visit the system path for the node and confirm a cache entry is
     // created.
@@ -59,7 +59,7 @@ class PathTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['source'] = 'node/' . $node1->nid;
     $edit['alias'] = $this->randomName(8);
-    $this->drupalPost('admin/config/search/path/add', $edit, t('Create new alias'));
+    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
 
     // Confirm that the alias works.
     $this->drupalGet($edit['alias']);
@@ -71,7 +71,7 @@ class PathTestCase extends DrupalWebTestCase {
 
     $previous = $edit['alias'];
     $edit['alias'] = $this->randomName(8);
-    $this->drupalPost('admin/config/search/path/edit/' . $pid, $edit, t('Update alias'));
+    $this->drupalPost('admin/config/search/path/edit/' . $pid, $edit, t('Save'));
 
     // Confirm that the alias works.
     $this->drupalGet($edit['alias']);
@@ -90,13 +90,14 @@ class PathTestCase extends DrupalWebTestCase {
     // Set alias to second test node.
     $edit['source'] = 'node/' . $node2->nid;
     // leave $edit['alias'] the same
-    $this->drupalPost('admin/config/search/path/add', $edit, t('Create new alias'));
+    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
 
     // Confirm no duplicate was created.
     $this->assertRaw(t('The alias %alias is already in use in this language.', array('%alias' => $edit['alias'])), 'Attempt to move alias was rejected.');
 
     // Delete alias.
-    $this->drupalPost('admin/config/search/path/delete/' . $pid, array(), t('Confirm'));
+    $this->drupalPost('admin/config/search/path/edit/' . $pid, array(), t('Delete'));
+    $this->drupalPost(NULL, array(), t('Confirm'));
 
     // Confirm that the alias no longer works.
     $this->drupalGet($edit['alias']);
