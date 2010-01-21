@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.60 2010/01/10 22:56:51 webchick Exp $
+// $Id: locale.test,v 1.61 2010/01/21 04:20:08 dries Exp $
 
 /**
  * @file
@@ -1327,7 +1327,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
       'alias'    => $english_path,
       'language' => 'en',
     );
-    $this->drupalPost($path, $edit, t('Create new alias'));
+    $this->drupalPost($path, $edit, t('Save'));
 
     // Create a path alias in new custom language.
     $custom_language_path = $this->randomName(8);
@@ -1336,7 +1336,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
       'alias'    => $custom_language_path,
       'language' => $langcode,
     );
-    $this->drupalPost($path, $edit, t('Create new alias'));
+    $this->drupalPost($path, $edit, t('Save'));
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);
