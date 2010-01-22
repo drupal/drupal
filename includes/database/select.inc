@@ -970,7 +970,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
   /* Implementations of QueryExtendableInterface. */
 
   public function extend($extender_name) {
-    $override_class = __CLASS__ . $this->connection->driver();
+    $override_class = $extender_name . '_' . $this->connection->driver();
     if (class_exists($override_class)) {
       $extender_name = $override_class;
     }
