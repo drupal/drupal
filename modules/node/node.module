@@ -302,19 +302,29 @@ function theme_node_list($variables) {
 
 /**
  * Update the 'last viewed' timestamp of the specified node for current user.
+ *
+ * @param $node
+ *   A node object.
  */
-function node_tag_new($nid) {
+function node_tag_new($node) {
   global $user;
-
   if ($user->uid) {
-    db_merge('history')
-      ->key(array(
-        'uid' => $user->uid,
-        'nid' => $nid,
-      ))
-      ->fields(array('timestamp' => REQUEST_TIME))
-      ->execute();
-  }
+    // To avoid multiple inserts if a user repeatedly requests the same page,
+    // only update history if the node has been updated, a new comment has been
+    // posted, or more than thirty minutes has elapsed since the last request.
+    $last_viewed = node_last_viewed($node->nid);
+    if (!$last_viewed
+       || ($last_viewed <= $node->changed || $last_viewed <= $node->last_comment_timestamp)
+       || $last_viewed <= REQUEST_TIME - variable_get('node_last_viewed_threshold', 1800)) {
+      db_merge('history')
+        ->key(array(
+          'uid' => $user->uid,
+          'nid' => $node->nid,
+        ))
+        ->fields(array('timestamp' => REQUEST_TIME))
+        ->execute();
+     }
+   }
 }
 
 /**
@@ -1315,7 +1325,7 @@ function node_show($node, $message = FALSE) {
   }
 
   // Update the history table, stating that this user viewed this node.
-  node_tag_new($node->nid);
+  node_tag_new($node);
 
   // For markup consistency with other pages, use node_view_multiple() rather than node_view().
   return node_view_multiple(array($node->nid => $node), 'full');
