@@ -452,6 +452,19 @@ function rdf_preprocess_field(&$variables) {
   if (!empty($mapping) && !empty($mapping[$field_name])) {
     foreach ($element['#items'] as $delta => $item) {
       $variables['item_attributes_array'][$delta] = rdf_rdfa_attributes($mapping[$field_name], $item);
+      // If this field is an image, RDFa will not output correctly when the
+      // image is in a containing 'a' tag. If the field is a file, RDFa will
+      // not output correctly if the filetype icon comes before the link to
+      // the file. We correct this by adding a resource attribute to the div if
+      // this field has a URI.
+      if (isset($item['uri'])) {
+        if (isset($element[$delta]['#image_style'])) {
+          $variables['item_attributes_array'][$delta]['resource'] = image_style_url($element[$delta]['#image_style'], $item['uri']);
+        }
+        else {
+          $variables['item_attributes_array'][$delta]['resource'] = file_create_url($item['uri']);
+        }
+      }
     }
   }
 }
@@ -595,6 +608,13 @@ function rdf_field_attach_view_alter(&$output, $context) {
 }
 
 /**
+ * Implements MODULE_preprocess_HOOK().
+ */
+function rdf_preprocess_image(&$variables) {
+  $variables['attributes']['typeof'] = array('foaf:Image');
+}
+
+/**
  * Wraps a template variable in an HTML element with the desired attributes.
  *
  * This is called by rdf_process() shortly before the theme system renders
@@ -695,4 +715,3 @@ function theme_rdf_metadata($variables) {
   }
   return $output;
 }
-

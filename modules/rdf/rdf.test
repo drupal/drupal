@@ -116,6 +116,64 @@ class RdfMarkupTestCase extends DrupalWebTestCase {
     $this->assertEqual($expected_attributes, $attributes);
   }
 
+  /**
+   * Ensure that file fields have the correct resource as the object in RDFa
+   * when displayed as a teaser.
+   */
+  function testAttributesInMarkupFile() {
+    // Create a user to post the image.
+    $admin_user = $this->drupalCreateUser(array('edit own article content', 'revert revisions', 'administer content types'));
+    $this->drupalLogin($admin_user);
+
+    $langcode = LANGUAGE_NONE;
+    $bundle_name = "article";
+
+    // Create file field.
+    $file_field = 'file_test';
+    $edit = array(
+      '_add_new_field[label]' => $file_field,
+      '_add_new_field[field_name]' => $file_field,
+      '_add_new_field[type]' => 'file',
+      '_add_new_field[widget_type]' => 'file_generic',
+    );
+    $this->drupalPost('admin/structure/types/manage/' . $bundle_name . '/fields',  $edit, t('Save'));
+    // Set the RDF mapping for the new field.
+    $rdf_mapping = rdf_mapping_load('node', $bundle_name);
+    $rdf_mapping += array('field_' . $file_field => array('predicates' => array('rdfs:seeAlso'), 'type' => 'rel'));
+    $rdf_mapping_save = array('mapping' => $rdf_mapping, 'type' => 'node', 'bundle' => $bundle_name);
+    rdf_mapping_save($rdf_mapping_save);
+
+    // Get the test file that simpletest provides.
+    $file = current($this->drupalGetTestFiles('text'));
+
+    // Prepare image variables.
+    $image_field = "field_image";
+    // Get the test image that simpletest provides.
+    $image = current($this->drupalGetTestFiles('image'));
+
+    // Create an array for drupalPost with the field names as the keys and
+    // the uris for the test files as the values.
+    $edit = array("files[field_" . $file_field . "_" . $langcode . "_0]" => drupal_realpath($file->uri),
+                  "files[" . $image_field . "_" . $langcode . "_0]" => drupal_realpath($image->uri));
+
+    // Create node and save, then edit node to upload files.
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+
+    // Get filenames and nid for comparison with HTML output.
+    $file_filename = $file->filename;
+    $image_filename = $image->filename;
+    $nid = $node->nid;
+    // Navigate to front page, where node is displayed in teaser form.
+    $this->drupalGet('node');
+
+    // We only check to make sure that the resource attribute contains '.txt'
+    // instead of the full file name because the filename is altered on upload.
+    $file_rel = $this->xpath("//div[contains(@about, 'node/$nid')]//div[contains(@rel, 'rdfs:seeAlso') and contains(@resource, '.txt')]");
+    $this->assertTrue(!empty($file_rel), t('Attribute \'rel\' set on file field. Attribute \'resource\' is also set.'));
+    $image_rel = $this->xpath("//div[contains(@about, 'node/$nid')]//div[contains(@rel, 'rdfs:seeAlso') and contains(@resource, '$image_filename')]//img[contains(@typeof, 'foaf:Image')]");
+    $this->assertTrue(!empty($image_rel), t('Attribute \'rel\' set on image field. Attribute \'resource\' is also set.'));
+  }
 }
 
 class RdfCrudTestCase extends DrupalWebTestCase {
