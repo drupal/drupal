@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.31 2009/12/13 18:06:48 webchick Exp $
+// $Id: select.inc,v 1.32 2010/01/22 22:52:38 dries Exp $
 
 /**
  * @ingroup database
@@ -970,7 +970,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
   /* Implementations of QueryExtendableInterface. */
 
   public function extend($extender_name) {
-    $override_class = __CLASS__ . $this->connection->driver();
+    $override_class = $extender_name . '_' . $this->connection->driver();
     if (class_exists($override_class)) {
       $extender_name = $override_class;
     }
