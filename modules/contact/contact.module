@@ -198,7 +198,7 @@ function contact_mail($key, &$message, $params) {
         '!recipient-edit-url' => url('user/' . $params['recipient']->uid . '/edit', array('absolute' => TRUE, 'language' => $language)),
       );
       $message['subject'] .= t('[!site-name] !subject', $variables, array('langcode' => $language->language));
-      $message['body'][] = t('!recipient-name,', $variables, array('langcode' => $language->language));
+      $message['body'][] = t('Hello !recipient-name,', $variables, array('langcode' => $language->language));
       $message['body'][] = t("!sender-name (!sender-url) has sent you a message via your contact form (!form-url) at !site-name.", $variables, array('langcode' => $language->language));
       $message['body'][] = t("If you don't want to receive such e-mails, you can change your settings at !recipient-edit-url.", $variables, array('langcode' => $language->language));
       $message['body'][] = t('Message:', array(), array('langcode' => $language->language));
