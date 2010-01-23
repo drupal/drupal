@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.567 2010/01/15 10:49:46 dries Exp $
+// $Id: taxonomy.module,v 1.568 2010/01/23 16:41:34 dries Exp $
 
 /**
  * @file
@@ -570,24 +570,6 @@ function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_get_parents');
   drupal_static_reset('taxonomy_get_children');
   entity_get_controller('taxonomy_term')->resetCache();
-}
-
-/**
- * Generate a set of options for selecting a term from all vocabularies.
- */
-function taxonomy_form_all() {
-  $vocabularies = taxonomy_get_vocabularies();
-  $options = array();
-  foreach ($vocabularies as $vid => $vocabulary) {
-    $tree = taxonomy_get_tree($vid);
-    if ($tree && (count($tree) > 0)) {
-      $options[$vocabulary->name] = array();
-      foreach ($tree as $term) {
-        $options[$vocabulary->name][$term->tid] = str_repeat('-', $term->depth) . $term->name;
-      }
-    }
-  }
-  return $options;
 }
 
 /**
