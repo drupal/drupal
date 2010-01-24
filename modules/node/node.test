@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.68 2010/01/13 12:58:47 webchick Exp $
+// $Id: node.test,v 1.69 2010/01/24 15:21:06 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -1355,5 +1355,33 @@ class MultiStepNodeFormBasicOptionsTest extends DrupalWebTestCase {
     $this->assertNoFieldChecked('edit-status', 'status stayed unchecked');
     $this->assertNoFieldChecked('edit-promote', 'promote stayed unchecked');
     $this->assertFieldChecked('edit-sticky', 'sticky stayed checked');
+  }
+}
+
+/**
+ * Test to ensure that a node's content is always rebuilt.
+ */
+class NodeBuildContent extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Rebuild content',
+      'description' => 'Test the rebuilding of content for different build modes.',
+      'group' => 'Node',
+    );
+  }
+
+ /**
+  * Test to ensure that a node's content array is rebuilt on every call to node_build_content().
+  */
+  function testNodeRebuildContent() {
+    $node = $this->drupalCreateNode();
+
+    // Set a property in the content array so we can test for its existance later on.
+    $node->content['test_content_property'] = array('#value' => $this->randomString());
+    $content = node_build_content($node);
+
+    // If the property doesn't exist it means the node->content was rebuilt.
+    $this->assertFalse(isset($content['test_content_property']), t('Node content was emptied prior to being built.'));
   }
 }
