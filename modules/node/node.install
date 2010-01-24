@@ -466,22 +466,23 @@ function node_update_7006(&$context) {
   else {
     // Subsequent invocations.
 
-    // Save the field IDs for field_sql_storage_field_storage_write().
+    // Grab the body field ID for field_sql_storage_field_storage_write().
     $body_field = field_info_field('body');
     $body_field_id = $body_field['id'];
 
     $found = FALSE;
     if ($context['total']) {
       // Operate on every revision of every node (whee!), in batches.
-      $batch_size = 50;
-      $query = db_select('node', 'n');
-      $nr = $query->innerJoin('node_revision', 'nr', 'n.vid = nr.vid');
-      $revisions = $query
+      $batch_size = 200;
+      $query = db_select('node_revision', 'nr');
+      $query->innerJoin('node', 'n', 'n.vid = nr.vid');
+      $query
+        ->fields('nr', array('nid', 'vid', 'body', 'teaser', 'format'))
         ->fields('n', array('type', 'status', 'comment', 'promote', 'sticky'))
-        ->fields($nr)
         ->condition('nr.vid', $context['last'], '>')
         ->orderBy('nr.vid', 'ASC')
-        ->execute();
+        ->range(0, $batch_size);
+      $revisions = $query->execute();
 
       // Load each reversion of each node, set up 'body'
       // appropriately, and save the node's field data.  Note that
@@ -499,7 +500,6 @@ function node_update_7006(&$context) {
             'vid' => $revision->vid,
             'type' => $revision->type,
           );
-          $node->title = $revision->title;
           if (!empty($revision->teaser) && $revision->teaser != text_summary($revision->body)) {
             $node->body[LANGUAGE_NONE][0]['summary'] = $revision->teaser;
           }
@@ -532,10 +532,6 @@ function node_update_7006(&$context) {
 
         $context['last'] = $revision->vid;
         $context['count'] += 1;
-
-        if (--$batch_size == 0) {
-          break;
-        }
       }
 
       $context['#finished'] = min(0.99, $context['count'] / $context['total']);
