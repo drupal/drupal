@@ -573,6 +573,24 @@ function taxonomy_terms_static_reset() {
 }
 
 /**
+ * Generate a set of options for selecting a term from all vocabularies.
+ */
+function taxonomy_form_all() {
+  $vocabularies = taxonomy_get_vocabularies();
+  $options = array();
+  foreach ($vocabularies as $vid => $vocabulary) {
+    $tree = taxonomy_get_tree($vid);
+    if ($tree && (count($tree) > 0)) {
+      $options[$vocabulary->name] = array();
+      foreach ($tree as $term) {
+        $options[$vocabulary->name][$term->tid] = str_repeat('-', $term->depth) . $term->name;
+      }
+    }
+  }
+  return $options;
+}
+
+/**
  * Return an array of all vocabulary objects.
  *
  * @param $type
