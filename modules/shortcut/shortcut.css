@@ -1,8 +1,8 @@
 /* $Id$ */
 div#toolbar a#edit-shortcuts {
   float: right;
-  padding: 10px 10px 10px 5px;
-  line-height: 30px;
+  padding: 5px 10px 5px 5px;
+  line-height: 24px;
   color: #bbb;
 }
 div#toolbar a#edit-shortcuts:focus,
@@ -12,9 +12,9 @@ div#toolbar a#edit-shortcuts.active {
 }
 
 div#toolbar div.toolbar-shortcuts ul {
-  padding: 5px 0;
-  height: 40px;
-  line-height: 30px;
+  padding: 5px 0 2px 0;
+  height: 28px;
+  line-height: 24px;
   float: left;
   margin-left:5px;
 }
@@ -22,7 +22,7 @@ div#toolbar div.toolbar-shortcuts ul {
 div#toolbar div.toolbar-shortcuts ul li a {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  padding: 5px 10px 5px 5px;
+  padding: 0 5px 0 5px;
   margin-right: 5px;
 }
 
