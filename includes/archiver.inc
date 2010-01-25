@@ -1,5 +1,5 @@
 <?php
-// $Id: archiver.inc,v 1.3 2009/12/04 16:31:04 dries Exp $
+// $Id: archiver.inc,v 1.4 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 interface ArchiverInterface {
 
   /**
-   * Contructor for a new archiver instance.
+   * Constructor for a new archiver instance.
    *
    * @param $file_path
    *   The full system path of the archive to manipulate.  Only local files
@@ -61,7 +61,7 @@ interface ArchiverInterface {
    *
    * @return
    *   An array of file names relative to the root of the archive, or
-   *   an iteratable object that resolves to such a list.
+   *   an iterable object that resolves to such a list.
    */
   public function listContents();
 }

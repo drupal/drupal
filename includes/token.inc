@@ -1,5 +1,5 @@
 <?php
-// $Id: token.inc,v 1.7 2009/12/05 03:49:17 webchick Exp $
+// $Id: token.inc,v 1.8 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@
  * Replace all tokens in a given string with appropriate values.
  *
  * @param $text
- *   A string potentially containing replacable tokens.
+ *   A string potentially containing replaceable tokens.
  * @param $data
  *   (optional) An array of keyed objects. For simple replacement scenarios
  *   'node', 'user', and others are common keys, with an accompanying node or

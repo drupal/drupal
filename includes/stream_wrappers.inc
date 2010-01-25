@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.8 2009/12/15 05:22:05 webchick Exp $
+// $Id: stream_wrappers.inc,v 1.9 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
  *
  * Note that PHP 5.2 fopen() only supports URIs of the form "scheme://target"
  * despite the fact that according to RFC 3986 a URI's scheme component
- * delimiter is in general just ":", not "://".  Becuase of this PHP limitation
+ * delimiter is in general just ":", not "://".  Because of this PHP limitation
  * and for consistency Drupal will only accept URIs of form "scheme://target".
  *
  * @link http://www.faqs.org/rfcs/rfc3986.html

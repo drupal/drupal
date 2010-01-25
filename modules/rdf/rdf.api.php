@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.api.php,v 1.2 2009/10/20 17:33:43 webchick Exp $
+// $Id: rdf.api.php,v 1.3 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @file
@@ -34,13 +34,13 @@
  *     - datatype: Is used along with 'callback' to format data so that it is
  *       readable by machine. A typical example is a date which can be written
  *       in many different formats but should be translated into a uniform
- *       format for machine comsumption.
+ *       format for machine consumption.
  *     - callback: A function name to invoke for 'datatype'.
  *     - type: A string used to determine the type of RDFa markup which will be
  *       used in the final HTML output, depending on whether the RDF object is a
  *       literal text or another RDF resource.
  *     - rdftype: A special property used to define the type of the instance.
- *       Its value shoud be an array of RDF classes.
+ *       Its value should be an array of RDF classes.
  */
 function hook_rdf_mapping() {
   return array(

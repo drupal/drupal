@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.22 2010/01/09 21:54:01 webchick Exp $
+// $Id: search.api.php,v 1.23 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @file
@@ -74,7 +74,7 @@ function hook_search_reset() {
 }
 
 /**
- * Report the stutus of indexing.
+ * Report the status of indexing.
  *
  * @return
  *  An associative array with the key-value pairs:

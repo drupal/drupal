@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.375 2010/01/14 13:45:33 dries Exp $
+// $Id: menu.inc,v 1.376 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @file
@@ -93,7 +93,7 @@ define('MENU_VISIBLE_IN_TREE', 0x0002);
 define('MENU_VISIBLE_IN_BREADCRUMB', 0x0004);
 
 /**
- * Internal menu flag -- menu item links back to its parnet.
+ * Internal menu flag -- menu item links back to its parent.
  */
 define('MENU_LINKS_TO_PARENT', 0x0008);
 

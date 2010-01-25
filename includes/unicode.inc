@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.40 2009/09/28 22:22:54 dries Exp $
+// $Id: unicode.inc,v 1.41 2010/01/25 10:38:34 dries Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -544,7 +544,7 @@ function drupal_substr($text, $start, $length = NULL) {
           $chars++;
         }
       }
-      // Backtrace one byte if we are not at the begining of the string.
+      // Backtrace one byte if we are not at the beginning of the string.
       if ($iend > 0) {
         $iend--;
       }

@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.test,v 1.6 2009/12/02 19:26:22 dries Exp $
+// $Id: field_ui.test,v 1.7 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @file
@@ -80,7 +80,7 @@ class FieldUITestCase extends DrupalWebTestCase {
    * Test adding a new field.
    *
    * @todo Assert properties can bet set in the form and read back in $field and
-   * $insatnces.
+   * $instances.
    */
   function createField() {
     // Create a test field.

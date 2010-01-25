@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.345 2010/01/15 14:57:10 webchick Exp $
+// $Id: bootstrap.inc,v 1.346 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @file
@@ -1654,7 +1654,7 @@ function _drupal_bootstrap_variables() {
 }
 
 /**
- * Bootstrap page header: Invoke hook_boot(), intialize locking system, and send default HTTP headers.
+ * Bootstrap page header: Invoke hook_boot(), initialize locking system, and send default HTTP headers.
  */
 function _drupal_bootstrap_page_header() {
   bootstrap_invoke_all('boot');

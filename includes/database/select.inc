@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.32 2010/01/22 22:52:38 dries Exp $
+// $Id: select.inc,v 1.33 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @ingroup database
@@ -541,7 +541,7 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $this->condition->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
-  /* Implmeentations of QueryConditionInterface for the HAVING clause. */
+  /* Implementations of QueryConditionInterface for the HAVING clause. */
 
   public function havingCondition($field, $value = NULL, $operator = '=') {
     $this->query->condition($field, $value, $operator, $num_args);
@@ -940,7 +940,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $this->where->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
-  /* Implmeentations of QueryConditionInterface for the HAVING clause. */
+  /* Implementations of QueryConditionInterface for the HAVING clause. */
 
   public function havingCondition($field, $value = NULL, $operator = '=') {
     if (!isset($num_args)) {

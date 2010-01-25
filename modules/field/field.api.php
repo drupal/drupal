@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.61 2010/01/13 04:37:03 webchick Exp $
+// $Id: field.api.php,v 1.62 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -1474,12 +1474,12 @@ function hook_field_create_instance($instance) {
  * @param $has_data
  *   Whether any data already exists for this field.
  * @return
- *   Throws a FieldUpdateForbiddenException to prevent the update from occuring.
+ *   Throws a FieldUpdateForbiddenException to prevent the update from occurring.
  */
 function hook_field_update_field_forbid($field, $prior_field, $has_data) {
   // A 'list' field stores integer keys mapped to display values. If
   // the new field will have fewer values, and any data exists for the
-  // abandonded keys, the field will have no way to display them. So,
+  // abandoned keys, the field will have no way to display them. So,
   // forbid such an update.
   if ($has_data && count($field['settings']['allowed_values']) < count($prior_field['settings']['allowed_values'])) {
     // Identify the keys that will be lost.

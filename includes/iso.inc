@@ -1,5 +1,5 @@
 <?php
-// $Id: iso.inc,v 1.6 2009/10/10 18:21:45 dries Exp $
+// $Id: iso.inc,v 1.7 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
 /**
  * Get an array of all country code => country name pairs.
  *
- * Get an array of all country code => country name pairs as layed out
+ * Get an array of all country code => country name pairs as laid out
  * in ISO 3166-1 alpha-2.
  * Grabbed from location project (http://drupal.org/project/location).
  * @return

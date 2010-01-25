@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.37 2009/12/13 18:10:42 webchick Exp $
+// $Id: query.inc,v 1.38 2010/01/25 10:38:34 dries Exp $
 
 /**
  * @ingroup database
@@ -528,7 +528,7 @@ class InsertQuery extends Query {
       // We have to assume that the used aliases match the insert fields.
       // Regular fields are added to the query before expressions, maintain the
       // same order for the insert fields.
-      // This behavior can be overriden by calling fields() manually as only the
+      // This behavior can be overridden by calling fields() manually as only the
       // first call to fields() does have an effect.
       $this->fields(array_merge(array_keys($this->fromQuery->getFields()), array_keys($this->fromQuery->getExpressions())));
     }
