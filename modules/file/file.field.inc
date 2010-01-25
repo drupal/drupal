@@ -25,7 +25,7 @@ function file_field_info() {
         'max_filesize' => '',
         'description_field' => 0,
       ),
-      'default_widget' => 'file_file',
+      'default_widget' => 'file_generic',
       'default_formatter' => 'file_default',
     ),
   );
