@@ -30,7 +30,7 @@ require_once DRUPAL_ROOT . '/includes/stream_wrappers.inc';
  * - filemime: The file's MIME type.
  * - filesize: The size of the file in bytes.
  * - status: A bitmapped field indicating the status of the file. The first 8
- *   bits are reserved for Drupal core. The least sigifigant bit indicates
+ *   bits are reserved for Drupal core. The least significant bit indicates
  *   temporary (0) or permanent (1). Temporary files older than
  *   DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during cron runs.
  * - timestamp: UNIX timestamp for the date the file was added to the database.
@@ -976,7 +976,7 @@ function file_unmanaged_delete($path) {
     return unlink($path);
   }
   // Return TRUE for non-existent file, but log that nothing was actually
-  // deleted, as the current state is the indended result.
+  // deleted, as the current state is the intended result.
   if (!file_exists($path)) {
     watchdog('file', 'The file %path was not deleted, because it does not exist.', array('%path' => $path), WATCHDOG_NOTICE);
     return TRUE;
@@ -1000,7 +1000,7 @@ function file_unmanaged_delete($path) {
  * Note that this only deletes visible files with write permission.
  *
  * @param $path
- *   A string containing eiher an URI or a file or directory path.
+ *   A string containing either an URI or a file or directory path.
  * @return
  *   TRUE for success or if path does not exist, FALSE in the event of an
  *   error.
@@ -1238,7 +1238,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
  *   indicates that the file passed validation. The functions will be called in
  *   the order specified.
  * @return
- *   An array contaning validation error messages.
+ *   An array containing validation error messages.
  *
  * @see hook_file_validate()
  */
@@ -1362,7 +1362,7 @@ function file_validate_is_image(stdClass $file) {
  * Verify that image dimensions are within the specified maximum and minimum.
  *
  * Non-image files will be ignored. If a image toolkit is available the image
- * will be scalled to fit within the desired maximum dimensions.
+ * will be scaled to fit within the desired maximum dimensions.
  *
  * @param $file
  *   A Drupal file object. This function may resize the file affecting its
@@ -1731,7 +1731,7 @@ function file_get_mimetype($uri, $mapping = NULL) {
  *
  * PHP's chmod does not support stream wrappers so we use our wrapper
  * implementation which interfaces with chmod() by default. Contrib wrappers
- * may override this bahavior in their implementations as needed.
+ * may override this behavior in their implementations as needed.
  *
  * @param $uri
  *   A string containing a URI file, or directory path.
@@ -1895,7 +1895,7 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
  *   The prefix of the generated temporary filename.
  *   Note: Windows uses only the first three characters of prefix.
  * @return
- *   The new temporary fillename, or FALSE on failure.
+ *   The new temporary filename, or FALSE on failure.
  *
  * @see tempnam()
  * @ingroup php_wrappers

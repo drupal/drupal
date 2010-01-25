@@ -100,7 +100,7 @@ function locale_language_from_browser($languages) {
  *   An array of valid language objects.
  *
  * @return
- *   A valid language code on succes, FALSE otherwise.
+ *   A valid language code on success, FALSE otherwise.
  */
 function locale_language_from_user($languages) {
   // User preference (only for logged users).
@@ -121,7 +121,7 @@ function locale_language_from_user($languages) {
  *   An array of valid language objects.
  *
  * @return
- *   A valid language code on succes, FALSE otherwise.
+ *   A valid language code on success, FALSE otherwise.
  */
 function locale_language_from_session($languages) {
   $param = variable_get('locale_language_negotiation_session_param', 'language');
@@ -146,7 +146,7 @@ function locale_language_from_session($languages) {
  *   An array of valid language objects.
  *
  * @return
- *   A valid language code on succes, FALSE otherwise.
+ *   A valid language code on success, FALSE otherwise.
  */
 function locale_language_from_url($languages) {
   $language_url = FALSE;
@@ -303,7 +303,7 @@ function locale_language_url_rewrite_session(&$path, &$options) {
  * This test can be used to detect possibly bad translation strings. It should
  * not have any false positives. But it is only a test, not a transformation,
  * as it destroys valid HTML. We cannot reliably filter translation strings
- * on inport becuase some strings are irreversibly corrupted. For example,
+ * on import because some strings are irreversibly corrupted. For example,
  * a &amp; in the translation would get encoded to &amp;amp; by filter_xss()
  * before being put in the database, and thus would be displayed incorrectly.
  *
@@ -1370,7 +1370,7 @@ function _locale_export_po($language = NULL, $output = NULL) {
     $filename = 'drupal.pot';
     watchdog('locale', 'Exported translation file: %filename.', array('%filename' => $filename));
   }
-  // Download the file fo the client.
+  // Download the file for the client.
   header("Content-Disposition: attachment; filename=$filename");
   header("Content-Type: text/plain; charset=utf-8");
   print $output;

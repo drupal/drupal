@@ -80,7 +80,7 @@ class FieldUITestCase extends DrupalWebTestCase {
    * Test adding a new field.
    *
    * @todo Assert properties can bet set in the form and read back in $field and
-   * $insatnces.
+   * $instances.
    */
   function createField() {
     // Create a test field.

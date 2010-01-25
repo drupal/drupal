@@ -634,12 +634,12 @@ function hook_node_view_alter($build) {
  *   - "body_label": the label for the body field of this content type. Optional
  *      (defaults to 'Body').
  *   - "locked": boolean indicating whether the administrator can change the
- *      machine name of this type. FALSE = changable (not locked),
- *      TRUE = unchangable (locked). Optional (defaults to TRUE).
+ *      machine name of this type. FALSE = changeable (not locked),
+ *      TRUE = unchangeable (locked). Optional (defaults to TRUE).
  *
  * The machine-readable name of a node type should contain only letters,
  * numbers, and underscores. Underscores will be converted into hyphens for the
- * purpose of contructing URLs.
+ * purpose of constructing URLs.
  *
  * All attributes of a node type that are defined through this hook (except for
  * 'locked') can be edited by a site administrator. This includes the
@@ -694,7 +694,7 @@ function hook_node_info() {
  *     not need to take the weighted system into account, as it will be done
  *     automatically. It does, however, need to calculate a decimal between
  *     0 and 1; be careful not to cast the entire score to an integer by
- *     inadvertantly introducing a variable argument. Required.
+ *     inadvertently introducing a variable argument. Required.
  *   - "arguments": if any arguments are required for the score, they can be
  *     specified in an array here.
  */

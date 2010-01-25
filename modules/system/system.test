@@ -483,7 +483,7 @@ class CronRunTestCase extends DrupalWebTestCase {
    * Ensure that temporary files are removed.
    *
    * Create files for all the possible combinations of age and status. We are
-   * using UPDATE statments rather than file_save() because it would set the
+   * using UPDATE statements rather than file_save() because it would set the
    * timestamp.
    */
   function testTempFileCleanup() {
@@ -1020,7 +1020,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
    * Test displaying and hiding the powered-by block.
    */
   function testPoweredByBlock() {
-    // Set block title and some settings to confirm that the interface is availble.
+    // Set block title and some settings to confirm that the interface is available.
     $this->drupalPost('admin/structure/block/manage/system/powered-by/configure', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 

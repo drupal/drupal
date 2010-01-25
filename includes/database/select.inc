@@ -541,7 +541,7 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $this->condition->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
-  /* Implmeentations of QueryConditionInterface for the HAVING clause. */
+  /* Implementations of QueryConditionInterface for the HAVING clause. */
 
   public function havingCondition($field, $value = NULL, $operator = '=') {
     $this->query->condition($field, $value, $operator, $num_args);
@@ -940,7 +940,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $this->where->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
-  /* Implmeentations of QueryConditionInterface for the HAVING clause. */
+  /* Implementations of QueryConditionInterface for the HAVING clause. */
 
   public function havingCondition($field, $value = NULL, $operator = '=') {
     if (!isset($num_args)) {

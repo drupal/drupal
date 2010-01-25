@@ -634,7 +634,7 @@ function drupal_parse_url($url) {
  * Otherwise, unwanted double encoding will occur.
  *
  * Notes:
- * - For esthetic reasons, we do not escape slashes. This also avoids a 'feature'
+ * - For aesthetic reasons, we do not escape slashes. This also avoids a 'feature'
  *   in Apache where it 404s on any path containing '%2F'.
  * - mod_rewrite unescapes %-encoded ampersands, hashes, and slashes when clean
  *   URLs are used, which are interpreted as delimiters by PHP. These
@@ -1112,7 +1112,7 @@ function _drupal_exception_handler($exception) {
 }
 
 /**
- * Decode an exception, especially to retrive the correct caller.
+ * Decode an exception, especially to retrieve the correct caller.
  *
  * @param $exception
  *   The exception object that was thrown.
@@ -1163,7 +1163,7 @@ function _drupal_decode_exception($exception) {
  *   TRUE if the error is fatal.
  */
 function _drupal_log_error($error, $fatal = FALSE) {
-  // Initialize a maintenance theme if the boostrap was not complete.
+  // Initialize a maintenance theme if the bootstrap was not complete.
   // Do it early because drupal_set_message() triggers a drupal_theme_initialize().
   if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
     unset($GLOBALS['theme']);
@@ -1213,7 +1213,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   }
   else {
     // Display the message if the current error reporting level allows this type
-    // of message to be displayed, and unconditionnaly in update.php.
+    // of message to be displayed, and unconditionally in update.php.
     $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
     $display_error = $error_level == ERROR_REPORTING_DISPLAY_ALL || ($error_level == ERROR_REPORTING_DISPLAY_SOME && $error['%type'] != 'Notice');
     if ($display_error || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
@@ -2306,7 +2306,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
     }
   }
   // Store DateTimeZone objects in an array rather than repeatedly
-  // contructing identical objects over the life of a request.
+  // constructing identical objects over the life of a request.
   if (!isset($timezones[$timezone])) {
     $timezones[$timezone] = timezone_open($timezone);
   }
@@ -2484,7 +2484,7 @@ function url($path = NULL, array $options = array()) {
     // Only call the slow filter_xss_bad_protocol if $path contains a ':'
     // before any / ? or #.
     // Note: we could use url_is_external($path) here, but that would
-    // requre another function call, and performance inside url() is critical.
+    // require another function call, and performance inside url() is critical.
     $colonpos = strpos($path, ':');
     $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path));
   }
@@ -3272,7 +3272,7 @@ function drupal_get_css($css = NULL) {
   // Sort css items according to their weights.
   uasort($css, 'drupal_sort_weight');
 
-  // Remove the overriden CSS files. Later CSS files override former ones.
+  // Remove the overridden CSS files. Later CSS files override former ones.
   $previous_item = array();
   foreach ($css as $key => $item) {
     if ($item['type'] == 'file') {
@@ -3485,7 +3485,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     // Perform some safe CSS optimizations.
     $contents = preg_replace('{
       (?<=\\\\\*/)([^/\*]+/\*)([^\*/]+\*/)  # Add a backslash also at the end ie-mac hack comment, so the next pass will not touch it.
-                                            # The added backshlash does not affect the effectiveness of the hack.
+                                            # The added backslash does not affect the effectiveness of the hack.
       }x', '\1\\\\\2', $contents);
     $contents = preg_replace('<
       \s*([@{}:;,]|\)\s|\s\()\s* |          # Remove whitespace around separators, but keep space around parentheses.
@@ -3729,7 +3729,7 @@ function drupal_region_class($region) {
  *       been toggled in admin/config/development/performance. Note that
  *       JavaScript of type 'external' is not aggregated. Defaults to TRUE.
  * @return
- *   The contructed array of JavaScript files.
+ *   The constructed array of JavaScript files.
  * @see drupal_get_js()
  */
 function drupal_add_js($data = NULL, $options = NULL) {
@@ -4073,7 +4073,7 @@ function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_ch
  * @param $elements
  *   The structured array that may contain an array item named states. This
  *   array describes the different JavaScript states that can be applied to the
- *   element when certain contitions are met. The #states array is first keyed
+ *   element when certain conditions are met. The #states array is first keyed
  *   by one of the following states:
  *   - enabled
  *   - invisible
@@ -4995,8 +4995,8 @@ function drupal_render_page($page) {
  *       @see drupal_render_cid_create()
  *    - 'granularity' (optional): Define the cache granularity using binary
  *       combinations of the cache granularity constants, e.g. DRUPAL_CACHE_PER_USER
- *       to cache for each user seperately or
- *       DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE to cache seperately for each
+ *       to cache for each user separately or
+ *       DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE to cache separately for each
  *       page and role. If not specified the element is cached globally for each
  *       theme and language.
  *    - 'cid': Specify the cache ID directly. Either 'keys' or 'cid' is required.
@@ -5313,8 +5313,8 @@ function drupal_render_cache_by_query($query, $function, $expire = CACHE_TEMPORA
  *
  * @param $granularity
  *   One or more cache granularity constants, e.g. DRUPAL_CACHE_PER_USER to cache
- *   for each user seperately or DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE to
- *   cache seperately for each page and role.
+ *   for each user separately or DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE to
+ *   cache separately for each page and role.
  *
  * @return
  *   An array of cache ID parts, always containing the active theme. If the
@@ -6356,7 +6356,7 @@ function drupal_parse_dependency($dependency) {
  *   The version to check against (like 4.2).
  * @return
  *   NULL if compatible, otherwise the original dependency version string that
- *   caused the incompatiblity.
+ *   caused the incompatibility.
  *
  * @see drupal_parse_dependency()
  */

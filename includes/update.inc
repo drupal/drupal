@@ -10,7 +10,7 @@
  */
 
 /**
- * Disable any items in the {system} table that are not core capatible.
+ * Disable any items in the {system} table that are not core compatible.
  */
 function update_fix_compatibility() {
   $incompatible = array();
@@ -289,7 +289,7 @@ function update_fix_d7_requirements() {
     db_add_field('menu_router', 'theme_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
     db_add_field('menu_router', 'theme_arguments', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
 
-    // Add the role_permisson table.
+    // Add the role_permission table.
     $schema['role_permission'] = array(
       'fields' => array(
         'rid' => array(
@@ -607,7 +607,7 @@ function update_fix_d7_install_profile() {
 }
 
 /**
- * Parase pre-Drupal 7 database connection URLs and return D7 compatible array.
+ * Parse pre-Drupal 7 database connection URLs and return D7 compatible array.
  *
  * @return
  *   Drupal 7 DBTNG compatible array of database connection information.

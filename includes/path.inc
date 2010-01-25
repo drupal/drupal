@@ -155,7 +155,7 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
  * Cache system paths for a page.
  *
  * Cache an array of the system paths available on each page. We assume
- * that aiases will be needed for the majority of these paths during
+ * that aliases will be needed for the majority of these paths during
  * subsequent requests, and load them in a single query during
  * drupal_lookup_path().
  */

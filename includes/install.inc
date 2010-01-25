@@ -1073,7 +1073,7 @@ function install_profile_info($profile, $locale = 'en') {
  *
  * This will run tasks that check that Drupal can perform all of the functions
  * on a database, that Drupal needs. Tasks include simple checks like CREATE
- * TABLE to database specfic functions like stored procedures and client
+ * TABLE to database specific functions like stored procedures and client
  * encoding.
  */
 function db_run_tasks($driver) {

@@ -107,7 +107,7 @@ function locale_languages_overview_form_submit($form, &$form_state) {
     if ($form_state['values']['site_default'] == $langcode || $default->language == $langcode) {
       // Automatically enable the default language and the language
       // which was default previously (because we will not get the
-      // value from that disabled checkox).
+      // value from that disabled checkbox).
       $form_state['values']['enabled'][$langcode] = 1;
     }
     if ($form_state['values']['enabled'][$langcode]) {
@@ -535,7 +535,7 @@ function _locale_languages_configure_form_language_table(&$form, $type) {
     $provider = $language_providers[$id];
 
     // List the provider only if the current type is defined in its 'types' key.
-    // If it is not defined default to all the configurabe language types.
+    // If it is not defined default to all the configurable language types.
     $types = array_flip(isset($provider['types']) ? $provider['types'] : $form['#language_types']);
 
     if (isset($types[$type])) {

@@ -966,7 +966,7 @@ function system_menu() {
     'weight' => -10,
   );
 
-  // Addititional categories
+  // Additional categories
   $items['admin/config/user-interface'] = array(
     'title' => 'User interface',
     'description' => 'Tools that enhance the user interface.',
@@ -1978,7 +1978,7 @@ function system_check_directory($form_element) {
   }
 
   if (is_dir($directory) && !is_writable($directory) && !drupal_chmod($directory)) {
-    // If the directory is not writable and cannont be made so.
+    // If the directory is not writable and cannot be made so.
     form_set_error($form_element['#parents'][0], t('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory)));
     watchdog('file system', 'The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory), WATCHDOG_ERROR);
   }
@@ -2061,7 +2061,7 @@ function system_update_files_database(&$files, $type) {
           ->execute();
       }
 
-      // Indiciate that the file exists already.
+      // Indicate that the file exists already.
       $files[$file->name]->exists = TRUE;
     }
     else {
@@ -3052,7 +3052,7 @@ function system_image_toolkits() {
  * @param $destination
  *   Where the file should be saved, if a directory is provided, file is saved
  *   in that directory with its original name.  If a filename is provided,
- *   remote fileis stored to that location.  NOTE: Relative to drupal "files" directory"
+ *   remote file is stored to that location.  NOTE: Relative to drupal "files" directory"
  *
  * @param $overwrite boolean
  *   Defaults to TRUE, will overwrite existing files of the same name.

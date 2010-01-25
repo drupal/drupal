@@ -905,7 +905,7 @@ function hook_image_toolkits() {
  * invoke hook_mail_alter(). For example, a contributed module directly
  * calling the drupal_mail_system()->mail() or PHP mail() function
  * will not invoke this hook. All core modules use drupal_mail() for
- * messaging, it is best practice but not manditory in contributed modules.
+ * messaging, it is best practice but not mandatory in contributed modules.
  *
  * @param $message
  *   An array containing the message data. Keys in this array include:
@@ -1257,7 +1257,7 @@ function hook_xmlrpc_alter(&$methods) {
  *   - request_uri: The Request URI for the page the event happened in.
  *   - referer: The page that referred the use to the page where the event occurred.
  *   - ip: The IP address where the request for the page came from.
- *   - timestamp: The UNIX timetamp of the date/time the event occurred
+ *   - timestamp: The UNIX timestamp of the date/time the event occurred
  *   - severity: One of the following values as defined in RFC 3164 http://www.faqs.org/rfcs/rfc3164.html
  *     WATCHDOG_EMERG     Emergency: system is unusable
  *     WATCHDOG_ALERT     Alert: action must be taken immediately

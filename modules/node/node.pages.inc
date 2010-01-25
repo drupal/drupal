@@ -112,7 +112,7 @@ function node_object_prepare($node) {
  */
 function node_form($form, &$form_state, $node) {
   global $user;
-  // This form has its own multistep persistance.
+  // This form has its own multistep persistence.
   if ($form_state['rebuild']) {
     $form_state['input'] = array();
   }

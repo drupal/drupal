@@ -473,7 +473,7 @@ function ajax_process_form($element, &$form_state) {
  * defined in misc/ajax.js.
  *
  * @param $text
- *   The message string to dipslay to the user.
+ *   The message string to display to the user.
  *
  * @return
  *   An array suitable for use with the ajax_render() function.
@@ -831,7 +831,7 @@ function ajax_command_data($selector, $name, $value) {
  * Creates a Drupal AJAX 'restripe' command.
  *
  * The 'restripe' command instructs the client to restripe a table. This is
- * usually used after a table has been modifed by a replace or append command.
+ * usually used after a table has been modified by a replace or append command.
  *
  * This command is implemented by Drupal.ajax.prototype.commands.restripe()
  * defined in misc/ajax.js.

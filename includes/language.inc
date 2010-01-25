@@ -34,7 +34,7 @@ function language_types_info() {
  * Return only the configurable language types.
  *
  * A language type maybe configurable or fixed. A fixed language type is a type
- * whose negotiation values are unchangable and defined while defining the
+ * whose negotiation values are unchangeable and defined while defining the
  * language type itself.
  *
  * @return
@@ -264,7 +264,7 @@ function language_provider_invoke($provider_id, $provider = NULL) {
       require_once DRUPAL_ROOT . '/' . $provider['file'];
     }
 
-    // If the language provider has no cache preference or this is satisified
+    // If the language provider has no cache preference or this is satisfied
     // we can execute the callback.
     $cache = !isset($provider['cache']) || $user->uid || $provider['cache'] == variable_get('cache', CACHE_DISABLED);
     $callback = isset($provider['callbacks']['language']) ? $provider['callbacks']['language'] : FALSE;

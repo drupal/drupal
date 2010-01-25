@@ -1982,7 +1982,7 @@ function theme_more_link($variables) {
  * Preprocess variables for theme_username().
  *
  * Modules that make any changes to variables like 'name' or 'extra' must insure
- * that the final string is safe to include directly in the ouput by using
+ * that the final string is safe to include directly in the output by using
  * check_plain() or filter_xss().
  *
  * @see theme_username().
@@ -2003,7 +2003,7 @@ function template_preprocess_username(&$variables) {
 
   // Set the name to a formatted name that is safe for printing and
   // that won't break tables by being too long. Keep an unshortened,
-  // unsanitized version, in case other preproces functions want to implement
+  // unsanitized version, in case other preprocess functions want to implement
   // their own shortening logic or add markup. If they do so, they must ensure
   // that $variables['name'] is safe for printing.
   $name = $variables['name_raw'] = format_username($account);
@@ -2167,7 +2167,7 @@ function _theme_table_cell($cell, $header = FALSE) {
 /**
  * Adds a default set of helper variables for variable processors and templates.
  * This comes in before any other preprocess function which makes it possible to
- * be used in default theme implementations (non-overriden theme functions).
+ * be used in default theme implementations (non-overridden theme functions).
  */
 function template_preprocess(&$variables, $hook) {
   global $user;

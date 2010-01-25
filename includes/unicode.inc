@@ -544,7 +544,7 @@ function drupal_substr($text, $start, $length = NULL) {
           $chars++;
         }
       }
-      // Backtrace one byte if we are not at the begining of the string.
+      // Backtrace one byte if we are not at the beginning of the string.
       if ($iend > 0) {
         $iend--;
       }

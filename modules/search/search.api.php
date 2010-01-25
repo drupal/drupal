@@ -74,7 +74,7 @@ function hook_search_reset() {
 }
 
 /**
- * Report the stutus of indexing.
+ * Report the status of indexing.
  *
  * @return
  *  An associative array with the key-value pairs:

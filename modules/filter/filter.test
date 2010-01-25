@@ -596,8 +596,8 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   /**
    * Test limiting allowed tags, XSS prevention and adding 'nofollow' to links.
    *
-   * XSS tests assume that script is dissallowed on default and src is allowed
-   * on default, but on* and style are dissallowed.
+   * XSS tests assume that script is disallowed on default and src is allowed
+   * on default, but on* and style are disallowed.
    *
    * Script injection vectors mostly adopted from http://ha.ckers.org/xss.html.
    *

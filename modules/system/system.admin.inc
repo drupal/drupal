@@ -1669,7 +1669,7 @@ function system_performance_settings() {
     '#description' => t('External resources  can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
 
-  // Do not allow Drupal to gzip pages if the server alredy does that.
+  // Do not allow Drupal to gzip pages if the server already does that.
   if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === FALSE) {
     $js_hide = $cache == CACHE_DISABLED ? ' class="js-hide"' : '';
     $form['bandwidth_optimization']['page_compression'] = array(

@@ -1654,7 +1654,7 @@ function _drupal_bootstrap_variables() {
 }
 
 /**
- * Bootstrap page header: Invoke hook_boot(), intialize locking system, and send default HTTP headers.
+ * Bootstrap page header: Invoke hook_boot(), initialize locking system, and send default HTTP headers.
  */
 function _drupal_bootstrap_page_header() {
   bootstrap_invoke_all('boot');

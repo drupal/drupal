@@ -14,7 +14,7 @@
  *
  * An Updater currently serves the following purposes:
  *   - It can take a given directory, and determine if it can operate on it.
- *   - It can move the contents of that directoy into the appropriate place
+ *   - It can move the contents of that directory into the appropriate place
  *     on the system using FileTransfer classes.
  *   - It can return a list of "next steps" after an update or install.
  *   - In the future, it will most likely perform some of those steps as well.

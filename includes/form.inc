@@ -776,7 +776,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
  *   form validation functions are passed an explicit copy of the
  *   values for the sake of simplicity. Validation handlers can also
  *   $form_state to pass information on to submit handlers. For example:
- *     $form_state['data_for_submision'] = $data;
+ *     $form_state['data_for_submission'] = $data;
  *   This technique is useful when validation requires file parsing,
  *   web service requests, or other expensive requests that should
  *   not be repeated in the submission step.
@@ -881,7 +881,7 @@ function drupal_redirect_form($form_state) {
  *   form validation functions are passed an explicit copy of the
  *   values for the sake of simplicity. Validation handlers can also
  *   $form_state to pass information on to submit handlers. For example:
- *     $form_state['data_for_submision'] = $data;
+ *     $form_state['data_for_submission'] = $data;
  *   This technique is useful when validation requires file parsing,
  *   web service requests, or other expensive requests that should
  *   not be repeated in the submission step.
@@ -3413,7 +3413,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
 
     // The batch is now completely built. Allow other modules to make changes
     // to the batch so that it is easier to reuse batch processes in other
-    // enviroments.
+    // environments.
     drupal_alter('batch', $batch);
 
     // Assign an arbitrary id: don't rely on a serial column in the 'batch'

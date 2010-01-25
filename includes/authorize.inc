@@ -59,7 +59,7 @@ function authorize_filetransfer_form($form_state) {
    * Here we create two submit buttons. For a JS enabled client, they will
    * only ever see submit_process. However, if a client doesn't have JS
    * enabled, they will see submit_connection on the first form (when picking
-   * what filetranfer type to use, and submit_process on the second one (which
+   * what filetransfer type to use, and submit_process on the second one (which
    * leads to the actual operation).
    */
   $form['submit_connection'] = array(

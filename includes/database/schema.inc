@@ -84,7 +84,7 @@
  *    of the local table, each value is an array with a single key pair as
  *    'tablename' => 'column' where 'column' is the foreign column to
  *    reference.
- *  - 'indexes':  An associative array of indexes ('indexame' =>
+ *  - 'indexes':  An associative array of indexes ('indexname' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form an index on the
  *    table.
@@ -216,7 +216,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
     $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
-    // concatination for conditionals like this however, we
+    // concatenation for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
     // Don't use {} around information_schema.tables table.
@@ -236,7 +236,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     $condition = $this->buildTableNameCondition($table_expression, 'LIKE');
     $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
-    // concatination for conditionals like this however, we
+    // concatenation for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
     // Don't use {} around information_schema.tables table.
@@ -251,7 +251,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     $condition->condition('column_name', $column);
     $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
-    // concatination for conditionals like this however, we
+    // concatenation for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
     // Don't use {} around information_schema.columns table.

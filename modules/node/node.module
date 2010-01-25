@@ -1287,7 +1287,7 @@ function node_language_negotiation_info() {
  *   An array of valid language objects.
  *
  * @return
- *   A valid language code on succes, FALSE otherwise.
+ *   A valid language code on success, FALSE otherwise.
  */
 function node_language_provider($languages) {
   require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
@@ -3047,7 +3047,7 @@ function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE)
  * This can be used as an alternative to direct node_access_rebuild calls,
  * allowing administrators to decide when they want to perform the actual
  * (possibly time consuming) rebuild.
- * When unsure the current user is an adminisrator, node_access_rebuild
+ * When unsure the current user is an administrator, node_access_rebuild
  * should be used instead.
  *
  * @param $rebuild

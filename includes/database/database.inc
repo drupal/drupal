@@ -836,7 +836,7 @@ abstract class DatabaseConnection extends PDO {
    * Escape characters that work as wildcard characters in a LIKE pattern.
    *
    * The wildcard characters "%" and "_" as well as backslash are prefixed with
-   * a backslash. Use this to do a seach for a verbatim string without any
+   * a backslash. Use this to do a search for a verbatim string without any
    * wildcard behavior.
    *
    * For example, the following does a case-insensitive query for all rows whose
@@ -1259,7 +1259,7 @@ abstract class Database {
    * A logging function callback array.
    *
    * The function must accept the same function signature as Drupal's
-   * watchdog(). The array containst key/value pairs for callback (string),
+   * watchdog(). The array contains key/value pairs for callback (string),
    * default_severity (int), and error_severity (int).
    *
    * @var string
@@ -1561,7 +1561,7 @@ abstract class Database {
    *   The database connection key. Defaults to NULL which means the active key.
    */
   public static function closeConnection($target = NULL, $key = NULL) {
-    // Gets the active conection by default.
+    // Gets the active connection by default.
     if (!isset($key)) {
       $key = self::$activeKey;
     }
@@ -2338,7 +2338,7 @@ function db_escape_table($table) {
  * Escape characters that work as wildcard characters in a LIKE pattern.
  *
  * The wildcard characters "%" and "_" as well as backslash are prefixed with
- * a backslash. Use this to do a seach for a verbatim string without any
+ * a backslash. Use this to do a search for a verbatim string without any
  * wildcard behavior.
  *
  * For example, the following does a case-insensitive query for all rows whose

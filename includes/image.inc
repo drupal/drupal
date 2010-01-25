@@ -15,7 +15,7 @@
  * allows site administrators to choose the library that's best for them.
  *
  * PHP includes the GD library by default so a GD toolkit is installed with
- * Drupal. Other toolkits like ImageMagic are available from contrib modules.
+ * Drupal. Other toolkits like ImageMagick are available from contrib modules.
  * GD works well for small images, but using it with larger files may cause PHP
  * to run out of memory. In contrast the ImageMagick library does not suffer
  * from this problem, but it requires the ISP to have installed additional
@@ -187,7 +187,7 @@ function image_scale_and_crop(stdClass $image, $width, $height) {
  *   The target height, in pixels. This value is omitted then the scaling will
  *   based only on the width value.
  * @param $upscale
- *   Boolean indicating that files smaller than the dimensions will be scalled
+ *   Boolean indicating that files smaller than the dimensions will be scaled
  *   up. This generally results in a low quality image.
  * @return
  *   TRUE or FALSE, based on success.
@@ -332,7 +332,7 @@ function image_desaturate(stdClass $image) {
  *    - 'info' - The array of information returned by image_get_info()
  *    - 'toolkit' - The name of the image toolkit requested when the image was
  *      loaded.
- *   Image tookits may add additional properties. The caller is advised not to
+ *   Image toolkits may add additional properties. The caller is advised not to
  *   monkey about with them.
  *
  * @see image_save()

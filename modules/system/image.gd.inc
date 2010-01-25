@@ -144,7 +144,7 @@ function image_gd_rotate(stdClass $image, $degrees, $background = NULL) {
     }
   }
 
-  // Images are assigned a new color pallete when rotating, removing any
+  // Images are assigned a new color palette when rotating, removing any
   // transparency flags. For GIF images, keep a record of the transparent color.
   if ($image->info['extension'] == 'gif') {
     $transparent_index = imagecolortransparent($image->resource);

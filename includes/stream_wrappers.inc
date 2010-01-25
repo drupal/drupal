@@ -13,7 +13,7 @@
  *
  * Note that PHP 5.2 fopen() only supports URIs of the form "scheme://target"
  * despite the fact that according to RFC 3986 a URI's scheme component
- * delimiter is in general just ":", not "://".  Becuase of this PHP limitation
+ * delimiter is in general just ":", not "://".  Because of this PHP limitation
  * and for consistency Drupal will only accept URIs of form "scheme://target".
  *
  * @link http://www.faqs.org/rfcs/rfc3986.html

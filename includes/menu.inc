@@ -93,7 +93,7 @@ define('MENU_VISIBLE_IN_TREE', 0x0002);
 define('MENU_VISIBLE_IN_BREADCRUMB', 0x0004);
 
 /**
- * Internal menu flag -- menu item links back to its parnet.
+ * Internal menu flag -- menu item links back to its parent.
  */
 define('MENU_LINKS_TO_PARENT', 0x0008);
 
