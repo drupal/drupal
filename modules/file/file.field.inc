@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.16 2010/01/20 17:25:54 dries Exp $
+// $Id: file.field.inc,v 1.17 2010/01/25 10:35:48 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function file_field_info() {
         'max_filesize' => '',
         'description_field' => 0,
       ),
-      'default_widget' => 'file_file',
+      'default_widget' => 'file_generic',
       'default_formatter' => 'file_default',
     ),
   );
