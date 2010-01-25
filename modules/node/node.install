@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.41 2010/01/24 15:12:19 dries Exp $
+// $Id: node.install,v 1.42 2010/01/25 21:32:44 dries Exp $
 
 /**
  * @file
@@ -437,6 +437,7 @@ function node_update_7005() {
  * Convert body and teaser from node properties to fields, and migrate status/comment/promote and sticky columns to the {node_revision} table.
  */
 function node_update_7006(&$context) {
+  // @todo Remove when http://drupal.org/node/211182 is fixed.
   taxonomy_update_7002();
 
   $context['#finished'] = 0;

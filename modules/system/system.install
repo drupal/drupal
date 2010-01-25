@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.442 2010/01/13 06:15:39 webchick Exp $
+// $Id: system.install,v 1.443 2010/01/25 21:32:44 dries Exp $
 
 /**
  * @file
@@ -2242,10 +2242,6 @@ function system_update_7026() {
  */
 function system_update_7027() {
   $module_list = array('text', 'number', 'list', 'options');
-  db_delete('system')
-    ->condition('type', 'module')
-    ->condition('name', $module_list)
-    ->execute();
   module_enable($module_list, FALSE);
 }
 
