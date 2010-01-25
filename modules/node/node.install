@@ -437,6 +437,7 @@ function node_update_7005() {
  * Convert body and teaser from node properties to fields, and migrate status/comment/promote and sticky columns to the {node_revision} table.
  */
 function node_update_7006(&$context) {
+  // @todo Remove when http://drupal.org/node/211182 is fixed.
   taxonomy_update_7002();
 
   $context['#finished'] = 0;

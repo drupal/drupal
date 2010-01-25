@@ -247,6 +247,9 @@ function comment_update_7011() {
  * Create the comment_body field.
  */
 function comment_update_7012() {
+  // @todo Remove when http://drupal.org/node/211182 is fixed.
+  taxonomy_update_7002();
+
   // Create comment body field.
   $field = array(
     'field_name' => 'comment_body',
@@ -307,6 +310,13 @@ function comment_update_7013(&$sandbox) {
 
     db_insert($comment_body_table)
       ->from($query)
+      ->execute();
+    // Update the comment body format in a similar manner as is done for other
+    // modules in filter_update_7005(), but we do this one here since we are
+    // already migrating the data.
+    db_update($comment_body_table)
+      ->fields(array('comment_body_format' => variable_get('filter_default_format', 1)))
+      ->condition('comment_body_format', 0)
       ->execute();
 
     $sandbox['#finished'] = 1 - count($sandbox['types']) / $sandbox['total'];

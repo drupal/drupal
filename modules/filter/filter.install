@@ -335,8 +335,9 @@ function filter_update_7005() {
   // using the default text format. Therefore, we have to convert all such
   // instances (in Drupal core) to explicitly use the appropriate format.
   // Note that the update of the node body field is handled separately, in
-  // node_update_7006().
-  foreach (array('block_custom', 'comment') as $table) {
+  // node_update_7006(), as is the update of the comment body field, in
+  // comment_update_7013().
+  foreach (array('block_custom') as $table) {
     if (db_table_exists($table)) {
       db_update($table)
         ->fields(array('format' => $default_format))

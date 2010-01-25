@@ -2242,10 +2242,6 @@ function system_update_7026() {
  */
 function system_update_7027() {
   $module_list = array('text', 'number', 'list', 'options');
-  db_delete('system')
-    ->condition('type', 'module')
-    ->condition('name', $module_list)
-    ->execute();
   module_enable($module_list, FALSE);
 }
 
