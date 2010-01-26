@@ -1458,6 +1458,7 @@ function system_stream_wrappers() {
       'name' => t('Temporary files'),
       'class' => 'DrupalTemporaryStreamWrapper',
       'description' => t('Temporary local files for upload and previews.'),
+      'type' => STREAM_WRAPPERS_HIDDEN,
     )
   );
 }

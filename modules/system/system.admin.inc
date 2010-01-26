@@ -1743,11 +1743,11 @@ function system_file_system_settings() {
     '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
   );
-  $wrappers = file_get_stream_wrappers();
-  $options = array(
-    'public' => $wrappers['public']['description'],
-    'private' => $wrappers['private']['description']
-  );
+  // Any visible, writeable wrapper can potentially be used for the files
+  // directory, including a remote file system that integrates with a CDN.
+  foreach(file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $info) {
+    $options[$scheme] = $info['description'];
+  }
   $form['file_default_scheme'] = array(
     '#type' => 'radios',
     '#title' => t('Default download method'),

@@ -86,10 +86,8 @@ function file_field_settings_form($field, $instance, $has_data) {
   );
 
   $scheme_options = array();
-  foreach (file_get_stream_wrappers() as $scheme => $stream_wrapper) {
-    if ($scheme != 'temporary') {
-      $scheme_options[$scheme] = $stream_wrapper['name'];
-    }
+  foreach (file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $stream_wrapper) {
+    $scheme_options[$scheme] = $stream_wrapper['name'];
   }
   $form['uri_scheme'] = array(
     '#type' => 'radios',

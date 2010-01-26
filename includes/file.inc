@@ -90,16 +90,24 @@ define('FILE_STATUS_PERMANENT', 1);
  *
  * A stream is referenced as "scheme://target".
  *
+ * @param $filter
+ *  Optionally filter out all types except these.  Defaults to
+ *  STREAM_WRAPPERS_ALL, which returns all registered stream wrappers.
+ *
  * @return
  *   Returns the entire Drupal stream wrapper registry.
  * @see hook_stream_wrappers()
  * @see hook_stream_wrappers_alter()
  */
-function file_get_stream_wrappers() {
-  $wrappers = &drupal_static(__FUNCTION__);
+function file_get_stream_wrappers($filter = STREAM_WRAPPERS_ALL) {
+  $wrappers_storage = &drupal_static(__FUNCTION__);
 
-  if (!isset($wrappers)) {
+  if (!isset($wrappers_storage)) {
     $wrappers = module_invoke_all('stream_wrappers');
+    foreach ($wrappers as $scheme => $info) {
+      // Add defaults.
+      $wrappers[$scheme] += array('type' => STREAM_WRAPPERS_NORMAL);
+    }
     drupal_alter('stream_wrappers', $wrappers);
     $existing = stream_get_wrappers();
     foreach ($wrappers as $scheme => $info) {
@@ -115,9 +123,25 @@ function file_get_stream_wrappers() {
         }
         stream_wrapper_register($scheme, $info['class']);
       }
+      // Pre-populate the static cache with the filters most typically used.
+      $wrappers_storage[STREAM_WRAPPERS_ALL][$scheme] = $wrappers[$scheme];
+      if (($info['type'] & STREAM_WRAPPERS_WRITE_VISIBLE) == STREAM_WRAPPERS_WRITE_VISIBLE) {
+        $wrappers_storage[STREAM_WRAPPERS_WRITE_VISIBLE][$scheme] = $wrappers[$scheme];
+      }
     }
   }
-  return $wrappers;
+
+  if (!isset($wrappers_storage[$filter])) {
+    $wrappers_storage[$filter] = array();
+    foreach ($wrappers_storage[STREAM_WRAPPERS_ALL] as $scheme => $info) {
+      // Bit-wise filter.
+      if ($info['type'] & $filter == $filter) {
+        $wrappers_storage[$filter][$scheme] = $info;
+      }
+    }
+  }
+
+  return $wrappers_storage[$filter];
 }
 
 /**
