@@ -118,8 +118,10 @@ function statistics_top_visitors() {
     ->limit(30)
     ->orderByHeader($header);
 
-  $count_query = db_select('accesslog');
-  $count_query->addExpression('COUNT(DISTINCT CONCAT(CAST(uid AS char), hostname))');
+  $uniques_query = db_select('accesslog')->distinct();
+  $uniques_query->fields('accesslog', array('uid', 'hostname'));
+  $count_query = db_select($uniques_query);
+  $count_query->addExpression('COUNT(*)');
   $query->setCountQuery($count_query);
 
   $result = $query->execute();
