@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.17 2010/01/25 10:35:48 dries Exp $
+// $Id: file.field.inc,v 1.18 2010/01/26 08:29:25 dries Exp $
 
 /**
  * @file
@@ -86,10 +86,8 @@ function file_field_settings_form($field, $instance, $has_data) {
   );
 
   $scheme_options = array();
-  foreach (file_get_stream_wrappers() as $scheme => $stream_wrapper) {
-    if ($scheme != 'temporary') {
-      $scheme_options[$scheme] = $stream_wrapper['name'];
-    }
+  foreach (file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $stream_wrapper) {
+    $scheme_options[$scheme] = $stream_wrapper['name'];
   }
   $form['uri_scheme'] = array(
     '#type' => 'radios',

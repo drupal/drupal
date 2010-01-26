@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.10 2010/01/13 06:26:49 webchick Exp $
+// $Id: image.field.inc,v 1.11 2010/01/26 08:29:25 dries Exp $
 
 /**
  * @file
@@ -72,10 +72,8 @@ function image_field_settings_form($field, $instance) {
   $settings = array_merge($defaults, $field['settings']);
 
   $scheme_options = array();
-  foreach (file_get_stream_wrappers() as $scheme => $stream_wrapper) {
-    if ($scheme != 'temporary') {
-      $scheme_options[$scheme] = $stream_wrapper['name'];
-    }
+  foreach (file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $stream_wrapper) {
+    $scheme_options[$scheme] = $stream_wrapper['name'];
   }
   $form['uri_scheme'] = array(
     '#type' => 'radios',
