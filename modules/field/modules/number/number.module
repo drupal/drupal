@@ -211,7 +211,7 @@ function number_field_presave($obj_type, $object, $field, $instance, $langcode, 
 }
 
 /**
- * Implements hook_content_is_empty().
+ * Implements hook_field_is_empty().
  */
 function number_field_is_empty($item, $field) {
   if (empty($item['value']) && (string)$item['value'] !== '0') {
