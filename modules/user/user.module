@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1112 2010/01/14 19:21:55 dries Exp $
+// $Id: user.module,v 1.1113 2010/01/27 11:24:32 dries Exp $
 
 /**
  * @file
@@ -1977,9 +1977,9 @@ function user_login_finalize(&$edit = array()) {
 function user_login_submit($form, &$form_state) {
   global $user;
   $user = user_load($form_state['uid']);
-  user_login_finalize();
-
   $form_state['redirect'] = 'user/' . $user->uid;
+
+  user_login_finalize($form_state);
 }
 
 /**
