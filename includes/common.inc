@@ -2842,8 +2842,7 @@ function drupal_deliver_page($page_callback_result, $default_delivery_callback =
 }
 
 /**
- * Package and send the result of a page callback to the browser as a normal
- * HTML page.
+ * Package and send the result of a page callback to the browser as HTML.
  *
  * @param $page_callback_result
  *   The result of a page callback. Can be one of:
@@ -2852,7 +2851,7 @@ function drupal_deliver_page($page_callback_result, $default_delivery_callback =
  *   - A string of HTML content.
  *   - A renderable array of content.
  *
- * @see drupal_deliver_page
+ * @see drupal_deliver_page()
  */
 function drupal_deliver_html_page($page_callback_result) {
   // Emit the correct charset HTTP header, but not if the page callback
