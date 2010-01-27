@@ -73,6 +73,9 @@ function dblog_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_init().
+ */
 function dblog_init() {
   if (arg(0) == 'admin' && arg(1) == 'reports') {
     // Add the CSS for this module
