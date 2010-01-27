@@ -1977,9 +1977,9 @@ function user_login_finalize(&$edit = array()) {
 function user_login_submit($form, &$form_state) {
   global $user;
   $user = user_load($form_state['uid']);
-  user_login_finalize();
-
   $form_state['redirect'] = 'user/' . $user->uid;
+
+  user_login_finalize($form_state);
 }
 
 /**
