@@ -84,7 +84,6 @@ function comment_admin_overview_validate($form, &$form_state) {
   $form_state['values']['comments'] = array_diff($form_state['values']['comments'], array(0));
   if (count($form_state['values']['comments']) == 0) {
     form_set_error('', t('Please select one or more comments to perform the update on.'));
-    drupal_goto('admin/content/comment');
   }
 }
 
@@ -96,7 +95,7 @@ function comment_admin_overview_validate($form, &$form_state) {
  */
 function comment_admin_overview_submit($form, &$form_state) {
   $operations = comment_operations();
-  if ($operations[$form_state['values']['operation']][1]) {
+  if (!empty($operations[$form_state['values']['operation']][1])) {
     // extract the appropriate database query operation
     $query = $operations[$form_state['values']['operation']][1];
     foreach ($form_state['values']['comments'] as $cid => $value) {

@@ -1072,20 +1072,20 @@ function comment_operations($action = NULL) {
   if ($action == 'publish') {
     $operations = array(
       'publish' => array(t('Publish the selected comments'), 'UPDATE {comments} SET status = '. COMMENT_PUBLISHED .' WHERE cid = %d'),
-      'delete' => array(t('Delete the selected comments'), '')
+      'delete' => array(t('Delete the selected comments'), ''),
     );
   }
   else if ($action == 'unpublish') {
     $operations = array(
       'unpublish' => array(t('Unpublish the selected comments'), 'UPDATE {comments} SET status = '. COMMENT_NOT_PUBLISHED .' WHERE cid = %d'),
-      'delete' => array(t('Delete the selected comments'), '')
+      'delete' => array(t('Delete the selected comments'), ''),
     );
   }
   else {
     $operations = array(
       'publish' => array(t('Publish the selected comments'), 'UPDATE {comments} SET status = '. COMMENT_PUBLISHED .' WHERE cid = %d'),
       'unpublish' => array(t('Unpublish the selected comments'), 'UPDATE {comments} SET status = '. COMMENT_NOT_PUBLISHED .' WHERE cid = %d'),
-      'delete' => array(t('Delete the selected comments'), '')
+      'delete' => array(t('Delete the selected comments'), ''),
     );
   }
   return $operations;
