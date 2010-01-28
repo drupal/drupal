@@ -10,12 +10,12 @@
  * mechanism for auto-loading core APIs, so we have to load them on
  * every page request.
  */
-module_load_include('inc', 'field', 'field.crud');
-module_load_include('inc', 'field', 'field.default');
-module_load_include('inc', 'field', 'field.info');
-module_load_include('inc', 'field', 'field.multilingual');
-module_load_include('inc', 'field', 'field.attach');
-module_load_include('inc', 'field', 'field.form');
+require_once DRUPAL_ROOT . '/modules/field/field.crud.inc';
+require_once DRUPAL_ROOT . '/modules/field/field.default.inc';
+require_once DRUPAL_ROOT . '/modules/field/field.info.inc';
+require_once DRUPAL_ROOT . '/modules/field/field.multilingual.inc';
+require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
+require_once DRUPAL_ROOT . '/modules/field/field.form.inc';
 
 /**
  * @defgroup field Field API

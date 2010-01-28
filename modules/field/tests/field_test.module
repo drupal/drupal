@@ -14,9 +14,9 @@
  * test helper functions
  */
 
-module_load_include('inc', 'field_test', 'field_test.entity');
-module_load_include('inc', 'field_test', 'field_test.field');
-module_load_include('inc', 'field_test', 'field_test.storage');
+require_once DRUPAL_ROOT . '/modules/field/tests/field_test.entity.inc';
+require_once DRUPAL_ROOT . '/modules/field/tests/field_test.field.inc';
+require_once DRUPAL_ROOT . '/modules/field/tests/field_test.storage.inc';
 
 /**
  * Implements hook_permission().
