@@ -1,10 +1,13 @@
 <?php
-// $Id: file.module,v 1.17 2010/01/11 16:26:40 webchick Exp $
+// $Id: file.module,v 1.18 2010/01/28 13:56:25 webchick Exp $
 
 /**
  * @file
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
+
+// Load all Field module hooks for File.
+require_once DRUPAL_ROOT . '/modules/file/file.field.inc';
 
 /**
  * Implements hook_help().
@@ -27,9 +30,6 @@ function file_help($path, $arg) {
       return $output;
   }
 }
-
-// Load all Field module hooks for File.
-module_load_include('inc', 'file', 'file.field');
 
 /**
  * Implements hook_menu().

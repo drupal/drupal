@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.3 2009/12/04 16:49:46 dries Exp $
+// $Id: field_test.module,v 1.4 2010/01/28 13:56:24 webchick Exp $
 
 /**
  * @file
@@ -14,9 +14,9 @@
  * test helper functions
  */
 
-module_load_include('inc', 'field_test', 'field_test.entity');
-module_load_include('inc', 'field_test', 'field_test.field');
-module_load_include('inc', 'field_test', 'field_test.storage');
+require_once DRUPAL_ROOT . '/modules/field/tests/field_test.entity.inc';
+require_once DRUPAL_ROOT . '/modules/field/tests/field_test.field.inc';
+require_once DRUPAL_ROOT . '/modules/field/tests/field_test.storage.inc';
 
 /**
  * Implements hook_permission().

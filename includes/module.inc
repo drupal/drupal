@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.179 2010/01/13 05:08:29 webchick Exp $
+// $Id: module.inc,v 1.180 2010/01/28 13:56:24 webchick Exp $
 
 /**
  * @file
@@ -245,7 +245,9 @@ function module_load_install($module) {
  *   module_load_include('inc', 'node', 'content_types');
  * @endcode
  *
- * Do not use this function to load an install file. Use module_load_install()
+ * Do not use this function to load an install file, use module_load_install()
+ * instead. Do not use this function in a global context since it requires
+ * Drupal to be fully bootstrapped, use require_once DRUPAL_ROOT . '/path/file'
  * instead.
  *
  * @param $type
