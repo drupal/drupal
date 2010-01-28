@@ -147,7 +147,7 @@ function poll_update_7001() {
 }
 
 /**
- * Add timestamp field to {poll_votes}.
+ * Add timestamp field to {poll_vote}.
  */
 function poll_update_7002() {
   $field = array(
@@ -155,5 +155,5 @@ function poll_update_7002() {
     'not null' => TRUE,
     'default' => 0,
   );
-  db_add_field('poll_votes', 'timestamp', $field);
+  db_add_field('poll_vote', 'timestamp', $field);
 }
