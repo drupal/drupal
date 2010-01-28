@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.243 2010/01/25 10:38:34 dries Exp $
+// $Id: locale.inc,v 1.244 2010/01/28 07:06:57 webchick Exp $
 
 /**
  * @file
@@ -1374,7 +1374,7 @@ function _locale_export_po($language = NULL, $output = NULL) {
   header("Content-Disposition: attachment; filename=$filename");
   header("Content-Type: text/plain; charset=utf-8");
   print $output;
-  die();
+  exit();
 }
 
 /**
