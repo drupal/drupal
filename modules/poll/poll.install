@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.install,v 1.28 2009/12/04 16:49:47 dries Exp $
+// $Id: poll.install,v 1.29 2010/01/28 13:52:30 webchick Exp $
 
 /**
  * @file
@@ -147,7 +147,7 @@ function poll_update_7001() {
 }
 
 /**
- * Add timestamp field to {poll_votes}.
+ * Add timestamp field to {poll_vote}.
  */
 function poll_update_7002() {
   $field = array(
@@ -155,5 +155,5 @@ function poll_update_7002() {
     'not null' => TRUE,
     'default' => 0,
   );
-  db_add_field('poll_votes', 'timestamp', $field);
+  db_add_field('poll_vote', 'timestamp', $field);
 }
