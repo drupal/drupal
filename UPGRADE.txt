@@ -47,8 +47,7 @@ Let's begin!
     option is at http://www.example.com/?q=admin/config/development/maintenance
     (replace www.example.com with your installation's domain name and path).
 
-4.  If using a custom or contributed theme, switch to a core theme (either
-    Garland or Stark).
+4.  If using a custom or contributed theme, switch to Garland.
 
 5.  Disable all custom and contributed modules.
 
