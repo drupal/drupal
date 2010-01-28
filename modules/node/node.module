@@ -2399,9 +2399,6 @@ function node_page_default() {
     if (_node_add_access()) {
       $default_links[] = l(t('Add new content'), 'node/add');
     }
-    if (user_access('administer site configuration')) {
-      $default_links[] = l(t('Change the default front page'), 'admin/config/system/site-information');
-    }
     if (!empty($default_links)) {
       $default_message .= theme('item_list', array('items' => $default_links));
     }
