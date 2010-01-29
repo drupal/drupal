@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.3 2010/01/21 04:20:08 dries Exp $
+// $Id: path.test,v 1.4 2010/01/29 22:40:41 dries Exp $
 
 /**
  * @file
@@ -198,6 +198,15 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
     $tid++;
     $this->assertUrlInboundAlter("taxonomy/term/$tid", "taxonomy/term/$tid");
     $this->assertUrlOutboundAlter("taxonomy/term/$tid", "taxonomy/term/$tid");
+  }
+
+  /**
+   * Test current_path() and request_path().
+   */
+  function testCurrentUrlRequestedPath() {
+    $this->drupalGet('url-alter-test/bar');
+    $this->assertRaw('request_path=url-alter-test/bar', t('request_path() returns the requested path.'));
+    $this->assertRaw('current_path=url-alter-test/foo', t('current_path() returns the internal path.'));
   }
 
   /**

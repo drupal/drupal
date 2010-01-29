@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.56 2010/01/25 10:38:34 dries Exp $
+// $Id: path.inc,v 1.57 2010/01/29 22:40:41 dries Exp $
 
 /**
  * @file
@@ -384,6 +384,8 @@ function drupal_match_path($path, $patterns) {
  *
  * @return
  *   The current Drupal URL path.
+ *
+ * @see request_path()
  */
 function current_path() {
   return $_GET['q'];

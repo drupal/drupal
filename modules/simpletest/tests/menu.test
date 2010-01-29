@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.26 2009/12/14 20:23:01 dries Exp $
+// $Id: menu.test,v 1.27 2010/01/29 22:40:41 dries Exp $
 
 /**
  * @file
@@ -49,6 +49,17 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme/inheritance');
     $this->assertText('Requested theme: seven. Actual theme: seven. Theme callback inheritance is being tested.', t('Theme callback inheritance correctly uses the administrative theme.'));
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
+  }
+
+  /**
+   * Test path containing "exotic" characters.
+   */
+  function testExoticPath() {
+    $path = "menu-test/ -._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
+      "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
+      "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
+    $this->drupalGet($path);
+    $this->assertRaw('This is menu_test_callback().');
   }
 
   /**

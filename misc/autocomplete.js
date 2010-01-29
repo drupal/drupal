@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.34 2009/09/05 12:03:31 webchick Exp $
+// $Id: autocomplete.js,v 1.35 2010/01/29 22:40:41 dries Exp $
 (function ($) {
 
 /**
@@ -276,7 +276,7 @@ Drupal.ACDB.prototype.search = function (searchString) {
     // Ajax GET request for autocompletion.
     $.ajax({
       type: 'GET',
-      url: db.uri + '/' + Drupal.encodePath(searchString),
+      url: db.uri + '/' + encodeURIComponent(searchString),
       dataType: 'json',
       success: function (matches) {
         if (typeof matches.status == 'undefined' || matches.status != 0) {

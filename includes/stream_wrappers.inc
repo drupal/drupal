@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.10 2010/01/26 08:29:25 dries Exp $
+// $Id: stream_wrappers.inc,v 1.11 2010/01/29 22:40:41 dries Exp $
 
 /**
  * @file
@@ -639,7 +639,7 @@ class DrupalPublicStreamWrapper extends DrupalLocalStreamWrapper {
    */
   function getExternalUrl() {
     $path = str_replace('\\', '/', file_uri_target($this->uri));
-    return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . $path;
+    return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . drupal_encode_path($path);
   }
 }
 

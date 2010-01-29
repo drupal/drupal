@@ -1,5 +1,5 @@
 <?php
-// $Id: menu_test.module,v 1.11 2009/12/14 20:23:01 dries Exp $
+// $Id: menu_test.module,v 1.12 2010/01/29 22:40:41 dries Exp $
 
 /**
  * @file
@@ -56,6 +56,15 @@ function menu_test_menu() {
     'title' => 'Page that tests theme callback inheritance.',
     'page callback' => 'menu_test_theme_page_callback',
     'page arguments' => array(TRUE),
+    'access arguments' => array('access content'),
+  );
+  // Path containing "exotic" characters.
+  $path = "menu-test/ -._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
+    "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
+    "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
+  $items[$path] = array(
+    'title' => '"Exotic" path',
+    'page callback' => 'menu_test_callback',
     'access arguments' => array('access content'),
   );
 
@@ -174,7 +183,7 @@ function menu_test_menu() {
  *  A random string.
  */
 function menu_test_callback() {
-  return $this->randomName();
+  return 'This is menu_test_callback().';
 }
 
 /**
