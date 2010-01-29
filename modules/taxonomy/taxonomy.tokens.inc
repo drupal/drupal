@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.tokens.inc,v 1.5 2009/12/04 16:49:47 dries Exp $
+// $Id: taxonomy.tokens.inc,v 1.6 2010/01/29 22:56:54 dries Exp $
 
 /**
  * @file
@@ -119,12 +119,14 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'url':
-          $replacements[$original] = url('taxonomy/term/' . $term, array('absolute' => TRUE));
+          $replacements[$original] = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
           break;
 
         case 'node-count':
-          $sql = "SELECT COUNT (1) FROM {taxonomy_term_node} tn WHERE tn.tid = :tid";
-          $count = db_query($sql, array(':tid' => $term->tid))->fetchField();
+          $query = db_select('taxonomy_index');
+          $query->condition('tid', $term->tid);
+          $query->addTag('term_node_count');
+          $count = $query->countQuery()->execute()->fetchField();
           $replacements[$original] = $count;
           break;
 
@@ -171,14 +173,20 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'term-count':
-          $sql = "SELECT COUNT (1) FROM {taxonomy_term_data} td WHERE td.vid = :vid";
-          $count = db_query($sql, array(':vid' => $vocabulary->vid))->fetchField();
+          $query = db_select('taxonomy_term_data');
+          $query->condition('vid', $vocabulary->vid);
+          $query->addTag('vocabulary_term_count');
+          $count = $query->countQuery()->execute()->fetchField();
           $replacements[$original] = $count;
           break;
 
         case 'node-count':
-          $sql = "SELECT COUNT (1) FROM {taxonomy_term_node} tn LEFT JOIN {taxonomy_term_data} td ON tn.tid = td.tid WHERE td.vid = :vid";
-          $count = db_query($sql, array(':vid' => $vocabulary->vid))->fetchField();
+          $query = db_select('taxonomy_index', 'ti');
+          $query->addExpression('COUNT(DISTINCT ti.nid)');
+          $query->leftJoin('taxonomy_term_data', 'td', 'ti.tid = td.tid');
+          $query->condition('td.vid', $vocabulary->vid);
+          $query->addTag('vocabulary_node_count');
+          $count = $query->execute()->fetchField();
           $replacements[$original] = $count;
           break;
       }
