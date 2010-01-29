@@ -1,5 +1,5 @@
 <?php
-// $Id: file_test.module,v 1.19 2009/12/04 16:49:47 dries Exp $
+// $Id: file_test.module,v 1.20 2010/01/29 01:59:32 webchick Exp $
 
 /**
  * @file
@@ -132,7 +132,7 @@ function file_test_reset() {
  * @param $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
  *   'references', 'insert', 'update', 'copy', 'move', 'delete'.
- * @returns
+ * @return
  *   Array of the parameters passed to each call.
  * @see _file_test_log_call() and file_test_reset()
  */

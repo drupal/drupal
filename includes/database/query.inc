@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.38 2010/01/25 10:38:34 dries Exp $
+// $Id: query.inc,v 1.39 2010/01/29 01:59:32 webchick Exp $
 
 /**
  * @ingroup database
@@ -98,7 +98,7 @@ interface QueryConditionInterface {
   /**
    * Gets a complete list of all values to insert into the prepared statement.
    *
-   * @returns
+   * @return
    *   An associative array of placeholders and values.
    */
   public function arguments();

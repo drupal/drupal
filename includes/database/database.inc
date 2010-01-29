@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.93 2010/01/25 10:38:34 dries Exp $
+// $Id: database.inc,v 1.94 2010/01/29 01:59:32 webchick Exp $
 
 /**
  * @file
@@ -2299,7 +2299,7 @@ function db_transaction($required = FALSE, Array $options = array()) {
  *
  * @param $key
  *   The key in the $databases array to set as the default database.
- * @returns
+ * @return
  *   The key of the formerly active database.
  */
 function db_set_active($key = 'default') {
