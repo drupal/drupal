@@ -2503,19 +2503,6 @@ function node_form_search_form_alter(&$form, $form_state) {
       '#maxlength' => 255,
     );
 
-    // Taxonomy box:
-    if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
-      $form['advanced']['term'] = array(
-        '#type' => 'select',
-        '#title' => t('Only in the term(s)'),
-        '#prefix' => '<div class="criterion">',
-        '#size' => 10,
-        '#suffix' => '</div>',
-        '#options' => $taxonomy,
-        '#multiple' => TRUE,
-      );
-    }
-
     // Node types:
     $types = array_map('check_plain', node_type_get_names());
     $form['advanced']['type'] = array(
