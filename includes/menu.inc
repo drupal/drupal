@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.376 2010/01/25 10:38:34 dries Exp $
+// $Id: menu.inc,v 1.377 2010/01/29 12:26:10 dries Exp $
 
 /**
  * @file
@@ -1754,7 +1754,7 @@ function menu_local_tasks($level = 0) {
       $next_parent = '';
       $count = 0;
       foreach ($children[$parent] as $item) {
-        if ($item['type'] == MENU_LOCAL_ACTION) {
+        if ($item['type'] & MENU_IS_LOCAL_ACTION) {
           continue;
         }
         if ($item['access']) {
