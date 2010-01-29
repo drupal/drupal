@@ -33,6 +33,7 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
   function createTerm($vocabulary) {
     $term = new stdClass();
     $term->name = $this->randomName();
+    $term->description = $this->randomName();
     $term->vid = $vocabulary->vid;
     taxonomy_term_save($term);
     return $term;
@@ -832,5 +833,114 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $entity->content = field_attach_view($entity_type, $entity);
     $this->content = drupal_render($entity->content);
     $this->assertText($term->name, t('Term name is displayed'));
+  }
+}
+
+/**
+ * Test taxonomy token replacement in strings.
+ */
+class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Taxonomy token replacement',
+      'description' => 'Generates text using placeholders for dummy content to check taxonomy token replacement.',
+      'group' => 'Taxonomy',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
+    $this->drupalLogin($this->admin_user);
+    $this->vocabulary = $this->createVocabulary();
+    $this->langcode = LANGUAGE_NONE;
+
+    $this->instance = array(
+      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'bundle' => 'article',
+      'object_type' => 'node',
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+      'display' => array(
+        'full' => array(
+          'type' => 'taxonomy_term_reference_link',
+        ),
+      ),
+    );
+    field_create_instance($this->instance);
+  }
+
+  /**
+   * Creates some terms and a node, then tests the tokens generated from them.
+   */
+  function testTaxonomyTokenReplacement() {
+    // Create two taxonomy terms.
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary);
+
+    // Edit $term2, setting $term1 as parent.
+    $edit = array();
+    $edit['parent[]'] = array($term1->tid);
+    $this->drupalPost('taxonomy/term/' . $term2->tid . '/edit', $edit, t('Save'));
+
+    // Create node with term2.
+    $edit = array();
+    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $edit[$this->instance['field_name'] . '[' . $this->langcode . '][]'] = $term2->tid;
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+
+    // Generate term token strings (before and after replacement) for term2.
+    $source  = '[term:tid]';
+    $source .= '[term:vid]';
+    $source .= '[term:name]';
+    $source .= '[term:description]';
+    $source .= '[term:url]';
+    $source .= '[term:node-count]';
+    $source .= '[term:parent:name]';
+    $source .= '[term:vocabulary:name]';
+
+    $target  = $term2->tid;
+    $target .= $term2->vid;
+    $target .= check_plain($term2->name);
+    $target .= check_markup($term2->description, $term2->format);
+    $target .= url('taxonomy/term/' . $term2->tid, array('absolute' => TRUE));
+    $target .= 1;
+    $target .= check_plain($term1->name);
+    $target .= check_plain($this->vocabulary->name);
+
+    $result = token_replace($source, array('term' => $term2));
+    $this->assertEqual(strcmp($target, $result), 0, t('Taxonomy term placeholder tokens replaced.'));
+
+    // Generate vocabulary token strings (before and after replacement).
+    $source = '[vocabulary:vid]';
+    $source .= '[vocabulary:name]';
+    $source .= '[vocabulary:description]';
+    $source .= '[vocabulary:node-count]';
+    $source .= '[vocabulary:term-count]';
+
+    $target = $this->vocabulary->vid;
+    $target .= check_plain($this->vocabulary->name);
+    $target .= filter_xss($this->vocabulary->description);
+    $target .= 1;
+    $target .= 2;
+
+    $result = token_replace($source, array('vocabulary' => $this->vocabulary));
+    $this->assertEqual(strcmp($target, $result), 0, t('Taxonomy vocabulary placeholder tokens replaced.'));
+
+    // Check that the results of token_generate are sanitized properly. This
+    // does NOT test the cleanliness of every token -- just that the $sanitize
+    // flag is being passed properly through the call stack and being handled
+    // correctly by a 'known' token, [term:name].
+    $edit = array();
+    $edit['name'] = '<blink>Blinking Text</blink>';
+    $this->drupalPost('taxonomy/term/' . $term2->tid . '/edit', $edit, t('Save'));
+
+    $raw_tokens = array('name' => '[term:name]');
+    $generated = token_generate('term', $raw_tokens, array('term' => $term2));
+    $this->assertEqual(strcmp($generated['[term:name]'], check_plain($term2->name)), 0, t('Token sanitized.'));
+
+    $generated = token_generate('term', $raw_tokens, array('term' => $term2), array('sanitize' => FALSE));
+    $this->assertEqual(strcmp($generated['[term:name]'], $term2->name), 0, t('Unsanitized token generated properly.'));
   }
 }
