@@ -1754,7 +1754,7 @@ function menu_local_tasks($level = 0) {
       $next_parent = '';
       $count = 0;
       foreach ($children[$parent] as $item) {
-        if ($item['type'] == MENU_LOCAL_ACTION) {
+        if ($item['type'] & MENU_IS_LOCAL_ACTION) {
           continue;
         }
         if ($item['access']) {
