@@ -492,6 +492,13 @@ function drupal_environment_initialize() {
     $_SERVER['HTTP_HOST'] = '';
   }
 
+  // When clean URLs are enabled, emulate ?q=foo/bar using REQUEST_URI. It is
+  // not possible to append the query string using mod_rewrite without the B
+  // flag (this was added in Apache 2.2.8), because mod_rewrite unescapes the
+  // path before passing it on to PHP. This is a problem when the path contains
+  // e.g. "&" or "%" that have special meanings in URLs and must be encoded.
+  $_GET['q'] = request_path();
+
   // Enforce E_ALL, but allow users to set levels not part of E_ALL.
   error_reporting(E_ALL | error_reporting());
 
@@ -559,8 +566,8 @@ function drupal_settings_initialize() {
 
     // $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
     // be modified by a visitor.
-    if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
-      $base_path = "/$dir";
+    if ($dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/')) {
+      $base_path = $dir;
       $base_url .= $base_path;
       $base_path .= '/';
     }
@@ -1856,6 +1863,50 @@ function language_list($field = 'language') {
 function language_default($property = NULL) {
   $language = variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => ''));
   return $property ? $language->$property : $language;
+}
+
+/**
+ * Returns the requested URL path of the page being viewed.
+ *
+ * Examples:
+ * - http://example.com/node/306 returns "node/306".
+ * - http://example.com/drupalfolder/node/306 returns "node/306" while
+ *   base_path() returns "/drupalfolder/".
+ * - http://example.com/path/alias (which is a path alias for node/306) returns
+ *   "path/alias" as opposed to the internal path.
+ *
+ * @return
+ *   The requested Drupal URL path.
+ *
+ * @see current_path()
+ */
+function request_path() {
+  static $path;
+
+  if (isset($path)) {
+    return $path;
+  }
+
+  if (isset($_GET['q'])) {
+    // This is a request with a ?q=foo/bar query string. $_GET['q'] is
+    // overwritten in drupal_path_initialize(), but request_path() is called
+    // very early in the bootstrap process, so the original value is saved in
+    // $path and returned in later calls.
+    $path = $_GET['q'];
+  }
+  elseif (isset($_SERVER['REQUEST_URI'])) {
+    // This is a request using a clean URL. Extract the path from REQUEST_URI.
+    $request_path = strtok($_SERVER['REQUEST_URI'], '?');
+    $base_path_len = strlen(rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/'));
+    // Unescape and strip $base_path prefix, leaving q without a leading slash.
+    $path = substr(urldecode($request_path), $base_path_len + 1);
+  }
+  else {
+    // This is the front page.
+    $path = '';
+  }
+
+  return $path;
 }
 
 /**

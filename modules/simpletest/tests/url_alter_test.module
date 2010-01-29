@@ -7,6 +7,27 @@
  */
 
 /**
+ * Implements hook_menu().
+ */
+function url_alter_test_menu() {
+  $items['url-alter-test/foo'] = array(
+    'title' => 'Foo',
+    'page callback' => 'url_alter_test_foo',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Menu callback.
+ */
+function url_alter_test_foo() {
+  print 'current_path=' . current_path() . ' request_path=' . request_path();
+  exit;
+}
+
+/**
  * Implements hook_url_inbound_alter().
  */
 function url_alter_test_url_inbound_alter(&$path, $original_path, $path_language) {
@@ -21,6 +42,10 @@ function url_alter_test_url_inbound_alter(&$path, $original_path, $path_language
   // Rewrite community/ to forum/.
   if ($path == 'community' || strpos($path, 'community/') === 0) {
     $path = 'forum' . substr($path, 9);
+  }
+
+  if ($path == 'url-alter-test/bar') {
+    $path = 'url-alter-test/foo';
   }
 }
 

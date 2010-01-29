@@ -282,14 +282,13 @@ Drupal.unfreezeHeight = function () {
 };
 
 /**
- * Wrapper around encodeURIComponent() which avoids Apache quirks (equivalent of
- * drupal_encode_path() in PHP). This function should only be used on paths, not
- * on query string arguments.
+ * Encodes a Drupal path for use in a URL.
+ *
+ * For aesthetic reasons slashes are not escaped.
  */
 Drupal.encodePath = function (item, uri) {
   uri = uri || location.href;
-  item = encodeURIComponent(item).replace(/%2F/g, '/');
-  return (uri.indexOf('?q=') != -1) ? item : item.replace(/%26/g, '%2526').replace(/%23/g, '%2523').replace(/\/\//g, '/%252F');
+  return encodeURIComponent(item).replace(/%2F/g, '/');
 };
 
 /**

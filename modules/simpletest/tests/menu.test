@@ -52,6 +52,17 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test path containing "exotic" characters.
+   */
+  function testExoticPath() {
+    $path = "menu-test/ -._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
+      "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
+      "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
+    $this->drupalGet($path);
+    $this->assertRaw('This is menu_test_callback().');
+  }
+
+  /**
    * Test the theme callback when the site is in maintenance mode.
    */
   function testThemeCallbackMaintenanceMode() {

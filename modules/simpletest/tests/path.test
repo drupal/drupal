@@ -201,6 +201,15 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
+   * Test current_path() and request_path().
+   */
+  function testCurrentUrlRequestedPath() {
+    $this->drupalGet('url-alter-test/bar');
+    $this->assertRaw('request_path=url-alter-test/bar', t('request_path() returns the requested path.'));
+    $this->assertRaw('current_path=url-alter-test/foo', t('current_path() returns the internal path.'));
+  }
+
+  /**
    * Assert that an outbound path is altered to an expected value.
    *
    * @param $original

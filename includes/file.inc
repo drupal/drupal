@@ -901,6 +901,10 @@ function file_unmunge_filename($filename) {
  *   of $basename.
  */
 function file_create_filename($basename, $directory) {
+  // Strip control characters (ASCII value < 32). Though these are allowed in
+  // some filesystems, not many applications handle them well.
+  $basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
+
   // A URI or path may already have a trailing slash or look like "public://".
   if (substr($directory, -1) == '/') {
     $separator = '';

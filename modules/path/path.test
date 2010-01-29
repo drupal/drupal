@@ -66,11 +66,13 @@ class PathTestCase extends DrupalWebTestCase {
     $this->assertText($node1->title, 'Alias works.');
     $this->assertResponse(200);
 
-    // Change alias.
+    // Change alias to one containing "exotic" characters.
     $pid = $this->getPID($edit['alias']);
 
     $previous = $edit['alias'];
-    $edit['alias'] = $this->randomName(8);
+    $edit['alias'] = "- ._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
+      "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
+      "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
     $this->drupalPost('admin/config/search/path/edit/' . $pid, $edit, t('Save'));
 
     // Confirm that the alias works.
@@ -122,9 +124,11 @@ class PathTestCase extends DrupalWebTestCase {
     $this->assertText($node1->title, 'Alias works.');
     $this->assertResponse(200);
 
-    // Change alias.
+    // Change alias to one containing "exotic" characters.
     $previous = $edit['path[alias]'];
-    $edit['path[alias]'] = $this->randomName(8);
+    $edit['path[alias]'] = "- ._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
+      "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
+      "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
     $this->drupalPost('node/' . $node1->nid . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.

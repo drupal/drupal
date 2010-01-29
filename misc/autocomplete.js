@@ -276,7 +276,7 @@ Drupal.ACDB.prototype.search = function (searchString) {
     // Ajax GET request for autocompletion.
     $.ajax({
       type: 'GET',
-      url: db.uri + '/' + Drupal.encodePath(searchString),
+      url: db.uri + '/' + encodeURIComponent(searchString),
       dataType: 'json',
       success: function (matches) {
         if (typeof matches.status == 'undefined' || matches.status != 0) {

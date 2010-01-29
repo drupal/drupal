@@ -639,7 +639,7 @@ class DrupalPublicStreamWrapper extends DrupalLocalStreamWrapper {
    */
   function getExternalUrl() {
     $path = str_replace('\\', '/', file_uri_target($this->uri));
-    return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . $path;
+    return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . drupal_encode_path($path);
   }
 }
 

@@ -384,6 +384,8 @@ function drupal_match_path($path, $patterns) {
  *
  * @return
  *   The current Drupal URL path.
+ *
+ * @see request_path()
  */
 function current_path() {
   return $_GET['q'];

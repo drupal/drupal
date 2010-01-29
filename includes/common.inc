@@ -501,7 +501,6 @@ function drupal_http_build_query(array $query, $parent = '') {
     }
     else {
       // For better readability of paths in query strings, we decode slashes.
-      // @see drupal_encode_path()
       $params[] = $key . '=' . str_replace('%2F', '/', rawurlencode($value));
     }
   }
@@ -623,38 +622,18 @@ function drupal_parse_url($url) {
 }
 
 /**
- * Encode a path for usage in a URL.
+ * Encodes a Drupal path for use in a URL.
  *
- * Wrapper around rawurlencode() which avoids Apache quirks. Should be used when
- * placing arbitrary data into the path component of an URL.
+ * For aesthetic reasons slashes are not escaped.
  *
- * Do not use this function to pass a path to url(). url() properly handles
- * and encodes paths internally.
- * This function should only be used on paths, not on query string arguments.
- * Otherwise, unwanted double encoding will occur.
- *
- * Notes:
- * - For aesthetic reasons, we do not escape slashes. This also avoids a 'feature'
- *   in Apache where it 404s on any path containing '%2F'.
- * - mod_rewrite unescapes %-encoded ampersands, hashes, and slashes when clean
- *   URLs are used, which are interpreted as delimiters by PHP. These
- *   characters are double escaped so PHP will still see the encoded version.
- * - With clean URLs, Apache changes '//' to '/', so every second slash is
- *   double escaped.
+ * Note that url() takes care of calling this function, so a path passed to that
+ * function should not be encoded in advance.
  *
  * @param $path
- *   The URL path component to encode.
+ *   The Drupal path to encode.
  */
 function drupal_encode_path($path) {
-  if (!empty($GLOBALS['conf']['clean_url'])) {
-    return str_replace(array('%2F', '%26', '%23', '//'),
-                       array('/', '%2526', '%2523', '/%252F'),
-                       rawurlencode($path)
-    );
-  }
-  else {
-    return str_replace('%2F', '/', rawurlencode($path));
-  }
+  return str_replace('%2F', '/', rawurlencode($path));
 }
 
 /**

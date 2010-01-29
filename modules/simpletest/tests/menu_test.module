@@ -58,6 +58,15 @@ function menu_test_menu() {
     'page arguments' => array(TRUE),
     'access arguments' => array('access content'),
   );
+  // Path containing "exotic" characters.
+  $path = "menu-test/ -._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
+    "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
+    "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
+  $items[$path] = array(
+    'title' => '"Exotic" path',
+    'page callback' => 'menu_test_callback',
+    'access arguments' => array('access content'),
+  );
 
   // Hidden tests; base parents.
   // Same structure as in Menu and Block modules. Since those structures can
@@ -174,7 +183,7 @@ function menu_test_menu() {
  *  A random string.
  */
 function menu_test_callback() {
-  return $this->randomName();
+  return 'This is menu_test_callback().';
 }
 
 /**
