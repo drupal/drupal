@@ -98,7 +98,7 @@ interface QueryConditionInterface {
   /**
    * Gets a complete list of all values to insert into the prepared statement.
    *
-   * @returns
+   * @return
    *   An associative array of placeholders and values.
    */
   public function arguments();

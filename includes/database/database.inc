@@ -2299,7 +2299,7 @@ function db_transaction($required = FALSE, Array $options = array()) {
  *
  * @param $key
  *   The key in the $databases array to set as the default database.
- * @returns
+ * @return
  *   The key of the formerly active database.
  */
 function db_set_active($key = 'default') {

@@ -132,7 +132,7 @@ function file_test_reset() {
  * @param $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
  *   'references', 'insert', 'update', 'copy', 'move', 'delete'.
- * @returns
+ * @return
  *   Array of the parameters passed to each call.
  * @see _file_test_log_call() and file_test_reset()
  */

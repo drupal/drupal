@@ -665,7 +665,7 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
  *     loading all fields, for each object. Note that returned objects
  *     may contain data for other fields, for example if they are read
  *     from a cache.
- * @returns
+ * @return
  *   On return, the objects in $objects are modified by having the
  *   appropriate set of fields added.
  */
