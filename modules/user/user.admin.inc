@@ -423,7 +423,7 @@ function user_admin_settings() {
   );
   // These email tokens are shared for all settings, so just define
   // the list once to help ensure they stay in sync.
-  $email_token_help = t('Available variables are:') . ' [site:name], [site:url], [user:name], [user:mail], [site:login-url], [user:edit-url], [user:password], [user:one-time-login-url], [user:cancel-url].';
+  $email_token_help = t('You can use the following tokens in your e-mail message text: !site-name-token, !site-url-token, !user-name-token, !user-mail-token, !site-login-url-token, !user-edit-url-token, !user-one-time-login-url-token, !user-cancel-url-token', array('!site-name-token' => '[site:name]', '!site-url-token' => '[site:url]', '!user-name-token' => '[user:name]', '!user-mail-token' => '[user:mail]', '!site-login-url-token' => '[site:login-url]', '!user-edit-url-token' => '[user:edit-url]', '!user-one-time-login-url-token' => '[user:one-time-login-url]', '!user-cancel-url-token' => '[user:cancel-url]'));
 
   $form['email_admin_created'] = array(
     '#type' => 'fieldset',
@@ -436,13 +436,13 @@ function user_admin_settings() {
   $form['email_admin_created']['user_mail_register_admin_created_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => _user_mail_text('register_admin_created_subject'),
+    '#default_value' => _user_mail_text('register_admin_created_subject', NULL, array(), FALSE),
     '#maxlength' => 180,
   );
   $form['email_admin_created']['user_mail_register_admin_created_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
-    '#default_value' => _user_mail_text('register_admin_created_body'),
+    '#default_value' => _user_mail_text('register_admin_created_body', NULL, array(), FALSE),
     '#rows' => 15,
   );
 
@@ -457,13 +457,13 @@ function user_admin_settings() {
   $form['email_pending_approval']['user_mail_register_pending_approval_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => _user_mail_text('register_pending_approval_subject'),
+    '#default_value' => _user_mail_text('register_pending_approval_subject', NULL, array(), FALSE),
     '#maxlength' => 180,
   );
   $form['email_pending_approval']['user_mail_register_pending_approval_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
-    '#default_value' => _user_mail_text('register_pending_approval_body'),
+    '#default_value' => _user_mail_text('register_pending_approval_body', NULL, array(), FALSE),
     '#rows' => 8,
   );
 
@@ -478,13 +478,13 @@ function user_admin_settings() {
   $form['email_no_approval_required']['user_mail_register_no_approval_required_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => _user_mail_text('register_no_approval_required_subject'),
+    '#default_value' => _user_mail_text('register_no_approval_required_subject', NULL, array(), FALSE),
     '#maxlength' => 180,
   );
   $form['email_no_approval_required']['user_mail_register_no_approval_required_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
-    '#default_value' => _user_mail_text('register_no_approval_required_body'),
+    '#default_value' => _user_mail_text('register_no_approval_required_body', NULL, array(), FALSE),
     '#rows' => 15,
   );
 
@@ -500,13 +500,13 @@ function user_admin_settings() {
   $form['email_password_reset']['user_mail_password_reset_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => _user_mail_text('password_reset_subject'),
+    '#default_value' => _user_mail_text('password_reset_subject', NULL, array(), FALSE),
     '#maxlength' => 180,
   );
   $form['email_password_reset']['user_mail_password_reset_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
-    '#default_value' => _user_mail_text('password_reset_body'),
+    '#default_value' => _user_mail_text('password_reset_body', NULL, array(), FALSE),
     '#rows' => 12,
   );
 
@@ -535,13 +535,13 @@ function user_admin_settings() {
   $form['email_activated']['settings']['user_mail_status_activated_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => _user_mail_text('status_activated_subject'),
+    '#default_value' => _user_mail_text('status_activated_subject', NULL, array(), FALSE),
     '#maxlength' => 180,
   );
   $form['email_activated']['settings']['user_mail_status_activated_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
-    '#default_value' => _user_mail_text('status_activated_body'),
+    '#default_value' => _user_mail_text('status_activated_body', NULL, array(), FALSE),
     '#rows' => 15,
   );
 
@@ -570,13 +570,13 @@ function user_admin_settings() {
   $form['email_blocked']['settings']['user_mail_status_blocked_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => _user_mail_text('status_blocked_subject'),
+    '#default_value' => _user_mail_text('status_blocked_subject', NULL, array(), FALSE),
     '#maxlength' => 180,
   );
   $form['email_blocked']['settings']['user_mail_status_blocked_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
-    '#default_value' => _user_mail_text('status_blocked_body'),
+    '#default_value' => _user_mail_text('status_blocked_body', NULL, array(), FALSE),
     '#rows' => 3,
   );
 
@@ -591,13 +591,13 @@ function user_admin_settings() {
   $form['email_cancel_confirm']['user_mail_cancel_confirm_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => _user_mail_text('cancel_confirm_subject'),
+    '#default_value' => _user_mail_text('cancel_confirm_subject', NULL, array(), FALSE),
     '#maxlength' => 180,
   );
   $form['email_cancel_confirm']['user_mail_cancel_confirm_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
-    '#default_value' => _user_mail_text('cancel_confirm_body'),
+    '#default_value' => _user_mail_text('cancel_confirm_body', NULL, array(), FALSE),
     '#rows' => 3,
   );
 
@@ -626,13 +626,13 @@ function user_admin_settings() {
   $form['email_canceled']['settings']['user_mail_status_canceled_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => _user_mail_text('status_canceled_subject'),
+    '#default_value' => _user_mail_text('status_canceled_subject', NULL, array(), FALSE),
     '#maxlength' => 180,
   );
   $form['email_canceled']['settings']['user_mail_status_canceled_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
-    '#default_value' => _user_mail_text('status_canceled_body'),
+    '#default_value' => _user_mail_text('status_canceled_body', NULL, array(), FALSE),
     '#rows' => 3,
   );
 

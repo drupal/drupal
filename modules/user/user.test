@@ -25,7 +25,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPost('user/register', $edit, t('Create new account'));
-    $this->assertText(t('Your password and further instructions have been sent to your e-mail address.'), t('User registered successfully.'));
+    $this->assertText(t('A welcome message with further instructions has been sent to your e-mail address.'), t('User registered successfully.'));
     $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
     $this->assertTrue($new_user->status, t('New account is active after registration.'));
@@ -1350,7 +1350,7 @@ class UserCreateTestCase extends DrupalWebTestCase {
       $this->drupalPost('admin/people/create', $edit, t('Create new account'));
 
       if ($notify) {
-        $this->assertText(t('Password and further instructions have been e-mailed to the new user @name.', array('@name' => $edit['name'])), 'User created');
+        $this->assertText(t('A welcome message with further instructions has been e-mailed to the new user @name.', array('@name' => $edit['name'])), 'User created');
         $this->assertEqual(count($this->drupalGetMails()), 1, 'Notification e-mail sent');
       }
       else {
