@@ -71,7 +71,7 @@ function toolbar_menu() {
 function toolbar_toggle_page() {
   global $base_path;
   // Toggle the value in the cookie.
-  setcookie('Drupal.admin.toolbar.collapsed', !_toolbar_is_collapsed(), NULL, $base_path);
+  setcookie('Drupal.toolbar.collapsed', !_toolbar_is_collapsed(), NULL, $base_path);
   // Redirect the user from where he used the toggle element.
   drupal_goto();
 }
@@ -177,7 +177,7 @@ function toolbar_view() {
         $module_path . '/toolbar.js',
         array('data' => 'misc/jquery.cookie.js', 'weight' => JS_LIBRARY + 2),
         array(
-          'data' => array('tableHeaderOffset' => 'Drupal.admin.toolbar.height'),
+          'data' => array('tableHeaderOffset' => 'Drupal.toolbar.height'),
           'type' => 'setting'
         ),
       ),
