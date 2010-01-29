@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1221 2010/01/28 07:10:59 webchick Exp $
+// $Id: node.module,v 1.1222 2010/01/29 12:14:43 dries Exp $
 
 /**
  * @file
@@ -2502,19 +2502,6 @@ function node_form_search_form_alter(&$form, $form_state) {
       '#size' => 30,
       '#maxlength' => 255,
     );
-
-    // Taxonomy box:
-    if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
-      $form['advanced']['term'] = array(
-        '#type' => 'select',
-        '#title' => t('Only in the term(s)'),
-        '#prefix' => '<div class="criterion">',
-        '#size' => 10,
-        '#suffix' => '</div>',
-        '#options' => $taxonomy,
-        '#multiple' => TRUE,
-      );
-    }
 
     // Node types:
     $types = array_map('check_plain', node_type_get_names());

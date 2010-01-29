@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.88 2010/01/13 23:30:43 dries Exp $
+// $Id: node.admin.inc,v 1.89 2010/01/29 12:14:43 dries Exp $
 
 /**
  * @file
@@ -97,15 +97,6 @@ function node_filters() {
     ) + node_type_get_names(),
   );
 
-  // The taxonomy filter
-  if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
-    $filters['term'] = array(
-      'title' => t('term'),
-      'options' => array(
-        '[any]' => t('any'),
-      ) + $taxonomy,
-    );
-  }
   // Language filter if there is a list of languages
   if ($languages = module_invoke('locale', 'language_list')) {
     $languages = array(LANGUAGE_NONE => t('Language neutral')) + $languages;
