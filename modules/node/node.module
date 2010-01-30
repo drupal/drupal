@@ -1049,6 +1049,7 @@ function node_save($node) {
     $function('node', $node);
 
     module_invoke_all('node_' . $op, $node);
+    entity_invoke($op, 'node', $node);
 
     // Update the node access table for this node.
     node_access_acquire_grants($node);

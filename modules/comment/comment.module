@@ -1370,6 +1370,7 @@ function comment_save($comment) {
       field_attach_update('comment', $comment);
       // Allow modules to respond to the updating of a comment.
       module_invoke_all('comment_update', $comment);
+      entity_invoke('update', 'comment', $comment);
       // Add an entry to the watchdog log.
       watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
     }
@@ -1453,6 +1454,7 @@ function comment_save($comment) {
 
       // Tell the other modules a new comment has been submitted.
       module_invoke_all('comment_insert', $comment);
+      entity_invoke('insert', 'comment', $comment);
       // Add an entry to the watchdog log.
       watchdog('content', 'Comment: added %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
     }

@@ -483,6 +483,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       }
 
       user_module_invoke('update', $edit, $user, $category);
+      entity_invoke('update', 'user', $user);
     }
     else {
       // Allow 'uid' to be set by the caller. There is no danger of writing an
@@ -515,6 +516,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       field_attach_insert('user', $object);
 
       user_module_invoke('insert', $edit, $user, $category);
+      entity_invoke('insert', 'user', $user);
 
       // Note, we wait with saving the data column to prevent module-handled
       // fields from being saved there.

@@ -512,11 +512,13 @@ function file_save(stdClass $file) {
     drupal_write_record('file', $file);
     // Inform modules about the newly added file.
     module_invoke_all('file_insert', $file);
+    entity_invoke('insert', 'file', $file);
   }
   else {
     drupal_write_record('file', $file, 'fid');
     // Inform modules that the file has been updated.
     module_invoke_all('file_update', $file);
+    entity_invoke('update', 'file', $file);
   }
 
   return $file;

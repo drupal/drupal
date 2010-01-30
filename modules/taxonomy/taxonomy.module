@@ -338,12 +338,14 @@ function taxonomy_vocabulary_save($vocabulary) {
   if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary, 'vid');
     module_invoke_all('taxonomy_vocabulary_update', $vocabulary);
+    entity_invoke('update', 'taxonomy_vocabulary', $vocabulary);
   }
   elseif (empty($vocabulary->vid)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary);
     field_attach_create_bundle('taxonomy_term', $vocabulary->machine_name);
     taxonomy_vocabulary_create_field($vocabulary);
     module_invoke_all('taxonomy_vocabulary_insert', $vocabulary);
+    entity_invoke('insert', 'taxonomy_vocabulary', $vocabulary);
   }
 
   cache_clear_all();
@@ -470,11 +472,13 @@ function taxonomy_term_save($term) {
     $status = drupal_write_record('taxonomy_term_data', $term, 'tid');
     field_attach_update('taxonomy_term', $term);
     module_invoke_all('taxonomy_term_update', $term);
+    entity_invoke('update', 'taxonomy_term', $term);
   }
   else {
     $status = drupal_write_record('taxonomy_term_data', $term);
     field_attach_insert('taxonomy_term', $term);
     module_invoke_all('taxonomy_term_insert', $term);
+    entity_invoke('insert', 'taxonomy_term', $term);
   }
 
   db_delete('taxonomy_term_hierarchy')

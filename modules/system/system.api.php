@@ -221,6 +221,32 @@ function hook_entity_load($entities, $type) {
 }
 
 /**
+ * Act on entities when inserted.
+ *
+ * Generic insert hook called for all entity types via entity_invoke().
+ *
+ * @param $entity
+ *   The entity object.
+ * @param $type
+ *   The type of entity being inserted (i.e. node, user, comment).
+ */
+function hook_entity_insert($entity, $type) {
+}
+
+/**
+ * Act on entities when updated.
+ *
+ * Generic update hook called for all entity types via entity_invoke().
+ *
+ * @param $entity
+ *   The entity object.
+ * @param $type
+ *   The type of entity being updated (i.e. node, user, comment).
+ */
+function hook_entity_update($entity, $type) {
+}
+
+/**
  * Define administrative paths.
  *
  * Modules may specify whether or not the paths they define in hook_menu() are
