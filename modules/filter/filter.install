@@ -37,7 +37,6 @@ function filter_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'size' => 'tiny',
         'description' => 'Weight of filter within format.',
       ),
       'status' => array(
@@ -89,7 +88,6 @@ function filter_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'size' => 'tiny',
         'description' => 'Weight of text format to use when listing.',
       )
     ),
@@ -357,6 +355,35 @@ function filter_update_7005() {
 function filter_update_7006() {
   db_drop_index('filter', 'list');
   db_add_index('filter', 'list', array('weight', 'module', 'name'));
+}
+
+/**
+ * Change the weight columns to normal int.
+ */
+function filter_update_7007() {
+  db_drop_index('filter', 'list');
+  db_change_field('filter', 'weight', 'weight', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'Weight of filter within format.',
+  ), array(
+    'indexes' => array(
+      'list' => array('weight', 'module', 'name'),
+    ),
+  ));
+
+  db_drop_index('filter_format', 'weight');
+  db_change_field('filter_format', 'weight', 'weight', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'Weight of text format to use when listing.',
+  ), array(
+    'indexes' => array(
+      'weight' => array('weight'),
+    ),
+  ));
 }
 
 /**

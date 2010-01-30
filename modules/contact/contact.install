@@ -43,7 +43,6 @@ function contact_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'size' => 'tiny',
         'description' => "The category's weight.",
       ),
       'selected' => array(
@@ -118,6 +117,23 @@ function contact_update_7001() {
  */
 function contact_update_7002() {
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access user contact forms'));
+}
+
+/**
+ * Change the weight column to normal int.
+ */
+function contact_update_7003() {
+  db_drop_index('contact', 'list');
+  db_change_field('contact', 'weight', 'weight', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => "The category's weight.",
+  ), array(
+    'indexes' => array(
+      'list' => array('weight', 'category'),
+    ),
+  ));
 }
 
 /**

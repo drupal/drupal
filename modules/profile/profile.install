@@ -65,7 +65,6 @@ function profile_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'size' => 'tiny',
         'description' => 'Weight of field in relation to other profile fields.',
       ),
       'required' => array(
@@ -153,4 +152,16 @@ function profile_schema() {
 function profile_update_7001() {
   db_rename_table('profile_fields', 'profile_field');
   db_rename_table('profile_values', 'profile_value');
+}
+
+/**
+ * Change the weight column to normal int.
+ */
+function profile_update_7002() {
+  db_change_field('profile', 'weight', 'weight', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'Weight of field in relation to other profile fields.',
+  ));
 }

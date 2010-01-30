@@ -61,7 +61,6 @@ function taxonomy_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'size' => 'tiny',
         'description' => 'The weight of this term in relation to other terms.',
       ),
     ),
@@ -153,7 +152,6 @@ function taxonomy_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'size' => 'tiny',
         'description' => 'The weight of this vocabulary in relation to other vocabularies.',
       ),
     ),
@@ -433,3 +431,31 @@ function taxonomy_update_7007() {
   db_add_index('taxonomy_term_data', 'name', array('name'));
 }
 
+/**
+ * Change the weight columns to normal int.
+ */
+function taxonomy_update_7008() {
+  db_drop_index('taxonomy_term_data', 'taxonomy_tree');
+  db_change_field('taxonomy_term_data', 'weight', 'weight', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'The weight of this term in relation to other terms.',
+  ), array(
+    'indexes' => array(
+       'taxonomy_tree' => array('vid', 'weight', 'name'),
+    ),
+  ));
+
+  db_drop_index('taxonomy_vocabulary', 'list');
+  db_change_field('taxonomy_vocabulary', 'weight', 'weight', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'The weight of this vocabulary in relation to other vocabularies.',
+  ), array(
+    'indexes' => array(
+      'list' => array('weight', 'name'),
+    ),
+  ));
+}
