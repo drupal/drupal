@@ -230,11 +230,8 @@ function node_form($form, &$form_state, $node) {
     '#title' => t('Authored on'),
     '#maxlength' => 25,
     '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the timezone offset from UTC. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? $node->date : format_date($node->created, 'custom', 'Y-m-d H:i:s O'), '%timezone' => !empty($node->date) ? $node->date : format_date($node->created, 'custom', 'O'))),
+    '#default_value' => !empty($node->date) ? $node->date : '',
   );
-
-  if (isset($node->date)) {
-    $form['author']['date']['#default_value'] = $node->date;
-  }
 
   // Node options for administrators
   $form['options'] = array(
@@ -264,14 +261,6 @@ function node_form($form, &$form_state, $node) {
     '#title' => t('Sticky at top of lists'),
     '#default_value' => $node->sticky,
   );
-
-  // These values are used when the user has no administrator access.
-  foreach (array('uid', 'created') as $key) {
-    $form[$key] = array(
-      '#type' => 'value',
-      '#value' => $node->$key,
-    );
-  }
 
   // Add the buttons.
   $form['actions'] = array(

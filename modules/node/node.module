@@ -931,9 +931,8 @@ function node_submit($node) {
   global $user;
 
   // A user might assign the node author by entering a user name in the node
-  // form, which we then need to translate to a user ID, unless we've already
-  // been provided a user ID by other means.
-  if (!empty($node->name) && !isset($node->uid)) {
+  // form, which we then need to translate to a user ID.
+  if (isset($node->name)) {
     if ($account = user_load_by_name($node->name)) {
       $node->uid = $account->uid;
     }
@@ -941,6 +940,7 @@ function node_submit($node) {
       $node->uid = 0;
     }
   }
+
   $node->created = !empty($node->date) ? strtotime($node->date) : REQUEST_TIME;
   $node->validated = TRUE;
 

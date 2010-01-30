@@ -212,6 +212,9 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
 }
 
 class PageEditTestCase extends DrupalWebTestCase {
+  protected $web_user;
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Node edit',
@@ -223,14 +226,16 @@ class PageEditTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
-    $this->drupalLogin($web_user);
+    $this->web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
+    $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes'));
   }
 
   /**
    * Check node edit functionality.
    */
   function testPageEdit() {
+    $this->drupalLogin($this->web_user);
+
     $langcode = LANGUAGE_NONE;
     $title_key = "title";
     $body_key = "body[$langcode][0][value]";
@@ -290,6 +295,51 @@ class PageEditTestCase extends DrupalWebTestCase {
     $first_node_version = node_load($node->nid, $node->vid);
     $second_node_version = node_load($node->nid, $revised_node->vid);
     $this->assertNotIdentical($first_node_version->revision_uid, $second_node_version->revision_uid, 'Each revision has a distinct user.');
+  }
+
+  /**
+   * Check changing node authored by fields.
+   */
+  function testPageAuthoredBy() {
+    $this->drupalLogin($this->admin_user);
+
+    // Create node to edit.
+    $langcode = LANGUAGE_NONE;
+    $body_key = "body[$langcode][0][value]";
+    $edit = array();
+    $edit['title'] = $this->randomName(8);;
+    $edit[$body_key] = $this->randomName(16);
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+
+    // Check that the node was authored by the currently logged in user.
+    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $this->assertIdentical($node->uid, $this->admin_user->uid, 'Node authored by admin user.');
+
+    // Try to change the 'authored by' field to an invalid user name.
+    $edit = array(
+      'name' => 'invalid-name',
+    );
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->assertText('The username invalid-name does not exist.');
+
+    // Change the authored by field to an empty string, which should assign
+    // authorship to the anonymous user (uid 0).
+    $edit['name'] = '';
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $node = node_load($node->nid, NULL, TRUE);
+    $this->assertIdentical($node->uid, '0', 'Node authored by anonymous user.');
+
+    // Change the authored by field to another user's name (that is not
+    // logged in).
+    $edit['name'] = $this->web_user->name;
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $node = node_load($node->nid, NULL, TRUE);
+    $this->assertIdentical($node->uid, $this->web_user->uid, 'Node authored by normal user.');
+
+    // Check that normal users cannot change the authored by information.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->assertNoFieldByName('name');
   }
 }
 
