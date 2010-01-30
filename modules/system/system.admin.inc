@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.255 2010/01/26 08:29:25 dries Exp $
+// $Id: system.admin.inc,v 1.256 2010/01/30 07:54:01 dries Exp $
 
 /**
  * @file
@@ -808,9 +808,9 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
 /**
  * Menu callback; provides module enable/disable interface.
  *
- * The list of modules gets populated by module.info files, which contain each module's name,
- * description and information about which modules it requires.
- * @see drupal_parse_info_file for information on module.info descriptors.
+ * The list of modules gets populated by module.info files, which contain each
+ * module's name, description, and information about which modules it requires.
+ * See drupal_parse_info_file() for information on module.info descriptors.
  *
  * Dependency checking is performed to ensure that a module:
  * - can not be enabled if there are disabled modules it requires.
@@ -818,11 +818,13 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  *
  * @param $form_state
  *   An associative array containing the current state of the form.
+ *
+ * @return
+ *   The form array.
+ *
  * @ingroup forms
  * @see theme_system_modules()
  * @see system_modules_submit()
- * @return
- *   The form array.
  */
 function system_modules($form, $form_state = array()) {
   // Get current list of modules.
