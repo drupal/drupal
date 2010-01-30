@@ -211,17 +211,15 @@ function update_menu() {
       'access callback' => 'update_manager_access',
       'access arguments' => array(),
       'weight' => 20,
-      'type' => MENU_LOCAL_ACTION,
+      'title' => 'Update',
+      'type' => MENU_LOCAL_TASK,
       'file' => 'update.manager.inc',
     );
   }
   // Customize the titles of the action links depending on where they appear.
   $items['admin/reports/updates/install']['title'] = 'Install new module or theme';
-  $items['admin/reports/updates/update']['title'] = 'Update existing modules and themes';
   $items['admin/modules/install']['title'] = 'Install new module';
-  $items['admin/modules/update']['title'] = 'Update existing modules';
   $items['admin/appearance/install']['title'] = 'Install new theme';
-  $items['admin/appearance/update']['title'] = 'Update existing themes';
 
   // Menu callback used for the confirmation page after all the releases
   // have been downloaded, asking you to backup before installing updates.
