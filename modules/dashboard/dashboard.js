@@ -1,4 +1,4 @@
-// $Id: dashboard.js,v 1.6 2010/01/14 04:04:30 webchick Exp $
+// $Id: dashboard.js,v 1.7 2010/01/30 04:45:17 webchick Exp $
 (function ($) {
 
 /**
@@ -66,7 +66,7 @@ Drupal.behaviors.dashboard = {
    */
   setupDrawer: function () {
     $('div.customize .canvas-content input').click(Drupal.behaviors.dashboard.exitCustomizeMode);
-    $('div.customize .canvas-content').append('<a class="button" href="">' + Drupal.t('Done') + '</a>');
+    $('div.customize .canvas-content').append('<a class="button" href="' + Drupal.settings.dashboard.dashboard + '">' + Drupal.t('Done') + '</a>');
 
     // Initialize drag-and-drop.
     var regions = $('#dashboard div.region');
