@@ -56,7 +56,7 @@ function field_ui_menu() {
           $path = $bundle_info['admin']['path'];
           $bundle_arg = isset($bundle_info['admin']['bundle argument']) ? $bundle_info['admin']['bundle argument'] : $bundle_name;
           $access = array_intersect_key($bundle_info['admin'], drupal_map_assoc(array('access callback', 'access arguments')));
-          $instance_position = count(explode('/', $path)) + 1;
+          $field_position = count(explode('/', $path)) + 1;
 
           $items["$path/fields"] = array(
             'title' => 'Manage fields',
@@ -67,43 +67,32 @@ function field_ui_menu() {
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu"] = array(
-            'title callback' => 'field_ui_menu_label',
-            'title arguments' => array($instance_position),
-            'load arguments' => array($obj_type, $bundle_arg),
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $instance_position),
+            'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/edit"] = array(
-            'title' => 'Edit instance settings',
-            'load arguments' => array($obj_type, $bundle_arg),
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $instance_position),
+            'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $field_position),
             'type' => MENU_DEFAULT_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/field-settings"] = array(
-            'title' => 'Edit field settings',
-            'load arguments' => array($obj_type, $bundle_arg),
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_settings_form', $obj_type, $bundle_arg, $instance_position),
+            'page arguments' => array('field_ui_field_settings_form', $obj_type, $bundle_arg, $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/widget-type"] = array(
-            'title' => 'Change widget type',
-            'load arguments' => array($obj_type, $bundle_arg),
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_widget_type_form', $obj_type, $bundle_arg, $instance_position),
+            'page arguments' => array('field_ui_widget_type_form', $obj_type, $bundle_arg, $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/delete"] = array(
-            'title' => 'Delete instance',
-            'load arguments' => array($obj_type, $bundle_arg),
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_delete_form', $obj_type, $bundle_arg, $instance_position),
+            'page arguments' => array('field_ui_field_delete_form', $obj_type, $bundle_arg, $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
@@ -135,21 +124,13 @@ function field_ui_menu() {
 }
 
 /**
- * Menu loader; Load a field instance based on its name.
+ * Menu loader; Load a field based on its name.
  */
-function field_ui_menu_load($field_name, $obj_type, $bundle_name) {
-  $bundle_name = strtr($bundle_name, array('-' => '_'));
-  if ($instance = field_info_instance($obj_type, $field_name, $bundle_name)) {
-    return $instance;
+function field_ui_menu_load($field_name) {
+  if ($field = field_info_field($field_name)) {
+    return $field;
   }
   return FALSE;
-}
-
-/**
- * Menu title callback; Return a field label based on its instance.
- */
-function field_ui_menu_label($instance) {
-  return t($instance['label']);
 }
 
 /**
