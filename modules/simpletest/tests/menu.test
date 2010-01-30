@@ -38,7 +38,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
    */
   function testThemeCallbackAdministrative() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertText('Requested theme: seven. Actual theme: seven.', t('The administrative theme can be correctly set in a theme callback.'));
+    $this->assertText('Custom theme: seven. Actual theme: seven.', t('The administrative theme can be correctly set in a theme callback.'));
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
   }
 
@@ -47,7 +47,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
    */
   function testThemeCallbackInheritance() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme/inheritance');
-    $this->assertText('Requested theme: seven. Actual theme: seven. Theme callback inheritance is being tested.', t('Theme callback inheritance correctly uses the administrative theme.'));
+    $this->assertText('Custom theme: seven. Actual theme: seven. Theme callback inheritance is being tested.', t('Theme callback inheritance correctly uses the administrative theme.'));
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
   }
 
@@ -77,7 +77,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     $admin_user = $this->drupalCreateUser(array('access site in maintenance mode'));
     $this->drupalLogin($admin_user);
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertText('Requested theme: seven. Actual theme: seven.', t('The theme callback system is correctly triggered for an administrator when the site is in maintenance mode.'));
+    $this->assertText('Custom theme: seven. Actual theme: seven.', t('The theme callback system is correctly triggered for an administrator when the site is in maintenance mode.'));
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
   }
 
@@ -87,13 +87,13 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   function testThemeCallbackOptionalTheme() {
     // Request a theme that is not enabled.
     $this->drupalGet('menu-test/theme-callback/use-stark-theme');
-    $this->assertText('Requested theme: stark. Actual theme: garland.', t('The theme callback system falls back on the default theme when a theme that is not enabled is requested.'));
+    $this->assertText('Custom theme: NONE. Actual theme: garland.', t('The theme callback system falls back on the default theme when a theme that is not enabled is requested.'));
     $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
 
     // Now enable the theme and request it again.
     theme_enable(array('stark'));
     $this->drupalGet('menu-test/theme-callback/use-stark-theme');
-    $this->assertText('Requested theme: stark. Actual theme: stark.', t('The theme callback system uses an optional theme once it has been enabled.'));
+    $this->assertText('Custom theme: stark. Actual theme: stark.', t('The theme callback system uses an optional theme once it has been enabled.'));
     $this->assertRaw('stark/layout.css', t("The optional theme's CSS appears on the page."));
   }
 
@@ -102,7 +102,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
    */
   function testThemeCallbackFakeTheme() {
     $this->drupalGet('menu-test/theme-callback/use-fake-theme');
-    $this->assertText('Requested theme: fake_theme. Actual theme: garland.', t('The theme callback system falls back on the default theme when a theme that does not exist is requested.'));
+    $this->assertText('Custom theme: NONE. Actual theme: garland.', t('The theme callback system falls back on the default theme when a theme that does not exist is requested.'));
     $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
   }
 
@@ -111,8 +111,31 @@ class MenuRouterTestCase extends DrupalWebTestCase {
    */
   function testThemeCallbackNoThemeRequested() {
     $this->drupalGet('menu-test/theme-callback/no-theme-requested');
-    $this->assertText('Requested theme: NONE. Actual theme: garland.', t('The theme callback system falls back on the default theme when no theme is requested.'));
+    $this->assertText('Custom theme: NONE. Actual theme: garland.', t('The theme callback system falls back on the default theme when no theme is requested.'));
     $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
+  }
+
+  /**
+   * Test that the result of hook_custom_theme() overrides the theme callback.
+   */
+  function testHookCustomTheme() {
+    // Trigger hook_custom_theme() to dynamically request the Stark theme for
+    // the requested page.
+    variable_set('menu_test_hook_custom_theme_name', 'stark');
+
+    // Request a page whose theme callback returns the Seven theme. Since Stark
+    // is not a currently enabled theme, our above request should be ignored,
+    // and Seven should still be used.
+    $this->drupalGet('menu-test/theme-callback/use-admin-theme');
+    $this->assertText('Custom theme: seven. Actual theme: seven.', t('The result of hook_custom_theme() does not override a theme callback when it returns a theme that is not enabled.'));
+    $this->assertRaw('seven/style.css', t("The Seven theme's CSS appears on the page."));
+
+    // Now enable the Stark theme and request the same page as above. This
+    // time, we expect hook_custom_theme() to prevail.
+    theme_enable(array('stark'));
+    $this->drupalGet('menu-test/theme-callback/use-admin-theme');
+    $this->assertText('Custom theme: stark. Actual theme: stark.', t('The result of hook_custom_theme() overrides what was set in a theme callback.'));
+    $this->assertRaw('stark/layout.css', t("The Stark theme's CSS appears on the page."));
   }
 
   /**

@@ -175,10 +175,13 @@
  *   - "access arguments": An array of arguments to pass to the access callback
  *     function, with path component substitution as described above.
  *   - "theme callback": Optional. A function returning the machine-readable
- *     name of the theme that will be used to render the page. If the function
- *     returns nothing, the main site theme will be used. If no function is
- *     provided, the main site theme will also be used, unless a value is
- *     inherited from a parent menu item.
+ *     name of the default theme that will be used to render the page. If this
+ *     function is provided, it is expected to return a currently-active theme
+ *     on the site (otherwise, the main site theme will be used instead). If no
+ *     function is provided, the main site theme will also be used, unless a
+ *     value is inherited from a parent menu item. In all cases, the results of
+ *     this function can be dynamically overridden for a particular page
+ *     request by modules which implement hook_custom_theme().
  *   - "theme arguments": An array of arguments to pass to the theme callback
  *     function, with path component substitution as described above.
  *   - "file": A file that will be included before the page callback is called;

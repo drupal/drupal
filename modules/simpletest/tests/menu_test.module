@@ -203,7 +203,7 @@ function menu_test_theme_page_callback($inherited = FALSE) {
   // Now check both the requested custom theme and the actual theme being used.
   $custom_theme = menu_get_custom_theme();
   $requested_theme = empty($custom_theme) ? 'NONE' : $custom_theme;
-  $output = "Requested theme: $requested_theme. Actual theme: $theme_key.";
+  $output = "Custom theme: $requested_theme. Actual theme: $theme_key.";
   if ($inherited) {
     $output .= ' Theme callback inheritance is being tested.';
   }
@@ -234,6 +234,21 @@ function menu_test_theme_callback($argument) {
   // For any other value of the URL argument, do not return anything. This
   // allows us to test that returning nothing from a theme callback function
   // causes the page to correctly fall back on using the main site theme.
+}
+
+/**
+ * Implement hook_custom_theme().
+ *
+ * @return
+ *   The name of the custom theme to use for the current page.
+ */
+function menu_test_custom_theme() {
+  // If an appropriate variable has been set in the database, request the theme
+  // that is stored there. Otherwise, do not attempt to dynamically set the
+  // theme.
+  if ($theme = variable_get('menu_test_hook_custom_theme_name', FALSE)) {
+    return $theme;
+  }
 }
 
 /**

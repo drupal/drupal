@@ -1505,8 +1505,8 @@ function menu_get_active_help() {
  *
  * @param $initialize
  *   This parameter should only be used internally; it is set to TRUE in order
- *   to force the custom theme to be initialized from the menu router item for
- *   the current page.
+ *   to force the custom theme to be initialized for the current page request.
+ *
  * @return
  *   The machine-readable name of the custom theme, if there is one.
  *
@@ -1517,9 +1517,23 @@ function menu_get_custom_theme($initialize = FALSE) {
   // Skip this if the site is offline or being installed or updated, since the
   // menu system may not be correctly initialized then.
   if ($initialize && !_menu_site_is_offline(TRUE) && (!defined('MAINTENANCE_MODE') || (MAINTENANCE_MODE != 'update' && MAINTENANCE_MODE != 'install'))) {
-    $router_item = menu_get_item();
-    if (!empty($router_item['access']) && !empty($router_item['theme_callback']) && function_exists($router_item['theme_callback'])) {
-      $custom_theme = call_user_func_array($router_item['theme_callback'], $router_item['theme_arguments']);
+    // First allow modules to dynamically set a custom theme for the current
+    // page. Since we can only have one, the last module to return a valid
+    // theme takes precedence.
+    $custom_themes = array_filter(module_invoke_all('custom_theme'), 'drupal_theme_access');
+    if (!empty($custom_themes)) {
+      $custom_theme = array_pop($custom_themes);
+    }
+    // Otherwise, execute the theme callback function for the current page, if
+    // there is one, in order to determine the custom theme to set.
+    if (!isset($custom_theme)) {
+      $router_item = menu_get_item();
+      if (!empty($router_item['access']) && !empty($router_item['theme_callback']) && function_exists($router_item['theme_callback'])) {
+        $theme_name = call_user_func_array($router_item['theme_callback'], $router_item['theme_arguments']);
+        if (drupal_theme_access($theme_name)) {
+          $custom_theme = $theme_name;
+        }
+      }
     }
   }
   return $custom_theme;

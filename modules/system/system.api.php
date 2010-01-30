@@ -1188,6 +1188,31 @@ function hook_theme_registry_alter(&$theme_registry) {
 }
 
 /**
+ * Return the machine-readable name of the theme to use for the current page.
+ *
+ * This hook can be used to dynamically set the theme for the current page
+ * request. It overrides the default theme as well as any per-page or
+ * per-section theme set by the theme callback function in hook_menu(). This
+ * should be used by modules which need to override the theme based on dynamic
+ * conditions.
+ *
+ * Since only one theme can be used at a time, the last (i.e., highest
+ * weighted) module which returns a valid theme name from this hook will
+ * prevail.
+ *
+ * @return
+ *   The machine-readable name of the theme that should be used for the current
+ *   page request. The value returned from this function will only have an
+ *   effect if it corresponds to a currently-active theme on the site.
+ */
+function hook_custom_theme() {
+  // Allow the user to request a particular theme via a query parameter.
+  if (isset($_GET['theme'])) {
+    return $_GET['theme'];
+  }
+}
+
+/**
  * Register XML-RPC callbacks.
  *
  * This hook lets a module register callback functions to be called when
