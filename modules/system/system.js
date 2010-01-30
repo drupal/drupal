@@ -165,10 +165,11 @@ Drupal.behaviors.pageCache = {
  */
 Drupal.behaviors.machineReadableValue = {
   attach: function () {
+    var self = this;
+
     for (var value in Drupal.settings.machineReadableValue) {
       var settings = Drupal.settings.machineReadableValue[value];
 
-      var searchPattern = new RegExp(settings.searchPattern, 'g');
       // Build selector for the source name entered by a user.
       var source = '#edit-' + value;
       var suffix = source + '-suffix';
@@ -180,12 +181,12 @@ Drupal.behaviors.machineReadableValue = {
       // Do not process the element if we got an error or the given name and the
       // machine readable name are identical or the machine readable name is
       // empty.
-      if (!$(target).hasClass('error') && ($(target).val() == $(source).val().toLowerCase().replace(searchPattern, settings.replaceToken) || $(target).val() == '')) {
+      if (!$(target).hasClass('error') && ($(target).val() == '' || $(target).val() == self.transliterate($(source).val(), settings))) {
         // Hide wrapper element.
         $(wrapper).hide();
         // Bind keyup event to source element.
         $(source).keyup(function () {
-          var machine = $(this).val().toLowerCase().replace(searchPattern, settings.replaceToken);
+          var machine = self.transliterate($(this).val(), settings);
           if (machine != '_' && machine != '') {
             // Set machine readable name to the user entered value.
             $(target).val(machine);
@@ -207,6 +208,17 @@ Drupal.behaviors.machineReadableValue = {
         $(source).keyup();
       }
     }
+  },
+
+  /**
+   * Transliterate a human-readable name to a machine name.
+   *
+   * The result should not contain any character matching settings.searchPattern,
+   * invalid characters are typically replaced with settings.replaceToken.
+   */
+  transliterate: function (source, settings) {
+    var searchPattern = new RegExp(settings.searchPattern, 'g');
+    return source.toLowerCase().replace(searchPattern, settings.replaceToken);
   }
 };
 
