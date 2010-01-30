@@ -146,6 +146,11 @@ class FieldUITestCase extends DrupalWebTestCase {
     $this->drupalGet(('admin/structure/types/manage/page/fields'));
     $this->assertRaw(t('Add existing field'), t('"Add existing field" was found.'));
 
+    // Check that the list of options respects object type restrictions on
+    // fields. The 'comment' field is restricted to the 'comment' object type
+    // and should not appear in the list.
+    $this->assertFalse($this->xpath('//select[@id="edit--add-existing-field-field-name"]//option[@value="comment"]'), t('The list of options respects object type restrictions.'));
+
     // Add a new field based on an existing field.
     $edit = array(
       '_add_existing_field[label]' => $this->field_label . '_2',

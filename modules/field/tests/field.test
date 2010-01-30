@@ -2297,7 +2297,6 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     $this->instance_definition = array(
       'field_name' => $this->field['field_name'],
       'object_type' => 'test_entity',
-      'object_type' => 'test_entity',
       'bundle' => 'test_bundle',
     );
   }
@@ -2353,6 +2352,39 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     }
     catch (FieldException $e) {
       $this->pass(t('Cannot create an instance of a non-existing field.'));
+    }
+
+    // Create a field restricted to a specific entity type.
+    $field_restricted = array(
+      'field_name' => drupal_strtolower($this->randomName()),
+      'type' => 'test_field',
+      'object_types' => array('test_cacheable_entity'),
+    );
+    field_create_field($field_restricted);
+
+    // Check that an instance can be added to an object type allowed
+    // by the field.
+    try {
+      $instance = $this->instance_definition;
+      $instance['field_name'] = $field_restricted['field_name'];
+      $instance['object_type'] = 'test_cacheable_entity';
+      field_create_instance($instance);
+      $this->pass(t('Can create an instance on a object type allowed by the field.'));
+    }
+    catch (FieldException $e) {
+      $this->fail(t('Can create an instance on a object type allowed by the field.'));
+    }
+
+    // Check that an instance cannot be added to an object type
+    // forbidden by the field. 
+    try {
+      $instance = $this->instance_definition;
+      $instance['field_name'] = $field_restricted['field_name'];
+      field_create_instance($instance);
+      $this->fail(t('Cannot create an instance on a object type forbidden by the field.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot create an instance on a object type forbidden by the field.'));
     }
 
     // TODO: test other failures.

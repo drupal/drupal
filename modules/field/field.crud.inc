@@ -45,6 +45,9 @@
  * - type (string)
  *     The type of the field, such as 'text' or 'image'. Field types
  *     are defined by modules that implement hook_field_info().
+ * - object_types (array)
+ *     The array of entity types that can hold instances of this field. If
+ *     empty or not specified, the field can have instances in any entity type.
  * - cardinality (integer)
  *     The number of values the field can hold. Legal values are any
  *     positive integer or FIELD_CARDINALITY_UNLIMITED.
@@ -265,6 +268,7 @@ function field_create_field($field) {
   }
 
   $field += array(
+    'object_types' => array(),
     'cardinality' => 1,
     'translatable' => FALSE,
     'locked' => FALSE,
@@ -395,6 +399,9 @@ function field_update_field($field) {
   // Some updates are always disallowed.
   if ($field['type'] != $prior_field['type']) {
     throw new FieldException("Cannot change an existing field's type.");
+  }
+  if ($field['object_types'] != $prior_field['object_types']) {
+    throw new FieldException("Cannot change an existing field's object_types property.");
   }
   if ($field['storage']['type'] != $prior_field['storage']['type']) {
     throw new FieldException("Cannot change an existing field's storage type.");
@@ -610,6 +617,10 @@ function field_create_instance($instance) {
   }
   if (empty($instance['bundle'])) {
     throw new FieldException(t('Attempt to create an instance of field @field_name without a bundle.', array('@field_name' => $instance['field_name'])));
+  }
+  // Check that the field can be attached to this object type.
+  if (!empty($field['object_types']) && !in_array($instance['object_type'], $field['object_types'])) {
+    throw new FieldException(t('Attempt to create an instance of field @field_name on forbidden object type @obj_type.', array('@field_name' => $instance['field_name'], '@obj_type' => $instance['object_type'])));
   }
 
   // Set the field id.

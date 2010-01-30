@@ -787,8 +787,13 @@ function field_ui_existing_field_options($obj_type, $bundle) {
       if (!($existing_bundle == $bundle && $existing_obj_type == $obj_type)) {
         foreach ($instances as $instance) {
           $field = field_info_field($instance['field_name']);
-          // Don't show locked fields or fields already in the current bundle.
-          if (empty($field['locked']) && !field_info_instance($obj_type, $field['field_name'], $bundle)) {
+          // Don't show
+          // - locked fields,
+          // - fields already in the current bundle,
+          // - field that cannot be added to the object type.
+          if (empty($field['locked'])
+            && !field_info_instance($obj_type, $field['field_name'], $bundle)
+            && (empty($field['object_types']) || in_array($obj_type, $field['object_types']))) {
             $text = t('@type: @field (@label)', array(
               '@type' => $field_types[$field['type']]['label'],
               '@label' => t($instance['label']), '@field' => $instance['field_name'],
