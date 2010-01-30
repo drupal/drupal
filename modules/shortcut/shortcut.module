@@ -399,7 +399,7 @@ function shortcut_current_displayed_set($account = NULL) {
     $shortcut_set = shortcut_set_load($shortcut_set_name);
   }
   // Otherwise, use the default set.
-  else { 
+  else {
     $shortcut_set = shortcut_default_set($account);
   }
 

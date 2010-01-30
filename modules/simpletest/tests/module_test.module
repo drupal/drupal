@@ -12,7 +12,7 @@ function module_test_permission() {
 
 /**
  * Implements hook_system_info_alter().
- * 
+ *
  * Manipulate module dependencies to test dependency chains.
  */
 function module_test_system_info_alter(&$info, $file, $type) {

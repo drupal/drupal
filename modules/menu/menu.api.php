@@ -165,7 +165,7 @@
  *     instead.
  *   - "page arguments": An array of arguments to pass to the page callback
  *     function, with path component substitution as described above.
- *   - "delivery callback": The function to call to package the result of the 
+ *   - "delivery callback": The function to call to package the result of the
  *     page callback function and send it to the browser. Defaults to
  *     drupal_deliver_html_page() unless a value is inherited from a parent menu
  *     item.
@@ -192,7 +192,7 @@
  *   - "file path": The path to the directory containing the file specified in
  *     "file". This defaults to the path to the module implementing the hook.
  *   - "load arguments": An array of arguments to be passed to each of the
- *     wildcard object loaders in the path, after the path argument itself. 
+ *     wildcard object loaders in the path, after the path argument itself.
  *     For example, if a module registers path node/%node/revisions/%/view
  *     with load arguments set to array(3), the '%node' in the path indicates
  *     that the loader function node_load() will be called with the second

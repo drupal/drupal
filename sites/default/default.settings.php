@@ -67,8 +67,8 @@
  * connection should use.  This is usually the same as the name of the
  * database type, such as mysql or sqlite, but not always.  The other
  * properties will vary depending on the driver.  For SQLite, you must
- * specify a database file name in a directory that is writable by the 
- * webserver.  For most other drivers, you must specify a 
+ * specify a database file name in a directory that is writable by the
+ * webserver.  For most other drivers, you must specify a
  * username, password, host, and database name.
  *
  * Some database engines support transactions.  In order to enable
@@ -182,7 +182,7 @@ $update_free_access = FALSE;
  *
  * Example:
  *   $drupal_hash_salt = file_get_contents('/home/example/salt.txt');
- *   
+ *
  */
 $drupal_hash_salt = '';
 

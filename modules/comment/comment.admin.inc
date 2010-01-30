@@ -75,7 +75,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     ->limit(50)
     ->orderByHeader($header)
     ->execute();
-	
+
   $cids = array();
 
   // We collect a sorted list of node_titles during the query to attach to the

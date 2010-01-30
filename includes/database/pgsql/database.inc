@@ -52,10 +52,10 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 
     $options += $this->defaultOptions();
 
-    // The PDO PostgreSQL driver has a bug which 
+    // The PDO PostgreSQL driver has a bug which
     // doesn't type cast booleans correctly when
-    // parameters are bound using associative 
-    // arrays. 
+    // parameters are bound using associative
+    // arrays.
     // See http://bugs.php.net/bug.php?id=48383
     foreach ($args as &$value) {
       if (is_bool($value)) {
@@ -141,12 +141,12 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
    */
   public function nextId($existing = 0) {
 
-    // Retrive the name of the sequence. This information cannot be cached 
+    // Retrive the name of the sequence. This information cannot be cached
     // because the prefix may change, for example, like it does in simpletests.
     $sequence_name = $this->makeSequenceName('sequences', 'value');
 
-    // When PostgreSQL gets a value too small then it will lock the table, 
-    // retry the INSERT and if it's still too small then alter the sequence. 
+    // When PostgreSQL gets a value too small then it will lock the table,
+    // retry the INSERT and if it's still too small then alter the sequence.
     $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
     if ($id > $existing) {
       return $id;
@@ -154,7 +154,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 
     // PostgreSQL advisory locks are simply locks to be used by an
     // application such as Drupal. This will prevent other Drupal proccesses
-    // from altering the sequence while we are. 
+    // from altering the sequence while we are.
     $this->query("SELECT pg_advisory_lock(" . POSTGRESQL_NEXTID_LOCK . ")");
 
     // While waiting to obtain the lock, the sequence may have been altered

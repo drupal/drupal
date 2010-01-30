@@ -294,8 +294,8 @@ table .form-button, table .form-submit {
  * Skip link
  */
 #skip-link a:link, #skip-link a:visited {
-  font-weight: bold; 
-  background: #fff; 
+  font-weight: bold;
+  background: #fff;
   padding: 0px 5px;
   text-decoration: none;
   font-size: 80%;

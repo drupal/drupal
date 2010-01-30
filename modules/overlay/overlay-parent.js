@@ -277,7 +277,7 @@ Drupal.overlay.load = function (url) {
   self.$iframeDocument = null;
   self.$iframeBody = null;
 
-  // Reset lastHeight so the overlay fits user's viewport and the loading 
+  // Reset lastHeight so the overlay fits user's viewport and the loading
   // spinner is centered.
   self.lastHeight = 0;
   self.outerResize();
@@ -292,7 +292,7 @@ Drupal.overlay.load = function (url) {
   self.$dialogTitlebar.find('ul').remove();
 
   // While the overlay is loading, we remove the loaded class from the dialog.
-  // After the loading is finished, the loaded class is added back. The loaded 
+  // After the loading is finished, the loaded class is added back. The loaded
   // class is being used to hide the iframe while loading.
   // @see overlay-parent.css .overlay-loaded #overlay-element
   self.$dialog.removeClass('overlay-loaded');
@@ -408,7 +408,7 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
 
   // Unbind the keydown and keypress handlers installed by ui.dialog because
   // they interfere with use of browser's keyboard hotkeys like CTRL+w.
-  // This may cause problems when using modules that implement keydown or 
+  // This may cause problems when using modules that implement keydown or
   // keypress handlers as they aren't blocked when overlay is open.
   $(document).unbind('keydown.dialog-overlay keypress.dialog-overlay');
 

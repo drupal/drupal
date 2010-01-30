@@ -53,7 +53,7 @@ class FileTransferLocal extends FileTransfer implements FileTransferChmodInterfa
       throw new FileTransferException('Cannot remove file %file.', NULL, array('%file' => $file));
     }
   }
-  
+
   public function isDirectory($path) {
     return is_dir($path);
   }

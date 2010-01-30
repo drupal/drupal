@@ -54,8 +54,8 @@ function openid_user_identities($account) {
   }
 
   $build['openid_table'] = array(
-    '#theme' => 'table', 
-    '#header' => $header, 
+    '#theme' => 'table',
+    '#header' => $header,
     '#rows' => $rows,
   );
   $build['openid_user_add'] = drupal_get_form('openid_user_add');

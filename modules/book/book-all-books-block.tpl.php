@@ -9,7 +9,7 @@
  *
  * Available variables:
  * - $book_menus: Array of book outlines keyed to the parent book ID. Call
- *   render() on each to print it as an unordered list. 
+ *   render() on each to print it as an unordered list.
  */
 ?>
 <?php foreach ($book_menus as $book_id => $menu) : ?>

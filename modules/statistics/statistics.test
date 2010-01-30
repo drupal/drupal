@@ -44,7 +44,7 @@ class StatisticsReportsTestCase extends StatisticsTestCase {
       'group' => 'Statistics'
     );
   }
-  
+
   /**
    * Verifies that 'Recent hits' renders properly and displays the added hit.
    */
@@ -179,7 +179,7 @@ class StatisticsBlockVisitorsTestCase extends StatisticsTestCase {
 class StatisticsAdminTestCase extends DrupalWebTestCase {
   protected $privileged_user;
   protected $test_node;
-  
+
   public static function getInfo() {
     return array(
       'name' => 'Test statistics admin.',
@@ -218,7 +218,7 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/reports/pages');
     $this->assertText('node/1', t('Test node found.'));
 
-    // Hit the node again (the counter is incremented after the hit, so 
+    // Hit the node again (the counter is incremented after the hit, so
     // "1 read" will actually be shown when the node is hit the second time).
     $this->drupalGet('node/' . $this->test_node->nid);
     $this->assertText('1 read', t('Node is read once.'));
@@ -298,7 +298,7 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
     // statistics_cron will subtract the statistics_flush_accesslog_timer
     // variable from REQUEST_TIME in the delete query, so wait two secs here to
     // make sure the access log will be flushed for the node just hit.
-    sleep(2); 
+    sleep(2);
     $this->cronRun();
 
     $this->drupalGet('admin/reports/pages');

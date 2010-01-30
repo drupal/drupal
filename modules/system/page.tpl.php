@@ -61,7 +61,7 @@
  * - $page['sidebar_second']: Items for the second sidebar.
  * - $page['header']: Items for the header region.
  * - $page['footer']: Items for the footer region.
- * 
+ *
  * @see template_preprocess()
  * @see template_preprocess_page()
  * @see template_process()

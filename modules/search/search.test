@@ -171,7 +171,7 @@ class SearchMatchTestCase extends DrupalWebTestCase {
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
     }
-    
+
     // These queries are run against the third index type, SEARCH_TYPE_JPN.
     $queries = array(
       // Simple AND queries.
@@ -193,7 +193,7 @@ class SearchMatchTestCase extends DrupalWebTestCase {
       $set = $result ? $result->fetchAll() : array();
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
-    }      
+    }
   }
 
   /**
@@ -599,4 +599,3 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
     $this->assertIdentical(' ', search_simplify($string), t('Search simplify works for ASCII control characters.'));
   }
 }
-  

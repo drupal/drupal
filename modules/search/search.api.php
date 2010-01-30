@@ -16,7 +16,7 @@
  *
  * This hook allows a module to perform searches on content it defines
  * (custom node types, users, or comments, for example) when a site search
- * is performed. 
+ * is performed.
  *
  * Note that you can use form API to extend the search. You will need to use
  * hook_form_alter() to add any additional required form elements. You can
@@ -206,7 +206,7 @@ function hook_search_execute($keys = NULL) {
   return $results;
 }
 
-/** 
+/**
  * Override the rendering of search results.
  *
  * A module that implements hook_search() to define a type of search

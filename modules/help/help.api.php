@@ -26,7 +26,7 @@
  *   is being requested; e.g., 'admin/node' or 'user/edit'. If the router path
  *   includes a % wildcard, then this will appear in $path; for example,
  *   node pages would have $path equal to 'node/%' or 'node/%/view'. Your hook
- *   implementation may also be called with special descriptors after a 
+ *   implementation may also be called with special descriptors after a
  *   "#" sign. Some examples:
  *   - admin/help#modulename
  *     The main module help text, displayed on the admin/help/modulename
@@ -41,7 +41,7 @@
  *   array should always be used rather than directly invoking arg(), because
  *   your hook implementation may be called for other purposes besides building
  *   the current page's help. Note that depending on which module is invoking
- *   hook_help, $arg may contain only empty strings. Regardless, $arg[0] to 
+ *   hook_help, $arg may contain only empty strings. Regardless, $arg[0] to
  *   $arg[11] will always be set.
  * @return
  *   A localized string containing the help text.

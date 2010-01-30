@@ -28,7 +28,7 @@ function dblog_help($path, $arg) {
       $output .= '<dt>' . t('Debugging site problems') . '</dt>';
       $output .= '<dd>' . t('In case of errors or problems with the site, the <a href="@dblog">Recent log entries</a> page can be useful for debugging, since it shows the sequence of events. The log entries include usage information, warnings, and errors.', array('@dblog' => url('admin/reports/dblog'))) . '</dd>';
       $output .= '</dl>';
-      return $output;	
+      return $output;
     case 'admin/reports/dblog':
       return '<p>' . t('The Database logging module monitors your website, capturing system events in a log (shown here) to be reviewed by an authorized individual at a later time. This log is a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the Recent log entries report on a regular basis, as it is often the only way to tell what is going on.') . '</p>';
   }

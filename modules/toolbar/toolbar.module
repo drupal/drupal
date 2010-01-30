@@ -78,7 +78,7 @@ function toolbar_toggle_page() {
 
 /**
  * Formats an element used to toggle the toolbar drawer's visibility.
- * 
+ *
  * @param $variables
  *   An associative array containing:
  *   - collapsed: A boolean value representing the toolbar drawer's visibility.
@@ -102,7 +102,7 @@ function theme_toolbar_toggle($variables) {
 
 /**
  * Determines the current state of the toolbar drawer's visibility.
- * 
+ *
  * @return
  *   TRUE when drawer is collapsed, FALSE when it is expanded.
  */
@@ -225,7 +225,7 @@ function toolbar_view() {
     '#links' => $links,
     '#attributes' => array('id' => 'toolbar-user'),
   );
-  
+
   // Add a "home" link.
   $link = array(
     'home' => array(
@@ -275,7 +275,7 @@ function toolbar_get_menu_tree() {
     $admin_link = array_pop($tree);
     $tree = $admin_link['below'] ? $admin_link['below'] : array();
   }
-  
+
   return $tree;
 }
 

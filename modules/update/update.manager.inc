@@ -35,7 +35,7 @@
  * sets up a batch to copy each extracted update from the temporary location
  * into the live web root.
  */
- 
+
 /**
  * @defgroup update_manager_update Update manager for updating existing code.
  * @{
@@ -180,7 +180,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
         // Core needs manual updates at this time.
         $projects['manual'][$name] = $entry;
         break;
-        
+
       case 'module':
       case 'theme':
         $projects['enabled'][$name] = $entry;
@@ -547,7 +547,7 @@ function update_manager_install_form_submit($form, &$form_state) {
     // @todo: find out if the module is already instealled, if so, throw an error.
     $local_cache = $finfo->uri;
   }
-  
+
   $directory = _update_manager_extract_directory();
   try {
     $archive = update_manager_archive_extract($local_cache, $directory);
@@ -583,12 +583,12 @@ function update_manager_install_form_submit($form, &$form_state) {
   if (!$project_title) {
     form_set_error($field, t('Unable to determine %project name.', array('%project' => $project)));
   }
-  
+
   if ($updater->isInstalled()) {
     form_set_error($field, t('%project is already installed.', array('%project' => $project_title)));
     return;
   }
-  
+
   $project_real_location = drupal_realpath($project_location);
   $arguments = array(
     'project' => $project,
@@ -715,7 +715,7 @@ function update_manager_file_get($url) {
   if (!file_exists($cache_directory)) {
     mkdir($cache_directory);
   }
-  
+
   if (!file_exists($local)) {
     return system_retrieve_file($url, $local);
   }

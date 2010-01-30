@@ -257,7 +257,7 @@ function image_gd_save(stdClass $image, $destination) {
   if ($wrapper = file_stream_wrapper_get_instance_by_uri($destination)) {
     $destination = $wrapper->realpath();
   }
-  
+
   $extension = str_replace('jpg', 'jpeg', $image->info['extension']);
   $function = 'image' . $extension;
   if (!function_exists($function)) {

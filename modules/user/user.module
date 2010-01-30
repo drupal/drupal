@@ -2350,7 +2350,7 @@ password: Your password
         break;
       case 'status_blocked_body':
         $text = t("!user-name-token,
-        
+
 Your account on !site-name-token has been blocked.
 
 --  !site-name-token team", array('!user-name-token' => '[user:name]', '!site-name-token' => '[site:name]'), array('langcode' => $langcode));

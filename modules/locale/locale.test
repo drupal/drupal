@@ -333,7 +333,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $edit = array('translations['. $langcode .']' => $this->randomString());
     $this->drupalPost($url, $edit, t('Save translations'));
 
-    // Trigger JavaScript translation parsing and building. 
+    // Trigger JavaScript translation parsing and building.
     locale_inc_callback('_locale_rebuild_js', $langcode);
 
     // Retrieve the JavaScript translation hash code for the custom language to

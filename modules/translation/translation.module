@@ -210,7 +210,7 @@ function translation_node_prepare($node) {
     isset($_GET['translation']) &&
     isset($_GET['language']) &&
     is_numeric($_GET['translation'])) {
-    
+
     $source_node = node_load($_GET['translation']);
     if (empty($source_node) || !node_access('view', $source_node)) {
       // Source node not found or no access to view. We should not check
@@ -218,13 +218,13 @@ function translation_node_prepare($node) {
       // to edit the source node but should still be able to translate.
       return;
     }
-    
+
     $language_list = language_list();
     if (!isset($language_list[$_GET['language']]) || ($source_node->language == $_GET['language'])) {
       // If not supported language, or same language as source node, break.
       return;
     }
-    
+
     // Ensure we don't have an existing translation in this language.
     if (!empty($source_node->tnid)) {
       $translations = translation_node_get_translations($source_node->tnid);
@@ -233,7 +233,7 @@ function translation_node_prepare($node) {
         return;
       }
     }
-    
+
     // Populate fields based on source node.
     $node->language = $_GET['language'];
     $node->translation_source = $source_node;

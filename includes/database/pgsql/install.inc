@@ -32,13 +32,13 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
    */
   protected function checkEncoding() {
     try {
-      if (db_query('SHOW server_encoding')->fetchField() == 'UTF8') { 
+      if (db_query('SHOW server_encoding')->fetchField() == 'UTF8') {
         $this->pass(st('Database is encoded in UTF-8'));
       }
       else {
         $replacements = array(
-          '%encoding' => 'UTF8', 
-          '%driver' => $this->name(), 
+          '%encoding' => 'UTF8',
+          '%driver' => $this->name(),
           '!link' => '<a href="INSTALL.pgsql.txt">INSTALL.pgsql.txt</a>'
         );
         $text  = 'The %driver database must use %encoding encoding to work with Drupal.';

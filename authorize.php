@@ -134,7 +134,7 @@ if (authorize_access_allowed()) {
     }
 
     $output = theme('authorize_report', array('messages' => $results['messages']));
-    
+
     $links = array();
     if (is_array($results['tasks'])) {
       $links += $results['tasks'];

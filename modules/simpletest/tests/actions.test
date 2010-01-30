@@ -104,7 +104,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
 
   /**
    * Create an infinite loop by causing a watchdog message to be set,
-   * which causes the actions to be triggered again, up to actions_max_stack 
+   * which causes the actions to be triggered again, up to actions_max_stack
    * times.
    */
   protected function triggerActions() {

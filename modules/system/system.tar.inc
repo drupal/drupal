@@ -51,7 +51,7 @@ define ('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
 * @license  http://www.opensource.org/licenses/bsd-license.php New BSD License
 * @package  Archive_Tar
 */
-class Archive_Tar 
+class Archive_Tar
 {
     /**
     * @var string Name of the Tar

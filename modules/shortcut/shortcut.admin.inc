@@ -80,7 +80,7 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
 
   $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
   $form['actions']['submit'] = array(
-    '#type' => 'submit', 
+    '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
 
@@ -186,7 +186,7 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
       '#default_value' => $status,
       '#attributes' => array('class' => array('shortcut-status-select')),
     );
-    
+
     $form['shortcuts'][$status][$mlid]['edit']['#markup'] = l(t('edit'), 'admin/config/system/shortcut/link/' . $mlid);
     $form['shortcuts'][$status][$mlid]['delete']['#markup'] = l(t('delete'), 'admin/config/system/shortcut/link/' . $mlid . '/delete');
   }
@@ -198,7 +198,7 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
 
   $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
   $form['actions']['submit'] = array(
-    '#type' => 'submit', 
+    '#type' => 'submit',
     '#value' => t('Save Changes'),
   );
 

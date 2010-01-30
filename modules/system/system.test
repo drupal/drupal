@@ -1244,7 +1244,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'));
     $this->drupalGet('node');
     $this->assertRaw($file->uri, t('Logo path successfully changed.'));
-  
+
     // Upload a file to use for the logo.
     $file = current($this->drupalGetTestFiles('image'));
     $edit = array(

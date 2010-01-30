@@ -390,7 +390,7 @@ class BootstrapResettableStaticTestCase extends DrupalUnitTestCase {
 
   /**
    * Test that a variable reference returned by drupal_static() gets reset when
-   * drupal_static_reset() is called. 
+   * drupal_static_reset() is called.
    */
   function testDrupalStatic() {
     $name = __CLASS__ . '_' . __METHOD__;

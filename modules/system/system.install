@@ -94,7 +94,7 @@ function system_requirements($phase) {
   else {
     $requirements['php_register_globals']['value'] = $t('Disabled');
   }
-  
+
   // Test PDO library availability.
   $requirements['pdo'] = array(
     'title' => $t('PDO library'),

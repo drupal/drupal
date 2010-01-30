@@ -103,7 +103,7 @@ function garland_preprocess_page(&$vars) {
     $site_fields[0] = '<span>' . $site_fields[0] . '</span>';
   }
   $vars['site_html'] = implode(' ', $site_fields);
-  
+
   // Set a variable for the site name title and logo alt attributes text.
   $slogan_text = filter_xss_admin(variable_get('site_slogan', ''));
   $site_name_text = filter_xss_admin(variable_get('site_name', 'Drupal'));

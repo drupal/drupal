@@ -59,7 +59,7 @@ class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface
       throw new FileTransferException('Cannot remove @directory.', NULL, array('@directory' => $destination));
     }
   }
-  
+
   /**
    * WARNING: This is untested.  It is not currently used, but should do the trick.
    */

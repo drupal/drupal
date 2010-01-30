@@ -154,7 +154,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
 
-    // Tell openid_test.module to respond with these SREG fields. 
+    // Tell openid_test.module to respond with these SREG fields.
     variable_set('openid_test_response', array('openid.sreg.nickname' => 'john', 'openid.sreg.email' => 'john@example.com'));
 
     // Fill out and submit the login form.
@@ -163,7 +163,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
     // Check we are on the OpenID redirect form.
     $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
-        
+
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
     $this->assertLink('john', 0, t('User was logged in.'));
@@ -184,7 +184,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
 
-    // Tell openid_test.module to respond with these SREG fields. 
+    // Tell openid_test.module to respond with these SREG fields.
     variable_set('openid_test_response', array('openid.sreg.nickname' => $this->web_user->name, 'openid.sreg.email' => 'mail@invalid#'));
 
     // Fill out and submit the login form.
@@ -193,7 +193,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
     // Check we are on the OpenID redirect form.
     $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
-        
+
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
 
@@ -237,7 +237,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
     // Check we are on the OpenID redirect form.
     $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
-        
+
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
 

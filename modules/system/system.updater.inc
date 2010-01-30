@@ -6,7 +6,7 @@
  * Subclasses of the Updater class to update Drupal core knows how to update.
  * At this time, only modules and themes are supported.
  */
- 
+
 /**
  * Class for updating modules using FileTransfer classes via authorize.php.
  */
@@ -145,7 +145,7 @@ class ThemeUpdater extends Updater implements DrupalUpdaterInterface {
       ->condition('name', $this->name)
       ->execute();
   }
-  
+
   public function postInstallTasks() {
     return array(
       l(t('Set the !project theme as default', array('!project' => $this->title)), 'admin/appearance'),
