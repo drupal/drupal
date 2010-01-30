@@ -1586,7 +1586,7 @@ function system_authorized_get_url(array $options = array()) {
 /**
  * Setup and invoke an operation using authorize.php.
  *
- * @see system_authorized_init
+ * @see system_authorized_init()
  */
 function system_authorized_run($callback, $file, $arguments = array(), $page_title = NULL) {
   system_authorized_init($callback, $file, $arguments, $page_title);

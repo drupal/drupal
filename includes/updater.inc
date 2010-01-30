@@ -198,11 +198,11 @@ class Updater {
    * Updates a Drupal project, returns a list of next actions.
    *
    * @param FileTransfer $filetransfer
-   *   Object which is a child of FileTransfer. Used for moving files
+   *   Object that is a child of FileTransfer. Used for moving files
    *   to the server.
    * @param array $overrides
-   *   An array of settings to override defaults
-   *   @see self::getInstallArgs
+   *   An array of settings to override defaults; see self::getInstallArgs().
+   *
    * @return array
    *   An array of links which the user may need to complete the update
    */
@@ -254,10 +254,10 @@ class Updater {
    * Installs a Drupal project, returns a list of next actions.
    *
    * @param FileTransfer $filetransfer
-   *   Object which is a child of FileTransfer.
+   *   Object that is a child of FileTransfer.
    * @param array $overrides
-   *   An array of settings to override defaults.
-   *   @see self::getInstallArgs
+   *   An array of settings to override defaults; see self::getInstallArgs().
+   *
    * @return array
    *   An array of links which the user may need to complete the install.
    */

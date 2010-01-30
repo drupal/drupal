@@ -2357,8 +2357,8 @@ function template_preprocess_html(&$variables) {
  * Any changes to variables in this preprocessor should also be changed inside
  * template_preprocess_maintenance_page() to keep all of them consistent.
  *
- * @see drupal_render_page
- * @see template_process_page
+ * @see drupal_render_page()
+ * @see template_process_page()
  * @see page.tpl.php
  */
 function template_preprocess_page(&$variables) {

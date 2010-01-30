@@ -4559,7 +4559,7 @@ function _drupal_bootstrap_full() {
  * Page compression requires the PHP zlib extension
  * (http://php.net/manual/en/ref.zlib.php).
  *
- * @see drupal_page_header
+ * @see drupal_page_header()
  */
 function drupal_page_set_cache() {
   global $base_root;

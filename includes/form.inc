@@ -2457,22 +2457,16 @@ function theme_container($variables) {
 }
 
 /**
- * Format a table with radio buttons or checkboxes.
+ * Formats a table with radio buttons or checkboxes.
  *
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties and children of
- *     the tableselect element.
- *     Each option in $variables['element']['#options'] can contain an array
- *     keyed by '#attributes' which is added to the row's HTML attributes.
- *     @see theme_table
- *     Properties used: header, options, empty, js_select.
- *
- * @return
- *   A themed HTML string representing the table.
- *
- * Example:
- *
+ *     the tableselect element. Properties used: #header, #options, #empty,
+ *     and #js_select. The #options property is an array of selection options;
+ *     each array element of #options is an array of properties. These 
+ *     properties can include #attributes, which is added to the
+ *     table row's HTML attributes (see theme_table()). Example:
  * @code
  * $options = array();
  * $options[0]['title'] = "A red row"
@@ -2485,6 +2479,11 @@ function theme_container($variables) {
  * '#title' => 'My Selector'
  * '#options' => $options,
  * );
+ * @endcode
+ *
+ * @return
+ *   A themed HTML string representing the table.
+ *
  * @ingroup themeable
  */
 function theme_tableselect($variables) {
