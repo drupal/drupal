@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.40 2010/01/11 00:17:02 webchick Exp $
+// $Id: comment.admin.inc,v 1.41 2010/01/30 07:59:24 dries Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     ->limit(50)
     ->orderByHeader($header)
     ->execute();
-	
+
   $cids = array();
 
   // We collect a sorted list of node_titles during the query to attach to the

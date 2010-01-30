@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.13 2010/01/30 02:22:01 webchick Exp $
+// $Id: field.test,v 1.14 2010/01/30 07:59:25 dries Exp $
 
 /**
  * @file
@@ -2376,7 +2376,7 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     }
 
     // Check that an instance cannot be added to an object type
-    // forbidden by the field. 
+    // forbidden by the field.
     try {
       $instance = $this->instance_definition;
       $instance['field_name'] = $field_restricted['field_name'];

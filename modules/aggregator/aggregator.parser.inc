@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.parser.inc,v 1.7 2009/12/04 16:49:45 dries Exp $
+// $Id: aggregator.parser.inc,v 1.8 2010/01/30 07:59:24 dries Exp $
 
 /**
  * @file
@@ -157,7 +157,7 @@ function aggregator_parse_feed(&$data, $feed) {
     if (empty($item['author']) && !empty($item['dc:creator'])) {
       $item['author'] = $item['dc:creator'];
     }
-     
+
     $item += array('author' => '', 'description' => '');
 
     // Store on $feed object. This is where processors will look for parsed items.

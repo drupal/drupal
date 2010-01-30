@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.13 2009/11/22 03:25:42 webchick Exp $
+// $Id: maintenance-page.tpl.php,v 1.14 2010/01/30 07:59:26 dries Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@
           $site_html = implode(' ', $site_fields);
 
           if ($logo || $site_title) {
-            print '<h1 id="branding"><a href="' . $base_path . '" title="' . $site_title . '">';            
+            print '<h1 id="branding"><a href="' . $base_path . '" title="' . $site_title . '">';
             if ($logo) {
               print '<img src="' . $logo . '" alt="' . $site_title . '" id="logo" />';
             }

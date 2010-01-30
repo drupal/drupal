@@ -1,5 +1,5 @@
 <?php
-// $Id: module_test.module,v 1.4 2010/01/02 18:56:20 webchick Exp $
+// $Id: module_test.module,v 1.5 2010/01/30 07:59:25 dries Exp $
 
 /**
  * Implements hook_permission().
@@ -12,7 +12,7 @@ function module_test_permission() {
 
 /**
  * Implements hook_system_info_alter().
- * 
+ *
  * Manipulate module dependencies to test dependency chains.
  */
 function module_test_system_info_alter(&$info, $file, $type) {

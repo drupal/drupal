@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.124 2010/01/30 03:38:22 webchick Exp $
+// $Id: system.api.php,v 1.125 2010/01/30 07:59:25 dries Exp $
 
 /**
  * @file
@@ -98,8 +98,8 @@ function hook_hook_info() {
  *     Keys are bundles machine names, as found in the objects' 'bundle'
  *     property (defined in the 'object keys' entry above). Elements:
  *     - label: The human-readable name of the bundle.
- *     - admin: An array of information that allows Field UI pages to attach 
- *       themselves to the existing administration pages for the bundle. 
+ *     - admin: An array of information that allows Field UI pages to attach
+ *       themselves to the existing administration pages for the bundle.
  *       Elements:
  *       - path: the path of the bundle's main administration page, as defined
  *         in hook_menu(). If the path includes a placeholder for the bundle,

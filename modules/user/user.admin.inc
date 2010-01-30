@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.97 2010/01/29 13:50:14 dries Exp $
+// $Id: user.admin.inc,v 1.98 2010/01/30 07:59:26 dries Exp $
 
 /**
  * @file
@@ -702,7 +702,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
     $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => isset($status[$rid]) ? $status[$rid] : array());
     $form['role_names'][$rid] = array('#markup' => $name, '#tree' => TRUE);
   }
-  
+
   $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 

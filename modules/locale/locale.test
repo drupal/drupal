@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.61 2010/01/21 04:20:08 dries Exp $
+// $Id: locale.test,v 1.62 2010/01/30 07:59:25 dries Exp $
 
 /**
  * @file
@@ -333,7 +333,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $edit = array('translations['. $langcode .']' => $this->randomString());
     $this->drupalPost($url, $edit, t('Save translations'));
 
-    // Trigger JavaScript translation parsing and building. 
+    // Trigger JavaScript translation parsing and building.
     locale_inc_callback('_locale_rebuild_js', $langcode);
 
     // Retrieve the JavaScript translation hash code for the custom language to

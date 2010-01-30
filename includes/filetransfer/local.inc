@@ -1,5 +1,5 @@
 <?php
-// $Id: local.inc,v 1.2 2009/10/27 03:34:01 webchick Exp $
+// $Id: local.inc,v 1.3 2010/01/30 07:59:24 dries Exp $
 
 /**
  * The local connection class for copying files as the httpd user.
@@ -53,7 +53,7 @@ class FileTransferLocal extends FileTransfer implements FileTransferChmodInterfa
       throw new FileTransferException('Cannot remove file %file.', NULL, array('%file' => $file));
     }
   }
-  
+
   public function isDirectory($path) {
     return is_dir($path);
   }

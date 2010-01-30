@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.php,v 1.4 2009/10/29 06:58:56 webchick Exp $
+// $Id: authorize.php,v 1.5 2010/01/30 07:59:24 dries Exp $
 
 /**
  * @file
@@ -134,7 +134,7 @@ if (authorize_access_allowed()) {
     }
 
     $output = theme('authorize_report', array('messages' => $results['messages']));
-    
+
     $links = array();
     if (is_array($results['tasks'])) {
       $links += $results['tasks'];

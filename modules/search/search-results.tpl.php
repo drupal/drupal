@@ -1,5 +1,5 @@
 <?php
-// $Id: search-results.tpl.php,v 1.4 2009/12/12 20:49:34 dries Exp $
+// $Id: search-results.tpl.php,v 1.5 2010/01/30 07:59:25 dries Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@
 <?php if ($search_results) : ?>
   <h2><?php print t('Search results');?></h2>
   <dl class="search-results <?php print $type; ?>-results">
-    <?php print $search_results; ?>  
+    <?php print $search_results; ?>
   </dl>
   <?php print $pager; ?>
 <?php else : ?>

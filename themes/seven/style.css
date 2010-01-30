@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.43 2010/01/14 03:25:43 webchick Exp $ */
+/* $Id: style.css,v 1.44 2010/01/30 07:59:26 dries Exp $ */
 
 /**
  * Generic elements
@@ -791,7 +791,7 @@ select.form-select:focus {
 }
 
 .resizable-textarea .grippie {
-  width: 100%; 
+  width: 100%;
   padding: 0 2px;
 }
 

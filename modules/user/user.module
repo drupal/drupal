@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1115 2010/01/30 02:01:41 webchick Exp $
+// $Id: user.module,v 1.1116 2010/01/30 07:59:26 dries Exp $
 
 /**
  * @file
@@ -2350,7 +2350,7 @@ password: Your password
         break;
       case 'status_blocked_body':
         $text = t("!user-name-token,
-        
+
 Your account on !site-name-token has been blocked.
 
 --  !site-name-token team", array('!user-name-token' => '[user:name]', '!site-name-token' => '[site:name]'), array('langcode' => $langcode));

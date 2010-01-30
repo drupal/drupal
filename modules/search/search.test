@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.50 2010/01/10 22:56:51 webchick Exp $
+// $Id: search.test,v 1.51 2010/01/30 07:59:25 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -171,7 +171,7 @@ class SearchMatchTestCase extends DrupalWebTestCase {
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
     }
-    
+
     // These queries are run against the third index type, SEARCH_TYPE_JPN.
     $queries = array(
       // Simple AND queries.
@@ -193,7 +193,7 @@ class SearchMatchTestCase extends DrupalWebTestCase {
       $set = $result ? $result->fetchAll() : array();
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
-    }      
+    }
   }
 
   /**
@@ -599,4 +599,3 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
     $this->assertIdentical(' ', search_simplify($string), t('Search simplify works for ASCII control characters.'));
   }
 }
-  

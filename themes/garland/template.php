@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.36 2010/01/08 07:36:53 webchick Exp $
+// $Id: template.php,v 1.37 2010/01/30 07:59:26 dries Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -103,7 +103,7 @@ function garland_preprocess_page(&$vars) {
     $site_fields[0] = '<span>' . $site_fields[0] . '</span>';
   }
   $vars['site_html'] = implode(' ', $site_fields);
-  
+
   // Set a variable for the site name title and logo alt attributes text.
   $slogan_text = filter_xss_admin(variable_get('site_slogan', ''));
   $site_name_text = filter_xss_admin(variable_get('site_name', 'Drupal'));

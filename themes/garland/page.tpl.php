@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.41 2010/01/04 03:57:19 webchick Exp $
+// $Id: page.tpl.php,v 1.42 2010/01/30 07:59:26 dries Exp $
 ?>
   <?php print render($page['header']); ?>
 
@@ -15,8 +15,8 @@
               <img src="<?php print $logo ?>" alt="<?php print $site_name_and_slogan ?>" id="logo" />
             <?php endif; ?>
             <?php print $site_html ?>
-            </a></strong></div>           
-          <?php else: /* Use h1 when the content title is empty */ ?>  
+            </a></strong></div>
+          <?php else: /* Use h1 when the content title is empty */ ?>
             <h1 id="branding"><a href="<?php print $front_page ?>" title="<?php print $site_name_and_slogan ?>">
             <?php if ($logo): ?>
               <img src="<?php print $logo ?>" alt="<?php print $site_name_and_slogan ?>" id="logo" />

@@ -36,7 +36,7 @@
  * @author      Vincent Blavet <vincent@phpconcept.net>
  * @copyright   1997-2008 The Authors
  * @license     http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @version     CVS: $Id: system.tar.inc,v 1.3 2010/01/09 23:03:21 webchick Exp $
+ * @version     CVS: $Id: system.tar.inc,v 1.4 2010/01/30 07:59:25 dries Exp $
  * @link        http://pear.php.net/package/Archive_Tar
  */
 
@@ -47,11 +47,11 @@ define ('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
 * Creates a (compressed) Tar archive
 *
 * @author   Vincent Blavet <vincent@phpconcept.net>
-* @version  $Revision: 1.3 $
+* @version  $Revision: 1.4 $
 * @license  http://www.opensource.org/licenses/bsd-license.php New BSD License
 * @package  Archive_Tar
 */
-class Archive_Tar 
+class Archive_Tar
 {
     /**
     * @var string Name of the Tar

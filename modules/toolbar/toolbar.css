@@ -1,4 +1,4 @@
-/* $Id: toolbar.css,v 1.16 2010/01/07 20:29:33 dries Exp $ */
+/* $Id: toolbar.css,v 1.17 2010/01/30 07:59:26 dries Exp $ */
 
 body.toolbar {
   padding-top: 2.2em;
@@ -86,7 +86,7 @@ body.toolbar-drawer {
 #toolbar-user {
   float: right;
 }
-  
+
 #toolbar-menu {
   float: left;
 }

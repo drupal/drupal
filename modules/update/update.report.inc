@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.29 2010/01/08 07:36:53 webchick Exp $
+// $Id: update.report.inc,v 1.30 2010/01/30 07:59:26 dries Exp $
 
 /**
  * @file
@@ -197,7 +197,7 @@ function theme_update_report($variables) {
           case UPDATE_NOT_SUPPORTED:
             $base_themes[] = t('%base_theme (!base_label)', array('%base_theme' => $base_theme, '!base_label' => theme('update_status_label', array('status' => $status[$base_key]))));
             break;
-            
+
           default:
             $base_themes[] = drupal_placeholder(array('text' => $base_theme));
         }

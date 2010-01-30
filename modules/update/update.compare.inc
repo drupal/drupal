@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.39 2010/01/04 21:31:52 webchick Exp $
+// $Id: update.compare.inc,v 1.40 2010/01/30 07:59:26 dries Exp $
 
 /**
  * @file
@@ -774,7 +774,7 @@ function update_filter_project_info($info) {
     'package',
     'project',
     'project status url',
-    'version', 
+    'version',
   );
   return array_intersect_key($info, drupal_map_assoc($whitelist));
 }

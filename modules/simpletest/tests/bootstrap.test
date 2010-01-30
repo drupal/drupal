@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.test,v 1.27 2010/01/05 18:00:14 webchick Exp $
+// $Id: bootstrap.test,v 1.28 2010/01/30 07:59:25 dries Exp $
 
 class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
@@ -390,7 +390,7 @@ class BootstrapResettableStaticTestCase extends DrupalUnitTestCase {
 
   /**
    * Test that a variable reference returned by drupal_static() gets reset when
-   * drupal_static_reset() is called. 
+   * drupal_static_reset() is called.
    */
   function testDrupalStatic() {
     $name = __CLASS__ . '_' . __METHOD__;

@@ -1,5 +1,5 @@
 <?php
-// $Id: ssh.inc,v 1.4 2009/10/24 05:38:27 webchick Exp $
+// $Id: ssh.inc,v 1.5 2010/01/30 07:59:24 dries Exp $
 
 /**
  * The SSH connection class for the update module.
@@ -59,7 +59,7 @@ class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface
       throw new FileTransferException('Cannot remove @directory.', NULL, array('@directory' => $destination));
     }
   }
-  
+
   /**
    * WARNING: This is untested.  It is not currently used, but should do the trick.
    */

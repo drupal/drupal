@@ -1,5 +1,5 @@
 <?php
-// $Id: book-all-books-block.tpl.php,v 1.4 2009/09/18 10:54:20 dries Exp $
+// $Id: book-all-books-block.tpl.php,v 1.5 2010/01/30 07:59:24 dries Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
  *
  * Available variables:
  * - $book_menus: Array of book outlines keyed to the parent book ID. Call
- *   render() on each to print it as an unordered list. 
+ *   render() on each to print it as an unordered list.
  */
 ?>
 <?php foreach ($book_menus as $book_id => $menu) : ?>

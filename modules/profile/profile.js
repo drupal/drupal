@@ -1,4 +1,4 @@
-// $Id: profile.js,v 1.7 2009/04/27 20:19:37 webchick Exp $
+// $Id: profile.js,v 1.8 2010/01/30 07:59:25 dries Exp $
 (function ($) {
 
 /**

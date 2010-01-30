@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.23 2010/01/25 10:38:34 dries Exp $
+// $Id: search.api.php,v 1.24 2010/01/30 07:59:25 dries Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@
  *
  * This hook allows a module to perform searches on content it defines
  * (custom node types, users, or comments, for example) when a site search
- * is performed. 
+ * is performed.
  *
  * Note that you can use form API to extend the search. You will need to use
  * hook_form_alter() to add any additional required form elements. You can
@@ -206,7 +206,7 @@ function hook_search_execute($keys = NULL) {
   return $results;
 }
 
-/** 
+/**
  * Override the rendering of search results.
  *
  * A module that implements hook_search() to define a type of search

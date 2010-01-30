@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.module,v 1.19 2010/01/14 06:47:54 webchick Exp $
+// $Id: shortcut.module,v 1.20 2010/01/30 07:59:25 dries Exp $
 
 /**
  * @file
@@ -399,7 +399,7 @@ function shortcut_current_displayed_set($account = NULL) {
     $shortcut_set = shortcut_set_load($shortcut_set_name);
   }
   // Otherwise, use the default set.
-  else { 
+  else {
     $shortcut_set = shortcut_default_set($account);
   }
 

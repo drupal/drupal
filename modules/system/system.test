@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.106 2010/01/25 10:38:35 dries Exp $
+// $Id: system.test,v 1.107 2010/01/30 07:59:25 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -1244,7 +1244,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'));
     $this->drupalGet('node');
     $this->assertRaw($file->uri, t('Logo path successfully changed.'));
-  
+
     // Upload a file to use for the logo.
     $file = current($this->drupalGetTestFiles('image'));
     $edit = array(

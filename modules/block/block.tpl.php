@@ -1,5 +1,5 @@
 <?php
-// $Id: block.tpl.php,v 1.8 2010/01/04 03:57:19 webchick Exp $
+// $Id: block.tpl.php,v 1.9 2010/01/30 07:59:24 dries Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@
  */
 ?>
 <div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
- 
+
   <?php print render($title_prefix); ?>
 <?php if ($block->subject): ?>
   <h2<?php print $title_attributes; ?>><?php print $block->subject ?></h2>

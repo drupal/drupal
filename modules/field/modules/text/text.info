@@ -1,4 +1,4 @@
-; $Id: text.info,v 1.5 2009/06/12 08:39:37 dries Exp $
+; $Id: text.info,v 1.6 2010/01/30 07:59:25 dries Exp $
 name = Text
 description = Defines simple text field types.
 package = Core - fields

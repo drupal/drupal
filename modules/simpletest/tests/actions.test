@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.test,v 1.12 2010/01/10 17:19:01 webchick Exp $
+// $Id: actions.test,v 1.13 2010/01/30 07:59:25 dries Exp $
 
 class ActionsConfigurationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -104,7 +104,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
 
   /**
    * Create an infinite loop by causing a watchdog message to be set,
-   * which causes the actions to be triggered again, up to actions_max_stack 
+   * which causes the actions to be triggered again, up to actions_max_stack
    * times.
    */
   protected function triggerActions() {

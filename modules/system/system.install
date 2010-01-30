@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.443 2010/01/25 21:32:44 dries Exp $
+// $Id: system.install,v 1.444 2010/01/30 07:59:25 dries Exp $
 
 /**
  * @file
@@ -94,7 +94,7 @@ function system_requirements($phase) {
   else {
     $requirements['php_register_globals']['value'] = $t('Disabled');
   }
-  
+
   // Test PDO library availability.
   $requirements['pdo'] = array(
     'title' => $t('PDO library'),

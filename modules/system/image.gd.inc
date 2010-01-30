@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.14 2010/01/25 10:38:35 dries Exp $
+// $Id: image.gd.inc,v 1.15 2010/01/30 07:59:25 dries Exp $
 
 /**
  * @file
@@ -257,7 +257,7 @@ function image_gd_save(stdClass $image, $destination) {
   if ($wrapper = file_stream_wrapper_get_instance_by_uri($destination)) {
     $destination = $wrapper->realpath();
   }
-  
+
   $extension = str_replace('jpg', 'jpeg', $image->info['extension']);
   $function = 'image' . $extension;
   if (!function_exists($function)) {
