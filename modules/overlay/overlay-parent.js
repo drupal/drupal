@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.22 2010/01/14 04:06:54 webchick Exp $
+// $Id: overlay-parent.js,v 1.23 2010/01/30 06:45:26 webchick Exp $
 
 (function ($) {
 
@@ -405,6 +405,12 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
   // pressed while clicking).
   $(document).unbind('mousedown.dialog-overlay click.dialog-overlay');
   $('.ui-widget-overlay').bind('mousedown.dialog-overlay click.dialog-overlay', function (){return false;});
+
+  // Unbind the keydown and keypress handlers installed by ui.dialog because
+  // they interfere with use of browser's keyboard hotkeys like CTRL+w.
+  // This may cause problems when using modules that implement keydown or 
+  // keypress handlers as they aren't blocked when overlay is open.
+  $(document).unbind('keydown.dialog-overlay keypress.dialog-overlay');
 
   // Reset the scroll to the top of the window so that the overlay is visible again.
   window.scrollTo(0, 0);
