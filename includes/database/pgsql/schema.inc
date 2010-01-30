@@ -147,15 +147,16 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if ($spec['type'] == 'serial') {
       unset($spec['not null']);
     }
-    if (!empty($spec['unsigned'])) {
-      $sql .= " CHECK ($name >= 0)";
-    }
 
     if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
       $sql .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
       $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
+    }
+
+    if (!empty($spec['unsigned'])) {
+      $sql .= " CHECK ($name >= 0)";
     }
 
     if (isset($spec['not null']) && $spec['not null']) {
