@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1223 2010/01/30 02:01:41 webchick Exp $
+// $Id: node.module,v 1.1224 2010/01/30 02:22:01 webchick Exp $
 
 /**
  * @file
@@ -576,6 +576,7 @@ function node_configure_fields($type) {
       $field = array(
         'field_name' => 'body',
         'type' => 'text_with_summary',
+        'object_types' => array('node'),
         'translatable' => TRUE,
       );
       $field = field_create_field($field);
