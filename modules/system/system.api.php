@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.122 2010/01/29 00:42:29 webchick Exp $
+// $Id: system.api.php,v 1.123 2010/01/30 02:01:41 webchick Exp $
 
 /**
  * @file
@@ -218,6 +218,32 @@ function hook_entity_load($entities, $type) {
   foreach ($entities as $entity) {
     $entity->foo = mymodule_add_something($entity, $type);
   }
+}
+
+/**
+ * Act on entities when inserted.
+ *
+ * Generic insert hook called for all entity types via entity_invoke().
+ *
+ * @param $entity
+ *   The entity object.
+ * @param $type
+ *   The type of entity being inserted (i.e. node, user, comment).
+ */
+function hook_entity_insert($entity, $type) {
+}
+
+/**
+ * Act on entities when updated.
+ *
+ * Generic update hook called for all entity types via entity_invoke().
+ *
+ * @param $entity
+ *   The entity object.
+ * @param $type
+ *   The type of entity being updated (i.e. node, user, comment).
+ */
+function hook_entity_update($entity, $type) {
 }
 
 /**

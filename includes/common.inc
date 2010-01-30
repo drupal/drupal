@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1094 2010/01/29 22:40:41 dries Exp $
+// $Id: common.inc,v 1.1095 2010/01/30 02:01:41 webchick Exp $
 
 /**
  * @file
@@ -6574,6 +6574,19 @@ function entity_path($entity_type, $entity) {
   if (isset($info['path callback']) && function_exists($info['path callback'])) {
     return $info['path callback']($entity);
   }
+}
+/**
+ * Invokes entity insert/update hooks.
+ *
+ * @param $op
+ *   One of 'insert' or 'update'.
+ * @param $entity_type
+ *   The entity type; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The entity object being operated on.
+ */
+function entity_invoke($op, $entity_type, $entity) {
+  module_invoke_all('entity_' . $op, $entity, $entity_type);
 }
 
 /**

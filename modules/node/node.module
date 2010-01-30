@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1222 2010/01/29 12:14:43 dries Exp $
+// $Id: node.module,v 1.1223 2010/01/30 02:01:41 webchick Exp $
 
 /**
  * @file
@@ -1049,6 +1049,7 @@ function node_save($node) {
     $function('node', $node);
 
     module_invoke_all('node_' . $op, $node);
+    entity_invoke($op, 'node', $node);
 
     // Update the node access table for this node.
     node_access_acquire_grants($node);
