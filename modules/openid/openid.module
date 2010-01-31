@@ -182,50 +182,50 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
   $claimed_id = _openid_normalize($claimed_id);
 
   $services = openid_discovery($claimed_id);
-  if (count($services) == 0) {
+  $service = _openid_select_service($services);
+
+  if (!$service) {
     form_set_error('openid_identifier', t('Sorry, that is not a valid OpenID. Ensure you have spelled your ID correctly.'));
     return;
   }
 
   // Store discovered information in the users' session so we don't have to rediscover.
-  $_SESSION['openid']['service'] = $services[0];
+  $_SESSION['openid']['service'] = $service;
   // Store the claimed id
   $_SESSION['openid']['claimed_id'] = $claimed_id;
   // Store the login form values so we can pass them to
   // user_exteral_login later.
   $_SESSION['openid']['user_login_values'] = $form_values;
 
-  $op_endpoint = $services[0]['uri'];
   // If bcmath is present, then create an association
   $assoc_handle = '';
   if (function_exists('bcadd')) {
-    $assoc_handle = openid_association($op_endpoint);
+    $assoc_handle = openid_association($service['uri']);
   }
 
-  // Now that there is an association created, move on
-  // to request authentication from the IdP
-  // First check for LocalID. If not found, check for Delegate. Fall
-  // back to $claimed_id if neither is found.
-  if (!empty($services[0]['localid'])) {
-    $identity = $services[0]['localid'];
-  }
-  elseif (!empty($services[0]['delegate'])) {
-    $identity = $services[0]['delegate'];
-  }
-  else {
-    $identity = $claimed_id;
-  }
-
-  if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 . '/server', $services[0]['types'])) {
+  if (in_array('http://specs.openid.net/auth/2.0/server', $service['types'])) {
+    // User entered an OP Identifier.
     $claimed_id = $identity = 'http://specs.openid.net/auth/2.0/identifier_select';
   }
-  $authn_request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $services[0]['version']);
+  else {
+    // Look for OP-Local Identifier.
+    if (!empty($service['localid'])) {
+      $identity = $service['localid'];
+    }
+    elseif (!empty($service['delegate'])) {
+      $identity = $service['delegate'];
+    }
+    else {
+      $identity = $claimed_id;
+    }
+  }
+  $request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $service['version']);
 
-  if ($services[0]['version'] == 2) {
-    openid_redirect($op_endpoint, $authn_request);
+  if ($service['version'] == 2) {
+    openid_redirect($service['uri'], $request);
   }
   else {
-    openid_redirect_http($op_endpoint, $authn_request);
+    openid_redirect_http($service['uri'], $request);
   }
 }
 
@@ -258,11 +258,20 @@ function openid_complete($response = array()) {
       }
       else {
         if (openid_verify_assertion($service['uri'], $response)) {
-          // If the returned claimed_id is different from the session claimed_id,
-          // then we need to do discovery and make sure the op_endpoint matches.
-          if ($service['version'] == 2 && $response['openid.claimed_id'] != $claimed_id) {
-            $disco = openid_discovery($response['openid.claimed_id']);
-            if ($disco[0]['uri'] != $service['uri']) {
+          // OpenID Authentication, section 11.2:
+          // If the returned Claimed Identifier is different from the one sent
+          // to the OpenID Provider, we need to do discovery on the returned
+          // identififer to make sure that the provider is authorized to respond
+          // on behalf of this.
+          if ($service['version'] == 2 && $response['openid.claimed_id'] != _openid_normalize($claimed_id)) {
+            $services = openid_discovery($response['openid.claimed_id']);
+            $uris = array();
+            foreach ($services as $discovered_service) {
+              if (in_array('http://specs.openid.net/auth/2.0/server', $discovered_service['types']) || in_array('http://specs.openid.net/auth/2.0/signon', $discovered_service['types'])) {
+                $uris[] = $discovered_service['uri'];
+              }
+            }
+            if (!in_array($service['uri'], $uris)) {
               return $response;
             }
           }
@@ -329,16 +338,20 @@ function openid_discovery($claimed_id) {
         // Look for 2.0 links
         $uri = _openid_link_href('openid2.provider', $result->data);
         $delegate = _openid_link_href('openid2.local_id', $result->data);
-        $version = 2;
+        $type = 'http://specs.openid.net/auth/2.0/signon';
 
-        // 1.0 links
+        // 1.x links
         if (empty($uri)) {
           $uri = _openid_link_href('openid.server', $result->data);
           $delegate = _openid_link_href('openid.delegate', $result->data);
-          $version = 1;
+          $type = 'http://openid.net/signon/1.1';
         }
         if (!empty($uri)) {
-          $services[] = array('uri' => $uri, 'delegate' => $delegate, 'version' => $version);
+          $services[] = array(
+            'uri' => $uri,
+            'delegate' => $delegate,
+            'types' => array($type),
+          );
         }
       }
     }

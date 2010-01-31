@@ -99,6 +99,56 @@ function openid_redirect_form($form, &$form_state, $url, $message) {
 }
 
 /**
+ * Select a service element.
+ *
+ * The procedure is described in OpenID Authentication 2.0, section 7.3.2.
+ *
+ * A new entry is added to the returned array with the key 'version' and the
+ * value 1 or 2 specifying the protocol version used by the service.
+ *
+ * @param $services
+ *   An array of service arrays as returned by openid_discovery().
+ * @return
+ *   The selected service array, or NULL if no valid services were found.
+ */
+function _openid_select_service(array $services) {
+  // Extensible Resource Identifier (XRI) Resolution Version 2.0, section 4.3.3:
+  // Find the service with the highest priority (lowest integer value). If there
+  // is a tie, select a random one, not just the first in the XML document.
+  $selected_service = NULL;
+  shuffle($services);
+
+  // Search for an OP Identifier Element.
+  foreach ($services as $service) {
+    if (!empty($service['uri'])) {
+      if (in_array('http://specs.openid.net/auth/2.0/server', $service['types'])) {
+        $service['version'] = 2;
+      }
+      elseif (in_array(OPENID_NS_1_0, $service['types']) || in_array(OPENID_NS_1_1, $service['types'])) {
+        $service['version'] = 1;
+      }
+      if (isset($service['version']) && (!$selected_service || $service['priority'] < $selected_service['priority'])) {
+        $selected_service = $service;
+      }
+    }
+  }
+
+  if (!$selected_service) {
+    // Search for Claimed Identifier Element.
+    foreach ($services as $service) {
+      if (!empty($service['uri']) && in_array('http://specs.openid.net/auth/2.0/signon', $service['types'])) {
+        $service['version'] = 2;
+        if (!$selected_service || $service['priority'] < $selected_service['priority']) {
+          $selected_service = $service;
+        }
+      }
+    }
+  }
+
+  return $selected_service;
+}
+
+/**
  * Determine if the given identifier is an XRI ID.
  */
 function _openid_is_xri($identifier) {
@@ -118,7 +168,9 @@ function _openid_is_xri($identifier) {
 }
 
 /**
- * Normalize the given identifier as per spec.
+ * Normalize the given identifier.
+ *
+ * The procedure is described in OpenID Authentication 2.0, section 7.2.
  */
 function _openid_normalize($identifier) {
   if (_openid_is_xri($identifier)) {

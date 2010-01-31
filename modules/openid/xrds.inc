@@ -25,10 +25,19 @@ function xrds_parse($xml) {
 /**
  * Parser callback functions
  */
-function _xrds_element_start(&$parser, $name, $attribs) {
-  global $xrds_open_elements;
+function _xrds_element_start(&$parser, $name, $attributes) {
+  global $xrds_open_elements, $xrds_current_service;
 
   $xrds_open_elements[] = _xrds_strip_namespace($name);
+
+  $path = strtoupper(implode('/', $xrds_open_elements));
+  if ($path == 'XRDS/XRD/SERVICE') {
+    foreach ($attributes as $attribute_name => $value) {
+      if (_xrds_strip_namespace($attribute_name) == 'PRIORITY') {
+        $xrds_current_service['priority'] = intval($value);
+      }
+    }
+  }
 }
 
 function _xrds_element_end(&$parser, $name) {
@@ -36,17 +45,11 @@ function _xrds_element_end(&$parser, $name) {
 
   $name = _xrds_strip_namespace($name);
   if ($name == 'SERVICE') {
-    if (in_array(OPENID_NS_2_0 . '/signon', $xrds_current_service['types']) ||
-        in_array(OPENID_NS_2_0 . '/server', $xrds_current_service['types'])) {
-      $xrds_current_service['version'] = 2;
+    if (!isset($xrds_current_service['priority'])) {
+      // If the priority attribute is absent, the default is infinity.
+      $xrds_current_service['priority'] = PHP_INT_MAX;
     }
-    elseif (in_array(OPENID_NS_1_1, $xrds_current_service['types']) ||
-            in_array(OPENID_NS_1_0, $xrds_current_service['types'])) {
-      $xrds_current_service['version'] = 1;
-    }
-    if (!empty($xrds_current_service['version'])) {
-      $xrds_services[] = $xrds_current_service;
-    }
+    $xrds_services[] = $xrds_current_service;
     $xrds_current_service = array();
   }
   array_pop($xrds_open_elements);

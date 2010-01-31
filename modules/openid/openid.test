@@ -45,6 +45,12 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     // Identifier is the URL of an XRDS document.
     $this->addIdentity(url('openid-test/yadis/xrds', array('absolute' => TRUE)), 2);
 
+    // Identifier is the URL of an XRDS document containing an OP Identifier
+    // Element. The Relying Party sends the special value
+    // "http://specs.openid.net/auth/2.0/identifier_select" as Claimed
+    // Identifier. The OpenID Provider responds with the actual identifier.
+    $this->addIdentity(url('openid-test/yadis/xrds/server', array('absolute' => TRUE)), 2, url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE)));
+
     // Identifier is the URL of an HTML page that is sent with an HTTP header
     // that contains the URL of an XRDS document.
     $this->addIdentity(url('openid-test/yadis/x-xrds-location', array('absolute' => TRUE)), 2);
@@ -126,8 +132,15 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
   /**
    * Add OpenID identity to user's profile.
+   *
+   * @param $identity
+   *   The User-supplied Identifier.
+   * @param $version
+   *   The protocol version used by the service.
+   * @param $claimed_id
+   *   The expected Claimed Identifier returned by the OpenID Provider.
    */
-  function addIdentity($identity, $version = 2) {
+  function addIdentity($identity, $version = 2, $claimed_id = NULL) {
     $this->drupalGet('user/' . $this->web_user->uid . '/openid');
     $edit = array('openid_identifier' => $identity);
     $this->drupalPost(NULL, $edit, t('Add an OpenID'));
@@ -139,7 +152,10 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
       $this->drupalPost(NULL, array(), t('Send'));
     }
 
-    $this->assertRaw(t('Successfully added %identity', array('%identity' => $identity)), t('Identity %identity was added.', array('%identity' => $identity)));
+    if (!$claimed_id) {
+      $claimed_id = $identity;
+    }
+    $this->assertRaw(t('Successfully added %identity', array('%identity' => $claimed_id)), t('Identity %identity was added.', array('%identity' => $identity)));
   }
 
   /**

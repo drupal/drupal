@@ -74,9 +74,33 @@ function openid_test_yadis_xrds() {
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)">
         <XRD>
           <Service>
+            <Type>http://example.com/this-is-ignored</Type>
+          </Service>
+          <Service priority="10">
             <Type>http://specs.openid.net/auth/2.0/signon</Type>
             <URI>' . url('openid-test/endpoint', array('absolute' => TRUE)) . '</URI>
           </Service>
+          <Service priority="15">
+            <Type>http://specs.openid.net/auth/2.0/signon</Type>
+            <URI>http://example.com/this-has-too-low-priority</URI>
+          </Service>
+          <Service>
+            <Type>http://specs.openid.net/auth/2.0/signon</Type>
+            <URI>http://example.com/this-has-too-low-priority</URI>
+          </Service>
+          ';
+    if (arg(3) == 'server') {
+      print '
+          <Service>
+            <Type>http://specs.openid.net/auth/2.0/server</Type>
+            <URI>http://example.com/this-has-too-low-priority</URI>
+          </Service>
+          <Service priority="20">
+            <Type>http://specs.openid.net/auth/2.0/server</Type>
+            <URI>' . url('openid-test/endpoint', array('absolute' => TRUE)) . '</URI>
+          </Service>';
+    }
+    print '
         <XRD>
       </xrds:XRDS>';
   }
@@ -202,12 +226,23 @@ function _openid_test_endpoint_associate() {
  * identity.
  */
 function _openid_test_endpoint_authenticate() {
-  global $base_url;
-
   module_load_include('inc', 'openid');
 
   // Generate unique identifier for this authentication.
   $nonce = _openid_nonce();
+
+  if (!isset($_REQUEST['openid_claimed_id'])) {
+    // openid.claimed_id is not used in OpenID 1.x.
+    $claimed_id = '';
+  }
+  elseif ($_REQUEST['openid_claimed_id'] == 'http://specs.openid.net/auth/2.0/identifier_select') {
+    // The Relying Party did not specify a Claimed Identifier, so the OpenID
+    // Provider decides on one.
+    $claimed_id = url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE));
+  }
+  else {
+    $claimed_id = $_REQUEST['openid_claimed_id'];
+  }
 
   // Generate response containing the user's identity. The openid.sreg.xxx
   // entries contain profile data stored by the OpenID Provider (see OpenID
@@ -215,9 +250,8 @@ function _openid_test_endpoint_authenticate() {
   $response = variable_get('openid_test_response', array()) + array(
     'openid.ns' => OPENID_NS_2_0,
     'openid.mode' => 'id_res',
-    'openid.op_endpoint' => $base_url . url('openid/provider'),
-    // openid.claimed_id is not sent by OpenID 1 clients.
-    'openid.claimed_id' => isset($_REQUEST['openid_claimed_id']) ? $_REQUEST['openid_claimed_id'] : '',
+    'openid.op_endpoint' => url('openid-test/endpoint', array('absolute' => TRUE)),
+    'openid.claimed_id' => $claimed_id,
     'openid.identity' => $_REQUEST['openid_identity'],
     'openid.return_to' => $_REQUEST['openid_return_to'],
     'openid.response_nonce' => $nonce,
