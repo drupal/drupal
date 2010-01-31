@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.72 2010/01/30 07:59:25 dries Exp $
+// $Id: menu.admin.inc,v 1.73 2010/01/31 18:53:16 dries Exp $
 
 /**
  * @file
@@ -346,7 +346,7 @@ function menu_edit_item_validate($form, &$form_state) {
   if (!url_is_external($item['link_path'])) {
     $parsed_link = parse_url($item['link_path']);
     if (isset($parsed_link['query'])) {
-      $item['options']['query'] = $parsed_link['query'];
+      $item['options']['query'] = drupal_get_query_array($parsed_link['query']);
     }
     if (isset($parsed_link['fragment'])) {
       $item['options']['fragment'] = $parsed_link['fragment'];
