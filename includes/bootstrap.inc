@@ -29,7 +29,7 @@ define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT',    '40M');
 /**
  * Minimum supported version of MySQL, if it is used.
  */
-define('DRUPAL_MINIMUM_MYSQL',  '5.0');
+define('DRUPAL_MINIMUM_MYSQL',  '5.0.15');
 
 /**
  * Minimum supported version of PostgreSQL, if it is used.
