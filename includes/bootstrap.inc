@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.347 2010/01/29 22:40:41 dries Exp $
+// $Id: bootstrap.inc,v 1.348 2010/01/31 18:31:46 dries Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT',    '40M');
 /**
  * Minimum supported version of MySQL, if it is used.
  */
-define('DRUPAL_MINIMUM_MYSQL',  '5.0');
+define('DRUPAL_MINIMUM_MYSQL',  '5.0.15');
 
 /**
  * Minimum supported version of PostgreSQL, if it is used.
