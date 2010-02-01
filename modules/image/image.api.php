@@ -1,5 +1,5 @@
 <?php
-// $Id: image.api.php,v 1.3 2009/10/16 00:52:46 webchick Exp $
+// $Id: image.api.php,v 1.4 2010/02/01 07:07:57 webchick Exp $
 
 /**
  * @file
@@ -88,8 +88,7 @@ function hook_image_style_delete($style) {
  * images are being deleted from the server and regenerated). Any
  * module-specific caches that contain information related to the style should
  * be cleared using this hook. This hook is called whenever a style is updated,
- * deleted, any effect associated with the style is update or deleted, or when
- * the user selects the style flush option.
+ * deleted, or any effect associated with the style is update or deleted.
  *
  * @param $style
  *   The image style array that is being flushed.
@@ -119,7 +118,7 @@ function hook_image_style_flush($style) {
  *
  * @see hook_image_default_styles()
  */
-function hook_image_styles_alter($styles) {
+function hook_image_styles_alter(&$styles) {
   // Check that we only affect a default style.
   if ($styles['thumbnail']['storage'] == IMAGE_STORAGE_DEFAULT) {
     // Add an additional effect to the thumbnail style.
@@ -127,6 +126,7 @@ function hook_image_styles_alter($styles) {
       'name' => 'image_desaturate',
       'data' => array(),
       'weight' => 1,
+      'effect callback' => 'image_desaturate_effect',
     );
   }
 }
