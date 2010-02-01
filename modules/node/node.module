@@ -958,7 +958,9 @@ function _node_save_revision(&$node, $uid, $update = NULL) {
  */
 function node_delete($nid) {
 
-  $node = node_load($nid);
+  // Clear the cache before the load, so if multiple nodes are deleted, the
+  // memory will not fill up with nodes (possibly) already removed.
+  $node = node_load($nid, NULL, TRUE);
 
   if (node_access('delete', $node)) {
     db_query('DELETE FROM {node} WHERE nid = %d', $node->nid);
