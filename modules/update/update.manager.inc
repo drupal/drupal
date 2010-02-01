@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.16 2010/01/30 07:59:26 dries Exp $
+// $Id: update.manager.inc,v 1.17 2010/02/01 07:17:59 webchick Exp $
 
 /**
  * @file
@@ -563,7 +563,7 @@ function update_manager_install_form_submit($form, &$form_state) {
     return;
   }
   // Unfortunately, we can only use the directory name for this. :(
-  $project = drupal_substr($files[0]['filename'], 0, -1);
+  $project = drupal_substr($files[0], 0, -1);
 
   try {
     update_manager_archive_verify($project, $local_cache, $directory);

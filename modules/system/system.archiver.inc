@@ -1,5 +1,5 @@
 <?php
-// $Id: system.archiver.inc,v 1.2 2009/10/16 13:18:32 dries Exp $
+// $Id: system.archiver.inc,v 1.3 2010/02/01 07:17:59 webchick Exp $
 
 /**
  * @file
@@ -49,7 +49,11 @@ class ArchiverTar implements ArchiverInterface {
   }
 
   public function listContents() {
-    return $this->tar->listContent();
+    $files = array();
+    foreach ($this->tar->listContent() as $file_data) {
+      $files[] = $file_data['filename'];
+    }
+    return $files;
   }
 
   /**

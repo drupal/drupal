@@ -1,5 +1,5 @@
 <?php
-// $Id: archiver.inc,v 1.4 2010/01/25 10:38:34 dries Exp $
+// $Id: archiver.inc,v 1.5 2010/02/01 07:17:59 webchick Exp $
 
 /**
  * @file
@@ -60,8 +60,7 @@ interface ArchiverInterface {
    * List all files in the archive.
    *
    * @return
-   *   An array of file names relative to the root of the archive, or
-   *   an iterable object that resolves to such a list.
+   *   An array of file names relative to the root of the archive.
    */
   public function listContents();
 }
