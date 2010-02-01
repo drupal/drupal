@@ -173,8 +173,10 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
     $log = $this->randomName(10);
     $node = $this->drupalCreateNode(array('log' => $log));
 
-    // Save over the same revision but do not provide a log message, and check
-    // that the original log message is preserved.
+    // Save over the same revision and explicitly provide an empty log message
+    // (for example, to mimic the case of a node form submitted with no text in
+    // the "log message" field), and check that the original log message is
+    // preserved.
     $new_title = $this->randomName(10) . 'testNodeRevisionWithoutLogMessage1';
     $updated_node = (object) array(
       'nid' => $node->nid,
@@ -182,6 +184,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
       'uid' => $node->uid,
       'type' => $node->type,
       'title' => $new_title,
+      'log' => '',
     );
     node_save($updated_node);
     $this->drupalGet('node/' . $node->nid);
