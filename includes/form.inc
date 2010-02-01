@@ -970,10 +970,8 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // #value data.
     elseif (isset($elements['#element_validate'])) {
       foreach ($elements['#element_validate'] as $function) {
-        if (function_exists($function))  {
-          $function($elements, $form_state, $form_state['complete form']);
-        }
-      }
+        $function($elements, $form_state, $form_state['complete form']);        
+      }      
     }
     $elements['#validated'] = TRUE;
   }
@@ -1014,22 +1012,19 @@ function form_execute_handlers($type, &$form, &$form_state) {
   }
 
   foreach ($handlers as $function) {
-    if (function_exists($function))  {
-      // Check if a previous _submit handler has set a batch, but make sure we
-      // do not react to a batch that is already being processed (for instance
-      // if a batch operation performs a drupal_form_submit()).
-      if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['id'])) {
-        // Some previous submit handler has set a batch. To ensure correct
-        // execution order, store the call in a special 'control' batch set.
-        // See _batch_next_set().
-        $batch['sets'][] = array('form_submit' => $function);
-        $batch['has_form_submits'] = TRUE;
-      }
-      else {
-        $function($form, $form_state);
-      }
-      $return = TRUE;
+    // Check to see if a previous _submit handler has set a batch, but
+    // make sure we do not react to a batch that is already being processed
+    // (for instance if a batch operation performs a drupal_form_submit()).
+    if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['current_set'])) {
+      // Some previous _submit handler has set a batch. We store the call
+      // in a special 'control' batch set, for execution at the correct
+      // time during the batch processing workflow.
+      $batch['sets'][] = array('form_submit' => $function);
     }
+    else {
+      $function($form, $form_state);
+    }
+    $return = TRUE;
   }
   return $return;
 }
@@ -1247,9 +1242,7 @@ function form_builder($form_id, $element, &$form_state) {
   // checkboxes and files.
   if (isset($element['#process']) && !$element['#processed']) {
     foreach ($element['#process'] as $process) {
-      if (function_exists($process)) {
-        $element = $process($element, $form_state, $form_state['complete form']);
-      }
+      $element = $process($element, $form_state, $form_state['complete form']);
     }
     $element['#processed'] = TRUE;
   }

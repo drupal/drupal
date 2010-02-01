@@ -681,9 +681,6 @@ function forum_form($node, $form_state) {
     $form['forum_tid'] = array('#type' => 'value', '#value' => $node->forum_tid);
   }
 
-  $form['#submit'][] = 'forum_submit';
-  // Assign the forum topic submit handler.
-
   return $form;
 }
 
