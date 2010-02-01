@@ -57,6 +57,8 @@ function image_help($path, $arg) {
     case 'admin/config/media/image-styles':
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
     case 'admin/config/media/image-styles/edit/%/add/%':
+      $effect = image_effect_definition_load($arg[7]);
+      return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
     case 'admin/config/media/image-styles/edit/%/effects/%':
       $effect = ($arg[5] == 'add') ? image_effect_definition_load($arg[6]) : image_effect_load($arg[6], $arg[4]);
       return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
