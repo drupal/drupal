@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.73 2010/01/31 18:53:16 dries Exp $
+// $Id: menu.admin.inc,v 1.74 2010/02/01 19:19:35 dries Exp $
 
 /**
  * @file
@@ -348,8 +348,16 @@ function menu_edit_item_validate($form, &$form_state) {
     if (isset($parsed_link['query'])) {
       $item['options']['query'] = drupal_get_query_array($parsed_link['query']);
     }
+    else {
+      // Use unset() rather than setting to empty string
+      // to avoid redundant serialized data being stored.
+      unset($item['options']['query']);
+    }
     if (isset($parsed_link['fragment'])) {
       $item['options']['fragment'] = $parsed_link['fragment'];
+    }
+    else {
+      unset($item['options']['fragment']);
     }
     if ($item['link_path'] != $parsed_link['path']) {
       $item['link_path'] = $parsed_link['path'];
