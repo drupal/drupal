@@ -290,17 +290,25 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
   /**
    * Create a random user and ensure the default mapping for user is used.
    */
-  function testUserProfilesAttributesInMarkup() {
+  function testUserAttributesInMarkup() {
     // Create a user with access to user profiles.
     $user = $this->drupalCreateUser(array('access user profiles'));
     $this->drupalLogin($user);
     // Browse to the user profile page.
     $this->drupalGet('user/' . $user->uid);
-    // Ensure the default bundle mapping for user is used. These attributes come
-    // from the user default bundle definition.
+    // Ensure the default bundle mapping for user is used on the user profile
+    // page. These attributes come from the user default bundle definition.
     $profile_url = url('user/' . $user->uid);
     $user_profile_about = $this->xpath("//div[@class='profile' and @typeof='sioc:User' and @about='$profile_url']");
     $this->assertTrue(!empty($user_profile_about), t('RDFa markup found on user profile page'));
+
+    // User creates node.
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $this->drupalGet('node/' . $node->nid);
+    // Ensures the default bundle mapping for user is used on the Authored By
+    // information on the node.
+    $author_about = $this->xpath("//a[@typeof='sioc:User' and @about='$profile_url' and @property='foaf:name' and contains(@xml:lang, '')]");
+    $this->assertTrue(!empty($author_about), t('RDFa markup found on author information on post. xml:lang on username is set to empty string.'));
   }
 }
 
