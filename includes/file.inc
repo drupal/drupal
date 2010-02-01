@@ -1831,9 +1831,14 @@ function drupal_realpath($uri) {
   if ($wrapper = file_stream_wrapper_get_instance_by_uri($uri)) {
     return $wrapper->realpath();
   }
-  else {
+  // Check that the uri has a value. There is a bug in PHP 5.2 on *BSD systems
+  // that makes realpath not return FALSE as expected when passing an empty
+  // variable.
+  // @todo Remove when Drupal drops support for PHP 5.2.
+  elseif (!empty($uri)) {
     return realpath($uri);
   }
+  return FALSE;
 }
 
 /**
