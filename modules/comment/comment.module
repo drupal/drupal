@@ -1739,7 +1739,9 @@ function theme_comment_flat_collapsed($comment, $node) {
  * @ingroup themeable
  */
 function theme_comment_flat_expanded($comment, $node) {
-  return theme('comment_view', $comment, $node, module_invoke_all('link', 'comment', $comment, 0));
+  $links = module_invoke_all('link', 'comment', $comment, 0);
+  drupal_alter('link', $links, $node);
+  return theme('comment_view', $comment, $node, $links);
 }
 
 /**
@@ -1765,7 +1767,9 @@ function theme_comment_thread_collapsed($comment, $node) {
  * @ingroup themeable
  */
 function theme_comment_thread_expanded($comment, $node) {
-  return theme('comment_view', $comment, $node, module_invoke_all('link', 'comment', $comment, 0));
+  $links = module_invoke_all('link', 'comment', $comment, 0);
+  drupal_alter('link', $links, $node);
+  return theme('comment_view', $comment, $node, $links);
 }
 
 /**
