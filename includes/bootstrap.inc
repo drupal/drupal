@@ -1060,6 +1060,8 @@ function _drupal_bootstrap($phase) {
         exit;
       }
       // Prepare for non-cached page workflow.
+      require_once variable_get('lock_inc', './includes/lock.inc');
+      lock_init();
       drupal_page_header();
       break;
 

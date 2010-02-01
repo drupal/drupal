@@ -962,6 +962,31 @@ function system_schema() {
     'primary key' => array('mlid'),
     );
 
+  $schema['semaphore'] = array(
+    'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as Drupal variables since they must not be cached.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'Primary Key: Unique name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'value' => array(
+        'description' => 'A value.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'expire' => array(
+        'description' => 'A Unix timestamp with microseconds indicating when the semaphore should expire.',
+        'type' => 'float',
+        'size' => 'big',
+        'not null' => TRUE),
+      ),
+    'indexes' => array('expire' => array('expire')),
+    'primary key' => array('name'),
+    );
+
   $schema['sessions'] = array(
     'description' => "Drupal's session handlers read and write into the sessions table. Each record represents a user session, either anonymous or authenticated.",
     'fields' => array(
@@ -2619,6 +2644,37 @@ function system_update_6052() {
 function system_update_6053() {
   $ret = array();
   db_add_index($ret, 'system', 'type_name', array(array('type', 12), 'name'));
+  return $ret;
+}
+
+/**
+ * Add semaphore table.
+ */
+function system_update_6054() {
+  $ret = array();
+
+  $schema['semaphore'] = array(
+    'fields' => array(
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'value' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'expire' => array(
+        'type' => 'float',
+        'size' => 'big',
+        'not null' => TRUE),
+      ),
+    'indexes' => array('expire' => array('expire')),
+    'primary key' => array('name'),
+  );
+  db_create_table($ret, 'semaphore', $schema['semaphore']);
+
   return $ret;
 }
 
