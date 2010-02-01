@@ -250,6 +250,7 @@ function install_begin_request(&$install_state) {
   drupal_language_initialize();
 
   include_once DRUPAL_ROOT . '/includes/entity.inc';
+  require_once DRUPAL_ROOT . '/includes/ajax.inc';
   $module_list['system']['filename'] = 'modules/system/system.module';
   $module_list['user']['filename'] = 'modules/user/user.module';
   module_list(TRUE, FALSE, FALSE, $module_list);
