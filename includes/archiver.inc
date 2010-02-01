@@ -60,8 +60,7 @@ interface ArchiverInterface {
    * List all files in the archive.
    *
    * @return
-   *   An array of file names relative to the root of the archive, or
-   *   an iterable object that resolves to such a list.
+   *   An array of file names relative to the root of the archive.
    */
   public function listContents();
 }

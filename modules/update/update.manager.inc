@@ -563,7 +563,7 @@ function update_manager_install_form_submit($form, &$form_state) {
     return;
   }
   // Unfortunately, we can only use the directory name for this. :(
-  $project = drupal_substr($files[0]['filename'], 0, -1);
+  $project = drupal_substr($files[0], 0, -1);
 
   try {
     update_manager_archive_verify($project, $local_cache, $directory);

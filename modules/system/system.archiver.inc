@@ -49,7 +49,11 @@ class ArchiverTar implements ArchiverInterface {
   }
 
   public function listContents() {
-    return $this->tar->listContent();
+    $files = array();
+    foreach ($this->tar->listContent() as $file_data) {
+      $files[] = $file_data['filename'];
+    }
+    return $files;
   }
 
   /**
