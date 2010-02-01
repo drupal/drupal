@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.235 2010/01/14 18:45:17 dries Exp $
+// $Id: install.php,v 1.236 2010/02/01 22:13:33 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -250,6 +250,7 @@ function install_begin_request(&$install_state) {
   drupal_language_initialize();
 
   include_once DRUPAL_ROOT . '/includes/entity.inc';
+  require_once DRUPAL_ROOT . '/includes/ajax.inc';
   $module_list['system']['filename'] = 'modules/system/system.module';
   $module_list['user']['filename'] = 'modules/user/user.module';
   module_list(TRUE, FALSE, FALSE, $module_list);
