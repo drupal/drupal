@@ -1274,7 +1274,7 @@ function theme_submenu($links) {
  *   - Any HTML attributes, such as "colspan", to apply to the table cell.
  *
  *   Here's an example for $rows:
- *   @verbatim
+ *   @code
  *   $rows = array(
  *     // Simple row
  *     array(
@@ -1285,7 +1285,7 @@ function theme_submenu($links) {
  *       'data' => array('Cell 1', array('data' => 'Cell 2', 'colspan' => 2)), 'class' => 'funky'
  *     )
  *   );
- *   @endverbatim
+ *   @endcode
  *
  * @param $attributes
  *   An array of HTML attributes to apply to the table tag.
