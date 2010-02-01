@@ -301,6 +301,15 @@ function locale_theme() {
   );
 }
 
+/**
+ * Implementation of hook_node_type().
+ */
+function locale_node_type($op, $info) {
+  if ($op == 'delete') {
+    variable_del('language_content_type_'. $info->type);
+  }
+}
+
 // ---------------------------------------------------------------------------------
 // Locale core functionality
 

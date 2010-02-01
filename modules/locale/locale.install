@@ -164,7 +164,7 @@ function locale_update_6004() {
 
 /**
  * Change language setting variable of content types.
- * 
+ *
  * Use language_content_type_<content_type> instead of language_<content_type>
  * so content types such as 'default', 'count' or 'negotiation' will not
  * interfere with language variables.
@@ -216,6 +216,26 @@ function locale_uninstall() {
       file_delete(file_create_path($file->javascript));
     }
   }
+
+  // Clear variables.
+  variable_del('language_default');
+  variable_del('language_count');
+  variable_del('language_content_type_default');
+  variable_del('language_content_type_negotiation');
+  variable_del('locale_cache_strings');
+  variable_del('locale_js_directory');
+  variable_del('javascript_parsed');
+  variable_del('language_negotiation');
+
+  foreach (node_get_types() as $type => $content_type) {
+    variable_del("language_content_type_$type");
+  }
+
+  // Switch back to English: with a $language->language value different from
+  // 'en' successive calls of t() might result in calling locale(), which in
+  // turn might try to query the unexisting {locales_source} and
+  // {locales_target} tables.
+  drupal_init_language();
 
   // Remove tables.
   drupal_uninstall_schema('locale');
@@ -395,4 +415,3 @@ function locale_schema() {
 
   return $schema;
 }
-
