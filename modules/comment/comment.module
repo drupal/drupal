@@ -363,13 +363,13 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
       // Threaded comments. See the documentation for comment_render().
       if ($order == COMMENT_ORDER_NEWEST_FIRST) {
         // Newest first: find the last thread with new comment
-        $result = db_query('(SELECT thread FROM {comments} WHERE nid = %d  AND status = 0 ORDER BY timestamp DESC LIMIT %d) ORDER BY thread DESC LIMIT 1', $node->nid, $new_replies);
+        $result = db_query('SELECT thread FROM (SELECT thread FROM {comments} WHERE nid = %d AND status = 0 ORDER BY timestamp DESC LIMIT %d) AS thread ORDER BY thread DESC LIMIT 1', $node->nid, $new_replies);
         $thread = db_result($result);
         $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND thread > '". $thread ."'", $node->nid);
       }
       else {
         // Oldest first: find the first thread with new comment
-        $result = db_query('(SELECT thread FROM {comments} WHERE nid = %d  AND status = 0 ORDER BY timestamp DESC LIMIT %d) ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1)) LIMIT 1', $node->nid, $new_replies);
+        $result = db_query('SELECT thread FROM (SELECT thread FROM {comments} WHERE nid = %d AND status = 0 ORDER BY timestamp DESC LIMIT %d) AS thread ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1)) LIMIT 1', $node->nid, $new_replies);
         $thread = substr(db_result($result), 0, -1);
         $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < '". $thread ."'", $node->nid);
       }
