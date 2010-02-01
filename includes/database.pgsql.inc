@@ -408,29 +408,6 @@ function db_check_setup() {
 }
 
 /**
- * Wraps the given table.field entry with a DISTINCT(). The wrapper is added to
- * the SELECT list entry of the given query and the resulting query is returned.
- * This function only applies the wrapper if a DISTINCT doesn't already exist in
- * the query.
- *
- * @param $table Table containing the field to set as DISTINCT
- * @param $field Field to set as DISTINCT
- * @param $query Query to apply the wrapper to
- * @return SQL query with the DISTINCT wrapper surrounding the given table.field.
- */
-function db_distinct_field($table, $field, $query) {
-  if (!preg_match('/FROM\s+\S+\s+AS/si', $query)
-  && !preg_match('/DISTINCT\s+ON\s*\(\s*(' . $table . '\s*\.\s*)?' . $field . '\s*\)/si', $query)
-  && !preg_match('/DISTINCT[ (]' . $field . '/si', $query)
-  && preg_match('/(.*FROM\s+)(.*?\s)(\s*(WHERE|GROUP|HAVING|ORDER|LIMIT|FOR).*)/Asi', $query, $m)) {
-    $query = $m[1];
-    $query .= preg_replace('/([\{\w+\}]+)\s+(' . $table . ')\s/Usi', '(SELECT DISTINCT ON (' . $field . ') * FROM \1) \2 ', $m[2]);
-    $query .= $m[3];
-  }
-  return $query;
-}
-
-/**
  * @} End of "ingroup database".
  */
 
