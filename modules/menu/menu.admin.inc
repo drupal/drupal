@@ -348,8 +348,16 @@ function menu_edit_item_validate($form, &$form_state) {
     if (isset($parsed_link['query'])) {
       $item['options']['query'] = drupal_get_query_array($parsed_link['query']);
     }
+    else {
+      // Use unset() rather than setting to empty string
+      // to avoid redundant serialized data being stored.
+      unset($item['options']['query']);
+    }
     if (isset($parsed_link['fragment'])) {
       $item['options']['fragment'] = $parsed_link['fragment'];
+    }
+    else {
+      unset($item['options']['fragment']);
     }
     if ($item['link_path'] != $parsed_link['path']) {
       $item['link_path'] = $parsed_link['path'];
