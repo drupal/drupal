@@ -3539,12 +3539,17 @@ function system_date_format_delete($dfid) {
  * Implements hook_archiver_info().
  */
 function system_archiver_info() {
-  return array(
-    'tar' => array(
-      'class' => 'ArchiverTar',
-      'extensions' => array('tar', 'tar.gz', 'tar.bz2'),
-    ),
+  $archivers['tar'] = array(
+    'class' => 'ArchiverTar',
+    'extensions' => array('tar', 'tar.gz', 'tar.bz2'),
   );
+  if (function_exists('zip_open')) {
+    $archivers['zip'] = array(
+      'class' => 'ArchiverZip',
+      'extensions' => array('zip'),
+    );
+  }
+  return $archivers;
 }
 
 /**
