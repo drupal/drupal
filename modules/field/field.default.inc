@@ -190,28 +190,28 @@ function field_default_view($obj_type, $object, $field, $instance, $langcode, $i
     $function = $display['module'] . '_field_formatter_view';
     if (function_exists($function)) {
       $elements = $function($obj_type, $object, $field, $instance, $langcode, $items, $display);
-    }
 
-    if ($elements) {
-      $info = array(
-        '#theme' => 'field',
-        '#weight' => $display['weight'],
-        '#title' => t($instance['label']),
-        '#access' => field_access('view', $field, $obj_type, $object),
-        '#label_display' => $display['label'],
-        '#view_mode' => $view_mode,
-        '#language' => $langcode,
-        '#field_name' => $field['field_name'],
-        '#field_type' => $field['type'],
-        '#field_translatable' => $field['translatable'],
-        '#object_type' => $obj_type,
-        '#bundle' => $bundle,
-        '#object' => $object,
-        '#items' => $items,
-        '#formatter' => $display['type']
-      );
+      if ($elements) {
+        $info = array(
+          '#theme' => 'field',
+          '#weight' => $display['weight'],
+          '#title' => t($instance['label']),
+          '#access' => field_access('view', $field, $obj_type, $object),
+          '#label_display' => $display['label'],
+          '#view_mode' => $view_mode,
+          '#language' => $langcode,
+          '#field_name' => $field['field_name'],
+          '#field_type' => $field['type'],
+          '#field_translatable' => $field['translatable'],
+          '#object_type' => $obj_type,
+          '#bundle' => $bundle,
+          '#object' => $object,
+          '#items' => $items,
+          '#formatter' => $display['type']
+        );
 
-      $addition[$field['field_name']] = array_merge($info, $elements);
+        $addition[$field['field_name']] = array_merge($info, $elements);
+      }
     }
   }
 
