@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.882 2010/02/01 19:14:14 dries Exp $
+// $Id: system.module,v 1.883 2010/02/01 21:37:28 dries Exp $
 
 /**
  * @file
@@ -3541,7 +3541,7 @@ function system_date_format_delete($dfid) {
 function system_archiver_info() {
   $archivers['tar'] = array(
     'class' => 'ArchiverTar',
-    'extensions' => array('tar', 'tar.gz', 'tar.bz2'),
+    'extensions' => array('tar', 'tgz', 'tar.gz', 'tar.bz2'),
   );
   if (function_exists('zip_open')) {
     $archivers['zip'] = array(
