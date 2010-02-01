@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1096 2010/01/30 07:54:01 dries Exp $
+// $Id: common.inc,v 1.1097 2010/02/01 07:06:14 webchick Exp $
 
 /**
  * @file
@@ -2736,6 +2736,8 @@ function l($text, $path, array $options = array()) {
   if ($use_theme) {
     return theme('link', array('text' => $text, 'path' => $path, 'options' => $options));
   }
+  // The result of url() is a plain-text URL. Because we are using it here
+  // in an HTML argument context, we need to encode it properly.
   return '<a href="' . check_plain(url($path, $options)) . '"' . drupal_attributes($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
 }
 
