@@ -63,7 +63,7 @@ function field_ui_inactive_message($obj_type, $bundle) {
 }
 
 /**
- * Menu callback; listing of fields for a content type.
+ * Menu callback; listing of fields for a bundle.
  *
  * Allows fields and pseudo-fields to be re-ordered.
  */
@@ -562,7 +562,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback; presents a listing of fields display settings for a content type.
+ * Menu callback; presents a listing of fields display settings for a bundle.
  *
  * This form includes form widgets to select which fields appear in teaser and
  * full view modes, and how the field labels should be rendered.
