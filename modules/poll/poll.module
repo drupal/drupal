@@ -720,7 +720,8 @@ function poll_vote($form, &$form_state) {
       'nid' => $node->nid,
       'chid' => $choice,
       'uid' => $user->uid,
-      'hostname' => $user->uid ? ip_address() : '',
+      'hostname' => $user->uid ? '' : ip_address(),
+      'timestamp' => REQUEST_TIME,
     ))
     ->execute();
 
