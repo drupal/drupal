@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.337 2010/01/13 05:40:03 webchick Exp $
+// $Id: poll.module,v 1.338 2010/02/02 07:39:21 dries Exp $
 
 /**
  * @file
@@ -720,7 +720,8 @@ function poll_vote($form, &$form_state) {
       'nid' => $node->nid,
       'chid' => $choice,
       'uid' => $user->uid,
-      'hostname' => $user->uid ? ip_address() : '',
+      'hostname' => $user->uid ? '' : ip_address(),
+      'timestamp' => REQUEST_TIME,
     ))
     ->execute();
 
