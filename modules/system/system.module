@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.883 2010/02/01 21:37:28 dries Exp $
+// $Id: system.module,v 1.884 2010/02/02 08:10:03 dries Exp $
 
 /**
  * @file
@@ -2501,6 +2501,7 @@ function _system_settings_form_automatic_defaults($form) {
 function system_settings_form($form, $automatic_defaults = TRUE) {
   $form['actions']['#type'] = 'container';
   $form['actions']['#attributes']['class'][] = 'form-actions';
+  $form['actions']['#weight'] = 100;
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   if ($automatic_defaults) {
