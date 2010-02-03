@@ -2233,6 +2233,51 @@ function hook_update_N(&$sandbox) {
 }
 
 /**
+ * Return an array of information about module update dependencies.
+ *
+ * This can be used to indicate update functions from other modules that your
+ * module's update functions depend on, or vice versa. It is used by the update
+ * system to determine the appropriate order in which updates should be run, as
+ * well as to search for missing dependencies.
+ *
+ * Implementations of this hook should be placed in a mymodule.install file in
+ * the same directory as mymodule.module.
+ *
+ * @return
+ *   A multidimensional array containing information about the module update
+ *   dependencies. The first two levels of keys represent the module and update
+ *   number (respectively) for which information is being returned, and the
+ *   value is an array of information about that update's dependencies. Within
+ *   this array, each key represents a module, and each value represents the
+ *   number of an update function within that module. In the event that your
+ *   update function depends on more than one update from a particular module,
+ *   you should always list the highest numbered one here (since updates within
+ *   a given module always run in numerical order).
+ *
+ * @see update_resolve_dependencies()
+ * @see hook_update_N()
+ */
+function hook_update_dependencies() {
+  // Indicate that the mymodule_update_7000() function provided by this module
+  // must run after the another_module_update_7002() function provided by the
+  // 'another_module' module.
+  $dependencies['mymodule'][7000] = array(
+    'another_module' => 7002,
+  );
+  // Indicate that the mymodule_update_7001() function provided by this module
+  // must run before the yet_another_module_update_7004() function provided by
+  // the 'yet_another_module' module. (Note that declaring dependencies in this
+  // direction should be done only in rare situations, since it can lead to the
+  // following problem: If a site has already run the yet_another_module
+  // module's database updates before it updates its codebase to pick up the
+  // newest mymodule code, then the dependency declared here will be ignored.)
+  $dependencies['yet_another_module'][7004] = array(
+    'mymodule' => 7001,
+  );
+  return $dependencies;
+}
+
+/**
  * Return a number which is no longer available as hook_update_N().
  *
  * If you remove some update functions from your mymodule.install file, you

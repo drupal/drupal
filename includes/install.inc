@@ -131,7 +131,8 @@ function drupal_get_schema_versions($module) {
  *   Set to TRUE if you want to get information about all modules in the
  *   system.
  * @return
- *   The currently installed schema version.
+ *   The currently installed schema version, or SCHEMA_UNINSTALLED if the
+ *   module is not installed.
  */
 function drupal_get_installed_schema_version($module, $reset = FALSE, $array = FALSE) {
   static $versions = array();
@@ -148,7 +149,12 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
     }
   }
 
-  return $array ? $versions : $versions[$module];
+  if ($array) {
+    return $versions;
+  }
+  else {
+    return isset($versions[$module]) ? $versions[$module] : SCHEMA_UNINSTALLED;
+  }
 }
 
 /**

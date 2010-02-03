@@ -158,7 +158,7 @@ function profile_update_7001() {
  * Change the weight column to normal int.
  */
 function profile_update_7002() {
-  db_change_field('profile', 'weight', 'weight', array(
+  db_change_field('profile_field', 'weight', 'weight', array(
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,

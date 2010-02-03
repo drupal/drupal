@@ -206,30 +206,59 @@ function taxonomy_schema() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function taxonomy_update_dependencies() {
+  // Taxonomy update 7002 creates comment Field API bundles and therefore must
+  // run after the Field module has been enabled, but before upgrading field
+  // data.
+  $dependencies['taxonomy'][7002] = array(
+    'system' => 7049,
+  );
+  $dependencies['system'][7050] = array(
+    'taxonomy' => 7002,
+  );
+  // It also must run before nodes are upgraded to use the Field API.
+  $dependencies['node'][7006] = array(
+    'taxonomy' => 7002,
+  );
+  return $dependencies;
+}
+
+/**
+ * Rename taxonomy tables.
+ */
+function taxonomy_update_7001() {
+  db_rename_table('term_data', 'taxonomy_term_data');
+  db_rename_table('term_hierarchy', 'taxonomy_term_hierarchy');
+  db_rename_table('term_node', 'taxonomy_term_node');
+  db_rename_table('term_relation', 'taxonomy_term_relation');
+  db_rename_table('term_synonym', 'taxonomy_term_synonym');
+  db_rename_table('vocabulary', 'taxonomy_vocabulary');
+  db_rename_table('vocabulary_node_types', 'taxonomy_vocabulary_node_type');
+}
+
+/**
  * Add {vocabulary}.machine_name column.
  */
 function taxonomy_update_7002() {
-  if (!variable_get('taxonomy_update_7002_done', FALSE)) {
-    $field = array(
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => TRUE,
-      'default' => '',
-      'description' => 'The vocabulary machine name.',
-    );
+  $field = array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The vocabulary machine name.',
+  );
 
-    db_add_field('taxonomy_vocabulary', 'machine_name', $field);
+  db_add_field('taxonomy_vocabulary', 'machine_name', $field);
 
-    foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
-      $machine_name = 'vocabulary_' . $vid;
-      db_update('taxonomy_vocabulary')
-        ->fields(array('machine_name' => 'vocabulary_' . $vid))
-        ->condition('vid', $vid)
-        ->execute();
-      field_attach_create_bundle('taxonomy_term', $machine_name);
-    }
-
-    variable_set('taxonomy_update_7002_done', TRUE);
+  foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
+    $machine_name = 'vocabulary_' . $vid;
+    db_update('taxonomy_vocabulary')
+      ->fields(array('machine_name' => 'vocabulary_' . $vid))
+      ->condition('vid', $vid)
+      ->execute();
+    field_attach_create_bundle('taxonomy_term', $machine_name);
   }
 }
 

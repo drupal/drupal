@@ -35,4 +35,5 @@ files[] = tests/schema.test
 files[] = tests/session.test
 files[] = tests/theme.test
 files[] = tests/unicode.test
+files[] = tests/update.test
 files[] = tests/xmlrpc.test

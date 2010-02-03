@@ -39,6 +39,7 @@ function update_selection_page() {
 
 function update_script_selection_form($form, &$form_state) {
   $count = 0;
+  $incompatible_count = 0;
   $form['start'] = array(
     '#tree' => TRUE,
     '#type' => 'fieldset',
@@ -50,6 +51,8 @@ function update_script_selection_form($form, &$form_state) {
   $form['start']['system'] = array();
 
   $updates = update_get_update_list();
+  $starting_updates = array();
+  $incompatible_updates_exist = FALSE;
   foreach ($updates as $module => $update) {
     if (!isset($update['start'])) {
       $form['start'][$module] = array(
@@ -58,20 +61,44 @@ function update_script_selection_form($form, &$form_state) {
         '#prefix' => '<div class="warning">',
         '#suffix' => '</div>',
       );
+      $incompatible_updates_exist = TRUE;
       continue;
     }
     if (!empty($update['pending'])) {
+      $starting_updates[$module] = $update['start'];
       $form['start'][$module] = array(
         '#type' => 'hidden',
         '#value' => $update['start'],
       );
       $form['start'][$module . '_updates'] = array(
-        '#markup' => theme('item_list', array('items' => $update['pending'], 'title' => $module . ' module')),
+        '#theme' => 'item_list',
+        '#items' => $update['pending'],
+        '#title' => $module . ' module',
       );
     }
     if (isset($update['pending'])) {
       $count = $count + count($update['pending']);
     }
+  }
+
+  // Find and label any incompatible updates.
+  foreach (update_resolve_dependencies($starting_updates) as $function => $data) {
+    if (!$data['allowed']) {
+      $incompatible_updates_exist = TRUE;
+      $incompatible_count++;
+      $module_update_key = $data['module'] . '_updates';
+      if (isset($form['start'][$module_update_key]['#items'][$data['number']])) {
+        $text = $data['missing_dependencies'] ? 'This update will been skipped due to the following missing dependencies: <em>' . implode(', ', $data['missing_dependencies']) . '</em>' : "This update will be skipped due to an error in the module's code.";
+        $form['start'][$module_update_key]['#items'][$data['number']] .= '<div class="warning">' . $text . '</div>';
+      }
+      // Move the module containing this update to the top of the list.
+      $form['start'] = array($module_update_key => $form['start'][$module_update_key]) + $form['start'];
+    }
+  }
+
+  // Warn the user if any updates were incompatible.
+  if ($incompatible_updates_exist) {
+    drupal_set_message('Some of the pending updates cannot be applied because their dependencies were not met.', 'warning');
   }
 
   if (empty($count)) {
@@ -86,7 +113,17 @@ function update_script_selection_form($form, &$form_state) {
       '#markup' => '<p>The version of Drupal you are updating from has been automatically detected.</p>',
       '#weight' => -5,
     );
-    $form['start']['#title'] = format_plural($count, '1 pending update', '@count pending updates');
+    if ($incompatible_count) {
+      $form['start']['#title'] = format_plural(
+        $count,
+        '1 pending update (@number_applied to be applied, @number_incompatible skipped)',
+        '@count pending updates (@number_applied to be applied, @number_incompatible skipped)',
+        array('@number_applied' => $count - $incompatible_count, '@number_incompatible' => $incompatible_count)
+      );
+    }
+    else {
+      $form['start']['#title'] = format_plural($count, '1 pending update', '@count pending updates');
+    }
     $form['has_js'] = array(
       '#type' => 'hidden',
       '#default_value' => FALSE,
@@ -142,9 +179,9 @@ function update_results_page() {
     $output .= '<div id="update-results">';
     $output .= '<h2>The following updates returned messages</h2>';
     foreach ($_SESSION['update_results'] as $module => $updates) {
-      $output .= '<h3>' . $module . ' module</h3>';
-      foreach ($updates as $number => $queries) {
-        if ($number != '#abort') {
+      if ($module != '#abort') {
+        $output .= '<h3>' . $module . ' module</h3>';
+        foreach ($updates as $number => $queries) {
           $messages = array();
           foreach ($queries as $query) {
             // If there is no message for this update, don't show anything.

@@ -357,6 +357,21 @@ function node_schema() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function node_update_dependencies() {
+  // Node update 7006 migrates node data to fields and therefore must run after
+  // the Field module has been enabled, but before upgrading field data.
+  $dependencies['node'][7006] = array(
+    'system' => 7049,
+  );
+  $dependencies['system'][7050] = array(
+    'node' => 7006,
+  );
+  return $dependencies;
+}
+
+/**
  * @defgroup updates-6.x-to-7.x System updates from 6.x to 7.x
  * @{
  */
@@ -437,9 +452,6 @@ function node_update_7005() {
  * Convert body and teaser from node properties to fields, and migrate status/comment/promote and sticky columns to the {node_revision} table.
  */
 function node_update_7006(&$context) {
-  // @todo Remove when http://drupal.org/node/211182 is fixed.
-  taxonomy_update_7002();
-
   $context['#finished'] = 0;
 
   // Get node type info for every invocation.

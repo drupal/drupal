@@ -651,10 +651,10 @@ function update_parse_db_url($db_url) {
  * throw new DrupalUpdateException(t('Description of what went wrong'));
  * @endcode
  *
- * If an exception is thrown, the current and all later updates for this module
- * will be aborted. The schema version will not be updated in this case, and all
- * the aborted updates will continue to appear on update.php as updates that
- * have not yet been run.
+ * If an exception is thrown, the current update and all updates that depend on
+ * it will be aborted. The schema version will not be updated in this case, and
+ * all the aborted updates will continue to appear on update.php as updates
+ * that have not yet been run.
  *
  * If an update function needs to be re-run as part of a batch process, it
  * should accept the $sandbox array by reference as its first parameter
@@ -665,13 +665,21 @@ function update_parse_db_url($db_url) {
  *   The module whose update will be run.
  * @param $number
  *   The update number to run.
+ * @param $dependency_map
+ *   An array whose keys are the names of all update functions that will be
+ *   performed during this batch process, and whose values are arrays of other
+ *   update functions that each one depends on.
  * @param $context
- *   The batch context array
+ *   The batch context array.
+ *
+ * @see update_resolve_dependencies()
  */
-function update_do_one($module, $number, &$context) {
-  // If updates for this module have been aborted
-  // in a previous step, go no further.
-  if (!empty($context['results'][$module]['#abort'])) {
+function update_do_one($module, $number, $dependency_map, &$context) {
+  $function = $module . '_update_' . $number;
+
+  // If this update was aborted in a previous step, or has a dependency that
+  // was aborted in a previous step, go no further.
+  if (!empty($context['results']['#abort']) && array_intersect($context['results']['#abort'], array_merge($dependency_map[$function], array($function)))) {
     return;
   }
 
@@ -680,7 +688,6 @@ function update_do_one($module, $number, &$context) {
   }
 
   $ret = array();
-  $function = $module . '_update_' . $number;
   if (function_exists($function)) {
     try {
       if ($context['log']) {
@@ -714,11 +721,12 @@ function update_do_one($module, $number, &$context) {
   $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);
 
   if (!empty($ret['#abort'])) {
-    $context['results'][$module]['#abort'] = TRUE;
+    // Record this function in the list of updates that were aborted.
+    $context['results']['#abort'][] = $function;
   }
 
   // Record the schema update if it was completed successfully.
-  if ($context['finished'] == 1 && empty($context['results'][$module]['#abort'])) {
+  if ($context['finished'] == 1 && empty($ret['#abort'])) {
     drupal_set_installed_schema_version($module, $number);
   }
 
@@ -734,7 +742,11 @@ class DrupalUpdateException extends Exception { }
  * Start the database update batch process.
  *
  * @param $start
- *   An array of all the modules and which update to start at.
+ *   An array whose keys contain the names of modules to be updated during the
+ *   current batch process, and whose values contain the number of the first
+ *   requested update for that module. The actual updates that are run (and the
+ *   order they are run in) will depend on the results of passing this data
+ *   through the update dependency system.
  * @param $redirect
  *   Path to redirect to when the batch has finished processing.
  * @param $url
@@ -745,6 +757,8 @@ class DrupalUpdateException extends Exception { }
  * @param $redirect_callback
  *   (optional) Specify a function to be called to redirect to the progressive
  *   processing page.
+ *
+ * @see update_resolve_dependencies()
  */
 function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $redirect_callback = 'drupal_goto') {
   // During the update, bring the site offline so that schema changes do not
@@ -754,18 +768,31 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
     variable_set('maintenance_mode', TRUE);
   }
 
+  // Resolve any update dependencies to determine the actual updates that will
+  // be run and the order they will be run in.
+  $updates = update_resolve_dependencies($start);
+
+  // Store the dependencies for each update function in an array which the
+  // batch API can pass in to the batch operation each time it is called. (We
+  // do not store the entire update dependency array here because it is
+  // potentially very large.)
+  $dependency_map = array();
+  foreach ($updates as $function => $update) {
+    $dependency_map[$function] = !empty($update['reverse_paths']) ? array_keys($update['reverse_paths']) : array();
+  }
+
   $operations = array();
-  // Set the installed version so updates start at the correct place.
-  foreach ($start as $module => $version) {
-    drupal_set_installed_schema_version($module, $version - 1);
-    $updates = drupal_get_schema_versions($module);
-    $max_version = max($updates);
-    if ($version <= $max_version) {
-      foreach ($updates as $update) {
-        if ($update >= $version) {
-          $operations[] = array('update_do_one', array($module, $update));
-        }
+  foreach ($updates as $update) {
+    if ($update['allowed']) {
+      // Set the installed version of each module so updates will start at the
+      // correct place. (The updates are already sorted, so we can simply base
+      // this on the first one we come across in the above foreach loop.)
+      if (isset($start[$update['module']])) {
+        drupal_set_installed_schema_version($update['module'], $update['number'] - 1);
+        unset($start[$update['module']]);
       }
+      // Add this update function to the batch.
+      $operations[] = array('update_do_one', array($update['module'], $update['number'], $dependency_map));
     }
   }
   $batch['operations'] = $operations;
@@ -871,5 +898,281 @@ function update_get_update_list() {
     unset($ret['system']);
   }
   return $ret;
+}
+
+/**
+ * Resolves dependencies in a set of module updates, and orders them correctly.
+ *
+ * This function receives a list of requested module updates and determines an
+ * appropriate order to run them in such that all update dependencies are met.
+ * Any updates whose dependencies cannot be met are included in the returned
+ * array but have the key 'allowed' set to FALSE; the calling function should
+ * take responsibility for ensuring that these updates are ultimately not
+ * performed.
+ *
+ * In addition, the returned array also includes detailed information about the
+ * dependency chain for each update, as provided by the depth-first search
+ * algorithm in drupal_depth_first_search().
+ *
+ * @param $starting_updates
+ *   An array whose keys contain the names of modules with updates to be run
+ *   and whose values contain the number of the first requested update for that
+ *   module.
+ *
+ * @return
+ *   An array whose keys are the names of all update functions within the
+ *   provided modules that would need to be run in order to fulfill the
+ *   request, arranged in the order in which the update functions should be
+ *   run. (This includes the provided starting update for each module and all
+ *   subsequent updates that are available.) The values are themselves arrays
+ *   containing all the keys provided by the drupal_depth_first_search()
+ *   algorithm, which encode detailed information about the dependency chain
+ *   for this update function (for example: 'paths', 'reverse_paths', 'weight',
+ *   and 'component'), as well as the following additional keys:
+ *   - 'allowed': A boolean which is TRUE when the update function's
+ *     dependencies are met, and FALSE otherwise. Calling functions should
+ *     inspect this value before running the update.
+ *   - 'missing_dependencies': An array containing the names of any other
+ *     update functions that are required by this one but that are unavailable
+ *     to be run. This array will be empty when 'allowed' is TRUE.
+ *   - 'module': The name of the module that this update function belongs to.
+ *   - 'number': The number of this update function within that module.
+ *
+ * @see drupal_depth_first_search()
+ */
+function update_resolve_dependencies($starting_updates) {
+  // Obtain a dependency graph for the requested update functions.
+  $update_functions = update_get_update_function_list($starting_updates);
+  $graph = update_build_dependency_graph($update_functions);
+
+  // Perform the depth-first search and sort the results.
+  require_once DRUPAL_ROOT . '/includes/graph.inc';
+  drupal_depth_first_search($graph);
+  uasort($graph, 'drupal_sort_weight');
+
+  foreach ($graph as $function => &$data) {
+    $module = $data['module'];
+    $number = $data['number'];
+    // If the update function is missing and has not yet been performed, mark
+    // it and everything that ultimately depends on it as disallowed.
+    if (update_is_missing($module, $number, $update_functions) && !update_already_performed($module, $number)) {
+      $data['allowed'] = FALSE;
+      foreach (array_keys($data['paths']) as $dependent) {
+        $graph[$dependent]['allowed'] = FALSE;
+        $graph[$dependent]['missing_dependencies'][] = $function;
+      }
+    }
+    elseif (!isset($data['allowed'])) {
+      $data['allowed'] = TRUE;
+      $data['missing_dependencies'] = array();
+    }
+    // Now that we have finished processing this function, remove it from the
+    // graph if it was not part of the original list. This ensures that we
+    // never try to run any updates that were not specifically requested.
+    if (!isset($update_functions[$module][$number])) {
+      unset($graph[$function]);
+    }
+  }
+
+  return $graph;
+}
+
+/**
+ * Returns an organized list of update functions for a set of modules.
+ *
+ * @param $starting_updates
+ *   An array whose keys contain the names of modules and whose values contain
+ *   the number of the first requested update for that module.
+ *
+ * @return
+ *   An array containing all the update functions that should be run for each
+ *   module, including the provided starting update and all subsequent updates
+ *   that are available. The keys of the array contain the module names, and
+ *   each value is an ordered array of update functions, keyed by the update
+ *   number.
+ *
+ * @see update_resolve_dependencies()
+ */
+function update_get_update_function_list($starting_updates) {
+  // Go through each module and find all updates that we need (including the
+  // first update that was requested and any updates that run after it).
+  $update_functions = array();
+  foreach ($starting_updates as $module => $version) {
+    $update_functions[$module] = array();
+    $updates = drupal_get_schema_versions($module);
+    $max_version = max($updates);
+    if ($version <= $max_version) {
+      foreach ($updates as $update) {
+        if ($update >= $version) {
+          $update_functions[$module][$update] = $module . '_update_' . $update;
+        }
+      }
+    }
+  }
+  return $update_functions;
+}
+
+/**
+ * Constructs a graph which encodes the dependencies between module updates.
+ *
+ * This function returns an associative array which contains a "directed graph"
+ * representation of the dependencies between a provided list of update
+ * functions, as well as any outside update functions that they directly depend
+ * on but that were not in the provided list. The vertices of the graph
+ * represent the update functions themselves, and each edge represents a
+ * requirement that the first update function needs to run before the second.
+ * For example, consider this graph:
+ *
+ * system_update_7000 ---> system_update_7001 ---> system_update_7002
+ *
+ * Visually, this indicates that system_update_7000() must run before
+ * system_update_7001(), which in turn must run before system_update_7002().
+ *
+ * The function takes into account standard dependencies within each module, as
+ * shown above (i.e., the fact that each module's updates must run in numerical
+ * order), but also finds any cross-module dependencies that are defined by
+ * modules which implement hook_update_dependencies(), and builds them into the
+ * graph as well.
+ *
+ * @param $update_functions
+ *   An organized array of update functions, in the format returned by
+ *   update_get_update_function_list().
+ *
+ * @return
+ *   A multidimensional array representing the dependency graph, suitable for
+ *   passing in to drupal_depth_first_search(), but with extra information
+ *   about each update function also included. Each array key contains the name
+ *   of an update function, including all update functions from the provided
+ *   list as well as any outside update functions which they directly depend
+ *   on. Each value is an associative array containing the following keys:
+ *   - 'edges': A representation of any other update functions that immediately
+ *     depend on this one. See drupal_depth_first_search() for more details on
+ *     the format.
+ *   - 'module': The name of the module that this update function belongs to.
+ *   - 'number': The number of this update function within that module.
+ *
+ * @see drupal_depth_first_search()
+ * @see update_resolve_dependencies()
+ */
+function update_build_dependency_graph($update_functions) {
+  // Initialize an array that will define a directed graph representing the
+  // dependencies between update functions.
+  $graph = array();
+
+  // Go through each update function and build an initial list of dependencies.
+  foreach ($update_functions as $module => $functions) {
+    $previous_function = NULL;
+    foreach ($functions as $number => $function) {
+      // Add an edge to the directed graph representing the fact that each
+      // update function in a given module must run after the update that
+      // numerically precedes it.
+      if ($previous_function) {
+        $graph[$previous_function]['edges'][$function] = TRUE;
+      }
+      $previous_function = $function;
+
+      // Define the module and update number associated with this function.
+      $graph[$function]['module'] = $module;
+      $graph[$function]['number'] = $number;
+    }
+  }
+
+  // Now add any explicit update dependencies declared by modules.
+  $update_dependencies = update_invoke_all('update_dependencies');
+  foreach ($graph as $function => $data) {
+    if (!empty($update_dependencies[$data['module']][$data['number']])) {
+      foreach ($update_dependencies[$data['module']][$data['number']] as $module => $number) {
+        // If we have an explicit dependency on more than one update from a
+        // particular module, choose the highest one, since that contains the
+        // actual direct dependency.
+        if (is_array($number)) {
+          $number = max($number);
+        }
+        $dependency = $module . '_update_' . $number;
+        $graph[$dependency]['edges'][$function] = TRUE;
+        $graph[$dependency]['module'] = $module;
+        $graph[$dependency]['number'] = $number;
+      }
+    }
+  }
+
+  return $graph;
+}
+
+/**
+ * Determines if a module update is missing or unavailable.
+ *
+ * @param $module
+ *   The name of the module.
+ * @param $number
+ *   The number of the update within that module.
+ * @param $update_functions
+ *   An organized array of update functions, in the format returned by
+ *   update_get_update_function_list(). This should represent all module
+ *   updates that are requested to run at the time this function is called.
+ *
+ * @return
+ *   TRUE if the provided module update is not installed or is not in the
+ *   provided list of updates to run; FALSE otherwise.
+ */
+function update_is_missing($module, $number, $update_functions) {
+  return !isset($update_functions[$module][$number]) || !function_exists($update_functions[$module][$number]);
+}
+
+/**
+ * Determines if a module update has already been performed.
+ *
+ * @param $module
+ *   The name of the module.
+ * @param $number
+ *   The number of the update within that module.
+ *
+ * @return
+ *   TRUE if the database schema indicates that the update has already been
+ *   performed; FALSE otherwise.
+ */
+function update_already_performed($module, $number) {
+  return $number <= drupal_get_installed_schema_version($module);
+}
+
+/**
+ * Invoke an update system hook in all installed modules.
+ *
+ * This function is similar to module_invoke_all(), except it does not require
+ * that a module be enabled to invoke its hook, only that it be installed. This
+ * allows the update system to properly perform updates even on modules that
+ * are currently disabled.
+ *
+ * @param $hook
+ *   The name of the hook to invoke.
+ * @param ...
+ *   Arguments to pass to the hook.
+ *
+ * @return
+ *   An array of return values of the hook implementations. If modules return
+ *   arrays from their implementations, those are merged into one array.
+ *
+ * @see module_invoke_all()
+ */
+function update_invoke_all() {
+  $args = func_get_args();
+  $hook = $args[0];
+  unset($args[0]);
+  $return = array();
+  $modules = db_query("SELECT name FROM {system} WHERE type = 'module' AND schema_version != :schema", array(':schema' => SCHEMA_UNINSTALLED))->fetchCol();
+  foreach ($modules as $module) {
+    $function = $module . '_' . $hook;
+    if (function_exists($function)) {
+      $result = call_user_func_array($function, $args);
+      if (isset($result) && is_array($result)) {
+        $return = array_merge_recursive($return, $result);
+      }
+      elseif (isset($result)) {
+        $return[] = $result;
+      }
+    }
+  }
+
+  return $return;
 }
 

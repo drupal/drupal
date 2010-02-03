@@ -107,6 +107,18 @@ function filter_schema() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function filter_update_dependencies() {
+  // Filter update 7005 migrates block data and therefore needs to run after
+  // the {block_custom} table is properly set up.
+  $dependencies['filter'][7005] = array(
+    'system' => 7037,
+  );
+  return $dependencies;
+}
+
+/**
  * @defgroup updates-6.x-to-7.x Filter updates from 6.x to 7.x
  * @{
  */
