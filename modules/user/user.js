@@ -1,4 +1,4 @@
-// $Id: user.js,v 1.20 2009/12/22 14:45:04 dries Exp $
+// $Id: user.js,v 1.21 2010/02/03 09:04:18 dries Exp $
 (function ($) {
 
 /**
@@ -19,7 +19,7 @@ Drupal.behaviors.password = {
       innerWrapper.addClass('password-parent');
 
       // Add the description box.
-      var passwordMeter = '<div id="password-strength"><div id="password-strength-text"></div><div class="password-strength-title">' + translate.strengthTitle + '</div><div id="password-indicator"><div id="indicator"></div></div></div>';
+      var passwordMeter = '<div id="password-strength"><div id="password-strength-text" aria-live="polite"></div><div class="password-strength-title">' + translate.strengthTitle + '</div><div id="password-indicator"><div id="indicator"></div></div></div>';
 
       $('div.description', outerWrapper).prepend('<div class="password-suggestions"></div>');
       $(innerWrapper).prepend(passwordMeter);
