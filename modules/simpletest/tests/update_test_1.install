@@ -1,0 +1,25 @@
+<?php
+// $Id: update_test_1.install,v 1.1 2010/02/03 18:16:23 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the update_test_1 module.
+ */
+
+/**
+ * Dummy update_test_1 update 7000.
+ */
+function update_test_1_update_7000() {
+}
+
+/**
+ * Dummy update_test_1 update 7001.
+ */
+function update_test_1_update_7001() {
+}
+
+/**
+ * Dummy update_test_1 update 7002.
+ */
+function update_test_1_update_7002() {
+}

@@ -1,0 +1,88 @@
+<?php
+// $Id: update.test,v 1.1 2010/02/03 18:16:23 webchick Exp $
+
+/**
+ * @file
+ * Tests for the update system.
+ */
+
+/**
+ * Tests for the update dependency ordering system.
+ */
+class UpdateDependencyOrderingTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Update dependency ordering',
+      'description' => 'Test that update functions are run in the proper order.',
+      'group' => 'Update API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('update_test_1', 'update_test_2', 'update_test_3');
+    require_once DRUPAL_ROOT . '/includes/update.inc';
+  }
+
+  /**
+   * Test that updates within a single module run in the correct order.
+   */
+  function testUpdateOrderingSingleModule() {
+    $starting_updates = array(
+      'update_test_1' => 7000,
+    );
+    $expected_updates = array(
+      'update_test_1_update_7000',
+      'update_test_1_update_7001',
+      'update_test_1_update_7002',
+    );
+    $actual_updates = array_keys(update_resolve_dependencies($starting_updates));
+    $this->assertEqual($expected_updates, $actual_updates, t('Updates within a single module run in the correct order.'));
+  }
+
+  /**
+   * Test that dependencies between modules are resolved correctly.
+   */
+  function testUpdateOrderingModuleInterdependency() {
+    $starting_updates = array(
+      'update_test_2' => 7000,
+      'update_test_3' => 7000,
+    );
+    $update_order = array_keys(update_resolve_dependencies($starting_updates));
+    // Make sure that each dependency is satisfied.
+    $first_dependency_satisfied = array_search('update_test_2_update_7000', $update_order) < array_search('update_test_3_update_7000', $update_order);
+    $this->assertTrue($first_dependency_satisfied, t('The dependency of the second module on the first module is respected by the update function order.'));
+    $second_dependency_satisfied = array_search('update_test_3_update_7000', $update_order) < array_search('update_test_2_update_7001', $update_order);
+    $this->assertTrue($second_dependency_satisfied, t('The dependency of the first module on the second module is respected by the update function order.'));
+  }
+}
+
+/**
+ * Tests for missing update dependencies.
+ */
+class UpdateDependencyMissingTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Missing update dependencies',
+      'description' => 'Test that missing update dependencies are correctly flagged.',
+      'group' => 'Update API',
+    );
+  }
+
+  function setUp() {
+    // Only install update_test_2.module, even though its updates have a
+    // dependency on update_test_3.module.
+    parent::setUp('update_test_2');
+    require_once DRUPAL_ROOT . '/includes/update.inc';
+  }
+
+  function testMissingUpdate() {
+    $starting_updates = array(
+      'update_test_2' => 7000,
+    );
+    $update_graph = update_resolve_dependencies($starting_updates);
+    $this->assertTrue($update_graph['update_test_2_update_7000']['allowed'], t("The module's first update function is allowed to run, since it does not have any missing dependencies."));
+    $this->assertFalse($update_graph['update_test_2_update_7001']['allowed'], t("The module's second update function is not allowed to run, since it has a direct dependency on a missing update."));
+    $this->assertFalse($update_graph['update_test_2_update_7002']['allowed'], t("The module's third update function is not allowed to run, since it has an indirect dependency on a missing update."));
+  }
+}
+

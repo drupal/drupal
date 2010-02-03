@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.24 2010/01/30 00:08:34 webchick Exp $
+// $Id: profile.install,v 1.25 2010/02/03 18:16:23 webchick Exp $
 
 /**
  * @file
@@ -158,7 +158,7 @@ function profile_update_7001() {
  * Change the weight column to normal int.
  */
 function profile_update_7002() {
-  db_change_field('profile', 'weight', 'weight', array(
+  db_change_field('profile_field', 'weight', 'weight', array(
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,

@@ -1,0 +1,23 @@
+<?php
+// $Id: update_test_3.install,v 1.1 2010/02/03 18:16:23 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the update_test_3 module.
+ */
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function update_test_3_update_dependencies() {
+  $dependencies['update_test_3'][7000] = array(
+    'update_test_2' => 7000,
+  );
+  return $dependencies;
+}
+
+/**
+ * Dummy update_test_3 update 7000.
+ */
+function update_test_3_update_7000() {
+}

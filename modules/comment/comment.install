@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.59 2010/01/30 02:22:01 webchick Exp $
+// $Id: comment.install,v 1.60 2010/02/03 18:16:23 webchick Exp $
 
 /**
  * @file
@@ -73,6 +73,29 @@ function comment_enable() {
       _comment_body_field_instance_create($info);
     }
   }
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function comment_update_dependencies() {
+  // Comment update 7005 creates comment Field API bundles and therefore must
+  // run after the Field module has been enabled, but before upgrading field
+  // data.
+  $dependencies['comment'][7005] = array(
+    'system' => 7049,
+  );
+  $dependencies['system'][7050] = array(
+    'comment' => 7005,
+  );
+
+  // Comment update 7012 creates the comment body field and therefore must run
+  // after all entities have been updated.
+  $dependencies['comment'][7012] = array(
+    'system' => 7021,
+  );
+
+  return $dependencies;
 }
 
 /**
@@ -248,9 +271,6 @@ function comment_update_7011() {
  * Create the comment_body field.
  */
 function comment_update_7012() {
-  // @todo Remove when http://drupal.org/node/211182 is fixed.
-  taxonomy_update_7002();
-
   // Create comment body field.
   $field = array(
     'field_name' => 'comment_body',
