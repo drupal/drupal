@@ -266,6 +266,35 @@ function update_fix_d7_requirements() {
     file_put_contents(conf_path() . '/settings.php', "\n" . '$databases = ' . var_export($databases, TRUE) . ";\n\$drupal_hash_salt = '$salt';", FILE_APPEND);
   }
   if (drupal_get_installed_schema_version('system') < 7000 && !variable_get('update_d7_requirements', FALSE)) {
+    // Change 6.x system table field values to 7.x equivalent.
+    // Change field values.
+    db_change_field('system', 'schema_version', 'schema_version', array(
+     'type' => 'int',
+     'size' => 'small',
+     'length' => 6,
+     'not null' => TRUE,
+     'default' => -1)
+    );
+    db_change_field('system', 'status', 'status', array(
+      'type' => 'int', 'length' => 11, 'not null' => TRUE, 'default' => 0));
+    db_change_field('system', 'weight', 'weight', array(
+      'type' => 'int', 'length' => 11, 'not null' => TRUE, 'default' => 0));
+    db_change_field('system', 'bootstrap', 'bootstrap', array(
+      'type' => 'int', 'length' => 11, 'not null' => TRUE, 'default' => 0));
+    // Drop and recreate 6.x indexes.
+    db_drop_index('system', 'bootstrap');
+    db_add_index('system', 'bootstrap', array(
+      'status', 'bootstrap', array('type', 12), 'weight', 'name'));
+
+    db_drop_index('system' ,'modules');
+    db_add_index('system', 'modules', array(array(
+      'type', 12), 'status', 'weight', 'name'));
+
+    db_drop_index('system', 'type_name');
+    db_add_index('system', 'type_name', array(array('type', 12), 'name'));
+    // Add 7.x indexes.
+    db_add_index('system', 'system_list', array('weight', 'name'));
+
     // Add the cache_path table.
     $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
     $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
