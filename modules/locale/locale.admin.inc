@@ -1073,7 +1073,6 @@ function locale_translate_export_pot_form() {
   $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
   // Reuse PO export submission callback.
   $form['#submit'][] = 'locale_translate_export_po_form_submit';
-  $form['#validate'][] = 'locale_translate_export_po_form_validate';
   return $form;
 }
 

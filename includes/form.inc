@@ -970,8 +970,8 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // #value data.
     elseif (isset($elements['#element_validate'])) {
       foreach ($elements['#element_validate'] as $function) {
-        $function($elements, $form_state, $form_state['complete form']);        
-      }      
+        $function($elements, $form_state, $form_state['complete form']);
+      }
     }
     $elements['#validated'] = TRUE;
   }
@@ -1012,14 +1012,15 @@ function form_execute_handlers($type, &$form, &$form_state) {
   }
 
   foreach ($handlers as $function) {
-    // Check to see if a previous _submit handler has set a batch, but
-    // make sure we do not react to a batch that is already being processed
-    // (for instance if a batch operation performs a drupal_form_submit()).
-    if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['current_set'])) {
-      // Some previous _submit handler has set a batch. We store the call
-      // in a special 'control' batch set, for execution at the correct
-      // time during the batch processing workflow.
+    // Check if a previous _submit handler has set a batch, but make sure we
+    // do not react to a batch that is already being processed (for instance
+    // if a batch operation performs a drupal_form_submit()).
+    if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['id'])) {
+      // Some previous submit handler has set a batch. To ensure correct
+      // execution order, store the call in a special 'control' batch set.
+      // See _batch_next_set().
       $batch['sets'][] = array('form_submit' => $function);
+      $batch['has_form_submits'] = TRUE;
     }
     else {
       $function($form, $form_state);
@@ -2457,7 +2458,7 @@ function theme_container($variables) {
  *   - element: An associative array containing the properties and children of
  *     the tableselect element. Properties used: #header, #options, #empty,
  *     and #js_select. The #options property is an array of selection options;
- *     each array element of #options is an array of properties. These 
+ *     each array element of #options is an array of properties. These
  *     properties can include #attributes, which is added to the
  *     table row's HTML attributes (see theme_table()). Example:
  * @code
