@@ -271,16 +271,15 @@ function update_fix_d7_requirements() {
     db_change_field('system', 'schema_version', 'schema_version', array(
      'type' => 'int',
      'size' => 'small',
-     'length' => 6,
      'not null' => TRUE,
      'default' => -1)
     );
     db_change_field('system', 'status', 'status', array(
-      'type' => 'int', 'length' => 11, 'not null' => TRUE, 'default' => 0));
+      'type' => 'int', 'not null' => TRUE, 'default' => 0));
     db_change_field('system', 'weight', 'weight', array(
-      'type' => 'int', 'length' => 11, 'not null' => TRUE, 'default' => 0));
+      'type' => 'int', 'not null' => TRUE, 'default' => 0));
     db_change_field('system', 'bootstrap', 'bootstrap', array(
-      'type' => 'int', 'length' => 11, 'not null' => TRUE, 'default' => 0));
+      'type' => 'int', 'not null' => TRUE, 'default' => 0));
     // Drop and recreate 6.x indexes.
     db_drop_index('system', 'bootstrap');
     db_add_index('system', 'bootstrap', array(
