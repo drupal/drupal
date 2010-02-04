@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.admin.inc,v 1.3 2010/01/25 10:38:34 dries Exp $
+// $Id: locale.admin.inc,v 1.4 2010/02/04 03:34:21 webchick Exp $
 
 /**
  * @file
@@ -1073,7 +1073,6 @@ function locale_translate_export_pot_form() {
   $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
   // Reuse PO export submission callback.
   $form['#submit'][] = 'locale_translate_export_po_form_submit';
-  $form['#validate'][] = 'locale_translate_export_po_form_validate';
   return $form;
 }
 
