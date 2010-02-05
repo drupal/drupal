@@ -14,7 +14,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('file');
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer files'));
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content'));
     $this->drupalLogin($this->admin_user);
   }
 
