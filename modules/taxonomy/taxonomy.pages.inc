@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.49 2010/01/13 23:19:54 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.50 2010/02/05 22:14:43 dries Exp $
 
 /**
  * @file
@@ -121,7 +121,7 @@ function taxonomy_autocomplete($field_name, $tags_typed = '') {
         $n = '"' . str_replace('"', '""', $name) . '"';
       }
       else {
-        $term_matches[$prefix . $n] = filter_xss($name);
+        $term_matches[$prefix . $n] = check_plain($name);
       }
     }
   }
