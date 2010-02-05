@@ -398,21 +398,17 @@ function node_type_get_types() {
 /**
  * Returns the node type of the passed node or node type string.
  *
- *@param $node
+ * @param $node
  *   A node object or string that indicates the node type to return.
- * @return
- *   A single node type, as an object or FALSE if the node type is not found.
- *   The node type is an array with following content:
  *
- *   @code
- *   array(
- *     'type' => 'Machine readable type name',
- *     'name' => 'Name of the node type',
- *     'base' => 'Indicates to which module this node type belongs',
- *     'description' => 'Description of the node type',
- *     // ...
- *   )
- *   @endcode
+ * @return
+ *   A single node type, as an object, or FALSE if the node type is not found.
+ *   The node type is an object containing fields from hook_node_info() return
+ *   values, as well as the field 'type' (the machine-readable type) and other
+ *   fields used internally and defined in _node_types_build() and
+ *   node_type_set_defaults().
+ *
+ * @see hook_node_info();
  */
 function node_type_get_type($node) {
   $type = _node_extract_type($node);
