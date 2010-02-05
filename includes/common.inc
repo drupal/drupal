@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1097 2010/02/01 07:06:14 webchick Exp $
+// $Id: common.inc,v 1.1098 2010/02/05 21:15:43 dries Exp $
 
 /**
  * @file
@@ -4528,6 +4528,8 @@ function _drupal_bootstrap_full() {
   fix_gpc_magic();
   // Load all enabled modules
   module_load_all();
+  // Register automated cron run handler.
+  register_shutdown_function('system_run_automated_cron');
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
   if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'simpletest') !== FALSE) {
