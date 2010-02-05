@@ -182,6 +182,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
       '#default_value' => $filters[$name]->weight,
       '#parents' => array('filters', $name, 'weight'),
     );
+    $form['filters']['order'][$name]['#weight'] = $filters[$name]->weight;
   }
 
   // Filter settings.
