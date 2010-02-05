@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.php,v 1.5 2010/01/30 07:59:24 dries Exp $
+// $Id: authorize.php,v 1.6 2010/02/05 22:03:03 dries Exp $
 
 /**
  * @file
@@ -65,6 +65,7 @@ require_once DRUPAL_ROOT . '/includes/session.inc';
 require_once DRUPAL_ROOT . '/includes/common.inc';
 require_once DRUPAL_ROOT . '/includes/file.inc';
 require_once DRUPAL_ROOT . '/includes/module.inc';
+require_once DRUPAL_ROOT . '/includes/ajax.inc';
 
 // We prepare only a minimal bootstrap. This includes the database and
 // variables, however, so we have access to the class autoloader registry.
