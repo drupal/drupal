@@ -609,7 +609,7 @@ function field_delete_field($field_name) {
 function field_create_instance($instance) {
   $field = field_read_field($instance['field_name']);
   if (empty($field)) {
-    throw new FieldException("Attempt to create an instance of a field that doesn't exist or is currently inactive.");
+    throw new FieldException(t("Attempt to create an instance of a field @field_name that doesn't exist or is currently inactive.", array('@field_name' => $instance['field_name'])));
   }
   // Check that the required properties exists.
   if (empty($instance['object_type'])) {
@@ -641,7 +641,7 @@ function field_create_instance($instance) {
   // a disabled field is not supported.
   $prior_instance = field_read_instance($instance['object_type'], $instance['field_name'], $instance['bundle']);
   if (!empty($prior_instance)) {
-    $message = t('Attempt to create a field instance that already exists.');
+    $message = t('Attempt to create an instance of field @field_name on bundle @bundle that already has an instance of that field.', array('@field_name' => $instance['field_name'], '@bundle' => $instance['bundle']));
     throw new FieldException($message);
   }
 
