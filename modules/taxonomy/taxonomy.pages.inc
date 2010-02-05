@@ -121,7 +121,7 @@ function taxonomy_autocomplete($field_name, $tags_typed = '') {
         $n = '"' . str_replace('"', '""', $name) . '"';
       }
       else {
-        $term_matches[$prefix . $n] = filter_xss($name);
+        $term_matches[$prefix . $n] = check_plain($name);
       }
     }
   }
