@@ -2534,6 +2534,23 @@ function user_role_delete($role) {
 }
 
 /**
+ * Determine the modules that permissions belong to.
+ *
+ * @return
+ *   An associative array in the format $permission => $module.
+ */
+function user_permission_get_modules() {
+  $permissions = array();
+  foreach (module_implements('permission') as $module) {
+    $perms = module_invoke($module, 'permission');
+    foreach ($perms as $key => $value) {
+      $permissions[$key] = $module;
+    }
+  }
+  return $permissions;
+}
+
+/**
  * Change permissions for a user role.
  *
  * This function may be used to grant and revoke multiple permissions at once.
@@ -2583,12 +2600,14 @@ function user_role_change_permissions($rid, array $permissions = array()) {
  * @see user_role_revoke_permissions()
  */
 function user_role_grant_permissions($rid, array $permissions = array()) {
+  $modules = user_permission_get_modules();
   // Grant new permissions for the role.
   foreach ($permissions as $name) {
     db_merge('role_permission')
       ->key(array(
         'rid' => $rid,
         'permission' => $name,
+        'module' => $modules[$name],
       ))
       ->execute();
   }
@@ -3332,17 +3351,9 @@ function user_modules_installed($modules) {
  * Implements hook_modules_uninstalled().
  */
 function user_modules_uninstalled($modules) {
-  $permissions = array();
-  foreach ($modules as $module) {
-    if (function_exists($module . '_permission')) {
-      $permissions = array_merge($permissions, array_keys(module_invoke($module, 'permission')));
-    }
-  }
-  if (!empty($permissions)) {
-    db_delete('role_permission')
-      ->condition('permission', $permissions, 'IN')
-      ->execute();
-  }
+   db_delete('role_permission')
+     ->condition('module', $modules, 'IN')
+     ->execute();
 }
 
 /**

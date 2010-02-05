@@ -65,6 +65,13 @@ function user_schema() {
         'default' => '',
         'description' => 'A single permission granted to the role identified by rid.',
       ),
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The module declaring the permission.",
+      ),
     ),
     'primary key' => array('rid', 'permission'),
     'indexes' => array(
@@ -490,3 +497,28 @@ function user_update_7005(&$sandbox) {
  * The next series of updates should start at 8000.
  */
 
+/**
+ * Add module data to {role_permission}.
+ */
+function user_update_7006(&$sandbox) {
+  $module_field = array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "The module declaring the permission.",
+  );
+  // Check that the field hasn't been updated in an aborted run of this
+  // update.
+  if (!db_column_exists('role_permission', 'module')) {
+    // Add a new field for the fid.
+    db_add_field('role_permission', 'module', $module_field);
+  }
+  $permissions = user_permissions_get_modules();
+  foreach ($permissions as $key => $value) {
+    db_update('role_permission')
+      ->fields(array('module' => $value))
+      ->condition('permission', $key)
+      ->execute();
+  }
+}
