@@ -1560,7 +1560,6 @@ function system_site_information_settings() {
   );
 
   $form['#validate'][] = 'system_site_information_settings_validate';
-  $form['#submit'][] = 'system_site_information_settings_submit';
 
   return system_settings_form($form, FALSE);
 }
@@ -1578,18 +1577,6 @@ function system_site_information_settings_validate($form, &$form_state) {
   // Validate front page path.
   if (!drupal_valid_path($form_state['values']['site_frontpage'])) {
     form_set_error('site_frontpage', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $form_state['values']['site_frontpage'])));
-  }
-}
-
-/**
- * Form submit handler for the site-information form.
- */
-function system_site_information_settings_submit($form, &$form_state) {
-  // Clear caches when the cron threshold is changed to ensure that the cron
-  // image is not contained in cached pages.
-  $cron_threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
-  if ($cron_threshold != $form_state['input']['cron_safe_threshold']) {
-    cache_clear_all();
   }
 }
 

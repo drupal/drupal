@@ -4528,6 +4528,8 @@ function _drupal_bootstrap_full() {
   fix_gpc_magic();
   // Load all enabled modules
   module_load_all();
+  // Register automated cron run handler.
+  register_shutdown_function('system_run_automated_cron');
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
   if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'simpletest') !== FALSE) {

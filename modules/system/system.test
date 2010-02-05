@@ -422,7 +422,7 @@ class CronRunTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Ensure that the automatic cron run callback is working.
+   * Ensure that the automatic cron run feature is working.
    *
    * In these tests we do not use REQUEST_TIME to track start time, because we
    * need the exact time when cron is triggered.
@@ -435,19 +435,13 @@ class CronRunTestCase extends DrupalWebTestCase {
     variable_set('cron_last', $cron_last);
     variable_set('cron_safe_threshold', $cron_safe_threshold);
     $this->drupalGet('');
-    $this->assertRaw('"cronCheck":' . ($cron_last + $cron_safe_threshold));
-    $this->drupalGet('system/run-cron-check');
-    $this->assertExpiresHeader($cron_last + $cron_safe_threshold);
     $this->assertTrue($cron_last == variable_get('cron_last', NULL), t('Cron does not run when the cron threshold is not passed.'));
 
     // Test if cron runs when the cron threshold was passed.
     $cron_last = time() - 200;
     variable_set('cron_last', $cron_last);
     $this->drupalGet('');
-    $this->assertRaw('"cronCheck":' . ($cron_last + $cron_safe_threshold));
     sleep(1);
-    $this->drupalGet('system/run-cron-check');
-    $this->assertExpiresHeader(variable_get('cron_last', NULL) + $cron_safe_threshold);
     $this->assertTrue($cron_last < variable_get('cron_last', NULL), t('Cron runs when the cron threshold is passed.'));
 
     // Disable the cron threshold through the interface.
@@ -461,22 +455,7 @@ class CronRunTestCase extends DrupalWebTestCase {
     $cron_last = time() - 200;
     variable_set('cron_last', $cron_last);
     $this->drupalGet('');
-    $this->assertNoRaw('cronCheck');
-    $this->drupalGet('system/run-cron-check');
-    $this->assertResponse(403);
     $this->assertTrue($cron_last == variable_get('cron_last', NULL), t('Cron does not run when the cron threshold is disabled.'));
-  }
-
-  /**
-   * Assert that the Expires header is a specific timestamp.
-   *
-   * @param $timestamp
-   *   The timestamp value to match against the header.
-   */
-  private function assertExpiresHeader($timestamp) {
-    $expires = $this->drupalGetHeader('Expires');
-    $expires = strtotime($expires);
-    $this->assertEqual($expires, $timestamp, t('Expires header expected @expected got @actual.', array('@expected' => $timestamp, '@actual' => $expires)));
   }
 
   /**

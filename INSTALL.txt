@@ -237,7 +237,7 @@ INSTALLATION
    Note, however, that cron tasks will only be executed when there are site
    visitors. You can enable the built-in cron feature at:
 
-          Administer > Configuration and modules > Development > Maintenance mode
+          Administer > Configuration > System > Site information
 
    Advanced users may want to ensure that cron tasks are executed periodically.
    To do this, visit the page "cron.php", which executes maintenance tasks on

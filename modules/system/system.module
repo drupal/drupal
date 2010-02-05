@@ -527,13 +527,6 @@ function system_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
-  $items['system/run-cron-check'] = array(
-    'title' => 'Execute cron',
-    'page callback' => 'system_run_cron_check',
-    'access callback' => 'system_run_cron_check_access',
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
-  );
   $items['admin'] = array(
     'title' => 'Administer',
     'access arguments' => array('access administration pages'),
@@ -3084,32 +3077,6 @@ function system_retrieve_file($url, $destination = NULL, $overwrite = TRUE) {
 }
 
 /**
- * Implements hook_page_build().
- */
-function system_page_build(&$page) {
-  // Automatic cron runs.
-  $cron_threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
-  if ($cron_threshold) {
-    $page['page_bottom']['run_cron'] = array(
-      // Trigger cron run via AJAX.
-      '#attached' => array(
-        'js' => array(
-          drupal_get_path('module', 'system') . '/system.cron.js' => array('weight' => JS_DEFAULT - 5),
-          array(
-            'data' => array(
-              // Add the timestamp for the next automatic cron run.
-              'cronCheck' => variable_get('cron_last', 0) + $cron_threshold,
-            ),
-            'type' => 'setting',
-          ),
-
-        ),
-      ),
-    );
-  }
-}
-
-/**
  * Implements hook_page_alter().
  */
 function system_page_alter(&$page) {
@@ -3125,65 +3092,15 @@ function system_page_alter(&$page) {
 }
 
 /**
- * Menu callback; executes cron via an AJAX callback.
- *
- * This callback runs cron in a separate HTTP request to prevent "mysterious"
- * slow-downs of regular HTTP requests. It is invoked via an AJAX request and
- * does not process the returned output.
- *
- * @see system_page_alter()
- * @see system_run_cron_check_access()
+ * Run the automated cron if enabled.
  */
-function system_run_cron_check() {
-  $cron_run = FALSE;
-  $cron_threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
-
-  // Cron threshold semaphore is used to avoid errors every time the image
-  // callback is displayed when a previous cron is still running.
-  $threshold_semaphore = variable_get('cron_threshold_semaphore', FALSE);
-  if ($threshold_semaphore) {
-    if (REQUEST_TIME - $threshold_semaphore > 3600) {
-      // Either cron has been running for more than an hour or the semaphore
-      // was not reset due to a database error.
-      watchdog('cron', 'Cron has been running for more than an hour and is most likely stuck.', array(), WATCHDOG_ERROR);
-
-      // Release the cron threshold semaphore.
-      variable_del('cron_threshold_semaphore');
-    }
-  }
-  else {
+function system_run_automated_cron() {
+  if (($threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD)) > 0) {
     $cron_last = variable_get('cron_last', NULL);
-    // Run cron automatically if it has never run or threshold was crossed.
-    if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $cron_threshold)) {
-      // Lock cron threshold semaphore.
-      variable_set('cron_threshold_semaphore', REQUEST_TIME);
-      $cron_run = drupal_cron_run();
-      // Release the cron threshold semaphore.
-      variable_del('cron_threshold_semaphore');
+    if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
+      drupal_cron_run();
     }
   }
-
-  // Add an expires header with the time of the next cron run.
-  $cron_last = variable_get('cron_last', NULL);
-  drupal_add_http_header('Expires', gmdate(DATE_RFC1123, $cron_last + $cron_threshold));
-
-  drupal_json_output(array('cron_run' => $cron_run));
-  drupal_page_footer();
-}
-
-/**
- * Checks if the feature to automatically run cron is enabled.
- *
- * Also used as a menu access callback for this feature.
- *
- * @return
- *   TRUE if cron threshold is enabled, FALSE otherwise.
- *
- * @see system_run_cron_check()
- * @see system_page_alter()
- */
-function system_run_cron_check_access() {
-  return variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD) > 0;
 }
 
 /**
