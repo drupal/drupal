@@ -36,6 +36,7 @@ Daniel F. Kudwien 'sun' <http://drupal.org/user/54136>
 
 FORM SYSTEM
 Károly Négyesi 'chx' <http://drupal.org/user/9446>
+Alex Bronstein 'effulgentsia' <http://drupal.org/user/78040>
 
 LOCALE MODULE
 Gabor Hojtsy 'goba' <http://drupal.org/user/4166>
