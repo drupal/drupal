@@ -57,15 +57,18 @@ function hook_node_grants($account, $op) {
  * interested, it must respond with an array of permissions arrays for that
  * node.
  *
+ * Note that the grant values in the return value from your hook must be
+ * integers and not boolean TRUE and FALSE.
+ *
  * Each permissions item in the array is an array with the following elements:
  * - 'realm': The name of a realm that the module has defined in
  *   hook_node_grants().
  * - 'gid': A 'grant ID' from hook_node_grants().
- * - 'grant_view': If set to TRUE a user that has been identified as a member
+ * - 'grant_view': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can view this node.
- * - 'grant_update': If set to TRUE a user that has been identified as a member
+ * - 'grant_update': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can edit this node.
- * - 'grant_delete': If set to TRUE a user that has been identified as a member
+ * - 'grant_delete': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can delete this node.
  * - 'priority': If multiple modules seek to set permissions on a node, the
  *   realms that have the highest priority will win out, and realms with a lower
@@ -85,10 +88,10 @@ function hook_node_access_records($node) {
     $grants = array();
     $grants[] = array(
       'realm' => 'example',
-      'gid' => TRUE,
-      'grant_view' => TRUE,
-      'grant_update' => FALSE,
-      'grant_delete' => FALSE,
+      'gid' => 1,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
       'priority' => 0,
     );
 
@@ -97,9 +100,9 @@ function hook_node_access_records($node) {
     $grants[] = array(
       'realm' => 'example_author',
       'gid' => $node->uid,
-      'grant_view' => TRUE,
-      'grant_update' => TRUE,
-      'grant_delete' => TRUE,
+      'grant_view' => 1,
+      'grant_update' => 1,
+      'grant_delete' => 1,
       'priority' => 0,
     );
     return $grants;
