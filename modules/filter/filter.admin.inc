@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.56 2010/01/03 21:01:04 webchick Exp $
+// $Id: filter.admin.inc,v 1.57 2010/02/05 21:44:35 dries Exp $
 
 /**
  * @file
@@ -182,6 +182,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
       '#default_value' => $filters[$name]->weight,
       '#parents' => array('filters', $name, 'weight'),
     );
+    $form['filters']['order'][$name]['#weight'] = $filters[$name]->weight;
   }
 
   // Filter settings.
