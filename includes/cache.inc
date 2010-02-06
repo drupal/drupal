@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.44 2010/01/13 23:19:54 dries Exp $
+// $Id: cache.inc,v 1.45 2010/02/06 14:53:20 dries Exp $
 
 /**
  * Get the cache object for a cache bin.
@@ -18,7 +18,7 @@
 function _cache_get_object($bin) {
   // We do not use drupal_static() here because we do not want to change the
   // storage of a cache bin mid-request.
-  static $cache_objects, $default_class;
+  static $cache_objects;
   if (!isset($cache_objects[$bin])) {
     $class = variable_get('cache_class_' . $bin);
     if (!isset($class)) {
