@@ -234,17 +234,19 @@ function field_modules_enabled($modules) {
  * Implements hook_modules_disabled().
  */
 function field_modules_disabled($modules) {
-  foreach ($modules as $module) {
-    db_update('field_config')
-      ->fields(array('active' => 0))
-      ->condition('module', $module)
-      ->execute();
-    db_update('field_config')
-      ->fields(array('storage_active' => 0))
-      ->condition('storage_module', $module)
-      ->execute();
-    field_cache_clear(TRUE);
-  }
+  // Track fields whose field type is being disabled.
+  db_update('field_config')
+    ->fields(array('active' => 0))
+    ->condition('module', $modules, 'IN')
+    ->execute();
+
+  // Track fields whose storage backend is being disabled.
+  db_update('field_config')
+    ->fields(array('storage_active' => 0))
+    ->condition('storage_module', $modules, 'IN')
+    ->execute();
+
+  field_cache_clear(TRUE);
 }
 
 /**
