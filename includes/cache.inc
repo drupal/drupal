@@ -18,7 +18,7 @@
 function _cache_get_object($bin) {
   // We do not use drupal_static() here because we do not want to change the
   // storage of a cache bin mid-request.
-  static $cache_objects, $default_class;
+  static $cache_objects;
   if (!isset($cache_objects[$bin])) {
     $class = variable_get('cache_class_' . $bin);
     if (!isset($class)) {
