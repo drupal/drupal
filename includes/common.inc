@@ -2469,6 +2469,7 @@ function url($path = NULL, array $options = array()) {
   // Preserve the original path before altering or aliasing.
   $original_path = $path;
 
+  // Allow other modules to alter the outbound URL and options.
   drupal_alter('url_outbound', $path, $options, $original_path);
 
   if ($options['fragment']) {
