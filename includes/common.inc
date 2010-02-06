@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1098 2010/02/05 21:15:43 dries Exp $
+// $Id: common.inc,v 1.1099 2010/02/06 15:43:42 dries Exp $
 
 /**
  * @file
@@ -2447,8 +2447,6 @@ function format_username($account) {
  * alternative than url().
  */
 function url($path = NULL, array $options = array()) {
-  static $url_outbound;
-
   // Merge in defaults.
   $options += array(
     'fragment' => '',
@@ -2471,15 +2469,7 @@ function url($path = NULL, array $options = array()) {
   // Preserve the original path before altering or aliasing.
   $original_path = $path;
 
-  // Allow other modules to alter the outbound URL and options.
-  // Since PHP code cannot be unloaded, we statically cache the implementations
-  // of hook_url_outbound_alter() and only invoke them in case there are any.
-  if (!isset($url_outbound)) {
-    $url_outbound = (bool) module_implements('url_outbound_alter');
-  }
-  if ($url_outbound) {
-    drupal_alter('url_outbound', $path, $options, $original_path);
-  }
+  drupal_alter('url_outbound', $path, $options, $original_path);
 
   if ($options['fragment']) {
     $options['fragment'] = '#' . $options['fragment'];
