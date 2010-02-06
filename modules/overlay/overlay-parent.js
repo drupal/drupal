@@ -773,7 +773,7 @@ Drupal.overlay.hashchangeHandler = function (event) {
     var linkURL = Drupal.settings.basePath + state;
     linkURL = $.param.querystring(linkURL, {'render': 'overlay'});
 
-    var path = self.getPath(linkURL);
+    var path = self.getPath(state);
     self.resetActiveClass(path);
 
     // If the modal frame is already open, replace the loaded document with
@@ -893,6 +893,7 @@ Drupal.overlay.refreshRegions = function (data) {
  */
 Drupal.overlay.resetActiveClass = function(activePath) {
   var self = this;
+  var windowDomain = window.location.protocol + window.location.hostname;
 
   $('.overlay-displace-top, .overlay-displace-bottom')
   .find('a[href]')
@@ -900,7 +901,6 @@ Drupal.overlay.resetActiveClass = function(activePath) {
   .removeClass('active')
   // Add active class to links that match activePath.
   .each(function () {
-    var windowDomain = window.location.protocol + window.location.hostname;
     var linkDomain = this.protocol + this.hostname;
     var linkPath = self.getPath(this);
 
