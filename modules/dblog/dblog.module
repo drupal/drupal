@@ -100,26 +100,6 @@ function dblog_cron() {
   }
 }
 
-/**
- * Implements hook_user_cancel().
- */
-function dblog_user_cancel($edit, $account, $method) {
-  switch ($method) {
-    case 'user_cancel_reassign':
-      db_update('watchdog')
-        ->fields(array('uid' => 0))
-        ->condition('uid', $account->uid)
-        ->execute();
-      break;
-
-    case 'user_cancel_delete':
-      db_delete('watchdog')
-        ->condition('uid', $account->uid)
-        ->execute();
-      break;
-  }
-}
-
 function _dblog_get_message_types() {
   $types = array();
 
@@ -166,4 +146,3 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
   );
   $form['actions']['#weight'] = 1;
 }
-

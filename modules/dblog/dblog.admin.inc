@@ -46,7 +46,7 @@ function dblog_overview() {
   );
 
   $query = db_select('watchdog', 'w')->extend('PagerDefault')->extend('TableSort');
-  $query->join('users', 'u', 'w.uid = u.uid');
+  $query->leftJoin('users', 'u', 'w.uid = u.uid');
   $query
     ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'))
     ->addField('u', 'name');
