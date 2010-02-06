@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.40 2010/01/31 18:42:41 dries Exp $
+// $Id: query.inc,v 1.41 2010/02/06 19:01:38 dries Exp $
 
 /**
  * @ingroup database
@@ -1386,10 +1386,11 @@ function db_xor() {
 /**
  * Returns a new DatabaseCondition, set to the specified conjunction.
  *
+ * Internal API function call.  The db_and(), db_or(), and db_xor()
+ * functions are preferred.
+ *
  * @param $conjunction
- *   The conjunction to use for query conditions. The following conjunctions are
- *   supported: AND, OR, XOR, IN, NOT IN, BETWEEN, IS NULL, IS NOT NULL,
- *   LIKE.
+ *   The conjunction to use for query conditions (AND, OR or XOR).
  * @return DatabaseCondition
  */
 function db_condition($conjunction) {
