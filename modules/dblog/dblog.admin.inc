@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.33 2010/01/03 21:01:04 webchick Exp $
+// $Id: dblog.admin.inc,v 1.34 2010/02/06 14:50:05 dries Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ function dblog_overview() {
   );
 
   $query = db_select('watchdog', 'w')->extend('PagerDefault')->extend('TableSort');
-  $query->join('users', 'u', 'w.uid = u.uid');
+  $query->leftJoin('users', 'u', 'w.uid = u.uid');
   $query
     ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'))
     ->addField('u', 'name');
