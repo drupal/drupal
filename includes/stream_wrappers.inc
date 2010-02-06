@@ -27,32 +27,32 @@
 /**
  * Stream wrapper bit flag -- a filter that matches all wrappers.
  */
-define ('STREAM_WRAPPERS_ALL', 0x0000);
+define('STREAM_WRAPPERS_ALL', 0x0000);
 
 /**
  * Stream wrapper bit flag -- refers to a local file system location.
  */
-define ('STREAM_WRAPPERS_LOCAL', 0x0001);
+define('STREAM_WRAPPERS_LOCAL', 0x0001);
 
 /**
  * Stream wrapper bit flag -- refers to a remote filesystem location.
  */
-define ('STREAM_WRAPPERS_REMOTE', 0x0002);
+define('STREAM_WRAPPERS_REMOTE', 0x0002);
 
 /**
  * Stream wrapper bit flag -- wrapper is readable (almost always true).
  */
-define ('STREAM_WRAPPERS_READ', 0x0004);
+define('STREAM_WRAPPERS_READ', 0x0004);
 
 /**
  * Stream wrapper bit flag -- wrapper is writeable.
  */
-define ('STREAM_WRAPPERS_WRITE', 0x0008);
+define('STREAM_WRAPPERS_WRITE', 0x0008);
 
 /**
  * Stream wrapper bit flag -- exposed in the UI and potentially web accessible.
  */
-define ('STREAM_WRAPPERS_VISIBLE', 0x0010);
+define('STREAM_WRAPPERS_VISIBLE', 0x0010);
 
 /**
  * Composite stream wrapper bit flags that are usually used as the types.
@@ -62,22 +62,22 @@ define ('STREAM_WRAPPERS_VISIBLE', 0x0010);
  * Stream wrapper type flag -- not visible in the UI or accessible via web,
  * but readable and writable. E.g. the temporary directory for uploads.
  */
-define ('STREAM_WRAPPERS_HIDDEN', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE);
+define('STREAM_WRAPPERS_HIDDEN', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE);
 
 /**
  * Stream wrapper type flag -- visible, readable and writeable.
  */
-define ('STREAM_WRAPPERS_WRITE_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE | STREAM_WRAPPERS_VISIBLE);
+define('STREAM_WRAPPERS_WRITE_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE | STREAM_WRAPPERS_VISIBLE);
 
 /**
  * Stream wrapper type flag -- visible and read-only.
  */
-define ('STREAM_WRAPPERS_READ_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_VISIBLE);
+define('STREAM_WRAPPERS_READ_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_VISIBLE);
 
 /**
  * Stream wrapper type flag -- visible, readable and writeable using local files.
  */
-define ('STREAM_WRAPPERS_NORMAL', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_WRITE_VISIBLE);
+define('STREAM_WRAPPERS_NORMAL', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_WRITE_VISIBLE);
 
 /**
  * Generic PHP stream wrapper interface.
