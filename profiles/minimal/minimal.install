@@ -1,5 +1,5 @@
 <?php
-// $Id: minimal.install,v 1.2 2010/02/06 16:29:35 dries Exp $
+// $Id: minimal.install,v 1.3 2010/02/06 16:30:27 dries Exp $
 
 /**
  * Implements hook_install().
@@ -91,5 +91,5 @@ function minimal_install() {
 
   // Enable default permissions for system roles.
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'post comments without approval', 'use text format 1'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content'));
 }
