@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.62 2010/01/28 13:56:24 webchick Exp $
+// $Id: field.module,v 1.63 2010/02/06 15:51:08 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -234,17 +234,19 @@ function field_modules_enabled($modules) {
  * Implements hook_modules_disabled().
  */
 function field_modules_disabled($modules) {
-  foreach ($modules as $module) {
-    db_update('field_config')
-      ->fields(array('active' => 0))
-      ->condition('module', $module)
-      ->execute();
-    db_update('field_config')
-      ->fields(array('storage_active' => 0))
-      ->condition('storage_module', $module)
-      ->execute();
-    field_cache_clear(TRUE);
-  }
+  // Track fields whose field type is being disabled.
+  db_update('field_config')
+    ->fields(array('active' => 0))
+    ->condition('module', $modules, 'IN')
+    ->execute();
+
+  // Track fields whose storage backend is being disabled.
+  db_update('field_config')
+    ->fields(array('storage_active' => 0))
+    ->condition('storage_module', $modules, 'IN')
+    ->execute();
+
+  field_cache_clear(TRUE);
 }
 
 /**
