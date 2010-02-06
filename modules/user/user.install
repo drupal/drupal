@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.38 2010/02/05 21:07:56 dries Exp $
+// $Id: user.install,v 1.39 2010/02/06 14:55:34 dries Exp $
 
 /**
  * @file
@@ -514,7 +514,7 @@ function user_update_7006(&$sandbox) {
     // Add a new field for the fid.
     db_add_field('role_permission', 'module', $module_field);
   }
-  $permissions = user_permissions_get_modules();
+  $permissions = user_permission_get_modules();
   foreach ($permissions as $key => $value) {
     db_update('role_permission')
       ->fields(array('module' => $value))
