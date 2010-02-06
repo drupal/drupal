@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1099 2010/02/06 15:43:42 dries Exp $
+// $Id: common.inc,v 1.1100 2010/02/06 16:21:08 dries Exp $
 
 /**
  * @file
@@ -2469,6 +2469,7 @@ function url($path = NULL, array $options = array()) {
   // Preserve the original path before altering or aliasing.
   $original_path = $path;
 
+  // Allow other modules to alter the outbound URL and options.
   drupal_alter('url_outbound', $path, $options, $original_path);
 
   if ($options['fragment']) {
