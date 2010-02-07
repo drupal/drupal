@@ -180,7 +180,8 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas) {
   // Loop through each block and make changes to the block tables.
   // Only run this the first time through the batch update.
   if (!isset($sandbox['progress'])) {
-    $block_tables = array('blocks', 'blocks_roles');
+    // Determine whether to use the old or new block table names.
+    $block_tables = db_table_exists('blocks') ? array('blocks', 'blocks_roles') : array('block', 'block_role');
     foreach ($block_tables as $table) {
       foreach ($renamed_deltas as $module => $deltas) {
         foreach ($deltas as $old_delta => $new_delta) {
