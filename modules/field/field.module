@@ -177,19 +177,14 @@ function field_help($path, $arg) {
  * Implements hook_theme().
  */
 function field_theme() {
-  $path = drupal_get_path('module', 'field') . '/theme';
-  $items = array(
+  return array(
     'field' => array(
-      'template' => 'field',
       'render element' => 'element',
-      'path' => $path,
     ),
     'field_multiple_value_form' => array(
       'render element' => 'element',
     ),
   );
-
-  return $items;
 }
 
 /**
@@ -743,69 +738,145 @@ function field_extract_bundle($obj_type, $bundle) {
 }
 
 /**
- * Theme preprocess function for field.tpl.php.
+ * Theme preprocess function for theme_field() and field.tpl.php.
  *
+ * @see theme_field()
  * @see field.tpl.php
  */
-function template_preprocess_field(&$variables) {
+function template_preprocess_field(&$variables, $hook) {
   $element = $variables['element'];
 
-  // @todo Convert to using drupal_html_class() after benchmarking the impact of
-  //   doing so.
-  $field_type_css = strtr($element['#field_type'], '_', '-');
-  $field_name_css = strtr($element['#field_name'], '_', '-');
+  // There's some overhead in calling check_plain() so only call it if the label
+  // variable is being displayed. Otherwise, set it to NULL to avoid PHP
+  // warnings if a theme implementation accesses the variable even when it's
+  // supposed to be hidden. If a theme implementation needs to print a hidden
+  // label, it needs to supply a preprocess function that sets it to the
+  // sanitized element title or whatever else is wanted in its place.
+  $variables['label_hidden'] = ($element['#label_display'] == 'hidden');
+  $variables['label'] = $variables['label_hidden'] ? NULL : check_plain($element['#title']);
 
-  // Prepare an $items variable that the template can simply loop on.
-  // Filter out non-children properties that might have been added if the
-  // renderable array has gone through form_builder().
-  $items = array_intersect_key($element, array_flip(element_children($element)));
-
-  $additions = array(
-    'object' => $element['#object'],
-    'view_mode' => $element['#view_mode'],
-    'items' => $items,
-    'field_type' => $element['#field_type'],
-    'field_name' => $element['#field_name'],
-    'field_type_css' => $field_type_css,
-    'field_name_css' => $field_name_css,
-    'label' => check_plain($element['#title']),
-    'label_display' => $element['#label_display'],
-    'label_hidden' => $element['#label_display'] == 'hidden',
-    'field_language' => $element['#language'],
-    'field_translatable' => $element['#field_translatable'],
-    'classes_array' => array(
-      'field',
-      'field-name-' . $field_name_css,
-      'field-type-' . $field_type_css,
-      'field-label-' . $element['#label_display'],
-    ),
-    'theme_hook_suggestions' => array(
-      'field',
-      'field__' . $element['#field_name'],
-      'field__' . $element['#bundle'],
-      'field__' . $element['#field_name'] . '__' . $element['#bundle'],
-    ),
-  );
-  $variables = array_merge($variables, $additions);
-
-  // Initialize attributes for each item.
-  $variables['item_attributes_array'] = array();
-  foreach ($variables['items'] as $delta => $item) {
-    $variables['item_attributes_array'][$delta] = array();
+  // We want other preprocess functions and the theme implementation to have
+  // fast access to the field item render arrays. The item render array keys
+  // (deltas) should always be a subset of the keys in #items, and looping on
+  // those keys is faster than calling element_children() or looping on all keys
+  // within $element, since that requires traversal of all element properties.
+  $variables['items'] = array();
+  foreach ($element['#items'] as $delta => $item) {
+    if (!empty($element[$delta])) {
+      $variables['items'][$delta] = $element[$delta];
+    }
   }
+
+  // Add default CSS classes. Since there can be many fields rendered on a page,
+  // save some overhead by calling strtr() directly instead of
+  // drupal_html_class().
+  $variables['field_name_css'] = strtr($element['#field_name'], '_', '-');
+  $variables['field_type_css'] = strtr($element['#field_type'], '_', '-');
+  $variables['classes_array'] = array(
+    'field',
+    'field-name-' . $variables['field_name_css'],
+    'field-type-' . $variables['field_type_css'],
+    'field-label-' . $element['#label_display'],
+  );
+
+  // Add specific suggestions that can override the default implementation.
+  $variables['theme_hook_suggestions'] = array(
+    'field__' . $element['#field_name'],
+    'field__' . $element['#bundle'],
+    'field__' . $element['#field_name'] . '__' . $element['#bundle'],
+  );
 }
 
 /**
- * Theme process function for field.tpl.php.
+ * Theme process function for theme_field() and field.tpl.php.
  *
+ * @see theme_field()
  * @see field.tpl.php
  */
-function template_process_field(&$variables) {
-  // Flatten out attributes for each item.
+function template_process_field(&$variables, $hook) {
+  // The default theme implementation is a function, so template_process() does
+  // not automatically run, so we need to flatten the classes and attributes
+  // here. For best performance, only call drupal_attributes() when needed, and
+  // note that template_preprocess_field() does not initialize the
+  // *_attributes_array variables.
+  $variables['classes'] = implode(' ', $variables['classes_array']);
+  $variables['attributes'] = empty($variables['attributes_array']) ? '' : drupal_attributes($variables['attributes_array']);
+  $variables['title_attributes'] = empty($variables['title_attributes_array']) ? '' : drupal_attributes($variables['title_attributes_array']);
+  $variables['content_attributes'] = empty($variables['content_attributes_array']) ? '' : drupal_attributes($variables['content_attributes_array']);
   foreach ($variables['items'] as $delta => $item) {
-    $variables['item_attributes'][$delta] = drupal_attributes($variables['item_attributes_array'][$delta]);
+    $variables['item_attributes'][$delta] = empty($variables['item_attributes_array'][$delta]) ? '' : drupal_attributes($variables['item_attributes_array'][$delta]);
   }
 }
 /**
  * @} End of "defgroup field"
  */
+
+/**
+ * Returns a themed field.
+ *
+ * This is the default theme implementation to display the value of a field.
+ * Theme developers who are comfortable with overriding theme functions may do
+ * so in order to customize this markup. This function can be overridden with
+ * varying levels of specificity. For example, for a field named 'body'
+ * displayed on the 'article' content type, any of the following functions will
+ * override this default implementation. The first of these functions that
+ * exists is used:
+ * - THEMENAME_field__body__article()
+ * - THEMENAME_field__article()
+ * - THEMENAME_field__body()
+ * - THEMENAME_field()
+ *
+ * Theme developers who prefer to customize templates instead of overriding
+ * functions may copy the "field.tpl.php" from the "modules/field/theme" folder
+ * of the Drupal installation to somewhere within the theme's folder and
+ * customize it, just like customizing other Drupal templates such as
+ * page.tpl.php or node.tpl.php. However, it takes longer for the server to
+ * process templates than to call a function, so for websites with many fields
+ * displayed on a page, this can result in a noticeable slowdown of the website.
+ * For these websites, developers are discouraged from placing a field.tpl.php
+ * file into the theme's folder, but may customize templates for specific
+ * fields. For example, for a field named 'body' displayed on the 'article'
+ * content type, any of the following templates will override this default
+ * implementation. The first of these templates that exists is used:
+ * - field--body--article.tpl.php
+ * - field--article.tpl.php
+ * - field--body.tpl.php
+ * - field.tpl.php
+ * So, if the body field on the article content type needs customization, a
+ * field--body--article.tpl.php file can be added within the theme's folder.
+ * Because it's a template, it will result in slightly more time needed to
+ * display that field, but it will not impact other fields, and therefore,
+ * is unlikely to cause a noticeable change in website performance. A very rough
+ * guideline is that if a page is being displayed with more than 100 fields and
+ * they are all themed with a template instead of a function, it can add up to
+ * 5% to the time it takes to display that page. This is a guideline only and
+ * the exact performance impact depends on the server configuration and the
+ * details of the website.
+ *
+ * @see template_preprocess_field()
+ * @see template_process_field()
+ * @see field.tpl.php
+ *
+ * @ingroup themeable
+ */
+function theme_field($variables) {
+  $output = '';
+
+  // Render the label, if it's not hidden.
+  if (!$variables['label_hidden']) {
+    $output .= '<div class="field-label"' . $variables['title_attributes'] . '>' . $variables['label'] . ':&nbsp;</div>';
+  }
+
+  // Render the items.
+  $output .= '<div class="field-items"' . $variables['content_attributes'] . '>';
+  foreach ($variables['items'] as $delta => $item) {
+    $classes = 'field-item ' . ($delta % 2 ? 'odd' : 'even');
+    $output .= '<div class="' . $classes . '"' . $variables['item_attributes'][$delta] . '>' . drupal_render($item) . '</div>';
+  }
+  $output .= '</div>';
+
+  // Render the top-level DIV.
+  $output = '<div class="' . $variables['classes'] . ' clearfix"' . $variables['attributes'] . '>' . $output . '</div>';
+
+  return $output;
+}

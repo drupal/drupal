@@ -325,10 +325,6 @@ function drupal_theme_rebuild() {
  *     in hook_theme(). If there is more than one implementation and
  *     'render element' is not specified in a later one, then the previous
  *     definition is kept.
- *   - 'theme paths': The paths where implementations of a theme hook can be
- *     found. Its definition is similarly inherited like 'variables'. Each time
- *     _theme_process_registry() is called for this theme hook, either the
- *     'path' key from hook_theme() (if defined) or $path is added.
  *   - 'preprocess functions': See theme() for detailed documentation.
  *   - 'process functions': See theme() for detailed documentation.
  * @param $name
@@ -405,14 +401,6 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         if (!isset($info['path'])) {
           $result[$hook]['template'] = $path . '/' . $info['template'];
         }
-
-        // These are used for template naming suggestions. Theme implementations
-        // can occur in multiple paths. Suggestions should follow.
-        if (!isset($info['theme paths']) && isset($cache[$hook])) {
-          $result[$hook]['theme paths'] = $cache[$hook]['theme paths'];
-        }
-        // Check for sub-directories.
-        $result[$hook]['theme paths'][] = isset($info['path']) ? $info['path'] : $path;
       }
 
       // Allow variable processors for all theming hooks, whether the hook is
@@ -915,6 +903,22 @@ function theme($hook, $variables = array()) {
           $extension = $extension_function();
         }
       }
+    }
+
+    // In some cases, a template implementation may not have had
+    // template_preprocess() run (for example, if the default implementation is
+    // a function, but a template overrides that default implementation). In
+    // these cases, a template should still be able to expect to have access to
+    // the variables provided by template_preprocess(), so we add them here if
+    // they don't already exist. We don't want to run template_preprocess()
+    // twice (it would be inefficient and mess up zebra striping), so we use the
+    // 'directory' variable to determine if it has already run, which while not
+    // completely intuitive, is reasonably safe, and allows us to save on the
+    // overhead of adding some new variable to track that.
+    if (!isset($variables['directory'])) {
+      $default_template_variables = array();
+      template_preprocess($default_template_variables, $hook);
+      $variables += $default_template_variables;
     }
 
     // Render the output using the template file.

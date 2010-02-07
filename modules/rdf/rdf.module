@@ -570,13 +570,6 @@ function rdf_preprocess_comment(&$variables) {
     $variables['title_attributes_array']['property'] = $comment->rdf_mapping['title']['predicates'];
     $variables['title_attributes_array']['datatype'] = '';
   }
-  if (!empty($comment->rdf_mapping['body'])) {
-    // We need a special case here since the comment body is not a field. Note
-    // that for that reason, fields attached to comment will be ignored by RDFa
-    // parsers since we set the property attribute here.
-    // @todo Use fields instead, see http://drupal.org/node/538164
-    $variables['content_attributes_array']['property'] = $comment->rdf_mapping['body']['predicates'];
-  }
 
   // Annotates the parent relationship between the current comment and the node
   // it belongs to. If available, the parent comment is also annotated.

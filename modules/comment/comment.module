@@ -938,33 +938,6 @@ function comment_build_content($comment, $node, $view_mode = 'full') {
   entity_prepare_view('comment', array($comment->cid => $comment));
   $comment->content += field_attach_view('comment', $comment, $view_mode);
 
-  // Prior to Drupal 7, the comment body was a simple text variable, but with
-  // Drupal 7, it has been upgraded to a field. However, using theme('field') to
-  // render the comment body results in a noticeable performance degradation for
-  // pages with many comments. By unsetting #theme, we avoid the overhead of
-  // theme('field') and instead settle for simply rendering the formatted field
-  // value that exists as a child element of the 'comment_body' render array,
-  // which results in equivalent markup and rendering speed as if the comment
-  // body had not been upgraded to a field. Modules that require the comment
-  // body to be rendered as a full field (and are willing to accept the
-  // corresponding performance impact) can restore #theme to 'field' within a
-  // hook_comment_view() or hook_comment_view_alter() implementation.
-  // @todo Bypassing theme('field') is not ideal, because:
-  //   - The field label is not displayed, even if its setting is to be
-  //     displayed.
-  //   - hook_preprocess_field() functions do not run, and therefore, attributes
-  //     added in those functions (for example, for RDF) are not output.
-  //   - The HTML markup that's within field.tpl.php is not output, so theme
-  //     developers must use different CSS rules for the comment body than for
-  //     all other fields.
-  //   The goal is for theme('field') to be sufficiently optimized prior to
-  //   Drupal 7 release, so that this code can be removed, and the comment body
-  //   can be rendered just like all other fields. Otherwise, another solution
-  //   to the above problems will be needed. @see http://drupal.org/node/659788.
-  if (isset($comment->content['comment_body']['#theme']) && ($comment->content['comment_body']['#theme'] === 'field')) {
-    unset($comment->content['comment_body']['#theme']);
-  }
-
   if (empty($comment->in_preview)) {
     $comment->content['links']['comment'] = array(
       '#theme' => 'links__comment',
@@ -2566,7 +2539,7 @@ function comment_rdf_mapping() {
       'type' => 'comment',
       'bundle' => RDF_DEFAULT_BUNDLE,
       'mapping' => array(
-        'rdftype' => array('sioc:Post'),
+        'rdftype' => array('sioc:Post', 'sioct:Comment'),
         'title' => array(
           'predicates' => array('dc:title'),
         ),
@@ -2580,7 +2553,7 @@ function comment_rdf_mapping() {
           'datatype' => 'xsd:dateTime',
           'callback' => 'date_iso8601',
         ),
-        'body' => array(
+        'comment_body' => array(
           'predicates' => array('content:encoded'),
         ),
         'pid' => array(
