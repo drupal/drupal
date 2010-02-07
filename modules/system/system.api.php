@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.127 2010/02/07 00:42:00 webchick Exp $
+// $Id: system.api.php,v 1.128 2010/02/07 09:11:28 dries Exp $
 
 /**
  * @file
@@ -1084,8 +1084,6 @@ function hook_permission() {
  *   'module', 'theme_engine', or 'theme'.
  * - theme path: (automatically derived) The directory path of the theme or
  *   module, so that it doesn't need to be looked up.
- * - theme paths: (automatically derived) An array of template suggestions where
- *   .tpl.php files related to this theme hook may be found.
  *
  * The following parameters are all optional.
  *
@@ -1162,9 +1160,6 @@ function hook_theme($existing, $type, $theme, $path) {
  *    'file' => 'modules/user/user.pages.inc',
  *    'type' => 'module',
  *    'theme path' => 'modules/user',
- *    'theme paths' => array(
- *      0 => 'modules/user',
- *    ),
  *    'preprocess functions' => array(
  *      0 => 'template_preprocess',
  *      1 => 'template_preprocess_user_profile',
