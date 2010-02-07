@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1100 2010/02/06 16:21:08 dries Exp $
+// $Id: common.inc,v 1.1101 2010/02/07 05:12:34 webchick Exp $
 
 /**
  * @file
@@ -6396,7 +6396,12 @@ function entity_get_info($entity_type = NULL) {
     }
   }
 
-  return empty($entity_type) ? $entity_info : $entity_info[$entity_type];
+  if (empty($entity_type)) {
+    return $entity_info;
+  }
+  elseif (isset($entity_info[$entity_type])) {
+    return $entity_info[$entity_type];
+  }
 }
 
 /**

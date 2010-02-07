@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.14 2010/01/30 07:59:25 dries Exp $
+// $Id: field.test,v 1.15 2010/02/07 05:12:35 webchick Exp $
 
 /**
  * @file
@@ -1345,6 +1345,29 @@ class FieldInfoTestCase extends FieldTestCase {
       $formatter_type = field_info_formatter_types($instance['display'][$view_mode]['type']);
       $this->assertIdentical($instance['display'][$view_mode]['settings'], $formatter_type['settings'] , t('All expected formatter settings are present in view_mode %view_mode', array('%view_mode' => $view_mode)));
     }
+  }
+
+  /**
+   * Test that instances on disabled object types are filtered out.
+   */
+  function testInstanceDisabledObjectType() {
+    // For this test the field type and the object type must be exposed by
+    // different modules.
+    $field_definition = array(
+      'field_name' => 'field',
+      'type' => 'test_field',
+    );
+    field_create_field($field_definition);
+    $instance_definition = array(
+      'field_name' => 'field',
+      'object_type' => 'comment',
+      'bundle' => 'comment_node_article',
+    );
+    field_create_instance($instance_definition);
+
+    // Disable coment module. This clears field_info cache.
+    module_disable(array('comment'));
+    $this->assertNull(field_info_instance('comment', 'field', 'comment_node_article'), t('No instances are returned on disabled object types.'));
   }
 
   /**
