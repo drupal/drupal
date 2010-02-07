@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.51 2010/01/30 07:59:25 dries Exp $
+// $Id: search.test,v 1.52 2010/02/07 17:29:09 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -517,7 +517,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
       //   seems to be added via node links.
       DRUPAL_ANONYMOUS_RID . '[post comments]' => 1,
     );
-    $this->drupalPost('admin/config/people/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
 
     // Create a node.
     $node = $this->drupalCreateNode(array('type' => 'article'));
