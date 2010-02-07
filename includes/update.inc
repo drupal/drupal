@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.35 2010/02/07 05:09:59 webchick Exp $
+// $Id: update.inc,v 1.36 2010/02/07 17:33:41 dries Exp $
 
 /**
  * @file
@@ -173,7 +173,7 @@ function update_prepare_d7_bootstrap() {
  *         array(
  *           0 => 'mymodule-block-1',
  *           1 => 'mymodule-block-2',
- *         );
+ *         ),
  *     );
  */
 function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas) {
