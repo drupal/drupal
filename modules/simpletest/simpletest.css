@@ -71,3 +71,22 @@ div.simpletest-image {
   display: inline;
   cursor: pointer;
 }
+
+a.simpletest-collapse {
+  height: 0;
+  width: 0;
+  top: -99em;
+  position: absolute;
+
+}
+
+a.simpletest-collapse:focus,
+a.simpletest-collapse:hover {
+  font-size: 80%;
+  top: 0px;
+  height: auto;
+  width: auto;
+  overflow: visible;
+  position: relative;
+  z-index: 1000;
+} 
