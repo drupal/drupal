@@ -139,4 +139,58 @@ class SchemaTestCase extends DrupalWebTestCase {
     $node_fake_index = Database::getConnection()->schema()->indexExists('node', 'node_not_exists');
     $this->assertFalse($node_fake_index, t('Fake index does not exists'));
   }
+
+  /**
+   * Tests creating unsigned columns and data integrity thereof.
+   */
+  function testUnsignedColumns() {
+    // First create the table with just a serial column.
+    $table_name = 'unsigned_table';
+    $table_spec = array(
+      'fields' => array('serial_column' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE)),
+      'primary key' => array('serial_column'),
+    );
+    $ret = array();
+    db_create_table($ret, $table_name, $table_spec);
+
+    // Now set up columns for the other types.
+    $types = array('int', 'float', 'numeric');
+    foreach ($types as $type) {
+      $column_spec = array('type' => $type, 'unsigned'=> TRUE);
+      if ($type == 'numeric') {
+        $column_spec += array('precision' => 10, 'scale' => 0);
+      }
+      $column_name = $type . '_column';
+      $table_spec['fields'][$column_name] = $column_spec;
+      db_add_field($ret, $table_name, $column_name, $column_spec);
+    }
+
+    // Finally, check each column and try to insert invalid values into them.
+    foreach($table_spec['fields'] as $column_name => $column_spec) {
+      $this->assertTrue(db_column_exists($table_name, $column_name), t('Unsigned @type column was created.', array('@type' => $column_spec['type'])));
+      $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), t('Unsigned @type column rejected a negative value.', array('@type' => $column_spec['type'])));
+    }
+  }
+
+  /**
+   * Tries to insert a negative value into columns defined as unsigned.
+   *
+   * @param $table_name
+   *   The table to insert
+   * @param $column_name
+   *   The column to insert
+   * @return
+   *   TRUE if the insert succeeded, FALSE otherwise
+   */
+  function tryUnsignedInsert($table_name, $column_name) {
+    try {
+      db_insert($table_name)
+         ->fields(array($column_name => -1))
+         ->execute();
+      return TRUE;
+    }
+    catch (Exception $e) {
+      return FALSE;
+    }
+  }
 }
