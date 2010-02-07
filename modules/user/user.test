@@ -971,7 +971,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     $this->assertFalse(user_access('administer nodes', $account), t('User does not have "administer nodes" permission.'));
     $edit = array();
     $edit[$rid . '[administer nodes]'] = TRUE;
-    $this->drupalPost('admin/config/people/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
     drupal_static_reset('user_access');
     drupal_static_reset('user_role_permissions');
@@ -981,7 +981,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     $this->assertTrue(user_access('access user profiles', $account), t('User has "access user profiles" permission.'));
     $edit = array();
     $edit[$rid . '[access user profiles]'] = FALSE;
-    $this->drupalPost('admin/config/people/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
     drupal_static_reset('user_access');
     drupal_static_reset('user_role_permissions');
@@ -1210,7 +1210,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
     $edit = array();
     $edit['name'] = $user->name;
     $edit['pass'] = $user->pass_raw;
-    $this->drupalPost('admin/config/people/permissions', $edit, t('Log in'));
+    $this->drupalPost('admin/people/permissions', $edit, t('Log in'));
     $this->assertNoText(t('User login'), t('Logged in.'));
 
     // Check that we are still on the same page.

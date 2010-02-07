@@ -18,7 +18,7 @@ function path_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating aliases') . '</dt>';
-      $output .= '<dd>' . t('Users with sufficient <a href="@permissions">permissions</a> can create aliases under the <em>URL path settings</em> section when they create or edit content. Some examples of aliases are: ', array('@permissions' => url('admin/config/people/permissions', array('fragment' => 'module-path'))));
+      $output .= '<dd>' . t('Users with sufficient <a href="@permissions">permissions</a> can create aliases under the <em>URL path settings</em> section when they create or edit content. Some examples of aliases are: ', array('@permissions' => url('admin/people/permissions', array('fragment' => 'module-path'))));
       $output .= '<ul><li>' . t('<em>member/jane-smith</em> aliased to internal path <em>user/123</em>') . '</li>';
       $output .= '<li>' . t('<em>about-us/team</em> aliased to internal path <em>node/456</em>') . '</li>';
       $output .= '</ul></dd>';
