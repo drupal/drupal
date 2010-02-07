@@ -823,6 +823,9 @@ function field_read_instance($obj_type, $field_name, $bundle, $include_additiona
  *   An array of instances matching the arguments.
  */
 function field_read_instances($params = array(), $include_additional = array()) {
+  $include_inactive = isset($include_additional['include_inactive']) && $include_additional['include_inactive'];
+  $include_deleted = isset($include_additional['include_deleted']) && $include_additional['include_deleted'];
+
   $query = db_select('field_config_instance', 'fci', array('fetch' => PDO::FETCH_ASSOC));
   $query->join('field_config', 'fc', 'fc.id = fci.field_id');
   $query->fields('fci');
@@ -831,12 +834,12 @@ function field_read_instances($params = array(), $include_additional = array()) 
   foreach ($params as $key => $value) {
     $query->condition('fci.' . $key, $value);
   }
-  if (!isset($include_additional['include_inactive']) || !$include_additional['include_inactive']) {
+  if (!$include_inactive) {
     $query
       ->condition('fc.active', 1)
       ->condition('fc.storage_active', 1);
   }
-  if (!isset($include_additional['include_deleted']) || !$include_additional['include_deleted']) {
+  if (!$include_deleted) {
     $query->condition('fc.deleted', 0);
     $query->condition('fci.deleted', 0);
   }
@@ -845,16 +848,21 @@ function field_read_instances($params = array(), $include_additional = array()) 
   $results = $query->execute();
 
   foreach ($results as $record) {
-    $instance = unserialize($record['data']);
-    $instance['id'] = $record['id'];
-    $instance['field_id'] = $record['field_id'];
-    $instance['field_name'] = $record['field_name'];
-    $instance['object_type'] = $record['object_type'];
-    $instance['bundle'] = $record['bundle'];
-    $instance['deleted'] = $record['deleted'];
+    // Filter out instances on unknown object types (for instance because the
+    // module exposing them was disabled).
+    $entity_info = entity_get_info($record['object_type']);
+    if ($include_inactive || $entity_info) {
+      $instance = unserialize($record['data']);
+      $instance['id'] = $record['id'];
+      $instance['field_id'] = $record['field_id'];
+      $instance['field_name'] = $record['field_name'];
+      $instance['object_type'] = $record['object_type'];
+      $instance['bundle'] = $record['bundle'];
+      $instance['deleted'] = $record['deleted'];
 
-    module_invoke_all('field_read_instance', $instance);
-    $instances[] = $instance;
+      module_invoke_all('field_read_instance', $instance);
+      $instances[] = $instance;
+    }
   }
   return $instances;
 }

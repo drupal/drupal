@@ -1348,6 +1348,29 @@ class FieldInfoTestCase extends FieldTestCase {
   }
 
   /**
+   * Test that instances on disabled object types are filtered out.
+   */
+  function testInstanceDisabledObjectType() {
+    // For this test the field type and the object type must be exposed by
+    // different modules.
+    $field_definition = array(
+      'field_name' => 'field',
+      'type' => 'test_field',
+    );
+    field_create_field($field_definition);
+    $instance_definition = array(
+      'field_name' => 'field',
+      'object_type' => 'comment',
+      'bundle' => 'comment_node_article',
+    );
+    field_create_instance($instance_definition);
+
+    // Disable coment module. This clears field_info cache.
+    module_disable(array('comment'));
+    $this->assertNull(field_info_instance('comment', 'field', 'comment_node_article'), t('No instances are returned on disabled object types.'));
+  }
+
+  /**
    * Test that the field_info settings convenience functions work.
    */
   function testSettingsInfo() {

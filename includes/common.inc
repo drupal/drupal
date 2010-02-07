@@ -6396,7 +6396,12 @@ function entity_get_info($entity_type = NULL) {
     }
   }
 
-  return empty($entity_type) ? $entity_info : $entity_info[$entity_type];
+  if (empty($entity_type)) {
+    return $entity_info;
+  }
+  elseif (isset($entity_info[$entity_type])) {
+    return $entity_info[$entity_type];
+  }
 }
 
 /**
