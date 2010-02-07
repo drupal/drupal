@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.24 2010/01/30 03:49:14 webchick Exp $
+// $Id: schema.inc,v 1.25 2010/02/07 05:23:32 webchick Exp $
 
 /**
  * @file
@@ -147,15 +147,16 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if ($spec['type'] == 'serial') {
       unset($spec['not null']);
     }
-    if (!empty($spec['unsigned'])) {
-      $sql .= " CHECK ($name >= 0)";
-    }
 
     if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
       $sql .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
       $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
+    }
+
+    if (!empty($spec['unsigned'])) {
+      $sql .= " CHECK ($name >= 0)";
     }
 
     if (isset($spec['not null']) && $spec['not null']) {
