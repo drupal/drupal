@@ -173,7 +173,7 @@ function update_prepare_d7_bootstrap() {
  *         array(
  *           0 => 'mymodule-block-1',
  *           1 => 'mymodule-block-2',
- *         );
+ *         ),
  *     );
  */
 function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas) {
