@@ -272,7 +272,7 @@ function text_field_formatter_view($object_type, $object, $field, $instance, $la
     case 'text_trimmed':
       foreach ($items as $delta => $item) {
         $output = _text_sanitize($instance, $langcode, $item, 'value');
-        if ($display['type'] == 'text_trimemd') {
+        if ($display['type'] == 'text_trimmed') {
           $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL);
         }
         $element[$delta] = array('#markup' => $output);
