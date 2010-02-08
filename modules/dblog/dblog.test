@@ -214,27 +214,6 @@ class DBLogTestCase extends DrupalWebTestCase {
     // We need to POST here to invoke batch_process() in the internal browser.
     $this->drupalPost('user/' . $user->uid . '/cancel', array('user_cancel_method' => 'user_cancel_reassign'), t('Cancel account'));
 
-    // Count rows that have uids for the user.
-    $count = db_query('SELECT COUNT(wid) FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
-    $this->assertTrue($count == 0, t('DBLog contains @count records for @name', array('@count' => $count, '@name' => $user->name)));
-
-    // Count rows in watchdog that previously related to the deleted user.
-    $select = db_select('watchdog');
-    $select->addExpression('COUNT(*)');
-    $select->condition('uid', 0);
-    if ($ids) {
-      $select->condition('wid', $ids, 'IN');
-    }
-    $count_after = $select->execute()->fetchField();
-    $this->assertTrue($count_after == $count_before, t('DBLog contains @count records for @name that now have uid = 0', array('@count' => $count_before, '@name' => $user->name)));
-    unset($ids);
-    // Fetch row ids in watchdog that relate to the user.
-    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->uid));
-    foreach ($result as $row) {
-      $ids[] = $row->wid;
-    }
-    $this->assertTrue(!isset($ids), t('DBLog contains no records for @name', array('@name' => $user->name)));
-
     // View the dblog report.
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse(200);
