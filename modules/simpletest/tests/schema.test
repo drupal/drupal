@@ -151,7 +151,7 @@ class SchemaTestCase extends DrupalWebTestCase {
       'primary key' => array('serial_column'),
     );
     $ret = array();
-    db_create_table($ret, $table_name, $table_spec);
+    db_create_table($table_name, $table_spec);
 
     // Now set up columns for the other types.
     $types = array('int', 'float', 'numeric');
@@ -162,7 +162,7 @@ class SchemaTestCase extends DrupalWebTestCase {
       }
       $column_name = $type . '_column';
       $table_spec['fields'][$column_name] = $column_spec;
-      db_add_field($ret, $table_name, $column_name, $column_spec);
+      db_add_field($table_name, $column_name, $column_spec);
     }
 
     // Finally, check each column and try to insert invalid values into them.
