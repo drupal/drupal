@@ -112,7 +112,7 @@
  * one would instead write:
  * @code
  * $fields = array('nid' => 1, 'title' => 'my title', 'body' => 'my body');
- * db_insert('my_table')->fields($fields)->execute();
+ * db_insert('node')->fields($fields)->execute();
  * @endcode
  * This method allows databases that need special data type handling to do so,
  * while also allowing optimizations such as multi-insert queries. UPDATE and
