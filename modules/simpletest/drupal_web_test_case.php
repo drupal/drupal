@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.193 2010/01/15 03:07:34 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.194 2010/02/08 17:43:17 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1451,6 +1451,12 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function drupalGet($path, array $options = array(), array $headers = array()) {
     $options['absolute'] = TRUE;
+
+    // CURL breaks if the URL contains a fragment.
+    // @todo remove when http://drupal.org/node/671520 is fixed.
+    // Strips off any fragment from the path and options.
+    $path = array_shift(explode('#', $path));
+    unset($options['fragment']);
 
     // We re-using a CURL connection here. If that connection still has certain
     // options set, it might change the GET into a POST. Make sure we clear out
