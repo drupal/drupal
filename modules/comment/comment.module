@@ -1586,7 +1586,7 @@ function comment_load_multiple($cids = array(), $conditions = array()) {
  */
 function comment_load($cid) {
   $comment = comment_load_multiple(array($cid));
-  return $comment ? $comment[$cid] : FALSE;;
+  return $comment ? $comment[$cid] : FALSE;
 }
 
 /**

@@ -5198,7 +5198,7 @@ function drupal_render_cache_get($elements) {
       drupal_process_attached($cache->data);
     }
     // Return the rendered output.
-    return $cache->data['#markup'];;
+    return $cache->data['#markup'];
   }
   return FALSE;
 }

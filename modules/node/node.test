@@ -310,7 +310,7 @@ class PageEditTestCase extends DrupalWebTestCase {
     $langcode = LANGUAGE_NONE;
     $body_key = "body[$langcode][0][value]";
     $edit = array();
-    $edit['title'] = $this->randomName(8);;
+    $edit['title'] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
