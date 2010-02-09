@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.60 2010/02/05 22:24:12 dries Exp $
+// $Id: node.api.php,v 1.61 2010/02/09 22:30:30 dries Exp $
 
 /**
  * @file
@@ -591,7 +591,7 @@ function hook_node_view($node, $view_mode) {
  *
  * @see node_view()
  */
-function hook_node_view_alter($build) {
+function hook_node_view_alter(&$build) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;

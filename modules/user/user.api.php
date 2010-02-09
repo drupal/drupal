@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.19 2010/01/09 23:03:21 webchick Exp $
+// $Id: user.api.php,v 1.20 2010/02/09 22:30:30 dries Exp $
 
 /**
  * @file
@@ -345,7 +345,7 @@ function hook_user_view($account, $view_mode) {
  *
  * @see user_view()
  */
-function hook_user_view_alter($build) {
+function hook_user_view_alter(&$build) {
   // Check for the existence of a field added by another module.
   if (isset($build['an_additional_field'])) {
     // Change its weight.
