@@ -345,7 +345,7 @@ function hook_user_view($account, $view_mode) {
  *
  * @see user_view()
  */
-function hook_user_view_alter($build) {
+function hook_user_view_alter(&$build) {
   // Check for the existence of a field added by another module.
   if (isset($build['an_additional_field'])) {
     // Change its weight.

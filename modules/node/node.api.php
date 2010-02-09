@@ -591,7 +591,7 @@ function hook_node_view($node, $view_mode) {
  *
  * @see node_view()
  */
-function hook_node_view_alter($build) {
+function hook_node_view_alter(&$build) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
