@@ -1168,6 +1168,10 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
 
+    // Run cron once in that environment, as install.php does at the end of
+    // the installation process.
+    drupal_cron_run();
+
     // Log in with a clean $user.
     $this->originalUser = $user;
     drupal_save_session(FALSE);
