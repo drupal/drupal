@@ -379,6 +379,9 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
     variable_set('language_count', variable_get('language_count', 1) + 1);
   }
 
+  // Kill the static cache in language_list().
+  drupal_static_reset('language_list');
+
   // Force JavaScript translation file creation for the newly added language.
   _locale_invalidate_js($langcode);
 
