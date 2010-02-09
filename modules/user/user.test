@@ -1214,7 +1214,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
     $this->assertNoText(t('User login'), t('Logged in.'));
 
     // Check that we are still on the same page.
-    $this->assertRaw('<a href="/admin/people/permissions" class="active">', t('Still on the same page after login for access denied page'));
+    $this->assertEqual($this->getAbsoluteUrl('admin/people/permissions'), $this->getUrl(), t('Still on the same page after login for access denied page'));
 
     // Now, log out and repeat with a non-403 page.
     $this->drupalLogout();
