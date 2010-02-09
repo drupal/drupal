@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.test,v 1.25 2010/01/10 22:56:51 webchick Exp $
+// $Id: trigger.test,v 1.26 2010/02/09 12:29:39 dries Exp $
 
 class TriggerContentTestCase extends DrupalWebTestCase {
   var $_cleanup_roles = array();
@@ -45,7 +45,7 @@ class TriggerContentTestCase extends DrupalWebTestCase {
       // Make sure the text we want appears.
       $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), t('Make sure the Basic page has actually been created'));
       // Action should have been fired.
-      $loaded_node = $this->drupalGetNodeByTitle($edit["title"]);;
+      $loaded_node = $this->drupalGetNodeByTitle($edit["title"]);
       $this->assertTrue($loaded_node->$info['property'] == $info['expected'], t('Make sure the @action action fired.', array('@action' => $info['name'])));
       // Leave action assigned for next test
 

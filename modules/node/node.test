@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.73 2010/02/01 06:46:26 webchick Exp $
+// $Id: node.test,v 1.74 2010/02/09 12:29:39 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -310,7 +310,7 @@ class PageEditTestCase extends DrupalWebTestCase {
     $langcode = LANGUAGE_NONE;
     $body_key = "body[$langcode][0][value]";
     $edit = array();
-    $edit['title'] = $this->randomName(8);;
+    $edit['title'] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 

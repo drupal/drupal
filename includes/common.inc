@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1101 2010/02/07 05:12:34 webchick Exp $
+// $Id: common.inc,v 1.1102 2010/02/09 12:29:39 dries Exp $
 
 /**
  * @file
@@ -5198,7 +5198,7 @@ function drupal_render_cache_get($elements) {
       drupal_process_attached($cache->data);
     }
     // Return the rendered output.
-    return $cache->data['#markup'];;
+    return $cache->data['#markup'];
   }
   return FALSE;
 }

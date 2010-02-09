@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.840 2010/02/07 09:11:28 dries Exp $
+// $Id: comment.module,v 1.841 2010/02/09 12:29:39 dries Exp $
 
 /**
  * @file
@@ -1586,7 +1586,7 @@ function comment_load_multiple($cids = array(), $conditions = array()) {
  */
 function comment_load($cid) {
   $comment = comment_load_multiple(array($cid));
-  return $comment ? $comment[$cid] : FALSE;;
+  return $comment ? $comment[$cid] : FALSE;
 }
 
 /**
