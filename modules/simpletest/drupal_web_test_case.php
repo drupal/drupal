@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.195 2010/02/08 23:35:20 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.196 2010/02/09 12:28:39 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1167,6 +1167,10 @@ class DrupalWebTestCase extends DrupalTestCase {
     _drupal_flush_css_js();
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
+
+    // Run cron once in that environment, as install.php does at the end of
+    // the installation process.
+    drupal_cron_run();
 
     // Log in with a clean $user.
     $this->originalUser = $user;
