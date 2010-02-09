@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.244 2010/01/28 07:06:57 webchick Exp $
+// $Id: locale.inc,v 1.245 2010/02/09 18:21:49 webchick Exp $
 
 /**
  * @file
@@ -378,6 +378,9 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
     // Increment enabled language count if we are adding an enabled language.
     variable_set('language_count', variable_get('language_count', 1) + 1);
   }
+
+  // Kill the static cache in language_list().
+  drupal_static_reset('language_list');
 
   // Force JavaScript translation file creation for the newly added language.
   _locale_invalidate_js($langcode);
