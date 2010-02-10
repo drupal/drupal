@@ -80,6 +80,12 @@ function node_form_validate($form, &$form_state) {
   field_attach_form_validate('node', $node, $form, $form_state);
 }
 
+/**
+ * Prepares a node object for editing.
+ *
+ * Fills in a few default values, and then invokes hook_prepare() on the node
+ * type module, and hook_node_prepare() on all modules.
+ */
 function node_object_prepare($node) {
   // Set up default values, if required.
   $node_options = variable_get('node_options_' . $node->type, array('status', 'promote'));
