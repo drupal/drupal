@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.tpl.php,v 1.8 2009/12/16 19:41:22 dries Exp $
+// $Id: toolbar.tpl.php,v 1.9 2010/02/10 10:54:12 dries Exp $
 
 /**
  * @file
@@ -35,6 +35,4 @@
   <div class="<?php echo $toolbar['toolbar_drawer_classes']; ?>">
     <?php print render($toolbar['toolbar_drawer']); ?>
   </div>
-
-  <div class="shadow"></div>
 </div>

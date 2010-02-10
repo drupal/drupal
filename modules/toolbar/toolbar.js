@@ -1,4 +1,4 @@
-// $Id: toolbar.js,v 1.14 2010/01/26 21:42:37 webchick Exp $
+// $Id: toolbar.js,v 1.15 2010/02/10 10:54:12 dries Exp $
 (function ($) {
 
 Drupal.toolbar = Drupal.toolbar || {};
@@ -49,7 +49,7 @@ Drupal.toolbar.collapse = function() {
     .removeClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').removeClass('toolbar-drawer').css('paddingTop', $('#toolbar').outerHeight());
+  $('body').addClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height());
   $.cookie(
     'Drupal.toolbar.collapsed',
     1,
@@ -71,7 +71,7 @@ Drupal.toolbar.expand = function() {
     .addClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').addClass('toolbar-drawer').css('paddingTop', $('#toolbar').outerHeight());
+  $('body').addClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height());
   $.cookie(
     'Drupal.toolbar.collapsed',
     0,
@@ -96,7 +96,13 @@ Drupal.toolbar.toggle = function() {
 };
 
 Drupal.toolbar.height = function() {
-  return $("#toolbar").height();
+  var height = $('#toolbar').outerHeight();
+  // In IE, Shadow filter adds some extra height, so we need to remove it from
+  // the returned height.
+  if ($('#toolbar').css('filter').match(/DXImageTransform\.Microsoft\.Shadow/)) {
+    height -= $('#toolbar').get(0).filters.item("DXImageTransform.Microsoft.Shadow").strength;
+  }
+  return height;
 };
 
 })(jQuery);
