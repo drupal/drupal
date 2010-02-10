@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1102 2010/02/09 12:29:39 dries Exp $
+// $Id: common.inc,v 1.1103 2010/02/10 20:22:57 dries Exp $
 
 /**
  * @file
@@ -6618,7 +6618,10 @@ function xmlrpc($url) {
 }
 
 /**
- * Retrieve a list of all available archivers.
+ * Retrieves a list of all available archivers.
+ *
+ * @see hook_archiver_info()
+ * @see hook_archiver_info_alter()
  */
 function archiver_get_info() {
   $archiver_info = &drupal_static(__FUNCTION__, array());
