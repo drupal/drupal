@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.445 2010/02/03 18:16:23 webchick Exp $
+// $Id: system.install,v 1.446 2010/02/10 10:38:53 dries Exp $
 
 /**
  * @file
@@ -106,6 +106,19 @@ function system_requirements($phase) {
     $requirements['pdo']['value'] = $t('Disabled');
     $requirements['pdo']['severity'] = REQUIREMENT_ERROR;
     $requirements['pdo']['description'] = $t('Your server does not have the PHP PDO extension enabled. See the <a href="@system_requirements">system requirements page</a> for more information.', array('@system_requirements' => 'http://drupal.org/requirements'));
+  }
+
+  // Test JSON library availability.
+  $requirements['json'] = array(
+    'title' => $t('JSON library'),
+  );
+  if (extension_loaded('json')) {
+    $requirements['json']['value'] = $t('Enabled');
+  }
+  else {
+    $requirements['json']['value'] = $t('Disabled');
+    $requirements['json']['severity'] = REQUIREMENT_ERROR;
+    $requirements['json']['description'] = $t('Your server does not have the PHP JSON extension enabled. See the <a href="@system_requirements">system requirements page</a> for more information.', array('@system_requirements' => 'http://drupal.org/requirements'));
   }
 
   // Test PHP memory_limit
