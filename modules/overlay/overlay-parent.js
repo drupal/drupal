@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.25 2010/02/06 15:00:03 dries Exp $
+// $Id: overlay-parent.js,v 1.26 2010/02/10 05:50:49 webchick Exp $
 
 (function ($) {
 
@@ -680,14 +680,17 @@ Drupal.overlay.clickHandler = function (event) {
     return;
   }
 
-  // Only continue if clicked target (or one of its parents) is a link and does
-  // not have class overlay-exclude. The overlay-exclude class allows to prevent
-  // opening a link in the overlay.
-  if (!$target.is('a') || $target.hasClass('overlay-exclude')) {
+  // Only continue if clicked target (or one of its parents) is a link. 
+  if (!$target.is('a')) {
     $target = $target.closest('a');
     if (!$target.length) {
       return;
     }
+  }
+
+  // Never open links in the overlay that contain the overlay-exclude class.
+  if ($target.hasClass('overlay-exclude')) {
+    return;
   }
 
   var href = $target.attr('href');
