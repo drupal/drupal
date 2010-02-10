@@ -6618,7 +6618,10 @@ function xmlrpc($url) {
 }
 
 /**
- * Retrieve a list of all available archivers.
+ * Retrieves a list of all available archivers.
+ *
+ * @see hook_archiver_info()
+ * @see hook_archiver_info_alter()
  */
 function archiver_get_info() {
   $archiver_info = &drupal_static(__FUNCTION__, array());

@@ -2741,6 +2741,8 @@ function hook_action_info_alter(&$actions) {
  * - weight: This optional key specifies the weight of this archiver.
  *   When mapping file extensions to archivers, the first archiver by
  *   weight found that supports the requested extension will be used.
+ *
+ * @see hook_archiver_info_alter()
  */
 function hook_archiver_info() {
   return array(
@@ -2751,6 +2753,18 @@ function hook_archiver_info() {
   );
 }
 
+/**
+ * Alter archiver information declared by other modules.
+ *
+ * See hook_archiver_info() for a description of archivers and the archiver
+ * information structure.
+ *
+ * @param $info
+ *   Archiver information to alter (return values from hook_archiver_info()).
+ */
+function hook_archiver_info_alter(&$info) {
+  $info['tar']['extensions'][] = 'tgz';
+}
 
 /**
  * Defines additional date types.
