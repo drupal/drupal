@@ -33,24 +33,22 @@ body.toolbar-drawer {
   background: #666;
   color: #ccc;
   position: fixed;
+  top: 0;
   left: 0;
   right: 0;
-  top: 0;
+  margin: 0 -20px;
+  padding: 0 20px;
   z-index: 600;
+  box-shadow: 0 3px 20px #000;
+  -moz-box-shadow: 0 3px 20px #000;
+  -webkit-box-shadow: 0 3px 20px #000;
+  filter: progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10');
+  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10')";
 }
 
 #toolbar div.collapsed {
   display: none;
   visibility: hidden;
-}
-
-#toolbar div.shadow {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -15px;
-  height: 15px;
-  background: url(toolbar.png) 0 -45px repeat-x;
 }
 
 #toolbar a {
@@ -78,7 +76,7 @@ body.toolbar-drawer {
   width: 11px;
   height: 14px;
   display: block;
-  background: url(toolbar.png) no-repeat -6px -63px;
+  background: url(toolbar.png) no-repeat 0 -45px;
   text-indent: -9999px;
   margin: 3px 0px;
 }
@@ -142,6 +140,9 @@ body.toolbar-drawer {
  */
 * html #toolbar {
   position: absolute;
-  top: 0;
-  left: 0;
+  margin: 0;
+  padding-right: 0;
+  left: -20px;
+  right: 0;
+  width: 100%;
 }

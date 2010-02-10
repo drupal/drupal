@@ -35,6 +35,4 @@
   <div class="<?php echo $toolbar['toolbar_drawer_classes']; ?>">
     <?php print render($toolbar['toolbar_drawer']); ?>
   </div>
-
-  <div class="shadow"></div>
 </div>
