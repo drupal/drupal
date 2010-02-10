@@ -643,12 +643,15 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#title' => t('Name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
-    '#required' => TRUE);
+    '#required' => TRUE,
+    '#weight' => -5,
+  );
   $form['description'] = array(
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
     '#text_format' => $edit['format'],
+    '#weight' => 0,
   );
 
   $form['vocabulary_machine_name'] = array(

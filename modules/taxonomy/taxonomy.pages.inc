@@ -28,18 +28,13 @@ function taxonomy_term_page($term) {
   $breadcrumb = array_reverse($breadcrumb);
   drupal_set_breadcrumb($breadcrumb);
   drupal_add_feed(url('taxonomy/term/' . $term->tid . '/feed'), 'RSS - ' . $term->name);
-  drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
 
-  field_attach_prepare_view('taxonomy_term', array($term->tid => $term), 'full');
-  entity_prepare_view('taxonomy_term', array($term->tid => $term));
-  $build = array();
-  $build += field_attach_view('taxonomy_term', $term);
-  $build['term_description'] = array(
-    '#markup' => check_markup($term->description, $term->format, '', TRUE),
-    '#weight' => -1,
-    '#prefix' => '<div class="taxonomy-term-description">',
+  $build['term_heading'] = array(
+    '#prefix' => '<div class="term-listing-heading">',
     '#suffix' => '</div>',
+    'term' => taxonomy_term_view($term, 'full'),
   );
+
   if ($nids = taxonomy_select_nodes($term->tid, TRUE, variable_get('default_nodes_main', 10))) {
     $nodes = node_load_multiple($nids);
     $build += node_view_multiple($nodes);

@@ -137,6 +137,30 @@ function taxonomy_term_path($term) {
 }
 
 /**
+ * Implements hook_field_extra_fields().
+ */
+function taxonomy_field_extra_fields() {
+  $return = array();
+
+  foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocabulary) {
+    $return['taxonomy_term'][$machine_name] = array(
+      'name' => array(
+        'label' => t('Name'),
+        'description' => t('Term name textfield'),
+        'weight' => -5,
+      ),
+      'description' => array(
+        'label' => t('Description'),
+        'description' => t('Term description textarea'),
+        'weight' => 0,
+      )
+    );
+  }
+
+  return $return;
+}
+
+/**
  * Return nodes attached to a term across all field instances.
  *
  * This function requires taxonomy module to be maintaining its own tables,
@@ -200,6 +224,10 @@ function taxonomy_theme() {
     ),
     'taxonomy_overview_terms' => array(
       'render element' => 'form',
+    ),
+    'taxonomy_term' => array(
+      'render element' => 'elements',
+      'template' => 'taxonomy-term',
     ),
   );
 }
@@ -563,6 +591,89 @@ function taxonomy_term_delete($tid) {
   taxonomy_terms_static_reset();
 
   return SAVED_DELETED;
+}
+
+
+/**
+ * Generate an array for rendering the given term.
+ *
+ * @param $term
+ *   A term object.
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
+ *
+ * @return
+ *   An array as expected by drupal_render().
+ */
+function taxonomy_term_view($term, $view_mode = 'full') {
+  field_attach_prepare_view('taxonomy_term', array($term->tid => $term), $view_mode);
+  entity_prepare_view('taxonomy_term', array($term->tid => $term));
+
+  $build = array(
+    '#theme' => 'taxonomy_term',
+    '#term' => $term,
+    '#view_mode' => $view_mode,
+  );
+
+  $build += field_attach_view('taxonomy_term', $term, $view_mode);
+
+  $build['description'] = array(
+    '#markup' => check_markup($term->description, $term->format, '', TRUE),
+    '#weight' => 0,
+    '#prefix' => '<div class="taxonomy-term-description">',
+    '#suffix' => '</div>',
+  );
+
+  $build['#attached']['css'][] = drupal_get_path('module', 'taxonomy') . '/taxonomy.css';
+
+  return $build;
+}
+
+/**
+ * Process variables for taxonomy-term.tpl.php.
+ */
+function template_preprocess_taxonomy_term(&$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['term'] = $variables['elements']['#term'];
+  $term = $variables['term'];
+
+  $variables['term_url']  = url('taxonomy/term/' . $term->tid);
+  $variables['term_name'] = check_plain($term->name);
+  $variables['page']      = taxonomy_term_is_page($term);
+
+  // Flatten the term object's member fields.
+  $variables = array_merge((array)$term, $variables);
+
+  // Helpful $content variable for templates.
+  foreach (element_children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+
+  // field_attach_preprocess() overwrites the $[field_name] variables with the
+  // values of the field in the language that was selected for display, instead
+  // of the raw values in $term->[field_name], which contain all values in all
+  // languages.
+  field_attach_preprocess('taxonomy_term', $term, $variables['content'], $variables);
+
+  $vocabulary_name_css = str_replace('_', '-', $term->vocabulary_machine_name);
+
+  // Gather classes.
+  $variables['classes_array'][] = 'vocabulary-' . $vocabulary_name_css;
+
+  // Clean up name so there are no underscores.
+  $variables['theme_hook_suggestions'][] = 'taxonomy-term__' . $vocabulary_name_css;
+  $variables['theme_hook_suggestions'][] = 'taxonomy-term__' . $term->tid;
+}
+
+/**
+ * Returns whether the current page is the page of the passed in term.
+ *
+ * @param $term
+ *   A term object.
+ */
+function taxonomy_term_is_page($term) {
+  $page_term = menu_get_object('taxonomy_term', 2);
+  return (!empty($page_term) ? $page_term->tid == $term->tid : FALSE);
 }
 
 /**
