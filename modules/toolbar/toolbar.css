@@ -119,7 +119,8 @@ body.toolbar-drawer {
 }
 
 #toolbar div.toolbar-menu ul li a.active:hover,
-#toolbar div.toolbar-menu ul li a.active {
+#toolbar div.toolbar-menu ul li a.active,
+#toolbar div.toolbar-menu ul li.active-trail a {
   text-shadow: #333 0 1px 0;
   background: url(toolbar.png) 0 0 repeat-x;
 }
