@@ -131,6 +131,42 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
+   * Test that a blocked user cannot log in.
+   */
+  function testBlockedUserLogin() {
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+
+    // Log in and add an OpenID Identity to the account.
+    $this->drupalLogin($this->web_user);
+    $this->addIdentity($identity);
+    $this->drupalLogout();
+
+    // Log in as an admin user and block the account.
+    $admin_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin_user);
+    $this->drupalGet('admin/people');
+    $edit = array(
+      'operation' => 'block',
+      'accounts[' . $this->web_user->uid . ']' => TRUE,
+    );
+    $this->drupalPost('admin/people', $edit, t('Update'));
+    $this->assertRaw('The update has been performed.', t('Account was blocked.'));
+    $this->drupalLogout();
+
+    // Fill out and submit the login form.
+    $edit = array('openid_identifier' => $identity);
+    $this->drupalPost(NULL, $edit, t('Log in'));
+
+    // Check we are on the OpenID redirect form.
+    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+
+    // Submit form to the OpenID Provider Endpoint.
+    $this->drupalPost(NULL, array(), t('Send'));
+    $this->assertRaw(t('The username %name has not been activated or is blocked.', array('%name' => $this->web_user->name)), t('User login was blocked.'));
+  }
+
+  /**
    * Add OpenID identity to user's profile.
    *
    * @param $identity

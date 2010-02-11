@@ -437,7 +437,8 @@ function openid_authentication($response) {
   if (isset($account->uid)) {
     if (!variable_get('user_email_verification', TRUE) || $account->login) {
       // Check if user is blocked.
-      user_login_name_validate(array(), $state, (array)$account);
+      $state['values']['name'] = $account->name;
+      user_login_name_validate(array(), $state);
       if (!form_get_errors()) {
         // Load global $user and perform final login tasks.
         $form_state['uid'] = $account->uid;
