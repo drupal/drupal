@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.71 2010/01/31 18:39:46 dries Exp $
+// $Id: openid.module,v 1.72 2010/02/11 03:08:05 webchick Exp $
 
 /**
  * @file
@@ -437,7 +437,8 @@ function openid_authentication($response) {
   if (isset($account->uid)) {
     if (!variable_get('user_email_verification', TRUE) || $account->login) {
       // Check if user is blocked.
-      user_login_name_validate(array(), $state, (array)$account);
+      $state['values']['name'] = $account->name;
+      user_login_name_validate(array(), $state);
       if (!form_get_errors()) {
         // Load global $user and perform final login tasks.
         $form_state['uid'] = $account->uid;
