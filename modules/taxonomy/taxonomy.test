@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.70 2010/01/29 22:56:54 dries Exp $
+// $Id: taxonomy.test,v 1.71 2010/02/11 03:29:22 webchick Exp $
 
 /**
  * @file
@@ -323,6 +323,21 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
+
+    $field = array(
+      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vid' => $this->vocabulary->vid,
+            'parent' => 0,
+          ),
+        ),
+      ),
+    );
+    field_create_field($field);
 
     $this->instance = array(
       'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
@@ -854,6 +869,21 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
     $this->langcode = LANGUAGE_NONE;
+
+    $field = array(
+      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vid' => $this->vocabulary->vid,
+            'parent' => 0,
+          ),
+        ),
+      ),
+    );
+    field_create_field($field);
 
     $this->instance = array(
       'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
