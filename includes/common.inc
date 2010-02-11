@@ -1183,6 +1183,13 @@ function _drupal_log_error($error, $fatal = FALSE) {
     drupal_add_http_header('500 Service unavailable (with message)');
   }
 
+  if (drupal_is_cli()) {
+    if ($fatal) {
+      // When called from CLI, simply output a plain text message.
+      print html_entity_decode(strip_tags(t('%type: %message in %function (line %line of %file).', $error))). "\n";
+      exit;
+    }
+  }
   if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     if ($fatal) {
       // When called from JavaScript, simply output the error message.
