@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.12 2010/01/30 07:59:25 dries Exp $
+// $Id: image.field.inc,v 1.13 2010/02/11 15:42:14 webchick Exp $
 
 /**
  * @file
@@ -346,8 +346,8 @@ function image_field_widget_process($element, &$form_state, $form) {
   $item = $element['#value'];
   $item['fid'] = $element['fid']['#value'];
 
-  $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
+  $instance = $form_state['field'][$element['#field_name']][$element['#language']]['instance'];
+
   $settings = $instance['settings'];
   $widget_settings = $instance['widget']['settings'];
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.46 2010/02/08 21:02:15 dries Exp $
+// $Id: text.module,v 1.47 2010/02/11 15:42:14 webchick Exp $
 
 /**
  * @file
@@ -566,7 +566,7 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
 /**
  * Implements hook_field_widget_error().
  */
-function text_field_widget_error($element, $error) {
+function text_field_widget_error($element, $error, $form, &$form_state) {
   switch ($error['error']) {
     case 'text_summary_max_length':
       $error_element = $element[$element['#columns'][1]];

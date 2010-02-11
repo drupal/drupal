@@ -1,5 +1,5 @@
 <?php
-// $Id: options.module,v 1.24 2010/01/10 16:50:36 webchick Exp $
+// $Id: options.module,v 1.25 2010/02/11 15:42:14 webchick Exp $
 
 /**
  * @file
@@ -361,7 +361,7 @@ function options_array_flatten($array) {
 /**
  * Implements hook_field_widget_error().
  */
-function options_field_widget_error($element, $error) {
+function options_field_widget_error($element, $error, $form, &$form_state) {
   form_error($element, $error['message']);
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.field.inc,v 1.6 2009/12/21 13:47:32 dries Exp $
+// $Id: field_test.field.inc,v 1.7 2010/02/11 15:42:14 webchick Exp $
 
 /**
  * @file
@@ -194,7 +194,7 @@ function field_test_widget_multiple_validate($element, &$form_state) {
 /**
  * Implements hook_field_widget_error().
  */
-function field_test_field_widget_error($element, $error) {
+function field_test_field_widget_error($element, $error, $form, &$form_state) {
   // @todo No easy way to differenciate widget types, we should receive it as a
   // parameter.
   if (isset($element['value'])) {
