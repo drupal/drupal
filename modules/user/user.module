@@ -361,7 +361,7 @@ function user_save($account, $edit = array(), $category = 'account') {
     // Get the fields form so we can recognize the fields in the $edit
     // form that should not go into the serialized data array.
     $field_form = array();
-    $field_form_state = array();
+    $field_form_state = form_state_defaults();
     $edit = (object) $edit;
     field_attach_form('user', $edit, $field_form, $field_form_state);
 
