@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1227 2010/02/07 17:29:09 webchick Exp $
+// $Id: node.module,v 1.1228 2010/02/11 09:04:54 dries Exp $
 
 /**
  * @file
@@ -1599,8 +1599,6 @@ function node_search_execute($keys = NULL) {
 
     // Fetch comments for snippet.
     $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node);
-    // Fetch terms for snippet.
-    $node->rendered .= ' ' . module_invoke('taxonomy', 'node_update_index', $node);
 
     $extra = module_invoke_all('node_search_result', $node);
 
