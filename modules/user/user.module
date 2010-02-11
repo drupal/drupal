@@ -934,6 +934,7 @@ function user_account_form(&$form, &$form_state) {
     '#attributes' => array('class' => array('username')),
     '#default_value' => (!$register ? $account->name : ''),
     '#access' => ($register || ($user->uid == $account->uid && user_access('change own username')) || $admin),
+    '#weight' => -10,
   );
 
   $form['account']['mail'] = array(
@@ -953,6 +954,35 @@ function user_account_form(&$form, &$form_state) {
       '#size' => 25,
       '#description' => t('To change the current user password, enter the new password in both fields.'),
     );
+    // To skip the current password field, the user must have logged in via a
+    // one-time link and have the token in the URL.
+    $pass_reset = isset($_SESSION['pass_reset_' . $account->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $account->uid]);
+    $protected_values = array();
+    $current_pass_description = '';
+    // The user may only change their own password without their current
+    // password if they logged in via a one-time login link.
+    if (!$pass_reset) {
+      $protected_values['mail'] = $form['account']['mail']['#title'];
+      $protected_values['pass'] = t('Password');
+      $request_new = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
+      $current_pass_description = t('Enter your current password to change the %mail or %pass. !request_new.', array('%mail' => $protected_values['mail'], '%pass' => $protected_values['pass'], '!request_new' => $request_new));
+    }
+    // The user must enter their current password to change to a new one.
+    if ($user->uid == $account->uid) {
+      $form['account']['current_pass_required_values'] = array(
+        '#type' => 'value',
+        '#value' => $protected_values,
+      );
+      $form['account']['current_pass'] = array(
+        '#type' => 'password',
+        '#title' => t('Current password'),
+        '#size' => 25,
+        '#access' => !empty($protected_values),
+        '#description' => $current_pass_description,
+        '#weight' => -5,
+      );
+      $form['#validate'][] = 'user_validate_current_pass';
+    }
   }
   elseif (!variable_get('user_email_verification', TRUE) || $admin) {
     $form['account']['pass'] = array(
@@ -1046,6 +1076,30 @@ function user_account_form(&$form, &$form_state) {
     '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions pixels and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . variable_get('user_picture_guidelines', ''),
   );
   $form['#validate'][] = 'user_validate_picture';
+}
+
+/**
+ * Form validation handler for the current password on the user_account_form().
+ */
+function user_validate_current_pass(&$form, &$form_state) {
+  global $user;
+
+  $account = $form['#user'];
+  foreach ($form_state['values']['current_pass_required_values'] as $key => $name) {
+    // This validation only works for required textfields (like mail) or
+    // form values like password_confirm that have their own validation
+    // that prevent them from being empty if they are changed.
+    if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $account->$key)) {
+      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+      $current_pass_failed = empty($form_state['values']['current_pass']) || !user_check_password($form_state['values']['current_pass'], $user);
+      if ($current_pass_failed) {
+        form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
+        form_set_error($key);
+      }
+      // We only need to check the password once.
+      break;
+    }
+  }
 }
 
 /**
@@ -1439,7 +1493,7 @@ function user_menu() {
     'title' => 'Request new password',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_pass'),
-    'access callback' => 'user_is_anonymous',
+    'access callback' => TRUE,
     'type' => MENU_LOCAL_TASK,
     'file' => 'user.pages.inc',
   );
@@ -3204,7 +3258,6 @@ function user_block_user_action(&$object, $context = array()) {
  * @ingroup forms
  * @see user_account_form()
  * @see user_account_form_validate()
- * @see user_account_form_submit()
  * @see user_register_submit()
  */
 function user_register_form($form, &$form_state) {
