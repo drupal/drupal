@@ -204,8 +204,8 @@ function _file_generic_settings_file_directory_validate($element, &$form_state) 
 /**
  * Implements hook_field_load().
  */
-function file_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
-  foreach ($objects as $obj_id => $object) {
+function file_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
+  foreach ($entities as $obj_id => $entity) {
     // Load the files from the files table.
     $fids = array();
     foreach ($items[$obj_id] as $delta => $item) {
@@ -228,9 +228,9 @@ function file_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
 /**
  * Implements hook_field_prepare_view().
  */
-function file_field_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items) {
+function file_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
   // Remove files specified to not be displayed.
-  foreach ($objects as $id => $object) {
+  foreach ($entities as $id => $entity) {
     foreach ($items[$id] as $delta => $item) {
       if (!file_field_displayed($item, $field)) {
         unset($items[$id][$delta]);
@@ -246,9 +246,9 @@ function file_field_prepare_view($obj_type, $objects, $field, $instances, $langc
  *
  * Check for files that have been removed from the object.
  */
-function file_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
+function file_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
   // On new revisions, old files are always maintained in the previous revision.
-  if (!empty($object->revision)) {
+  if (!empty($entity->revision)) {
     return;
   }
 
@@ -259,8 +259,8 @@ function file_field_update($obj_type, $object, $field, $instance, $langcode, &$i
   }
 
   // Delete items from original object.
-  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
-  $load_function = $obj_type . '_load';
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+  $load_function = $entity_type . '_load';
 
   $original = $load_function($id);
   if (!empty($original->{$field['field_name']}[$langcode])) {
@@ -278,14 +278,14 @@ function file_field_update($obj_type, $object, $field, $instance, $langcode, &$i
 /**
  * Implements hook_field_delete().
  */
-function file_field_delete($obj_type, $object, $field, $instance, $langcode, &$items) {
-  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
+function file_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
   foreach ($items as $delta => $item) {
     // For hook_file_references(), remember that this is being deleted.
     $item['file_field_name'] = $field['field_name'];
     // Pass in the ID of the object that is being removed so all references can
     // be counted in hook_file_references().
-    $item['file_field_type'] = $obj_type;
+    $item['file_field_type'] = $entity_type;
     $item['file_field_id'] = $id;
     file_field_delete_file($item, $field);
   }
@@ -294,7 +294,7 @@ function file_field_delete($obj_type, $object, $field, $instance, $langcode, &$i
 /**
  * Implements hook_field_delete_revision().
  */
-function file_field_delete_revision($obj_type, $object, $field, $instance, $langcode, &$items) {
+function file_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
     // For hook_file_references, remember that this file is being deleted.
     $item['file_field_name'] = $field['field_name'];
@@ -832,7 +832,7 @@ function theme_file_upload_help($variables) {
 /**
  * Implements hook_field_formatter_view().
  */
-function file_field_formatter_view($obj_type, $object, $field, $instance, $langcode, $items, $display) {
+function file_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {

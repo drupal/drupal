@@ -48,7 +48,7 @@ function field_ui_menu() {
     return $items;
   }
   // Create tabs for all possible bundles.
-  foreach (entity_get_info() as $obj_type => $info) {
+  foreach (entity_get_info() as $entity_type => $info) {
     if ($info['fieldable']) {
       foreach ($info['bundles'] as $bundle_name => $bundle_info) {
         if (isset($bundle_info['admin'])) {
@@ -61,38 +61,38 @@ function field_ui_menu() {
           $items["$path/fields"] = array(
             'title' => 'Manage fields',
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_overview_form', $obj_type, $bundle_arg),
+            'page arguments' => array('field_ui_field_overview_form', $entity_type, $bundle_arg),
             'type' => MENU_LOCAL_TASK,
             'weight' => 1,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu"] = array(
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_field_edit_form', $entity_type, $bundle_arg, $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/edit"] = array(
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_field_edit_form', $entity_type, $bundle_arg, $field_position),
             'type' => MENU_DEFAULT_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/field-settings"] = array(
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_settings_form', $obj_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_field_settings_form', $entity_type, $bundle_arg, $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/widget-type"] = array(
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_widget_type_form', $obj_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_widget_type_form', $entity_type, $bundle_arg, $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/delete"] = array(
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_delete_form', $obj_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_field_delete_form', $entity_type, $bundle_arg, $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
@@ -101,16 +101,16 @@ function field_ui_menu() {
           $items["$path/display"] = array(
             'title' => 'Manage display',
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_display_overview_form', $obj_type, $bundle_arg),
+            'page arguments' => array('field_ui_display_overview_form', $entity_type, $bundle_arg),
             'type' => MENU_LOCAL_TASK,
             'weight' => 2,
             'file' => 'field_ui.admin.inc',
           ) + $access;
-          $tabs = field_ui_view_modes_tabs($obj_type);
+          $tabs = field_ui_view_modes_tabs($entity_type);
           foreach ($tabs as $key => $tab) {
             $items["$path/display/$key"] = array(
               'title' => $tab['title'],
-              'page arguments' => array('field_ui_display_overview_form', $obj_type, $bundle_arg, $key),
+              'page arguments' => array('field_ui_display_overview_form', $entity_type, $bundle_arg, $key),
               'type' => $key == 'basic' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
               'weight' => $key == 'basic' ? 0 : 1,
               'file' => 'field_ui.admin.inc',
@@ -156,32 +156,32 @@ function field_ui_theme() {
  *
  * @todo Remove this completely and use vertical tabs?
  */
-function field_ui_view_modes_tabs($obj_type, $tab_selector = NULL) {
+function field_ui_view_modes_tabs($entity_type, $tab_selector = NULL) {
   $info = &drupal_static(__FUNCTION__);
 
-  if (!isset($info[$obj_type])) {
-    $info[$obj_type] = module_invoke_all('field_ui_view_modes_tabs', $obj_type);
+  if (!isset($info[$entity_type])) {
+    $info[$entity_type] = module_invoke_all('field_ui_view_modes_tabs', $entity_type);
     // Filter out inactive modes.
-    $entity_info = entity_get_info($obj_type);
-    foreach ($info[$obj_type] as $tab => $values) {
+    $entity_info = entity_get_info($entity_type);
+    foreach ($info[$entity_type] as $tab => $values) {
       $modes = array();
-      foreach ($info[$obj_type][$tab]['view modes'] as $mode) {
+      foreach ($info[$entity_type][$tab]['view modes'] as $mode) {
         if (isset($entity_info['view modes'][$mode])) {
           $modes[] = $mode;
         }
       }
       if ($modes) {
-        $info[$obj_type][$tab]['view modes'] = $modes;
+        $info[$entity_type][$tab]['view modes'] = $modes;
       }
       else {
-        unset($info[$obj_type][$tab]);
+        unset($info[$entity_type][$tab]);
       }
     }
   }
   if ($tab_selector) {
-    return isset($info[$obj_type][$tab_selector]) ? $info[$obj_type][$tab_selector]['view modes'] : array();
+    return isset($info[$entity_type][$tab_selector]) ? $info[$entity_type][$tab_selector]['view modes'] : array();
   }
-  return $info[$obj_type];
+  return $info[$entity_type];
 }
 
 /**
@@ -229,7 +229,7 @@ function field_ui_field_ui_view_modes_tabs() {
 /**
  * Implements hook_field_attach_create_bundle().
  */
-function field_ui_field_attach_create_bundle($obj_type, $bundle) {
+function field_ui_field_attach_create_bundle($entity_type, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add our
   // menu item tabs.
   variable_set('menu_rebuild_needed', TRUE);
@@ -238,12 +238,12 @@ function field_ui_field_attach_create_bundle($obj_type, $bundle) {
 /**
  * Implements hook_field_attach_rename_bundle().
  */
-function field_ui_field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new) {
+function field_ui_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
   if ($bundle_old !== $bundle_new) {
     $extra_weights = variable_get('field_extra_weights', array());
-    if (isset($info[$obj_type][$bundle_old])) {
-      $extra_weights[$obj_type][$bundle_new] = $extra_weights[$obj_type][$bundle_old];
-      unset($extra_weights[$obj_type][$bundle_old]);
+    if (isset($info[$entity_type][$bundle_old])) {
+      $extra_weights[$entity_type][$bundle_new] = $extra_weights[$entity_type][$bundle_old];
+      unset($extra_weights[$entity_type][$bundle_old]);
       variable_set('field_extra_weights', $extra_weights);
     }
   }
@@ -252,10 +252,10 @@ function field_ui_field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new
 /**
  * Implements hook_field_attach_delete_bundle().
  */
-function field_ui_field_attach_delete_bundle($obj_type, $bundle) {
+function field_ui_field_attach_delete_bundle($entity_type, $bundle) {
   $extra_weights = variable_get('field_extra_weights', array());
-  if (isset($extra_weights[$obj_type][$bundle])) {
-    unset($extra_weights[$obj_type][$bundle]);
+  if (isset($extra_weights[$entity_type][$bundle])) {
+    unset($extra_weights[$entity_type][$bundle]);
     variable_set('field_extra_weights', $extra_weights);
   }
 }
@@ -263,8 +263,8 @@ function field_ui_field_attach_delete_bundle($obj_type, $bundle) {
 /**
  * Helper function to create the right administration path for a bundle.
  */
-function _field_ui_bundle_admin_path($obj_type, $bundle_name) {
-  $bundles = field_info_bundles($obj_type);
+function _field_ui_bundle_admin_path($entity_type, $bundle_name) {
+  $bundles = field_info_bundles($entity_type);
   $bundle_info = $bundles[$bundle_name];
   return isset($bundle_info['admin']['real path']) ? $bundle_info['admin']['real path'] : $bundle_info['admin']['path'];
 }
@@ -272,7 +272,7 @@ function _field_ui_bundle_admin_path($obj_type, $bundle_name) {
 /**
  * Helper function to identify inactive fields within a bundle.
  */
-function field_ui_inactive_instances($obj_type, $bundle_name = NULL) {
+function field_ui_inactive_instances($entity_type, $bundle_name = NULL) {
   if (!empty($bundle_name)) {
     $inactive = array($bundle_name => array());
     $params = array('bundle' => $bundle_name);
@@ -281,9 +281,9 @@ function field_ui_inactive_instances($obj_type, $bundle_name = NULL) {
     $inactive = array();
     $params = array();
   }
-  $params['object_type'] = $obj_type;
+  $params['object_type'] = $entity_type;
 
-  $active_instances = field_info_instances($obj_type);
+  $active_instances = field_info_instances($entity_type);
   $all_instances = field_read_instances($params, array('include_inactive' => TRUE));
   foreach ($all_instances as $instance) {
     if (!isset($active_instances[$instance['bundle']][$instance['field_name']])) {

@@ -262,7 +262,7 @@ function list_extract_allowed_values($string_values, $position_keys = FALSE) {
  * Possible error codes:
  * - 'list_illegal_value': The value is not part of the list of allowed values.
  */
-function list_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
+function list_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   $allowed_values = list_allowed_values($field);
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
@@ -332,7 +332,7 @@ function list_field_formatter_info() {
 /**
  * Implements hook_field_formatter_view().
  */
-function list_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function list_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {

@@ -1407,12 +1407,12 @@ function hook_mail($key, &$message, $params) {
     '%username' => format_username($account),
   );
   if ($context['hook'] == 'taxonomy') {
-    $object = $params['object'];
-    $vocabulary = taxonomy_vocabulary_load($object->vid);
+    $entity = $params['object'];
+    $vocabulary = taxonomy_vocabulary_load($entity->vid);
     $variables += array(
-      '%term_name' => $object->name,
-      '%term_description' => $object->description,
-      '%term_id' => $object->tid,
+      '%term_name' => $entity->name,
+      '%term_description' => $entity->description,
+      '%term_id' => $entity->tid,
       '%vocabulary_name' => $vocabulary->name,
       '%vocabulary_description' => $vocabulary->description,
       '%vocabulary_id' => $vocabulary->vid,

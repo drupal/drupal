@@ -81,7 +81,7 @@ function _field_test_storage_data($data = NULL) {
 /**
  * Implements hook_field_storage_load().
  */
-function field_test_field_storage_load($obj_type, $objects, $age, $fields, $options) {
+function field_test_field_storage_load($entity_type, $entities, $age, $fields, $options) {
   $data = _field_test_storage_data();
 
   $load_current = $age == FIELD_LOAD_CURRENT;
@@ -93,9 +93,9 @@ function field_test_field_storage_load($obj_type, $objects, $age, $fields, $opti
     $sub_table = $load_current ? 'current' : 'revisions';
     $delta_count = array();
     foreach ($field_data[$sub_table] as $row) {
-      if ($row->type == $obj_type && (!$row->deleted || $options['deleted'])) {
+      if ($row->type == $entity_type && (!$row->deleted || $options['deleted'])) {
         if (($load_current && in_array($row->entity_id, $ids)) || (!$load_current && in_array($row->revision_id, $ids))) {
-          if (in_array($row->language, field_multilingual_available_languages($obj_type, $field))) {
+          if (in_array($row->language, field_multilingual_available_languages($entity_type, $field))) {
             if (!isset($delta_count[$row->entity_id][$row->language])) {
               $delta_count[$row->entity_id][$row->language] = 0;
             }
@@ -104,7 +104,7 @@ function field_test_field_storage_load($obj_type, $objects, $age, $fields, $opti
               foreach ($field['columns'] as $column => $attributes) {
                 $item[$column] = $row->{$column};
               }
-              $objects[$row->entity_id]->{$field_name}[$row->language][] = $item;
+              $entities[$row->entity_id]->{$field_name}[$row->language][] = $item;
               $delta_count[$row->entity_id][$row->language]++;
             }
           }
@@ -117,33 +117,33 @@ function field_test_field_storage_load($obj_type, $objects, $age, $fields, $opti
 /**
  * Implements hook_field_storage_write().
  */
-function field_test_field_storage_write($obj_type, $object, $op, $fields) {
+function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
   $data = _field_test_storage_data();
 
-  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
 
   foreach ($fields as $field_id) {
     $field = field_info_field_by_id($field_id);
     $field_name = $field['field_name'];
     $field_data = &$data[$field_id];
 
-    $all_languages = field_multilingual_available_languages($obj_type, $field);
-    $field_languages = array_intersect($all_languages, array_keys((array) $object->$field_name));
+    $all_languages = field_multilingual_available_languages($entity_type, $field);
+    $field_languages = array_intersect($all_languages, array_keys((array) $entity->$field_name));
 
     // Delete and insert, rather than update, in case a value was added.
     if ($op == FIELD_STORAGE_UPDATE) {
-      // Delete languages present in the incoming $object->$field_name.
-      // Delete all languages if $object->$field_name is empty.
-      $languages = !empty($object->$field_name) ? $field_languages : $all_languages;
+      // Delete languages present in the incoming $entity->$field_name.
+      // Delete all languages if $entity->$field_name is empty.
+      $languages = !empty($entity->$field_name) ? $field_languages : $all_languages;
       if ($languages) {
         foreach ($field_data['current'] as $key => $row) {
-          if ($row->type == $obj_type && $row->entity_id == $id && in_array($row->language, $languages)) {
+          if ($row->type == $entity_type && $row->entity_id == $id && in_array($row->language, $languages)) {
             unset($field_data['current'][$key]);
           }
         }
         if (isset($vid)) {
           foreach ($field_data['revisions'] as $key => $row) {
-            if ($row->type == $obj_type && $row->revision_id == $vid) {
+            if ($row->type == $entity_type && $row->revision_id == $vid) {
               unset($field_data['revisions'][$key]);
             }
           }
@@ -152,12 +152,12 @@ function field_test_field_storage_write($obj_type, $object, $op, $fields) {
     }
 
     foreach ($field_languages as $langcode) {
-      $items = (array) $object->{$field_name}[$langcode];
+      $items = (array) $entity->{$field_name}[$langcode];
       $delta_count = 0;
       foreach ($items as $delta => $item) {
         $row = (object) array(
           'field_id' => $field_id,
-          'type' => $obj_type,
+          'type' => $entity_type,
           'entity_id' => $id,
           'revision_id' => $vid,
           'bundle' => $bundle,
@@ -187,15 +187,15 @@ function field_test_field_storage_write($obj_type, $object, $op, $fields) {
 /**
  * Implements hook_field_storage_delete().
  */
-function field_test_field_storage_delete($obj_type, $object, $fields) {
-  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
+function field_test_field_storage_delete($entity_type, $entity, $fields) {
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
 
   // Note: reusing field_test_storage_purge(), like field_sql_storage.module
   // does, is highly inefficient in our case...
   foreach (field_info_instances($bundle) as $instance) {
     if (isset($fields[$instance['field_id']])) {
       $field = field_info_field_by_id($instance['field_id']);
-      field_test_field_storage_purge($obj_type, $object, $field, $instance);
+      field_test_field_storage_purge($entity_type, $entity, $field, $instance);
     }
   }
 }
@@ -203,15 +203,15 @@ function field_test_field_storage_delete($obj_type, $object, $fields) {
 /**
  * Implements hook_field_storage_purge().
  */
-function field_test_field_storage_purge($obj_type, $object, $field, $instance) {
+function field_test_field_storage_purge($entity_type, $entity, $field, $instance) {
   $data = _field_test_storage_data();
 
-  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
 
   $field_data = &$data[$field['id']];
   foreach (array('current', 'revisions') as $sub_table) {
     foreach ($field_data[$sub_table] as $key => $row) {
-      if ($row->type == $obj_type && $row->entity_id == $id) {
+      if ($row->type == $entity_type && $row->entity_id == $id) {
         unset($field_data[$sub_table][$key]);
       }
     }
@@ -223,15 +223,15 @@ function field_test_field_storage_purge($obj_type, $object, $field, $instance) {
 /**
  * Implements hook_field_storage_delete_revision().
  */
-function field_test_field_storage_delete_revision($obj_type, $object, $fields) {
+function field_test_field_storage_delete_revision($entity_type, $entity, $fields) {
   $data = _field_test_storage_data();
 
-  list($id, $vid, $bundle) = entity_extract_ids($obj_type, $object);
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
   foreach ($fields as $field_id) {
     $field_data = &$data[$field_id];
     foreach (array('current', 'revisions') as $sub_table) {
       foreach ($field_data[$sub_table] as $key => $row) {
-        if ($row->type == $obj_type && $row->entity_id == $id && $row->revision_id == $vid) {
+        if ($row->type == $entity_type && $row->entity_id == $id && $row->revision_id == $vid) {
           unset($field_data[$sub_table][$key]);
         }
       }

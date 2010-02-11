@@ -139,13 +139,13 @@ function file_file_download($uri, $field_type = 'file') {
   // Check access to content containing the file fields. If access is allowed
   // to any of this content, allow the download.
   foreach ($references as $field_name => $field_references) {
-    foreach ($field_references as $obj_type => $type_references) {
+    foreach ($field_references as $entity_type => $type_references) {
       foreach ($type_references as $reference) {
         // If access is allowed to any object, immediately stop and grant
         // access. If access is denied, continue through in case another object
         // grants access.
         // TODO: Switch this to a universal access check mechanism if available.
-        if ($obj_type == 'node' && ($node = node_load($reference->nid))) {
+        if ($entity_type == 'node' && ($node = node_load($reference->nid))) {
           if (node_access('view', $node)) {
             $denied = FALSE;
             break 3;
@@ -154,7 +154,7 @@ function file_file_download($uri, $field_type = 'file') {
             $denied = TRUE;
           }
         }
-        if ($obj_type == 'user') {
+        if ($entity_type == 'user') {
           if (user_access('access user profiles') || $user->uid == $reference->uid) {
             $denied = FALSE;
             break 3;
@@ -904,7 +904,7 @@ function file_get_file_reference_count($file, $field = NULL, $field_type = 'file
       // TODO: Use a more efficient mechanism rather than actually retrieving
       // all the references themselves, such as using a COUNT() query.
       $references = file_get_file_references($file, $field, FIELD_LOAD_REVISION, $field_type);
-      foreach ($references as $obj_type => $type_references) {
+      foreach ($references as $entity_type => $type_references) {
         $reference_count += count($type_references);
       }
 
@@ -913,9 +913,9 @@ function file_get_file_reference_count($file, $field = NULL, $field_type = 'file
       if (isset($file->file_field_name) && $field['field_name'] == $file->file_field_name) {
         // If deleting the entire piece of content, decrement references.
         if (isset($file->file_field_type) && isset($file->file_field_id)) {
-          if ($file->file_field_type == $obj_type) {
-            $info = entity_get_info($obj_type);
-            $id = $types[$obj_type]['object keys']['id'];
+          if ($file->file_field_type == $entity_type) {
+            $info = entity_get_info($entity_type);
+            $id = $types[$entity_type]['object keys']['id'];
             foreach ($type_references as $reference) {
               if ($file->file_field_id == $reference->$id) {
                 $reference_count--;

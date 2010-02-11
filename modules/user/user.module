@@ -471,8 +471,8 @@ function user_save($account, $edit = array(), $category = 'account') {
       }
 
       // Save Field data.
-      $object = (object) $edit;
-      field_attach_update('user', $object);
+      $entity = (object) $edit;
+      field_attach_update('user', $entity);
 
       // Refresh user object.
       $user = user_load($account->uid, TRUE);
@@ -514,8 +514,8 @@ function user_save($account, $edit = array(), $category = 'account') {
       // Build the initial user object.
       $user = user_load($edit['uid'], TRUE);
 
-      $object = (object) $edit;
-      field_attach_insert('user', $object);
+      $entity = (object) $edit;
+      field_attach_insert('user', $entity);
 
       user_module_invoke('insert', $edit, $user, $category);
       entity_invoke('insert', 'user', $user);
@@ -3235,9 +3235,9 @@ function user_action_info() {
  * Implement a Drupal action.
  * Blocks the current user.
  */
-function user_block_user_action(&$object, $context = array()) {
-  if (isset($object->uid)) {
-    $uid = $object->uid;
+function user_block_user_action(&$entity, $context = array()) {
+  if (isset($entity->uid)) {
+    $uid = $entity->uid;
   }
   elseif (isset($context['uid'])) {
     $uid = $context['uid'];

@@ -208,9 +208,9 @@ function _field_info_collate_fields($reset = FALSE) {
 
     // Populate 'instances'. Only non-deleted instances are considered.
     $info['instances'] = array();
-    foreach (field_info_bundles() as $obj_type => $bundles) {
+    foreach (field_info_bundles() as $entity_type => $bundles) {
       foreach ($bundles as $bundle => $bundle_info) {
-        $info['instances'][$obj_type][$bundle] = array();
+        $info['instances'][$entity_type][$bundle] = array();
       }
     }
     foreach ($definitions['instances'] as $instance) {
@@ -481,19 +481,19 @@ function field_info_storage_types($storage_type = NULL) {
 /**
  * Returns information about existing bundles.
  *
- * @param $obj_type
+ * @param $entity_type
  *   The type of object; e.g. 'node' or 'user'.
  *
  * @return
- *   An array of bundles for the $obj_type keyed by bundle name,
- *   or, if no $obj_type was provided, the array of all existing bundles,
+ *   An array of bundles for the $entity_type keyed by bundle name,
+ *   or, if no $entity_type was provided, the array of all existing bundles,
  *   keyed by object type.
  */
-function field_info_bundles($obj_type = NULL) {
+function field_info_bundles($entity_type = NULL) {
   $info = entity_get_info();
 
-  if ($obj_type) {
-    return isset($info[$obj_type]['bundles']) ? $info[$obj_type]['bundles'] : array();
+  if ($entity_type) {
+    return isset($info[$entity_type]['bundles']) ? $info[$entity_type]['bundles'] : array();
   }
 
   $bundles = array();
@@ -561,27 +561,27 @@ function field_info_field_by_id($field_id) {
 /**
  * Retrieves information about field instances.
  *
- * @param $obj_type
+ * @param $entity_type
  *   The object type for which to return instances.
  * @param $bundle_name
  *   The bundle name for which to return instances.
  *
  * @return
- *   If $obj_type is not set, return all instances keyed by object type and
- *   bundle name. If $obj_type is set, return all instances for that object
- *   type, keyed by bundle name. If $obj_type and $bundle_name are set, return
+ *   If $entity_type is not set, return all instances keyed by object type and
+ *   bundle name. If $entity_type is set, return all instances for that object
+ *   type, keyed by bundle name. If $entity_type and $bundle_name are set, return
  *   all instances for that bundle.
  */
-function field_info_instances($obj_type = NULL, $bundle_name = NULL) {
+function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
   $info = _field_info_collate_fields();
-  if (!isset($obj_type)) {
+  if (!isset($entity_type)) {
     return $info['instances'];
   }
   if (!isset($bundle_name)) {
-    return $info['instances'][$obj_type];
+    return $info['instances'][$entity_type];
   }
-  if (isset($info['instances'][$obj_type][$bundle_name])) {
-    return $info['instances'][$obj_type][$bundle_name];
+  if (isset($info['instances'][$entity_type][$bundle_name])) {
+    return $info['instances'][$entity_type][$bundle_name];
   }
   return array();
 }
@@ -589,17 +589,17 @@ function field_info_instances($obj_type = NULL, $bundle_name = NULL) {
 /**
  * Returns an array of instance data for a specific field and bundle.
  *
- * @param $obj_type
+ * @param $entity_type
  *   The object type for the instance.
  * @param $field_name
  *   The field name for the instance.
  * @param $bundle_name
  *   The bundle name for the instance.
  */
-function field_info_instance($obj_type, $field_name, $bundle_name) {
+function field_info_instance($entity_type, $field_name, $bundle_name) {
   $info = _field_info_collate_fields();
-  if (isset($info['instances'][$obj_type][$bundle_name][$field_name])) {
-    return $info['instances'][$obj_type][$bundle_name][$field_name];
+  if (isset($info['instances'][$entity_type][$bundle_name][$field_name])) {
+    return $info['instances'][$entity_type][$bundle_name][$field_name];
   }
 }
 

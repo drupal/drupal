@@ -205,10 +205,10 @@ class FieldUITestCase extends DrupalWebTestCase {
    *   The field name for the instance.
    * @param $string
    *   The settings text.
-   * @param $obj_type
+   * @param $entity_type
    *   The object type for the instance.
    */
-  function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $obj_type = 'node') {
+  function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
     // Reset the fields info.
     _field_info_collate_fields(TRUE);
     // Assert field settings.
@@ -216,7 +216,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     $this->assertTrue($field['settings']['test_field_setting'] == $string, t('Field settings were found.'));
 
     // Assert instance and widget settings.
-    $instance = field_info_instance($obj_type, $field_name, $bundle);
+    $instance = field_info_instance($entity_type, $field_name, $bundle);
     $this->assertTrue($instance['settings']['test_instance_setting'] == $string, t('Field instance settings were found.'));
     $this->assertTrue($instance['widget']['settings']['test_widget_setting'] == $string, t('Field widget settings were found.'));
   }

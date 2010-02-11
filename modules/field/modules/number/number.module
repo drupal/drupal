@@ -176,7 +176,7 @@ function number_field_instance_settings_form($field, $instance) {
  * - 'number_min': The value is smaller than the allowed minimum value.
  * - 'number_max': The value is larger than the allowed maximum value.
  */
-function number_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
+function number_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
     if ($item['value'] != '') {
       if (is_numeric($instance['settings']['min']) && $item['value'] < $instance['settings']['min']) {
@@ -198,7 +198,7 @@ function number_field_validate($obj_type, $object, $field, $instance, $langcode,
 /**
  * Implements hook_field_presave().
  */
-function number_field_presave($obj_type, $object, $field, $instance, $langcode, &$items) {
+function number_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
   if ($field['type'] == 'number_decimal') {
     // Let PHP round the value to ensure consistent behavior across storage
     // backends.
@@ -255,7 +255,7 @@ function number_field_formatter_info() {
 /**
  * Implements hook_field_formatter_view().
  */
-function number_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function number_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
   $settings = $display['settings'];
 

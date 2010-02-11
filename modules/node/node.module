@@ -2519,8 +2519,8 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Languages:
     $language_options = array();
-    foreach (language_list('language') as $key => $object) {
-      $language_options[$key] = $object->name;
+    foreach (language_list('language') as $key => $entity) {
+      $language_options[$key] = $entity->name;
     }
     if (count($language_options) > 1) {
       $form['advanced']['language'] = array(
@@ -3489,8 +3489,8 @@ class NodeController extends DrupalDefaultEntityController {
     // Create an array of nodes for each content type and pass this to the
     // object type specific callback.
     $typed_nodes = array();
-    foreach ($nodes as $id => $object) {
-      $typed_nodes[$object->type][$id] = $object;
+    foreach ($nodes as $id => $entity) {
+      $typed_nodes[$entity->type][$id] = $entity;
     }
 
     // Call object type specific callbacks on each typed array of nodes.

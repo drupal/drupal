@@ -54,12 +54,12 @@ function field_test_entity_info() {
  */
 function field_test_entity_info_alter(&$entity_info) {
   // Enable/disable field_test as a translation handler.
-  foreach (field_test_entity_info_translatable() as $obj_type => $translatable) {
-    $entity_info[$obj_type]['translation']['field_test'] = $translatable;
+  foreach (field_test_entity_info_translatable() as $entity_type => $translatable) {
+    $entity_info[$entity_type]['translation']['field_test'] = $translatable;
   }
   // Disable locale as a translation handler.
-  foreach ($entity_info as $obj_type => $info) {
-    $entity_info[$obj_type]['translation']['locale'] = FALSE;
+  foreach ($entity_info as $entity_type => $info) {
+    $entity_info[$entity_type]['translation']['locale'] = FALSE;
   }
 }
 

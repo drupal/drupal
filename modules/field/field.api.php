@@ -242,7 +242,7 @@ function hook_field_schema($field) {
  * Defines custom load behavior for this module's field types.
  *
  * Unlike most other field hooks, this hook operates on multiple objects. The
- * $objects, $instances and $items parameters are arrays keyed by object id.
+ * $entities, $instances and $items parameters are arrays keyed by object id.
  * For performance reasons, information for all available objects should be
  * loaded in a single query where possible.
  *
@@ -252,9 +252,9 @@ function hook_field_schema($field) {
  * hook_field_load() is run on those as well. Use
  * hook_field_formatter_prepare_view() instead.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $objects
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entities
  *   Array of objects being loaded, keyed by object id.
  * @param $field
  *   The field structure for the operation.
@@ -272,10 +272,10 @@ function hook_field_schema($field) {
  *   Changes or additions to field values are done by altering the $items
  *   parameter by reference.
  */
-function hook_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
+function hook_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
   // Sample code from text.module: precompute sanitized strings so they are
   // stored in the field cache.
-  foreach ($objects as $id => $object) {
+  foreach ($entities as $id => $entity) {
     foreach ($items[$id] as $delta => $item) {
       // Only process items with a cacheable format, the rest will be handled
       // by formatters if needed.
@@ -298,13 +298,13 @@ function hook_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
  * @see hook_field_formatter_prepare_view()
  *
  * Unlike most other field hooks, this hook operates on multiple objects. The
- * $objects, $instances and $items parameters are arrays keyed by object id.
+ * $entities, $instances and $items parameters are arrays keyed by object id.
  * For performance reasons, information for all available objects should be
  * loaded in a single query where possible.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $objects
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entities
  *   Array of objects being displayed, keyed by object id.
  * @param $field
  *   The field structure for the operation.
@@ -314,12 +314,12 @@ function hook_field_load($obj_type, $objects, $field, $instances, $langcode, &$i
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}, or an empty array if unset.
+ *   $entity->{$field['field_name']}, or an empty array if unset.
  */
-function hook_field_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items) {
+function hook_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
   // Sample code from image.module: if there are no images specified at all,
   // use the default.
-  foreach ($objects as $id => $object) {
+  foreach ($entities as $id => $entity) {
     if (empty($items[$id]) && $field['settings']['default_image']) {
       if ($file = file_load($field['settings']['default_image'])) {
         $items[$id][0] = (array) $file + array(
@@ -335,18 +335,18 @@ function hook_field_prepare_view($obj_type, $objects, $field, $instances, $langc
 /**
  * Define custom validate behavior for this module's field types.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
  *   The object for the operation.
  * @param $field
  *   The field structure for the operation.
  * @param $instance
- *   The instance structure for $field on $object's bundle.
+ *   The instance structure for $field on $entity's bundle.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
+ *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  * @param $errors
  *   The array of errors, keyed by field name and by value delta, that have
  *   already been reported for the object. The function should add its errors
@@ -355,7 +355,7 @@ function hook_field_prepare_view($obj_type, $objects, $field, $instances, $langc
  *   - 'error': an error code (should be a string, prefixed with the module name)
  *   - 'message': the human readable message to be displayed.
  */
-function hook_field_validate($obj_type, $object, $field, $instance, $langcode, &$items, &$errors) {
+function hook_field_validate($entity_type, $entity, $field, $instance, $langcode, &$items, &$errors) {
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
@@ -371,20 +371,20 @@ function hook_field_validate($obj_type, $object, $field, $instance, $langcode, &
 /**
  * Define custom presave behavior for this module's field types.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
  *   The object for the operation.
  * @param $field
  *   The field structure for the operation.
  * @param $instance
- *   The instance structure for $field on $object's bundle.
+ *   The instance structure for $field on $entity's bundle.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
+ *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_presave($obj_type, $object, $field, $instance, $langcode, &$items) {
+function hook_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
   if ($field['type'] == 'number_decimal') {
     // Let PHP round the value to ensure consistent behavior across storage
     // backends.
@@ -399,39 +399,39 @@ function hook_field_presave($obj_type, $object, $field, $instance, $langcode, &$
 /**
  * Define custom insert behavior for this module's field types.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
  *   The object for the operation.
  * @param $field
  *   The field structure for the operation.
  * @param $instance
- *   The instance structure for $field on $object's bundle.
+ *   The instance structure for $field on $entity's bundle.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
+ *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_insert($obj_type, $object, $field, $instance, $langcode, &$items) {
+function hook_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
 }
 
 /**
  * Define custom update behavior for this module's field types.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
  *   The object for the operation.
  * @param $field
  *   The field structure for the operation.
  * @param $instance
- *   The instance structure for $field on $object's bundle.
+ *   The instance structure for $field on $entity's bundle.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
+ *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
+function hook_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -439,20 +439,20 @@ function hook_field_update($obj_type, $object, $field, $instance, $langcode, &$i
  *
  * This hook is invoked just before the data is deleted from field storage.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
  *   The object for the operation.
  * @param $field
  *   The field structure for the operation.
  * @param $instance
- *   The instance structure for $field on $object's bundle.
+ *   The instance structure for $field on $entity's bundle.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
+ *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_delete($obj_type, $object, $field, $instance, $langcode, &$items) {
+function hook_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -461,20 +461,20 @@ function hook_field_delete($obj_type, $object, $field, $instance, $langcode, &$i
  * This hook is invoked just before the data is deleted from field storage,
  * and will only be called for fieldable types that are versioned.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
  *   The object for the operation.
  * @param $field
  *   The field structure for the operation.
  * @param $instance
- *   The instance structure for $field on $object's bundle.
+ *   The instance structure for $field on $entity's bundle.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
+ *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_delete_revision($obj_type, $object, $field, $instance, $langcode, &$items) {
+function hook_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -482,20 +482,20 @@ function hook_field_delete_revision($obj_type, $object, $field, $instance, $lang
  *
  * TODO: This hook may or may not survive in Field API.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
  *   The object for the operation.
  * @param $field
  *   The field structure for the operation.
  * @param $instance
- *   The instance structure for $field on $object's bundle.
+ *   The instance structure for $field on $entity's bundle.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
+ *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_prepare_translation($obj_type, $object, $field, $instance, $langcode, &$items) {
+function hook_field_prepare_translation($entity_type, $entity, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -775,13 +775,13 @@ function hook_field_formatter_info_alter(&$info) {
  * @see hook_field_prepare_view()
  *
  * Unlike most other field hooks, this hook operates on multiple objects. The
- * $objects, $instances and $items parameters are arrays keyed by object id.
+ * $entities, $instances and $items parameters are arrays keyed by object id.
  * For performance reasons, information for all available objects should be
  * loaded in a single query where possible.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $objects
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entities
  *   Array of objects being displayed, keyed by object id.
  * @param $field
  *   The field structure for the operation.
@@ -799,16 +799,16 @@ function hook_field_formatter_info_alter(&$info) {
  *   Changes or additions to field values are done by altering the $items
  *   parameter by reference.
  */
-function hook_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $displays) {
+function hook_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $displays) {
 
 }
 
 /**
  * Builds a renderable array for a field value.
  *
- * @param $obj_type
- *   The type of $object.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
  *   The object being displayed.
  * @param $field
  *   The field structure.
@@ -828,7 +828,7 @@ function hook_field_formatter_prepare_view($obj_type, $objects, $field, $instanc
  *   A renderable array for the $items, as an array of child elements keyed
  *   by numeric indexes starting from 0.
  */
-function hook_field_formatter_view($obj_type, $object, $field, $instance, $langcode, $items, $display) {
+function hook_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
   $settings = $display['settings'];
 
@@ -888,11 +888,11 @@ function hook_field_formatter_view($obj_type, $object, $field, $instance, $langc
  *
  * See field_attach_form() for details and arguments.
  */
-function hook_field_attach_form($obj_type, $object, &$form, &$form_state, $langcode) {
+function hook_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
   $tids = array();
 
   // Collect every possible term attached to any of the fieldable entities.
-  foreach ($objects as $id => $object) {
+  foreach ($entities as $id => $entity) {
     foreach ($items[$id] as $delta => $item) {
       // Force the array key to prevent duplicates.
       $tids[$item['value']] = $item['value'];
@@ -910,7 +910,7 @@ function hook_field_attach_form($obj_type, $object, &$form, &$form_state, $langc
     $terms = $query->execute()->fetchAllAssoc('tid');
 
     // Iterate through the fieldable entities again to attach the loaded term data.
-    foreach ($objects as $id => $object) {
+    foreach ($entities as $id => $entity) {
       foreach ($items[$id] as $delta => $item) {
         // Check whether the taxonomy term field instance value could be loaded.
         if (isset($terms[$item['value']])) {
@@ -932,7 +932,7 @@ function hook_field_attach_form($obj_type, $object, &$form, &$form_state, $langc
  * This hook is invoked after the field module has performed the operation.
  *
  * Unlike other field_attach hooks, this hook accounts for 'multiple loads'.
- * Instead of the usual $object parameter, it accepts an array of objects,
+ * Instead of the usual $entity parameter, it accepts an array of objects,
  * indexed by object id. For performance reasons, information for all available
  * objects should be loaded in a single query where possible.
  *
@@ -941,7 +941,7 @@ function hook_field_attach_form($obj_type, $object, &$form, &$form_state, $langc
  *
  * See field_attach_load() for details and arguments.
  */
-function hook_field_attach_load($obj_type, $objects, $age) {
+function hook_field_attach_load($entity_type, $entities, $age) {
 }
 
 /**
@@ -951,7 +951,7 @@ function hook_field_attach_load($obj_type, $objects, $age) {
  *
  * See field_attach_validate() for details and arguments.
  */
-function hook_field_attach_validate($obj_type, $object, &$errors) {
+function hook_field_attach_validate($entity_type, $entity, &$errors) {
 }
 
 /**
@@ -961,7 +961,7 @@ function hook_field_attach_validate($obj_type, $object, &$errors) {
  *
  * See field_attach_submit() for details and arguments.
  */
-function hook_field_attach_submit($obj_type, $object, $form, &$form_state) {
+function hook_field_attach_submit($entity_type, $entity, $form, &$form_state) {
 }
 
 /**
@@ -971,7 +971,7 @@ function hook_field_attach_submit($obj_type, $object, $form, &$form_state) {
  *
  * See field_attach_presave() for details and arguments.
  */
-function hook_field_attach_presave($obj_type, $object) {
+function hook_field_attach_presave($entity_type, $entity) {
 }
 
 /**
@@ -981,7 +981,7 @@ function hook_field_attach_presave($obj_type, $object) {
  *
  * See field_attach_insert() for details and arguments.
  */
-function hook_field_attach_insert($obj_type, $object) {
+function hook_field_attach_insert($entity_type, $entity) {
 }
 
 /**
@@ -991,7 +991,7 @@ function hook_field_attach_insert($obj_type, $object) {
  *
  * See field_attach_update() for details and arguments.
  */
-function hook_field_attach_update($obj_type, $object) {
+function hook_field_attach_update($entity_type, $entity) {
 }
 
 /**
@@ -1004,7 +1004,7 @@ function hook_field_attach_update($obj_type, $object) {
  *   values.
  * @param $context
  *   An associative array containing:
- *   - obj_type: The type of $object; e.g. 'node' or 'user'.
+ *   - obj_type: The type of $entity; e.g. 'node' or 'user'.
  *   - object: The object with fields to render.
  *   - element: The structured array containing the values ready for rendering.
  */
@@ -1018,7 +1018,7 @@ function hook_field_attach_preprocess_alter(&$variables, $context) {
  *
  * See field_attach_delete() for details and arguments.
  */
-function hook_field_attach_delete($obj_type, $object) {
+function hook_field_attach_delete($entity_type, $entity) {
 }
 
 /**
@@ -1028,7 +1028,7 @@ function hook_field_attach_delete($obj_type, $object) {
  *
  * See field_attach_delete_revision() for details and arguments.
  */
-function hook_field_attach_delete_revision($obj_type, $object) {
+function hook_field_attach_delete_revision($entity_type, $entity) {
 }
 
 /**
@@ -1037,10 +1037,10 @@ function hook_field_attach_delete_revision($obj_type, $object) {
  * This hook is invoked after the field module has performed the operation.
  *
  * @param &$output
- *   The structured content array tree for all of $object's fields.
+ *   The structured content array tree for all of $entity's fields.
  * @param $context
  *   An associative array containing:
- *   - obj_type: The type of $object; e.g. 'node' or 'user'.
+ *   - obj_type: The type of $entity; e.g. 'node' or 'user'.
  *   - object: The object with fields to render.
  *   - view_mode: View mode, e.g. 'full', 'teaser'...
  *   - langcode: The language in which the field values will be displayed.
@@ -1055,7 +1055,7 @@ function hook_field_attach_view_alter(&$output, $context) {
  *
  * See field_attach_create_bundle() for details and arguments.
  */
-function hook_field_attach_create_bundle($obj_type, $bundle) {
+function hook_field_attach_create_bundle($entity_type, $bundle) {
 }
 
 /**
@@ -1065,7 +1065,7 @@ function hook_field_attach_create_bundle($obj_type, $bundle) {
  *
  * See field_attach_rename_bundle() for details and arguments.
  */
-function hook_field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new) {
+function hook_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
 }
 
 /**
@@ -1073,7 +1073,7 @@ function hook_field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $obj_type
+ * @param $entity_type
  *   The type of object; e.g. 'node' or 'user'.
  * @param $bundle
  *   The bundle that was just deleted.
@@ -1081,7 +1081,7 @@ function hook_field_attach_rename_bundle($obj_type, $bundle_old, $bundle_new) {
  *   An array of all instances that existed for the bundle before it was
  *   deleted.
  */
-function hook_field_attach_delete_bundle($obj_type, $bundle, $instances) {
+function hook_field_attach_delete_bundle($entity_type, $bundle, $instances) {
 }
 
 /**
@@ -1173,9 +1173,9 @@ function hook_field_storage_details_alter(&$details, $field) {
 /**
  * Load field data for a set of objects.
  *
- * @param $obj_type
+ * @param $entity_type
  *   The entity type of object, such as 'node' or 'user'.
- * @param $objects
+ * @param $entities
  *   The array of objects for which to load data, keyed by object id.
  * @param $age
  *   FIELD_LOAD_CURRENT to load the most recent revision for all
@@ -1186,18 +1186,18 @@ function hook_field_storage_details_alter(&$details, $field) {
  *   ids, the values of the array are the object ids (or revision ids,
  *   depending on the $age parameter) to be loaded for each field.
  * @return
- *   Loaded field values are added to $objects. Fields with no values should be
+ *   Loaded field values are added to $entities. Fields with no values should be
  *   set as an empty array.
  */
-function hook_field_storage_load($obj_type, $objects, $age, $fields) {
+function hook_field_storage_load($entity_type, $entities, $age, $fields) {
 }
 
 /**
  * Write field data for an object.
  *
- * @param $obj_type
+ * @param $entity_type
  *   The entity type of object, such as 'node' or 'user'.
- * @param $object
+ * @param $entity
  *   The object on which to operate.
  * @param $op
  *   FIELD_STORAGE_UPDATE when updating an existing object,
@@ -1206,21 +1206,21 @@ function hook_field_storage_load($obj_type, $objects, $age, $fields) {
  *   An array listing the fields to be written. The keys and values of the
  *   array are field ids.
  */
-function hook_field_storage_write($obj_type, $object, $op, $fields) {
+function hook_field_storage_write($entity_type, $entity, $op, $fields) {
 }
 
 /**
  * Delete all field data for an object.
  *
- * @param $obj_type
+ * @param $entity_type
  *   The entity type of object, such as 'node' or 'user'.
- * @param $object
+ * @param $entity
  *   The object on which to operate.
  * @param $fields
  *   An array listing the fields to delete. The keys and values of the
  *   array are field ids.
  */
-function hook_field_storage_delete($obj_type, $object, $fields) {
+function hook_field_storage_delete($entity_type, $entity, $fields) {
 }
 
 /**
@@ -1229,17 +1229,17 @@ function hook_field_storage_delete($obj_type, $object, $fields) {
  * Deleting the current (most recently written) revision is not
  * allowed as has undefined results.
  *
- * @param $obj_type
+ * @param $entity_type
  *   The entity type of object, such as 'node' or 'user'.
- * @param $object
+ * @param $entity
  *   The object on which to operate. The revision to delete is
  *   indicated by the object's revision id property, as identified by
- *   hook_fieldable_info() for $obj_type.
+ *   hook_fieldable_info() for $entity_type.
  * @param $fields
  *   An array listing the fields to delete. The keys and values of the
  *   array are field ids.
  */
-function hook_field_storage_delete_revision($obj_type, $object, $fields) {
+function hook_field_storage_delete_revision($entity_type, $entity, $fields) {
 }
 
 /**
@@ -1297,9 +1297,9 @@ function hook_field_storage_delete_instance($instance) {
  * subset of fields in a different way than the current storage engine.
  * Possible use cases include: per-bundle storage, per-combo-field storage...
  *
- * @param $obj_type
+ * @param $entity_type
  *   The type of objects for which to load fields; e.g. 'node' or 'user'.
- * @param $objects
+ * @param $entities
  *   An array of objects for which to load fields, keyed by object id.
  * @param $age
  *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
@@ -1309,11 +1309,11 @@ function hook_field_storage_delete_instance($instance) {
  *   therefore should not be loaded again. The values associated to these keys
  *   are not specified.
  * @return
- *   - Loaded field values are added to $objects. Fields with no values should
+ *   - Loaded field values are added to $entities. Fields with no values should
  *     be set as an empty array.
  *   - Loaded field ids are set as keys in $skip_fields.
  */
-function hook_field_storage_pre_load($obj_type, $objects, $age, &$skip_fields) {
+function hook_field_storage_pre_load($entity_type, $entities, $age, &$skip_fields) {
 }
 
 /**
@@ -1322,9 +1322,9 @@ function hook_field_storage_pre_load($obj_type, $objects, $age, &$skip_fields) {
  * This hook allows modules to store data before the Field Storage API,
  * optionally preventing the field storage module from doing so.
  *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
  *   The object with fields to save.
  * @param $skip_fields
  *   An array keyed by field ids whose data has already been written and
@@ -1333,19 +1333,19 @@ function hook_field_storage_pre_load($obj_type, $objects, $age, &$skip_fields) {
  * @return
  *   Saved field ids are set set as keys in $skip_fields.
  */
-function hook_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
-  if ($obj_type == 'node' && $object->status && _forum_node_check_node_type($object)) {
+function hook_field_storage_pre_insert($entity_type, $entity, &$skip_fields) {
+  if ($entity_type == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
     $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
-    foreach ($object->taxonomy_forums as $language) {
+    foreach ($entity->taxonomy_forums as $language) {
       foreach ($language as $delta) {
         $query->values(array(
-          'nid' => $object->nid,
-          'title' => $object->title,
+          'nid' => $entity->nid,
+          'title' => $entity->title,
           'tid' => $delta['value'],
-          'sticky' => $object->sticky,
-          'created' => $object->created,
+          'sticky' => $entity->sticky,
+          'created' => $entity->created,
           'comment_count' => 0,
-          'last_comment_timestamp' => $object->created,
+          'last_comment_timestamp' => $entity->created,
         ));
       }
     }
@@ -1359,9 +1359,9 @@ function hook_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
  * This hook allows modules to store data before the Field Storage API,
  * optionally preventing the field storage module from doing so.
  *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
  *   The object with fields to save.
  * @param $skip_fields
  *   An array keyed by field ids whose data has already been written and
@@ -1370,37 +1370,37 @@ function hook_field_storage_pre_insert($obj_type, $object, &$skip_fields) {
  * @return
  *   Saved field ids are set set as keys in $skip_fields.
  */
-function hook_field_storage_pre_update($obj_type, $object, &$skip_fields) {
+function hook_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
   $first_call = &drupal_static(__FUNCTION__, array());
 
-  if ($obj_type == 'node' && $object->status && _forum_node_check_node_type($object)) {
+  if ($entity_type == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
     // We don't maintain data for old revisions, so clear all previous values
     // from the table. Since this hook runs once per field, per object, make
     // sure we only wipe values once.
-    if (!isset($first_call[$object->nid])) {
-      $first_call[$object->nid] = FALSE;
-      db_delete('forum_index')->condition('nid', $object->nid)->execute();
+    if (!isset($first_call[$entity->nid])) {
+      $first_call[$entity->nid] = FALSE;
+      db_delete('forum_index')->condition('nid', $entity->nid)->execute();
     }
     // Only save data to the table if the node is published.
-    if ($object->status) {
+    if ($entity->status) {
       $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
-      foreach ($object->taxonomy_forums as $language) {
+      foreach ($entity->taxonomy_forums as $language) {
         foreach ($language as $delta) {
           $query->values(array(
-            'nid' => $object->nid,
-            'title' => $object->title,
+            'nid' => $entity->nid,
+            'title' => $entity->title,
             'tid' => $delta['value'],
-            'sticky' => $object->sticky,
-            'created' => $object->created,
+            'sticky' => $entity->sticky,
+            'created' => $entity->created,
             'comment_count' => 0,
-            'last_comment_timestamp' => $object->created,
+            'last_comment_timestamp' => $entity->created,
           ));
         }
       }
       $query->execute();
       // The logic for determining last_comment_count is fairly complex, so
       // call _forum_update_forum_index() too.
-      _forum_update_forum_index($object->nid);
+      _forum_update_forum_index($entity->nid);
     }
   }
 }
@@ -1592,9 +1592,9 @@ function hook_field_read_instance($instance) {
  *   - "view"
  * @param $field
  *   The field on which the operation is to be performed.
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
  *   (optional) The object for the operation.
  * @param $account
  *   (optional) The account to check, if not given use currently logged in user.
@@ -1602,5 +1602,5 @@ function hook_field_read_instance($instance) {
  *   TRUE if the operation is allowed;
  *   FALSE if the operation is denied.
  */
-function hook_field_access($op, $field, $obj_type, $object, $account) {
+function hook_field_access($op, $field, $entity_type, $entity, $account) {
 }

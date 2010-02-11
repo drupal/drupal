@@ -41,7 +41,7 @@
  * - field_name (string)
  *     The name of the field. Each field name is unique within Field API.
  *     When a field is attached to an object, the field's data is stored
- *     in $object->$field_name.
+ *     in $entity->$field_name.
  * - type (string)
  *     The type of the field, such as 'text' or 'image'. Field types
  *     are defined by modules that implement hook_field_info().
@@ -553,9 +553,9 @@ function field_delete_field($field_name) {
   // Delete all non-deleted instances.
   $field = field_info_field($field_name);
   if (isset($field['bundles'])) {
-    foreach ($field['bundles'] as $obj_type => $bundles) {
+    foreach ($field['bundles'] as $entity_type => $bundles) {
       foreach ($bundles as $bundle) {
-        $instance = field_info_instance($obj_type, $field_name, $bundle);
+        $instance = field_info_instance($entity_type, $field_name, $bundle);
         field_delete_instance($instance);
       }
     }
@@ -786,7 +786,7 @@ function _field_write_instance($instance, $update = FALSE) {
  * This function will not return deleted instances. Use
  * field_read_instances() instead for this purpose.
  *
- * @param $obj_type
+ * @param $entity_type
  *   The type of object to which the field is bound.
  * @param $field_name
  *   The field name to read.
@@ -801,8 +801,8 @@ function _field_write_instance($instance, $update = FALSE) {
  * @return
  *   An instance structure, or FALSE.
  */
-function field_read_instance($obj_type, $field_name, $bundle, $include_additional = array()) {
-  $instances = field_read_instances(array('object_type' => $obj_type, 'field_name' => $field_name, 'bundle' => $bundle), $include_additional);
+function field_read_instance($entity_type, $field_name, $bundle, $include_additional = array()) {
+  $instances = field_read_instances(array('object_type' => $entity_type, 'field_name' => $field_name, 'bundle' => $bundle), $include_additional);
   return $instances ? current($instances) : FALSE;
 }
 
@@ -984,14 +984,14 @@ function field_purge_batch($batch_size) {
     $field = field_info_field_by_id($instance['field_id']);
 
     // Retrieve some pseudo-objects.
-    $obj_types = field_attach_query($instance['field_id'], array(array('bundle', $instance['bundle']), array('deleted', 1)), array('limit' => $batch_size));
+    $entity_types = field_attach_query($instance['field_id'], array(array('bundle', $instance['bundle']), array('deleted', 1)), array('limit' => $batch_size));
 
-    if (count($obj_types) > 0) {
+    if (count($entity_types) > 0) {
       // Field data for the instance still exists.
-      foreach ($obj_types as $obj_type => $objects) {
-        field_attach_load($obj_type, $objects, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
+      foreach ($entity_types as $entity_type => $entities) {
+        field_attach_load($entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
 
-        foreach ($objects as $id => $object) {
+        foreach ($entities as $id => $entity) {
           // field_attach_query() may return more results than we asked for.
           // Stop when he have done our batch size.
           if ($batch_size-- <= 0) {
@@ -999,7 +999,7 @@ function field_purge_batch($batch_size) {
           }
 
           // Purge the data for the object.
-          field_purge_data($obj_type, $object, $field, $instance);
+          field_purge_data($entity_type, $entity, $field, $instance);
         }
       }
     }
@@ -1027,28 +1027,28 @@ function field_purge_batch($batch_size) {
  * to a single field. The object itself is not being deleted, and it is quite
  * possible that other field data will remain attached to it.
  *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
  *   The pseudo-object whose field data to delete.
  * @param $field
  *   The (possibly deleted) field whose data is being purged.
  * @param $instance
  *   The deleted field instance whose data is being purged.
  */
-function field_purge_data($obj_type, $object, $field, $instance) {
+function field_purge_data($entity_type, $entity, $field, $instance) {
   // Each field type's hook_field_delete() only expects to operate on a single
   // field at a time, so we can use it as-is for purging.
   $options = array('field_id' => $instance['field_id'], 'deleted' => TRUE);
-  _field_invoke('delete', $obj_type, $object, $dummy, $dummy, $options);
+  _field_invoke('delete', $entity_type, $entity, $dummy, $dummy, $options);
 
   // Tell the field storage system to purge the data.
-  module_invoke($field['storage']['module'], 'field_storage_purge', $obj_type, $object, $field, $instance);
+  module_invoke($field['storage']['module'], 'field_storage_purge', $entity_type, $entity, $field, $instance);
 
   // Let other modules act on purging the data.
   foreach (module_implements('field_attach_purge') as $module) {
     $function = $module . '_field_attach_purge';
-    $function($obj_type, $object, $field, $instance);
+    $function($entity_type, $entity, $field, $instance);
   }
 }
 

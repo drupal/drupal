@@ -2848,9 +2848,9 @@ function system_send_email_action_submit($form, $form_state) {
 /**
  * Implements a configurable Drupal action: sends an email.
  */
-function system_send_email_action($object, $context) {
+function system_send_email_action($entity, $context) {
   if (empty($context['node'])) {
-    $context['node'] = $object;
+    $context['node'] = $entity;
   }
 
   $recipient = token_replace($context['recipient'], $context);
@@ -2898,9 +2898,9 @@ function system_message_action_submit($form, $form_state) {
 /**
  * A configurable Drupal action. Sends a message to the current user's screen.
  */
-function system_message_action(&$object, $context = array()) {
+function system_message_action(&$entity, $context = array()) {
   if (empty($context['node'])) {
-    $context['node'] = $object;
+    $context['node'] = $entity;
   }
 
   $context['message'] = token_replace($context['message'], $context);
@@ -2927,7 +2927,7 @@ function system_goto_action_submit($form, $form_state) {
   );
 }
 
-function system_goto_action($object, $context) {
+function system_goto_action($entity, $context) {
   drupal_goto(token_replace($context['url'], $context));
 }
 

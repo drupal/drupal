@@ -427,7 +427,7 @@ function node_update_7004() {
   $type_list = node_type_get_types();
 
   // Apply original settings to all types.
-  foreach ($type_list as $type => $object) {
+  foreach ($type_list as $type => $entity) {
     variable_set('teaser_length_' . $type, $original_length);
     variable_set('node_preview_' . $type, $original_preview);
   }

@@ -68,8 +68,8 @@ function field_test_menu() {
  *
  * This simulates a field operation callback to be invoked by _field_invoke().
  */
-function field_test_field_test_op($obj_type, $object, $field, $instance, $langcode, &$items) {
-  return array($langcode => md5(serialize(array($obj_type, $object, $field['field_name'], $langcode, $items))));
+function field_test_field_test_op($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  return array($langcode => md5(serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items))));
 }
 
 /**
@@ -78,10 +78,10 @@ function field_test_field_test_op($obj_type, $object, $field, $instance, $langco
  * This simulates a multiple field operation callback to be invoked by
  * _field_invoke_multiple().
  */
-function field_test_field_test_op_multiple($obj_type, $objects, $field, $instances, $langcode, &$items) {
+function field_test_field_test_op_multiple($entity_type, $entities, $field, $instances, $langcode, &$items) {
   $result = array();
-  foreach ($objects as $id => $object) {
-    $result[$id] = array($langcode => md5(serialize(array($obj_type, $object, $field['field_name'], $langcode, $items[$id]))));
+  foreach ($entities as $id => $entity) {
+    $result[$id] = array($langcode => md5(serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items[$id]))));
   }
   return $result;
 }
@@ -89,7 +89,7 @@ function field_test_field_test_op_multiple($obj_type, $objects, $field, $instanc
 /**
  * Implements hook_field_languages().
  */
-function field_test_field_languages($obj_type, $field, &$languages) {
+function field_test_field_languages($entity_type, $field, &$languages) {
   if ($field['settings']['test_hook_in']) {
     // Add an unavailable language.
     $languages[] = 'xx';
@@ -101,10 +101,10 @@ function field_test_field_languages($obj_type, $field, &$languages) {
 /**
  * Helper function to enable entity translations.
  */
-function field_test_entity_info_translatable($obj_type = NULL, $translatable = NULL) {
+function field_test_entity_info_translatable($entity_type = NULL, $translatable = NULL) {
   $stored_value = &drupal_static(__FUNCTION__, array());
-  if (isset($obj_type)) {
-    $stored_value[$obj_type] = $translatable;
+  if (isset($entity_type)) {
+    $stored_value[$entity_type] = $translatable;
     entity_info_cache_clear();
   }
   return $stored_value;
@@ -175,7 +175,7 @@ function field_test_field_create_field($field) {
 /**
  * Memorize calls to hook_field_insert().
  */
-function field_test_field_insert($obj_type, $object, $field, $instance, $items) {
+function field_test_field_insert($entity_type, $entity, $field, $instance, $items) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
@@ -183,7 +183,7 @@ function field_test_field_insert($obj_type, $object, $field, $instance, $items) 
 /**
  * Memorize calls to hook_field_update().
  */
-function field_test_field_update($obj_type, $object, $field, $instance, $items) {
+function field_test_field_update($entity_type, $entity, $field, $instance, $items) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
@@ -191,7 +191,7 @@ function field_test_field_update($obj_type, $object, $field, $instance, $items) 
 /**
  * Memorize calls to hook_field_delete().
  */
-function field_test_field_delete($obj_type, $object, $field, $instance, $items) {
+function field_test_field_delete($entity_type, $entity, $field, $instance, $items) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }

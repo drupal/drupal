@@ -9,11 +9,11 @@
 /**
  * Create a separate form element for each field.
  */
-function field_default_form($obj_type, $object, $field, $instance, $langcode, $items, &$form, &$form_state, $get_delta = NULL) {
+function field_default_form($entity_type, $entity, $field, $instance, $langcode, $items, &$form, &$form_state, $get_delta = NULL) {
   // This could be called with no object, as when a UI module creates a
   // dummy form to set default values.
-  if ($object) {
-    list($id, , ) = entity_extract_ids($obj_type, $object);
+  if ($entity) {
+    list($id, , ) = entity_extract_ids($entity_type, $entity);
   }
 
   $field_name = $field['field_name'];
@@ -31,12 +31,12 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
 
   // Populate widgets with default values when creating a new object.
   if (empty($items) && empty($id)) {
-    $items = field_get_default_value($obj_type, $object, $field, $instance, $langcode);
+    $items = field_get_default_value($entity_type, $entity, $field, $instance, $langcode);
   }
 
   // Collect widget elements.
   $elements = array();
-  if (field_access('edit', $field, $obj_type, $object)) {
+  if (field_access('edit', $field, $entity_type, $entity)) {
     // If field module handles multiple values for this form element, and we
     // are displaying an individual element, process the multiple value form.
     if (!isset($get_delta) && field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
@@ -325,7 +325,7 @@ function field_form_element_after_build($element, &$form_state) {
 /**
  * Transfer field-level validation errors to widgets.
  */
-function field_default_form_errors($obj_type, $object, $field, $instance, $langcode, $items, $form, &$form_state) {
+function field_default_form_errors($entity_type, $entity, $field, $instance, $langcode, $items, $form, &$form_state) {
   $field_name = $field['field_name'];
   $field_info = $form_state['field'][$field_name][$langcode];
 

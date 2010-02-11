@@ -15,14 +15,14 @@ function field_ui_fields_list() {
   $bundles = field_info_bundles();
   $header = array(t('Field name'), t('Field type'), t('Used in'));
   $rows = array();
-  foreach ($instances as $obj_type => $type_bundles) {
+  foreach ($instances as $entity_type => $type_bundles) {
     foreach ($type_bundles as $bundle => $bundle_instances) {
       foreach ($bundle_instances as $field_name => $instance) {
         $field = field_info_field($field_name);
-        $admin_path = _field_ui_bundle_admin_path($obj_type, $bundle);
+        $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
         $rows[$field_name]['data'][0] = $field['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
         $rows[$field_name]['data'][1] = t($field_types[$field['type']]['label']);
-        $rows[$field_name]['data'][2][] = l($bundles[$obj_type][$bundle]['label'], $admin_path . '/fields');
+        $rows[$field_name]['data'][2][] = l($bundles[$entity_type][$bundle]['label'], $admin_path . '/fields');
         $rows[$field_name]['class'] = $field['locked'] ? array('menu-disabled') : array('');
       }
     }
@@ -44,8 +44,8 @@ function field_ui_fields_list() {
 /**
  * Helper function to display a message about inactive fields.
  */
-function field_ui_inactive_message($obj_type, $bundle) {
-  $inactive_instances = field_ui_inactive_instances($obj_type, $bundle);
+function field_ui_inactive_message($entity_type, $bundle) {
+  $inactive_instances = field_ui_inactive_instances($entity_type, $bundle);
   if (!empty($inactive_instances)) {
     $field_types = field_info_field_types();
     $widget_types = field_info_widget_types();
@@ -67,11 +67,11 @@ function field_ui_inactive_message($obj_type, $bundle) {
  *
  * Allows fields and pseudo-fields to be re-ordered.
  */
-function field_ui_field_overview_form($form, &$form_state, $obj_type, $bundle) {
-  $bundle = field_extract_bundle($obj_type, $bundle);
+function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle) {
+  $bundle = field_extract_bundle($entity_type, $bundle);
 
-  field_ui_inactive_message($obj_type, $bundle);
-  $admin_path = _field_ui_bundle_admin_path($obj_type, $bundle);
+  field_ui_inactive_message($entity_type, $bundle);
+  $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
 
   // When displaying the form, make sure the list of fields is up-to-date.
   if (empty($form_state['post'])) {
@@ -79,18 +79,18 @@ function field_ui_field_overview_form($form, &$form_state, $obj_type, $bundle) {
   }
 
   // Gather bundle information.
-  $instances = field_info_instances($obj_type, $bundle);
+  $instances = field_info_instances($entity_type, $bundle);
   $field_types = field_info_field_types();
   $widget_types = field_info_widget_types();
 
-  $extra = field_extra_fields($obj_type, $bundle);
+  $extra = field_extra_fields($entity_type, $bundle);
 
   // Store each default weight so that we can add the 'add new' rows after them.
   $weights = array();
 
   $form += array(
     '#tree' => TRUE,
-    '#object_type' => $obj_type,
+    '#object_type' => $entity_type,
     '#bundle' => $bundle,
     '#fields' => array_keys($instances),
     '#extra' => array_keys($extra),
@@ -238,7 +238,7 @@ function field_ui_field_overview_form($form, &$form_state, $obj_type, $bundle) {
   }
 
   // Additional row: add existing field.
-  $existing_field_options = field_ui_existing_field_options($obj_type, $bundle);
+  $existing_field_options = field_ui_existing_field_options($entity_type, $bundle);
   if ($existing_field_options && $widget_type_options) {
     $weight++;
     array_unshift($existing_field_options, t('- Select an existing field -'));
@@ -459,15 +459,15 @@ function _field_ui_field_overview_form_validate_add_existing($form, &$form_state
  */
 function field_ui_field_overview_form_submit($form, &$form_state) {
   $form_values = $form_state['values'];
-  $obj_type = $form['#object_type'];
+  $entity_type = $form['#object_type'];
   $bundle = $form['#bundle'];
-  $admin_path = _field_ui_bundle_admin_path($obj_type, $bundle);
+  $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
 
   // Update field weights.
   $extra = array();
   foreach ($form_values as $key => $values) {
     if (in_array($key, $form['#fields'])) {
-      $instance = field_read_instance($obj_type, $key, $bundle);
+      $instance = field_read_instance($entity_type, $key, $bundle);
       $instance['widget']['weight'] = $values['weight'];
       foreach($instance['display'] as $view_mode => $display) {
         $instance['display'][$view_mode]['weight'] = $values['weight'];
@@ -480,7 +480,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
   }
 
   $extra_weights = variable_get('field_extra_weights', array());
-  $extra_weights[$obj_type][$bundle] = $extra;
+  $extra_weights[$entity_type][$bundle] = $extra;
   variable_set('field_extra_weights', $extra_weights);
 
   $destinations = array();
@@ -497,7 +497,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     );
     $instance = array(
       'field_name' => $field['field_name'],
-      'object_type' => $obj_type,
+      'object_type' => $entity_type,
       'bundle' => $bundle,
       'label' => $values['label'],
       'widget' => array(
@@ -532,7 +532,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     else {
       $instance = array(
         'field_name' => $field['field_name'],
-        'object_type' => $obj_type,
+        'object_type' => $entity_type,
         'bundle' => $bundle,
         'label' => $values['label'],
         'widget' => array(
@@ -567,20 +567,20 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
  * This form includes form widgets to select which fields appear in teaser and
  * full view modes, and how the field labels should be rendered.
  */
-function field_ui_display_overview_form($form, &$form_state, $obj_type, $bundle, $view_modes_selector = 'basic') {
-  $bundle = field_extract_bundle($obj_type, $bundle);
+function field_ui_display_overview_form($form, &$form_state, $entity_type, $bundle, $view_modes_selector = 'basic') {
+  $bundle = field_extract_bundle($entity_type, $bundle);
 
-  field_ui_inactive_message($obj_type, $bundle);
-  $admin_path = _field_ui_bundle_admin_path($obj_type, $bundle);
+  field_ui_inactive_message($entity_type, $bundle);
+  $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
 
   // Gather type information.
-  $instances = field_info_instances($obj_type, $bundle);
+  $instances = field_info_instances($entity_type, $bundle);
   $field_types = field_info_field_types();
-  $view_modes = field_ui_view_modes_tabs($obj_type, $view_modes_selector);
+  $view_modes = field_ui_view_modes_tabs($entity_type, $view_modes_selector);
 
   $form += array(
     '#tree' => TRUE,
-    '#object_type' => $obj_type,
+    '#object_type' => $entity_type,
     '#bundle' => $bundle,
     '#fields' => array_keys($instances),
     '#contexts' => $view_modes_selector,
@@ -777,14 +777,14 @@ function field_ui_formatter_options($field_type = NULL) {
 /**
  * Return an array of existing field to be added to a bundle.
  */
-function field_ui_existing_field_options($obj_type, $bundle) {
+function field_ui_existing_field_options($entity_type, $bundle) {
   $options = array();
   $field_types = field_info_field_types();
 
   foreach (field_info_instances() as $existing_obj_type => $bundles) {
     foreach ($bundles as $existing_bundle => $instances) {
       // No need to look in the current bundle.
-      if (!($existing_bundle == $bundle && $existing_obj_type == $obj_type)) {
+      if (!($existing_bundle == $bundle && $existing_obj_type == $entity_type)) {
         foreach ($instances as $instance) {
           $field = field_info_field($instance['field_name']);
           // Don't show
@@ -792,8 +792,8 @@ function field_ui_existing_field_options($obj_type, $bundle) {
           // - fields already in the current bundle,
           // - field that cannot be added to the object type.
           if (empty($field['locked'])
-            && !field_info_instance($obj_type, $field['field_name'], $bundle)
-            && (empty($field['object_types']) || in_array($obj_type, $field['object_types']))) {
+            && !field_info_instance($entity_type, $field['field_name'], $bundle)
+            && (empty($field['object_types']) || in_array($entity_type, $field['object_types']))) {
             $text = t('@type: @field (@label)', array(
               '@type' => $field_types[$field['type']]['label'],
               '@label' => t($instance['label']), '@field' => $instance['field_name'],
@@ -812,9 +812,9 @@ function field_ui_existing_field_options($obj_type, $bundle) {
 /**
  * Menu callback; presents the field settings edit page.
  */
-function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $field) {
-  $bundle = field_extract_bundle($obj_type, $bundle);
-  $instance = field_info_instance($obj_type, $field['field_name'], $bundle);
+function field_ui_field_settings_form($form, &$form_state, $entity_type, $bundle, $field) {
+  $bundle = field_extract_bundle($entity_type, $bundle);
+  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
 
   // When a field is first created, we have to get data from the db.
   if (!isset($instance['label'])) {
@@ -860,7 +860,7 @@ function field_ui_field_settings_form($form, &$form_state, $obj_type, $bundle, $
       '#markup' => t('%field has no field settings.', array('%field' => $instance['label'])),
     );
   }
-  $form['#object_type'] = $obj_type;
+  $form['#object_type'] = $entity_type;
   $form['#bundle'] = $bundle;
 
   $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
@@ -878,9 +878,9 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
   // Merge incoming form values into the existing field.
   $field = field_info_field($field_values['field_name']);
 
-  $obj_type = $form['#object_type'];
+  $entity_type = $form['#object_type'];
   $bundle = $form['#bundle'];
-  $instance = field_info_instance($obj_type, $field['field_name'], $bundle);
+  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
 
   // Update the field.
   $field = array_merge($field, $field_values);
@@ -888,28 +888,28 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
   try {
     field_update_field($field);
     drupal_set_message(t('Updated field %label field settings.', array('%label' => $instance['label'])));
-    $form_state['redirect'] = field_ui_next_destination($obj_type, $bundle);
+    $form_state['redirect'] = field_ui_next_destination($entity_type, $bundle);
   }
   catch (FieldException $e) {
     drupal_set_message(t('Attempt to update field %label failed: %message.', array('%label' => $instance['label'], '%message' => $e->getMessage())), 'error');
     // TODO: Where do we go from here?
-    $form_state['redirect'] = field_ui_next_destination($obj_type, $bundle);
+    $form_state['redirect'] = field_ui_next_destination($entity_type, $bundle);
   }
 }
 
 /**
  * Menu callback; select a widget for the field.
  */
-function field_ui_widget_type_form($form, &$form_state, $obj_type, $bundle, $field) {
-  $bundle = field_extract_bundle($obj_type, $bundle);
-  $instance = field_info_instance($obj_type, $field['field_name'], $bundle);
+function field_ui_widget_type_form($form, &$form_state, $entity_type, $bundle, $field) {
+  $bundle = field_extract_bundle($entity_type, $bundle);
+  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
 
   drupal_set_title($instance['label']);
 
   $field_type = field_info_field_types($field['type']);
   $widget_type = field_info_widget_types($instance['widget']['type']);
   $bundles = field_info_bundles();
-  $bundle_label = $bundles[$obj_type][$bundle]['label'];
+  $bundle_label = $bundles[$entity_type][$bundle]['label'];
 
   $form['basic'] = array(
     '#type' => 'fieldset',
@@ -940,7 +940,7 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
   $form_values = $form_state['values'];
   $instance = $form['#instance'];
   $bundle = $instance['bundle'];
-  $obj_type = $instance['object_type'];
+  $entity_type = $instance['object_type'];
 
   // Set the right module information.
   $widget_type = field_info_widget_types($form_values['widget_type']);
@@ -956,18 +956,18 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
     drupal_set_message(t('There was a problem changing the widget for field %label.', array('%label' => $instance['label'])));
   }
 
-  $form_state['redirect'] = field_ui_next_destination($obj_type, $bundle);
+  $form_state['redirect'] = field_ui_next_destination($entity_type, $bundle);
 }
 
 /**
  * Menu callback; present a form for removing a field from a content type.
  */
-function field_ui_field_delete_form($form, &$form_state, $obj_type, $bundle, $field) {
-  $bundle = field_extract_bundle($obj_type, $bundle);
-  $instance = field_info_instance($obj_type, $field['field_name'], $bundle);
-  $admin_path = _field_ui_bundle_admin_path($obj_type, $bundle);
+function field_ui_field_delete_form($form, &$form_state, $entity_type, $bundle, $field) {
+  $bundle = field_extract_bundle($entity_type, $bundle);
+  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
+  $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
 
-  $form['object_type'] = array('#type' => 'value', '#value' => $obj_type);
+  $form['object_type'] = array('#type' => 'value', '#value' => $entity_type);
   $form['bundle'] = array('#type' => 'value', '#value' => $bundle);
   $form['field_name'] = array('#type' => 'value', '#value' => $field['field_name']);
 
@@ -994,11 +994,11 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
   $form_values = $form_state['values'];
   $field_name = $form_values['field_name'];
   $bundle = $form_values['bundle'];
-  $obj_type = $form_values['object_type'];
+  $entity_type = $form_values['object_type'];
   $field = field_info_field($form_values['field_name']);
-  $instance = field_info_instance($obj_type, $field_name, $bundle);
+  $instance = field_info_instance($entity_type, $field_name, $bundle);
   $bundles = field_info_bundles();
-  $bundle_label = $bundles[$obj_type][$bundle]['label'];
+  $bundle_label = $bundles[$entity_type][$bundle]['label'];
 
   if (!empty($bundle) && $field && !$field['locked'] && $form_values['confirm']) {
     field_delete_instance($instance);
@@ -1012,16 +1012,16 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
     drupal_set_message(t('There was a problem removing the %field from the %type content type.', array('%field' => $instance['label'], '%type' => $bundle_label)));
   }
 
-  $admin_path = _field_ui_bundle_admin_path($obj_type, $bundle);
+  $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
   $form_state['redirect'] = field_ui_get_destinations(array($admin_path . '/fields'));
 }
 
 /**
  * Menu callback; presents the field instance edit page.
  */
-function field_ui_field_edit_form($form, &$form_state, $obj_type, $bundle, $field) {
-  $bundle = field_extract_bundle($obj_type, $bundle);
-  $instance = field_info_instance($obj_type, $field['field_name'], $bundle);
+function field_ui_field_edit_form($form, &$form_state, $entity_type, $bundle, $field) {
+  $bundle = field_extract_bundle($entity_type, $bundle);
+  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
 
   $form['#field'] = $field;
 
@@ -1043,8 +1043,8 @@ function field_ui_field_edit_form($form, &$form_state, $obj_type, $bundle, $fiel
   $form['instance'] = array(
     '#tree' => TRUE,
     '#type' => 'fieldset',
-    '#title' => t('%type settings', array('%type' => $bundles[$obj_type][$bundle]['label'])),
-    '#description' => t('These settings apply only to the %field field when used in the %type type.', array('%field' => $instance['label'], '%type' => $bundles[$obj_type][$bundle]['label'])),
+    '#title' => t('%type settings', array('%type' => $bundles[$entity_type][$bundle]['label'])),
+    '#description' => t('These settings apply only to the %field field when used in the %type type.', array('%field' => $instance['label'], '%type' => $bundles[$entity_type][$bundle]['label'])),
     '#pre_render' => array('field_ui_field_edit_instance_pre_render'),
   );
 
@@ -1055,7 +1055,7 @@ function field_ui_field_edit_form($form, &$form_state, $obj_type, $bundle, $fiel
   );
   $form['instance']['object_type'] = array(
     '#type' => 'value',
-    '#value' => $obj_type,
+    '#value' => $entity_type,
   );
   $form['instance']['bundle'] = array(
     '#type' => 'value',
@@ -1296,13 +1296,13 @@ function field_ui_get_destinations($destinations) {
 /**
  * Return the next redirect path in a multipage sequence.
  */
-function field_ui_next_destination($obj_type, $bundle) {
+function field_ui_next_destination($entity_type, $bundle) {
   $destinations = !empty($_REQUEST['destinations']) ? $_REQUEST['destinations'] : array();
   if (!empty($destinations)) {
     unset($_REQUEST['destinations']);
     return field_ui_get_destinations($destinations);
   }
-  $admin_path = _field_ui_bundle_admin_path($obj_type, $bundle);
+  $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
   return $admin_path . '/fields';
 }
 

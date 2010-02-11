@@ -274,9 +274,9 @@ function field_associate_fields($module) {
 /**
  * Helper function to get the default value for a field on an object.
  *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
  *   The object for the operation.
  * @param $field
  *   The field structure.
@@ -285,12 +285,12 @@ function field_associate_fields($module) {
  * @param $langcode
  *   The field language to fill-in with the default value.
  */
-function field_get_default_value($obj_type, $object, $field, $instance, $langcode = NULL) {
+function field_get_default_value($entity_type, $entity, $field, $instance, $langcode = NULL) {
   $items = array();
   if (!empty($instance['default_value_function'])) {
     $function = $instance['default_value_function'];
     if (function_exists($function)) {
-      $items = $function($obj_type, $object, $field, $instance, $langcode);
+      $items = $function($entity_type, $entity, $field, $instance, $langcode);
     }
   }
   elseif (!empty($instance['default_value'])) {
@@ -367,14 +367,14 @@ function _field_sort_items_value_helper($a, $b) {
 /**
  * Registry of pseudo-field components in a given bundle.
  *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
  * @param $bundle
  *   The bundle name.
  * @return
  *   The array of pseudo-field elements in the bundle.
  */
-function field_extra_fields($obj_type, $bundle) {
+function field_extra_fields($entity_type, $bundle) {
   $info = &drupal_static(__FUNCTION__, array());
 
   if (empty($info)) {
@@ -384,25 +384,25 @@ function field_extra_fields($obj_type, $bundle) {
     // Add saved weights. The array is keyed by object type, bundle and
     // element name.
     $extra_weights = variable_get('field_extra_weights', array());
-    foreach ($extra_weights as $obj_type_name => $bundles) {
+    foreach ($extra_weights as $entity_type_name => $bundles) {
       foreach ($bundles as $bundle_name => $weights) {
         foreach ($weights as $key => $value) {
-          if (isset($info[$obj_type_name][$bundle_name][$key])) {
-            $info[$obj_type_name][$bundle_name][$key]['weight'] = $value;
+          if (isset($info[$entity_type_name][$bundle_name][$key])) {
+            $info[$entity_type_name][$bundle_name][$key]['weight'] = $value;
           }
         }
       }
     }
   }
 
-  return isset($info[$obj_type][$bundle]) ? $info[$obj_type][$bundle]: array();
+  return isset($info[$entity_type][$bundle]) ? $info[$entity_type][$bundle]: array();
 }
 
 /**
  * Retrieve the user-defined weight for a 'pseudo-field' component.
  *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
  * @param $bundle
  *   The bundle name.
  * @param $pseudo_field
@@ -411,8 +411,8 @@ function field_extra_fields($obj_type, $bundle) {
  *   The weight for the 'pseudo-field', respecting the user settings stored by
  *   field.module.
  */
-function field_extra_field_weight($obj_type, $bundle, $pseudo_field) {
-  $extra = field_extra_fields($obj_type, $bundle);
+function field_extra_field_weight($entity_type, $bundle, $pseudo_field) {
+  $extra = field_extra_fields($entity_type, $bundle);
   if (isset($extra[$pseudo_field])) {
     return $extra[$pseudo_field]['weight'];
   }
@@ -499,17 +499,17 @@ function _field_filter_xss_display_allowed_tags() {
  *   It will have been passed through the necessary check_plain() or check_markup()
  *   functions as necessary.
  */
-function field_format($obj_type, $object, $field, $item, $formatter_type = NULL, $formatter_settings = array()) {
+function field_format($entity_type, $entity, $field, $item, $formatter_type = NULL, $formatter_settings = array()) {
   if (!is_array($field)) {
     $field = field_info_field($field);
   }
 
-  if (field_access('view', $field, $obj_type, $object)) {
+  if (field_access('view', $field, $entity_type, $entity)) {
     $field_type = field_info_field_types($field['type']);
 
-    // We need $field, $instance, $obj_type, $object to be able to display a value...
-    list(, , $bundle) = entity_extract_ids($obj_type, $object);
-    $instance = field_info_instance($obj_type, $field['field_name'], $bundle);
+    // We need $field, $instance, $entity_type, $entity to be able to display a value...
+    list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+    $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
 
     $display = array(
       'type' => $formatter_type ? $formatter_type : $field_type['default_formatter'],
@@ -523,12 +523,12 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
       $element = array(
         '#theme' => $theme,
         '#field_name' => $field['field_name'],
-        '#object_type' => $obj_type,
+        '#object_type' => $entity_type,
         '#bundle' => $bundle,
         '#formatter' => $display['type'],
         '#settings' => $display['settings'],
-        '#object' => $object,
-        '#object_type' => $obj_type,
+        '#object' => $entity,
+        '#object_type' => $entity_type,
         '#delta' => isset($item['#delta']) ? $item['#delta'] : NULL,
       );
 
@@ -539,7 +539,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
         $items = array($item);
         $function = $field['module'] . '_field_sanitize';
         if (function_exists($function)) {
-          $function($obj_type, $object, $field, $instance, $items);
+          $function($entity_type, $entity, $field, $instance, $items);
         }
 
         $element['#item'] = $items[0];
@@ -549,7 +549,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
         $items = $item;
         $function = $field['module'] . '_field_sanitize';
         if (function_exists($function)) {
-          $function($obj_type, $object, $field, $instance, $items);
+          $function($entity_type, $entity, $field, $instance, $items);
         }
 
         foreach ($items as $delta => $item) {
@@ -580,9 +580,9 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
  * The function takes care of invoking the prepare_view steps. It also respects
  * field access permissions.
  *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
  *   The object containing the field to display. Must at least contain the id
  *   key and the field data to display.
  * @param $field_name
@@ -616,7 +616,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_type = NULL,
  * @return
  *   A renderable array for the field value.
  */
-function field_view_field($obj_type, $object, $field_name, $display = array(), $langcode = NULL) {
+function field_view_field($entity_type, $entity, $field_name, $display = array(), $langcode = NULL) {
   $output = array();
 
   if ($field = field_info_field($field_name)) {
@@ -627,8 +627,8 @@ function field_view_field($obj_type, $object, $field_name, $display = array(), $
     else {
       // When using a view mode, make sure we have settings for it, or fall
       // back to the 'full' view mode.
-      list(, , $bundle) = entity_extract_ids($obj_type, $object);
-      $instance = field_info_instance($obj_type, $field_name, $bundle);
+      list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+      $instance = field_info_instance($entity_type, $field_name, $bundle);
       if (!isset($instance['display'][$display])) {
         $display = 'full';
       }
@@ -638,20 +638,20 @@ function field_view_field($obj_type, $object, $field_name, $display = array(), $
     // 'single field' mode, to reuse the language fallback logic.
     $options = array('field_name' => $field_name, 'language' => field_multilingual_valid_language($langcode, FALSE));
     $null = NULL;
-    list($id) = entity_extract_ids($obj_type, $object);
+    list($id) = entity_extract_ids($entity_type, $entity);
 
     // First let the field types do their preparation.
-    _field_invoke_multiple('prepare_view', $obj_type, array($id => $object), $display, $null, $options);
+    _field_invoke_multiple('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
     // Then let the formatters do their own specific massaging.
-    _field_invoke_multiple_default('prepare_view', $obj_type, array($id => $object), $display, $null, $options);
+    _field_invoke_multiple_default('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
     // Build the renderable array.
-    $result = _field_invoke_default('view', $obj_type, $object, $display, $null, $options);
+    $result = _field_invoke_default('view', $entity_type, $entity, $display, $null, $options);
 
     // Invoke hook_field_attach_view_alter() to tet other modules alter the
     // renderable array, as in a full field_attach_view() execution.
     $context = array(
-      'obj_type' => $obj_type,
-      'object' => $object,
+      'obj_type' => $entity_type,
+      'object' => $entity,
       'view_mode' => '_custom',
       'langcode' => $langcode,
     );
@@ -688,9 +688,9 @@ function field_has_data($field) {
  *   - "view"
  * @param $field
  *   The field on which the operation is to be performed.
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
- * @param $object
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
  *   (optional) The object for the operation.
  * @param $account
  *   (optional) The account to check, if not given use currently logged in user.
@@ -698,7 +698,7 @@ function field_has_data($field) {
  *   TRUE if the operation is allowed;
  *   FALSE if the operation is denied.
  */
-function field_access($op, $field, $obj_type, $object = NULL, $account = NULL) {
+function field_access($op, $field, $entity_type, $entity = NULL, $account = NULL) {
   global $user;
 
   if (!isset($account)) {
@@ -707,7 +707,7 @@ function field_access($op, $field, $obj_type, $object = NULL, $account = NULL) {
 
   foreach (module_implements('field_access') as $module) {
     $function = $module . '_field_access';
-    $access = $function($op, $field, $obj_type, $object, $account);
+    $access = $function($op, $field, $entity_type, $entity, $account);
     if ($access === FALSE) {
       return FALSE;
     }
@@ -718,20 +718,20 @@ function field_access($op, $field, $obj_type, $object = NULL, $account = NULL) {
 /**
  * Helper function to extract the bundle name of from a bundle object.
  *
- * @param $obj_type
- *   The type of $object; e.g. 'node' or 'user'.
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
  * @param $bundle
  *   The bundle object (or string if bundles for this object type do not exist
  *   as standalone objects).
  * @return
  *   The bundle name.
  */
-function field_extract_bundle($obj_type, $bundle) {
+function field_extract_bundle($entity_type, $bundle) {
   if (is_string($bundle)) {
     return $bundle;
   }
 
-  $info = entity_get_info($obj_type);
+  $info = entity_get_info($entity_type);
   if (is_object($bundle) && isset($info['bundle keys']['bundle']) && isset($bundle->{$info['bundle keys']['bundle']})) {
     return $bundle->{$info['bundle keys']['bundle']};
   }

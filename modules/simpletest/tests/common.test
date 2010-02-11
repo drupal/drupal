@@ -24,8 +24,8 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
 
   function testDrupalAlter() {
     $array = array('foo' => 'bar');
-    $object = new stdClass;
-    $object->foo = 'bar';
+    $entity = new stdClass;
+    $entity->foo = 'bar';
 
     // Verify alteration of a single argument.
     $array_copy = $array;
@@ -33,23 +33,23 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
     drupal_alter('drupal_alter', $array_copy);
     $this->assertEqual($array_copy, $array_expected, t('Single array was altered.'));
 
-    $object_copy = clone $object;
-    $object_expected = clone $object;
-    $object_expected->foo = 'Drupal theme';
-    drupal_alter('drupal_alter', $object_copy);
-    $this->assertEqual($object_copy, $object_expected, t('Single object was altered.'));
+    $entity_copy = clone $entity;
+    $entity_expected = clone $entity;
+    $entity_expected->foo = 'Drupal theme';
+    drupal_alter('drupal_alter', $entity_copy);
+    $this->assertEqual($entity_copy, $entity_expected, t('Single object was altered.'));
 
     // Verify alteration of multiple arguments.
     $array_copy = $array;
     $array_expected = array('foo' => 'Drupal theme');
-    $object_copy = clone $object;
-    $object_expected = clone $object;
-    $object_expected->foo = 'Drupal theme';
+    $entity_copy = clone $entity;
+    $entity_expected = clone $entity;
+    $entity_expected->foo = 'Drupal theme';
     $array2_copy = $array;
     $array2_expected = array('foo' => 'Drupal theme');
-    drupal_alter('drupal_alter', $array_copy, $object_copy, $array2_copy);
+    drupal_alter('drupal_alter', $array_copy, $entity_copy, $array2_copy);
     $this->assertEqual($array_copy, $array_expected, t('First argument to drupal_alter() was altered.'));
-    $this->assertEqual($object_copy, $object_expected, t('Second argument to drupal_alter() was altered.'));
+    $this->assertEqual($entity_copy, $entity_expected, t('Second argument to drupal_alter() was altered.'));
     $this->assertEqual($array2_copy, $array2_expected, t('Third argument to drupal_alter() was altered.'));
   }
 }

@@ -59,7 +59,7 @@ function field_test_field_update_forbid($field, $prior_field, $has_data) {
 /**
  * Implements hook_field_load().
  */
-function field_test_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
+function field_test_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
   foreach ($items as $id => $item) {
     // To keep the test non-intrusive, only act for instances with the
     // test_hook_field_load setting explicitly set to TRUE.
@@ -80,7 +80,7 @@ function field_test_field_load($obj_type, $objects, $field, $instances, $langcod
  * Possible error codes:
  * - 'field_test_invalid': The value is invalid.
  */
-function field_test_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
+function field_test_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
     if ($item['value'] == -1) {
       $errors[$field['field_name']][$langcode][$delta][] = array(
@@ -261,7 +261,7 @@ function field_test_field_formatter_info() {
 /**
  * Implements hook_field_formatter_prepare_view().
  */
-function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items, $displays) {
+function field_test_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $displays) {
   foreach ($items as $id => $item) {
     // To keep the test non-intrusive, only act on the
     // 'field_test_needs_additional_data' formatter.
@@ -279,7 +279,7 @@ function field_test_field_formatter_prepare_view($obj_type, $objects, $field, $i
 /**
  * Implements hook_field_formatter_view().
  */
-function field_test_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function field_test_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
   $settings = $display['settings'];
 
@@ -311,14 +311,14 @@ function field_test_field_formatter_view($object_type, $object, $field, $instanc
 /**
  * Sample 'default value' callback.
  */
-function field_test_default_value($obj_type, $object, $field, $instance) {
+function field_test_default_value($entity_type, $entity, $field, $instance) {
   return array(array('value' => 99));
 }
 
 /**
  * Implements hook_field_access().
  */
-function field_test_field_access($op, $field, $obj_type, $object, $account) {
+function field_test_field_access($op, $field, $entity_type, $entity, $account) {
   if ($field['field_name'] == "field_no_{$op}_access") {
     return FALSE;
   }

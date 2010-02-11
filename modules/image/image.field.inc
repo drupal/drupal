@@ -203,16 +203,16 @@ function _image_field_resolution_validate($element, &$form_state) {
 /**
  * Implements hook_field_load().
  */
-function image_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
-  file_field_load($obj_type, $objects, $field, $instances, $langcode, $items, $age);
+function image_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
+  file_field_load($entity_type, $entities, $field, $instances, $langcode, $items, $age);
 }
 
 /**
  * Implements hook_field_prepare_view().
  */
-function image_field_prepare_view($obj_type, $objects, $field, $instances, $langcode, &$items) {
+function image_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
   // If there are no files specified at all, use the default.
-  foreach ($objects as $id => $object) {
+  foreach ($entities as $id => $entity) {
     if (empty($items[$id]) && $field['settings']['default_image']) {
       if ($file = file_load($field['settings']['default_image'])) {
         $items[$id][0] = (array) $file + array(
@@ -228,29 +228,29 @@ function image_field_prepare_view($obj_type, $objects, $field, $instances, $lang
 /**
  * Implements hook_field_insert().
  */
-function image_field_insert($obj_type, $object, $field, $instance, $langcode, &$items) {
-  image_field_update($obj_type, $object, $field, $instance, $langcode, $items);
+function image_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  image_field_update($entity_type, $entity, $field, $instance, $langcode, $items);
 }
 
 /**
  * Implements hook_field_update().
  */
-function image_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
-  file_field_update($obj_type, $object, $field, $instance, $langcode, $items);
+function image_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  file_field_update($entity_type, $entity, $field, $instance, $langcode, $items);
 }
 
 /**
  * Implements hook_field_delete().
  */
-function image_field_delete($obj_type, $object, $field, $instance, $langcode, &$items) {
-  file_field_delete($obj_type, $object, $field, $instance, $langcode, $items);
+function image_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  file_field_delete($entity_type, $entity, $field, $instance, $langcode, $items);
 }
 
 /**
  * Implements hook_field_delete_revision().
  */
-function image_field_delete_revision($obj_type, $object, $field, $instance, $langcode, &$items) {
-  file_field_delete_revision($obj_type, $object, $field, $instance, $langcode, $items);
+function image_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  file_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, $items);
 }
 
 /**
@@ -450,7 +450,7 @@ function image_field_formatter_info() {
 /**
  * Implements hook_field_formatter_view().
  */
-function image_field_formatter_view($obj_type, $object, $field, $instance, $langcode, $items, $display) {
+function image_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   // Check if the formatter involves a particular image style.
@@ -461,7 +461,7 @@ function image_field_formatter_view($obj_type, $object, $field, $instance, $lang
 
   // Check if the formatter involves a link.
   if (strpos($display['type'], 'image_link_content') === 0) {
-    $uri = entity_uri($obj_type, $object);
+    $uri = entity_uri($entity_type, $entity);
   }
   elseif (strpos($display['type'], 'image_link_file') === 0) {
     $link_file = TRUE;

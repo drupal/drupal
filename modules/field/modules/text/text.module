@@ -167,7 +167,7 @@ function text_field_instance_settings_form($field, $instance) {
  * - 'text_value_max_length': The value exceeds the maximum length.
  * - 'text_summary_max_length': The summary exceeds the maximum length.
  */
-function text_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
+function text_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
     // @todo Length is counted separately for summary and value, so the maximum
     //   length can be exceeded very easily.
@@ -201,8 +201,8 @@ function text_field_validate($obj_type, $object, $field, $instance, $langcode, $
  * separately.
  * @see text_field_formatter_view().
  */
-function text_field_load($obj_type, $objects, $field, $instances, $langcode, &$items) {
-  foreach ($objects as $id => $object) {
+function text_field_load($entity_type, $entities, $field, $instances, $langcode, &$items) {
+  foreach ($entities as $id => $entity) {
     foreach ($items[$id] as $delta => $item) {
       // Only process items with a cacheable format, the rest will be handled
       // by formatters if needed.
@@ -264,7 +264,7 @@ function text_field_formatter_info() {
 /**
  * Implements hook_field_formatter_view().
  */
-function text_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
+function text_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {

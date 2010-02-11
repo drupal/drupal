@@ -2731,26 +2731,26 @@ class FieldTranslationsTestCase extends FieldTestCase {
     // Prepare the field translations.
     field_test_entity_info_translatable('test_entity', TRUE);
     $eid = $evid = 1;
-    $obj_type = 'test_entity';
-    $object = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
+    $entity_type = 'test_entity';
+    $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
     $field_translations = array();
-    $available_languages = field_multilingual_available_languages($obj_type, $this->field);
+    $available_languages = field_multilingual_available_languages($entity_type, $this->field);
     $this->assertTrue(count($available_languages) > 1, t('Field is translatable.'));
     foreach ($available_languages as $langcode) {
       $field_translations[$langcode] = $this->_generateTestFieldValues($this->field['cardinality']);
     }
 
     // Save and reload the field translations.
-    $object->{$this->field_name} = $field_translations;
-    field_attach_insert($obj_type, $object);
-    unset($object->{$this->field_name});
-    field_attach_load($obj_type, array($eid => $object));
+    $entity->{$this->field_name} = $field_translations;
+    field_attach_insert($entity_type, $entity);
+    unset($entity->{$this->field_name});
+    field_attach_load($entity_type, array($eid => $entity));
 
     // Check if the correct values were saved/loaded.
     foreach ($field_translations as $langcode => $items) {
       $result = TRUE;
       foreach ($items as $delta => $item) {
-        $result = $result && $item['value'] == $object->{$this->field_name}[$langcode][$delta]['value'];
+        $result = $result && $item['value'] == $entity->{$this->field_name}[$langcode][$delta]['value'];
       }
       $this->assertTrue($result, t('%language translation correctly handled.', array('%language' => $langcode)));
     }
@@ -2779,20 +2779,20 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
    * same fieldable type which contains the data for the field name
    * (if given).
    *
-   * @param $obj_type
-   *   The entity type of $objects.
-   * @param $objects
-   *   An array of objects of type $obj_type.
+   * @param $entity_type
+   *   The entity type of $entities.
+   * @param $entities
+   *   An array of objects of type $entity_type.
    * @param $field_name
    *   Optional; a field name whose data should be copied from
-   *   $objects into the returned stub objects.
+   *   $entities into the returned stub objects.
    * @return
-   *   An array of stub objects corresponding to $objects.
+   *   An array of stub objects corresponding to $entities.
    */
-  function _generateStubObjects($obj_type, $objects, $field_name = NULL) {
+  function _generateStubObjects($entity_type, $entities, $field_name = NULL) {
     $stubs = array();
-    foreach ($objects as $obj) {
-      $stub = entity_create_stub_entity($obj_type, entity_extract_ids($obj_type, $obj));
+    foreach ($entities as $obj) {
+      $stub = entity_create_stub_entity($entity_type, entity_extract_ids($entity_type, $obj));
       if (isset($field_name)) {
         $stub->{$field_name} = $obj->{$field_name};
       }
