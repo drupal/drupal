@@ -79,7 +79,7 @@ function openid_requirements($phase) {
         'severity' => REQUIREMENT_OK,
       );
     }
-    $requirements['bcmath']['title'] = t('BC Match library');
+    $requirements['bcmath']['title'] = t('BC Math library');
   }
 
   return $requirements;
