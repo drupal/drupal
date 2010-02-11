@@ -1599,8 +1599,6 @@ function node_search_execute($keys = NULL) {
 
     // Fetch comments for snippet.
     $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node);
-    // Fetch terms for snippet.
-    $node->rendered .= ' ' . module_invoke('taxonomy', 'node_update_index', $node);
 
     $extra = module_invoke_all('node_search_result', $node);
 
