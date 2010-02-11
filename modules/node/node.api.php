@@ -22,13 +22,13 @@
  * node operation:
  * - Node-type-specific hooks: These hooks are only invoked on the primary
  *   module, using the "base" return component of hook_node_info() as the
- *   function prefix.  For example, blog.module defines the base for the Blog
- *   content type as "blog", so during creation of a blog node, hook_insert() is
- *   only invoked by calling blog_insert().
+ *   function prefix.  For example, poll.module defines the base for the Poll
+ *   content type as "poll", so during creation of a poll node, hook_insert() is
+ *   only invoked by calling poll_insert().
  * - All-module hooks: This set of hooks is invoked on all implementing
  *   modules, to allow other modules to modify what the primary node module is
  *   doing. For example, hook_node_insert() is invoked on all modules when
- *   creating a blog node.
+ *   creating a poll node.
  * - Field hooks: Hooks related to the fields attached to the node. These are
  *   invoked from the field operations functions described below, and can be
  *   either field-type-specific or all-module hooks.
@@ -69,14 +69,14 @@
  *   done):
  *   - hook_view() (node-type-specific)
  *   - field_attach_prepare_view()
- *   - hook_entity_prepare_view()
+ *   - hook_entity_prepare_view() (all)
  *   - field_attach_view()
  *   - hook_node_view() (all)
  * - Viewing multiple nodes (calling node_view_multiple() - note that the input
  *   to node_view_multiple() is a set of loaded nodes, so the Loading steps
  *   above are already done):
  *   - field_attach_prepare_view()
- *   - hook_entity_prepare_view()
+ *   - hook_entity_prepare_view() (all)
  *   - hook_view() (node-type-specific)
  *   - field_attach_view()
  *   - hook_node_view() (all)
@@ -96,8 +96,8 @@
  *   an existing node, it will already be loaded; see the Loading section
  *   above):
  *   - hook_prepare() (node-type-specific)
- *   - hook_node_prepare() (all); if translation.module is enabled,
- *     this will also invoke hook_node_prepare_translation() on all modules.
+ *   - hook_node_prepare() (all); if translation.module is enabled, this will
+ *     also invoke hook_node_prepare_translation() on all modules. 
  *   - hook_form() (node-type-specific)
  *   - field_attach_form()
  * - Validating a node during editing form submit (calling
@@ -110,7 +110,7 @@
  *   - Query is executed to find matching nodes
  *   - Resulting node is loaded (see Loading section above)
  *   - Resulting node is prepared for viewing (see Viewing a single node above)
- *   - comment_node_update_index() and taxonomy_node_update_index() are called
+ *   - comment_node_update_index() is called.
  *   - hook_node_search_result() (all)
  * - Search indexing (calling node_update_index()):
  *   - Node is loaded (see Loading section above)
