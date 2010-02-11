@@ -17,16 +17,16 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
   }
 
   $field_name = $field['field_name'];
+  $addition[$field_name] = array();
 
-  // Put field information at the top of the form, so that it can be easily
-  // retrieved.
-  // Note : widgets and other form handling code should *always* fetch field
-  // and instance information from $form['#fields'] rather than from
-  // field_info_field(). This lets us build forms for 'variants' of a field,
-  // for instance on admin screens.
-  $form['#fields'][$field_name] = array(
+  // Store field information in $form_state['storage'].
+  $form_state['field'][$field_name][$langcode] = array(
     'field' => $field,
     'instance' => $instance,
+    // This entry will be populated at form build time.
+    'array_parents' => array(),
+    // This entry will be populated at form validation time.
+    'errors' => array(),
   );
 
   // Populate widgets with default values when creating a new object.
@@ -34,13 +34,13 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
     $items = field_get_default_value($obj_type, $object, $field, $instance, $langcode);
   }
 
-  $field_elements = array();
-
+  // Collect widget elements.
+  $elements = array();
   if (field_access('edit', $field, $obj_type, $object)) {
     // If field module handles multiple values for this form element, and we
     // are displaying an individual element, process the multiple value form.
     if (!isset($get_delta) && field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
-      $field_elements = field_multiple_value_form($field, $instance, $langcode, $items, $form, $form_state);
+      $elements = field_multiple_value_form($field, $instance, $langcode, $items, $form, $form_state);
     }
     // If the widget is handling multiple values (e.g Options), or if we are
     // displaying an individual element, just get a single form element and
@@ -53,6 +53,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
           '#object_type' => $instance['object_type'],
           '#bundle' => $instance['bundle'],
           '#field_name' => $field_name,
+          '#language' => $langcode,
           '#columns' => array_keys($field['columns']),
           '#title' => check_plain(t($instance['label'])),
           '#description' => field_filter_xss($instance['description']),
@@ -67,23 +68,17 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
           // assumptions about how the field is structured, just merge in the
           // returned element.
           if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
-            $field_elements[$delta] = $element;
+            $elements[$delta] = $element;
           }
           else {
-            $field_elements = $element;
+            $elements = $element;
           }
         }
       }
     }
   }
 
-  if ($field_elements) {
-    // Add the field form element as a child keyed by language code to match
-    // the field data structure:
-    // $object->{$field_name}[$langcode][$delta][$column].
-    // The '#language' key can be used to access the field's form element
-    // when $langcode is unknown. The #weight property is inherited from the
-    // field's form element.
+  if ($elements) {
     // Also aid in theming of field widgets by rendering a classified
     // container.
     $addition[$field_name] = array(
@@ -95,29 +90,34 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
           'field-widget-' . drupal_html_class($instance['widget']['type']),
         ),
       ),
-      '#tree' => TRUE,
       '#weight' => $instance['widget']['weight'],
-      '#language' => $langcode,
-      $langcode => $field_elements,
     );
   }
   else {
     // The field is not accessible, or the widget did not return anything. Make
     // sure the items are available in the submitted form values.
     foreach ($items as $delta => $item) {
-      $field_elements[$delta] = array(
+      $elements[$delta] = array(
         '#type' => 'value',
         '#value' => $item,
       );
     }
-    $addition[$field_name] = array(
-      '#tree' => TRUE,
-      '#language' => $langcode,
-      $langcode => $field_elements,
-    );
   }
 
-  $form['#fields'][$field_name]['form_path'] = array($field_name);
+  // Populate the 'array_parents' information in $form_state['field'] after
+  // the form is built, so that we catch changes in the form structure performed
+  // in alter() hooks.
+  $elements['#after_build'][] = 'field_form_element_after_build';
+  $elements['#field_name'] = $field_name;
+  $elements['#language'] = $langcode;
+
+  $addition[$field_name] += array(
+    '#tree' => TRUE,
+    // The '#language' key can be used to access the field's form element
+    // when $langcode is unknown.
+    '#language' => $langcode,
+    $langcode => $elements,
+  );
 
   return $addition;
 }
@@ -158,7 +158,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
 
   $title = check_plain(t($instance['label']));
   $description = field_filter_xss(t($instance['description']));
-  $wrapper_id = drupal_html_class($field_name) . '-wrapper';
+  $wrapper_id = drupal_html_class($field_name) . '-add-more-wrapper';
   $field_elements = array();
 
   $function = $instance['widget']['module'] . '_field_widget_form';
@@ -169,6 +169,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
         '#object_type' => $instance['object_type'],
         '#bundle' => $instance['bundle'],
         '#field_name' => $field_name,
+        '#language' => $langcode,
         '#columns' => array_keys($field['columns']),
         // For multiple fields, title and description are handled by the wrapping table.
         '#title' => $multiple ? '' : $title,
@@ -304,36 +305,53 @@ function theme_field_multiple_value_form($variables) {
   return $output;
 }
 
+/**
+ * Stores information about the built form structure in the form storage.
+ *
+ * The 'array_parents' array is used to assign validation errors to actual form
+ * elements, and to identify the form element to return in the AJAX 'add more'
+ * button handler.
+ * @see field_default_form_errors()
+ * @see field_add_more_js()
+ */
+function field_form_element_after_build($element, &$form_state) {
+  $field_name = $element['#field_name'];
+  $langcode = $element['#language'];
+  $form_state['field'][$field_name][$langcode]['array_parents'] = $element['#array_parents'];
+
+  return $element;
+}
 
 /**
  * Transfer field-level validation errors to widgets.
  */
-function field_default_form_errors($obj_type, $object, $field, $instance, $langcode, $items, $form, $errors) {
+function field_default_form_errors($obj_type, $object, $field, $instance, $langcode, $items, $form, &$form_state) {
   $field_name = $field['field_name'];
-  if (!empty($errors[$field_name][$langcode])) {
+  $field_info = $form_state['field'][$field_name][$langcode];
+
+  if (!empty($field_info['errors'])) {
     $function = $instance['widget']['module'] . '_field_widget_error';
     $function_exists = function_exists($function);
 
     // Walk the form down to where the widget lives.
-    $form_path = $form['#fields'][$field_name]['form_path'];
     $element = $form;
-    foreach ($form_path as $key) {
+    foreach ($field_info['array_parents'] as $key) {
       $element = $element[$key];
     }
 
     $multiple_widget = field_behaviors_widget('multiple values', $instance) != FIELD_BEHAVIOR_DEFAULT;
-    foreach ($errors[$field_name][$langcode] as $delta => $delta_errors) {
+    foreach ($field_info['errors'] as $delta => $delta_errors) {
       // For multiple single-value widgets, pass errors by delta.
       // For a multiple-value widget, all errors are passed to the main widget.
-      $error_element = $multiple_widget ? $element[$langcode] : $element[$langcode][$delta];
+      $error_element = $multiple_widget ? $element : $element[$delta];
       foreach ($delta_errors as $error) {
         if ($function_exists) {
-          $function($error_element, $error);
+          $function($error_element, $error, $form, $form_state);
         }
         else {
           // Make sure that errors are reported (even incorrectly flagged) if
           // the widget module fails to implement hook_field_widget_error().
-          form_error($error_element, $error['error']);
+          form_error($error_element, $error['error'], $form, $form_state);
         }
       }
     }
@@ -374,22 +392,25 @@ function field_add_more_submit($form, &$form_state) {
 function field_add_more_js($form, $form_state) {
   // Retrieve field information.
   $field_name = $form_state['clicked_button']['#field_name'];
-  $field = $form['#fields'][$field_name]['field'];
+  $langcode = $form_state['clicked_button']['#language'];
+  $field_info = $form_state['field'][$field_name][$langcode];
+  $field = $field_info['field'];
+
   if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
     ajax_render(array());
   }
-  // Navigate to the right part of the form.
-  $form_path = $form['#fields'][$field_name]['form_path'];
-  $field_form = $form;
-  foreach ($form_path as $key) {
-    $field_form = $field_form[$key];
+
+  // Navigate to the right element in the the form.
+  $element = $form;
+
+  foreach ($field_info['array_parents'] as $key) {
+    $element = $element[$key];
   }
 
   // Add a DIV around the new field to receive the AJAX effect.
-  $langcode = $field_form['#language'];
-  $delta = $field_form[$langcode]['#max_delta'];
-  $field_form[$langcode][$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($field_form[$langcode][$delta]['#prefix']) ? $field_form[$langcode][$delta]['#prefix'] : '');
-  $field_form[$langcode][$delta]['#suffix'] = (isset($field_form[$langcode][$delta]['#suffix']) ? $field_form[$langcode][$delta]['#suffix'] : '') . '</div>';
+  $delta = $element['#max_delta'];
+  $element[$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($element[$delta]['#prefix']) ? $element[$delta]['#prefix'] : '');
+  $element[$delta]['#suffix'] = (isset($element[$delta]['#suffix']) ? $element[$delta]['#suffix'] : '') . '</div>';
 
-  return drupal_render($field_form);
+  return $element;
 }

@@ -1326,7 +1326,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
   // them here and process them independently.
   if ($tags = $element['#value']) {
     // Collect candidate vocabularies.
-    $field = $form_state['complete form']['#fields'][$element['#field_name']]['field'];
+    $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
     $vids = array();
     foreach ($field['settings']['allowed_values'] as $tree) {
       $vids[] = $tree['vid'];
@@ -1364,10 +1364,9 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
 /**
  * Implements hook_field_widget_error().
  */
-function taxonomy_field_widget_error($element, $error) {
+function taxonomy_field_widget_error($element, $error, $form, &$form_state) {
   form_error($element, $error['message']);
 }
-
 /**
  * Implements hook_field_settings_form().
  */

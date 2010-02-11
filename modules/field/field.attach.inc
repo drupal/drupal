@@ -400,6 +400,79 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
 /**
  * Add form elements for all fields for an object to a form structure.
  *
+ * Sample structure for $form:
+ * @code
+ *   // One sub-array per field appearing in the form, keyed by field name.
+ *   // The structure of the array differs slightly depending on whether the
+ *   // widget is 'single-value' (provides the input for one field value,
+ *   // most common case), and will therefore be repeated as many times as
+ *   // needed, or 'multiple-values' (one single widget allows the input of
+ *   // several values, e.g checkboxes, select box...).
+ *   // The sub-array is nested into a $langcode key where $langcode has the
+ *   // same value of the $langcode parameter above.
+ *   // The '#language' key holds the same value of $langcode and it is used
+ *   // to access the field sub-array when $langcode is unknown.
+ *   'field_foo' => array(
+ *     '#tree' => TRUE,
+ *     '#field_name' => the name of the field,
+ *     '#language' => $langcode,
+ *     $langcode => array(
+ *       '#field_name' => the name of the field,
+ *       '#tree' => TRUE,
+ *       '#required' => whether or not the field is required,
+ *       '#title' => the label of the field instance,
+ *       '#description' => the description text for the field instance,
+ *
+ *       // Only for 'single' widgets:
+ *       '#theme' => 'field_multiple_value_form',
+ *       '#cardinality' => the field cardinality,
+ *       // One sub-array per copy of the widget, keyed by delta.
+ *       0 => array(
+ *         '#title' => the title to be displayed by the widget,
+ *         '#default_value' => the field value for delta 0,
+ *         '#required' => whether the widget should be marked required,
+ *         '#delta' => 0,
+ *         '#field_name' => the name of the field,
+ *         '#bundle' => the name of the bundle,
+ *         '#columns' => the array of field columns,
+ *         // The remaining elements in the sub-array depend on the widget.
+ *         '#type' => the type of the widget,
+ *         ...
+ *       ),
+ *       1 => array(
+ *         ...
+ *       ),
+ *
+ *       // Only for multiple widgets:
+ *       '#bundle' => $instance['bundle'],
+ *       '#columns'  => array_keys($field['columns']),
+ *       // The remaining elements in the sub-array depend on the widget.
+ *       '#type' => the type of the widget,
+ *       ...
+ *     ),
+ *     ...
+ *   ),
+ * )
+ * @endcode
+ *
+ * Sample structure for $form_state['field']:
+ * @code
+ * array(
+ *   // One sub-array per field appearing in the form, keyed by field name.
+ *   'field_foo' => array(
+ *     $langcode => array(
+ *       'field' => the field definition array,
+ *       'instance' => the field instance definition array,
+ *       'array_parents' => an array of keys indicating the path to the field
+ *         element within the full $form structure. This entry is populated at
+ *         form build time.
+ *       'errors' => the array ok field validation errors reported on the
+ *         field. This entry is populated at form validation time.
+ *     ),
+ *   ),
+ * ),
+ * @endcode
+ *
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
@@ -414,73 +487,8 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
  *   is provided the default site language will be used.
  * @return
  *   The form elements are added by reference at the top level of the $form
- *   parameter. Sample structure:
- *   @code
- *   array(
- *     '#fields' => array(
- *       // One sub-array per field appearing in the form, keyed by field name.
- *       'field_foo' => array (
- *         'field' => the field definition structure,
- *         'instance' => the field instance definition structure,
- *         'form_path' => an array of keys indicating the path to the field
- *           element within the full $form structure, used by the 'add more
- *           values' AHAH button. Any 3rd party module using form_alter() to
- *           modify the structure of the form should update this entry as well.
- *       ),
- *     ),
- *
- *     // One sub-array per field appearing in the form, keyed by field name.
- *     // The structure of the array differs slightly depending on whether the
- *     // widget is 'single-value' (provides the input for one field value,
- *     // most common case), and will therefore be repeated as many times as
- *     // needed, or 'multiple-values' (one single widget allows the input of
- *     // several values, e.g checkboxes, select box...).
- *     // The sub-array is nested into a $langcode key where $langcode has the
- *     // same value of the $langcode parameter above. This allow us to match
- *     // the field data structure ($field_name[$langcode][$delta][$column]).
- *     // The '#language' key holds the same value of $langcode and it is used
- *     // to access the field sub-array when $langcode is unknown.
- *     'field_foo' => array(
- *       '#tree' => TRUE,
- *       '#language' => $langcode,
- *       $langcode => array(
- *         '#field_name' => the name of the field,
- *         '#tree' => TRUE,
- *         '#required' => whether or not the field is required,
- *         '#title' => the label of the field instance,
- *         '#description' => the description text for the field instance,
- *
- *         // Only for 'single' widgets:
- *         '#theme' => 'field_multiple_value_form',
- *         '#cardinality' => the field cardinality,
- *         // One sub-array per copy of the widget, keyed by delta.
- *         0 => array(
- *           '#title' => the title to be displayed by the widget,
- *           '#default_value' => the field value for delta 0,
- *           '#required' => whether the widget should be marked required,
- *           '#delta' => 0,
- *           '#field_name' => the name of the field,
- *           '#bundle' => the name of the bundle,
- *           '#columns' => the array of field columns,
- *           // The remaining elements in the sub-array depend on the widget.
- *           '#type' => the type of the widget,
- *           ...
- *         ),
- *         1 => array(
- *           ...
- *         ),
- *
- *         // Only for multiple widgets:
- *         '#bundle' => $instance['bundle'],
- *         '#columns'  => array_keys($field['columns']),
- *         // The remaining elements in the sub-array depend on the widget.
- *         '#type' => the type of the widget,
- *         ...
- *       ),
- *       ...
- *     ),
- *   )
- *   @endcode
+ *   parameter. Processing information is added by reference in
+ *   $form_state['field'].
  */
 function field_attach_form($obj_type, $object, &$form, &$form_state, $langcode = NULL) {
   // If no language is provided use the default site language.
@@ -748,7 +756,12 @@ function field_attach_form_validate($obj_type, $object, $form, &$form_state) {
   catch (FieldValidationException $e) {
     // Pass field-level validation errors back to widgets for accurate error
     // flagging.
-    _field_invoke_default('form_errors', $obj_type, $object, $form, $e->errors);
+    foreach ($e->errors as $field_name => $field_errors) {
+      foreach ($field_errors as $langcode => $language_errors) {
+        $form_state['field'][$field_name][$langcode]['errors'] = $language_errors;
+      }
+    }
+    _field_invoke_default('form_errors', $obj_type, $object, $form, $form_state);
   }
 }
 

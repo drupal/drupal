@@ -492,9 +492,9 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
     $elements['#process'] = array('file_field_widget_process_multiple');
     $elements['#title'] = $element['#title'];
     $elements['#description'] = $element['#description'];
-    $elements['#object_type'] = $element['#object_type'];
-    $elements['#bundle'] = $element['#bundle'];
     $elements['#field_name'] = $element['#field_name'];
+    $elements['#language'] = $element['#language'];
+    $elements['#display_field'] = $field['settings']['display_field'];
 
     // Add some properties that will eventually be added to the file upload
     // field. These are added here so that they may be referenced easily through
@@ -562,7 +562,7 @@ function file_field_widget_value($element, $input = FALSE, $form_state) {
   if ($input) {
     // Checkboxes lose their value when empty.
     // If the display field is present make sure its unchecked value is saved.
-    $field = field_info_field($element['#field_name']);
+    $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
     if (empty($input['display'])) {
       $input['display'] = $field['settings']['display_field'] ? 0 : 1;
     }
@@ -590,8 +590,8 @@ function file_field_widget_process($element, &$form_state, $form) {
   $item = $element['#value'];
   $item['fid'] = $element['fid']['#value'];
 
-  $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
+  $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
+  $instance = $form_state['field'][$element['#field_name']][$element['#language']]['instance'];
   $settings = $instance['widget']['settings'];
 
   $element['#theme'] = 'file_widget';
@@ -702,9 +702,6 @@ function theme_file_widget($variables) {
 function theme_file_widget_multiple($variables) {
   $element = $variables['element'];
 
-  $field = field_info_field($element['#field_name']);
-  $instance = field_info_instance($element['#object_type'], $element['#field_name'], $element['#bundle']);
-
   // Get our list of widgets in order.
   $widgets = array();
   foreach (element_children($element) as $key) {
@@ -719,7 +716,7 @@ function theme_file_widget_multiple($variables) {
   // Build up a table of applicable fields.
   $headers = array();
   $headers[] = t('File information');
-  if (!empty($field['settings']['display_field'])) {
+  if ($element['#display_field']) {
     $headers[] = array(
       'data' => t('Display'),
       'class' => array('checkbox'),
@@ -747,7 +744,7 @@ function theme_file_widget_multiple($variables) {
 
     // Render the "Display" option in its own own column.
     $display = '';
-    if (!empty($field['settings']['display_field'])) {
+    if ($element['#display_field']) {
       unset($element[$key]['display']['#title']);
       $display = array(
         'data' => drupal_render($element[$key]['display']),
@@ -765,7 +762,7 @@ function theme_file_widget_multiple($variables) {
 
     $row = array();
     $row[] = $information;
-    if (!empty($field['settings']['display_field'])) {
+    if ($element['#display_field']) {
       $row[] = $display;
     }
     $row[] = $weight;

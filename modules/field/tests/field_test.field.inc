@@ -194,7 +194,7 @@ function field_test_widget_multiple_validate($element, &$form_state) {
 /**
  * Implements hook_field_widget_error().
  */
-function field_test_field_widget_error($element, $error) {
+function field_test_field_widget_error($element, $error, $form, &$form_state) {
   // @todo No easy way to differenciate widget types, we should receive it as a
   // parameter.
   if (isset($element['value'])) {

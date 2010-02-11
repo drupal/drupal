@@ -337,8 +337,8 @@ function number_field_widget_form(&$form, &$form_state, $field, $instance, $lang
  * FAPI validation of an individual number element.
  */
 function number_field_widget_validate($element, &$form_state) {
-  $field = $form_state['complete form']['#fields'][$element['#field_name']]['field'];
-  $instance = $form_state['complete form']['#fields'][$element['#field_name']]['instance'];
+  $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
+  $instance = $form_state['field'][$element['#field_name']][$element['#language']]['instance'];
 
   $type = $element['#number_type'];
   $value = $element['#value'];
@@ -373,6 +373,6 @@ function number_field_widget_validate($element, &$form_state) {
 /**
  * Implements hook_field_widget_error().
  */
-function number_field_widget_error($element, $error) {
+function number_field_widget_error($element, $error, $form, &$form_state) {
   form_error($element['value'], $error['message']);
 }

@@ -361,7 +361,7 @@ function options_array_flatten($array) {
 /**
  * Implements hook_field_widget_error().
  */
-function options_field_widget_error($element, $error) {
+function options_field_widget_error($element, $error, $form, &$form_state) {
   form_error($element, $error['message']);
 }
 

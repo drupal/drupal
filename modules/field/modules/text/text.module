@@ -566,7 +566,7 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
 /**
  * Implements hook_field_widget_error().
  */
-function text_field_widget_error($element, $error) {
+function text_field_widget_error($element, $error, $form, &$form_state) {
   switch ($error['error']) {
     case 'text_summary_max_length':
       $error_element = $element[$element['#columns'][1]];

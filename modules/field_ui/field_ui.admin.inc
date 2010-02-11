@@ -1212,10 +1212,6 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
   // @todo Allow multiple values (requires more work on 'add more' JS handler).
   $element += field_default_form(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state, 0);
 
-  // Adjust 'form_path' to reflect the actual location of the widget in the
-  // form structure.
-  $form['#fields'][$field_name]['form_path'] = array('instance', 'default_value_widget', $field_name);
-
   return $element;
 }
 
@@ -1224,6 +1220,8 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
  */
 function field_ui_field_edit_form_validate($form, &$form_state) {
   $instance = $form_state['values']['instance'];
+  $field_name = $instance['field_name'];
+  $field = field_info_field($field_name);
 
   // Validate the default value.
   if (!empty($instance['default_value_widget'])) {
@@ -1240,8 +1238,9 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
     if (function_exists($function)) {
       $function(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $errors);
     }
-    if ($errors) {
-      field_default_form_errors(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $errors);
+    if (isset($errors[$field_name][LANGUAGE_NONE])) {
+      $form_state['field'][$field_name][LANGUAGE_NONE]['errors'] = $errors[$field_name][LANGUAGE_NONE];
+      field_default_form_errors(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
     }
   }
 }

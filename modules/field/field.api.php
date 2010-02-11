@@ -609,15 +609,25 @@ function hook_field_widget_info_alter(&$info) {
  * contains the base form element properties derived from the field
  * configuration.
  *
- * Field API will set the weight, field name and delta values for each
- * form element. If there are multiple values for this field, the
- * Field API will call this function as many times as needed.
+ * Field API will set the weight, field name and delta values for each form
+ * element. If there are multiple values for this field, the Field API will
+ * call this function as many times as needed.
+ *
+ * Note that, depending on the context in which the widget is being included
+ * (regular object edit form, 'default value' input in the field settings form,
+ * etc...), the passed in values for $field and $instance might be different
+ * from the official definitions returned by field_info_field() and
+ * field_info_instance(). If the widget uses Form API callbacks (like
+ * #element_validate, #value_callback...) that need to access the $field or
+ * $instance definitions, they should not use the field_info_*() functions, but
+ * fetch the information present in $form_state['field']:
+ * - $form_state['field'][$field_name][$langcode]['field']
+ * - $form_state['field'][$field_name][$langcode]['instance']
  *
  * @param $form
  *   The entire form array.
  * @param $form_state
- *   The form_state, $form_state['values'][$field['field_name']]
- *   holds the field's form values.
+ *   An associative array containing the current state of the form.
  * @param $field
  *   The field structure.
  * @param $instance
@@ -633,6 +643,7 @@ function hook_field_widget_info_alter(&$info) {
  *   - #object_type: The name of the object the field is attached to.
  *   - #bundle: The name of the field bundle the field is contained in.
  *   - #field_name: The name of the field.
+ *   - #language: The language the field is being edited in.
  *   - #columns: A list of field storage columns of the field.
  *   - #title: The sanitized element label for the field instance, ready for
  *     output.
@@ -643,7 +654,6 @@ function hook_field_widget_info_alter(&$info) {
  *     required.
  *   - #delta: The order of this item in the array of subelements; see $delta
  *     above.
- *
  * @return
  *   The form elements for a single widget for this field.
  */
@@ -668,8 +678,12 @@ function hook_field_widget_form(&$form, &$form_state, $field, $instance, $langco
  *   - 'error': the error code. Complex widgets might need to report different
  *     errors to different form elements inside the widget.
  *   - 'message': the human readable message to be displayed.
+ * @param $form
+ *   The form array.
+ * @param $form_state
+ *   An associative array containing the current state of the form.
  */
-function hook_field_widget_error($element, $error) {
+function hook_field_widget_error($element, $error, $form, &$form_state) {
   form_error($element['value'], $error['message']);
 }
 
