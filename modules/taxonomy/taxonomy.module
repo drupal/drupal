@@ -371,7 +371,6 @@ function taxonomy_vocabulary_save($vocabulary) {
   elseif (empty($vocabulary->vid)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary);
     field_attach_create_bundle('taxonomy_term', $vocabulary->machine_name);
-    taxonomy_vocabulary_create_field($vocabulary);
     module_invoke_all('taxonomy_vocabulary_insert', $vocabulary);
     entity_invoke('insert', 'taxonomy_vocabulary', $vocabulary);
   }
@@ -449,31 +448,6 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
   }
 
   return $hierarchy;
-}
-
-/**
- * Create a default field when a vocabulary is created.
- *
- * @param $vocabulary
- *   A taxonomy vocabulary object.
- */
-function taxonomy_vocabulary_create_field($vocabulary) {
-  $field = array(
-    'field_name' => 'taxonomy_' . $vocabulary->machine_name,
-    'type' => 'taxonomy_term_reference',
-    // Set cardinality to unlimited so that select
-    // and autocomplete widgets behave as normal.
-    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    'settings' => array(
-      'allowed_values' => array(
-        array(
-          'vid' => $vocabulary->vid,
-          'parent' => 0,
-        ),
-      ),
-    ),
-  );
-  field_create_field($field);
 }
 
 /**

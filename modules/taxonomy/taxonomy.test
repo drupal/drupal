@@ -324,6 +324,21 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
 
+    $field = array(
+      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vid' => $this->vocabulary->vid,
+            'parent' => 0,
+          ),
+        ),
+      ),
+    );
+    field_create_field($field);
+
     $this->instance = array(
       'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
       'bundle' => 'article',
@@ -854,6 +869,21 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
     $this->langcode = LANGUAGE_NONE;
+
+    $field = array(
+      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vid' => $this->vocabulary->vid,
+            'parent' => 0,
+          ),
+        ),
+      ),
+    );
+    field_create_field($field);
 
     $this->instance = array(
       'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,

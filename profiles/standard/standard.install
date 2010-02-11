@@ -304,6 +304,23 @@ function standard_install() {
 
   );
   taxonomy_vocabulary_save($vocabulary);
+
+  $field = array(
+    'field_name' => 'taxonomy_' . $vocabulary->machine_name,
+    'type' => 'taxonomy_term_reference',
+    // Set cardinality to unlimited for tagging.
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    'settings' => array(
+      'allowed_values' => array(
+        array(
+          'vid' => $vocabulary->vid,
+          'parent' => 0,
+        ),
+      ),
+    ),
+  );
+  field_create_field($field);
+
   $instance = array(
     'field_name' => 'taxonomy_' . $vocabulary->machine_name,
     'object_type' => 'node',
