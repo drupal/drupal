@@ -97,7 +97,7 @@ function comment_entity_info() {
     'comment' => array(
       'label' => t('Comment'),
       'base table' => 'comment',
-      'path callback' => 'comment_path',
+      'uri callback' => 'comment_uri',
       'fieldable' => TRUE,
       'controller class' => 'CommentController',
       'object keys' => array(
@@ -148,10 +148,13 @@ function comment_node_type_load($name) {
 }
 
 /**
- * Entity path callback.
+ * Entity uri callback.
  */
-function comment_path($comment) {
-  return 'comment/' . $comment->cid;
+function comment_uri($comment) {
+  return array(
+    'path' => 'comment/' . $comment->cid,
+    'options' => array('fragment' => 'comment-' . $comment->cid),
+  );
 }
 
 /**

@@ -125,7 +125,7 @@ function user_entity_info() {
       'label' => t('User'),
       'controller class' => 'UserController',
       'base table' => 'users',
-      'path callback' => 'user_path',
+      'uri callback' => 'user_uri',
       'fieldable' => TRUE,
       'object keys' => array(
         'id' => 'uid',
@@ -150,10 +150,12 @@ function user_entity_info() {
 }
 
 /**
- * Entity path callback.
+ * Entity uri callback.
  */
-function user_path($user) {
-  return 'user/' . $user->uid;
+function user_uri($user) {
+  return array(
+    'path' => 'user/' . $user->uid,
+  );
 }
 
 /**

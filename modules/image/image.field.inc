@@ -461,7 +461,7 @@ function image_field_formatter_view($obj_type, $object, $field, $instance, $lang
 
   // Check if the formatter involves a link.
   if (strpos($display['type'], 'image_link_content') === 0) {
-    $path = entity_path($obj_type, $object);
+    $uri = entity_uri($obj_type, $object);
   }
   elseif (strpos($display['type'], 'image_link_file') === 0) {
     $link_file = TRUE;
@@ -469,17 +469,20 @@ function image_field_formatter_view($obj_type, $object, $field, $instance, $lang
 
   foreach ($items as $delta => $item) {
     if (isset($link_file)) {
-      $path = file_create_url($item['uri']);
+      $uri = array(
+        'path' => file_create_url($item['uri']),
+        'options' => array(),
+      );
     }
     $element[$delta] = array(
       '#theme' => 'image_formatter',
       '#item' => $item,
       '#image_style' => isset($image_style) ? $image_style : '',
-      '#path' => isset($path) ? $path : '',
+      '#path' => isset($uri) ? $uri : '',
     );
   }
 
-   return $element;
+  return $element;
 }
 
 /**
@@ -502,7 +505,11 @@ function theme_image_formatter($variables) {
   }
 
   if ($variables['path']) {
-    $output = l($output, $variables['path'], array('html' => TRUE));
+    $path = $variables['path']['path'];
+    $options = $variables['path']['options'];
+    // When displaying an image inside a link, the html option must be TRUE.
+    $options['html'] = TRUE;
+    $output = l($output, $path, $options);
   }
 
   return $output;
