@@ -1625,7 +1625,7 @@ function form_type_checkbox_value($element, $input = FALSE) {
     else {
       // Disabled form controls are not submitted by the browser. Ignore any
       // submitted value and always return default.
-      return isset($element['#default_value']) && $element['#default_value'] === $element['#return_value'] ? $element['#return_value'] : 0;
+      return $element['#default_value'];
     }
   }
 }
