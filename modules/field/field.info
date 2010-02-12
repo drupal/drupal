@@ -1,6 +1,6 @@
-; $Id: field.info,v 1.6 2009/11/20 23:29:28 webchick Exp $
+; $Id: field.info,v 1.7 2010/02/12 05:38:09 webchick Exp $
 name = Field
-description = Field API to add fields to objects like nodes and users.
+description = Field API to add fields to entities like nodes and users.
 package = Core - fields
 version = VERSION
 core = 7.x

@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.module,v 1.24 2010/02/11 17:44:47 webchick Exp $
+// $Id: field_ui.module,v 1.25 2010/02/12 05:38:10 webchick Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function field_ui_help($path, $arg) {
 function field_ui_menu() {
   $items['admin/reports/fields'] = array(
     'title' => 'Field list',
-    'description' => 'Overview of fields on all object types.',
+    'description' => 'Overview of fields on all entity types.',
     'page callback' => 'field_ui_fields_list',
     'access arguments' => array('administer content types'),
     'type' => MENU_NORMAL_ITEM,

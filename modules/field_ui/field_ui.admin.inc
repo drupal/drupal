@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.41 2010/02/11 17:44:47 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.42 2010/02/12 05:38:10 webchick Exp $
 
 /**
  * @file
@@ -790,7 +790,7 @@ function field_ui_existing_field_options($entity_type, $bundle) {
           // Don't show
           // - locked fields,
           // - fields already in the current bundle,
-          // - field that cannot be added to the object type.
+          // - field that cannot be added to the entity type.
           if (empty($field['locked'])
             && !field_info_instance($entity_type, $field['field_name'], $bundle)
             && (empty($field['object_types']) || in_array($entity_type, $field['object_types']))) {

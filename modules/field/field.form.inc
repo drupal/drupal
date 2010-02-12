@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.41 2010/02/11 17:44:47 webchick Exp $
+// $Id: field.form.inc,v 1.42 2010/02/12 05:38:09 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Create a separate form element for each field.
  */
 function field_default_form($entity_type, $entity, $field, $instance, $langcode, $items, &$form, &$form_state, $get_delta = NULL) {
-  // This could be called with no object, as when a UI module creates a
+  // This could be called with no entity, as when a UI module creates a
   // dummy form to set default values.
   if ($entity) {
     list($id, , ) = entity_extract_ids($entity_type, $entity);
@@ -29,7 +29,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
     'errors' => array(),
   );
 
-  // Populate widgets with default values when creating a new object.
+  // Populate widgets with default values when creating a new entity.
   if (empty($items) && empty($id)) {
     $items = field_get_default_value($entity_type, $entity, $field, $instance, $langcode);
   }

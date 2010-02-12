@@ -1,5 +1,5 @@
 <?php
-// $Id: field.multilingual.inc,v 1.7 2010/02/11 17:44:47 webchick Exp $
+// $Id: field.multilingual.inc,v 1.8 2010/02/12 05:38:09 webchick Exp $
 
 /**
  * @file
@@ -95,13 +95,13 @@ function field_multilingual_content_languages() {
  *   TRUE, if the handler is allowed to manage field translations.
  */
 function field_multilingual_check_translation_handlers($entity_type, $handler = NULL) {
-  $obj_info = entity_get_info($entity_type);
+  $entity_info = entity_get_info($entity_type);
 
   if (isset($handler)) {
-    return isset($obj_info['translation'][$handler]) && !empty($obj_info['translation'][$handler]);
+    return isset($entity_info['translation'][$handler]) && !empty($entity_info['translation'][$handler]);
   }
-  elseif (isset($obj_info['translation'])) {
-    foreach ($obj_info['translation'] as $handler_info) {
+  elseif (isset($entity_info['translation'])) {
+    foreach ($entity_info['translation'] as $handler_info) {
       // The translation handler must use a non-empty data structure.
       if (!empty($handler_info)) {
         return TRUE;
