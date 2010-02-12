@@ -69,8 +69,8 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
         $stmt->execute(NULL, $options);
       }
       else {
-        $modified = $this->expandArguments($query, $args);
-        $stmt = $this->prepareQuery($query, !$modified);
+        $this->expandArguments($query, $args);
+        $stmt = $this->prepareQuery($query);
         $stmt->execute($args, $options);
       }
 

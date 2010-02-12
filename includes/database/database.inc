@@ -202,16 +202,6 @@ abstract class DatabaseConnection extends PDO {
   protected $logger = NULL;
 
   /**
-   * Cache of prepared statements.
-   *
-   * This cache only lasts as long as the current page request, so it's not
-   * as useful as it could be, but every little bit helps.
-   *
-   * @var Array
-   */
-  protected $preparedStatements = array();
-
-  /**
    * Track the number of "layers" of transactions currently active.
    *
    * On many databases transactions cannot nest.  Instead, we track
@@ -446,26 +436,14 @@ abstract class DatabaseConnection extends PDO {
    * @param $query
    *   The query string as SQL, with curly-braces surrounding the
    *   table names.
-   * @param $cache
-   *   Whether or not to cache the prepared statement for later reuse in this
-   *   same request.  Usually we want to, but queries that require preprocessing
-   *   cannot be safely cached.
    * @return DatabaseStatementInterface
    *   A PDO prepared statement ready for its execute() method.
    */
-  public function prepareQuery($query, $cache = TRUE) {
+  public function prepareQuery($query) {
     $query = $this->prefixTables($query);
-    if (isset($this->preparedStatements[$query])) {
-      $stmt = $this->preparedStatements[$query];
-    }
-    else {
-      // Call PDO::prepare.
-      $stmt = parent::prepare($query);
-      if ($cache) {
-        $this->preparedStatements[$query] = $stmt;
-      }
-    }
-    return $stmt;
+
+    // Call PDO::prepare.
+    return parent::prepare($query);
   }
 
   /**
@@ -581,8 +559,8 @@ abstract class DatabaseConnection extends PDO {
         $stmt->execute(NULL, $options);
       }
       else {
-        $modified = $this->expandArguments($query, $args);
-        $stmt = $this->prepareQuery($query, !$modified);
+        $this->expandArguments($query, $args);
+        $stmt = $this->prepareQuery($query);
         $stmt->execute($args, $options);
       }
 

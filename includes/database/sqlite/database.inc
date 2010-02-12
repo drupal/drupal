@@ -161,10 +161,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     return isset($specials[$operator]) ? $specials[$operator] : NULL;
   }
 
-  public function prepareQuery($query, $cache = TRUE) {
-    // It makes no sense to use the static prepared statement cache here,
-    // because all the work in our implementation is done in
-    // DatabaseStatement_sqlite::execute() and cannot be cached.
+  public function prepareQuery($query) {
     return $this->prepare($this->prefixTables($query));
   }
 
