@@ -476,7 +476,7 @@ function rdf_preprocess_user_profile(&$variables) {
   // Adds RDFa markup to the user profile page. Fields displayed in this page
   // will automatically describe the user.
   // @todo move to user.module
-  $account = user_load($variables['user']->uid);
+  $account = $variables['elements']['#account'];
   if (!empty($account->rdf_mapping['rdftype'])) {
     $variables['attributes_array']['typeof'] = $account->rdf_mapping['rdftype'];
     $variables['attributes_array']['about'] = url('user/' . $account->uid);

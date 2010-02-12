@@ -291,19 +291,22 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
    * Create a random user and ensure the default mapping for user is used.
    */
   function testUserAttributesInMarkup() {
-    // Create a user with access to user profiles.
-    $user = $this->drupalCreateUser(array('access user profiles'));
-    $this->drupalLogin($user);
+    // Create two users, one with access to user profiles.
+    $user1 = $this->drupalCreateUser(array('access user profiles'));
+    $user2 = $this->drupalCreateUser();
+    $this->drupalLogin($user1);
     // Browse to the user profile page.
-    $this->drupalGet('user/' . $user->uid);
+    $this->drupalGet('user/' . $user2->uid);
     // Ensure the default bundle mapping for user is used on the user profile
     // page. These attributes come from the user default bundle definition.
-    $profile_url = url('user/' . $user->uid);
-    $user_profile_about = $this->xpath("//div[@class='profile' and @typeof='sioc:User' and @about='$profile_url']");
-    $this->assertTrue(!empty($user_profile_about), t('RDFa markup found on user profile page'));
+    $profile_url = url('user/' . $user2->uid);
+    $user2_profile_about = $this->xpath("//div[@class='profile' and @typeof='sioc:User' and @about='$profile_url']");
+    $this->assertTrue(!empty($user2_profile_about), t('RDFa markup found on user profile page'));
 
-    // User creates node.
+    // User 2 creates node.
+    $this->drupalLogin($user2);
     $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $this->drupalLogin($user1);
     $this->drupalGet('node/' . $node->nid);
     // Ensures the default bundle mapping for user is used on the Authored By
     // information on the node.
