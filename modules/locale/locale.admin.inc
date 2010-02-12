@@ -1037,21 +1037,20 @@ function locale_translate_export_screen() {
  *   An associate array with localized language names
  */
 function locale_translate_export_po_form($form, &$form_state, $names) {
-  $form['export'] = array('#type' => 'fieldset',
+  $form['export_title'] = array('#type' => 'item',
     '#title' => t('Export translation'),
-    '#collapsible' => TRUE,
   );
-  $form['export']['langcode'] = array('#type' => 'select',
+  $form['langcode'] = array('#type' => 'select',
     '#title' => t('Language name'),
     '#options' => $names,
     '#description' => t('Select the language to export in Gettext Portable Object (<em>.po</em>) format.'),
   );
-  $form['export']['group'] = array('#type' => 'radios',
+  $form['group'] = array('#type' => 'radios',
     '#title' => t('Text group'),
     '#default_value' => 'default',
     '#options' => module_invoke_all('locale', 'groups'),
   );
-  $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Export'));
   return $form;
 }
 
@@ -1060,17 +1059,16 @@ function locale_translate_export_po_form($form, &$form_state, $names) {
  */
 function locale_translate_export_pot_form() {
   // Complete template export of the strings
-  $form['export'] = array('#type' => 'fieldset',
+  $form['export_title'] = array('#type' => 'item',
     '#title' => t('Export template'),
-    '#collapsible' => TRUE,
     '#description' => t('Generate a Gettext Portable Object Template (<em>.pot</em>) file with all strings from the Drupal locale database.'),
   );
-  $form['export']['group'] = array('#type' => 'radios',
+  $form['group'] = array('#type' => 'radios',
     '#title' => t('Text group'),
     '#default_value' => 'default',
     '#options' => module_invoke_all('locale', 'groups'),
   );
-  $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Export'));
   // Reuse PO export submission callback.
   $form['#submit'][] = 'locale_translate_export_po_form_submit';
   return $form;
