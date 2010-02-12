@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.430 2010/02/04 03:34:20 webchick Exp $
+// $Id: form.inc,v 1.431 2010/02/12 12:25:49 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1625,7 +1625,7 @@ function form_type_checkbox_value($element, $input = FALSE) {
     else {
       // Disabled form controls are not submitted by the browser. Ignore any
       // submitted value and always return default.
-      return $element['#default_value'];
+      return isset($element['#default_value']) && $element['#default_value'] === $element['#return_value'] ? $element['#return_value'] : 0;
     }
   }
 }
