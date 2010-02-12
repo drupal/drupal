@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.23 2010/01/14 19:49:14 webchick Exp $
+// $Id: database.inc,v 1.24 2010/02/12 06:58:43 webchick Exp $
 
 /**
  * @file
@@ -161,10 +161,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     return isset($specials[$operator]) ? $specials[$operator] : NULL;
   }
 
-  public function prepareQuery($query, $cache = TRUE) {
-    // It makes no sense to use the static prepared statement cache here,
-    // because all the work in our implementation is done in
-    // DatabaseStatement_sqlite::execute() and cannot be cached.
+  public function prepareQuery($query) {
     return $this->prepare($this->prefixTables($query));
   }
 

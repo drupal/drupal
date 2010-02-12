@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.33 2010/01/30 07:59:24 dries Exp $
+// $Id: database.inc,v 1.34 2010/02/12 06:58:43 webchick Exp $
 
 /**
  * @file
@@ -69,8 +69,8 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
         $stmt->execute(NULL, $options);
       }
       else {
-        $modified = $this->expandArguments($query, $args);
-        $stmt = $this->prepareQuery($query, !$modified);
+        $this->expandArguments($query, $args);
+        $stmt = $this->prepareQuery($query);
         $stmt->execute($args, $options);
       }
 
