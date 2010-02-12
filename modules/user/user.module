@@ -809,8 +809,8 @@ function user_file_download($uri) {
  */
 function user_file_references($file) {
   // Determine if the file is used by this module.
-  $file_used = (bool) db_query_range('SELECT 1 FROM {users} WHERE picture = :fid', 0, 1, array(':fid' => $file->fid))->fetchField();
-  if ($file_used) {
+  $count = db_query('SELECT COUNT(*) FROM {users} WHERE picture = :fid', array(':fid' => $file->fid))->fetchField();
+  if ($count) {
     // Return the name of the module and how many references it has to the file.
     return array('user' => $count);
   }
