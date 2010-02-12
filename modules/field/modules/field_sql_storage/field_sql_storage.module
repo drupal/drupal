@@ -86,14 +86,13 @@ function _field_sql_storage_indexname($name, $index) {
 }
 
 /**
- * Retrieve or assign an entity type id for an object type.
+ * Retrieve or assign an entity type id for an entity type.
  *
  * @param $entity_type
- *   The object type, such as 'node' or 'user'.
+ *   The entity type, such as 'node' or 'user'.
  * @return
  *   The entity type id.
  *
- * TODO: We need to decide on 'entity' or 'object'.
  */
 function _field_sql_storage_etid($entity_type) {
   $etid = variable_get('field_sql_storage_' . $entity_type . '_etid', NULL);
@@ -434,7 +433,7 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
 /**
  * Implements hook_field_storage_delete().
  *
- * This function deletes data for all fields for an object from the database.
+ * This function deletes data for all fields for an entity from the database.
  */
 function field_sql_storage_field_storage_delete($entity_type, $entity, $fields) {
   list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
@@ -452,7 +451,7 @@ function field_sql_storage_field_storage_delete($entity_type, $entity, $fields) 
  * Implements hook_field_storage_purge().
  *
  * This function deletes data from the database for a single field on
- * an object.
+ * an entity.
  */
 function field_sql_storage_field_storage_purge($entity_type, $entity, $field, $instance) {
   list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
@@ -548,7 +547,7 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $options)
   $query
     ->fields('t', array('bundle', 'entity_id', 'revision_id'))
     ->fields('e', array('type'))
-    // We need to ensure objects arrive in a consistent order for the
+    // We need to ensure entities arrive in a consistent order for the
     // range() operation to work.
     ->orderBy('t.etid')
     ->orderBy('t.entity_id');
@@ -556,11 +555,11 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $options)
   // Initialize results array
   $return = array();
 
-  // Getting $count objects possibly requires reading more than $count rows
+  // Getting $count entities possibly requires reading more than $count rows
   // since fields with multiple values span over several rows. We query for
-  // batches of $count rows until we've either read $count objects or received
+  // batches of $count rows until we've either read $count entities or received
   // less rows than asked for.
-  $obj_count = 0;
+  $entity_count = 0;
   do {
     if ($options['limit'] != FIELD_QUERY_NO_LIMIT) {
       $query->range($options['cursor'], $options['limit']);
@@ -578,10 +577,10 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $options)
 
       if (!isset($return[$row->type][$id])) {
         $return[$row->type][$id] = entity_create_stub_entity($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
-        $obj_count++;
+        $entity_count++;
       }
     }
-  } while ($options['limit'] != FIELD_QUERY_NO_LIMIT && $row_count == $options['limit'] && $obj_count < $options['limit']);
+  } while ($options['limit'] != FIELD_QUERY_NO_LIMIT && $row_count == $options['limit'] && $entity_count < $options['limit']);
 
   // The query is complete when the last batch returns less rows than asked
   // for.

@@ -26,7 +26,7 @@
  *     the label position is "above" it would result in "field-label-above".
  *
  * Other variables:
- * - $element['#object']: The object to which the field is attached.
+ * - $element['#object']: The entity to which the field is attached.
  * - $element['#view_mode']: View mode, e.g. 'full', 'teaser'...
  * - $element['#field_name']: The field name.
  * - $element['#field_type']: The field type.
@@ -43,7 +43,7 @@
  * @see theme_field()
  */
 ?>
-<!-- 
+<!--
 THIS FILE IS NOT USED AND IS HERE AS A STARTING POINT FOR CUSTOMIZATION ONLY.
 See http://api.drupal.org/api/function/theme_field/7 for details.
 After copying this file to your theme's folder and customizing it, remove this

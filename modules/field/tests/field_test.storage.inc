@@ -254,19 +254,19 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
 
   $field_data = $data[$field['id']];
   $sub_table = $load_current ? 'current' : 'revisions';
-  // We need to sort records by object type and object id.
+  // We need to sort records by entity type and entity id.
   usort($field_data[$sub_table], '_field_test_field_storage_query_sort_helper');
 
     // Initialize results array.
   $return = array();
-  $obj_count = 0;
+  $entity_count = 0;
   $rows_count = 0;
   $rows_total = count($field_data[$sub_table]);
   $skip = $cursor;
   $skipped = 0;
 
   foreach ($field_data[$sub_table] as $row) {
-    if ($count != FIELD_QUERY_NO_LIMIT && $obj_count >= $count) {
+    if ($count != FIELD_QUERY_NO_LIMIT && $entity_count >= $count) {
       break;
     }
 
@@ -327,7 +327,7 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
 
           if (!isset($return[$row->type][$id])) {
             $return[$row->type][$id] = entity_create_stub_entity($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
-            $obj_count++;
+            $entity_count++;
           }
         }
         else {
@@ -349,7 +349,7 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
 /**
  * Sort helper for field_test_field_storage_query().
  *
- * Sorts by object type and object id.
+ * Sorts by entity type and entity id.
  */
 function _field_test_field_storage_query_sort_helper($a, $b) {
   if ($a->type == $b->type) {

@@ -790,7 +790,7 @@ function field_ui_existing_field_options($entity_type, $bundle) {
           // Don't show
           // - locked fields,
           // - fields already in the current bundle,
-          // - field that cannot be added to the object type.
+          // - field that cannot be added to the entity type.
           if (empty($field['locked'])
             && !field_info_instance($entity_type, $field['field_name'], $bundle)
             && (empty($field['object_types']) || in_array($entity_type, $field['object_types']))) {

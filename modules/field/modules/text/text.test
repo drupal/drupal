@@ -114,7 +114,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
 
-    // Display the object.
+    // Display the entity.
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view($entity_type, $entity);
     $this->content = drupal_render($entity->content);
@@ -178,7 +178,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
 
-    // Display the object.
+    // Display the entity.
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view($entity_type, $entity);
     $this->content = drupal_render($entity->content);
@@ -211,7 +211,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), t('Entity was updated'));
 
-    // Display the object.
+    // Display the entity.
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view($entity_type, $entity);
     $this->content = drupal_render($entity->content);

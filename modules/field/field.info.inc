@@ -168,7 +168,7 @@ function _field_info_collate_types($reset = FALSE) {
  *   - fields_id: Array of existing fields, keyed by field id. This entry lists
  *     both deleted and non-deleted fields. The bundles element is the same as
  *     for 'fields'.
- *   - instances: Array of existing instances, keyed by object type, bundle
+ *   - instances: Array of existing instances, keyed by entity type, bundle
  *     name and field name. This entry only lists non-deleted instances.
  */
 function _field_info_collate_fields($reset = FALSE) {
@@ -482,12 +482,12 @@ function field_info_storage_types($storage_type = NULL) {
  * Returns information about existing bundles.
  *
  * @param $entity_type
- *   The type of object; e.g. 'node' or 'user'.
+ *   The type of entity; e.g. 'node' or 'user'.
  *
  * @return
  *   An array of bundles for the $entity_type keyed by bundle name,
  *   or, if no $entity_type was provided, the array of all existing bundles,
- *   keyed by object type.
+ *   keyed by entity type.
  */
 function field_info_bundles($entity_type = NULL) {
   $info = entity_get_info();
@@ -562,13 +562,13 @@ function field_info_field_by_id($field_id) {
  * Retrieves information about field instances.
  *
  * @param $entity_type
- *   The object type for which to return instances.
+ *   The entity type for which to return instances.
  * @param $bundle_name
  *   The bundle name for which to return instances.
  *
  * @return
- *   If $entity_type is not set, return all instances keyed by object type and
- *   bundle name. If $entity_type is set, return all instances for that object
+ *   If $entity_type is not set, return all instances keyed by entity type and
+ *   bundle name. If $entity_type is set, return all instances for that entity
  *   type, keyed by bundle name. If $entity_type and $bundle_name are set, return
  *   all instances for that bundle.
  */
@@ -590,7 +590,7 @@ function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
  * Returns an array of instance data for a specific field and bundle.
  *
  * @param $entity_type
- *   The object type for the instance.
+ *   The entity type for the instance.
  * @param $field_name
  *   The field name for the instance.
  * @param $bundle_name

@@ -2,7 +2,7 @@
 // $Id$
 /**
  * @file
- * Attach custom data fields to Drupal objects.
+ * Attach custom data fields to Drupal entities.
  */
 
 /*
@@ -20,11 +20,11 @@ require_once DRUPAL_ROOT . '/modules/field/field.form.inc';
 /**
  * @defgroup field Field API
  * @{
- * Attach custom data fields to Drupal objects.
+ * Attach custom data fields to Drupal entities.
  *
  * The Field API allows custom data fields to be attached to Drupal
- * objects and takes care of storing, loading, editing, and rendering
- * field data. Any object type (node, user, etc.) can use the Field
+ * entities and takes care of storing, loading, editing, and rendering
+ * field data. Any entity type (node, user, etc.) can use the Field
  * API to make itself "fieldable" and thus allow fields to be attached
  * to it. Other modules can provide a user interface for managing custom
  * fields via a web browser as well as a wide and flexible variety of
@@ -42,11 +42,11 @@ require_once DRUPAL_ROOT . '/modules/field/field.form.inc';
  *   Modules use this API, often in hook_install(), to create
  *   custom data structures.
  *
- * - @link field_attach Field Attach API @endlink. Connects object
+ * - @link field_attach Field Attach API @endlink. Connects entity
  *   types to the Field API. Field Attach API functions load, store,
  *   generate Form API structures, display, and perform a variety of
- *   other functions for field data connected to individual objects.
- *   Fieldable object types like node and user use this API to make
+ *   other functions for field data connected to individual entities.
+ *   Fieldable entity types like node and user use this API to make
  *   themselves fieldable.
  *
  * - @link field_info Field Info API @endlink. Exposes information
@@ -83,13 +83,13 @@ define('FIELD_BEHAVIOR_DEFAULT', 0x0002);
 define('FIELD_BEHAVIOR_CUSTOM', 0x0004);
 
 /**
- * Age argument for loading the most recent version of an object's
+ * Age argument for loading the most recent version of an entity's
  * field data with field_attach_load().
  */
 define('FIELD_LOAD_CURRENT', 'FIELD_LOAD_CURRENT');
 /**
- * Age argument for loading the version of an object's field data
- * specified in the object with field_attach_load().
+ * Age argument for loading the version of an entity's field data
+ * specified in the entity with field_attach_load().
  */
 define('FIELD_LOAD_REVISION', 'FIELD_LOAD_REVISION');
 
@@ -101,7 +101,7 @@ define('FIELD_LOAD_REVISION', 'FIELD_LOAD_REVISION');
 
 /**
  * Limit argument for field_attach_query() to request all available
- * objects instead of a limited number.
+ * entities instead of a limited number.
  */
 define('FIELD_QUERY_NO_LIMIT', 'FIELD_QUERY_NO_LIMIT');
 
@@ -143,7 +143,7 @@ function field_help($path, $arg) {
     case 'admin/help#field':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Field module allows custom data fields to be attached to Drupal <em>objects</em> (content nodes, users, taxonomy vocabularies, etc.) and takes care of storing, loading, editing, and rendering field data. Most users will not interact with the Field module directly, but will instead use the <a href="@field-ui-help">Field UI module</a> user interface. Module developers can use the Field API to make new objects "fieldable" and thus allow fields to be attached to their objects. For more information, see the online handbook entry for <a href="@field">Field module</a>.', array('@field-ui-help' => url('admin/help/field_ui'), '@field' => 'http://drupal.org/handbook/modules/field')) . '</p>';
+      $output .= '<p>' . t('The Field module allows custom data fields to be attached to Drupal <em>entities</em> (content nodes, users, taxonomy vocabularies, etc.) and takes care of storing, loading, editing, and rendering field data. Most users will not interact with the Field module directly, but will instead use the <a href="@field-ui-help">Field UI module</a> user interface. Module developers can use the Field API to make new entities "fieldable" and thus allow fields to be attached to their entities. For more information, see the online handbook entry for <a href="@field">Field module</a>.', array('@field-ui-help' => url('admin/help/field_ui'), '@field' => 'http://drupal.org/handbook/modules/field')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling field types') . '</dt>';
@@ -272,12 +272,12 @@ function field_associate_fields($module) {
 }
 
 /**
- * Helper function to get the default value for a field on an object.
+ * Helper function to get the default value for a field on an entity.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object for the operation.
+ *   The entity for the operation.
  * @param $field
  *   The field structure.
  * @param $instance
@@ -381,7 +381,7 @@ function field_extra_fields($entity_type, $bundle) {
     $info = (array) module_invoke_all('field_extra_fields');
     drupal_alter('field_extra_fields', $info);
 
-    // Add saved weights. The array is keyed by object type, bundle and
+    // Add saved weights. The array is keyed by entity type, bundle and
     // element name.
     $extra_weights = variable_get('field_extra_weights', array());
     foreach ($extra_weights as $entity_type_name => $bundles) {
@@ -419,7 +419,7 @@ function field_extra_field_weight($entity_type, $bundle, $pseudo_field) {
 }
 
 /**
- * Pre-render callback to adjust weights of non-field elements on objects.
+ * Pre-render callback to adjust weights of non-field elements on entities.
  */
 function _field_extra_weights_pre_render($elements) {
   if (isset($elements['#extra_fields'])) {
@@ -566,7 +566,7 @@ function field_format($entity_type, $entity, $field, $item, $formatter_type = NU
 }
 
 /**
- * Returns a renderable array for the value of a single field in an object.
+ * Returns a renderable array for the value of a single field in an entity.
  *
  * The resulting output is a fully themed field with label and multiple values.
  *
@@ -574,7 +574,7 @@ function field_format($entity_type, $entity, $field, $item, $formatter_type = NU
  * isolated field.
  * - Do not use inside node (or other entities) templates, use
  *   render($content[FIELD_NAME]) instead.
- * - Do not use to display all fields in an object, use
+ * - Do not use to display all fields in an entity, use
  *   field_attach_prepare_view() and field_attach_view() instead.
  *
  * The function takes care of invoking the prepare_view steps. It also respects
@@ -583,7 +583,7 @@ function field_format($entity_type, $entity, $field, $item, $formatter_type = NU
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object containing the field to display. Must at least contain the id
+ *   The entity containing the field to display. Must at least contain the id
  *   key and the field data to display.
  * @param $field_name
  *   The name of the field to display.
@@ -591,7 +591,7 @@ function field_format($entity_type, $entity, $field, $item, $formatter_type = NU
  *   Can be either:
  *   - The name of a view mode. The field will be displayed according to the
  *     display settings specified for this view mode in the $instance
- *     definition for the field in the object's bundle.
+ *     definition for the field in the entity's bundle.
  *     If no display settings are found for the view mode, the settings for
  *     the 'full' view mode will be used.
  *   - An array of display settings, as found in the 'display' entry of
@@ -672,7 +672,7 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
  * @param $field
  *   A field structure.
  * @return
- *   TRUE if the field has data for any object; FALSE otherwise.
+ *   TRUE if the field has data for any entity; FALSE otherwise.
  */
 function field_has_data($field) {
   $results = field_attach_query($field['id'], array(), array('limit' => 1));
@@ -691,7 +691,7 @@ function field_has_data($field) {
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   (optional) The object for the operation.
+ *   (optional) The entity for the operation.
  * @param $account
  *   (optional) The account to check, if not given use currently logged in user.
  * @return
@@ -721,7 +721,7 @@ function field_access($op, $field, $entity_type, $entity = NULL, $account = NULL
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $bundle
- *   The bundle object (or string if bundles for this object type do not exist
+ *   The bundle object (or string if bundles for this entity type do not exist
  *   as standalone objects).
  * @return
  *   The bundle name.

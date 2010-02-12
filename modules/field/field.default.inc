@@ -32,7 +32,7 @@ function field_default_extract_form_values($entity_type, $entity, $field, $insta
  * @param $entity_type
  *   The type of $entity.
  * @param $entity
- *   The object for the operation.
+ *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
  * @param $instance
@@ -43,7 +43,7 @@ function field_default_extract_form_values($entity_type, $entity, $field, $insta
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  * @param $errors
  *   The array of errors, keyed by field name and by value delta, that have
- *   already been reported for the object. The function should add its errors
+ *   already been reported for the entity. The function should add its errors
  *   to this array. Each error is an associative array, with the following
  *   keys and values:
  *   - 'error': an error code (should be a string, prefixed with the module name)
@@ -102,16 +102,16 @@ function field_default_insert($entity_type, $entity, $field, $instance, $langcod
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of objects being displayed, keyed by object id.
+ *   An array of entities being displayed, keyed by entity id.
  * @param $field
  *   The field structure for the operation.
  * @param $instances
- *   Array of instance structures for $field for each object, keyed by object
+ *   Array of instance structures for $field for each entity, keyed by entity
  *   id.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   Array of field values already loaded for the objects, keyed by object id.
+ *   Array of field values already loaded for the entities, keyed by entity id.
  * @param $display
  *   Can be either:
  *   - the name of a view mode
@@ -119,14 +119,14 @@ function field_default_insert($entity_type, $entity, $field, $instance, $langcod
  *     'display' entry of $instance definitions.
 */
 function field_default_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $display) {
-  // Group objects, instances and items by formatter module.
+  // Group entities, instances and items by formatter module.
   $modules = array();
   foreach ($instances as $id => $instance) {
     $display = is_string($display) ? $instance['display'][$display] : $display;
     if ($display['type'] !== 'hidden') {
       $module = $display['module'];
       $modules[$module] = $module;
-      $grouped_objects[$module][$id] = $entities[$id];
+      $grouped_entities[$module][$id] = $entities[$id];
       $grouped_instances[$module][$id] = $instance;
       $grouped_displays[$module][$id] = $display;
       // hook_field_formatter_prepare_view() alters $items by reference.
@@ -138,7 +138,7 @@ function field_default_prepare_view($entity_type, $entities, $field, $instances,
     // Invoke hook_field_formatter_prepare_view().
     $function = $module . '_field_formatter_prepare_view';
     if (function_exists($function)) {
-      $function($entity_type, $grouped_objects[$module], $field, $grouped_instances[$module], $langcode, $grouped_items[$module], $grouped_displays[$module]);
+      $function($entity_type, $grouped_entities[$module], $field, $grouped_instances[$module], $langcode, $grouped_items[$module], $grouped_displays[$module]);
     }
   }
 }
@@ -149,16 +149,16 @@ function field_default_prepare_view($entity_type, $entities, $field, $instances,
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of objects being displayed, keyed by object id.
+ *   An array of entities being displayed, keyed by entity id.
  * @param $field
  *   The field structure for the operation.
  * @param $instances
- *   Array of instance structures for $field for each object, keyed by object
+ *   Array of instance structures for $field for each entity, keyed by entity
  *   id.
  * @param $langcode
  *   The language associated to $items.
  * @param $items
- *   Array of field values already loaded for the objects, keyed by object id.
+ *   Array of field values already loaded for the entities, keyed by entity id.
  * @param $display
  *   Can be either:
  *   - the name of a view mode;

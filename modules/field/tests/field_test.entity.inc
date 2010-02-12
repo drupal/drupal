@@ -64,7 +64,7 @@ function field_test_entity_info_alter(&$entity_info) {
 }
 
 /**
- * Creates a new bundle for test_entity objects.
+ * Creates a new bundle for test_entity entities.
  *
  * @param $bundle
  *   The machine-readable name of the bundle.
@@ -84,7 +84,7 @@ function field_test_create_bundle($bundle, $text = NULL) {
 }
 
 /**
- * Renames a bundle for test_entity objects.
+ * Renames a bundle for test_entity entities.
  *
  * @param $bundle_old
  *   The machine-readable name of the bundle to rename.
@@ -121,7 +121,7 @@ function field_test_delete_bundle($bundle) {
 }
 
 /**
- * Creates a basic test_entity object.
+ * Creates a basic test_entity entity.
  */
 function field_test_create_stub_entity($id = 1, $vid = 1, $bundle = 'test_bundle') {
   $entity = new stdClass();

@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Field attach API, allowing objects (nodes, users, ...) to be 'fieldable'.
+ * Field attach API, allowing entities (nodes, users, ...) to be 'fieldable'.
  */
 
 /**
@@ -60,14 +60,14 @@ class FieldQueryException extends FieldException {}
  * Argument for an update operation.
  *
  * This is used in hook_field_storage_write when updating an
- * existing object.
+ * existing entity.
  */
 define('FIELD_STORAGE_UPDATE', 'update');
 
 /**
  * Argument for an insert operation.
  *
- * This is used in hook_field_storage_write when inserting a new object.
+ * This is used in hook_field_storage_write when inserting a new entity.
  */
 define('FIELD_STORAGE_INSERT', 'insert');
 
@@ -78,17 +78,17 @@ define('FIELD_STORAGE_INSERT', 'insert');
 /**
  * @defgroup field_attach Field Attach API
  * @{
- * Operate on Field API data attached to Drupal objects.
+ * Operate on Field API data attached to Drupal entities.
  *
  * Field Attach API functions load, store, generate Form API
  * structures, display, and perform a variety of other functions for
- * field data connected to individual objects.
+ * field data connected to individual entities.
  *
  * Field Attach API functions generally take $entity_type and $entity
  * arguments along with additional function-specific arguments.
  * $entity_type is the type of the fieldable entity, such as 'node' or
- * 'user', and $entity is the object itself. An individual object's
- * bundle, if any, is read from the object's bundle key property
+ * 'user', and $entity is the entity itself. An individual entity's
+ * bundle, if any, is read from the entity's bundle key property
  * identified by hook_fieldable_info() for $entity_type.
  *
  * Fieldable types call Field Attach API functions during their own
@@ -98,8 +98,8 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *
  * Most Field Attach API functions define a corresponding hook
  * function that allows any module to act on Field Attach operations
- * for any object after the operation is complete, and access or
- * modify all the field, form, or display data for that object and
+ * for any entity after the operation is complete, and access or
+ * modify all the field, form, or display data for that entity and
  * operation. For example, field_attach_view() invokes
  * hook_field_attach_view_alter(). These all-module hooks are distinct from
  * those of the Field Types API, such as hook_field_load(), that are
@@ -139,7 +139,7 @@ define('FIELD_STORAGE_INSERT', 'insert');
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The fully formed $entity_type object.
+ *   The fully formed $entity_type entity.
  * @param $a
  *   - The $form in the 'form' operation.
  *   - The value of $view_mode in the 'view' operation.
@@ -151,12 +151,12 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *   An associative array of additional options, with the following keys:
  *  - 'field_name': The name of the field whose operation should be
  *    invoked. By default, the operation is invoked on all the fields
- *    in the object's bundle. NOTE: This option is not compatible with
+ *    in the entity's bundle. NOTE: This option is not compatible with
  *    the 'deleted' option; the 'field_id' option should be used
  *    instead.
  *  - 'field_id': The id of the field whose operation should be
  *    invoked. By default, the operation is invoked on all the fields
- *    in the objects' bundles.
+ *    in the entity's' bundles.
  *  - 'default': A boolean value, specifying which implementation of
  *    the operation should be invoked.
  *    - if FALSE (default), the field types implementation of the operation
@@ -178,7 +178,7 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
   );
   $options += $default_options;
 
-  // Iterate through the object's field instances.
+  // Iterate through the entity's field instances.
   $return = array();
   list(, , $bundle) = entity_extract_ids($entity_type, $entity);
 
@@ -234,7 +234,7 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
 }
 
 /**
- * Invoke a field hook across fields on multiple objects.
+ * Invoke a field hook across fields on multiple entities.
  *
  * @param $op
  *   Possible operations include:
@@ -245,7 +245,7 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of objects, keyed by object id.
+ *   An array of entities, keyed by entity id.
  * @param $a
  *   - The $age parameter in the 'load' operation.
  *   - Otherwise NULL.
@@ -255,11 +255,11 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
  *   An associative array of additional options, with the following keys:
  *  - 'field_name': The name of the field whose operation should be
  *    invoked. By default, the operation is invoked on all the fields
- *    in the object's bundle. NOTE: This option is not compatible with
+ *    in the entity's bundle. NOTE: This option is not compatible with
  *    the 'deleted' option; the 'field_id' option should be used instead.
  *  - 'field_id': The id of the field whose operation should be
  *    invoked. By default, the operation is invoked on all the fields
- *    in the objects' bundles.
+ *    in the entity's' bundles.
  *  - 'default': A boolean value, specifying which implementation of
  *    the operation should be invoked.
  *    - if FALSE (default), the field types implementation of the operation
@@ -272,7 +272,7 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
  *    as well as non-deleted fields. If unset or FALSE, only
  *    non-deleted fields are operated on.
  * @return
- *   An array of returned values keyed by object id.
+ *   An array of returned values keyed by entity id.
  */
 function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = NULL, $options = array()) {
   // Merge default options.
@@ -285,15 +285,15 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
 
   $fields = array();
   $grouped_instances = array();
-  $grouped_objects = array();
+  $grouped_entities = array();
   $grouped_items = array();
   $return = array();
 
-  // Go through the objects and collect the fields on which the hook should be
+  // Go through the entities and collect the fields on which the hook should be
   // invoked.
   //
   // We group fields by id, not by name, because this function can operate on
-  // deleted fields which may have non-unique names. However, objects can only
+  // deleted fields which may have non-unique names. However, entities can only
   // contain data for a single field for each name, even if that field
   // is deleted, so we reference field data via the
   // $entity->$field_name property.
@@ -316,9 +316,9 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
         if (!isset($fields[$field_id])) {
           $fields[$field_id] = field_info_field_by_id($field_id);
         }
-        // Group the corresponding instances and objects.
+        // Group the corresponding instances and entities.
         $grouped_instances[$field_id][$id] = $instance;
-        $grouped_objects[$field_id][$id] = $entities[$id];
+        $grouped_entities[$field_id][$id] = $entities[$id];
         // Extract the field values into a separate variable, easily accessed
         // by hook implementations.
         $suggested_languages = empty($options['language']) ? NULL : array($options['language']);
@@ -327,7 +327,7 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
         }
       }
     }
-    // Initialize the return value for each object.
+    // Initialize the return value for each entity.
     $return[$id] = array();
   }
 
@@ -338,9 +338,9 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
     if (function_exists($function)) {
       // Iterate over all the field translations.
       foreach ($grouped_items[$field_id] as $langcode => $items) {
-        $results = $function($entity_type, $grouped_objects[$field_id], $field, $grouped_instances[$field_id], $langcode, $grouped_items[$field_id][$langcode], $a, $b);
+        $results = $function($entity_type, $grouped_entities[$field_id], $field, $grouped_instances[$field_id], $langcode, $grouped_items[$field_id][$langcode], $a, $b);
         if (isset($results)) {
-          // Collect results by object.
+          // Collect results by entity.
           // For hooks with array results, we merge results together.
           // For hooks with scalar results, we collect results in an array.
           foreach ($results as $id => $result) {
@@ -355,9 +355,9 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
       }
     }
 
-    // Populate field values back in the objects, but avoid replacing missing
+    // Populate field values back in the entities, but avoid replacing missing
     // fields with an empty array (those are not equivalent on update).
-    foreach ($grouped_objects[$field_id] as $id => $entity) {
+    foreach ($grouped_entities[$field_id] as $id => $entity) {
       foreach ($grouped_items[$field_id] as $langcode => $items) {
         if ($grouped_items[$field_id][$langcode][$id] !== array() || isset($entity->{$field_name}[$langcode])) {
           $entity->{$field_name}[$langcode] = $grouped_items[$field_id][$langcode][$id];
@@ -384,7 +384,7 @@ function _field_invoke_default($op, $entity_type, $entity, &$a = NULL, &$b = NUL
 }
 
 /**
- * Invoke field.module's version of a field hook on multiple objects.
+ * Invoke field.module's version of a field hook on multiple entities.
  *
  * This function invokes the field_default_[op]() function.
  * Use _field_invoke_multiple() to invoke the field type implementation,
@@ -398,7 +398,7 @@ function _field_invoke_multiple_default($op, $entity_type, $entities, &$a = NULL
 }
 
 /**
- * Add form elements for all fields for an object to a form structure.
+ * Add form elements for all fields for an entity to a form structure.
  *
  * Sample structure for $form:
  * @code
@@ -476,7 +476,7 @@ function _field_invoke_multiple_default($op, $entity_type, $entities, &$a = NULL
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object for which to load form elements, used to initialize
+ *   The entity for which to load form elements, used to initialize
  *   default form values.
  * @param $form
  *   The form structure to fill in.
@@ -511,23 +511,23 @@ function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcod
 
 /**
  * Load all fields for the most current version of each of a set of
- * objects of a single object type.
+ * entities of a single entity type.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of objects for which to load fields, keyed by object id.
- *   Each object needs to have its 'bundle', 'id' and (if applicable)
+ *   An array of entities for which to load fields, keyed by entity id.
+ *   Each entity needs to have its 'bundle', 'id' and (if applicable)
  *   'revision' keys filled.
  * @param $age
  *   FIELD_LOAD_CURRENT to load the most recent revision for all
  *   fields, or FIELD_LOAD_REVISION to load the version indicated by
- *   each object. Defaults to FIELD_LOAD_CURRENT; use
+ *   each entity. Defaults to FIELD_LOAD_CURRENT; use
  *   field_attach_load_revision() instead of passing FIELD_LOAD_REVISION.
  * @param $options
  *   An associative array of additional options, with the following keys:
  *  - 'field_id': The field id that should be loaded, instead of
- *    loading all fields, for each object. Note that returned objects
+ *    loading all fields, for each entity. Note that returned entities
  *    may contain data for other fields, for example if they are read
  *    from a cache.
  *  - 'deleted': If TRUE, the function will operate on deleted fields
@@ -556,11 +556,11 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     return;
   }
 
-  // Assume all objects will need to be queried. Objects found in the cache
+  // Assume all entities will need to be queried. Entities found in the cache
   // will be removed from the list.
-  $queried_objects = $entities;
+  $queried_entities = $entities;
 
-  // Fetch available objects from cache, if applicable.
+  // Fetch available entities from cache, if applicable.
   if ($cache_read) {
     // Build the list of cache entries to retrieve.
     $cids = array();
@@ -568,12 +568,12 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
       $cids[] = "field:$entity_type:$id";
     }
     $cache = cache_get_multiple($cids, 'cache_field');
-    // Put the cached field values back into the objects and remove them from
-    // the list of objects to query.
+    // Put the cached field values back into the entities and remove them from
+    // the list of entities to query.
     foreach ($entities as $id => $entity) {
       $cid = "field:$entity_type:$id";
       if (isset($cache[$cid])) {
-        unset($queried_objects[$id]);
+        unset($queried_entities[$id]);
         foreach ($cache[$cid]->data as $field_name => $values) {
           $entity->$field_name = $values;
         }
@@ -581,8 +581,8 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     }
   }
 
-  // Fetch other objects from their storage location.
-  if ($queried_objects) {
+  // Fetch other entities from their storage location.
+  if ($queried_entities) {
     // The invoke order is:
     // - hook_field_storage_pre_load()
     // - storage backend's hook_field_storage_load()
@@ -594,13 +594,13 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     $skip_fields = array();
     foreach (module_implements('field_storage_pre_load') as $module) {
       $function = $module . '_field_storage_pre_load';
-      $function($entity_type, $queried_objects, $age, $skip_fields, $options);
+      $function($entity_type, $queried_entities, $age, $skip_fields, $options);
     }
 
-    // Collect the storage backends used by the remaining fields in the objects.
+    // Collect the storage backends used by the remaining fields in the entities.
     $storages = array();
-    foreach ($queried_objects as $obj) {
-      list($id, $vid, $bundle) = entity_extract_ids($entity_type, $obj);
+    foreach ($queried_entities as $entity) {
+      list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
       if ($options['deleted']) {
         $instances = field_read_instances(array('object_type' => $entity_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
       }
@@ -613,8 +613,8 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
           $field_name = $instance['field_name'];
           $field_id = $instance['field_id'];
           // Make sure all fields are present at least as empty arrays.
-          if (!isset($queried_objects[$id]->{$field_name})) {
-            $queried_objects[$id]->{$field_name} = array();
+          if (!isset($queried_entities[$id]->{$field_name})) {
+            $queried_entities[$id]->{$field_name} = array();
           }
           // Collect the storage backend if the field has not been loaded yet.
           if (!isset($skip_fields[$field_id])) {
@@ -628,24 +628,24 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     // Invoke hook_field_storage_load() on the relevant storage backends.
     foreach ($storages as $storage => $fields) {
       $storage_info = field_info_storage_types($storage);
-      module_invoke($storage_info['module'], 'field_storage_load', $entity_type, $queried_objects, $age, $fields, $options);
+      module_invoke($storage_info['module'], 'field_storage_load', $entity_type, $queried_entities, $age, $fields, $options);
     }
 
     // Invoke field-type module's hook_field_load().
-    _field_invoke_multiple('load', $entity_type, $queried_objects, $age, $options);
+    _field_invoke_multiple('load', $entity_type, $queried_entities, $age, $options);
 
     // Invoke hook_field_attach_load(): let other modules act on loading the
-    // object.
-    module_invoke_all('field_attach_load', $entity_type, $queried_objects, $age, $options);
+    // entitiy.
+    module_invoke_all('field_attach_load', $entity_type, $queried_entities, $age, $options);
 
     // Build cache data.
     if ($cache_write) {
-      foreach ($queried_objects as $id => $entity) {
+      foreach ($queried_entities as $id => $entity) {
         $data = array();
         list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
         $instances = field_info_instances($entity_type, $bundle);
         foreach ($instances as $instance) {
-          $data[$instance['field_name']] = $queried_objects[$id]->{$instance['field_name']};
+          $data[$instance['field_name']] = $queried_entities[$id]->{$instance['field_name']};
         }
         $cid = "field:$entity_type:$id";
         cache_set($cid, $data, 'cache_field');
@@ -656,25 +656,25 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
 
 /**
  * Load all fields for a previous version of each of a set of
- * objects of a single object type.
+ * entities of a single entity type.
  *
- * Loading different versions of the same objects is not supported,
+ * Loading different versions of the same entities is not supported,
  * and should be done by separate calls to the function.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of objects for which to load fields, keyed by object id.
- *   Each object needs to have its 'bundle', 'id' and (if applicable)
+ *   An array of entities for which to load fields, keyed by entity id.
+ *   Each entity needs to have its 'bundle', 'id' and (if applicable)
  *   'revision' keys filled.
  * @param $options
  *   An associative array of additional options, with the following keys:
  *   - 'field_name':  The field name that should be loaded, instead of
- *     loading all fields, for each object. Note that returned objects
+ *     loading all fields, for each entity. Note that returned entities
  *     may contain data for other fields, for example if they are read
  *     from a cache.
  * @return
- *   On return, the objects in $entities are modified by having the
+ *   On return, the entities in $entities are modified by having the
  *   appropriate set of fields added.
  */
 function field_attach_load_revision($entity_type, $entities, $options = array()) {
@@ -682,7 +682,7 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
 }
 
 /**
- * Perform field validation against the field data in an object.
+ * Perform field validation against the field data in an entity.
  *
  * This function does not perform field widget validation on form
  * submissions. It is intended to be called during API save
@@ -692,7 +692,7 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object with fields to validate.
+ *   The entity with fields to validate.
  * @throws FieldValidationException
  *   If validation errors are found, a FieldValidationException is thrown. The
  *   'errors' property contains the array of errors, keyed by field name,
@@ -705,7 +705,7 @@ function field_attach_validate($entity_type, $entity) {
   // Check field-type specific errors.
   _field_invoke('validate', $entity_type, $entity, $errors);
 
-  // Let other modules validate the object.
+  // Let other modules validate the entity.
   // Avoid module_invoke_all() to let $errors be taken by reference.
   foreach (module_implements('field_attach_validate') as $module) {
     $function = $module . '_field_attach_validate';
@@ -731,13 +731,13 @@ function field_attach_validate($entity_type, $entity) {
  *
  * This function performs field validation in the context of a form
  * submission. It converts field validation errors into form errors
- * on the correct form elements. Fieldable object types should call
+ * on the correct form elements. Fieldable entity types should call
  * this function during their own form validation function.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object being submitted. The 'bundle', 'id' and (if applicable)
+ *   The entity being submitted. The 'bundle', 'id' and (if applicable)
  *   'revision' keys should be present. The actual field values will be read
  *   from $form_state['values'].
  * @param $form
@@ -774,7 +774,7 @@ function field_attach_form_validate($entity_type, $entity, $form, &$form_state) 
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object being submitted. The 'bundle', 'id' and (if applicable)
+ *   The entity being submitted. The 'bundle', 'id' and (if applicable)
  *   'revision' keys should be present. The actual field values will be read
  *   from $form_state['values'].
  * @param $form
@@ -788,7 +788,7 @@ function field_attach_submit($entity_type, $entity, $form, &$form_state) {
 
   _field_invoke_default('submit', $entity_type, $entity, $form, $form_state);
 
-  // Let other modules act on submitting the object.
+  // Let other modules act on submitting the entity.
   // Avoid module_invoke_all() to let $form_state be taken by reference.
   foreach (module_implements('field_attach_submit') as $module) {
     $function = $module . '_field_attach_submit';
@@ -805,19 +805,19 @@ function field_attach_submit($entity_type, $entity, $form, &$form_state) {
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object with fields to process.
+ *   The entity with fields to process.
  */
 function field_attach_presave($entity_type, $entity) {
   _field_invoke('presave', $entity_type, $entity);
 
-  // Let other modules act on presaving the object.
+  // Let other modules act on presaving the entity.
   module_invoke_all('field_attach_presave', $entity_type, $entity);
 }
 
 /**
- * Save field data for a new object.
+ * Save field data for a new entity.
  *
- * The passed in object must already contain its id and (if applicable)
+ * The passed in entity must already contain its id and (if applicable)
  * revision id attributes.
  * Default values (if any) will be saved for fields not present in the
  * $entity.
@@ -825,7 +825,7 @@ function field_attach_presave($entity_type, $entity) {
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object with fields to save.
+ *   The entity with fields to save.
  * @return
  *   Default values (if any) will be added to the $entity parameter for fields
  *   it leaves unspecified.
@@ -844,7 +844,7 @@ function field_attach_insert($entity_type, $entity) {
     $function($entity_type, $entity, $skip_fields);
   }
 
-  // Collect the storage backends used by the remaining fields in the objects.
+  // Collect the storage backends used by the remaining fields in the entities.
   $storages = array();
   foreach (field_info_instances($entity_type, $bundle) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
@@ -864,7 +864,7 @@ function field_attach_insert($entity_type, $entity) {
     module_invoke($storage_info['module'], 'field_storage_write', $entity_type, $entity, FIELD_STORAGE_INSERT, $fields);
   }
 
-  // Let other modules act on inserting the object.
+  // Let other modules act on inserting the entity.
   module_invoke_all('field_attach_insert', $entity_type, $entity);
 
   if ($cacheable) {
@@ -873,12 +873,12 @@ function field_attach_insert($entity_type, $entity) {
 }
 
 /**
- * Save field data for an existing object.
+ * Save field data for an existing entity.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object with fields to save.
+ *   The entity with fields to save.
  */
 function field_attach_update($entity_type, $entity) {
   _field_invoke('update', $entity_type, $entity);
@@ -893,7 +893,7 @@ function field_attach_update($entity_type, $entity) {
     $function($entity_type, $entity, $skip_fields);
   }
 
-  // Collect the storage backends used by the remaining fields in the objects.
+  // Collect the storage backends used by the remaining fields in the entities.
   $storages = array();
   foreach (field_info_instances($entity_type, $bundle) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
@@ -917,7 +917,7 @@ function field_attach_update($entity_type, $entity) {
     module_invoke($storage_info['module'], 'field_storage_write', $entity_type, $entity, FIELD_STORAGE_UPDATE, $fields);
   }
 
-  // Let other modules act on updating the object.
+  // Let other modules act on updating the entity.
   module_invoke_all('field_attach_update', $entity_type, $entity);
 
   if ($cacheable) {
@@ -926,20 +926,20 @@ function field_attach_update($entity_type, $entity) {
 }
 
 /**
- * Delete field data for an existing object. This deletes all
- * revisions of field data for the object.
+ * Delete field data for an existing entity. This deletes all
+ * revisions of field data for the entity.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object whose field data to delete.
+ *   The entity whose field data to delete.
  */
 function field_attach_delete($entity_type, $entity) {
   _field_invoke('delete', $entity_type, $entity);
 
   list($id, $vid, $bundle, $cacheable) = entity_extract_ids($entity_type, $entity);
 
-  // Collect the storage backends used by the fields in the objects.
+  // Collect the storage backends used by the fields in the entities.
   $storages = array();
   foreach (field_info_instances($entity_type, $bundle) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
@@ -953,7 +953,7 @@ function field_attach_delete($entity_type, $entity) {
     module_invoke($storage_info['module'], 'field_storage_delete', $entity_type, $entity, $fields);
   }
 
-  // Let other modules act on deleting the object.
+  // Let other modules act on deleting the entity.
   module_invoke_all('field_attach_delete', $entity_type, $entity);
 
   if ($cacheable) {
@@ -962,20 +962,20 @@ function field_attach_delete($entity_type, $entity) {
 }
 
 /**
- * Delete field data for a single revision of an existing object. The
- * passed object must have a revision id attribute.
+ * Delete field data for a single revision of an existing entity. The
+ * passed entity must have a revision id attribute.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object with fields to save.
+ *   The entity with fields to save.
  */
 function field_attach_delete_revision($entity_type, $entity) {
   _field_invoke('delete_revision', $entity_type, $entity);
 
   list($id, $vid, $bundle, $cacheable) = entity_extract_ids($entity_type, $entity);
 
-  // Collect the storage backends used by the fields in the objects.
+  // Collect the storage backends used by the fields in the entities.
   $storages = array();
   foreach (field_info_instances($entity_type, $bundle) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
@@ -994,14 +994,14 @@ function field_attach_delete_revision($entity_type, $entity) {
 }
 
 /**
- * Retrieve objects matching a given set of conditions.
+ * Retrieve entities matching a given set of conditions.
  *
  * Note that the query 'conditions' only apply to the stored values.
  * In a regular field_attach_load() call, field values additionally go through
  * hook_field_load() and hook_field_attach_load() invocations, which can add
  * to or affect the raw stored values. The results of field_attach_query()
  * might therefore differ from what could be expected by looking at a regular,
- * fully loaded object.
+ * fully loaded entity.
  *
  * @param $field_id
  *   The id of the field to query.
@@ -1014,13 +1014,13 @@ function field_attach_delete_revision($entity_type, $entity) {
  *   Supported columns:
  *     - any of the columns defined in hook_field_schema() for $field_name's
  *       field type: condition on field value,
- *     - 'type': condition on object type (e.g. 'node', 'user'...),
- *     - 'bundle': condition on object bundle (e.g. node type),
- *     - 'entity_id': condition on object id (e.g node nid, user uid...),
+ *     - 'type': condition on entity type (e.g. 'node', 'user'...),
+ *     - 'bundle': condition on entity bundle (e.g. node type),
+ *     - 'entity_id': condition on entity id (e.g node nid, user uid...),
  *     - 'deleted': condition on whether the field's data is
- *        marked deleted for the object (defaults to FALSE if not specified)
+ *        marked deleted for the entity (defaults to FALSE if not specified)
  *     The field_attach_query_revisions() function additionally supports:
- *     - 'revision_id': condition on object revision id (e.g node vid).
+ *     - 'revision_id': condition on entity revision id (e.g node vid).
  *   Supported operators:
  *     - '=', '!=', '>', '>=', '<', '<=', 'STARTS_WITH', 'ENDS_WITH',
  *       'CONTAINS': these operators expect the value as a literal of the same
@@ -1046,7 +1046,7 @@ function field_attach_delete_revision($entity_type, $entity) {
  *   - limit: The number of results that is requested. This is only a
  *   hint to the storage engine(s); callers should be prepared to
  *   handle fewer or more results. Specify FIELD_QUERY_NO_LIMIT to retrieve
- *   all available objects. This option has a default value of 0 so
+ *   all available entities. This option has a default value of 0 so
  *   callers must make an explicit choice to potentially retrieve an
  *   enormous result set.
  *   - cursor: A reference to an opaque cursor that allows a caller to
@@ -1056,18 +1056,18 @@ function field_attach_delete_revision($entity_type, $entity) {
  *   the value will be filled in with FIELD_QUERY_COMPLETE. If cursor
  *   is passed as NULL, the first result set is returned and no next
  *   cursor is returned.
- *   - count: If TRUE, return a single count of all matching objects;
+ *   - count: If TRUE, return a single count of all matching entities;
  *   limit and cursor are ignored.
  *   - age: Internal use only. Use field_attach_query_revisions()
  *   instead of passing FIELD_LOAD_REVISION.
  *     - FIELD_LOAD_CURRENT (default): query the most recent revisions for all
- *     objects. The results will be keyed by object type and object id.
+ *     entities. The results will be keyed by entity type and entity id.
  *     - FIELD_LOAD_REVISION: query all revisions. The results will be keyed by
- *     object type and object revision id.
+ *     entity type and entity revision id.
  * @return
- *   An array keyed by object type (e.g. 'node', 'user'...), then by object id
+ *   An array keyed by entity type (e.g. 'node', 'user'...), then by entity id
  *   or revision id (depending of the value of the $age parameter).
- *   The values are pseudo-objects with the bundle, id, and revision
+ *   The values are pseudo-entities with the bundle, id, and revision
  *   id fields filled in.
  *
  *   Throws a FieldQueryException if the field's storage doesn't support the
@@ -1105,7 +1105,7 @@ function field_attach_query($field_id, $conditions, $options = array()) {
 }
 
 /**
- * Retrieve object revisions matching a given set of conditions.
+ * Retrieve entity revisions matching a given set of conditions.
  *
  * See field_attach_query() for more informations.
  *
@@ -1128,13 +1128,13 @@ function field_attach_query_revisions($field_id, $conditions, $options = array()
  *
  * This function must be called before field_attach_view(). It lets field
  * types and formatters load additional data needed for display, and
- * therefore accepts an array of objects to allow query optimisation when
- * displaying lists of objects.
+ * therefore accepts an array of entities to allow query optimisation when
+ * displaying lists of entities.
  *
  * @param $entity_type
  *   The type of $entities; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of objects, keyed by object id.
+ *   An array of entities, keyed by entity id.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  */
@@ -1162,12 +1162,12 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode = 'full')
 }
 
 /**
- * Returns a renderable array for the fields on an object.
+ * Returns a renderable array for the fields on an entity.
  *
  * Each field is displayed according to the display options specified in the
  * $instance definition for the given $view_mode.
  *
- * The object must have run through field_attach_prepare_view() beforehands.
+ * The entity must have run through field_attach_prepare_view() beforehands.
  * @see field_attach_prepare_view()
  *
  * Sample structure:
@@ -1177,8 +1177,8 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode = 'full')
  *     '#theme' => 'field',
  *     '#title' => the label of the field instance,
  *     '#label_display' => the label display mode,
- *     '#object' => the fieldable object being displayed,
- *     '#object_type' => the type of the object being displayed,
+ *     '#object' => the fieldable entity being displayed,
+ *     '#object_type' => the type of the entity being displayed,
  *     '#language' => the language of the field values being displayed,
  *     '#view_mode' => the view mode,
  *     '#field_name' => the name of the field,
@@ -1194,7 +1194,7 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode = 'full')
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object with fields to render.
+ *   The entity with fields to render.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  * @param $langcode
@@ -1228,7 +1228,7 @@ function field_attach_view($entity_type, $entity, $view_mode = 'full', $langcode
   drupal_alter('field_attach_view', $output, $context);
 
   // Reset the _field_view_prepared flag set in field_attach_prepare_view(),
-  // in case the same object is displayed with different settings later in
+  // in case the same entity is displayed with different settings later in
   // the request.
   unset($entity->_field_view_prepared);
 
@@ -1246,7 +1246,7 @@ function field_attach_view($entity_type, $entity, $view_mode = 'full', $langcode
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The object with fields to render.
+ *   The entity with fields to render.
  * @param $element
  *   The structured array containing the values ready for rendering.
  * @param $variables
@@ -1300,7 +1300,7 @@ function field_attach_prepare_translation($node) {
  * others might.
  *
  * @param $entity_type
- *   The object type to which the bundle is bound.
+ *   The entity type to which the bundle is bound.
  * @param $bundle
  *   The name of the newly created bundle.
  */
@@ -1316,7 +1316,7 @@ function field_attach_create_bundle($entity_type, $bundle) {
  * Notify field.module that a bundle was renamed.
  *
  * @param $entity_type
- *   The object type to which the bundle is bound.
+ *   The entity type to which the bundle is bound.
  * @param $bundle_old
  *   The previous name of the bundle.
  * @param $bundle_new
@@ -1347,7 +1347,7 @@ function field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
  * simple DELETE query).
  *
  * @param $entity_type
- *   The object type to which the bundle is bound.
+ *   The entity type to which the bundle is bound.
  * @param $bundle
  *   The bundle to delete.
  */

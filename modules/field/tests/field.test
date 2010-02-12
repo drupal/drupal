@@ -482,7 +482,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     foreach (array_keys($rev) as $vid) {
       $read = field_test_create_stub_entity(0, $vid, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $read));
-      $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test object revision $vid has {$this->field['cardinality']} values.");
+      $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test entity revision $vid has {$this->field['cardinality']} values.");
     }
 
     // Delete revision 1, confirm the other two still load.
@@ -490,24 +490,24 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     foreach (array(0, 2) as $vid) {
       $read = field_test_create_stub_entity(0, $vid, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $read));
-      $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test object revision $vid has {$this->field['cardinality']} values.");
+      $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test entity revision $vid has {$this->field['cardinality']} values.");
     }
 
     // Confirm the current revision still loads
     $read = field_test_create_stub_entity(0, 2, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $read));
-    $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test object current revision has {$this->field['cardinality']} values.");
+    $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test entity current revision has {$this->field['cardinality']} values.");
 
     // Delete all field data, confirm nothing loads
     field_attach_delete($entity_type, $rev[2]);
     foreach (array(0, 1, 2) as $vid) {
       $read = field_test_create_stub_entity(0, $vid, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $read));
-      $this->assertIdentical($read->{$this->field_name}, array(), "The test object revision $vid is deleted.");
+      $this->assertIdentical($read->{$this->field_name}, array(), "The test entity revision $vid is deleted.");
     }
     $read = field_test_create_stub_entity(0, 2, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $read));
-    $this->assertIdentical($read->{$this->field_name}, array(), t('The test object current revision is deleted.'));
+    $this->assertIdentical($read->{$this->field_name}, array(), t('The test entity current revision is deleted.'));
   }
 
   /**
@@ -523,7 +523,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     $this->instance['bundle'] = $new_bundle;
     field_create_instance($this->instance);
 
-    // Save an object with data in the field.
+    // Save an entity with data in the field.
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     $langcode = LANGUAGE_NONE;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
@@ -582,7 +582,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
           'size' => mt_rand(0, 255))));
     field_create_instance($instance);
 
-    // Save an object with data for both fields
+    // Save an entity with data for both fields
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     $langcode = LANGUAGE_NONE;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
@@ -634,13 +634,13 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
 
     // Unconditional count query returns 0.
     $count = field_attach_query($this->field_id, array(), array('count' => TRUE));
-    $this->assertEqual($count, 0, t('With no objects, count query returns 0.'));
+    $this->assertEqual($count, 0, t('With no entities, count query returns 0.'));
 
-    // Create two test objects, using two different types and bundles.
+    // Create two test entities, using two different types and bundles.
     $entity_types = array(1 => 'test_entity', 2 => 'test_cacheable_entity');
     $entities = array(1 => field_test_create_stub_entity(1, 1, 'test_bundle'), 2 => field_test_create_stub_entity(2, 2, 'test_bundle_1'));
 
-    // Create first test object with random (distinct) values.
+    // Create first test entity with random (distinct) values.
     $values = array();
     for ($delta = 0; $delta < $cardinality; $delta++) {
       do {
@@ -653,59 +653,59 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
 
     // Unconditional count query returns 1.
     $count = field_attach_query($this->field_id, array(), array('count' => TRUE));
-    $this->assertEqual($count, 1, t('With one object, count query returns @count.', array('@count' => $count)));
+    $this->assertEqual($count, 1, t('With one entity, count query returns @count.', array('@count' => $count)));
 
-    // Create second test object, sharing a value with the first one.
+    // Create second test entity, sharing a value with the first one.
     $common_value = $values[$cardinality - 1];
     $entities[2]->{$this->field_name} = array($langcode => array(array('value' => $common_value)));
     field_attach_insert($entity_types[2], $entities[2]);
 
-    // Query on the object's values.
+    // Query on the entity's values.
     for ($delta = 0; $delta < $cardinality; $delta++) {
       $conditions = array(array('value', $values[$delta]));
       $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-      $this->assertTrue(isset($result[$entity_types[1]][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
+      $this->assertTrue(isset($result[$entity_types[1]][1]), t('Query on value %delta returns the entity', array('%delta' => $delta)));
 
       $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
-      $this->assertEqual($count, ($values[$delta] == $common_value) ? 2 : 1, t('Count query on value %delta counts %count objects', array('%delta' => $delta, '%count' => $count)));
+      $this->assertEqual($count, ($values[$delta] == $common_value) ? 2 : 1, t('Count query on value %delta counts %count entities', array('%delta' => $delta, '%count' => $count)));
     }
 
-    // Query on a value that is not in the object.
+    // Query on a value that is not in the entity.
     do {
       $different_value = mt_rand(1, 127);
     } while (in_array($different_value, $values));
     $conditions = array(array('value', $different_value));
     $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertFalse(isset($result[$entity_types[1]][1]), t("Query on a value that is not in the object doesn't return the object"));
+    $this->assertFalse(isset($result[$entity_types[1]][1]), t("Query on a value that is not in the entity doesn't return the entity"));
     $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
-    $this->assertEqual($count, 0, t("Count query on a value that is not in the object doesn't count the object"));
+    $this->assertEqual($count, 0, t("Count query on a value that is not in the entity doesn't count the entity"));
 
-    // Query on the value shared by both objects, and discriminate using
+    // Query on the value shared by both entities, and discriminate using
     // additional conditions.
 
     $conditions = array(array('value', $common_value));
     $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertTrue(isset($result[$entity_types[1]][1]) && isset($result[$entity_types[2]][2]), t('Query on a value common to both objects returns both objects'));
+    $this->assertTrue(isset($result[$entity_types[1]][1]) && isset($result[$entity_types[2]][2]), t('Query on a value common to both entities returns both entities'));
     $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
-    $this->assertEqual($count, 2, t('Count query on a value common to both objects counts both objects'));
+    $this->assertEqual($count, 2, t('Count query on a value common to both entities counts both entities'));
 
     $conditions = array(array('type', $entity_types[1]), array('value', $common_value));
     $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'type' condition only returns the relevant object"));
+    $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both entities and a 'type' condition only returns the relevant entity"));
     $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
-    $this->assertEqual($count, 1, t("Count query on a value common to both objects and a 'type' condition only returns the relevant object"));
+    $this->assertEqual($count, 1, t("Count query on a value common to both entities and a 'type' condition only returns the relevant entity"));
 
     $conditions = array(array('bundle', $entities[1]->fttype), array('value', $common_value));
     $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'bundle' condition only returns the relevant object"));
+    $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both entities and a 'bundle' condition only returns the relevant entity"));
     $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
-    $this->assertEqual($count, 1, t("Count query on a value common to both objects and a 'bundle' condition only counts the relevant object"));
+    $this->assertEqual($count, 1, t("Count query on a value common to both entities and a 'bundle' condition only counts the relevant entity"));
 
     $conditions = array(array('entity_id', $entities[1]->ftid), array('value', $common_value));
     $result = field_attach_query($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and an 'entity_id' condition only returns the relevant object"));
+    $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both entities and an 'entity_id' condition only returns the relevant entity"));
     $count = field_attach_query($this->field_id, $conditions, array('count' => TRUE));
-    $this->assertEqual($count, 1, t("Count query on a value common to both objects and an 'entity_id' condition only counts the relevant object"));
+    $this->assertEqual($count, 1, t("Count query on a value common to both entities and an 'entity_id' condition only counts the relevant entity"));
 
     // Test result format.
     $conditions = array(array('value', $values[0]));
@@ -725,7 +725,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     $this->instance2['bundle'] = 'offset_bundle';
     field_create_instance($this->instance2);
 
-    // Create 20 test objects, using the new bundle, but with
+    // Create 20 test entities, using the new bundle, but with
     // non-sequential ids so we can tell we are getting the right ones
     // back. We do not need unique values since field_attach_query()
     // won't return them anyway.
@@ -764,7 +764,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
   function testFieldAttachQueryRevisions() {
     $cardinality = $this->field['cardinality'];
 
-    // Create first object revision with random (distinct) values.
+    // Create first entity revision with random (distinct) values.
     $entity_type = 'test_entity';
     $entities = array(1 => field_test_create_stub_entity(1, 1), 2 => field_test_create_stub_entity(1, 2));
     $langcode = LANGUAGE_NONE;
@@ -778,36 +778,36 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     }
     field_attach_insert($entity_type, $entities[1]);
 
-    // Create second object revision, sharing a value with the first one.
+    // Create second entity revision, sharing a value with the first one.
     $common_value = $values[$cardinality - 1];
     $entities[2]->{$this->field_name}[$langcode][0] = array('value' => $common_value);
     field_attach_update($entity_type, $entities[2]);
 
-    // Query on the object's values.
+    // Query on the entity values.
     for ($delta = 0; $delta < $cardinality; $delta++) {
       $conditions = array(array('value', $values[$delta]));
       $result = field_attach_query_revisions($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-      $this->assertTrue(isset($result[$entity_type][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
+      $this->assertTrue(isset($result[$entity_type][1]), t('Query on value %delta returns the entity', array('%delta' => $delta)));
     }
 
-    // Query on a value that is not in the object.
+    // Query on a value that is not in the entity.
     do {
       $different_value = mt_rand(1, 127);
     } while (in_array($different_value, $values));
     $conditions = array(array('value', $different_value));
     $result = field_attach_query_revisions($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertFalse(isset($result[$entity_type][1]), t("Query on a value that is not in the object doesn't return the object"));
+    $this->assertFalse(isset($result[$entity_type][1]), t("Query on a value that is not in the entity doesn't return the entity"));
 
-    // Query on the value shared by both objects, and discriminate using
+    // Query on the value shared by both entities, and discriminate using
     // additional conditions.
 
     $conditions = array(array('value', $common_value));
     $result = field_attach_query_revisions($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertTrue(isset($result[$entity_type][1]) && isset($result[$entity_type][2]), t('Query on a value common to both objects returns both objects'));
+    $this->assertTrue(isset($result[$entity_type][1]) && isset($result[$entity_type][2]), t('Query on a value common to both entities returns both entities'));
 
     $conditions = array(array('revision_id', $entities[1]->ftvid), array('value', $common_value));
     $result = field_attach_query_revisions($this->field_id, $conditions, array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertTrue(isset($result[$entity_type][1]) && !isset($result[$entity_type][2]), t("Query on a value common to both objects and a 'revision_id' condition only returns the relevant object"));
+    $this->assertTrue(isset($result[$entity_type][1]) && !isset($result[$entity_type][2]), t("Query on a value common to both entities and a 'revision_id' condition only returns the relevant entity"));
 
     // Test FIELD_QUERY_RETURN_IDS result format.
     $conditions = array(array('value', $values[0]));
@@ -1351,10 +1351,10 @@ class FieldInfoTestCase extends FieldTestCase {
   }
 
   /**
-   * Test that instances on disabled object types are filtered out.
+   * Test that instances on disabled entity types are filtered out.
    */
-  function testInstanceDisabledObjectType() {
-    // For this test the field type and the object type must be exposed by
+  function testInstanceDisabledEntityType() {
+    // For this test the field type and the entity type must be exposed by
     // different modules.
     $field_definition = array(
       'field_name' => 'field',
@@ -1370,7 +1370,7 @@ class FieldInfoTestCase extends FieldTestCase {
 
     // Disable coment module. This clears field_info cache.
     module_disable(array('comment'));
-    $this->assertNull(field_info_instance('comment', 'field', 'comment_node_article'), t('No instances are returned on disabled object types.'));
+    $this->assertNull(field_info_instance('comment', 'field', 'comment_node_article'), t('No instances are returned on disabled entity types.'));
   }
 
   /**
@@ -1979,18 +1979,18 @@ class FieldCrudTestCase extends FieldTestCase {
       $this->pass(t('Cannot create a field with a name longer than 32 characters.'));
     }
 
-    // Check that field name can not be an object key.
-    // "ftvid" is known as an object key from the "test_entity" type.
+    // Check that field name can not be an entity key.
+    // "ftvid" is known as an entity key from the "test_entity" type.
     try {
       $field_definition = array(
         'type' => 'test_field',
         'field_name' => 'ftvid',
       );
       $field = field_create_field($field_definition);
-      $this->fail(t('Cannot create a field bearing the name of an object key.'));
+      $this->fail(t('Cannot create a field bearing the name of an entity key.'));
     }
     catch (FieldException $e) {
-      $this->pass(t('Cannot create a field bearing the name of an object key.'));
+      $this->pass(t('Cannot create a field bearing the name of an entity key.'));
     }
   }
 
@@ -2142,7 +2142,7 @@ class FieldCrudTestCase extends FieldTestCase {
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $this->assertTrue(!empty($instance) && empty($instance['deleted']), t('A new instance for a previously used field name is created.'));
 
-    // Save an object with data for the field
+    // Save an entity with data for the field
     $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
     $langcode = LANGUAGE_NONE;
     $values[0]['value'] = mt_rand(1, 127);
@@ -2388,29 +2388,29 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     );
     field_create_field($field_restricted);
 
-    // Check that an instance can be added to an object type allowed
+    // Check that an instance can be added to an entity type allowed
     // by the field.
     try {
       $instance = $this->instance_definition;
       $instance['field_name'] = $field_restricted['field_name'];
       $instance['object_type'] = 'test_cacheable_entity';
       field_create_instance($instance);
-      $this->pass(t('Can create an instance on a object type allowed by the field.'));
+      $this->pass(t('Can create an instance on an entity type allowed by the field.'));
     }
     catch (FieldException $e) {
-      $this->fail(t('Can create an instance on a object type allowed by the field.'));
+      $this->fail(t('Can create an instance on an entity type allowed by the field.'));
     }
 
-    // Check that an instance cannot be added to an object type
+    // Check that an instance cannot be added to an entity type
     // forbidden by the field.
     try {
       $instance = $this->instance_definition;
       $instance['field_name'] = $field_restricted['field_name'];
       field_create_instance($instance);
-      $this->fail(t('Cannot create an instance on a object type forbidden by the field.'));
+      $this->fail(t('Cannot create an instance on an entity type forbidden by the field.'));
     }
     catch (FieldException $e) {
-      $this->pass(t('Cannot create an instance on a object type forbidden by the field.'));
+      $this->pass(t('Cannot create an instance on an entity type forbidden by the field.'));
     }
 
     // TODO: test other failures.
@@ -2713,9 +2713,9 @@ class FieldTranslationsTestCase extends FieldTestCase {
         $hash = md5(serialize(array($entity_type, $entities[$id], $this->field_name, $langcode, $values[$id][$langcode])));
         // Check whether the parameters passed to _field_invoke() were correctly
         // forwarded to the callback function.
-        $this->assertEqual($hash, $result, t('The result for object %id/%language is correctly stored.', array('%id' => $id, '%language' => $langcode)));
+        $this->assertEqual($hash, $result, t('The result for entity %id/%language is correctly stored.', array('%id' => $id, '%language' => $langcode)));
       }
-      $this->assertEqual(count($results), count($available_languages), t('No unavailable language has been processed for object %id.', array('%id' => $id)));
+      $this->assertEqual(count($results), count($available_languages), t('No unavailable language has been processed for entity %id.', array('%id' => $id)));
     }
   }
 
@@ -2725,8 +2725,8 @@ class FieldTranslationsTestCase extends FieldTestCase {
   function testTranslatableFieldSaveLoad() {
     // Enable field translations for nodes.
     field_test_entity_info_translatable('node', TRUE);
-    $obj_info = entity_get_info('node');
-    $this->assertTrue(count($obj_info['translation']), t('Nodes are translatable.'));
+    $entity_info = entity_get_info('node');
+    $this->assertTrue(count($entity_info['translation']), t('Nodes are translatable.'));
 
     // Prepare the field translations.
     field_test_entity_info_translatable('test_entity', TRUE);
@@ -2774,27 +2774,27 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
   /**
    * Convenience function for Field API tests.
    *
-   * Given an array of potentially fully-populated objects and an
-   * optional field name, generate an array of stub objects of the
+   * Given an array of potentially fully-populated entities and an
+   * optional field name, generate an array of stub entities of the
    * same fieldable type which contains the data for the field name
    * (if given).
    *
    * @param $entity_type
    *   The entity type of $entities.
    * @param $entities
-   *   An array of objects of type $entity_type.
+   *   An array of entities of type $entity_type.
    * @param $field_name
    *   Optional; a field name whose data should be copied from
-   *   $entities into the returned stub objects.
+   *   $entities into the returned stub entities.
    * @return
-   *   An array of stub objects corresponding to $entities.
+   *   An array of stub entities corresponding to $entities.
    */
-  function _generateStubObjects($entity_type, $entities, $field_name = NULL) {
+  function _generateStubEntities($entity_type, $entities, $field_name = NULL) {
     $stubs = array();
-    foreach ($entities as $obj) {
-      $stub = entity_create_stub_entity($entity_type, entity_extract_ids($entity_type, $obj));
+    foreach ($entities as $entity) {
+      $stub = entity_create_stub_entity($entity_type, entity_extract_ids($entity_type, $entity));
       if (isset($field_name)) {
-        $stub->{$field_name} = $obj->{$field_name};
+        $stub->{$field_name} = $entity->{$field_name};
       }
       $stubs[] = $stub;
     }
@@ -2821,7 +2821,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $this->fields[] = field_create_field($field);
 
     // For each bundle, create an instance of each field, and 10
-    // objects with values for each field.
+    // entities with values for each field.
     $id = 0;
     $this->entity_type = 'test_entity';
     foreach ($this->bundles as $bundle) {
@@ -2862,9 +2862,9 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $bundle = reset($this->bundles);
     $field = reset($this->fields);
 
-    // There are 10 objects of this bundle.
+    // There are 10 entities of this bundle.
     $found = field_attach_query($field['id'], array(array('bundle', $bundle)), array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertEqual(count($found['test_entity']), 10, 'Correct number of objects found before deleting');
+    $this->assertEqual(count($found['test_entity']), 10, 'Correct number of entities found before deleting');
 
     // Delete the instance.
     $instance = field_info_instance($this->entity_type, $field['field_name'], $bundle);
@@ -2875,17 +2875,17 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $this->assertEqual(count($instances), 1, 'There is one deleted instance');
     $this->assertEqual($instances[0]['bundle'], $bundle, 'The deleted instance is for the correct bundle');
 
-    // There are 0 objects of this bundle with non-deleted data.
+    // There are 0 entities of this bundle with non-deleted data.
     $found = field_attach_query($field['id'], array(array('bundle', $bundle)), array('limit' => FIELD_QUERY_NO_LIMIT));
-    $this->assertTrue(!isset($found['test_entity']), 'No objects found after deleting');
+    $this->assertTrue(!isset($found['test_entity']), 'No entities found after deleting');
 
-    // There are 10 objects of this bundle when deleted fields are allowed, and
+    // There are 10 entities of this bundle when deleted fields are allowed, and
     // their values are correct.
     $found = field_attach_query($field['id'], array(array('bundle', $bundle), array('deleted', 1)), array('limit' => FIELD_QUERY_NO_LIMIT));
     field_attach_load($this->entity_type, $found[$this->entity_type], FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
-    $this->assertEqual(count($found['test_entity']), 10, 'Correct number of objects found after deleting');
-    foreach ($found['test_entity'] as $id => $obj) {
-      $this->assertEqual($this->entities[$id]->{$field['field_name']}, $obj->{$field['field_name']}, "Object $id with deleted data loaded correctly");
+    $this->assertEqual(count($found['test_entity']), 10, 'Correct number of entities found after deleting');
+    foreach ($found['test_entity'] as $id => $entity) {
+      $this->assertEqual($this->entities[$id]->{$field['field_name']}, $entity->{$field['field_name']}, "Entity $id with deleted data loaded correctly");
     }
   }
 
@@ -2909,27 +2909,27 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
 
     $batch_size = 2;
     for ($count = 8; $count >= 0; $count -= 2) {
-      // Purge two objects.
+      // Purge two entities.
       field_purge_batch($batch_size);
 
-      // There are $count deleted objects left.
+      // There are $count deleted entities left.
       $found = field_attach_query($field['id'], array(array('bundle', $bundle), array('deleted', 1)), array('limit' => FIELD_QUERY_NO_LIMIT));
-      $this->assertEqual($count ? count($found['test_entity']) : count($found), $count, 'Correct number of objects found after purging 2');
+      $this->assertEqual($count ? count($found['test_entity']) : count($found), $count, 'Correct number of entities found after purging 2');
     }
 
-    // hook_field_delete() was called on a pseudo-object for each object. Each
-    // pseudo object has a $field property that matches the original object,
+    // hook_field_delete() was called on a pseudo-entity for each entity. Each
+    // pseudo entity has a $field property that matches the original entity,
     // but no others.
     $mem = field_test_memorize();
-    $this->assertEqual(count($mem['field_test_field_delete']), 10, 'hook_field_delete was called for the right number of objects');
-    $stubs = $this->_generateStubObjects($this->entity_type, $this->entities, $field['field_name']);
+    $this->assertEqual(count($mem['field_test_field_delete']), 10, 'hook_field_delete was called for the right number of entities');
+    $stubs = $this->_generateStubEntities($this->entity_type, $this->entities, $field['field_name']);
     $count = count($stubs);
     foreach ($mem['field_test_field_delete'] as $args) {
-      $obj = $args[1];
-      $this->assertEqual($stubs[$obj->ftid], $obj, 'hook_field_delete() called with the correct stub');
-      unset($stubs[$obj->ftid]);
+      $entity = $args[1];
+      $this->assertEqual($stubs[$entity->ftid], $entity, 'hook_field_delete() called with the correct stub');
+      unset($stubs[$entity->ftid]);
     }
-    $this->assertEqual(count($stubs), $count-10, 'hook_field_delete was called with each object once');
+    $this->assertEqual(count($stubs), $count-10, 'hook_field_delete was called with each entity once');
 
     // The instance still exists, deleted.
     $instances = field_read_instances(array('field_id' => $field['id'], 'deleted' => 1), array('include_deleted' => 1, 'include_inactive' => 1));

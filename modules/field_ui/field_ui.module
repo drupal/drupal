@@ -35,7 +35,7 @@ function field_ui_help($path, $arg) {
 function field_ui_menu() {
   $items['admin/reports/fields'] = array(
     'title' => 'Field list',
-    'description' => 'Overview of fields on all object types.',
+    'description' => 'Overview of fields on all entity types.',
     'page callback' => 'field_ui_fields_list',
     'access arguments' => array('administer content types'),
     'type' => MENU_NORMAL_ITEM,

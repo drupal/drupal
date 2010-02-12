@@ -1,6 +1,6 @@
 ; $Id$
 name = Field
-description = Field API to add fields to objects like nodes and users.
+description = Field API to add fields to entities like nodes and users.
 package = Core - fields
 version = VERSION
 core = 7.x

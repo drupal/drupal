@@ -13,7 +13,7 @@
  *
  * The Field API defines two primary data structures, Field and
  * Instance, and the concept of a Bundle. A Field defines a
- * particular type of data that can be attached to objects. A Field
+ * particular type of data that can be attached to entities. A Field
  * Instance is a Field attached to a single Bundle. A Bundle is a set
  * of fields that are treated as a group by the Field Attach API and
  * is related to a single fieldable entity type.
@@ -31,8 +31,8 @@
  * field_attach_load() then loads the 'subtitle' and 'photo' fields
  * because they are both attached to the 'node' bundle 'article'.
  *
- * Field objects are (currently) represented as an array of key/value
- * pairs. The object properties are:
+ * Field definitions are (currently) represented as an array of key/value
+ * pairs. The array properties are:
  *
  * @param array $field:
  * - id (integer, read-only)
@@ -40,7 +40,7 @@
  *     by field_create_field().
  * - field_name (string)
  *     The name of the field. Each field name is unique within Field API.
- *     When a field is attached to an object, the field's data is stored
+ *     When a field is attached to an entity, the field's data is stored
  *     in $entity->$field_name.
  * - type (string)
  *     The type of the field, such as 'text' or 'image'. Field types
@@ -96,8 +96,8 @@
  *         A sub-array of key/value pairs of settings. Each storage backend
  *         defines and documents its own settings.
  *
- * Field Instance objects are (currently) represented as an array of
- * key/value pairs. The object properties are:
+ * Field Instance definitions are (currently) represented as an array of
+ * key/value pairs. The array properties are:
  *
  * @param array $instance:
  * - id (integer, read-only)
@@ -109,7 +109,7 @@
  * - field_name (string)
  *     The name of the field attached to the bundle by this instance.
  * - object_type (string)
- *     The name of the object type the instance is attached to.
+ *     The name of the entity type the instance is attached to.
  * - bundle (string)
  *     The name of the bundle that the field is attached to.
  * - label (string)
@@ -147,7 +147,7 @@
  *         Each field widget type module defines and documents its own
  *         widget settings.
  *     - weight (float)
- *         The weight of the widget relative to the other elements in object
+ *         The weight of the widget relative to the other elements in entity
  *         edit forms.
  *     - module (string, read-only)
  *         The name of the module that implements the widget type.
@@ -166,7 +166,7 @@
  *             A sub-array of key/value pairs of display options specific to
  *             the formatter.
  *        - weight (float)
- *            The weight of the field relative to the other object components
+ *            The weight of the field relative to the other entity components
  *            displayed in this view mode.
  *         - module (string, read-only)
  *             The name of the module which implements the display formatter.
@@ -259,7 +259,7 @@ function field_create_field($field) {
   }
 
   // Disallow reserved field names. This can't prevent all field name
-  // collisions with existing object properties, but some is better
+  // collisions with existing entity properties, but some is better
   // than none.
   foreach (entity_get_info() as $type => $info) {
     if (in_array($field['field_name'], $info['object keys'])) {
@@ -618,7 +618,7 @@ function field_create_instance($instance) {
   if (empty($instance['bundle'])) {
     throw new FieldException(t('Attempt to create an instance of field @field_name without a bundle.', array('@field_name' => $instance['field_name'])));
   }
-  // Check that the field can be attached to this object type.
+  // Check that the field can be attached to this entity type.
   if (!empty($field['object_types']) && !in_array($instance['object_type'], $field['object_types'])) {
     throw new FieldException(t('Attempt to create an instance of field @field_name on forbidden object type @obj_type.', array('@field_name' => $instance['field_name'], '@obj_type' => $instance['object_type'])));
   }
@@ -632,7 +632,7 @@ function field_create_instance($instance) {
 
   // TODO: Check that the widget type is known and can handle the field type ?
   // TODO: Check that the formatters are known and can handle the field type ?
-  // TODO: Check that the display view modes are known for the object type ?
+  // TODO: Check that the display view modes are known for the entity type ?
   // Those checks should probably happen in _field_write_instance() ?
   // Problem : this would mean that a UI module cannot update an instance with a disabled formatter.
 
@@ -787,7 +787,7 @@ function _field_write_instance($instance, $update = FALSE) {
  * field_read_instances() instead for this purpose.
  *
  * @param $entity_type
- *   The type of object to which the field is bound.
+ *   The type of entity to which the field is bound.
  * @param $field_name
  *   The field name to read.
  * @param $bundle
@@ -848,7 +848,7 @@ function field_read_instances($params = array(), $include_additional = array()) 
   $results = $query->execute();
 
   foreach ($results as $record) {
-    // Filter out instances on unknown object types (for instance because the
+    // Filter out instances on unknown entity types (for instance because the
     // module exposing them was disabled).
     $entity_info = entity_get_info($record['object_type']);
     if ($include_inactive || $entity_info) {
@@ -902,29 +902,29 @@ function field_delete_instance($instance) {
  * Clean up after Field API bulk deletion operations.
  *
  * Field API provides functions for deleting data attached to individual
- * objects as well as deleting entire fields or field instances in a single
+ * entities as well as deleting entire fields or field instances in a single
  * operation.
  *
- * Deleting field data items for an object with field_attach_delete() involves
+ * Deleting field data items for an entity with field_attach_delete() involves
  * three separate operations:
  * - Invoking the Field Type API hook_field_delete() for each field on the
- * object. The hook for each field type receives the object and the specific
+ * entity. The hook for each field type receives the entity and the specific
  * field being deleted. A file field module might use this hook to delete
  * uploaded files from the filesystem.
  * - Invoking the Field Storage API hook_field_storage_delete() to remove
  * data from the primary field storage. The hook implementation receives the
- * object being deleted and deletes data for all of the object's bundle's
+ * entity being deleted and deletes data for all of the entity's bundle's
  * fields.
  * - Invoking the global Field Attach API hook_field_attach_delete() for all
- * modules that implement it. Each hook implementation receives the object
- * being deleted and can operate on whichever subset of the object's bundle's
+ * modules that implement it. Each hook implementation receives the entity
+ * being deleted and can operate on whichever subset of the entity's bundle's
  * fields it chooses to.
  *
  * These hooks are invoked immediately when field_attach_delete() is
  * called. Similar operations are performed for field_attach_delete_revision().
  *
  * When a field, bundle, or field instance is deleted, it is not practical to
- * invoke these hooks immediately on every affected object in a single page
+ * invoke these hooks immediately on every affected entity in a single page
  * request; there could be thousands or millions of them. Instead, the
  * appropriate field data items, instances, and/or fields are marked as deleted
  * so that subsequent load or query operations will not return them. Later, a
@@ -933,24 +933,24 @@ function field_delete_instance($instance) {
  * deleted field and instance records.
  *
  * Purging field data is made somewhat tricky by the fact that, while
- * field_attach_delete() has a complete object to pass to the various deletion
+ * field_attach_delete() has a complete entity to pass to the various deletion
  * hooks, the Field API purge process only has the field data it has previously
- * stored. It cannot reconstruct complete original objects to pass to the
- * deletion hooks. It is even possible that the original object to which some
+ * stored. It cannot reconstruct complete original entities to pass to the
+ * deletion hooks. It is even possible that the original entity to which some
  * Field API data was attached has been itself deleted before the field purge
  * operation takes place.
  *
- * Field API resolves this problem by using "pseudo-objects" during purge
- * operations. A pseudo-object contains only the information from the original
- * object that Field API knows about: entity type, id, revision id, and
+ * Field API resolves this problem by using "pseudo-entities" during purge
+ * operations. A pseudo-entity contains only the information from the original
+ * entity that Field API knows about: entity type, id, revision id, and
  * bundle. It also contains the field data for whichever field instance is
  * currently being purged. For example, suppose that the node type 'story' used
  * to contain a field called 'subtitle' but the field was deleted. If node 37
- * was a story with a subtitle, the pseudo-object passed to the purge hooks
+ * was a story with a subtitle, the pseudo-entity passed to the purge hooks
  * would look something like this:
  *
  * @code
- *   $obj = stdClass Object(
+ *   $entity = stdClass Object(
  *     [nid] => 37,
  *     [vid] => 37,
  *     [type] => 'story',
@@ -967,7 +967,7 @@ function field_delete_instance($instance) {
  * Purges a batch of deleted Field API data, instances, or fields.
  *
  * This function will purge deleted field data on up to a specified maximum
- * number of objects and then return. If a deleted field instance with no
+ * number of entities and then return. If a deleted field instance with no
  * remaining data records is found, the instance itself will be purged.
  * If a deleted field with no remaining field instances is found, the field
  * itself will be purged.
@@ -983,7 +983,7 @@ function field_purge_batch($batch_size) {
   foreach ($instances as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
 
-    // Retrieve some pseudo-objects.
+    // Retrieve some pseudo-entities.
     $entity_types = field_attach_query($instance['field_id'], array(array('bundle', $instance['bundle']), array('deleted', 1)), array('limit' => $batch_size));
 
     if (count($entity_types) > 0) {
@@ -998,7 +998,7 @@ function field_purge_batch($batch_size) {
             return;
           }
 
-          // Purge the data for the object.
+          // Purge the data for the entity.
           field_purge_data($entity_type, $entity, $field, $instance);
         }
       }
@@ -1021,16 +1021,16 @@ function field_purge_batch($batch_size) {
 }
 
 /**
- * Purges the field data for a single field on a single pseudo-object.
+ * Purges the field data for a single field on a single pseudo-entity.
  *
  * This is basically the same as field_attach_delete() except it only applies
- * to a single field. The object itself is not being deleted, and it is quite
+ * to a single field. The entity itself is not being deleted, and it is quite
  * possible that other field data will remain attached to it.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The pseudo-object whose field data to delete.
+ *   The pseudo-entity whose field data to delete.
  * @param $field
  *   The (possibly deleted) field whose data is being purged.
  * @param $instance
