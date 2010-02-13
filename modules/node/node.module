@@ -2161,14 +2161,18 @@ function theme_node_recent_block($variables) {
   foreach ($variables['nodes'] as $node) {
     $row = array();
     $row[] = theme('node_recent_content', array('node' => $node));
-    $row[] = node_access('update', $node) ? l(t('edit'), 'node/' . $node->nid . '/edit', $l_options) : '';
-    $row[] = node_access('delete', $node) ? l(t('delete'), 'node/' . $node->nid . '/delete', $l_options) : '';
+    if (node_access('update', $node)) {
+      $row[] = l(t('edit'), 'node/' . $node->nid . '/edit', $l_options);
+    }
+    if (node_access('delete', $node)) {
+      $row[] = l(t('delete'), 'node/' . $node->nid . '/delete', $l_options);
+    }
     $rows[] = $row;
   }
 
   if ($rows) {
     $output = theme('table', array('rows' => $rows));
-    $output .= '<div class="list-all">' . l(t('Show all content'), 'admin/content') . '</div>';
+    $output .= '<div class="more-link">' . l(t('Show all content'), 'admin/content') . '</div>';
   }
 
   return $output;

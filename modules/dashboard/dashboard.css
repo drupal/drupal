@@ -153,8 +153,6 @@
 #dashboard #block-node-recent tr {
   border: none;
 }
-
-#dashboard .list-all {
-  text-align: right;
-  margin: 0 10px 0 0;
+#dashboard #block-node-recent .content {
+  padding: 0;
 }
