@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.40 2010/02/12 05:38:10 webchick Exp $
+// $Id: field_sql_storage.module,v 1.41 2010/02/13 20:56:16 dries Exp $
 
 /**
  * @file
@@ -127,7 +127,7 @@ function _field_sql_storage_schema($field) {
       ),
       'bundle' => array(
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
         'description' => 'The field instance bundle to which this row belongs, used when deleting a field instance',
