@@ -224,6 +224,7 @@ function search_menu() {
     'page arguments' => array('search_admin_settings'),
     'access arguments' => array('administer search'),
     'type' => MENU_NORMAL_ITEM,
+    'weight' => -5,
     'file' => 'search.admin.inc',
   );
   $items['admin/config/search/settings/reindex'] = array(

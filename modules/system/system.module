@@ -707,6 +707,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_file_system_settings'),
     'access arguments' => array('administer site configuration'),
+    'weight' => 10,
     'file' => 'system.admin.inc',
   );
     $items['admin/config/media/image-toolkit'] = array(
@@ -715,6 +716,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_image_toolkit_settings'),
     'access arguments' => array('administer site configuration'),
+    'weight' => 20,
     'file' => 'system.admin.inc',
   );
 
@@ -751,6 +753,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_maintenance_mode'),
     'access arguments' => array('administer site configuration'),
+    'weight' => 50,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/development/performance'] = array(
@@ -759,6 +762,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_performance_settings'),
     'access arguments' => array('administer site configuration'),
+    'weight' => -10,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/development/logging'] = array(
@@ -767,6 +771,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_logging_settings'),
     'access arguments' => array('administer site configuration'),
+    'weight' => 60,
     'file' => 'system.admin.inc',
   );
 
@@ -786,7 +791,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_regional_settings'),
     'access arguments' => array('administer site configuration'),
-    'weight' => -10,
+    'weight' => 50,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/regional/date-time'] = array(
@@ -795,7 +800,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_date_time_settings'),
     'access arguments' => array('administer site configuration'),
-    'weight' => -9,
+    'weight' => 60,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/regional/date-time/types'] = array(
