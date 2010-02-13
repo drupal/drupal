@@ -1043,33 +1043,29 @@ function field_attach_delete_revision($entity_type, $entity) {
  *   @endcode
  * @param $options
  *   An associative array of additional options:
- *   - limit: The number of results that is requested. This is only a
- *   hint to the storage engine(s); callers should be prepared to
- *   handle fewer or more results. Specify FIELD_QUERY_NO_LIMIT to retrieve
- *   all available entities. This option has a default value of 0 so
- *   callers must make an explicit choice to potentially retrieve an
- *   enormous result set.
- *   - cursor: A reference to an opaque cursor that allows a caller to
- *   iterate through multiple result sets. On the first call, pass 0;
- *   the correct value to pass on the next call will be written into
- *   the value on return. When there is no more query data available,
- *   the value will be filled in with FIELD_QUERY_COMPLETE. If cursor
- *   is passed as NULL, the first result set is returned and no next
- *   cursor is returned.
- *   - count: If TRUE, return a single count of all matching entities;
- *   limit and cursor are ignored.
- *   - age: Internal use only. Use field_attach_query_revisions()
- *   instead of passing FIELD_LOAD_REVISION.
+ *   - limit: The number of results that is requested. This is only a hint to
+ *     the storage engine(s); callers should be prepared to handle fewer or
+ *     more results. Specify FIELD_QUERY_NO_LIMIT to retrieve all available
+ *     entities. This option has a default value of 0 so callers must make an
+ *     explicit choice to potentially retrieve an enormous result set.
+ *   - cursor: A reference to an opaque cursor that allows a caller to iterate
+ *     through multiple result sets. On the first call, pass 0; the correct
+ *     value to pass on the next call will be written into the value on return.
+ *     When there is no more query data available, the value will be filled in
+ *     with FIELD_QUERY_COMPLETE. If cursor is passed as NULL, the first result
+ *     set is returned and no next cursor is returned.
+ *   - count: If TRUE, return a single count of all matching entities; limit and
+ *     cursor are ignored.
+ *   - age: Internal use only. Use field_attach_query_revisions() instead of
+ *     passing FIELD_LOAD_REVISION.
  *     - FIELD_LOAD_CURRENT (default): query the most recent revisions for all
- *     entities. The results will be keyed by entity type and entity id.
+ *       entities. The results will be keyed by entity type and entity id.
  *     - FIELD_LOAD_REVISION: query all revisions. The results will be keyed by
- *     entity type and entity revision id.
+ *       entity type and entity revision id.
  * @return
  *   An array keyed by entity type (e.g. 'node', 'user'...), then by entity id
- *   or revision id (depending of the value of the $age parameter).
- *   The values are pseudo-entities with the bundle, id, and revision
- *   id fields filled in.
- *
+ *   or revision id (depending of the value of the $age parameter). The values
+ *   are pseudo-entities with the bundle, id, and revision id fields filled in.
  *   Throws a FieldQueryException if the field's storage doesn't support the
  *   specified conditions.
  */
