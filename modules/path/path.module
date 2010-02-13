@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.182 2010/02/07 17:29:09 webchick Exp $
+// $Id: path.module,v 1.183 2010/02/13 21:41:58 dries Exp $
 
 /**
  * @file
@@ -58,6 +58,7 @@ function path_menu() {
     'description' => "Change your site's URL paths by aliasing them.",
     'page callback' => 'path_admin_overview',
     'access arguments' => array('administer url aliases'),
+    'weight' => -10,
     'file' => 'path.admin.inc',
   );
   $items['admin/config/search/path/edit/%path'] = array(

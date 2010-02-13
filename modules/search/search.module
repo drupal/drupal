@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.336 2010/01/30 07:59:25 dries Exp $
+// $Id: search.module,v 1.337 2010/02/13 21:41:58 dries Exp $
 
 /**
  * @file
@@ -224,6 +224,7 @@ function search_menu() {
     'page arguments' => array('search_admin_settings'),
     'access arguments' => array('administer search'),
     'type' => MENU_NORMAL_ITEM,
+    'weight' => -5,
     'file' => 'search.admin.inc',
   );
   $items['admin/config/search/settings/reindex'] = array(
