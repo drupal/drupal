@@ -23,8 +23,8 @@ Drupal.behaviors.menuLinkAutomaticTitle = {
     // Try to find menu settings widget elements as well as a 'title' field in
     // the form, but play nicely with user permissions and form alterations.
     var $checkbox = $('fieldset.menu-link-form #edit-menu-enabled', context);
-    var $link_title = $('#menu-wrapper #edit-menu-link-title', context);
-    var $title = $('#menu-wrapper', context).closest('form').find('#title-wrapper input.form-text');
+    var $link_title = $('#edit-menu-link-title', context);
+    var $title = $('#edit-title', context);
     // Bail out if we do not have all required fields.
     if (!($checkbox.length && $link_title.length && $title.length)) {
       return;
@@ -50,11 +50,13 @@ Drupal.behaviors.menuLinkAutomaticTitle = {
         $link_title.removeData('menuLinkAutomaticTitleOveridden');
       }
       $checkbox.closest('fieldset.vertical-tabs-pane').trigger('summaryUpdated');
+      $checkbox.trigger('formUpdated');
     });
     // Take over any title change.
     $title.keyup(function () {
       if (!$link_title.data('menuLinkAutomaticTitleOveridden') && $checkbox.attr('checked')) {
         $link_title.val($title.val());
+        $link_title.val($title.val()).trigger('formUpdated');
       }
     });
   }
