@@ -503,5 +503,289 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
     $this->assertEqual($effects[0]['name'], 'image_scale', t('The default effect still exists in the reverted style.'));
     $this->assertFalse(array_key_exists(1, $effects), t('The added effect has been removed in the reverted style.'));
   }
+}
 
+/**
+ * This class provides methods specifically for testing Image's field handling.
+ */
+class ImageFieldTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
+  function setUp() {
+    parent::setUp('image');
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Create a new image field.
+   *
+   * @param $name
+   *   The name of the new field (all lowercase), exclude the "field_" prefix.
+   * @param $type_name
+   *   The node type that this field will be added to.
+   * @param $field_settings
+   *   A list of field settings that will be added to the defaults.
+   * @param $instance_settings
+   *   A list of instance settings that will be added to the instance defaults.
+   * @param $widget_settings
+   *   A list of widget settings that will be added to the widget defaults.
+   */
+  function createImageField($name, $type_name, $field_settings = array(), $instance_settings = array(), $widget_settings = array()) {
+    $field = array(
+      'field_name' => $name,
+      'type' => 'image',
+      'settings' => array(),
+      'cardinality' => !empty($field_settings['cardinality']) ? $field_settings['cardinality'] : 1,
+    );
+    $field['settings'] = array_merge($field['settings'], $field_settings);
+    field_create_field($field);
+
+    $instance = array(
+      'field_name' => $field['field_name'],
+      'object_type' => 'node',
+      'label' => $name,
+      'bundle' => $type_name,
+      'required' => !empty($instance_settings['required']),
+      'settings' => array(),
+      'widget' => array(
+        'type' => 'image_image',
+        'settings' => array(),
+      ),
+    );
+    $instance['settings'] = array_merge($instance['settings'], $instance_settings);
+    $instance['widget']['settings'] = array_merge($instance['widget']['settings'], $widget_settings);
+    return field_create_instance($instance);
+  }
+
+  /**
+   * Upload an image to a node.
+   *
+   * @param $image
+   *   A file object representing the image to upload.
+   * @param $field_name
+   *   Name of the image field the image should be attached to.
+   * @param $type
+   *   The type of node to create.
+   */
+  function uploadNodeImage($image, $field_name, $type) {
+    $edit = array(
+      'title' => $this->randomName(),
+    );
+    $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_0]'] = realpath($image->uri);
+    $this->drupalPost('node/add/' . $type, $edit, t('Save'));
+
+    // Retrieve ID of the newly created node from the current URL.
+    $matches = array();
+    preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
+    return isset($matches[1]) ? $matches[1] : FALSE;
+  }
+}
+
+/**
+ * Test class to check that formatters and display settings are working.
+ */
+class ImageFieldDisplayTestCase extends ImageFieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Image field display tests',
+      'description' => 'Test the display of image fields.',
+      'group' => 'Image',
+    );
+  }
+
+  /**
+   * Test image formatters on node display.
+   */
+  function testImageFieldFormatters() {
+    $field_name = 'field_' . strtolower($this->randomName());
+    $this->createImageField($field_name, 'article');
+
+    // Create a new node with an image attached.
+    $test_image = current($this->drupalGetTestFiles('image'));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $node = node_load($nid, NULL, TRUE);
+
+    // Test that the default formatter is being used.
+    $image_uri = $node->{$field_name}[LANGUAGE_NONE][0]['uri'];
+    $image_info = array(
+      'path' => $image_uri,
+      'getsize' => TRUE,
+    );
+    $default_output = theme('image', $image_info);
+    $this->assertRaw($default_output, t('Default formatter displaying correctly on full node view.'));
+
+    // Test the image linked to file formatter.
+    $instance = field_info_instance('node', $field_name, 'article');
+    $instance['display']['full']['type'] = 'image_link_file';
+    field_update_instance($instance);
+    $default_output = l(theme('image', $image_info), file_create_url($image_uri), array('html' => TRUE));
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw($default_output, t('Image linked to file formatter displaying correctly on full node view.'));
+
+    // Test the image linked to content formatter.
+    $instance['display']['full']['type'] = 'image_link_content';
+    field_update_instance($instance);
+    $default_output = l(theme('image', $image_info), 'node/' . $nid, array('html' => TRUE, 'attributes' => array('class' => 'active')));
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw($default_output, t('Image linked to content formatter displaying correctly on full node view.'));
+
+    // Test the image style 'thumbnail' formatter.
+    $instance['display']['full']['type'] = 'image__thumbnail';
+    field_update_instance($instance);
+    // Ensure the derrivative image is generated so we do not have to deal with
+    // image style callback paths.
+    $this->drupalGet(image_style_url('thumbnail', $image_uri));
+    $image_info['path'] = image_style_url('thumbnail', $image_uri);
+    $image_info['getsize'] = FALSE;
+    $default_output = theme('image', $image_info);
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw($default_output, t('Image style thumbnail formatter displaying correctly on full node view.'));
+  }
+
+  /**
+   * Tests for image field settings.
+   */
+  function testImageFieldSettings() {
+    $field_name = 'field_' . strtolower($this->randomName());
+    $instance_settings = array(
+      'alt_field' => 1,
+      'file_extensions' => 'gif jpg jpeg',
+      'max_filesize' => '50 KB',
+      'max_resolution' => '100x100',
+      'min_resolution' => '10x10',
+      'title_field' => 1,
+    );
+    $widget_settings = array(
+      'preview_image_style' => 'medium',
+    );
+    $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
+    $instance = field_info_instance('node', $field_name, 'article');
+
+    $this->drupalGet('node/add/article');
+    $this->assertText(t('Files must be less than 50 KB.'), t('Image widget max file size is displayed on article form.'));
+    $this->assertText(t('Allowed file types: gif jpg jpeg.'), t('Image widget allowed file types displayed on article form.'));
+    $this->assertText(t('Images must be between 10x10 and 100x100 pixels.'), t('Image widget allowed resolution displayed on article form.'));
+
+    // We have to create the article first and then edit it because the alt
+    // and title fields do not display until the image has been attached.
+    $test_image = current($this->drupalGetTestFiles('image'));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->assertFieldByName($field_name . '[' . LANGUAGE_NONE . '][0][alt]', '', t('Alt field displayed on article form.'));
+    $this->assertFieldByName($field_name . '[' . LANGUAGE_NONE . '][0][title]', '', t('Title field displayed on article form.'));
+    // Verify that the attached image is being previewed using the 'medium'
+    // style.
+    $node = node_load($nid, NULL, TRUE);
+    $image_info = array(
+      'path' => image_style_url('medium', $node->{$field_name}[LANGUAGE_NONE][0]['uri']),
+      'getsize' => FALSE,
+    );
+    $default_output = theme('image', $image_info);
+    $this->assertRaw($default_output, t("Preview image is displayed using 'medium' style."));
+
+    // Add alt/title fields to the image and verify that they are displayed.
+    $image_info = array(
+      'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
+      'alt' => $this->randomName(),
+      'title' => $this->randomName(),
+      'getsize' => TRUE,
+    );
+    $edit = array(
+      $field_name . '[' . LANGUAGE_NONE . '][0][alt]' => $image_info['alt'],
+      $field_name . '[' . LANGUAGE_NONE . '][0][title]' => $image_info['title'],
+    );
+    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
+    $default_output = theme('image', $image_info);
+    $this->assertRaw($default_output, t('Image displayed using user supplied alt and title attributes.'));
+  }
+
+  /**
+   * Test use of a default image with an image field.
+   */
+  function testImageFieldDefaultImage() {
+    // Create a new image field.
+    $field_name = 'field_' . strtolower($this->randomName());
+    $this->createImageField($field_name, 'article');
+
+    // Create a new node, with no images and verify that no images are
+    // displayed.
+    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $this->drupalGet('node/' . $node->nid);
+    // Verify that no image is displayed on the page by checking for the class
+    // that would be used on the image field.
+    $this->assertNoPattern('<div class="(.*?)field-name-' . strtr($field_name, '_', '-') . '(.*?)">', t('No image displayed when no image is attached and no default image specified.'));
+
+    // Add a default image to the imagefield instance.
+    $images = $this->drupalGetTestFiles('image');
+    $edit = array(
+      'files[field_settings_default_image]' => realpath($images[0]->uri),
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/' . $field_name, $edit, t('Save settings'));
+    // Clear field info cache so the new default image is detected.
+    field_info_cache_clear();
+    $field = field_info_field($field_name);
+    $image = file_load($field['settings']['default_image']);
+    $default_output = theme('image', array('path' => $image->uri, 'getsize' => TRUE));
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw($default_output, t('Default image displayed when no user supplied image is present.'));
+
+    // Create a node with an image attached and ensure that the default image
+    // is not displayed.
+    $nid = $this->uploadNodeImage($images[1], $field_name, 'article');
+    $node = node_load($nid, NULL, TRUE);
+    $image_info = array(
+      'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
+      'getsize' => TRUE,
+    );
+    $image_output = theme('image', $image_info);
+    $this->drupalGet('node/' . $nid);
+    $this->assertNoRaw($default_output, t('Default image is not displayed when user supplied image is present.'));
+    $this->assertRaw($image_output, t('User supplied image is displayed.'));
+
+    // Remove default image from the field and make sure it is no longer used.
+    $edit = array(
+      'field[settings][default_image][fid]' => 0,
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/' . $field_name, $edit, t('Save settings'));
+    // Clear field info cache so the new default image is detected.
+    field_info_cache_clear();
+    $field = field_info_field($field_name);
+    $this->assertFalse($field['settings']['default_image'], t('Default image removed from field.'));    
+  }
+}
+
+/**
+ * Test class to check for various validations.
+ */
+class ImageFieldValidateTestCase extends ImageFieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Image field validation tests',
+      'description' => 'Tests validation functions such as min/max resolution.',
+      'group' => 'Image',
+    );
+  }
+
+  /**
+   * Test min/max resolution settings.
+   */
+  function testResolution() {
+    $field_name = 'field_' . strtolower($this->randomName());
+    $instance_settings = array(
+      'max_resolution' => '100x100',
+      'min_resolution' => '50x50',
+    );
+    $this->createImageField($field_name, 'article', array(), $instance_settings);
+
+    // Use image-test.png which has a resolution of 40x20.
+    $test_image = current($this->drupalGetTestFiles('image', 48006));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $this->assertText(t('The specified file image-test.png could not be uploaded. The image is too small; the minimum dimensions are 50x50 pixels.'), t('Node save failed when minimum image resolution was not met.'));
+
+    // Use image-1.png which has a resolution of 360x240.
+    $test_image = current($this->drupalGetTestFiles('image', 64027));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $this->assertText(t('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.'), t('Image exceeding max resolution was properly resized.'));
+  }
 }
