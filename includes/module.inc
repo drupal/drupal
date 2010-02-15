@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.180 2010/01/28 13:56:24 webchick Exp $
+// $Id: module.inc,v 1.181 2010/02/15 22:16:58 webchick Exp $
 
 /**
  * @file
@@ -338,6 +338,8 @@ function module_enable($module_list, $enable_dependencies = TRUE, $disable_modul
 
   $invoke_modules = array();
 
+  // Required for _drupal_install_module().
+  include_once DRUPAL_ROOT . '/includes/install.inc';
   // Try to install the enabled modules and collect which were installed.
   // $module_list is not changed and already installed modules are ignored.
   $modules_installed = array_filter($module_list, '_drupal_install_module');
