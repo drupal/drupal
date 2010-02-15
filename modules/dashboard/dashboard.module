@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.20 2010/02/15 16:00:00 dries Exp $
+// $Id: dashboard.module,v 1.21 2010/02/15 19:15:21 webchick Exp $
 
 /**
  * Implements hook_help().
@@ -213,7 +213,7 @@ function dashboard_admin($launch_customize = FALSE) {
   );
   $build = array(
     '#theme' => 'dashboard_admin',
-    '#message' => t('To customize the dashboard page, move blocks to the dashboard regions on the <a href="@blocks">Blocks administration page</a>, or enable JavaScript on this page to use the drag-and-drop interface.', array('!blocks' => url('admin/structure/block'))),
+    '#message' => t('To customize the dashboard page, move blocks to the dashboard regions on the <a href="@blocks">Blocks administration page</a>, or enable JavaScript on this page to use the drag-and-drop interface.', array('@blocks' => url('admin/structure/block'))),
     '#access' => user_access('administer blocks'),
     '#attached' => array(
       'js' => array(
