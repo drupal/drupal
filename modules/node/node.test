@@ -713,6 +713,12 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
   function setUp() {
     // Enable dummy module that implements hook_node_view.
     parent::setUp('node_test');
+
+    // Use bypass node access permission here, because the test class uses
+    // hook_grants_alter() to deny access to everyone on node_access
+    // queries.
+    $user = $this->drupalCreateUser(array('bypass node access', 'access content', 'create article content'));
+    $this->drupalLogin($user);
   }
 
   /**
@@ -747,6 +753,7 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
     // viewing node.
     $this->drupalGet("node/$node->nid");
     $this->assertNoText($rss_only_content, t('Node content designed for RSS doesn\'t appear when viewing node.'));
+
   }
 }
 
@@ -1436,5 +1443,134 @@ class NodeBuildContent extends DrupalWebTestCase {
 
     // If the property doesn't exist it means the node->content was rebuilt.
     $this->assertFalse(isset($content['test_content_property']), t('Node content was emptied prior to being built.'));
+  }
+}
+
+/**
+ * Tests node_query_node_access_alter().
+ */
+class NodeQueryAlter extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Node query alter',
+      'description' => 'Test that node access queries are properly altered by the node module.',
+      'group' => 'Node',
+    );
+  }
+
+  /**
+   * User with permission to view content.
+   */
+  protected $accessUser;
+
+  /**
+   * User without permission to view content.
+   */
+  protected $noAccessUser;
+
+  function setUp() {
+    parent::setUp('node_access_test');
+    node_access_rebuild();
+
+    // Create some content.
+    $this->drupalCreateNode();
+    $this->drupalCreateNode();
+    $this->drupalCreateNode();
+    $this->drupalCreateNode();
+
+    // Create user with simple node access permission.
+    $this->accessUser = $this->drupalCreateUser(array('access content', 'node test view'));
+    $this->noAccessUser = $this->drupalCreateUser(array('access content'));
+  }
+
+  /**
+   * Tests that node access permissions are followed.
+   */
+  function testNodeQueryAlterWithUI() {
+    // Verify that a user with access permission can see at least one node.
+
+    $this->drupalLogin($this->accessUser);
+    $this->drupalGet('node_access_test_page');
+    $this->assertText('Yes, 4 nodes', "4 nodes were found for access user");
+    $this->assertNoText('Exception', "No database exception");
+
+    // Verify that a user with no access permission cannot see nodes.
+
+    $this->drupalLogin($this->noAccessUser);
+    $this->drupalGet('node_access_test_page');
+    $this->assertText('No nodes', "No nodes were found for no access user");
+    $this->assertNoText('Exception', "No database exception");
+  }
+
+  /**
+   * Lower-level test of 'node_access' query alter, for user with access.
+   *
+   * Verifies that a non-standard table alias can be used, and that a
+   * user with node access can view the nodes.
+   */
+  function testNodeQueryAlterLowLevelWithAccess() {   
+    // User with access should be able to view 4 nodes.
+    try {
+      $query = db_select('node', 'mytab')
+        ->fields('mytab');
+      $query->addTag('node_access');
+      $query->addMetaData('op', 'view');
+      $query->addMetaData('account', $this->accessUser);
+
+      $result = $query->execute()->fetchAll();
+      $this->assertEqual(count($result), 4, t('User with access can see correct nodes'));
+    }
+    catch (Exception $e) {
+      $this->fail(t('Altered query is malformed'));
+    }
+  }
+
+  /**
+   * Lower-level test of 'node_access' query alter, for user without access.
+   *
+   * Verifies that a non-standard table alias can be used, and that a
+   * user without node access cannot view the nodes.
+   */
+  function testNodeQueryAlterLowLevelNoAccess() {
+    // User without access should be able to view 0 nodes.
+    try {
+      $query = db_select('node', 'mytab')
+        ->fields('mytab');
+      $query->addTag('node_access');
+      $query->addMetaData('op', 'view');
+      $query->addMetaData('account', $this->noAccessUser);
+
+      $result = $query->execute()->fetchAll();
+      $this->assertEqual(count($result), 0, t('User with no access cannot see nodes'));
+    }
+    catch (Exception $e) {
+      $this->fail(t('Altered query is malformed'));
+    }
+  }
+
+  /**
+   * Lower-level test of 'node_access' query alter, for edit access.
+   *
+   * Verifies that a non-standard table alias can be used, and that a
+   * user with view-only node access cannot edit the nodes.
+   */
+  function testNodeQueryAlterLowLevelEditAccess() {
+    // User with view-only access should not be able to edit nodes.
+    try {
+      $query = db_select('node', 'mytab')
+        ->fields('mytab');
+      $query->addTag('node_access');
+      $query->addMetaData('op', 'update');
+      $query->addMetaData('account', $this->accessUser);
+
+      $result = $query->execute()->fetchAll();
+      $this->assertEqual(count($result), 0, t('User with view-only access cannot edit nodes'));
+    }
+    catch (Exception $e) {
+      $this->fail($e->getMessage());
+      $this->fail((string)$query);
+      $this->fail(t('Altered query is malformed'));
+    }
   }
 }

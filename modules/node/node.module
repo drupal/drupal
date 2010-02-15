@@ -2905,25 +2905,52 @@ function node_access_view_all_nodes() {
 
 /**
  * Implements hook_query_TAG_alter().
+ *
+ * This is the hook_query_alter() for queries tagged with 'node_access'.
+ * It adds node access checks for the user account given by the 'account'
+ * meta-data (or global $user if not provided), for an operation given by
+ * the 'op' meta-data (or 'view' if not provided; other possible values are
+ * 'update' and 'delete').
  */
 function node_query_node_access_alter(QueryAlterableInterface $query) {
-  // Skip the extra expensive alterations if site has no node access control
-  // modules.
-  if (!node_access_view_all_nodes()) {
-    // Prevent duplicate records.
-    $query->distinct();
-    // The recognized operations are 'view', 'update', 'delete'.
-    if (!$op = $query->getMetaData('op')) {
-      $op = 'view';
-    }
-    // Skip the extra joins and conditions for node admins.
-    if (!user_access('bypass node access')) {
+  global $user;
+
+  // Read meta-data from query, if provided.
+  if (!$account = $query->getMetaData('account')) {
+    $account = $user;
+  }
+  if (!$op = $query->getMetaData('op')) {
+    $op = 'view';
+  }
+  
+  // If $account can bypass node access, or there are no node access
+  // modules, we don't need to alter the query.
+  if (user_access('bypass node access', $account)) {
+    return;
+  }
+  if (!count(module_implements('node_grants'))) {
+    return;
+  }
+
+  // Prevent duplicate records.
+  $query->distinct();
+
+  // Find all instances of the {node} table being joined -- could appear
+  // more than once in the query, and could be aliased. Join each one to
+  // the node_access table.
+
+  $tables = $query->getTables();
+  $grants = node_access_grants($op, $account);
+  foreach ($tables as $nalias => $tableinfo) {
+    $table = $tableinfo['table'];
+    if (!($table instanceof SelectQueryInterface) && $table == 'node') {
+
       // The node_access table has the access grants for any given node.
-      $access_alias = $query->join('node_access', 'na', 'na.nid = n.nid');
+      $access_alias = $query->join('node_access', 'na', "na.nid = {$nalias}.nid");
       $or = db_or();
-      // If any grant exists for the specified user, then user has access to the
-      // node for the specified operation.
-      foreach (node_access_grants($op, $query->getMetaData('account')) as $realm => $gids) {
+      // If any grant exists for the specified user, then user has access
+      // to the node for the specified operation.
+      foreach ($grants as $realm => $gids) {
         foreach ($gids as $gid) {
           $or->condition(db_and()
             ->condition("{$access_alias}.gid", $gid)
