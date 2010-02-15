@@ -23,7 +23,7 @@ function field_sql_storage_schema() {
       ),
       'type' => array(
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 128,
         'not null' => TRUE,
         'description' => 'An entity type',
       ),
