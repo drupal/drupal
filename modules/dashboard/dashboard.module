@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.18 2010/02/07 17:29:09 webchick Exp $
+// $Id: dashboard.module,v 1.19 2010/02/15 15:12:22 dries Exp $
 
 /**
  * Implements hook_help().
@@ -59,6 +59,18 @@ function dashboard_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function dashboard_menu_alter(&$items) {
+  // Make the dashboard the default local task on /admin.
+  $items['admin']['title'] = 'Dashboard';
+  $items['admin']['page callback'] = 'dashboard_admin';
+  $items['admin']['access arguments'] = array('access dashboard');
+  $items['admin/dashboard']['type'] = MENU_DEFAULT_LOCAL_TASK;
+  $items['admin/by-task']['type'] = MENU_LOCAL_TASK;
 }
 
 /**
