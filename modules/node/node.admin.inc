@@ -614,11 +614,3 @@ function node_multiple_delete_confirm_submit($form, &$form_state) {
   }
   $form_state['redirect'] = 'admin/content';
 }
-
-/**
- * Implements hook_modules_installed().
- */
-function node_modules_installed($modules) {
-  // Clear node type cache for node permissions.
-  drupal_static_reset('_node_types_build');
-}
