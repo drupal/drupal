@@ -4571,7 +4571,8 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
  * @param $content
  *   A string or renderable array representing the body of the page.
  * @return
- *   A renderable array representing the body of the page.
+ *   If called without $content, a renderable array representing the body of 
+ *   the page.
  */
 function drupal_set_page_content($content = NULL) {
   $content_block = &drupal_static(__FUNCTION__, NULL);
