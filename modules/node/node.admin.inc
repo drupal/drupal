@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.89 2010/01/29 12:14:43 dries Exp $
+// $Id: node.admin.inc,v 1.90 2010/02/15 16:36:48 webchick Exp $
 
 /**
  * @file
@@ -613,12 +613,4 @@ function node_multiple_delete_confirm_submit($form, &$form_state) {
     drupal_set_message(t('Deleted @count posts.', array('@count' => $count)));
   }
   $form_state['redirect'] = 'admin/content';
-}
-
-/**
- * Implements hook_modules_installed().
- */
-function node_modules_installed($modules) {
-  // Clear node type cache for node permissions.
-  drupal_static_reset('_node_types_build');
 }
