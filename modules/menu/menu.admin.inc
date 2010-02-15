@@ -259,7 +259,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
 
   $path = $item['link_path'];
   if (isset($item['options']['query'])) {
-    $path .= '?' . $item['options']['query'];
+    $path .= '?' . drupal_http_build_query($item['options']['query']);
   }
   if (isset($item['options']['fragment'])) {
     $path .= '#' . $item['options']['fragment'];

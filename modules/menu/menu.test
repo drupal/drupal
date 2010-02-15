@@ -228,6 +228,26 @@ class MenuTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Add and remove a menu link with a query string and fragment.
+   */
+  function testMenuQueryAndFragment() {
+    $this->drupalLogin($this->big_user);
+
+    // Make a path with query and fragment on.
+    $path = 'node?arg1=value1&arg2=value2';
+    $item = $this->addMenuLink(0, $path);
+
+    $this->drupalGet('admin/structure/menu/item/' . $item['mlid'] . '/edit');
+    $this->assertFieldByName('link_path', $path, t('Path is found with both query and fragment.'));
+
+    // Now change the path to something without query and fragment.
+    $path = 'node';
+    $this->drupalPost('admin/structure/menu/item/' . $item['mlid'] . '/edit', array('link_path' => $path), t('Save'));
+    $this->drupalGet('admin/structure/menu/item/' . $item['mlid'] . '/edit');
+    $this->assertFieldByName('link_path', $path, t('Path no longer has query or fragment.'));
+  }
+
+  /**
    * Add a menu link using the menu module UI.
    *
    * @param integer $plid Parent menu link id.
@@ -268,6 +288,13 @@ class MenuTestCase extends DrupalWebTestCase {
     // Both menu links were created in the navigation menu.
     $this->assertEqual($item['menu_name'], $menu_name);
     $this->assertEqual($item['plid'], $plid);
+    $options = unserialize($item['options']);
+    if (!empty($options['query'])) {
+      $item['link_path'] .= '?' . drupal_http_build_query($options['query']);
+    }
+    if (!empty($options['fragment'])) {
+      $item['link_path'] .= '#' . $options['fragment'];
+    }
     $this->assertEqual($item['link_path'], $link);
     $this->assertEqual($item['link_title'], $title);
     if ($plid == 0) {
