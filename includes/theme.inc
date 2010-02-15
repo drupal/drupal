@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.573 2010/02/07 09:11:28 dries Exp $
+// $Id: theme.inc,v 1.574 2010/02/15 15:52:27 dries Exp $
 
 /**
  * @file
@@ -2543,6 +2543,10 @@ function template_preprocess_maintenance_page(&$variables) {
       $head_title[] = variable_get('site_slogan', '');
     }
   }
+
+  // set the default language if necessary
+  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : language_default();
+
   $variables['head_title']        = implode(' | ', $head_title);
   $variables['base_path']         = base_path();
   $variables['front_page']        = url();
@@ -2550,8 +2554,8 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['feed_icons']        = '';
   $variables['head']              = drupal_get_html_head();
   $variables['help']              = '';
-  $variables['language']          = $GLOBALS['language'];
-  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
+  $variables['language']          = $language;
+  $variables['language']->dir     = $language->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['main_menu']         = array();
