@@ -613,6 +613,18 @@ function hook_css_alter(&$css) {
 }
 
 /**
+ * Alter the commands that are sent to the user through the AJAX framework.
+ *
+ * @param $commands
+ *   An array of all commands that will be sent to the user.
+ * @see ajax_render()
+ */
+function hook_ajax_render_alter($commands) {
+  // Inject any new status messages into the content area.
+  $commands[] = ajax_command_prepend('#block-system-main .content', theme('status_messages'));
+}
+
+/**
  * Add elements to a page before it is rendered.
  *
  * Use this hook when you want to add elements at the page level. For your
