@@ -1,4 +1,4 @@
-// $Id: block.js,v 1.13 2009/12/21 08:14:12 dries Exp $
+// $Id: block.js,v 1.14 2010/02/15 19:06:21 dries Exp $
 (function ($) {
 
 /**
@@ -79,7 +79,7 @@ Drupal.behaviors.blockDrag = {
 
     // A custom message for the blocks page specifically.
     Drupal.theme.tableDragChangedWarning = function () {
-      return '<div class="warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('The changes to these blocks will not be saved until the <em>Save blocks</em> button is clicked.') + '</div>';
+      return '<div class="messages warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('The changes to these blocks will not be saved until the <em>Save blocks</em> button is clicked.') + '</div>';
     };
 
     // Add a handler so when a row is dropped, update fields dropped into new regions.
