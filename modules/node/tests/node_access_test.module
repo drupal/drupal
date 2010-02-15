@@ -1,0 +1,102 @@
+<?php
+// $Id: node_access_test.module,v 1.1 2010/02/15 19:00:30 webchick Exp $
+
+/**
+ * @file
+ * Dummy module implementing node access related hooks to test API interaction
+ * with the Node module. This module restricts view permission to those with
+ * a special 'node test view' permission.
+ */
+
+/**
+ * Implements hook_node_grants().
+ */
+function node_access_test_node_grants($account, $op) {
+  $grants = array();
+  if ($op == 'view' && user_access('node test view', $account)) {
+    $grants['node_access_test'] = array(888);
+  }
+  return $grants;
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function node_access_test_node_access_records($node) {
+  $grants = array();
+  $grants[] = array(
+    'realm' => 'node_access_test',
+    'gid' => 888,
+    'grant_view' => 1,
+    'grant_update' => 0,
+    'grant_delete' => 0,
+    'priority' => 999,
+    );
+
+  return $grants;
+}
+
+/**
+ * Implements hook_permission().
+ *
+ * Sets up permissions for this module.
+ */
+function node_access_test_permission() {
+  return array('node test view' => array('title' => 'View content'));
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * Sets up a page that lists nodes.
+ */
+function node_access_test_menu() {
+  $items = array();
+  $items['node_access_test_page'] = array(
+    'title' => 'Node access test',
+    'page callback' => 'node_access_test_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Page callback for node access test page.
+ *
+ * Page should say "No nodes" if there are no nodes, and "Yes, # nodes" (with
+ * the number filled in) if there were nodes the user could access. Also, the
+ * database query is shown, and a list of the node IDs, for debugging purposes.
+ * And if there is a query exception, the page says "Exception" and gives the
+ * error.
+ */
+function node_access_test_page() {
+  $output = '';
+
+  try {
+    $query = db_select('node', 'mytab')
+      ->fields('mytab');
+    $query->addTag('node_access');
+    $result = $query->execute()->fetchAll();
+
+    if (count($result)) {
+      $output .= '<p>Yes, ' . count($result) . ' nodes</p>';
+      $output .= '<ul>';
+      foreach ($result as $item) {
+        $output .= '<li>' . $item->nid . '</li>';
+      }
+      $output .= '</ul>';
+    }
+    else {
+      $output .= '<p>No nodes</p>';
+    }
+
+    $output .= '<p>' . ((string) $query ) . '</p>';
+  }
+  catch (Exception $e) {
+    $output = '<p>Exception</p>';
+    $output .= '<p>' . $e->getMessage() . '</p>';
+  }
+
+  return $output;
+}
