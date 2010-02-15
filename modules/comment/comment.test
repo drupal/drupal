@@ -1103,13 +1103,13 @@ class CommentRdfaTestCase extends CommentHelperCase {
 
     // Tests number of comments in teaser view.
     $this->drupalGet('node');
-    $comment_count_teaser = $this->xpath("//div[contains(@typeof, 'sioc:Item')]//li[contains(@class, 'comment_comments')]/a[contains(@property, 'sioc:num_replies') and contains(@content, '2')]");
+    $comment_count_teaser = $this->xpath("//div[contains(@typeof, 'sioc:Item')]//li[contains(@class, 'comment_comments')]/a[contains(@property, 'sioc:num_replies') and contains(@content, '2') and @datatype='xsd:integer']");
     $this->assertTrue(!empty($comment_count_teaser), t('RDFa markup for the number of comments found on teaser view.'));
 
     // Tests number of comments in full node view.
     $this->drupalGet('node/' . $this->node1->nid);
     $node_url = url('node/' . $this->node1->nid);
-    $comment_count_teaser = $this->xpath("/html/head/meta[@about='$node_url' and @property='sioc:num_replies' and @content='2']");
+    $comment_count_teaser = $this->xpath("/html/head/meta[@about='$node_url' and @property='sioc:num_replies' and @content='2' and @datatype='xsd:integer']");
     $this->assertTrue(!empty($comment_count_teaser), t('RDFa markup for the number of comments found on full node view.'));
   }
 

@@ -423,6 +423,7 @@ function rdf_preprocess_node(&$variables) {
     if (isset($variables['content']['links']['comment']['#links']['comment_comments'])) {
       $comment_count_attributes['property'] = $variables['node']->rdf_mapping['comment_count']['predicates'];
       $comment_count_attributes['content'] = $variables['node']->comment_count;
+      $comment_count_attributes['datatype'] = $variables['node']->rdf_mapping['comment_count']['datatype'];
       $variables['content']['links']['comment']['#links']['comment_comments']['attributes'] += $comment_count_attributes;
     }
     // In full node view, the number of comments is not displayed by
@@ -434,6 +435,7 @@ function rdf_preprocess_node(&$variables) {
           'about' => $variables['node_url'],
           'property' => $variables['node']->rdf_mapping['comment_count']['predicates'],
           'content' => $variables['node']->comment_count,
+          'datatype' => $variables['node']->rdf_mapping['comment_count']['datatype'],
         ),
       );
       drupal_add_html_head($element, 'rdf_node_comment_count');

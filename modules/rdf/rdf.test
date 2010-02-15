@@ -400,7 +400,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
     }
 
     // Tests whether the property has been set for number of comments.
-    $tracker_replies = $this->xpath("//tr[@about='$url']//td[contains(@property, 'sioc:num_replies') and contains(@content, '0')]");
+    $tracker_replies = $this->xpath("//tr[@about='$url']//td[contains(@property, 'sioc:num_replies') and contains(@content, '0') and @datatype='xsd:integer']");
     $this->assertTrue($tracker_replies, t('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
 
     // Tests that the appropriate RDFa markup to annotate the latest activity
