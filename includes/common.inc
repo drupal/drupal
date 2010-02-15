@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1106 2010/02/15 15:52:27 dries Exp $
+// $Id: common.inc,v 1.1107 2010/02/15 22:08:49 webchick Exp $
 
 /**
  * @file
@@ -4571,7 +4571,8 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
  * @param $content
  *   A string or renderable array representing the body of the page.
  * @return
- *   A renderable array representing the body of the page.
+ *   If called without $content, a renderable array representing the body of 
+ *   the page.
  */
 function drupal_set_page_content($content = NULL) {
   $content_block = &drupal_static(__FUNCTION__, NULL);
