@@ -429,9 +429,10 @@ function system_theme_default() {
       }
       // Set the default theme.
       variable_set('theme_default', $theme);
-      // The status message depends on whether an admin theme is currently in use.
+      // The status message depends on whether an admin theme is currently in use:
+      // a value of 0 means the admin theme is set to be the default theme.
       $admin_theme = variable_get('admin_theme', 0);
-      if ($admin_theme != $theme) {
+      if ($admin_theme != 0 && $admin_theme != $theme) {
         drupal_set_message(t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
           '%admin_theme' => $themes[$admin_theme]->info['name'],
           '%selected_theme' => $themes[$theme]->info['name'],
