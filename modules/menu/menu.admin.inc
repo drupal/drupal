@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.74 2010/02/01 19:19:35 dries Exp $
+// $Id: menu.admin.inc,v 1.75 2010/02/15 15:29:14 dries Exp $
 
 /**
  * @file
@@ -259,7 +259,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
 
   $path = $item['link_path'];
   if (isset($item['options']['query'])) {
-    $path .= '?' . $item['options']['query'];
+    $path .= '?' . drupal_http_build_query($item['options']['query']);
   }
   if (isset($item['options']['fragment'])) {
     $path .= '#' . $item['options']['fragment'];
