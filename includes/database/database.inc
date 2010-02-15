@@ -972,6 +972,13 @@ abstract class DatabaseConnection extends PDO {
 
     if ($this->transactionLayers == 0) {
       if ($this->willRollback) {
+        // Reset the rollback status so that the next transaction starts clean.
+        $this->willRollback = FALSE;
+
+        // Reset the error log.
+        $rollback_logs = $this->rollbackLogs;
+        $this->rollbackLogs = array();
+
         $logging = Database::getLoggingCallback();
         $logging_callback = NULL;
         if (is_array($logging)) {
@@ -994,16 +1001,10 @@ abstract class DatabaseConnection extends PDO {
         if (isset($logging_callback)) {
           // Play back the logged errors to the specified logging callback post-
           // rollback.
-          foreach ($this->rollbackLogs as $log_item) {
+          foreach ($rollback_logs as $log_item) {
             $logging_callback($log_item['type'], $log_item['message'], $log_item['variables'], $log_item['severity'], $log_item['link']);
           }
         }
-
-        // Reset any scheduled rollback.
-        $this->willRollback = FALSE;
-
-        // Reset the error logs.
-        $this->rollbackLogs = array();
       }
       elseif ($this->supportsTransactions()) {
         parent::commit();
