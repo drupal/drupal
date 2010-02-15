@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.131 2010/02/11 17:44:47 webchick Exp $
+// $Id: system.api.php,v 1.132 2010/02/15 22:11:21 webchick Exp $
 
 /**
  * @file
@@ -610,6 +610,18 @@ function hook_library_alter(&$libraries, $module) {
 function hook_css_alter(&$css) {
   // Remove defaults.css file.
   unset($css[drupal_get_path('module', 'system') . '/defaults.css']);
+}
+
+/**
+ * Alter the commands that are sent to the user through the AJAX framework.
+ *
+ * @param $commands
+ *   An array of all commands that will be sent to the user.
+ * @see ajax_render()
+ */
+function hook_ajax_render_alter($commands) {
+  // Inject any new status messages into the content area.
+  $commands[] = ajax_command_prepend('#block-system-main .content', theme('status_messages'));
 }
 
 /**
