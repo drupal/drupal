@@ -35,7 +35,7 @@ function list_field_info() {
       'label' => t('Boolean'),
       'description' => t('This field stores simple on/off or yes/no options.'),
       'settings' => array('allowed_values' => '', 'allowed_values_function' => ''),
-      'default_widget' => 'options_select',
+      'default_widget' => 'options_buttons',
       'default_formatter' => 'list_default',
     ),
     'list_number' => array(
@@ -296,7 +296,7 @@ function list_field_is_empty($item, $field) {
  */
 function list_field_widget_info_alter(&$info) {
   $widgets = array(
-    'options_select' => array('list', 'list_text', 'list_number', 'list_boolean'),
+    'options_select' => array('list', 'list_text', 'list_number'),
     'options_buttons' => array('list', 'list_text', 'list_number', 'list_boolean'),
     'options_onoff' => array('list_boolean'),
   );
