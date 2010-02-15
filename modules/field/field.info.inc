@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.39 2010/02/12 05:38:09 webchick Exp $
+// $Id: field.info.inc,v 1.40 2010/02/15 22:18:35 webchick Exp $
 
 /**
  * @file
@@ -247,6 +247,9 @@ function _field_info_prepare_field($field) {
   $details = (array) module_invoke($field['storage']['module'], 'field_storage_details', $field);
   drupal_alter('field_storage_details', $details, $field, $instance);
   $field['storage']['details'] = $details;
+
+  // Initialize the 'bundles' list.
+  $field['bundles'] = array();
 
   return $field;
 }
