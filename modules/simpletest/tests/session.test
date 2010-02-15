@@ -279,15 +279,15 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
 
     // Verify that user is logged in on secure URL.
     $this->curlClose();
-    $this->drupalGet($this->httpsUrl('admin/config'), array(), array('Cookie: ' . $cookie));
-    $this->assertText(t('Configuration'));
+    $this->drupalGet($this->httpsUrl('admin'), array(), array('Cookie: ' . $cookie));
+    $this->assertText(t('Administer'));
     $this->assertResponse(200);
 
     // Verify that user is not logged in on non-secure URL.
     if (!$is_https) {
       $this->curlClose();
-      $this->drupalGet('admin/config', array(), array('Cookie: ' . $cookie));
-      $this->assertNoText(t('Configuration'));
+      $this->drupalGet('admin', array(), array('Cookie: ' . $cookie));
+      $this->assertNoText(t('Administer'));
       $this->assertResponse(403);
     }
 
@@ -340,16 +340,16 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     );
 
     foreach ($cookies as $cookie_key => $cookie) {
-      foreach (array('admin/config', $this->httpsUrl('admin/config')) as $url_key => $url) {
+      foreach (array('admin', $this->httpsUrl('admin')) as $url_key => $url) {
         $this->curlClose();
 
         $this->drupalGet($url, array(), array('Cookie: ' . $cookie));
         if ($cookie_key == $url_key) {
-          $this->assertText(t('Configuration'));
+          $this->assertText(t('Administer'));
           $this->assertResponse(200);
         }
         else {
-          $this->assertNoText(t('Configuration'));
+          $this->assertNoText(t('Administer'));
           $this->assertResponse(403);
         }
       }

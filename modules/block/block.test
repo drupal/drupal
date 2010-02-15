@@ -21,7 +21,7 @@ class BlockTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer filters', 'access administration pages', 'access dashboard'));
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer filters', 'access administration pages'));
     $this->drupalLogin($admin_user);
 
     // Define the existing regions
