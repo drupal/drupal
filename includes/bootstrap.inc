@@ -1565,9 +1565,48 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
 }
 
 /**
+ * Custom PHP error handler.
+ *
+ * @param $error_level
+ *   The level of the error raised.
+ * @param $message
+ *   The error message.
+ * @param $filename
+ *   The filename that the error was raised in.
+ * @param $line
+ *   The line number the error was raised at.
+ * @param $context
+ *   An array that points to the active symbol table at the point the error occurred.
+ */
+function _drupal_error_handler($error_level, $message, $filename, $line, $context) {
+  require_once DRUPAL_ROOT . '/includes/errors.inc';
+  _drupal_error_handler_real($error_level, $message, $filename, $line, $context);
+}
+
+/**
+ * Custom PHP exception handler.
+ *
+ * Uncaught exceptions are those not enclosed in a try/catch block. They are
+ * always fatal: the execution of the script will stop as soon as the exception
+ * handler exits.
+ *
+ * @param $exception
+ *   The exception object that was thrown.
+ */
+function _drupal_exception_handler($exception) {
+  require_once DRUPAL_ROOT . '/includes/errors.inc';
+  // Log the message to the watchdog and return an error page to the user.
+  _drupal_log_error(_drupal_decode_exception($exception), TRUE);
+}
+
+/**
  * Bootstrap configuration: Setup script environment and load settings.php.
  */
 function _drupal_bootstrap_configuration() {
+  // Set the Drupal custom error handler.
+  set_error_handler('_drupal_error_handler');
+  set_exception_handler('_drupal_exception_handler');
+
   drupal_environment_initialize();
   // Start a page timer:
   timer_start('page');

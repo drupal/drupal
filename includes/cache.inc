@@ -309,29 +309,42 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
   }
 
   function get($cid) {
-    // Garbage collection necessary when enforcing a minimum cache lifetime.
-    $this->garbageCollection($this->bin);
-    $cache = db_query("SELECT data, created, headers, expire, serialized FROM {" . $this->bin . "} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
-
-    return $this->prepareItem($cache);
+    try {
+      // Garbage collection necessary when enforcing a minimum cache lifetime.
+      $this->garbageCollection($this->bin);
+      $cache = db_query("SELECT data, created, headers, expire, serialized FROM {" . $this->bin . "} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
+      return $this->prepareItem($cache);
+    }
+    catch (Exception $e) {
+      // If the database is never going to be available, cache requests should
+      // return FALSE in order to allow exception handling to occur.
+      return FALSE;
+    }
   }
 
   function getMultiple(&$cids) {
-    // Garbage collection necessary when enforcing a minimum cache lifetime.
-    $this->garbageCollection($this->bin);
-    $query = db_select($this->bin);
-    $query->fields($this->bin, array('cid', 'data', 'created', 'headers', 'expire', 'serialized'));
-    $query->condition($this->bin . '.cid', $cids, 'IN');
-    $result = $query->execute();
-    $cache = array();
-    foreach ($result as $item) {
-      $item = $this->prepareItem($item);
-      if ($item) {
-        $cache[$item->cid] = $item;
+    try {
+      // Garbage collection necessary when enforcing a minimum cache lifetime.
+      $this->garbageCollection($this->bin);
+      $query = db_select($this->bin);
+      $query->fields($this->bin, array('cid', 'data', 'created', 'headers', 'expire', 'serialized'));
+      $query->condition($this->bin . '.cid', $cids, 'IN');
+      $result = $query->execute();
+      $cache = array();
+      foreach ($result as $item) {
+        $item = $this->prepareItem($item);
+        if ($item) {
+          $cache[$item->cid] = $item;
+        }
       }
+      $cids = array_diff($cids, array_keys($cache));
+      return $cache;
     }
-    $cids = array_diff($cids, array_keys($cache));
-    return $cache;
+    catch (Exception $e) {
+      // If the database is never going to be available, cache requests should
+      // return FALSE in order to allow exception handling to occur.
+      return array();
+    }
   }
 
   /**
@@ -415,10 +428,15 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
       $fields['serialized'] = 0;
     }
 
-    db_merge($this->bin)
-      ->key(array('cid' => $cid))
-      ->fields($fields)
-      ->execute();
+    try {
+      db_merge($this->bin)
+        ->key(array('cid' => $cid))
+        ->fields($fields)
+        ->execute();
+    }
+    catch (Exception $e) {
+      // The database may not be available, so we'll ignore cache_set requests.
+    }
   }
 
   function clear($cid = NULL, $wildcard = FALSE) {
