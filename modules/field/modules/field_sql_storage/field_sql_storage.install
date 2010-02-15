@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.install,v 1.8 2009/12/04 16:49:46 dries Exp $
+// $Id: field_sql_storage.install,v 1.9 2010/02/15 18:43:00 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function field_sql_storage_schema() {
       ),
       'type' => array(
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 128,
         'not null' => TRUE,
         'description' => 'An entity type',
       ),
