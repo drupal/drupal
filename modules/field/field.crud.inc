@@ -319,6 +319,9 @@ function field_create_field($field) {
   // read.
   $data = $field;
   unset($data['columns'], $data['field_name'], $data['type'], $data['active'], $data['module'], $data['storage_type'], $data['storage_active'], $data['storage_module'], $data['locked'], $data['cardinality'], $data['deleted']);
+  // Additionally, do not save the 'bundles' property populated by
+  // field_info_field().
+  unset($data['bundles']);
 
   $record = array(
     'field_name' => $field['field_name'],
@@ -440,6 +443,10 @@ function field_update_field($field) {
   // read.
   $data = $field;
   unset($data['columns'], $data['field_name'], $data['type'], $data['locked'], $data['module'], $data['cardinality'], $data['active'], $data['deleted']);
+  // Additionally, do not save the 'bundles' property populated by
+  // field_info_field().
+  unset($data['bundles']);
+
   $field['data'] = $data;
 
   // Store the field and create the id.

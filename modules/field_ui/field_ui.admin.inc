@@ -995,7 +995,8 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
   $field_name = $form_values['field_name'];
   $bundle = $form_values['bundle'];
   $entity_type = $form_values['object_type'];
-  $field = field_info_field($form_values['field_name']);
+
+  $field = field_info_field($field_name);
   $instance = field_info_instance($entity_type, $field_name, $bundle);
   $bundles = field_info_bundles();
   $bundle_label = $bundles[$entity_type][$bundle]['label'];
@@ -1003,7 +1004,7 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
   if (!empty($bundle) && $field && !$field['locked'] && $form_values['confirm']) {
     field_delete_instance($instance);
     // Delete the field if that was the last instance.
-    if (count($field['bundles'] == 1)) {
+    if (count($field['bundles']) == 1 && count(current($field['bundles'])) == 1) {
       field_delete_field($field['field_name']);
     }
     drupal_set_message(t('The field %field has been deleted from the %type content type.', array('%field' => $instance['label'], '%type' => $bundle_label)));

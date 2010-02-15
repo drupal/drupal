@@ -248,6 +248,9 @@ function _field_info_prepare_field($field) {
   drupal_alter('field_storage_details', $details, $field, $instance);
   $field['storage']['details'] = $details;
 
+  // Initialize the 'bundles' list.
+  $field['bundles'] = array();
+
   return $field;
 }
 
