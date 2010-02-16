@@ -1,4 +1,4 @@
-/* $Id: system-behavior.css,v 1.3 2010/01/13 14:41:58 dries Exp $ */
+/* $Id: system-behavior.css,v 1.4 2010/02/16 01:05:52 webchick Exp $ */
 
 /**
  * Autocomplete
@@ -240,7 +240,7 @@ div.password-confirm {
   display: inline;
   padding-left: 1em;
 }
-div.password-suggestions {
+div.form-item div.password-suggestions {
   padding: 0.2em 0.5em;
   margin: 0.7em 0;
   width: 38.5em;
