@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.8 2010/01/18 17:12:04 dries Exp $
+// $Id: overlay.module,v 1.9 2010/02/16 00:27:34 webchick Exp $
 
 /**
  * @file
@@ -84,7 +84,8 @@ function overlay_init() {
       // Unset the render parameter to avoid it being included in URLs on the page.
       unset($_GET['render']);
     }
-    else {
+    // Do not enable the overlay if we already are on an admin page.
+    else if (!path_is_admin(current_path())) {
       // Otherwise add overlay parent code and our behavior.
       overlay_set_mode('parent');
     }
