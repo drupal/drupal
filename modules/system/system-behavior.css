@@ -240,7 +240,7 @@ div.password-confirm {
   display: inline;
   padding-left: 1em;
 }
-div.password-suggestions {
+div.form-item div.password-suggestions {
   padding: 0.2em 0.5em;
   margin: 0.7em 0;
   width: 38.5em;
