@@ -1097,14 +1097,15 @@ function drupal_find_theme_templates($cache, $extension, $path) {
 /**
  * Retrieve a setting for the current theme or for a given theme.
  *
- * The final setting is arrived at by merging the default settings, the custom
- * theme settings defined in the theme's .info file, the site-wide settings, and
- * the settings defined for the specific theme. If an empty string is given for
- * $key, only the site-wide theme defaults are retrieved.
- *
- * The default values for each setting is defined in this function. To add new
- * settings, add their default values here, and then add form elements to
- * system_theme_settings() in system.admin.inc.
+ * The final setting is obtained from the last value found in the following
+ * sources:
+ * - the default global settings specified in this function
+ * - the default theme-specific settings defined in any base theme's .info file
+ * - the default theme-specific settings defined in the theme's .info file
+ * - the saved values from the global theme settings form
+ * - the saved values from the theme's settings form
+ * To only retrieve the default global theme setting, an empty string should be
+ * given for $theme.
  *
  * @param $setting_name
  *  The name of the setting to be retrieved.
@@ -1122,7 +1123,9 @@ function theme_get_setting($setting_name, $theme = NULL) {
   }
 
   if (empty($cache[$theme])) {
-    // Set the default settings.
+    // Set the default values for each global setting.
+    // To add new global settings, add their default values below, and then
+    // add form elements to system_theme_settings() in system.admin.inc.
     $cache[$theme] = array(
       'default_logo'                     =>  1,
       'logo_path'                        =>  '',
@@ -1143,7 +1146,8 @@ function theme_get_setting($setting_name, $theme = NULL) {
       'toggle_secondary_menu'            =>  1,
     );
 
-    // Get the default values for the custom settings from the .info file.
+    // Get the values for the theme-specific settings from the .info files of
+    // the theme and all its base themes.
     if ($theme) {
       $themes = list_themes();
       $theme_object = $themes[$theme];
@@ -1167,7 +1171,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
     $cache[$theme] = array_merge($cache[$theme], variable_get('theme_settings', array()));
 
     if ($theme) {
-      // Get the saved theme settings from the database.
+      // Get the saved theme-specific settings from the database.
       $cache[$theme] = array_merge($cache[$theme], variable_get('theme_' . $theme . '_settings', array()));
 
       // Generate the path to the logo image.
