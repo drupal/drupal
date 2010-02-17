@@ -708,7 +708,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
   // If this update was aborted in a previous step, or has a dependency that
   // was aborted in a previous step, go no further.
-  if (!empty($context['results']['#abort']) && array_intersect($context['results']['#abort'], array_merge($dependency_map[$function], array($function)))) {
+  if (!empty($context['results']['#abort']) && array_intersect($context['results']['#abort'], array_merge($dependency_map, array($function)))) {
     return;
   }
 
@@ -821,7 +821,8 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
         unset($start[$update['module']]);
       }
       // Add this update function to the batch.
-      $operations[] = array('update_do_one', array($update['module'], $update['number'], $dependency_map));
+      $function = $update['module'] . '_update_' . $update['number'];
+      $operations[] = array('update_do_one', array($update['module'], $update['number'], $dependency_map[$function]));
     }
   }
   $batch['operations'] = $operations;
