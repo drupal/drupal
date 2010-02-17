@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.41 2010/02/17 03:59:43 webchick Exp $
+// $Id: contact.test,v 1.42 2010/02/17 04:39:49 webchick Exp $
 
 /**
  * Test the sitewide contact form.
@@ -352,6 +352,19 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
     $this->assertResponse(200);
+
+    // Re-create our contacted user as a blocked user.
+    $this->contact_user = $this->drupalCreateUser();
+    user_save($this->contact_user, array('status' => 0));
+
+    // Test that blocked users can still be contacted by admin.
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(200);
+
+    // Test that blocked users cannot be contacted by non-admins.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(403);
   }
 
   /**

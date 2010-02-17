@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.143 2010/01/22 22:56:54 dries Exp $
+// $Id: contact.module,v 1.144 2010/02/17 04:39:49 webchick Exp $
 
 /**
  * @file
@@ -139,6 +139,11 @@ function _contact_personal_tab_access(stdClass $account) {
   // If the requested user has disabled their contact form, or this preference
   // has not yet been saved, do not allow users to contact them.
   if (empty($account->contact)) {
+    return FALSE;
+  }
+
+  // If requested user has been blocked, do not allow users to contact them.
+  if (empty($account->status)) {
     return FALSE;
   }
 
