@@ -2194,7 +2194,8 @@ function menu_link_load($mlid) {
     $query = db_select('menu_links', 'ml');
     $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
     $query->fields('ml');
-    $query->fields('m');
+    // Weight should be taken from {menu_links}, not {menu_router}.
+    $query->fields('m', array_diff(drupal_schema_fields_sql('menu_router'), array('weight')));
     $query->condition('ml.mlid', $mlid);
     if ($item = $query->execute()->fetchAssoc()) {
       _menu_link_translate($item);

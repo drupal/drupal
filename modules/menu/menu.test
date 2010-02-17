@@ -606,11 +606,15 @@ class MenuNodeTestCase extends DrupalWebTestCase {
     $edit = array(
       'menu[enabled]' => 1,
       'menu[link_title]' => $node_title,
+      'menu[weight]' => 17,
     );
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     // Assert that the link exists.
     $this->drupalGet('');
     $this->assertLink($node_title);
+
+    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->assertOptionSelected('edit-menu-weight', 17, t('Menu weight correct in edit form'));
 
     // Edit the node and remove the menu link.
     $edit = array(
@@ -622,4 +626,3 @@ class MenuNodeTestCase extends DrupalWebTestCase {
     $this->assertNoLink($node_title);
   }
 }
-
