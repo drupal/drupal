@@ -1445,7 +1445,7 @@ function system_schema() {
         'default' => '',
       ),
       'type' => array(
-        'description' => 'The type of the item, either module, theme, or theme_engine.',
+        'description' => 'The type of the item, either module, theme, theme_engine, or profile.',
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
