@@ -94,6 +94,11 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
     $this->assertRaw(t('Category %category has been saved.', array('%category' => $category)), t('Category successfully saved.'));
 
+    // Try adding a category that already exists.
+    $this->addCategory($category, '', '', FALSE);
+    $this->assertNoRaw(t('Category %category has been saved.', array('%category' => $category)), t('Category not saved.'));
+    $this->assertRaw(t('A contact form with category %category already exists.', array('%category' => $category)), t('Duplicate category error found.'));
+
     // Clear flood table in preparation for flood test and allow other checks to complete.
     db_delete('flood')->execute();
     $num_records_after = db_query("SELECT COUNT(*) FROM {flood}")->fetchField();
