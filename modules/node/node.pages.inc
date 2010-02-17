@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.114 2010/02/10 10:34:50 dries Exp $
+// $Id: node.pages.inc,v 1.115 2010/02/17 05:32:48 webchick Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@ function node_object_prepare($node) {
   // Set up default values, if required.
   $node_options = variable_get('node_options_' . $node->type, array('status', 'promote'));
   // If this is a new node, fill in the default values.
-  if (!isset($node->nid)) {
+  if (!isset($node->nid) || isset($node->is_new)) {
     foreach (array('status', 'promote', 'sticky') as $key) {
       // Multistep node forms might have filled in something already.
       if (!isset($node->$key)) {
