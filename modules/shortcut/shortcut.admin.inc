@@ -505,8 +505,10 @@ function shortcut_link_delete_submit($form, &$form_state) {
  */
 function shortcut_link_add_inline($shortcut_set) {
   if (isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'shortcut-add-link') && shortcut_valid_link($_GET['link'])) {
+    $item = menu_get_item($_GET['link']);
+    $title = ($item && $item['title']) ? $item['title'] : $_GET['name'];
     $link = array(
-      'link_title' => $_GET['name'],
+      'link_title' => $title,
       'link_path' => $_GET['link'],
     );
     shortcut_admin_add_link($link, $shortcut_set, shortcut_max_slots());
