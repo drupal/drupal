@@ -210,7 +210,7 @@ function update_menu() {
       'page arguments' => array('update_manager_update_form', $context),
       'access callback' => 'update_manager_access',
       'access arguments' => array(),
-      'weight' => 20,
+      'weight' => 10,
       'title' => 'Update',
       'type' => MENU_LOCAL_TASK,
       'file' => 'update.manager.inc',
