@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.350 2010/02/17 02:52:15 webchick Exp $
+// $Id: bootstrap.inc,v 1.351 2010/02/17 03:55:45 webchick Exp $
 
 /**
  * @file
@@ -636,7 +636,7 @@ function drupal_settings_initialize() {
  * the above, depending on where the module is located.
  *
  * @param $type
- *   The type of the item (i.e. theme, theme_engine, module).
+ *   The type of the item (i.e. theme, theme_engine, module, profile).
  * @param $name
  *   The name of the item for which the filename is requested.
  * @param $filename

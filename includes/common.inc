@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1108 2010/02/17 02:52:15 webchick Exp $
+// $Id: common.inc,v 1.1109 2010/02/17 03:55:45 webchick Exp $
 
 /**
  * @file
@@ -2521,7 +2521,7 @@ function drupal_set_time_limit($time_limit) {
  * Returns the path to a system item (module, theme, etc.).
  *
  * @param $type
- *   The type of the item (i.e. theme, theme_engine, module).
+ *   The type of the item (i.e. theme, theme_engine, module, profile).
  * @param $name
  *   The name of the item for which the path is requested.
  *
