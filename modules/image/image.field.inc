@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.15 2010/02/11 17:44:47 webchick Exp $
+// $Id: image.field.inc,v 1.16 2010/02/17 05:39:51 webchick Exp $
 
 /**
  * @file
@@ -223,6 +223,13 @@ function image_field_prepare_view($entity_type, $entities, $field, $instances, $
       }
     }
   }
+}
+
+/**
+ * Implements hook_field_presave().
+ */
+function image_field_presave($obj_type, $object, $field, $instance, $langcode, &$items) {
+  file_field_presave($obj_type, $object, $field, $instance, $langcode, $items);
 }
 
 /**

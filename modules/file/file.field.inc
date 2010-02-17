@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.21 2010/02/12 05:38:10 webchick Exp $
+// $Id: file.field.inc,v 1.22 2010/02/17 05:39:51 webchick Exp $
 
 /**
  * @file
@@ -237,6 +237,22 @@ function file_field_prepare_view($entity_type, $entities, $field, $instances, $l
       }
       // Ensure consecutive deltas.
       $items[$id] = array_values($items[$id]);
+    }
+  }
+}
+
+/**
+ * Implements hook_field_presave().
+ */
+function file_field_presave($obj_type, $object, $field, $instance, $langcode, &$items) {
+  // Make sure that each file which will be saved with this object has a
+  // permanent status, so that it will not be removed when temporary files are
+  // cleaned up.
+  foreach ($items as $item) {
+    $file = file_load($item['fid']);
+    if (($file->status & FILE_STATUS_PERMANENT) == 0) {
+      $file->status |= FILE_STATUS_PERMANENT;
+      file_save($file);
     }
   }
 }
