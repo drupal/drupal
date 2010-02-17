@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.62 2010/01/30 06:55:51 webchick Exp $
+// $Id: update.module,v 1.63 2010/02/17 09:08:59 dries Exp $
 
 /**
  * @file
@@ -210,7 +210,7 @@ function update_menu() {
       'page arguments' => array('update_manager_update_form', $context),
       'access callback' => 'update_manager_access',
       'access arguments' => array(),
-      'weight' => 20,
+      'weight' => 10,
       'title' => 'Update',
       'type' => MENU_LOCAL_TASK,
       'file' => 'update.manager.inc',
