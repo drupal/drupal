@@ -1185,6 +1185,255 @@ function drupal_unpack($obj, $field = 'data') {
 }
 
 /**
+ * Translate strings to the page language or a given language.
+ *
+ * Human-readable text that will be displayed somewhere within a page should
+ * be run through the t() function.
+ *
+ * Examples:
+ * @code
+ *   if (!$info || !$info['extension']) {
+ *     form_set_error('picture_upload', t('The uploaded file was not an image.'));
+ *   }
+ *
+ *   $form['submit'] = array(
+ *     '#type' => 'submit',
+ *     '#value' => t('Log in'),
+ *   );
+ * @endcode
+ *
+ * Any text within t() can be extracted by translators and changed into
+ * the equivalent text in their native language.
+ *
+ * Special variables called "placeholders" are used to signal dynamic
+ * information in a string which should not be translated. Placeholders
+ * can also be used for text that may change from time to time (such as
+ * link paths) to be changed without requiring updates to translations.
+ *
+ * For example:
+ * @code
+ *   $output = t('There are currently %members and %visitors online.', array(
+ *     '%members' => format_plural($total_users, '1 user', '@count users'),
+ *     '%visitors' => format_plural($guests->count, '1 guest', '@count guests')));
+ * @endcode
+ *
+ * There are three styles of placeholders:
+ * - !variable, which indicates that the text should be inserted as-is. This is
+ *   useful for inserting variables into things like e-mail.
+ *   @code
+ *     $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", array('absolute' => TRUE))));
+ *   @endcode
+ *
+ * - @variable, which indicates that the text should be run through
+ *   check_plain, to escape HTML characters. Use this for any output that's
+ *   displayed within a Drupal page.
+ *   @code
+ *     drupal_set_title($title = t("@name's blog", array('@name' => format_username($account))), PASS_THROUGH);
+ *   @endcode
+ *
+ * - %variable, which indicates that the string should be HTML escaped and
+ *   highlighted with theme_placeholder() which shows up by default as
+ *   <em>emphasized</em>.
+ *   @code
+ *     $message = t('%name-from sent %name-to an e-mail.', array('%name-from' => format_username($user), '%name-to' => format_username($account)));
+ *   @endcode
+ *
+ * When using t(), try to put entire sentences and strings in one t() call.
+ * This makes it easier for translators, as it provides context as to what
+ * each word refers to. HTML markup within translation strings is allowed, but
+ * should be avoided if possible. The exception are embedded links; link
+ * titles add a context for translators, so should be kept in the main string.
+ *
+ * Here is an example of incorrect usage of t():
+ * @code
+ *   $output .= t('<p>Go to the @contact-page.</p>', array('@contact-page' => l(t('contact page'), 'contact')));
+ * @endcode
+ *
+ * Here is an example of t() used correctly:
+ * @code
+ *   $output .= '<p>' . t('Go to the <a href="@contact-page">contact page</a>.', array('@contact-page' => url('contact'))) . '</p>';
+ * @endcode
+ *
+ * Avoid escaping quotation marks wherever possible.
+ *
+ * Incorrect:
+ * @code
+ *   $output .= t('Don\'t click me.');
+ * @endcode
+ *
+ * Correct:
+ * @code
+ *   $output .= t("Don't click me.");
+ * @endcode
+ *
+ * Because t() is designed for handling code-based strings, in almost all
+ * cases, the actual string and not a variable must be passed through t().
+ *
+ * Extraction of translations is done based on the strings contained in t()
+ * calls. If a variable is passed through t(), the content of the variable
+ * cannot be extracted from the file for translation.
+ *
+ * Incorrect:
+ * @code
+ *   $message = 'An error occurred.';
+ *   drupal_set_message(t($message), 'error');
+ *   $output .= t($message);
+ * @endcode
+ *
+ * Correct:
+ * @code
+ *   $message = t('An error occurred.');
+ *   drupal_set_message($message, 'error');
+ *   $output .= $message;
+ * @endcode
+ *
+ * The only case in which variables can be passed safely through t() is when
+ * code-based versions of the same strings will be passed through t() (or
+ * otherwise extracted) elsewhere.
+ *
+ * In some cases, modules may include strings in code that can't use t()
+ * calls. For example, a module may use an external PHP application that
+ * produces strings that are loaded into variables in Drupal for output.
+ * In these cases, module authors may include a dummy file that passes the
+ * relevant strings through t(). This approach will allow the strings to be
+ * extracted.
+ *
+ * Sample external (non-Drupal) code:
+ * @code
+ *   class Time {
+ *     public $yesterday = 'Yesterday';
+ *     public $today = 'Today';
+ *     public $tomorrow = 'Tomorrow';
+ *   }
+ * @endcode
+ *
+ * Sample dummy file.
+ * @code
+ *   // Dummy function included in example.potx.inc.
+ *   function example_potx() {
+ *     $strings = array(
+ *       t('Yesterday'),
+ *       t('Today'),
+ *       t('Tomorrow'),
+ *     );
+ *     // No return value needed, since this is a dummy function.
+ *   }
+ * @endcode
+ *
+ * Having passed strings through t() in a dummy function, it is then
+ * okay to pass variables through t().
+ *
+ * Correct (if a dummy file was used):
+ * @code
+ *   $time = new Time();
+ *   $output .= t($time->today);
+ * @endcode
+ *
+ * However tempting it is, custom data from user input or other non-code
+ * sources should not be passed through t(). Doing so leads to the following
+ * problems and errors:
+ *  - The t() system doesn't support updates to existing strings. When user
+ *    data is updated, the next time it's passed through t() a new record is
+ *    created instead of an update. The database bloats over time and any
+ *    existing translations are orphaned with each update.
+ *  - The t() system assumes any data it receives is in English. User data may
+ *    be in another language, producing translation errors.
+ *  - The "Built-in interface" text group in the locale system is used to
+ *    produce translations for storage in .po files. When non-code strings are
+ *    passed through t(), they are added to this text group, which is rendered
+ *    inaccurate since it is a mix of actual interface strings and various user
+ *    input strings of uncertain origin.
+ *
+ * Incorrect:
+ * @code
+ *   $item = item_load();
+ *   $output .= check_plain(t($item['title']));
+ * @endcode
+ *
+ * Instead, translation of these data can be done through the locale system,
+ * either directly or through helper functions provided by contributed
+ * modules.
+ * @see hook_locale()
+ *
+ * During installation, st() is used in place of t(). Code that may be called
+ * during installation or during normal operation should use the get_t()
+ * helper function.
+ * @see st()
+ * @see get_t()
+ *
+ * @param $string
+ *   A string containing the English string to translate.
+ * @param $args
+ *   An associative array of replacements to make after translation. Incidences
+ *   of any key in this array are replaced with the corresponding value. Based
+ *   on the first character of the key, the value is escaped and/or themed:
+ *    - !variable: inserted as is
+ *    - @variable: escape plain text to HTML (check_plain)
+ *    - %variable: escape text and theme as a placeholder for user-submitted
+ *      content (check_plain + theme_placeholder)
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *     - 'langcode' (default to the current language) The language code to
+ *       translate to a language other than what is used to display the page.
+ *     - 'context' (default to the empty context) The context the source string
+ *       belongs to.
+ * @return
+ *   The translated string.
+ */
+function t($string, array $args = array(), array $options = array()) {
+  global $language_interface;
+  static $custom_strings;
+
+  // Merge in default.
+  if (empty($options['langcode'])) {
+    $options['langcode'] = isset($language_interface->language) ? $language_interface->language : 'en';
+  }
+  if (empty($options['context'])) {
+    $options['context'] = '';
+  }
+
+  // First, check for an array of customized strings. If present, use the array
+  // *instead of* database lookups. This is a high performance way to provide a
+  // handful of string replacements. See settings.php for examples.
+  // Cache the $custom_strings variable to improve performance.
+  if (!isset($custom_strings[$options['langcode']])) {
+    $custom_strings[$options['langcode']] = variable_get('locale_custom_strings_' . $options['langcode'], array());
+  }
+  // Custom strings work for English too, even if locale module is disabled.
+  if (isset($custom_strings[$options['langcode']][$options['context']][$string])) {
+    $string = $custom_strings[$options['langcode']][$options['context']][$string];
+  }
+  // Translate with locale module if enabled.
+  elseif (function_exists('locale') && $options['langcode'] != 'en') {
+    $string = locale($string, $options['context'], $options['langcode']);
+  }
+  if (empty($args)) {
+    return $string;
+  }
+  else {
+    // Transform arguments before inserting them.
+    foreach ($args as $key => $value) {
+      switch ($key[0]) {
+        case '@':
+          // Escaped only.
+          $args[$key] = check_plain($value);
+          break;
+
+        case '%':
+        default:
+          // Escaped and placeholder.
+          $args[$key] = drupal_placeholder(array('text' => $value));
+          break;
+
+        case '!':
+          // Pass-through.
+      }
+    }
+    return strtr($string, $args);
+  }
+}
+
+/**
  * Encode special characters in a plain-text string for display as HTML.
  *
  * Also validates strings as UTF-8 to prevent cross site scripting attacks on
@@ -1310,7 +1559,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
 
   // It is possible that the error handling will itself trigger an error. In that case, we could
   // end up in an infinite loop. To avoid that, we implement a simple static semaphore.
-  if (!$in_error_state) {
+  if (!$in_error_state && function_exists('module_implements')) {
     $in_error_state = TRUE;
 
     // Prepare the fields to be logged
