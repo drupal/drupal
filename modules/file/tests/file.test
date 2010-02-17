@@ -172,6 +172,14 @@ class FileFieldTestCase extends DrupalWebTestCase {
     $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->uri));
     $this->assertFalse(file_load($file->fid), $message);
   }
+
+  /**
+   * Assert that a file's status is set to permanent in the database.
+   */
+  function assertFileIsPermanent($file, $message = NULL) {
+    $message = isset($message) ? $message : t('File %file is permanent.', array('%file' => $file->uri));
+    $this->assertTrue($file->status == FILE_STATUS_PERMANENT, $message);
+  }
 }
 
 /**
@@ -215,6 +223,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     $node_vid_r1 = $node->vid;
     $this->assertFileExists($node_file_r1, t('New file saved to disk on node creation.'));
     $this->assertFileEntryExists($node_file_r1, t('File entry exists in database on node creation.'));
+    $this->assertFileIsPermanent($node_file_r1, t('File is permanent.'));
 
     // Upload another file to the same node in a new revision.
     $this->replaceNodeFile($test_file, $field_name, $nid);
@@ -223,12 +232,14 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     $node_vid_r2 = $node->vid;
     $this->assertFileExists($node_file_r2, t('Replacement file exists on disk after creating new revision.'));
     $this->assertFileEntryExists($node_file_r2, t('Replacement file entry exists in database after creating new revision.'));
+    $this->assertFileIsPermanent($node_file_r2, t('Replacement file is permanent.'));
 
     // Check that the original file is still in place on the first revision.
     $node = node_load($nid, $node_vid_r1, TRUE);
     $this->assertEqual($node_file_r1, (object) $node->{$field_name}[LANGUAGE_NONE][0], t('Original file still in place after replacing file in new revision.'));
     $this->assertFileExists($node_file_r1, t('Original file still in place after replacing file in new revision.'));
     $this->assertFileEntryExists($node_file_r1, t('Original file entry still in place after replacing file in new revision'));
+    $this->assertFileIsPermanent($node_file_r1, t('Original file is still permanent.'));
 
     // Save a new version of the node without any changes.
     // Check that the file is still the same as the previous revision.
@@ -237,6 +248,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     $node_file_r3 = (object) $node->{$field_name}[LANGUAGE_NONE][0];
     $node_vid_r3 = $node->vid;
     $this->assertEqual($node_file_r2, $node_file_r3, t('Previous revision file still in place after creating a new revision without a new file.'));
+    $this->assertFileIsPermanent($node_file_r3, t('New revision file is permanent.'));
 
     // Revert to the first revision and check that the original file is active.
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r1 . '/revert', array(), t('Revert'));
@@ -244,12 +256,14 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     $node_file_r4 = (object) $node->{$field_name}[LANGUAGE_NONE][0];
     $node_vid_r4 = $node->vid;
     $this->assertEqual($node_file_r1, $node_file_r4, t('Original revision file still in place after reverting to the original revision.'));
+    $this->assertFileIsPermanent($node_file_r4, t('Original revision file still permanent after reverting to the original revision.'));
 
     // Delete the second revision and check that the file is kept (since it is
     // still being used by the third revision).
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r2 . '/delete', array(), t('Delete'));
     $this->assertFileExists($node_file_r3, t('Second file is still available after deleting second revision, since it is being used by the third revision.'));
     $this->assertFileEntryExists($node_file_r3, t('Second file entry is still available after deleting second revision, since it is being used by the third revision.'));
+    $this->assertFileIsPermanent($node_file_r3, t('Second file entry is still permanent after deleting second revision, since it is being used by the third revision.'));
 
     // Delete the third revision and check that the file is deleted also.
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r3 . '/delete', array(), t('Delete'));

@@ -242,6 +242,22 @@ function file_field_prepare_view($entity_type, $entities, $field, $instances, $l
 }
 
 /**
+ * Implements hook_field_presave().
+ */
+function file_field_presave($obj_type, $object, $field, $instance, $langcode, &$items) {
+  // Make sure that each file which will be saved with this object has a
+  // permanent status, so that it will not be removed when temporary files are
+  // cleaned up.
+  foreach ($items as $item) {
+    $file = file_load($item['fid']);
+    if (($file->status & FILE_STATUS_PERMANENT) == 0) {
+      $file->status |= FILE_STATUS_PERMANENT;
+      file_save($file);
+    }
+  }
+}
+
+/**
  * Implements hook_field_update().
  *
  * Check for files that have been removed from the object.
