@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.21 2010/02/17 03:59:43 webchick Exp $
+// $Id: contact.admin.inc,v 1.22 2010/02/17 08:48:18 dries Exp $
 
 /**
  * @file
@@ -39,7 +39,12 @@ function contact_category_list() {
     ));
   }
 
-  return theme('table', array('header' => $header, 'rows' => $rows));
+  $build['category_table'] = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+  );
+  return $build;
 }
 
 /**
@@ -97,7 +102,10 @@ function contact_category_edit_form($form, &$form_state, array $category = array
     '#type' => 'value',
     '#value' => $category['cid'],
   );
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions')),
+  );
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
