@@ -388,6 +388,8 @@ function user_cancel_confirm_form($form, &$form_state, $account) {
     }
   }
 
+  // Always provide entity id in the same form key as in the entity edit form.
+  $form['uid'] = array('#type' => 'value', '#value' => $account->uid);
   return confirm_form($form,
     $question,
     'user/' . $account->uid,

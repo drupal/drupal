@@ -469,11 +469,9 @@ function node_form_submit_build_node($form, &$form_state) {
  * Menu callback -- ask for confirmation of node deletion
  */
 function node_delete_confirm($form, &$form_state, $node) {
-  $form['nid'] = array(
-    '#type' => 'value',
-    '#value' => $node->nid,
-  );
-
+  $form['#node'] = $node;
+  // Always provide entity id in the same form key as in the entity edit form.
+  $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
   return confirm_form($form,
     t('Are you sure you want to delete %title?', array('%title' => $node->title)),
     'node/' . $node->nid,
