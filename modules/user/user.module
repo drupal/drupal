@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1124 2010/02/13 21:19:16 dries Exp $
+// $Id: user.module,v 1.1125 2010/02/17 03:49:02 webchick Exp $
 
 /**
  * @file
@@ -2077,6 +2077,16 @@ function user_external_login_register($name, $module) {
   user_login_submit(array(), $form_state);
 }
 
+/**
+ * Generates a unique URL for a user to login and reset their password.
+ *
+ * @param object $account
+ *   An object containing the user account.
+ *
+ * @return
+ *   A unique URL that provides a one-time log in for the user, from which
+ *   they can change their password.
+ */
 function user_pass_reset_url($account) {
   $timestamp = REQUEST_TIME;
   return url("user/reset/$account->uid/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), array('absolute' => TRUE));
