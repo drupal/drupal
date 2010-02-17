@@ -4175,14 +4175,14 @@ function drupal_cron_cleanup() {
  * Return an array of system file objects.
  *
  * Returns an array of file objects of the given type from the site-wide
- * directory (i.e. modules/), the all-sites directory (i.e.
- * sites/all/modules/), the profiles directory, and site-specific directory
- * (i.e. sites/somesite/modules/). The returned array will be keyed using the
- * key specified (name, basename, filename). Using name or basename will cause
- * site-specific files to be prioritized over similar files in the default
- * directories. That is, if a file with the same name appears in both the
- * site-wide directory and site-specific directory, only the site-specific
- * version will be included.
+ * directory (i.e. modules/), the all-sites directory (i.e. sites/all/modules/),
+ * the profiles directory (i.e. profiles/your_site_profile/modules/), and the
+ * site-specific directory (i.e. sites/your_site_dir/modules/). The returned
+ * array will be keyed using the key specified (uri, filename, or name). Using
+ * name or filename will cause site-specific files to be prioritized over
+ * similar files in the default directories. That is, if a file with the same
+ * name appears in both the site-wide directory and site-specific directory,
+ * only the site-specific version will be included.
  *
  * @param $mask
  *   The preg_match() regular expression of the files to find.
