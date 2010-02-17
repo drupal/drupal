@@ -1,5 +1,5 @@
 <?php
-// $Id: lock.inc,v 1.1 2009/08/17 20:32:29 dries Exp $
+// $Id: lock.inc,v 1.2 2010/02/17 22:44:51 webchick Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function _lock_id() {
     // Assign a unique id.
     $lock_id = uniqid(mt_rand(), TRUE);
     // We only register a shutdown function if a lock is used.
-    register_shutdown_function('lock_release_all', $lock_id);
+    drupal_register_shutdown_function('lock_release_all', $lock_id);
   }
   return $lock_id;
 }

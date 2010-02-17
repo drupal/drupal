@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.24 2010/01/25 10:38:34 dries Exp $
+// $Id: database.inc,v 1.25 2010/02/17 22:44:52 webchick Exp $
 
 /**
  * @file
@@ -85,7 +85,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       $new_id = $this->query('INSERT INTO {sequences} () VALUES ()', array(), array('return' => Database::RETURN_INSERT_ID));
     }
     if (!$shutdown_registered) {
-      register_shutdown_function(array(get_class($this), 'nextIdDelete'));
+      drupal_register_shutdown_function(array(get_class($this), 'nextIdDelete'));
       $shutdown_registered = TRUE;
     }
     return $new_id;

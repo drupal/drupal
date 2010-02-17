@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.351 2010/02/17 03:55:45 webchick Exp $
+// $Id: bootstrap.inc,v 1.352 2010/02/17 22:44:51 webchick Exp $
 
 /**
  * @file
@@ -2643,4 +2643,60 @@ function drupal_is_cli() {
  */
 function drupal_placeholder($variables) {
   return '<em class="placeholder">' . check_plain($variables['text']) . '</em>';
+}
+
+/**
+ *
+ * Register a function for execution on shutdown.
+ *
+ * Wrapper for register_shutdown_function() which catches thrown exceptions
+ * to avoid "Exception thrown without a stack frame in Unknown".
+ *
+ * @param $callback
+ *   The shutdown function to register.
+ * @param $parameters
+ *   It is possible to pass parameters to the shutdown function by passing
+ *   additional parameters.
+ * @return
+ *   Array of shutdown functions to be executed.
+ *
+ * @see register_shutdown_function()
+ */
+function &drupal_register_shutdown_function($callback = NULL, $parameters = NULL) {
+  // We cannot use drupal_static() here because the static cache is reset
+  // during batch processing, which breaks batch handling.
+  static $callbacks = array();
+
+  if (isset($callback)) {
+    // Only register the internal shutdown function once.
+    if (empty($callbacks)) {
+      register_shutdown_function('_drupal_shutdown_function');
+    }
+    $args = func_get_args();
+    array_shift($args);
+    // Save callback and arguments
+    $callbacks[] = array('callback' => $callback, 'arguments' => $args);
+  }
+  return $callbacks;
+}
+
+/**
+ * Internal function used to execute registered shutdown functions.
+ */
+function _drupal_shutdown_function() {
+  $callbacks = &drupal_register_shutdown_function();
+
+  try {
+    while (list($key, $callback) = each($callbacks)) {
+      call_user_func_array($callback['callback'], $callback['arguments']);
+    }
+  }
+  catch(Exception $exception) {
+    require_once DRUPAL_ROOT . '/includes/errors.inc';
+    // The theme has already been printed so it doesn't make much sense to use
+    // drupal_exception_handler() because that would display the maintenaince
+    // page below the usual page. For now, just print the error for debugging.
+    // @todo: Improve this.
+    print t('%type: %message in %function (line %line of %file).', _drupal_decode_exception($exception));
+  }
 }

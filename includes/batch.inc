@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.49 2010/01/08 06:36:34 webchick Exp $
+// $Id: batch.inc,v 1.50 2010/02/17 22:44:51 webchick Exp $
 
 
 /**
@@ -58,7 +58,7 @@ function _batch_page() {
   }
 
   // Register database update for the end of processing.
-  register_shutdown_function('_batch_shutdown');
+  drupal_register_shutdown_function('_batch_shutdown');
 
   // Add batch-specific CSS.
   foreach ($batch['sets'] as $batch_set) {

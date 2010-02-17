@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.132 2010/02/15 22:11:21 webchick Exp $
+// $Id: system.api.php,v 1.133 2010/02/17 22:44:52 webchick Exp $
 
 /**
  * @file
@@ -877,7 +877,7 @@ function hook_forms($form_id, $args) {
 function hook_boot() {
   // we need user_access() in the shutdown function. make sure it gets loaded
   drupal_load('module', 'user');
-  register_shutdown_function('devel_shutdown');
+  drupal_register_shutdown_function('devel_shutdown');
 }
 
 /**

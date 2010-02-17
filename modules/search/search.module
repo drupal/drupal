@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.337 2010/02/13 21:41:58 dries Exp $
+// $Id: search.module,v 1.338 2010/02/17 22:44:52 webchick Exp $
 
 /**
  * @file
@@ -341,7 +341,7 @@ function search_dirty($word = NULL) {
 function search_cron() {
   // We register a shutdown function to ensure that search_total is always up
   // to date.
-  register_shutdown_function('search_update_totals');
+  drupal_register_shutdown_function('search_update_totals');
 
   foreach(variable_get('search_active_modules', array('node', 'user')) as $module) {
     // Update word index
