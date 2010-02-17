@@ -1995,7 +1995,7 @@ function theme_html_tag($variables) {
  *   - title: A descriptive verb for the link, like 'Read more'
  */
 function theme_more_link($variables) {
-  return '<div class="more-link">' . t('<a href="@link" title="@title">more</a>', array('@link' => check_url($variables['url']), '@title' => $variables['title'])) . '</div>';
+  return '<div class="more-link">' . t('<a href="@link" title="@title">More</a>', array('@link' => check_url($variables['url']), '@title' => $variables['title'])) . '</div>';
 }
 
 /**

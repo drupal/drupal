@@ -19,25 +19,11 @@
 }
 
 #dashboard .dashboard-region .block {
-  border: #ccc 1px solid;
   clear: both;
 }
 
 #dashboard div.block h2 {
-  padding: 3px 9px 3px 19px;
   float: none;
-}
-
-#dashboard .dashboard-region div.block h2 {
-  background: #E0E0D8;
-}
-
-#dashboard div.block div.content {
-  padding: 10px 5px 5px 5px;
-}
-
-#dashboard div.block div.content ul.menu {
-  margin-left: 20px;
 }
 
 #dashboard #disabled-blocks .block, #dashboard .block-placeholder {
@@ -122,6 +108,7 @@
 
 #dashboard .ui-sortable .block h2 {
   background: transparent url(../../misc/draggable.png) no-repeat 0 -35px;
+  padding: 0 1em;
 }
 
 #dashboard #disabled-blocks .block:hover h2 {
@@ -146,13 +133,4 @@
 #dashboard #disabled-blocks .block-placeholder {
   width: 30px;
   height: 1.6em;
-}
-
-/* Recent content block */
-#dashboard #block-node-recent table,
-#dashboard #block-node-recent tr {
-  border: none;
-}
-#dashboard #block-node-recent .content {
-  padding: 0;
 }

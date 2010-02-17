@@ -1017,7 +1017,33 @@ div.add-or-remove-shortcuts {
 }
 
 /* Dashboard */
+#dashboard .dashboard-region div.block h2 {
+  background: #E0E0D8;
+}
 #dashboard div.block h2 {
   margin: 0;
   font-size: 1em;
+  padding: 3px 9px 3px 19px;
+}
+#dashboard div.block div.content {
+  padding: 10px 5px 5px 5px;
+}
+#dashboard div.block div.content ul.menu {
+  margin-left: 20px;
+}
+#dashboard .dashboard-region .block {
+  border: #ccc 1px solid;
+}
+
+
+/* Recent content block */
+#dashboard div#block-node-recent div.content {
+  padding: 0;
+}
+#block-node-recent table,
+#block-node-recent tr {
+  border: none;
+}
+#block-node-recent .more-link {
+  padding: 0 5px 5px 0;
 }
