@@ -352,6 +352,19 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
     $this->assertResponse(200);
+
+    // Re-create our contacted user as a blocked user.
+    $this->contact_user = $this->drupalCreateUser();
+    user_save($this->contact_user, array('status' => 0));
+
+    // Test that blocked users can still be contacted by admin.
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(200);
+
+    // Test that blocked users cannot be contacted by non-admins.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(403);
   }
 
   /**

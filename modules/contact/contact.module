@@ -142,6 +142,11 @@ function _contact_personal_tab_access(stdClass $account) {
     return FALSE;
   }
 
+  // If requested user has been blocked, do not allow users to contact them.
+  if (empty($account->status)) {
+    return FALSE;
+  }
+
   return user_access('access user contact forms');
 }
 
