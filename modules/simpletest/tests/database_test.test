@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.80 2010/01/13 05:49:41 webchick Exp $
+// $Id: database_test.test,v 1.81 2010/02/17 05:24:53 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1906,6 +1906,19 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $count = $count->execute()->fetchField();
 
     $this->assertEqual($count, 4, t('Counted the correct number of records.'));
+  }
+
+  /**
+   * Test that we can generate a count query from a query with distinct.
+   */
+  function testCountQueryDistinct() {
+    $query = db_select('test_task');
+    $task_field = $query->addField('test_task', 'task');
+    $query->distinct();
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 6, t('Counted the correct number of records.'));
   }
 
   /**
