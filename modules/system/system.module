@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.889 2010/02/13 21:41:58 dries Exp $
+// $Id: system.module,v 1.890 2010/02/17 09:09:30 dries Exp $
 
 /**
  * @file
@@ -613,6 +613,7 @@ function system_menu() {
     'access arguments' => array('administer themes'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'system.admin.inc',
+    'weight' => 20,
   );
   // Theme configuration subtabs.
   $items['admin/appearance/settings/global'] = array(
@@ -657,6 +658,7 @@ function system_menu() {
     'access arguments' => array('administer modules'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'system.admin.inc',
+    'weight' => 20,
   );
   $items['admin/modules/uninstall/confirm'] = array(
     'title' => 'Uninstall',
