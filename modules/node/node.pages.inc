@@ -90,7 +90,7 @@ function node_object_prepare($node) {
   // Set up default values, if required.
   $node_options = variable_get('node_options_' . $node->type, array('status', 'promote'));
   // If this is a new node, fill in the default values.
-  if (!isset($node->nid)) {
+  if (!isset($node->nid) || isset($node->is_new)) {
     foreach (array('status', 'promote', 'sticky') as $key) {
       // Multistep node forms might have filled in something already.
       if (!isset($node->$key)) {
