@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.66 2010/02/11 03:19:21 webchick Exp $
+// $Id: user.pages.inc,v 1.67 2010/02/17 05:42:42 webchick Exp $
 
 /**
  * @file
@@ -388,6 +388,8 @@ function user_cancel_confirm_form($form, &$form_state, $account) {
     }
   }
 
+  // Always provide entity id in the same form key as in the entity edit form.
+  $form['uid'] = array('#type' => 'value', '#value' => $account->uid);
   return confirm_form($form,
     $question,
     'user/' . $account->uid,

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.41 2010/01/30 07:59:24 dries Exp $
+// $Id: comment.admin.inc,v 1.42 2010/02/17 05:42:42 webchick Exp $
 
 /**
  * @file
@@ -241,6 +241,8 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
  */
 function comment_confirm_delete($form, &$form_state, $comment) {
   $form['#comment'] = $comment;
+  // Always provide entity id in the same form key as in the entity edit form.
+  $form['cid'] = array('#type' => 'value', '#value' => $comment->cid);
   return confirm_form(
     $form,
     t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
