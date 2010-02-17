@@ -72,7 +72,7 @@ function _drupal_session_read($sid) {
   // since PHP 5.0.5.
   // Thus destructors can use sessions but session handler can't use objects.
   // So we are moving session closure before destructing objects.
-  register_shutdown_function('session_write_close');
+  drupal_register_shutdown_function('session_write_close');
 
   // Handle the case of first time visitors and clients that don't store
   // cookies (eg. web crawlers).

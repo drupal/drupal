@@ -94,6 +94,13 @@ function system_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['system-test/shutdown-functions'] = array(
+    'title' => 'Test main content duplication',
+    'page callback' => 'system_test_page_shutdown_functions',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -278,5 +285,31 @@ function system_test_page_build(&$page) {
  */
 function system_test_main_content_fallback() {
   return t('Content to test main content fallback');
+}
+
+/**
+ * A simple page callback which adds a register shutdown function.
+ */
+function system_test_page_shutdown_functions($arg1, $arg2) {
+  drupal_register_shutdown_function('_system_test_first_shutdown_function', $arg1, $arg2);
+}
+
+/**
+ * Dummy shutdown function which registers another shutdown function.
+ */
+function _system_test_first_shutdown_function($arg1, $arg2) {
+  // Output something, page has already been printed and the session stored
+  // so we can't use drupal_set_message.
+  print t('First shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2));
+  drupal_register_shutdown_function('_system_test_second_shutdown_function', $arg1, $arg2);
+}
+
+/**
+ * Dummy shutdown function.
+ */
+function _system_test_second_shutdown_function($arg1, $arg2) {
+  // Output something, page has already been printed and the session stored
+  // so we can't use drupal_set_message.
+  print t('Second shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2));
 }
 

@@ -877,7 +877,7 @@ function hook_forms($form_id, $args) {
 function hook_boot() {
   // we need user_access() in the shutdown function. make sure it gets loaded
   drupal_load('module', 'user');
-  register_shutdown_function('devel_shutdown');
+  drupal_register_shutdown_function('devel_shutdown');
 }
 
 /**

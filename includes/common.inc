@@ -4017,7 +4017,7 @@ function _drupal_bootstrap_full() {
   // Load all enabled modules
   module_load_all();
   // Register automated cron run handler.
-  register_shutdown_function('system_run_automated_cron');
+  drupal_register_shutdown_function('system_run_automated_cron');
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
   if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'simpletest') !== FALSE) {
@@ -4130,7 +4130,7 @@ function drupal_cron_run() {
       DrupalQueue::get($queue_name)->createQueue();
     }
     // Register shutdown callback
-    register_shutdown_function('drupal_cron_cleanup');
+    drupal_register_shutdown_function('drupal_cron_cleanup');
 
     // Lock cron semaphore
     variable_set('cron_semaphore', REQUEST_TIME);

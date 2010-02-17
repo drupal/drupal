@@ -2216,7 +2216,7 @@ function menu_cache_clear($menu_name = 'navigation') {
     $cache_cleared[$menu_name] = 1;
   }
   elseif ($cache_cleared[$menu_name] == 1) {
-    register_shutdown_function('cache_clear_all', 'links:' . $menu_name . ':', 'cache_menu', TRUE);
+    drupal_register_shutdown_function('cache_clear_all', 'links:' . $menu_name . ':', 'cache_menu', TRUE);
     $cache_cleared[$menu_name] = 2;
   }
 
@@ -2798,9 +2798,9 @@ function _menu_clear_page_cache() {
     $cache_cleared = 1;
   }
   elseif ($cache_cleared == 1) {
-    register_shutdown_function('cache_clear_all');
+    drupal_register_shutdown_function('cache_clear_all');
     // Keep track of which menus have expanded items.
-    register_shutdown_function('_menu_set_expanded_menus');
+    drupal_register_shutdown_function('_menu_set_expanded_menus');
     $cache_cleared = 2;
   }
 }

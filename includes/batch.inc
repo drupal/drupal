@@ -58,7 +58,7 @@ function _batch_page() {
   }
 
   // Register database update for the end of processing.
-  register_shutdown_function('_batch_shutdown');
+  drupal_register_shutdown_function('_batch_shutdown');
 
   // Add batch-specific CSS.
   foreach ($batch['sets'] as $batch_set) {
