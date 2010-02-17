@@ -613,6 +613,7 @@ function system_menu() {
     'access arguments' => array('administer themes'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'system.admin.inc',
+    'weight' => 20,
   );
   // Theme configuration subtabs.
   $items['admin/appearance/settings/global'] = array(
@@ -657,6 +658,7 @@ function system_menu() {
     'access arguments' => array('administer modules'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'system.admin.inc',
+    'weight' => 20,
   );
   $items['admin/modules/uninstall/confirm'] = array(
     'title' => 'Uninstall',
