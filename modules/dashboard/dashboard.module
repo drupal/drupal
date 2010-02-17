@@ -62,6 +62,18 @@ function dashboard_menu() {
 }
 
 /**
+ * Implements hook_menu_alter().
+ */
+function dashboard_menu_alter(&$items) {
+  // Make the dashboard the default local task on /admin.
+  $items['admin']['title'] = 'Dashboard';
+  $items['admin']['page callback'] = 'dashboard_admin';
+  $items['admin']['access arguments'] = array('access dashboard');
+  $items['admin/dashboard']['type'] = MENU_DEFAULT_LOCAL_TASK;
+  $items['admin/by-task']['type'] = MENU_LOCAL_TASK;
+}
+
+/**
  * Implements hook_block_info_alter().
  *
  * Skip rendering dashboard blocks when not on the dashboard page itself. This
