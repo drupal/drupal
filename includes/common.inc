@@ -1148,22 +1148,25 @@ function flood_clear_event($name, $identifier = NULL) {
 }
 
 /**
- * Check if the current visitor is allowed to proceed with the specified event.
+ * Checks whether user is allowed to proceed with the specified event.
  *
- * The user is allowed to proceed if he did not trigger the specified event more
- * than $threshold times in the specified time window.
+ * Events can have thresholds saying that each user can only do that event
+ * a certain number of times in a time window. This function verifies that the
+ * current user has not exceeded this threshold.
  *
  * @param $name
- *   The name of the event.
+ *   The unique name of the event.
  * @param $threshold
- *   The maximum number of the specified event allowed per time window.
+ *   The maximum number of times each user can do this event per time window.
  * @param $window
- *   Optional number of seconds over which to look for events.  Defaults to
- *   3600 (1 hour).
+ *   Number of seconds in the time window for this event (default is 3600
+ *   seconds, or 1 hour).
  * @param $identifier
- *   Optional identifier (defaults to the current user's IP address).
+ *   Unique identifier of the current user. Defaults to their IP address.
+ *
  * @return
- *   True if the user did not exceed the hourly threshold. False otherwise.
+ *   TRUE if the user is allowed to proceed. FALSE if they have exceeded the
+ *   threshold and should not be allowed to proceed.
  */
 function flood_is_allowed($name, $threshold, $window = 3600, $identifier = NULL) {
   if (!isset($identifier)) {
