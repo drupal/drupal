@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.20 2010/01/03 21:01:04 webchick Exp $
+// $Id: contact.admin.inc,v 1.21 2010/02/17 03:59:43 webchick Exp $
 
 /**
  * @file
@@ -112,6 +112,18 @@ function contact_category_edit_form($form, &$form_state, array $category = array
 function contact_category_edit_form_validate($form, &$form_state) {
   // Validate and each e-mail recipient.
   $recipients = explode(',', $form_state['values']['recipients']);
+
+  // When creating a new contact form, or renaming the category on an existing
+  // contact form, make sure that the given category is unique.
+  $category = $form_state['values']['category'];
+  $query = db_select('contact', 'c')->condition('c.category', $category, '=');
+  if (!empty($form_state['values']['cid'])) {
+    $query->condition('c.cid', $form_state['values']['cid'], '<>');
+  }
+  if ($query->countQuery()->execute()->fetchField()) {
+    form_set_error('category', t('A contact form with category %category already exists.', array('%category' => $category)));
+  }
+
   foreach ($recipients as &$recipient) {
     $recipient = trim($recipient);
     if (!valid_email_address($recipient)) {
