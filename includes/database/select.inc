@@ -1250,23 +1250,32 @@ class SelectQuery extends Query implements SelectQueryInterface {
     // Create our new query object that we will mutate into a count query.
     $count = clone($this);
 
-    // Zero-out existing fields and expressions.
-    $fields =& $count->getFields();
-    $fields = array();
-    $expressions =& $count->getExpressions();
-    $expressions = array();
+    if (!$count->distinct) {
+      // When not executing a distinct query, we can zero-out existing fields
+      // and expressions.
+      $fields =& $count->getFields();
+      $fields = array();
+      $expressions =& $count->getExpressions();
+      $expressions = array();
 
-
-    // Also remove 'all_fields' statements, which are expanded into tablename.*
-    // when the query is executed.
-    foreach ($count->tables as $alias => &$table) {
-      unset($table['all_fields']);
+      // Also remove 'all_fields' statements, which are expanded into tablename.*
+      // when the query is executed.
+      foreach ($count->tables as $alias => &$table) {
+        unset($table['all_fields']);
+      }
     }
 
     // Ordering a count query is a waste of cycles, and breaks on some
     // databases anyway.
     $orders = &$count->getOrderBy();
     $orders = array();
+
+    if ($count->distinct) {
+      // If the query is distinct, we need to execute it in a subquery,
+      // because SQL99 does not support counting on distinct multiple fields.
+      $count = db_select($count);
+      $count->distinct = FALSE;
+    }
 
     // COUNT() is an expression, so we add that back in.
     $count->addExpression('COUNT(*)');

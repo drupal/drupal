@@ -1909,6 +1909,19 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
   }
 
   /**
+   * Test that we can generate a count query from a query with distinct.
+   */
+  function testCountQueryDistinct() {
+    $query = db_select('test_task');
+    $task_field = $query->addField('test_task', 'task');
+    $query->distinct();
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 6, t('Counted the correct number of records.'));
+  }
+
+  /**
    * Confirm that we can properly nest conditional clauses.
    */
   function testNestedConditions() {

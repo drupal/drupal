@@ -539,8 +539,12 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $options)
 
   // For a count query, return the count now.
   if ($options['count']) {
-    $query->addExpression('COUNT(DISTINCT e.type,t.entity_id,t.revision_id)');
-    return $query->execute()->fetchField();
+    return $query
+      ->fields('t', array('etid', 'entity_id', 'revision_id'))
+      ->distinct()
+      ->countQuery()
+      ->execute()
+      ->fetchField();
   }
 
   // For a data query, add fields.
