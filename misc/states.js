@@ -1,4 +1,4 @@
-// $Id: states.js,v 1.1 2009/10/16 19:20:34 dries Exp $
+// $Id: states.js,v 1.2 2010/02/18 19:24:55 webchick Exp $
 (function ($) {
 
 /**
@@ -249,6 +249,9 @@ states.Trigger.states = {
 
   value: {
     'keyup': function () {
+      return this.val();
+    },
+    'change': function () {
       return this.val();
     }
   },
