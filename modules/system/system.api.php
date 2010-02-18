@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.133 2010/02/17 22:44:52 webchick Exp $
+// $Id: system.api.php,v 1.134 2010/02/18 01:40:46 webchick Exp $
 
 /**
  * @file
@@ -3208,6 +3208,19 @@ function hook_token_info_alter(&$data) {
   );
 }
 
+/**
+ * Alter the default country list.
+ *
+ * @param $countries
+ *   The associative array of countries keyed by ISO 3166-1 country code.
+ *
+ * @see country_get_list()
+ * @see _country_get_predefined_list()
+ */
+function hook_countries_alter(&$countries) {
+  // Quebec has seceded from Canada. Add to country list.
+  $countries['QC'] = 'Quebec';
+}
 /**
  * @} End of "addtogroup hooks".
  */
