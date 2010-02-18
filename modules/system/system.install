@@ -2021,7 +2021,6 @@ function system_update_7018() {
   db_drop_index('system', 'type_name');
   db_change_field('system', 'type', 'type', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
   db_add_index('system', 'type_name', array('type', 'name'));
-  db_add_index('system', 'system_list', array('weight', 'name'));
 }
 
 /**

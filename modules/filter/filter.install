@@ -113,8 +113,9 @@ function filter_update_dependencies() {
   // Filter update 7005 migrates block data and therefore needs to run after
   // the {block_custom} table is properly set up.
   $dependencies['filter'][7005] = array(
-    'system' => 7037,
+    'taxonomy' => 7002,
   );
+
   return $dependencies;
 }
 

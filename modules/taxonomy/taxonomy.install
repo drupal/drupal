@@ -215,6 +215,9 @@ function taxonomy_update_dependencies() {
   $dependencies['taxonomy'][7002] = array(
     'system' => 7049,
   );
+  $dependencies['user'][7006] = array(
+    'taxonomy' => 7002,
+  );
   $dependencies['system'][7050] = array(
     'taxonomy' => 7002,
   );
@@ -222,6 +225,7 @@ function taxonomy_update_dependencies() {
   $dependencies['node'][7006] = array(
     'taxonomy' => 7002,
   );
+ 
   return $dependencies;
 }
 
