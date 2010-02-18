@@ -250,6 +250,9 @@ states.Trigger.states = {
   value: {
     'keyup': function () {
       return this.val();
+    },
+    'change': function () {
+      return this.val();
     }
   },
 
