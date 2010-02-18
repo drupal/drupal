@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.31 2010/02/03 18:16:23 webchick Exp $
+// $Id: filter.install,v 1.32 2010/02/18 04:36:38 webchick Exp $
 
 /**
  * @file
@@ -113,8 +113,9 @@ function filter_update_dependencies() {
   // Filter update 7005 migrates block data and therefore needs to run after
   // the {block_custom} table is properly set up.
   $dependencies['filter'][7005] = array(
-    'system' => 7037,
+    'taxonomy' => 7002,
   );
+
   return $dependencies;
 }
 
