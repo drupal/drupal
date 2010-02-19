@@ -774,7 +774,6 @@ function locale_js_alter(&$javascript) {
         // Don't parse our own translations files.
         if (substr($filepath, 0, strlen($dir)) != $dir) {
           locale_inc_callback('_locale_parse_js_file', $filepath);
-          watchdog('locale', 'Parsed JavaScript file %file.', array('%file' => $filepath));
           $parsed[] = $filepath;
           $new_files = TRUE;
         }
