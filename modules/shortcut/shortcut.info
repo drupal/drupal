@@ -1,4 +1,4 @@
-; $Id: shortcut.info,v 1.2 2009/11/17 21:24:18 dries Exp $
+; $Id: shortcut.info,v 1.3 2010/02/19 10:36:12 dries Exp $
 name = Shortcut
 description = Allows users to manage customizable lists of shortcut links.
 package = Core
@@ -7,4 +7,4 @@ core = 7.x
 files[] = shortcut.module
 files[] = shortcut.admin.inc
 files[] = shortcut.install
-configure = admin/config/system/shortcut
+configure = admin/config/user-interface/shortcut
