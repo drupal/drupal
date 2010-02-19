@@ -24,7 +24,7 @@ function shortcut_help($path, $arg) {
       $output .= '<p>' . t('The Shortcut module allows users to create sets of <em>shortcut</em> links to commonly-visited pages of the site. Shortcuts are contained within <em>sets</em>, and each user with <em>Select own shortcut set</em> permission can select a preferred set of shortcuts. For more information, see the online handbook entry for <a href="@shortcut">Shortcut module</a>.', array('@shortcut' => 'http://drupal.org/handbook/modules/shortcut/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl><dt>' . t('Creating and modifying shortcuts and sets') . '</dt>';
-      $output .= '<dd>' . t('Users with the appropriate permissions can manage shortcut sets, choose a preferred shortcut set, and edit the shortcuts within sets from the <a href="@shortcuts">Shortcuts administration page</a>.', array('@shortcuts' => url('admin/config/system/shortcut'))) . '</dd>';
+      $output .= '<dd>' . t('Users with the appropriate permissions can manage shortcut sets, choose a preferred shortcut set, and edit the shortcuts within sets from the <a href="@shortcuts">Shortcuts administration page</a>.', array('@shortcuts' => url('admin/config/user-interface/shortcut'))) . '</dd>';
       $output .= '<dt>' . t('Adding and removing shortcuts') . '</dt>';
       $output .= '<dd>' . t('The Shortcut module creates an add/remove link for each page on your site; the link lets you add or remove the current page from the currently-enabled set of shortcuts (if your theme displays it). The core Seven administration theme displays this link next to the page title, as a small + or - sign. If you click on the + sign, you will add that page to your preferred set of shortcuts. If the page is already part of your shortcut set, the link will be a - sign, and will allow you to remove the current page from your shortcut set.') . '</dd>';
       $output .= '<dt>' . t('Displaying shortcuts') . '</dt>';
@@ -55,7 +55,7 @@ function shortcut_permission() {
  * Implements hook_menu().
  */
 function shortcut_menu() {
-  $items['admin/config/system/shortcut'] = array(
+  $items['admin/config/user-interface/shortcut'] = array(
     'title' => 'Shortcuts',
     'description' => 'List the available shortcut sets and switch between them.',
     'page callback' => 'drupal_get_form',
@@ -63,7 +63,7 @@ function shortcut_menu() {
     'access arguments' => array('administer shortcuts'),
     'file' => 'shortcut.admin.inc',
   );
-  $items['admin/config/system/shortcut/%shortcut_set'] = array(
+  $items['admin/config/user-interface/shortcut/%shortcut_set'] = array(
     'title' => 'Edit shortcuts',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('shortcut_set_customize', 4),
@@ -72,7 +72,7 @@ function shortcut_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'shortcut.admin.inc',
   );
-  $items['admin/config/system/shortcut/%shortcut_set/add-link'] = array(
+  $items['admin/config/user-interface/shortcut/%shortcut_set/add-link'] = array(
     'title' => 'Add shortcut',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('shortcut_link_add', 4),
@@ -81,7 +81,7 @@ function shortcut_menu() {
     'type' => MENU_LOCAL_ACTION,
     'file' => 'shortcut.admin.inc',
   );
-  $items['admin/config/system/shortcut/%shortcut_set/add-link-inline'] = array(
+  $items['admin/config/user-interface/shortcut/%shortcut_set/add-link-inline'] = array(
     'title' => 'Add shortcut',
     'page callback' => 'shortcut_link_add_inline',
     'page arguments' => array(4),
@@ -90,7 +90,7 @@ function shortcut_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'shortcut.admin.inc',
   );
-  $items['admin/config/system/shortcut/link/%menu_link'] = array(
+  $items['admin/config/user-interface/shortcut/link/%menu_link'] = array(
     'title' => 'Edit shortcut',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('shortcut_link_edit', 5),
@@ -99,7 +99,7 @@ function shortcut_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'shortcut.admin.inc',
   );
-  $items['admin/config/system/shortcut/link/%menu_link/delete'] = array(
+  $items['admin/config/user-interface/shortcut/link/%menu_link/delete'] = array(
     'title' => 'Delete shortcut',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('shortcut_link_delete', 5),
@@ -550,12 +550,12 @@ function shortcut_preprocess_page(&$variables) {
     if ($link_mode == "add") {
       $query['token'] = drupal_get_token('shortcut-add-link');
       $link_text = shortcut_set_switch_access() ? t('Add to %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->title)) : t('Add to shortcuts');
-      $link_path = 'admin/config/system/shortcut/' . $shortcut_set->set_name . '/add-link-inline';
+      $link_path = 'admin/config/user-interface/shortcut/' . $shortcut_set->set_name . '/add-link-inline';
     }
     else {
       $query['mlid'] = $mlid;
       $link_text = shortcut_set_switch_access() ? t('Remove from %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->title)) : t('Remove from shortcuts');
-      $link_path = 'admin/config/system/shortcut/link/' . $mlid . '/delete';
+      $link_path = 'admin/config/user-interface/shortcut/link/' . $mlid . '/delete';
     }
 
     if (theme_get_setting('shortcut_module_link')) {
@@ -597,7 +597,7 @@ function shortcut_toolbar_pre_render($toolbar) {
     $configure_link = array(
       '#type' => 'link',
       '#title' => t('Edit shortcuts'),
-      '#href' => 'admin/config/system/shortcut/' . $shortcut_set->set_name,
+      '#href' => 'admin/config/user-interface/shortcut/' . $shortcut_set->set_name,
       '#options' => array('attributes' => array('id' => 'edit-shortcuts')),
     );
   }

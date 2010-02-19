@@ -117,7 +117,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
     else {
       drupal_set_message(t('%user is now using a new shortcut set called %set_name. You can edit it from this page.', $replacements));
     }
-    $form_state['redirect'] = 'admin/config/system/shortcut/' . $set->set_name;
+    $form_state['redirect'] = 'admin/config/user-interface/shortcut/' . $set->set_name;
   }
   else {
     // Switch to a different shortcut set.
@@ -159,7 +159,7 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
   $form['change_set'] = array(
     '#type' => 'link',
     '#title' => t('Change set'),
-    '#href' => 'admin/config/system/shortcut',
+    '#href' => 'admin/config/user-interface/shortcut',
     '#prefix' => '<div class="shortcuts-change-set"> (',
     '#suffix' => ')</div>',
     '#weight' => -99,
@@ -187,8 +187,8 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
       '#attributes' => array('class' => array('shortcut-status-select')),
     );
 
-    $form['shortcuts'][$status][$mlid]['edit']['#markup'] = l(t('edit'), 'admin/config/system/shortcut/link/' . $mlid);
-    $form['shortcuts'][$status][$mlid]['delete']['#markup'] = l(t('delete'), 'admin/config/system/shortcut/link/' . $mlid . '/delete');
+    $form['shortcuts'][$status][$mlid]['edit']['#markup'] = l(t('edit'), 'admin/config/user-interface/shortcut/link/' . $mlid);
+    $form['shortcuts'][$status][$mlid]['delete']['#markup'] = l(t('delete'), 'admin/config/user-interface/shortcut/link/' . $mlid . '/delete');
   }
 
   $form['#attached'] = array(
@@ -399,7 +399,7 @@ function shortcut_link_edit_validate($form, &$form_state) {
 function shortcut_link_edit_submit($form, &$form_state) {
   $shortcut_link = array_merge($form_state['values']['original_shortcut_link'], $form_state['values']['shortcut_link']);
   menu_link_save($shortcut_link);
-  $form_state['redirect'] = 'admin/config/system/shortcut/' . $shortcut_link['menu_name'];
+  $form_state['redirect'] = 'admin/config/user-interface/shortcut/' . $shortcut_link['menu_name'];
   drupal_set_message(t('The shortcut %link has been updated.', array('%link' => $shortcut_link['link_title'])));
 }
 
@@ -413,7 +413,7 @@ function shortcut_link_add_submit($form, &$form_state) {
   $shortcut_link['menu_name'] = $shortcut_set->set_name;
   shortcut_admin_add_link($shortcut_link, $shortcut_set, shortcut_max_slots());
   shortcut_set_save($shortcut_set);
-  $form_state['redirect'] = 'admin/config/system/shortcut/' . $shortcut_link['menu_name'];
+  $form_state['redirect'] = 'admin/config/user-interface/shortcut/' . $shortcut_link['menu_name'];
   drupal_set_message(t('Added a shortcut for %title.', array('%title' => $shortcut_link['link_title'])));
 }
 
@@ -478,7 +478,7 @@ function shortcut_link_delete($form, &$form_state, $shortcut_link) {
   return confirm_form(
     $form,
     t('Are you sure you want to delete the shortcut %title?', array('%title' => $shortcut_link['link_title'])),
-    'admin/config/system/shortcut/' . $shortcut_link['menu_name'],
+    'admin/config/user-interface/shortcut/' . $shortcut_link['menu_name'],
     t('This action cannot be undone.'),
     t('Delete'),
     t('Cancel')
@@ -491,7 +491,7 @@ function shortcut_link_delete($form, &$form_state, $shortcut_link) {
 function shortcut_link_delete_submit($form, &$form_state) {
   $shortcut_link = $form_state['values']['shortcut_link'];
   menu_link_delete($shortcut_link['mlid']);
-  $form_state['redirect'] = 'admin/config/system/shortcut/' . $shortcut_link['menu_name'];
+  $form_state['redirect'] = 'admin/config/user-interface/shortcut/' . $shortcut_link['menu_name'];
   drupal_set_message(t('The shortcut %title has been deleted.', array('%title' => $shortcut_link['link_title'])));
 }
 
