@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.282 2010/01/14 06:43:24 webchick Exp $
+// $Id: locale.module,v 1.283 2010/02/19 10:38:31 dries Exp $
 
 /**
  * @file
@@ -774,7 +774,6 @@ function locale_js_alter(&$javascript) {
         // Don't parse our own translations files.
         if (substr($filepath, 0, strlen($dir)) != $dir) {
           locale_inc_callback('_locale_parse_js_file', $filepath);
-          watchdog('locale', 'Parsed JavaScript file %file.', array('%file' => $filepath));
           $parsed[] = $filepath;
           $new_files = TRUE;
         }
