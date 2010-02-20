@@ -1537,7 +1537,7 @@ function hook_modules_disabled($modules) {
  * @see hook_uninstall()
  *
  * @param $modules
- *   The name of the uninstalled module.
+ *   An array of the uninstalled modules.
  */
 function hook_modules_uninstalled($modules) {
   foreach ($modules as $module) {
