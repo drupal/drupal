@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.134 2010/02/18 01:40:46 webchick Exp $
+// $Id: system.api.php,v 1.135 2010/02/20 14:35:03 dries Exp $
 
 /**
  * @file
@@ -1537,7 +1537,7 @@ function hook_modules_disabled($modules) {
  * @see hook_uninstall()
  *
  * @param $modules
- *   The name of the uninstalled module.
+ *   An array of the uninstalled modules.
  */
 function hook_modules_uninstalled($modules) {
   foreach ($modules as $module) {
