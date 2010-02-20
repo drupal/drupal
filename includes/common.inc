@@ -5045,9 +5045,6 @@ function drupal_common_theme() {
     'more_link' => array(
       'variables' => array('url' => NULL, 'title' => NULL)
     ),
-    'blocks' => array(
-      'variables' => array('region' => NULL),
-    ),
     'username' => array(
       'variables' => array('account' => NULL),
     ),
