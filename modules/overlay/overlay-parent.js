@@ -281,15 +281,27 @@ Drupal.overlay.load = function (url) {
   // spinner is centered.
   self.lastHeight = 0;
   self.outerResize();
-  // No need to resize when loading.
+  // No need to resize while loading.
   clearTimeout(self.resizeTimeoutID);
 
   // Change the overlay title.
   self.$container.dialog('option', 'title', Drupal.t('Loading...'));
   // Remove any existing shortcut button markup in the title section.
   self.$dialogTitlebar.find('.add-or-remove-shortcuts').remove();
-  // Remove any existing tabs in the title section.
-  self.$dialogTitlebar.find('ul').remove();
+  // Remove any existing tabs in the title section, but only if requested url
+  // is not one of those tabs. If the latter, set that tab active.
+  var urlPath = self.getPath(url);
+  var $tabs = self.$dialogTitlebar.find('ul');
+  var $tabsLinks = $tabs.find('> li > a');
+  var $activeLink = $tabsLinks.filter(function () { return self.getPath(this) == urlPath; });
+  if ($activeLink.length) {
+    var active_tab = Drupal.t('(active tab)');
+    $tabsLinks.parent().removeClass('active').find('element-invisible:contains(' + active_tab + ')').appendTo($activeLink);
+    $activeLink.parent().addClass('active');
+  }
+  else {
+    $tabs.remove();
+  }
 
   // While the overlay is loading, we remove the loaded class from the dialog.
   // After the loading is finished, the loaded class is added back. The loaded
