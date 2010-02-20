@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.43 2010/02/15 22:18:35 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.44 2010/02/20 14:28:41 dries Exp $
 
 /**
  * @file
@@ -781,10 +781,10 @@ function field_ui_existing_field_options($entity_type, $bundle) {
   $options = array();
   $field_types = field_info_field_types();
 
-  foreach (field_info_instances() as $existing_obj_type => $bundles) {
+  foreach (field_info_instances() as $existing_entity_type => $bundles) {
     foreach ($bundles as $existing_bundle => $instances) {
       // No need to look in the current bundle.
-      if (!($existing_bundle == $bundle && $existing_obj_type == $entity_type)) {
+      if (!($existing_bundle == $bundle && $existing_entity_type == $entity_type)) {
         foreach ($instances as $instance) {
           $field = field_info_field($instance['field_name']);
           // Don't show
