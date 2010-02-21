@@ -1,4 +1,4 @@
-// $Id: dashboard.js,v 1.7 2010/01/30 04:45:17 webchick Exp $
+// $Id: dashboard.js,v 1.8 2010/02/21 10:47:25 dries Exp $
 (function ($) {
 
 /**
@@ -6,7 +6,7 @@
  */
 Drupal.behaviors.dashboard = {
   attach: function () {
-    $('#dashboard').prepend('<div class="customize"><ul class="action-links"><a href="#">' + Drupal.t('Customize dashboard') + '</a></ul><div class="canvas"></div></div>');
+    $('#dashboard').prepend('<div class="customize"><ul class="action-links"><li><a href="#">' + Drupal.t('Customize dashboard') + '</a></li></ul><div class="canvas"></div></div>');
     $('#dashboard .customize .action-links a').click(Drupal.behaviors.dashboard.enterCustomizeMode);
     if ($('#dashboard .region .block').length == 0) {
       Drupal.settings.dashboard.launchCustomize = true;
