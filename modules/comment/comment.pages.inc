@@ -103,13 +103,16 @@ function comment_reply($node, $pid = NULL) {
 /**
  * Menu callback; publish specified comment.
  *
- * @param $comment
- *   A comment object.
+ * @param $cid
+ *   A comment identifier.
  */
-function comment_approve($comment) {
-  $comment->status = COMMENT_PUBLISHED;
-  comment_save($comment);
+function comment_approve($cid) {
+  if ($comment = comment_load($cid)) {
+    $comment->status = COMMENT_PUBLISHED;
+    comment_save($comment);
 
-  drupal_set_message(t('Comment approved.'));
-  drupal_goto('node/' . $comment->nid);
+    drupal_set_message(t('Comment approved.'));
+    drupal_goto('node/' . $comment->nid);
+  }
+  return MENU_NOT_FOUND;
 }

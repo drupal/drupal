@@ -233,45 +233,44 @@ function comment_menu() {
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['comment/%comment'] = array(
+  $items['comment/%'] = array(
     'title' => 'Comment permalink',
     'page callback' => 'comment_permalink',
     'page arguments' => array(1),
     'access arguments' => array('access comments'),
     'type' => MENU_CALLBACK,
   );
-  $items['comment/%comment/view'] = array(
+  $items['comment/%/view'] = array(
     'title' => 'View comment',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
+  // Every other comment path uses %, but this one loads the comment directly,
+  // so we don't end up loading it twice (in the page and access callback).
   $items['comment/%comment/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('comment_form', 1),
+    'page callback' => 'comment_edit_page',
+    'page arguments' => array(1),
     'access callback' => 'comment_access',
     'access arguments' => array('edit', 1),
     'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => 0,
   );
-  $items['comment/%comment/approve'] = array(
+  $items['comment/%/approve'] = array(
     'title' => 'Approve',
     'page callback' => 'comment_approve',
     'page arguments' => array(1),
     'access arguments' => array('administer comments'),
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
+    'type' => MENU_CALLBACK,
     'file' => 'comment.pages.inc',
     'weight' => 1,
   );
-  $items['comment/%comment/delete'] = array(
+  $items['comment/%/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('comment_confirm_delete', 1),
+    'page callback' => 'comment_confirm_delete_page',
+    'page arguments' => array(1),
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'comment.admin.inc',
     'weight' => 2,
   );
@@ -437,14 +436,13 @@ function comment_block_view($delta = '') {
  * calculates the page number based on current comment settings and returns
  * the full comment view with the pager set dynamically.
  *
- * @param $comment
- *   A comment object.
+ * @param $cid
+ *   A comment identifier.
  * @return
  *   The comment listing set to the page on which the comment appears.
  */
-function comment_permalink($comment) {
-  $node = node_load($comment->nid);
-  if ($node && $comment) {
+function comment_permalink($cid) {
+  if (($comment = comment_load($cid)) && ($node = node_load($comment->nid))) {
 
     // Find the current display page for this comment.
     $page = comment_get_display_page($comment->cid, $node->type);
@@ -1715,6 +1713,14 @@ function comment_get_display_page($cid, $node_type) {
   $ordinal = comment_get_display_ordinal($cid, $node_type);
   $comments_per_page = variable_get('comment_default_per_page_' . $node_type, 50);
   return floor($ordinal / $comments_per_page);
+}
+
+/**
+ * Page callback for comment editing.
+ */
+function comment_edit_page($comment) {
+  drupal_set_title(t('Edit comment %comment', array('%comment' => $comment->subject)), PASS_THROUGH);
+  return drupal_get_form('comment_form', $comment);
 }
 
 /**
