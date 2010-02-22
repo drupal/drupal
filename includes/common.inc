@@ -5018,9 +5018,6 @@ function drupal_common_theme() {
     'help' => array(
       'variables' => array(),
     ),
-    'submenu' => array(
-      'variables' => array('links' => NULL),
-    ),
     'table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'empty' => ''),
     ),

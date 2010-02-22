@@ -1592,19 +1592,6 @@ function theme_breadcrumb($variables) {
 }
 
 /**
- * Return a themed submenu, typically displayed under the tabs.
- *
- * @param $variables
- *   An associative array containing:
- *   - links: An array of links.
- */
-function theme_submenu($variables) {
-  $links = $variables['links'];
-
-  return '<div class="submenu">' . implode(' | ', $links) . '</div>';
-}
-
-/**
  * Return a themed table.
  *
  * @param $variables
