@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.576 2010/02/17 08:50:49 dries Exp $
+// $Id: theme.inc,v 1.577 2010/02/22 19:21:34 dries Exp $
 
 /**
  * @file
@@ -1589,19 +1589,6 @@ function theme_breadcrumb($variables) {
     $output .= '<div class="breadcrumb">' . implode(' » ', $breadcrumb) . '</div>';
     return $output;
   }
-}
-
-/**
- * Return a themed submenu, typically displayed under the tabs.
- *
- * @param $variables
- *   An associative array containing:
- *   - links: An array of links.
- */
-function theme_submenu($variables) {
-  $links = $variables['links'];
-
-  return '<div class="submenu">' . implode(' | ', $links) . '</div>';
 }
 
 /**
