@@ -360,16 +360,9 @@ function user_save($account, $edit = array(), $category = 'account') {
       unset($edit['pass']);
     }
 
-    // Get the fields form so we can recognize the fields in the $edit
-    // form that should not go into the serialized data array.
-    $field_form = array();
-    $field_form_state = form_state_defaults();
+    // Presave field allowing changing of $edit.
     $edit = (object) $edit;
-    field_attach_form('user', $edit, $field_form, $field_form_state);
-
-    // Presave fields.
     field_attach_presave('user', $edit);
-
     $edit = (array) $edit;
 
     if (!isset($account->is_new)) {
@@ -385,11 +378,19 @@ function user_save($account, $edit = array(), $category = 'account') {
       if (empty($edit['access']) && empty($account->access) && user_access('administer users')) {
         $edit['access'] = REQUEST_TIME;
       }
+      // Find the fields attached to this user.
+      $field_names = array();
+      list(, , $bundle) = entity_extract_ids('user', (object) $edit);
+      foreach (field_info_instances('user', $bundle) as $instance) {
+        $field = field_info_field_by_id($instance['field_id']);
+        $field_names[] = $field['field_name'];
+      }
+
       foreach ($edit as $key => $value) {
         // Form fields that don't pertain to the users, user_roles, or
         // Field API are automatically serialized into the users.data
         // column.
-        if (!in_array($key, array('roles', 'is_new')) && empty($user_fields[$key]) && empty($field_form[$key])) {
+        if (!in_array($key, array('roles', 'is_new')) && empty($user_fields[$key]) && empty($field_names[$key])) {
           if ($value === NULL) {
             unset($data[$key]);
           }
