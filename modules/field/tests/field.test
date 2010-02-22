@@ -2576,8 +2576,9 @@ class FieldTranslationsTestCase extends FieldTestCase {
     field_create_instance($instance);
     $this->instance = field_read_instance('test_entity', $this->field_name, 'test_bundle');
 
+    require_once DRUPAL_ROOT . '/includes/locale.inc';
     for ($i = 0; $i < 3; ++$i) {
-      locale_inc_callback('locale_add_language', 'l' . $i, $this->randomString(), $this->randomString());
+      locale_add_language('l' . $i, $this->randomString(), $this->randomString());
     }
   }
 

@@ -273,16 +273,6 @@ function locale_init() {
 }
 
 /**
- * Wrapper function to be able to set callbacks in locale.inc
- */
-function locale_inc_callback() {
-  $args = func_get_args();
-  $function = array_shift($args);
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
-  return call_user_func_array($function, $args);
-}
-
-/**
  * Implements hook_permission().
  */
 function locale_permission() {
@@ -766,6 +756,9 @@ function locale_js_alter(&$javascript) {
   $parsed = variable_get('javascript_parsed', array());
   $files = $new_files = FALSE;
 
+  // Require because locale_js_alter() could be called without locale_init().
+  require_once DRUPAL_ROOT . '/includes/locale.inc';
+
   foreach ($javascript as $item) {
     if ($item['type'] == 'file') {
       $files = TRUE;
@@ -773,7 +766,7 @@ function locale_js_alter(&$javascript) {
       if (!in_array($filepath, $parsed)) {
         // Don't parse our own translations files.
         if (substr($filepath, 0, strlen($dir)) != $dir) {
-          locale_inc_callback('_locale_parse_js_file', $filepath);
+          _locale_parse_js_file($filepath);
           $parsed[] = $filepath;
           $new_files = TRUE;
         }
@@ -785,14 +778,14 @@ function locale_js_alter(&$javascript) {
   // JavaScript translation files for all languages, adding the refresh
   // flags into the existing array.
   if ($new_files) {
-    $parsed += locale_inc_callback('_locale_invalidate_js');
+    $parsed += _locale_invalidate_js();
   }
 
   // If necessary, rebuild the translation file for the current language.
   if (!empty($parsed['refresh:' . $language->language])) {
     // Don't clear the refresh flag on failure, so that another try will
     // be performed later.
-    if (locale_inc_callback('_locale_rebuild_js')) {
+    if (_locale_rebuild_js()) {
       unset($parsed['refresh:' . $language->language]);
     }
     // Store any changes after refresh was attempted.
