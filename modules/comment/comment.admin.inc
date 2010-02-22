@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.42 2010/02/17 05:42:42 webchick Exp $
+// $Id: comment.admin.inc,v 1.43 2010/02/22 15:38:52 webchick Exp $
 
 /**
  * @file
@@ -231,6 +231,16 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
     drupal_set_message(t('Deleted @count comments.', array('@count' => $count)));
   }
   $form_state['redirect'] = 'admin/content/comment';
+}
+
+/**
+ * Page callback for comment deletions.
+ */
+function comment_confirm_delete_page($cid) {
+  if ($comment = comment_load($cid)) {
+    return drupal_get_form('comment_confirm_delete', $comment);
+  }
+  return MENU_NOT_FOUND;
 }
 
 /**
