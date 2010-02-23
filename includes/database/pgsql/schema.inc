@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.26 2010/02/17 05:26:10 webchick Exp $
+// $Id: schema.inc,v 1.27 2010/02/23 05:07:18 webchick Exp $
 
 /**
  * @file
@@ -378,7 +378,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   public function indexExists($table, $name) {
-    $index_name = $table . '_' . $name . '_idx';
+    $index_name = '{' . $table . '}_' . $name . '_idx';
     return $this->connection->query("SELECT COUNT(indexname) FROM pg_indexes WHERE indexname = '$index_name'")->fetchField();
   }
 
