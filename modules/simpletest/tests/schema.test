@@ -61,8 +61,22 @@ class SchemaTestCase extends DrupalWebTestCase {
     // The insert should fail again.
     $this->assertFalse($this->tryInsert(), t('Insert without a default failed.'));
 
+    // Test for fake index.
+    $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
+    $this->assertFalse($index_exists, t('Fake index does not exists'));
+    // Add index.
+    db_add_index('test_table', 'test_field', array('test_field'));
+    // Test for created index.
+    $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
+    $this->assertTrue($index_exists, t('Index created.'));
+
     // Rename the table.
     db_rename_table('test_table', 'test_table2');
+
+    // Index should be renamed.
+    $index_exists = Database::getConnection()->schema()->indexExists('test_table2', 'test_field');
+    $this->assertTrue($index_exists, t('Index was renamed.'));
+
     // We need the default so that we can insert after the rename.
     db_field_set_default('test_table2', 'test_field', 0);
     $this->assertFalse($this->tryInsert(), t('Insert into the old table failed.'));
@@ -127,17 +141,6 @@ class SchemaTestCase extends DrupalWebTestCase {
       $comment = Database::getConnection()->schema()->getComment($table, $column);
       $this->assertEqual($comment, $description, t('The comment matches the schema description.'));
     }
-  }
-
-  /**
-   * Test index status.
-   */
-  function testCheckIndex() {
-    $node_changed_index = Database::getConnection()->schema()->indexExists('node', 'node_changed');
-    $this->assertTrue($node_changed_index, t('Node index exists'));
-
-    $node_fake_index = Database::getConnection()->schema()->indexExists('node', 'node_not_exists');
-    $this->assertFalse($node_fake_index, t('Fake index does not exists'));
   }
 
   /**

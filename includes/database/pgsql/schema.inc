@@ -378,7 +378,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   public function indexExists($table, $name) {
-    $index_name = $table . '_' . $name . '_idx';
+    $index_name = '{' . $table . '}_' . $name . '_idx';
     return $this->connection->query("SELECT COUNT(indexname) FROM pg_indexes WHERE indexname = '$index_name'")->fetchField();
   }
 

@@ -135,9 +135,12 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
   protected function createFieldSql($name, $spec) {
     if (!empty($spec['auto_increment'])) {
       $sql = $name . " INTEGER PRIMARY KEY AUTOINCREMENT";
+      if (!empty($spec['unsigned'])) {
+        $sql .= ' CHECK (' . $name . '>= 0)';
+      }
     }
     else {
-      $sql = $name . " " . $spec['sqlite_type'];
+      $sql = $name . ' ' . $spec['sqlite_type'];
 
       if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
         $sql .= '(' . $spec['length'] . ')';
@@ -145,6 +148,10 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
       if (!empty($spec['not null'])) {
         $sql .= ' NOT NULL';
+      }
+
+      if (!empty($spec['unsigned'])) {
+        $sql .= ' CHECK (' . $name . '>= 0)';
       }
 
       if (isset($spec['default'])) {
@@ -220,7 +227,27 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
   *   The new name for the table.
   */
   public function renameTable($table, $new_name) {
+    $schema = $this->introspectSchema($table);
+
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
+
+    // Drop the indexes, there is no RENAME INDEX command in SQLite.
+    if (!empty($schema['unique keys'])) {
+      foreach ($schema['unique keys'] as $key => $fields) {
+        $this->dropIndex($table, $key);
+      }
+    }
+    if (!empty($schema['indexes'])) {
+      foreach ($schema['indexes'] as $index => $fields) {
+        $this->dropIndex($table, $index);
+      }
+    }
+
+    // Recreate the indexes.
+    $statements = $this->createIndexSql($new_name, $schema);
+    foreach ($statements as $statement) {
+      $this->connection->query($statement);
+    }
   }
 
   /**
@@ -269,7 +296,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     $this->createTable($new_table, $new_schema);
 
-    $select = $this->connection->select($table)->fields($new_schema['fields']);
+    $select = $this->connection->select($table)->fields($table, array_keys($new_schema['fields']));
     $this->connection->insert($new_table)
       ->from($select)
       ->execute();
@@ -340,9 +367,11 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
         );
       }
     }
-    $n = strlen($table) + 1;
+    // Get length of table name and underscore.
+    $n = strlen($this->connection->prefixTables('{' . $table . '}')) + 1;
     foreach ($indexes as $index) {
       $name = $index['name'];
+      // Get index name without prefix.
       $index_name = substr($name, $n);
       $result = $this->connection->query("PRAGMA index_info('$name')");
       foreach ($result as $row) {
@@ -434,7 +463,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
   }
 
   public function indexExists($table, $name) {
-    return ($this->connection->query("PRAGMA index_info($name)")->fetchField() != '');
+    return ($this->connection->query('PRAGMA index_info({' . $table . '}_' . $name . ')')->fetchField() != '');
   }
 
   /**
