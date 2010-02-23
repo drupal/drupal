@@ -1,5 +1,5 @@
 <?php
-// $Id: comment-wrapper.tpl.php,v 1.8 2009/09/11 06:48:02 dries Exp $
+// $Id: comment-wrapper.tpl.php,v 1.9 2010/02/23 09:51:21 dries Exp $
 
 /**
  * @file
@@ -31,16 +31,14 @@
  */
 ?>
 <div id="comments" class="<?php print $classes; ?>"<?php print $attributes; ?>>
-  <?php if ($node->type != 'forum'): ?>
-    <h2 class="comments"><?php print t('Comments'); ?></h2>
+  <?php if ($content['comments'] && $node->type != 'forum'): ?>
+    <h2 class="title"><?php print t('Comments'); ?></h2>
   <?php endif; ?>
 
   <?php print render($content['comments']); ?>
 
   <?php if ($content['comment_form']): ?>
-    <h2 class="title"><?php print t('Post new comment'); ?></h2>
-    <div>
-      <?php print render($content['comment_form']); ?>
-    </div>
+    <h2 class="title comment-form"><?php print t('Add new comment'); ?></h2>
+    <?php print render($content['comment_form']); ?>
   <?php endif; ?>
 </div>
