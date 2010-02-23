@@ -656,13 +656,6 @@ function menu_configure() {
   );
 
   $menu_options = menu_get_menus();
-  $form['menu_default_node_menu'] = array(
-    '#type' => 'select',
-    '#title' => t('Default menu for content'),
-    '#default_value' => 'navigation',
-    '#options' => $menu_options,
-    '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
-  );
 
   $main = variable_get('menu_main_links_source', 'main-menu');
   $main_options = array_merge($menu_options, array('' => t('No Main links')));

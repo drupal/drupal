@@ -541,7 +541,7 @@ function menu_node_delete($node) {
 function menu_node_prepare($node) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
-    $menu_name = variable_get('menu_default_node_menu', 'navigation');
+    $menu_name = variable_get('menu_parent_' . $node->type, 'main-menu:0');
     $item = array();
     if (isset($node->nid)) {
       // Give priority to the default menu
