@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.16 2010/02/17 05:39:51 webchick Exp $
+// $Id: image.field.inc,v 1.17 2010/02/23 09:52:56 dries Exp $
 
 /**
  * @file
@@ -313,6 +313,10 @@ function image_field_widget_settings_form($field, $instance) {
  * Implements hook_field_widget_form().
  */
 function image_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+
+  // Add display_field setting to field because file_field_widget_form() assumes it is set.
+  $field['settings']['display_field'] = 0;
+
   $elements = file_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
   $settings = $instance['settings'];
 
