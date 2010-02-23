@@ -39,6 +39,20 @@ class TemplateUnitTest extends DrupalWebTestCase {
     $suggestions = theme_get_suggestions($args, 'page');
     $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\0 from suggestions'));
   }
+
+  /**
+   * Ensure page-front template suggestion is added when on front page.
+   */
+  function testFrontPageThemeSuggestion() {
+    $q = $_GET['q'];
+    // Set $_GET['q'] to node because theme_get_suggestions() will query it to
+    // see if we are on the front page.
+    $_GET['q'] = variable_get('site_frontpage', 'node');
+    $suggestions = theme_get_suggestions(explode('/', $_GET['q']), 'page');
+    // Set it back to not annoy the batch runner.
+    $_GET['q'] = $q;
+    $this->assertTrue(in_array('page__front', $suggestions), t('Front page template was suggested.'));
+  }
 }
 
 /**
