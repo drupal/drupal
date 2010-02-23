@@ -276,6 +276,21 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   function renameTable($table, $new_name) {
+    // Get the schema and tablename for the old table.
+    $old_full_name = $this->connection->prefixTables('{' . $table . '}');
+    list($old_schema, $old_table_name) = strpos($old_full_name, '.') ? explode('.', $old_full_name) : array('public', $old_full_name);
+
+    // Index names and constraint names are global in PostgreSQL, so we need to
+    // rename them when renaming the table.
+    $indexes = $this->connection->query('SELECT indexname FROM pg_indexes WHERE schemaname = :schema AND tablename = :table', array(':schema' => $old_schema, ':table' => $old_table_name));
+    foreach ($indexes as $index) {
+      if (preg_match('/^' . preg_quote($old_full_name) . '_(.*)_idx$/', $index->indexname, $matches)) {
+        $index_name = $matches[1];
+        $this->connection->query('ALTER INDEX ' . $index->indexname . ' RENAME TO {' . $new_name . '}_' . $index_name . '_idx');
+      }
+    }
+
+    // Now rename the table.
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
   }
 
