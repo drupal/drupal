@@ -1002,7 +1002,9 @@ function node_save($node) {
       $node->created = REQUEST_TIME;
     }
     // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
-    $node->changed = REQUEST_TIME;
+    if (empty($node->changed)) {
+      $node->changed = REQUEST_TIME;
+    }
 
     $node->timestamp = REQUEST_TIME;
     $update_node = TRUE;
@@ -2929,7 +2931,7 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
   if (!$op = $query->getMetaData('op')) {
     $op = 'view';
   }
-  
+
   // If $account can bypass node access, or there are no node access
   // modules, we don't need to alter the query.
   if (user_access('bypass node access', $account)) {
