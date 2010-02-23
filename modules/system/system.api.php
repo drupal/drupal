@@ -2137,10 +2137,11 @@ function hook_install() {
 }
 
 /**
- * Perform a single update. For each patch which requires a database change add
- * a new hook_update_N() which will be called by update.php.
+ * Perform a single update.
  *
- * The database updates are numbered sequentially according to the version of Drupal you are compatible with.
+ * For each patch which requires a database change add a new hook_update_N()
+ * which will be called by update.php. The database updates are numbered 
+ * sequentially according to the version of Drupal you are compatible with.
  *
  * Schema updates should adhere to the Schema API:
  * @link http://drupal.org/node/150215 http://drupal.org/node/150215 @endlink
