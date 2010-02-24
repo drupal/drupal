@@ -53,11 +53,6 @@
  * lock_acquire() and lock_wait() will automatically break (delete) a lock
  * whose duration has exceeded the timeout specified when it was acquired.
  *
- * A function that has acquired a lock may attempt to renew a lock (extend the
- * duration of the lock) by calling lock_acquire() again during the operation.
- * Failure to renew a lock is indicative that another request has acquired
- * the lock, and that the current operation may need to be aborted.
- *
  * Alternative implementations of this API (such as APC) may be substituted
  * by setting the 'lock_inc' variable to an alternate include filepath. Since
  * this is an API intended to support alternative implementations, code using
