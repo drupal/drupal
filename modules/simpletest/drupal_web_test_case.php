@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.196 2010/02/09 12:28:39 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.197 2010/02/25 16:03:47 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -493,7 +493,8 @@ abstract class DrupalTestCase {
       'line' => $exception->getLine(),
       'file' => $exception->getFile(),
     ));
-    $this->error($exception->getMessage(), 'Uncaught exception', _drupal_get_last_caller($backtrace));
+    require_once DRUPAL_ROOT . '/includes/errors.inc';
+    $this->error(t('%type: %message in %function (line %line of %file).', _drupal_decode_exception($exception)), 'Uncaught exception', _drupal_get_last_caller($backtrace));
   }
 
   /**
