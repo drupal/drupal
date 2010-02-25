@@ -527,6 +527,12 @@ function update_fix_d7_requirements() {
         'expire' => array('expire'),
       ),
     );
+    // Check for queue table that may remain from D5 or D6, if found
+    //drop it.
+    if (db_table_exists('queue')) {
+      db_drop_table('queue');
+    }
+
     db_create_table('queue', $schema['queue']);
 
     // Create the sequences table.
@@ -542,6 +548,11 @@ function update_fix_d7_requirements() {
        ),
       'primary key' => array('value'),
     );
+    // Check for sequences table that may remain from D5 or D6, if found
+    //drop it.
+    if (db_table_exists('sequences')) {
+      db_drop_table('sequences');
+    }
     db_create_table('sequences', $schema['sequences']);
     // Initialize the table with the maximum current increment of the tables
     // that will rely on it for their ids.
