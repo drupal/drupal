@@ -819,10 +819,52 @@ function filter_dom_load($text) {
 function filter_dom_serialize($dom_document) {
   $body_node = $dom_document->getElementsByTagName('body')->item(0);
   $body_content = '';
+
+  foreach($body_node->getElementsByTagName('script') as $node) {
+    filter_dom_serialize_escape_cdata_element($dom_document, $node);
+  }
+
+  foreach($body_node->getElementsByTagName('style') as $node) {
+    filter_dom_serialize_escape_cdata_element($dom_document, $node, '/*', '*/');
+  }
+  
   foreach ($body_node->childNodes as $child_node) {
     $body_content .= $dom_document->saveXML($child_node);
   }
   return preg_replace('|<([^>]*)/>|i', '<$1 />', $body_content);
+}
+
+/**
+ * Adds comments around the <!CDATA section in a dom element.
+ * 
+ * DOMDocument::loadHTML in filter_dom_load() makes CDATA sections from the
+ * contents of inline script and style tags.  This can cause HTML 4 browsers to
+ * throw exceptions.
+ * 
+ * This function attempts to solve the problem by creating a DocumentFragment
+ * and immitating the behavior in drupal_get_js(), commenting the CDATA tag.
+ * 
+ * @param $dom_document
+ *   The DOMDocument containing the $dom_element.
+ * @param $dom_element
+ *   The element potentially containing a CDATA node.
+ * @param $comment_start
+ *   String to use as a comment start marker to escape the CDATA declaration.
+ * @param $comment_end
+ *   String to use as a comment end marker to escape the CDATA declaration.
+ */
+function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, $comment_start = '//', $comment_end = '') {
+  foreach ($dom_element->childNodes as $node) {
+    if (get_class($node) == 'DOMCdataSection') {
+      // @see drupal_get_js().  This code is more or less duplicated there.
+      $embed_prefix = "\n<!--{$comment_start}--><![CDATA[{$comment_start} ><!--{$comment_end}\n";
+      $embed_suffix = "\n{$comment_start}--><!]]>{$comment_end}\n";
+      $fragment = $dom_document->createDocumentFragment();
+      $fragment->appendXML($embed_prefix . $node->data . $embed_suffix);
+      $dom_element->appendChild($fragment);
+      $dom_element->removeChild($node);
+    }
+  }
 }
 
 /**

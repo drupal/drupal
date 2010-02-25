@@ -1065,6 +1065,27 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
 
     $f = _filter_htmlcorrector('<p>دروبال');
     $this->assertEqual($f, '<p>دروبال</p>', t('HTML corrector -- Encoding is correctly kept.'));
+
+    $f = _filter_htmlcorrector('<script type="text/javascript">alert("test")</script>');
+    $this->assertEqual($f, '<script type="text/javascript">
+<!--//--><![CDATA[// ><!--
+alert("test")
+//--><!]]>
+</script>', t('HTML corrector -- CDATA added to script element'));
+
+    $f = _filter_htmlcorrector('<p><script type="text/javascript">alert("test")</script></p>');
+    $this->assertEqual($f, '<p><script type="text/javascript">
+<!--//--><![CDATA[// ><!--
+alert("test")
+//--><!]]>
+</script></p>', t('HTML corrector -- CDATA added to a nested script element'));
+
+    $f = _filter_htmlcorrector('<p><style> /* Styling */ body {color:red} </style></p>');
+    $this->assertEqual($f, '<p><style>
+<!--/*--><![CDATA[/* ><!--*/
+ /* Styling */ body {color:red} 
+/*--><!]]>*/
+</style></p>', t('HTML corrector -- CDATA added to a style element.'));
   }
 
   /**
