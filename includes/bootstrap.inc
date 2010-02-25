@@ -296,13 +296,17 @@ function timer_read($name) {
 function timer_stop($name) {
   global $timers;
 
-  if (isset($timers[$name]['time'])) {
-    $timers[$name]['time'] += timer_read($name);
+  if (isset($timers[$name]['start'])) {
+    $stop = microtime(TRUE);
+    $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
+    if (isset($timers[$name]['time'])) {
+      $timers[$name]['time'] += $diff;
+    }
+    else {
+      $timers[$name]['time'] = $diff;
+    }
+    unset($timers[$name]['start']);
   }
-  else {
-    $timers[$name]['time'] = timer_read($name);
-  }
-  unset($timers[$name]['start']);
 
   return $timers[$name];
 }
