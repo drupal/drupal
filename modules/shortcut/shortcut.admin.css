@@ -1,10 +1,5 @@
 /* $Id$ */
 
-h4.shortcuts-set,
-div.shortcuts-change-set {
-  display: inline;
-}
-
 .shortcut-slot-hidden {
   display: none;
 }

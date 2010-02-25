@@ -10,7 +10,7 @@
  * The name of the default shortcut set.
  *
  * This set will be displayed to any user that does not have another set
- * assigned.
+ * assigned, unless overridden by a hook_shortcut_default_set() implementation.
  */
 define('SHORTCUT_DEFAULT_SET_NAME', 'shortcut-set-1');
 
@@ -18,19 +18,30 @@ define('SHORTCUT_DEFAULT_SET_NAME', 'shortcut-set-1');
  * Implements hook_help().
  */
 function shortcut_help($path, $arg) {
+  global $user;
+
   switch ($path) {
     case 'admin/help#shortcut':
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Shortcut module allows users to create sets of <em>shortcut</em> links to commonly-visited pages of the site. Shortcuts are contained within <em>sets</em>. Each user with <em>Select any shortcut set</em> permission can select a shortcut set created by anyone at the site. For more information, see the online handbook entry for <a href="@shortcut">Shortcut module</a>.', array('@shortcut' => 'http://drupal.org/handbook/modules/shortcut/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
-      $output .= '<dl><dt>' . t('Creating and modifying shortcuts and sets') . '</dt>';
-      $output .= '<dd>' . t('Users with the appropriate permissions can manage shortcut sets, choose a preferred shortcut set, and edit the shortcuts within sets from the <a href="@shortcuts">Shortcuts administration page</a>.', array('@shortcuts' => url('admin/config/user-interface/shortcut'))) . '</dd>';
+      $output .= '<dl><dt>' . t('Administering shortcuts') . '</dt>';
+      $output .= '<dd>' . t('Users with the <em>Administer shortcuts</em> permission can manage shortcut sets and edit the shortcuts within sets from the <a href="@shortcuts">Shortcuts administration page</a>.', array('@shortcuts' => url('admin/config/user-interface/shortcut'))) . '</dd>';
+      $output .= '<dt>' . t('Choosing shortcut sets') . '</dt>';
+      $output .= '<dd>' . t('Users with permission to switch shortcut sets can choose a shortcut set to use from the Shortcuts tab of their user account page.') . '</dd>';
       $output .= '<dt>' . t('Adding and removing shortcuts') . '</dt>';
-      $output .= '<dd>' . t('The Shortcut module creates an add/remove link for each page on your site; the link lets you add or remove the current page from the currently-enabled set of shortcuts (if your theme displays it). The core Seven administration theme displays this link next to the page title, as a small + or - sign. If you click on the + sign, you will add that page to your preferred set of shortcuts. If the page is already part of your shortcut set, the link will be a - sign, and will allow you to remove the current page from your shortcut set.') . '</dd>';
+      $output .= '<dd>' . t('The Shortcut module creates an add/remove link for each page on your site; the link lets you add or remove the current page from the currently-enabled set of shortcuts (if your theme displays it and you have permission to edit your shortcut set). The core Seven administration theme displays this link next to the page title, as a small + or - sign. If you click on the + sign, you will add that page to your preferred set of shortcuts. If the page is already part of your shortcut set, the link will be a - sign, and will allow you to remove the current page from your shortcut set.') . '</dd>';
       $output .= '<dt>' . t('Displaying shortcuts') . '</dt>';
       $output .= '<dd>' . t('You can display your shortcuts by enabling the Shortcuts block on the <a href="@blocks">Blocks administration page</a>. Certain administrative modules also display your shortcuts; for example, the core <a href="@toolbar-help">Toolbar module</a> displays them near the top of the page, along with an <em>Edit shortcuts</em> link.', array('@blocks' => url('admin/structure/block'), '@toolbar-help' => url('admin/help/toolbar'))) . '</dd>';
       $output .= '</dl>';
       return $output;
+
+    case 'admin/config/user-interface/shortcut':
+    case 'admin/config/user-interface/shortcut/%':
+      if (user_access('switch shortcut sets')) {
+        $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => url("user/{$user->uid}/shortcuts"))) . '</p>';
+        return $output;
+      }
   }
 }
 
@@ -59,17 +70,49 @@ function shortcut_permission() {
 function shortcut_menu() {
   $items['admin/config/user-interface/shortcut'] = array(
     'title' => 'Shortcuts',
-    'description' => 'List the available shortcut sets and switch between them.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('shortcut_set_switch'),
+    'description' => 'Add and modify shortcut sets.',
+    'page callback' => 'shortcut_set_admin',
     'access arguments' => array('administer shortcuts'),
+    'file' => 'shortcut.admin.inc',
+  );
+  $items['admin/config/user-interface/shortcut/add-set'] = array(
+    'title' => 'Add shortcut set',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('shortcut_set_add_form'),
+    'access arguments' => array('administer shortcuts'),
+    'type' => MENU_LOCAL_ACTION,
     'file' => 'shortcut.admin.inc',
   );
   $items['admin/config/user-interface/shortcut/%shortcut_set'] = array(
     'title' => 'Edit shortcuts',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('shortcut_set_customize', 4),
+    'title callback' => 'shortcut_set_title',
+    'title arguments' => array(4),
     'access callback' => 'shortcut_set_edit_access',
+    'access arguments' => array(4),
+    'type' => MENU_CALLBACK,
+    'file' => 'shortcut.admin.inc',
+  );
+  $items['admin/config/user-interface/shortcut/%shortcut_set/links'] = array(
+    'title' => 'List links',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/user-interface/shortcut/%shortcut_set/edit'] = array(
+    'title' => 'Edit set name',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('shortcut_set_edit_form', 4),
+    'access callback' => 'shortcut_set_edit_access',
+    'access arguments' => array(4),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'shortcut.admin.inc',
+    'weight' => 10,
+  );
+  $items['admin/config/user-interface/shortcut/%shortcut_set/delete'] = array(
+    'title' => 'Delete shortcut set',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('shortcut_set_delete_form', 4),
+    'access callback' => 'shortcut_set_delete_access',
     'access arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'shortcut.admin.inc',
@@ -119,6 +162,7 @@ function shortcut_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'shortcut.admin.inc',
   );
+
   return $items;
 }
 
@@ -160,9 +204,10 @@ function shortcut_block_view($delta = '') {
 /**
  * Access callback for editing a shortcut set.
  *
- * @param $shortcut_set
- *   (optional) The shortcut set to be edited. If not set, the current
- *   displayed shortcut set will be assumed.
+ * @param object $shortcut_set
+ *   (optional) The shortcut set to be edited. If not set, the current user's
+ *   shortcut set will be used.
+ *
  * @return
  *   TRUE if the current user has access to edit the shortcut set, FALSE
  *   otherwise.
@@ -180,20 +225,61 @@ function shortcut_set_edit_access($shortcut_set = NULL) {
 }
 
 /**
+ * Access callback for deleting a shortcut set.
+ *
+ * @param $shortcut_set
+ *   The shortcut set to be deleted.
+ *
+ * @return
+ *   TRUE if the current user has access to delete shortcut sets and this is
+ *   not the site-wide default set; FALSE otherwise.
+ */
+function shortcut_set_delete_access($shortcut_set) {
+  // Only admins can delete sets.
+  if (!user_access('administer shortcuts')) {
+    return FALSE;
+  }
+
+  // Never let the default shortcut set be deleted.
+  if ($shortcut_set->set_name == SHORTCUT_DEFAULT_SET_NAME) {
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
  * Access callback for switching the shortcut set assigned to a user account.
  *
- * @param $account
+ * @param object $account
  *   (optional) The user account whose shortcuts will be switched. If not set,
- *   the account of the current logged-in user will be assumed.
+ *   permissions will be checked for switching the logged-in user's own
+ *   shortcut set.
+ *
  * @return
  *   TRUE if the current user has access to switch the shortcut set of the
  *   provided account, FALSE otherwise.
  */
 function shortcut_set_switch_access($account = NULL) {
   global $user;
-  // Sufficiently-privileged users can switch their own shortcut sets, but not
-  // those of other users. Shortcut administrators can switch any user's set.
-  return user_access('administer shortcuts') || (user_access('switch shortcut sets') && (!isset($account) || $user->uid == $account->uid));
+
+  if (user_access('administer shortcuts')) {
+    // Administrators can switch anyone's shortcut set.
+    return TRUE;
+  }
+
+  if (!user_access('switch shortcut sets')) {
+    // The user has no permission to switch anyone's shortcut set.
+    return FALSE;
+  }
+
+  if (!isset($account) || $user->uid == $account->uid) {
+    // Users with the 'switch shortcut sets' permission can switch their own
+    // shortcuts sets.
+    return TRUE;
+  }
+
+  return FALSE;
 }
 
 /**
@@ -213,9 +299,9 @@ function shortcut_link_access($menu_link) {
  *
  * @param $set_name
  *   The name of the shortcut set to load.
- * @return
- *   If the shortcut set exists, an object of type stdClass containing the
- *   following properties:
+ *
+ * @return object
+ *   If the shortcut set exists, an object containing the following properties:
  *   - 'set_name': The internal name of the shortcut set.
  *   - 'title': The title of the shortcut set.
  *   - 'links': An array of links associated with this shortcut set.
@@ -250,6 +336,7 @@ function shortcut_set_load($set_name) {
  *     - 'link_path': The Drupal path or external path that the link points to.
  *     - 'link_title': The title of the link.
  *     Any other keys accepted by menu_link_save() may also be provided.
+ *
  * @return
  *   A constant which is either SAVED_NEW or SAVED_UPDATED depending on whether
  *   a new set was created or an existing one was updated.
@@ -292,37 +379,41 @@ function shortcut_set_save(&$shortcut_set) {
  *
  * @param $shortcut_set
  *   An object representing the shortcut set to delete.
+ *
  * @return
  *   TRUE if the set was deleted, FALSE otherwise.
  */
 function shortcut_set_delete($shortcut_set) {
-  // Make sure not to delete the default set.
-  $default_set = shortcut_default_set();
-  if ($shortcut_set->set_name == $default_set->set_name) {
+  // Don't allow deletion of the system default shortcut set.
+  if ($shortcut_set->set_name == SHORTCUT_DEFAULT_SET_NAME) {
     return FALSE;
   }
+
   // First, delete any user assignments for this set, so that each of these
   // users will go back to using whatever default set applies.
   db_delete('shortcut_set_users')
     ->condition('set_name', $shortcut_set->set_name)
     ->execute();
+
   // Next, delete the menu links for this set.
   menu_delete_links($shortcut_set->set_name);
+
   // Finally, delete the set itself.
   $deleted = db_delete('shortcut_set')
     ->condition('set_name', $shortcut_set->set_name)
     ->execute();
+
   return (bool) $deleted;
 }
 
 /**
- * Reset the link weights in a shortcut set to match their current order.
+ * Resets the link weights in a shortcut set to match their current order.
  *
  * This function can be used, for example, when a new shortcut link is added to
  * the set. If the link is added to the end of the array and this function is
  * called, it will force that link to display at the end of the list.
  *
- * @param $shortcut_set
+ * @param object $shortcut_set
  *   An object representing a shortcut set. The link weights of the passed-in
  *   object will be reset as described above.
  */
@@ -335,7 +426,7 @@ function shortcut_set_reset_link_weights(&$shortcut_set) {
 }
 
 /**
- * Assign a user to a particular shortcut set.
+ * Assigns a user to a particular shortcut set.
  *
  * @param $shortcut_set
  *   An object representing the shortcut set.
@@ -351,12 +442,13 @@ function shortcut_set_assign_user($shortcut_set, $account) {
 }
 
 /**
- * Unassign a user from any shortcut set they may have been assigned to.
+ * Unassigns a user from any shortcut set they may have been assigned to.
  *
  * The user will go back to using whatever default set applies.
  *
  * @param $account
  *   A user account that will be removed from the shortcut set assignment.
+ *
  * @return
  *   TRUE if the user was previously assigned to a shortcut set and has been
  *   successfully removed from it. FALSE if the user was already not assigned
@@ -374,7 +466,8 @@ function shortcut_set_unassign_user($account) {
  *
  * @param $account
  *   (optional) The user account whose shortcuts will be returned. Defaults to
- *   the current logged-in user.
+ *   the currently logged-in user.
+ *
  * @return
  *   An object representing the shortcut set that should be displayed to the
  *   current user. If the user does not have an explicit shortcut set defined,
@@ -412,9 +505,11 @@ function shortcut_current_displayed_set($account = NULL) {
 /**
  * Returns the default shortcut set for a given user account.
  *
- * @param $account
- *   (optional) The user account whose shortcuts will be returned. Defaults to
- *   the current logged-in user.
+ * @param object $account
+ *   (optional) The user account whose default shortcut set will be returned.
+ *   If not provided, the function will return the currently logged-in user's
+ *   default shortcut set.
+ *
  * @return
  *   An object representing the default shortcut set.
  */
@@ -423,16 +518,19 @@ function shortcut_default_set($account = NULL) {
   if (!isset($account)) {
     $account = $user;
   }
+
   // Allow modules to return a default shortcut set name. Since we can only
   // have one, we allow the last module which returns a valid result to take
   // precedence. If no module returns a valid set, fall back on the site-wide
-  // default.
-  $shortcut_set_names = array_reverse(array_merge(array(SHORTCUT_DEFAULT_SET_NAME), module_invoke_all('shortcut_default_set', $account)));
-  foreach ($shortcut_set_names as $name) {
+  // default, which is the lowest-numbered shortcut set.
+  $suggestions = array_reverse(module_invoke_all('shortcut_default_set', $account));
+  $suggestions[] = SHORTCUT_DEFAULT_SET_NAME;
+  foreach ($suggestions as $name) {
     if ($shortcut_set = shortcut_set_load($name)) {
       break;
     }
   }
+
   return $shortcut_set;
 }
 
@@ -461,6 +559,7 @@ function shortcut_set_get_unique_name() {
  *
  * @param $number
  *   A number representing the shortcut set whose name should be retrieved.
+ *
  * @return
  *   A string representing the expected shortcut name.
  */
@@ -611,5 +710,18 @@ function shortcut_toolbar_pre_render($toolbar) {
 
   $toolbar['toolbar_drawer'][] = $drawer;
   return $toolbar;
+}
+
+/**
+ * Returns the title of a shortcut set.
+ *
+ * Title callback for the editing pages for shortcut sets.
+ *
+ * @param $shortcut_set
+ *   An object representing the shortcut set, as returned by
+ *   shortcut_set_load().
+ */
+function shortcut_set_title($shortcut_set) {
+  return check_plain($shortcut_set->title);
 }
 

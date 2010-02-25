@@ -19,7 +19,7 @@ function shortcut_max_slots() {
 }
 
 /**
- * Menu callback; Build the form for switching shortcut sets.
+ * Form callback: builds the form for switching shortcut sets.
  *
  * @param $form
  *   An associative array containing the structure of the form.
@@ -28,6 +28,7 @@ function shortcut_max_slots() {
  * @param $account
  *   (optional) The user account whose shortcuts will be switched. Defaults to
  *   the current logged-in user.
+ *
  * @return
  *   An array representing the form definition.
  *
@@ -43,7 +44,7 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
   // Prepare the list of shortcut sets.
   $sets = shortcut_sets();
   $current_set = shortcut_current_displayed_set($account);
-  $default_set = shortcut_default_set($account);
+
   $options = array();
   foreach ($sets as $name => $set) {
     $options[$name] = check_plain($set->title);
@@ -55,48 +56,61 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
     $options['new'] = t('New set');
   }
 
-  $form['account'] = array(
-    '#type' => 'value',
-    '#value' => $account,
-  );
+  if (count($options) > 1) {
+    $form['account'] = array(
+      '#type' => 'value',
+      '#value' => $account,
+    );
 
-  $form['set'] = array(
-    '#type' => 'radios',
-    '#title' => $user->uid == $account->uid ? t('Choose a set of shortcuts to use') : t('Choose a set of shortcuts for this user'),
-    '#options' => $options,
-    '#default_value' => $current_set->set_name,
-  );
+    $form['set'] = array(
+      '#type' => 'radios',
+      '#title' => $user->uid == $account->uid ? t('Choose a set of shortcuts to use') : t('Choose a set of shortcuts for this user'),
+      '#options' => $options,
+      '#default_value' => $current_set->set_name,
+    );
 
-  $form['new'] = array(
-    '#type' => 'textfield',
-    '#description' => t('The new set is created by copying items from the @default set.', array('@default' => $default_set->title)),
-    '#access' => $add_access,
-  );
+    $form['new'] = array(
+      '#type' => 'textfield',
+      '#description' => t('The new set is created by copying items from your default shortcut set.'),
+      '#access' => $add_access,
+    );
 
-  $form['#attached'] = array(
-    'css' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.css'),
-    'js' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.js'),
-  );
+    if ($user->uid != $account->uid) {
+      $default_set = shortcut_default_set($account);
+      $form['new']['#description'] = t('The new set is created by copying items from the %default set.', array('%default' => $default_set->title));
+    }
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
-  );
+    $form['#attached'] = array(
+      'css' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.css'),
+      'js' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.js'),
+    );
+
+    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Change set'),
+    );
+  }
+  else {
+    // There is only 1 option, so output a message in the $form array.
+    $form['info'] = array(
+      '#markup' => '<p>' . t('You are currently using the %set-name shortcut set.', array('%set-name' => $current_set->title)) . '</p>',
+    );
+  }
 
   return $form;
 }
 
 /**
- * Submit handler for the form that switches shortcut sets.
+ * Submit handler for shortcut_set_switch().
  */
 function shortcut_set_switch_submit($form, &$form_state) {
   global $user;
   $account = $form_state['values']['account'];
 
   if ($form_state['values']['set'] == 'new') {
-    // Save a new shortcut set with links copied from the default set.
-    $default_set = shortcut_default_set();
+    // Save a new shortcut set with links copied from the user's default set.
+    $default_set = shortcut_default_set($account);
     $set = (object) array(
       'title' => $form_state['values']['new'],
       'links' => menu_links_clone($default_set->links),
@@ -105,9 +119,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
     $replacements = array(
       '%user' => $account->name,
       '%set_name' => $set->title,
-      // This form can be displayed on more than one page, so make sure we link
-      // back to the correct one.
-      '@switch-url' => url($_GET['q']),
+      '@switch-url' => url(current_path()),
     );
     if ($account->uid == $user->uid) {
       // Only administrators can create new shortcut sets, so we know they have
@@ -134,7 +146,79 @@ function shortcut_set_switch_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback; Build the form for customizing shortcut sets.
+ * Menu page callback: builds the page for administering shortcut sets.
+ */
+function shortcut_set_admin() {
+  $shortcut_sets = shortcut_sets();
+  $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => 4));
+
+  $rows = array();
+  foreach ($shortcut_sets as $set) {
+    $row = array(
+      check_plain($set->title),
+      l(t('list links'), "admin/config/user-interface/shortcut/$set->set_name"),
+      l(t('edit set name'), "admin/config/user-interface/shortcut/$set->set_name/edit"),
+    );
+    if (shortcut_set_delete_access($set)) {
+      $row[] = l(t('delete set'), "admin/config/user-interface/shortcut/$set->set_name/delete");
+    }
+    else {
+      $row[] = '';
+    }
+
+    $rows[] = $row;
+  }
+
+  return theme('table', array('header' => $header, 'rows' => $rows));
+}
+
+/**
+ * Form callback: builds the form for adding a shortcut set.
+ *
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ *
+ * @return
+ *   An array representing the form definition.
+ *
+ * @ingroup forms
+ * @see shortcut_set_add_form_submit()
+ */
+function shortcut_set_add_form($form, &$form_state) {
+  $form['new'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Set name'),
+    '#description' => t('The new set is created by copying items from your default shortcut set.'),
+  );
+
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Create new set'),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for shortcut_set_add_form().
+ */
+function shortcut_set_add_form_submit($form, &$form_state) {
+  // Save a new shortcut set with links copied from the user's default set.
+  $default_set = shortcut_default_set();
+  $set = (object) array(
+    'title' => $form_state['values']['new'],
+    'links' => menu_links_clone($default_set->links),
+  );
+  shortcut_set_save($set);
+  drupal_set_message(t('The %set_name shortcut set has been created. You can edit it from this page.', array('%set_name' => $set->title)));
+  $form_state['redirect'] = 'admin/config/user-interface/shortcut/' . $set->set_name;
+}
+
+/**
+ * Form callback: builds the form for customizing shortcut sets.
  *
  * @param $form
  *   An associative array containing the structure of the form.
@@ -142,6 +226,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
  *   An associative array containing the current state of the form.
  * @param $shortcut_set
  *   An object representing the shortcut set which is being edited.
+ *
  * @return
  *   An array representing the form definition.
  *
@@ -149,25 +234,13 @@ function shortcut_set_switch_submit($form, &$form_state) {
  * @see shortcut_set_customize_submit()
  */
 function shortcut_set_customize($form, &$form_state, $shortcut_set) {
-  $form['set'] = array(
-    '#markup' => t('Using set "@set"', array('@set' => $shortcut_set->title)),
-    '#prefix' => '<h4 class="shortcuts-set">',
-    '#suffix' => '</h4>',
-    '#weight' => -100,
+  $form['shortcuts'] = array(
+    '#tree' => TRUE,
+    '#weight' => -20,
+    'enabled' => array(),
+    'disabled' => array(),
   );
 
-  $form['change_set'] = array(
-    '#type' => 'link',
-    '#title' => t('Change set'),
-    '#href' => 'admin/config/user-interface/shortcut',
-    '#prefix' => '<div class="shortcuts-change-set"> (',
-    '#suffix' => ')</div>',
-    '#weight' => -99,
-    '#access' => shortcut_set_switch_access(),
-  );
-
-  $form['shortcuts']['#tree'] = TRUE;
-  $form['shortcuts']['enabled'] = $form['shortcuts']['disabled'] = array();
   foreach ($shortcut_set->links as $link) {
     $mlid = $link['mlid'];
     $status = $link['hidden'] ? 'disabled' : 'enabled';
@@ -206,7 +279,7 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
 }
 
 /**
- * Submit handler for the shortcut set customization form.
+ * Submit handler for shortcut_set_customize().
  */
 function shortcut_set_customize_submit($form, &$form_state) {
   foreach ($form_state['values']['shortcuts'] as $group => $links) {
@@ -221,11 +294,12 @@ function shortcut_set_customize_submit($form, &$form_state) {
 }
 
 /**
- * Theme function for the shortcut set customization form.
+ * Themes the shortcut set customization form.
  *
  * @param $variables
  *   An associative array containing:
  *   - form: An array representing the form.
+ *
  * @return
  *   A themed HTML string representing the content of the form.
  *
@@ -247,6 +321,7 @@ function theme_shortcut_set_customize($variables) {
       )),
       'class' => array('shortcut-status', 'shortcut-status-' . $status),
     );
+
     foreach (element_children($form['shortcuts'][$status]) as $key) {
       $shortcut = &$form['shortcuts'][$status][$key];
       $row = array();
@@ -260,6 +335,7 @@ function theme_shortcut_set_customize($variables) {
         'class' => array('draggable'),
       );
     }
+
     if ($status == 'enabled') {
       for ($i = 0; $i < shortcut_max_slots(); $i++) {
         $rows['empty-' . $i] = array(
@@ -278,15 +354,16 @@ function theme_shortcut_set_customize($variables) {
       }
     }
   }
+
   $header = array(t('Name'), t('Weight'), t('Status'), array('data' => t('Operations'), 'colspan' => 2));
   $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'shortcuts')));
-  $output .= drupal_render($form['submit']);
+  $output .= drupal_render($form['actions']);
   $output = drupal_render_children($form) . $output;
   return $output;
 }
 
 /**
- * Menu callback; Build the form for adding a new shortcut link.
+ * Form callback: builds the form for adding a new shortcut link.
  *
  * @param $form
  *   An associative array containing the structure of the form.
@@ -294,6 +371,7 @@ function theme_shortcut_set_customize($variables) {
  *   An associative array containing the current state of the form.
  * @param $shortcut_set
  *   An object representing the shortcut set to which the link will be added.
+ *
  * @return
  *   An array representing the form definition.
  *
@@ -312,7 +390,7 @@ function shortcut_link_add($form, &$form_state, $shortcut_set) {
 }
 
 /**
- * Menu callback; Build the form for editing a shortcut link.
+ * Form callback: builds the form for editing a shortcut link.
  *
  * @param $form
  *   An associative array containing the structure of the form.
@@ -320,6 +398,7 @@ function shortcut_link_add($form, &$form_state, $shortcut_set) {
  *   An associative array containing the current state of the form.
  * @param $shortcut_link
  *   An array representing the link that is being edited.
+ *
  * @return
  *   An array representing the form definition.
  *
@@ -343,6 +422,7 @@ function shortcut_link_edit($form, &$form_state, $shortcut_link) {
  * @param $shortcut_link
  *   (optional) An array representing the shortcut link that will be edited. If
  *   not provided, a new link will be created.
+ *
  * @return
  *   An array of form elements.
  */
@@ -376,7 +456,8 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
 
   $form['#validate'][] = 'shortcut_link_edit_validate';
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
@@ -394,7 +475,7 @@ function shortcut_link_edit_validate($form, &$form_state) {
 }
 
 /**
- * Submit handler for the shortcut link editing form.
+ * Submit handler for shortcut_link_edit().
  */
 function shortcut_link_edit_submit($form, &$form_state) {
   $shortcut_link = array_merge($form_state['values']['original_shortcut_link'], $form_state['values']['shortcut_link']);
@@ -404,7 +485,7 @@ function shortcut_link_edit_submit($form, &$form_state) {
 }
 
 /**
- * Submit handler for the form that adds shortcut links.
+ * Submit handler for shortcut_link_add().
  */
 function shortcut_link_add_submit($form, &$form_state) {
   // Add the shortcut link to the set.
@@ -418,7 +499,7 @@ function shortcut_link_add_submit($form, &$form_state) {
 }
 
 /**
- * Add a link to the end of a shortcut set, keeping within a prescribed limit.
+ * Adds a link to the end of a shortcut set, keeping within a prescribed limit.
  *
  * @param $link
  *   An array representing a shortcut link.
@@ -455,7 +536,125 @@ function shortcut_admin_add_link($shortcut_link, &$shortcut_set, $limit = NULL) 
 }
 
 /**
- * Menu callback; Build the form for deleting a shortcut link.
+ * Form callback: builds the form for editing the shortcut set name.
+ *
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ * @param object $shortcut_set
+ *   An object representing the shortcut set, as returned from
+ *   shortcut_set_load().
+ *
+ * @return
+ *   An array representing the form definition.
+ *
+ * @ingroup forms
+ * @see shortcut_set_edit_form_submit()
+ */
+function shortcut_set_edit_form($form, &$form_state, $shortcut_set) {
+  $form['shortcut_set'] = array(
+    '#type' => 'value',
+    '#value' => $shortcut_set,
+  );
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Set name'),
+    '#default_value' => $shortcut_set->title,
+    '#maxlength' => 255,
+    '#required' => TRUE,
+    '#weight' => -5,
+  );
+  $form['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions')),
+    '#weight' => 100,
+  );
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#weight' => 5,
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for shortcut_set_edit_form().
+ */
+function shortcut_set_edit_form_submit($form, &$form_state) {
+  $shortcut_set = $form_state['values']['shortcut_set'];
+  $shortcut_set->title = $form_state['values']['title'];
+  shortcut_set_save($shortcut_set);
+  drupal_set_message(t('Updated set name to %set-name.', array('%set-name' => $shortcut_set->title)));
+  $form_state['redirect'] = "admin/config/user-interface/shortcut/$shortcut_set->set_name";
+}
+
+/**
+ * Form callback: builds the confirmation form for deleting a shortcut set.
+ *
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ * @param object $shortcut_set
+ *   An object representing the shortcut set, as returned from
+ *   shortcut_set_load().
+ *
+ * @return
+ *   An array representing the form definition.
+ *
+ * @ingroup forms
+ * @see shortcut_set_delete_form_submit()
+ */
+function shortcut_set_delete_form($form, &$form_state, $shortcut_set) {
+  $form['shortcut_set'] = array(
+    '#type' => 'value',
+    '#value' => $shortcut_set->set_name,
+  );
+
+  // Find out how many users are directly assigned to this shortcut set, and
+  // make a message.
+  $number = db_query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', array(':name' => $shortcut_set->set_name))->fetchField();
+  $info = '';
+  if ($number) {
+    $info .= '<p>' . format_plural($number,
+      '1 user has chosen or been assigned to this shortcut set.',
+      '@count users have chosen or been assigned to this shortcut set.') . '</p>';
+  }
+
+  // Also, if a module implements hook_shortcut_default_set(), it's possible
+  // that this set is being used as a default set. Add a message about that too.
+  if (count(module_implements('shortcut_default_set')) > 0) {
+    $info .= '<p>' . t('If you have chosen this shortcut set as the default for some or all users, they may also be affected by deleting it.') . '</p>';
+  }
+
+  $form['info'] = array(
+    '#markup' => $info, 
+  );
+
+  return confirm_form(
+    $form,
+    t('Are you sure you want to delete the shortcut set %title?', array('%title' => $shortcut_set->title)),
+    'admin/config/user-interface/shortcut/' . $shortcut_set->set_name,
+    t('This action cannot be undone.'),
+    t('Delete'),
+    t('Cancel')
+  );
+}
+
+/**
+ * Submit handler for shortcut_set_delete_form().
+ */
+function shortcut_set_delete_form_submit($form, &$form_state) {
+  $shortcut_set = shortcut_set_load($form_state['values']['shortcut_set']);
+  shortcut_set_delete($shortcut_set);
+  $form_state['redirect'] = 'admin/config/user-interface/shortcut';
+  drupal_set_message(t('The shortcut set %title has been deleted.', array('%title' => $shortcut_set->title)));
+}
+
+/**
+ * Form callback: builds the confirmation form for deleting a shortcut link.
  *
  * @param $form
  *   An associative array containing the structure of the form.
@@ -463,6 +662,7 @@ function shortcut_admin_add_link($shortcut_link, &$shortcut_set, $limit = NULL) 
  *   An associative array containing the current state of the form.
  * @param $shortcut_link
  *   An array representing the link that will be deleted.
+ *
  * @return
  *   An array representing the form definition.
  *
@@ -486,7 +686,7 @@ function shortcut_link_delete($form, &$form_state, $shortcut_link) {
 }
 
 /**
- * Submit handler for the shortcut link deletion form.
+ * Submit handler for shortcut_link_delete_submit().
  */
 function shortcut_link_delete_submit($form, &$form_state) {
   $shortcut_link = $form_state['values']['shortcut_link'];
@@ -496,7 +696,7 @@ function shortcut_link_delete_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback; Creates a new link in the provided shortcut set
+ * Menu page callback: creates a new link in the provided shortcut set.
  *
  * After completion, redirects the user back to where they came from.
  *
@@ -520,5 +720,6 @@ function shortcut_link_add_inline($shortcut_set) {
     }
     drupal_goto();
   }
+
   return drupal_access_denied();
 }
