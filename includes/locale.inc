@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.246 2010/02/20 14:33:23 dries Exp $
+// $Id: locale.inc,v 1.247 2010/02/25 15:53:27 dries Exp $
 
 /**
  * @file
@@ -1321,10 +1321,10 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
       if ($string['comment']) {
         $output .= '#: ' . $string['comment'] . "\n";
       }
-      $output .= 'msgid ' . _locale_export_string($string['source']);
       if (!empty($string['context'])) {
         $output .= 'msgctxt ' . _locale_export_string($string['context']);
       }
+      $output .= 'msgid ' . _locale_export_string($string['source']);
       if (!empty($string['plural'])) {
         $plural = $string['plural'];
         $output .= 'msgid_plural ' . _locale_export_string($strings[$plural]['source']);
@@ -2068,4 +2068,3 @@ function locale_get_localized_date_format($languages) {
 
   return $formats;
 }
-
