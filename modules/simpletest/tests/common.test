@@ -558,7 +558,9 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     $css = 'http://example.com/style.css';
     drupal_add_css($css, 'external');
     $styles = drupal_get_css();
-    $this->assertTrue(strpos($styles, 'href="' . $css) > 0, t('Rendering an external CSS file.'));
+    // Stylesheet URL may be the href of a LINK tag or in an @import statement
+    // of a STYLE tag.
+    $this->assertTrue(strpos($styles, 'href="' . $css) > 0 || strpos($styles, '@import url("' . $css . '")') > 0, t('Rendering an external CSS file.'));
   }
 
   /**
@@ -566,10 +568,10 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
    */
   function testRenderInlinePreprocess() {
     $css = 'body { padding: 0px; }';
-    $css_preprocessed = '<style type="text/css">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
+    $css_preprocessed = '<style type="text/css" media="all">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
     drupal_add_css($css, 'inline');
     $styles = drupal_get_css();
-    $this->assertEqual($styles, "\n" . $css_preprocessed . "\n", t('Rendering preprocessed inline CSS adds it to the page.'));
+    $this->assertEqual(trim($styles), $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
   }
 
   /**
@@ -631,8 +633,10 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
 
 
     $styles = drupal_get_css();
-    if (preg_match_all('/href="' . preg_quote($GLOBALS['base_url'] . '/', '/') . '([^?]+)\?/', $styles, $matches)) {
-      $result = $matches[1];
+    // Stylesheet URL may be the href of a LINK tag or in an @import statement
+    // of a STYLE tag.
+    if (preg_match_all('/(href="|url\(")' . preg_quote($GLOBALS['base_url'] . '/', '/') . '([^?]+)\?/', $styles, $matches)) {
+      $result = $matches[2];
     }
     else {
       $result = array();

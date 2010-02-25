@@ -20,9 +20,6 @@
     <?php print $head ?>
     <?php print $styles ?>
     <?php print $scripts ?>
-    <!--[if lt IE 7]>
-      <?php print garland_get_ie_styles(); ?>
-    <![endif]-->
   </head>
   <body class="<?php print $classes ?>">
 

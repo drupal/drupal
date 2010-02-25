@@ -137,6 +137,7 @@ function theme_install_page($variables) {
   template_preprocess($variables, 'install_page');
   template_preprocess_maintenance_page($variables);
   template_process($variables, 'install_page');
+  template_process_maintenance_page($variables);
 
   // Special handling of error messages
   $messages = drupal_set_message();
@@ -197,6 +198,7 @@ function theme_update_page($variables) {
   template_preprocess($variables, 'update_page');
   template_preprocess_maintenance_page($variables);
   template_process($variables, 'update_page');
+  template_process_maintenance_page($variables);
 
   // Special handling of warning messages.
   $messages = drupal_set_message();

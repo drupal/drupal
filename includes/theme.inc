@@ -2483,8 +2483,8 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
 }
 
 /**
- * The variables generated here is a mirror of template_preprocess_page().
- * This preprocessor will run it's course when theme_maintenance_page() is
+ * The variables array generated here is a mirror of template_preprocess_page().
+ * This preprocessor will run its course when theme_maintenance_page() is
  * invoked. It is also used in theme_install_page() and theme_update_page() to
  * keep all the variables consistent.
  *
@@ -2545,7 +2545,6 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['front_page']        = url();
   $variables['breadcrumb']        = '';
   $variables['feed_icons']        = '';
-  $variables['head']              = drupal_get_html_head();
   $variables['help']              = '';
   $variables['language']          = $language;
   $variables['language']->dir     = $language->direction ? 'rtl' : 'ltr';
@@ -2555,9 +2554,6 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['secondary_menu']    = array();
   $variables['site_name']         = (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : '');
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : '');
-  $variables['css']               = drupal_add_css();
-  $variables['styles']            = drupal_get_css();
-  $variables['scripts']           = drupal_get_js();
   $variables['tabs']              = '';
   $variables['title']             = drupal_get_title();
   $variables['closure']           = '';
@@ -2582,6 +2578,21 @@ function template_preprocess_maintenance_page(&$variables) {
   if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
     $variables['theme_hook_suggestion'] = 'maintenance_page__offline';
   }
+}
+
+/**
+ * The variables array generated here is a mirror of template_process_html().
+ * This processor will run its course when theme_maintenance_page() is invoked.
+ * It is also used in theme_install_page() and theme_update_page() to keep all
+ * the variables consistent.
+ *
+ * @see maintenance-page.tpl.php
+ */
+function template_process_maintenance_page(&$variables) {
+  $variables['head']    = drupal_get_html_head();
+  $variables['css']     = drupal_add_css();
+  $variables['styles']  = drupal_get_css();
+  $variables['scripts'] = drupal_get_js();
 }
 
 /**

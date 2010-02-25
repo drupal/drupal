@@ -25,10 +25,12 @@ function garland_breadcrumb($variables) {
  * Override or insert variables into the maintenance page template.
  */
 function garland_preprocess_maintenance_page(&$vars) {
-  // Toggle fixed or fluid width.
-  if (theme_get_setting('garland_width') == 'fluid') {
-    $vars['classes_array'][] = 'fluid-width';
-  }
+  // While markup for normal pages is split into page.tpl.php and html.tpl.php,
+  // the markup for the maintenance page is all in the single
+  // maintenance-page.tpl.php template. So, to have what's done in
+  // garland_preprocess_html() also happen on the maintenance page, it has to be
+  // called here.
+  garland_preprocess_html($vars);
 }
 
 /**
@@ -39,6 +41,8 @@ function garland_preprocess_html(&$vars) {
   if (theme_get_setting('garland_width') == 'fluid') {
     $vars['classes_array'][] = 'fluid-width';
   }
+  // Add conditional CSS for IE6.
+  drupal_add_css(path_to_theme() . '/fix-ie.css', array('weight' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 7', '!IE' => FALSE), 'preprocess' => FALSE));
 }
 
 /**
@@ -49,7 +53,6 @@ function garland_process_html(&$vars) {
   if (module_exists('color')) {
     _color_html_alter($vars);
   }
-  $vars['styles'] .= "\n<!--[if lt IE 7]>\n" . garland_get_ie_styles() . "<![endif]-->\n";
 }
 
 /**
@@ -135,18 +138,4 @@ function garland_preprocess_region(&$vars) {
  */
 function garland_menu_local_tasks() {
   return menu_primary_local_tasks();
-}
-
-/**
- * Generates IE CSS links for LTR and RTL languages.
- */
-function garland_get_ie_styles() {
-  global $language;
-
-  $ie_styles = '<link type="text/css" rel="stylesheet" media="all" href="' . file_create_url(path_to_theme() . '/fix-ie.css') . '" />' . "\n";
-  if ($language->direction == LANGUAGE_RTL) {
-    $ie_styles .= '      <style type="text/css" media="all">@import "' . file_create_url(path_to_theme() . '/fix-ie-rtl.css') . '";</style>' . "\n";
-  }
-
-  return $ie_styles;
 }

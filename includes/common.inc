@@ -2651,6 +2651,9 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *   - 'preprocess': If TRUE, Allows the CSS to be aggregated and compressed if
  *     the Optimize CSS feature has been turned on under the performance
  *     section.  Defaults to TRUE.
+ *   - 'browsers': An array containing information specifying which browsers
+ *     should load the CSS item. See drupal_pre_render_conditional_comments()
+ *     for details.
  *
  * @return
  *   An array of queued cascading stylesheets.
@@ -2677,6 +2680,11 @@ function drupal_add_css($data = NULL, $options = NULL) {
       'media' => 'all',
       'preprocess' => TRUE,
       'data' => $data,
+      'browsers' => array(),
+    );
+    $options['browsers'] += array(
+      'IE' => TRUE,
+      '!IE' => TRUE,
     );
 
     // Always add a tiny value to the weight, to conserve the insertion order.
@@ -2722,25 +2730,14 @@ function drupal_add_css($data = NULL, $options = NULL) {
  *   A string of XHTML CSS tags.
  */
 function drupal_get_css($css = NULL) {
-  $output = '';
   if (!isset($css)) {
     $css = drupal_add_css();
   }
 
-  $preprocess_css = (variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
-  $directory = file_directory_path('public');
-  $is_writable = is_dir($directory) && is_writable($directory);
-
-  // A dummy query-string is added to filenames, to gain control over
-  // browser-caching. The string changes on every update or full cache
-  // flush, forcing browsers to load a new copy of the files, as the
-  // URL changed.
-  $query_string = '?' . substr(variable_get('css_js_query_string', '0'), 0, 1);
-
-  // Allow modules to alter the css items.
+  // Allow modules to alter the CSS items.
   drupal_alter('css', $css);
 
-  // Sort css items according to their weights.
+  // Sort CSS items according to their weights.
   uasort($css, 'drupal_sort_weight');
 
   // Remove the overridden CSS files. Later CSS files override former ones.
@@ -2756,75 +2753,354 @@ function drupal_get_css($css = NULL) {
     }
   }
 
-  // If CSS preprocessing is off, we still need to output the styles.
-  // Additionally, go through any remaining styles if CSS preprocessing is on
-  // and output the non-cached ones.
-  $css_element = array(
+  // Render the HTML needed to load the CSS.
+  $styles = array(
+    '#type' => 'styles',
+    '#items' => $css,
+  );
+  return drupal_render($styles);
+}
+
+/**
+ * Default callback to group CSS items.
+ *
+ * This function arranges the CSS items that are in the #items property of the
+ * styles element into groups. Arranging the CSS items into groups serves two
+ * purposes. When aggregation is enabled, files within a group are aggregated
+ * into a single file, significantly improving page loading performance by
+ * minimizing network traffic overhead. When aggregation is disabled, grouping
+ * allows multiple files to be loaded from a single STYLE tag, enabling sites
+ * with many modules enabled or a complex theme being used to stay within IE's
+ * 31 CSS inclusion tag limit: http://drupal.org/node/228818.
+ *
+ * This function puts multiple items into the same group if they are groupable
+ * and if they are for the same 'media' and 'browsers'. Items of the 'file' type
+ * are groupable if their 'preprocess' flag is TRUE, items of the 'inline' type
+ * are always groupable, and items of the 'external' type are never groupable.
+ * This function also ensures that the process of grouping items does not change
+ * their relative order. This requirement may result in multiple groups for the
+ * same type, media, and browsers, if needed to accomodate other items in
+ * between.
+ *
+ * @param $css
+ *   An array of CSS items, as returned by drupal_add_css(), but after
+ *   alteration performed by drupal_get_css().
+ *
+ * @return
+ *   An array of CSS groups. Each group contains the same keys (e.g., 'media',
+ *   'data', etc.) as a CSS item from the $css parameter, with the value of
+ *   each key applying to the group as a whole. Each group also contains an
+ *   'items' key, which is the subset of items from $css that are in the group.
+ *
+ * @see drupal_pre_render_styles()
+ */
+function drupal_group_css($css) {
+  $groups = array();
+  // If a group can contain multiple items, we track the information that must
+  // be the same for each item in the group, so that when we iterate the next
+  // item, we can determine if it can be put into the current group, or if a
+  // new group needs to be made for it.
+  $current_group_keys = NULL;
+  // When creating a new group, we pre-increment $i, so by initializing it to
+  // -1, the first group will have index 0.
+  $i = -1;
+  foreach ($css as $item) {
+    // The browsers for which the CSS item needs to be loaded is part of the
+    // information that determines when a new group is needed, but the order of
+    // keys in the array doesn't matter, and we don't want a new group if all
+    // that's different is that order.
+    ksort($item['browsers']);
+
+    // If the item can be grouped with other items, set $group_keys to an array
+    // of information that must be the same for all items in its group. If the
+    // item can't be grouped with other items, set $group_keys to FALSE. We
+    // put items into a group that can be aggregated together: whether they will
+    // be aggregated is up to the _drupal_css_aggregate() function or an
+    // override of that function specified in hook_css_alter(), but regardless
+    // of the details of that function, a group represents items that can be
+    // aggregated. Since a group may be rendered with a single HTML tag, all
+    // items in the group must share the same information that would need to be
+    // part of that HTML tag.
+    switch ($item['type']) {
+      case 'file':
+        // Group file items if their 'preprocess' flag is TRUE.
+        $group_keys = $item['preprocess'] ? array($item['type'], $item['media'], $item['browsers']) : FALSE;
+        break;
+      case 'inline':
+        // Always group inline items.
+        $group_keys = array($item['type'], $item['media'], $item['browsers']);
+        break;
+      case 'external':
+        // Do not group external items.
+        $group_keys = FALSE;
+        break;
+    }
+
+    // If the group keys don't match the most recent group we're working with,
+    // then a new group must be made.
+    if ($group_keys !== $current_group_keys) {
+      $i++;
+      // Initialize the new group with the same properties as the first item
+      // being placed into it. The item's 'data' and 'weight' properties are
+      // unique to the item and should not be carried over to the group.
+      $groups[$i] = $item;
+      unset($groups[$i]['data'], $groups[$i]['weight']);
+      $groups[$i]['items'] = array();
+      $current_group_keys = $group_keys ? $group_keys : NULL;
+    }
+
+    // Add the item to the current group.
+    $groups[$i]['items'][] = $item;
+  }
+  return $groups;
+}
+
+/**
+ * Default callback to aggregate CSS files and inline content.
+ *
+ * Having the browser load fewer CSS files results in much faster page loads
+ * than when it loads many small files. This function aggregates files within
+ * the same group into a single file unless the site-wide setting to do so is
+ * disabled (commonly the case during site development). To optimize download,
+ * it also compresses the aggregate files by removing comments, whitespace, and
+ * other unnecessary content. Additionally, this functions aggregates inline
+ * content together, regardless of the site-wide aggregation setting.
+ *
+ * @param $css_groups
+ *   An array of CSS groups as returned by drupal_group_css(). This function
+ *   modifies the group's 'data' property for each group that is aggregated.
+ *
+ * @see drupal_group_css()
+ * @see drupal_pre_render_styles()
+ */
+function drupal_aggregate_css(&$css_groups) {
+  $preprocess_css = (variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
+  $directory = file_directory_path('public');
+  $is_writable = is_dir($directory) && is_writable($directory);
+
+  // For non-aggregated files, a dummy query string is added to the URL when
+  // rendering the HTML tag (see drupal_pre_render_styles()). For aggregated
+  // files, it is instead added to the data from which an md5 hash is generated,
+  // so that a changed query string triggers a new aggregate file to be created.
+  $query_string = '?' . substr(variable_get('css_js_query_string', '0'), 0, 1);
+
+  // For each group that needs aggregation, aggregate its items.
+  foreach ($css_groups as $key => $group) {
+    switch ($group['type']) {
+      // If a file group can be aggregated into a single file, do so, and set
+      // the group's data property to the file path of the aggregate file.
+      case 'file':
+        if ($group['preprocess'] && $preprocess_css && $is_writable) {
+          // Prefix filename to prevent blocking by firewalls which reject files
+          // starting with "ad*".
+          $filename = 'css_' . md5(serialize($group['items']) . $query_string) . '.css';
+          $css_groups[$key]['data'] = drupal_build_css_cache($group['items'], $filename);
+        }
+        break;
+      // Aggregate all inline CSS content into the group's data property.
+      case 'inline':
+        $css_groups[$key]['data'] = '';
+        foreach ($group['items'] as $item) {
+          $css_groups[$key]['data'] .= drupal_load_stylesheet_content($item['data'], $item['preprocess']);
+        }
+        break;
+    }
+  }
+}
+
+/**
+ * #pre_render callback to add the elements needed for CSS tags to be rendered.
+ *
+ * For production websites, LINK tags are preferable to STYLE tags with @import
+ * statements, because:
+ * - They are the standard tag intended for linking to a resource.
+ * - On Firefox 2 and perhaps other browsers, CSS files included with @import
+ *   statements don't get saved when saving the complete web page for offline
+ *   use: http://drupal.org/node/145218.
+ * - On IE, if only LINK tags and no @import statements are used, all the CSS
+ *   files are downloaded in parallel, resulting in faster page load, but if
+ *   @import statements are used and span across multiple STYLE tags, all the
+ *   ones from one STYLE tag must be downloaded before downloading begins for
+ *   the next STYLE tag. Furthermore, IE7 does not support media declaration on
+ *   the @import statement, so multiple STYLE tags must be used when different
+ *   files are for different media types. Non-IE browsers always download in
+ *   parallel, so this is an IE-specific performance quirk:
+ *   http://www.stevesouders.com/blog/2009/04/09/dont-use-import/.
+ *
+ * However, IE has an annoying limit of 31 total CSS inclusion tags
+ * (http://drupal.org/node/228818) and LINK tags are limited to one file per
+ * tag, whereas STYLE tags can contain multiple @import statements allowing
+ * multiple files to be loaded per tag. When CSS aggregation is disabled, a
+ * Drupal site can easily have more than 31 CSS files that need to be loaded, so
+ * using LINK tags exclusively would result in a site that would display
+ * incorrectly in IE. Depending on different needs, different strategies can be
+ * employed to decide when to use LINK tags and when to use STYLE tags.
+ *
+ * The strategy employed by this function is to use LINK tags for all aggregate
+ * files and for all files that cannot be aggregated (e.g., if 'preprocess' is
+ * set to FALSE or the type is 'external'), and to use STYLE tags for groups
+ * of files that could be aggregated together but aren't (e.g., if the site-wide
+ * aggregation setting is disabled). This results in all LINK tags when
+ * aggregation is enabled, a guarantee that as many or only slightly more tags
+ * are used with aggregation disabled than enabled (so that if the limit were to
+ * be crossed with aggregation enabled, the site developer would also notice the
+ * problem while aggregation is disabled), and an easy way for a developer to
+ * view HTML source while aggregation is disabled and know what files will be
+ * aggregated together when aggregation becomes enabled.
+ *
+ * This function evaluates the aggregation enabled/disabled condition on a group
+ * by group basis by testing whether an aggregate file has been made for the
+ * group rather than by testing the site-wide aggregation setting. This allows
+ * this function to work correctly even if modules have implemented custom
+ * logic for grouping and aggregating files.
+ *
+ * @param $element
+ *   A render array containing:
+ *   - '#items': The CSS items as returned by drupal_add_css() and altered by
+ *     drupal_get_css().
+ *   - '#group_callback': A function to call to group #items to enable the use
+ *     of fewer tags by aggregating files and/or using multiple @import
+ *     statements within a single tag.
+ *   - '#aggregate_callback': A function to call to aggregate the items within
+ *     the groups arranged by the #group_callback function.
+ *
+ * @return
+ *   A render array that will render to a string of XHTML CSS tags.
+ *
+ * @see drupal_get_css()
+ */
+function drupal_pre_render_styles($elements) {
+  // Group and aggregate the items.
+  if (isset($elements['#group_callback'])) {
+    $elements['#groups'] = $elements['#group_callback']($elements['#items']);
+  }
+  if (isset($elements['#aggregate_callback'])) {
+    $elements['#aggregate_callback']($elements['#groups']);
+  }
+
+  // A dummy query-string is added to filenames, to gain control over
+  // browser-caching. The string changes on every update or full cache
+  // flush, forcing browsers to load a new copy of the files, as the
+  // URL changed.
+  $query_string = '?' . substr(variable_get('css_js_query_string', '0'), 0, 1);
+
+  // Defaults for LINK and STYLE elements.
+  $link_element_defaults = array(
+    '#type' => 'html_tag',
     '#tag' => 'link',
     '#attributes' => array(
       'type' => 'text/css',
       'rel' => 'stylesheet',
     ),
   );
-  $rendered_css = array();
-  $inline_css = '';
-  $external_css = '';
-  $preprocess_items = array();
-  foreach ($css as $data => $item) {
-    // Loop through each of the stylesheets, including them appropriately based
-    // on their type.
-    switch ($item['type']) {
+  $style_element_defaults = array(
+    '#type' => 'html_tag',
+    '#tag' => 'style',
+    '#attributes' => array(
+      'type' => 'text/css',
+    ),
+  );
+
+  // Loop through each group.
+  foreach ($elements['#groups'] as $group) {
+    switch ($group['type']) {
+      // For file items, there are three possibilites.
+      // - The group has been aggregated: in this case, output a LINK tag for
+      //   the aggregate file.
+      // - The group can be aggregated but has not been (most likely because
+      //   the site administrator disabled the site-wide setting): in this case,
+      //   output as few STYLE tags for the group as possible, using @import
+      //   statement for each file in the group. This enables us to stay within
+      //   IE's limit of 31 total CSS inclusion tags.
+      // - The group contains items not eligible for aggregation (their
+      //   'preprocess' flag has been set to FALSE): in this case, output a LINK
+      //   tag for each file. 
       case 'file':
-        // Depending on whether aggregation is desired, include the file.
-        if (!$item['preprocess'] || !($is_writable && $preprocess_css)) {
-          $element = $css_element;
-          $element['#attributes']['media'] = $item['media'];
-          $element['#attributes']['href'] = file_create_url($item['data']) . $query_string;
-          $rendered_css[] = theme('html_tag', array('element' => $element));
+        // The group has been aggregated into a single file: output a LINK tag
+        // for the aggregate file.
+        if (isset($group['data'])) {
+          $element = $link_element_defaults;
+          // The aggregate file name already incorporates the dummy query
+          // string information. The query string does not need to be added to
+          // the URL.
+          $element['#attributes']['href'] = file_create_url($group['data']);
+          $element['#attributes']['media'] = $group['media'];
+          $element['#browsers'] = $group['browsers'];
+          $elements[] = $element;
+        }
+        // The group can be aggregated, but hasn't been: combine multiple items
+        // into as few STYLE tags as possible.
+        elseif ($group['preprocess']) {
+          $import = array();
+          foreach ($group['items'] as $item) {
+            // The dummy query string needs to be added to the URL to control
+            // browser-caching. IE7 does not support a media type on the @import
+            // statement, so we instead specify the media for the group on the
+            // STYLE tag.
+            $import[] = '@import url("' . file_create_url($item['data']) . $query_string . '");';
+          }
+          // In addition to IE's limit of 31 total CSS inclusion tags, it also
+          // has a limit of 31 @import statements per STYLE tag.
+          while (!empty($import)) {
+            $import_batch = array_slice($import, 0, 31);
+            $import = array_slice($import, 31);
+            $element = $style_element_defaults;
+            $element['#value'] = implode("\n", $import_batch);
+            $element['#attributes']['media'] = $group['media'];
+            $element['#browsers'] = $group['browsers'];
+            $elements[] = $element;
+          }
+        }
+        // The group contains items ineligible for aggregation: output a LINK
+        // tag for each file.
+        else {
+          foreach ($group['items'] as $item) {
+            $element = $link_element_defaults;
+            // The dummy query string needs to be added to the URL to control
+            // browser-caching.
+            $element['#attributes']['href'] = file_create_url($item['data']) . $query_string;
+            $element['#attributes']['media'] = $item['media'];
+            $element['#browsers'] = $group['browsers'];
+            $elements[] = $element;
+          }
+        }
+        break;
+      // For inline content, the 'data' property contains the CSS content. If
+      // the group's 'data' property is set, then output it in a single STYLE
+      // tag. Otherwise, output a separate STYLE tag for each item.
+      case 'inline':
+        if (isset($group['data'])) {
+          $element = $style_element_defaults;
+          $element['#value'] = $group['data'];
+          $element['#attributes']['media'] = $group['media'];
+          $element['#browsers'] = $group['browsers'];
+          $elements[] = $element;
         }
         else {
-          $preprocess_items[$item['media']][] = $item;
-          // Mark the position of the preprocess element,
-          // it should be at the position of the first preprocessed file.
-          $rendered_css['preprocess'] = '';
+          foreach ($group['items'] as $item) {
+            $element = $style_element_defaults;
+            $element['#value'] = $item['data'];
+            $element['#attributes']['media'] = $item['media'];
+            $element['#browsers'] = $group['browsers'];
+            $elements[] = $element;
+          }
         }
         break;
-      case 'inline':
-        // Include inline stylesheets.
-        $inline_css .= drupal_load_stylesheet_content($item['data'], $item['preprocess']);
-        break;
+      // Output a LINK tag for each external item. The item's 'data' property
+      // contains the full URL.
       case 'external':
-        // Preprocessing for external CSS files is ignored.
-        $element = $css_element;
-        $element['#attributes']['media'] = $item['media'];
-        $element['#attributes']['href'] = $item['data'];
-        $external_css .= theme('html_tag', array('element' => $element));
+        foreach ($group['items'] as $item) {
+          $element = $link_element_defaults;
+          $element['#attributes']['href'] = $item['data'];
+          $element['#attributes']['media'] = $item['media'];
+          $element['#browsers'] = $group['browsers'];
+          $elements[] = $element;
+        }
         break;
     }
   }
 
-  if (!empty($preprocess_items)) {
-    foreach ($preprocess_items as $media => $items) {
-      // Prefix filename to prevent blocking by firewalls which reject files
-      // starting with "ad*".
-      $element = $css_element;
-      $element['#attributes']['media'] = $media;
-      $filename = 'css_' . md5(serialize($items) . $query_string) . '.css';
-      $element['#attributes']['href'] = file_create_url(drupal_build_css_cache($items, $filename));
-      $rendered_css['preprocess'] .= theme('html_tag', array('element' => $element));
-    }
-  }
-  // Enclose the inline CSS with the style tag if required.
-  if (!empty($inline_css)) {
-    $element = $css_element;
-    $element['#tag'] = 'style';
-    $element['#value'] = $inline_css;
-    unset($element['#attributes']['rel']);
-    $inline_css = "\n" . theme('html_tag', array('element' => $element));
-  }
-
-  // Output all the CSS files with the inline stylesheets showing up last.
-  return implode($rendered_css) . $external_css . $inline_css;
+  return $elements;
 }
 
 /**
@@ -4342,6 +4618,82 @@ function drupal_set_page_content($content = NULL) {
     $main_content_display = TRUE;
     return $content_block;
   }
+}
+
+/**
+ * #pre_render callback to render #browsers into #prefix and #suffix.
+ *
+ * @param $elements
+ *   A render array with a '#browsers' property. The '#browsers' property can
+ *   contain any or all of the following keys:
+ *   - 'IE': If FALSE, the element is not rendered by Internet Explorer. If
+ *     TRUE, the element is rendered by Internet Explorer. Can also be a string
+ *     containing an expression for Internet Explorer to evaluate as part of a
+ *     conditional comment. For example, this can be set to 'lt IE 7' for the
+ *     element to be rendered in Internet Explorer 6, but not in Internet
+ *     Explorer 7 or higher. Defaults to TRUE. 
+ *   - '!IE': If FALSE, the element is not rendered by browsers other than
+ *     Internet Explorer. If TRUE, the element is rendered by those browsers.
+ *     Defaults to TRUE.
+ *   Examples:
+ *   - To render an element in all browsers, '#browsers' can be left out or set
+ *     to array('IE' => TRUE, '!IE' => TRUE).
+ *   - To render an element in Internet Explorer only, '#browsers' can be set
+ *     to array('!IE' => FALSE).
+ *   - To render an element in Internet Explorer 6 only, '#browsers' can be set
+ *     to array('IE' => 'lt IE 7', '!IE' => FALSE).
+ *   - To render an element in Internet Explorer 8 and higher and in all other
+ *     browsers, '#browsers' can be set to array('IE' => 'gte IE 8').
+ *
+ * @return
+ *   The passed in element with markup for conditional comments potentially
+ *   added to '#prefix' and '#suffix'.
+ */
+function drupal_pre_render_conditional_comments($elements) {
+  $browsers = isset($elements['#browsers']) ? $elements['#browsers'] : array();
+  $browsers += array(
+    'IE' => TRUE,
+    '!IE' => TRUE,
+  );
+
+  // If rendering in all browsers, no need for conditional comments.
+  if ($browsers['IE'] === TRUE && $browsers['!IE']) {
+    return $elements;
+  }
+
+  // Determine the conditional comment expression for Internet Explorer to
+  // evaluate.
+  if ($browsers['IE'] === TRUE) {
+    $expression = 'IE';
+  }
+  elseif ($browsers['IE'] === FALSE) {
+    $expression = '!IE';
+  }
+  else {
+    $expression = $browsers['IE'];
+  }
+
+  // Wrap the element's potentially existing #prefix and #suffix properties with
+  // conditional comment markup. The conditional comment expression is evaluated
+  // by Internet Explorer only. To control the rendering by other browsers,
+  // either the "downlevel-hidden" or "downlevel-revealed" technique must be
+  // used. See http://en.wikipedia.org/wiki/Conditional_comment for details.
+  $elements += array(
+    '#prefix' => '',
+    '#suffix' => '',
+  );
+  if (!$browsers['!IE']) {
+    // "downlevel-hidden".
+    $elements['#prefix'] = "\n<!--[if $expression]>\n" . $elements['#prefix'];
+    $elements['#suffix'] .= "<![endif]-->\n";
+  }
+  else {
+    // "downlevel-revealed".
+    $elements['#prefix'] = "\n<!--[if $expression]><!-->\n" . $elements['#prefix'];
+    $elements['#suffix'] .= "<!--<![endif]-->\n";
+  }
+
+  return $elements;
 }
 
 /**
