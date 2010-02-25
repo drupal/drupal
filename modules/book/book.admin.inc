@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.31 2010/01/09 21:54:00 webchick Exp $
+// $Id: book.admin.inc,v 1.32 2010/02/25 09:44:51 dries Exp $
 
 /**
  * @file
@@ -124,7 +124,7 @@ function book_admin_edit_submit($form, &$form_state) {
 
       // Update the title if changed.
       if ($row['title']['#default_value'] != $values['title']) {
-        $node = node_load($values['nid'], FALSE);
+        $node = node_load($values['nid']);
         $langcode = LANGUAGE_NONE;
         $node->title = $values['title'];
         $node->book['link_title'] = $values['title'];
