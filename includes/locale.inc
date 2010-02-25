@@ -1321,10 +1321,10 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
       if ($string['comment']) {
         $output .= '#: ' . $string['comment'] . "\n";
       }
-      $output .= 'msgid ' . _locale_export_string($string['source']);
       if (!empty($string['context'])) {
         $output .= 'msgctxt ' . _locale_export_string($string['context']);
       }
+      $output .= 'msgid ' . _locale_export_string($string['source']);
       if (!empty($string['plural'])) {
         $plural = $string['plural'];
         $output .= 'msgid_plural ' . _locale_export_string($strings[$plural]['source']);
@@ -2068,4 +2068,3 @@ function locale_get_localized_date_format($languages) {
 
   return $formats;
 }
-
