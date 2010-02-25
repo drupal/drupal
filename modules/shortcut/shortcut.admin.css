@@ -1,9 +1,4 @@
-/* $Id: shortcut.admin.css,v 1.1 2009/10/17 00:51:52 dries Exp $ */
-
-h4.shortcuts-set,
-div.shortcuts-change-set {
-  display: inline;
-}
+/* $Id: shortcut.admin.css,v 1.2 2010/02/25 15:58:54 dries Exp $ */
 
 .shortcut-slot-hidden {
   display: none;
