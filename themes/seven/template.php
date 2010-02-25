@@ -1,12 +1,17 @@
 <?php
-// $Id: template.php,v 1.12 2010/01/04 03:46:31 webchick Exp $
+// $Id: template.php,v 1.13 2010/02/25 20:57:39 dries Exp $
+
+/**
+ * Override or insert variables into the html template.
+ */
+function seven_preprocess_html(&$vars) {
+  // Add conditional CSS for IE6.
+  drupal_add_css(path_to_theme() . '/ie6.css', array('weight' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 7', '!IE' => FALSE), 'preprocess' => FALSE));
+}
 
 /**
  * Override or insert variables into the page template.
  */
-function seven_process_html(&$vars) {
-  $vars['styles'] .= "\n<!--[if lt IE 7]>\n" . '<link type="text/css" rel="stylesheet" media="all" href="' . file_create_url(path_to_theme() . '/ie6.css') . '" />' . "\n" . "<![endif]-->\n";
-}
 function seven_preprocess_page(&$vars) {
   $vars['primary_local_tasks'] = menu_primary_local_tasks();
   $vars['secondary_local_tasks'] = menu_secondary_local_tasks();

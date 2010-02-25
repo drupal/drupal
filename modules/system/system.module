@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.890 2010/02/17 09:09:30 dries Exp $
+// $Id: system.module,v 1.891 2010/02/25 20:57:39 dries Exp $
 
 /**
  * @file
@@ -311,11 +311,17 @@ function system_element_info() {
   $types['ajax_commands'] = array(
     '#ajax_commands' => array(),
   );
-
   $types['html_tag'] = array(
     '#theme' => 'html_tag',
+    '#pre_render' => array('drupal_pre_render_conditional_comments'),
     '#attributes' => array(),
     '#value' => NULL,
+  );
+  $types['styles'] = array(
+    '#items' => array(),
+    '#pre_render' => array('drupal_pre_render_styles'),
+    '#group_callback' => 'drupal_group_css',
+    '#aggregate_callback' => 'drupal_aggregate_css',
   );
 
   // Input elements.

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.53 2010/01/09 23:03:21 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.54 2010/02/25 20:57:39 dries Exp $
 
 /**
  * @file
@@ -137,6 +137,7 @@ function theme_install_page($variables) {
   template_preprocess($variables, 'install_page');
   template_preprocess_maintenance_page($variables);
   template_process($variables, 'install_page');
+  template_process_maintenance_page($variables);
 
   // Special handling of error messages
   $messages = drupal_set_message();
@@ -197,6 +198,7 @@ function theme_update_page($variables) {
   template_preprocess($variables, 'update_page');
   template_preprocess_maintenance_page($variables);
   template_process($variables, 'update_page');
+  template_process_maintenance_page($variables);
 
   // Special handling of warning messages.
   $messages = drupal_set_message();

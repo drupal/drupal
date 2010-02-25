@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.14 2010/01/30 07:59:26 dries Exp $
+// $Id: maintenance-page.tpl.php,v 1.15 2010/02/25 20:57:39 dries Exp $
 
 /**
  * @file
@@ -20,9 +20,6 @@
     <?php print $head ?>
     <?php print $styles ?>
     <?php print $scripts ?>
-    <!--[if lt IE 7]>
-      <?php print garland_get_ie_styles(); ?>
-    <![endif]-->
   </head>
   <body class="<?php print $classes ?>">
 
