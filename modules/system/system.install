@@ -95,30 +95,71 @@ function system_requirements($phase) {
     $requirements['php_register_globals']['value'] = $t('Disabled');
   }
 
-  // Test PDO library availability.
-  $requirements['pdo'] = array(
-    'title' => $t('PDO library'),
+  // Test for PHP extensions.
+  $requirements['php_extensions'] = array(
+    'title' => $t('PHP extensions'),
   );
-  if (extension_loaded('pdo')) {
-    $requirements['pdo']['value'] = $t('Enabled');
-  }
-  else {
-    $requirements['pdo']['value'] = $t('Disabled');
-    $requirements['pdo']['severity'] = REQUIREMENT_ERROR;
-    $requirements['pdo']['description'] = $t('Your server does not have the PHP PDO extension enabled. See the <a href="@system_requirements">system requirements page</a> for more information.', array('@system_requirements' => 'http://drupal.org/requirements'));
+
+  $missing_extensions = array();
+  $required_extensions = array(
+    'date',
+    'dom',
+    'filter',
+    'gd',
+    'hash',
+    'json',
+    'pcre',
+    'pdo',
+    'session',
+    'SimpleXML',
+    'SPL',
+    'xml',
+  );
+  foreach ($required_extensions as $extension) {
+    if (!extension_loaded($extension)) {
+      $missing_extensions[] = $extension;
+    }
   }
 
-  // Test JSON library availability.
-  $requirements['json'] = array(
-    'title' => $t('JSON library'),
-  );
-  if (extension_loaded('json')) {
-    $requirements['json']['value'] = $t('Enabled');
+  if (!empty($missing_extensions)) {
+    $description = $t('Drupal requires you to enable the PHP extensions in the following list (see the <a href="@system_requirements">system requirements page</a> for more information):', array(
+      '@system_requirements' => 'http://drupal.org/requirements',
+    ));
+
+    $description .= theme('item_list',  array(
+      'type' => 'ul',
+      'items' => $missing_extensions,
+    ));
+
+    $requirements['php_extensions']['value'] = $t('Disabled');
+    $requirements['php_extensions']['severity'] = REQUIREMENT_ERROR;
+    $requirements['php_extensions']['description'] = $description;
   }
   else {
-    $requirements['json']['value'] = $t('Disabled');
-    $requirements['json']['severity'] = REQUIREMENT_ERROR;
-    $requirements['json']['description'] = $t('Your server does not have the PHP JSON extension enabled. See the <a href="@system_requirements">system requirements page</a> for more information.', array('@system_requirements' => 'http://drupal.org/requirements'));
+    $requirements['php_extensions']['value'] = $t('Enabled');
+  }
+
+  // Test for PDO (database).
+  $requirements['database_extensions'] = array(
+    'title' => $t('Database support'),
+  );
+
+  // Test for at least one suitable PDO extension, if PDO is available.
+  $database_ok = extension_loaded('pdo');
+  if ($database_ok) {
+    $drivers = drupal_detect_database_types();
+    $database_ok = !empty($drivers);
+  }
+
+  if (!$database_ok) {
+    $requirements['database_extensions']['value'] = $t('Disabled');
+    $requirements['database_extensions']['severity'] = REQUIREMENT_ERROR;
+    $requirements['database_extensions']['description'] = $t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array(
+      '@drupal-databases' => 'http://drupal.org/node/270#database',
+    ));
+  }
+  else {
+    $requirements['database_extensions']['value'] = $t('Enabled');
   }
 
   // Test PHP memory_limit
@@ -315,17 +356,6 @@ function system_requirements($phase) {
   // Test Unicode library
   include_once DRUPAL_ROOT . '/includes/unicode.inc';
   $requirements = array_merge($requirements, unicode_requirements());
-
-  // Verify if the DOM PHP 5 extension is available.
-  $has_dom = class_exists('DOMDocument');
-  if (!$has_dom) {
-    $requirements['php_dom'] = array(
-      'title' => $t('PHP DOM Extension'),
-      'value' => $t('Not found'),
-      'severity' => REQUIREMENT_ERROR,
-      'description' => $t("The DOM extension is part of PHP 5 core, but doesn't seem to be enabled on your system. You need to enable the DOM extension on your PHP installation."),
-    );
-  }
 
   if ($phase == 'runtime') {
     // Check for update status module.

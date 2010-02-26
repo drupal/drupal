@@ -829,102 +829,96 @@ function install_settings_form($form, &$form_state, &$install_state) {
 
   $drivers = drupal_detect_database_types();
 
-  if (!$drivers) {
-    // There is no point submitting the form if there are no database drivers
-    // at all, so throw an exception here.
-    throw new Exception(st('Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array('@drupal-databases' => 'http://drupal.org/node/270#database')));
+  $form['driver'] = array(
+    '#type' => 'radios',
+    '#title' => st('Database type'),
+    '#required' => TRUE,
+    '#options' => $drivers,
+    '#default_value' => !empty($database['driver']) ? $database['driver'] : current(array_keys($drivers)),
+    '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
+  );
+  if (count($drivers) == 1) {
+    $form['driver']['#disabled'] = TRUE;
+    $form['driver']['#description'] .= ' ' . st('Your PHP configuration only supports the %driver database type so it has been automatically selected.', array('%driver' => current($drivers)));
   }
-  else {
-    $form['driver'] = array(
-      '#type' => 'radios',
-      '#title' => st('Database type'),
-      '#required' => TRUE,
-      '#options' => $drivers,
-      '#default_value' => !empty($database['driver']) ? $database['driver'] : current(array_keys($drivers)),
-      '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
-    );
-    if (count($drivers) == 1) {
-      $form['driver']['#disabled'] = TRUE;
-      $form['driver']['#description'] .= ' ' . st('Your PHP configuration only supports the %driver database type so it has been automatically selected.', array('%driver' => current($drivers)));
-    }
 
-    // Database name
-    $form['database'] = array(
-      '#type' => 'textfield',
-      '#title' => st('Database name'),
-      '#default_value' => empty($database['database']) ? '' : $database['database'],
-      '#size' => 45,
-      '#required' => TRUE,
-      '#description' => st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_distribution_name())),
-    );
+  // Database name
+  $form['database'] = array(
+    '#type' => 'textfield',
+    '#title' => st('Database name'),
+    '#default_value' => empty($database['database']) ? '' : $database['database'],
+    '#size' => 45,
+    '#required' => TRUE,
+    '#description' => st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_distribution_name())),
+  );
 
-    // Database username
-    $form['username'] = array(
-      '#type' => 'textfield',
-      '#title' => st('Database username'),
-      '#default_value' => empty($database['username']) ? '' : $database['username'],
-      '#size' => 45,
-    );
+  // Database username
+  $form['username'] = array(
+    '#type' => 'textfield',
+    '#title' => st('Database username'),
+    '#default_value' => empty($database['username']) ? '' : $database['username'],
+    '#size' => 45,
+  );
 
-    // Database password
-    $form['password'] = array(
-      '#type' => 'password',
-      '#title' => st('Database password'),
-      '#default_value' => empty($database['password']) ? '' : $database['password'],
-      '#size' => 45,
-    );
+  // Database password
+  $form['password'] = array(
+    '#type' => 'password',
+    '#title' => st('Database password'),
+    '#default_value' => empty($database['password']) ? '' : $database['password'],
+    '#size' => 45,
+  );
 
-    $form['advanced_options'] = array(
-      '#type' => 'fieldset',
-      '#title' => st('Advanced options'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-      '#description' => st("These options are only necessary for some sites. If you're not sure what you should enter here, leave the default settings or check with your hosting provider.")
-    );
+  $form['advanced_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => st('Advanced options'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => st("These options are only necessary for some sites. If you're not sure what you should enter here, leave the default settings or check with your hosting provider.")
+  );
 
-    // Database host
-    $form['advanced_options']['host'] = array(
-      '#type' => 'textfield',
-      '#title' => st('Database host'),
-      '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
-      '#size' => 45,
-      // Hostnames can be 255 characters long.
-      '#maxlength' => 255,
-      '#required' => TRUE,
-      '#description' => st('If your database is located on a different server, change this.'),
-    );
+  // Database host
+  $form['advanced_options']['host'] = array(
+    '#type' => 'textfield',
+    '#title' => st('Database host'),
+    '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
+    '#size' => 45,
+    // Hostnames can be 255 characters long.
+    '#maxlength' => 255,
+    '#required' => TRUE,
+    '#description' => st('If your database is located on a different server, change this.'),
+  );
 
-    // Database port
-    $form['advanced_options']['port'] = array(
-      '#type' => 'textfield',
-      '#title' => st('Database port'),
-      '#default_value' => empty($database['port']) ? '' : $database['port'],
-      '#size' => 45,
-      // The maximum port number is 65536, 5 digits.
-      '#maxlength' => 5,
-      '#description' => st('If your database server is listening to a non-standard port, enter its number.'),
-    );
+  // Database port
+  $form['advanced_options']['port'] = array(
+    '#type' => 'textfield',
+    '#title' => st('Database port'),
+    '#default_value' => empty($database['port']) ? '' : $database['port'],
+    '#size' => 45,
+    // The maximum port number is 65536, 5 digits.
+    '#maxlength' => 5,
+    '#description' => st('If your database server is listening to a non-standard port, enter its number.'),
+  );
 
-    // Table prefix
-    $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
-    $form['advanced_options']['db_prefix'] = array(
-      '#type' => 'textfield',
-      '#title' => st('Table prefix'),
-      '#default_value' => '',
-      '#size' => 45,
-      '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_distribution_name(), '%prefix' => $db_prefix)),
-    );
+  // Table prefix
+  $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
+  $form['advanced_options']['db_prefix'] = array(
+    '#type' => 'textfield',
+    '#title' => st('Table prefix'),
+    '#default_value' => '',
+    '#size' => 45,
+    '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_distribution_name(), '%prefix' => $db_prefix)),
+  );
 
-    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
-    $form['actions']['save'] = array(
-      '#type' => 'submit',
-      '#value' => st('Save and continue'),
-    );
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['save'] = array(
+    '#type' => 'submit',
+    '#value' => st('Save and continue'),
+  );
 
-    $form['errors'] = array();
-    $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
-    $form['_database'] = array('#type' => 'value');
-  }
+  $form['errors'] = array();
+  $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
+  $form['_database'] = array('#type' => 'value');
+
   return $form;
 }
 
