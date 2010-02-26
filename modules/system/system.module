@@ -3099,32 +3099,49 @@ function system_image_toolkits() {
  *   The URL of the file to grab.
  *
  * @param $destination
- *   Where the file should be saved, if a directory is provided, file is saved
- *   in that directory with its original name.  If a filename is provided,
- *   remote file is stored to that location.  NOTE: Relative to drupal "files" directory"
+ *   Stream wrapper URI specifying where the file should be placed. If a
+ *   directory path is provided, the file is saved into that directory under
+ *   its original name. If the path contains a filename as well, that one will
+ *   be used instead.
+ *   If this value is omitted, the site's default files scheme will be used,
+ *   usually "public://".
  *
- * @param $overwrite boolean
- *   Defaults to TRUE, will overwrite existing files of the same name.
+ * @param $managed boolean
+ *   If this is set to TRUE, the file API hooks will be invoked and the file is
+ *   registered in the database.
+ *
+ * @param $replace boolean
+ *   Replace behavior when the destination file already exists:
+ *   - FILE_EXISTS_REPLACE: Replace the existing file.
+ *   - FILE_EXISTS_RENAME: Append _{incrementing number} until the filename is
+ *     unique.
+ *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
  *
  * @return
- *   On success the address the files was saved to, FALSE on failure.
+ *   On success the location the file was saved to, FALSE on failure.
  */
-function system_retrieve_file($url, $destination = NULL, $overwrite = TRUE) {
-  if (!$destination) {
-    $destination = file_directory_path('temporary');
-  }
+function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FILE_EXISTS_RENAME) {
   $parsed_url = parse_url($url);
-  $local = is_dir(file_directory_path() . '/' . $destination) ? $destination . '/' . basename($parsed_url['path']) : $destination;
-
-  if (!$overwrite && file_exists($local)) {
-    drupal_set_message(t('@remote could not be saved. @local already exists', array('@remote' => $url, '@local' => $local)), 'error');
+  if (!isset($destination)) {
+    $path = file_build_uri(basename($parsed_url['path']));
+  }
+  else {
+    if (is_dir(drupal_realpath($destination))) {
+      // Prevent URIs with triple slashes when glueing parts together.
+      $path = str_replace('///', '//', "$destination/") . basename($parsed_url['path']);
+    }
+    else {
+      $path = $destination;
+    }
+  }
+  $result = drupal_http_request($url);
+  if ($result->code != 200) {
+    drupal_set_message(t('HTTP error @errorcode occured when trying to fetch @remote.', array('@errorcode' => $result->code, '@remote' => $url)), 'error');
     return FALSE;
   }
-
-  $result = drupal_http_request($url);
-  if ($result->code != 200 || !file_save_data($result->data, $local)) {
-    drupal_set_message(t('@remote could not be saved.', array('@remote' => $url)), 'error');
-    return FALSE;
+  $local = $managed ? file_save_data($result->data, $path, $replace) : file_unmanaged_save_data($result->data, $path, $replace);
+  if (!$local) {
+    drupal_set_message(t('@remote could not be saved to @path.', array('@remote' => $url, '@path' => $path)), 'error');
   }
 
   return $local;
