@@ -498,7 +498,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
    * Verify that comments are rendered using proper format in search results.
    */
   function testSearchResultsComment() {
-    $comment_body = $this->randomName(5);
+    $comment_body = 'Test comment body';
 
     variable_set('comment_preview_article', DRUPAL_OPTIONAL);
     // Enable check_plain() for 'Filtered HTML' text format.
@@ -523,7 +523,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('type' => 'article'));
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
-    $edit_comment['subject'] = $this->randomName(2);
+    $edit_comment['subject'] = 'Test comment subject';
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value_format]'] = 2;
     $this->drupalPost('comment/reply/' . $node->nid, $edit_comment, t('Save'));
@@ -534,7 +534,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Search for the comment subject.
     $edit = array(
-      'search_block_form' => $edit_comment['subject'],
+      'search_block_form' => "'" . $edit_comment['subject'] . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
     $this->assertText($node->title, t('Node found in search results.'));
@@ -542,7 +542,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Search for the comment body.
     $edit = array(
-      'search_block_form' => $comment_body,
+      'search_block_form' => "'" . $comment_body . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
     $this->assertText($node->title, t('Node found in search results.'));

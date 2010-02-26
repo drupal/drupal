@@ -181,7 +181,7 @@ class DBLogTestCase extends DrupalWebTestCase {
    */
   private function doUser() {
     // Set user variables.
-    $name = $this->randomName();
+    $name = $this->randomName(4);
     $pass = user_password();
     // Add user using form to generate add user event (which is not triggered by drupalCreateUser).
     $edit = array();
