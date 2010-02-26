@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.33 2010/02/08 23:31:45 webchick Exp $
+// $Id: dblog.test,v 1.34 2010/02/26 17:22:39 dries Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -181,7 +181,7 @@ class DBLogTestCase extends DrupalWebTestCase {
    */
   private function doUser() {
     // Set user variables.
-    $name = $this->randomName();
+    $name = $this->randomName(4);
     $pass = user_password();
     // Add user using form to generate add user event (which is not triggered by drupalCreateUser).
     $edit = array();
