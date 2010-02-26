@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1127 2010/02/22 19:51:15 dries Exp $
+// $Id: user.module,v 1.1128 2010/02/26 16:55:18 dries Exp $
 
 /**
  * @file
@@ -3243,8 +3243,9 @@ function user_action_info() {
 }
 
 /**
- * Implement a Drupal action.
  * Blocks the current user.
+ *
+ * @ingroup actions
  */
 function user_block_user_action(&$entity, $context = array()) {
   if (isset($entity->uid)) {
