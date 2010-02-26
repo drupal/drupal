@@ -159,7 +159,12 @@ function _contact_personal_tab_access(stdClass $account) {
  *   An array with the contact category's data.
  */
 function contact_load($cid) {
-  return db_query("SELECT * FROM {contact} WHERE cid = :cid", array(':cid' => $cid))->fetchAssoc();
+  return db_select('contact', 'c')
+    ->addTag('translatable')
+    ->fields('c')
+    ->condition('cid', $cid)
+    ->execute()
+    ->fetchAssoc();
 }
 
 /**
