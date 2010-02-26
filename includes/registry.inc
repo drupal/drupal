@@ -123,24 +123,27 @@ function registry_get_parsed_files() {
 function _registry_parse_files($files) {
   $parsed_files = array();
   foreach ($files as $filename => $file) {
-    $filectime = filectime($filename);
-    $filemtime = filemtime($filename);
-    $modified_file = !isset($file['filectime']) || !isset($file['filemtime'])
-                || $filectime != $file['filectime'] || $filemtime != $file['filemtime'];
-    if ($modified_file) {
-      $contents = file_get_contents($filename);
-      $parsed_files[] = $filename;
-      // We update the filectime/filemtime after we've saved the files resources
-      // rather than here, so if we don't make it through this rebuild, the next
-      // run will reparse the file.
-      _registry_parse_file($filename, $contents, $file['module'], $file['weight']);
-      db_merge('registry_file')
-        ->key(array('filename' => $filename))
-        ->fields(array(
-          'filectime' => $filectime,
-          'filemtime' => $filemtime,
-        ))
-        ->execute();
+    if (file_exists($filename)) {
+      $filectime = filectime($filename);
+      $filemtime = filemtime($filename);
+
+      $modified_file = !isset($file['filectime']) || !isset($file['filemtime'])
+                  || $filectime != $file['filectime'] || $filemtime != $file['filemtime'];
+      if ($modified_file) {
+        $contents = file_get_contents($filename);
+        $parsed_files[] = $filename;
+        // We update the filectime/filemtime after we've saved the files resources
+        // rather than here, so if we don't make it through this rebuild, the next
+        // run will reparse the file.
+        _registry_parse_file($filename, $contents, $file['module'], $file['weight']);
+        db_merge('registry_file')
+          ->key(array('filename' => $filename))
+          ->fields(array(
+            'filectime' => $filectime,
+            'filemtime' => $filemtime,
+          ))
+          ->execute();
+      }
     }
   }
   return $parsed_files;
