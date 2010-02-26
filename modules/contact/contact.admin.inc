@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.22 2010/02/17 08:48:18 dries Exp $
+// $Id: contact.admin.inc,v 1.23 2010/02/26 18:35:35 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,13 @@ function contact_category_list() {
   $rows = array();
 
   // Get all the contact categories from the database.
-  $categories = db_query('SELECT cid, category, recipients, selected FROM {contact} ORDER BY weight, category')->fetchAll();
+  $categories = db_select('contact', 'c')
+    ->addTag('translatable')
+    ->fields('c', array('cid', 'category', 'recipients', 'selected'))
+    ->orderBy('weight')
+    ->orderBy('category')
+    ->execute()
+    ->fetchAll();
 
   // Loop through the categories and add them to the table.
   foreach ($categories as $category) {

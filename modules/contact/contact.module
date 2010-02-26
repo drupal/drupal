@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.144 2010/02/17 04:39:49 webchick Exp $
+// $Id: contact.module,v 1.145 2010/02/26 18:35:35 dries Exp $
 
 /**
  * @file
@@ -159,7 +159,12 @@ function _contact_personal_tab_access(stdClass $account) {
  *   An array with the contact category's data.
  */
 function contact_load($cid) {
-  return db_query("SELECT * FROM {contact} WHERE cid = :cid", array(':cid' => $cid))->fetchAssoc();
+  return db_select('contact', 'c')
+    ->addTag('translatable')
+    ->fields('c')
+    ->condition('cid', $cid)
+    ->execute()
+    ->fetchAssoc();
 }
 
 /**
