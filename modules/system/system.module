@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.892 2010/02/26 16:55:18 dries Exp $
+// $Id: system.module,v 1.893 2010/02/26 18:31:29 dries Exp $
 
 /**
  * @file
@@ -2226,6 +2226,8 @@ function _system_update_bootstrap_status() {
     $query->condition('name', $bootstrap_modules, 'NOT IN');
   }
   $query->execute();
+  // Reset the cached list of bootstrap modules.
+  system_list_reset();
 }
 
 /**

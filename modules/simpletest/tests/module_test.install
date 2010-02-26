@@ -1,0 +1,43 @@
+<?php
+// $Id: module_test.install,v 1.1 2010/02/26 18:31:29 dries Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the module_test module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function module_test_schema() {
+  $schema['module_test'] = array(
+    'description' => 'Dummy table to test the behavior of hook_schema() during module installation.',
+    'fields' => array(
+      'data' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'An example data column for the module.',
+      ),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function module_test_install() {
+  $record = array('data' => 'Data inserted in hook_install()');
+  drupal_write_record('module_test', $record);
+}
+
+/**
+ * Implements hook_enable().
+ */
+function module_test_enable() {
+  $record = array('data' => 'Data inserted in hook_enable()');
+  drupal_write_record('module_test', $record);
+}
+

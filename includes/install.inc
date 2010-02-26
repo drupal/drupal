@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.127 2010/02/03 18:16:23 webchick Exp $
+// $Id: install.inc,v 1.128 2010/02/26 18:31:29 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -539,31 +539,6 @@ function drupal_verify_profile($install_state) {
     );
   }
   return $requirements;
-}
-
-/**
- * Callback to install an individual install profile module.
- *
- * Used during installation to install modules one at a time and then
- * enable them, or to install a number of modules at one time
- * from admin/modules.
- *
- * @param $module
- *   The machine name of the module to install.
- * @return
- *   TRUE if the module got installed.
- */
-function _drupal_install_module($module) {
-  if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
-    drupal_load('module', $module);
-    drupal_install_schema($module);
-    // Now allow the module to perform install tasks.
-    module_invoke($module, 'install');
-    $versions = drupal_get_schema_versions($module);
-    drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
-    system_list_reset();
-    return TRUE;
-  }
 }
 
 /**
