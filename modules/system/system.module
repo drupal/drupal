@@ -2859,7 +2859,22 @@ function system_send_email_action_submit($form, $form_state) {
 }
 
 /**
- * Implements a configurable Drupal action: sends an email.
+ * Sends an e-mail message.
+ *
+ * @param object $entity
+ *   An optional node object, which will be added as $context['node'] if
+ *   provided.
+ * @param array $context
+ *   Array with the following elements:
+ *   - 'recipient': E-mail message recipient. This will be passed through
+ *     token_replace().
+ *   - 'subject': The subject of the message. This will be passed through
+ *     token_replace().
+ *   - 'message': The message to send. This will be passed through
+ *     token_replace().
+ *   - Other elements will be used as the data for token replacement.
+ *
+ * @ingroup actions
  */
 function system_send_email_action($entity, $context) {
   if (empty($context['node'])) {
@@ -2909,7 +2924,19 @@ function system_message_action_submit($form, $form_state) {
 }
 
 /**
- * A configurable Drupal action. Sends a message to the current user's screen.
+ * Sends a message to the current user's screen.
+ *
+ * @param object $entity
+ *   An optional node object, which will be added as $context['node'] if
+ *   provided.
+ * @param array $context
+ *   Array with the following elements:
+ *   - 'message': The message to send. This will be passed through
+ *     token_replace().
+ *   - Other elements will be used as the data for token replacement in
+ *     the message.
+ *
+ * @ingroup actions
  */
 function system_message_action(&$entity, $context = array()) {
   if (empty($context['node'])) {
@@ -2921,7 +2948,7 @@ function system_message_action(&$entity, $context = array()) {
 }
 
 /**
- * Implements a configurable Drupal action: redirect user to a URL.
+ * Settings form for system_goto_action().
  */
 function system_goto_action_form($context) {
   $form['url'] = array(
@@ -2940,12 +2967,27 @@ function system_goto_action_submit($form, $form_state) {
   );
 }
 
+/**
+ * Redirects to a different URL.
+ *
+ * @param $entity
+ *   Ignored.
+ * @param array $context
+ *   Array with the following elements:
+ *   - 'url': URL to redirect to. This will be passed through
+ *     token_replace().
+ *   - Other elements will be used as the data for token replacement.
+ *
+ * @ingroup actions
+ */
 function system_goto_action($entity, $context) {
   drupal_goto(token_replace($context['url'], $context));
 }
 
 /**
- * Implements a Drupal action: blocks the user's IP address.
+ * Blocks the current user's IP address.
+ *
+ * @ingroup actions
  */
 function system_block_ip_action() {
   $ip = ip_address();

@@ -11,16 +11,17 @@
  * @{
  * Functions that perform an action on a certain system object.
  *
- * All modules should declare their action functions to be in this group and
- * each action function should reference its configuration form, validate, and
- * submit functions using \@see. Conversely, form, validate, and submit
- * functions should reference the action function using \@see. For examples of
- * this see comment_unpublish_by_keyword_action(), which has the following in
- * its doxygen documentation:
+ * Action functions are declared by modules by implementing hook_action_info().
+ * Modules can cause action functions to run by calling actions_do(), and
+ * trigger.module provides a user interface that lets administrators define
+ * events that cause action functions to run.
  *
- * \@ingroup actions
- * \@see comment_unpublish_by_keyword_action_form().
- * \@see comment_unpublish_by_keyword_action_submit().
+ * Each action function takes two to four arguments:
+ * - $entity: The object that the action acts on, such as a node, comment, or
+ *   user.
+ * - $context: Array of additional information about what triggered the action.
+ * - $a1, $a2: Optional additional information, which can be passed into
+ *   actions_do() and will be passed along to the action function.
  *
  * @} End of "defgroup actions".
  */
@@ -51,6 +52,8 @@
  * @return
  *   An associative array containing the results of the functions that
  *   perform the actions, keyed on action ID.
+ *
+ * @ingroup actions
  */
 function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a2 = NULL) {
   // $stack tracks the number of recursive calls.

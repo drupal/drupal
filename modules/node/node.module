@@ -3322,7 +3322,9 @@ function node_action_info() {
 }
 
 /**
- * Implements a Drupal action: sets the status of a node to 1 (published).
+ * Sets the status of a node to 1 (published).
+ *
+ * @ingroup actions
  */
 function node_publish_action($node, $context = array()) {
   $node->status = NODE_PUBLISHED;
@@ -3330,7 +3332,9 @@ function node_publish_action($node, $context = array()) {
 }
 
 /**
- * Implements a Drupal action: sets the status of a node to 0 (unpublished).
+ * Sets the status of a node to 0 (unpublished).
+ *
+ * @ingroup actions
  */
 function node_unpublish_action($node, $context = array()) {
   $node->status = NODE_NOT_PUBLISHED;
@@ -3338,7 +3342,9 @@ function node_unpublish_action($node, $context = array()) {
 }
 
 /**
- * Implements a Drupal action: sets sticky-at-top-of-list property to 1.
+ * Sets the sticky-at-top-of-list property of a node to 1.
+ *
+ * @ingroup actions
  */
 function node_make_sticky_action($node, $context = array()) {
   $node->sticky = NODE_STICKY;
@@ -3346,7 +3352,9 @@ function node_make_sticky_action($node, $context = array()) {
 }
 
 /**
- * Implements a Drupal action: sets sticky-at-top-of-list property to 0.
+ * Sets the sticky-at-top-of-list property of a node to 0.
+ *
+ * @ingroup actions
  */
 function node_make_unsticky_action($node, $context = array()) {
   $node->sticky = NODE_NOT_STICKY;
@@ -3354,7 +3362,9 @@ function node_make_unsticky_action($node, $context = array()) {
 }
 
 /**
- * Implements a Drupal action: sets the promote property of a node to 1.
+ * Sets the promote property of a node to 1.
+ *
+ * @ingroup actions
  */
 function node_promote_action($node, $context = array()) {
   $node->promote = NODE_PROMOTED;
@@ -3362,7 +3372,9 @@ function node_promote_action($node, $context = array()) {
 }
 
 /**
- * Implements a Drupal action: sets the promote property of a node to 0.
+ * Sets the promote property of a node to 0.
+ *
+ * @ingroup actions
  */
 function node_unpromote_action($node, $context = array()) {
   $node->promote = NODE_NOT_PROMOTED;
@@ -3370,7 +3382,9 @@ function node_unpromote_action($node, $context = array()) {
 }
 
 /**
- * Implements a Drupal action: saves a node.
+ * Saves a node.
+ *
+ * @ingroup actions
  */
 function node_save_action($node) {
   node_save($node);
@@ -3378,7 +3392,15 @@ function node_save_action($node) {
 }
 
 /**
- * Implements a configurable Drupal action: assigns ownership of node to user.
+ * Assigns ownership of a node to a user.
+ *
+ * @param $node
+ *   A node object to modify.
+ * @param $context
+ *   Array with the following elements:
+ *   - 'owner_uid': User ID to assign to the node.
+ *
+ * @ingroup actions
  */
 function node_assign_owner_action($node, $context) {
   $node->uid = $context['owner_uid'];
@@ -3387,7 +3409,7 @@ function node_assign_owner_action($node, $context) {
 }
 
 /**
- * Generates settings form for node_assign_owner_action().
+ * Generates the settings form for node_assign_owner_action().
  */
 function node_assign_owner_action_form($context) {
   $description = t('The username of the user to which you would like to assign ownership.');
@@ -3466,13 +3488,16 @@ function node_unpublish_by_keyword_action_submit($form, $form_state) {
 }
 
 /**
- * Implements a configurable Drupal action: unpublish node containing keywords.
+ * Unpublishes a node containing certain keywords.
  *
  * @param $node
- *   A node object.
+ *   A node object to modify.
  * @param $context
- *   An array providing more information about the context of the call to this
- *   action.
+ *   Array with the following elements:
+ *   - 'keywords': Array of keywords. If any keyword is present in the rendered
+ *     node, the node's status flag is set to unpublished.
+ *
+ * @ingroup actions
  */
 function node_unpublish_by_keyword_action($node, $context) {
   foreach ($context['keywords'] as $keyword) {

@@ -2360,8 +2360,6 @@ function vancode2int($c = '00') {
 
 /**
  * Implements hook_action_info().
- *
- * @ingroup actions
  */
 function comment_action_info() {
   return array(
@@ -2396,12 +2394,13 @@ function comment_action_info() {
 }
 
 /**
- * Action to publish a comment.
+ * Publishes a comment.
  *
  * @param $comment
  *   An optional comment object.
- * @param $context
- *   Keyed array. Must contain the id of the comment if $comment is not passed.
+ * @param array $context
+ *   Array with components:
+ *   - 'cid': Comment ID. Required if $comment is not given.
  *
  * @ingroup actions
  */
@@ -2422,12 +2421,13 @@ function comment_publish_action($comment, $context = array()) {
 }
 
 /**
- * Action to unpublish a comment.
+ * Unpublishes a comment.
  *
  * @param $comment
  *   An optional comment object.
- * @param $context
- *   Keyed array. Must contain the id of the comment if $comment is not passed.
+ * @param array $context
+ *   Array with components:
+ *   - 'cid': Comment ID. Required if $comment is not given.
  *
  * @ingroup actions
  */
@@ -2448,12 +2448,14 @@ function comment_unpublish_action($comment, $context = array()) {
 }
 
 /**
- * Action to unpublish a comment if it contains a certain string.
+ * Unpublishes a comment if it contains certain keywords.
  *
  * @param $comment
- *   A comment object.
- * @param $context
- *   Keyed array. Must contain the id of the comment if $comment is not passed.
+ *   Comment object to modify.
+ * @param array $context
+ *   Array with components:
+ *   - 'keywords': Keywords to look for. If the comment contains at least one
+ *     of the keywords, it is unpublished.
  *
  * @ingroup actions
  * @see comment_unpublish_by_keyword_action_form()
@@ -2498,7 +2500,9 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
 }
 
 /**
- * Action to save a comment.
+ * Saves a comment.
+ *
+ * @ingroup actions
  */
 function comment_save_action($comment) {
   comment_save($comment);

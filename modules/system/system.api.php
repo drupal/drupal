@@ -2690,6 +2690,8 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
  *       Modules that are processing actions (like Trigger module) should take
  *       special care for the "presave" hook, in which case a dependent "save"
  *       action should NOT be invoked.
+ *
+ * @ingroup actions
  */
 function hook_action_info() {
   return array(

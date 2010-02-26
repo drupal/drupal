@@ -3243,8 +3243,9 @@ function user_action_info() {
 }
 
 /**
- * Implement a Drupal action.
  * Blocks the current user.
+ *
+ * @ingroup actions
  */
 function user_block_user_action(&$entity, $context = array()) {
   if (isset($entity->uid)) {
