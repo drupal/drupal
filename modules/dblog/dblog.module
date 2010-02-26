@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.50 2010/02/06 14:50:05 dries Exp $
+// $Id: dblog.module,v 1.51 2010/02/26 15:25:43 dries Exp $
 
 /**
  * @file
@@ -83,8 +83,6 @@ function dblog_init() {
   }
 }
 
-
-
 /**
  * Implements hook_cron().
  *
@@ -93,8 +91,8 @@ function dblog_init() {
 function dblog_cron() {
   // Cleanup the watchdog table
   if (variable_get('dblog_row_limit', 1000) > 0) {
-    $max = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
-    db_delete('watchdog')
+    $max = Database::getConnection('default', 'default')->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    Database::getConnection('default', 'default')->delete('watchdog')
       ->condition('wid', $max - variable_get('dblog_row_limit', 1000), '<=')
       ->execute();
   }
