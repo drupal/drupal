@@ -83,8 +83,6 @@ function dblog_init() {
   }
 }
 
-
-
 /**
  * Implements hook_cron().
  *
@@ -93,8 +91,8 @@ function dblog_init() {
 function dblog_cron() {
   // Cleanup the watchdog table
   if (variable_get('dblog_row_limit', 1000) > 0) {
-    $max = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
-    db_delete('watchdog')
+    $max = Database::getConnection('default', 'default')->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    Database::getConnection('default', 'default')->delete('watchdog')
       ->condition('wid', $max - variable_get('dblog_row_limit', 1000), '<=')
       ->execute();
   }
