@@ -2226,6 +2226,8 @@ function _system_update_bootstrap_status() {
     $query->condition('name', $bootstrap_modules, 'NOT IN');
   }
   $query->execute();
+  // Reset the cached list of bootstrap modules.
+  system_list_reset();
 }
 
 /**

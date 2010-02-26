@@ -43,8 +43,9 @@ function rdf_schema() {
  * Implements hook_install().
  */
 function rdf_install() {
-  // The installer does not trigger hook_modules_installed(), so it needs to be
-  // triggered manually for modules defining RDF mappings.
+  // Collect any RDF mappings that were declared by modules installed before
+  // this one.
   $modules = module_implements('rdf_mapping');
   rdf_modules_installed($modules);
 }
+

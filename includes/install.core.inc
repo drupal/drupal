@@ -1493,8 +1493,7 @@ function install_finished(&$install_state) {
  * Batch callback for batch installation of modules.
  */
 function _install_module_batch($module, $module_name, &$context) {
-  _drupal_install_module($module);
-  // We enable the installed module right away, so that the module will be
+  // Install and enable the module right away, so that the module will be
   // loaded by drupal_bootstrap in subsequent batch requests, and other
   // modules possibly depending on it can safely perform their installation
   // steps.

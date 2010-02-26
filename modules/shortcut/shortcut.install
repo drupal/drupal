@@ -7,14 +7,9 @@
  */
 
 /**
- * Implements hook_enable().
+ * Implements hook_install().
  */
-function shortcut_enable() {
-  if (shortcut_set_load(SHORTCUT_DEFAULT_SET_NAME)) {
-    // Quit out; this module has already been installed before.
-    return;
-  }
-
+function shortcut_install() {
   $t = get_t();
   // Create an initial default shortcut set.
   $shortcut_set = new StdClass();

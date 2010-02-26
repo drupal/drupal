@@ -336,63 +336,69 @@ function module_enable($module_list, $enable_dependencies = TRUE, $disable_modul
     $module_list = array_keys($module_list);
   }
 
-  $invoke_modules = array();
-
-  // Required for _drupal_install_module().
+  // Required for module installation checks.
   include_once DRUPAL_ROOT . '/includes/install.inc';
-  // Try to install the enabled modules and collect which were installed.
-  // $module_list is not changed and already installed modules are ignored.
-  $modules_installed = array_filter($module_list, '_drupal_install_module');
+
+  $modules_installed = array();
+  $modules_enabled = array();
   foreach ($module_list as $module) {
+    // Only process modules that are not already enabled.
     $existing = db_query("SELECT status FROM {system} WHERE type = :type AND name = :name", array(
       ':type' => 'module',
       ':name' => $module))
       ->fetchObject();
     if ($existing->status == 0) {
+      // Load the module's code.
+      drupal_load('module', $module);
       module_load_install($module);
+
+      // Update the database and module list to reflect the new module. This
+      // needs to be done first so that the module's hook implementations,
+      // hook_schema() in particular, can be called while it is being
+      // installed.
       db_update('system')
         ->fields(array('status' => 1))
         ->condition('type', 'module')
         ->condition('name', $module)
         ->execute();
-      drupal_load('module', $module);
-      $invoke_modules[] = $module;
+      // Refresh the module list to include it.
+      system_list_reset();
+      module_list(TRUE);
+      module_implements('', FALSE, TRUE);
+      _system_update_bootstrap_status();
+      // Update the registry to include it.
+      registry_update();
+      // Refresh the schema to include it.
+      drupal_get_schema(NULL, TRUE);
+
+      // Now install the module if necessary.
+      if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
+        drupal_install_schema($module);
+        // Allow the module to perform install tasks.
+        module_invoke($module, 'install');
+        $versions = drupal_get_schema_versions($module);
+        drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
+        // Record the fact that it was installed.
+        $modules_installed[] = $module;
+      }
+
+      // Enable the module.
+      module_invoke($module, 'enable');
+
+      // Record the fact that it was enabled.
+      $modules_enabled[] = $module;
       watchdog('system', '%module module enabled.', array('%module' => $module), WATCHDOG_INFO);
     }
   }
 
-  if (!empty($invoke_modules)) {
-    // Refresh the module list to exclude the disabled modules.
-    system_list_reset();
-    module_list(TRUE);
-    module_implements('', FALSE, TRUE);
-    // Update the registry to include the new enabled module.
-    registry_update();
-    // Refresh the schema to include the new enabled module.
-    drupal_get_schema(NULL, TRUE);
-
-    // If any modules were newly installed, execute the hook for them.
-    if (!$disable_modules_installed_hook && !empty($modules_installed)) {
-      module_invoke_all('modules_installed', $modules_installed);
-    }
-    _system_update_bootstrap_status();
+  // If any modules were newly installed, invoke hook_modules_installed().
+  if (!$disable_modules_installed_hook && !empty($modules_installed)) {
+    module_invoke_all('modules_installed', $modules_installed);
   }
 
-  foreach ($invoke_modules as $module) {
-    module_invoke($module, 'enable');
-    // Check if node_access table needs rebuilding.
-    // We check for the existence of node_access_needs_rebuild() since
-    // at install time, module_enable() could be called while node.module
-    // is not enabled yet.
-    if (function_exists('node_access_needs_rebuild') && !node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
-      node_access_needs_rebuild(TRUE);
-    }
-  }
-
-  if (!empty($invoke_modules)) {
-    // Invoke hook_modules_enabled after all the modules have been
-    // enabled.
-    module_invoke_all('modules_enabled', $invoke_modules);
+  // If any modules were newly enabled, invoke hook_modules_enabled().
+  if (!empty($modules_enabled)) {
+    module_invoke_all('modules_enabled', $modules_enabled);
   }
 
   return TRUE;

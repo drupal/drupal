@@ -3536,6 +3536,17 @@ function node_requirements($phase) {
 }
 
 /**
+ * Implements hook_modules_enabled().
+ */
+function node_modules_enabled($modules) {
+  // Check if any of the newly enabled modules require the node_access table to
+  // be rebuilt.
+  if (!node_access_needs_rebuild() && array_intersect($modules, module_implements('node_grants'))) {
+    node_access_needs_rebuild(TRUE);
+  }
+}
+
+/**
  * Controller class for nodes.
  *
  * This extends the DrupalDefaultEntityController class, adding required
