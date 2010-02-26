@@ -319,14 +319,26 @@ function aggregator_permission() {
  * Queues news feeds for updates once their refresh interval has elapsed.
  */
 function aggregator_cron() {
-  $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < :time AND refresh != :never', array(
+  $result = db_query('SELECT * FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh != :never', array(
     ':time' => REQUEST_TIME,
     ':never' => AGGREGATOR_CLEAR_NEVER
   ));
   $queue = DrupalQueue::get('aggregator_feeds');
   foreach ($result as $feed) {
-    $queue->createItem($feed);
+    if ($queue->createItem($feed)) {
+      // Add timestamp to avoid queueing item more than once.
+      db_update('aggregator_feed')
+        ->fields(array('queued' => REQUEST_TIME))
+        ->condition('fid', $feed->fid)
+        ->execute();
+    }
   }
+
+  // Remove queued timestamp after 6 hours assuming the update has failed.
+  db_update('aggregator_feed')
+    ->fields(array('queued' => 0))
+    ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+    ->execute();
 }
 
 /**
@@ -615,7 +627,6 @@ function aggregator_refresh($feed) {
         ->key(array('fid' => $feed->fid))
         ->fields(array(
           'url' => $feed->url,
-          'checked' => REQUEST_TIME,
           'link' => empty($feed->link) ? $feed->url : $feed->link,
           'description' => empty($feed->description) ? '' : $feed->description,
           'image' => empty($feed->image) ? '' : $feed->image,
@@ -642,13 +653,14 @@ function aggregator_refresh($feed) {
     }
   }
   else {
-    db_update('aggregator_feed')
-      ->fields(array('checked' => REQUEST_TIME))
-      ->condition('fid', $feed->fid)
-      ->execute();
-
     drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed->title)));
   }
+
+  // Regardless of successful or not, indicate that this feed has been checked.
+  db_update('aggregator_feed')
+    ->fields(array('checked' => REQUEST_TIME, 'queued' => 0))
+    ->condition('fid', $feed->fid)
+    ->execute();
 
   // Expire old feed items.
   if (function_exists('aggregator_expire')) {
