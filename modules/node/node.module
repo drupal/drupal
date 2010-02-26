@@ -311,21 +311,13 @@ function theme_node_list($variables) {
 function node_tag_new($node) {
   global $user;
   if ($user->uid) {
-    // To avoid multiple inserts if a user repeatedly requests the same page,
-    // only update history if the node has been updated, a new comment has been
-    // posted, or more than thirty minutes has elapsed since the last request.
-    $last_viewed = node_last_viewed($node->nid);
-    if (!$last_viewed
-       || ($last_viewed <= $node->changed || $last_viewed <= $node->last_comment_timestamp)
-       || $last_viewed <= REQUEST_TIME - variable_get('node_last_viewed_threshold', 1800)) {
-      db_merge('history')
-        ->key(array(
-          'uid' => $user->uid,
-          'nid' => $node->nid,
-        ))
-        ->fields(array('timestamp' => REQUEST_TIME))
-        ->execute();
-     }
+    db_merge('history')
+      ->key(array(
+        'uid' => $user->uid,
+        'nid' => $node->nid,
+      ))
+      ->fields(array('timestamp' => REQUEST_TIME))
+      ->execute();
    }
 }
 
