@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.9 2010/02/16 00:27:34 webchick Exp $
+// $Id: overlay.module,v 1.10 2010/02/27 07:45:22 dries Exp $
 
 /**
  * @file
@@ -140,7 +140,7 @@ function overlay_library() {
   // Overlay parent.
   $libraries['parent'] = array(
     'title' => 'Overlay: Parent',
-    'website' => 'http://drupal.org/node/517688',
+    'website' => 'http://drupal.org/handbook/modules/overlay',
     'version' => '1.0',
     'js' => array(
       $module_path . '/overlay-parent.js' => array(),
@@ -156,7 +156,7 @@ function overlay_library() {
   // Overlay child.
   $libraries['child'] = array(
     'title' => 'Overlay: Child',
-    'website' => 'http://drupal.org/node/517688',
+    'website' => 'http://drupal.org/handbook/modules/overlay',
     'version' => '1.0',
     'js' => array(
       $module_path . '/overlay-child.js' => array(),
