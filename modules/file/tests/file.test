@@ -207,7 +207,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
    */
   function testRevisions() {
     $type_name = 'article';
-    $field_name = 'field_' . strtolower($this->randomName());
+    $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
     $field = field_info_field($field_name);
     $instance = field_info_instance('node', $field_name, $type_name);
@@ -297,7 +297,7 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
    * Test normal formatter display on node display.
    */
   function testNodeDisplay() {
-    $field_name = 'field_' . strtolower($this->randomName());
+    $field_name = strtolower($this->randomName());
     $type_name = 'article';
     $field_settings = array(
       'display_field' => '1',
@@ -352,7 +352,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
    */
   function testRequired() {
     $type_name = 'article';
-    $field_name = 'field_' . strtolower($this->randomName());
+    $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name, array(), array('required' => '1'));
     $field = field_info_field($field_name);
     $instance = field_info_instance('node', $field_name, $type_name);
@@ -398,7 +398,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
    */
   function testFileMaxSize() {
     $type_name = 'article';
-    $field_name = 'field_' . strtolower($this->randomName());
+    $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name, array(), array('required' => '1'));
     $field = field_info_field($field_name);
     $instance = field_info_instance('node', $field_name, $type_name);
@@ -450,7 +450,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
    */
   function testFileExtension() {
     $type_name = 'article';
-    $field_name = 'field_' . strtolower($this->randomName());
+    $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
     $field = field_info_field($field_name);
     $instance = field_info_instance('node', $field_name, $type_name);
@@ -507,7 +507,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
    * Test normal formatter display on node display.
    */
   function testUploadPath() {
-    $field_name = 'field_' . strtolower($this->randomName());
+    $field_name = strtolower($this->randomName());
     $type_name = 'article';
     $field = $this->createFileField($field_name, $type_name);
     $test_file = $this->getTestFile('text');

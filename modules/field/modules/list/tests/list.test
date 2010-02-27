@@ -21,7 +21,7 @@ class ListFieldTestCase extends FieldTestCase {
   function setUp() {
     parent::setUp('field_test');
 
-    $this->field_name = 'field_test';
+    $this->field_name = 'test_list';
     $this->field = array(
       'field_name' => $this->field_name,
       'type' => 'list',
@@ -117,15 +117,15 @@ class ListFieldUITestCase extends FieldTestCase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name = strtolower($this->randomName(8)) . '_' .'test';
+    $type_name = 'test_' . strtolower($this->randomName());
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
     $this->type = $type->type;
     // Store a valid URL name, with hyphens instead of underscores.
     $this->hyphen_type = str_replace('_', '-', $this->type);
 
     // Create random field name.
-    $this->field_label = $this->randomName(8);
-    $this->field_name = 'field_' . strtolower($this->randomName(8));
+    $this->field_label = $this->randomString();
+    $this->field_name = strtolower($this->randomName());
   }
 
   /**
