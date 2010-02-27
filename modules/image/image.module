@@ -694,7 +694,7 @@ function image_style_flush($style) {
 
   // Clear image style and effect caches.
   cache_clear_all('image_styles', 'cache');
-  cache_clear_all('image_effects', 'cache');
+  cache_clear_all('image_effects:', 'cache', TRUE);
   drupal_static_reset('image_styles');
   drupal_static_reset('image_effects');
 
@@ -825,10 +825,16 @@ function image_default_style_revert($style) {
  * @see image_effect_definition_load()
  */
 function image_effect_definitions() {
+  global $language;
+
+  // hook_image_effect_info() includes translated strings, so each language is
+  // cached separately.
+  $langcode = $language->language;
+
   $effects = &drupal_static(__FUNCTION__);
 
   if (!isset($effects)) {
-    if ($cache = cache_get('image_effects') && !empty($cache->data)) {
+    if ($cache = cache_get("image_effects:$langcode") && !empty($cache->data)) {
       $effects = $cache->data;
     }
     else {
@@ -844,7 +850,7 @@ function image_effect_definitions() {
         };
       }
       uasort($effects, '_image_effect_definitions_sort');
-      cache_set('image_effects', $effects);
+      cache_set("image_effects:$langcode", $effects);
     }
   }
 

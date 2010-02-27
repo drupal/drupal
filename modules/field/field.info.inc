@@ -65,18 +65,24 @@ function field_info_cache_clear() {
  *     as well as module, giving the module that exposes the entity type.
  */
 function _field_info_collate_types($reset = FALSE) {
+  global $language;
   static $info;
 
   // @TODO use entity_get_info().
 
+  // The _info() hooks invoked below include translated strings, so each
+  // language is cached separately.
+  $langcode = $language->language;
+
   if ($reset) {
     $info = NULL;
-    cache_clear_all('field_info_types', 'cache_field');
+    // Clear all languages.
+    cache_clear_all('field_info_types:', 'cache_field', TRUE);
     return;
   }
 
   if (!isset($info)) {
-    if ($cached = cache_get('field_info_types', 'cache_field')) {
+    if ($cached = cache_get("field_info_types:$langcode", 'cache_field')) {
       $info = $cached->data;
     }
     else {
@@ -144,7 +150,7 @@ function _field_info_collate_types($reset = FALSE) {
       }
       drupal_alter('field_storage_info', $info['storage types']);
 
-      cache_set('field_info_types', $info, 'cache_field');
+      cache_set("field_info_types:$langcode", $info, 'cache_field');
     }
   }
 

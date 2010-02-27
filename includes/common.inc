@@ -6197,6 +6197,8 @@ function drupal_check_incompatibility($v, $current_version) {
  *   to return an array with info about all types.
  */
 function entity_get_info($entity_type = NULL) {
+  global $language;
+
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
@@ -6204,8 +6206,12 @@ function entity_get_info($entity_type = NULL) {
   }
   $entity_info = &$drupal_static_fast['entity_info'];
 
+  // hook_entity_info() includes translated strings, so each language is cached
+  // separately.
+  $langcode = $language->language;
+
   if (empty($entity_info)) {
-    if ($cache = cache_get('entity_info')) {
+    if ($cache = cache_get("entity_info:$langcode")) {
       $entity_info = $cache->data;
     }
     else {
@@ -6235,7 +6241,7 @@ function entity_get_info($entity_type = NULL) {
       }
       // Let other modules alter the entity info.
       drupal_alter('entity_info', $entity_info);
-      cache_set('entity_info', $entity_info);
+      cache_set("entity_info:$langcode", $entity_info);
     }
   }
 
@@ -6252,7 +6258,8 @@ function entity_get_info($entity_type = NULL) {
  */
 function entity_info_cache_clear() {
   drupal_static_reset('entity_get_info');
-  cache_clear_all('entity_info', 'cache');
+  // Clear all languages.
+  cache_clear_all('entity_info:', 'cache', TRUE);
 }
 
 /**
