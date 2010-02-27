@@ -68,8 +68,6 @@ function _field_info_collate_types($reset = FALSE) {
   global $language;
   static $info;
 
-  // @TODO use entity_get_info().
-
   // The _info() hooks invoked below include translated strings, so each
   // language is cached separately.
   $langcode = $language->language;
