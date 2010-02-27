@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.41 2010/02/27 07:41:34 dries Exp $
+// $Id: field.info.inc,v 1.42 2010/02/27 22:11:11 webchick Exp $
 
 /**
  * @file
@@ -67,8 +67,6 @@ function field_info_cache_clear() {
 function _field_info_collate_types($reset = FALSE) {
   global $language;
   static $info;
-
-  // @TODO use entity_get_info().
 
   // The _info() hooks invoked below include translated strings, so each
   // language is cached separately.
