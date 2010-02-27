@@ -383,13 +383,31 @@ function hook_cron() {
  *     worker in seconds. Defaults to 15.
  *
  * @see hook_cron()
+ * @see hook_cron_queue_info_alter()
  */
 function hook_cron_queue_info() {
   $queues['aggregator_feeds'] = array(
     'worker callback' => 'aggregator_refresh',
-    'time' => 15,
+    'time' => 60,
   );
   return $queues;
+}
+
+/**
+ * Alter cron queue information before cron runs.
+ *
+ * Called by drupal_run_cron() to allow modules to alter cron queue settings
+ * before any jobs are processesed.
+ *
+ * @param array $queues
+ *   An array of cron queue information.
+ *
+ *  @see hook_cron_queue_info()
+ */
+function hook_cron_queue_info_alter(&$queues) {
+  // This site has many feeds so let's spend 90 seconds on each cron run
+  // updating feeds instead of the default 60.
+  $queues['aggregator_feeds']['time'] = 90;
 }
 
 /**
