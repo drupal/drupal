@@ -821,11 +821,11 @@ function _block_get_cache_id($block) {
   // it brings too many chances of having unwanted output get in the cache
   // and later be served to other users. We therefore exclude user 1 from
   // block caching.
-  if (variable_get('block_cache', 0) && !in_array($block->cache, array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM)) && $user->uid != 1) {
+  if (variable_get('block_cache', FALSE) && !in_array($block->cache, array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM)) && $user->uid != 1) {
     // Start with common sub-patterns: block identification, theme, language.
     $cid_parts[] = $block->module;
     $cid_parts[] = $block->delta;
-    $cid_parts += drupal_render_cid_parts($block->cache);
+    $cid_parts = array_merge($cid_parts, drupal_render_cid_parts($block->cache));
 
     return implode(':', $cid_parts);
   }
