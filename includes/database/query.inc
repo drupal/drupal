@@ -1332,6 +1332,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
       'IS NOT NULL' => array('use_value' => FALSE),
       // Use backslash for escaping wildcard characters.
       'LIKE' => array('postfix' => " ESCAPE '\\\\'"),
+      'NOT LIKE' => array('postfix' => " ESCAPE '\\\\'"),
       // These ones are here for performance reasons.
       '=' => array(),
       '<' => array(),

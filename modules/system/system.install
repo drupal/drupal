@@ -1764,7 +1764,7 @@ function system_update_7003() {
     ));
     $or = db_condition('or');
     foreach ($result as $allowed) {
-      $or->where('LOWER(ip) LIKE LOWER(:mask)', array(':mask' => $allowed->mask));
+      $or->condition('ip', $allowed->mask, 'LIKE');
     }
     if (count($or)) {
       db_delete('blocked_ips')

@@ -160,7 +160,7 @@ function statistics_top_referrers() {
   $query->addExpression('MAX(timestamp)', 'last');
   $query
     ->fields('a', array('url'))
-    ->where('LOWER(url) NOT LIKE :host', array(':host' => '%' . $_SERVER['HTTP_HOST'] . '%'))
+    ->condition('url', '%' . $_SERVER['HTTP_HOST'] . '%', 'NOT LIKE')
     ->condition('url', '', '<>')
     ->groupBy('url')
     ->limit(30)
@@ -169,7 +169,7 @@ function statistics_top_referrers() {
   $count_query = db_select('accesslog', 'a', array('target' => 'slave'));
   $count_query->addExpression('COUNT(DISTINCT url)');
   $count_query
-    ->where('LOWER(url) NOT LIKE :host', array(':host' => '%' . $_SERVER['HTTP_HOST'] . '%'))
+    ->condition('url', '%' . $_SERVER['HTTP_HOST'] . '%', 'NOT LIKE')
     ->condition('url', '', '<>');
   $query->setCountQuery($count_query);
 

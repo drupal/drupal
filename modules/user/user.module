@@ -856,11 +856,11 @@ function user_search_execute($keys = NULL) {
   if (user_access('administer users')) {
     // Administrators can also search in the otherwise private email field.
     $query->condition(db_or()->
-      where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"))->
-      where('LOWER(mail) LIKE LOWER(:mail)', array(':mail' => "%$keys%")));
+      condition('name', '%' . db_like($keys) . '%', 'LIKE')->
+      condition('mail', '%' . db_like($keys) . '%', 'LIKE'));
   }
   else {
-    $query->where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"));
+    $query->condition('name', '%' . db_like($keys) . '%', 'LIKE');
   }
   $result = $query
     ->limit(15)
@@ -1125,7 +1125,7 @@ function user_account_form_validate($form, &$form_state) {
     if ($error = user_validate_mail($form_state['values']['mail'])) {
       form_set_error('mail', $error);
     }
-    elseif ((bool) db_query_range("SELECT 1 FROM {users} WHERE uid <> :uid AND LOWER(mail) = LOWER(:mail)", 0, 1, array(':uid' => $account->uid, ':mail' => $form_state['values']['mail']))->fetchField()) {
+    elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($form_state['values']['mail']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
       // Format error message dependent on whether the user is logged in or not.
       if ($GLOBALS['user']->uid) {
         form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $form_state['values']['mail'])));
