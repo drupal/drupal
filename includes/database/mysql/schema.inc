@@ -219,9 +219,6 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     return $map;
   }
 
-
-
-
   protected function createKeysSql($spec) {
     $keys = array();
 
@@ -269,14 +266,33 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function renameTable($table, $new_name) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot rename %table to %table_new: table %table doesn't exist.", array('%table' => $table, '%table_new' => $new_name)));
+    }
+    if ($this->tableExists($new_name)) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot rename %table to %table_new: table %table_new already exists.", array('%table' => $table, '%table_new' => $new_name)));
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
   }
 
   public function dropTable($table) {
+    if (!$this->tableExists($table)) {
+      return FALSE;
+    }
+
     $this->connection->query('DROP TABLE {' . $table . '}');
+    return TRUE;
   }
 
   public function addField($table, $field, $spec, $keys_new = array()) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add field %table.%field: table doesn't exists.", array('%field' => $field, '%table' => $table)));
+    }
+    if ($this->columnExists($table, $field)) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot add field %table.%field: field already exists.", array('%field' => $field, '%table' => $table)));
+    }
+
     $fixnull = FALSE;
     if (!empty($spec['not null']) && !isset($spec['default'])) {
       $fixnull = TRUE;
@@ -300,10 +316,19 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function dropField($table, $field) {
+    if (!$this->columnExists($table, $field)) {
+      return FALSE;
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} DROP `' . $field . '`');
+    return TRUE;
   }
 
   public function fieldSetDefault($table, $field, $default) {
+    if (!$this->columnExists($table, $field)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot set default value of field %table.%field: field doesn't exists.", array('%table' => $table, '%field' => $field)));
+    }
+
     if (is_null($default)) {
       $default = 'NULL';
     }
@@ -315,6 +340,10 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function fieldSetNoDefault($table, $field) {
+    if (!$this->columnExists($table, $field)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot remove default value of field %table.%field: field doesn't exists.", array('%table' => $table, '%field' => $field)));
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` DROP DEFAULT');
   }
 
@@ -323,30 +352,73 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function addPrimaryKey($table, $fields) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add primary key to table %table: table doesn't exists.", array('%table' => $table)));
+    }
+    if ($this->indexExists($table, 'PRIMARY')) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot add primary key to table %table: primary key already exists.", array('%table' => $table)));
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . $this->createKeySql($fields) . ')');
   }
 
   public function dropPrimaryKey($table) {
+    if (!$this->indexExists($table, 'PRIMARY')) {
+      return FALSE;
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} DROP PRIMARY KEY');
+    return TRUE;
   }
 
   public function addUniqueKey($table, $name, $fields) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add unique key %name to table %table: table doesn't exists.", array('%table' => $table, '%name' => $name)));
+    }
+    if ($this->indexExists($table, $name)) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot add unique key %name to table %table: unique key already exists.", array('%table' => $table, '%name' => $name)));
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} ADD UNIQUE KEY `' . $name . '` (' . $this->createKeySql($fields) . ')');
   }
 
   public function dropUniqueKey($table, $name) {
+    if (!$this->indexExists($table, $name)) {
+      return FALSE;
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} DROP KEY `' . $name . '`');
+    return TRUE;
   }
 
   public function addIndex($table, $name, $fields) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add index %name to table %table: table doesn't exists.", array('%table' => $table, '%name' => $name)));
+    }
+    if ($this->indexExists($table, $name)) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot add index %name to table %table: index already exists.", array('%table' => $table, '%name' => $name)));
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} ADD INDEX `' . $name . '` (' . $this->createKeySql($fields) . ')');
   }
 
   public function dropIndex($table, $name) {
+    if (!$this->indexExists($table, $name)) {
+      return FALSE;
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} DROP INDEX `' . $name . '`');
+    return TRUE;
   }
 
   public function changeField($table, $field, $field_new, $spec, $keys_new = array()) {
+    if (!$this->columnExists($table, $field)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot change the definition of field %table.%name: field doesn't exists.", array('%table' => $table, '%name' => $field)));
+    }
+    if (($field != $field_new) && $this->columnExists($table, $field_new)) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot rename field %table.%name to %name_new: target field already exists.", array('%table' => $table, '%name' => $name, '%name_new' => $field_new)));
+    }
+
     $sql = 'ALTER TABLE {' . $table . '} CHANGE `' . $field . '` ' . $this->createFieldSql($field_new, $this->processField($spec));
     if (count($keys_new)) {
       $sql .= ', ADD ' . implode(', ADD ', $this->createKeysSql($keys_new));

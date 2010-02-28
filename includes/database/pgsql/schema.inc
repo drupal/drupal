@@ -210,7 +210,6 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     return $field;
   }
 
-
   /**
    * This maps a generic data type in combination with its data size
    * to the engine-specific data type.
@@ -276,6 +275,13 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   function renameTable($table, $new_name) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot rename %table to %table_new: table %table doesn't exist.", array('%table' => $table, '%table_new' => $new_name)));
+    }
+    if ($this->tableExists($new_name)) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot rename %table to %table_new: table %table_new already exists.", array('%table' => $table, '%table_new' => $new_name)));
+    }
+
     // Get the schema and tablename for the old table.
     $old_full_name = $this->connection->prefixTables('{' . $table . '}');
     list($old_schema, $old_table_name) = strpos($old_full_name, '.') ? explode('.', $old_full_name) : array('public', $old_full_name);
@@ -295,33 +301,22 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   public function dropTable($table) {
+    if (!$this->tableExists($table)) {
+      return FALSE;
+    }
+
     $this->connection->query('DROP TABLE {' . $table . '}');
+    return TRUE;
   }
 
-  /**
-   * Add a new field to a table.
-   *
-   * @param $table
-   *   Name of the table to be altered.
-   * @param $field
-   *   Name of the field to be added.
-   * @param $spec
-   *   The field specification array, as taken from a schema definition.
-   *   The specification may also contain the key 'initial', the newly
-   *   created field will be set to the value of the key in all rows.
-   *   This is most useful for creating NOT NULL columns with no default
-   *   value in existing tables.
-   * @param $keys_new
-   *   Optional keys and indexes specification to be created on the
-   *   table along with adding the field. The format is the same as a
-   *   table specification but without the 'fields' element. If you are
-   *   adding a type 'serial' field, you MUST specify at least one key
-   *   or index including it in this array. See db_change_field() for more
-   *   explanation why.
-   *
-   * @see db_change_field()
-   */
   public function addField($table, $field, $spec, $new_keys = array()) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add field %table.%field: table doesn't exists.", array('%field' => $field, '%table' => $table)));
+    }
+    if ($this->columnExists($table, $field)) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot add field %table.%field: field already exists.", array('%field' => $field, '%table' => $table)));
+    }
+
     $fixnull = FALSE;
     if (!empty($spec['not null']) && !isset($spec['default'])) {
       $fixnull = TRUE;
@@ -347,29 +342,20 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     }
   }
 
-  /**
-   * Drop a field.
-   *
-   * @param $table
-   *   The table to be altered.
-   * @param $field
-   *   The field to be dropped.
-   */
   public function dropField($table, $field) {
+    if (!$this->columnExists($table, $field)) {
+      return FALSE;
+    }
+    
     $this->connection->query('ALTER TABLE {' . $table . '} DROP COLUMN "' . $field . '"');
+    return TRUE;
   }
 
-  /**
-   * Set the default value for a field.
-   *
-   * @param $table
-   *   The table to be altered.
-   * @param $field
-   *   The field to be altered.
-   * @param $default
-   *   Default value to be set. NULL for 'default NULL'.
-   */
   public function fieldSetDefault($table, $field, $default) {
+    if (!$this->columnExists($table, $field)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot set default value of field %table.%field: field doesn't exists.", array('%table' => $table, '%field' => $field)));
+    }
+
     if (is_null($default)) {
       $default = 'NULL';
     }
@@ -380,169 +366,106 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" SET DEFAULT ' . $default);
   }
 
-  /**
-   * Set a field to have no default value.
-   *
-   * @param $table
-   *   The table to be altered.
-   * @param $field
-   *   The field to be altered.
-   */
   public function fieldSetNoDefault($table, $field) {
+    if (!$this->columnExists($table, $field)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot remove default value of field %table.%field: field doesn't exists.", array('%table' => $table, '%field' => $field)));
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
   }
 
   public function indexExists($table, $name) {
     $index_name = '{' . $table . '}_' . $name . '_idx';
-    return $this->connection->query("SELECT COUNT(indexname) FROM pg_indexes WHERE indexname = '$index_name'")->fetchField();
+    return $this->connection->query("SELECT 1 FROM pg_indexes WHERE indexname = '$index_name'")->fetchField();
   }
 
   /**
-   * Add a primary key.
+   * Helper function: check if a constraint (PK, FK, UK) exists.
    *
    * @param $table
-   *   The table to be altered.
-   * @param $fields
-   *   Fields for the primary key.
+   *   The name of the table.
+   * @param $name
+   *   The name of the constraint (typically 'pkey' or '[constraint]_key').
    */
+  protected function constraintExists($table, $name) {
+    $constraint_name = '{' . $table . '}_' . $name;
+    return (bool) $this->connection->query("SELECT 1 FROM pg_constraint WHERE conname = '$constraint_name'")->fetchField();
+  }
+
   public function addPrimaryKey($table, $fields) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add primary key to table %table: table doesn't exists.", array('%table' => $table)));
+    }
+    if ($this->constraintExists($table, 'pkey')) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot add primary key to table %table: primary key already exists.", array('%table' => $table)));
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . implode(',', $fields) . ')');
   }
 
-  /**
-   * Drop the primary key.
-   *
-   * @param $table
-   *   The table to be altered.
-   */
   public function dropPrimaryKey($table) {
+    if (!$this->constraintExists($table, 'pkey')) {
+      return FALSE;
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT {' . $table . '}_pkey');
+    return TRUE;
   }
 
-  /**
-   * Add a unique key.
-   *
-   * @param $table
-   *   The table to be altered.
-   * @param $name
-   *   The name of the key.
-   * @param $fields
-   *   An array of field names.
-   */
   function addUniqueKey($table, $name, $fields) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add unique key %name to table %table: table doesn't exists.", array('%table' => $table, '%name' => $name)));
+    }
+    if ($this->constraintExists($table, $name . '_key')) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot add unique key %name to table %table: unique key already exists.", array('%table' => $table, '%name' => $name)));
+    }
+
     $name = '{' . $table . '}_' . $name . '_key';
     $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $name . '" UNIQUE (' . implode(',', $fields) . ')');
   }
 
-  /**
-   * Drop a unique key.
-   *
-   * @param $table
-   *   The table to be altered.
-   * @param $name
-   *   The name of the key.
-   */
   public function dropUniqueKey($table, $name) {
+    if (!$this->constraintExists($table, $name . '_key')) {
+      return FALSE;
+    }
+
     $name = '{' . $table . '}_' . $name . '_key';
     $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $name . '"');
+    return TRUE;
   }
 
-  /**
-   * Add an index.
-   *
-   * @param $table
-   *   The table to be altered.
-   * @param $name
-   *   The name of the index.
-   * @param $fields
-   *   An array of field names.
-   */
   public function addIndex($table, $name, $fields) {
+    if (!$this->tableExists($table)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add index %name to table %table: table doesn't exists.", array('%table' => $table, '%name' => $name)));
+    }
+    if ($this->indexExists($table, $name)) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot add index %name to table %table: index already exists.", array('%table' => $table, '%name' => $name)));
+    }
+
     $this->connection->query($this->_createIndexSql($table, $name, $fields));
   }
 
-  /**
-   * Drop an index.
-   *
-   * @param $table
-   *   The table to be altered.
-   * @param $name
-   *   The name of the index.
-   */
   public function dropIndex($table, $name) {
+    if (!$this->indexExists($table, $name)) {
+      return FALSE;
+    }
+
     $name = '{' . $table . '}_' . $name . '_idx';
     $this->connection->query('DROP INDEX ' . $name);
+    return TRUE;
   }
 
-  /**
-   * Change a field definition.
-   *
-   * IMPORTANT NOTE: To maintain database portability, you have to explicitly
-   * recreate all indices and primary keys that are using the changed field.
-   *
-   * That means that you have to drop all affected keys and indexes with
-   * db_drop_{primary_key,unique_key,index}() before calling db_change_field().
-   * To recreate the keys and indices, pass the key definitions as the
-   * optional $new_keys argument directly to db_change_field().
-   *
-   * For example, suppose you have:
-   * @code
-   * $schema['foo'] = array(
-   *   'fields' => array(
-   *     'bar' => array('type' => 'int', 'not null' => TRUE)
-   *   ),
-   *   'primary key' => array('bar')
-   * );
-   * @endcode
-   * and you want to change foo.bar to be type serial, leaving it as the
-   * primary key. The correct sequence is:
-   * @code
-   * db_drop_primary_key('foo');
-   * db_change_field('foo', 'bar', 'bar',
-   *   array('type' => 'serial', 'not null' => TRUE),
-   *   array('primary key' => array('bar')));
-   * @endcode
-   *
-   * The reasons for this are due to the different database engines:
-   *
-   * On PostgreSQL, changing a field definition involves adding a new field
-   * and dropping an old one which* causes any indices, primary keys and
-   * sequences (from serial-type fields) that use the changed field to be dropped.
-   *
-   * On MySQL, all type 'serial' fields must be part of at least one key
-   * or index as soon as they are created. You cannot use
-   * db_add_{primary_key,unique_key,index}() for this purpose because
-   * the ALTER TABLE command will fail to add the column without a key
-   * or index specification. The solution is to use the optional
-   * $new_keys argument to create the key or index at the same time as
-   * field.
-   *
-   * You could use db_add_{primary_key,unique_key,index}() in all cases
-   * unless you are converting a field to be type serial. You can use
-   * the $new_keys argument in all cases.
-   *
-   * @param $table
-   *   Name of the table.
-   * @param $field
-   *   Name of the field to change.
-   * @param $field_new
-   *   New name for the field (set to the same as $field if you don't want to change the name).
-   * @param $spec
-   *   The field specification for the new field.
-   * @param $new_keys
-   *   Optional keys and indexes specification to be created on the
-   *   table along with changing the field. The format is the same as a
-   *   table specification but without the 'fields' element.
-   */
   public function changeField($table, $field, $field_new, $spec, $new_keys = array()) {
-    $this->connection->query('ALTER TABLE {' . $table . '} RENAME "' . $field . '" TO "' . $field . '_old"');
-    $not_null = isset($spec['not null']) ? $spec['not null'] : FALSE;
-    unset($spec['not null']);
+    if (!$this->columnExists($table, $field)) {
+      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot change the definition of field %table.%name: field doesn't exists.", array('%table' => $table, '%name' => $field)));
+    }
+    if (($field != $field_new) && $this->columnExists($table, $field_new)) {
+      throw new DatabaseSchemaObjectExistsException(t("Cannot rename field %table.%name to %name_new: target field already exists.", array('%table' => $table, '%name' => $name, '%name_new' => $field_new)));
+    }
 
     if (!array_key_exists('size', $spec)) {
       $spec['size'] = 'normal';
     }
-    $this->addField($table, "$field_new", $spec);
 
     // We need to typecast the new column to best be able to transfer the data
     // Schema_pgsql::getFieldTypeMap() will return possibilities that are not
@@ -552,13 +475,18 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if (in_array($typecast, array('serial', 'bigserial', 'numeric'))) {
       $typecast = 'int';
     }
-    $this->connection->query("UPDATE {" . $table . "} SET $field_new = CAST(" . $field . "_old as " . $typecast . ")");
 
-    if ($not_null) {
-      $this->connection->query("ALTER TABLE {" . $table . "} ALTER $field_new SET NOT NULL");
-    }
+
+    $this->connection->query("ALTER TABLE {" . $table . "} ALTER $field SET $field_new = CAST(" . $field . "_old as " . $typecast . ")");
+
+    $this->addField($table, "$field_new", $spec);
 
     $this->dropField($table, $field . '_old');
+
+    // Rename the column if necessary.
+    if ($field != $field_new) {
+      $this->connection->query('ALTER TABLE {' . $table . '} RENAME "' . $field . '" TO "' . $field_new . '_old"');
+    }
 
     if (isset($new_keys)) {
       $this->_createKeys($table, $new_keys);
