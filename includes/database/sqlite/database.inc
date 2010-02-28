@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.25 2010/02/15 22:14:17 webchick Exp $
+// $Id: database.inc,v 1.26 2010/02/28 20:10:34 dries Exp $
 
 /**
  * @file
@@ -157,6 +157,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     // We don't want to override any of the defaults.
     static $specials = array(
       'LIKE' => array('postfix' => " ESCAPE '\\'"),
+      'NOT LIKE' => array('postfix' => " ESCAPE '\\'"),
     );
     return isset($specials[$operator]) ? $specials[$operator] : NULL;
   }

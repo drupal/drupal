@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.41 2010/02/06 19:01:38 dries Exp $
+// $Id: query.inc,v 1.42 2010/02/28 20:10:34 dries Exp $
 
 /**
  * @ingroup database
@@ -1332,6 +1332,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
       'IS NOT NULL' => array('use_value' => FALSE),
       // Use backslash for escaping wildcard characters.
       'LIKE' => array('postfix' => " ESCAPE '\\\\'"),
+      'NOT LIKE' => array('postfix' => " ESCAPE '\\\\'"),
       // These ones are here for performance reasons.
       '=' => array(),
       '<' => array(),

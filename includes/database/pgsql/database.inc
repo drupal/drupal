@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.34 2010/02/12 06:58:43 webchick Exp $
+// $Id: database.inc,v 1.35 2010/02/28 20:10:34 dries Exp $
 
 /**
  * @file
@@ -128,6 +128,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
       // statements, we need to use ILIKE instead. Use backslash for escaping
       // wildcard characters.
       'LIKE' => array('operator' => 'ILIKE', 'postfix' => " ESCAPE '\\\\'"),
+      'NOT LIKE' => array('operator' => 'NOT ILIKE', 'postfix' => " ESCAPE '\\\\'"),
     );
 
     return isset($specials[$operator]) ? $specials[$operator] : NULL;

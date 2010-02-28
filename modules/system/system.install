@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.449 2010/02/26 06:39:13 dries Exp $
+// $Id: system.install,v 1.450 2010/02/28 20:10:34 dries Exp $
 
 /**
  * @file
@@ -1764,7 +1764,7 @@ function system_update_7003() {
     ));
     $or = db_condition('or');
     foreach ($result as $allowed) {
-      $or->where('LOWER(ip) LIKE LOWER(:mask)', array(':mask' => $allowed->mask));
+      $or->condition('ip', $allowed->mask, 'LIKE');
     }
     if (count($or)) {
       db_delete('blocked_ips')
