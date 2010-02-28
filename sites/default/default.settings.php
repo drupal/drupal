@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.40 2010/01/30 07:59:26 dries Exp $
+// $Id: default.settings.php,v 1.41 2010/02/28 19:00:21 dries Exp $
 
 /**
  * @file
@@ -212,7 +212,7 @@ $drupal_hash_salt = '';
  *
  * To see what PHP settings are possible, including whether they can be set at
  * runtime (by using ini_set()), read the PHP documentation:
- * http://www.php.net/manual/en/ini.php#ini.list
+ * http://www.php.net/manual/en/ini.list.php
  * See drupal_initialize_variables() in includes/bootstrap.inc for required
  * runtime settings and the .htaccess file for non-runtime settings. Settings
  * defined there should not be duplicated here so as to avoid conflict issues.
