@@ -2681,7 +2681,7 @@ function system_update_6054() {
 /**
  * Improve indexes on the {url_alias} table.
  */
-function system_update_6054() {
+function system_update_6055() {
   $ret = array();
   db_drop_index($ret, 'url_alias', 'src_language');
   db_drop_unique_key($ret, 'url_alias', 'dst_language');
