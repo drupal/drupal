@@ -2132,7 +2132,7 @@ function user_mail_tokens($account, $language) {
  */
 function user_preferred_language($account, $default = NULL) {
   $language_list = language_list();
-  if ($account->language && isset($language_list[$account->language])) {
+  if (!empty($account->language) && isset($language_list[$account->language])) {
     return $language_list[$account->language];
   }
   else {
