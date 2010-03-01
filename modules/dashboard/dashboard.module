@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.22 2010/02/17 08:56:48 dries Exp $
+// $Id: dashboard.module,v 1.23 2010/03/01 13:12:45 dries Exp $
 
 /**
  * Implements hook_help().
@@ -373,6 +373,7 @@ function dashboard_update() {
           ->execute();
       }
     }
+    drupal_set_message(t('The configuration options have been saved.'), 'status', FALSE);
   }
   drupal_exit();
 }
