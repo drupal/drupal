@@ -808,7 +808,7 @@ class MergeQuery extends Query {
     $select = $select->countQuery();
     $sql = (string)$select;
     $arguments = $select->getArguments();
-    $num_existing = db_query($sql, $arguments)->fetchField();
+    $num_existing = $this->connection->query($sql, $arguments)->fetchField();
 
 
     if ($num_existing) {

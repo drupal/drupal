@@ -348,7 +348,10 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function indexExists($table, $name) {
-    return $this->connection->query('SHOW INDEX FROM {' . $table . "} WHERE key_name = '$name'")->fetchField();
+    // Returns one row for each column in the index. Result is string or FALSE.
+    // Details at http://dev.mysql.com/doc/refman/5.0/en/show-index.html
+    $row = $this->connection->query('SHOW INDEX FROM {' . $table . "} WHERE key_name = '$name'")->fetchAssoc();
+    return isset($row['key_name']);
   }
 
   public function addPrimaryKey($table, $fields) {

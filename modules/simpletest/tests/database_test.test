@@ -2391,19 +2391,27 @@ class DatabaseRegressionTestCase extends DatabaseTestCase {
   }
 
   /**
-   * Test the db_column_exists() function.
-   */
-  function testDBColumnExists() {
-    $this->assertTrue(db_column_exists('node', 'nid'), t('Returns true for existent column.'));
-    $this->assertFalse(db_column_exists('node', 'nosuchcolumn'), t('Returns false for nonexistent column.'));
-  }
-
-  /**
    * Test the db_table_exists() function.
    */
   function testDBTableExists() {
-    $this->assertTrue(db_table_exists('node'), t('Returns true for existent table.'));
-    $this->assertFalse(db_table_exists('nosuchtable'), t('Returns false for nonexistent table.'));
+    $this->assertIdentical(TRUE, db_table_exists('node'), t('Returns true for existent table.'));
+    $this->assertIdentical(FALSE, db_table_exists('nosuchtable'), t('Returns false for nonexistent table.'));
+  }
+
+  /**
+   * Test the db_column_exists() function.
+   */
+  function testDBColumnExists() {
+    $this->assertIdentical(TRUE, db_column_exists('node', 'nid'), t('Returns true for existent column.'));
+    $this->assertIdentical(FALSE, db_column_exists('node', 'nosuchcolumn'), t('Returns false for nonexistent column.'));
+  }
+
+  /**
+   * Test the db_index_exists() function.
+   */
+  function testDBIndexExists() {
+    $this->assertIdentical(TRUE, db_index_exists('node', 'node_created'), t('Returns true for existent index.'));
+    $this->assertIdentical(FALSE, db_index_exists('node', 'nosuchindex'), t('Returns false for nonexistent index.'));
   }
 }
 

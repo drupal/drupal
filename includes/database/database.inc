@@ -2423,19 +2423,26 @@ function db_field_names($fields) {
 }
 
 /**
- * Check if an index exists.
+ * Check if an index exists in the given table.
  *
+ * @param $table
+ *   The name of the table in drupal (no prefixing).
  * @param $name
- *   Index name.
+ *   The name of the index in drupal (no prefixing).
  * @return
  *   TRUE if the given index exists, otherwise FALSE.
  */
-function db_index_exists($name) {
-  return Database::getConnection()->schema()->indexExists($name);
+function db_index_exists($table, $name) {
+  return Database::getConnection()->schema()->indexExists($table, $name);
 }
 
 /**
  * Check if a table exists.
+ *
+ * @param $table
+ *   The name of the table in drupal (no prefixing).
+ * @return
+ *   TRUE if the given table exists, otherwise FALSE.
  */
 function db_table_exists($table) {
   return Database::getConnection()->schema()->tableExists($table);
@@ -2443,6 +2450,13 @@ function db_table_exists($table) {
 
 /**
  * Check if a column exists in the given table.
+ *
+ * @param $table
+ *   The name of the table in drupal (no prefixing).
+ * @param $name
+ *   The name of the column.
+ * @return
+ *   TRUE if the given column exists, otherwise FALSE.
  */
 function db_column_exists($table, $column) {
   return Database::getConnection()->schema()->columnExists($table, $column);

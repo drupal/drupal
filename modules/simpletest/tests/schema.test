@@ -61,14 +61,14 @@ class SchemaTestCase extends DrupalWebTestCase {
     // The insert should fail again.
     $this->assertFalse($this->tryInsert(), t('Insert without a default failed.'));
 
-    // Test for fake index.
+    // Test for fake index and test for the boolean result of indexExists().
     $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
-    $this->assertFalse($index_exists, t('Fake index does not exists'));
+    $this->assertIdentical($index_exists, FALSE, t('Fake index does not exists'));
     // Add index.
     db_add_index('test_table', 'test_field', array('test_field'));
-    // Test for created index.
+    // Test for created index and test for the boolean result of indexExists().
     $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
-    $this->assertTrue($index_exists, t('Index created.'));
+    $this->assertIdentical($index_exists, TRUE, t('Index created.'));
 
     // Rename the table.
     db_rename_table('test_table', 'test_table2');

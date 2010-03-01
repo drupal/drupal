@@ -210,7 +210,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * @param $table
    *   The name of the table in drupal (no prefixing).
    * @return
-   *   false is no table exists otherwise the actual table name.
+   *   TRUE if the given table exists, otherwise FALSE.
    */
   public function tableExists($table) {
     $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
@@ -220,7 +220,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
     // Don't use {} around information_schema.tables table.
-    return db_query("SELECT table_name FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
+    return (bool) $this->connection->query("SELECT 1 FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
   }
 
   /**
@@ -240,11 +240,18 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
     // Don't use {} around information_schema.tables table.
-    return db_query("SELECT table_name FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchAllKeyed(0, 0);
+    return $this->connection->query("SELECT table_name FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchAllKeyed(0, 0);
   }
 
   /**
    * Check if a column exists in the given table.
+   *
+   * @param $table
+   *   The name of the table in drupal (no prefixing).
+   * @param $name
+   *   The name of the column.
+   * @return
+   *   TRUE if the given column exists, otherwise FALSE.
    */
   public function columnExists($table, $column) {
     $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
@@ -255,7 +262,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
     // Don't use {} around information_schema.columns table.
-    return db_query("SELECT column_name FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchAllKeyed(0, 0);
+    return (bool) $this->connection->query("SELECT 1 FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
   }
 
   /**
@@ -356,14 +363,14 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
   abstract public function fieldSetNoDefault($table, $field);
 
   /**
-   * Checks if an index exists.
+   * Checks if an index exists in the given table.
    *
    * @param $table
-   *   Name of the table.
+   *   The name of the table in drupal (no prefixing).
    * @param $name
-   *   Name of the index.
+   *   The name of the index in drupal (no prefixing).
    * @return
-   *   TRUE if the index exists, otherwise FALSE.
+   *   TRUE if the given index exists, otherwise FALSE.
    */
   abstract public function indexExists($table, $name);
 
