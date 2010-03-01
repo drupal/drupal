@@ -967,13 +967,19 @@ function taxonomy_get_term_by_name($name) {
  *
  * @param $vid
  *   The vocabulary's ID
+ * @param $reset
+ *   Whether to reset the internal taxonomy_vocabulary_load cache.
  *
  * @return
  *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
  */
-function taxonomy_vocabulary_load($vid) {
+function taxonomy_vocabulary_load($vid, $reset = FALSE) {
   static $vocabularies = array();
+
+  if ($reset) {
+    $vocabularies = array();
+  }
 
   if (!isset($vocabularies[$vid])) {
     // Initialize so if this vocabulary does not exist, we have
@@ -1001,12 +1007,18 @@ function taxonomy_vocabulary_load($vid) {
  *
  * @param $tid
  *   A term's ID
+ * @param $reset
+ *   Whether to reset the internal taxonomy_get_term cache.
  *
  * @return Object
  *   A term object. Results are statically cached.
  */
-function taxonomy_get_term($tid) {
+function taxonomy_get_term($tid, $reset = FALSE) {
   static $terms = array();
+
+  if ($reset) {
+    $terms = array();
+  }
 
   if (!isset($terms[$tid])) {
     $terms[$tid] = db_fetch_object(db_query('SELECT * FROM {term_data} WHERE tid = %d', $tid));
