@@ -132,13 +132,13 @@ function drupal_get_form($form_id) {
   // fields.
   //
   // If $form_state['storage'] or $form_state['rebuild'] has been set
-  // and the form has been submitted, we know that we're in a complex
-  // multi-part process of some sort and the form's workflow is NOT 
+  // and input has been processed, we know that we're in a complex
+  // multi-part process of some sort and the form's workflow is NOT
   // complete. We need to construct a fresh copy of the form, passing
   // in the latest $form_state in addition to any other variables passed
   // into drupal_get_form().
 
-  if ((!empty($form_state['storage']) || !empty($form_state['rebuild'])) && !empty($form_state['submitted']) && !form_get_errors()) {
+  if ((!empty($form_state['storage']) || !empty($form_state['rebuild'])) && !empty($form_state['process_input']) && !form_get_errors()) {
     $form = drupal_rebuild_form($form_id, $form_state, $args);
   }
 
@@ -401,6 +401,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
   // Only process the form if it is programmed or the form_id coming
   // from the POST data is set and matches the current form_id.
   if ((!empty($form['#programmed'])) || (!empty($form['#post']) && (isset($form['#post']['form_id']) && ($form['#post']['form_id'] == $form_id)))) {
+    $form_state['process_input'] = TRUE;
     drupal_validate_form($form_id, $form, $form_state);
 
     // form_clean_id() maintains a cache of element IDs it has seen,
