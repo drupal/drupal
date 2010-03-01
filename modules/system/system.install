@@ -392,13 +392,10 @@ function system_requirements($phase) {
  */
 function system_install() {
   // Create tables.
-  $modules = array('system', 'filter', 'user', 'node');
-  foreach ($modules as $module) {
-    drupal_install_schema($module);
-    $versions = drupal_get_schema_versions($module);
-    $version = $versions ? max($versions) : SCHEMA_INSTALLED;
-    drupal_set_installed_schema_version($module, $version);
-  }
+  drupal_install_schema('system');
+  $versions = drupal_get_schema_versions('system');
+  $version = $versions ? max($versions) : SCHEMA_INSTALLED;
+  drupal_set_installed_schema_version('system', $version);
 
   // Clear out module list and hook implementation statics before calling
   // system_rebuild_theme_data().
@@ -408,73 +405,16 @@ function system_install() {
   // Load system theme data appropriately.
   system_rebuild_theme_data();
 
-  db_insert('users')
-    ->fields(array(
-      'uid' => 0,
-      'name' => '',
-      'mail' => '',
-    ))
-    ->execute();
-  // We need some placeholders here as name and mail are uniques and data is
-  // presumed to be a serialized array. This will be changed by the settings
-  // form.
-  db_insert('users')
-    ->fields(array(
-      'uid' => 1,
-      'name' => 'placeholder-for-uid-1',
-      'mail' => 'placeholder-for-uid-1',
-      'created' => REQUEST_TIME,
-      'status' => 1,
-      'data' => serialize(array()),
-    ))
-    ->execute();
-  // Built-in roles.
-  $rid_anonymous = db_insert('role')
-    ->fields(array('name' => 'anonymous user'))
-    ->execute();
-
-  $rid_authenticated = db_insert('role')
-    ->fields(array('name' => 'authenticated user'))
-    ->execute();
-
-  // Sanity check to ensure the anonymous and authenticated role IDs are the
-  // same as the drupal defined constants. In certain situations, this will
-  // not be true.
-  if ($rid_anonymous != DRUPAL_ANONYMOUS_RID) {
-    db_update('role')
-      ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
-      ->condition('rid', $rid_anonymous)
-      ->execute();
-  }
-
-  if ($rid_authenticated != DRUPAL_AUTHENTICATED_RID) {
-    db_update('role')
-      ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
-      ->condition('rid', $rid_authenticated)
-      ->execute();
-  }
-
+  // Enable the default theme.
   variable_set('theme_default', 'garland');
-
   db_update('system')
     ->fields(array('status' => 1))
     ->condition('type', 'theme')
     ->condition('name', 'garland')
     ->execute();
 
-  db_insert('node_access')
-    ->fields(array(
-      'nid' => 0,
-      'gid' => 0,
-      'realm' => 'all',
-      'grant_view' => 1,
-      'grant_update' => 0,
-      'grant_delete' => 0,
-    ))
-    ->execute();
-
+  // Populate the cron key variable.
   $cron_key = md5(mt_rand());
-
   variable_set('cron_key', $cron_key);
 }
 

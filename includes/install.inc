@@ -589,8 +589,6 @@ function drupal_install_system() {
         'bootstrap' => 0,
       ))
     ->execute();
-  // Now that we've installed things properly, bootstrap the full Drupal environment
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   system_rebuild_module_data();
 }
 
