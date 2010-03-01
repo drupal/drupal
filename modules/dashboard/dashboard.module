@@ -373,6 +373,7 @@ function dashboard_update() {
           ->execute();
       }
     }
+    drupal_set_message(t('The configuration options have been saved.'), 'status', FALSE);
   }
   drupal_exit();
 }
