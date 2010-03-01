@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.42 2010/02/28 20:10:34 dries Exp $
+// $Id: query.inc,v 1.43 2010/03/01 11:30:37 dries Exp $
 
 /**
  * @ingroup database
@@ -808,7 +808,7 @@ class MergeQuery extends Query {
     $select = $select->countQuery();
     $sql = (string)$select;
     $arguments = $select->getArguments();
-    $num_existing = db_query($sql, $arguments)->fetchField();
+    $num_existing = $this->connection->query($sql, $arguments)->fetchField();
 
 
     if ($num_existing) {

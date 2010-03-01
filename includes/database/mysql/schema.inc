@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.30 2010/03/01 06:27:58 dries Exp $
+// $Id: schema.inc,v 1.31 2010/03/01 11:30:37 dries Exp $
 
 /**
  * @file
@@ -348,7 +348,10 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function indexExists($table, $name) {
-    return $this->connection->query('SHOW INDEX FROM {' . $table . "} WHERE key_name = '$name'")->fetchField();
+    // Returns one row for each column in the index. Result is string or FALSE.
+    // Details at http://dev.mysql.com/doc/refman/5.0/en/show-index.html
+    $row = $this->connection->query('SHOW INDEX FROM {' . $table . "} WHERE key_name = '$name'")->fetchAssoc();
+    return isset($row['key_name']);
   }
 
   public function addPrimaryKey($table, $fields) {

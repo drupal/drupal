@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.30 2010/03/01 06:27:58 dries Exp $
+// $Id: schema.inc,v 1.31 2010/03/01 11:30:37 dries Exp $
 
 /**
  * @file
@@ -375,8 +375,9 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   public function indexExists($table, $name) {
+    // Details http://www.postgresql.org/docs/8.3/interactive/view-pg-indexes.html
     $index_name = '{' . $table . '}_' . $name . '_idx';
-    return $this->connection->query("SELECT 1 FROM pg_indexes WHERE indexname = '$index_name'")->fetchField();
+    return (bool) $this->connection->query("SELECT 1 FROM pg_indexes WHERE indexname = '$index_name'")->fetchField();
   }
 
   /**
