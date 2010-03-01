@@ -88,7 +88,7 @@ Drupal.behaviors.teaser = function(context) {
       Drupal.behaviors.textarea(teaser.parentNode);
     }
     // Set initial visibility
-    if ($(teaser).is('[@disabled]')) {
+    if ($(teaser).is(':disabled')) {
       $(teaser).parent().hide();
     }
 
