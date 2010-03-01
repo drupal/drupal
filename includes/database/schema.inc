@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.27 2010/02/28 20:03:05 dries Exp $
+// $Id: schema.inc,v 1.28 2010/03/01 06:27:58 dries Exp $
 
 /**
  * @file
@@ -274,7 +274,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * @throws DatabaseSchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
    * @throws DatabaseSchemaObjectExistsException
-   *   If the specified table target table already exist.
+   *   If a table with the specified new name already exists.
    */
   abstract public function renameTable($table, $new_name);
 
@@ -576,12 +576,20 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
 }
 
 /**
- * Exception thrown if an object already exists on an operation creating a table, field or index.
+ * Exception thrown if an object being created already exists.
+ *
+ * For example, this exception should be thrown whenever there is an attempt to
+ * create a new database table, field, or index that already exists in the
+ * database schema.
  */
 class DatabaseSchemaObjectExistsException extends Exception {}
 
 /**
- * Exception thrown if an object doesn't exists on a modify operation.
+ * Exception thrown if an object being modified doesn't exist yet.
+ *
+ * For example, this exception should be thrown whenever there is an attempt to
+ * modify a database table, field, or index that does not currently exist in
+ * the database schema.
  */
 class DatabaseSchemaObjectDoesNotExistException extends Exception {}
 
