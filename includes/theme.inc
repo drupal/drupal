@@ -273,18 +273,40 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       if (!isset($info['template']) && !isset($info['function'])) {
         $result[$hook]['function'] = ($type == 'module' ? 'theme_' : $name .'_') . $hook;
       }
+
+      // Make sure include files is set so we don't generate notices later.
+      if (!isset($info['include files'])) {
+        $result[$hook]['include files'] = array();
+      }
+
       // If a path is set in the info, use what was set. Otherwise use the
       // default path. This is mostly so system.module can declare theme
       // functions on behalf of core .include files.
       // All files are included to be safe. Conditionally included
       // files can prevent them from getting registered.
       if (isset($info['file']) && !isset($info['path'])) {
-        $result[$hook]['file'] = $path .'/'. $info['file'];
-        include_once($result[$hook]['file']);
+        // First, check to see if the fully qualified file exists.
+        $filename = './'. $path .'/'. $info['file'];
+        if (file_exists($filename)) {
+          require_once $filename;
+          $result[$hook]['include files'][] = $filename;
+        }
+        else {
+          $filename = './'. $info['file'];
+          if (file_exists($filename)) {
+            require_once $filename;
+            $result[$hook]['include files'][] = $filename;
+          }
+        }
       }
       elseif (isset($info['file']) && isset($info['path'])) {
-        include_once($info['path'] .'/'. $info['file']);
+        $filename = './'. $info['path'] .'/'. $info['file'];
+        if (file_exists($filename)) {
+          require_once $filename;
+          $result[$hook]['include files'][] = $filename;
+        }
       }
+
 
       if (isset($info['template']) && !isset($info['path'])) {
         $result[$hook]['template'] = $path .'/'. $info['template'];
@@ -605,13 +627,30 @@ function theme() {
   $theme_path = $hooks[$hook]['theme path'];
 
   // Include a file if the theme function or preprocess function is held elsewhere.
+  if (!empty($info['include files'])) {
+    foreach ($info['include files'] as $include_file) {
+      include_once($include_file);
+    }
+  }
+
+  // Handle compatibility with theme_registry_alters to prevent failures.
   if (!empty($info['file'])) {
+    static $included_files = array();
     $include_file = $info['file'];
-    if (isset($info['path'])) {
+    if (!empty($info['path'])) {
       $include_file = $info['path'] .'/'. $include_file;
     }
-    include_once($include_file);
+
+    if (empty($included_files[$include_file])) {
+      // Statically cache files we've already tried to include so we don't
+      // run unnecessary file_exists calls.
+      $included_files[$include_file] = TRUE;
+      if (file_exists('./'. $include_file)) {
+        include_once('./'. $include_file);
+      }
+    }
   }
+
   if (isset($info['function'])) {
     // The theme call is a function.
     $output = call_user_func_array($info['function'], $args);
@@ -768,13 +807,16 @@ function drupal_find_theme_functions($cache, $prefixes) {
               'function' => $match,
               'arguments' => $info['arguments'],
               'original hook' => $hook,
+              'include files' => $info['include files'],
             );
           }
         }
       }
+
       if (function_exists($prefix .'_'. $hook)) {
         $templates[$hook] = array(
           'function' => $prefix .'_'. $hook,
+          'include files' => $info['include files'],
         );
         // Ensure that the pattern is maintained from base themes to its sub-themes.
         // Each sub-theme will have their functions scanned so the pattern must be
@@ -782,6 +824,8 @@ function drupal_find_theme_functions($cache, $prefixes) {
         if (isset($info['pattern'])) {
           $templates[$hook]['pattern'] = $info['pattern'];
         }
+        // Also ensure that the 'file' property is maintained, because it probably
+        // contains the preprocess.
       }
     }
   }
@@ -845,6 +889,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
       $templates[$hook] = array(
         'template' => $template,
         'path' => dirname($file->filename),
+        'include files' => $cache[$hook]['include files'],
       );
     }
     // Ensure that the pattern is maintained from base themes to its sub-themes.
@@ -873,6 +918,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
             'path' => dirname($files[$match]->filename),
             'arguments' => $info['arguments'],
             'original hook' => $hook,
+            'include files' => $info['include files'],
           );
         }
       }
