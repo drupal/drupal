@@ -1125,9 +1125,9 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '')
       ),
-    'unique keys' => array('dst_language' => array('dst', 'language')),
+    'unique keys' => array('dst_language_pid' => array('dst', 'language', 'pid')),
     'primary key' => array('pid'),
-    'indexes' => array('src_language' => array('src', 'language')),
+    'indexes' => array('src_language_pid' => array('src', 'language', 'pid')),
     );
 
   return $schema;
@@ -2675,6 +2675,18 @@ function system_update_6054() {
   );
   db_create_table($ret, 'semaphore', $schema['semaphore']);
 
+  return $ret;
+}
+
+/**
+ * Improve indexes on the {url_alias} table.
+ */
+function system_update_6054() {
+  $ret = array();
+  db_drop_index($ret, 'url_alias', 'src_language');
+  db_drop_unique_key($ret, 'url_alias', 'dst_language');
+  db_add_index($ret, 'url_alias', 'src_language_pid', array('src', 'language', 'pid'));
+  db_add_unique_key($ret, 'url_alias', 'dst_language_pid', array('dst', 'language', 'pid'));
   return $ret;
 }
 
