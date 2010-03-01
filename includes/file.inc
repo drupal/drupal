@@ -342,15 +342,24 @@ function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 }
 
 /**
- * Munge the filename as needed for security purposes. For instance the file
- * name "exploit.php.pps" would become "exploit.php_.pps".
+ * Modify a filename as needed for security purposes.
  *
- * @param $filename The name of a file to modify.
- * @param $extensions A space separated list of extensions that should not
- *   be altered.
- * @param $alerts Whether alerts (watchdog, drupal_set_message()) should be
- *   displayed.
- * @return $filename The potentially modified $filename.
+ * Dangerous file names will be altered; for instance, the file name
+ * "exploit.php.pps" will become "exploit.php_.pps". All extensions that are
+ * between 2 and 5 characters in length, internal to the file name, and not
+ * included in $extensions will be altered by adding an underscore. If variable
+ * 'allow_insecure_uploads' evaluates to TRUE, no alterations will be made.
+ *
+ * @param $filename
+ *   File name to modify.
+ * @param $extensions
+ *   A space-separated list of extensions that should not be altered.
+ * @param $alerts
+ *   If TRUE, drupal_set_message() will be called to display a message if the
+ *   file name was changed.
+ *
+ * @return
+ *   The potentially modified $filename.
  */
 function file_munge_filename($filename, $extensions, $alerts = TRUE) {
   $original = $filename;
