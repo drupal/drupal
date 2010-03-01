@@ -335,7 +335,7 @@ function db_drop_field(&$ret, $table, $field) {
  *   Default value to be set. NULL for 'default NULL'.
  */
 function db_field_set_default(&$ret, $table, $field, $default) {
-  if ($default == NULL) {
+  if ($default === NULL) {
     $default = 'NULL';
   }
   else {
