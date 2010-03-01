@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1129 2010/02/28 20:10:34 dries Exp $
+// $Id: user.module,v 1.1130 2010/03/01 11:33:55 dries Exp $
 
 /**
  * @file
@@ -3098,7 +3098,7 @@ function theme_user_signature($variables) {
  */
 function user_preferred_language($account, $default = NULL) {
   $language_list = language_list();
-  if ($account->language && isset($language_list[$account->language])) {
+  if (!empty($account->language) && isset($language_list[$account->language])) {
     return $language_list[$account->language];
   }
   else {
