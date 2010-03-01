@@ -589,7 +589,9 @@ function comment_node_view($node, $view_mode) {
       }
     }
     elseif ($view_mode == 'teaser') {
-      // Main page: display the number of comments that have been posted.
+      // Teaser view: display the number of comments that have been posted,
+      // or a link to add new comments if the user has permission, the node
+      // is open to new comments, and there currently are none.
       if (user_access('access comments')) {
         if (!empty($node->comment_count)) {
           $links['comment_comments'] = array(
@@ -630,9 +632,11 @@ function comment_node_view($node, $view_mode) {
         }
       }
     }
-    else {
-      // Node page: add a "post comment" link if the user is allowed to post
-      // comments and if this node is not read-only.
+    elseif ($view_mode != 'search_index') {
+      // Node in other view modes: add a "post comment" link if the user is
+      // allowed to post comments and if this node is allowing new comments.
+      // But we don't want this link if we're building the node for search
+      // indexing.
       if ($node->comment == COMMENT_NODE_OPEN) {
         if (user_access('post comments')) {
           $links['comment_add'] = array(
