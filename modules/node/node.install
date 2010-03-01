@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.44 2010/02/11 17:44:47 webchick Exp $
+// $Id: node.install,v 1.45 2010/03/01 07:39:12 dries Exp $
 
 /**
  * @file
@@ -354,6 +354,23 @@ function node_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function node_install() {
+  // Populate the node access table.
+  db_insert('node_access')
+    ->fields(array(
+      'nid' => 0,
+      'gid' => 0,
+      'realm' => 'all',
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+    ))
+    ->execute();
 }
 
 /**

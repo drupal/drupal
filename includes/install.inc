@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.128 2010/02/26 18:31:29 dries Exp $
+// $Id: install.inc,v 1.129 2010/03/01 07:39:12 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -589,8 +589,6 @@ function drupal_install_system() {
         'bootstrap' => 0,
       ))
     ->execute();
-  // Now that we've installed things properly, bootstrap the full Drupal environment
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   system_rebuild_module_data();
 }
 
