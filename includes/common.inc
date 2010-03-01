@@ -1726,7 +1726,7 @@ function drupal_clone($object) {
  * Add a <link> tag to the page's HEAD.
  */
 function drupal_add_link($attributes) {
-  drupal_set_html_head('<link'. drupal_attributes($attributes) ." />\n");
+  drupal_set_html_head('<link'. drupal_attributes($attributes) .' />');
 }
 
 /**
