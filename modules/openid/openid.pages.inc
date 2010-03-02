@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.26 2010/01/30 07:59:25 dries Exp $
+// $Id: openid.pages.inc,v 1.27 2010/03/02 08:59:54 dries Exp $
 
 /**
  * @file
@@ -80,7 +80,7 @@ function openid_user_add() {
 
 function openid_user_add_validate($form, &$form_state) {
   // Check for existing entries.
-  $claimed_id = _openid_normalize($form_state['values']['openid_identifier']);
+  $claimed_id = openid_normalize($form_state['values']['openid_identifier']);
   if (db_query("SELECT authname FROM {authmap} WHERE authname = :authname", (array(':authname' => $claimed_id)))->fetchField()) {
     form_set_error('openid_identifier', t('That OpenID is already in use on this site.'));
   }
