@@ -1,5 +1,5 @@
 <?php
-// $Id: openid_test.module,v 1.9 2010/01/31 18:39:46 dries Exp $
+// $Id: openid_test.module,v 1.10 2010/03/02 08:55:42 dries Exp $
 
 /**
  * @file
@@ -78,6 +78,7 @@ function openid_test_yadis_xrds() {
           </Service>
           <Service priority="10">
             <Type>http://specs.openid.net/auth/2.0/signon</Type>
+            <Type>http://openid.net/srv/ax/1.0</Type>
             <URI>' . url('openid-test/endpoint', array('absolute' => TRUE)) . '</URI>
           </Service>
           <Service priority="15">
