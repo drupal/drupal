@@ -1599,6 +1599,16 @@ function system_update_6053() {
 }
 
 /**
+ * Improve indexes on the {url_alias} table.
+ */
+function system_update_6055() {
+  db_drop_index('url_alias', 'src_language');
+  db_drop_unique_key('url_alias', 'dst_language');
+  db_add_index('url_alias', 'src_language_pid', array('src', 'language', 'pid'));
+  db_add_unique_key('url_alias', 'dst_language_pid', array('dst', 'language', 'pid'));
+}
+
+/**
  * @} End of "defgroup updates-6.x-extra"
  * The next series of updates should start at 7000.
  */
@@ -2024,16 +2034,6 @@ function system_update_7024() {
       LANGUAGE \'sql\''
     );
   }
-}
-
-/**
- * Improve indexes on the {url_alias} table.
- */
-function system_update_7025() {
-  db_drop_index('url_alias', 'src_language');
-  db_drop_index('url_alias', 'dst_language');
-  db_add_index('url_alias', 'dst_language_pid', array('dst', 'language', 'pid'));
-  db_add_index('url_alias', 'src_language_pid', array('src', 'language', 'pid'));
 }
 
 /**
