@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1130 2010/03/01 11:33:55 dries Exp $
+// $Id: user.module,v 1.1131 2010/03/02 09:12:31 dries Exp $
 
 /**
  * @file
@@ -1307,7 +1307,7 @@ function user_block_view($delta = '') {
         // rather than u.access because it is much faster.
         $authenticated_count = db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s WHERE s.timestamp >= :timestamp AND s.uid > 0", array(':timestamp' => $interval))->fetchField();
 
-        $output = format_plural($authenticated_count, 'There is currently 1 user online.', 'There are currently @count users online.');
+        $output = '<p>' . format_plural($authenticated_count, 'There is currently 1 user online.', 'There are currently @count users online.') . '</p>';
 
         // Display a list of currently online users.
         $max_users = variable_get('user_block_max_list_count', 10);
