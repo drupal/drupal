@@ -219,7 +219,7 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
       $identity = $claimed_id;
     }
   }
-  $request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $service['version']);
+  $request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $service);
 
   if ($service['version'] == 2) {
     openid_redirect($service['uri'], $request);
@@ -452,16 +452,46 @@ function openid_authentication($response) {
     }
   }
   elseif (variable_get('user_register', 1)) {
-    // Register new user
+    // Register new user.
+
+    // Extract Simple Registration keys from the response.
+    $sreg_values = openid_extract_namespace($response, OPENID_NS_SREG, 'sreg');
+    // Extract Attribute Exchanges keys from the response.
+    $ax_values = openid_extract_namespace($response, OPENID_NS_AX, 'ax');
+
     $form_state['build_info']['args'] = array();
     $form_state['redirect'] = NULL;
-    $form_state['values']['name'] = !empty($response['openid.sreg.nickname']) ? $response['openid.sreg.nickname'] : '';
-    $form_state['values']['mail'] = !empty($response['openid.sreg.email']) ? $response['openid.sreg.email'] : '';
+
+    if (!empty($sreg_values['nickname'])) {
+      // Use the nickname returned by Simple Registration if available.
+      $form_state['values']['name'] = $sreg_values['nickname'];
+    }
+    else if (!empty($ax_values['value.email'])) {
+      // Else, extract the name part of the email address returned by AX if available.
+      list ($name, $domain) = explode('@', $ax_values['value.email'], 2);
+      $form_state['values']['name'] = $name;
+    }
+    else {
+      $form_state['values']['name'] = '';
+    }
+
+    if (!empty($sreg_values['email'])) {
+      // Use the email returned by Simple Registration if available.
+      $form_state['values']['mail'] = $sreg_values['email'];
+    }
+    else if (!empty($ax_values['value.email'])) {
+      // Else, use the email returned by AX if available.
+      $form_state['values']['mail'] = $ax_values['value.email'];
+    }
+    else {
+      $form_state['values']['mail'] = '';
+    }
+
     $form_state['values']['pass']  = user_password();
     $form_state['values']['status'] = variable_get('user_register', 1) == 1;
     $form_state['values']['response'] = $response;
 
-    if (empty($response['openid.sreg.email']) && empty($response['openid.sreg.nickname'])) {
+    if (empty($form_state['values']['name']) || empty($form_state['values']['mail'])) {
       drupal_set_message(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'warning');
       $success = FALSE;
     }
@@ -529,7 +559,7 @@ function openid_association_request($public) {
   return $request;
 }
 
-function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $version = 2) {
+function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $service) {
   module_load_include('inc', 'openid');
 
   $request =  array(
@@ -539,7 +569,7 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
     'openid.return_to' => $return_to,
   );
 
-  if ($version == 2) {
+  if ($service['version'] == 2) {
     $request['openid.ns'] = OPENID_NS_2_0;
     $request['openid.claimed_id'] = $claimed_id;
     $request['openid.realm'] = url('', array('absolute' => TRUE));
@@ -548,9 +578,20 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
     $request['openid.trust_root'] = url('', array('absolute' => TRUE));
   }
 
-  // Simple Registration
+  // Always request Simple Registration. The specification doesn't mandate
+  // that the Endpoint advertise OPENID_NS_SREG in the service description.
+  $request['openid.ns.sreg'] = OPENID_NS_SREG;
   $request['openid.sreg.required'] = 'nickname,email';
-  $request['openid.ns.sreg'] = "http://openid.net/extensions/sreg/1.1";
+
+  // Request Attribute Exchange, if available.
+  // We only request the minimum attributes we need here, contributed modules
+  // can alter the request to add more attribute, and map them to profile fields.
+  if (in_array(OPENID_NS_AX, $service['types'])) {
+    $request['openid.ns.ax'] = OPENID_NS_AX;
+    $request['openid.ax.mode'] = 'fetch_request';
+    $request['openid.ax.required'] = 'email';
+    $request['openid.ax.type.email'] = 'http://schema.openid.net/contact/email';
+  }
 
   $request = array_merge($request, module_invoke_all('openid', 'request', $request));
 

@@ -51,6 +51,16 @@ define('OPENID_NS_1_1', 'http://openid.net/signon/1.1');
 define('OPENID_NS_1_0', 'http://openid.net/signon/1.0');
 
 /**
+ * OpenID Simple Registration extension.
+ */
+define('OPENID_NS_SREG', 'http://openid.net/extensions/sreg/1.1');
+
+/**
+ * OpenID Attribute Exchange extension.
+ */
+define('OPENID_NS_AX', 'http://openid.net/srv/ax/1.0');
+
+/**
  * Performs an HTTP 302 redirect (for the 1.x protocol).
  */
 function openid_redirect_http($url, $message) {
@@ -494,4 +504,62 @@ function _openid_get_params($str) {
     }
   }
   return $data;
+}
+
+/**
+ * Extract all the parameters belonging to an extension in a response message.
+ *
+ * OpenID 2.0 defines a simple extension mechanism, based on a namespace prefix.
+ *
+ * Each request or response can define a prefix using:
+ * @code
+ *   openid.ns.[prefix] = [extension_namespace]
+ *   openid.[prefix].[key1] = [value1]
+ *   openid.[prefix].[key2] = [value2]
+ *   ...
+ * @endcode
+ * 
+ * This function extracts all the keys belonging to an extension namespace in a
+ * response, optionally using a fallback prefix if none is provided in the response.
+ * 
+ * Note that you cannot assume that a given extension namespace will use the same
+ * prefix on the response and the request: each party may use a different prefix
+ * to refer to the same namespace.
+ *
+ * @param $response
+ *   The response array.
+ * @param $extension_namespace
+ *   The namespace of the extension.
+ * @param $fallback_prefix
+ *   An optional prefix that will be used in case no prefix is found for the
+ *   target extension namespace.
+ * @return
+ *   An associative array containing all the parameters in the response message
+ *   that belong to the extension. The keys are stripped from their namespace
+ *   prefix.
+ * @see http://openid.net/specs/openid-authentication-2_0.html#extensions
+ */
+function openid_extract_namespace($response, $extension_namespace, $fallback_prefix = NULL) {
+  // Find the namespace prefix.
+  $prefix = $fallback_prefix;
+  foreach ($response as $key => $value) {
+    if ($value == $extension_namespace && preg_match('/^openid\.ns\.([^.]+)$/', $key, $matches)) {
+      $prefix = $matches[1];
+      break;
+    }
+  }
+
+  // Now extract the namespace keys from the response.
+  $output = array();
+  if (!isset($prefix)) {
+    return $output;
+  }
+  foreach ($response as $key => $value) {
+    if (preg_match('/^openid\.' . $prefix . '\.(.+)$/', $key, $matches)) {
+      $local_key = $matches[1];
+      $output[$local_key] = $value;
+    }
+  }
+
+  return $output;
 }

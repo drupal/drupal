@@ -78,6 +78,7 @@ function openid_test_yadis_xrds() {
           </Service>
           <Service priority="10">
             <Type>http://specs.openid.net/auth/2.0/signon</Type>
+            <Type>http://openid.net/srv/ax/1.0</Type>
             <URI>' . url('openid-test/endpoint', array('absolute' => TRUE)) . '</URI>
           </Service>
           <Service priority="15">

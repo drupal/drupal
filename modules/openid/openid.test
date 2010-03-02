@@ -315,6 +315,41 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     $this->clickLink(t('OpenID identities'));
     $this->assertRaw($identity, t('OpenID identity was registered.'));
   }
+
+  /**
+   * Test OpenID auto-registration with a provider that supplies AX information,
+   * but no SREG.
+   */
+  function testRegisterUserWithAXButNoSREG() {
+    variable_set('user_email_verification', FALSE);
+
+    // Load the front page to get the user login block.
+    $this->drupalGet('');
+
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+
+    // Tell openid_test.module to respond with these AX fields.
+    variable_set('openid_test_response', array(
+      'openid.ns.ext123' => 'http://openid.net/srv/ax/1.0',
+      'openid.ext123.value.email' => 'john@example.com',
+    ));
+
+    // Fill out and submit the login form.
+    $edit = array('openid_identifier' => $identity);
+    $this->drupalPost(NULL, $edit, t('Log in'));
+
+    // Check we are on the OpenID redirect form.
+    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+
+    // Submit form to the OpenID Provider Endpoint.
+    $this->drupalPost(NULL, array(), t('Send'));
+    $this->assertLink('john', 0, t('User was logged in.'));
+
+    $user = user_load_by_name('john');
+    $this->assertTrue($user, t('User was registered with right username.'));
+    $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
+  }
 }
 
 /**
