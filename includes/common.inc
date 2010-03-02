@@ -2982,7 +2982,7 @@ function drupal_pre_render_styles($elements) {
   // browser-caching. The string changes on every update or full cache
   // flush, forcing browsers to load a new copy of the files, as the
   // URL changed.
-  $query_string = '?' . substr(variable_get('css_js_query_string', '0'), 0, 1);
+  $query_string = substr(variable_get('css_js_query_string', '0'), 0, 1);
 
   // Defaults for LINK and STYLE elements.
   $link_element_defaults = array(
@@ -3037,7 +3037,8 @@ function drupal_pre_render_styles($elements) {
             // browser-caching. IE7 does not support a media type on the @import
             // statement, so we instead specify the media for the group on the
             // STYLE tag.
-            $import[] = '@import url("' . file_create_url($item['data']) . $query_string . '");';
+            $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
+            $import[] = '@import url("' . check_plain(file_create_url($item['data']) . $query_string_separator . $query_string) . '");';
           }
           // In addition to IE's limit of 31 total CSS inclusion tags, it also
           // has a limit of 31 @import statements per STYLE tag.
@@ -3058,7 +3059,8 @@ function drupal_pre_render_styles($elements) {
             $element = $link_element_defaults;
             // The dummy query string needs to be added to the URL to control
             // browser-caching.
-            $element['#attributes']['href'] = file_create_url($item['data']) . $query_string;
+            $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
+            $element['#attributes']['href'] = file_create_url($item['data']) . $query_string_separator . $query_string;
             $element['#attributes']['media'] = $item['media'];
             $element['#browsers'] = $group['browsers'];
             $elements[] = $element;
@@ -3628,7 +3630,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   // URL changed. Files that should not be cached (see drupal_add_js())
   // get REQUEST_TIME as query-string instead, to enforce reload on every
   // page request.
-  $query_string = '?' . substr(variable_get('css_js_query_string', '0'), 0, 1);
+  $query_string = substr(variable_get('css_js_query_string', '0'), 0, 1);
 
   // For inline Javascript to validate as XHTML, all Javascript containing
   // XHTML needs to be wrapped in CDATA. To make that backwards compatible
@@ -3674,7 +3676,8 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
           if ($item['defer']) {
             $js_element['#attributes']['defer'] = 'defer';
           }
-          $js_element['#attributes']['src'] = file_create_url($item['data']) . ($item['cache'] ? $query_string : '?' . REQUEST_TIME);
+          $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
+          $js_element['#attributes']['src'] = file_create_url($item['data']) . $query_string_separator . ($item['cache'] ? $query_string : REQUEST_TIME);
           $no_preprocess .= theme('html_tag', array('element' => $js_element));
         }
         else {

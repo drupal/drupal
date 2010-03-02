@@ -1158,6 +1158,10 @@ function _locale_import_parse_quoted($string) {
 function _locale_parse_js_file($filepath) {
   global $language;
 
+  // The file path might contain a query string, so make sure we only use the
+  // actual file.
+  $parsed_url = drupal_parse_url($filepath);
+  $filepath = $parsed_url['path'];
   // Load the JavaScript file.
   $file = file_get_contents($filepath);
 

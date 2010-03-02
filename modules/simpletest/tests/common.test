@@ -503,7 +503,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('php', 'locale');
+    parent::setUp('php', 'locale', 'common_test');
     // Reset drupal_add_css() before each test.
     drupal_static_reset('drupal_add_css');
   }
@@ -681,6 +681,16 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
 
     // Change the language back to left to right.
     $language->direction = LANGUAGE_LTR;
+  }
+
+  /**
+   * Tests that the query string remains intact when adding CSS files that have
+   * query string parameters.
+   */
+  function testAddCssFileWithQueryString() {
+    $this->drupalGet('common-test/query-string');
+    $query_string = substr(variable_get('css_js_query_string', '0'), 0, 1);
+    $this->assertRaw(drupal_get_path('module', 'node') . '/node.css?arg1=value1&amp;arg2=value2&amp;' . $query_string, t('Query string was appended correctly to css.'));
   }
 }
 
@@ -1254,6 +1264,16 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     drupal_render($element);
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'misc/farbtastic/farbtastic.js'), t('The attached_library property adds the additional libraries.'));
+  }
+
+  /**
+   * Tests that the query string remains intact when adding JavaScript files
+   *  that have query string parameters.
+   */
+  function testAddJsFileWithQueryString() {
+    $this->drupalGet('common-test/query-string');
+    $query_string = substr(variable_get('css_js_query_string', '0'), 0, 1);
+    $this->assertRaw(drupal_get_path('module', 'node') . '/node.js?arg1=value1&amp;arg2=value2&amp;' . $query_string, t('Query string was appended correctly to js.'));
   }
 }
 

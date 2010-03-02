@@ -35,6 +35,12 @@ function common_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['common-test/query-string'] = array(
+    'title' => 'Test querystring',
+    'page callback' => 'common_test_js_and_css_querystring',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -182,4 +188,13 @@ function common_test_library() {
     ),
   );
   return $libraries;
+}
+
+/**
+ * Adds a JavaScript file and a CSS file with a query string appended.
+ */
+function common_test_js_and_css_querystring() {
+   drupal_add_js(drupal_get_path('module', 'node') . '/node.js?arg1=value1&arg2=value2');
+   drupal_add_css(drupal_get_path('module', 'node') . '/node.css?arg1=value1&arg2=value2');
+   return '';
 }
