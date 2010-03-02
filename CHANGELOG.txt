@@ -99,6 +99,11 @@ Drupal 7.0, xxxx-xx-xx (development version)
       at the operating system level.
     * Removed per-user themes: Contributed modules with similar functionality
       are available.
+- OpenID:
+    * Added support for Gmail and Google Apps for Domain identifiers. Users can
+      now login with their user@domain.com identifier when domain.com is powered
+      by Google.
+    * Made the OpenID module more pluggable.
 - Added code registry:
     * Using the registry, modules declare their includable files via their .info file,
       allowing Drupal to lazy-load classes and interfaces as needed.

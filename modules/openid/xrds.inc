@@ -71,6 +71,11 @@ function _xrds_cdata(&$parser, $data) {
     case 'XRDS/XRD/SERVICE/LOCALID':
       $xrds_current_service['localid'] = $data;
       break;
+    default:
+      if (preg_match('@^XRDS/XRD/SERVICE/(.*)$@', $path, $matches)) {
+        $xrds_current_service['additional'][$matches[1]] = $data;
+      }
+      break;
   }
 }
 

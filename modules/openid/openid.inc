@@ -182,24 +182,39 @@ function _openid_is_xri($identifier) {
  *
  * The procedure is described in OpenID Authentication 2.0, section 7.2.
  */
-function _openid_normalize($identifier) {
+function openid_normalize($identifier) {
+  $methods = module_invoke_all('openid_normalization_method_info');
+  drupal_alter('openid_normalization_method_info', $methods);
+
+  // Execute each method in turn, stopping after the first method accepted
+  // the identifier.
+  foreach ($methods as $method) {
+    $result = $method($identifier);
+    if ($result !== NULL) {
+      $identifier = $result;
+      break;
+    }
+  }
+
+  return $identifier;
+}
+
+/**
+ * OpenID normalization method: normalize XRI identifiers.
+ */
+function _openid_xri_normalize($identifier) {
   if (_openid_is_xri($identifier)) {
-    return _openid_normalize_xri($identifier);
-  }
-  else {
-    return _openid_normalize_url($identifier);
+    if (stristr($identifier, 'xri://') !== FALSE) {
+      $identifier = substr($identifier, 6);
+    }
+    return $identifier;
   }
 }
 
-function _openid_normalize_xri($xri) {
-  $normalized_xri = $xri;
-  if (stristr($xri, 'xri://') !== FALSE) {
-    $normalized_xri = substr($xri, 6);
-  }
-  return $normalized_xri;
-}
-
-function _openid_normalize_url($url) {
+/**
+ * OpenID normalization method: normalize URL identifiers.
+ */
+function _openid_url_normalize($url) {
   $normalized_url = $url;
 
   if (stristr($url, '://') === FALSE) {
@@ -214,6 +229,34 @@ function _openid_normalize_url($url) {
   }
 
   return $normalized_url;
+}
+
+/**
+ * OpenID normalization method: Normalize Google identifiers.
+ *
+ * This transforms a Google identifier (user@domain) into an XRDS URL.
+ *
+ * @see http://sites.google.com/site/oauthgoog/fedlogininterp/openiddiscovery#TOC-IdP-Discovery
+ */
+function _openid_google_idp_normalize($identifier) {
+  if (!valid_email_address($identifier)) {
+    return;
+  }
+
+  // If the identifier is a valid email address, try to discover the domain
+  // with Google Federated Login. We only use the generic URL, because the
+  // domain-specific URL (http://example.com/.well-known/host-meta) cannot
+  // be trusted.
+  list($name, $domain) = explode('@', $identifier, 2);
+  $response = drupal_http_request('https://www.google.com/accounts/o8/.well-known/host-meta?hd=' . rawurlencode($domain));
+  if (isset($response->error) || $response->code != 200) {
+    return;
+  }
+
+  if (preg_match('/Link: <(.*)>/', $response->data, $matches)) {
+    $xrds_url = $matches[1];
+    return $xrds_url;
+  }
 }
 
 /**

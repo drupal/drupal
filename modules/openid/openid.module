@@ -179,7 +179,7 @@ function openid_login_validate($form, &$form_state) {
 function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
   module_load_include('inc', 'openid');
 
-  $claimed_id = _openid_normalize($claimed_id);
+  $claimed_id = openid_normalize($claimed_id);
 
   $services = openid_discovery($claimed_id);
   $service = _openid_select_service($services);
@@ -263,7 +263,7 @@ function openid_complete($response = array()) {
           // to the OpenID Provider, we need to do discovery on the returned
           // identififer to make sure that the provider is authorized to respond
           // on behalf of this.
-          if ($service['version'] == 2 && $response['openid.claimed_id'] != _openid_normalize($claimed_id)) {
+          if ($service['version'] == 2 && $response['openid.claimed_id'] != openid_normalize($claimed_id)) {
             $services = openid_discovery($response['openid.claimed_id']);
             $uris = array();
             foreach ($services as $discovered_service) {
@@ -298,12 +298,61 @@ function openid_discovery($claimed_id) {
   module_load_include('inc', 'openid');
   module_load_include('inc', 'openid', 'xrds');
 
+  $methods = module_invoke_all('openid_discovery_method_info');
+  drupal_alter('openid_discovery_method_info', $methods);
+
+  // Execute each method in turn.
+  foreach ($methods as $method) {
+    $discovered_services = $method($claimed_id);
+    if (!empty($discovered_services)) {
+      return $discovered_services;
+    }
+  }
+
+  return array();
+}
+
+/**
+ * Implementation of hook_openid_discovery_method_info().
+ *
+ * Define standard discovery methods.
+ */
+function openid_openid_discovery_method_info() {
+  // The discovery process will stop as soon as one discovery method succeed.
+  // We first attempt to discover XRI-based identifiers, then standard XRDS
+  // identifiers via Yadis and HTML-based discovery, conforming to the OpenID 2.0
+  // specification. If those fail, we attempt to discover services based on
+  // the Google user discovery scheme.
+  return array(
+    'xri' => '_openid_xri_discovery',
+    'xrds' => '_openid_xrds_discovery',
+    'google' => '_openid_google_user_discovery',
+  );
+}
+
+/**
+ * OpenID discovery method: perform an XRI discovery.
+ *
+ * @see http://openid.net/specs/openid-authentication-2_0.html#discovery
+ * @see hook_openid_discovery_method_info()
+ */
+function _openid_xri_discovery($claimed_id) {
+  if (_openid_is_xri($claimed_id)) {
+    $xrds_url = 'http://xri.net/' . $claimed_id;
+    _openid_xrds_discovery($xrds_url);
+  }
+}
+
+/**
+ * OpenID discovery method: perform a XRDS discovery.
+ *
+ * @see http://openid.net/specs/openid-authentication-2_0.html#discovery
+ * @see hook_openid_discovery_method_info()
+ */
+function _openid_xrds_discovery($claimed_id) {
   $services = array();
 
   $xrds_url = $claimed_id;
-  if (_openid_is_xri($claimed_id)) {
-    $xrds_url = 'http://xri.net/' . $claimed_id;
-  }
   $scheme = @parse_url($xrds_url, PHP_URL_SCHEME);
   if ($scheme == 'http' || $scheme == 'https') {
     // For regular URLs, try Yadis resolution first, then HTML-based discovery
@@ -357,6 +406,57 @@ function openid_discovery($claimed_id) {
     }
   }
   return $services;
+}
+
+/**
+ * OpenID discovery method: Perform an user discovery using Google Discovery protocol.
+ *
+ * This transforms a OpenID identifier into an OpenID endpoint.
+ *
+ * @see http://sites.google.com/site/oauthgoog/fedlogininterp/openiddiscovery#TOC-User-Discovery
+ * @see hook_openid_discovery_method_info()
+ */
+function _openid_google_user_discovery($claimed_id) {
+  $xrds_url = $claimed_id;
+  $url = @parse_url($xrds_url);
+  if (empty($url['scheme']) || ($url['scheme'] != 'http' && $scheme['scheme'] != 'https') || empty($url['host'])) {
+    return;
+  }
+
+  $response = drupal_http_request('https://www.google.com/accounts/o8/.well-known/host-meta?hd=' . rawurlencode($url['host']));
+  if (isset($response->error) || $response->code != 200) {
+    return;
+  }
+
+  if (preg_match('/Link: <(.*)>/', $response->data, $matches)) {
+    $xrds_url = $matches[1];
+    $services = _openid_xrds_discovery($xrds_url);
+
+    foreach ($services as $service) {
+      if (in_array('http://www.iana.org/assignments/relation/describedby', $service['types']) && !empty($service['additional']['URITEMPLATE'])) {
+        $template = $service['additional']['URITEMPLATE'];
+        $xrds_url = str_replace('{%uri}', rawurlencode($claimed_id), $template);
+        return _openid_xrds_discovery($xrds_url);
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_openid_normalization_method_info().
+ *
+ * Define standard normalization methods.
+ */
+function openid_openid_normalization_method_info() {
+  // We first try to normalize Google Identifiers (user@domain) into their
+  // corresponding XRDS URL. If this fail, we proceed with standard OpenID
+  // normalization by normalizing XRI idenfiers. Finally, normalize the identifier
+  // into a canonical URL.
+  return array(
+    'google_idp' => '_openid_google_idp_normalize',
+    'xri' => '_openid_xri_normalize',
+    'url' => '_openid_url_normalize',
+  );
 }
 
 /**
