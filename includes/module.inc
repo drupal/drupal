@@ -293,12 +293,11 @@ function module_load_all_includes($type, $name = NULL) {
  *   If TRUE, dependencies will automatically be added and enabled in the
  *   correct order. This incurs a significant performance cost, so use FALSE
  *   if you know $module_list is already complete and in the correct order.
- * @param $disable_modules_installed_hook
- *   Normally just testing wants to set this to TRUE.
+ *
  * @return
  *   FALSE if one or more dependencies are missing, TRUE otherwise.
  */
-function module_enable($module_list, $enable_dependencies = TRUE, $disable_modules_installed_hook = FALSE) {
+function module_enable($module_list, $enable_dependencies = TRUE) {
   if ($enable_dependencies) {
     // Get all module data so we can find dependencies and sort.
     $module_data = system_rebuild_module_data();
@@ -392,7 +391,7 @@ function module_enable($module_list, $enable_dependencies = TRUE, $disable_modul
   }
 
   // If any modules were newly installed, invoke hook_modules_installed().
-  if (!$disable_modules_installed_hook && !empty($modules_installed)) {
+  if (!empty($modules_installed)) {
     module_invoke_all('modules_installed', $modules_installed);
   }
 

@@ -267,10 +267,6 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
  * database so that they can be altered via the RDF CRUD mapping API.
  */
 function rdf_modules_installed($modules) {
-  // We need to clear the caches of entity_info as this is not done right
-  // during the tests. see http://drupal.org/node/594234
-  entity_info_cache_clear();
-
   foreach ($modules as $module) {
     $function = $module . '_rdf_mapping';
     if (function_exists($function)) {

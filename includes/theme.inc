@@ -561,7 +561,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *   - 'base theme': The name of the base theme.
  */
 function list_themes($refresh = FALSE) {
-  static $list = array();
+  $list = &drupal_static(__FUNCTION__, array());
 
   if ($refresh) {
     $list = array();

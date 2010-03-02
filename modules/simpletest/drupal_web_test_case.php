@@ -547,8 +547,7 @@ abstract class DrupalTestCase {
  *
  * These tests can not access the database nor files. Calling any Drupal
  * function that needs the database will throw exceptions. These include
- * watchdog(), function_exists(), module_implements(),
- * module_invoke_all() etc.
+ * watchdog(), module_implements(), module_invoke_all() etc.
  */
 class DrupalUnitTestCase extends DrupalTestCase {
 
@@ -1124,8 +1123,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     ini_set('log_errors', 1);
     ini_set('error_log', $public_files_directory . '/error.log');
 
-    // Reset all statics and variables so that test is performed with a clean
-    // environment.
+    // Reset all statics and variables to perform tests in a clean environment.
     $conf = array();
     drupal_static_reset();
 
@@ -1139,31 +1137,29 @@ class DrupalWebTestCase extends DrupalTestCase {
     $profile_details = install_profile_info('standard', 'en');
 
     // Install the modules specified by the default profile.
-    module_enable($profile_details['dependencies'], FALSE, TRUE);
+    module_enable($profile_details['dependencies'], FALSE);
 
-    drupal_static_reset('_node_types_build');
-
+    // Install modules needed for this test.
     if ($modules = func_get_args()) {
-      // Install modules needed for this test.
-      module_enable($modules, TRUE, TRUE);
+      module_enable($modules, TRUE);
     }
 
-    // Because the schema is static cached, we need to flush
-    // it between each run. If we don't, then it will contain
-    // stale data for the previous run's database prefix and all
-    // calls to it will fail.
-    drupal_get_schema(NULL, TRUE);
-
     // Run default profile tasks.
-    $install_state = array();
-    module_enable(array('standard'), FALSE, TRUE);
+    module_enable(array('standard'), FALSE);
 
     // Rebuild caches.
-    node_types_rebuild();
+    drupal_static_reset();
+    drupal_flush_all_caches();
+
+    // Register actions declared by any modules.
     actions_synchronize();
-    _drupal_flush_css_js();
+
+    // Reload global $conf array and permissions.
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
+
+    // Reset statically cached schema for new database prefix.
+    drupal_get_schema(NULL, TRUE);
 
     // Run cron once in that environment, as install.php does at the end of
     // the installation process.
