@@ -1,5 +1,5 @@
 <?php
-// $Id: common_test.module,v 1.9 2009/12/04 16:49:47 dries Exp $
+// $Id: common_test.module,v 1.10 2010/03/02 08:47:41 dries Exp $
 
 /**
  * @file
@@ -32,6 +32,12 @@ function common_test_menu() {
     'title' => 'Drupal Goto Failure',
     'page callback' => 'drupal_goto',
     'page arguments' => array('common-test/drupal_goto/fail'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['common-test/query-string'] = array(
+    'title' => 'Test querystring',
+    'page callback' => 'common_test_js_and_css_querystring',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -182,4 +188,13 @@ function common_test_library() {
     ),
   );
   return $libraries;
+}
+
+/**
+ * Adds a JavaScript file and a CSS file with a query string appended.
+ */
+function common_test_js_and_css_querystring() {
+   drupal_add_js(drupal_get_path('module', 'node') . '/node.js?arg1=value1&arg2=value2');
+   drupal_add_css(drupal_get_path('module', 'node') . '/node.css?arg1=value1&arg2=value2');
+   return '';
 }

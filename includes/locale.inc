@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.247 2010/02/25 15:53:27 dries Exp $
+// $Id: locale.inc,v 1.248 2010/03/02 08:47:41 dries Exp $
 
 /**
  * @file
@@ -1158,6 +1158,10 @@ function _locale_import_parse_quoted($string) {
 function _locale_parse_js_file($filepath) {
   global $language;
 
+  // The file path might contain a query string, so make sure we only use the
+  // actual file.
+  $parsed_url = drupal_parse_url($filepath);
+  $filepath = $parsed_url['path'];
   // Load the JavaScript file.
   $file = file_get_contents($filepath);
 
