@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.module,v 1.25 2010/02/15 15:12:22 dries Exp $
+// $Id: rdf.module,v 1.26 2010/03/02 09:07:09 dries Exp $
 
 /**
  * @file
@@ -267,10 +267,6 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
  * database so that they can be altered via the RDF CRUD mapping API.
  */
 function rdf_modules_installed($modules) {
-  // We need to clear the caches of entity_info as this is not done right
-  // during the tests. see http://drupal.org/node/594234
-  entity_info_cache_clear();
-
   foreach ($modules as $module) {
     $function = $module . '_rdf_mapping';
     if (function_exists($function)) {

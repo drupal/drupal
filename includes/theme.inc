@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.580 2010/02/27 09:24:09 dries Exp $
+// $Id: theme.inc,v 1.581 2010/03/02 09:07:09 dries Exp $
 
 /**
  * @file
@@ -561,7 +561,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *   - 'base theme': The name of the base theme.
  */
 function list_themes($refresh = FALSE) {
-  static $list = array();
+  $list = &drupal_static(__FUNCTION__, array());
 
   if ($refresh) {
     $list = array();
