@@ -865,13 +865,10 @@ function node_save(&$node) {
   node_invoke_nodeapi($node, 'presave');
   global $user;
 
-  $node->is_new = FALSE;
+  // Insert a new node.
+  $node->is_new = empty($node->nid);
 
-  // Apply filters to some default node fields:
-  if (empty($node->nid)) {
-    // Insert a new node.
-    $node->is_new = TRUE;
-
+  if ($node->is_new || !empty($node->revision)) {
     // When inserting a node, $node->log must be set because
     // {node_revisions}.log does not (and cannot) have a default
     // value.  If the user does not have permission to create
@@ -880,35 +877,35 @@ function node_save(&$node) {
     if (!isset($node->log)) {
       $node->log = '';
     }
-
-    // For the same reasons, make sure we have $node->teaser and
-    // $node->body.  We should consider making these fields nullable
-    // in a future version since node types are not required to use them.
-    if (!isset($node->teaser)) {
-      $node->teaser = '';
-    }
-    if (!isset($node->body)) {
-      $node->body = '';
-    }
   }
-  elseif (!empty($node->revision)) {
+  elseif (empty($node->log)) {
+    // When updating a node, however, avoid clobbering an existing
+    // log entry with an empty one.
+    unset($node->log);
+  }
+
+  // For the same reasons, make sure we have $node->teaser and
+  // $node->body set.
+  if (!isset($node->teaser)) {
+    $node->teaser = '';
+  }
+  if (!isset($node->body)) {
+    $node->body = '';
+  }
+
+  // Save the old revision if needed.
+  if (!$node->is_new && !empty($node->revision) && $node->vid) {
     $node->old_vid = $node->vid;
   }
-  else {
-    // When updating a node, avoid clobberring an existing log entry with an empty one.
-    if (empty($node->log)) {
-      unset($node->log);
-    }
-  }
 
-  // Set some required fields:
+  $time = time();
   if (empty($node->created)) {
-    $node->created = time();
+    $node->created = $time;
   }
   // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
-  $node->changed = time();
+  $node->changed = $time;
 
-  $node->timestamp = time();
+  $node->timestamp = $time;
   $node->format = isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT;
 
   // Generate the node table query and the node_revisions table query.
