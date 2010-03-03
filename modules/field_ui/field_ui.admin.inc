@@ -1204,6 +1204,8 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
     '#collapsible' => FALSE,
     '#tree' => TRUE,
     '#description' => t('The default value for this field, used when creating new content.'),
+    // Make sure the values appear at the top-level of $form_state['values'].
+    '#parents' => array(),
   );
 
   // Insert the widget.
@@ -1224,25 +1226,18 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
   $field_name = $instance['field_name'];
   $field = field_info_field($field_name);
 
-  // Validate the default value.
-  if (!empty($instance['default_value_widget'])) {
-    $field = field_info_field($instance['field_name']);
-
-    // Extract field values.
-    $items = array();
-    $form_state_copy = array('values' => $instance['default_value_widget']);
-    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state_copy);
-
-    // Validate the values and report errors.
-    $errors = array();
-    $function = $field['module'] . '_field_validate';
-    if (function_exists($function)) {
-      $function(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $errors);
-    }
-    if (isset($errors[$field_name][LANGUAGE_NONE])) {
-      $form_state['field'][$field_name][LANGUAGE_NONE]['errors'] = $errors[$field_name][LANGUAGE_NONE];
-      field_default_form_errors(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
-    }
+  // Extract the 'default value'.
+  $items = array();
+  field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
+  // Validate the value and report errors.
+  $errors = array();
+  $function = $field['module'] . '_field_validate';
+  if (function_exists($function)) {
+    $function(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $errors);
+  }
+  if (isset($errors[$field_name][LANGUAGE_NONE])) {
+    $form_state['field'][$field_name][LANGUAGE_NONE]['errors'] = $errors[$field_name][LANGUAGE_NONE];
+    field_default_form_errors(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
   }
 }
 
@@ -1259,18 +1254,12 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
   field_update_field($field);
 
   // Handle the default value.
-  if (!empty($instance['default_value_widget'])) {
-    // Extract field values.
-    $items = array();
-    $form_state_copy = array('values' => $instance['default_value_widget']);
-    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state_copy);
-
-    // Prepare field values.
-    field_default_submit(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state_copy);
-
-    $instance['default_value'] = $items ? $items : NULL;
-    unset($instance['default_value_widget']);
-  }
+  // Extract field values.
+  $items = array();
+  field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
+  // Prepare field values.
+  field_default_submit(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
+  $instance['default_value'] = $items ? $items : NULL;
 
   // Update the instance settings.
   $instance_source = field_info_instance($instance['object_type'], $instance['field_name'], $instance['bundle']);
