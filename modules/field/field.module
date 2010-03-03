@@ -595,7 +595,7 @@ function field_format($entity_type, $entity, $field, $item, $formatter_type = NU
  *     If no display settings are found for the view mode, the settings for
  *     the 'full' view mode will be used.
  *   - An array of display settings, as found in the 'display' entry of
- *     $instance definitions. The following kay/value pairs are allowed:
+ *     $instance definitions. The following key/value pairs are allowed:
  *     - label: (string) Position of the label. The default 'field' theme
  *       implementation supports the values 'inline', 'above' and 'hidden'.
  *       Defaults to 'above'.
