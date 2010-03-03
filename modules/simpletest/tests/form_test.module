@@ -144,6 +144,11 @@ function form_test_validate_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Save',
   );
+
+  // To simplify this test, enable form caching and use form storage to
+  // remember our alteration.
+  $form_state['cache'] = TRUE;
+
   return $form;
 }
 
@@ -161,9 +166,6 @@ function form_test_element_validate_name(&$element, &$form_state) {
     $triggered = TRUE;
   }
   if ($form_state['values']['name'] == 'element_validate_access') {
-    // To simplify this test, enable form caching and use form storage to
-    // remember our alteration.
-    $form_state['cache'] = TRUE;
     $form_state['storage']['form_test_name'] = $form_state['values']['name'];
     // Alter the form element.
     $element['#access'] = FALSE;
@@ -453,9 +455,6 @@ function form_test_storage_element_validate_value_cached($element, &$form_state)
   // though.
   if (isset($_REQUEST['cache']) && $form_state['values']['value'] == 'change_title') {
     $form_state['storage']['thing']['changed'] = TRUE;
-    // @todo Fix FAPI to make it unnecessary to explicitly set the cache flag in
-    //   this situation. @see http://drupal.org/node/641356.
-    $form_state['cache'] = TRUE;
   }
 }
 
