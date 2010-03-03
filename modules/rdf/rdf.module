@@ -495,12 +495,33 @@ function rdf_preprocess_field(&$variables) {
 function rdf_preprocess_user_profile(&$variables) {
   // Adds RDFa markup to the user profile page. Fields displayed in this page
   // will automatically describe the user.
-  // @todo move to user.module
   $account = $variables['elements']['#account'];
   if (!empty($account->rdf_mapping['rdftype'])) {
     $variables['attributes_array']['typeof'] = $account->rdf_mapping['rdftype'];
     $variables['attributes_array']['about'] = url('user/' . $account->uid);
   }
+  // Adds the relationship between the sioc:User and the foaf:Person who holds
+  // the account.
+  $account_holder_meta = array(
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'about' => url('user/' . $account->uid, array('fragment' => 'me')),
+      'typeof' => array('foaf:Person'),
+      'rel' => array('foaf:account'),
+      'resource' => url('user/' . $account->uid),
+    ),
+  );
+  // Adds the markup for username.
+  $username_meta = array(
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'about' => url('user/' . $account->uid),
+      'property' => $account->rdf_mapping['name']['predicates'],
+      'content' => $account->name,
+    )
+  );
+  drupal_add_html_head($account_holder_meta, 'rdf_user_account_holder');
+  drupal_add_html_head($username_meta, 'rdf_user_username');
 }
 
 /**

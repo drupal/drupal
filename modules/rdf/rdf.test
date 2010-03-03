@@ -307,14 +307,20 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     // Create two users, one with access to user profiles.
     $user1 = $this->drupalCreateUser(array('access user profiles'));
     $user2 = $this->drupalCreateUser();
+    $username = $user2->name;
     $this->drupalLogin($user1);
     // Browse to the user profile page.
     $this->drupalGet('user/' . $user2->uid);
     // Ensure the default bundle mapping for user is used on the user profile
     // page. These attributes come from the user default bundle definition.
-    $profile_url = url('user/' . $user2->uid);
-    $user2_profile_about = $this->xpath("//div[@class='profile' and @typeof='sioc:User' and @about='$profile_url']");
+    $account_uri = url('user/' . $user2->uid);
+    $person_uri = url('user/' . $user2->uid, array('fragment' => 'me'));
+    $user2_profile_about = $this->xpath("//div[@class='profile' and @typeof='sioc:User' and @about='$account_uri']");
     $this->assertTrue(!empty($user2_profile_about), t('RDFa markup found on user profile page'));
+    $user_account_holder = $this->xpath("//meta[contains(@typeof, 'foaf:Person') and @about='$person_uri' and @resource='$account_uri' and contains(@rel, 'foaf:account')]");
+    $this->assertTrue(!empty($user_account_holder), t('URI created for account holder and username set on sioc:User.'));
+    $user_username = $this->xpath("//meta[@about='$account_uri' and contains(@property, 'foaf:name') and @content='$username']");
+    $this->assertTrue(!empty($user_username), t('foaf:name set on username.'));
 
     // User 2 creates node.
     $this->drupalLogin($user2);
@@ -323,7 +329,7 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     // Ensures the default bundle mapping for user is used on the Authored By
     // information on the node.
-    $author_about = $this->xpath("//a[@typeof='sioc:User' and @about='$profile_url' and @property='foaf:name' and contains(@xml:lang, '')]");
+    $author_about = $this->xpath("//a[@typeof='sioc:User' and @about='$account_uri' and @property='foaf:name' and contains(@xml:lang, '')]");
     $this->assertTrue(!empty($author_about), t('RDFa markup found on author information on post. xml:lang on username is set to empty string.'));
   }
 }
