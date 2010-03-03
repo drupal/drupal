@@ -459,14 +459,15 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
     $tabs = $(self.$iframeWindow('<div>').append($tabs).remove().html());
 
     self.$dialogTitlebar.append($tabs);
-    if ($tabs.is('.primary')) {
-      $tabs.find('a').removeClass('overlay-processed');
-      Drupal.attachBehaviors($tabs);
-    }
+
     // Remove any classes from the list element to avoid theme styles
     // clashing with our styling.
     $tabs.removeAttr('class');
   }
+
+  // Re-attach the behaviors we lost while copying elements from the iframe 
+  // document to the parent document.
+  Drupal.attachBehaviors(self.$dialogTitlebar);
 
   // Try to enhance keyboard based navigation of the overlay.
   // Logic inspired by the open() method in ui.dialog.js, and
