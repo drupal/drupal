@@ -2611,7 +2611,7 @@ function node_search_validate($form, &$form_state) {
     $keys .= ' "' . str_replace('"', ' ', $form_state['values']['phrase']) . '"';
   }
   if (!empty($keys)) {
-    form_set_value($form['basic']['inline']['processed_keys'], trim($keys), $form_state);
+    form_set_value($form['basic']['processed_keys'], trim($keys), $form_state);
   }
 }
 

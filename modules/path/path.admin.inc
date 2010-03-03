@@ -231,23 +231,23 @@ function path_admin_delete_confirm_submit($form, &$form_state) {
 function path_admin_filter_form($form, &$form_state, $keys = '') {
   $form['#attributes'] = array('class' => array('search-form'));
   $form['basic'] = array('#type' => 'fieldset',
-    '#title' => t('Filter aliases')
+    '#title' => t('Filter aliases'),
+    '#attributes' => array('class' => array('container-inline')),
   );
-  $form['basic']['inline'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
-  $form['basic']['inline']['filter'] = array(
+  $form['basic']['filter'] = array(
     '#type' => 'textfield',
     '#title' => '',
     '#default_value' => $keys,
     '#maxlength' => 128,
     '#size' => 25,
   );
-  $form['basic']['inline']['submit'] = array(
+  $form['basic']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
     '#submit' => array('path_admin_filter_form_submit_filter'),
     );
   if ($keys) {
-    $form['basic']['inline']['reset'] = array(
+    $form['basic']['reset'] = array(
       '#type' => 'submit',
       '#value' => t('Reset'),
       '#submit' => array('path_admin_filter_form_submit_reset'),

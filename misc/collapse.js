@@ -5,40 +5,33 @@
  * Toggle the visibility of a fieldset using smooth animations.
  */
 Drupal.toggleFieldset = function (fieldset) {
-  if ($(fieldset).is('.collapsed')) {
-    // Action div containers are processed separately because of a IE bug
-    // that alters the default submit button behavior.
-    var content = $('> div:not(.action)', fieldset);
-    $(fieldset)
+  var $fieldset = $(fieldset);
+  if ($fieldset.is('.collapsed')) {
+    var $content = $('> .fieldset-wrapper', fieldset).hide();
+    $fieldset
       .removeClass('collapsed')
       .trigger({ type: 'collapsed', value: false })
-      .find('> legend > a > span.element-invisible')
-        .empty()
-        .append(Drupal.t('Hide'));
-    content.hide();
-    content.slideDown({
+      .find('> legend span.fieldset-legend-prefix').html(Drupal.t('Hide'));
+    $content.slideDown({
       duration: 'fast',
       easing: 'linear',
       complete: function () {
-        Drupal.collapseScrollIntoView(this.parentNode);
-        this.parentNode.animating = false;
-        $('div.action', fieldset).show();
+        Drupal.collapseScrollIntoView(fieldset);
+        fieldset.animating = false;
       },
       step: function () {
         // Scroll the fieldset into view.
-        Drupal.collapseScrollIntoView(this.parentNode);
+        Drupal.collapseScrollIntoView(fieldset);
       }
     });
   }
   else {
-    $('div.action', fieldset).hide();
-    $(fieldset).trigger({ type: 'collapsed', value: true });
-    var content = $('> div:not(.action)', fieldset).slideUp('fast', function () {
-      $(this.parentNode).addClass('collapsed')
-        .find('> legend > a > span.element-invisible')
-          .empty()
-          .append(Drupal.t('Show'));
-      this.parentNode.animating = false;
+    $fieldset.trigger({ type: 'collapsed', value: true });
+    $('> .fieldset-wrapper', fieldset).slideUp('fast', function () {
+      $fieldset
+        .addClass('collapsed')
+        .find('> legend span.fieldset-legend-prefix').html(Drupal.t('Show'));
+      fieldset.animating = false;
     });
   }
 };
@@ -63,45 +56,45 @@ Drupal.collapseScrollIntoView = function (node) {
 
 Drupal.behaviors.collapse = {
   attach: function (context, settings) {
-    $('fieldset.collapsible > legend', context).once('collapse', function () {
-      var fieldset = $(this.parentNode);
+    $('fieldset.collapsible', context).once('collapse', function () {
+      var $fieldset = $(this);
       // Expand if there are errors inside.
-      if ($('input.error, textarea.error, select.error', fieldset).size() > 0) {
-        fieldset.removeClass('collapsed');
+      if ($('.error', $fieldset).length) {
+        $fieldset.removeClass('collapsed');
       }
 
       var summary = $('<span class="summary"></span>');
-      fieldset.
+      $fieldset.
         bind('summaryUpdated', function () {
-          var text = $.trim(fieldset.getSummary());
+          var text = $.trim($fieldset.getSummary());
           summary.html(text ? ' (' + text + ')' : '');
         })
         .trigger('summaryUpdated');
 
-      // Turn the legend into a clickable link and wrap the contents of the
-      // fieldset in a div for easier animation.
-      var text = this.innerHTML;
-      $(this).empty()
-        .append($('<a href="#">' + text + '</a>')
-          .click(function () {
-            var fieldset = $(this).parents('fieldset:first')[0];
-            // Don't animate multiple times.
-            if (!fieldset.animating) {
-              fieldset.animating = true;
-              Drupal.toggleFieldset(fieldset);
-            }
-            return false;
-          })
-          .prepend($('<span class="element-invisible"></span>')
-            .append(fieldset.hasClass('collapsed') ? Drupal.t('Show') : Drupal.t('Hide'))
-            .after(' ')
-          )
-        )
-        .append(summary)
-        .after(
-          $('<div class="fieldset-wrapper"></div>')
-            .append(fieldset.children(':not(legend):not(.action)'))
-        );
+      // Turn the legend into a clickable link, but retain span.fieldset-legend
+      // for CSS positioning.
+      var $legend = $('> legend .fieldset-legend', this);
+
+      $('<span class="fieldset-legend-prefix element-invisible"></span>')
+        .append($fieldset.hasClass('collapsed') ? Drupal.t('Show') : Drupal.t('Hide'))
+        .prependTo($legend)
+        .after(' ');
+
+      // .wrapInner() does not retain bound events.
+      var $link = $('<a class="fieldset-title" href="#"></a>')
+        .prepend($legend.contents())
+        .appendTo($legend)
+        .click(function () {
+          var fieldset = $fieldset.get(0);
+          // Don't animate multiple times.
+          if (!fieldset.animating) {
+            fieldset.animating = true;
+            Drupal.toggleFieldset(fieldset);
+          }
+          return false;
+        });
+
+      $legend.append(summary);
     });
   }
 };

@@ -388,8 +388,7 @@ function node_admin_nodes() {
   $form['options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update options'),
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
+    '#attributes' => array('class' => array('container-inline')),
     '#access' => $admin_access,
   );
   $options = array();

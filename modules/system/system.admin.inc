@@ -2900,8 +2900,7 @@ function system_actions_manage_form($form, &$form_state, $options = array()) {
   $form['parent'] = array(
     '#type' => 'fieldset',
     '#title' => t('Create an advanced action'),
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
+    '#attributes' => array('class' => array('container-inline')),
   );
   $form['parent']['action'] = array(
     '#type' => 'select',

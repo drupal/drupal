@@ -168,8 +168,7 @@ function user_admin_account() {
   $form['options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update options'),
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
+    '#attributes' => array('class' => array('container-inline')),
   );
   $options = array();
   foreach (module_invoke_all('user_operations') as $operation => $array) {

@@ -603,88 +603,100 @@ table tr.selected td {
 }
 
 /**
- * Forms.
+ * Fieldsets.
+ *
+ * Fieldset legends are displayed like containers in Seven. However, several
+ * browsers do not support styling of LEGEND elements. To achieve the desired
+ * styling:
+ * - All fieldsets use 'position: relative'.
+ * - All legend labels are wrapped in a single span.fieldset-legend that uses
+ *   'position: absolute', which means that the LEGEND element itself is not
+ *   rendered by browsers.
+ * - Due to using 'position: absolute', collapsed fieldsets do not have a
+ *   height; the fieldset requires a 'padding-top' to make the absolute
+ *   positioned .fieldset-legend appear as though it would have a height.
+ * - Various browsers are positioning the legend differently if there is a
+ *   'padding-left'/'padding-right' applied on a fieldset and inherit the
+ *   positioning even to absolute positioned elements within; we therefore have
+ *   to apply all padding to the inner .fieldset-wrapper instead.
  */
 
-/* Fieldsets & Form items */
 fieldset {
   border: 1px solid #ccc;
-  padding: 30px 13px 13px 14px;
-  margin: 0 0 10px;
-}
-
-fieldset legend span,
-fieldset legend a {
-  position: absolute;
-  margin-top: 9px;
-}
-
-fieldset legend a span {
+  padding: 2.5em 0 0 0;
   position: relative;
-  margin-top: 0;
+  margin: 1em 0;
+}
+
+fieldset .fieldset-legend {
+  margin-top: 0.5em;
+  padding-left: 15px;
+  position: absolute;
+  text-transform: uppercase;
+}
+
+fieldset .fieldset-wrapper {
+  padding: 0 13px 13px 15px;
 }
 
 fieldset.collapsed {
-  background: transparent;
+  background-color: transparent;
 }
 
-html.js fieldset.collapsed legend,
-html.js fieldset.collapsed legend * {
-  display: block;
-}
 html.js fieldset.collapsed {
   border-width: 1px;
+  height: auto;
   margin-bottom: 10px;
-  padding: 13px;
 }
 
 fieldset fieldset {
-  background: #fff;
+  background-color: #fff;
 }
 
 fieldset fieldset fieldset {
-  background: #f8f8f8;
+  background-color: #f8f8f8;
 }
 
 html.js fieldset.collapsible .fieldset-wrapper {
   overflow: visible;
 }
 
-div.form-item {
+/**
+ * Form elements.
+ */
+
+.form-item {
   padding: 9px 0;
   margin: 0 0 10px;
 }
 
-.filter-wrapper div.form-item,
-div.teaser-checkbox div.form-item,
-div.form-item div.form-item,
-fieldset div.form-item {
+.filter-wrapper .form-item,
+div.teaser-checkbox .form-item,
+.form-item .form-item {
   padding: 5px 0;
   margin: 0;
   border: 0;
 }
-
+.form-type-checkbox {
+  padding: 0;
+}
 .text-format-wrapper .form-item {
   padding-bottom: 0;
 }
 
-div.form-item label {
+.form-item label {
   margin: 0;
   padding: 0;
 }
 
-fieldset legend {
-  text-transform: uppercase;
-}
-
-div.form-item label.option {
+.form-item label.option {
   text-transform: none;
 }
 
-div.form-item label.option {
+.form-item label.option {
   font-size: 12px;
 }
-div.form-item label.option input {
+.form-item label.option input {
   vertical-align: middle;
 }
 
@@ -700,7 +712,7 @@ div.form-item label.option input {
   padding-left: 6px;
 }
 
-.filter-wrapper div.form-item,
+.filter-wrapper .form-item,
 .filter-wrapper .filter-guidelines,
 .filter-wrapper .filter-help {
   font-size: 12px;
@@ -709,7 +721,7 @@ div.form-item label.option input {
 
 ul.tips,
 div.description,
-div.form-item div.description {
+.form-item div.description {
   margin: 5px 0;
   line-height: 15px;
   font-size: 12px;
@@ -854,10 +866,6 @@ div.admin-panel h3 {
   text-transform: uppercase;
   margin: 0;
   padding-bottom: 9px;
-}
-
-.container-inline fieldset {
-  display: block;
 }
 
 /* admin/appearance */

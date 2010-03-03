@@ -39,8 +39,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
   $form['options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update options'),
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
+    '#attributes' => array('class' => array('container-inline')),
   );
   $options = array();
   foreach (comment_operations($arg == 'approval' ? 'publish' : 'unpublish') as $key => $value) {

@@ -892,17 +892,8 @@ fieldset {
   background-position: 0 0;
 }
 
-*:first-child+html fieldset > .description, *:first-child+html fieldset .fieldset-wrapper .description {
+*:first-child+html fieldset .fieldset-wrapper .fieldset-description {
   padding-top: 1em;
-}
-
-fieldset legend {
-  /* Fix disappearing legend in FFox */
-  display: block;
-}
-
-*:first-child+html fieldset legend, *:first-child+html fieldset.collapsed legend {
-  display: inline;
 }
 
 html.js fieldset.collapsed {
@@ -911,17 +902,16 @@ html.js fieldset.collapsed {
   padding-bottom: .6em;
 }
 
-html.js fieldset.collapsible legend a {
+html.js fieldset.collapsible .fieldset-legend {
   padding-left: 2em; /* LTR */
   background: url(images/menu-expanded.gif) no-repeat 0% 50%; /* LTR */
+}
+html.js fieldset.collapsed .fieldset-legend {
+  background: url(images/menu-collapsed.gif) no-repeat 0% 50%; /* LTR */
 }
 
 html.js fieldset.collapsible legend span.summary {
   color: #898989;
-}
-
-html.js fieldset.collapsed legend a {
-  background: url(images/menu-collapsed.gif) no-repeat 0% 50%; /* LTR */
 }
 
 /**

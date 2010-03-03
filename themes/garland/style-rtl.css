@@ -227,13 +227,13 @@ ul.links li, ul.inline li {
   margin-right: 25px;
 }
 
-html.js fieldset.collapsible legend a {
+html.js fieldset.collapsible .fieldset-legend {
   padding-left: 0;
   padding-right: 2em;
   background: url("images/menu-expanded.gif") no-repeat 100% 50%;
 }
 
-html.js fieldset.collapsed legend a {
+html.js fieldset.collapsed .fieldset-legend {
   background: url("images/menu-collapsed-rtl.gif") no-repeat 100% 50%;
 }
 

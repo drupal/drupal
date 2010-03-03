@@ -143,7 +143,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     variable_set('user_default_timezone', DRUPAL_USER_TIMEZONE_SELECT);
     $this->drupalLogout();
     $this->drupalGet('user/register');
-    $this->assertRaw('<fieldset id="edit-account"><legend>Account information</legend>', t('Account settings fieldset was not hidden.'));
+    $this->assertText(t('Account information'), t('Account settings fieldset was not hidden.'));
   }
 }
 

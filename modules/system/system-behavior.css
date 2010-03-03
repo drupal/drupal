@@ -46,35 +46,28 @@ html.js fieldset.collapsed {
   margin-bottom: 0;
   height: 1em;
 }
-html.js fieldset.collapsed * {
+html.js fieldset.collapsed .fieldset-wrapper {
   display: none;
 }
-html.js fieldset.collapsed legend, html.js fieldset.collapsed legend a span.element-invisible {
+html.js fieldset.collapsible .fieldset-legend {
   display: block;
-  overflow: hidden;
-}
-html.js fieldset.collapsible legend a {
-  display: inline;
   padding-left: 15px; /* LTR */
   background: url(../../misc/menu-expanded.png) 5px 75% no-repeat; /* LTR */
 }
+html.js fieldset.collapsed .fieldset-legend {
+  background-image: url(../../misc/menu-collapsed.png); /* LTR */
+  background-position: 5px 50%; /* LTR */
+}
 html.js fieldset.collapsible legend span.summary {
-  display: inline;
   font-size: 0.9em;
   color: #999;
   margin-left: 0.5em;
 }
-html.js fieldset.collapsed legend a {
-  background-image: url(../../misc/menu-collapsed.png); /* LTR */
-  background-position: 5px 50%; /* LTR */
-}
-/* Note: IE-only fix due to '* html' (breaks Konqueror otherwise). */
-* html.js fieldset.collapsed legend,
-* html.js fieldset.collapsed legend *,
+/* IE6: Fix due to '* html' (breaks Konqueror otherwise). */
 * html.js fieldset.collapsed table * {
   display: inline;
 }
-/* For Safari 2 to prevent collapsible fieldsets containing tables from dissapearing due to tableheader.js. */
+/* Safari 2: Tables in collapsible fieldsets disappear due to tableheader.js. */
 html.js fieldset.collapsible {
   position: relative;
 }
@@ -267,8 +260,13 @@ div.password-confirm {
 /**
  * Inline items (need to override above)
  */
-.container-inline div, .container-inline label {
+.container-inline div,
+.container-inline label {
   display: inline;
+}
+/* Fieldset contents always need to be rendered as block. */
+.container-inline .fieldset-wrapper {
+  display: block;
 }
 
 .nowrap {

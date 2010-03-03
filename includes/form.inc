@@ -1947,8 +1947,10 @@ function theme_fieldset($variables) {
 
   $output = '<fieldset' . drupal_attributes($element['#attributes']) . '>';
   if (!empty($element['#title'])) {
-    $output .= '<legend>' . $element['#title'] . '</legend>';
+    // Always wrap fieldset legends in a SPAN for CSS positioning.
+    $output .= '<legend><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
   }
+  $output .= '<div class="fieldset-wrapper">';
   if (!empty($element['#description'])) {
     $output .= '<div class="fieldset-description">' . $element['#description'] . '</div>';
   }
@@ -1956,6 +1958,7 @@ function theme_fieldset($variables) {
   if (isset($element['#value'])) {
     $output .= $element['#value'];
   }
+  $output .= '</div>';
   $output .= "</fieldset>\n";
   return $output;
 }

@@ -901,19 +901,18 @@ function search_form($form, &$form_state, $action = '', $keys = '', $type = NULL
   $form['#action'] = $action;
   $form['#attributes']['class'][] = 'search-form';
   $form['module'] = array('#type' => 'value', '#value' => $type);
-  $form['basic'] = array('#type' => 'item', '#title' => $prompt, '#id' => 'edit-keys');
-  $form['basic']['inline'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
-  $form['basic']['inline']['keys'] = array(
+  $form['basic'] = array('#type' => 'container', '#attributes' => array('class' => array('container-inline')));
+  $form['basic']['keys'] = array(
     '#type' => 'textfield',
-    '#title' => '',
+    '#title' => $prompt,
     '#default_value' => $keys,
     '#size' => $prompt ? 40 : 20,
     '#maxlength' => 255,
   );
   // processed_keys is used to coordinate keyword passing between other forms
   // that hook into the basic search form.
-  $form['basic']['inline']['processed_keys'] = array('#type' => 'value', '#value' => array());
-  $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+  $form['basic']['processed_keys'] = array('#type' => 'value', '#value' => array());
+  $form['basic']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
   return $form;
 }

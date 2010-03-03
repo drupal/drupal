@@ -214,7 +214,6 @@ body {
  * to sneak the clearfix class into Drupal's markup.
  * From http://www.positioniseverything.net/easyclearing.html
  */
-div.form-item:after,
 ul.links:after,
 div.admin-panel .body:after,
 .clearfix:after {
@@ -232,7 +231,7 @@ ul.inline:after {
   clear: none;
 }
 
-div.form-item,
+.form-item,
 ul.links,
 div.admin-panel .body,
 .clearfix {
@@ -240,14 +239,14 @@ div.admin-panel .body,
 }
 
 /* Hides from IE-mac \*/
-* html div.form-item,
+* html .form-item,
 * html ul.links,
 * html div.admin-panel .body,
 * html .clearfix {
   height: 1%;
 }
 
-div.form-item,
+.form-item,
 ul.links,
 div.admin-panel .body,
 .clearfix {
