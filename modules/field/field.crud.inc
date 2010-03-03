@@ -433,7 +433,8 @@ function field_update_field($field) {
 
   // Tell the storage engine to update the field. Do this before
   // saving the new definition since it still might fail.
-  module_invoke(variable_get('field_storage_default', 'field_sql_storage'), 'field_storage_update_field', $field, $prior_field, $has_data);
+  $storage_type = field_info_storage_types($field['storage']['type']);
+  module_invoke($storage_type['module'], 'field_storage_update_field', $field, $prior_field, $has_data);
 
   // Save the new field definition. @todo: refactor with
   // field_create_field.
