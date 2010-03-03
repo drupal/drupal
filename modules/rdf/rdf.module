@@ -71,6 +71,28 @@ function rdf_help($path, $arg) {
 define('RDF_DEFAULT_BUNDLE', '');
 
 /**
+ * Implements hook_rdf_namespaces().
+ */
+function rdf_rdf_namespaces() {
+  return array(
+    'admin'    => 'http://webns.net/mvcb/',
+    'content'  => 'http://purl.org/rss/1.0/modules/content/',
+    'dc'       => 'http://purl.org/dc/terms/',
+    'foaf'     => 'http://xmlns.com/foaf/0.1/',
+    'owl'      => 'http://www.w3.org/2002/07/owl#',
+    'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#',
+    'rss'      => 'http://purl.org/rss/1.0/',
+    'tags'     => 'http://www.holygoat.co.uk/owl/redwood/0.1/tags/',
+    'sioc'     => 'http://rdfs.org/sioc/ns#',
+    'sioct'    => 'http://rdfs.org/sioc/types#',
+    'ctag'     => 'http://commontag.org/ns#',
+    'skos'     => 'http://www.w3.org/2004/02/skos/core#',
+    'xsd'      => 'http://www.w3.org/2001/XMLSchema#',
+  );
+}
+
+/**
  * Returns the mapping for attributes of a given type/bundle pair.
  *
  * @param $type
