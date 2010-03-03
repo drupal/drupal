@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.432 2010/02/12 15:11:29 dries Exp $
+// $Id: form.inc,v 1.433 2010/03/03 08:43:07 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -328,9 +328,8 @@ function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
   drupal_prepare_form($form_id, $form, $form_state);
 
   if (empty($form_state['no_cache'])) {
-    // We cache the form structure so it can be retrieved later for validation.
-    // If $form_state['storage'] is populated, we also cache it so that it can
-    // be used to resume complex multi-step processes.
+    // We cache the form structure and the form state so it can be retrieved
+    // later for validation.
     form_set_cache($form_build_id, $form, $form_state);
   }
 
@@ -396,8 +395,6 @@ function form_state_keys_no_cache() {
   return array(
     // Public properties defined by form constructors and form handlers.
     'always_process',
-    'cache',
-    'no_cache',
     'must_validate',
     'rebuild',
     'redirect',
