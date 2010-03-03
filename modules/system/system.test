@@ -122,6 +122,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     $this->assertText(t('hook_modules_enabled fired for aggregator'), t('hook_modules_enabled fired.'));
     $this->assertModules(array('aggregator'), TRUE);
     $this->assertTableCount('aggregator', TRUE);
+    $this->assertLogMessage('system', "%module module installed.", array('%module' => 'aggregator'), WATCHDOG_INFO);
     $this->assertLogMessage('system', "%module module enabled.", array('%module' => 'aggregator'), WATCHDOG_INFO);
 
     // Disable aggregator, check tables, uninstall aggregator, check tables.

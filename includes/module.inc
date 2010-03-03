@@ -379,6 +379,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
         // Record the fact that it was installed.
         $modules_installed[] = $module;
+        watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
       }
 
       // Enable the module.
