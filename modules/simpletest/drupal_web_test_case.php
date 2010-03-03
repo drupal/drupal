@@ -698,6 +698,11 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected $generatedTestFiles = FALSE;
 
   /**
+   * The number of redirects followed during the handling of a request.
+   */
+  protected $redirect_count;
+
+  /**
    * Constructor for DrupalWebTestCase.
    */
   function __construct($test_id = NULL) {
@@ -1297,8 +1302,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       $curl_options = $this->additionalCurlOptions + array(
         CURLOPT_COOKIEJAR => $this->cookieFile,
         CURLOPT_URL => $base_url,
-        CURLOPT_FOLLOWLOCATION => TRUE,
-        CURLOPT_MAXREDIRS => 5,
+        CURLOPT_FOLLOWLOCATION => FALSE,
         CURLOPT_RETURNTRANSFER => TRUE,
         CURLOPT_SSL_VERIFYPEER => FALSE, // Required to make the tests run on https.
         CURLOPT_SSL_VERIFYHOST => FALSE, // Required to make the tests run on https.
@@ -1325,12 +1329,27 @@ class DrupalWebTestCase extends DrupalTestCase {
    *
    * @param $curl_options
    *   Custom cURL options.
+   * @param $redirect
+   *   FALSE if this is an initial request, TRUE if this request is the result of
+   *   a redirect.
    * @return
    *   Content returned from the exec.
    */
-  protected function curlExec($curl_options) {
+  protected function curlExec($curl_options, $redirect = FALSE) {
     $this->curlInitialize();
+
+    // cURL incorrectly handles URLs with a fragment by including the
+    // fragment in the request to the server, causing some web servers
+    // to reject the request citing "400 - Bad Request". To prevent
+    // this, we strip the fragment from the request.
+    // TODO: Remove this for Drupal 8, since fixed in curl 7.20.0.
+    if (!empty($curl_options[CURLOPT_URL]) && strpos($curl_options[CURLOPT_URL], '#')) {
+      $original_url = $curl_options[CURLOPT_URL];
+      $curl_options[CURLOPT_URL] = strtok($curl_options[CURLOPT_URL], '#');
+    }
+
     $url = empty($curl_options[CURLOPT_URL]) ? curl_getinfo($this->curlHandle, CURLINFO_EFFECTIVE_URL) : $curl_options[CURLOPT_URL];
+
     if (!empty($curl_options[CURLOPT_POST])) {
       // This is a fix for the Curl library to prevent Expect: 100-continue
       // headers in POST requests, that may cause unexpected HTTP response
@@ -1341,15 +1360,36 @@ class DrupalWebTestCase extends DrupalTestCase {
     }
     curl_setopt_array($this->curlHandle, $this->additionalCurlOptions + $curl_options);
 
-    // Reset headers and the session ID.
-    $this->session_id = NULL;
-    $this->headers = array();
+    if (!$redirect) {
+      // Reset headers, the session ID and the redirect counter.
+      $this->session_id = NULL;
+      $this->headers = array();
+      $this->redirect_count = 0;
+    }
 
-    $this->drupalSetContent(curl_exec($this->curlHandle), curl_getinfo($this->curlHandle, CURLINFO_EFFECTIVE_URL));
+    $content = curl_exec($this->curlHandle);
+    $status = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
+
+    // cURL incorrectly handles URLs with fragments, so instead of
+    // letting cURL handle redirects we take of them ourselves to
+    // to prevent fragments being sent to the web server as part
+    // of the request.
+    // TODO: Remove this for Drupal 8, since fixed in curl 7.20.0.
+    if (in_array($status, array(300, 301, 302, 303, 305, 307)) && $this->redirect_count < variable_get('simpletest_maximum_redirects', 5)) {
+      if ($this->drupalGetHeader('location')) {
+        $this->redirect_count++;
+        $curl_options = array();
+        $curl_options[CURLOPT_URL] = $this->drupalGetHeader('location');
+        $curl_options[CURLOPT_HTTPGET] = TRUE;
+        return $this->curlExec($curl_options, TRUE);
+      }
+    }
+
+    $this->drupalSetContent($content, isset($original_url) ? $original_url : curl_getinfo($this->curlHandle, CURLINFO_EFFECTIVE_URL));
     $message_vars = array(
       '!method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'),
-      '@url' => $url,
-      '@status' => curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE),
+      '@url' => isset($original_url) ? $original_url : $url,
+      '@status' => $status,
       '!length' => format_size(strlen($this->content))
     );
     $message = t('!method @url returned @status (!length).', $message_vars);
@@ -1956,10 +1996,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->assertTrue(isset($urls[$index]), t('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), t('Browser'));
 
     if (isset($url_target)) {
-      // CURL breaks in drupalGet() if the URL contains a fragment.
-      // @todo remove when http://drupal.org/node/671520 is fixed.
-      // Strips off any fragment from the path.
-      $url_target = array_shift(explode('#', $url_target));
       return $this->drupalGet($url_target);
     }
     return FALSE;

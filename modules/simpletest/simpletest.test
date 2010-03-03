@@ -54,7 +54,8 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       $this->drupalGet($base_url . '/install.php', array('external' => TRUE));
       $this->assertResponse(403, 'Cannot access install.php with a "simpletest" user-agent header.');
 
-      $this->drupalLogin($this->drupalCreateUser());
+      $user = $this->drupalCreateUser();
+      $this->drupalLogin($user);
       $headers = $this->drupalGetHeaders(TRUE);
       $this->assertEqual(count($headers), 2, t('There was one intermediate request.'));
       $this->assertTrue(strpos($headers[0][':status'], '302') !== FALSE, t('Intermediate response code was 302.'));
@@ -62,6 +63,17 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       $this->assertEqual($this->getUrl(), $headers[0]['location'], t('HTTP redirect was followed'));
       $this->assertFalse($this->drupalGetHeader('Location'), t('Headers from intermediate request were reset.'));
       $this->assertResponse(200, t('Response code from intermediate request was reset.'));
+
+      // Test the maximum redirection option.
+      $this->drupalLogout();
+      $edit = array(
+        'name' => $user->name,
+        'pass' => $user->pass_raw
+      );
+      variable_set('simpletest_maximum_redirects', 1);
+      $this->drupalPost('user?destination=user/logout', $edit, t('Log in'));
+      $headers = $this->drupalGetHeaders(TRUE);
+      $this->assertEqual(count($headers), 2, t('Simpletest stopped following redirects after the first one.'));
     }
   }
 
