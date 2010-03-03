@@ -5672,26 +5672,30 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
 }
 
 /**
- * Save a record to the database based upon the schema.
+ * Saves a record to the database based upon the schema.
  *
  * Default values are filled in for missing items, and 'serial' (auto increment)
  * types are filled in with IDs.
  *
  * @param $table
- *   The name of the table; this must exist in schema API.
+ *   The name of the table; this must be defined by a hook_schema()
+ *   implementation.
  * @param $object
- *   The object to write. This is a reference, as defaults according to the
- *   schema may be filled in on the object, as well as ID on the serial type(s).
- *   Both array and object types may be passed.
+ *   An object or array representing the record to write, passed in by
+ *   reference. The function will fill in defaults from the schema and add an
+ *   ID value to serial fields.
  * @param $primary_keys
- *   If this is an update, specify the primary keys' field names. It is the
- *   caller's responsibility to know if a record for this object already exists
- *   in the database. If there is only 1 key, you may pass a simple string.
+ *   If this is an update, specify the primary keys' field names. If this is a
+ *   new record, you must not provide this value. If there is only 1 field in
+ *   the key, you may pass in a string; if there are multiple fields in the key,
+ *   pass in an array.
+ *
  * @return
  *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
  *   SAVED_UPDATED is returned depending on the operation performed. The $object
- *   parameter contains values for any serial fields defined by the $table. For
- *   example, $object->nid will be populated after inserting a new a new node.
+ *   parameter will contain values for any serial fields defined by the $table.
+ *   For example, $object->nid or $object['nid'] will be populated after
+ *   inserting a new a new node.
  */
 function drupal_write_record($table, &$object, $primary_keys = array()) {
   // Standardize $primary_keys to an array.
@@ -5778,6 +5782,7 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
 
   // Build the SQL.
   if (empty($primary_keys)) {
+    // We are doing an insert.
     $options = array('return' => Database::RETURN_INSERT_ID);
     if (isset($serial) && isset($fields[$serial])) {
       // If the serial column has been explicitly set with an ID, then we don't
@@ -5803,7 +5808,7 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
   }
 
   // Execute the SQL.
-  if ($last_insert_id = $query->execute()) {
+  if ($query_return = $query->execute()) {
     if (isset($serial)) {
       // If the database was not told to return the last insert id, it will be
       // because we already know it.
@@ -5811,7 +5816,7 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
         $object->$serial = $fields[$serial];
       }
       else {
-        $object->$serial = $last_insert_id;
+        $object->$serial = $query_return;
       }
     }
   }
@@ -5819,7 +5824,7 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
   // query failed. Note that we explicitly check for FALSE, because
   // a valid update query which doesn't change any values will return
   // zero (0) affected rows.
-  elseif ($last_insert_id === FALSE && count($primary_keys) == 1) {
+  elseif ($query_return === FALSE && count($primary_keys) == 1) {
     $return = FALSE;
   }
 
