@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.113 2010/02/26 21:19:09 dries Exp $
+// $Id: system.test,v 1.114 2010/03/03 07:38:08 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -122,6 +122,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     $this->assertText(t('hook_modules_enabled fired for aggregator'), t('hook_modules_enabled fired.'));
     $this->assertModules(array('aggregator'), TRUE);
     $this->assertTableCount('aggregator', TRUE);
+    $this->assertLogMessage('system', "%module module installed.", array('%module' => 'aggregator'), WATCHDOG_INFO);
     $this->assertLogMessage('system', "%module module enabled.", array('%module' => 'aggregator'), WATCHDOG_INFO);
 
     // Disable aggregator, check tables, uninstall aggregator, check tables.

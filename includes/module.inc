@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.183 2010/03/02 09:07:09 dries Exp $
+// $Id: module.inc,v 1.184 2010/03/03 07:38:08 dries Exp $
 
 /**
  * @file
@@ -379,6 +379,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
         // Record the fact that it was installed.
         $modules_installed[] = $module;
+        watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
       }
 
       // Enable the module.
