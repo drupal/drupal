@@ -1,4 +1,4 @@
-/* $Id: system-behavior-rtl.css,v 1.1 2010/01/07 07:41:46 webchick Exp $ */
+/* $Id: system-behavior-rtl.css,v 1.2 2010/03/03 19:46:26 dries Exp $ */
 
 /**
  * Autocomplete
@@ -14,12 +14,12 @@ html.js input.throbbing {
 /**
  * Collapsing fieldsets
  */
-html.js fieldset.collapsible legend a {
+html.js fieldset.collapsible .fieldset-legend {
   padding-left: 0;
   padding-right: 15px;
   background-position: 98% 75%;
 }
-html.js fieldset.collapsed legend a {
+html.js fieldset.collapsed .fieldset-legend {
   background-image: url(../../misc/menu-collapsed-rtl.png);
   background-position: 98% 50%;
 }

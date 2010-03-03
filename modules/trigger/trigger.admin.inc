@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.21 2009/11/06 03:59:06 webchick Exp $
+// $Id: trigger.admin.inc,v 1.22 2010/03/03 19:46:26 dries Exp $
 
 /**
  * @file
@@ -160,8 +160,8 @@ function trigger_assign_form($form, $form_state, $module, $hook, $label) {
   }
 
   $form[$hook]['parent'] = array(
-    '#prefix' => "<div class='container-inline'>",
-    '#suffix' => '</div>',
+    '#type' => 'container',
+    '#attributes' => array('class' => array('container-inline')),
   );
   // List possible actions that may be assigned.
   if (count($options) != 0) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.43 2010/02/22 15:38:52 webchick Exp $
+// $Id: comment.admin.inc,v 1.44 2010/03/03 19:46:25 dries Exp $
 
 /**
  * @file
@@ -39,8 +39,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
   $form['options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update options'),
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
+    '#attributes' => array('class' => array('container-inline')),
   );
   $options = array();
   foreach (comment_operations($arg == 'approval' ? 'publish' : 'unpublish') as $key => $value) {

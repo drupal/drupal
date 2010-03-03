@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.90 2010/02/15 16:36:48 webchick Exp $
+// $Id: node.admin.inc,v 1.91 2010/03/03 19:46:25 dries Exp $
 
 /**
  * @file
@@ -388,8 +388,7 @@ function node_admin_nodes() {
   $form['options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update options'),
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
+    '#attributes' => array('class' => array('container-inline')),
     '#access' => $admin_access,
   );
   $options = array();

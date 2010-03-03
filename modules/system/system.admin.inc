@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.259 2010/02/15 15:07:57 dries Exp $
+// $Id: system.admin.inc,v 1.260 2010/03/03 19:46:26 dries Exp $
 
 /**
  * @file
@@ -2900,8 +2900,7 @@ function system_actions_manage_form($form, &$form_state, $options = array()) {
   $form['parent'] = array(
     '#type' => 'fieldset',
     '#title' => t('Create an advanced action'),
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
+    '#attributes' => array('class' => array('container-inline')),
   );
   $form['parent']['action'] = array(
     '#type' => 'select',

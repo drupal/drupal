@@ -1,9 +1,10 @@
-/* $Id: ie6.css,v 1.3 2010/01/30 07:59:26 dries Exp $ */
+/* $Id: ie6.css,v 1.4 2010/03/03 19:46:26 dries Exp $ */
 
 ul.menu li,
 ul.menu li a,
 ul.links li,
 ul.links li a,
+.action-links,
 #page {
   height: 1%;
 }

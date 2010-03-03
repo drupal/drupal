@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.15 2010/01/13 05:40:03 webchick Exp $
+// $Id: search.pages.inc,v 1.16 2010/03/03 19:46:25 dries Exp $
 
 /**
  * @file
@@ -122,7 +122,7 @@ function template_preprocess_search_result(&$variables) {
  * value for the basic search form.
  */
 function search_form_validate($form, &$form_state) {
-  form_set_value($form['basic']['inline']['processed_keys'], trim($form_state['values']['keys']), $form_state);
+  form_set_value($form['basic']['processed_keys'], trim($form_state['values']['keys']), $form_state);
 }
 
 /**

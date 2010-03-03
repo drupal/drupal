@@ -1,10 +1,12 @@
 <?php
-// $Id: template.php,v 1.13 2010/02/25 20:57:39 dries Exp $
+// $Id: template.php,v 1.14 2010/03/03 19:46:26 dries Exp $
 
 /**
  * Override or insert variables into the html template.
  */
 function seven_preprocess_html(&$vars) {
+  // Add conditional CSS for IE8 and below.
+  drupal_add_css(path_to_theme() . '/ie.css', array('weight' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE), 'preprocess' => FALSE));
   // Add conditional CSS for IE6.
   drupal_add_css(path_to_theme() . '/ie6.css', array('weight' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 7', '!IE' => FALSE), 'preprocess' => FALSE));
 }
@@ -73,29 +75,6 @@ function seven_tablesort_indicator($variables) {
   else {
     return theme('image', array('path' => $theme_path . '/images/arrow-desc.png', 'alt' => t('sort descending'), 'title' => t('sort descending')));
   }
-}
-
-/**
- * Override of theme_fieldset().
- *
- * Add span to legend tag, so we can style it to be inside the fieldset.
- */
-function seven_fieldset($variables) {
-  $element = $variables['element'];
-
-  $output = '<fieldset' . drupal_attributes($element['#attributes']) . '>';
-  if (!empty($element['#title'])) {
-    $output .= '<legend><span>' . $element['#title'] . '</span></legend>';
-  }
-  if (!empty($element['#description'])) {
-    $output .= '<div class="fieldset-description">' . $element['#description'] . '</div>';
-  }
-  $output .= $element['#children'];
-  if (isset($element['#value'])) {
-    $output .= $element['#value'];
-  }
-  $output .= "</fieldset>\n";
-  return $output;
 }
 
 /**
