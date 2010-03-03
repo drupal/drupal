@@ -35,7 +35,8 @@ function database_test_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0,
+      ),
       'job' => array(
         'description' => "The person's job",
         'type' => 'varchar',
@@ -199,6 +200,33 @@ function database_test_schema() {
     ),
     'indexes' => array(
       'ages' => array('age'),
+    ),
+  );
+
+  $schema['test_serialized'] = array(
+    'description' => 'Basic test table for NULL value handling.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => "A person's name.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'info' => array(
+        'description' => "The person's data in serialized form.",
+        'type' => 'text',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'name' => array('name')
     ),
   );
 

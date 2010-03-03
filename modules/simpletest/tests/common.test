@@ -1561,6 +1561,26 @@ class DrupalDataApiTest extends DrupalWebTestCase {
     $this->assertIdentical($result->name, 'Mary', t('Name field set.'));
     $this->assertIdentical($result->age, NULL, t('Age field set.'));
 
+    // Insert a record - the "data" column should be serialized.
+    $person = new stdClass();
+    $person->name = 'Dave';
+    $update_result = drupal_write_record('test_serialized', $person);
+    $result = db_query("SELECT * FROM {test_serialized} WHERE id = :id", array(':id' => $person->id))->fetchObject();
+    $this->assertIdentical($result->name, 'Dave', t('Name field set.'));
+    $this->assertIdentical($result->info, NULL, t('Info field set.'));
+
+    $person->info = array();
+    $update_result = drupal_write_record('test_serialized', $person, array('id'));
+    $result = db_query("SELECT * FROM {test_serialized} WHERE id = :id", array(':id' => $person->id))->fetchObject();
+    $this->assertIdentical(unserialize($result->info), array(), t('Info field updated.'));
+
+    // Update the serialized record.
+    $data = array('foo' => 'bar', 1 => 2, 'empty' => '', 'null' => NULL);
+    $person->info = $data;
+    $update_result = drupal_write_record('test_serialized', $person, array('id'));
+    $result = db_query("SELECT * FROM {test_serialized} WHERE id = :id", array(':id' => $person->id))->fetchObject();
+    $this->assertIdentical(unserialize($result->info), $data, t('Info field updated.'));
+
     // Run an update query where no field values are changed. The database
     // layer should return zero for number of affected rows, but
     // db_write_record() should still return SAVED_UPDATED.

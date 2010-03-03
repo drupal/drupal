@@ -5741,7 +5741,7 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
     if (empty($info['serialize'])) {
       $fields[$field] = $object->$field;
     }
-    elseif (!empty($object->$field)) {
+    elseif (isset($object->$field)) {
       $fields[$field] = serialize($object->$field);
     }
     else {
