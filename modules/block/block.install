@@ -187,8 +187,8 @@ function block_schema() {
         'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
-        'description' => "Block body's {filter_format}.format; for example, 1 = Filtered HTML.",
-      )
+        'description' => 'The {filter_format}.format of the block body.',
+      ),
     ),
     'unique keys' => array(
       'info' => array('info'),

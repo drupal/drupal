@@ -7,29 +7,6 @@
  * Perform actions to set up the site for this profile.
  */
 function minimal_install() {
-  // Add text formats.
-  $plain_text_format = array(
-    'name' => 'Plain text',
-    'weight' => 10,
-    'filters' => array(
-      // Escape all HTML.
-      'filter_html_escape' => array(
-        'weight' => 0,
-        'status' => 1,
-      ),
-      // Line break filter.
-      'filter_autop' => array(
-        'weight' => 1,
-        'status' => 1,
-      ),
-    ),
-  );
-  $plain_text_format = (object) $plain_text_format;
-  filter_format_save($plain_text_format);
-
-  // Set the fallback format to plain text.
-  variable_set('filter_fallback_format', $plain_text_format->format);
-
   // Enable some standard blocks.
   $values = array(
     array(

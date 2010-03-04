@@ -107,6 +107,42 @@ function filter_schema() {
 }
 
 /**
+ * Implements hook_install().
+ */
+function filter_install() {
+  // All sites require at least one text format (the fallback format) that all
+  // users have access to, so add it here. We initialize it as a simple, safe
+  // plain text format with very basic formatting, but it can be modified by
+  // installation profiles to have other properties.
+  $plain_text_format = array(
+    'name' => 'Plain text',
+    'weight' => 10,
+    'filters' => array(
+      // Escape all HTML.
+      'filter_html_escape' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 2,
+        'status' => 1,
+      ),
+    ),
+  );
+  $plain_text_format = (object) $plain_text_format;
+  filter_format_save($plain_text_format);
+
+  // Set the fallback format to plain text.
+  variable_set('filter_fallback_format', $plain_text_format->format);
+}
+
+/**
  * Implements hook_update_dependencies().
  */
 function filter_update_dependencies() {
@@ -317,18 +353,27 @@ function filter_update_7005() {
   $start_name = 'Plain text';
   $format_name = $start_name;
   while ($format = db_query('SELECT format FROM {filter_format} WHERE name = :name', array(':name' => $format_name))->fetchField()) {
-    $id = empty($id) ? 1 : $id + 1;
+    $id = empty($id) ? 2 : $id + 1;
     $format_name = $start_name . ' ' . $id;
   }
   $fallback_format = new stdClass();
   $fallback_format->name = $format_name;
-  $fallback_format->cache = 1;
   $fallback_format->weight = 1;
   // This format should output plain text, so we escape all HTML and apply the
-  // line break filter only.
+  // line break and URL filters only.
   $fallback_format->filters = array(
-    'filter_html_escape' => array('status' => 1),
-    'filter_autop' => array('status' => 1),
+    'filter_html_escape' => array(
+      'weight' => 0,
+      'status' => 1,
+    ),
+    'filter_url' => array(
+      'weight' => 1,
+      'status' => 1,
+    ),
+    'filter_autop' => array(
+      'weight' => 2,
+      'status' => 1,
+    ),
   );
   filter_format_save($fallback_format);
   variable_set('filter_fallback_format', $fallback_format->format);

@@ -153,14 +153,17 @@ function filter_format_load($format_id) {
  *   - 'name': The title of the text format.
  *   - 'format': (optional) The internal ID of the text format. If omitted, a
  *     new text format is created.
- *   - 'roles': (optional) An associative array containing the roles allowed to
- *     access/use the text format.
+ *   - 'weight': (optional) The weight of the text format, which controls its
+ *     placement in text format lists. If omitted, the weight is set to 0.
  *   - 'filters': (optional) An associative, multi-dimensional array of filters
- *     assigned to the text format, using the properties:
- *     - 'weight': The weight of the filter in the text format.
- *     - 'status': A boolean indicating whether the filter is enabled in the
- *       text format.
- *     - 'module': The name of the module implementing the filter.
+ *     assigned to the text format, keyed by the name of each filter and using
+ *     the properties:
+ *     - 'weight': (optional) The weight of the filter in the text format. If
+ *       omitted, either the currently stored weight is retained (if there is
+ *       one), or the filter is assigned a weight of 10, which will usually
+ *       put it at the bottom of the list.
+ *     - 'status': (optional) A boolean indicating whether the filter is
+ *       enabled in the text format. If omitted, the filter will be disabled.
  *     - 'settings': (optional) An array of configured settings for the filter.
  *       See hook_filter_info() for details.
  */
@@ -316,6 +319,24 @@ function filter_cron() {
 }
 
 /**
+ * Implements hook_modules_enabled().
+ */
+function filter_modules_enabled($modules) {
+  // Reset the static cache of module-provided filters, in case any of the
+  // newly enabled modules defines a new filter or alters existing ones.
+  drupal_static_reset('filter_get_filters');
+}
+
+/**
+ * Implements hook_modules_disabled().
+ */
+function filter_modules_disabled($modules) {
+  // Reset the static cache of module-provided filters, in case any of the
+  // newly disabled modules defined or altered any filters.
+  drupal_static_reset('filter_get_filters');
+}
+
+/**
  * Retrieve a list of text formats, ordered by weight.
  *
  * @param $account
@@ -439,6 +460,31 @@ function filter_default_format($account = NULL) {
 
 /**
  * Returns the ID of the fallback text format that all users have access to.
+ *
+ * The fallback text format is a regular text format in every respect, except
+ * it does not participate in the filter permission system and cannot be
+ * deleted. It needs to exist because any user who has permission to create
+ * formatted content must always have at least one text format they can use.
+ *
+ * Because the fallback format is available to all users, it should always be
+ * configured securely. For example, when the Filter module is installed, this
+ * format is initialized to output plain text. Installation profiles and site
+ * administrators have the freedom to configure it further.
+ *
+ * When a text format is deleted, all content that previously had that format
+ * assigned should be switched to the fallback format. To facilitate this,
+ * Drupal passes in the fallback format object as one of the parameters of
+ * hook_filter_format_delete().
+ *
+ * Note that the fallback format is completely distinct from the default
+ * format, which differs per user and is simply the first format which that
+ * user has access to. The default and fallback formats are only guaranteed to
+ * be the same for users who do not have access to any other format; otherwise,
+ * the fallback format's weight determines its placement with respect to the
+ * user's other formats.
+ *
+ * @see hook_filter_format_delete()
+ * @see filter_default_format()
  */
 function filter_fallback_format() {
   // This variable is automatically set in the database for all installations
