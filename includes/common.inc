@@ -302,11 +302,22 @@ function drupal_get_destination() {
  * @see drupal_get_destination()
  */
 function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response_code = 302) {
+
+  $destination = FALSE;
   if (isset($_REQUEST['destination'])) {
-    extract(parse_url(urldecode($_REQUEST['destination'])));
+    $destination = $_REQUEST['destination'];
   }
   else if (isset($_REQUEST['edit']['destination'])) {
-    extract(parse_url(urldecode($_REQUEST['edit']['destination'])));
+    $destination = $_REQUEST['edit']['destination'];
+  }
+
+  if ($destination) {
+    // Do not redirect to an absolute URL originating from user input.
+    $colonpos = strpos($destination, ':');
+    $absolute = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($destination, 0, $colonpos)));
+    if (!$absolute) {
+      extract(parse_url(urldecode($destination)));
+    }
   }
 
   $url = url($path, $query, $fragment, TRUE);

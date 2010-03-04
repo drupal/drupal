@@ -137,15 +137,17 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     if ($user->language == '') {
       $user->language = key($languages['name']);
     }
-    $languages['name'] = array_map('check_plain', array_map('t', $languages['name']));
+    foreach (array_map('t', $languages['name']) as $key => $value) {
+      $languages_name[check_plain($key)] = check_plain($value);
+    }
     $form['locale'] = array('#type' => 'fieldset',
       '#title' => t('Interface language settings'),
       '#weight' => 1,
     );
     $form['locale']['language'] = array('#type' => 'radios',
       '#title' => t('Language'),
-      '#default_value' => $user->language,
-      '#options' => $languages['name'],
+      '#default_value' => check_plain($user->language),
+      '#options' => $languages_name,
       '#description' => t('Selecting a different locale will change the interface language of the site.'),
     );
     return $form;

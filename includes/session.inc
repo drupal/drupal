@@ -31,8 +31,9 @@ function sess_read($key) {
   // Otherwise, if the session is still active, we have a record of the client's session in the database.
   $user = db_fetch_object(db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s'", $key));
 
-  // We found the client's session record and they are an authenticated user
-  if ($user && $user->uid > 0) {
+  // We found the client's session record and they are an authenticated,
+  // active user.
+  if ($user && $user->uid > 0 && $user->status == 1) {
     // This is done to unserialize the data member of $user
     $user = drupal_unpack($user);
 
@@ -44,7 +45,8 @@ function sess_read($key) {
       $user->roles[$role->rid] = $role->name;
     }
   }
-  // We didn't find the client's record (session has expired), or they are an anonymous user.
+  // We didn't find the client's record (session has expired), or they are
+  // blocked, or they are an anonymous user.
   else {
     $session = isset($user->session) ? $user->session : '';
     $user = drupal_anonymous_user($session);

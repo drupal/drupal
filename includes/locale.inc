@@ -41,6 +41,9 @@ function _locale_admin_manage_screen() {
   $options = array();
   $form['name'] = array('#tree' => TRUE);
   foreach ($languages['name'] as $key => $lang) {
+    // Language code should contain no markup, but is emitted
+    // by radio and checkbox options.
+    $key = check_plain($key);
     $options[$key] = '';
     $status = db_fetch_object(db_query("SELECT isdefault, enabled FROM {locales_meta} WHERE locale = '%s'", $key));
     if ($status->enabled) {
@@ -95,6 +98,14 @@ function theme_locale_admin_manage_screen($form) {
   $output .= drupal_render($form);
 
   return $output;
+}
+
+function _locale_admin_manage_screen_validate($form_id, $form_values) {
+  foreach ($form_values['name'] as $key => $value) {
+    if (preg_match('/["<>\']/', $value)) {
+      form_set_error('name][' . $key, t('The characters &lt;, &gt;, " and \' are not allowed in the language name in English field.'));
+    }
+  }
 }
 
 /**
@@ -184,10 +195,20 @@ function locale_add_language_form_validate($form_id, $form_values) {
     form_set_error(t('The language %language (%code) already exists.', array('%language' => $form_values['langname'], '%code' => $form_values['langcode'])));
   }
 
+  // If we are adding a non-custom language, check for a valid langcode.
   if (!isset($form_values['langname'])) {
     $isocodes = _locale_get_iso639_list();
     if (!isset($isocodes[$form_values['langcode']])) {
       form_set_error('langcode', t('Invalid language code.'));
+    }
+  }
+  // Otherwise, check for invlaid characters
+  else {
+    if (preg_match('/["<>\']/', $form_values['langcode'])) {
+      form_set_error('langcode', t('The characters &lt;, &gt;, " and \' are not allowed in the language code field.'));
+    }
+    if (preg_match('/["<>\']/', $form_values['langname'])) {
+      form_set_error('langname', t('The characters &lt;, &gt;, " and \' are not allowed in the language name in English field.'));
     }
   }
 }
@@ -331,8 +352,14 @@ function _locale_export_po_form_submit($form_id, $form_values) {
 function _locale_string_seek_form() {
   // Get *all* languages set up
   $languages = locale_supported_languages(FALSE, TRUE);
-  asort($languages['name']); unset($languages['name']['en']);
-  $languages['name'] = array_map('check_plain', $languages['name']);
+  unset($languages['name']['en']);
+  // Sanitize the values to be used in radios.
+  $languages_name = array();
+  foreach ($languages['name'] as $key => $value) {
+    $languages_name[check_plain($key)] = check_plain($value);
+  }
+  $languages['name'] = $languages_name;
+  asort($languages['name']);
 
   // Present edit form preserving previous user settings
   $query = _locale_string_seek_query();

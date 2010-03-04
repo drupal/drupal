@@ -1,7 +1,9 @@
 // $Id$
 
-Drupal 5.22, xxxx-xx-xx
+Drupal 5.22, 2010-03-03
 -----------------------
+- Fixed security issues (Open redirection, Locale module cross site scripting,
+  Blocked user session regeneration), see SA-CORE-2010-001.
 
 Drupal 5.21, 2009-12-16
 -----------------------

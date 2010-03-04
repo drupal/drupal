@@ -85,3 +85,23 @@ function locale_uninstall() {
   db_query('DROP TABLE {locales_source}');
   db_query('DROP TABLE {locales_target}');
 }
+
+/**
+ * Neutralize unsafe language names in the database.
+ */
+function locale_update_1() {
+  $ret = array();
+  $matches = db_result(db_query("SELECT 1 FROM {locales_meta} WHERE name LIKE '%<%' OR name LIKE '%>%'"));
+  if ($matches) {
+    $ret[] = update_sql("UPDATE {locales_meta} SET name = REPLACE(name, '<', '')");
+    $ret[] = update_sql("UPDATE {locales_meta} SET name = REPLACE(name, '>', '')");
+    drupal_set_message('The language name in English of all the existing custom languages of your site have been sanitized for security purposes. Visit the <a href="'. url('admin/settings/language') .'">Languages</a> page to check these and fix them if necessary.', 'warning');
+  }
+  // Check if some langcode values contain potentially dangerous characters and
+  // warn the user if so. These are not fixed since they are referenced in other
+  // tables (e.g. {node}).
+  if (db_result(db_query("SELECT 1 FROM {locales_meta} WHERE locale LIKE '%<%' OR locale LIKE '%>%' OR locale LIKE '%\"%' OR locale LIKE '%\\\\\%'"))) {
+    drupal_set_message('Some of your custom language code values contain invalid characters. You should examine the <a href="'. url('admin/settings/language') .'">Languages</a> page. These must be fixed manually.', 'error');
+  }
+  return $ret;
+}
