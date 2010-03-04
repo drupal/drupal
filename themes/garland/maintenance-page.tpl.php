@@ -35,10 +35,10 @@
           // Prepare header
           $site_fields = array();
           if ($site_name) {
-            $site_fields[] = check_plain($site_name);
+            $site_fields[] = $site_name;
           }
           if ($site_slogan) {
-            $site_fields[] = check_plain($site_slogan);
+            $site_fields[] = $site_slogan;
           }
           $site_title = implode(' ', $site_fields);
           if ($site_fields) {
