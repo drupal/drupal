@@ -415,9 +415,14 @@ function form_state_keys_no_cache() {
 }
 
 /**
- * Retrieves a form using a form_id, populates it with $form_state['values'],
- * processes it, and returns any validation errors encountered. This
- * function is the programmatic counterpart to drupal_get_form().
+ * Retrieves, populates, and processes a form.
+ *
+ * This function allows you to supply values for form elements and submit a
+ * form for processing. Compare to drupal_get_form(), which also builds and
+ * processes a form, but does not allow you to supply values.
+ *
+ * There is no return value, but you can check to see if there are errors
+ * by calling form_get_errors().
  *
  * @param $form_id
  *   The unique string identifying the desired form. If a function
@@ -440,7 +445,6 @@ function form_state_keys_no_cache() {
  *   For example, the node_edit form requires that a node object be passed
  *   in here when it is called.
  * For example:
- *
  * @code
  * // register a new user
  * $form_state = array();
@@ -450,7 +454,6 @@ function form_state_keys_no_cache() {
  * $form_state['values']['pass']['pass2'] = 'password';
  * $form_state['values']['op'] = t('Create new account');
  * drupal_form_submit('user_register_form', $form_state);
- *
  * // Create a new node
  * $form_state = array();
  * module_load_include('inc', 'node', 'node.pages');
