@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.581 2010/03/02 09:07:09 dries Exp $
+// $Id: theme.inc,v 1.582 2010/03/04 09:03:08 dries Exp $
 
 /**
  * @file
@@ -2259,12 +2259,12 @@ function template_preprocess_html(&$variables) {
 
   // Construct page title.
   if (drupal_get_title()) {
-    $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
+    $head_title = array(strip_tags(drupal_get_title()), check_plain(variable_get('site_name', 'Drupal')));
   }
   else {
-    $head_title = array(variable_get('site_name', 'Drupal'));
+    $head_title = array(check_plain(variable_get('site_name', 'Drupal')));
     if (variable_get('site_slogan', '')) {
-      $head_title[] = variable_get('site_slogan', '');
+      $head_title[] = filter_xss_admin(variable_get('site_slogan', ''));
     }
   }
   $variables['head_title'] = implode(' | ', $head_title);

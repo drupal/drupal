@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.15 2010/02/25 20:57:39 dries Exp $
+// $Id: maintenance-page.tpl.php,v 1.16 2010/03/04 09:03:08 dries Exp $
 
 /**
  * @file
@@ -35,10 +35,10 @@
           // Prepare header
           $site_fields = array();
           if ($site_name) {
-            $site_fields[] = check_plain($site_name);
+            $site_fields[] = $site_name;
           }
           if ($site_slogan) {
-            $site_fields[] = check_plain($site_slogan);
+            $site_fields[] = $site_slogan;
           }
           $site_title = implode(' ', $site_fields);
           if ($site_fields) {

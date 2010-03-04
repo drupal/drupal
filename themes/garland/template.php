@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.38 2010/02/25 20:57:39 dries Exp $
+// $Id: template.php,v 1.39 2010/03/04 09:03:08 dries Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -96,10 +96,10 @@ function garland_preprocess_page(&$vars) {
   // Prepare header.
   $site_fields = array();
   if (!empty($vars['site_name'])) {
-    $site_fields[] = check_plain($vars['site_name']);
+    $site_fields[] = $vars['site_name'];
   }
   if (!empty($vars['site_slogan'])) {
-    $site_fields[] = check_plain($vars['site_slogan']);
+    $site_fields[] = $vars['site_slogan'];
   }
   $vars['site_title'] = implode(' ', $site_fields);
   if (!empty($site_fields)) {
@@ -108,8 +108,8 @@ function garland_preprocess_page(&$vars) {
   $vars['site_html'] = implode(' ', $site_fields);
 
   // Set a variable for the site name title and logo alt attributes text.
-  $slogan_text = filter_xss_admin(variable_get('site_slogan', ''));
-  $site_name_text = filter_xss_admin(variable_get('site_name', 'Drupal'));
+  $slogan_text = $vars['site_slogan'];
+  $site_name_text = $vars['site_name'];
   $vars['site_name_and_slogan'] = $site_name_text . ' ' . $slogan_text;
 }
 
