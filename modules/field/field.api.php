@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.65 2010/02/12 05:38:09 webchick Exp $
+// $Id: field.api.php,v 1.66 2010/03/04 18:28:29 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -28,6 +28,8 @@
  *   - weight: The default weight of the element.
  *   - view: (optional) The name of the element as it appears in the rendered
  *     structure, if different from the name in the form.
+ *
+ * @see hook_field_extra_fields_alter()
  */
 function hook_field_extra_fields() {
   $extra = array();
@@ -59,6 +61,23 @@ function hook_field_extra_fields() {
     }
   }
   return $extra;
+}
+
+/**
+ * Alter "pseudo-field" components on fieldable entities.
+ *
+ * @param $info
+ *   The associative array of 'pseudo-field' components.
+ *
+ * @see hook_field_extra_fields()
+ */
+function hook_field_extra_fields_alter(&$info) {
+  // Force node title to always be at the top of the list
+  // by default.
+  if (isset($info['title'])) {
+    $info['title']['weight'] = -20;
+  }
+
 }
 
 /**
