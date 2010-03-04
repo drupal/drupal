@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.6 2010/02/11 03:29:22 webchick Exp $
+// $Id: standard.install,v 1.7 2010/03/04 21:42:01 dries Exp $
 
 /**
  * Implements hook_install().
@@ -60,28 +60,6 @@ function standard_install() {
   );
   $full_html_format = (object) $full_html_format;
   filter_format_save($full_html_format);
-
-  $plain_text_format = array(
-    'name' => 'Plain text',
-    'weight' => 10,
-    'filters' => array(
-      // Escape all HTML.
-      'filter_html_escape' => array(
-        'weight' => 0,
-        'status' => 1,
-      ),
-      // Line break filter.
-      'filter_autop' => array(
-        'weight' => 1,
-        'status' => 1,
-      ),
-    ),
-  );
-  $plain_text_format = (object) $plain_text_format;
-  filter_format_save($plain_text_format);
-
-  // Set the fallback format to plain text.
-  variable_set('filter_fallback_format', $plain_text_format->format);
 
   // Enable some standard blocks.
   $values = array(

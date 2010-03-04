@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.40 2010/02/28 07:46:44 dries Exp $
+// $Id: block.test,v 1.41 2010/03/04 21:42:00 dries Exp $
 
 /**
  * @file
@@ -79,7 +79,8 @@ class BlockTestCase extends DrupalWebTestCase {
     $custom_block['info'] = $this->randomName(8);
     $custom_block['title'] = $this->randomName(8);
     $custom_block['body'] = '<h1>Full HTML</h1>';
-    $custom_block['body_format'] = 2;
+    $full_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchField();
+    $custom_block['body_format'] = $full_html_format_id;
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
 
     // Set the created custom block to a specific region.

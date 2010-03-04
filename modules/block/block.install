@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.38 2010/02/03 18:16:23 webchick Exp $
+// $Id: block.install,v 1.39 2010/03/04 21:42:00 dries Exp $
 
 /**
  * @file
@@ -187,8 +187,8 @@ function block_schema() {
         'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
-        'description' => "Block body's {filter_format}.format; for example, 1 = Filtered HTML.",
-      )
+        'description' => 'The {filter_format}.format of the block body.',
+      ),
     ),
     'unique keys' => array(
       'info' => array('info'),

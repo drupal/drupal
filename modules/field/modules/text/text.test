@@ -1,5 +1,5 @@
 <?php
-// $Id: text.test,v 1.18 2010/02/12 05:38:10 webchick Exp $
+// $Id: text.test,v 1.19 2010/03/04 21:42:00 dries Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
@@ -195,7 +195,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
     $permission = filter_permission_name(filter_format_load($format_id));
     $rid = max(array_keys($this->web_user->roles));
-    user_role_grant_permissions($rid, array($permission), TRUE);
+    user_role_grant_permissions($rid, array($permission));
     $this->drupalLogin($this->web_user);
 
     // Display edition form.
