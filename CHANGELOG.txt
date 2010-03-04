@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 5.23-dev, xxxx-xx-xx
+-----------------------
+
 Drupal 5.22, 2010-03-03
 -----------------------
 - Fixed security issues (Open redirection, Locale module cross site scripting,
