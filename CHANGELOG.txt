@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.17-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.16, 2010-03-03
 ----------------------
 - Fixed security issues (Installation cross site scripting, Open redirection,
