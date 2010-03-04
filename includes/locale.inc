@@ -34,6 +34,9 @@ function locale_languages_overview_form() {
   $options = array();
   $form['weight'] = array('#tree' => TRUE);
   foreach ($languages as $langcode => $language) {
+    // Language code should contain no markup, but is emitted
+    // by radio and checkbox options.
+    $langcode = check_plain($langcode);
 
     $options[$langcode] = '';
     if ($language->enabled) {
@@ -335,6 +338,17 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
  * Validate the language editing form. Reused for custom language addition too.
  */
 function locale_languages_edit_form_validate($form, &$form_state) {
+  // Validate that the name, native, and langcode variables are safe.
+  if (preg_match('/["<>\']/', $form_state['values']['langcode'])) {
+    form_set_error('langcode', t('The characters &lt;, &gt;, " and \' are not allowed in the language code field.'));
+  }
+  if (preg_match('/["<>\']/', $form_state['values']['name'])) {
+    form_set_error('name', t('The characters &lt;, &gt;, " and \' are not allowed in the language name in English field.'));
+  }
+  if (preg_match('/["<>\']/', $form_state['values']['native'])) {
+    form_set_error('native', t('The characters &lt;, &gt;, " and \' are not allowed in the native language name field.'));
+  }
+
   if (!empty($form_state['values']['domain']) && !empty($form_state['values']['prefix'])) {
     form_set_error('prefix', t('Domain and path prefix values should not be set at the same time.'));
   }
@@ -536,8 +550,13 @@ function locale_translate_seek_screen() {
  */
 function locale_translate_seek_form() {
   // Get all languages, except English
-  $languages = locale_language_list('name', TRUE);
-  unset($languages['en']);
+  $raw_languages = locale_language_list('name', TRUE);
+  unset($raw_languages['en']);
+  // Sanitize the values to be used in radios.
+  $languages = array();
+  foreach ($raw_languages as $key => $value) {
+    $languages[check_plain($key)] = check_plain($value);
+  }
 
   // Present edit form preserving previous user settings
   $query = _locale_translate_seek_query();

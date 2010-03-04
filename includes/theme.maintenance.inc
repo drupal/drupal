@@ -125,9 +125,9 @@ function theme_install_page($content) {
     $title = count($messages['error']) > 1 ? st('The following errors must be resolved before you can continue the installation process') : st('The following error must be resolved before you can continue the installation process');
     $variables['messages'] .= '<h3>'. $title .':</h3>';
     $variables['messages'] .= theme('status_messages', 'error');
-    $variables['content'] .= '<p>'. st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri())) .'</p>';
+    $variables['content'] .= '<p>'. st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => check_url(request_uri()))) .'</p>';
   }
-  
+
   // Special handling of warning messages
   if (isset($messages['warning'])) {
     $title = count($messages['warning']) > 1 ? st('The following installation warnings should be carefully reviewed') : st('The following installation warning should be carefully reviewed');

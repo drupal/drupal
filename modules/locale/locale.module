@@ -215,7 +215,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     $names = array();
     foreach ($languages as $langcode => $item) {
       $name = t($item->name);
-      $names[$langcode] = $name . ($item->native != $name ? ' ('. $item->native .')' : '');
+      $names[check_plain($langcode)] = check_plain($name . ($item->native != $name ? ' ('. $item->native .')' : ''));
     }
     $form['locale'] = array(
       '#type' => 'fieldset',
@@ -228,7 +228,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     $form['locale']['language'] = array(
       '#type' => (count($names) <= 5 ? 'radios' : 'select'),
       '#title' => t('Language'),
-      '#default_value' => $user_preferred_language->language,
+      '#default_value' => check_plain($user_preferred_language->language),
       '#options' => $names,
       '#description' => ($mode == LANGUAGE_NEGOTIATION_PATH) ? t("This account's default language for e-mails, and preferred language for site presentation.") : t("This account's default language for e-mails."),
     );
