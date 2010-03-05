@@ -261,23 +261,15 @@ class ForumTestCase extends DrupalWebTestCase {
     $title = $this->randomName(20);
     $body = $this->randomName(200);
 
-    // Without this being set, post variable equals the first non-blank in
-    // select items list.
-    $tid = $forum['tid'];
-
     $langcode = LANGUAGE_NONE;
     $edit = array(
       "title" => $title,
       "body[$langcode][0][value]" => $body,
-      "taxonomy_forums[$langcode]" => $tid,
     );
 
-    // TODO The taxonomy select value is set by drupal code when the tid is part
-    // of the url. However, unless a tid is passed in the edit array, when
-    // drupalPost() runs, the select value is not preserved. Instead, the post
-    // variables seem to pick up the first non-blank value in the select list.
-    // Create forum topic.
-    $this->drupalPost('node/add/forum/', $edit, t('Save'));
+    // Create the forum topic, preselecting the forum ID via a URL parameter.
+    $this->drupalPost('node/add/forum/' . $forum['tid'], $edit, t('Save'));
+
     $type = t('Forum topic');
     if ($container) {
       $this->assertNoRaw(t('@type %title has been created.', array('@type' => $type, '%title' => $title)), t('Forum topic was not created'));
@@ -289,9 +281,10 @@ class ForumTestCase extends DrupalWebTestCase {
       $this->assertNoRaw(t('The item %title is a forum container, not a forum.', array('%title' => $forum['name'])), t('No error message was shown'));
     }
 
-    // Retrieve node object.
+    // Retrieve node object, ensure that the topic was created and in the proper forum.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
+    $this->assertEqual($node->taxonomy_forums[LANGUAGE_NONE][0]['tid'], $forum['tid'], 'Saved forum topic was in the expected forum');
 
     // View forum topic.
     $this->drupalGet('node/' . $node->nid);
