@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.58 2010/02/25 08:58:31 dries Exp $
+// $Id: filter.test,v 1.59 2010/03/05 13:32:09 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -168,7 +168,14 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create users.
-    $this->admin_user = $this->drupalCreateUser(array('administer filters'));
+    $filteredhtml_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchObject();
+    $fullhtml_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer filters',
+      filter_permission_name($filteredhtml_format),
+      filter_permission_name($fullhtml_format),
+    ));
+
     $this->web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
     $this->drupalLogin($this->admin_user);
   }

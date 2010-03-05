@@ -1,4 +1,4 @@
-// $Id: vertical-tabs.js,v 1.7 2009/08/31 05:51:08 dries Exp $
+// $Id: vertical-tabs.js,v 1.8 2010/03/05 13:32:09 dries Exp $
 
 (function ($) {
 
@@ -41,7 +41,9 @@ Drupal.behaviors.verticalTabs = {
       if (!focus) {
         focus = $('> .vertical-tabs-pane:first', this);
       }
-      focus.data('verticalTab').focus();
+      if (focus.length) {
+        focus.data('verticalTab').focus();
+      }
     });
   }
 };

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.33 2010/03/04 21:42:00 dries Exp $
+// $Id: filter.install,v 1.34 2010/03/05 13:32:09 dries Exp $
 
 /**
  * @file
@@ -442,6 +442,27 @@ function filter_update_7007() {
       'weight' => array('weight'),
     ),
   ));
+}
+
+/**
+ * Grant usage of all text formats to user roles having the 'administer filters' permission.
+ */
+function filter_update_7008() {
+  // Build the list of permissions to grant.
+  $permissions = array();
+  foreach (filter_formats() as $format_id => $format) {
+    if ($permission = filter_permission_name($format)) {
+      $permissions[] = $permission;
+    }
+  }
+  // Grant text format permissions to all roles that can 'administer filters'.
+  // Albeit anonymous users *should not* have the permission, we cannot presume
+  // that they do not or must not.
+  if ($roles = user_roles(FALSE, 'administer filters')) {
+    foreach ($roles as $rid => $name) {
+      user_role_grant_permissions($rid, $permissions);
+    }
+  }
 }
 
 /**
