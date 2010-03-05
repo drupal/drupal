@@ -41,7 +41,9 @@ Drupal.behaviors.verticalTabs = {
       if (!focus) {
         focus = $('> .vertical-tabs-pane:first', this);
       }
-      focus.data('verticalTab').focus();
+      if (focus.length) {
+        focus.data('verticalTab').focus();
+      }
     });
   }
 };

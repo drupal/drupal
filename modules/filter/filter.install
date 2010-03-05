@@ -445,6 +445,27 @@ function filter_update_7007() {
 }
 
 /**
+ * Grant usage of all text formats to user roles having the 'administer filters' permission.
+ */
+function filter_update_7008() {
+  // Build the list of permissions to grant.
+  $permissions = array();
+  foreach (filter_formats() as $format_id => $format) {
+    if ($permission = filter_permission_name($format)) {
+      $permissions[] = $permission;
+    }
+  }
+  // Grant text format permissions to all roles that can 'administer filters'.
+  // Albeit anonymous users *should not* have the permission, we cannot presume
+  // that they do not or must not.
+  if ($roles = user_roles(FALSE, 'administer filters')) {
+    foreach ($roles as $rid => $name) {
+      user_role_grant_permissions($rid, $permissions);
+    }
+  }
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

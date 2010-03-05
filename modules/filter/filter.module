@@ -272,8 +272,8 @@ function filter_admin_format_title($format) {
  */
 function filter_permission() {
   $perms['administer filters'] = array(
-    'title' => t('Administer and use any text formats and filters'),
-    'description' => drupal_placeholder(array('text' => t('Warning: This permission may have security implications depending on how the text format is configured.'))),
+    'title' => t('Administer text formats and filters'),
+    'description' => drupal_placeholder(array('text' => t('Warning: This permission has security implications.'))),
   );
 
   // Generate permissions for each text format. Warn the administrator that any
@@ -786,8 +786,8 @@ function filter_access($format, $account = NULL) {
     $account = $user;
   }
   // Handle special cases up front. All users have access to the fallback
-  // format, and administrators have access to all formats.
-  if (user_access('administer filters', $account) || $format->format == filter_fallback_format()) {
+  // format.
+  if ($format->format == filter_fallback_format()) {
     return TRUE;
   }
   // Check the permission if one exists; otherwise, we have a non-existent

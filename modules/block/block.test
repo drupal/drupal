@@ -20,8 +20,15 @@ class BlockTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
-    // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer filters', 'access administration pages', 'access dashboard'));
+    // Create and login administrative user having access to Full HTML text
+    // format.
+    $fullhtml_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
+    $admin_user = $this->drupalCreateUser(array(
+      'administer blocks',
+      filter_permission_name($fullhtml_format),
+      'access administration pages',
+      'access dashboard',
+    ));
     $this->drupalLogin($admin_user);
 
     // Define the existing regions

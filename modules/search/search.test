@@ -490,7 +490,16 @@ class SearchCommentTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('comment', 'search');
 
-    $this->admin_user = $this->drupalCreateUser(array('administer filters', 'administer permissions', 'create page content', 'post comments without approval'));
+    // Create and login administrative user having access to Full HTML text
+    // format.
+    $fullhtml_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer filters',
+      filter_permission_name($fullhtml_format),
+      'administer permissions',
+      'create page content',
+      'post comments without approval',
+    ));
     $this->drupalLogin($this->admin_user);
   }
 
