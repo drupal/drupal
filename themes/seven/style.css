@@ -1,7 +1,7 @@
 /* $Id$ */
 
 /**
- * Generic elements
+ * Generic elements.
  */
 body {
   color: #000;
@@ -11,16 +11,13 @@ body {
   font-size: 0.8em;
   font-family: Lucida Grande, Lucida Sans Unicode, sans-serif;
 }
-
 a {
   color: #0074BD;
   text-decoration: none;
 }
-
 a:hover {
   text-decoration: underline;
 }
-
 hr {
   margin: 0;
   padding: 0;
@@ -28,132 +25,103 @@ hr {
   height: 1px;
   background: #CCCCCC;
 }
-
 legend {
   font-weight: bold;
 }
-
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   margin: 10px 0;
 }
-
 h1 {
   font-size: 150%;
 }
-
 h2 {
   font-size: 140%;
 }
-
 h3 {
   font-size: 130%;
 }
-
 h4 {
   font-size: 120%;
 }
-
 h5 {
   font-size: 110%;
 }
-
 h6 {
   font-size: 105%;
 }
-
 p {
   margin: 1em 0;
 }
-
 dl {
   margin: 0 0 20px;
 }
-
 dl dd,
 dl dl {
   margin-left: 20px;
   margin-bottom: 10px;
 }
-
 blockquote {
   margin: 1em 40px;
 }
-
 address {
   font-style: italic;
 }
-
 u, ins {
   text-decoration: underline;
 }
-
 s, strike, del {
   text-decoration: line-through;
 }
-
 big {
   font-size: larger;
 }
-
 small {
   font-size: smaller;
 }
-
 sub {
   vertical-align: sub;
   font-size: smaller;
   line-height: normal;
 }
-
 sup {
   vertical-align: super;
   font-size: smaller;
   line-height: normal;
 }
-
 nobr {
   white-space: nowrap;
 }
-
 abbr, acronym {
   border-bottom: dotted 1px;
 }
-
 ul, .block ul, .item-list ul, .item-list ul {
   list-style-type: disc;
   list-style-image: none;
   margin: 0.25em 0 0.25em 1.5em;
 }
-
 .item-list ul li, li.leaf, ul.menu li {
   list-style-type: disc;
   list-style-image: none;
 }
-
 ul.menu li {
   margin: 0;
 }
-
 ol {
   list-style-type: decimal;
   margin: 0.25em 0 0.25em 2em;
 }
-
 .item-list ul li.collapsed, ul.menu li.collapsed {
   list-style-image:url(../../misc/menu-collapsed.png);
   list-style-type:disc;
 }
-
 .item-list ul li.expanded, ul.menu li.expanded {
   list-style-image:url(../../misc/menu-expanded.png);
   list-style-type:circle;
 }
-
 quote, code {
   margin: .5em 0;
 }
-
 code, pre, kbd {
   font-size: 1.25em;
 }
@@ -169,7 +137,6 @@ code, pre, kbd {
   width: auto;
   z-index: 50;
 }
-
 #skip-link a,
 #skip-link a:link,
 #skip-link a:visited {
@@ -193,7 +160,6 @@ code, pre, kbd {
   font-size: 0.94em;
   text-decoration: none;
 }
-
 #skip-link a:hover,
 #skip-link a:active,
 #skip-link a:focus {
@@ -213,12 +179,10 @@ code, pre, kbd {
   position: relative;
   background-color: #e0e0d8;
 }
-
 #branding div.breadcrumb {
   font-size: 11px;
   padding-bottom: 5px;
 }
-
 #branding div.block {
   position: relative;
   float: right;
@@ -226,23 +190,19 @@ code, pre, kbd {
   padding-left: 10px;
   background: #333;
 }
-
 #branding div.block form label {
   display: none;
 }
-
 #branding div.block form div.form-item {
   float: left;
   border: 0;
   margin: 0;
   padding: 0;
 }
-
 #branding div.block form input.form-text {
   width: 140px;
   margin-right: 10px;
 }
-
 #branding div.block form input.form-submit {
   text-align: center;
   width: 80px;
@@ -255,7 +215,6 @@ code, pre, kbd {
   font-size: 0.9em;
   margin-top: 1em;
 }
-
 #help p {
   margin: 0 0 10px;
 }
@@ -274,23 +233,19 @@ div.messages {
   background: #bdf;
   border: 1px solid #ace;
 }
-
 div.warning {
   color: #840;
   background: #fe6;
   border-color: #ed5;
 }
-
 div.error {
   color: #fff;
   background: #e63;
   border-color: #d52;
 }
-
 div.error p.error {
   color: #333;
 }
-
 div.status {
   color: #360;
   background: #cf8;
@@ -304,7 +259,6 @@ div.status {
   background: #333;
   padding-top: 20px;
 }
-
 #branding h1.page-title {
   color: #000;
   margin: 0;
@@ -333,12 +287,10 @@ ul.primary {
   text-transform: uppercase;
   font-size: 12px;
 }
-
 ul.primary li {
   display: inline;
   list-style: none;
 }
-
 ul.primary li a,
 ul.primary li a.active,
 ul.primary li a:active,
@@ -356,7 +308,6 @@ ul.primary li a:hover {
   border-style: solid;
   border-color: #a6a7a2;
 }
-
 ul.primary li.active a,
 ul.primary li.active a.active,
 ul.primary li.active a:active,
@@ -364,15 +315,12 @@ ul.primary li.active a:visited {
   background-color: #fff;
   border-color: #c9cac4;
 }
-
 ul.primary li a:hover {
   color: #fff;
 }
-
 ul.primary li.active a:hover {
   color: #000;
 }
-
 ul.secondary {
   float: none;
   clear: both;
@@ -384,15 +332,12 @@ ul.secondary {
   border-bottom: 1px solid #ccc;
   background: #fff;
 }
-
 ul.secondary li {
   padding-left: 10px;
 }
-
 ul.secondary li a {
   color: #05a;
 }
-
 ul.secondary li a,
 ul.secondary li a:hover,
 ul.secondary li.active a,
@@ -401,7 +346,6 @@ ul.secondary li.active a.active {
   -moz-border-radius: 10px;
   -webkit-border-radius: 7px;
 }
-
 ul.secondary li.active a,
 ul.secondary li.active a.active {
   color: #fff;
@@ -419,11 +363,9 @@ ul.secondary li.active a.active {
   position: relative;
   color: #333;
 }
-
 #secondary-links ul.links li {
   padding: 0 10px 10px 0;
 }
-
 #secondary-links ul.links li a {
   font-size: 9px;
   line-height: 10px;
@@ -437,25 +379,20 @@ ul.secondary li.active a.active {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
-
 #secondary-links ul.links li a:hover {
   background: #999;
 }
-
 ul.links li,
 ul.inline li {
   padding-right: 1em;
 }
-
 ul.inline li {
   display: inline;
 }
-
 #secondary-links ul.links li.active-trail a,
 #secondary-links ul.links li a.active {
   background: #333;
 }
-
 ul.node-type-list li,
 ul.admin-list li {
   position: relative;
@@ -468,18 +405,15 @@ ul.admin-list li {
   list-style-type: none;
   list-style-image: none;
 }
-
 .admin-panel .item-list ul,
 ul.admin-list {
   margin: 0;
   padding: 0;
 }
-
 .admin-panel .item-list ul,
 ul.admin-list.compact {
   margin-bottom: 8px;
 }
-
 .admin-panel .item-list li,
 ul.admin-list.compact li {
   border: none;
@@ -488,7 +422,6 @@ ul.admin-list.compact li {
   padding: 0;
   list-style-type: disc;
 }
-
 ul.admin-list li:last-child {
   border-bottom: none;
 }
@@ -496,18 +429,15 @@ ul.admin-list li:last-child {
 ul.node-type-list .label {
   font-size: 15px;
 }
-
 ul.node-type-list li a, ul.admin-list li a {
   margin-left: -30px;
   padding: 0px 0 4px 30px;
   min-height: 0;
 }
-
 ul.admin-list.compact li a {
   margin-left: 0;
   padding: 0;
 }
-
 ul.node-type-list li div.description a, ul.admin-list li div.description a {
   margin-left: 0px;
   padding: 0px;
@@ -523,34 +453,27 @@ table {
   margin: 0 0 10px;
   border: 1px solid #bebfb9;
 }
-
 table.system-status-report th,
 table td,
 table th {
   vertical-align: middle;
   padding: 8px 10px;
 }
-
 table.system-status-report th {
   padding-left: 30px;
 }
-
 table.system-status-report tr.ok > * {
   background-color: #dfd;
 }
-
 table.system-status-report tr.info > * {
   background-color: #bdf;
 }
-
 table.system-status-report tr.warning > * {
   background-color: #ffd;
 }
-
 table.system-status-report tr.error > * {
   background-color: #fdd;
 }
-
 tr.even, tr.odd {
   border-width: 0 1px 0 1px;
   border-style: solid;
@@ -561,7 +484,6 @@ tr.even, tr.odd {
 tr.odd {
   background: #fff;
 }
-
 table th {
   font-size: 12px;
   text-transform: uppercase;
@@ -576,26 +498,21 @@ table th {
 table th.active {
   background: #bdbeb9;
 }
-
 table th a {
   display: block;
   position: relative;
 }
-
 table th.active img {
   position: absolute;
   top: 3px;
   right: 3px;
 }
-
 table td.active {
   background: #e9e9dd;
 }
-
 table tr.odd td.active {
   background: #f3f4ee;
 }
-
 table tr.selected td.active,
 table tr.selected td {
   background: #ffc;
@@ -620,43 +537,35 @@ table tr.selected td {
  *   positioning even to absolute positioned elements within; we therefore have
  *   to apply all padding to the inner .fieldset-wrapper instead.
  */
-
 fieldset {
   border: 1px solid #ccc;
   padding: 2.5em 0 0 0;
   position: relative;
   margin: 1em 0;
 }
-
 fieldset .fieldset-legend {
   margin-top: 0.5em;
   padding-left: 15px;
   position: absolute;
   text-transform: uppercase;
 }
-
 fieldset .fieldset-wrapper {
   padding: 0 13px 13px 15px;
 }
-
 fieldset.collapsed {
   background-color: transparent;
 }
-
 html.js fieldset.collapsed {
   border-width: 1px;
   height: auto;
   margin-bottom: 10px;
 }
-
 fieldset fieldset {
   background-color: #fff;
 }
-
 fieldset fieldset fieldset {
   background-color: #f8f8f8;
 }
-
 html.js fieldset.collapsible .fieldset-wrapper {
   overflow: visible;
 }
@@ -664,12 +573,10 @@ html.js fieldset.collapsible .fieldset-wrapper {
 /**
  * Form elements.
  */
-
 .form-item {
   padding: 9px 0;
   margin: 0 0 10px;
 }
-
 .filter-wrapper .form-item,
 div.teaser-checkbox .form-item,
 .form-item .form-item {
@@ -683,16 +590,13 @@ div.teaser-checkbox .form-item,
 .text-format-wrapper .form-item {
   padding-bottom: 0;
 }
-
 .form-item label {
   margin: 0;
   padding: 0;
 }
-
 .form-item label.option {
   text-transform: none;
 }
-
 .form-item label.option {
   font-size: 12px;
 }
@@ -706,19 +610,16 @@ div.teaser-checkbox .form-item,
   width: 95%;
   padding: 10px 2px;
 }
-
 .filter-wrapper > div {
   padding-right: 6px;
   padding-left: 6px;
 }
-
 .filter-wrapper .form-item,
 .filter-wrapper .filter-guidelines,
 .filter-wrapper .filter-help {
   font-size: 12px;
   padding: 0;
 }
-
 ul.tips,
 div.description,
 .form-item div.description {
@@ -727,16 +628,12 @@ div.description,
   font-size: 12px;
   color: #666;
 }
-
 ul.tips li {
   margin: 0.25em 0 0.25em 1.5em;
 }
-
 body div.form-type-radio div.description, body div.form-type-checkbox div.description {
   margin-left: 1.5em;
 }
-
-/* Buttons */
 input.form-submit, a.button {
   cursor: pointer;
   padding: 4px 17px;
@@ -754,12 +651,10 @@ input.form-submit, a.button {
   -webkit-border-radius: 15px;
   font-size: 1.1em;
 }
-
 a.button:link, a.button:visited, a.button:hover, a.button:active {
   text-decoration: none;
   color: #5a5a5a;
 }
-
 div.node-form input#edit-submit,
 div.node-form input#edit-submit-1 {
   border: 1px solid #8eB7cd;
@@ -769,21 +664,18 @@ div.node-form input#edit-submit-1 {
   background: url(images/buttons.png) 0px -40px repeat-x;
   color: #133B54;
 }
-
 input.form-submit:active {
   background: #666;
   color: #fff;
   border-color: #555;
   text-shadow: #222 0px -1px 0px;
 }
-
 form input#edit-delete {
   background: #eee;
   border-color: #fff #ddd #ccc;
   text-shadow: none;
   color: #999;
 }
-
 input.form-autocomplete,
 input.form-text,
 textarea.form-textarea,
@@ -794,39 +686,32 @@ select.form-select {
   background: #fff;
   color: #333;
 }
-
 input.form-text:focus,
 textarea.form-textarea:focus,
 select.form-select:focus {
   color: #000;
   border-color: #ace;
 }
-
 .resizable-textarea .grippie {
   width: 100%;
   padding: 0 2px;
 }
-
 html.js input.form-autocomplete {
   background-position: 100% 4px;
 }
-
 html.js input.throbbing {
   background-position: 100% -16px;
 }
-
 ul.action-links {
   margin: 1em 0;
   padding: 0 20px 0 20px;
   list-style-type: none;
   overflow: hidden;
 }
-
 ul.action-links li {
   float: left;
   margin: 0 1em 0 0;
 }
-
 ul.action-links a {
   padding-left: 15px;
   background: transparent url(images/add.png) no-repeat 0 center;
@@ -847,20 +732,17 @@ div.admin .left {
   width: 49%;
   margin: 0;
 }
-
 div.admin-panel,
 div.admin-panel .body {
   padding: 0;
   clear: left;
 }
-
 div.admin-panel {
   margin: 0 0 20px;
   padding: 9px;
   background: #f8f8f8;
   border: 1px solid #ccc;
 }
-
 div.admin-panel h3 {
   font-size: 12px;
   text-transform: uppercase;
@@ -889,7 +771,6 @@ dl.multiselect dt,
 dl.multiselect dd {
   margin: 0 10px 0 0;
 }
-
 dl.multiselect select,
 dl.multiselect dd select {
   font-size: 12px;
@@ -906,18 +787,15 @@ div.admin-options {
   border: 1px solid #ccc;
   margin: 0 0 10px;
 }
-
 div.admin-options label {
   text-transform: uppercase;
   font: 12px/30px Lucida Grande, Lucida Sans Unicode, sans-serif;
 }
-
 div.admin-options label,
 div.admin-options div.form-item {
   margin-right: 10px;
   float: left;
 }
-
 div.admin-options div.form-item {
   padding: 0;
   border: 0;
@@ -949,25 +827,20 @@ body.in-maintenance #branding h1 {
   margin: 0 auto;
   float: none;
 }
-
 body.in-maintenance .form-radios .form-type-radio {
   padding: 2px 0;
 }
-
 body.in-maintenance div.form-item:after {
   content: "";
   display: none;
   clear: none;
 }
-
 body.in-maintenance .form-submit {
   display: block;
 }
-
 body.in-maintenance #logo {
   margin-bottom: 1.5em;
 }
-
 ol.task-list {
   margin-left: 0; /* LTR */
   list-style-type: none;
@@ -1042,7 +915,6 @@ div.add-or-remove-shortcuts {
 #dashboard .dashboard-region .block {
   border: #ccc 1px solid;
 }
-
 
 /* Recent content block */
 #dashboard div#block-node-recent div.content {

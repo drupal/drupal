@@ -9,15 +9,11 @@
 
 html,
 body,
-
-/* Structures */
 div,
 span,
 applet,
 object,
 iframe,
-
-/* Text */
 h1,
 h2,
 h3,
@@ -55,16 +51,12 @@ b,
 u,
 i,
 center,
-
-/* Lists */
 dl,
 dt,
 dd,
 ol,
 ul,
 li,
-
-/* Forms */
 fieldset,
 form,
 input,
@@ -72,8 +64,6 @@ select,
 textarea,
 label,
 legend,
-
-/* Tables */
 table,
 caption,
 tbody,
@@ -82,17 +72,14 @@ thead,
 tr,
 th,
 td,
-
 /* Drupal: system-menus.css */
 td.menu-disabled,
 ul.links,
 ul.links.inline,
 ul.links li,
 .block ul,
-
 /* Drupal: admin.css */
 div.admin,
-
 /* Drupal: system.css */
 tr.even,
 tr.odd,
@@ -148,26 +135,21 @@ ul.secondary a.active,
   background: transparent;
   line-height: inherit;
 }
-
-
 /* Drupal: system-menus.css */
 ul.links,
 ul.links.inline,
 ul.links li,
 .block ul,
-
 ol,
 ul,
 .item-list ul,
 .item-list ul li {
   list-style: none;
 }
-
 blockquote,
 q {
   quotes: none;
 }
-
 blockquote:before,
 blockquote:after,
 q:before, q:after {
@@ -195,7 +177,7 @@ table {
 }
 
 /**
- * Font reset =========================================================
+ * Font reset.
  *
  * Specifically targets form elements which browsers often times give
  * special treatment.
@@ -208,7 +190,7 @@ body {
 }
 
 /**
- * Markup free clearing ===============================================
+ * Markup free clearing.
  *
  * Consider adding your own selectors to this instead of finding ways
  * to sneak the clearfix class into Drupal's markup.
@@ -230,7 +212,6 @@ ul.inline:after {
   display: none;
   clear: none;
 }
-
 .form-item,
 ul.links,
 div.admin-panel .body,
@@ -245,7 +226,6 @@ div.admin-panel .body,
 * html .clearfix {
   height: 1%;
 }
-
 .form-item,
 ul.links,
 div.admin-panel .body,
