@@ -3586,7 +3586,8 @@ function node_modules_enabled($modules) {
  * special handling for node objects.
  */
 class NodeController extends DrupalDefaultEntityController {
-  protected function attachLoad(&$nodes) {
+
+  protected function attachLoad(&$nodes, $revision_id = FALSE) {
     // Create an array of nodes for each content type and pass this to the
     // object type specific callback.
     $typed_nodes = array();
@@ -3602,6 +3603,6 @@ class NodeController extends DrupalDefaultEntityController {
       }
     }
     $this->hookLoadArguments[] = array_keys($typed_nodes);
-    parent::attachLoad($nodes);
+    parent::attachLoad($nodes, $revision_id);
   }
 }

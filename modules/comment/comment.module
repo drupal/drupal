@@ -1602,17 +1602,19 @@ function comment_load($cid) {
  * special handling for comment objects.
  */
 class CommentController extends DrupalDefaultEntityController {
-  protected function buildQuery() {
-    parent::buildQuery();
+
+  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
+    $query = parent::buildQuery($ids, $conditions, $revision_id);
     // Specify additional fields from the user and node tables.
-    $this->query->innerJoin('node', 'n', 'base.nid = n.nid');
-    $this->query->addField('n', 'type', 'node_type');
-    $this->query->innerJoin('users', 'u', 'base.uid = u.uid');
-    $this->query->addField('u', 'name', 'registered_name');
-    $this->query->fields('u', array('uid', 'signature', 'picture', 'data'));
+    $query->innerJoin('node', 'n', 'base.nid = n.nid');
+    $query->addField('n', 'type', 'node_type');
+    $query->innerJoin('users', 'u', 'base.uid = u.uid');
+    $query->addField('u', 'name', 'registered_name');
+    $query->fields('u', array('uid', 'signature', 'picture', 'data'));
+    return $query;
   }
 
-  protected function attachLoad(&$comments) {
+  protected function attachLoad(&$comments, $revision_id = FALSE) {
     // Setup standard comment properties.
     foreach ($comments as $key => $comment) {
       $comment = drupal_unpack($comment);
@@ -1621,7 +1623,7 @@ class CommentController extends DrupalDefaultEntityController {
       $comment->node_type = 'comment_node_' . $comment->node_type;
       $comments[$key] = $comment;
     }
-    parent::attachLoad($comments);
+    parent::attachLoad($comments, $revision_id);
   }
 }
 

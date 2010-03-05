@@ -228,7 +228,8 @@ function user_load_multiple($uids = array(), $conditions = array(), $reset = FAL
  * special handling for user objects.
  */
 class UserController extends DrupalDefaultEntityController {
-  function attachLoad(&$queried_users) {
+
+  function attachLoad(&$queried_users, $revision_id = FALSE) {
     // Build an array of user picture IDs so that these can be fetched later.
     $picture_fids = array();
     foreach ($queried_users as $key => $record) {
@@ -263,7 +264,7 @@ class UserController extends DrupalDefaultEntityController {
     }
     // Call the default attachLoad() method. This will add fields and call
     // hook_user_load().
-    parent::attachLoad($queried_users);
+    parent::attachLoad($queried_users, $revision_id);
   }
 }
 

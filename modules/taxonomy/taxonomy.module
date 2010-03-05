@@ -865,32 +865,25 @@ function taxonomy_get_term_by_name($name) {
  * that we match the condition on term name case-independently.
  */
 class TaxonomyTermController extends DrupalDefaultEntityController {
-  protected $type;
-  public function load($ids = array(), $conditions = array()) {
-    if (isset($conditions['type'])) {
-      $this->type = $conditions['type'];
-      unset($conditions['type']);
-    }
-    return parent::load($ids, $conditions);
-  }
 
-  protected function buildQuery() {
-    parent::buildQuery();
-    $this->query->addTag('translatable');
-    $this->query->addTag('term_access');
+  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
+    $query = parent::buildQuery($ids, $conditions, $revision_id);
+    $query->addTag('translatable');
+    $query->addTag('term_access');
     // When name is passed as a condition use LIKE.
-    if (isset($this->conditions['name'])) {
-      $conditions = &$this->query->conditions();
-      foreach ($conditions as $key => $condition) {
+    if (isset($conditions['name'])) {
+      $query_conditions = &$query->conditions();
+      foreach ($query_conditions as $key => $condition) {
         if ($condition['field'] == 'base.name') {
-          $conditions[$key]['operator'] = 'LIKE';
-          $conditions[$key]['value'] = db_like($conditions[$key]['value']);
+          $query_conditions[$key]['operator'] = 'LIKE';
+          $query_conditions[$key]['value'] = db_like($query_conditions[$key]['value']);
         }
       }
     }
     // Add the machine name field from the {taxonomy_vocabulary} table.
-    $this->query->innerJoin('taxonomy_vocabulary', 'v', 'base.vid = v.vid');
-    $this->query->addField('v', 'machine_name', 'vocabulary_machine_name');
+    $query->innerJoin('taxonomy_vocabulary', 'v', 'base.vid = v.vid');
+    $query->addField('v', 'machine_name', 'vocabulary_machine_name');
+    return $query;
   }
 
   protected function cacheGet($ids, $conditions = array()) {
@@ -899,7 +892,7 @@ class TaxonomyTermController extends DrupalDefaultEntityController {
     // LOWER() and drupal_strtolower() may return different results.
     foreach ($terms as $term) {
       $term_values = (array) $term;
-      if (isset($this->conditions['name']) && drupal_strtolower($this->conditions['name'] != drupal_strtolower($term_values['name']))) {
+      if (isset($conditions['name']) && drupal_strtolower($conditions['name'] != drupal_strtolower($term_values['name']))) {
         unset($terms[$term->tid]);
       }
     }
@@ -914,21 +907,13 @@ class TaxonomyTermController extends DrupalDefaultEntityController {
  * special handling for taxonomy vocabulary objects.
  */
 class TaxonomyVocabularyController extends DrupalDefaultEntityController {
-  protected function buildQuery() {
-    parent::buildQuery();
-    $this->query->addTag('translatable');
-    $this->query->orderBy('base.weight');
-    $this->query->orderBy('base.name');
-  }
 
-  protected function attachLoad(&$records) {
-    foreach ($records as $record) {
-      // If no node types are associated with a vocabulary, the LEFT JOIN will
-      // return a NULL value for type.
-      $queried_vocabularies[$record->vid] = $record;
-    }
-    $records = $queried_vocabularies;
-    parent::attachLoad($records);
+  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
+    $query = parent::buildQuery($ids, $conditions, $revision_id);
+    $query->addTag('translatable');
+    $query->orderBy('base.weight');
+    $query->orderBy('base.name');
+    return $query;
   }
 }
 
