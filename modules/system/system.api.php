@@ -794,27 +794,29 @@ function hook_form_FORM_ID_alter(&$form, &$form_state) {
 }
 
 /**
- * Map form_ids to builder functions.
+ * Map form_ids to form builder functions.
  *
- * This hook allows modules to build multiple forms from a single form "factory"
- * function but each form will have a different form id for submission,
- * validation, theming or alteration by other modules.
+ * By default, when drupal_get_form() is called, the system will look for a
+ * function with the same name as the form ID, and use that function to build
+ * the form. This hook allows you to override that behavior in two ways.
  *
- * The 'callback arguments' will be passed as parameters to the function defined
- * in 'callback'. In case the code that calls drupal_get_form() also passes
- * parameters, then the 'callback' function will receive the
- * 'callback arguments' specified in hook_forms() before those that have been
- * passed to drupal_get_form().
+ * First, you can use this hook to tell the form system to use a different
+ * function to build certain forms in your module; this is often used to define
+ * a form "factory" function that is used to build several similar forms. In
+ * this case, your hook implementation will likely ignore all of the input
+ * arguments. See node_forms() for an example of this.
  *
- * See node_forms() for an actual example of how multiple forms share a common
- * building function.
+ * Second, you could use this hook to define how to build a form with a
+ * dynamically-generated form ID. In this case, you would need to verify that
+ * the $form_id input matched your module's format for dynamically-generated
+ * form IDs, and if so, act appropriately.
  *
  * @param $form_id
  *   The unique string identifying the desired form.
  * @param $args
- *   An array containing the original arguments provided to drupal_get_form().
- *   These are always passed to the form builder and do not have to be specified
- *   manually in 'callback arguments'.
+ *   An array containing the original arguments provided to drupal_get_form()
+ *   or drupal_form_submit(). These are always passed to the form builder and
+ *   do not have to be specified manually in 'callback arguments'.
  *
  * @return
  *   An associative array whose keys define form_ids and whose values are an

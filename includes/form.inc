@@ -495,14 +495,9 @@ function drupal_form_submit($form_id, &$form_state) {
  *   using different $form_ids can implement hook_forms(), which maps
  *   different $form_id values to the proper form constructor function.
  * @param $form_state
- *   A keyed array containing the current state of the form.
- * @param ...
- *   Any additional arguments needed by the unique form constructor
- *   function. Generally, these are any arguments passed into the
- *   drupal_get_form() or drupal_form_submit() functions after the first
- *   argument. If a module implements hook_forms(), it can examine
- *   these additional arguments and conditionally return different
- *   builder functions as well.
+ *   A keyed array containing the current state of the form, including the
+ *   additional arguments to drupal_get_form() or drupal_form_submit() in the
+ *   'args' component of the array.
  */
 function drupal_retrieve_form($form_id, &$form_state) {
   $forms = &drupal_static(__FUNCTION__);
