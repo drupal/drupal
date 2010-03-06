@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.10 2010/02/03 08:23:12 dries Exp $
+// $Id: ajax.js,v 1.11 2010/03/06 07:28:29 dries Exp $
 (function ($) {
 
 /**
@@ -107,7 +107,7 @@ Drupal.ajax = function (base, element, element_settings) {
 
   // Replacing 'nojs' with 'ajax' in the URL allows for an easy method to let
   // the server detect when it needs to degrade gracefully.
-  this.url = element_settings.url.replace(/nojs/g, 'ajax');
+  this.url = element_settings.url.replace(/\/nojs(\/|$)/g, '/ajax$1');
   this.wrapper = '#' + element_settings.wrapper;
 
   // If there isn't a form, jQuery.ajax() will be used instead, allowing us to
