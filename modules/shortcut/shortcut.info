@@ -7,4 +7,5 @@ core = 7.x
 files[] = shortcut.module
 files[] = shortcut.admin.inc
 files[] = shortcut.install
+files[] = shortcut.test
 configure = admin/config/user-interface/shortcut
