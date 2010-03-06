@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.test,v 1.29 2010/02/02 07:39:21 dries Exp $
+// $Id: poll.test,v 1.30 2010/03/06 06:39:00 dries Exp $
 
 /**
  * @file
@@ -372,7 +372,7 @@ class PollVoteCheckHostname extends PollTestCase {
       'vote on polls' => TRUE,
     ));
 
-    // Create poll. 
+    // Create poll.
     $title = $this->randomName();
     $choices = $this->_generateChoices(3);
     $this->poll_nid = $this->pollCreate($title, $choices, FALSE);

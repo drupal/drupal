@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.31 2010/03/01 11:30:37 dries Exp $
+// $Id: schema.inc,v 1.32 2010/03/06 06:39:00 dries Exp $
 
 /**
  * @file
@@ -346,7 +346,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if (!$this->columnExists($table, $field)) {
       return FALSE;
     }
-    
+
     $this->connection->query('ALTER TABLE {' . $table . '} DROP COLUMN "' . $field . '"');
     return TRUE;
   }

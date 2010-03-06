@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.28 2010/03/03 07:39:25 dries Exp $
+// $Id: overlay-parent.js,v 1.29 2010/03/06 06:39:00 dries Exp $
 
 (function ($) {
 
@@ -465,7 +465,7 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
     $tabs.removeAttr('class');
   }
 
-  // Re-attach the behaviors we lost while copying elements from the iframe 
+  // Re-attach the behaviors we lost while copying elements from the iframe
   // document to the parent document.
   Drupal.attachBehaviors(self.$dialogTitlebar);
 
@@ -693,7 +693,7 @@ Drupal.overlay.clickHandler = function (event) {
     return;
   }
 
-  // Only continue if clicked target (or one of its parents) is a link. 
+  // Only continue if clicked target (or one of its parents) is a link.
   if (!$target.is('a')) {
     $target = $target.closest('a');
     if (!$target.length) {

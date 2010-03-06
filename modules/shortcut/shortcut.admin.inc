@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.admin.inc,v 1.9 2010/02/25 15:58:54 dries Exp $
+// $Id: shortcut.admin.inc,v 1.10 2010/03/06 06:39:01 dries Exp $
 
 /**
  * @file
@@ -630,7 +630,7 @@ function shortcut_set_delete_form($form, &$form_state, $shortcut_set) {
   }
 
   $form['info'] = array(
-    '#markup' => $info, 
+    '#markup' => $info,
   );
 
   return confirm_form(

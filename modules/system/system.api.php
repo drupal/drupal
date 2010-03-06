@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.139 2010/02/27 10:51:25 dries Exp $
+// $Id: system.api.php,v 1.140 2010/03/06 06:39:01 dries Exp $
 
 /**
  * @file
@@ -1560,7 +1560,7 @@ function hook_modules_uninstalled($modules) {
  *   - 'description' A string with a short description of what the wrapper does.
  *   - 'type' A bitmask of flags indicating what type of streams this wrapper
  *     will access - local or remote, readable and/or writeable, etc. Many
- *     shortcut constants are defined in stream_wrappers.inc. 
+ *     shortcut constants are defined in stream_wrappers.inc.
  *
  * @see file_get_stream_wrappers()
  * @see hook_stream_wrappers_alter()
@@ -2132,7 +2132,7 @@ function hook_install() {
  * Perform a single update.
  *
  * For each patch which requires a database change add a new hook_update_N()
- * which will be called by update.php. The database updates are numbered 
+ * which will be called by update.php. The database updates are numbered
  * sequentially according to the version of Drupal you are compatible with.
  *
  * Schema updates should adhere to the Schema API:

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.115 2010/03/04 09:03:08 dries Exp $
+// $Id: system.test,v 1.116 2010/03/06 06:39:01 dries Exp $
 
 /**
  * Helper class for module test cases.

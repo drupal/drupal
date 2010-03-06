@@ -1,4 +1,4 @@
-/* $Id: simpletest.css,v 1.7 2010/02/07 05:36:57 webchick Exp $ */
+/* $Id: simpletest.css,v 1.8 2010/03/06 06:39:01 dries Exp $ */
 
 /* Addon for the simpletest module */
 #simpletest {
@@ -89,4 +89,4 @@ a.simpletest-collapse:hover {
   overflow: visible;
   position: relative;
   z-index: 1000;
-} 
+}

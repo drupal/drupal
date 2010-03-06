@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.36 2010/02/18 04:36:38 webchick Exp $
+// $Id: taxonomy.install,v 1.37 2010/03/06 06:39:01 dries Exp $
 
 /**
  * @file
@@ -225,7 +225,7 @@ function taxonomy_update_dependencies() {
   $dependencies['node'][7006] = array(
     'taxonomy' => 7002,
   );
- 
+
   return $dependencies;
 }
 
