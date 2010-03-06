@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.module,v 1.23 2010/02/25 15:58:54 dries Exp $
+// $Id: shortcut.module,v 1.24 2010/03/06 06:33:14 dries Exp $
 
 /**
  * @file
@@ -328,7 +328,7 @@ function shortcut_set_load($set_name) {
  *   - 'title': The title of the shortcut set.
  *   - 'set_name': (optional) The internal name of the shortcut set. If
  *     omitted, a new shortcut set will be created, and the 'set_name' property
- *     will be added to the passed-in array.
+ *     will be added to the passed-in object.
  *   - 'links': (optional) An array of menu links to save for the shortcut set.
  *     Each link is an array containing at least the following keys (which will
  *     be expanded to fill in other default values after the shortcut set is
