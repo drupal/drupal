@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.260 2010/03/03 19:46:26 dries Exp $
+// $Id: system.admin.inc,v 1.261 2010/03/06 19:38:34 dries Exp $
 
 /**
  * @file
@@ -1205,7 +1205,7 @@ function system_modules_submit($form, &$form_state) {
     foreach ($modules_to_be_enabled as $module) {
       $sort[$module] = $files[$module]->sort;
     }
-    array_multisort($sort, $modules_to_be_enabled);
+    array_multisort($sort, SORT_DESC, $modules_to_be_enabled);
     module_enable($modules_to_be_enabled, FALSE);
   }
   // Disable the modules that need disabling.
@@ -1214,8 +1214,8 @@ function system_modules_submit($form, &$form_state) {
     foreach ($disable_modules as $module) {
       $sort[$module] = $files[$module]->sort;
     }
-    array_multisort($sort, $disable_modules);
-    module_disable($disable_modules);
+    array_multisort($sort, SORT_ASC, $disable_modules);
+    module_disable($disable_modules, FALSE);
   }
 
   // Install new modules.
@@ -1227,7 +1227,7 @@ function system_modules_submit($form, &$form_state) {
       }
       $sort[$module] = $files[$module]->sort;
     }
-    array_multisort($sort, $new_modules);
+    array_multisort($sort, SORT_DESC, $new_modules);
     module_enable($new_modules, FALSE);
   }
 
