@@ -39,7 +39,7 @@ define('MAINTENANCE_MODE', 'update');
  * Render a 403 access denied page for authorize.php
  */
 function authorize_access_denied_page() {
-  drupal_add_http_header('403 Forbidden');
+  drupal_add_http_header('Status', '403 Forbidden');
   watchdog('access denied', 'authorize.php', NULL, WATCHDOG_WARNING);
   drupal_set_title('Access denied');
   return t('You are not allowed to access this page.');

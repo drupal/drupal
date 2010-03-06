@@ -906,32 +906,22 @@ function drupal_load($type, $name) {
  * too. This is necessary to avoid security bugs (e.g. UTF-7 XSS).
  *
  * @param $name
- *   The HTTP header name, or a status code followed by a reason phrase, e.g.
- *   "404 Not Found".
+ *   The HTTP header name, or the special 'Status' header name.
  * @param $value
- *   The HTTP header value; if omitted, the specified header is unset.
+ *   The HTTP header value; if equal to FALSE, the specified header is unset.
+ *   If $name is 'Status', this is expected to be a status code followed by a
+ *   reason phrase, e.g. "404 Not Found".
  * @param $append
  *   Whether to append the value to an existing header or to replace it.
  */
-function drupal_add_http_header($name = NULL, $value = NULL, $append = FALSE) {
+function drupal_add_http_header($name, $value, $append = FALSE) {
   // The headers as name/value pairs.
-  $headers = &drupal_static(__FUNCTION__, array());
+  $headers = &drupal_static('drupal_http_headers', array());
 
-  if (!isset($name)) {
-    return $headers;
-  }
-
-  // Save status codes using the special key ":status".
-  if (preg_match('/^\d{3} /', $name)) {
-    $value = $name;
-    $name = $name_lower = ':status';
-  }
-  else {
-    $name_lower = strtolower($name);
-  }
+  $name_lower = strtolower($name);
   _drupal_set_preferred_header_name($name);
 
-  if (!isset($value)) {
+  if ($value === FALSE) {
     $headers[$name_lower] = FALSE;
   }
   elseif (isset($headers[$name_lower]) && $append) {
@@ -956,7 +946,7 @@ function drupal_add_http_header($name = NULL, $value = NULL, $append = FALSE) {
  *   or NULL if the header has not been set.
  */
 function drupal_get_http_header($name = NULL) {
-  $headers = drupal_add_http_header();
+  $headers = &drupal_static('drupal_http_headers', array());
   if (isset($name)) {
     $name = strtolower($name);
     return isset($headers[$name]) ? $headers[$name] : NULL;
@@ -1006,7 +996,7 @@ function drupal_send_headers($default_headers = array(), $only_default = FALSE) 
     }
   }
   foreach ($headers as $name_lower => $value) {
-    if ($name_lower == ':status') {
+    if ($name_lower == 'status') {
       header($_SERVER['SERVER_PROTOCOL'] . ' ' . $value);
     }
     // Skip headers that have been unset.

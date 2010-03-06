@@ -2722,7 +2722,7 @@ function _db_error_page($error = '') {
   global $db_type;
   drupal_language_initialize();
   drupal_maintenance_theme();
-  drupal_add_http_header($_SERVER['SERVER_PROTOCOL'] . ' 503 Service Unavailable');
+  drupal_add_http_header('Status', '503 Service Unavailable');
   drupal_set_title('Site offline');
 }
 

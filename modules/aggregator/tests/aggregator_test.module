@@ -40,7 +40,7 @@ function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   }
   // Return 304 not modified if either last modified or etag match.
   if ($last_modified == $if_modified_since || $etag == $if_none_match) {
-    drupal_add_http_header('304 Not Modified');
+    drupal_add_http_header('Status', '304 Not Modified');
     return;
   }
 

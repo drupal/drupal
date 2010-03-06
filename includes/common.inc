@@ -2339,7 +2339,7 @@ function drupal_deliver_html_page($page_callback_result) {
     switch ($page_callback_result) {
       case MENU_NOT_FOUND:
         // Print a 404 page.
-        drupal_add_http_header('404 Not Found');
+        drupal_add_http_header('Status', '404 Not Found');
 
         watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
@@ -2369,7 +2369,7 @@ function drupal_deliver_html_page($page_callback_result) {
 
       case MENU_ACCESS_DENIED:
         // Print a 403 page.
-        drupal_add_http_header('403 Forbidden');
+        drupal_add_http_header('Status', '403 Forbidden');
         watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
@@ -2397,7 +2397,7 @@ function drupal_deliver_html_page($page_callback_result) {
       case MENU_SITE_OFFLINE:
         // Print a 503 page.
         drupal_maintenance_theme();
-        drupal_add_http_header('503 Service unavailable');
+        drupal_add_http_header('Status', '503 Service unavailable');
         drupal_set_title(t('Site under maintenance'));
         print theme('maintenance_page', array('content' => filter_xss_admin(variable_get('maintenance_mode_message',
           t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))))));
