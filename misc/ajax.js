@@ -107,7 +107,7 @@ Drupal.ajax = function (base, element, element_settings) {
 
   // Replacing 'nojs' with 'ajax' in the URL allows for an easy method to let
   // the server detect when it needs to degrade gracefully.
-  this.url = element_settings.url.replace(/nojs/g, 'ajax');
+  this.url = element_settings.url.replace(/\/nojs(\/|$)/g, '/ajax$1');
   this.wrapper = '#' + element_settings.wrapper;
 
   // If there isn't a form, jQuery.ajax() will be used instead, allowing us to
