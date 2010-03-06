@@ -97,7 +97,7 @@
  *   above):
  *   - hook_prepare() (node-type-specific)
  *   - hook_node_prepare() (all); if translation.module is enabled, this will
- *     also invoke hook_node_prepare_translation() on all modules. 
+ *     also invoke hook_node_prepare_translation() on all modules.
  *   - hook_form() (node-type-specific)
  *   - field_attach_form()
  * - Validating a node during editing form submit (calling

@@ -225,7 +225,7 @@ function taxonomy_update_dependencies() {
   $dependencies['node'][7006] = array(
     'taxonomy' => 7002,
   );
- 
+
   return $dependencies;
 }
 

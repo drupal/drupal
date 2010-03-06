@@ -1087,10 +1087,10 @@ alert("test")
 //--><!]]>
 </script></p>', t('HTML corrector -- CDATA added to a nested script element'));
 
-    $f = _filter_htmlcorrector('<p><style> /* Styling */ body {color:red} </style></p>');
+    $f = _filter_htmlcorrector('<p><style> /* Styling */ body {color:red}</style></p>');
     $this->assertEqual($f, '<p><style>
 <!--/*--><![CDATA[/* ><!--*/
- /* Styling */ body {color:red} 
+ /* Styling */ body {color:red}
 /*--><!]]>*/
 </style></p>', t('HTML corrector -- CDATA added to a style element.'));
   }

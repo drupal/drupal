@@ -561,10 +561,10 @@ function _openid_get_params($str) {
  *   openid.[prefix].[key2] = [value2]
  *   ...
  * @endcode
- * 
+ *
  * This function extracts all the keys belonging to an extension namespace in a
  * response, optionally using a fallback prefix if none is provided in the response.
- * 
+ *
  * Note that you cannot assume that a given extension namespace will use the same
  * prefix on the response and the request: each party may use a different prefix
  * to refer to the same namespace.

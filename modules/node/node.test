@@ -1509,7 +1509,7 @@ class NodeQueryAlter extends DrupalWebTestCase {
    * Verifies that a non-standard table alias can be used, and that a
    * user with node access can view the nodes.
    */
-  function testNodeQueryAlterLowLevelWithAccess() {   
+  function testNodeQueryAlterLowLevelWithAccess() {
     // User with access should be able to view 4 nodes.
     try {
       $query = db_select('node', 'mytab')

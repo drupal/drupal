@@ -630,7 +630,7 @@ function shortcut_set_delete_form($form, &$form_state, $shortcut_set) {
   }
 
   $form['info'] = array(
-    '#markup' => $info, 
+    '#markup' => $info,
   );
 
   return confirm_form(

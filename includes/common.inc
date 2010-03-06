@@ -3014,7 +3014,7 @@ function drupal_pre_render_styles($elements) {
       //   IE's limit of 31 total CSS inclusion tags.
       // - The group contains items not eligible for aggregation (their
       //   'preprocess' flag has been set to FALSE): in this case, output a LINK
-      //   tag for each file. 
+      //   tag for each file.
       case 'file':
         // The group has been aggregated into a single file: output a LINK tag
         // for the aggregate file.
@@ -4634,7 +4634,7 @@ function drupal_set_page_content($content = NULL) {
  *     containing an expression for Internet Explorer to evaluate as part of a
  *     conditional comment. For example, this can be set to 'lt IE 7' for the
  *     element to be rendered in Internet Explorer 6, but not in Internet
- *     Explorer 7 or higher. Defaults to TRUE. 
+ *     Explorer 7 or higher. Defaults to TRUE.
  *   - '!IE': If FALSE, the element is not rendered by browsers other than
  *     Internet Explorer. If TRUE, the element is rendered by those browsers.
  *     Defaults to TRUE.

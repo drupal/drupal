@@ -346,7 +346,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if (!$this->columnExists($table, $field)) {
       return FALSE;
     }
-    
+
     $this->connection->query('ALTER TABLE {' . $table . '} DROP COLUMN "' . $field . '"');
     return TRUE;
   }

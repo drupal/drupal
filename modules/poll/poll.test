@@ -372,7 +372,7 @@ class PollVoteCheckHostname extends PollTestCase {
       'vote on polls' => TRUE,
     ));
 
-    // Create poll. 
+    // Create poll.
     $title = $this->randomName();
     $choices = $this->_generateChoices(3);
     $this->poll_nid = $this->pollCreate($title, $choices, FALSE);

@@ -873,7 +873,7 @@ function filter_dom_serialize($dom_document) {
   foreach($body_node->getElementsByTagName('style') as $node) {
     filter_dom_serialize_escape_cdata_element($dom_document, $node, '/*', '*/');
   }
-  
+
   foreach ($body_node->childNodes as $child_node) {
     $body_content .= $dom_document->saveXML($child_node);
   }
@@ -882,14 +882,14 @@ function filter_dom_serialize($dom_document) {
 
 /**
  * Adds comments around the <!CDATA section in a dom element.
- * 
+ *
  * DOMDocument::loadHTML in filter_dom_load() makes CDATA sections from the
  * contents of inline script and style tags.  This can cause HTML 4 browsers to
  * throw exceptions.
- * 
+ *
  * This function attempts to solve the problem by creating a DocumentFragment
  * and immitating the behavior in drupal_get_js(), commenting the CDATA tag.
- * 
+ *
  * @param $dom_document
  *   The DOMDocument containing the $dom_element.
  * @param $dom_element
