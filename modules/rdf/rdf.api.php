@@ -41,6 +41,8 @@
  *       literal text or another RDF resource.
  *     - rdftype: A special property used to define the type of the instance.
  *       Its value should be an array of RDF classes.
+ *
+ *       @ingroup rdf
  */
 function hook_rdf_mapping() {
   return array(
@@ -69,6 +71,39 @@ function hook_rdf_mapping() {
         ),
       ),
     ),
+  );
+}
+
+/**
+ * Allow modules to define namespaces for RDF mappings.
+ *
+ * Many common namespace prefixes are defined in rdf_rdf_namespaces(). However,
+ * if a module implements hook_rdf_mapping() and uses a prefix that is not
+ * defined in rdf_rdf_namespaces(), this hook should be used to define the new
+ * namespace prefix.
+ *
+ * @return
+ *   An associative array of namespaces where the key is the namespace prefix
+ *   and the value is the namespace URI.
+ *
+ * @ingroup rdf
+ */
+function hook_rdf_namespaces() {
+  return array(
+    'admin'    => 'http://webns.net/mvcb/',
+    'content'  => 'http://purl.org/rss/1.0/modules/content/',
+    'dc'       => 'http://purl.org/dc/terms/',
+    'foaf'     => 'http://xmlns.com/foaf/0.1/',
+    'owl'      => 'http://www.w3.org/2002/07/owl#',
+    'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#',
+    'rss'      => 'http://purl.org/rss/1.0/',
+    'tags'     => 'http://www.holygoat.co.uk/owl/redwood/0.1/tags/',
+    'sioc'     => 'http://rdfs.org/sioc/ns#',
+    'sioct'    => 'http://rdfs.org/sioc/types#',
+    'ctag'     => 'http://commontag.org/ns#',
+    'skos'     => 'http://www.w3.org/2004/02/skos/core#',
+    'xsd'      => 'http://www.w3.org/2001/XMLSchema#',
   );
 }
 

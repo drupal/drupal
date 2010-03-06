@@ -250,8 +250,8 @@ function drupal_get_breadcrumb() {
 }
 
 /**
- * Return a string containing RDF namespaces for the <html> tag of an XHTML
- * page.
+ * Return a string containing RDF namespace declarations for use in XML and
+ * XHTML output.
  */
 function drupal_get_rdf_namespaces() {
   // Serialize the RDF namespaces used in RDFa annotation.
