@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator_test.module,v 1.6 2009/12/04 16:49:45 dries Exp $
+// $Id: aggregator_test.module,v 1.7 2010/03/06 06:31:24 dries Exp $
 
 /**
  * Implements hook_menu().
@@ -40,7 +40,7 @@ function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   }
   // Return 304 not modified if either last modified or etag match.
   if ($last_modified == $if_modified_since || $etag == $if_none_match) {
-    drupal_add_http_header('304 Not Modified');
+    drupal_add_http_header('Status', '304 Not Modified');
     return;
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.php,v 1.6 2010/02/05 22:03:03 dries Exp $
+// $Id: authorize.php,v 1.7 2010/03/06 06:31:23 dries Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ define('MAINTENANCE_MODE', 'update');
  * Render a 403 access denied page for authorize.php
  */
 function authorize_access_denied_page() {
-  drupal_add_http_header('403 Forbidden');
+  drupal_add_http_header('Status', '403 Forbidden');
   watchdog('access denied', 'authorize.php', NULL, WATCHDOG_WARNING);
   drupal_set_title('Access denied');
   return t('You are not allowed to access this page.');

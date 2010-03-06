@@ -1,5 +1,5 @@
 <?php
-// $Id: errors.inc,v 1.1 2010/02/15 16:25:06 webchick Exp $
+// $Id: errors.inc,v 1.2 2010/03/06 06:31:24 dries Exp $
 
 /**
  * @file
@@ -172,7 +172,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   }
 
   if ($fatal) {
-    drupal_add_http_header('500 Service unavailable (with message)');
+    drupal_add_http_header('Status', '500 Service unavailable (with message)');
   }
 
   if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
