@@ -273,7 +273,7 @@ function filter_admin_format_title($format) {
 function filter_permission() {
   $perms['administer filters'] = array(
     'title' => t('Administer text formats and filters'),
-    'description' => drupal_placeholder(array('text' => t('Warning: This permission has security implications.'))),
+    'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
   );
 
   // Generate permissions for each text format. Warn the administrator that any

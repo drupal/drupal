@@ -124,11 +124,20 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#type' => 'checkboxes',
     '#title' => t('Roles'),
     '#options' => user_roles(),
-    '#default_value' => array_keys(filter_get_roles_by_format($format)),
     '#disabled' => $is_fallback,
   );
   if ($is_fallback) {
     $form['roles']['#description'] = t('All roles for this text format must be enabled and cannot be changed.');
+  }
+  if (!empty($format->format)) {
+    // If editing an existing text format, pre-select its current permissions.
+    $form['roles']['#default_value'] = array_keys(filter_get_roles_by_format($format));
+  }
+  elseif ($admin_role = variable_get('user_admin_role', 0)) {
+    // If adding a new text format and the site has an administrative role,
+    // pre-select that role so as to grant administrators access to the new
+    // text format permission by default.
+    $form['roles']['#default_value'] = array($admin_role);
   }
 
   // Retrieve available filters and load all configured filters for existing

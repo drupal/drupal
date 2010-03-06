@@ -168,12 +168,12 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create users.
-    $filteredhtml_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchObject();
-    $fullhtml_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
+    $filtered_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchObject();
+    $full_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
     $this->admin_user = $this->drupalCreateUser(array(
       'administer filters',
-      filter_permission_name($filteredhtml_format),
-      filter_permission_name($fullhtml_format),
+      filter_permission_name($filtered_html_format),
+      filter_permission_name($full_html_format),
     ));
 
     $this->web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
