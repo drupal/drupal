@@ -1,13 +1,13 @@
-/* $Id: overlay-parent.css,v 1.10 2010/01/18 03:29:51 dries Exp $ */
+/* $Id: overlay-parent.css,v 1.11 2010/03/06 07:46:49 dries Exp $ */
 
 /**
  * ui-dialog overlay.
  */
 .ui-widget-overlay {
-  background-color: #222;
-  opacity: 0.85;
-  filter: alpha(opacity=85);
-  background-image: none;
+  opacity: 1;
+  filter: none;
+  /* Using a transparent png renders faster than using opacity */
+  background: transparent url(images/background.png) repeat;
 }
 
 body.overlay-autofit {
@@ -157,4 +157,14 @@ body.overlay-autofit {
  */
 .overlay div.add-or-remove-shortcuts {
   padding-top: 0.9em;
+}
+
+/**
+ * IE 6 Fix.
+ *
+ * Use filter to support transparency in IE6 for the overlay background.
+ */
+* html .ui-widget-overlay {
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='modules/overlay/images/background.png', sizingMethod='scale');
+  background: none;
 }
