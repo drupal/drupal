@@ -239,6 +239,9 @@ function system_hook_info() {
   $hooks['token_info'] = array(
     'group' => 'tokens',
   );
+  $hooks['token_info_alter'] = array(
+    'group' => 'tokens',
+  );
   $hooks['tokens'] = array(
     'group' => 'tokens',
   );
