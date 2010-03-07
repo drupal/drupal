@@ -2408,7 +2408,7 @@ Your account at !site-name-token has been activated.
 
 You may now log in by clicking this link or copying and pasting it into your browser:
 
-!site-login-url-token
+!one-time-login-token
 
 This link can only be used once to log in and will lead you to a page where you can set your password.
 
@@ -2417,7 +2417,7 @@ After setting your password, you will be able to log in at !site-login-url-token
 username: !user-name-token
 password: Your password
 
---  !site-name-token team", array('!user-name-token' => '[user:name]', '!site-name-token' => '[site:name]',  '!site-login-url-token' => '[site:login-url]'), array('langcode' => $langcode));
+--  !site-name-token team", array('!user-name-token' => '[user:name]', '!site-name-token' => '[site:name]',  '!site-login-url-token' => '[site:login-url]', '!one-time-login-token' => '[user:one-time-login-url]'), array('langcode' => $langcode));
         break;
 
       case 'status_blocked_subject':
