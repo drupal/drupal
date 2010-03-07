@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.896 2010/03/07 18:44:31 webchick Exp $
+// $Id: system.module,v 1.897 2010/03/07 23:14:20 webchick Exp $
 
 /**
  * @file
@@ -337,7 +337,7 @@ function system_element_info() {
     '#size' => 60,
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_text_format', 'ajax_process_form'),
+    '#process' => array('ajax_process_form'),
     '#theme' => 'textfield',
     '#theme_wrappers' => array('form_element'),
   );
@@ -359,7 +359,7 @@ function system_element_info() {
     '#cols' => 60,
     '#rows' => 5,
     '#resizable' => TRUE,
-    '#process' => array('form_process_text_format', 'ajax_process_form'),
+    '#process' => array('ajax_process_form'),
     '#theme' => 'textarea',
     '#theme_wrappers' => array('form_element'),
   );

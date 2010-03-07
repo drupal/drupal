@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.72 2010/01/15 10:59:21 dries Exp $
+// $Id: block.admin.inc,v 1.73 2010/03/07 23:14:20 webchick Exp $
 
 /**
  * @file
@@ -443,7 +443,7 @@ function block_add_block_form_submit($form, &$form_state) {
     ->fields(array(
       'body' => $form_state['values']['body'],
       'info' => $form_state['values']['info'],
-      'format' => $form_state['values']['body_format'],
+      'format' => $form_state['values']['format'],
     ))
     ->execute();
 

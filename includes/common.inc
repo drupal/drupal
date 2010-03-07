@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1124 2010/03/07 06:58:14 webchick Exp $
+// $Id: common.inc,v 1.1125 2010/03/07 23:14:20 webchick Exp $
 
 /**
  * @file
@@ -5517,9 +5517,6 @@ function drupal_common_theme() {
       'arguments' => array('element' => NULL),
     ),
     'form_element_label' => array(
-      'render element' => 'element',
-    ),
-    'text_format_wrapper' => array(
       'render element' => 'element',
     ),
     'vertical_tabs' => array(

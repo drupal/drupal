@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.94 2010/02/17 05:42:42 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.95 2010/03/07 23:14:20 webchick Exp $
 
 /**
  * @file
@@ -647,10 +647,10 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#weight' => -5,
   );
   $form['description'] = array(
-    '#type' => 'textarea',
+    '#type' => 'text_format',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
-    '#text_format' => $edit['format'],
+    '#format' => $edit['format'],
     '#weight' => 0,
   );
 
@@ -779,10 +779,6 @@ function taxonomy_form_term_submit($form, &$form_state) {
     $form_state['confirm_parents'] = TRUE;
     return;
   }
-
-  // Massage #text_format.
-  $form_state['values']['format'] = $form_state['values']['description_format'];
-  unset($form_state['values']['description_format']);
 
   $term = taxonomy_form_term_submit_builder($form, $form_state);
 
