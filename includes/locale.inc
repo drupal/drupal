@@ -41,12 +41,12 @@ define('LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN', 1);
  */
 
 /**
- * Identify the language from the current content language.
+ * Identifies the language from the current interface language.
  *
  * @return
- *   The current content language code.
+ *   The current interface language code.
  */
-function locale_language_from_content() {
+function locale_language_from_interface() {
   global $language;
   return isset($language->language) ? $language->language : FALSE;
 }

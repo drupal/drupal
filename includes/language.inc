@@ -37,15 +37,32 @@ function language_types_info() {
  * whose negotiation values are unchangeable and defined while defining the
  * language type itself.
  *
+ * @param $stored
+ *   Optional. By default retrieves values from the 'language_types' variable to
+ *   avoid unnecessary hook invocations.
+ *   If set to FALSE retrieves values from the actual language type definitions.
+ *   This allows to react to alterations performed on the definitions by modules
+ *   installed after the 'language_types' variable is set.
+ *
  * @return
  *   An array of language type names.
  */
-function language_types_configurable() {
+function language_types_configurable($stored = TRUE) {
   $configurable = &drupal_static(__FUNCTION__);
 
-  if (!isset($configurable)) {
+  if ($stored && !isset($configurable)) {
     $types = variable_get('language_types', drupal_language_types());
     $configurable = array_keys(array_filter($types));
+  }
+
+  if (!$stored) {
+    $result = array();
+    foreach (language_types_info() as $type => $info) {
+      if (!isset($info['fixed'])) {
+        $result[] = $type;
+      }
+    }
+    return $result;
   }
 
   return $configurable;

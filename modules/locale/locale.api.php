@@ -57,12 +57,17 @@ function hook_language_switch_links_alter(array &$links, $type, $path) {
  *   the following key-value pairs:
  *   - "name": The human-readable language type identifier.
  *   - "description": A description of the language type.
+ *   - "fixed": An array of language provider identifiers. Defining this key
+ *     makes the language type non-configurable.
  */
 function hook_language_types_info() {
   return array(
     'custom_language_type' => array(
       'name' => t('Custom language'),
       'description' => t('A custom language type.'),
+    ),
+    'fixed_custom_language_type' => array(
+      'fixed' => array('custom_language_provider'),
     ),
   );
 }

@@ -44,7 +44,7 @@ function drupal_path_initialize() {
  *   found.
  */
 function drupal_lookup_path($action, $path = '', $path_language = NULL) {
-  global $language;
+  global $language_content;
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
@@ -71,7 +71,7 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
     }
   }
 
-  $path_language = $path_language ? $path_language : $language->language;
+  $path_language = $path_language ? $path_language : $language_content->language;
 
   if ($action == 'wipe') {
     $cache = array();

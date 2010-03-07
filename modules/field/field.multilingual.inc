@@ -132,8 +132,8 @@ function field_multilingual_valid_language($langcode, $default = TRUE) {
   if (in_array($langcode, $enabled_languages)) {
     return $langcode;
   }
-  global $language;
-  $langcode = $default ? language_default('language') : $language->language;
+  global $language_content;
+  $langcode = $default ? language_default('language') : $language_content->language;
   if (in_array($langcode, $enabled_languages)) {
     return $langcode;
   }

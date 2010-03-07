@@ -965,11 +965,11 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
   /**
    * The default language set for the UI before uninstall.
    */
-  protected $language_interface;
+  protected $language;
 
   function setUp() {
     parent::setUp('locale');
-    $this->language_interface = 'en';
+    $this->language = 'en';
   }
 
   /**
@@ -980,12 +980,12 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Add a new language and optionally set it as default.
     require_once DRUPAL_ROOT . '/includes/locale.inc';
-    locale_add_language('fr', 'French', 'Français', LANGUAGE_LTR, '', '', TRUE, $this->language_interface == 'fr');
+    locale_add_language('fr', 'French', 'Français', LANGUAGE_LTR, '', '', TRUE, $this->language == 'fr');
 
     // Check the UI language.
     drupal_language_initialize();
-    global $language_interface;
-    $this->assertEqual($language_interface->language, $this->language_interface, t('Current language: %lang', array('%lang' => $language_interface->language)));
+    global $language;
+    $this->assertEqual($language->language, $this->language, t('Current language: %lang', array('%lang' => $language->language)));
 
     // Enable multilingual workflow option for articles.
     variable_set('language_content_type_article', 1);
@@ -1031,7 +1031,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check the init language logic.
     drupal_language_initialize();
-    $this->assertEqual($language_interface->language, 'en', t('Language after uninstall: %lang', array('%lang' => $language_interface->language)));
+    $this->assertEqual($language->language, 'en', t('Language after uninstall: %lang', array('%lang' => $language->language)));
 
     // Check JavaScript files deletion.
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
@@ -1091,7 +1091,7 @@ class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest 
 
   function setUp() {
     parent::setUp();
-    $this->language_interface = 'fr';
+    $this->language = 'fr';
   }
 }
 
@@ -1122,8 +1122,9 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
    */
   function testLanguageBlock() {
     // Enable the language switching block.
+    $language_type = LANGUAGE_TYPE_INTERFACE;
     $edit = array(
-      'locale_language[region]' => 'sidebar_first',
+      "locale_{$language_type}[region]" => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
@@ -1136,14 +1137,14 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     // Set language negotiation.
     drupal_load('module', 'locale');
     include_once DRUPAL_ROOT . '/includes/language.inc';
-    language_negotiation_set(LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
+    language_negotiation_set($language_type, locale_language_negotiation_info());
 
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
     $this->assertText(t('Languages'), t('Language switcher block found.'));
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id="block-locale-language"]/div[@class="content"]');
+    list($language_switcher) = $this->xpath("//div[@id=\"block-locale-{$language_type}\"]/div[@class=\"content\"]");
     $links = array(
       'active' => array(),
       'inactive' => array(),
@@ -1815,9 +1816,9 @@ class LocalizeDateFormatsFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set language negotiation.
+    $language_type = LANGUAGE_TYPE_INTERFACE;
     $edit = array(
-      'language[enabled][locale-url]' => TRUE,
-      'language_interface[enabled][locale-url]' => TRUE,
+      "{$language_type}[enabled][locale-url]" => TRUE,
     );
     $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
 

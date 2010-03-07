@@ -479,7 +479,7 @@ function locale_languages_configure_form() {
   $form = array(
     '#submit' => array('locale_languages_configure_form_submit'),
     '#theme' => 'locale_languages_configure_form',
-    '#language_types' => language_types_configurable(),
+    '#language_types' => language_types_configurable(FALSE),
     '#language_types_info' => language_types_info(),
     '#language_providers' => language_negotiation_info(),
   );
@@ -504,7 +504,7 @@ function _locale_languages_configure_form_language_table(&$form, $type) {
   $info = $form['#language_types_info'][$type];
 
   $table_form = array(
-    '#title' => t('@type', array('@type' => $info['name'])),
+    '#title' => t('@type language detection', array('@type' => $info['name'])),
     '#tree' => TRUE,
     '#description' => $info['description'],
     '#language_providers' => array(),
@@ -667,9 +667,10 @@ function locale_languages_configure_form_submit($form, &$form_state) {
     if (isset($info['fixed'])) {
       $language_types[$type] = FALSE;
       $negotiation = array();
-      foreach ($info['fixed'] as $id) {
+      foreach ($info['fixed'] as $weight => $id) {
         if (isset($defined_providers[$id])) {
           $negotiation[$id] = $defined_providers[$id];
+          $negotiation[$id]['weight'] = $weight;
         }
       }
       language_negotiation_set($type, $negotiation);

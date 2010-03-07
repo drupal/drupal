@@ -189,12 +189,12 @@ define('LANGUAGE_NONE', 'und');
 /**
  * The type of language used to define the content language.
  */
-define('LANGUAGE_TYPE_CONTENT', 'language');
+define('LANGUAGE_TYPE_CONTENT', 'language_content');
 
 /**
  * The type of language used to select the user interface.
  */
-define('LANGUAGE_TYPE_INTERFACE', 'language_interface');
+define('LANGUAGE_TYPE_INTERFACE', 'language');
 
 /**
  * The type of language used for URLs.
@@ -1379,12 +1379,12 @@ function drupal_unpack($obj, $field = 'data') {
  *   The translated string.
  */
 function t($string, array $args = array(), array $options = array()) {
-  global $language_interface;
+  global $language;
   static $custom_strings;
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = isset($language_interface->language) ? $language_interface->language : 'en';
+    $options['langcode'] = isset($language->language) ? $language->language : 'en';
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -2081,8 +2081,8 @@ function drupal_language_initialize() {
  */
 function drupal_language_types() {
   return array(
-    LANGUAGE_TYPE_CONTENT => TRUE,
     LANGUAGE_TYPE_INTERFACE => TRUE,
+    LANGUAGE_TYPE_CONTENT => FALSE,
     LANGUAGE_TYPE_URL => FALSE,
   );
 }
