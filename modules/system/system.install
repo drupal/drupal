@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.452 2010/03/02 09:09:45 dries Exp $
+// $Id: system.install,v 1.453 2010/03/07 06:35:48 webchick Exp $
 
 /**
  * @file
@@ -1606,6 +1606,13 @@ function system_update_6055() {
   db_drop_unique_key('url_alias', 'dst_language');
   db_add_index('url_alias', 'src_language_pid', array('src', 'language', 'pid'));
   db_add_unique_key('url_alias', 'dst_language_pid', array('dst', 'language', 'pid'));
+}
+
+/**
+ * Add semaphore table.
+ */
+function system_update_6054() {
+  // Lives in update_fix_d7_requirements()
 }
 
 /**
