@@ -1,5 +1,5 @@
 <?php
-// $Id: field.multilingual.inc,v 1.8 2010/02/12 05:38:09 webchick Exp $
+// $Id: field.multilingual.inc,v 1.9 2010/03/07 07:44:18 webchick Exp $
 
 /**
  * @file
@@ -132,8 +132,8 @@ function field_multilingual_valid_language($langcode, $default = TRUE) {
   if (in_array($langcode, $enabled_languages)) {
     return $langcode;
   }
-  global $language;
-  $langcode = $default ? language_default('language') : $language->language;
+  global $language_content;
+  $langcode = $default ? language_default('language') : $language_content->language;
   if (in_array($langcode, $enabled_languages)) {
     return $langcode;
   }

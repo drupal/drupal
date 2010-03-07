@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.55 2010/01/09 22:07:56 webchick Exp $
+// $Id: locale.install,v 1.56 2010/03/07 07:44:18 webchick Exp $
 
 /**
  * @file
@@ -70,10 +70,9 @@ function locale_update_7001() {
       break;
   }
 
-  // Save new language negotiation options: UI language is tied to content
-  // language as this was Drupal 6 behavior.
-  language_negotiation_set(LANGUAGE_TYPE_CONTENT, array_flip($negotiation));
-  language_negotiation_set(LANGUAGE_TYPE_INTERFACE, array(LOCALE_LANGUAGE_NEGOTIATION_CONTENT => 0));
+  // Save new language negotiation options.
+  language_negotiation_set(LANGUAGE_TYPE_INTERFACE, array_flip($negotiation));
+  language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LOCALE_LANGUAGE_NEGOTIATION_INTERFACE => 0));
   language_negotiation_set(LANGUAGE_TYPE_URL, array(LOCALE_LANGUAGE_NEGOTIATION_URL => 0));
 
   // Unset the old language negotiation system variable.
