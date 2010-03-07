@@ -673,6 +673,13 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected $originalUser = NULL;
 
   /**
+   * The original shutdown handlers array, before it was cleaned for testing purposes.
+   *
+   * @var array
+   */
+  protected $originalShutdownCallbacks = array();
+
+  /**
    * HTTP authentication method
    */
   protected $httpauth_method = CURLAUTH_BASIC;
@@ -1103,6 +1110,14 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->originalProfile = drupal_get_profile();
     $clean_url_original = variable_get('clean_url', 0);
 
+    // Save and clean shutdown callbacks array because it static cached and
+    // will be changed by the test run. If we don't, then it will contain
+    // callbacks from both environments. So testing environment will try
+    // to call handlers from original environment.
+    $callbacks = &drupal_register_shutdown_function();
+    $this->originalShutdownCallbacks = $callbacks;
+    $callbacks = array();
+
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $db_prefix_new = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
     db_update('simpletest_test_id')
@@ -1255,6 +1270,11 @@ class DrupalWebTestCase extends DrupalTestCase {
 
       // Return the database prefix to the original.
       $db_prefix = $this->originalPrefix;
+
+      // Restore original shutdown callbacks array to prevent original
+      // environment of calling handlers from test run.
+      $callbacks = &drupal_register_shutdown_function();
+      $callbacks = $this->originalShutdownCallbacks;
 
       // Return the user to the original one.
       $user = $this->originalUser;
