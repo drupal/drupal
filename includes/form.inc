@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.436 2010/03/06 12:43:45 dries Exp $
+// $Id: form.inc,v 1.437 2010/03/07 07:49:25 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -480,6 +480,10 @@ function drupal_form_submit($form_id, &$form_state) {
   $form_state['programmed'] = TRUE;
   // Programmed forms are always submitted.
   $form_state['submitted'] = TRUE;
+
+  // Reset form validation.
+  $form_state['must_validate'] = TRUE;
+  form_clear_error();
 
   drupal_prepare_form($form_id, $form, $form_state);
   drupal_process_form($form_id, $form, $form_state);
