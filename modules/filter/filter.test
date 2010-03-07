@@ -305,7 +305,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $langcode = LANGUAGE_NONE;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $text;
-    $edit["body[$langcode][0][value_format]"] = $filtered;
+    $edit["body[$langcode][0][format]"] = $filtered;
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), t('Filtered node created.'));
 
@@ -317,7 +317,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Use plain text and see if it escapes all tags, whether allowed or not.
     $edit = array();
-    $edit["body[$langcode][0][value_format]"] = $plain;
+    $edit["body[$langcode][0][format]"] = $plain;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->nid);
     $this->assertText(check_plain($text), t('The "Plain text" text format escapes all HTML tags.'));
@@ -1212,9 +1212,9 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $custom_block = array();
     $custom_block['info'] = $this->randomName(8);
     $custom_block['title'] = $this->randomName(8);
-    $custom_block['body'] = $this->randomName(32);
+    $custom_block['body[value]'] = $this->randomName(32);
     // Use the format created.
-    $custom_block['body_format'] = $format_id;
+    $custom_block['body[format]'] = $format_id;
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
     $this->assertText(t('The block has been created.'), t('New block successfully created.'));
 

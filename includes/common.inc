@@ -5519,9 +5519,6 @@ function drupal_common_theme() {
     'form_element_label' => array(
       'render element' => 'element',
     ),
-    'text_format_wrapper' => array(
-      'render element' => 'element',
-    ),
     'vertical_tabs' => array(
       'render element' => 'element',
     ),

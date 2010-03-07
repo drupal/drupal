@@ -443,7 +443,7 @@ function block_add_block_form_submit($form, &$form_state) {
     ->fields(array(
       'body' => $form_state['values']['body'],
       'info' => $form_state['values']['info'],
-      'format' => $form_state['values']['body_format'],
+      'format' => $form_state['values']['format'],
     ))
     ->execute();
 

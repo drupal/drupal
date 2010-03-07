@@ -56,6 +56,9 @@ function filter_theme() {
       'variables' => array('tips' => NULL, 'long' => FALSE),
       'file' => 'filter.pages.inc',
     ),
+    'text_format_wrapper' => array(
+      'render element' => 'element',
+    ),
     'filter_tips_more_info' => array(
       'variables' => array(),
     ),
@@ -63,6 +66,20 @@ function filter_theme() {
       'variables' => array('format' => NULL),
     ),
   );
+}
+
+/**
+ * Implements hook_element_info().
+ *
+ * @see filter_process_format()
+ */
+function filter_element_info() {
+  $type['text_format'] = array(
+    '#process' => array('filter_process_format'),
+    '#base_type' => 'textarea',
+    '#theme_wrappers' => array('text_format_wrapper'),
+  );
+  return $type;
 }
 
 /**
@@ -701,71 +718,194 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
 }
 
 /**
- * Generates a selector for choosing a format in a form.
+ * Expands an element into a base element with text format selector attached.
  *
- * @param $selected_format
- *   The ID of the format that is currently selected; uses the default format
- *   for the current user if not provided.
- * @param $weight
- *   The weight of the form element within the form.
- * @param $parents
- *   The parents array of the element. Required when defining multiple text
- *   formats on a single form or having a different parent than 'format'.
+ * The form element will be expanded into two separate form elements, one
+ * holding the original element, and the other holding the text format selector:
+ * - value: Holds the original element, having its #type changed to the value of
+ *   #base_type or 'textarea' by default.
+ * - format: Holds the text format fieldset and the text format selection, using
+ *   the text format id specified in #format or the user's default format by
+ *   default, if NULL.
+ *
+ * Since most modules expect the value of the new 'format' element *next* to the
+ * original element, filter_process_format() utilizes an #after_build to move
+ * the values of the children of the 'text_format' element so as to let the
+ * submitted form values appear as if they were located on the same level.
+ * For example, considering the input values:
+ * @code
+ *   $form_state['input']['body']['value'] = 'foo';
+ *   $form_state['input']['body']['format'] = 'foo';
+ * @endcode
+ * The #after_build will process them into:
+ * @code
+ *   $form_state['values']['body'] = 'foo';
+ *   $form_state['values']['format'] = 'foo';
+ * @endcode
+ *
+ * If multiple text format-enabled elements are required on the same level of
+ * the form structure, modules can set custom #parents on the original element.
+ * Alternatively, the #after_build may be unset through a subsequent #process
+ * callback. If no custom processing occurs, then the submitted form values will
+ * appear like in the $form_state['input'] array above.
+ *
+ * @see filter_form_after_build()
+ *
+ * @param $element
+ *   The form element to process. Properties used:
+ *   - #base_type: The form element #type to use for the 'value' element.
+ *     'textarea' by default.
+ *   - #format: (optional) The text format id to preselect. If 0, NULL, or not
+ *     set, the default format for the current user will be used.
  *
  * @return
- *   Form API array for the form element.
- *
- * @ingroup forms
+ *   The expanded element.
  */
-function filter_form($selected_format = NULL, $weight = NULL, $parents = array('format')) {
+function filter_process_format($element) {
   global $user;
 
-  // Use the default format for this user if none was selected.
-  if (empty($selected_format)) {
-    $selected_format = filter_default_format($user);
+  // Ensure that children appear as subkeys of this element.
+  $element['#tree'] = TRUE;
+  $blacklist = array(
+    // Make form_builder() regenerate child properties.
+    '#parents',
+    '#id',
+    '#name',
+    // Do not copy this #process function to prevent form_builder() from
+    // recursing infinitely.
+    '#process',
+    // Description is handled by theme_text_format_wrapper().
+    '#description',
+    // Ensure proper ordering of children.
+    '#weight',
+    // Properties already processed for the parent element.
+    '#prefix',
+    '#suffix',
+    '#attached',
+    '#processed',
+    '#theme_wrappers',
+  );
+  // Move this element into sub-element 'value'. 
+  unset($element['value']);
+  foreach ($element as $key => $value) {
+    if ($key[0] === '#' && !in_array($key, $blacklist)) {
+      $element['value'][$key] = $value;
+    }
   }
 
-  // Get a list of formats that the current user has access to.
-  $formats = filter_formats($user);
+  $element['value']['#type'] = $element['#base_type'];
+  $element['value'] += element_info($element['#base_type']);
 
-  drupal_add_js('misc/form.js');
-  drupal_add_css(drupal_get_path('module', 'filter') . '/filter.css');
-  $element_id = drupal_html_id('edit-' . implode('-', $parents));
+  // Turn original element into a text format wrapper.
+  $path = drupal_get_path('module', 'filter');
+  $element['#attached']['js'][] = $path . '/filter.js';
+  $element['#attached']['css'][] = $path . '/filter.css';
 
-  $form = array(
+  // Apply default #after_build behavior.
+  $element['#after_build'][] = 'filter_form_after_build';
+
+  // Setup child container for the text format widget.
+  $element['format'] = array(
     '#type' => 'fieldset',
-    '#weight' => $weight,
     '#attributes' => array('class' => array('filter-wrapper')),
   );
-  $form['format_guidelines'] = array(
-    '#prefix' => '<div id="' . $element_id . '-guidelines" class="filter-guidelines">',
-    '#suffix' => '</div>',
-    '#weight' => 2,
+
+  // Prepare text format guidelines.
+  $element['format']['guidelines'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('filter-guidelines')),
+    '#weight' => 20,
   );
+  // Get a list of formats that the current user has access to.
+  $formats = filter_formats($user);
   foreach ($formats as $format) {
     $options[$format->format] = $format->name;
-    $form['format_guidelines'][$format->format] = array(
-      '#markup' => theme('filter_guidelines', array('format' => $format)),
+    $element['format']['guidelines'][$format->format] = array(
+      '#theme' => 'filter_guidelines',
+      '#format' => $format,
     );
   }
-  $form['format'] = array(
+
+  // Use the default format for this user if none was selected.
+  if (empty($element['#format'])) {
+    $element['#format'] = filter_default_format($user);
+  }
+  $element['format']['format'] = array(
     '#type' => 'select',
     '#title' => t('Text format'),
     '#options' => $options,
-    '#default_value' => $selected_format,
-    '#parents' => $parents,
+    '#default_value' => $element['#format'],
     '#access' => count($formats) > 1,
-    '#id' => $element_id,
+    '#weight' => 10,
     '#attributes' => array('class' => array('filter-list')),
-  );
-  $form['format_help'] = array(
-    '#prefix' => '<div id="' . $element_id . '-help" class="filter-help">',
-    '#markup' => theme('filter_tips_more_info'),
-    '#suffix' => '</div>',
-    '#weight' => 1,
+    '#parents' => array_merge($element['#parents'], array('format')),
+    '#value_callback' => 'filter_form_value_callback_format',
   );
 
-  return $form;
+  $element['format']['help'] = array(
+    '#type' => 'container',
+    '#theme' => 'filter_tips_more_info',
+    '#attributes' => array('class' => array('filter-help')),
+    '#weight' => 0,
+  );
+
+  return $element;
+}
+
+/**
+ * After build, we need to move the values up in $form_state.
+ */
+function filter_form_after_build($element, &$form_state) {
+  $parents = $element['#parents'];
+  $original_key = array_pop($parents);
+
+  // For text fields, the additional subkeys map 1:1 to field schema columns.
+  if (isset($element['#columns'])) {
+    return $element;
+  }
+
+  foreach (element_children($element) as $key) {
+    $current_parents = $parents;
+    switch ($key) {
+      case 'value':
+        form_set_value(array('#parents' => $element['#parents']), $element[$key]['#value'], $form_state);
+        break;
+      case 'format':
+        $current_parents[] = $key;
+        form_set_value(array('#parents' => $current_parents), $element['format']['format']['#value'], $form_state);
+        break;
+
+      default:
+        $current_parents[] = $key;
+        form_set_value(array('#parents' => $current_parents), $element[$key]['#value'], $form_state);
+    }
+  }
+  return $element;
+}
+
+/**
+ * Render a text format-enabled form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #children, #description
+ *
+ * @return
+ *   A string representing the form element.
+ *
+ * @ingroup themeable
+ */
+function theme_text_format_wrapper($variables) {
+  $element = $variables['element'];
+  $output = '<div class="text-format-wrapper">';
+  $output .= $element['#children'];
+  if (!empty($element['#description'])) {
+    $output .= '<div class="description">' . $element['#description'] . '</div>';
+  }
+  $output .= "</div>\n";
+
+  return $output;
 }
 
 /**

@@ -512,10 +512,12 @@ function text_field_widget_settings_form($field, $instance) {
  */
 function text_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
   $element = $base;
+  $summary_widget = array();
+  $main_widget = array();
 
   switch ($instance['widget']['type']) {
     case 'text_textfield':
-      $element['value'] = $base + array(
+      $main_widget = $base + array(
         '#type' => 'textfield',
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
         '#size' => $instance['widget']['settings']['size'],
@@ -526,7 +528,7 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
 
     case 'text_textarea_with_summary':
       $display = !empty($items[$delta]['summary']) || !empty($instance['settings']['display_summary']);
-      $element['summary'] = array(
+      $summary_widget = array(
         '#type' => $display ? 'textarea' : 'value',
         '#default_value' => isset($items[$delta]['summary']) ? $items[$delta]['summary'] : NULL,
         '#title' => t('Summary'),
@@ -543,7 +545,7 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
       // Fall through to the next case.
 
     case 'text_textarea':
-      $element['value'] = $base + array(
+      $main_widget = $base + array(
         '#type' => 'textarea',
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
         '#rows' => $instance['widget']['settings']['rows'],
@@ -553,11 +555,20 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
       break;
   }
 
-  if ($instance['settings']['text_processing']) {
-    $element['value']['#text_format'] = isset($items[$delta]['format']) ? $items[$delta]['format'] : filter_default_format();
-    $element['#type'] = 'markup';
-    $element['#input'] = TRUE;
-    $element['#value_callback'] = 'text_field_widget_formatted_text_value';
+  if ($main_widget) {
+    // Conditionally alter the form element's type if text processing is enabled.
+    if ($instance['settings']['text_processing']) {
+      $element = $main_widget;
+      $element['#type'] = 'text_format';
+      $element['#format'] = isset($items[$delta]['format']) ? $items[$delta]['format'] : NULL;
+      $element['#base_type'] = $main_widget['#type'];
+    }
+    else {
+      $element['value'] = $main_widget;
+    }
+  }
+  if ($summary_widget) {
+    $element['summary'] = $summary_widget;
   }
 
   return $element;
@@ -580,19 +591,3 @@ function text_field_widget_error($element, $error, $form, &$form_state) {
   form_error($error_element, $error['message']);
 }
 
-/**
- * Form element #value_callback to re-assign text format value for a formatted text widget.
- *
- * #text_format puts the format into 'value_format', while we need it in
- * 'format'.
- */
-function text_field_widget_formatted_text_value($element, $edit = FALSE, &$form_state) {
-  if ($edit !== FALSE) {
-    // The format selector uses #access = FALSE if only one format is
-    // available. In this case, we don't receive its value, and need to
-    // manually set it.
-    $edit['format'] = !empty($edit['value_format']) ? $edit['value_format'] : filter_default_format();
-    unset($edit['value_format']);
-    return $edit;
-  }
-}

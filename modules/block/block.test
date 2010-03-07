@@ -48,7 +48,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $custom_block = array();
     $custom_block['info'] = $this->randomName(8);
     $custom_block['title'] = $this->randomName(8);
-    $custom_block['body'] = $this->randomName(32);
+    $custom_block['body[value]'] = $this->randomName(32);
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
 
     // Confirm that the custom block has been created, and then query the created bid.
@@ -85,9 +85,9 @@ class BlockTestCase extends DrupalWebTestCase {
     $custom_block = array();
     $custom_block['info'] = $this->randomName(8);
     $custom_block['title'] = $this->randomName(8);
-    $custom_block['body'] = '<h1>Full HTML</h1>';
+    $custom_block['body[value]'] = '<h1>Full HTML</h1>';
     $full_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchField();
-    $custom_block['body_format'] = $full_html_format_id;
+    $custom_block['body[format]'] = $full_html_format_id;
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
 
     // Set the created custom block to a specific region.
@@ -127,7 +127,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $custom_block = array();
     $custom_block['info'] = $this->randomName(8);
     $custom_block['title'] = $title;
-    $custom_block['body'] = $this->randomName(32);
+    $custom_block['body[value]'] = $this->randomName(32);
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
 
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();

@@ -420,10 +420,10 @@ function block_custom_block_form($edit = array()) {
   );
   $form['body_field']['#weight'] = -17;
   $form['body_field']['body'] = array(
-    '#type' => 'textarea',
+    '#type' => 'text_format',
     '#title' => t('Block body'),
     '#default_value' => $edit['body'],
-    '#text_format' => isset($edit['format']) ? $edit['format'] : filter_default_format(),
+    '#format' => isset($edit['format']) ? $edit['format'] : NULL,
     '#rows' => 15,
     '#description' => t('The content of the block as shown to the user.'),
     '#required' => TRUE,
@@ -452,7 +452,7 @@ function block_custom_block_save($edit, $delta) {
     ->fields(array(
       'body' => $edit['body'],
       'info' => $edit['info'],
-      'format' => $edit['body_format'],
+      'format' => $edit['format'],
     ))
     ->condition('bid', $delta)
     ->execute();

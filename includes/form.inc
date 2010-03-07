@@ -1435,7 +1435,15 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       }
     }
   }
-  form_set_value($element, $element['#value'], $form_state);
+  // Set the element's value in $form_state['values'], but only, if its key
+  // does not exist yet (a #value_callback may have already populated it).
+  $values = $form_state['values'];
+  foreach ($element['#parents'] as $key) {
+    $values = (isset($values[$key]) ? $values[$key] : NULL);
+  }
+  if (!isset($values)) {
+    form_set_value($element, $element['#value'], $form_state);
+  }
 }
 
 /**
@@ -2203,110 +2211,6 @@ function form_process_radios($element) {
     }
   }
   return $element;
-}
-
-/**
- * Add text format selector to text elements with the #text_format property.
- *
- * The #text_format property should be the ID of an text format, found in
- * {filter_format}.format, which gets passed to filter_form().
- *
- * If the property #text_format is set, the form element will be expanded into
- * two separate form elements, one holding the content of the element, and the
- * other holding the text format selector. The original element is shifted into
- * a child element, but is otherwise unaltered, so that the format selector is
- * at the same level as the text field which it affects.
- *
- * For example:
- * @code
- *   // A simple textarea, such as a node body.
- *   $form['body'] = array(
- *     '#type' => 'textarea',
- *     '#title' => t('Body'),
- *     '#text_format' => isset($node->format) ? $node->format : filter_default_format(),
- *   );
- * @endcode
- *
- * Becomes:
- * @code
- *   $form['body'] = array(
- *     // Type switches to 'markup', as we're only interested in submitting the child elements.
- *     '#type' => 'markup',
- *     // 'value' holds the original element.
- *     'value' => array(
- *       '#type' => 'textarea',
- *       '#title' => t('Body'),
- *       '#parents' => array('body'),
- *     ),
- *     // 'format' holds the text format selector.
- *     'format' => array(
- *       '#parents' => array('body_format'),
- *       ...
- *     ),
- *   );
- * @endcode
- *
- * And would result in:
- * @code
- *   // Original, unaltered form element value.
- *   $form_state['values']['body'] = 'Example content';
- *   // Chosen text format.
- *   $form_state['values']['body_format'] = 1;
- * @endcode
- *
- * @see system_element_info(), filter_form()
- */
-function form_process_text_format($element) {
-  if (isset($element['#text_format'])) {
-    // Determine the form element parents and element name to use for the input
-    // format widget. This simulates the 'element' and 'element_format' pair of
-    // parents that filter_form() expects.
-    $element_parents = $element['#parents'];
-    $element_name = array_pop($element_parents);
-    $element_parents[] = $element_name . '_format';
-
-    // We need to break references, otherwise form_builder recurses infinitely.
-    $element['value'] = (array)$element;
-    $element['value']['#weight'] = 0;
-    unset($element['value']['#description']);
-    $element['#type'] = 'markup';
-    $element['#theme'] = NULL;
-    $element['#theme_wrappers'] = array('text_format_wrapper');
-    $element['format'] = filter_form($element['#text_format'], 1, $element_parents);
-
-    // We need to clear the #text_format from the new child otherwise we
-    // would get into an infinite loop.
-    unset($element['value']['#text_format']);
-  }
-  return $element;
-}
-
-/**
- * Theme a text format form element.
- *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #children, #description
- *
- * @return
- *   A string representing the form element.
- *
- * @ingroup themeable
- */
-function theme_text_format_wrapper($variables) {
-  $element = $variables['element'];
-  $output = '<div class="text-format-wrapper">' . "\n";
-
-  $output .= $element['#children'] . "\n";
-
-  if (!empty($element['#description'])) {
-    $output .= '<div class="description">' . $element['#description'] . "</div>\n";
-  }
-
-  $output .= "</div>\n";
-
-  return $output;
 }
 
 /**

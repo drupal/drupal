@@ -1150,8 +1150,8 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $langcode = LANGUAGE_NONE;
     // Pretend the form has been built.
     drupal_prepare_form('field_test_entity_form', $form, $form_state);
-    $form = form_builder('field_test_entity_form', $form, $form_state);
-    $form_state['values'] = array($this->field_name => array($langcode => $values));
+    drupal_process_form('field_test_entity_form', $form, $form_state);
+    $form_state['values'][$this->field_name][$langcode] = $values;
     field_attach_submit($entity_type, $entity, $form, $form_state);
 
     asort($weights);

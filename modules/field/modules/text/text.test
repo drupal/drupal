@@ -166,7 +166,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     // no format selector will be displayed.
     $this->drupalGet('test-entity/add/test-bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
-    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][value_format]", '', t('Format selector is not displayed'));
+    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '', t('Format selector is not displayed'));
 
     // Submit with data that should be filtered.
     $value = '<em>' . $this->randomName() . '</em>';
@@ -202,11 +202,11 @@ class TextFieldTestCase extends DrupalWebTestCase {
     // We should now have a 'text format' selector.
     $this->drupalGet('test-entity/' . $id . '/edit');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value_format]", '', t('Format selector is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][format]", '', t('Format selector is displayed'));
 
     // Edit and change the text format to the new one that was created.
     $edit = array(
-      "{$this->field_name}[$langcode][0][value_format]" => $format_id,
+      "{$this->field_name}[$langcode][0][format]" => $format_id,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), t('Entity was updated'));

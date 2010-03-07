@@ -536,7 +536,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $edit_comment['subject'] = 'Test comment subject';
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchField();
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value_format]'] = $full_html_format_id;
+    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][format]'] = $full_html_format_id;
     $this->drupalPost('comment/reply/' . $node->nid, $edit_comment, t('Save'));
 
     // Invoke search index update.

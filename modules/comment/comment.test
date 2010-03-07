@@ -571,7 +571,7 @@ class CommentAnonymous extends CommentHelperCase {
     $this->drupalGet('comment/reply/' . $this->node->nid);
     $this->assertText('You are not authorized to view comments', t('Error attempting to post comment.'));
     $this->assertNoFieldByName('subject', '', t('Subject field not found.'));
-    $this->assertNoFieldByName('comment', '', t('Comment field not found.'));
+    $this->assertNoFieldByName('comment[value]', '', t('Comment field not found.'));
 
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
