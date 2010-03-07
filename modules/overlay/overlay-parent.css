@@ -88,19 +88,12 @@ body.overlay-autofit {
   padding: 0;
   width: 100%;
   overflow: visible;
-  background: #fff url(images/loading.gif) no-repeat 50% 50%;
-}
-.overlay-loaded #overlay-container {
   background: #fff;
 }
 .overlay #overlay-element {
   overflow: hidden;
   width: 100%;
   height: 100%;
-  display: none;
-}
-.overlay-loaded #overlay-element {
-  display: block;
 }
 
 /**

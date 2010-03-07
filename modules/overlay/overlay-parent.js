@@ -277,10 +277,6 @@ Drupal.overlay.load = function (url) {
   self.$iframeDocument = null;
   self.$iframeBody = null;
 
-  // Reset lastHeight so the overlay fits user's viewport and the loading
-  // spinner is centered.
-  self.lastHeight = 0;
-  self.outerResize();
   // No need to resize while loading.
   clearTimeout(self.resizeTimeoutID);
 
@@ -594,26 +590,25 @@ Drupal.overlay.isAdminLink = function (url) {
  * Note, though, that the size of the iframe itself may affect the size of the
  * child document, especially on fluid layouts.
  */
-Drupal.overlay.innerResize = function () {
+Drupal.overlay.innerResize = function (height) {
   var self = Drupal.overlay;
   // Proceed only if the dialog still exists.
-  if (!self.isOpen || self.isClosing || self.isLoading) {
+  if (!self.isOpen || self.isClosing) {
     return;
   }
 
-  var height;
-  // Only set height when iframe content is loaded.
-  if ($.isObject(self.$iframeBody)) {
+  // When no height is given try to get height when iframe content is loaded.
+  if (!height && $.isObject(self.$iframeBody)) {
     height = self.$iframeBody.outerHeight() + 25;
-
-    // Only resize when height actually is changed.
-    if (height != self.lastHeight) {
-
-      // Resize the container.
-      self.$container.height(height);
-      // Keep the dim background grow or shrink with the dialog.
-      $.ui.dialog.overlay.resize();
-    }
+  }
+  
+  // Only resize when height actually is changed.
+  if (height && height != self.lastHeight) {
+    // Resize the container.
+    self.$container.height(height);
+    // Keep the dim background grow or shrink with the dialog.
+    $.ui.dialog.overlay.resize();
+    
     self.lastHeight = height;
   }
 };
