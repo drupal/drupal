@@ -244,6 +244,41 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     // Opening a connection after closing it should yield an object different than the original.
     $this->assertNotIdentical($db1, $db2, t('Opening the default connection after it is closed returns a new object.'));
   }
+
+  /**
+   * Tests the connection options of the active database.
+   */
+  function testConnectionOptions() {
+    $connection_info = Database::getConnectionInfo('default');
+
+    // Be sure we're connected to the default database.
+    $db = Database::getConnection('default', 'default');
+    $connectionOptions = $db->getConnectionOptions();
+
+    // In the MySQL driver, the port can be different, so check individual
+    // options.
+    $this->assertEqual($connection_info['default']['driver'], $connectionOptions['driver'], t('The default connection info driver matches the current connection options driver.'));
+    $this->assertEqual($connection_info['default']['database'], $connectionOptions['database'], t('The default connection info database matches the current connection options database.'));
+
+    // Set up identical slave and confirm connection options are identical.
+    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+    $db2 = Database::getConnection('slave', 'default');
+    $connectionOptions2 = $db2->getConnectionOptions();
+
+    // Get a fresh copy of the default connection options.
+    $connectionOptions = $db->getConnectionOptions();
+    $this->assertIdentical($connectionOptions, $connectionOptions2, t('The default and slave connection options are identical.'));
+
+    // Set up a new connection with different connection info.
+    $test = $connection_info['default'];
+    $test['database'] .= 'test';
+    Database::addConnectionInfo('test', 'default', $test);
+    $connection_info = Database::getConnectionInfo('test');
+
+    // Get a fresh copy of the default connection options.
+    $connectionOptions = $db->getConnectionOptions();
+    $this->assertNotEqual($connection_info['default']['database'], $connectionOptions['database'], t('The test connection info database does not match the current connection options database.'));
+  }
 }
 
 /**

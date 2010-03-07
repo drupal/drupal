@@ -309,6 +309,13 @@ abstract class DatabaseConnection extends PDO {
   protected $temporaryNameIndex = 0;
 
   /**
+   * The connection information for this connection object.
+   *
+   * @var array
+   */
+  protected $connectionOptions = array();
+
+  /**
    * The schema object for this connection.
    *
    * @var object
@@ -388,6 +395,22 @@ abstract class DatabaseConnection extends PDO {
       'return' => Database::RETURN_STATEMENT,
       'throw_exception' => TRUE,
     );
+  }
+
+  /**
+   * Return the connection information for this connection object.
+   *
+   * Note that Database::getConnectionInfo() is for requesting information
+   * about an arbitrary database connection that is defined. This method
+   * is for requesting the connection information of this specific
+   * open connection object.
+   *
+   * @return
+   *   An array of the connection information. The exact list of
+   *   properties is driver-dependent.
+   */
+  public function getConnectionOptions() {
+    return $this->connectionOptions;
   }
 
   /**

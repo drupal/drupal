@@ -33,13 +33,13 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    * from the condition criteria.
    */
   protected function buildTableNameCondition($table_name, $operator = '=') {
-    $info = Database::getConnectionInfo();
+    $info = $this->connection->getConnectionOptions();
 
     if (strpos($table_name, '.')) {
       list($schema, $table_name) = explode('.', $table_name);
     }
     else {
-      $schema = $info['default']['database'];
+      $schema = $info['database'];
     }
 
     $condition = new DatabaseCondition('AND');

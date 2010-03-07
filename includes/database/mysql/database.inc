@@ -25,6 +25,8 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       $connection_options['port'] = 3306;
     }
 
+    $this->connectionOptions = $connection_options;
+
     $dsn = 'mysql:host=' . $connection_options['host'] . ';port=' . $connection_options['port'] . ';dbname=' . $connection_options['database'];
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
       // So we don't have to mess around with cursors and unbuffered queries by default.
