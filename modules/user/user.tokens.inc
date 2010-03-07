@@ -1,5 +1,5 @@
 <?php
-// $Id: user.tokens.inc,v 1.4 2010/03/07 17:56:20 webchick Exp $
+// $Id: user.tokens.inc,v 1.5 2010/03/07 23:18:06 webchick Exp $
 
 /**
  * @file
@@ -54,7 +54,7 @@ function user_token_info() {
   );
 
   return array(
-    'types' => array('user' => $types),
+    'types' => $types,
     'tokens' => array('user' => $user),
   );
 }
