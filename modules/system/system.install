@@ -1609,6 +1609,13 @@ function system_update_6055() {
 }
 
 /**
+ * Add semaphore table.
+ */
+function system_update_6054() {
+  // Lives in update_fix_d7_requirements()
+}
+
+/**
  * @} End of "defgroup updates-6.x-extra"
  * The next series of updates should start at 7000.
  */
