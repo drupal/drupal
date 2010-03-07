@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.129 2010/03/01 07:39:12 dries Exp $
+// $Id: install.inc,v 1.130 2010/03/07 06:53:26 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -95,6 +95,11 @@ function drupal_get_schema_versions($module) {
   $updates = &drupal_static(__FUNCTION__, NULL);
   if (!isset($updates[$module])) {
     $updates = array();
+
+    foreach (module_list() as $loaded_module) {
+      $updates[$loaded_module] = array();
+    }
+
     // Prepare regular expression to match all possible defined hook_update_N().
     $regexp = '/^(?P<module>.+)_update_(?P<version>\d+)$/';
     $functions = get_defined_functions();
@@ -117,7 +122,7 @@ function drupal_get_schema_versions($module) {
       sort($module_updates, SORT_NUMERIC);
     }
   }
-  return isset($updates[$module]) ? $updates[$module] : FALSE;
+  return empty($updates[$module]) ? FALSE : $updates[$module];
 }
 
 /**
