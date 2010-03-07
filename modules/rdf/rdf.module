@@ -371,6 +371,19 @@ function rdf_entity_load($entities, $type) {
 }
 
 /**
+ * Implements hook_comment_load().
+ */
+function rdf_comment_load($comments) {
+  foreach ($comments as $comment) {
+    $comment->rdf_data['date'] = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created);
+    $comment->rdf_data['nid_uri'] = url('node/' . $comment->nid);
+    if ($comment->pid) {
+      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid, array('fragment' => 'comment-' . $comment->pid));
+    }
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function rdf_theme() {
@@ -622,7 +635,7 @@ function rdf_preprocess_comment(&$variables) {
 
   // Adds RDFa markup for the date of the comment.
   if (!empty($comment->rdf_mapping['created'])) {
-    $date_attributes_array = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created);
+    $date_attributes_array = $comment->rdf_data['date'];
     $variables['rdf_template_variable_attributes_array']['created'] = $date_attributes_array;
   }
   // Adds RDFa markup for the relation between the comment and its author.
@@ -643,13 +656,13 @@ function rdf_preprocess_comment(&$variables) {
   if (!empty($comment->rdf_mapping['pid'])) {
     // Relation to parent node.
     $parent_node_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
-    $parent_node_attributes['resource'] = url('node/' . $comment->nid);
+    $parent_node_attributes['resource'] = $comment->rdf_data['nid_uri'];
     $variables['rdf_metadata_attributes_array'][] = $parent_node_attributes;
 
     // Relation to parent comment if it exists.
     if ($comment->pid != 0) {
       $parent_comment_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
-      $parent_comment_attributes['resource'] = url('comment/' . $comment->pid, array('fragment' => 'comment-' . $comment->pid));
+      $parent_comment_attributes['resource'] = $comment->rdf_data['pid_uri'];
       $variables['rdf_metadata_attributes_array'][] = $parent_comment_attributes;
     }
   }
