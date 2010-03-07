@@ -54,7 +54,7 @@ function user_token_info() {
   );
 
   return array(
-    'types' => array('user' => $types),
+    'types' => $types,
     'tokens' => array('user' => $user),
   );
 }
