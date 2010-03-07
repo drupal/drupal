@@ -1659,17 +1659,14 @@ function system_performance_settings() {
     '#description' => t('External resources  can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
 
-  // Do not allow Drupal to gzip pages if the server already does that.
-  if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === FALSE) {
-    $js_hide = $cache == CACHE_DISABLED ? ' class="js-hide"' : '';
-    $form['bandwidth_optimization']['page_compression'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Compress cached pages.'),
-      '#default_value' => variable_get('page_compression', TRUE),
-      '#prefix' => '<div id="page-compression-wrapper"' . $js_hide . '>',
-      '#suffix' => '</div>',
-    );
-  }
+  $js_hide = $cache == CACHE_DISABLED ? ' class="js-hide"' : '';
+  $form['bandwidth_optimization']['page_compression'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Compress cached pages.'),
+    '#default_value' => variable_get('page_compression', TRUE),
+    '#prefix' => '<div id="page-compression-wrapper"' . $js_hide . '>',
+    '#suffix' => '</div>',
+  );
   $form['bandwidth_optimization']['preprocess_css'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate and compress CSS files into one file.'),
