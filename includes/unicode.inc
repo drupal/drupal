@@ -39,9 +39,6 @@ function _unicode_check() {
   // Ensure translations don't break at install time
   $t = get_t();
 
-  // Set the standard C locale to ensure consistent, ASCII-only string handling.
-  setlocale(LC_CTYPE, 'C');
-
   // Check for mbstring extension
   if (!function_exists('mb_strlen')) {
     return array(UNICODE_SINGLEBYTE, $t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="@url">PHP mbstring extension</a> for improved Unicode support.', array('@url' => 'http://www.php.net/mbstring')));
