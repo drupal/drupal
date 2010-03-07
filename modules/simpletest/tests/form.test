@@ -784,3 +784,68 @@ class FormsRebuildTestCase extends DrupalWebTestCase {
     $this->assertFieldById('edit-text-2', 'DEFAULT 2', t('A newly added textfield was initialized with its default value.'));
   }
 }
+
+/**
+ * Test the programmatic form submission behavior.
+ */
+class FormsProgrammaticTestCase extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => 'Programmatic form submissions',
+      'description' => 'Test the programmatic form submission behavior.',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Test the programmatic form submission workflow.
+   */
+  function testSubmissionWorkflow() {
+    // Backup the current batch status and reset it to avoid conflicts while
+    // processing the dummy form submit handler.
+    $current_batch = $batch =& batch_get();
+    $batch = array();
+
+    $this->submitForm();
+    $this->submitForm('test 1');
+    $this->submitForm();
+    $this->submitForm('test 2');
+
+    // Restore the current batch status.
+    $batch = $current_batch;
+  }
+
+  /**
+   * Helper function used to programmatically submit the form defined in
+   * form_test.module with the given value.
+   *
+   * @param string $value
+   *   The field value to be submitted.
+   */
+  private function submitForm($value = NULL) {
+    // Programmatically submit the given value.
+    $form_state = array('values' => array('submitted_field' => $value));
+    drupal_form_submit('form_test_programmatic_form', $form_state);
+
+    $errors = form_get_errors();
+    $valid_form = empty($errors);
+    $valid_input = !empty($value);
+
+    // If no value was passed the form should return an error and viceversa.
+    $args = array('%value' => $value, '%errors' => $valid_form ? '' : implode(' ', $errors));
+    $this->assertTrue($valid_input == $valid_form, t('Input value: %value<br/>Validation handler errors: %errors', $args));
+
+    // We check submitted values only if we have a valid input.
+    if ($valid_input) {
+      // By fetching the value from $form_state['storage'] we ensure that the
+      // submission handler was properly executed.
+      $submitted_value = $form_state['storage']['programmatic_form_submit'];
+      $this->assertTrue($submitted_value == $value, t('Submission handler correctly executed: %submitted_value', array('%submitted_value' => $submitted_value)));
+    }
+  }
+}

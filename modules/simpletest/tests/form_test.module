@@ -888,3 +888,37 @@ function form_test_form_form_test_state_persist_alter(&$form, &$form_state) {
     $form_state['cache'] = TRUE;
   }
 }
+
+/**
+ * Form builder to test programmatic form submissions.
+ */
+function form_test_programmatic_form($form, &$form_state) {
+  $form['submitted_field'] = array(
+    '#title' => 'Submitted',
+    '#type' => 'textfield',
+  );
+
+  return $form;
+}
+
+/**
+ * Form validation handler for programmatic form submissions.
+ *
+ * To test that the validation handler is correctly executed, the field value is
+ * explicitly required here.
+ */
+function form_test_programmatic_form_validate($form, &$form_state) {
+  if (empty($form_state['values']['submitted_field'])) {
+    form_set_error('submitted_field', t('Submitted field is required.'));
+  }
+}
+
+/**
+ * Form submit handler for programmatic form submissions.
+ *
+ * To test that the submission handler is correctly executed, we store the
+ * submitted value in a place we can access from the caller context.
+ */
+function form_test_programmatic_form_submit($form, &$form_state) {
+  $form_state['storage']['programmatic_form_submit'] = $form_state['values']['submitted_field'];
+}

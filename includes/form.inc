@@ -481,6 +481,10 @@ function drupal_form_submit($form_id, &$form_state) {
   // Programmed forms are always submitted.
   $form_state['submitted'] = TRUE;
 
+  // Reset form validation.
+  $form_state['must_validate'] = TRUE;
+  form_clear_error();
+
   drupal_prepare_form($form_id, $form, $form_state);
   drupal_process_form($form_id, $form, $form_state);
 }
