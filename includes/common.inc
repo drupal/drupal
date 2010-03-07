@@ -340,13 +340,6 @@ function drupal_get_html_head() {
 }
 
 /**
- * Reset the static variable which holds the aliases mapped for this request.
- */
-function drupal_clear_path_cache() {
-  drupal_lookup_path('wipe');
-}
-
-/**
  * Add a feed URL for the current page.
  *
  * This function can be called as long the HTML header hasn't been sent.
