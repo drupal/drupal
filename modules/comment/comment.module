@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.850 2010/03/05 13:41:04 dries Exp $
+// $Id: comment.module,v 1.851 2010/03/07 07:15:28 webchick Exp $
 
 /**
  * @file
@@ -1532,39 +1532,6 @@ function comment_delete_multiple($cids) {
       _comment_update_node_statistics($comment->nid);
     }
   }
-}
-
-/**
- * Comment operations. Offer different update operations depending on
- * which comment administration page is being viewed.
- *
- * @param $action
- *   The comment administration page.
- * @return
- *   An associative array containing the offered operations.
- */
-function comment_operations($action = NULL) {
-  if ($action == 'publish') {
-    $operations = array(
-      'publish' => array(t('Publish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_PUBLISHED))),
-      'delete' => array(t('Delete the selected comments'), ''),
-    );
-  }
-  elseif ($action == 'unpublish') {
-    $operations = array(
-      'unpublish' => array(t('Unpublish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_NOT_PUBLISHED))),
-      'delete' => array(t('Delete the selected comments'), ''),
-    );
-  }
-  else {
-    $operations = array(
-      'publish' => array(t('Publish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_PUBLISHED))),
-      'unpublish' => array(t('Unpublish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_NOT_PUBLISHED))),
-      'delete' => array(t('Delete the selected comments'), ''),
-    );
-  }
-
-  return $operations;
 }
 
 /**
