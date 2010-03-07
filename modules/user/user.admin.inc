@@ -897,6 +897,8 @@ function theme_user_filters($variables) {
   }
   $output .= '</ul>';
 
+  $output .= '<div class="clearfix">';
+
   $output .= '<dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '');
 
   $output .= '<dd>';
@@ -908,6 +910,8 @@ function theme_user_filters($variables) {
 
   $output .= '</dl>';
   $output .= drupal_render($form['actions']);
+
+  $output .= '</div>';
 
   return $output;
 }
