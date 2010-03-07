@@ -2227,12 +2227,10 @@ function node_form_block_admin_configure_alter(&$form, &$form_state) {
  * Form submit handler for block configuration form.
  */
 function node_block_admin_configure_submit($form, &$form_state) {
-  if (isset($form_state['values']['delta'])) {
-    db_delete('block_node_type')
-      ->condition('module', $form_state['values']['module'])
-      ->condition('delta', $form_state['values']['delta'])
-      ->execute();
-  }
+  db_delete('block_node_type')
+    ->condition('module', $form_state['values']['module'])
+    ->condition('delta', $form_state['values']['delta'])
+    ->execute();
   $query = db_insert('block_node_type')->fields(array('type', 'module', 'delta'));
   foreach (array_filter($form_state['values']['types']) as $type) {
     $query->values(array(
