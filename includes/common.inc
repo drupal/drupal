@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1123 2010/03/06 06:40:35 dries Exp $
+// $Id: common.inc,v 1.1124 2010/03/07 06:58:14 webchick Exp $
 
 /**
  * @file
@@ -337,13 +337,6 @@ function drupal_get_html_head() {
   $elements = drupal_add_html_head();
   drupal_alter('html_head', $elements);
   return drupal_render($elements);
-}
-
-/**
- * Reset the static variable which holds the aliases mapped for this request.
- */
-function drupal_clear_path_cache() {
-  drupal_lookup_path('wipe');
 }
 
 /**
