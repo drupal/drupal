@@ -1041,11 +1041,13 @@ function update_get_update_function_list($starting_updates) {
   foreach ($starting_updates as $module => $version) {
     $update_functions[$module] = array();
     $updates = drupal_get_schema_versions($module);
-    $max_version = max($updates);
-    if ($version <= $max_version) {
-      foreach ($updates as $update) {
-        if ($update >= $version) {
-          $update_functions[$module][$update] = $module . '_update_' . $update;
+    if ($updates !== FALSE) {
+      $max_version = max($updates);
+      if ($version <= $max_version) {
+        foreach ($updates as $update) {
+          if ($update >= $version) {
+            $update_functions[$module][$update] = $module . '_update_' . $update;
+          }
         }
       }
     }
