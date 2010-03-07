@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.85 2010/03/03 19:46:26 dries Exp $
+// $Id: user.test,v 1.86 2010/03/07 18:46:55 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1419,5 +1419,41 @@ class UserEditTestCase extends DrupalWebTestCase {
     $user1->pass_raw = $new_pass;
     $this->drupalLogin($user1);
     $this->drupalLogout();
+  }
+}
+
+/**
+ * Test that a user, having editing their own account, can still log in.
+ */
+class UserEditedOwnAccountTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'User edited own account',
+      'description' => 'Test user edited own account can still log in.',
+      'group' => 'User',
+    );
+  }
+
+  function testUserEditedOwnAccount() {
+    // Change account setting 'Who can register accounts?' to Administrators
+    // only.
+    variable_set('user_register', 0);
+
+    // Create a new user account and log in.
+    $account = $this->drupalCreateUser(array('change own username'));
+    $this->drupalLogin($account);
+
+    // Change own username.
+    $edit = array();
+    $edit['name'] = $this->randomName();
+    $this->drupalPost('user/' . $account->uid . '/edit', $edit, t('Save'));
+
+    // Log out.
+    $this->drupalLogout();
+
+    // Set the new name on the user account and attempt to log back in.
+    $account->name = $edit['name'];
+    $this->drupalLogin($account);
   }
 }
