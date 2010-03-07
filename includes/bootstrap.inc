@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.356 2010/03/06 06:31:23 dries Exp $
+// $Id: bootstrap.inc,v 1.357 2010/03/07 06:38:55 webchick Exp $
 
 /**
  * @file
@@ -523,6 +523,10 @@ function drupal_environment_initialize() {
   ini_set('session.cache_limiter', 'none');
   // Use httponly session cookies.
   ini_set('session.cookie_httponly', '1');
+
+  // Set sane locale settings, to ensure consistent string, dates, times and
+  // numbers handling.
+  setlocale(LC_ALL, 'C');
 }
 
 /**

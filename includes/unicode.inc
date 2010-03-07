@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.41 2010/01/25 10:38:34 dries Exp $
+// $Id: unicode.inc,v 1.42 2010/03/07 06:38:55 webchick Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -38,9 +38,6 @@ function unicode_check() {
 function _unicode_check() {
   // Ensure translations don't break at install time
   $t = get_t();
-
-  // Set the standard C locale to ensure consistent, ASCII-only string handling.
-  setlocale(LC_CTYPE, 'C');
 
   // Check for mbstring extension
   if (!function_exists('mb_strlen')) {
