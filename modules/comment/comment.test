@@ -895,6 +895,33 @@ class CommentApprovalTest extends CommentHelperCase {
 
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertTrue($this->commentExists($anonymous_comment4), t('Anonymous comment visible.'));
+
+    // Post 2 anonymous comments without contact info.
+    $comments[] = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
+
+    // Publish multiple comments in one operation.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/content/comment/approval');
+    $this->assertText(t('Unapproved comments (@count)', array('@count' => 2)), t('Two unapproved comments waiting for approval.'));
+    $edit = array(
+      "comments[{$comments[0]->id}]" => 1,
+      "comments[{$comments[1]->id}]" => 1,
+    );
+    $this->drupalPost(NULL, $edit, t('Update'));
+    $this->assertText(t('Unapproved comments (@count)', array('@count' => 0)), t('All comments were approved.'));
+
+    // Delete multiple comments in one operation.
+    $edit = array(
+      'operation' => 'delete',
+      "comments[{$comments[0]->id}]" => 1,
+      "comments[{$comments[1]->id}]" => 1,
+      "comments[{$anonymous_comment4->id}]" => 1,
+    );
+    $this->drupalPost(NULL, $edit, t('Update'));
+    $this->assertText(t('Are you sure you want to delete these comments and all their children?'), t('Confirmation required.'));
+    $this->drupalPost(NULL, $edit, t('Delete comments'));
+    $this->assertText(t('No comments available.'), t('All comments were deleted.'));
   }
 
   /**

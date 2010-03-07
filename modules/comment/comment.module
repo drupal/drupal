@@ -1535,39 +1535,6 @@ function comment_delete_multiple($cids) {
 }
 
 /**
- * Comment operations. Offer different update operations depending on
- * which comment administration page is being viewed.
- *
- * @param $action
- *   The comment administration page.
- * @return
- *   An associative array containing the offered operations.
- */
-function comment_operations($action = NULL) {
-  if ($action == 'publish') {
-    $operations = array(
-      'publish' => array(t('Publish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_PUBLISHED))),
-      'delete' => array(t('Delete the selected comments'), ''),
-    );
-  }
-  elseif ($action == 'unpublish') {
-    $operations = array(
-      'unpublish' => array(t('Unpublish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_NOT_PUBLISHED))),
-      'delete' => array(t('Delete the selected comments'), ''),
-    );
-  }
-  else {
-    $operations = array(
-      'publish' => array(t('Publish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_PUBLISHED))),
-      'unpublish' => array(t('Unpublish the selected comments'), db_update('comment')->fields(array('status' => COMMENT_NOT_PUBLISHED))),
-      'delete' => array(t('Delete the selected comments'), ''),
-    );
-  }
-
-  return $operations;
-}
-
-/**
  * Load comments from the database.
  *
  * @param $cids
