@@ -998,10 +998,10 @@ function user_account_form(&$form, &$form_state) {
   }
 
   if ($admin) {
-    $status = (isset($account->status) ? $account->status : 1);
+    $status = isset($account->status) ? $account->status : 1;
   }
   else {
-    $status = (variable_get('user_register', 1) == 1);
+    $status = $register ? variable_get('user_register', 1) == 1 : $account->status;
   }
   $form['account']['status'] = array(
     '#type' => 'radios',
