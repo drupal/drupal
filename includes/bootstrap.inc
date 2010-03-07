@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.357 2010/03/07 06:38:55 webchick Exp $
+// $Id: bootstrap.inc,v 1.358 2010/03/07 07:30:40 webchick Exp $
 
 /**
  * @file
@@ -2091,11 +2091,7 @@ function drupal_language_types() {
  * Return true if there is more than one language enabled.
  */
 function drupal_multilingual() {
-  static $multilingual;
-  if (!isset($multilingual)) {
-    $multilingual = variable_get('language_count', 1) > 1;
-  }
-  return $multilingual;
+  return variable_get('language_count', 1) > 1;
 }
 
 /**
