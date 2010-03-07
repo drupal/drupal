@@ -6,13 +6,9 @@ ul.menu {
 ul.menu li {
   margin: 0 0.5em 0 0;
 }
-li.expanded {
-  padding: 0.2em 0 0 0.5em;
-}
-li.collapsed {
+ul li.collapsed {
   list-style-image: url(../../misc/menu-collapsed-rtl.png);
-  padding: 0.2em 0 0 0.5em;
 }
-li.leaf {
+li.expanded, li.collapsed, li.leaf {
   padding: 0.2em 0 0 0.5em;
 }
