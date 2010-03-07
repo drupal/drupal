@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.100 2010/03/03 19:46:26 dries Exp $
+// $Id: user.admin.inc,v 1.101 2010/03/07 06:49:10 webchick Exp $
 
 /**
  * @file
@@ -897,6 +897,8 @@ function theme_user_filters($variables) {
   }
   $output .= '</ul>';
 
+  $output .= '<div class="clearfix">';
+
   $output .= '<dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '');
 
   $output .= '<dd>';
@@ -908,6 +910,8 @@ function theme_user_filters($variables) {
 
   $output .= '</dl>';
   $output .= drupal_render($form['actions']);
+
+  $output .= '</div>';
 
   return $output;
 }

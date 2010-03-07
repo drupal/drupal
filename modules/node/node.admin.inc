@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.91 2010/03/03 19:46:25 dries Exp $
+// $Id: node.admin.inc,v 1.92 2010/03/07 06:49:10 webchick Exp $
 
 /**
  * @file
@@ -220,6 +220,8 @@ function theme_node_filters($variables) {
   }
   $output .= '</ul>';
 
+  $output .= '<div class="clearfix">';
+
   $output .= '<dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '');
 
   $output .= '<dd>';
@@ -231,6 +233,8 @@ function theme_node_filters($variables) {
 
   $output .= '</dl>';
   $output .= drupal_render($form['actions']);
+
+  $output .= '</div>';
 
   return $output;
 }
