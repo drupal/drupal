@@ -216,7 +216,12 @@ class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iter
         $count = 0;
         $new_args = array();
         foreach ($args as $value) {
-          if (is_numeric($value)) {
+          if (is_float($value) || is_int($value)) {
+            if (is_float($value)) {
+              // Force the conversion to float so as not to loose precision
+              // in the automatic cast.
+              $value = sprintf('%F', $value);
+            }
             $query = substr_replace($query, $value, strpos($query, '?'), 1);
           }
           else {
@@ -231,7 +236,13 @@ class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iter
         // Else, this is using named placeholders.
         foreach ($args as $placeholder => $value) {
           if (is_float($value) || is_int($value)) {
-            // We will remove this placeholder from the query and PDO throws an
+            if (is_float($value)) {
+              // Force the conversion to float so as not to loose precision
+              // in the automatic cast.
+              $value = sprintf('%F', $value);
+            }
+            
+            // We will remove this placeholder from the query as PDO throws an
             // exception if the number of placeholders in the query and the
             // arguments does not match.
             unset($args[$placeholder]);
