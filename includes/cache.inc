@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.46 2010/02/15 15:52:27 dries Exp $
+// $Id: cache.inc,v 1.47 2010/03/07 07:26:13 webchick Exp $
 
 /**
  * Get the cache object for a cache bin.
@@ -387,13 +387,6 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     if (!isset($cache->data)) {
       return FALSE;
     }
-    // If the data is permanent or we are not enforcing a minimum cache lifetime
-    // always return the cached data.
-    if ($cache->expire == CACHE_PERMANENT || !variable_get('cache_lifetime', 0)) {
-      if ($cache->serialized) {
-        $cache->data = unserialize($cache->data);
-      }
-    }
     // If enforcing a minimum cache lifetime, validate that the data is
     // currently valid for this user before we return it by making sure the cache
     // entry was created before the timestamp in the current session's cache
@@ -405,6 +398,9 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
       return FALSE;
     }
 
+    if ($cache->serialized) {
+      $cache->data = unserialize($cache->data);
+    }
     if (isset($cache->headers)) {
       $cache->headers = unserialize($cache->headers);
     }
