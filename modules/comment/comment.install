@@ -140,16 +140,6 @@ function comment_update_7002() {
 }
 
 /**
- * Improve indexes on the comment table.
- */
-function comment_update_7003() {
-  db_drop_index('comment', 'status');
-  db_drop_index('comment', 'pid');
-  db_add_index('comment', 'comment_pid_status', array('pid', 'status'));
-  db_add_index('comment', 'comment_num_new', array('nid', 'timestamp', 'status'));
-}
-
-/**
  * Rename comment display setting variables.
  */
 function comment_update_7004() {
@@ -183,11 +173,12 @@ function comment_update_7006() {
 }
 
 /**
- * Split {comment}.timestamp into {comment}.created and {comment}.changed.
+ * Split {comment}.timestamp into 'created' and 'changed', improve indexing on {comment}.
  */
 function comment_update_7007() {
-  // Drop the index associated to timestamp.
-  db_drop_index('comment', 'comment_num_new');
+  // Drop the old indexes.
+  db_drop_index('comment', 'status');
+  db_drop_index('comment', 'pid');
 
   // Create a created column.
   db_add_field('comment', 'created', array(
@@ -203,12 +194,15 @@ function comment_update_7007() {
     'default' => 0,
   ));
 
-  // Recreate the index.
-  db_add_index('comment', 'comment_num_new', array('nid', 'changed', 'status'));
-
   // Migrate the data.
   // @todo db_update() should support this.
   db_query('UPDATE {comment} SET created = changed');
+
+  // Recreate the indexes.
+  // The 'comment_num_new' index is optimized for comment_num_new()
+  // and comment_new_page_count().
+  db_add_index('comment', 'comment_num_new', array('nid', 'status', 'created', 'cid', 'thread'));
+  db_add_index('comment', 'comment_pid_status', array('pid', 'status'));
 }
 
 /**
@@ -349,14 +343,6 @@ function comment_update_7013(&$sandbox) {
     db_drop_field('comment', 'comment');
     db_drop_field('comment', 'format');
   }
-}
-
-/**
- * Optimize index for comment_num_new() and comment_new_page_count().
- */
-function comment_update_7014() {
-  db_drop_index('comment', 'comment_num_new');
-  db_add_index('comment', 'comment_num_new', array('nid', 'status', 'created', 'cid', 'thread'));
 }
 
 /**
