@@ -153,10 +153,21 @@ function trigger_assign_form($form, $form_state, $module, $hook, $label) {
   $form[$hook]['assigned']['#type'] = 'value';
   $form[$hook]['assigned']['#value'] = array();
   foreach ($actions as $aid => $info) {
-    $form[$hook]['assigned']['#value'][$aid] = array(
-      'label' => $info['label'],
-      'link' => l(t('unassign'), "admin/structure/trigger/unassign/$module/$hook/" . md5($aid)),
-    );
+    // If action is defined unassign it, otherwise offer to delete all orphaned
+    // actions.
+    if (actions_function_lookup(md5($aid))) {
+      $form[$hook]['assigned']['#value'][$aid] = array(
+        'label' => $info['label'],
+        'link' => l(t('unassign'), "admin/structure/trigger/unassign/$module/$hook/" . md5($aid)),
+      );
+    }
+    else {
+      // Link to system_actions_remove_orphans() to do the clean up.
+      $form[$hook]['assigned']['#value'][$aid] = array(
+        'label' => $info['label'],
+        'link' => l(t('Remove orphaned actions'), "admin/config/system/actions/orphan"),
+      );
+    }
   }
 
   $form[$hook]['parent'] = array(

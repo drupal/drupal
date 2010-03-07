@@ -129,7 +129,13 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
     }
     // Singleton action; $action_ids is the function name.
     else {
-      $actions_result[$action_ids] = $action_ids($object, $context, $a1, $a2);
+      if (function_exists($action_ids)) {
+        $actions_result[$action_ids] = $action_ids($object, $context, $a1, $a2);
+      }
+      else {
+        // Set to avoid undefined index error messages later.
+        $actions_result[$action_ids] = FALSE;
+      }
     }
   }
   $stack--;
@@ -153,7 +159,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
  * @see hook_action_info()
  */
 function actions_list($reset = FALSE) {
-  static $actions;
+  $actions = &drupal_static(__FUNCTION__);
   if (!isset($actions) || $reset) {
     $actions = module_invoke_all('action_info');
     drupal_alter('action_info', $actions);
