@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.27 2010/03/07 07:53:15 webchick Exp $
+// $Id: database.inc,v 1.28 2010/03/07 08:03:45 webchick Exp $
 
 /**
  * @file
@@ -24,6 +24,8 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
     // This driver defaults to transaction support, except if explicitly passed FALSE.
     $this->transactionSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] !== FALSE;
+
+    $this->connectionOptions = $connection_options;
 
     parent::__construct('sqlite:' . $connection_options['database'], '', '', array(
       // Force column names to lower case.

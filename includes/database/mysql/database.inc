@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.25 2010/02/17 22:44:52 webchick Exp $
+// $Id: database.inc,v 1.26 2010/03/07 08:03:44 webchick Exp $
 
 /**
  * @file
@@ -24,6 +24,8 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     if (empty($connection_options['port'])) {
       $connection_options['port'] = 3306;
     }
+
+    $this->connectionOptions = $connection_options;
 
     $dsn = 'mysql:host=' . $connection_options['host'] . ';port=' . $connection_options['port'] . ';dbname=' . $connection_options['database'];
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(

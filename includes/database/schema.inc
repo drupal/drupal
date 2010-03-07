@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.29 2010/03/01 11:30:37 dries Exp $
+// $Id: schema.inc,v 1.30 2010/03/07 08:03:44 webchick Exp $
 
 /**
  * @file
@@ -187,7 +187,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   A DatabaseCondition object.
    */
   protected function buildTableNameCondition($table_name, $operator = '=') {
-    $info = Database::getConnectionInfo();
+    $info = $this->connection->getConnectionOptions();
 
     // The table name may describe the schema eg. schema.table.
     if (strpos($table_name, '.')) {
@@ -198,7 +198,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     }
 
     $condition = new DatabaseCondition('AND');
-    $condition->condition('table_catalog', $info['default']['database']);
+    $condition->condition('table_catalog', $info['database']);
     $condition->condition('table_schema', $schema);
     $condition->condition('table_name', $table_name, $operator);
     return $condition;

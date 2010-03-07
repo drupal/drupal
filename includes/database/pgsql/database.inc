@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.35 2010/02/28 20:10:34 dries Exp $
+// $Id: database.inc,v 1.36 2010/03/07 08:03:45 webchick Exp $
 
 /**
  * @file
@@ -35,6 +35,8 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     if (empty($connection_options['password'])) {
       $connection_options['password'] = null;
     }
+
+    $this->connectionOptions = $connection_options;
 
     $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
