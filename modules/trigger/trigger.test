@@ -1,7 +1,38 @@
 <?php
 // $Id$
 
-class TriggerContentTestCase extends DrupalWebTestCase {
+/**
+ * Class with common helper methods.
+ */
+class TriggerWebTestCase extends DrupalWebTestCase {
+
+  /**
+   * Configure an advanced action.
+   *
+   * @param $action
+   *   The name of the action callback. For example: 'user_block_user_action'
+   * @param $edit
+   *   The $edit array for the form to be used to configure.
+   *   Example members would be 'actions_label' (always), 'message', etc.
+   * @return
+   *   the aid (action id) of the configured action, or FALSE if none.
+   */
+  protected function configureAdvancedAction($action, $edit) {
+    // Create an advanced action.
+    $hash = md5($action);
+    $this->drupalPost("admin/config/system/actions/configure/$hash", $edit, t('Save'));
+    $this->assertText(t('The action has been successfully saved.'));
+
+    // Now we have to find out the action ID of what we created.
+    return db_query('SELECT aid FROM {actions} WHERE callback = :callback AND label = :label', array(':callback' => $action, ':label' => $edit['actions_label']))->fetchField();
+  }
+
+}
+
+/**
+ * Test node triggers.
+ */
+class TriggerContentTestCase extends TriggerWebTestCase {
   var $_cleanup_roles = array();
   var $_cleanup_users = array();
 
@@ -116,7 +147,7 @@ class TriggerContentTestCase extends DrupalWebTestCase {
 /**
  * Test cron trigger.
  */
-class TriggerCronTestCase extends DrupalWebTestCase {
+class TriggerCronTestCase extends TriggerWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Trigger cron (system) actions',
@@ -146,14 +177,12 @@ class TriggerCronTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/trigger/system', $edit, t('Assign'));
 
     // Assign a configurable action to the cron trigger.
-    $hash = md5('trigger_test_system_cron_conf_action');
     $action_label = $this->randomName();
     $edit = array(
       'actions_label' => $action_label,
       'subject' => $action_label,
     );
-    $this->drupalPost('admin/config/system/actions/configure/' . $hash, $edit, t('Save'));
-    $aid = db_query('SELECT aid FROM {actions} WHERE callback = :callback', array(':callback' => 'trigger_test_system_cron_conf_action'))->fetchField();
+    $aid = $this->configureAdvancedAction('trigger_test_system_cron_conf_action', $edit);
     // $aid is likely 3 but if we add more uses for the sequences table in
     // core it might break, so it is easier to get the value from the database.
     $edit = array('aid' => md5($aid));
@@ -165,8 +194,8 @@ class TriggerCronTestCase extends DrupalWebTestCase {
       'actions_label' => $action_label,
       'subject' => $action_label,
     );
-    $this->drupalPost('admin/config/system/actions/configure/' . $hash, $edit, t('Save'));
-    $edit = array('aid' => md5($aid + 1));
+    $aid = $this->configureAdvancedAction('trigger_test_system_cron_conf_action', $edit);
+    $edit = array('aid' => md5($aid));
     $this->drupalPost('admin/structure/trigger/system', $edit, t('Assign'));
 
     // Force a cron run.
@@ -185,7 +214,7 @@ class TriggerCronTestCase extends DrupalWebTestCase {
 /**
  * Test other triggers.
  */
-class TriggerOtherTestCase extends DrupalWebTestCase {
+class TriggerOtherTestCase extends TriggerWebTestCase {
   var $_cleanup_roles = array();
   var $_cleanup_users = array();
 
@@ -198,11 +227,11 @@ class TriggerOtherTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('trigger', 'trigger_test');
+    parent::setUp('trigger', 'trigger_test', 'contact');
   }
 
   /**
-   * Test triggering on user create.
+   * Test triggering on user create and user login.
    */
   function testActionsUser() {
     // Assign an action to the create user trigger.
@@ -233,7 +262,29 @@ class TriggerOtherTestCase extends DrupalWebTestCase {
     $this->assertTrue(variable_get($action_id, FALSE), t('Check that creating a user triggered the test action.'));
 
     // Reset the action variable.
-    variable_set( $action_id, FALSE );
+    variable_set($action_id, FALSE);
+
+    $this->drupalLogin($test_user);
+    // Assign a configurable action 'System message' to the user_login trigger.
+    $action_edit = array(
+      'actions_label' => $this->randomName(16),
+      'message' => t("You have logged in:") . $this->randomName(16),
+    );
+
+    // Configure an advanced action that we can assign.
+    $aid = $this->configureAdvancedAction('system_message_action', $action_edit);
+    $edit = array('aid' => md5($aid));
+    $this->drupalPost('admin/structure/trigger/user', $edit, t('Assign'), array(), array(), 'trigger_user_login_assign_form');
+
+    // Verify that the action has been assigned to the correct hook.
+    $actions = trigger_get_assigned_actions('user_login');
+    $this->assertEqual(1, count($actions), t('One Action assigned to the hook'));
+    $this->assertEqual($actions[$aid]['label'], $action_edit['actions_label'], t('Correct action label found.'));
+
+    // User should get the configured message at login.
+    $contact_user = $this->drupalCreateUser(array('access site-wide contact form'));;
+    $this->drupalLogin($contact_user);
+    $this->assertText($action_edit['message']);
   }
 
   /**
@@ -249,7 +300,7 @@ class TriggerOtherTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/trigger/comment', $edit, t('Assign'));
 
     // Set action variable to FALSE.
-    variable_set( $action_id, FALSE );
+    variable_set($action_id, FALSE);
 
     // Create a node and add a comment to it.
     $web_user = $this->drupalCreateUser(array('create article content', 'access content', 'post comments without approval', 'post comments'));
@@ -278,7 +329,7 @@ class TriggerOtherTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/trigger/taxonomy', $edit, t('Assign'));
 
     // Set action variable to FALSE.
-    variable_set( $action_id, FALSE );
+    variable_set($action_id, FALSE);
 
     // Create a taxonomy vocabulary and add a term to it.
 
@@ -300,6 +351,7 @@ class TriggerOtherTestCase extends DrupalWebTestCase {
     // Verify that the action variable has been set.
     $this->assertTrue(variable_get($action_id, FALSE), t('Check that creating a taxonomy term triggered the action.'));
   }
+
 }
 
 /**

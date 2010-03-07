@@ -1586,8 +1586,12 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @param $headers
    *   An array containing additional HTTP request headers, each formatted as
    *   "name: value".
+   * @param $form_id
+   *   The optional string identifying the form to be submitted. On some pages
+   *   there are many identical forms, so just using the value of the submit
+   *   button is not enough.
    */
-  protected function drupalPost($path, $edit, $submit, array $options = array(), array $headers = array()) {
+  protected function drupalPost($path, $edit, $submit, array $options = array(), array $headers = array(), $form_id = NULL) {
     $submit_matches = FALSE;
     $ajax = is_array($submit);
     if (isset($path)) {
@@ -1596,7 +1600,11 @@ class DrupalWebTestCase extends DrupalTestCase {
     if ($this->parse()) {
       $edit_save = $edit;
       // Let's iterate over all the forms.
-      $forms = $this->xpath('//form');
+      $xpath = "//form";
+      if (!empty($form_id)) {
+        $xpath .= "[@id='" . drupal_html_id($form_id) . "']";
+      }
+      $forms = $this->xpath($xpath);
       foreach ($forms as $form) {
         // We try to set the fields of this form as specified in $edit.
         $edit = $edit_save;
