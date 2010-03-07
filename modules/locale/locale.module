@@ -319,6 +319,7 @@ function locale_language_selector_form(&$form, &$form_state, $user) {
     '#type' => 'fieldset',
     '#title' => t('Language settings'),
     '#weight' => 1,
+    '#access' => ($form['#user_category'] == 'account' || ($form['#user_category'] == 'register' && user_access('administer users'))),
   );
 
   // Get language negotiation settings.
@@ -381,7 +382,7 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
   if (drupal_multilingual()) {
     // Display language selector when either creating a user on the admin
     // interface or editing a user account.
-    if (($form_id == 'user_register_form' && user_access('administer users')) || ($form_id == 'user_profile_form' && $form['#user_category'] == 'account')) {
+    if ($form_id == 'user_register_form' || ($form_id == 'user_profile_form' && $form['#user_category'] == 'account')) {
       locale_language_selector_form($form, $form_state, $form['#user']);
     }
   }
