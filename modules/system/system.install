@@ -1563,7 +1563,7 @@ function system_update_6051() {
       'description' => 'The {filter_formats}.format of the signature.',
     );
 
-    db_add_field($ret, 'users', 'signature_format', $schema);
+    db_add_field('users', 'signature_format', $schema);
 
     // Set the format of existing signatures to the current default text format.
     if ($current_default_filter = variable_get('filter_default_format', 0)) {
@@ -1576,26 +1576,20 @@ function system_update_6051() {
 
     drupal_set_message("User signatures no longer inherit comment text formats. Each user's signature now has its own associated format that can be selected on the user's account page. Existing signatures have been set to your site's default text format.");
   }
-
-  return $ret;
 }
 
 /**
  * Add a missing index on the {menu_router} table.
  */
 function system_update_6052() {
-  $ret = array();
-  db_add_index($ret, 'menu_router', 'tab_root_weight_title', array(array('tab_root', 64), 'weight', 'title'));
-  return $ret;
+  db_add_index('menu_router', 'tab_root_weight_title', array(array('tab_root', 64), 'weight', 'title'));
 }
 
 /**
  * Add a {system} index on type and name.
  */
 function system_update_6053() {
-  $ret = array();
-  db_add_index($ret, 'system', 'type_name', array(array('type', 12), 'name'));
-  return $ret;
+  db_add_index('system', 'type_name', array(array('type', 12), 'name'));
 }
 
 /**
