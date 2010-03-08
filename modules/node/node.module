@@ -1414,6 +1414,7 @@ function node_permission() {
   $perms = array(
     'administer content types' => array(
       'title' => t('Administer content types'),
+      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'administer nodes' => array(
       'title' => t('Administer content'),

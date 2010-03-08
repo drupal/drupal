@@ -207,6 +207,7 @@ function system_permission() {
     ),
     'administer site configuration' => array(
       'title' => t('Administer site configuration'),
+      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'administer themes' => array(
       'title' => t('Administer themes'),
