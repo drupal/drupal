@@ -521,8 +521,7 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
         '#type' => 'textfield',
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
         '#size' => $instance['widget']['settings']['size'],
-        '#prefix' => '<div class="text-full-wrapper">',
-        '#suffix' => '</div>',
+        '#attributes' => array('class' => array('text-full')),
       );
       break;
 
@@ -549,8 +548,7 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
         '#type' => 'textarea',
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
         '#rows' => $instance['widget']['settings']['rows'],
-        '#prefix' => '<div class="text-full-wrapper">',
-        '#suffix' => '</div>',
+        '#attributes' => array('class' => array('text-full')),
       );
       break;
   }

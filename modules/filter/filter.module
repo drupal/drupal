@@ -746,8 +746,9 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
  * If multiple text format-enabled elements are required on the same level of
  * the form structure, modules can set custom #parents on the original element.
  * Alternatively, the #after_build may be unset through a subsequent #process
- * callback. If no custom processing occurs, then the submitted form values will
- * appear like in the $form_state['input'] array above.
+ * callback. If the default #after_build is not invoked and no custom processing
+ * occurs, then the submitted form values will appear like in the
+ * $form_state['input'] array above.
  *
  * @see filter_form_after_build()
  *
@@ -785,11 +786,11 @@ function filter_process_format($element) {
     '#processed',
     '#theme_wrappers',
   );
-  // Move this element into sub-element 'value'. 
+  // Move this element into sub-element 'value'.
   unset($element['value']);
-  foreach ($element as $key => $value) {
-    if ($key[0] === '#' && !in_array($key, $blacklist)) {
-      $element['value'][$key] = $value;
+  foreach (element_properties($element) as $key) {
+    if (!in_array($key, $blacklist)) {
+      $element['value'][$key] = $element[$key];
     }
   }
 
@@ -839,7 +840,6 @@ function filter_process_format($element) {
     '#weight' => 10,
     '#attributes' => array('class' => array('filter-list')),
     '#parents' => array_merge($element['#parents'], array('format')),
-    '#value_callback' => 'filter_form_value_callback_format',
   );
 
   $element['format']['help'] = array(
@@ -853,16 +853,16 @@ function filter_process_format($element) {
 }
 
 /**
- * After build, we need to move the values up in $form_state.
+ * After build callback to move #type 'text_format' values up in $form_state.
  */
 function filter_form_after_build($element, &$form_state) {
-  $parents = $element['#parents'];
-  $original_key = array_pop($parents);
-
   // For text fields, the additional subkeys map 1:1 to field schema columns.
   if (isset($element['#columns'])) {
     return $element;
   }
+
+  $parents = $element['#parents'];
+  array_pop($parents);
 
   foreach (element_children($element) as $key) {
     $current_parents = $parents;
@@ -870,6 +870,7 @@ function filter_form_after_build($element, &$form_state) {
       case 'value':
         form_set_value(array('#parents' => $element['#parents']), $element[$key]['#value'], $form_state);
         break;
+
       case 'format':
         $current_parents[] = $key;
         form_set_value(array('#parents' => $current_parents), $element['format']['format']['#value'], $form_state);

@@ -11,8 +11,8 @@ Drupal.behaviors.textSummary = {
       var $widget = $(this).closest('div.field-type-text-with-summary');
       var $summary = $widget.find('div.text-summary-wrapper');
       var $summaryLabel = $summary.find('label');
-      var $full = $widget.find('div.text-full-wrapper');
-      var $fullLabel = $full.find('div.form-type-textarea label');
+      var $full = $widget.find('.form-item:has(.text-full)');
+      var $fullLabel = $full.find('label');
 
       // Setup the edit/hide summary link.
       var $link = $('<span class="field-edit-link">(<a class="link-edit-summary" href="#">' + Drupal.t('Hide summary') + '</a>)</span>').toggle(
