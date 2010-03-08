@@ -272,7 +272,7 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
   $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save Changes'),
+    '#value' => t('Save changes'),
   );
 
   return $form;
