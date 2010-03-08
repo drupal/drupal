@@ -570,8 +570,8 @@ function forum_form_alter(&$form, $form_state, $form_id) {
     $form['taxonomy_forums'][$langcode]['#multiple'] = FALSE;
     if (empty($form['taxonomy_forums'][$langcode]['#default_value'])) {
       // If there is no default forum already selected, try to get the forum
-      // ID from the URL (e.g., if we are on a page like node/add/forum/3, we
-      // expect "3" to be the ID of the forum that was requested).
+      // ID from the URL (e.g., if we are on a page like node/add/forum/2, we
+      // expect "2" to be the ID of the forum that was requested).
       $requested_forum_id = arg(3);
       $form['taxonomy_forums'][$langcode]['#default_value'] = is_numeric($requested_forum_id) ? $requested_forum_id : NULL;
     }
