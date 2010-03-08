@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1244 2010/03/07 07:52:00 webchick Exp $
+// $Id: node.module,v 1.1245 2010/03/08 02:41:46 webchick Exp $
 
 /**
  * @file
@@ -1414,6 +1414,7 @@ function node_permission() {
   $perms = array(
     'administer content types' => array(
       'title' => t('Administer content types'),
+      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'administer nodes' => array(
       'title' => t('Administer content'),
