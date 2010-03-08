@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.admin.inc,v 1.10 2010/03/06 06:39:01 dries Exp $
+// $Id: shortcut.admin.inc,v 1.11 2010/03/08 15:45:26 webchick Exp $
 
 /**
  * @file
@@ -272,7 +272,7 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
   $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save Changes'),
+    '#value' => t('Save changes'),
   );
 
   return $form;
