@@ -2044,15 +2044,6 @@ function system_update_7024() {
 }
 
 /**
- * Increase permitted length of url aliases to 255 characters.
- *
- */
-function system_update_7026() {
-  db_change_field('url_alias', 'src', 'src', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
-  db_change_field('url_alias', 'dst', 'dst', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
-}
-
-/**
  * Enable field type modules.
  */
 function system_update_7027() {
@@ -2280,7 +2271,7 @@ function system_update_7041() {
 }
 
 /**
- * Rename dst and src to source and alias.
+ * Upgrade the {url_alias} table and create a cache bin for path aliases.
  */
 function system_update_7042() {
   // update_fix_d7_requirements() adds 'fake' source and alias columns to
@@ -2293,16 +2284,16 @@ function system_update_7042() {
   $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
   $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
   db_create_table('cache_path', $schema['cache_path']);
+
   // Drop indexes.
   db_drop_index('url_alias', 'src_language_pid');
   db_drop_unique_key('url_alias', 'dst_language_pid');
-  // Rename fields.
+  // Rename the fields, and increase their length to 255 characters.
   db_change_field('url_alias', 'src', 'source', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
   db_change_field('url_alias', 'dst', 'alias', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
   // Add indexes back.
   db_add_index('url_alias', 'source_language_pid', array('source', 'language', 'pid'));
   db_add_unique_key('url_alias', 'alias_language_pid', array('alias', 'language', 'pid'));
-
 }
 
 /**
