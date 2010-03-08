@@ -394,10 +394,37 @@ class ProfileBlockTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Test profile browsing.
+ */
+class ProfileTestBrowsing extends ProfileTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Profile browsing',
+      'description' => 'Test profile browsing.',
+      'group' => 'Profile',
+    );
+  }
+
+  /**
+   * Test profile browsing.
+   */
+  function testProfileBrowsing() {
+    $this->drupalLogin($this->admin_user);
+    $field = $this->createProfileField('list', 'simpletest', array('page' => '%value'));
+
+    // Set a random value for the profile field.
+    $value = $this->setProfileField($field);
+
+    // Check that user is found on the profile browse page.
+    $this->drupalGet("profile/{$field['form_name']}/$value");
+    $this->assertText($this->normal_user->name);
+  }
+}
+
   /**
    * TODO:
    * - Test field visibility
-   * - Test profile browsing
    * - Test required fields
    * - Test fields on registration form
    * - Test updating fields

@@ -33,7 +33,7 @@ function profile_browse() {
       ':visibility' => PROFILE_PUBLIC_LISTINGS,
     ))->fetchAll();
 
-    $query = db_select('users')->extend('PagerDefault');
+    $query = db_select('users', 'u')->extend('PagerDefault');
     $query->join('profile_value', 'v', 'u.uid = v.uid');
     $query
       ->fields('u', array('uid', 'access'))
