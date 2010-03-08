@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.17 2009/12/13 20:03:11 dries Exp $
+// $Id: filter.api.php,v 1.18 2010/03/08 05:21:23 webchick Exp $
 
 /**
  * @file
@@ -245,8 +245,8 @@ function hook_filter_format_update($format) {
  *   The format object of the site's fallback format, which is always available
  *   to all users.
  *
+ * @see hook_filter_format_insert().
  * @see hook_filter_format_update().
- * @see hook_filter_format_delete().
  */
 function hook_filter_format_delete($format, $fallback) {
   // Replace the deleted format with the fallback format.
