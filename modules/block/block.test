@@ -44,6 +44,20 @@ class BlockTestCase extends DrupalWebTestCase {
    * Test creating custom block, moving it to a specific region and then deleting it.
    */
   function testCustomBlock() {
+    // Confirm that hidden regions are not shown as options for block placement
+    // when adding a new block.
+    theme_enable(array('stark'));
+    $themes = list_themes();
+    $this->drupalGet('admin/structure/block/add');
+    foreach ($themes as $key => $theme) {
+      if ($theme->status) {
+        foreach ($theme->info['regions_hidden'] as $hidden_region) {
+          $elements = $this->xpath('//select[@id="edit-regions-' . $key . '"]//option[@value="' . $hidden_region . '"]');
+          $this->assertFalse(isset($elements[0]), t('The hidden region @region is not available for @theme.', array('@region' => $hidden_region, '@theme' => $key)));
+        }
+      }
+    }
+
     // Add a new custom block by filling out the input form on the admin/structure/block/add page.
     $custom_block = array();
     $custom_block['info'] = $this->randomName(8);
