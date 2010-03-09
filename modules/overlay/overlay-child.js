@@ -1,4 +1,4 @@
-// $Id: overlay-child.js,v 1.5 2010/01/06 15:23:32 dries Exp $
+// $Id: overlay-child.js,v 1.6 2010/03/09 20:52:27 webchick Exp $
 
 (function ($) {
 
@@ -23,7 +23,7 @@ Drupal.behaviors.overlayChild = {
 
     // If we cannot reach the parent window, then we have nothing else to do
     // here.
-    if (!$.isObject(parent.Drupal) || !$.isObject(parent.Drupal.overlay)) {
+    if (!$.isPlainObject(parent.Drupal) || !$.isPlainObject(parent.Drupal.overlay)) {
       return;
     }
 

@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.33 2009/12/08 03:10:51 dries Exp $
+// $Id: tabledrag.js,v 1.34 2010/03/09 20:52:27 webchick Exp $
 (function ($) {
 
 /**
@@ -169,7 +169,8 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
   // Create the handle.
   var handle = $('<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>').attr('title', Drupal.t('Drag to re-order'));
   // Insert the handle after indentations (if any).
-  if ($('td:first .indentation:last', item).after(handle).size()) {
+  if ($('td:first .indentation:last', item).length) {
+    $('td:first .indentation:last', item).after(handle);
     // Update the total width of indentation in this entire table.
     self.indentCount = Math.max($('.indentation', item).size(), self.indentCount);
   }
