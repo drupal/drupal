@@ -1078,7 +1078,7 @@ function system_library() {
     'website' => 'http://benalman.com/projects/jquery-bbq-plugin/',
     'version' => '1.0.2',
     'js' => array(
-      'misc/jquery.ba-bbq.js',
+      'misc/jquery.ba-bbq.js' => array(),
     ),
   );
 

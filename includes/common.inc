@@ -2871,12 +2871,6 @@ function drupal_aggregate_css(&$css_groups) {
   $directory = file_directory_path('public');
   $is_writable = is_dir($directory) && is_writable($directory);
 
-  // For non-aggregated files, a dummy query string is added to the URL when
-  // rendering the HTML tag (see drupal_pre_render_styles()). For aggregated
-  // files, it is instead added to the data from which an md5 hash is generated,
-  // so that a changed query string triggers a new aggregate file to be created.
-  $query_string = '?' . substr(variable_get('css_js_query_string', '0'), 0, 1);
-
   // For each group that needs aggregation, aggregate its items.
   foreach ($css_groups as $key => $group) {
     switch ($group['type']) {
@@ -2886,7 +2880,7 @@ function drupal_aggregate_css(&$css_groups) {
         if ($group['preprocess'] && $preprocess_css && $is_writable) {
           // Prefix filename to prevent blocking by firewalls which reject files
           // starting with "ad*".
-          $filename = 'css_' . md5(serialize($group['items']) . $query_string) . '.css';
+          $filename = 'css_' . md5(serialize($group['items'])) . '.css';
           $css_groups[$key]['data'] = drupal_build_css_cache($group['items'], $filename);
         }
         break;
@@ -2975,7 +2969,7 @@ function drupal_pre_render_styles($elements) {
   // browser-caching. The string changes on every update or full cache
   // flush, forcing browsers to load a new copy of the files, as the
   // URL changed.
-  $query_string = substr(variable_get('css_js_query_string', '0'), 0, 1);
+  $query_string = substr(variable_get('css_js_query_string', '0'), 0, 2);
 
   // Defaults for LINK and STYLE elements.
   $link_element_defaults = array(
@@ -3013,10 +3007,7 @@ function drupal_pre_render_styles($elements) {
         // for the aggregate file.
         if (isset($group['data'])) {
           $element = $link_element_defaults;
-          // The aggregate file name already incorporates the dummy query
-          // string information. The query string does not need to be added to
-          // the URL.
-          $element['#attributes']['href'] = file_create_url($group['data']);
+          $element['#attributes']['href'] = file_create_url($group['data']) . '?' . $query_string;
           $element['#attributes']['media'] = $group['media'];
           $element['#browsers'] = $group['browsers'];
           $elements[] = $element;
@@ -3470,6 +3461,10 @@ function drupal_region_class($region) {
  *       Aggregate the JavaScript if the JavaScript optimization setting has
  *       been toggled in admin/config/development/performance. Note that
  *       JavaScript of type 'external' is not aggregated. Defaults to TRUE.
+ *   - version
+ *       If not empty, the version is added as a query string instead of the
+ *       incremental query string that changes on cache clearing. Primarily
+ *       used for libraries.
  * @return
  *   The constructed array of JavaScript files.
  * @see drupal_get_js()
@@ -3559,6 +3554,7 @@ function drupal_js_defaults($data = NULL) {
     'cache' => TRUE,
     'defer' => FALSE,
     'preprocess' => TRUE,
+    'version' => NULL,
     'data' => $data,
   );
 }
@@ -3610,8 +3606,10 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   }
 
   $output = '';
-  $preprocessed = '';
-  $no_preprocess = "\n";
+  // The index counter is used to keep aggregated and non-aggregated files in
+  // order by weight.
+  $index = 1;
+  $processed = array();
   $files = array();
   $preprocess_js = (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
   $directory = file_directory_path('public');
@@ -3623,13 +3621,17 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   // URL changed. Files that should not be cached (see drupal_add_js())
   // get REQUEST_TIME as query-string instead, to enforce reload on every
   // page request.
-  $query_string = substr(variable_get('css_js_query_string', '0'), 0, 1);
+  $default_query_string = substr(variable_get('css_js_query_string', '0'), 0, 2);
 
   // For inline Javascript to validate as XHTML, all Javascript containing
   // XHTML needs to be wrapped in CDATA. To make that backwards compatible
   // with HTML 4, we need to comment out the CDATA-tag.
   $embed_prefix = "\n<!--//--><![CDATA[//><!--\n";
   $embed_suffix = "\n//--><!]]>\n";
+
+  // Since Javascript may look for arguments in the url and act on them, some
+  // third-party code might require the use of a different query string.
+  $js_version_string = variable_get('drupal_js_version_query_string', 'v=');
 
   // Sort the JavaScript by weight so that it appears in the correct order.
   uasort($items, 'drupal_sort_weight');
@@ -3643,6 +3645,8 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
     ),
   );
   foreach ($items as $item) {
+    $query_string =  empty($item['version']) ? $default_query_string : $js_version_string . $item['version'];
+
     switch ($item['type']) {
       case 'setting':
         $js_element = $element;
@@ -3671,10 +3675,14 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
           }
           $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
           $js_element['#attributes']['src'] = file_create_url($item['data']) . $query_string_separator . ($item['cache'] ? $query_string : REQUEST_TIME);
-          $no_preprocess .= theme('html_tag', array('element' => $js_element));
+          $processed[$index++] = theme('html_tag', array('element' => $js_element));
         }
         else {
-          $files[$item['data']] = $item;
+          // By increasing the index for each aggregated file, we maintain
+          // the relative ordering of JS by weight.
+          $key = 'aggregate' . $index;
+          $processed[$key] = '';
+          $files[$key][$item['data']] = $item;
         }
         break;
 
@@ -3685,7 +3693,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
           $js_element['#attributes']['defer'] = 'defer';
         }
         $js_element['#attributes']['src'] = $item['data'];
-        $output .= theme('html_tag', array('element' => $js_element));
+        $processed[$index++] = theme('html_tag', array('element' => $js_element));
         break;
     }
   }
@@ -3694,16 +3702,18 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   if ($is_writable && $preprocess_js && count($files) > 0) {
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
-    $filename = 'js_' . md5(serialize($files) . $query_string) . '.js';
-    $preprocess_file = file_create_url(drupal_build_js_cache($files, $filename));
-    $js_element = $element;
-    $js_element['#attributes']['src'] = $preprocess_file;
-    $preprocessed .= theme('html_tag', array('element' => $js_element)) . "\n";
+    foreach ($files as $key => $file_set) {
+      $filename = 'js_' . md5(serialize($file_set)) . '.js';
+      $preprocess_file = file_create_url(drupal_build_js_cache($file_set, $filename)) . '?' . $default_query_string;
+      $js_element = $element;
+      $js_element['#attributes']['src'] = $preprocess_file;
+      $processed[$key] = theme('html_tag', array('element' => $js_element));
+    }
   }
 
   // Keep the order of JS files consistent as some are preprocessed and others are not.
   // Make sure any inline or JS setting variables appear last after libraries have loaded.
-  return $preprocessed . $no_preprocess . $output;
+  return implode('', $processed) . $output;
 }
 
 /**
@@ -3930,21 +3940,27 @@ function drupal_add_library($module, $name) {
 function drupal_get_library($module, $name) {
   $libraries = &drupal_static(__FUNCTION__, array());
 
-  if (!array_key_exists($module, $libraries)) {
+  if (!isset($libraries[$module])) {
     // Retrieve all libraries associated with the module.
     $module_libraries = module_invoke($module, 'library');
-
+    if (empty($module_libraries)) {
+      $module_libraries = array();
+    }
     // Allow modules to alter the module's registered libraries.
-    if (!empty($module_libraries)) {
-      drupal_alter('library', $module_libraries, $module);
+    drupal_alter('library', $module_libraries, $module);
+
+    foreach ($module_libraries as $key => $data) {
+      if (is_array($data)) {
+        // Add default elements to allow for easier processing.
+        $module_libraries[$key] += array('dependencies' => array(), 'js' => array(), 'css' => array());
+        foreach ($module_libraries[$key]['js'] as $file => $options) {
+          $module_libraries[$key]['js'][$file]['version'] = $module_libraries[$key]['version'];
+        }
+      }
     }
     $libraries[$module] = $module_libraries;
   }
-  if (!empty($libraries[$module][$name]) && is_array($libraries[$module][$name])) {
-    // Add default elements to allow for easier processing.
-    $libraries[$module][$name] += array('dependencies' => array(), 'js' => array(), 'css' => array());
-  }
-  else {
+  if (empty($libraries[$module][$name])) {
     $libraries[$module][$name] = FALSE;
   }
 
@@ -6068,8 +6084,8 @@ function drupal_flush_all_caches() {
  *
  * Changes the character added to all css/js files as dummy query-string,
  * so that all browsers are forced to reload fresh files. We keep
- * 20 characters history (FIFO) to avoid repeats, but only the first
- * (newest) character is actually used on urls, to keep them short.
+ * 20 characters history (FIFO) to avoid repeats, but only the first two
+ * (newest) characters are actually used on urls, to keep them short.
  * This is also called from update.php.
  */
 function _drupal_flush_css_js() {
