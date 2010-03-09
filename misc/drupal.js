@@ -366,15 +366,4 @@ Drupal.theme.prototype = {
   }
 };
 
-/**
- * Return whether the given variable is an object.
- *
- * The HEAD version of jQuery (http://code.jquery.com/jquery-nightly.js)
- * includes an isObject() function, so when that gets released and incorporated
- * into Drupal, this can be removed.
- */
-$.extend({isObject: function(value) {
-  return (value !== null && typeof value === 'object');
-}});
-
 })(jQuery);

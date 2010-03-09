@@ -598,7 +598,7 @@ Drupal.overlay.innerResize = function (height) {
   }
 
   // When no height is given try to get height when iframe content is loaded.
-  if (!height && $.isObject(self.$iframeBody)) {
+  if (!height && self.$iframeBody) {
     height = self.$iframeBody.outerHeight() + 25;
   }
   

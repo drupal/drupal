@@ -23,7 +23,7 @@ Drupal.behaviors.overlayChild = {
 
     // If we cannot reach the parent window, then we have nothing else to do
     // here.
-    if (!$.isObject(parent.Drupal) || !$.isObject(parent.Drupal.overlay)) {
+    if (!$.isPlainObject(parent.Drupal) || !$.isPlainObject(parent.Drupal.overlay)) {
       return;
     }
 
