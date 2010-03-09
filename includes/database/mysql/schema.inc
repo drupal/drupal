@@ -161,7 +161,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
 
     // Set the correct database-engine specific datatype.
     if (!isset($field['mysql_type'])) {
-      $map = db_type_map();
+      $map = $this->getFieldTypeMap();
       $field['mysql_type'] = $map[$field['type'] . ':' . $field['size']];
     }
 

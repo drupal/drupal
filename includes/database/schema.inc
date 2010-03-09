@@ -54,7 +54,7 @@
  *       INT, VARCHAR, BLOB, etc.).
  *
  *       Not all sizes are available for all data types. See
- *       db_type_map() for possible combinations.
+ *       DatabaseSchema::getFieldTypeMap() for possible combinations.
  *     - 'not null': If true, no NULL values will be allowed in this
  *       database column. Defaults to false.
  *     - 'default': The field's default value. The PHP type of the
@@ -266,9 +266,15 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
   }
 
   /**
-   * This maps a generic data type in combination with its data size
-   * to the engine-specific data type.
-   */
+  * Returns a mapping of Drupal schema field names to DB-native field types.
+  *
+  * Because different field types do not map 1:1 between databases, Drupal has
+  * its own normalized field type names. This function returns a driver-specific
+  * mapping table from Drupal names to the native names for each database.
+  *
+  * @return array
+  *   An array of Schema API field types to driver-specific field types.
+  */
   abstract public function getFieldTypeMap();
 
   /**
