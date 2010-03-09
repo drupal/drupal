@@ -1,4 +1,4 @@
-/* $Id: node.css,v 1.13 2010/02/17 03:37:12 webchick Exp $ */
+/* $Id: node.css,v 1.14 2010/03/09 11:45:37 dries Exp $ */
 
 .node-unpublished {
   background-color: #fff4f4;
@@ -30,10 +30,6 @@ td.revision-current {
 }
 .node-form .standard {
   clear: both;
-}
-.node-form textarea {
-  display: block;
-  width: 95%;
 }
 .node-form .attachments fieldset {
   float: none;
