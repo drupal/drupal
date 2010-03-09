@@ -100,8 +100,9 @@ function _drupal_session_read($sid) {
     $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $sid))->fetchObject();
   }
 
-  // We found the client's session record and they are an authenticated user.
-  if ($user && $user->uid > 0) {
+  // We found the client's session record and they are an authenticated,
+  // active user.
+  if ($user && $user->uid > 0 && $user->status == 1) {
     // This is done to unserialize the data member of $user.
     $user = drupal_unpack($user);
 
@@ -110,8 +111,8 @@ function _drupal_session_read($sid) {
     $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
     $user->roles += db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = :uid", array(':uid' => $user->uid))->fetchAllKeyed(0, 1);
   }
-  // We didn't find the client's record (session has expired), or they
-  // are an anonymous user.
+  // We didn't find the client's record (session has expired), or they are
+  // blocked, or they are an anonymous user.
   else {
     $session = isset($user->session) ? $user->session : '';
     $user = drupal_anonymous_user($session);
