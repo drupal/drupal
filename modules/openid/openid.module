@@ -705,13 +705,21 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
  * @param $response Array of response values from the provider.
  *
  * @return boolean
+ * @see http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4
  */
 function openid_verify_assertion($op_endpoint, $response) {
   module_load_include('inc', 'openid');
 
   $valid = FALSE;
+  $association = FALSE;
 
-  $association = db_query("SELECT * FROM {openid_association} WHERE assoc_handle = :assoc_handle", array(':assoc_handle' => $response['openid.assoc_handle']))->fetchObject();
+  // If the OP returned a openid.invalidate_handle, we have to proceed with
+  // direct verification: ignore the openid.assoc_handle, even if present.
+  // See http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.1
+  if (!empty($response['openid.assoc_handle']) && empty($response['openid.invalidate_handle'])) {
+    $association = db_query("SELECT * FROM {openid_association} WHERE assoc_handle = :assoc_handle", array(':assoc_handle' => $response['openid.assoc_handle']))->fetchObject();
+  }
+
   if ($association && isset($association->session_type)) {
     $keys_to_sign = explode(',', $response['openid.signed']);
     $self_sig = _openid_signature($association, $response, $keys_to_sign);
@@ -723,6 +731,9 @@ function openid_verify_assertion($op_endpoint, $response) {
     }
   }
   else {
+    // See http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.2.1
+    // The verification requests contain all the fields from the response,
+    // except openid.mode.
     $request = $response;
     $request['openid.mode'] = 'check_authentication';
     $message = _openid_create_message($request);
@@ -734,8 +745,17 @@ function openid_verify_assertion($op_endpoint, $response) {
     $result = drupal_http_request($op_endpoint, $options);
     if (!isset($result->error)) {
       $response = _openid_parse_message($result->data);
+
       if (strtolower(trim($response['is_valid'])) == 'true') {
         $valid = TRUE;
+        if (!empty($response['invalidate_handle'])) {
+          // This association handle has expired on the OP side, remove it from the
+          // database to avoid reusing it again on a subsequent authentication request.
+          // See http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.2.2
+          db_delete('openid_association')
+            ->condition('assoc_handle', $response['invalidate_handle'])
+            ->execute();
+        }
       }
       else {
         $valid = FALSE;
