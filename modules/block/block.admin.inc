@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.74 2010/03/09 03:48:59 dries Exp $
+// $Id: block.admin.inc,v 1.75 2010/03/09 12:09:52 dries Exp $
 
 /**
  * @file
@@ -513,6 +513,10 @@ function block_custom_block_delete_submit($form, &$form_state) {
     ->condition('bid', $form_state['values']['bid'])
     ->execute();
   db_delete('block')
+    ->condition('module', 'block')
+    ->condition('delta', $form_state['values']['bid'])
+    ->execute();
+  db_delete('block_role')
     ->condition('module', 'block')
     ->condition('delta', $form_state['values']['bid'])
     ->execute();
