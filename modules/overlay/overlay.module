@@ -464,7 +464,7 @@ function overlay_set_mode($mode = NULL) {
       drupal_add_library('overlay', 'child');
       // Pass child's document height on to parent document as quickly as
       // possible so it can be updated accordingly.
-      drupal_add_js('if (jQuery.isObject(parent.Drupal) && jQuery.isObject(parent.Drupal.overlay)) { parent.Drupal.overlay.innerResize(jQuery(document.body).outerHeight()); }', array('type' => 'inline', 'scope' => 'footer'));
+      drupal_add_js('if (parent.Drupal && parent.Drupal.overlay) { parent.Drupal.overlay.innerResize(jQuery(document.body).outerHeight()); }', array('type' => 'inline', 'scope' => 'footer'));
 
       // Allow modules to act upon overlay events.
       module_invoke_all('overlay_child_initialize');
