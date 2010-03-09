@@ -84,11 +84,18 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertRaw(l(t('configure'), 'admin/structure/block/manage/block/' . $bid . '/configure'), t('Custom block configure link found.'));
     $this->assertRaw(l(t('delete'), 'admin/structure/block/manage/block/' . $bid . '/delete'), t('Custom block delete link found.'));
 
+    // Set visibility only for authenticated users, to verify delete functionality.
+    $edit = array();
+    $edit['roles[2]'] = TRUE;
+    $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/configure', $edit, t('Save block'));
+
     // Delete the created custom block & verify that it's been deleted and no longer appearing on the page.
     $this->clickLink(t('delete'));
     $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/delete', array(), t('Delete'));
     $this->assertRaw(t('The block %title has been removed.', array('%title' => $custom_block['info'])), t('Custom block successfully deleted.'));
     $this->assertNoText(t($custom_block['title']), t('Custom block no longer appears on page.'));
+    $count = db_query("SELECT 1 FROM {block_role} WHERE module = :module AND delta = :delta", array(':module' => $custom_block['module'], ':delta' => $custom_block['delta']))->fetchField();
+    $this->assertFalse($count, t('Table block_role being cleaned.'));
   }
 
   /**

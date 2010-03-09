@@ -516,6 +516,10 @@ function block_custom_block_delete_submit($form, &$form_state) {
     ->condition('module', 'block')
     ->condition('delta', $form_state['values']['bid'])
     ->execute();
+  db_delete('block_role')
+    ->condition('module', 'block')
+    ->condition('delta', $form_state['values']['bid'])
+    ->execute();
   drupal_set_message(t('The block %name has been removed.', array('%name' => $form_state['values']['info'])));
   cache_clear_all();
   $form_state['redirect'] = 'admin/structure/block';

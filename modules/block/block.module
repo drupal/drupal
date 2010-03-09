@@ -925,3 +925,17 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
     '#weight' => -1,
   );
 }
+
+/**
+ * Implements hook_modules_uninstalled().
+ *
+ * Cleanup {block} and {block_role} tables from modules' blocks.
+ */
+function block_modules_uninstalled($modules) {
+  db_delete('block')
+    ->condition('module', $modules, 'IN')
+    ->execute();
+  db_delete('block_role')
+    ->condition('module', $modules, 'IN')
+    ->execute();
+}
