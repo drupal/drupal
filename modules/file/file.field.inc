@@ -274,11 +274,11 @@ function file_field_update($entity_type, $entity, $field, $instance, $langcode, 
     $fids[] = $item['fid'];
   }
 
-  // Delete items from original object.
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-  $load_function = $entity_type . '_load';
+  // Get the current values in the entity, and delete files for removed items.
+  list($id) = entity_extract_ids($entity_type, $entity);
+  $original = clone $entity;
+  field_attach_load($entity_type, array($id => $original), FIELD_LOAD_CURRENT, array('field_id' => $field['id']));
 
-  $original = $load_function($id);
   if (!empty($original->{$field['field_name']}[$langcode])) {
     foreach ($original->{$field['field_name']}[$langcode] as $original_item) {
       if (isset($original_item['fid']) && !in_array($original_item['fid'], $fids)) {
