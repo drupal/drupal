@@ -607,7 +607,6 @@ div.teaser-checkbox .form-item,
 /* Filter */
 .filter-wrapper {
   border-top: 0;
-  width: 95%;
   padding: 10px 2px;
 }
 .filter-wrapper > div {
@@ -691,10 +690,6 @@ textarea.form-textarea:focus,
 select.form-select:focus {
   color: #000;
   border-color: #ace;
-}
-.resizable-textarea .grippie {
-  width: 100%;
-  padding: 0 2px;
 }
 html.js input.form-autocomplete {
   background-position: 100% 4px;

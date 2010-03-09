@@ -31,10 +31,6 @@ td.revision-current {
 .node-form .standard {
   clear: both;
 }
-.node-form textarea {
-  display: block;
-  width: 95%;
-}
 .node-form .attachments fieldset {
   float: none;
   display: block;

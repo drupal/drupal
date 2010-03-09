@@ -79,8 +79,13 @@ html.js fieldset.collapsible .fieldset-wrapper {
 /**
  * Resizable textareas
  */
-.resizable-textarea {
-  width: 95%;
+.form-textarea-wrapper textarea {
+  margin: 0;
+  width: 100%;
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .resizable-textarea .grippie {
   height: 9px;
@@ -89,11 +94,6 @@ html.js fieldset.collapsible .fieldset-wrapper {
   border: 1px solid #ddd;
   border-top-width: 0;
   cursor: s-resize;
-}
-html.js .resizable-textarea textarea {
-  margin-bottom: 0;
-  width: 100%;
-  display: block;
 }
 
 /**

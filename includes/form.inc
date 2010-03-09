@@ -2801,16 +2801,24 @@ function theme_form($variables) {
  */
 function theme_textarea($variables) {
   $element = $variables['element'];
+  $wrapper_attributes = array(
+    'class' => array('form-textarea-wrapper'),
+  );
   $class = array('form-textarea');
 
-  // Add resizable behavior
-  if ($element['#resizable'] !== FALSE) {
+  // Add resizable behavior.
+  if (!empty($element['#resizable'])) {
     drupal_add_js('misc/textarea.js');
-    $class[] = 'resizable';
+    $wrapper_attributes['class'][] = 'resizable';
   }
 
+  $output = '<div' . drupal_attributes($wrapper_attributes) . '>';
+
   _form_set_class($element, $class);
-  return '<textarea cols="' . $element['#cols'] . '" rows="' . $element['#rows'] . '" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
+  $output .= '<textarea cols="' . $element['#cols'] . '" rows="' . $element['#rows'] . '" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
+
+  $output .= '</div>';
+  return $output;
 }
 
 /**
