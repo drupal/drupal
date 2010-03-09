@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.32 2010/03/07 08:03:44 webchick Exp $
+// $Id: schema.inc,v 1.33 2010/03/09 11:39:07 dries Exp $
 
 /**
  * @file
@@ -161,7 +161,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
 
     // Set the correct database-engine specific datatype.
     if (!isset($field['mysql_type'])) {
-      $map = db_type_map();
+      $map = $this->getFieldTypeMap();
       $field['mysql_type'] = $map[$field['type'] . ':' . $field['size']];
     }
 
