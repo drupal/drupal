@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.73 2010/03/07 23:14:20 webchick Exp $
+// $Id: block.admin.inc,v 1.74 2010/03/09 03:48:59 dries Exp $
 
 /**
  * @file
@@ -239,7 +239,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
         '#type' => 'select',
         '#title' => $theme->info['name'],
         '#default_value' => (!empty($region) ? $region : BLOCK_REGION_NONE),
-        '#options' => array(BLOCK_REGION_NONE => t('Disabled')) + $theme->info['regions'],
+        '#options' => array(BLOCK_REGION_NONE => t('<none>')) + system_region_list($key, REGIONS_VISIBLE),
         '#expandable' => ($key !== $theme_default),
         '#weight' => ($key == $theme_default ? 9 : 10),
       );
