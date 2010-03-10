@@ -73,10 +73,10 @@ Drupal.tableDrag = function (table, tableSettings) {
     // manually append 2 indentations in the first draggable row, measure
     // the offset, then remove.
     var indent = Drupal.theme('tableDragIndentation');
-    // Match immediate children of the parent element to allow nesting.
-    var testCell = $('> tbody > tr.draggable:first td:first, > tr.draggable:first td:first', table).prepend(indent).prepend(indent);
+    var testRow = $('<tr/>').addClass('draggable').appendTo(table);
+    var testCell = $('<td/>').appendTo(testRow).prepend(indent).prepend(indent);
     this.indentAmount = $('.indentation', testCell).get(1).offsetLeft - $('.indentation', testCell).get(0).offsetLeft;
-    $('.indentation', testCell).slice(0, 2).remove();
+    testRow.remove();
   }
 
   // Make each applicable row draggable.
