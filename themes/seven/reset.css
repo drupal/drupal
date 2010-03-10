@@ -1,4 +1,4 @@
-/* $Id: reset.css,v 1.6 2010/03/05 15:23:25 dries Exp $ */
+/* $Id: reset.css,v 1.7 2010/03/10 19:31:17 webchick Exp $ */
 
 /**
  * Reset CSS styles.
@@ -129,7 +129,6 @@ ul.secondary a.active,
   margin: 0;
   padding: 0;
   border: 0;
-  outline: 0;
   font-size: 100%;
   vertical-align: baseline;
   background: transparent;
@@ -155,11 +154,6 @@ blockquote:after,
 q:before, q:after {
   content: '';
   content: none;
-}
-
-/* Remember to define focus styles! */
-:focus {
-  outline: 0;
 }
 
 /* Remember to highlight inserts somehow! */
