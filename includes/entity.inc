@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.5 2010/03/05 13:41:04 dries Exp $
+// $Id: entity.inc,v 1.6 2010/03/10 14:04:26 dries Exp $
 
 /**
  * Interface for entity controller classes.
@@ -163,6 +163,9 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
    * into terms, however it can also support $conditions on different tables.
    * See CommentController::buildQuery() or TaxonomyTermController::buildQuery()
    * for examples.
+   *
+   * @return SelectQuery
+   *   A SelectQuery object for loading the entity.
    */
   protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
     $query = db_select($this->entityInfo['base table'], 'base');
