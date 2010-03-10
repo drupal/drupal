@@ -669,6 +669,24 @@ function rdf_preprocess_comment(&$variables) {
 }
 
 /**
+ * Implements MODULE_preprocess_HOOK().
+ */
+function rdf_preprocess_taxonomy_term(&$variables) {
+  // Adds the RDF type of the term and the term name in a meta tag.
+  $term = $variables['term'];
+  $term_label_meta = array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'about' => url('taxonomy/term/' . $term->tid),
+        'typeof' => $term->rdf_mapping['rdftype'],
+        'property' => $term->rdf_mapping['name']['predicates'],
+        'content' => $term->name,
+      ),
+    );
+  drupal_add_html_head($term_label_meta, 'rdf_term_label');
+}
+
+/**
  * Implements hook_field_attach_view_alter().
  */
 function rdf_field_attach_view_alter(&$output, $context) {

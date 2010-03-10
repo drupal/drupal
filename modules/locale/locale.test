@@ -613,6 +613,9 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     // The import should have created 7 strings.
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 7, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
 
+    // This import should have saved plural forms to have 2 variants.
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('Plural number initialized.'));
+
     // Ensure we were redirected correctly.
     $this->assertEqual($this->getUrl(), url('admin/config/regional/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
 
@@ -668,6 +671,8 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), t('String not overwritten by imported string.'));
 
+    // This import should not have changed number of plural forms.
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('Plural numbers untouched.'));
 
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are overwritten.
@@ -687,6 +692,8 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('String overwritten by imported string.'));
+    // This import should have changed number of plural forms.
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 3, t('Plural numbers changed.'));
   }
 
   /**
@@ -831,7 +838,7 @@ msgstr ""
 "MIME-Version: 1.0\\n"
 "Content-Type: text/plain; charset=UTF-8\\n"
 "Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\\n"
 
 msgid "Monday"
 msgstr "Montag"

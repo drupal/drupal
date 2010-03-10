@@ -678,27 +678,33 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
     case 'db-store':
       // We got header information.
       if ($value['msgid'] == '') {
-        $header = _locale_import_parse_header($value['msgstr']);
+        $languages = language_list();
+        if (($mode != LOCALE_IMPORT_KEEP) || empty($languages[$lang]->plurals)) {
+          // Since we only need to parse the header if we ought to update the
+          // plural formula, only run this if we don't need to keep existing 
+          // data untouched or if we don't have an existing plural formula.
+          $header = _locale_import_parse_header($value['msgstr']);
 
-        // Get the plural formula and update in database.
-        if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->uri)) {
-          list($nplurals, $plural) = $p;
-          db_update('languages')
-            ->fields(array(
-              'plurals' => $nplurals,
-              'formula' => $plural,
-            ))
-            ->condition('language', $lang)
-            ->execute();
-        }
-        else {
-          db_update('languages')
-            ->fields(array(
-              'plurals' => 0,
-              'formula' => '',
-            ))
-            ->condition('language', $lang)
-            ->execute();
+          // Get the plural formula and update in database.
+          if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->uri)) {
+            list($nplurals, $plural) = $p;
+            db_update('languages')
+              ->fields(array(
+                'plurals' => $nplurals,
+                'formula' => $plural,
+              ))
+              ->condition('language', $lang)
+              ->execute();
+          }
+          else {
+            db_update('languages')
+              ->fields(array(
+                'plurals' => 0,
+                'formula' => '',
+              ))
+              ->condition('language', $lang)
+              ->execute();
+          }
         }
         $header_done = TRUE;
       }

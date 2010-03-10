@@ -332,6 +332,21 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     $author_about = $this->xpath("//a[@typeof='sioc:User' and @about='$account_uri' and @property='foaf:name' and contains(@xml:lang, '')]");
     $this->assertTrue(!empty($author_about), t('RDFa markup found on author information on post. xml:lang on username is set to empty string.'));
   }
+
+  /**
+   * Creates a random term and ensures the right RDFa markup is used.
+   */
+  function testTaxonomyTermRdfaAttributes() {
+    $vocabulary = TaxonomyWebTestCase::createVocabulary();
+    $term = TaxonomyWebTestCase::createTerm($vocabulary);
+
+    // Views the term and checks that the RDFa markup is correct.
+    $this->drupalGet('taxonomy/term/' . $term->tid);
+    $term_url = url('taxonomy/term/' . $term->tid);
+    $term_name = $term->name;
+    $term_rdfa_meta = $this->xpath("//meta[@typeof='skos:Concept' and @about='$term_url' and contains(@property, 'rdfs:label') and contains(@property, 'skos:prefLabel') and @content='$term_name']");
+    $this->assertTrue(!empty($term_rdfa_meta), t('RDFa markup found on term page.'));
+  }
 }
 
 

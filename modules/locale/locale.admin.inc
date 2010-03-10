@@ -962,8 +962,8 @@ function locale_translate_import_form($form) {
     '#title' => t('Mode'),
     '#default_value' => LOCALE_IMPORT_KEEP,
     '#options' => array(
-      LOCALE_IMPORT_OVERWRITE => t('Strings in the uploaded file replace existing ones, new ones are added'),
-      LOCALE_IMPORT_KEEP => t('Existing strings are kept, only new strings are added')
+      LOCALE_IMPORT_OVERWRITE => t('Strings in the uploaded file replace existing ones, new ones are added. The plural format is updated.'),
+      LOCALE_IMPORT_KEEP => t('Existing strings and the plural format are kept, only new strings are added.')
     ),
   );
   $form['import']['submit'] = array('#type' => 'submit', '#value' => t('Import'));
