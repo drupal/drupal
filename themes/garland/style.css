@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.74 2010/03/03 19:46:26 dries Exp $ */
+/* $Id: style.css,v 1.75 2010/03/10 20:32:56 webchick Exp $ */
 
 /**
  * Generic elements
@@ -918,7 +918,6 @@ html.js fieldset.collapsible legend span.summary {
  * Vertical tabs.
  */
 div.vertical-tabs {
-  margin-right: 5%;
   border-color: #d9eaf5;
 }
 
