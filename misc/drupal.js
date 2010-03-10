@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.64 2010/03/09 20:52:27 webchick Exp $
+// $Id: drupal.js,v 1.65 2010/03/10 15:14:38 dries Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
@@ -245,18 +245,6 @@ Drupal.theme = function (func) {
   }
 
   return (Drupal.theme[func] || Drupal.theme.prototype[func]).apply(this, args);
-};
-
-/**
- * Parse a JSON response.
- *
- * The result is either the JSON object, or an object with 'status' 0 and 'data' an error message.
- */
-Drupal.parseJson = function (data) {
-  if ((data.substring(0, 1) != '{') && (data.substring(0, 1) != '[')) {
-    return { status: 0, data: data.length ? data : Drupal.t('Unspecified error') };
-  }
-  return eval('(' + data + ');');
 };
 
 /**
