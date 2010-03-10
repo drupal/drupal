@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.28 2010/03/07 07:44:18 webchick Exp $
+// $Id: language.inc,v 1.29 2010/03/10 19:36:14 webchick Exp $
 
 /**
  * @file
@@ -359,7 +359,7 @@ function language_from_default() {
  *    - The path without the prefix on success, the given path otherwise.
  */
 function language_url_split_prefix($path, $languages) {
-  $args = empty($path) ? array() : explode('/', trim($path, '/'));
+  $args = empty($path) ? array() : explode('/', $path);
   $prefix = array_shift($args);
 
   // Search prefix within enabled languages.

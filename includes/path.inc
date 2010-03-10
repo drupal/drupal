@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.59 2010/03/07 07:44:18 webchick Exp $
+// $Id: path.inc,v 1.60 2010/03/10 19:36:14 webchick Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@
  */
 function drupal_path_initialize() {
   if (!empty($_GET['q'])) {
-    $_GET['q'] = drupal_get_normal_path(trim($_GET['q'], '/'));
+    $_GET['q'] = drupal_get_normal_path($_GET['q']);
   }
   else {
     $_GET['q'] = drupal_get_normal_path(variable_get('site_frontpage', 'node'));

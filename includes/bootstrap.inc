@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.359 2010/03/07 07:44:18 webchick Exp $
+// $Id: bootstrap.inc,v 1.360 2010/03/10 19:36:14 webchick Exp $
 
 /**
  * @file
@@ -2187,6 +2187,11 @@ function request_path() {
     // This is the front page.
     $path = '';
   }
+
+  // Under certain conditions Apache's RewriteRule directive prepends the value
+  // assigned to $_GET['q'] with a slash. Moreover we can always have a trailing
+  // slash in place, hence we need to normalize $_GET['q'].
+  $path = trim($path, '/');
 
   return $path;
 }
