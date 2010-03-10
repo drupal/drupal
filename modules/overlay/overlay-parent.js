@@ -273,31 +273,56 @@ Drupal.overlay.load = function (url) {
 
   self.isLoading = true;
 
+  // Change the overlay title.
+  self.$container.dialog('option', 'title', Drupal.t('Loading...'));
+  // Remove any existing shortcut button markup in the title section.
+  self.$dialogTitlebar.find('.add-or-remove-shortcuts').remove();
+
+  // Remove any existing tabs in the title section, but only if requested url
+  // is not one of those tabs. If the latter, set that tab active. Only check
+  // for tabs when the overlay is not empty.
+  if (self.$iframeBody) {
+    var urlPath = self.getPath(url);
+
+    // Get the primary tabs
+    var $tabs = self.$dialogTitlebar.find('ul');
+    var $tabsLinks = $tabs.find('> li > a');
+
+    // Check if clicked on a primary tab
+    var $activeLink = $tabsLinks.filter(function () { return self.getPath(this) == urlPath; });
+
+    if ($activeLink.length) {
+      var active_tab = Drupal.t('(active tab)');
+      $tabsLinks.parent().removeClass('active').find('element-invisible:contains(' + active_tab + ')').appendTo($activeLink);
+      $activeLink.parent().addClass('active');
+      removeTabs = false;
+    }
+    else {
+      // Get the secondary tabs
+      var $secondary = self.$iframeBody.find('ul.secondary');
+      var $secondaryLinks = $secondary.find('> li > a');
+  
+      // Check if clicked on a secondary tab
+      var $activeLinkSecondary = $secondaryLinks.filter(function () { return self.getPath(this) == urlPath; });
+  
+      if ($activeLinkSecondary.length) {
+        var active_tab = Drupal.t('(active tab)');
+        $secondaryLinks.parent().removeClass('active').find('element-invisible:contains(' + active_tab + ')').appendTo($activeLinkSecondary);
+        $activeLinkSecondary.parent().addClass('active');
+        removeTabs = false;
+      }
+      else {
+        $tabs.remove();
+      }
+    }
+  }
+
   self.$iframeWindow = null;
   self.$iframeDocument = null;
   self.$iframeBody = null;
 
   // No need to resize while loading.
   clearTimeout(self.resizeTimeoutID);
-
-  // Change the overlay title.
-  self.$container.dialog('option', 'title', Drupal.t('Loading...'));
-  // Remove any existing shortcut button markup in the title section.
-  self.$dialogTitlebar.find('.add-or-remove-shortcuts').remove();
-  // Remove any existing tabs in the title section, but only if requested url
-  // is not one of those tabs. If the latter, set that tab active.
-  var urlPath = self.getPath(url);
-  var $tabs = self.$dialogTitlebar.find('ul');
-  var $tabsLinks = $tabs.find('> li > a');
-  var $activeLink = $tabsLinks.filter(function () { return self.getPath(this) == urlPath; });
-  if ($activeLink.length) {
-    var active_tab = Drupal.t('(active tab)');
-    $tabsLinks.parent().removeClass('active').find('element-invisible:contains(' + active_tab + ')').appendTo($activeLink);
-    $activeLink.parent().addClass('active');
-  }
-  else {
-    $tabs.remove();
-  }
 
   // While the overlay is loading, we remove the loaded class from the dialog.
   // After the loading is finished, the loaded class is added back. The loaded
