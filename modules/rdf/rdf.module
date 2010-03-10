@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.module,v 1.30 2010/03/07 07:08:41 webchick Exp $
+// $Id: rdf.module,v 1.31 2010/03/10 14:23:32 dries Exp $
 
 /**
  * @file
@@ -666,6 +666,24 @@ function rdf_preprocess_comment(&$variables) {
       $variables['rdf_metadata_attributes_array'][] = $parent_comment_attributes;
     }
   }
+}
+
+/**
+ * Implements MODULE_preprocess_HOOK().
+ */
+function rdf_preprocess_taxonomy_term(&$variables) {
+  // Adds the RDF type of the term and the term name in a meta tag.
+  $term = $variables['term'];
+  $term_label_meta = array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'about' => url('taxonomy/term/' . $term->tid),
+        'typeof' => $term->rdf_mapping['rdftype'],
+        'property' => $term->rdf_mapping['name']['predicates'],
+        'content' => $term->name,
+      ),
+    );
+  drupal_add_html_head($term_label_meta, 'rdf_term_label');
 }
 
 /**

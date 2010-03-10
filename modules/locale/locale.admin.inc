@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.admin.inc,v 1.6 2010/03/07 07:44:18 webchick Exp $
+// $Id: locale.admin.inc,v 1.7 2010/03/10 14:23:31 dries Exp $
 
 /**
  * @file
@@ -962,8 +962,8 @@ function locale_translate_import_form($form) {
     '#title' => t('Mode'),
     '#default_value' => LOCALE_IMPORT_KEEP,
     '#options' => array(
-      LOCALE_IMPORT_OVERWRITE => t('Strings in the uploaded file replace existing ones, new ones are added'),
-      LOCALE_IMPORT_KEEP => t('Existing strings are kept, only new strings are added')
+      LOCALE_IMPORT_OVERWRITE => t('Strings in the uploaded file replace existing ones, new ones are added. The plural format is updated.'),
+      LOCALE_IMPORT_KEEP => t('Existing strings and the plural format are kept, only new strings are added.')
     ),
   );
   $form['import']['submit'] = array('#type' => 'submit', '#value' => t('Import'));
