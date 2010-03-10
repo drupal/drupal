@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.29 2010/01/09 12:51:01 dries Exp $
+// $Id: forum.admin.inc,v 1.30 2010/03/10 17:59:00 webchick Exp $
 
 /**
  * @file
@@ -259,7 +259,6 @@ function forum_overview($form, &$form_state) {
   // The form needs to have submit and validate handlers set explicitly.
   $form['#theme'] = 'taxonomy_overview_terms';
   $form['#submit'] = array('taxonomy_overview_terms_submit'); // Use the existing taxonomy overview submit handler.
-  $form['#validate'] = array('taxonomy_overview_terms_validate');
   $form['#empty_text'] = t('No containers or forums available. <a href="@container">Add container</a> or <a href="@forum">Add forum</a>.', array('@container' => url('admin/structure/forum/add/container'), '@forum' => url('admin/structure/forum/add/forum')));
   return $form;
 }
