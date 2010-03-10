@@ -142,7 +142,7 @@ function toolbar_pre_render($toolbar) {
  * Add some page classes, so global page theming can adjust to the toolbar.
  */
 function toolbar_preprocess_html(&$vars) {
-  if (user_access('access toolbar')) {
+  if (isset($vars['page_top']['toolbar']) && user_access('access toolbar')) {
     $vars['classes_array'][] = 'toolbar';
     if (!_toolbar_is_collapsed()) {
       $vars['classes_array'][] = 'toolbar-drawer';
