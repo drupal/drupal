@@ -359,7 +359,7 @@ function language_from_default() {
  *    - The path without the prefix on success, the given path otherwise.
  */
 function language_url_split_prefix($path, $languages) {
-  $args = empty($path) ? array() : explode('/', trim($path, '/'));
+  $args = empty($path) ? array() : explode('/', $path);
   $prefix = array_shift($args);
 
   // Search prefix within enabled languages.

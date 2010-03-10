@@ -15,7 +15,7 @@
  */
 function drupal_path_initialize() {
   if (!empty($_GET['q'])) {
-    $_GET['q'] = drupal_get_normal_path(trim($_GET['q'], '/'));
+    $_GET['q'] = drupal_get_normal_path($_GET['q']);
   }
   else {
     $_GET['q'] = drupal_get_normal_path(variable_get('site_frontpage', 'node'));

@@ -2188,6 +2188,11 @@ function request_path() {
     $path = '';
   }
 
+  // Under certain conditions Apache's RewriteRule directive prepends the value
+  // assigned to $_GET['q'] with a slash. Moreover we can always have a trailing
+  // slash in place, hence we need to normalize $_GET['q'].
+  $path = trim($path, '/');
+
   return $path;
 }
 
