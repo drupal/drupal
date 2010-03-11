@@ -2753,15 +2753,8 @@ function theme_textfield($variables) {
   }
   _form_set_class($element, $class);
 
-  if (isset($element['#field_prefix'])) {
-    $output .= '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ';
-  }
-
   $output .= '<input type="text"' . $maxlength . ' name="' . $element['#name'] . '" id="' . $element['#id'] . '"' . $size . ' value="' . check_plain($element['#value']) . '"' . drupal_attributes($element['#attributes']) . ' />';
 
-  if (isset($element['#field_suffix'])) {
-    $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
-  }
   return $output . $extra;
 }
 
@@ -2943,6 +2936,10 @@ function theme_form_element($variables) {
 
   $output = '<div class="' . implode(' ', $class) . '">' . "\n";
 
+  if (isset($element['#field_prefix'])) {
+    $output .= '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ';
+  }
+
   switch ($element['#title_display']) {
     case 'before':
       $output .= ' ' . theme('form_element_label', $variables);
@@ -2959,6 +2956,10 @@ function theme_form_element($variables) {
       // Output no label and no required marker, only the children.
       $output .= ' ' . $element['#children'] . "\n";
       break;
+  }
+
+  if (isset($element['#field_suffix'])) {
+    $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
   }
 
   if (!empty($element['#description'])) {
