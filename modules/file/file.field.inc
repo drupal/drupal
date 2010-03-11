@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.23 2010/03/09 17:06:37 dries Exp $
+// $Id: file.field.inc,v 1.24 2010/03/11 22:44:44 dries Exp $
 
 /**
  * @file
@@ -209,7 +209,9 @@ function file_field_load($entity_type, $entities, $field, $instances, $langcode,
     // Load the files from the files table.
     $fids = array();
     foreach ($items[$id] as $delta => $item) {
-      $fids[] = $item['fid'];
+      if (!empty($item['fid'])) {
+        $fids[] = $item['fid'];
+      }
     }
     $files = file_load_multiple($fids);
 
