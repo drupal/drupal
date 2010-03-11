@@ -13,24 +13,24 @@ function dblog_overview() {
   $filter = dblog_build_filter_query();
   $rows = array();
   $icons = array(
-    WATCHDOG_DEBUG    => '',
-    WATCHDOG_INFO     => '',
-    WATCHDOG_NOTICE   => '',
-    WATCHDOG_WARNING  => theme('image', array('path' => 'misc/watchdog-warning.png', 'alt' => t('warning'), 'title' => t('warning'))),
-    WATCHDOG_ERROR    => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('error'), 'title' => t('error'))),
-    WATCHDOG_CRITICAL => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('critical'), 'title' => t('critical'))),
-    WATCHDOG_ALERT    => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('alert'), 'title' => t('alert'))),
-    WATCHDOG_EMERG    => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('emergency'), 'title' => t('emergency'))),
+    WATCHDOG_DEBUG     => '',
+    WATCHDOG_INFO      => '',
+    WATCHDOG_NOTICE    => '',
+    WATCHDOG_WARNING   => theme('image', array('path' => 'misc/watchdog-warning.png', 'alt' => t('warning'), 'title' => t('warning'))),
+    WATCHDOG_ERROR     => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('error'), 'title' => t('error'))),
+    WATCHDOG_CRITICAL  => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('critical'), 'title' => t('critical'))),
+    WATCHDOG_ALERT     => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('alert'), 'title' => t('alert'))),
+    WATCHDOG_EMERGENCY => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('emergency'), 'title' => t('emergency'))),
   );
   $classes = array(
-    WATCHDOG_DEBUG    => 'dblog-debug',
-    WATCHDOG_INFO     => 'dblog-info',
-    WATCHDOG_NOTICE   => 'dblog-notice',
-    WATCHDOG_WARNING  => 'dblog-warning',
-    WATCHDOG_ERROR    => 'dblog-error',
-    WATCHDOG_CRITICAL => 'dblog-critical',
-    WATCHDOG_ALERT    => 'dblog-alert',
-    WATCHDOG_EMERG    => 'dblog-emerg',
+    WATCHDOG_DEBUG     => 'dblog-debug',
+    WATCHDOG_INFO      => 'dblog-info',
+    WATCHDOG_NOTICE    => 'dblog-notice',
+    WATCHDOG_WARNING   => 'dblog-warning',
+    WATCHDOG_ERROR     => 'dblog-error',
+    WATCHDOG_CRITICAL  => 'dblog-critical',
+    WATCHDOG_ALERT     => 'dblog-alert',
+    WATCHDOG_EMERGENCY => 'dblog-emerg',
   );
 
   $build['dblog_filter_form'] = drupal_get_form('dblog_filter_form');

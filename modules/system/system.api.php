@@ -1312,7 +1312,7 @@ function hook_xmlrpc_alter(&$methods) {
  *   - ip: The IP address where the request for the page came from.
  *   - timestamp: The UNIX timestamp of the date/time the event occurred
  *   - severity: One of the following values as defined in RFC 3164 http://www.faqs.org/rfcs/rfc3164.html
- *     WATCHDOG_EMERG     Emergency: system is unusable
+ *     WATCHDOG_EMERGENCY Emergency: system is unusable
  *     WATCHDOG_ALERT     Alert: action must be taken immediately
  *     WATCHDOG_CRITICAL  Critical: critical conditions
  *     WATCHDOG_ERROR     Error: error conditions
@@ -1327,14 +1327,14 @@ function hook_watchdog(array $log_entry) {
   global $base_url, $language;
 
   $severity_list = array(
-    WATCHDOG_EMERG    => t('Emergency'),
-    WATCHDOG_ALERT    => t('Alert'),
-    WATCHDOG_CRITICAL => t('Critical'),
-    WATCHDOG_ERROR    => t('Error'),
-    WATCHDOG_WARNING  => t('Warning'),
-    WATCHDOG_NOTICE   => t('Notice'),
-    WATCHDOG_INFO     => t('Info'),
-    WATCHDOG_DEBUG    => t('Debug'),
+    WATCHDOG_EMERGENCY => t('Emergency'),
+    WATCHDOG_ALERT     => t('Alert'),
+    WATCHDOG_CRITICAL  => t('Critical'),
+    WATCHDOG_ERROR     => t('Error'),
+    WATCHDOG_WARNING   => t('Warning'),
+    WATCHDOG_NOTICE    => t('Notice'),
+    WATCHDOG_INFO      => t('Info'),
+    WATCHDOG_DEBUG     => t('Debug'),
   );
 
   $to = 'someone@example.com';

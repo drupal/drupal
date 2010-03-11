@@ -64,7 +64,7 @@ define('CACHE_NORMAL', 1);
  * @see watchdog()
  * @see watchdog_severity_levels()
  */
-define('WATCHDOG_EMERG', 0);
+define('WATCHDOG_EMERGENCY', 0);
 
 /**
  * Log message severity -- Alert: action must be taken immediately.

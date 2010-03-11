@@ -390,7 +390,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $types = array();
     for ($i = 0; $i < 3; $i++) {
       $type_names[] = $type_name = $this->randomName();
-      $severity = WATCHDOG_EMERG;
+      $severity = WATCHDOG_EMERGENCY;
       for ($j = 0; $j < 3; $j++) {
         $types[] = $type = array(
           'count' => mt_rand(1, 5),
@@ -506,7 +506,7 @@ class DBLogTestCase extends DrupalWebTestCase {
       'dblog-error' => WATCHDOG_ERROR,
       'dblog-critical' => WATCHDOG_CRITICAL,
       'dblog-alert' => WATCHDOG_ALERT,
-      'dblog-emerg' => WATCHDOG_EMERG,
+      'dblog-emerg' => WATCHDOG_EMERGENCY,
     );
 
     // Find the class that contains the severity.
