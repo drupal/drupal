@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.7 2010/03/04 21:42:01 dries Exp $
+// $Id: standard.install,v 1.8 2010/03/11 22:48:34 dries Exp $
 
 /**
  * Implements hook_install().
@@ -200,7 +200,7 @@ function standard_install() {
   }
   $query->execute();
 
-  // Insert default user-defined node types into the database. For a complete
+  // Insert default pre-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
   // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
   $types = array(
@@ -229,7 +229,7 @@ function standard_install() {
     node_type_save($type);
   }
 
-  // Insert default user-defined RDF mapping into the database.
+  // Insert default pre-defined RDF mapping into the database.
   $rdf_mappings = array(
     array(
       'type' => 'node',
