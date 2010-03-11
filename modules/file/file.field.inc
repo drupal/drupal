@@ -209,7 +209,9 @@ function file_field_load($entity_type, $entities, $field, $instances, $langcode,
     // Load the files from the files table.
     $fids = array();
     foreach ($items[$id] as $delta => $item) {
-      $fids[] = $item['fid'];
+      if (!empty($item['fid'])) {
+        $fids[] = $item['fid'];
+      }
     }
     $files = file_load_multiple($fids);
 
