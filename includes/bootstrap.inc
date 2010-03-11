@@ -233,6 +233,10 @@ define('CHECK_PLAIN', 0);
 define('PASS_THROUGH', -1);
 
 /**
+ * @} End of "Title text filtering flags".
+ */
+
+/**
  * Signals that the registry lookup cache should be reset.
  */
 define('REGISTRY_RESET_LOOKUP_CACHE', 1);
@@ -241,11 +245,6 @@ define('REGISTRY_RESET_LOOKUP_CACHE', 1);
  * Signals that the registry lookup cache should be written to storage.
  */
 define('REGISTRY_WRITE_LOOKUP_CACHE', 2);
-
-/**
- * @} End of "Title text filtering flags".
- */
-
 
 /**
  * Start the timer with the specified name. If you start and stop the same
