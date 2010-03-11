@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.361 2010/03/11 21:21:36 dries Exp $
+// $Id: bootstrap.inc,v 1.362 2010/03/11 21:23:05 dries Exp $
 
 /**
  * @file
@@ -64,7 +64,7 @@ define('CACHE_NORMAL', 1);
  * @see watchdog()
  * @see watchdog_severity_levels()
  */
-define('WATCHDOG_EMERG', 0);
+define('WATCHDOG_EMERGENCY', 0);
 
 /**
  * Log message severity -- Alert: action must be taken immediately.
