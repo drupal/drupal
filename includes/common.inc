@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1127 2010/03/11 21:23:05 dries Exp $
+// $Id: common.inc,v 1.1128 2010/03/12 14:20:32 dries Exp $
 
 /**
  * @file
@@ -4385,6 +4385,14 @@ function drupal_cron_run() {
   // Allow execution to continue even if the request gets canceled.
   @ignore_user_abort(TRUE);
 
+  // Prevent session information from being saved while cron is running.
+  drupal_save_session(FALSE);
+
+  // Force the current user to anonymous to ensure consistent permissions on
+  // cron runs.
+  $original_user = $GLOBALS['user'];
+  $GLOBALS['user'] = drupal_anonymous_user();
+
   // Try to allocate enough time to run all the hook_cron implementations.
   drupal_set_time_limit(240);
 
@@ -4445,6 +4453,10 @@ function drupal_cron_run() {
       $queue->deleteItem($item);
     }
   }
+  // Restore the user.
+  $GLOBALS['user'] = $original_user;
+  drupal_save_session(TRUE);
+
   return $return;
 }
 
