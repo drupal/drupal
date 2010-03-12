@@ -1,4 +1,4 @@
-// $Id: filter.admin.js,v 1.1 2009/12/14 13:32:53 dries Exp $
+// $Id: filter.admin.js,v 1.2 2010/03/12 22:31:37 webchick Exp $
 
 (function ($) {
 
@@ -77,7 +77,7 @@ Drupal.behaviors.filterStatus = {
       }
 
       // Trigger our bound click handler to update elements to initial state.
-      $checkbox.trigger('click.filterUpdate');
+      $checkbox.triggerHandler('click.filterUpdate');
     });
   }
 };
