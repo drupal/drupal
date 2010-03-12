@@ -391,7 +391,7 @@ function user_save($account, $edit = array(), $category = 'account') {
         // Form fields that don't pertain to the users, user_roles, or
         // Field API are automatically serialized into the users.data
         // column.
-        if (!in_array($key, array('roles', 'is_new')) && empty($user_fields[$key]) && empty($field_names[$key])) {
+        if (!in_array($key, array('roles', 'is_new', 'current_pass_required_values', 'current_pass')) && empty($user_fields[$key]) && empty($field_names[$key])) {
           if ($value === NULL) {
             unset($data[$key]);
           }
