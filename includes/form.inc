@@ -1658,7 +1658,10 @@ function form_type_checkboxes_value($element, $input = FALSE) {
     }
     return $value;
   }
-  elseif (!isset($input)) {
+  // If the checkboxes are enabled, and NULL input is submitted, it means
+  // they're intentionally unchecked, so we need to return an empty array to
+  // prevent the default value from being used.
+  elseif (!isset($input) && empty($element['#disabled'])) {
     return array();
   }
 }
@@ -1698,7 +1701,15 @@ function form_type_password_confirm_value($element, $input = FALSE) {
 function form_type_select_value($element, $input = FALSE) {
   if ($input !== FALSE) {
     if (isset($element['#multiple']) && $element['#multiple']) {
-      return (is_array($input)) ? drupal_map_assoc($input) : array();
+      // If an enabled multi-select submits NULL, it means all items are
+      // unselected. A disabled multi-select always submits NULL, and the
+      // default value should be used.
+      if (empty($element['#disabled'])) {
+        return (is_array($input)) ? drupal_map_assoc($input) : array();
+      }
+      else {
+        return (isset($element['#default_value']) && is_array($element['#default_value'])) ? $element['#default_value'] : array();
+      }
     }
     else {
       return $input;
@@ -1719,7 +1730,7 @@ function form_type_select_value($element, $input = FALSE) {
  *   for this element. Return nothing to use the default.
  */
 function form_type_textfield_value($element, $input = FALSE) {
-  if ($input !== FALSE) {
+  if ($input !== FALSE && $input !== NULL) {
     // Equate $input to the form value to ensure it's marked for
     // validation.
     return str_replace(array("\r", "\n"), '', $input);
@@ -2206,6 +2217,7 @@ function form_process_radios($element) {
           '#parents' => $element['#parents'],
           '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
           '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+          '#disabled' => isset($element['#disabled']) ? $element['#disabled'] : NULL,
         );
       }
     }
@@ -2308,6 +2320,7 @@ function form_process_checkboxes($element) {
           '#default_value' => isset($value[$key]) ? $key : NULL,
           '#attributes' => $element['#attributes'],
           '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+          '#disabled' => isset($element['#disabled']) ? $element['#disabled'] : NULL,
         );
       }
     }
@@ -2459,6 +2472,7 @@ function form_process_tableselect($element) {
             '#default_value' => isset($value[$key]) ? $key : NULL,
             '#attributes' => $element['#attributes'],
             '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+            '#disabled' => isset($element['#disabled']) ? $element['#disabled'] : NULL,
           );
         }
         else {
@@ -2474,6 +2488,7 @@ function form_process_tableselect($element) {
             '#parents' => $element['#parents'],
             '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
             '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+            '#disabled' => isset($element['#disabled']) ? $element['#disabled'] : NULL,
           );
         }
       }

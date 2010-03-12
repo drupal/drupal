@@ -172,7 +172,7 @@ class FormsTestCase extends DrupalWebTestCase {
           // Checkboxes values are not filtered out.
           $returned_values[$key] = array_filter($returned_values[$key]);
         }
-        $this->assertEqual($expected_value, $returned_values[$key], t('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($returned_values[$key], TRUE))));
+        $this->assertIdentical($expected_value, $returned_values[$key], t('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($returned_values[$key], TRUE))));
       }
     }
   }

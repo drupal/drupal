@@ -110,11 +110,14 @@ class TranslationTestCase extends DrupalWebTestCase {
         $this->assertRaw(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => $languages[$language_code]->name, '@locale-help' => url('admin/help/locale'))), t('Language has been created.'));
       }
     }
+    elseif ($this->xpath('//input[@type=\'checkbox\' and @name=\'enabled[' . $language_code . ']\' and @checked=\'checked\']')) {
+      // It's installed and enabled. No need to do anything.
+      $this->assertTrue(true, 'Language [' . $language_code . '] already installed and enabled.');
+    }
     else {
-      // Ensure that it is enabled.
+      // It's installed but not enabled. Enable it.
       $this->assertTrue(true, 'Language [' . $language_code . '] already installed.');
       $this->drupalPost(NULL, array('enabled[' . $language_code . ']' => TRUE), t('Save configuration'));
-
       $this->assertRaw(t('Configuration saved.'), t('Language successfully enabled.'));
     }
   }
