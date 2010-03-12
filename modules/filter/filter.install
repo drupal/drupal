@@ -54,9 +54,6 @@ function filter_schema() {
       ),
     ),
     'primary key' => array('format', 'name'),
-    'unique keys' => array(
-      'fmn' => array('format', 'module', 'name'),
-    ),
     'indexes' => array(
       'list' => array('weight', 'module', 'name'),
     ),
@@ -161,11 +158,31 @@ function filter_update_dependencies() {
  */
 
 /**
- * Add a weight column to the filter formats table.
+ * Increase the size of {filters}.weight and add {filter_formats}.weight.
  */
 function filter_update_7000() {
-  db_add_field('filter_formats', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
-  db_add_index('filter_formats', 'weight', array('weight'));
+  // The list index will be recreated by filter_update_7003().
+  db_drop_index('filters', 'list');
+
+  // Change the weight column of the filter table to normal (ie. non tiny) int.
+  db_change_field('filters', 'weight', 'weight', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'Weight of filter within format.',
+  ));
+
+  // Add a new filter_format.weight column.
+  db_add_field('filter_formats', 'weight', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'Weight of text format to use when listing.',
+  ), array(
+    'indexes' => array(
+      'weight' => array('weight'),
+    ),
+  ));
 }
 
 /**
@@ -217,9 +234,11 @@ function filter_update_7003() {
     ),
   );
 
-  // Rename field 'delta' to 'name'.
+  // The unique key on (filter, module, delta) is not necessary anymore,
+  // as filter_update_7004() will add a primary key on (filter, name).
   db_drop_unique_key('filter', 'fmd');
-  db_drop_index('filter', 'list');
+
+  // Rename field 'delta' to 'name'.
   db_change_field('filter', 'delta', 'name',
     array(
       'type' => 'varchar',
@@ -229,11 +248,8 @@ function filter_update_7003() {
       'description' => 'Name of the filter being referenced.',
     ),
     array(
-      'unique keys' => array(
-        'fmn' => array('format', 'module', 'name'),
-      ),
       'indexes' => array(
-        'list' => array('format', 'weight', 'module', 'name'),
+        'list' => array('weight', 'module', 'name'),
       ),
     )
   );
@@ -405,43 +421,6 @@ function filter_update_7005() {
   // We do not delete the 'filter_default_format' variable, since other modules
   // may need it in their update functions.
   // @todo This variable can be deleted in Drupal 8.
-}
-
-/**
- * Remove the 'format' column from 'list' index on {filter}.
- */
-function filter_update_7006() {
-  db_drop_index('filter', 'list');
-  db_add_index('filter', 'list', array('weight', 'module', 'name'));
-}
-
-/**
- * Change the weight columns to normal int.
- */
-function filter_update_7007() {
-  db_drop_index('filter', 'list');
-  db_change_field('filter', 'weight', 'weight', array(
-    'type' => 'int',
-    'not null' => TRUE,
-    'default' => 0,
-    'description' => 'Weight of filter within format.',
-  ), array(
-    'indexes' => array(
-      'list' => array('weight', 'module', 'name'),
-    ),
-  ));
-
-  db_drop_index('filter_format', 'weight');
-  db_change_field('filter_format', 'weight', 'weight', array(
-    'type' => 'int',
-    'not null' => TRUE,
-    'default' => 0,
-    'description' => 'Weight of text format to use when listing.',
-  ), array(
-    'indexes' => array(
-      'weight' => array('weight'),
-    ),
-  ));
 }
 
 /**
