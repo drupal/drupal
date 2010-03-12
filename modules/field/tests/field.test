@@ -925,7 +925,7 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $this->instance['display'] = array(
       'full' => array(
         'label' => 'above',
-        'type' => 'field_test_needs_additional_data',
+        'type' => 'field_test_with_prepare_view',
         'settings' => array(
           'test_formatter_setting_additional' => $formatter_setting,
         )
@@ -1805,7 +1805,7 @@ class FieldDisplayAPITestCase extends FieldTestCase {
   /**
    * Test the field_view_field() function.
    */
-  function testFieldBuildField() {
+  function testFieldViewField() {
     // No display settings: check that default display settings are used.
     $output = field_view_field('test_entity', $this->entity, $this->field_name);
     $this->drupalSetContent(drupal_render($output));
@@ -1834,6 +1834,23 @@ class FieldDisplayAPITestCase extends FieldTestCase {
     }
     $this->assertText($setting . '|' . implode('|', $array), t('Values were displayed with expected setting.'));
 
+    // Check the prepare_view steps are invoked.
+    $display = array(
+      'label' => 'hidden',
+      'type' => 'field_test_with_prepare_view',
+      'settings' => array(
+        'test_formatter_setting_additional' => $this->randomName(),
+      ),
+    );
+    $output = field_view_field('test_entity', $this->entity, $this->field_name, $display);
+    $view = drupal_render($output);
+    $this->drupalSetContent($view);
+    $setting = $display['settings']['test_formatter_setting_additional'];
+    $this->assertNoText($this->label, t('Label was not displayed.'));
+    foreach ($this->values as $delta => $value) {
+      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+    }
+
     // View mode: check that display settings specified in the instance are
     // used.
     $output = field_view_field('test_entity', $this->entity, $this->field_name, 'full');
@@ -1851,6 +1868,73 @@ class FieldDisplayAPITestCase extends FieldTestCase {
     $setting = $this->instance['display']['full']['settings']['test_formatter_setting'];
     $this->assertText($this->label, t('Label was displayed.'));
     foreach($this->values as $delta => $value) {
+      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+    }
+  }
+
+  /**
+   * Test the field_view_value() function.
+   */
+  function testFieldViewValue() {
+    // No display settings: check that default display settings are used.
+    $settings = field_info_formatter_settings('field_test_default');
+    $setting = $settings['test_formatter_setting'];
+    foreach ($this->values as $delta => $value) {
+      $item = $this->entity->{$this->field_name}[LANGUAGE_NONE][$delta];
+      $output = field_view_value('test_entity', $this->entity, $this->field_name, $item);
+      $this->drupalSetContent(drupal_render($output));
+      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+    }
+
+    // Check that explicit display settings are used.
+    $display = array(
+      'type' => 'field_test_multiple',
+      'settings' => array(
+        'test_formatter_setting_multiple' => $this->randomName(),
+      ),
+    );
+    $setting = $display['settings']['test_formatter_setting_multiple'];
+    $array = array();
+    foreach ($this->values as $delta => $value) {
+      $item = $this->entity->{$this->field_name}[LANGUAGE_NONE][$delta];
+      $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, $display);
+      $this->drupalSetContent(drupal_render($output));
+      $this->assertText($setting . '|0:' .  $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+    }
+
+    // Check that prepare_view steps are invoked.
+    $display = array(
+      'type' => 'field_test_with_prepare_view',
+      'settings' => array(
+        'test_formatter_setting_additional' => $this->randomName(),
+      ),
+    );
+    $setting = $display['settings']['test_formatter_setting_additional'];
+    $array = array();
+    foreach ($this->values as $delta => $value) {
+      $item = $this->entity->{$this->field_name}[LANGUAGE_NONE][$delta];
+      $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, $display);
+      $this->drupalSetContent(drupal_render($output));
+      $this->assertText($setting . '|' .  $value['value'] . '|' . ($value['value'] + 1), t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+    }
+
+    // View mode: check that display settings specified in the instance are
+    // used.
+    $setting = $this->instance['display']['full']['settings']['test_formatter_setting'];
+    foreach ($this->values as $delta => $value) {
+      $item = $this->entity->{$this->field_name}[LANGUAGE_NONE][$delta];
+      $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, 'full');
+      $this->drupalSetContent(drupal_render($output));
+      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+    }
+
+    // Unknown view mode: check that display settings for 'full' view mode
+    // are used.
+    $setting = $this->instance['display']['full']['settings']['test_formatter_setting'];
+    foreach ($this->values as $delta => $value) {
+      $item = $this->entity->{$this->field_name}[LANGUAGE_NONE][$delta];
+      $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, 'unknown_view_mode');
+      $this->drupalSetContent(drupal_render($output));
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
   }

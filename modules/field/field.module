@@ -471,98 +471,50 @@ function _field_filter_xss_display_allowed_tags() {
 }
 
 /**
- * Format a field item for display.
+ * Returns a renderable array for a single field value.
  *
- * TODO D7 : do we still need field_format ?
- * - backwards compatibility of templates - check what fallbacks we can propose...
- * - was used by Views integration in CCK in D6 - do we need now?
- * At least needs a little rehaul/update...
- *
- * Used to display a field's values outside the context of the $node, as
- * when fields are displayed in Views, or to display a field in a template
- * using a different formatter than the one set up on the 'Manage display' tab
- * for the node's context.
- *
- * @param $field
- *   Either a field array or the name of the field.
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The entity containing the field to display. Must at least contain the id
+ *   key and the field data to display.
+ * @param $field_name
+ *   The name of the field to display.
  * @param $item
- *   The field item(s) to be formatted (such as $node->field_foo[0],
- *   or $node->field_foo if the formatter handles multiple values itself)
- * @param $formatter_type
- *   The name of the formatter type to use.
- * @param $node
- *   Optionally, the containing node object for context purposes and
- *   field-instance options.
- *
+ *   The field value to display, as found in
+ *   $entity->field_name[$langcode][$delta].
+ * @param $display
+ *   Can be either the name of a view mode, or an array of display settings.
+ *   See field_view_field() for more information.
+ * @param $langcode
+ *   (Optional) The language of the value in $item. If not provided, the
+ *   current language will be assumed.
  * @return
- *   A string containing the contents of the field item(s) sanitized for display.
- *   It will have been passed through the necessary check_plain() or check_markup()
- *   functions as necessary.
+ *   A renderable array for the field value.
  */
-function field_format($entity_type, $entity, $field, $item, $formatter_type = NULL, $formatter_settings = array()) {
-  if (!is_array($field)) {
-    $field = field_info_field($field);
-  }
+function field_view_value($entity_type, $entity, $field_name, $item, $display = array(), $langcode = NULL) {
+  $output = array();
 
-  if (field_access('view', $field, $entity_type, $entity)) {
-    $field_type = field_info_field_types($field['type']);
+  if ($field = field_info_field($field_name)) {
+    $langcode = field_multilingual_valid_language($langcode, FALSE);
 
-    // We need $field, $instance, $entity_type, $entity to be able to display a value...
-    list(, , $bundle) = entity_extract_ids($entity_type, $entity);
-    $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
+    // Determine the langcode that will be used by language fallback.
+    $langcode = current(field_multilingual_available_languages($entity_type, $field, array($langcode)));
 
-    $display = array(
-      'type' => $formatter_type ? $formatter_type : $field_type['default_formatter'],
-      'settings' => $formatter_settings,
-    );
-    $display['settings'] += field_info_formatter_settings($display['type']);
+    // Push the item as the single value for the field, and defer to
+    // field_view_field() to build the render array for the whole field.
+    $clone = clone $entity;
+    $clone->{$field_name}[$langcode] = array($item);
+    $elements = field_view_field($entity_type, $clone, $field_name, $display, $langcode);
 
-    if ($display['type'] !== 'hidden') {
-      $theme = $formatter['module'] . '_formatter_' . $display['type'];
-
-      $element = array(
-        '#theme' => $theme,
-        '#field_name' => $field['field_name'],
-        '#object_type' => $entity_type,
-        '#bundle' => $bundle,
-        '#formatter' => $display['type'],
-        '#settings' => $display['settings'],
-        '#object' => $entity,
-        '#object_type' => $entity_type,
-        '#delta' => isset($item['#delta']) ? $item['#delta'] : NULL,
-      );
-
-      if (field_behaviors_formatter('multiple values', $display) == FIELD_BEHAVIOR_DEFAULT) {
-        // Single value formatter.
-
-        // hook_field('sanitize') expects an array of items, so we build one.
-        $items = array($item);
-        $function = $field['module'] . '_field_sanitize';
-        if (function_exists($function)) {
-          $function($entity_type, $entity, $field, $instance, $items);
-        }
-
-        $element['#item'] = $items[0];
-      }
-      else {
-        // Multiple values formatter.
-        $items = $item;
-        $function = $field['module'] . '_field_sanitize';
-        if (function_exists($function)) {
-          $function($entity_type, $entity, $field, $instance, $items);
-        }
-
-        foreach ($items as $delta => $item) {
-          $element[$delta] = array(
-            '#item' => $item,
-            '#weight' => $delta,
-          );
-        }
-      }
-
-      return theme($theme, $element);
+    // Extract the part of the render array we need.
+    $output = isset($elements[0]) ? $elements[0] : array();
+    if (isset($elements['#access'])) {
+      $output['#access'] = $elements['#access'];
     }
   }
+
+  return $output;
 }
 
 /**
@@ -638,12 +590,17 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
     // 'single field' mode, to reuse the language fallback logic.
     $options = array('field_name' => $field_name, 'language' => field_multilingual_valid_language($langcode, FALSE));
     $null = NULL;
-    list($id) = entity_extract_ids($entity_type, $entity);
 
-    // First let the field types do their preparation.
-    _field_invoke_multiple('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
-    // Then let the formatters do their own specific massaging.
-    _field_invoke_multiple_default('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
+    // Invoke prepare_view steps if needed.
+    if (empty($entity->_field_view_prepared)) {
+      list($id) = entity_extract_ids($entity_type, $entity);
+
+      // First let the field types do their preparation.
+      _field_invoke_multiple('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
+      // Then let the formatters do their own specific massaging.
+      _field_invoke_multiple_default('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
+    }
+
     // Build the renderable array.
     $result = _field_invoke_default('view', $entity_type, $entity, $display, $null, $options);
 

@@ -248,7 +248,7 @@ function field_test_field_formatter_info() {
         'test_formatter_setting_multiple' => 'dummy test string',
       ),
     ),
-    'field_test_needs_additional_data' => array(
+    'field_test_with_prepare_view' => array(
       'label' => t('Tests hook_field_formatter_prepare_view()'),
       'field types' => array('test_field'),
       'settings' => array(
@@ -264,8 +264,8 @@ function field_test_field_formatter_info() {
 function field_test_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $displays) {
   foreach ($items as $id => $item) {
     // To keep the test non-intrusive, only act on the
-    // 'field_test_needs_additional_data' formatter.
-    if ($displays[$id]['type'] == 'field_test_needs_additional_data') {
+    // 'field_test_with_prepare_view' formatter.
+    if ($displays[$id]['type'] == 'field_test_with_prepare_view') {
       foreach ($item as $delta => $value) {
         // Don't add anything on empty values.
         if ($value) {
@@ -290,7 +290,7 @@ function field_test_field_formatter_view($entity_type, $entity, $field, $instanc
       }
       break;
 
-    case 'field_test_needs_additional_data':
+    case 'field_test_with_prepare_view':
       foreach ($items as $delta => $item) {
         $element[$delta] = array('#markup' => $settings['test_formatter_setting_additional'] . '|' . $item['value'] . '|' . $item['additional_formatter_value']);
       }
