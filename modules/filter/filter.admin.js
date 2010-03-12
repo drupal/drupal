@@ -77,7 +77,7 @@ Drupal.behaviors.filterStatus = {
       }
 
       // Trigger our bound click handler to update elements to initial state.
-      $checkbox.trigger('click.filterUpdate');
+      $checkbox.triggerHandler('click.filterUpdate');
     });
   }
 };
