@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.16 2010/03/03 19:46:25 dries Exp $
+// $Id: search.pages.inc,v 1.17 2010/03/12 02:29:23 dries Exp $
 
 /**
  * @file
@@ -136,6 +136,6 @@ function search_form_submit($form, &$form_state) {
   }
 
   $type = $form_state['values']['module'] ? $form_state['values']['module'] : 'node';
-  $form_state['redirect'] = 'search/' . $type . '/' . $keys;
+  $form_state['redirect'] = $form_state['action'] . '/' . $keys;
   return;
 }
