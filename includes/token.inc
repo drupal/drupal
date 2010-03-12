@@ -78,6 +78,9 @@ function token_replace($text, array $data = array(), array $options = array()) {
   $replacements = array();
   foreach (token_scan($text) as $type => $tokens) {
     $replacements += token_generate($type, $tokens, $data, $options);
+    if (!empty($options['clear'])) {
+      $replacements += array_fill_keys($tokens, '');
+    }
   }
 
   // Optionally alter the list of replacement values.
