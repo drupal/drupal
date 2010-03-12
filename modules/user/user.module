@@ -2144,8 +2144,11 @@ function user_cancel($edit, $uid, $method) {
   );
   batch_set($batch);
 
-  // Allow modules to add further sets to this batch.
-  module_invoke_all('user_cancel', $edit, $account, $method);
+  // Modules use hook_user_delete() to respond to deletion.
+  if ($method != 'user_cancel_delete') {
+    // Allow modules to add further sets to this batch.
+    module_invoke_all('user_cancel', $edit, $account, $method);
+  }
 
   // Finish the batch and actually cancel the account.
   $batch = array(
@@ -2193,15 +2196,7 @@ function _user_cancel($edit, $account, $method) {
       if (!empty($edit['user_cancel_notify'])) {
         _user_mail_notify('status_canceled', $account);
       }
-      db_delete('users')
-        ->condition('uid', $account->uid)
-        ->execute();
-      db_delete('users_roles')
-        ->condition('uid', $account->uid)
-        ->execute();
-      db_delete('authmap')
-        ->condition('uid', $account->uid)
-        ->execute();
+      user_delete($account->uid);
       drupal_set_message(t('%name has been deleted.', array('%name' => $account->name)));
       watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
@@ -2218,6 +2213,45 @@ function _user_cancel($edit, $account, $method) {
 
   // Clear the cache for anonymous users.
   cache_clear_all();
+}
+
+/**
+ * Delete a user.
+ *
+ * @param $uid
+ *   A user ID.
+ */
+function user_delete($uid) {
+  user_delete_multiple(array($uid));
+}
+
+/**
+ * Delete multiple user accounts.
+ *
+ * @param $uids
+ *   An array of user IDs.
+ */
+function user_delete_multiple(array $uids) {
+  if (!empty($uids)) {
+    $accounts = user_load_multiple($uids, array());
+
+    foreach ($accounts as $uid => $account) {
+      module_invoke_all('user_delete', $account);
+      field_attach_delete('user', $account);
+    }
+
+    db_delete('users')
+      ->condition('uid', $uids, 'IN')
+      ->execute();
+    db_delete('users_roles')
+      ->condition('uid', $uids, 'IN')
+      ->execute();
+    db_delete('authmap')
+      ->condition('uid', $uids, 'IN')
+      ->execute();
+
+    entity_get_controller('user')->resetCache();
+  }
 }
 
 /**

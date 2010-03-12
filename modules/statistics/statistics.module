@@ -208,13 +208,16 @@ function statistics_user_cancel($edit, $account, $method) {
         ->condition('uid', $account->uid)
         ->execute();
       break;
-
-    case 'user_cancel_delete':
-      db_delete('accesslog')
-        ->condition('uid', $account->uid)
-        ->execute();
-      break;
   }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function statistics_user_delete($account) {
+  db_delete('accesslog')
+    ->condition('uid', $account->uid)
+    ->execute();
 }
 
 /**

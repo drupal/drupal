@@ -923,13 +923,16 @@ function poll_user_cancel($edit, $account, $method) {
         ->condition('uid', $account->uid)
         ->execute();
       break;
-
-    case 'user_cancel_delete':
-      db_delete('poll_vote')
-        ->condition('uid', $account->uid)
-        ->execute();
-      break;
   }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function poll_user_delete($account) {
+  db_delete('poll_vote')
+    ->condition('uid', $account->uid)
+    ->execute();
 }
 
 /**

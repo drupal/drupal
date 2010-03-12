@@ -1671,27 +1671,30 @@ function node_user_cancel($edit, $account, $method) {
         ->condition('uid', $account->uid)
         ->execute();
       break;
-
-    case 'user_cancel_delete':
-      // Delete nodes (current revisions).
-      // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
-      $nodes = db_select('node', 'n')
-        ->fields('n', array('nid'))
-        ->condition('uid', $account->uid)
-        ->execute()
-        ->fetchCol();
-      node_delete_multiple($nodes);
-      // Delete old revisions.
-      $revisions = db_query('SELECT vid FROM {node_revision} WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
-      foreach ($revisions as $revision) {
-        node_revision_delete($revision);
-      }
-      // Clean history.
-      db_delete('history')
-        ->condition('uid', $account->uid)
-          ->execute();
-      break;
   }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function node_user_delete($account) {
+  // Delete nodes (current revisions).
+  // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
+  $nodes = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('uid', $account->uid)
+    ->execute()
+    ->fetchCol();
+  node_delete_multiple($nodes);
+  // Delete old revisions.
+  $revisions = db_query('SELECT vid FROM {node_revision} WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
+  foreach ($revisions as $revision) {
+    node_revision_delete($revision);
+  }
+  // Clean history.
+  db_delete('history')
+    ->condition('uid', $account->uid)
+    ->execute();
 }
 
 /**

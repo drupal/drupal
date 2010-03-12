@@ -233,12 +233,19 @@ function profile_user_insert(&$edit, $account, $category) {
 function profile_user_cancel(&$edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
-    case 'user_cancel_delete':
       db_delete('profile_value')
         ->condition('uid', $account->uid)
         ->execute();
-      break;
   }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function profile_user_delete($account) {
+  db_delete('profile_value')
+    ->condition('uid', $account->uid)
+    ->execute();
 }
 
 /**
@@ -621,4 +628,3 @@ function _profile_get_fields($category, $register = FALSE) {
     ->orderBy('weight', 'ASC')
     ->execute();
 }
-

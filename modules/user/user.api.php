@@ -32,11 +32,29 @@ function hook_user_load($users) {
 }
 
 /**
+ * Respond to user deletion.
+ *
+ * This hook is invoked from user_delete_multiple() after the account has been
+ * removed from the user tables in the database, and before
+ * field_attach_delete() is called.
+ *
+ * @param $account
+ *   The account that is being deleted.
+ *
+ * @see user_delete_multiple()
+ */
+function hook_user_delete($account) {
+  db_delete('mytable')
+    ->condition('uid', $account->uid)
+    ->execute();
+}
+
+/**
  * Act on user account cancellations.
  *
  * The user account is being canceled. Depending on the account cancellation
- * method, the module should either do nothing, unpublish content, anonymize
- * content, or delete content and data belonging to the canceled user account.
+ * method, the module should either do nothing, unpublish content, or anonymize
+ * content.
  *
  * Expensive operations should be added to the global batch with batch_set().
  *
@@ -76,26 +94,6 @@ function hook_user_cancel($edit, $account, $method) {
       // Anonymize old revisions.
       db_update('node_revision')
         ->fields(array('uid' => 0))
-        ->condition('uid', $account->uid)
-        ->execute();
-      // Clean history.
-      db_delete('history')
-        ->condition('uid', $account->uid)
-        ->execute();
-      break;
-
-    case 'user_cancel_delete':
-      // Delete nodes (current revisions).
-      $nodes = db_select('node', 'n')
-        ->fields('n', array('nid'))
-        ->condition('uid', $account->uid)
-        ->execute()
-        ->fetchCol();
-      foreach ($nodes as $nid) {
-        node_delete($nid);
-      }
-      // Delete old revisions.
-      db_delete('node_revision')
         ->condition('uid', $account->uid)
         ->execute();
       // Clean history.

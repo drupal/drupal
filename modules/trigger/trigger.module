@@ -514,10 +514,16 @@ function trigger_user_update(&$edit, $account, $category) {
 function trigger_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
-    case 'user_cancel_delete':
       _trigger_user('user_delete', $edit, $account, $method);
       break;
   }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function trigger_user_delete($account) {
+  _trigger_user('user_delete', $edit, $account, $method);
 }
 
 /**
@@ -618,4 +624,3 @@ function _trigger_get_all_info() {
 
   return $triggers;
 }
-
