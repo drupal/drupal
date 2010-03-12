@@ -1,5 +1,5 @@
 <?php
-// $Id: token.inc,v 1.8 2010/01/25 10:38:34 dries Exp $
+// $Id: token.inc,v 1.9 2010/03/12 14:33:02 dries Exp $
 
 /**
  * @file
@@ -78,6 +78,9 @@ function token_replace($text, array $data = array(), array $options = array()) {
   $replacements = array();
   foreach (token_scan($text) as $type => $tokens) {
     $replacements += token_generate($type, $tokens, $data, $options);
+    if (!empty($options['clear'])) {
+      $replacements += array_fill_keys($tokens, '');
+    }
   }
 
   // Optionally alter the list of replacement values.
