@@ -1704,10 +1704,12 @@ function menu_local_tasks($level = 0) {
       $tasks[$item['path']] = $item;
     }
     // Find all tabs below the current path.
-    $path = $router_item['path'];
+    $path = ($router_item['type'] == MENU_DEFAULT_LOCAL_TASK ? $router_item['tab_parent'] : $router_item['path']);
     // Tab parenting may skip levels, so the number of parts in the path may not
     // equal the depth. Thus we use the $depth counter (offset by 1000 for ksort).
     $depth = 1001;
+    $actions['count'] = 0;
+    $actions['output'] = array();
     while (isset($children[$path])) {
       $tabs_current = array();
       $actions_current = array();
@@ -1752,8 +1754,8 @@ function menu_local_tasks($level = 0) {
       $path = $next_path;
       $tabs[$depth]['count'] = $tab_count;
       $tabs[$depth]['output'] = $tabs_current;
-      $actions['count'] = $action_count;
-      $actions['output'] = $actions_current;
+      $actions['count'] += $action_count;
+      $actions['output'] = array_merge($actions['output'], $actions_current);
       $depth++;
     }
     $data['actions'] = $actions;

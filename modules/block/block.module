@@ -127,6 +127,16 @@ function block_menu() {
       'access arguments' => array($theme),
       'file' => 'block.admin.inc',
     );
+    if ($key != $default_theme) {
+      $items['admin/structure/block/list/' . $key . '/add'] = array(
+        'title' => 'Add block',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('block_add_block_form'),
+        'access arguments' => array('administer blocks'),
+        'type' => MENU_LOCAL_ACTION,
+        'file' => 'block.admin.inc',
+      );
+    }
     $items['admin/structure/block/demo/' . $key] = array(
       'title' => check_plain($theme->info['name']),
       'page callback' => 'block_admin_demo',

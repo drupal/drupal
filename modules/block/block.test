@@ -44,6 +44,12 @@ class BlockTestCase extends DrupalWebTestCase {
    * Test creating custom block, moving it to a specific region and then deleting it.
    */
   function testCustomBlock() {
+    // Confirm that the add block link appears on block overview pages.
+    $this->drupalGet('admin/structure/block');
+    $this->assertRaw(l('Add block', 'admin/structure/block/add'), t('Add block link is present on block overview page for default theme.'));
+    $this->drupalGet('admin/structure/block/list/seven');
+    $this->assertRaw(l('Add block', 'admin/structure/block/list/seven/add'), t('Add block link is present on block overview page for non-default theme.'));
+
     // Confirm that hidden regions are not shown as options for block placement
     // when adding a new block.
     theme_enable(array('stark'));
