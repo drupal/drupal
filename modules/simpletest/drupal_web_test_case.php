@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.202 2010/03/07 18:06:06 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.203 2010/03/12 14:38:37 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1747,7 +1747,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function handleForm(&$post, &$edit, &$upload, $submit, $form) {
     // Retrieve the form elements.
-    $elements = $form->xpath('.//input|.//textarea|.//select');
+    $elements = $form->xpath('.//input[not(@disabled)]|.//textarea[not(@disabled)]|.//select[not(@disabled)]');
     $submit_matches = FALSE;
     foreach ($elements as $element) {
       // SimpleXML objects need string casting all the time.
