@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.59 2010/03/07 07:22:42 webchick Exp $
+// $Id: trigger.module,v 1.60 2010/03/12 15:56:30 dries Exp $
 
 /**
  * @file
@@ -514,10 +514,16 @@ function trigger_user_update(&$edit, $account, $category) {
 function trigger_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
-    case 'user_cancel_delete':
       _trigger_user('user_delete', $edit, $account, $method);
       break;
   }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function trigger_user_delete($account) {
+  _trigger_user('user_delete', $edit, $account, $method);
 }
 
 /**
@@ -618,4 +624,3 @@ function _trigger_get_all_info() {
 
   return $triggers;
 }
-

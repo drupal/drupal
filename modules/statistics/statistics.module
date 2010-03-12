@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.331 2010/02/07 17:29:09 webchick Exp $
+// $Id: statistics.module,v 1.332 2010/03/12 15:56:29 dries Exp $
 
 /**
  * @file
@@ -208,13 +208,16 @@ function statistics_user_cancel($edit, $account, $method) {
         ->condition('uid', $account->uid)
         ->execute();
       break;
-
-    case 'user_cancel_delete':
-      db_delete('accesslog')
-        ->condition('uid', $account->uid)
-        ->execute();
-      break;
   }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function statistics_user_delete($account) {
+  db_delete('accesslog')
+    ->condition('uid', $account->uid)
+    ->execute();
 }
 
 /**
