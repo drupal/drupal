@@ -876,7 +876,7 @@ function search_get_keys() {
  * Render a search form.
  *
  * @param $action
- *   Form action. Defaults to "search".
+ *   Form action. Defaults to "search/$type". This will be run through url().
  * @param $keys
  *   The search string entered by the user, containing keywords for the search.
  * @param $type
@@ -892,13 +892,15 @@ function search_form($form, &$form_state, $action = '', $keys = '', $type = NULL
   drupal_add_css(drupal_get_path('module', 'search') . '/search.css', array('preprocess' => FALSE));
 
   if (!$action) {
-    $action = url('search/' . $type);
+    $action = 'search/' . $type;
   }
   if (is_null($prompt)) {
     $prompt = t('Enter your keywords');
   }
 
-  $form['#action'] = $action;
+  $form['#action'] = url($action);
+  // Record the $action for later use in redirecting.
+  $form_state['action'] = $action;
   $form['#attributes']['class'][] = 'search-form';
   $form['module'] = array('#type' => 'value', '#value' => $type);
   $form['basic'] = array('#type' => 'container', '#attributes' => array('class' => array('container-inline')));

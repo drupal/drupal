@@ -136,6 +136,6 @@ function search_form_submit($form, &$form_state) {
   }
 
   $type = $form_state['values']['module'] ? $form_state['values']['module'] : 'node';
-  $form_state['redirect'] = 'search/' . $type . '/' . $keys;
+  $form_state['redirect'] = $form_state['action'] . '/' . $keys;
   return;
 }
