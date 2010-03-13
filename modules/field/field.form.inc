@@ -397,7 +397,7 @@ function field_add_more_js($form, $form_state) {
   $field = $field_info['field'];
 
   if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
-    ajax_render(array());
+    return;
   }
 
   // Navigate to the right element in the the form.

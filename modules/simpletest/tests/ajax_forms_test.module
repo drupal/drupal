@@ -67,7 +67,7 @@ function ajax_forms_test_simple_form_select_callback($form, $form_state) {
   $commands = array();
   $commands[] = ajax_command_html('#ajax_selected_color', $form_state['values']['select']);
   $commands[] = ajax_command_data('#ajax_selected_color', 'form_state_value_select', $form_state['values']['select']);
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -77,7 +77,7 @@ function ajax_forms_test_simple_form_checkbox_callback($form, $form_state) {
   $commands = array();
   $commands[] = ajax_command_html('#ajax_checkbox_value', (int)$form_state['values']['checkbox']);
   $commands[] = ajax_command_data('#ajax_checkbox_value', 'form_state_value_select', (int)$form_state['values']['checkbox']);
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 
@@ -233,7 +233,7 @@ function ajax_forms_test_advanced_commands_after_callback($form, $form_state) {
 
   $commands = array();
   $commands[] = ajax_command_after($selector, "This will be placed after");
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -242,7 +242,7 @@ function ajax_forms_test_advanced_commands_after_callback($form, $form_state) {
 function ajax_forms_test_advanced_commands_alert_callback($form, $form_state) {
   $commands = array();
   $commands[] = ajax_command_alert("Alert");
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -252,7 +252,7 @@ function ajax_forms_test_advanced_commands_append_callback($form, $form_state) {
   $selector = '#append_div';
   $commands = array();
   $commands[] = ajax_command_append($selector, "Appended text");
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -263,7 +263,7 @@ function ajax_forms_test_advanced_commands_before_callback($form, $form_state) {
 
   $commands = array();
   $commands[] = ajax_command_before($selector, "Before text");
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -271,7 +271,7 @@ function ajax_forms_test_advanced_commands_before_callback($form, $form_state) {
  */
 function ajax_forms_test_advanced_commands_changed_callback($form, $form_state) {
   $commands[] = ajax_command_changed('#changed_div');
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 /**
  * AJAX callback for 'changed' with asterisk marking inner div.
@@ -279,7 +279,7 @@ function ajax_forms_test_advanced_commands_changed_callback($form, $form_state) 
 function ajax_forms_test_advanced_commands_changed_asterisk_callback($form, $form_state) {
   $commands = array();
   $commands[] = ajax_command_changed('#changed_div', '#changed_div_mark_this');
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -291,7 +291,7 @@ function ajax_forms_test_advanced_commands_css_callback($form, $form_state) {
 
   $commands = array();
   $commands[] = ajax_command_css($selector, array('background-color' => $color));
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -302,7 +302,7 @@ function ajax_forms_test_advanced_commands_data_callback($form, $form_state) {
 
   $commands = array();
   $commands[] = ajax_command_data($selector, 'testkey', 'testvalue');
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -311,7 +311,7 @@ function ajax_forms_test_advanced_commands_data_callback($form, $form_state) {
 function ajax_forms_test_advanced_commands_html_callback($form, $form_state) {
   $commands = array();
   $commands[] = ajax_command_html('#html_div', 'replacement text');
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -320,7 +320,7 @@ function ajax_forms_test_advanced_commands_html_callback($form, $form_state) {
 function ajax_forms_test_advanced_commands_prepend_callback($form, $form_state) {
   $commands = array();
   $commands[] = ajax_command_prepend('#prepend_div', "prepended text");
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -329,7 +329,7 @@ function ajax_forms_test_advanced_commands_prepend_callback($form, $form_state) 
 function ajax_forms_test_advanced_commands_remove_callback($form, $form_state) {
   $commands = array();
   $commands[] = ajax_command_remove('#remove_text');
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -338,5 +338,5 @@ function ajax_forms_test_advanced_commands_remove_callback($form, $form_state) {
 function ajax_forms_test_advanced_commands_restripe_callback($form, $form_state) {
   $commands = array();
   $commands[] = ajax_command_restripe('#restripe_table');
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }

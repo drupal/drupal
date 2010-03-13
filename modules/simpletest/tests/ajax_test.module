@@ -13,12 +13,14 @@ function ajax_test_menu() {
   $items['ajax-test/render'] = array(
     'title' => 'ajax_render',
     'page callback' => 'ajax_test_render',
+    'delivery callback' => 'ajax_deliver',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['ajax-test/render-error'] = array(
     'title' => 'ajax_render_error',
-    'page callback' => 'ajax_test_render_error',
+    'page callback' => 'ajax_test_error',
+    'delivery callback' => 'ajax_deliver',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -26,7 +28,7 @@ function ajax_test_menu() {
 }
 
 /**
- * Menu callback; Copies $_GET['commands'] into $commands and ajax_render()s that.
+ * Menu callback; Returns $_GET['commands'] suitable for use by ajax_deliver().
  *
  * Additionally ensures that ajax_render() incorporates JavaScript settings
  * by invoking drupal_add_js() with a dummy setting.
@@ -40,20 +42,16 @@ function ajax_test_render() {
   // Add a dummy JS setting.
   drupal_add_js(array('ajax' => 'test'), 'setting');
 
-  // Output AJAX commands and end the request.
-  ajax_render($commands);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
- * Menu callback; Invokes ajax_render_error().
- *
- * Optionally passes $_GET['message'] to ajax_render_error().
+ * Menu callback; Returns AJAX element with #error property set.
  */
-function ajax_test_render_error() {
+function ajax_test_error() {
   $message = '';
   if (!empty($_GET['message'])) {
     $message = $_GET['message'];
   }
-  ajax_render_error($message);
+  return array('#type' => 'ajax', '#error' => $message);
 }
-

@@ -290,8 +290,10 @@ function system_element_info() {
   // HTML page, so we don't provide defaults for #theme or #theme_wrappers.
   // However, modules can set these properties (for example, to provide an HTML
   // debugging page that displays rather than executes AJAX commands).
-  $types['ajax_commands'] = array(
-    '#ajax_commands' => array(),
+  $types['ajax'] = array(
+    '#header' => TRUE,
+    '#commands' => array(),
+    '#error' => NULL,
   );
   $types['html_tag'] = array(
     '#theme' => 'html_tag',
