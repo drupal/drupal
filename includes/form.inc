@@ -1654,7 +1654,7 @@ function form_type_checkboxes_value($element, $input = FALSE) {
     $value = array();
     $element += array('#default_value' => array());
     foreach ($element['#default_value'] as $key) {
-      $value[$key] = 1;
+      $value[$key] = $key;
     }
     return $value;
   }
