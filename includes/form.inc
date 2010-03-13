@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.441 2010/03/12 14:38:37 dries Exp $
+// $Id: form.inc,v 1.442 2010/03/13 22:33:05 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1654,7 +1654,7 @@ function form_type_checkboxes_value($element, $input = FALSE) {
     $value = array();
     $element += array('#default_value' => array());
     foreach ($element['#default_value'] as $key) {
-      $value[$key] = 1;
+      $value[$key] = $key;
     }
     return $value;
   }
