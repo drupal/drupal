@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.42 2010/02/12 05:38:09 webchick Exp $
+// $Id: field.form.inc,v 1.43 2010/03/13 06:55:50 dries Exp $
 
 /**
  * @file
@@ -397,7 +397,7 @@ function field_add_more_js($form, $form_state) {
   $field = $field_info['field'];
 
   if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
-    ajax_render(array());
+    return;
   }
 
   // Navigate to the right element in the the form.

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.24 2010/01/09 21:54:00 webchick Exp $
+// $Id: book.pages.inc,v 1.25 2010/03/13 06:55:50 dries Exp $
 
 /**
  * @file
@@ -237,7 +237,6 @@ function book_form_update() {
   // Load the form based upon the $_POST data sent via the ajax call.
   list($form, $form_state) = ajax_get_form();
 
-  $commands = array();
   $bid = $_POST['book']['bid'];
 
   // Validate the bid.
@@ -248,15 +247,9 @@ function book_form_update() {
     $form['book']['plid'] = _book_parent_select($book_link);
     form_set_cache($form['values']['form_build_id'], $form, $form_state);
 
-    // Build and render the new select element, then return it in JSON format.
+    // Build the new select element and return it.
     $form_state = array();
     $form = form_builder($form['form_id']['#value'], $form, $form_state);
-
-    $commands[] = ajax_command_replace(NULL, drupal_render($form['book']['plid']));
+    return $form['book']['plid'];
   }
-
-  // @todo: We could and should just return $form['book']['plid'] and skip the
-  // ajax_command_replace() above. But for now, this provides a test case of
-  // returning an AJAX commands array.
-  return array('#type' => 'ajax_commands', '#ajax_commands' => $commands);
 }
