@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.test,v 1.28 2010/01/30 07:59:25 dries Exp $
+// $Id: bootstrap.test,v 1.29 2010/03/17 13:58:45 dries Exp $
 
 class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
@@ -70,7 +70,8 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
       t('Proxy forwarding with trusted proxy got forwarded IP address')
     );
 
-    // Cluster environment.
+    // Custom client-IP header.
+    variable_set('reverse_proxy_header', 'HTTP_X_CLUSTER_CLIENT_IP');
     $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] = $this->cluster_ip;
     drupal_static_reset('ip_address');
     $this->assertTrue(
