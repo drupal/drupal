@@ -2198,8 +2198,8 @@ function request_path() {
 /**
  * If Drupal is behind a reverse proxy, we use the X-Forwarded-For header
  * instead of $_SERVER['REMOTE_ADDR'], which would be the IP address of
- * the proxy server, and not the client's. If Drupal is run in a cluster
- * we use the X-Cluster-Client-Ip header instead.
+ * the proxy server, and not the client's. The actual header name can be
+ * configured by the reverse_proxy_header variable.
  *
  * @return
  *   IP address of client machine, adjusted for reverse proxy and/or cluster
@@ -2212,7 +2212,8 @@ function ip_address() {
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
     if (variable_get('reverse_proxy', 0)) {
-      if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
+      $reverse_proxy_header = variable_get('reverse_proxy_header', 'HTTP_X_FORWARDED_FOR');
+      if (!empty($_SERVER[$reverse_proxy_header])) {
         // If an array of known reverse proxy IPs is provided, then trust
         // the XFF header if request really comes from one of them.
         $reverse_proxy_addresses = variable_get('reverse_proxy_addresses', array());
@@ -2220,16 +2221,9 @@ function ip_address() {
           // The "X-Forwarded-For" header is a comma+space separated list of IP addresses,
           // the left-most being the farthest downstream client. If there is more than
           // one proxy, we are interested in the most recent one (i.e. last one in the list).
-          $ip_address_parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+          $ip_address_parts = explode(',', $_SERVER[$reverse_proxy_header]);
           $ip_address = trim(array_pop($ip_address_parts));
         }
-      }
-
-      // When Drupal is run in a cluster environment, REMOTE_ADDR contains the IP
-      // address of a server in the cluster, while the IP address of the client is
-      // stored in HTTP_X_CLUSTER_CLIENT_IP.
-      if (array_key_exists('HTTP_X_CLUSTER_CLIENT_IP', $_SERVER)) {
-        $ip_address = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
       }
     }
   }

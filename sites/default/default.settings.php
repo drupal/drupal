@@ -284,8 +284,6 @@ ini_set('session.cookie_lifetime', 2000000);
 # $conf['maintenance_theme'] = 'garland';
 
 /**
- * reverse_proxy accepts a boolean value.
- *
  * Enable this setting to determine the correct IP address of the remote
  * client by examining information stored in the X-Forwarded-For headers.
  * X-Forwarded-For headers are a standard mechanism for identifying client
@@ -300,6 +298,15 @@ ini_set('session.cookie_lifetime', 2000000);
  * a shared hosting environment, this setting should remain commented out.
  */
 # $conf['reverse_proxy'] = TRUE;
+
+/**
+ * Set this value if your proxy server sends the client IP in a header other
+ * than X-Forwarded-For.
+ *
+ * The "X-Forwarded-For" header is a comma+space separated list of IP addresses,
+ * only the last one (the left-most) will be used.
+ */
+# $conf['reverse_proxy_header'] = 'HTTP_X_CLUSTER_CLIENT_IP';
 
 /**
  * reverse_proxy accepts an array of IP addresses.
