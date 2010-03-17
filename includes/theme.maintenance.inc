@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.54 2010/02/25 20:57:39 dries Exp $
+// $Id: theme.maintenance.inc,v 1.55 2010/03/17 14:04:38 dries Exp $
 
 /**
  * @file
@@ -145,7 +145,7 @@ function theme_install_page($variables) {
     $title = count($messages['error']) > 1 ? st('The following errors must be resolved before you can continue the installation process') : st('The following error must be resolved before you can continue the installation process');
     $variables['messages'] .= '<h3>' . $title . ':</h3>';
     $variables['messages'] .= theme('status_messages', array('display' => 'error'));
-    $variables['content'] .= '<p>' . st('Check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri())) . '</p>';
+    $variables['content'] .= '<p>' . st('Check the error messages and <a href="!url">try again</a>.', array('!url' => check_url(request_uri()))) . '</p>';
   }
 
   // Special handling of warning messages
