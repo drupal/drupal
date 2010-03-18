@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.901 2010/03/13 06:55:50 dries Exp $
+// $Id: system.module,v 1.902 2010/03/18 06:46:24 dries Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function system_help($path, $arg) {
     case 'admin/appearance/settings/' . $arg[3]:
       $reference = explode('.', $arg[3], 2);
       $theme = array_pop($reference);
-      return '<p>' . t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.', array('%template' => $theme, '@global' => url('admin/appearance/settings'))) . '</p>';
+      return '<p>' . t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used.', array('%template' => $theme)) . '</p>';
     case 'admin/appearance/settings':
       return '<p>' . t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') . '</p>';
     case 'admin/modules':
