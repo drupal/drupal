@@ -95,6 +95,17 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
     $this->assertNoRaw('sticky-enabled',  t('Table does not have a class of sticky-enabled because $sticky = FALSE.'));
     drupal_static_reset('drupal_add_js');
   }
+
+  /**
+   * Tests that the table header is printed even if there are no rows. And that
+   * the empty text is displayed correctly.
+   */
+  function testThemeTableWithEmptyMessage() {
+    $header = array(t('Header 1'), t('Header 2'));
+    $this->content = theme('table', array('header' => $header, 'rows' => array(), 'empty' => t('No strings available.')));
+    $this->assertRaw('<tr class="odd"><td colspan="2" class="empty message">No strings available.</td>', t('Correct colspan was set on empty message.'));
+    $this->assertRaw('<thead><tr><th>Header 1</th>', t('Table header was printed.'));
+  }
 }
 
 /**

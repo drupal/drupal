@@ -1663,6 +1663,11 @@ function theme_table($variables) {
     }
   }
 
+  // Add the 'empty' row message if available.
+  if (!count($rows) && $empty) {
+    $rows[] = array(array('data' => $empty, 'colspan' => count($header), 'class' => array('empty', 'message')));
+  }
+
   // Format the table header:
   if (count($header)) {
     $ts = tablesort_init($header);
@@ -1678,11 +1683,6 @@ function theme_table($variables) {
   }
   else {
     $ts = array();
-  }
-
-  // Add the 'empty' row message if available.
-  if (!count($rows) && $empty) {
-    $rows[] = array(array('data' => $empty, 'colspan' => count($header), 'class' => array('empty', 'message')));
   }
 
   // Format the table rows:
