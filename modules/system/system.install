@@ -534,7 +534,7 @@ function system_schema() {
       'ip' => array(
         'description' => 'IP address',
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 40,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -2385,6 +2385,13 @@ function system_update_7049() {
  */
 function system_update_7050() {
   db_change_field('batch', 'bid', 'bid', array('description' => 'Primary Key: Unique batch ID.', 'type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
+}
+
+/**
+ * make the IP field IPv6 compatible
+ */
+function system_update_7051() {
+  db_change_field('blocked_ips', 'ip', 'ip', array('description' => 'IP address', 'type' => 'varchar', 'length' => 40, 'not null' => TRUE, 'default' => ''));
 }
 
 /**
