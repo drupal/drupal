@@ -1921,8 +1921,10 @@ function format_username($account) {
  *   - 'alias': Defaults to FALSE. Whether the given path is a URL alias
  *     already.
  *   - 'external': Whether the given path is an external URL.
- *   - 'language': An optional language object. Used to build the URL to link
- *     to and look up the proper alias for the link.
+ *   - 'language': An optional language object. If the path being linked to is
+ *     internal to the site, $options['language'] is used to look up the alias
+ *     for the URL. If $options['language'] is omitted, the global $language
+ *     will be used.
  *   - 'https': Whether this URL should point to a secure location. If not
  *     defined, the current scheme is used, so the user stays on http or https
  *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
@@ -2147,24 +2149,27 @@ function drupal_attributes(array $attributes = array()) {
  *       used as is.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *     - 'attributes'
- *       An associative array of HTML attributes to apply to the anchor tag.
- *     - 'query'
- *       A query string to append to the link, or an array of query key/value
- *       properties.
- *     - 'fragment'
- *       A fragment identifier (named anchor) to append to the link.
+ *     - attributes: An associative array of HTML attributes to apply to the
+ *       anchor tag.
+ *     - query: A query string to append to the link, or an array of query
+ *       key/value properties.
+ *     - fragment: A fragment identifier (named anchor) to append to the link.
  *       Do not include the '#' character.
- *     - 'absolute' (default FALSE)
- *       Whether to force the output to be an absolute link (beginning with
- *       http:). Useful for links that will be displayed outside the site, such
- *       as in an RSS feed.
- *     - 'html' (default FALSE)
- *       Whether $text is HTML, or just plain-text. For example for making
- *       an image a link, this must be set to TRUE, or else you will see the
- *       escaped HTML.
- *     - 'alias' (default FALSE)
- *       Whether the given path is an alias already.
+ *     - absolute: (default FALSE) Whether to force the output to be an absolute
+ *       link (beginning with http:). Useful for links that will be displayed
+ *       outside the site, such as in an RSS feed.
+ *     - html: (default FALSE) Whether $text is HTML, or just plain-text. For
+ *       example for making an image a link, this must be set to TRUE, or else
+ *       you will see the escaped HTML.
+ *     - alias: (default FALSE) Whether the given path is an alias already.
+ *     - language: An optional language object. If the path being linked to is
+ *       internal to the site, $options['language'] is used to look up the alias
+ *       for the URL, and to determine whether the link is "active", or pointing
+ *       to the current page (the language as well as the path must match). If
+ *       $options['language'] is omitted, the language defined by the current
+ *       page's URL will be used; this depends on the site's language
+ *       negotiation settings (sub-domain or URL prefix).
+ *
  * @return
  *   an HTML string containing a link to the given path.
  */
