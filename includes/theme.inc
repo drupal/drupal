@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.582 2010/03/04 09:03:08 dries Exp $
+// $Id: theme.inc,v 1.583 2010/03/18 19:03:29 dries Exp $
 
 /**
  * @file
@@ -1663,6 +1663,11 @@ function theme_table($variables) {
     }
   }
 
+  // Add the 'empty' row message if available.
+  if (!count($rows) && $empty) {
+    $rows[] = array(array('data' => $empty, 'colspan' => count($header), 'class' => array('empty', 'message')));
+  }
+
   // Format the table header:
   if (count($header)) {
     $ts = tablesort_init($header);
@@ -1678,11 +1683,6 @@ function theme_table($variables) {
   }
   else {
     $ts = array();
-  }
-
-  // Add the 'empty' row message if available.
-  if (!count($rows) && $empty) {
-    $rows[] = array(array('data' => $empty, 'colspan' => count($header), 'class' => array('empty', 'message')));
   }
 
   // Format the table rows:
