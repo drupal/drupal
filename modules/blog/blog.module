@@ -184,6 +184,30 @@ function blog_block_info() {
 }
 
 /**
+ * Implements hook_block_configure().
+ */
+function blog_block_configure($delta = '') {
+  if ($delta == 'recent') {
+    $form['blog_block_count'] = array(
+      '#type' => 'select',
+      '#title' => t('Number of recent blog posts to display'),
+      '#default_value' => variable_get('blog_block_count', 10),
+      '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
+    );
+    return $form;
+  }
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function blog_block_save($delta = '', $edit = array()) {
+  if ($delta == 'recent') {
+    variable_set('blog_block_count', $edit['blog_block_count']);
+  }
+}
+
+/**
  * Implements hook_block_view().
  *
  * Displays the most recent 10 blog titles.
@@ -197,7 +221,7 @@ function blog_block_view($delta = '') {
       ->condition('type', 'blog')
       ->condition('status', 1)
       ->orderBy('created', 'DESC')
-      ->range(0, 10)
+      ->range(0, variable_get('blog_block_count', 10))
       ->addTag('node_access')
       ->execute();
 
