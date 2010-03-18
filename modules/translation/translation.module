@@ -123,7 +123,7 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
  *   is about to be created.
  */
 function translation_form_alter(&$form, &$form_state, $form_id) {
-  if (isset($form['#id']) && $form['#id'] == 'node-form' && translation_supported_type($form['#node']->type)) {
+  if (!empty($form['#node_edit_form']) && translation_supported_type($form['#node']->type)) {
     $node = $form['#node'];
     if (!empty($node->translation_source)) {
       // We are creating a translation. Add values and lock language field.

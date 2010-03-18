@@ -143,10 +143,6 @@ function node_theme() {
       'variables' => array('content' => NULL),
       'file' => 'node.pages.inc',
     ),
-    'node_form' => array(
-      'render element' => 'form',
-      'file' => 'node.pages.inc',
-    ),
     'node_preview' => array(
       'variables' => array('node' => NULL),
       'file' => 'node.pages.inc',

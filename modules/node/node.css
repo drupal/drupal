@@ -24,17 +24,6 @@
 td.revision-current {
   background: #ffc;
 }
-.node-form .container-inline .form-text {
-  display: inline;
-  width: auto;
-}
-.node-form .standard {
-  clear: both;
-}
-.node-form .attachments fieldset {
-  float: none;
-  display: block;
-}
 .terms-inline {
   display: inline;
 }

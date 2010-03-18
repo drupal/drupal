@@ -386,7 +386,7 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
       locale_language_selector_form($form, $form_state, $form['#user']);
     }
   }
-  if (isset($form['#id']) && $form['#id'] == 'node-form') {
+  if (!empty($form['#node_edit_form'])) {
     if (isset($form['#node']->type) && locale_multilingual_node_type($form['#node']->type)) {
       $form['language'] = array(
         '#type' => 'select',

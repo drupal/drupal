@@ -108,9 +108,12 @@ function node_form($form, &$form_state, $node) {
     $node->in_preview = TRUE;
   }
 
-  // Set the id and identify this as a node edit form.
-  $form['#id'] = 'node-form';
+  // Identify this as a node edit form.
   $form['#node_edit_form'] = TRUE;
+  $form['#attributes']['class'][] = 'node-form';
+  if (!empty($node->type)) {
+    $form['#attributes']['class'][] = 'node-' . $node->type . '-form';
+  }
 
   // Basic node information.
   // These elements are just values so they are not even sent to the client.
@@ -289,25 +292,6 @@ function node_form_delete_submit($form, &$form_state) {
 function node_form_build_preview($form, &$form_state) {
   $node = node_form_submit_build_node($form, $form_state);
   $form_state['node_preview'] = node_preview($node);
-}
-
-/**
- * Present a node submission form.
- *
- * @ingroup themeable
- */
-function theme_node_form($variables) {
-  $form = $variables['form'];
-
-  $output = "\n<div class=\"node-form\">\n";
-
-  $output .= "  <div class=\"standard\">\n";
-  $output .= drupal_render_children($form);
-  $output .= "  </div>\n";
-
-  $output .= "</div>\n";
-
-  return $output;
 }
 
 /**
