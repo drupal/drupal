@@ -376,7 +376,7 @@ function _locale_get_predefined_list() {
     'ku' => array('Kurdish', 'Kurdî'),
     'kv' => array('Komi'),
     'kw' => array('Cornish'),
-    'kg' => array('Kirghiz', 'Кыргыз'),
+    'ky' => array('Kirghiz', 'Кыргыз'),
     'la' => array('Latin', 'Latina'),
     'lb' => array('Luxembourgish'),
     'lg' => array('Luganda'),
