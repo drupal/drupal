@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1246 2010/03/12 15:56:29 dries Exp $
+// $Id: node.module,v 1.1247 2010/03/18 06:50:37 dries Exp $
 
 /**
  * @file
@@ -141,10 +141,6 @@ function node_theme() {
     ),
     'node_add_list' => array(
       'variables' => array('content' => NULL),
-      'file' => 'node.pages.inc',
-    ),
-    'node_form' => array(
-      'render element' => 'form',
       'file' => 'node.pages.inc',
     ),
     'node_preview' => array(
