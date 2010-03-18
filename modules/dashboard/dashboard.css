@@ -107,18 +107,18 @@
 }
 
 #dashboard .ui-sortable .block h2 {
-  background: transparent url(../../misc/draggable.png) no-repeat 0 -35px;
-  padding: 0 1em;
+  background: transparent url(../../misc/draggable.png) no-repeat 0px -39px;
+  padding: 0 17px;
 }
 
 #dashboard #disabled-blocks .block:hover h2 {
-  background: #0074BD url(../../misc/draggable.png) no-repeat 0 -35px;
+  background: #0074BD url(../../misc/draggable.png) no-repeat 0px -39px;
   color: #fff;
 }
 
 #dashboard .dashboard-region .ui-sortable .block:hover h2 {
   background: #0074BD url(../../misc/draggable.png) no-repeat;
-  background-position: 3px -32px;
+  background-position: 3px -36px;
   color: #fff;
 }
 
