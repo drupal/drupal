@@ -1104,7 +1104,7 @@ function hook_update($node) {
  * This hook is invoked only on the module that defines the node's content type
  * (use hook_node_validate() to act on all node validations).
  *
- * This hook is invoked from node_validate(), after a user has has finished
+ * This hook is invoked from node_validate(), after a user has finished
  * editing the node and is previewing or submitting it. It is invoked at the end
  * of all the standard validation steps, and before hook_node_validate() is
  * invoked.
@@ -1113,8 +1113,7 @@ function hook_update($node) {
  *
  * Note: Changes made to the $node object within your hook implementation will
  * have no effect.  The preferred method to change a node's content is to use
- * hook_node_presave() instead. If it is really necessary to change
- * the node at the validate stage, you can use form_set_value().
+ * hook_node_presave() instead.
  *
  * @param $node
  *   The node being validated.
