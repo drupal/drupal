@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.95 2010/03/07 23:14:20 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.96 2010/03/18 06:36:39 dries Exp $
 
 /**
  * @file
@@ -48,7 +48,7 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
       taxonomy_vocabulary_save($form[$vid]['#vocabulary']);
     }
   }
-  drupal_set_message(t('Your configuration has been saved.'));
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
@@ -509,7 +509,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
     $vocabulary->hierarchy = $hierarchy;
     taxonomy_vocabulary_save($vocabulary);
   }
-  drupal_set_message(t('Your configuration has been saved.'));
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
