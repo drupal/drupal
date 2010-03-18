@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.test,v 1.25 2010/01/09 21:54:00 webchick Exp $
+// $Id: blog.test,v 1.26 2010/03/18 06:26:36 dries Exp $
 
 class BlogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -65,6 +65,11 @@ class BlogTestCase extends DrupalWebTestCase {
     $edit['blog_recent[region]'] = 'sidebar_second';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
+    // Verify ability to change number of recent blog posts in block.
+    $edit = array();
+    $edit['blog_block_count'] = 5;
+    $this->drupalPost('admin/structure/block/manage/blog/recent/configure', $edit, t('Save block'));
+    $this->assertEqual(variable_get('blog_block_count', 10), 5, t('Number of recent blog posts changed.'));
 
     // Do basic tests for each user.
     $this->doBasicTests($this->any_user, TRUE);
