@@ -538,11 +538,8 @@ function user_save($account, $edit = array(), $category = 'account') {
         drupal_write_record('users', $data_array, 'uid');
       }
 
-      // Save user roles (delete just to be safe).
+      // Save user roles.
       if (isset($edit['roles']) && is_array($edit['roles'])) {
-        db_delete('users_roles')
-          ->condition('uid', $edit['uid'])
-          ->execute();
         $query = db_insert('users_roles')->fields(array('uid', 'rid'));
         foreach (array_keys($edit['roles']) as $rid) {
           if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
