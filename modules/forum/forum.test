@@ -131,7 +131,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->delete_forum = $this->createForum('forum', $this->container['tid']);
     // Save forum overview.
     $this->drupalPost('admin/structure/forum/', array(), t('Save'));
-    $this->assertRaw(t('Your configuration has been saved.'));
+    $this->assertRaw(t('The configuration options have been saved.'));
     // Delete this second form.
     $this->deleteForum($this->delete_forum['tid']);
     // Create forum at the top (root) level.

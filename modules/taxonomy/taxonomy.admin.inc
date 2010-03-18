@@ -48,7 +48,7 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
       taxonomy_vocabulary_save($form[$vid]['#vocabulary']);
     }
   }
-  drupal_set_message(t('Your configuration has been saved.'));
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
@@ -509,7 +509,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
     $vocabulary->hierarchy = $hierarchy;
     taxonomy_vocabulary_save($vocabulary);
   }
-  drupal_set_message(t('Your configuration has been saved.'));
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
