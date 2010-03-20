@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1138 2010/03/20 14:55:06 dries Exp $
+// $Id: user.module,v 1.1139 2010/03/20 19:06:12 dries Exp $
 
 /**
  * @file
@@ -1417,11 +1417,6 @@ function user_edit_access($account) {
  */
 function user_cancel_access($account) {
   return ((($GLOBALS['user']->uid == $account->uid) && user_access('cancel account')) || user_access('administer users')) && $account->uid > 0;
-}
-
-function user_load_self($arg) {
-  $arg[1] = user_load($GLOBALS['user']->uid);
-  return $arg;
 }
 
 /**
