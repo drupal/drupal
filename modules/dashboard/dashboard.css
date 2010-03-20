@@ -1,4 +1,4 @@
-/* $Id: dashboard.css,v 1.10 2010/03/18 06:54:43 dries Exp $ */
+/* $Id: dashboard.css,v 1.11 2010/03/20 14:45:05 dries Exp $ */
 
 #dashboard div.dashboard-region {
   float: left;
@@ -31,6 +31,7 @@
   padding: 6px 4px 6px 8px;
   margin: 3px 3px 3px 0;
   float: left;
+  border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
 }

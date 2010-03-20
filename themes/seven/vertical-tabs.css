@@ -1,4 +1,4 @@
-/* $Id: vertical-tabs.css,v 1.4 2010/01/11 06:44:31 webchick Exp $ */
+/* $Id: vertical-tabs.css,v 1.5 2010/03/20 14:45:05 dries Exp $ */
 
 /**
  * Override of misc/vertical-tabs.css.
@@ -33,6 +33,8 @@ div.vertical-tabs ul li.vertical-tab-button a {
   display: block;
   border-right: 1px solid #ccc;
   padding: 10px 9px 10px 10px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   -moz-border-radius-topleft: 5px;
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-top-left-radius: 5px;
