@@ -2477,9 +2477,7 @@ function db_next_id($existing_id = 0) {
  *   A Schema API table definition array.
  */
 function db_create_table($name, $table) {
-  if (!db_table_exists($name)) {
-    return Database::getConnection()->schema()->createTable($name, $table);
-  }
+  return Database::getConnection()->schema()->createTable($name, $table);
 }
 
 /**

@@ -2,18 +2,9 @@
 // $Id$
 
 /**
- * Implements hook_install().
- */
-function tracker_install() {
-  drupal_install_schema('tracker');
-}
-
-/**
  * Implements hook_uninstall().
  */
 function tracker_uninstall() {
-  drupal_uninstall_schema('tracker');
-
   variable_del('tracker_index_nid');
   variable_del('tracker_batch_size');
 }

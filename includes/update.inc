@@ -106,53 +106,55 @@ function update_prepare_d7_bootstrap() {
   // The new cache_bootstrap bin is required to bootstrap to
   // DRUPAL_BOOTSTRAP_SESSION, so create it here rather than in
   // update_fix_d7_requirements().
-  $cache_bootstrap = array(
-    'description' => 'Cache table for data required to bootstrap Drupal, may be routed to a shared memory cache.',
-    'fields' => array(
-      'cid' => array(
-        'description' => 'Primary Key: Unique cache ID.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
+  if (!db_table_exists('cache_bootstrap')) {
+    $cache_bootstrap = array(
+      'description' => 'Cache table for data required to bootstrap Drupal, may be routed to a shared memory cache.',
+      'fields' => array(
+        'cid' => array(
+          'description' => 'Primary Key: Unique cache ID.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'data' => array(
+          'description' => 'A collection of data to cache.',
+          'type' => 'blob',
+          'not null' => FALSE,
+          'size' => 'big',
+        ),
+        'expire' => array(
+          'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'created' => array(
+          'description' => 'A Unix timestamp indicating when the cache entry was created.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'headers' => array(
+          'description' => 'Any custom HTTP headers to be added to cached data.',
+          'type' => 'text',
+          'not null' => FALSE,
+        ),
+        'serialized' => array(
+          'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
+          'type' => 'int',
+          'size' => 'small',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
       ),
-      'data' => array(
-        'description' => 'A collection of data to cache.',
-        'type' => 'blob',
-        'not null' => FALSE,
-        'size' => 'big',
+      'indexes' => array(
+        'expire' => array('expire'),
       ),
-      'expire' => array(
-        'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'created' => array(
-        'description' => 'A Unix timestamp indicating when the cache entry was created.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'headers' => array(
-        'description' => 'Any custom HTTP headers to be added to cached data.',
-        'type' => 'text',
-        'not null' => FALSE,
-      ),
-      'serialized' => array(
-        'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
-        'type' => 'int',
-        'size' => 'small',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'expire' => array('expire'),
-    ),
-    'primary key' => array('cid'),
-  );
-  db_create_table('cache_bootstrap', $cache_bootstrap);
+      'primary key' => array('cid'),
+    );
+    db_create_table('cache_bootstrap', $cache_bootstrap);
+  }
 }
 
 /**
