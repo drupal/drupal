@@ -1419,11 +1419,6 @@ function user_cancel_access($account) {
   return ((($GLOBALS['user']->uid == $account->uid) && user_access('cancel account')) || user_access('administer users')) && $account->uid > 0;
 }
 
-function user_load_self($arg) {
-  $arg[1] = user_load($GLOBALS['user']->uid);
-  return $arg;
-}
-
 /**
  * Implements hook_menu().
  */
