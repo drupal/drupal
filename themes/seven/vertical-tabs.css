@@ -33,6 +33,8 @@ div.vertical-tabs ul li.vertical-tab-button a {
   display: block;
   border-right: 1px solid #ccc;
   padding: 10px 9px 10px 10px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   -moz-border-radius-topleft: 5px;
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-top-left-radius: 5px;

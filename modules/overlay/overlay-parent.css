@@ -69,6 +69,7 @@ body.overlay-autofit {
   width: 26px;
   height: 36px;
   background: transparent url(images/close.png) no-repeat;
+  border-top-left-radius: 0;
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
 }
@@ -120,10 +121,10 @@ body.overlay-autofit {
 .overlay .ui-dialog-titlebar ul li a:hover {
   display: inline-block;
   background-color: #a6a7a2;
+  border-radius: 8px 8px 0 0;
   -moz-border-radius: 8px 8px 0 0;
   -webkit-border-top-left-radius: 8px;
   -webkit-border-top-right-radius: 8px;
-  border-radius: 8px 8px 0 0;
   color: #000;
   font-weight: bold;
   padding: 0 14px;

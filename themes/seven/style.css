@@ -146,19 +146,17 @@ code, pre, kbd {
   left: -10000px;
   width: 1px;
   height: 1px;
-  -moz-border-radius-bottomleft: 10px;
-  -moz-border-radius-bottomright: 10px;
-  -moz-border-radius-topleft: 0;
-  -moz-border-radius-topright: 0;
-  -webkit-border-top-left-radius: 0;
-  -webkit-border-top-right-radius: 0;
-  -webkit-border-bottom-left-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  border-radius:0 0 10px 10px;
   background: #444;
   color: #fff;
   font-size: 0.94em;
   text-decoration: none;
+  border-radius:0 0 10px 10px;
+  -moz-border-radius: 0 0 10px 10px;
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-left-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+
 }
 #skip-link a:hover,
 #skip-link a:active,
@@ -297,16 +295,16 @@ ul.primary li a:active,
 ul.primary li a:visited,
 ul.primary li a:hover {
   background-color: #a6a7a2;
-  -moz-border-radius: 8px 8px 0 0;
-  -webkit-border-top-left-radius: 8px;
-  -webkit-border-top-right-radius: 8px;
-  border-radius: 8px 8px 0 0;
   color: #000;
   font-weight: bold;
   padding: 7px 20px 5px 20px;
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: #a6a7a2;
+  border-radius: 8px 8px 0 0;
+  -moz-border-radius: 8px 8px 0 0;
+  -webkit-border-top-left-radius: 8px;
+  -webkit-border-top-right-radius: 8px;
 }
 ul.primary li.active a,
 ul.primary li.active a.active,
@@ -343,6 +341,7 @@ ul.secondary li a:hover,
 ul.secondary li.active a,
 ul.secondary li.active a.active {
   padding: 0 10px;
+  border-radius: 7px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 7px;
 }
@@ -376,6 +375,7 @@ ul.secondary li.active a.active {
   height: 55px;
   width: 80px;
   overflow: hidden;
+  border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
@@ -640,15 +640,16 @@ input.form-submit, a.button {
   color: #5a5a5a;
   text-align: center;
   font-weight: normal;
+  font-size: 1.1em;
   font-family: "Lucida Grande", Verdana, sans-serif;
   border: 1px solid #e4e4e4;
   border-bottom: 1px solid #b4b4b4;
   border-left-color: #D2D2D2;
   border-right-color: #D2D2D2;
   background: url(images/buttons.png) 0 0 repeat-x;
+  border-radius: 15px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 15px;
-  font-size: 1.1em;
 }
 a.button:link, a.button:visited, a.button:hover, a.button:active {
   text-decoration: none;
