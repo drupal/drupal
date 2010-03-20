@@ -198,10 +198,8 @@ function hook_user_categories() {
  *
  * This hook is primarily intended for modules that want to store properties in
  * the serialized {users}.data column, which is automatically loaded whenever a
- * user account object is loaded, and the module needs to prepare the stored
- * data in some way.
- * The module should save its custom additions to the user object into the
- * database and set the saved fields to NULL in $edit.
+ * user account object is loaded, modules may add to $edit['data'] in order
+ * to have their data serialized on save.
  *
  * @param &$edit
  *   The array of form values submitted by the user.
@@ -216,9 +214,7 @@ function hook_user_categories() {
 function hook_user_presave(&$edit, $account, $category) {
   // Make sure that our form value 'mymodule_foo' is stored as 'mymodule_bar'.
   if (isset($edit['mymodule_foo'])) {
-    $edit['mymodule_bar'] = $edit['mymodule_foo'];
-    // Inform user_save() to ignore the value of our property.
-    $edit['mymodule_foo'] = NULL;
+    $edit['data']['my_module_foo'] = $edit['my_module_foo'];
   }
 }
 
@@ -226,7 +222,7 @@ function hook_user_presave(&$edit, $account, $category) {
  * A user account was created.
  *
  * The module should save its custom additions to the user object into the
- * database and set the saved fields to NULL in $edit.
+ * database.
  *
  * @param &$edit
  *   The array of form values submitted by the user.
@@ -245,8 +241,6 @@ function hook_user_insert(&$edit, $account, $category) {
       'uid' => $account->uid,
     ))
     ->execute();
-  // Inform user_save() to ignore the value of our property.
-  $edit['myfield'] = NULL;
 }
 
 /**

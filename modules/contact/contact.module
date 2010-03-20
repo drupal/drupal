@@ -168,13 +168,6 @@ function contact_load($cid) {
 }
 
 /**
- * Implements hook_user_insert().
- */
-function contact_user_insert(&$edit, $account, $category) {
-  $edit['contact'] = variable_get('contact_default_status', 1);
-}
-
-/**
  * Implements hook_mail().
  */
 function contact_mail($key, &$message, $params) {
@@ -238,6 +231,13 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
       '#description' => t('Allow other users to contact you via a <a href="@url">personal contact form</a> which keeps your e-mail address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.', array('@url' => url("user/$account->uid/contact"))),
     );
   }
+}
+
+/**
+ * Implements hook_user_presave().
+ */
+function contact_user_presave(&$edit, $account, $category) {
+  $edit['data']['contact'] = isset($edit['contact']) ? $edit['contact'] : variable_get('contact_default_status', 1);
 }
 
 /**

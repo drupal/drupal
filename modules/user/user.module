@@ -345,7 +345,6 @@ function user_save($account, $edit = array(), $category = 'account') {
   $transaction = db_transaction();
   try {
     $table = drupal_get_schema('users');
-    $user_fields = $table['fields'];
 
     if (!empty($edit['pass'])) {
       // Allow alternate password hashing schemes.
@@ -369,36 +368,21 @@ function user_save($account, $edit = array(), $category = 'account') {
     if (!isset($account->is_new)) {
       $account->is_new = empty($account->uid);
     }
-
+    // Prepopulate $edit['data'] with the current value of $account->data.
+    // Modules can add to or remove from this array in hook_user_presave().
+    if (!empty($account->data)) {
+      $data = unserialize($account->data);
+      foreach ($data as $key => $value) {
+        $edit['data'][$key] = $value;
+      }
+    }
     user_module_invoke('presave', $edit, $account, $category);
 
     if (is_object($account) && !$account->is_new) {
-      $data = unserialize(db_query('SELECT data FROM {users} WHERE uid = :uid', array(':uid' => $account->uid))->fetchField());
       // Consider users edited by an administrator as logged in, if they haven't
       // already, so anonymous users can view the profile (if allowed).
       if (empty($edit['access']) && empty($account->access) && user_access('administer users')) {
         $edit['access'] = REQUEST_TIME;
-      }
-      // Find the fields attached to this user.
-      $field_names = array();
-      list(, , $bundle) = entity_extract_ids('user', (object) $edit);
-      foreach (field_info_instances('user', $bundle) as $instance) {
-        $field = field_info_field_by_id($instance['field_id']);
-        $field_names[] = $field['field_name'];
-      }
-
-      foreach ($edit as $key => $value) {
-        // Form fields that don't pertain to the users, user_roles, or
-        // Field API are automatically serialized into the users.data
-        // column.
-        if (!in_array($key, array('roles', 'is_new', 'current_pass_required_values', 'current_pass')) && empty($user_fields[$key]) && empty($field_names[$key])) {
-          if ($value === NULL) {
-            unset($data[$key]);
-          }
-          else {
-            $data[$key] = $value;
-          }
-        }
       }
 
       // Process picture uploads.
@@ -422,7 +406,6 @@ function user_save($account, $edit = array(), $category = 'account') {
       }
       $edit['picture'] = empty($edit['picture']->fid) ? 0 : $edit['picture']->fid;
 
-      $edit['data'] = $data;
       // Do not allow 'uid' to be changed.
       $edit['uid'] = $account->uid;
       // Save changes to the user table.
@@ -521,22 +504,6 @@ function user_save($account, $edit = array(), $category = 'account') {
 
       user_module_invoke('insert', $edit, $user, $category);
       entity_invoke('insert', 'user', $user);
-
-      // Note, we wait with saving the data column to prevent module-handled
-      // fields from being saved there.
-      $data = array();
-      foreach ($edit as $key => $value) {
-        // Form fields that don't pertain to the users, user_roles, or
-        // Field API are automatically serialized into the user.data
-        // column.
-        if ((!in_array($key, array('roles', 'is_new'))) && (empty($user_fields[$key]) && empty($field_form[$key])) && ($value !== NULL)) {
-          $data[$key] = $value;
-        }
-      }
-      if (!empty($data)) {
-        $data_array = array('uid' => $user->uid, 'data' => $data);
-        drupal_write_record('users', $data_array, 'uid');
-      }
 
       // Save user roles.
       if (isset($edit['roles']) && is_array($edit['roles'])) {
@@ -1156,13 +1123,16 @@ function user_user_presave(&$edit, $account, $category) {
     elseif (!empty($edit['picture_delete'])) {
       $edit['picture'] = NULL;
     }
-    // Remove these values so they don't end up serialized in the data field.
-    $edit['picture_upload'] = NULL;
-    $edit['picture_delete'] = NULL;
-
     // Prepare user roles.
     if (isset($edit['roles'])) {
       $edit['roles'] = array_filter($edit['roles']);
+    }
+  }
+
+  // Move account cancellation information into $user->data.
+  foreach (array('user_cancel_method', 'user_cancel_notify') as $key) {
+    if (isset($edit[$key])) {
+      $edit['data'][$key] = $edit[$key];
     }
   }
 }
