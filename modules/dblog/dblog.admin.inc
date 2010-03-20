@@ -70,7 +70,7 @@ function dblog_overview() {
         $dblog->link,
       ),
       // Attributes for tr
-      'class' => array('dblog-' . preg_replace('/[^a-z]/i', '-', $dblog->type), $classes[$dblog->severity]),
+      'class' => array(drupal_html_class('dblog-' . $dblog->type), $classes[$dblog->severity]),
     );
   }
 
