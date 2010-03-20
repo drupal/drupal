@@ -1,19 +1,10 @@
 <?php
-// $Id: tracker.install,v 1.3 2009/12/04 16:49:47 dries Exp $
-
-/**
- * Implements hook_install().
- */
-function tracker_install() {
-  drupal_install_schema('tracker');
-}
+// $Id: tracker.install,v 1.4 2010/03/20 15:06:51 dries Exp $
 
 /**
  * Implements hook_uninstall().
  */
 function tracker_uninstall() {
-  drupal_uninstall_schema('tracker');
-
   variable_del('tracker_index_nid');
   variable_del('tracker_batch_size');
 }

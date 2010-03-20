@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.102 2010/03/09 11:39:07 dries Exp $
+// $Id: database.inc,v 1.103 2010/03/20 15:06:51 dries Exp $
 
 /**
  * @file
@@ -2477,9 +2477,7 @@ function db_next_id($existing_id = 0) {
  *   A Schema API table definition array.
  */
 function db_create_table($name, $table) {
-  if (!db_table_exists($name)) {
-    return Database::getConnection()->schema()->createTable($name, $table);
-  }
+  return Database::getConnection()->schema()->createTable($name, $table);
 }
 
 /**

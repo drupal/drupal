@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.456 2010/03/18 19:01:24 dries Exp $
+// $Id: system.install,v 1.457 2010/03/20 15:06:51 dries Exp $
 
 /**
  * @file
@@ -2273,11 +2273,6 @@ function system_update_7042() {
   // so that we can rename properly.
   db_drop_field('url_alias', 'source');
   db_drop_field('url_alias', 'alias');
-
-  // Add the cache_path table.
-  $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
-  db_create_table('cache_path', $schema['cache_path']);
 
   // Drop indexes.
   db_drop_index('url_alias', 'src_language_pid');
