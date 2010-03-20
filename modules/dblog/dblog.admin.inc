@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.35 2010/03/11 21:23:06 dries Exp $
+// $Id: dblog.admin.inc,v 1.36 2010/03/20 14:55:55 dries Exp $
 
 /**
  * @file
@@ -70,7 +70,7 @@ function dblog_overview() {
         $dblog->link,
       ),
       // Attributes for tr
-      'class' => array('dblog-' . preg_replace('/[^a-z]/i', '-', $dblog->type), $classes[$dblog->severity]),
+      'class' => array(drupal_html_class('dblog-' . $dblog->type), $classes[$dblog->severity]),
     );
   }
 
