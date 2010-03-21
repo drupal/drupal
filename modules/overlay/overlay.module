@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.12 2010/03/09 22:23:59 webchick Exp $
+// $Id: overlay.module,v 1.13 2010/03/21 03:47:32 webchick Exp $
 
 /**
  * @file
@@ -150,6 +150,7 @@ function overlay_library() {
     ),
     'dependencies' => array(
       array('system', 'ui.dialog'),
+      array('system', 'ui.position'),
       array('system', 'jquery-bbq'),
     ),
   );

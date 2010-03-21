@@ -1,0 +1,6 @@
+/* $Id: jquery.ui.progressbar.css,v 1.1 2010/03/21 03:47:32 webchick Exp $ */
+
+/* Progressbar
+----------------------------------*/
+.ui-progressbar { height:2em; text-align: left; }
+.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
