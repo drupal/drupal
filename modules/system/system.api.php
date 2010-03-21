@@ -1724,11 +1724,11 @@ function hook_file_move($file, $source) {
  * @see upload_file_references()
  */
 function hook_file_references($file) {
-  // If upload.module is still using a file, do not let other modules delete it.
-  $file_used = (bool) db_query_range('SELECT 1 FROM {upload} WHERE fid = :fid', 0, 1, array(':fid' => $file->fid))->fetchField();
-  if ($file_used) {
+  // If user.module is still using a file, do not let other modules delete it.
+  $count = (int) db_query('SELECT COUNT(picture) FROM {users} WHERE picture = :fid', array(':fid' => $file->fid))->fetchField();
+  if ($count) {
     // Return the name of the module and how many references it has to the file.
-    return array('upload' => $count);
+    return array('user' => $count);
   }
 }
 
