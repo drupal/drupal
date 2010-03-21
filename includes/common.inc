@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1129 2010/03/18 19:15:02 dries Exp $
+// $Id: common.inc,v 1.1130 2010/03/21 20:26:40 dries Exp $
 
 /**
  * @file
@@ -3669,7 +3669,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
         $js_element['#value_prefix'] = $embed_prefix;
         $js_element['#value'] = $item['data'];
         $js_element['#value_suffix'] = $embed_suffix;
-        $output .= theme('html_tag', array('element' => $js_element));
+        $processed[$index++] = theme('html_tag', array('element' => $js_element));
         break;
 
       case 'file':
