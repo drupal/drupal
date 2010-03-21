@@ -330,7 +330,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       ->condition('l.textgroup', 'default')
       ->execute();
     $url = 'admin/config/regional/translate/edit/' . $result->fetchObject()->lid;
-    $edit = array('translations['. $langcode .']' => $this->randomString());
+    $edit = array('translations['. $langcode .']' => $this->randomName());
     $this->drupalPost($url, $edit, t('Save translations'));
 
     // Trigger JavaScript translation parsing and building.
