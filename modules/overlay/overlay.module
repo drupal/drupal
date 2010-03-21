@@ -150,6 +150,7 @@ function overlay_library() {
     ),
     'dependencies' => array(
       array('system', 'ui.dialog'),
+      array('system', 'ui.position'),
       array('system', 'jquery-bbq'),
     ),
   );
