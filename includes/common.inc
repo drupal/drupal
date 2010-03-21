@@ -2635,6 +2635,12 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *   have any or all of the following keys:
  *   - 'type': The type of stylesheet being added. Available options are 'file',
  *     'inline' or 'external'. Defaults to 'file'.
+ *   - 'basename': Force a basename for the file being added. Modules are
+ *     expected to use stylesheets with unique filenames, but integration of
+ *     external libraries may make this impossible. The basename of
+ *     'modules/node/node.css' is 'node.css'. If the external library "node.js"
+ *     ships with a 'node.css', then a different, unique basename would be
+ *     'node.js.css'.
  *   - 'weight': The weight of the stylesheet specifies the order in which the
  *     CSS will appear when presented on the page. Available constants are:
  *     - CSS_SYSTEM: Any system-layer CSS.
@@ -2742,7 +2748,8 @@ function drupal_get_css($css = NULL) {
   $previous_item = array();
   foreach ($css as $key => $item) {
     if ($item['type'] == 'file') {
-      $basename = basename($item['data']);
+      // If defined, force a unique basename for this file.
+      $basename = isset($item['basename']) ? $item['basename'] : basename($item['data']);
       if (isset($previous_item[$basename])) {
         // Remove the previous item that shared the same base name.
         unset($css[$previous_item[$basename]]);
