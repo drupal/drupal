@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.34 2010/03/06 06:31:24 dries Exp $
+// $Id: image.module,v 1.35 2010/03/21 20:36:10 dries Exp $
 
 /**
  * @file
@@ -362,9 +362,9 @@ function image_image_default_styles() {
 function image_path_flush($path) {
   $styles = image_styles();
   foreach ($styles as $style) {
-    $path = image_style_path($style['name'], $path);
-    if (file_exists($path)) {
-      file_unmanaged_delete($path);
+    $image_path = image_style_path($style['name'], $path);
+    if (file_exists($image_path)) {
+      file_unmanaged_delete($image_path);
     }
   }
 }
