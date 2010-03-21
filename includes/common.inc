@@ -3669,7 +3669,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
         $js_element['#value_prefix'] = $embed_prefix;
         $js_element['#value'] = $item['data'];
         $js_element['#value_suffix'] = $embed_suffix;
-        $output .= theme('html_tag', array('element' => $js_element));
+        $processed[$index++] = theme('html_tag', array('element' => $js_element));
         break;
 
       case 'file':
