@@ -1,0 +1,40 @@
+<?php
+// $Id: theme_test.module,v 1.1 2010/03/21 04:05:24 webchick Exp $
+
+/**
+ * Implements hook_menu().
+ */
+function theme_test_menu() {
+  $items['theme-test/suggestion'] = array(
+    'title' => 'Suggestion',
+    'page callback' => '_theme_test_suggestion',
+    'access arguments' => array('access content'),
+    'theme callback' => '_theme_custom_theme',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Custom theme callback.
+ */
+function _theme_custom_theme() {
+  return 'test_theme';
+}
+
+/**
+ * Page callback, calls a theme hook suggestion.
+ */
+function _theme_test_suggestion() {
+  return theme(array('breadcrumb__suggestion', 'breadcrumb'), array());
+}
+
+/**
+ * Implements hook_preprocess_breadcrumb().
+ *
+ * Set a variable that can later be tested to see if this function ran.
+ */
+function theme_test_preprocess_breadcrumb(&$variables) {
+  $variables['theme_test_preprocess_breadcrumb'] = 1;
+}
