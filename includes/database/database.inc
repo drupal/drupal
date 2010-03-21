@@ -48,7 +48,6 @@
  * database servers, so that is abstracted into db_query_range() arguments.
  * Finally, note the PDO-based ability to foreach() over the result set.
  *
- *
  * All queries are passed as a prepared statement string. A
  * prepared statement is a "template" of a query that omits literal or variable
  * values in favor of placeholders. The values to place into those
@@ -98,7 +97,6 @@
  * considerably more secure against SQL injection than trying to remember
  * which values need quotation marks and string escaping and which don't.
  *
- *
  * INSERT, UPDATE, and DELETE queries need special care in order to behave
  * consistently across all different databases. Therefore, they use a special
  * object-oriented API for defining a query structurally. For example, rather
@@ -115,7 +113,6 @@
  * while also allowing optimizations such as multi-insert queries. UPDATE and
  * DELETE queries have a similar pattern.
  *
- *
  * Drupal also supports transactions, including a transparent fallback for
  * databases that do not support transactions. To start a new transaction,
  * simply call $txn = db_transaction(); in your own code. The transaction will
@@ -126,7 +123,6 @@
  * scope, that is, all relevant queries completed successfully.
  *
  * Example:
- *
  * @code
  * function my_transaction_function() {
  *   // The transaction opens here.
@@ -166,7 +162,6 @@
  *   }
  * }
  * @endcode
- *
  */
 
 
@@ -336,47 +331,39 @@ abstract class DatabaseConnection extends PDO {
    * Returns the default query options for any given query.
    *
    * A given query can be customized with a number of option flags in an
-   * associative array.
-   *
-   *   target - The database "target" against which to execute a query. Valid
+   * associative array:
+   * - target: The database "target" against which to execute a query. Valid
    *   values are "default" or "slave". The system will first try to open a
    *   connection to a database specified with the user-supplied key. If one
    *   is not available, it will silently fall back to the "default" target.
    *   If multiple databases connections are specified with the same target,
    *   one will be selected at random for the duration of the request.
-   *
-   *   fetch - This element controls how rows from a result set will be
+   * - fetch: This element controls how rows from a result set will be
    *   returned. Legal values include PDO::FETCH_ASSOC, PDO::FETCH_BOTH,
    *   PDO::FETCH_OBJ, PDO::FETCH_NUM, or a string representing the name of a
    *   class. If a string is specified, each record will be fetched into a new
    *   object of that class. The behavior of all other values is defined by PDO.
    *   See http://www.php.net/PDOStatement-fetch
-   *
-   *   return - Depending on the type of query, different return values may be
+   * - return: Depending on the type of query, different return values may be
    *   meaningful. This directive instructs the system which type of return
    *   value is desired. The system will generally set the correct value
    *   automatically, so it is extremely rare that a module developer will ever
    *   need to specify this value. Setting it incorrectly will likely lead to
    *   unpredictable results or fatal errors. Legal values include:
-   *
-   *     Database::RETURN_STATEMENT - Return the prepared statement object for
+   *   - Database::RETURN_STATEMENT: Return the prepared statement object for
    *     the query. This is usually only meaningful for SELECT queries, where
    *     the statement object is how one accesses the result set returned by the
    *     query.
-   *
-   *     Database::RETURN_AFFECTED - Return the number of rows affected by an
+   *   - Database::RETURN_AFFECTED: Return the number of rows affected by an
    *     UPDATE or DELETE query. Be aware that means the number of rows actually
    *     changed, not the number of rows matched by the WHERE clause.
-   *
-   *     Database::RETURN_INSERT_ID - Return the sequence ID (primary key)
+   *   - Database::RETURN_INSERT_ID: Return the sequence ID (primary key)
    *     created by an INSERT statement on a table that contains a serial
    *     column.
-   *
-   *     Database::RETURN_NULL - Do not return anything, as there is no
+   *   - Database::RETURN_NULL: Do not return anything, as there is no
    *     meaningful value to return. That is the case for INSERT queries on
    *     tables that do not contain a serial column.
-   *
-   *   throw_exception - By default, the database system will catch any errors
+   * - throw_exception: By default, the database system will catch any errors
    *   on a query as an Exception, log it, and then rethrow it so that code
    *   further up the call chain can take an appropriate action. To suppress
    *   that behavior and simply return NULL on failure, set this option to
@@ -548,7 +535,6 @@ abstract class DatabaseConnection extends PDO {
    *   DatabaseStatementInterface may also be passed in order to allow calling
    *   code to manually bind variables to a query. If a
    *   DatabaseStatementInterface is passed, the $args array will be ignored.
-   *
    *   It is extremely rare that module code will need to pass a statement
    *   object to this method. It is used primarily for database drivers for
    *   databases that require special LOB field handling.
@@ -819,8 +805,7 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Returns a DatabaseSchema object for manipulating the schema of this
-   * database.
+   * Returns a DatabaseSchema object for manipulating the schema.
    *
    * This method will lazy-load the appropriate schema library file.
    *
@@ -1751,8 +1736,7 @@ class DatabaseTransaction {
  * @code
  * class DatabaseStatement_oracle extends PDOStatement implements DatabaseStatementInterface {}
  * @endcode
- *
- * …or implement their own class, but in that case they will also have to
+ * or implement their own class, but in that case they will also have to
  * implement the Iterator or IteratorArray interfaces before
  * DatabaseStatementInterface:
  * @code
@@ -1802,12 +1786,12 @@ interface DatabaseStatementInterface extends Traversable {
    *   One of the PDO::FETCH_* constants.
    * @param $a1
    *   An option depending of the fetch mode specified by $mode:
-   *    - for PDO::FETCH_COLUMN, it is the index of the column to fetch,
-   *    - for PDO::FETCH_CLASS, it is the name of the class to create, and
-   *    - for PDO::FETCH_INTO, it is the object to add the data to.
+   *   - for PDO::FETCH_COLUMN, the index of the column to fetch
+   *   - for PDO::FETCH_CLASS, the name of the class to create
+   *   - for PDO::FETCH_INTO, the object to add the data to
    * @param $a2
-   *  In case of when mode is PDO::FETCH_CLASS, the optional arguments to
-   *  pass to the constructor.
+   *   If $mode is PDO::FETCH_CLASS, the optional arguments to pass to the
+   *   constructor.
    */
   // public function setFetchMode($mode, $a1 = NULL, $a2 = array());
 
@@ -2467,7 +2451,6 @@ function db_next_id($existing_id = 0) {
  * @{
  */
 
-
 /**
  * Creates a new table from a Drupal table definition.
  *
@@ -2784,7 +2767,7 @@ function db_change_field($table, $field, $field_new, $spec, $keys_new = array())
  * @} End of "ingroup schemaapi".
  */
 
- /**
+/**
  * Sets a session variable specifying the lag time for ignoring a slave server.
  */
 function db_ignore_slave() {
