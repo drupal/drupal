@@ -9,13 +9,18 @@
 /**
  * Unit tests for the Theme API.
  */
-class TemplateUnitTest extends DrupalWebTestCase {
+class ThemeUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Theme API',
-      'description' => 'Test low-level theme template functions.',
+      'description' => 'Test low-level theme functions.',
       'group' => 'Theme',
     );
+  }
+
+  function setUp() {
+    parent::setUp('theme_test');
+    theme_enable(array('test_theme'));
   }
 
   /**
@@ -38,6 +43,14 @@ class TemplateUnitTest extends DrupalWebTestCase {
     $args = array('node', "1\0");
     $suggestions = theme_get_suggestions($args, 'page');
     $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\0 from suggestions'));
+  }
+  
+  /**
+  * Preprocess functions for the base hook should run even for suggestion implementations.
+  */
+  function testPreprocessForSuggestions() {
+    $this->drupalGet('theme-test/suggestion');
+    $this->assertText('test_theme_breadcrumb__suggestion: 1', t('Theme hook suggestion ran with data available from a preprocess function for the base hook.'));
   }
 
   /**
