@@ -362,9 +362,9 @@ function image_image_default_styles() {
 function image_path_flush($path) {
   $styles = image_styles();
   foreach ($styles as $style) {
-    $path = image_style_path($style['name'], $path);
-    if (file_exists($path)) {
-      file_unmanaged_delete($path);
+    $image_path = image_style_path($style['name'], $path);
+    if (file_exists($image_path)) {
+      file_unmanaged_delete($image_path);
     }
   }
 }
