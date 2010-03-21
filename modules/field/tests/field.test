@@ -1557,23 +1557,21 @@ class FieldFormTestCase extends FieldTestCase {
       do {
         $weight = mt_rand(-$delta_range, $delta_range);
       } while (in_array($weight, $weights));
-      $weights[] = $weight;
       $value = mt_rand(1, 127);
       $edit["$this->field_name[$langcode][$delta][value]"] = $value;
       $edit["$this->field_name[$langcode][$delta][_weight]"] = $weight;
       // We'll need three slightly different formats to check the values.
-      $values[$weight] = $value;
+      $values[$delta] = $value;
+      $weights[$delta] = $weight;
       $field_values[$weight]['value'] = (string)$value;
       $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
     }
 
     // Press 'add more' button -> 4 widgets
     $this->drupalPost(NULL, $edit, t('Add another item'));
-    ksort($values);
-    $values = array_values($values);
     for ($delta = 0; $delta <= $delta_range; $delta++) {
       $this->assertFieldByName("$this->field_name[$langcode][$delta][value]", $values[$delta], "Widget $delta is displayed and has the right value");
-      $this->assertFieldByName("$this->field_name[$langcode][$delta][_weight]", $delta, "Widget $delta has the right weight");
+      $this->assertFieldByName("$this->field_name[$langcode][$delta][_weight]", $weights[$delta], "Widget $delta has the right weight");
     }
     ksort($pattern);
     $pattern = implode('.*', array_values($pattern));
@@ -1627,12 +1625,12 @@ class FieldFormTestCase extends FieldTestCase {
       do {
         $weight = mt_rand(-$delta_range, $delta_range);
       } while (in_array($weight, $weights));
-      $weights[] = $weight;
       $value = mt_rand(1, 127);
       $edit["$this->field_name[$langcode][$delta][value]"] = $value;
       $edit["$this->field_name[$langcode][$delta][_weight]"] = $weight;
       // We'll need three slightly different formats to check the values.
-      $values[$weight] = $value;
+      $values[$delta] = $value;
+      $weights[$delta] = $weight;
       $field_values[$weight]['value'] = (string)$value;
       $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
     }
@@ -1641,11 +1639,9 @@ class FieldFormTestCase extends FieldTestCase {
     $commands = $this->drupalPostAJAX(NULL, $edit, $this->field_name . '_add_more');
     $this->content = $commands[1]['data'];
 
-    ksort($values);
-    $values = array_values($values);
     for ($delta = 0; $delta <= $delta_range; $delta++) {
       $this->assertFieldByName("$this->field_name[$langcode][$delta][value]", $values[$delta], "Widget $delta is displayed and has the right value");
-      $this->assertFieldByName("$this->field_name[$langcode][$delta][_weight]", $delta, "Widget $delta has the right weight");
+      $this->assertFieldByName("$this->field_name[$langcode][$delta][_weight]", $weights[$delta], "Widget $delta has the right weight");
     }
     ksort($pattern);
     $pattern = implode('.*', array_values($pattern));

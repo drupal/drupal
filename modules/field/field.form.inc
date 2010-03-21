@@ -131,11 +131,6 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
  * - drag-n-drop value reordering
  */
 function field_multiple_value_form($field, $instance, $langcode, $items, &$form, &$form_state) {
-  // This form has its own multistep persistance.
-  if ($form_state['rebuild']) {
-    $form_state['input'] = array();
-  }
-
   $field_name = $field['field_name'];
 
   // Determine the number of widgets to display.

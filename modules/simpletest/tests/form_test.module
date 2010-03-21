@@ -922,3 +922,30 @@ function form_test_programmatic_form_validate($form, &$form_state) {
 function form_test_programmatic_form_submit($form, &$form_state) {
   $form_state['storage']['programmatic_form_submit'] = $form_state['values']['submitted_field'];
 }
+
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the registration form.
+ */
+function form_test_form_user_register_form_alter(&$form, &$form_state) {
+  $form['test_rebuild'] = array(
+    '#type' => 'submit',
+    '#value' => t('Rebuild'),
+    '#submit' => array('form_test_user_register_form_rebuild'),
+  );
+  // If requested, add the test field by attaching the node page form.
+  if (!empty($_REQUEST['field'])) {
+    $node = (object)array('type' => 'page');
+    field_attach_form('node', $node, $form, $form_state);
+    // The form API requires the builder function to set rebuilding, so do so.
+    $form['#builder_function'] = 'form_test_user_register_form_rebuild';
+  }
+}
+
+/**
+ * Submit callback that just lets the form rebuild.
+ */
+function form_test_user_register_form_rebuild($form, &$form_state) {
+  drupal_set_message('Form rebuilt.');
+  $form_state['rebuild'] = TRUE;
+}
