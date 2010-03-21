@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.903 2010/03/21 03:47:32 webchick Exp $
+// $Id: system.module,v 1.904 2010/03/21 21:20:43 dries Exp $
 
 /**
  * @file
@@ -207,7 +207,7 @@ function system_permission() {
     ),
     'administer site configuration' => array(
       'title' => t('Administer site configuration'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
     'administer themes' => array(
       'title' => t('Administer themes'),

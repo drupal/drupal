@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1140 2010/03/21 20:28:28 dries Exp $
+// $Id: user.module,v 1.1141 2010/03/21 21:20:43 dries Exp $
 
 /**
  * @file
@@ -108,6 +108,10 @@ function user_theme() {
     ),
     'user_filters' => array(
       'render element' => 'form',
+      'file' => 'user.admin.inc',
+    ),
+    'user_permission_description' => array(
+      'variables' => array('permission_item' => NULL, 'hide' => NULL),
       'file' => 'user.admin.inc',
     ),
     'user_signature' => array(
@@ -735,11 +739,11 @@ function user_permission() {
   return array(
     'administer permissions' =>  array(
       'title' => t('Administer permissions'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
     'administer users' => array(
       'title' => t('Administer users'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
     'access user profiles' => array(
       'title' => t('View user profiles'),
@@ -753,7 +757,7 @@ function user_permission() {
     ),
     'select account cancellation method' => array(
       'title' => t('Select method for cancelling own account'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
   );
 }

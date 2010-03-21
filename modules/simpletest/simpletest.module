@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.89 2010/01/15 04:16:57 dries Exp $
+// $Id: simpletest.module,v 1.90 2010/03/21 21:20:43 dries Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function simpletest_permission() {
   return array(
     'administer unit tests' => array(
       'title' => t('Administer tests'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
   );
 }
