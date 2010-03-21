@@ -31,7 +31,7 @@ function php_permission() {
   return array(
     'use PHP for settings' => array(
       'title' => t('Use PHP for settings'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
   );
 }

@@ -1410,11 +1410,11 @@ function node_permission() {
   $perms = array(
     'administer content types' => array(
       'title' => t('Administer content types'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
     'administer nodes' => array(
       'title' => t('Administer content'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
     'access content' => array(
       'title' => t('View published content'),
@@ -1424,7 +1424,8 @@ function node_permission() {
     ),
     'bypass node access' => array(
       'title' => t('Bypass content access control'),
-      'description' => t('View, edit and delete all content regardless of permission restrictions. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => t('View, edit and delete all content regardless of permission restrictions.'),
+      'restrict access' => TRUE,
     ),
     'view revisions' => array(
       'title' => t('View content revisions'),

@@ -110,6 +110,10 @@ function user_theme() {
       'render element' => 'form',
       'file' => 'user.admin.inc',
     ),
+    'user_permission_description' => array(
+      'variables' => array('permission_item' => NULL, 'hide' => NULL),
+      'file' => 'user.admin.inc',
+    ),
     'user_signature' => array(
       'variables' => array('signature' => NULL),
     ),
@@ -735,11 +739,11 @@ function user_permission() {
   return array(
     'administer permissions' =>  array(
       'title' => t('Administer permissions'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
     'administer users' => array(
       'title' => t('Administer users'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
     'access user profiles' => array(
       'title' => t('View user profiles'),
@@ -753,7 +757,7 @@ function user_permission() {
     ),
     'select account cancellation method' => array(
       'title' => t('Select method for cancelling own account'),
-      'description' => drupal_placeholder(array('text' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'restrict access' => TRUE,
     ),
   );
 }

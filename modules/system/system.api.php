@@ -1012,13 +1012,22 @@ function hook_system_info_alter(&$info, $file, $type) {
  * For a detailed usage example, see page_example.module.
  *
  * @return
- *   An array of which permission names are the keys and their corresponding
- *   values are descriptions of each permission.
- *   The permission names (keys of the array) must not be wrapped with
- *   the t() function, since the string extractor takes care of
- *   extracting permission names defined in the perm hook for
- *   translation. The permission descriptions (values of the array)
- *   should be wrapped in the t() function so they can be translated.
+ *   An array whose keys are permission names and whose corresponding values
+ *   are arrays containing the following key-value pairs:
+ *   - title: The human-readable name of the permission, to be shown on the
+ *     permission administration page. This should be wrapped in the t()
+ *     function so it can be translated.
+ *   - description: (optional) A description of what the permission does. This
+ *     should be wrapped in the t() function so it can be translated.
+ *   - restrict access: (optional) A boolean which can be set to TRUE to
+ *     indicate that site administrators should restrict access to this
+ *     permission to trusted users. This should be used for permissions that
+ *     have inherent security risks across a variety of potential use cases
+ *     (for example, the "administer filters" and "bypass node access"
+ *     permissions provided by Drupal core). When set to TRUE, a standard
+ *     warning message defined in user_admin_permissions() will be associated
+ *     with the permission and displayed with it on the permission
+ *     administration page. Defaults to FALSE.
  */
 function hook_permission() {
   return array(
