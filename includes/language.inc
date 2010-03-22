@@ -106,7 +106,7 @@ function language_url_rewrite(&$path, &$options) {
   global $language;
 
   // Only modify relative (insite) URLs.
-  if (!$options['external']) {
+  if (empty($options['external'])) {
 
     // Language can be passed as an option, or we go for current language.
     if (!isset($options['language'])) {
