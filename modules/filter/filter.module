@@ -470,18 +470,22 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
 }
 
 /**
- * Generate a selector for choosing a format in a form.
+ * Generates a selector for choosing a format in a form.
  *
- * @ingroup forms
- * @see filter_form_validate()
  * @param $value
- *   The ID of the format that is currently selected.
+ *   The ID of the format that is currently selected; uses the default format
+ *   if not provided.
  * @param $weight
- *   The weight of the input format.
+ *   The weight of the form element within the form.
  * @param $parents
- *   Required when defining multiple input formats on a single node or having a different parent than 'format'.
+ *   The parents array of the element. Required when defining multiple text
+ *   formats on a single form or having a different parent than 'format'.
+ *
  * @return
- *   HTML for the form element.
+ *   Form API array for the form element.
+ *
+ * @see filter_form_validate()
+ * @ingroup forms
  */
 function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = array('format')) {
   $value = filter_resolve_format($value);
@@ -528,6 +532,11 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
   return $form;
 }
 
+/**
+ * Validation callback for filter elements in a form.
+ *
+ * @see filter_form().
+ */
 function filter_form_validate($form) {
   foreach (element_children($form) as $key) {
     if ($form[$key]['#value'] == $form[$key]['#return_value']) {
