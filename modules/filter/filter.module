@@ -377,9 +377,16 @@ function filter_list_format($format) {
   if (!isset($filters[$format])) {
     $result = db_query("SELECT * FROM {filters} WHERE format = %d ORDER BY weight, module, delta", $format);
     if (db_affected_rows($result) == 0 && !db_result(db_query("SELECT 1 FROM {filter_formats} WHERE format = %d", $format))) {
-      // The format has no filters and does not exist, use the default input
-      // format.
-      $filters[$format] = filter_list_format(variable_get('filter_default_format', 1));
+      // The format has no filters and does not exist. Use the default input
+      // format. Do not infinitely recurse if the default input format
+      // does not exist,
+      $default = variable_get('filter_default_format', 1);
+      if ($default != $format) {
+        $filters[$format] = filter_list_format($default);
+      }
+      else {
+        $filters[$format] = array();
+      }
     }
     else {
       $filters[$format] = array();
