@@ -208,16 +208,12 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
     $claimed_id = $identity = 'http://specs.openid.net/auth/2.0/identifier_select';
   }
   else {
-    // Look for OP-Local Identifier.
-    if (!empty($service['localid'])) {
-      $identity = $service['localid'];
+    // Use Claimed ID and/or OP-Local Identifier from service description, if
+    // available.
+    if (!empty($service['claimed_id'])) {
+      $claimed_id = $service['claimed_id'];
     }
-    elseif (!empty($service['delegate'])) {
-      $identity = $service['delegate'];
-    }
-    else {
-      $identity = $claimed_id;
-    }
+    $identity = !empty($service['identity']) ? $service['identity'] : $claimed_id;
   }
   $request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $service);
 
@@ -258,12 +254,21 @@ function openid_complete($response = array()) {
       }
       else {
         if (openid_verify_assertion($service['uri'], $response)) {
+          // OpenID Authentication, section 7.3.2.3 and Appendix A.5:
+          // The CanonicalID specified in the XRDS document must be used as the
+          // account key. We rely on the XRI proxy resolver to verify that the
+          // provider is authorized to respond on behalf of the specified
+          // identifer (required per Extensible Resource Identifier (XRI)
+          // (XRI) Resolution Version 2.0, section 14.3):
+          if (!empty($service['claimed_id'])) {
+            $response['openid.claimed_id'] = $service['claimed_id'];
+          }
           // OpenID Authentication, section 11.2:
           // If the returned Claimed Identifier is different from the one sent
           // to the OpenID Provider, we need to do discovery on the returned
-          // identififer to make sure that the provider is authorized to respond
+          // identifier to make sure that the provider is authorized to respond
           // on behalf of this.
-          if ($service['version'] == 2 && $response['openid.claimed_id'] != openid_normalize($claimed_id)) {
+          elseif ($service['version'] == 2 && $response['openid.claimed_id'] != openid_normalize($claimed_id)) {
             $services = openid_discovery($response['openid.claimed_id']);
             $uris = array();
             foreach ($services as $discovered_service) {
@@ -338,8 +343,14 @@ function openid_openid_discovery_method_info() {
  */
 function _openid_xri_discovery($claimed_id) {
   if (_openid_is_xri($claimed_id)) {
-    $xrds_url = 'http://xri.net/' . $claimed_id;
-    _openid_xrds_discovery($xrds_url);
+    // Resolve XRI using a proxy resolver (Extensible Resource Identifier (XRI)
+    // Resolution Version 2.0, section 11.2).
+    $xrds_url = variable_get('xri_proxy_resolver', 'http://xri.net/') . rawurlencode($claimed_id) . '?_xrd_r=application/xrds+xml';
+    $services = _openid_xrds_discovery($xrds_url);
+    foreach ($services as &$service) {
+      $service['claimed_id'] = openid_normalize((string)$service['xrd']->children(OPENID_NS_XRD)->CanonicalID);
+    }
+    return $services;
   }
 }
 
@@ -362,7 +373,7 @@ function _openid_xrds_discovery($claimed_id) {
     if (!isset($result->error)) {
       if (isset($result->headers['Content-Type']) && preg_match("/application\/xrds\+xml/", $result->headers['Content-Type'])) {
         // Parse XML document to find URL
-        $services = xrds_parse($result->data);
+        $services = _openid_xrds_parse($result->data);
       }
       else {
         $xrds_url = NULL;
@@ -377,7 +388,7 @@ function _openid_xrds_discovery($claimed_id) {
           $headers = array('Accept' => 'application/xrds+xml');
           $xrds_result = drupal_http_request($xrds_url, array('headers' => $headers));
           if (!isset($xrds_result->error)) {
-            $services = xrds_parse($xrds_result->data);
+            $services = _openid_xrds_parse($xrds_result->data);
           }
         }
       }
@@ -386,19 +397,19 @@ function _openid_xrds_discovery($claimed_id) {
       if (count($services) == 0) {
         // Look for 2.0 links
         $uri = _openid_link_href('openid2.provider', $result->data);
-        $delegate = _openid_link_href('openid2.local_id', $result->data);
+        $identity = _openid_link_href('openid2.local_id', $result->data);
         $type = 'http://specs.openid.net/auth/2.0/signon';
 
         // 1.x links
         if (empty($uri)) {
           $uri = _openid_link_href('openid.server', $result->data);
-          $delegate = _openid_link_href('openid.delegate', $result->data);
+          $identity = _openid_link_href('openid.delegate', $result->data);
           $type = 'http://openid.net/signon/1.1';
         }
         if (!empty($uri)) {
           $services[] = array(
             'uri' => $uri,
-            'delegate' => $delegate,
+            'identity' => $identity,
             'types' => array($type),
           );
         }
@@ -432,9 +443,9 @@ function _openid_google_user_discovery($claimed_id) {
     $xrds_url = $matches[1];
     $services = _openid_xrds_discovery($xrds_url);
 
-    foreach ($services as $service) {
-      if (in_array('http://www.iana.org/assignments/relation/describedby', $service['types']) && !empty($service['additional']['URITEMPLATE'])) {
-        $template = $service['additional']['URITEMPLATE'];
+    foreach ($services as $i => $service) {
+      if (in_array('http://www.iana.org/assignments/relation/describedby', $service['types']) && $service['service']->children(OPENID_NS_GOOGLE)->URITemplate) {
+        $template = (string)$service['service']->children(OPENID_NS_GOOGLE)->URITemplate;
         $xrds_url = str_replace('{%uri}', rawurlencode($claimed_id), $template);
         return _openid_xrds_discovery($xrds_url);
       }

@@ -69,10 +69,29 @@ function openid_test_menu() {
  */
 function openid_test_yadis_xrds() {
   if ($_SERVER['HTTP_ACCEPT'] == 'application/xrds+xml') {
+    // Only respond to XRI requests for one specific XRI. The is used to verify
+    // that the XRI has been properly encoded. The "+" sign in the _xrd_r query
+    // parameter is decoded to a space by PHP.
+    if (arg(3) == 'xri') {
+      if (variable_get('clean_url', 0)) {
+        if (arg(4) != '@example*résumé;%25' || $_GET['_xrd_r'] != 'application/xrds xml') {
+          drupal_not_found();
+        }
+      }
+      else {
+        // Drupal cannot properly emulate an XRI proxy resolver using unclean
+        // URLs, so the arguments gets messed up.
+        if (arg(4) . '/' . arg(5) != '@example*résumé;%25?_xrd_r=application/xrds xml') {
+          drupal_not_found();
+        }
+      }
+    }
     drupal_add_http_header('Content-Type', 'application/xrds+xml');
     print '<?xml version="1.0" encoding="UTF-8"?>
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)">
         <XRD>
+          <ProviderID>xri://@</ProviderID>
+          <CanonicalID>http://example.com/user</CanonicalID>
           <Service>
             <Type>http://example.com/this-is-ignored</Type>
           </Service>
@@ -102,7 +121,7 @@ function openid_test_yadis_xrds() {
           </Service>';
     }
     print '
-        <XRD>
+        </XRD>
       </xrds:XRDS>';
   }
   else {

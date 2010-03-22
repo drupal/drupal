@@ -61,6 +61,16 @@ define('OPENID_NS_SREG', 'http://openid.net/extensions/sreg/1.1');
 define('OPENID_NS_AX', 'http://openid.net/srv/ax/1.0');
 
 /**
+ * Extensible Resource Descriptor documents.
+ */
+define('OPENID_NS_XRD', 'xri://$xrd*($v*2.0)');
+
+/**
+ * OpenID IDP for Google hosted domains.
+ */
+define('OPENID_NS_GOOGLE', 'http://namespace.google.com/openid/xmlns');
+
+/**
  * Performs an HTTP 302 redirect (for the 1.x protocol).
  */
 function openid_redirect_http($url, $message) {
@@ -109,6 +119,49 @@ function openid_redirect_form($form, &$form_state, $url, $message) {
 }
 
 /**
+ * Parse an XRDS document.
+ *
+ * @param $raw_xml
+ *   A string containing the XRDS document.
+ * @return
+ *   An array of service entries.
+ */
+function _openid_xrds_parse($raw_xml) {
+  $services = array();
+  try {
+    $xml = @new SimpleXMLElement($raw_xml);
+    foreach ($xml->children(OPENID_NS_XRD)->XRD as $xrd) {
+      foreach ($xrd->children(OPENID_NS_XRD)->Service as $service_element) {
+        $service = array(
+          'priority' => $service_element->attributes()->priority ? (int)$service_element->attributes()->priority : PHP_INT_MAX,
+          'types' => array(),
+          'uri' => (string)$service_element->children(OPENID_NS_XRD)->URI,
+          'service' => $service_element,
+          'xrd' => $xrd,
+        );
+        foreach ($service_element->Type as $type) {
+          $service['types'][] = (string)$type;
+        }
+        if ($service_element->children(OPENID_NS_XRD)->Delegate) {
+          $service['identity'] = (string)$service_element->children(OPENID_NS_XRD)->Delegate;
+        }
+        if ($service_element->children(OPENID_NS_XRD)->LocalID) {
+          $service['identity'] = (string)$service_element->children(OPENID_NS_XRD)->LocalID;
+        }
+        else {
+          $service['identity'] = FALSE;
+        }
+        $services[] = $service;
+      }
+    }
+  }
+  catch (Exception $e) {
+    // Invalid XML.
+  }
+  return $services;
+}
+
+/**
  * Select a service element.
  *
  * The procedure is described in OpenID Authentication 2.0, section 7.3.2.
@@ -153,6 +206,12 @@ function _openid_select_service(array $services) {
         }
       }
     }
+  }
+
+  if ($selected_service) {
+    // Unset SimpleXMLElement instances that cannot be saved in $_SESSION.
+    unset($selected_service['xrd']);
+    unset($selected_service['service']);
   }
 
   return $selected_service;
