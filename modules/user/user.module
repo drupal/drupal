@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1141 2010/03/21 21:20:43 dries Exp $
+// $Id: user.module,v 1.1142 2010/03/22 18:55:45 dries Exp $
 
 /**
  * @file
@@ -3461,6 +3461,16 @@ function user_cookie_save(array $values, array $fields = array('name', 'mail', '
       setrawcookie('Drupal.visitor.' . $field, rawurlencode($values[$field]), REQUEST_TIME + 31536000, '/');
     }
   }
+}
+
+/**
+ * Delete a visitor information cookie.
+ *
+ * @param $cookie_name
+ *   A cookie name such as 'homepage'.
+ */
+function user_cookie_delete($cookie_name) {
+  setrawcookie('Drupal.visitor.' . $cookie_name, '', REQUEST_TIME - 3600, '/');
 }
 
 /**
