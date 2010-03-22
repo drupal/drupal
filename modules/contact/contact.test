@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.42 2010/02/17 04:39:49 webchick Exp $
+// $Id: contact.test,v 1.43 2010/03/22 17:52:58 webchick Exp $
 
 /**
  * Test the sitewide contact form.
@@ -166,15 +166,15 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Set up three categories, 2 with an auto-reply and one without.
-    $foo_autoreply = $this->randomString(40);
-    $bar_autoreply = $this->randomString(40);
+    $foo_autoreply = $this->randomName(40);
+    $bar_autoreply = $this->randomName(40);
     $this->addCategory('foo', 'foo@example.com', $foo_autoreply, FALSE);
     $this->addCategory('bar', 'bar@example.com', $bar_autoreply, FALSE);
     $this->addCategory('no_autoreply', 'bar@example.com', '', FALSE);
 
     // Test the auto-reply for category 'foo'.
     $email = $this->randomName(32) . '@example.com';
-    $subject = $this->randomString(64);
+    $subject = $this->randomName(64);
     $this->submitContact($this->randomName(16), $email, $subject, 2, $this->randomString(128));
 
     // We are testing the auto-reply, so there should be one e-mail going to the sender.
