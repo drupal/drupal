@@ -76,6 +76,30 @@ function openid_user_insert(&$edit, $account, $category) {
 }
 
 /**
+ * Implements hook_user_login().
+ *
+ * Save openid_identifier to visitor cookie.
+ */
+function openid_user_login(&$edit, $account) {
+  if (isset($_SESSION['openid'])) {
+    // The user has logged in via OpenID.
+    user_cookie_save($_SESSION['openid']['user_login_values'], array('openid_identifier'));
+    unset($_SESSION['openid']);
+  }
+}
+
+/**
+ * Implements hook_user_logout().
+ *
+ * Delete any openid_identifier in visitor cookie.
+ */
+function openid_user_logout($account) {
+  if (isset($_COOKIE['Drupal_visitor_openid_identifier'])) {
+    user_cookie_delete('openid_identifier');
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function openid_form_user_login_block_alter(&$form, &$form_state) {
@@ -90,8 +114,9 @@ function openid_form_user_login_alter(&$form, &$form_state) {
 }
 
 function _openid_user_login_form_alter(&$form, &$form_state) {
-  drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css');
-  drupal_add_js(drupal_get_path('module', 'openid') . '/openid.js');
+  $form['#attached']['css'][] = drupal_get_path('module', 'openid') . '/openid.css';
+  $form['#attached']['js'][] = drupal_get_path('module', 'openid') . '/openid.js';
+  $form['#attached']['library'][] = array('system', 'cookie');
   if (!empty($form_state['input']['openid_identifier'])) {
     $form['name']['#required'] = FALSE;
     $form['pass']['#required'] = FALSE;

@@ -5,14 +5,21 @@ Drupal.behaviors.openid = {
   attach: function (context) {
     var loginElements = $('.form-item-name, .form-item-pass, li.openid-link');
     var openidElements = $('.form-item-openid-identifier, li.user-link');
+    var cookie = $.cookie('Drupal.visitor.openid_identifier');
 
     // This behavior attaches by ID, so is only valid once on a page.
-    if (!$('#edit-openid-identifier.openid-processed').size() && $('#edit-openid-identifier').val()) {
-      $('#edit-openid-identifier').addClass('openid-processed');
-      loginElements.hide();
-      // Use .css('display', 'block') instead of .show() to be Konqueror friendly.
-      openidElements.css('display', 'block');
+    if (!$('#edit-openid-identifier.openid-processed').size()) {
+      if (cookie) {
+        $('#edit-openid-identifier').val(cookie);
+      }
+      if ($('#edit-openid-identifier').val()) {
+        $('#edit-openid-identifier').addClass('openid-processed');
+        loginElements.hide();
+        // Use .css('display', 'block') instead of .show() to  Konqueror friendly.
+        openidElements.css('display', 'block');
+      }
     }
+
     $('li.openid-link:not(.openid-processed)', context)
       .addClass('openid-processed')
       .click(function () {

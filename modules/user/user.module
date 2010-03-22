@@ -3464,6 +3464,16 @@ function user_cookie_save(array $values, array $fields = array('name', 'mail', '
 }
 
 /**
+ * Delete a visitor information cookie.
+ *
+ * @param $cookie_name
+ *   A cookie name such as 'homepage'.
+ */
+function user_cookie_delete($cookie_name) {
+  setrawcookie('Drupal.visitor.' . $cookie_name, '', REQUEST_TIME - 3600, '/');
+}
+
+/**
  * Implements hook_rdf_mapping().
  */
 function user_rdf_mapping() {
