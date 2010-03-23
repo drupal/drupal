@@ -1529,10 +1529,11 @@ function user_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => -5,
   );
-  $items['admin/people/permissions/roles/edit'] = array(
+  $items['admin/people/permissions/roles/edit/%user_role'] = array(
     'title' => 'Edit role',
-    'page arguments' => array('user_admin_role'),
-    'access arguments' => array('administer permissions'),
+    'page arguments' => array('user_admin_role', 5),
+    'access callback' => 'user_role_edit_access',
+    'access arguments' => array(5),
     'type' => MENU_CALLBACK,
   );
 
@@ -2532,22 +2533,45 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
 }
 
 /**
- * Fetch a user role from database.
+ * Fetches a user role by role ID.
  *
- * @param $role
- *   A string with the role name, or an integer with the role ID.
+ * @param $rid
+ *   An integer representing the role ID.
+ *
  * @return
- *   A fully-loaded role object if a role with the given name or ID
- *   exists, FALSE otherwise.
+ *   A fully-loaded role object if a role with the given ID exists, or FALSE
+ *   otherwise.
+ *
+ * @see user_role_load_by_name()
  */
-function user_role_load($role) {
-  $field = is_int($role) ? 'rid' : 'name';
+function user_role_load($rid) {
   return db_select('role', 'r')
     ->fields('r')
-    ->condition($field, $role)
+    ->condition('rid', $rid)
     ->execute()
     ->fetchObject();
 }
+
+/**
+ * Fetches a user role by role name.
+ *
+ * @param $role_name
+ *   A string representing the role name.
+ *
+ * @return
+ *   A fully-loaded role object if a role with the given name exists, or FALSE
+ *   otherwise.
+ *
+ * @see user_role_load()
+ */
+function user_role_load_by_name($role_name) {
+  return db_select('role', 'r')
+    ->fields('r')
+    ->condition('name', $role_name)
+    ->execute()
+    ->fetchObject();
+}
+
 /**
  * Save a user role to the database.
  *
@@ -2588,7 +2612,12 @@ function user_role_save($role) {
  *   A string with the role name, or an integer with the role ID.
  */
 function user_role_delete($role) {
-  $role = user_role_load($role);
+  if (is_int($role)) {
+    $role = user_role_load($role);
+  }
+  else {
+    $role = user_role_load_by_name($role);
+  }
 
   db_delete('role')
     ->condition('rid', $role->rid)
@@ -2606,6 +2635,18 @@ function user_role_delete($role) {
   // Clear the user access cache.
   drupal_static_reset('user_access');
   drupal_static_reset('user_role_permissions');
+}
+
+/**
+ * Menu access callback for user role editing.
+ */
+function user_role_edit_access($role) {
+  // Prevent the system-defined roles from being altered or removed.
+  if ($role->rid == DRUPAL_ANONYMOUS_RID || $role->rid == DRUPAL_AUTHENTICATED_RID) {
+    return FALSE;
+  }
+
+  return user_access('administer permissions');
 }
 
 /**

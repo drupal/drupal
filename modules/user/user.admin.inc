@@ -803,19 +803,19 @@ function theme_user_permission_description($variables) {
 /**
  * Menu callback: administer roles.
  *
+ * @param $role
+ *   A user role object, as returned from user_role_load(). This represents the
+ *   role which will be edited. If not set, a new role will be added instead.
+ *
  * @ingroup forms
+ * @see user_role_load()
  * @see user_admin_role_validate()
  * @see user_admin_role_submit()
  * @see theme_user_admin_new_role()
  */
-function user_admin_role() {
-  $rid = arg(5);
-  if ($rid) {
-    if ($rid == DRUPAL_ANONYMOUS_RID || $rid == DRUPAL_AUTHENTICATED_RID) {
-      drupal_goto('admin/people/permissions/roles');
-    }
+function user_admin_role($form, &$form_state, $role = NULL) {
+  if (!empty($role)) {
     // Display the edit role form.
-    $role = db_query('SELECT * FROM {role} WHERE rid = :rid', array(':rid' => $rid))->fetchObject();
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Role name'),
@@ -827,7 +827,7 @@ function user_admin_role() {
     );
     $form['rid'] = array(
       '#type' => 'value',
-      '#value' => $rid,
+      '#value' => $role->rid,
     );
     $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
     $form['actions']['submit'] = array(
@@ -855,16 +855,19 @@ function user_admin_role() {
   return $form;
 }
 
+/**
+ * Form validation handler for the user_admin_role() form.
+ */
 function user_admin_role_validate($form, &$form_state) {
-  if ($form_state['values']['name']) {
+  if (!empty($form_state['values']['name'])) {
     if ($form_state['values']['op'] == t('Save role')) {
-      $role = user_role_load($form_state['values']['name']);
+      $role = user_role_load_by_name($form_state['values']['name']);
       if ($role && $role->rid != $form_state['values']['rid']) {
         form_set_error('name', t('The role name %name already exists. Choose another role name.', array('%name' => $form_state['values']['name'])));
       }
     }
     elseif ($form_state['values']['op'] == t('Add role')) {
-      if (user_role_load($form_state['values']['name'])) {
+      if (user_role_load_by_name($form_state['values']['name'])) {
         form_set_error('name', t('The role name %name already exists. Choose another role name.', array('%name' => $form_state['values']['name'])));
       }
     }
@@ -881,7 +884,7 @@ function user_admin_role_submit($form, &$form_state) {
     drupal_set_message(t('The role has been renamed.'));
   }
   elseif ($form_state['values']['op'] == t('Delete role')) {
-    user_role_delete($form_state['values']['rid']);
+    user_role_delete((int) $form_state['values']['rid']);
     drupal_set_message(t('The role has been deleted.'));
   }
   elseif ($form_state['values']['op'] == t('Add role')) {
