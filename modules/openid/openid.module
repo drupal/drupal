@@ -372,11 +372,18 @@ function openid_openid_discovery_method_info() {
 function _openid_xri_discovery($claimed_id) {
   if (_openid_is_xri($claimed_id)) {
     // Resolve XRI using a proxy resolver (Extensible Resource Identifier (XRI)
-    // Resolution Version 2.0, section 11.2).
+    // Resolution Version 2.0, section 11.2 and 14.3).
     $xrds_url = variable_get('xri_proxy_resolver', 'http://xri.net/') . rawurlencode($claimed_id) . '?_xrd_r=application/xrds+xml';
     $services = _openid_xrds_discovery($xrds_url);
-    foreach ($services as &$service) {
-      $service['claimed_id'] = openid_normalize((string)$service['xrd']->children(OPENID_NS_XRD)->CanonicalID);
+    foreach ($services as $i => &$service) {
+      $status = $service['xrd']->children(OPENID_NS_XRD)->Status;
+      if ($status && $status->attributes()->cid == 'verified') {
+        $service['claimed_id'] = openid_normalize((string)$service['xrd']->children(OPENID_NS_XRD)->CanonicalID);
+      }
+      else {
+        // Ignore service if CanonicalID could not be verified.
+        unset($services[$i]);
+      }
     }
     return $services;
   }

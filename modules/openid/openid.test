@@ -72,6 +72,10 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     variable_set('xri_proxy_resolver', url('openid-test/yadis/xrds/xri', array('absolute' => TRUE)) . '/');
     $this->addIdentity('@example*résumé;%25', 2, 'http://example.com/user');
 
+    // Make sure that unverified CanonicalID are not trusted.
+    variable_set('openid_test_canonical_id_status', 'bad value');
+    $this->addIdentity('@example*résumé;%25', 2, FALSE);
+
     // HTML-based discovery:
     // If the User-supplied Identifier is a URL of an HTML page, the page may
     // contain a <link rel=...> element containing the URL of the OpenID
@@ -186,21 +190,28 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
    * @param $version
    *   The protocol version used by the service.
    * @param $claimed_id
-   *   The expected Claimed Identifier returned by the OpenID Provider.
+   *   The expected Claimed Identifier returned by the OpenID Provider, or FALSE
+   *   if the discovery is expected to fail.
    */
   function addIdentity($identity, $version = 2, $claimed_id = NULL) {
-    $this->drupalGet('user/' . $this->web_user->uid . '/openid');
     $edit = array('openid_identifier' => $identity);
-    $this->drupalPost(NULL, $edit, t('Add an OpenID'));
+    $this->drupalPost('user/' . $this->web_user->uid . '/openid', $edit, t('Add an OpenID'));
+
+    if ($claimed_id === FALSE) {
+      $this->assertRaw(t('Sorry, that is not a valid OpenID. Ensure you have spelled your ID correctly.'), t('Invalid identity was rejected.'));
+      return;
+    }
 
     // OpenID 1 used a HTTP redirect, OpenID 2 uses a HTML form that is submitted automatically using JavaScript.
     if ($version == 2) {
-      // Manually submit form because SimpleTest is not able to execute JavaScript.
-      $this->assertRaw('<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>', t('JavaScript form submission found.'));
+      // Check we are on the OpenID redirect form.
+      $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+
+      // Submit form to the OpenID Provider Endpoint.
       $this->drupalPost(NULL, array(), t('Send'));
     }
 
-    if (!$claimed_id) {
+    if (!isset($claimed_id)) {
       $claimed_id = $identity;
     }
     $this->assertRaw(t('Successfully added %identity', array('%identity' => $claimed_id)), t('Identity %identity was added.', array('%identity' => $identity)));

@@ -90,6 +90,7 @@ function openid_test_yadis_xrds() {
     print '<?xml version="1.0" encoding="UTF-8"?>
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)">
         <XRD>
+          <Status cid="' . check_plain(variable_get('openid_test_canonical_id_status', 'verified')) . '"/>
           <ProviderID>xri://@</ProviderID>
           <CanonicalID>http://example.com/user</CanonicalID>
           <Service>
