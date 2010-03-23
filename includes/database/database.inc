@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.104 2010/03/21 20:49:01 dries Exp $
+// $Id: database.inc,v 1.105 2010/03/23 18:54:32 dries Exp $
 
 /**
  * @file
@@ -831,7 +831,7 @@ abstract class DatabaseConnection extends PDO {
    *   The sanitized table name string.
    */
   public function escapeTable($table) {
-    return preg_replace('/[^A-Za-z0-9_]+/', '', $table);
+    return preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
   }
 
   /**
