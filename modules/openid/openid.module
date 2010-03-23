@@ -288,21 +288,24 @@ function openid_complete($response = array()) {
           if (!empty($service['claimed_id'])) {
             $response['openid.claimed_id'] = $service['claimed_id'];
           }
-          // OpenID Authentication, section 11.2:
-          // If the returned Claimed Identifier is different from the one sent
-          // to the OpenID Provider, we need to do discovery on the returned
-          // identifier to make sure that the provider is authorized to respond
-          // on behalf of this.
-          elseif ($service['version'] == 2 && $response['openid.claimed_id'] != openid_normalize($claimed_id)) {
-            $services = openid_discovery($response['openid.claimed_id']);
-            $uris = array();
-            foreach ($services as $discovered_service) {
-              if (in_array('http://specs.openid.net/auth/2.0/server', $discovered_service['types']) || in_array('http://specs.openid.net/auth/2.0/signon', $discovered_service['types'])) {
-                $uris[] = $discovered_service['uri'];
+          elseif ($service['version'] == 2) {
+            $response['openid.claimed_id'] = openid_normalize($response['openid.claimed_id']);
+            // OpenID Authentication, section 11.2:
+            // If the returned Claimed Identifier is different from the one sent
+            // to the OpenID Provider, we need to do discovery on the returned
+            // identififer to make sure that the provider is authorized to
+            // respond on behalf of this.
+            if ($response['openid.claimed_id'] != $claimed_id) {
+              $services = openid_discovery($response['openid.claimed_id']);
+              $uris = array();
+              foreach ($services as $discovered_service) {
+                if (in_array('http://specs.openid.net/auth/2.0/server', $discovered_service['types']) || in_array('http://specs.openid.net/auth/2.0/signon', $discovered_service['types'])) {
+                  $uris[] = $discovered_service['uri'];
+                }
               }
-            }
-            if (!in_array($service['uri'], $uris)) {
-              return $response;
+              if (!in_array($service['uri'], $uris)) {
+                return $response;
+              }
             }
           }
           else {

@@ -43,13 +43,22 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     // the URL of the OpenID Provider Endpoint.
 
     // Identifier is the URL of an XRDS document.
-    $this->addIdentity(url('openid-test/yadis/xrds', array('absolute' => TRUE)), 2);
+    // The URL scheme is stripped in order to test that the supplied identifier
+    // is normalized in openid_begin().
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+    $this->addIdentity(preg_replace('@^https?://@', '', $identity), 2, $identity);
 
     // Identifier is the URL of an XRDS document containing an OP Identifier
     // Element. The Relying Party sends the special value
     // "http://specs.openid.net/auth/2.0/identifier_select" as Claimed
     // Identifier. The OpenID Provider responds with the actual identifier.
-    $this->addIdentity(url('openid-test/yadis/xrds/server', array('absolute' => TRUE)), 2, url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE)));
+    $identity = url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE));
+    // Tell openid_test.module to respond with this identifier. The URL scheme
+    // is stripped in order to test that the returned identifier is normalized in
+    // openid_complete().
+    variable_set('openid_test_response', array('openid.claimed_id' => preg_replace('@^https?://@', '', $identity)));
+    $this->addIdentity(url('openid-test/yadis/xrds/server', array('absolute' => TRUE)), 2, $identity);
+    variable_set('openid_test_response', array());
 
     // Identifier is the URL of an HTML page that is sent with an HTTP header
     // that contains the URL of an XRDS document.
