@@ -1,4 +1,4 @@
-// $Id: vertical-tabs.js,v 1.8 2010/03/05 13:32:09 dries Exp $
+// $Id: vertical-tabs.js,v 1.9 2010/03/23 19:11:52 dries Exp $
 
 (function ($) {
 
@@ -18,12 +18,19 @@ Drupal.behaviors.verticalTabs = {
     $('.vertical-tabs-panes', context).once('vertical-tabs', function () {
       var focusID = $(':hidden.vertical-tabs-active-tab', this).val();
       var focus;
+      
+      // Check if there are some fieldsets that can be converted to vertical-tabs
+      var $fieldsets = $('> fieldset', this);
+      if ($fieldsets.length == 0) {
+        return;
+      }
+      
       // Create the tab column.
       var list = $('<ul class="vertical-tabs-list"></ul>');
       $(this).wrap('<div class="vertical-tabs clearfix"></div>').before(list);
 
       // Transform each fieldset into a tab.
-      $('> fieldset', this).each(function () {
+      $fieldsets.each(function () {
         var tab = new Drupal.verticalTab({ title: $('> legend', this).text(), fieldset: $(this) });
         list.append(tab.item);
         $(this)
