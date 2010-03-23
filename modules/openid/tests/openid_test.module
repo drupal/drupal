@@ -1,5 +1,5 @@
 <?php
-// $Id: openid_test.module,v 1.12 2010/03/23 19:05:16 dries Exp $
+// $Id: openid_test.module,v 1.13 2010/03/23 21:14:49 dries Exp $
 
 /**
  * @file
@@ -90,6 +90,7 @@ function openid_test_yadis_xrds() {
     print '<?xml version="1.0" encoding="UTF-8"?>
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)">
         <XRD>
+          <Status cid="' . check_plain(variable_get('openid_test_canonical_id_status', 'verified')) . '"/>
           <ProviderID>xri://@</ProviderID>
           <CanonicalID>http://example.com/user</CanonicalID>
           <Service>
