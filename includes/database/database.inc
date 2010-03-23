@@ -831,7 +831,7 @@ abstract class DatabaseConnection extends PDO {
    *   The sanitized table name string.
    */
   public function escapeTable($table) {
-    return preg_replace('/[^A-Za-z0-9_]+/', '', $table);
+    return preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
   }
 
   /**
