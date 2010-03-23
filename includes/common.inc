@@ -2981,7 +2981,7 @@ function drupal_pre_render_styles($elements) {
   // browser-caching. The string changes on every update or full cache
   // flush, forcing browsers to load a new copy of the files, as the
   // URL changed.
-  $query_string = substr(variable_get('css_js_query_string', '0'), 0, 2);
+  $query_string = variable_get('css_js_query_string', '0');
 
   // Defaults for LINK and STYLE elements.
   $link_element_defaults = array(
@@ -3633,7 +3633,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   // URL changed. Files that should not be cached (see drupal_add_js())
   // get REQUEST_TIME as query-string instead, to enforce reload on every
   // page request.
-  $default_query_string = substr(variable_get('css_js_query_string', '0'), 0, 2);
+  $default_query_string = variable_get('css_js_query_string', '0');
 
   // For inline Javascript to validate as XHTML, all Javascript containing
   // XHTML needs to be wrapped in CDATA. To make that backwards compatible
@@ -6106,21 +6106,12 @@ function drupal_flush_all_caches() {
 /**
  * Helper function to change query-strings on css/js files.
  *
- * Changes the character added to all css/js files as dummy query-string,
- * so that all browsers are forced to reload fresh files. We keep
- * 20 characters history (FIFO) to avoid repeats, but only the first two
- * (newest) characters are actually used on urls, to keep them short.
- * This is also called from update.php.
+ * Changes the character added to all css/js files as dummy query-string, so
+ * that all browsers are forced to reload fresh files.
  */
 function _drupal_flush_css_js() {
-  $string_history = variable_get('css_js_query_string', '00000000000000000000');
-  $new_character = $string_history[0];
-  // Not including 'q' to allow certain JavaScripts to re-use query string.
-  $characters = 'abcdefghijklmnoprstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  while (strpos($string_history, $new_character) !== FALSE) {
-    $new_character = $characters[mt_rand(0, strlen($characters) - 1)];
-  }
-  variable_set('css_js_query_string', $new_character . substr($string_history, 0, 19));
+  // The timestamp is converted to base 36 in order to make it more compact.
+  variable_set('css_js_query_string', base_convert(REQUEST_TIME, 10, 36));
 }
 
 /**
