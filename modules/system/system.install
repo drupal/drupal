@@ -379,7 +379,7 @@ function system_requirements($phase) {
         'title' => $t('HTTP request status'),
         'value' => $t('Fails'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => $t('Your system or network configuration does not allow Drupal to access web pages, resulting in reduced functionality. This could be due to your webserver configuration or PHP settings, and should be resolved in order to download information about available updates, fetch aggregator feeds, sign in via OpenID, or use other network-dependent services.  If you are certain that Drupal can access web pages but you are still seeing this message, you may add <code>$conf[\'drupal_http_request_fails\'] = FALSE;</code> to the bottom of your settings.php file.'),
+        'description' => $t('Your system or network configuration does not allow Drupal to access web pages, resulting in reduced functionality. This could be due to your webserver configuration or PHP settings, and should be resolved in order to download information about available updates, fetch aggregator feeds, sign in via OpenID, or use other network-dependent services. If you are certain that Drupal can access web pages but you are still seeing this message, you may add <code>$conf[\'drupal_http_request_fails\'] = FALSE;</code> to the bottom of your settings.php file.'),
       );
     }
   }
