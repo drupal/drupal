@@ -323,7 +323,7 @@ function file_progress_implementation() {
  * Implements hook_file_references().
  */
 function file_file_references($file) {
-  $count = file_get_file_reference_count($file);
+  $count = file_get_file_reference_count($file, NULL, 'file');
   return $count ? array('file' => $count) : NULL;
 }
 
@@ -883,7 +883,7 @@ function file_icon_map($file) {
  * @return
  *   An integer value.
  */
-function file_get_file_reference_count($file, $field = NULL, $field_type = 'file') {
+function file_get_file_reference_count($file, $field = NULL, $field_type = NULL) {
   // Determine the collection of fields to check.
   if (isset($field)) {
     // Support $field as 'field name'.
