@@ -1,4 +1,4 @@
-/* $Id: user.css,v 1.19 2010/01/30 07:59:26 dries Exp $ */
+/* $Id: user.css,v 1.20 2010/03/24 07:34:10 dries Exp $ */
 
 #permissions td.module {
   font-weight: bold;
@@ -33,10 +33,10 @@
  * Override default textfield float to put the "Add role" button next to
  * the input textfield.
  */
-#user-admin-new-role td.edit-name {
+#user-admin-roles td.edit-name {
   clear: both;
 }
-#user-admin-new-role .form-item-name {
+#user-admin-roles .form-item-name {
   float: left;
   margin-right: 1em;
 }
