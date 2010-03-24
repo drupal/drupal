@@ -52,7 +52,7 @@ function seven_admin_block_content($variables) {
       $output .= '<li class="leaf">';
       $output .= l($item['title'], $item['href'], $item['localized_options']);
       if (!system_admin_compact_mode()) {
-        $output .= '<div class="description">' . $item['description'] . '</div>';
+        $output .= '<div class="description">' . filter_xss_admin($item['description']) . '</div>';
       }
       $output .= '</li>';
     }
