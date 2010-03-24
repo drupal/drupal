@@ -375,10 +375,7 @@ function user_save($account, $edit = array(), $category = 'account') {
     // Prepopulate $edit['data'] with the current value of $account->data.
     // Modules can add to or remove from this array in hook_user_presave().
     if (!empty($account->data)) {
-      $data = unserialize($account->data);
-      foreach ($data as $key => $value) {
-        $edit['data'][$key] = $value;
-      }
+      $edit['data'] = !empty($edit['data']) ? array_merge($edit['data'], $account->data) : $account->data;
     }
     user_module_invoke('presave', $edit, $account, $category);
 
@@ -500,11 +497,11 @@ function user_save($account, $edit = array(), $category = 'account') {
         return FALSE;
       }
 
-      // Build the initial user object.
-      $user = user_load($edit['uid'], TRUE);
+      // Build a stub user object.
+      $user = (object) $edit;
+      $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
 
-      $entity = (object) $edit;
-      field_attach_insert('user', $entity);
+      field_attach_insert('user', $user);
 
       user_module_invoke('insert', $edit, $user, $category);
       entity_invoke('insert', 'user', $user);
@@ -522,9 +519,6 @@ function user_save($account, $edit = array(), $category = 'account') {
         }
         $query->execute();
       }
-
-      // Build the finished user object.
-      $user = user_load($edit['uid'], TRUE);
     }
 
     return $user;
