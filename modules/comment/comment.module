@@ -1399,8 +1399,6 @@ function comment_save($comment) {
       // Allow modules to respond to the updating of a comment.
       module_invoke_all('comment_update', $comment);
       entity_invoke('update', 'comment', $comment);
-      // Add an entry to the watchdog log.
-      watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
     }
     else {
       // Add the comment to database. This next section builds the thread field.
@@ -1483,8 +1481,6 @@ function comment_save($comment) {
       // Tell the other modules a new comment has been submitted.
       module_invoke_all('comment_insert', $comment);
       entity_invoke('insert', 'comment', $comment);
-      // Add an entry to the watchdog log.
-      watchdog('content', 'Comment: added %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
     }
     _comment_update_node_statistics($comment->nid);
     // Clear the cache so an anonymous user can see his comment being added.
@@ -2090,6 +2086,10 @@ function comment_form_submit($form, &$form_state) {
 
     comment_save($comment);
     $form_state['values']['cid'] = $comment->cid;
+
+    // Add an entry to the watchdog log.
+    watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
+
     // Explain the approval queue if necessary.
     if ($comment->status == COMMENT_NOT_PUBLISHED) {
       if (!user_access('administer comments')) {
