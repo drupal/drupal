@@ -23,19 +23,13 @@ function aggregator_page_last() {
 /**
  * Menu callback; displays all the items captured from a particular feed.
  *
- * If there are two arguments then this function is the categorize form.
+ * @param $feed
+ *   The feed for which to display all items.
  *
- * @param $arg1
- *   If there are two arguments then $arg1 is $form_state. Otherwise, $arg1 is $feed.
- * @param $arg2
- *   If there are two arguments then $arg2 is feed.
  * @return
- *   The item's HTML.
+ *   The rendered list of items for a feed.
  */
-function aggregator_page_source($arg1, $arg2 = NULL) {
-  // If there are two arguments then this function is the categorize form, and
-  // $arg1 is $form_state and $arg2 is $feed. Otherwise, $arg1 is $feed.
-  $feed = is_object($arg2) ? $arg2 : $arg1;
+function aggregator_page_source($feed) {
   drupal_set_title($feed->title);
   $feed_source = theme('aggregator_feed_source', array('feed' => $feed));
 
@@ -47,22 +41,30 @@ function aggregator_page_source($arg1, $arg2 = NULL) {
 }
 
 /**
+ * Menu callback; displays a form with all items captured from a feed.
+ *
+ * @param $feed
+ *   The feed for which to list all the aggregated items.
+ *
+ * @return
+ *   The rendered list of items for a feed.
+ *
+ * @see aggregator_page_source()
+ */
+function aggregator_page_source_form($form, $form_state, $feed) {
+  return aggregator_page_source($feed);
+}
+
+/**
  * Menu callback; displays all the items aggregated in a particular category.
  *
- * If there are two arguments then this function is called as a form.
+ * @param $category
+ *   The category for which to list all the aggregated items.
  *
- * @param $arg1
- *   If there are two arguments then $arg1 is $form_state. Otherwise, $arg1 is $category.
- * @param $arg2
- *   If there are two arguments then $arg2 is $category.
  * @return
- *   The items HTML.
+*   The rendered list of items for a category.
  */
-function aggregator_page_category($arg1, $arg2 = NULL) {
-  // If there are two arguments then we are called as a form, $arg1 is
-  // $form_state and $arg2 is $category. Otherwise, $arg1 is $category.
-  $category = is_array($arg2) ? $arg2 : $arg1;
-
+function aggregator_page_category($category) {
   drupal_add_feed(url('aggregator/rss/' . $category['cid']), variable_get('site_name', 'Drupal') . ' ' . t('aggregator - @title', array('@title' => $category['title'])));
 
   // It is safe to include the cid in the query because it's loaded from the
@@ -70,6 +72,21 @@ function aggregator_page_category($arg1, $arg2 = NULL) {
   $items = aggregator_feed_items_load('category', $category);
 
   return _aggregator_page_list($items, arg(3));
+}
+
+/**
+ * Menu callback; displays a form containing items aggregated in a category.
+ *
+ * @param $category
+ *   The category for which to list all the aggregated items.
+ *
+ * @return
+*   The rendered list of items for a category.
+ *
+ * @see aggregator_page_category()
+ */
+function aggregator_page_category_form($form, $form_state, $category) {
+  return aggregator_page_category($category);
 }
 
 /**

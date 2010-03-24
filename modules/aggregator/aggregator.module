@@ -209,7 +209,7 @@ function aggregator_menu() {
   $items['aggregator/categories/%aggregator_category/categorize'] = array(
     'title' => 'Categorize',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_page_category', 2),
+    'page arguments' => array('aggregator_page_category_form', 2),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'aggregator.pages.inc',
@@ -238,7 +238,7 @@ function aggregator_menu() {
   $items['aggregator/sources/%aggregator_feed/categorize'] = array(
     'title' => 'Categorize',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_page_source', 2),
+    'page arguments' => array('aggregator_page_source_form', 2),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'aggregator.pages.inc',
