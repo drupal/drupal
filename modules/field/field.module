@@ -1,9 +1,17 @@
 <?php
-// $Id: field.module,v 1.68 2010/03/12 19:51:40 dries Exp $
+// $Id: field.module,v 1.69 2010/03/24 07:58:07 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
  */
+
+/**
+ * Base class for all exceptions thrown by Field API functions.
+ *
+ * This class has no functionality of its own other than allowing all
+ * Field API exceptions to be caught by a single catch block.
+ */
+class FieldException extends Exception {}
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -114,14 +122,6 @@ define('FIELD_QUERY_COMPLETE', 'FIELD_QUERY_COMPLETE');
 /**
  * @} End of "Field query flags".
  */
-
-/**
- * Base class for all exceptions thrown by Field API functions.
- *
- * This class has no functionality of its own other than allowing all
- * Field API exceptions to be caught by a single catch block.
- */
-class FieldException extends Exception {}
 
 /**
  * Exception class thrown by hook_field_update_forbid().
