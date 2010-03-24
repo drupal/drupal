@@ -5,6 +5,14 @@
  * Attach custom data fields to Drupal entities.
  */
 
+/**
+ * Base class for all exceptions thrown by Field API functions.
+ *
+ * This class has no functionality of its own other than allowing all
+ * Field API exceptions to be caught by a single catch block.
+ */
+class FieldException extends Exception {}
+
 /*
  * Load all public Field API functions. Drupal currently has no
  * mechanism for auto-loading core APIs, so we have to load them on
@@ -114,14 +122,6 @@ define('FIELD_QUERY_COMPLETE', 'FIELD_QUERY_COMPLETE');
 /**
  * @} End of "Field query flags".
  */
-
-/**
- * Base class for all exceptions thrown by Field API functions.
- *
- * This class has no functionality of its own other than allowing all
- * Field API exceptions to be caught by a single catch block.
- */
-class FieldException extends Exception {}
 
 /**
  * Exception class thrown by hook_field_update_forbid().
