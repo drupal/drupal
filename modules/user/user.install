@@ -98,11 +98,20 @@ function user_schema() {
         'default' => '',
         'description' => 'Unique role name.',
       ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The weight of this role in listings and the user interface.',
+      ),
     ),
     'unique keys' => array(
       'name' => array('name'),
     ),
     'primary key' => array('rid'),
+    'indexes' => array(
+      'name_weight' => array('name', 'weight'),
+    ),
   );
 
   $schema['users'] = array(
@@ -280,10 +289,10 @@ function user_install() {
 
   // Built-in roles.
   $rid_anonymous = db_insert('role')
-    ->fields(array('name' => 'anonymous user'))
+    ->fields(array('name' => 'anonymous user', 'weight' => 0))
     ->execute();
   $rid_authenticated = db_insert('role')
-    ->fields(array('name' => 'authenticated user'))
+    ->fields(array('name' => 'authenticated user', 'weight' => 1))
     ->execute();
 
   // Sanity check to ensure the anonymous and authenticated role IDs are the
@@ -545,11 +554,6 @@ function user_update_7005(&$sandbox) {
 }
 
 /**
- * @} End of "defgroup user-updates-6.x-to-7.x"
- * The next series of updates should start at 8000.
- */
-
-/**
  * Add module data to {role_permission}.
  */
 function user_update_7006(&$sandbox) {
@@ -574,3 +578,16 @@ function user_update_7006(&$sandbox) {
       ->execute();
   }
 }
+
+/**
+ * Add a weight column to user roles.
+ */
+function user_update_7007() {
+  db_add_field('role', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+  db_add_index('role', 'name_weight', array('name', 'weight'));
+}
+
+/**
+ * @} End of "defgroup user-updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
+ */

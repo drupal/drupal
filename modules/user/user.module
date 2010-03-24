@@ -42,7 +42,7 @@ function user_help($path, $arg) {
     case 'admin/people/permissions':
       return '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href="@role">Roles</a> page to create a role). Two important roles to consider are Authenticated Users and Administrators. Any permissions granted to the Authenticated Users role will be given to any user who can log into your site.  You can make any role the Administrator role for the site, meaning this will be granted all new permissions automatically. You can do this on the <a href="@settings">User Settings</a> page. You should be careful to ensure that only trusted users are given this access and level of control of your site.', array('@role' => url('admin/people/permissions/roles'), '@settings' => url('admin/config/people/accounts'))) . '</p>';
     case 'admin/people/permissions/roles':
-      $output = '<p>' . t('Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined in <a href="@permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".', array('@permissions' => url('admin/people/permissions'))) . '</p>';
+      $output = '<p>' . t('Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined on the <a href="@permissions">permissions page</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the names and order of the roles on your site. It is recommended to order your roles from least permissive (anonymous user) to most permissive (administrator). To delete a role choose "edit role".', array('@permissions' => url('admin/people/permissions'))) . '</p>';
       $output .= '<p>'. t('By default, Drupal comes with two user roles:') . '</p>';
       $output .= '<ul>';
       $output .= '<li>' . t("Anonymous user: this role is used for users that don't have a user account or that are not authenticated.") . '</li>';
@@ -102,7 +102,7 @@ function user_theme() {
       'render element' => 'form',
       'file' => 'user.admin.inc',
     ),
-    'user_admin_new_role' => array(
+    'user_admin_roles' => array(
       'render element' => 'form',
       'file' => 'user.admin.inc',
     ),
@@ -1504,6 +1504,8 @@ function user_menu() {
     'weight' => -10,
     'file' => 'user.admin.inc',
   );
+
+  // Permissions and role forms.
   $items['admin/people/permissions'] = array(
     'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
@@ -1523,7 +1525,7 @@ function user_menu() {
     'title' => 'Roles',
     'description' => 'List, edit, or add user roles.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_new_role'),
+    'page arguments' => array('user_admin_roles'),
     'access arguments' => array('administer permissions'),
     'file' => 'user.admin.inc',
     'type' => MENU_LOCAL_TASK,
@@ -2499,17 +2501,11 @@ function user_mail_tokens(&$replacements, $data, $options) {
  *   value.
  */
 function user_roles($membersonly = FALSE, $permission = NULL) {
-  // System roles take the first two positions.
-  $roles = array(
-    DRUPAL_ANONYMOUS_RID => NULL,
-    DRUPAL_AUTHENTICATED_RID => NULL,
-  );
-
   if (!empty($permission)) {
-    $result = db_query("SELECT r.* FROM {role} r INNER JOIN {role_permission} p ON r.rid = p.rid WHERE p.permission = :permission ORDER BY r.name", array(':permission' => $permission));
+    $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {role_permission} p ON r.rid = p.rid WHERE p.permission = :permission ORDER BY r.weight, r.name", array(':permission' => $permission));
   }
   else {
-    $result = db_query('SELECT * FROM {role} ORDER BY name');
+    $result = db_query('SELECT rid, name FROM {role} ORDER BY weight, name');
   }
 
   foreach ($result as $role) {
@@ -2528,8 +2524,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
     }
   }
 
-  // Filter to remove unmatched system roles.
-  return array_filter($roles);
+  return $roles;
 }
 
 /**
@@ -2588,6 +2583,12 @@ function user_role_save($role) {
   if ($role->name) {
     // Prevent leading and trailing spaces in role names.
     $role->name = trim($role->name);
+  }
+  if (!isset($role->weight)) {
+    // Set a role weight to make this new role last.
+    $query = db_select('role');
+    $query->addExpression('MAX(weight)');
+    $role->weight = $query->execute()->fetchField() + 1;
   }
   if (!empty($role->rid) && $role->name) {
     $status = drupal_write_record('role', $role, 'rid');
@@ -3090,7 +3091,6 @@ function user_build_filter_query(SelectQuery $query) {
 function user_forms() {
   $forms['user_admin_access_add_form']['callback'] = 'user_admin_access_form';
   $forms['user_admin_access_edit_form']['callback'] = 'user_admin_access_form';
-  $forms['user_admin_new_role']['callback'] = 'user_admin_role';
   return $forms;
 }
 

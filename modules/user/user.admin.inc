@@ -801,57 +801,141 @@ function theme_user_permission_description($variables) {
 }
 
 /**
- * Menu callback: administer roles.
- *
- * @param $role
- *   A user role object, as returned from user_role_load(). This represents the
- *   role which will be edited. If not set, a new role will be added instead.
+ * Form to re-order roles or add a new one.
  *
  * @ingroup forms
- * @see user_role_load()
+ * @see theme_user_admin_roles()
+ */
+function user_admin_roles($form, $form_state) {
+  $roles = user_roles();
+
+  $form['roles'] = array(
+    '#tree' => TRUE,
+  );
+  $order = 0;
+  foreach ($roles as $rid => $name) {
+    $form['roles'][$rid]['#role'] = (object) array(
+      'rid' => $rid,
+      'name' => $name,
+      'weight' => $order,
+    );
+    $form['roles'][$rid]['#weight'] = $order;
+    $form['roles'][$rid]['weight'] = array(
+      '#type' => 'textfield',
+      '#size' => 4,
+      '#default_value' => $order,
+      '#attributes' => array('class' => array('role-weight')),
+    );
+    $order++;
+  }
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#size' => 32,
+    '#maxlength' => 64,
+  );
+  $form['add'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add role'),
+    '#validate' => array('user_admin_role_validate'),
+    '#submit' => array('user_admin_role_submit'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save order'),
+    '#submit' => array('user_admin_roles_order_submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form submit function. Update the role weights.
+ */
+function user_admin_roles_order_submit($form, &$form_state) {
+  foreach ($form_state['values']['roles'] as $rid => $role_values) {
+    $role = $form['roles'][$rid]['#role'];
+    $role->weight = $role_values['weight'];
+    user_role_save($role);
+  }
+}
+
+/**
+ * Theme the role order and new role form.
+ *
+ * @ingroup themeable
+ */
+function theme_user_admin_roles($variables) {
+  $form = $variables['form'];
+
+  $header = array(t('Name'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
+  foreach (element_children($form['roles']) as $rid) {
+    $name = $form['roles'][$rid]['#role']->name;
+    $row = array();
+    if (in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+      $row[] = t('@name <em>(locked)</em>', array('@name' => $name));
+      $row[] = drupal_render($form['roles'][$rid]['weight']);
+      $row[] = '';
+      $row[] = l(t('edit permissions'), 'admin/people/permissions/' . $rid);
+    }
+    else {
+      $row[] = check_plain($name);
+      $row[] = drupal_render($form['roles'][$rid]['weight']);
+      $row[] = l(t('edit role'), 'admin/people/permissions/roles/edit/' . $rid);
+      $row[] = l(t('edit permissions'), 'admin/people/permissions/' . $rid);
+    }
+    $rows[] = array('data' => $row, 'class' => array('draggable'));
+  }
+  $rows[] = array(array('data' => drupal_render($form['name']) . drupal_render($form['add']), 'colspan' => 4, 'class' => 'edit-name'));
+
+  drupal_add_tabledrag('user-roles', 'order', 'sibling', 'role-weight');
+
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'user-roles')));
+  $output .= drupal_render_children($form);
+
+  return $output;
+}
+
+/**
+ * Form to configure a single role.
+ *
+ * @ingroup forms
  * @see user_admin_role_validate()
  * @see user_admin_role_submit()
- * @see theme_user_admin_new_role()
  */
-function user_admin_role($form, &$form_state, $role = NULL) {
-  if (!empty($role)) {
-    // Display the edit role form.
-    $form['name'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Role name'),
-      '#default_value' => $role->name,
-      '#size' => 30,
-      '#required' => TRUE,
-      '#maxlength' => 64,
-      '#description' => t('The name for this role. Example: "moderator", "editorial board", "site architect".'),
-    );
-    $form['rid'] = array(
-      '#type' => 'value',
-      '#value' => $role->rid,
-    );
-    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save role'),
-    );
-    $form['actions']['delete'] = array(
-      '#type' => 'submit',
-      '#value' => t('Delete role'),
-    );
+function user_admin_role($form, $form_state, $role) {
+  if ($role->rid == DRUPAL_ANONYMOUS_RID || $role->rid == DRUPAL_AUTHENTICATED_RID) {
+    drupal_goto('admin/people/permissions/roles');
   }
-  else {
-    $form['name'] = array(
-      '#type' => 'textfield',
-      '#size' => 32,
-      '#maxlength' => 64,
-    );
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Add role'),
-    );
-    $form['#submit'][] = 'user_admin_role_submit';
-    $form['#validate'][] = 'user_admin_role_validate';
-  }
+
+  // Display the edit role form.
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Role name'),
+    '#default_value' => $role->name,
+    '#size' => 30,
+    '#required' => TRUE,
+    '#maxlength' => 64,
+    '#description' => t('The name for this role. Example: "moderator", "editorial board", "site architect".'),
+  );
+  $form['rid'] = array(
+    '#type' => 'value',
+    '#value' => $role->rid,
+  );
+  $form['weight'] = array(
+    '#type' => 'value',
+    '#value' => $role->weight,
+  );
+  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save role'),
+  );
+  $form['actions']['delete'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete role'),
+  );
+
   return $form;
 }
 
@@ -893,32 +977,6 @@ function user_admin_role_submit($form, &$form_state) {
   }
   $form_state['redirect'] = 'admin/people/permissions/roles';
   return;
-}
-
-/**
- * Theme the new-role form.
- *
- * @ingroup themeable
- */
-function theme_user_admin_new_role($variables) {
-  $form = $variables['form'];
-
-  $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => 2));
-  foreach (user_roles() as $rid => $name) {
-    $edit_permissions = l(t('edit permissions'), 'admin/people/permissions/' . $rid);
-    if (in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-      $rows[] = array(t('!name %locked', array('!name' => $name, '%locked' => t('(locked)'))), '', $edit_permissions);
-    }
-    else {
-      $rows[] = array($name, l(t('edit role'), 'admin/people/permissions/roles/edit/' . $rid), $edit_permissions);
-    }
-  }
-  $rows[] = array(array('data' => drupal_render($form['name']) . drupal_render($form['submit']), 'colspan' => 3, 'class' => 'edit-name'));
-
-  $output = drupal_render_children($form);
-  $output .= theme('table', array('header' => $header, 'rows' => $rows));
-
-  return $output;
 }
 
 /**

@@ -33,10 +33,10 @@
  * Override default textfield float to put the "Add role" button next to
  * the input textfield.
  */
-#user-admin-new-role td.edit-name {
+#user-admin-roles td.edit-name {
   clear: both;
 }
-#user-admin-new-role .form-item-name {
+#user-admin-roles .form-item-name {
   float: left;
   margin-right: 1em;
 }
