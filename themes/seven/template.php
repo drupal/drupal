@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.14 2010/03/03 19:46:26 dries Exp $
+// $Id: template.php,v 1.15 2010/03/24 09:26:37 dries Exp $
 
 /**
  * Override or insert variables into the html template.
@@ -52,7 +52,7 @@ function seven_admin_block_content($variables) {
       $output .= '<li class="leaf">';
       $output .= l($item['title'], $item['href'], $item['localized_options']);
       if (!system_admin_compact_mode()) {
-        $output .= '<div class="description">' . $item['description'] . '</div>';
+        $output .= '<div class="description">' . filter_xss_admin($item['description']) . '</div>';
       }
       $output .= '</li>';
     }
