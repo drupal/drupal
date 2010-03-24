@@ -344,7 +344,7 @@ function list_field_formatter_view($entity_type, $entity, $field, $instance, $la
         }
         else {
           // If no match was found in allowed values, fall back to the key.
-          $output = field_filter_xss($value);
+          $output = field_filter_xss($item['value']);
         }
         $element[$delta] = array('#markup' => $output);
       }
