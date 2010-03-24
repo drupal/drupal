@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.38 2010/02/26 00:11:58 webchick Exp $
+// $Id: aggregator.test,v 1.39 2010/03/24 08:51:42 dries Exp $
 
 /**
  * @file
@@ -283,6 +283,8 @@ class AddFeedTestCase extends AggregatorTestCase {
     $this->drupalGet('aggregator/sources/' . $feed->fid);
     $this->assertResponse(200, t('Feed source exists.'));
     $this->assertText($feed->title, t('Page title'));
+    $this->drupalGet('aggregator/sources/' . $feed->fid . '/categorize');
+    $this->assertResponse(200, t('Feed categorization page exists.'));
 
     // Delete feed.
     $this->deleteFeed($feed);
