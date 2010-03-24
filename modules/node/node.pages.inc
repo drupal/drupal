@@ -163,14 +163,18 @@ function node_form($form, &$form_state, $node) {
     '#type' => 'checkbox',
     '#title' => t('Create new revision'),
     '#default_value' => $node->revision,
-    '#states' => array(
-      // Check the revision log checkbox when the log textarea is filled in.
+    '#access' => user_access('administer nodes'),
+  );
+  // Check the revision log checkbox when the log textarea is filled in.
+  // This must not happen if "Create new revision" is enabled by default, since
+  // the state would auto-disable the checkbox otherwise.
+  if (!$node->revision) {
+    $form['revision_information']['revision']['#states'] = array(
       'checked' => array(
         'textarea[name="log"]' => array('empty' => FALSE),
       ),
-    ),
-    '#access' => user_access('administer nodes'),
-  );
+    );
+  }
   $form['revision_information']['log'] = array(
     '#type' => 'textarea',
     '#title' => t('Revision log message'),
