@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.33 2010/03/07 23:14:20 webchick Exp $
+// $Id: path.test,v 1.34 2010/03/25 11:53:25 dries Exp $
 
 /**
  * @file
@@ -190,12 +190,13 @@ class PathTaxonomyTermTestCase extends DrupalWebTestCase {
    */
   function testTermAlias() {
     // Create a term in the default 'Tags' vocabulary with URL alias.
+    $vocabulary = taxonomy_vocabulary_load(1);
     $description = $this->randomName();;
     $edit = array();
     $edit['name'] = $this->randomName();
     $edit['description[value]'] = $description;
     $edit['path[alias]'] = $this->randomName();
-    $this->drupalPost('admin/structure/taxonomy/1/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->machine_name . '/add', $edit, t('Save'));
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[alias]']);
