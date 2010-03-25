@@ -200,16 +200,9 @@ abstract class DatabaseConnection extends PDO {
    * nested calls to transactions and collapse them into a single
    * transaction.
    *
-   * @var int
+   * @var array
    */
-  protected $transactionLayers = 0;
-
-  /**
-   * Whether or not the active transaction (if any) will be rolled back.
-   *
-   * @var boolean
-   */
-  protected $willRollback;
+  protected $transactionLayers = array();
 
   /**
    * Array of argument arrays for logging post-rollback.
@@ -870,29 +863,42 @@ abstract class DatabaseConnection extends PDO {
    *   TRUE if we're currently in a transaction, FALSE otherwise.
    */
   public function inTransaction() {
-    return ($this->transactionLayers > 0);
+    return ($this->transactionDepth() > 0);
+  }
+
+  /**
+   * Determines current transaction depth.
+   */
+  public function transactionDepth() {
+    return count($this->transactionLayers);
   }
 
   /**
    * Returns a new DatabaseTransaction object on this connection.
    *
+   * @param $name
+   *   Optional name of the savepoint.
+   *
    * @see DatabaseTransaction
    */
-  public function startTransaction() {
+  public function startTransaction($name = '') {
     if (empty($this->transactionClass)) {
       $this->transactionClass = 'DatabaseTransaction_' . $this->driver();
       if (!class_exists($this->transactionClass)) {
         $this->transactionClass = 'DatabaseTransaction';
       }
     }
-    return new $this->transactionClass($this);
+    return new $this->transactionClass($this, $name);
   }
 
   /**
-   * Schedules the current transaction for rollback.
+   * Rolls back the transaction entirely or to a named savepoint.
    *
    * This method throws an exception if no transaction is active.
    *
+   * @param $savepoint_name
+   *   The name of the savepoint. The default, 'drupal_transaction', will roll
+   *   the entire transaction back.
    * @param $type
    *   The category to which the rollback message belongs.
    * @param $message
@@ -912,9 +918,14 @@ abstract class DatabaseConnection extends PDO {
    * @see DatabaseTransaction::rollback()
    * @see watchdog()
    */
-  public function rollback($type = NULL, $message = NULL, $variables = array(), $severity = NULL, $link = NULL) {
-    if ($this->transactionLayers == 0) {
-      throw new NoActiveTransactionException();
+  public function rollback($savepoint_name = 'drupal_transaction', $type = NULL, $message = NULL, $variables = array(), $severity = NULL, $link = NULL) {
+    if (!$this->inTransaction()) {
+      throw new DatabaseTransactionNoActiveException();
+    }
+    // A previous rollback to an earlier savepoint may mean that the savepoint
+    // in question has already been rolled back.
+    if (!in_array($savepoint_name, $this->transactionLayers)) {
+      return;
     }
 
     // Set the severity to the configured default if not specified.
@@ -940,25 +951,49 @@ abstract class DatabaseConnection extends PDO {
       );
     }
 
-    $this->willRollback = TRUE;
+    // We need to find the point we're rolling back to, all other savepoints
+    // before are no longer needed.
+    while ($savepoint = array_pop($this->transactionLayers)) {
+      if ($savepoint == $savepoint_name) {
+        // If it is the last the transaction in the stack, then it is not a
+        // savepoint, it is the transaction itself so we will need to roll back
+        // the transaction rather than a savepoint.
+        if (empty($this->transactionLayers)) {
+          break;
+        }
+        $this->query('ROLLBACK TO SAVEPOINT ' . $savepoint);
+        return;
+      }
+    }
+    if ($this->supportsTransactions()) {
+      parent::rollBack();
+    }
+    $this->logRollback();
   }
 
   /**
-   * Determines if this transaction will roll back.
-   *
-   * Use this function to skip further operations if the current transaction
-   * is already scheduled to roll back. Throws an exception if no transaction
-   * is active.
-   *
-   * @return
-   *   TRUE if the transaction will roll back, FALSE otherwise.
+   * Logs messages from rollback().
    */
-  public function willRollback() {
-    if ($this->transactionLayers == 0) {
-      throw new NoActiveTransactionException();
+  protected function logRollback() {
+    $logging = Database::getLoggingCallback();
+    // If there is no callback defined. We can't do anything.
+    if (!is_array($logging)) {
+      return;
     }
 
-    return $this->willRollback;
+    $logging_callback = $logging['callback'];
+
+    // Log the failed rollback.
+    $logging_callback('database', 'Explicit rollback failed: not supported on active connection.', array(), $logging['error_severity']);
+
+    // Play back the logged errors to the specified logging callback post-
+    // rollback.
+    foreach ($this->rollbackLogs as $log_item) {
+      $logging_callback($log_item['type'], $log_item['message'], $log_item['variables'], $log_item['severity'], $log_item['link']);
+    }
+
+    // Reset the error logs.
+    $this->rollbackLogs = array();
   }
 
   /**
@@ -968,72 +1003,57 @@ abstract class DatabaseConnection extends PDO {
    *
    * @see DatabaseTransaction
    */
-  public function pushTransaction() {
-    ++$this->transactionLayers;
-
-    if ($this->transactionLayers == 1) {
-      if ($this->supportsTransactions()) {
-        parent::beginTransaction();
-      }
+  public function pushTransaction($name) {
+    if (!$this->supportsTransactions()) {
+      return;
     }
+    if (isset($this->transactionLayers[$name])) {
+      throw new DatabaseTransactionNameNonUniqueException($name . " is already in use.");
+    }
+    // If we're already in a transaction then we want to create a savepoint
+    // rather than try to create another transaction.
+    if ($this->inTransaction()) {
+      $this->query('SAVEPOINT ' . $name);
+    }
+    else {
+      parent::beginTransaction();
+    }
+    $this->transactionLayers[$name] = $name;
   }
 
   /**
    * Decreases the depth of transaction nesting.
    *
-   * This function first attempts to decrease the number of layers of
-   * transaction nesting by one. If there was no active transaction, the
-   * function throws an exception. If this was the last transaction layer, the
-   * function either rolls back or commits the transaction, depending on whether
-   * the transaction was marked for rollback or not.
+   * If we pop off the last transaction layer, then we either commit or roll
+   * back the transaction as necessary. If no transaction is active, we return
+   * because the transaction may have manually been rolled back.
+   *
+   * @param $name
+   *   The name of the savepoint
    *
    * @see DatabaseTransaction
    */
-  public function popTransaction() {
-    if ($this->transactionLayers == 0) {
-      throw new NoActiveTransactionException();
+  public function popTransaction($name) {
+    if (!$this->supportsTransactions()) {
+      return;
+    }
+    if (!$this->inTransaction()) {
+      throw new DatabaseTransactionNoActiveException();
     }
 
-    --$this->transactionLayers;
+    // Commit everything since SAVEPOINT $name.
+    while($savepoint = array_pop($this->transactionLayers)) {
+      if ($savepoint != $name) continue;
 
-    if ($this->transactionLayers == 0) {
-      if ($this->willRollback) {
-        // Reset the rollback status so that the next transaction starts clean.
-        $this->willRollback = FALSE;
-
-        // Reset the error log.
-        $rollback_logs = $this->rollbackLogs;
-        $this->rollbackLogs = array();
-
-        $logging = Database::getLoggingCallback();
-        $logging_callback = NULL;
-        if (is_array($logging)) {
-          $logging_callback = $logging['callback'];
-        }
-
-        if ($this->supportsTransactions()) {
-          parent::rollBack();
-        }
-        else {
-          if (isset($logging_callback)) {
-            // Log the failed rollback.
-            call_user_func($logging_callback, 'database', 'Explicit rollback failed: not supported on active connection.', array(), $logging['error_severity']);
-          }
-
-          // It would be nice to throw an exception here if logging failed,
-          // but throwing exceptions in destructors is not supported.
-        }
-
-        if (isset($logging_callback)) {
-          // Play back the logged errors to the specified logging callback post-
-          // rollback.
-          foreach ($rollback_logs as $log_item) {
-            call_user_func($logging_callback, $log_item['type'], $log_item['message'], $log_item['variables'], $log_item['severity'], $log_item['link']);
-          }
+      // If there are no more layers left then we should commit.
+      if (empty($this->transactionLayers)) {
+        if (!parent::commit()) {
+          throw new DatabaseTransactionCommitFailedException();
         }
       }
-      elseif ($this->supportsTransactions()) {
-        parent::commit();
+      else {
+        $this->query('RELEASE SAVEPOINT ' . $name);
+        break;
       }
     }
   }
@@ -1166,7 +1186,7 @@ abstract class DatabaseConnection extends PDO {
    * @see DatabaseTransaction
    */
   public function commit() {
-    throw new ExplicitTransactionsNotSupportedException();
+    throw new DatabaseTransactionExplicitCommitNotAllowedException();
   }
 
   /**
@@ -1611,7 +1631,17 @@ abstract class Database {
 /**
  * Exception for when popTransaction() is called with no active transaction.
  */
-class NoActiveTransactionException extends Exception { }
+class DatabaseTransactionNoActiveException extends Exception { }
+
+/**
+ * Exception thrown when a savepoint or transaction name occurs twice.
+ */
+class DatabaseTransactionNameNonUniqueException extends Exception { }
+
+/**
+ * Exception thrown when a commit() function fails.
+ */
+class DatabaseTransactionCommitFailedException extends Exception { }
 
 /**
  * Exception to deny attempts to explicitly manage transactions.
@@ -1619,7 +1649,7 @@ class NoActiveTransactionException extends Exception { }
  * This exception will be thrown when the PDO connection commit() is called.
  * Code should never call this method directly.
  */
-class ExplicitTransactionsNotSupportedException extends Exception { }
+class DatabaseTransactionExplicitCommitNotAllowedException extends Exception { }
 
 /**
  * Exception thrown for merge queries that do not make semantic sense.
@@ -1670,13 +1700,51 @@ class DatabaseTransaction {
    */
   protected $connection;
 
-  public function __construct(DatabaseConnection &$connection) {
+  /**
+   * A boolean value to indicate whether this transaction has been rolled back.
+   *
+   * @var Boolean
+   */
+  protected $rolledBack = FALSE;
+
+  /**
+   * The name of the transaction.
+   *
+   * This is used to label the transaction savepoint. It will be overridden to
+   * 'drupal_transaction' if there is no transaction depth.
+   */
+  protected $name;
+
+  public function __construct(DatabaseConnection &$connection, $name = NULL) {
     $this->connection = &$connection;
-    $this->connection->pushTransaction();
+    // If there is no transaction depth, then no transaction has started. Name
+    // the transaction 'drupal_transaction'.
+    if (!$depth = $connection->transactionDepth()) {
+      $this->name = 'drupal_transaction';
+    }
+    // Within transactions, savepoints are used. Each savepoint requires a
+    // name. So if no name is present we need to create one.
+    elseif (!$name) {
+      $this->name = 'savepoint_' . $depth;
+    }
+    else {
+      $this->name = $name;
+    }
+    $this->connection->pushTransaction($this->name);
   }
 
   public function __destruct() {
-    $this->connection->popTransaction();
+    // If we rolled back then the transaction would have already been popped.
+    if ($this->connection->inTransaction() && !$this->rolledBack) {
+      $this->connection->popTransaction($this->name);
+    }
+  }
+
+  /**
+   * Retrieves the name of the transaction or savepoint.
+   */
+  public function name() {
+    return $this->name;
   }
 
   /**
@@ -1704,22 +1772,15 @@ class DatabaseTransaction {
    * @see watchdog()
    */
   public function rollback($type = NULL, $message = NULL, $variables = array(), $severity = NULL, $link = NULL) {
+    $this->rolledBack = TRUE;
     if (!isset($severity)) {
       $logging = Database::getLoggingCallback();
       if (is_array($logging)) {
         $severity = $logging['default_severity'];
       }
     }
-    $this->connection->rollback($type, $message, $variables, $severity, $link);
+    $this->connection->rollback($this->name, $type, $message, $variables, $severity, $link);
   }
-
-  /**
-   * Determines if this transaction will roll back.
-   */
-  public function willRollback() {
-    return $this->connection->willRollback();
-  }
-
 }
 
 /**
@@ -2310,22 +2371,20 @@ function db_select($table, $alias = NULL, array $options = array()) {
 /**
  * Returns a new transaction object for the active database.
  *
- * @param $required
- *   TRUE if the calling code will not function properly without transaction
- *   support.  If set to TRUE and the active database does not support
- *   transactions, a TransactionsNotSupportedException exception will be thrown.
- * @param $options
- *   An array of options to control how the transaction operates.  Only the
- *   target key has any meaning in this case.
+ * @param string $name
+ *   Optional name of the transaction.
+ * @param array $options
+ *   An array of options to control how the transaction operates:
+ *   - target: The database target name.
  *
  * @return DatabaseTransaction
  *   A new DatabaseTransaction object for this connection.
  */
-function db_transaction($required = FALSE, Array $options = array()) {
+function db_transaction($name = NULL, array $options = array()) {
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }
-  return Database::getConnection($options['target'])->startTransaction($required);
+  return Database::getConnection($options['target'])->startTransaction($name);
 }
 
 /**
@@ -2413,7 +2472,7 @@ function db_driver() {
  * Closes the active database connection.
  *
  * @param $options
- *   An array of options to control which connection is closed.  Only the target
+ *   An array of options to control which connection is closed. Only the target
  *   key has any meaning in this case.
  */
 function db_close(array $options = array()) {

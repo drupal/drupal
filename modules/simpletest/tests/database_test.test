@@ -2908,6 +2908,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
    */
   protected function transactionOuterLayer($suffix, $rollback = FALSE) {
     $connection = Database::getConnection();
+    $depth = $connection->transactionDepth();
     $txn = db_transaction();
 
     // Insert a single row into the testing table.
@@ -2925,6 +2926,13 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
     $this->transactionInnerLayer($suffix, $rollback);
 
     $this->assertTrue($connection->inTransaction(), t('In transaction after calling nested transaction.'));
+
+    if ($rollback) {
+      // Roll back the transaction, if requested.
+      // This rollback should propagate to the last savepoint.
+      $txn->rollback();
+      $this->assertTrue(($connection->transactionDepth() == $depth), t('Transaction has rolled back to the last savepoint after calling rollback().'));
+    }
   }
 
   /**
@@ -2939,11 +2947,17 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
   protected function transactionInnerLayer($suffix, $rollback = FALSE) {
     $connection = Database::getConnection();
 
+    $this->assertTrue($connection->inTransaction(), t('In transaction in nested transaction.'));
+
+    $depth = $connection->transactionDepth();
     // Start a transaction. If we're being called from ->transactionOuterLayer,
     // then we're already in a transaction. Normally, that would make starting
     // a transaction here dangerous, but the database API handles this problem
     // for us by tracking the nesting and avoiding the danger.
     $txn = db_transaction();
+
+    $depth2 = $connection->transactionDepth();
+    $this->assertTrue($depth < $depth2, t('Transaction depth is has increased with new transaction.'));
 
     // Insert a single row into the testing table.
     db_insert('test')
@@ -2957,9 +2971,9 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
 
     if ($rollback) {
       // Roll back the transaction, if requested.
-      // This rollback should propagate to the the outer transaction, if present.
+      // This rollback should propagate to the last savepoint.
       $txn->rollback();
-      $this->assertTrue($txn->willRollback(), t('Transaction is scheduled to roll back after calling rollback().'));
+      $this->assertTrue(($connection->transactionDepth() == $depth), t('Transaction has rolled back to the last savepoint after calling rollback().'));
     }
   }
 
