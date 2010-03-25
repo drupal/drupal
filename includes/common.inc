@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1132 2010/03/23 21:44:10 dries Exp $
+// $Id: common.inc,v 1.1133 2010/03/25 10:45:03 dries Exp $
 
 /**
  * @file
@@ -1171,10 +1171,6 @@ function flood_is_allowed($name, $threshold, $window = 3600, $identifier = NULL)
     ':timestamp' => REQUEST_TIME - $window))
     ->fetchField();
   return ($number < $threshold);
-}
-
-function check_file($filename) {
-  return is_uploaded_file($filename);
 }
 
 /**
