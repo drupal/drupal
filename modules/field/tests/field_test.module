@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.5 2010/02/11 17:44:47 webchick Exp $
+// $Id: field_test.module,v 1.6 2010/03/25 11:46:20 dries Exp $
 
 /**
  * @file
@@ -87,27 +87,23 @@ function field_test_field_test_op_multiple($entity_type, $entities, $field, $ins
 }
 
 /**
- * Implements hook_field_languages().
+ * Implements hook_field_available_languages_alter().
  */
-function field_test_field_languages($entity_type, $field, &$languages) {
-  if ($field['settings']['test_hook_in']) {
+function field_test_field_available_languages_alter(&$languages, $context) {
+  if (variable_get('field_test_field_available_languages_alter', FALSE)) {
     // Add an unavailable language.
     $languages[] = 'xx';
     // Remove an available language.
-    unset($languages[0]);
+    $index = array_search('en', $languages);
+    unset($languages[$index]);
   }
 }
 
 /**
- * Helper function to enable entity translations.
+ * Implements hook_field_language_alter().
  */
-function field_test_entity_info_translatable($entity_type = NULL, $translatable = NULL) {
-  $stored_value = &drupal_static(__FUNCTION__, array());
-  if (isset($entity_type)) {
-    $stored_value[$entity_type] = $translatable;
-    entity_info_cache_clear();
-  }
-  return $stored_value;
+function field_test_field_language_alter(&$display_language, $context) {
+  locale_field_language_fallback($display_language, $context['entity'], $context['language']);
 }
 
 /**

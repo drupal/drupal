@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.56 2010/03/07 07:44:18 webchick Exp $
+// $Id: locale.install,v 1.57 2010/03/25 11:46:21 dries Exp $
 
 /**
  * @file
@@ -113,6 +113,7 @@ function locale_uninstall() {
   variable_del('locale_cache_strings');
   variable_del('locale_js_directory');
   variable_del('javascript_parsed');
+  variable_del('locale_field_language_fallback');
 
   foreach (language_types() as $type) {
     variable_del("language_negotiation_$type");
