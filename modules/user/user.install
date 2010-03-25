@@ -283,7 +283,7 @@ function user_install() {
       'mail' => 'placeholder-for-uid-1',
       'created' => REQUEST_TIME,
       'status' => 1,
-      'data' => serialize(array()),
+      'data' => NULL,
     ))
     ->execute();
 
