@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.41 2010/03/24 07:34:10 dries Exp $
+// $Id: user.install,v 1.42 2010/03/25 10:31:23 dries Exp $
 
 /**
  * @file
@@ -283,7 +283,7 @@ function user_install() {
       'mail' => 'placeholder-for-uid-1',
       'created' => REQUEST_TIME,
       'status' => 1,
-      'data' => serialize(array()),
+      'data' => NULL,
     ))
     ->execute();
 
