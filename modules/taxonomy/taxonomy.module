@@ -42,7 +42,7 @@ function taxonomy_help($path, $arg) {
       $output = '<p>' . t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
       return $output;
     case 'admin/structure/taxonomy/%':
-      $vocabulary = taxonomy_vocabulary_load($arg[3]);
+      $vocabulary = taxonomy_vocabulary_machine_name_load($arg[3]);
       switch ($vocabulary->hierarchy) {
         case 0:
           return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
@@ -109,8 +109,8 @@ function taxonomy_entity_info() {
     $return['taxonomy_term']['bundles'][$machine_name] = array(
       'label' => $vocabulary->name,
       'admin' => array(
-        'path' => 'admin/structure/taxonomy/%taxonomy_vocabulary',
-        'real path' => 'admin/structure/taxonomy/' . $vocabulary->vid,
+        'path' => 'admin/structure/taxonomy/%taxonomy_vocabulary_machine_name',
+        'real path' => 'admin/structure/taxonomy/' . $machine_name,
         'bundle argument' => 3,
         'access arguments' => array('administer taxonomy'),
       ),
@@ -302,7 +302,7 @@ function taxonomy_menu() {
     'file' => 'taxonomy.pages.inc',
   );
 
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary'] = array(
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name'] = array(
     'title callback' => 'taxonomy_admin_vocabulary_title_callback',
     'title arguments' => array(3),
     'page callback' => 'drupal_get_form',
@@ -310,12 +310,12 @@ function taxonomy_menu() {
     'access arguments' => array('administer taxonomy'),
     'file' => 'taxonomy.admin.inc',
   );
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/list'] = array(
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -20,
   );
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/edit'] = array(
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_vocabulary', 3),
@@ -325,7 +325,7 @@ function taxonomy_menu() {
     'file' => 'taxonomy.admin.inc',
   );
 
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/add'] = array(
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add'] = array(
     'title' => 'Add term',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_term', array(), 3),
@@ -971,6 +971,21 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
  */
 function taxonomy_vocabulary_load($vid) {
   $vocabularies = taxonomy_vocabulary_load_multiple(array($vid));
+  return reset($vocabularies);
+}
+
+/**
+ * Return the vocabulary object matching a vocabulary machine name.
+ *
+ * @param $name
+ *   The vocabulary's machine name.
+ *
+ * @return
+ *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
+ *   Results are statically cached.
+ */
+function taxonomy_vocabulary_machine_name_load($name) {
+  $vocabularies = taxonomy_vocabulary_load_multiple(NULL, array('machine_name' => $name));
   return reset($vocabularies);
 }
 

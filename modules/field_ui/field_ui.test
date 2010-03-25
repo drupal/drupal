@@ -92,7 +92,8 @@ class FieldUITestCase extends DrupalWebTestCase {
     // Assert the field appears in the "add existing field" section for
     // different entity types; e.g. if a field was added in a node entity, it
     // should also appear in the 'taxonomy term' entity.
-    $this->drupalGet('admin/structure/taxonomy/1/fields');
+    $vocabulary = taxonomy_vocabulary_load(1);
+    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->machine_name . '/fields');
     $this->assertTrue($this->xpath('//select[@id="edit--add-existing-field-field-name"]//option[@value="' . $this->field_name . '"]'), t('Existing field was found in account settings.'));
   }
 
