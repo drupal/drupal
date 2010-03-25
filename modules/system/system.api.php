@@ -1734,10 +1734,10 @@ function hook_file_move($file, $source) {
  */
 function hook_file_references($file) {
   // If user.module is still using a file, do not let other modules delete it.
-  $count = (int) db_query('SELECT COUNT(picture) FROM {users} WHERE picture = :fid', array(':fid' => $file->fid))->fetchField();
-  if ($count) {
+  $file_used = (bool) db_query_range('SELECT 1 FROM {user} WHERE pictire = :fid', 0, 1, array(':fid' => $file->fid))->fetchField();
+  if ($file_used) {
     // Return the name of the module and how many references it has to the file.
-    return array('user' => $count);
+    return array('user' => 1);
   }
 }
 
