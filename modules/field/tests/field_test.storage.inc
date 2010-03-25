@@ -95,7 +95,7 @@ function field_test_field_storage_load($entity_type, $entities, $age, $fields, $
     foreach ($field_data[$sub_table] as $row) {
       if ($row->type == $entity_type && (!$row->deleted || $options['deleted'])) {
         if (($load_current && in_array($row->entity_id, $ids)) || (!$load_current && in_array($row->revision_id, $ids))) {
-          if (in_array($row->language, field_multilingual_available_languages($entity_type, $field))) {
+          if (in_array($row->language, field_available_languages($entity_type, $field))) {
             if (!isset($delta_count[$row->entity_id][$row->language])) {
               $delta_count[$row->entity_id][$row->language] = 0;
             }
@@ -127,7 +127,7 @@ function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
     $field_name = $field['field_name'];
     $field_data = &$data[$field_id];
 
-    $all_languages = field_multilingual_available_languages($entity_type, $field);
+    $all_languages = field_available_languages($entity_type, $field);
     $field_languages = array_intersect($all_languages, array_keys((array) $entity->$field_name));
 
     // Delete and insert, rather than update, in case a value was added.

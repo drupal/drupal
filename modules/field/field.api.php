@@ -1062,9 +1062,41 @@ function hook_field_attach_delete_revision($entity_type, $entity) {
  *   - obj_type: The type of $entity; e.g. 'node' or 'user'.
  *   - object: The entity with fields to render.
  *   - view_mode: View mode, e.g. 'full', 'teaser'...
- *   - langcode: The language in which the field values will be displayed.
  */
 function hook_field_attach_view_alter(&$output, $context) {
+}
+
+/**
+ * Act on field_language().
+ *
+ * This hook is invoked to alter the array of display languages for the given
+ * entity.
+ *
+ * @param $display_language
+ *   A reference to an array of language codes keyed by field name.
+ * @param $context
+ *   An associative array containing:
+ *   - entity_type: The type of the entity to be displayed.
+ *   - entity: The entity with fields to render.
+ *   - langcode: The language code $entity has to be displayed in.
+ */
+function hook_field_language_alter(&$display_language, $context) {
+}
+
+/**
+ * Act on field_available_languages().
+ *
+ * This hook is invoked to alter the array of available languages for the given
+ * field.
+ *
+ * @param &$languages
+ *   A reference to an array of language codes to be made available.
+ * @param $context
+ *   An associative array containing:
+ *   - entity_type: The type of the entity the field is attached to.
+ *   - field: A field data structure.
+ */
+function hook_field_available_languages_alter(&$languages, $context) {
 }
 
 /**

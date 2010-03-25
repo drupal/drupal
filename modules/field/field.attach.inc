@@ -168,6 +168,9 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *  - 'deleted': If TRUE, the function will operate on deleted fields
  *    as well as non-deleted fields. If unset or FALSE, only
  *    non-deleted fields are operated on.
+ *  - 'language': A language code or an array of language codes keyed by field
+ *    name. It will be used to narrow down to a single value the available
+ *    languages to act on.
  */
 function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $options = array()) {
   // Merge default options.
@@ -196,10 +199,14 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
     if ((!isset($options['field_id']) || $options['field_id'] == $instance['field_id']) && (!isset($options['field_name']) || $options['field_name'] == $field_name)) {
       $field = field_info_field($field_name);
       $field_translations = array();
-      $suggested_languages = empty($options['language']) ? NULL : array($options['language']);
+
+      // Unless a language suggestion is provided we iterate on all the
+      // available languages.
+      $available_languages = field_available_languages($entity_type, $field);
+      $languages = _field_language_suggestion($available_languages, $options['language'], $field_name);
 
       // Initialize field translations according to the available languages.
-      foreach (field_multilingual_available_languages($entity_type, $field, $suggested_languages) as $langcode) {
+      foreach ($languages as $langcode) {
         $field_translations[$langcode] = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
       }
 
@@ -271,6 +278,10 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
  *  - 'deleted': If TRUE, the function will operate on deleted fields
  *    as well as non-deleted fields. If unset or FALSE, only
  *    non-deleted fields are operated on.
+ *  - 'language': A language code or an array of language codes keyed by field
+ *    name. It will be used to narrow down to a single value the available
+ *    languages to act on.
+ *
  * @return
  *   An array of returned values keyed by entity id.
  */
@@ -321,8 +332,11 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
         $grouped_entities[$field_id][$id] = $entities[$id];
         // Extract the field values into a separate variable, easily accessed
         // by hook implementations.
-        $suggested_languages = empty($options['language']) ? NULL : array($options['language']);
-        foreach (field_multilingual_available_languages($entity_type, $fields[$field_id], $suggested_languages) as $langcode) {
+        // Unless a language suggestion is provided we iterate on all the
+        // available languages.
+        $available_languages = field_available_languages($entity_type, $fields[$field_id]);
+        $languages = _field_language_suggestion($available_languages, $options['language'], $field_name);
+        foreach ($languages as $langcode) {
           $grouped_items[$field_id][$langcode][$id] = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
         }
       }
@@ -492,7 +506,7 @@ function _field_invoke_multiple_default($op, $entity_type, $entities, &$a = NULL
  */
 function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode = NULL) {
   // If no language is provided use the default site language.
-  $options = array('language' => field_multilingual_valid_language($langcode));
+  $options = array('language' => field_valid_language($langcode));
   $form += (array) _field_invoke_default('form', $entity_type, $entity, $form, $form_state, $options);
 
   // Add custom weight handling.
@@ -1200,9 +1214,12 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode = 'full')
  *   A renderable array for the field values.
  */
 function field_attach_view($entity_type, $entity, $view_mode = 'full', $langcode = NULL) {
-  // Invoke field_default_view(). If no language is provided, use the current
-  // UI language.
-  $options = array('language' => field_multilingual_valid_language($langcode, FALSE));
+  // Determine the actual language to display for each field, given the
+  // languages available in the field data.
+  $display_language = field_language($entity_type, $entity, NULL, $langcode);
+  $options = array('language' => $display_language);
+
+  // Invoke field_default_view().
   $null = NULL;
   $output = _field_invoke_default('view', $entity_type, $entity, $view_mode, $null, $options);
 
@@ -1219,7 +1236,6 @@ function field_attach_view($entity_type, $entity, $view_mode = 'full', $langcode
     'obj_type' => $entity_type,
     'object' => $entity,
     'view_mode' => $view_mode,
-    'langcode' => $langcode,
   );
   drupal_alter('field_attach_view', $output, $context);
 

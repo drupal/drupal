@@ -2604,8 +2604,7 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
  * Unit test class for the multilanguage fields logic.
  *
  * The following tests will check the multilanguage logic of _field_invoke() and
- * that only the correct values are returned by
- * field_multilingual_available_languages().
+ * that only the correct values are returned by field_available_languages().
  */
 class FieldTranslationsTestCase extends FieldTestCase {
   public static function getInfo() {
@@ -2628,9 +2627,6 @@ class FieldTranslationsTestCase extends FieldTestCase {
       'type' => 'test_field',
       'cardinality' => 4,
       'translatable' => TRUE,
-      'settings' => array(
-        'test_hook_in' => FALSE,
-      ),
     );
     field_create_field($field);
     $this->field = field_read_field($this->field_name);
@@ -2639,19 +2635,6 @@ class FieldTranslationsTestCase extends FieldTestCase {
       'field_name' => $this->field_name,
       'object_type' => $this->obj_type,
       'bundle' => 'test_bundle',
-      'label' => $this->randomName() . '_label',
-      'description' => $this->randomName() . '_description',
-      'weight' => mt_rand(0, 127),
-      'settings' => array(
-        'test_instance_setting' => $this->randomName(),
-      ),
-      'widget' => array(
-        'type' => 'test_field_widget',
-        'label' => 'Test Field',
-        'settings' => array(
-          'test_widget_setting' => $this->randomName(),
-        ),
-      ),
     );
     field_create_instance($instance);
     $this->instance = field_read_instance('test_entity', $this->field_name, 'test_bundle');
@@ -2663,64 +2646,34 @@ class FieldTranslationsTestCase extends FieldTestCase {
   }
 
   /**
-   * Ensure that only valid values are returned by field_multilingual_available_languages().
+   * Ensures that only valid values are returned by field_available_languages().
    */
   function testFieldAvailableLanguages() {
     // Test 'translatable' fieldable info.
     field_test_entity_info_translatable('test_entity', FALSE);
     $field = $this->field;
     $field['field_name'] .= '_untranslatable';
-    $langcode = language_default();
-    $suggested_languages = array($langcode->language);
-    $available_languages = field_multilingual_available_languages($this->obj_type, $field, $suggested_languages);
-    $this->assertTrue(count($available_languages) == 1 && $available_languages[0] === LANGUAGE_NONE, t('Untranslatable entity: suggested language ignored.'));
 
     // Enable field translations for the entity.
     field_test_entity_info_translatable('test_entity', TRUE);
 
     // Test hook_field_languages() invocation on a translatable field.
-    $this->field['settings']['test_hook_in'] = TRUE;
-    $enabled_languages = array_keys(language_list());
-    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field);
-    $this->assertTrue(in_array(LANGUAGE_NONE, $available_languages), t('%language is an available language.', array('%language' => LANGUAGE_NONE)));
+    variable_set('field_test_field_available_languages_alter', TRUE);
+    $enabled_languages = field_content_languages();
+    $available_languages = field_available_languages($this->obj_type, $this->field);
     foreach ($available_languages as $delta => $langcode) {
-      if ($langcode != LANGUAGE_NONE) {
+      if ($langcode != 'xx' && $langcode != 'en') {
         $this->assertTrue(in_array($langcode, $enabled_languages), t('%language is an enabled language.', array('%language' => $langcode)));
       }
     }
-    $this->assertFalse(in_array('xx', $available_languages), t('No invalid language was made available.'));
-    $this->assertTrue(count($available_languages) == count($enabled_languages), t('An enabled language was successfully made unavailable.'));
+    $this->assertTrue(in_array('xx', $available_languages), t('%language was made available.', array('%language' => 'xx')));
+    $this->assertFalse(in_array('en', $available_languages), t('%language was made unavailable.', array('%language' => 'en')));
 
-    // Test field_multilingual_available_languages() behavior for untranslatable fields.
+    // Test field_available_languages() behavior for untranslatable fields.
     $this->field['translatable'] = FALSE;
     $this->field_name = $this->field['field_name'] = $this->instance['field_name'] = drupal_strtolower($this->randomName() . '_field_name');
-    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field);
-    $this->assertTrue(count($available_languages) == 1 && $available_languages[0] === LANGUAGE_NONE, t('For untranslatable fields only neutral language is available.'));
-
-    // Test language suggestions.
-    $this->field['settings']['test_hook_in'] = FALSE;
-    $this->field['translatable'] = TRUE;
-    $this->field_name = $this->field['field_name'] = $this->instance['field_name'] = drupal_strtolower($this->randomName() . '_field_name');
-    $suggested_languages = array();
-    $lang_count = mt_rand(1, count($enabled_languages) - 1);
-    for ($i = 0; $i < $lang_count; ++$i) {
-      do {
-        $langcode = $enabled_languages[mt_rand(0, $lang_count)];
-      }
-      while (in_array($langcode, $suggested_languages));
-      $suggested_languages[] = $langcode;
-    }
-
-    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field, $suggested_languages);
-    $this->assertEqual(count($available_languages), count($suggested_languages), t('Suggested languages were successfully made available.'));
-    foreach ($available_languages as $langcode) {
-      $this->assertTrue(in_array($langcode, $available_languages), t('Suggested language %language is available.', array('%language' => $langcode)));
-    }
-
-    $this->field_name = $this->field['field_name'] = $this->instance['field_name'] = drupal_strtolower($this->randomName() . '_field_name');
-    $suggested_languages = array('xx');
-    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field, $suggested_languages);
-    $this->assertTrue(empty($available_languages), t('An invalid suggested language was not made available.'));
+    $available_languages = field_available_languages($this->obj_type, $this->field);
+    $this->assertTrue(count($available_languages) == 1 && $available_languages[0] === LANGUAGE_NONE, t('For untranslatable fields only LANGUAGE_NONE is available.'));
   }
 
   /**
@@ -2731,10 +2684,10 @@ class FieldTranslationsTestCase extends FieldTestCase {
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
 
     // Populate some extra languages to check if _field_invoke() correctly uses
-    // the result of field_multilingual_available_languages().
+    // the result of field_available_languages().
     $values = array();
     $extra_languages = mt_rand(1, 4);
-    $languages = $available_languages = field_multilingual_available_languages($this->obj_type, $this->field);
+    $languages = $available_languages = field_available_languages($this->obj_type, $this->field);
     for ($i = 0; $i < $extra_languages; ++$i) {
       $languages[] = $this->randomString(2);
     }
@@ -2765,14 +2718,14 @@ class FieldTranslationsTestCase extends FieldTestCase {
     $entities = array();
     $entity_type = 'test_entity';
     $entity_count = mt_rand(1, 5);
-    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field);
+    $available_languages = field_available_languages($this->obj_type, $this->field);
 
     for ($id = 1; $id <= $entity_count; ++$id) {
       $entity = field_test_create_stub_entity($id, $id, $this->instance['bundle']);
       $languages = $available_languages;
 
       // Populate some extra languages to check whether _field_invoke()
-      // correctly uses the result of field_multilingual_available_languages().
+      // correctly uses the result of field_available_languages().
       $extra_languages = mt_rand(1, 4);
       for ($i = 0; $i < $extra_languages; ++$i) {
         $languages[] = $this->randomString(2);
@@ -2815,7 +2768,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
     $field_translations = array();
-    $available_languages = field_multilingual_available_languages($entity_type, $this->field);
+    $available_languages = field_available_languages($entity_type, $this->field);
     $this->assertTrue(count($available_languages) > 1, t('Field is translatable.'));
     foreach ($available_languages as $langcode) {
       $field_translations[$langcode] = $this->_generateTestFieldValues($this->field['cardinality']);
@@ -2835,6 +2788,82 @@ class FieldTranslationsTestCase extends FieldTestCase {
       }
       $this->assertTrue($result, t('%language translation correctly handled.', array('%language' => $langcode)));
     }
+  }
+
+  /**
+   * Tests display language logic for translatable fields.
+   */
+  function testFieldDisplayLanguage() {
+    $field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $entity_type = 'test_entity';
+
+    // We need an additional field here to properly test display language
+    // suggestions.
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'test_field',
+      'cardinality' => 2,
+      'translatable' => TRUE,
+    );
+    field_create_field($field);
+
+    $instance = array(
+      'field_name' => $field['field_name'],
+      'object_type' => $entity_type,
+      'bundle' => 'test_bundle',
+    );
+    field_create_instance($instance);
+
+    $entity = field_test_create_stub_entity(1, 1, $this->instance['bundle']);
+    list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+    $instances = field_info_instances($entity_type, $bundle);
+
+    $enabled_languages = field_content_languages();
+    $languages = array();
+
+    // Generate field translations for languages different from the first
+    // enabled.
+    foreach ($instances as $instance) {
+      $field_name = $instance['field_name'];
+      $field = field_info_field($field_name);
+      do {
+        // Index 0 is reserved for the requested language, this way we ensure
+        // that no field is actually populated with it.
+        $langcode = $enabled_languages[mt_rand(1, count($enabled_languages) - 1)];
+      }
+      while (isset($languages[$langcode]));
+      $languages[$langcode] = TRUE;
+      $entity->{$field_name}[$langcode] = $this->_generateTestFieldValues($field['cardinality']);
+    }
+
+    // Test multiple-fields display languages for untranslatable entities.
+    field_test_entity_info_translatable($entity_type, FALSE);
+    drupal_static_reset('field_language');
+    $requested_language = $enabled_languages[0];
+    $display_language = field_language($entity_type, $entity, NULL, $requested_language);
+    foreach ($instances as $instance) {
+      $field_name = $instance['field_name'];
+      $this->assertTrue($display_language[$field_name] == LANGUAGE_NONE, t('The display language for field %field_name is %language.', array('%field_name' => $field_name, '%language' => LANGUAGE_NONE)));
+    }
+
+    // Test multiple-fields display languages for translatable entities.
+    field_test_entity_info_translatable($entity_type, TRUE);
+    drupal_static_reset('field_language');
+    $display_language = field_language($entity_type, $entity, NULL, $requested_language);
+
+    foreach ($instances as $instance) {
+      $field_name = $instance['field_name'];
+      $langcode = $display_language[$field_name];
+      // As the requested language was not assinged to any field, if the
+      // returned language is defined for the current field, core fallback rules
+      // were successfully applied.
+      $this->assertTrue(isset($entity->{$field_name}[$langcode]) && $langcode != $requested_language, t('The display language for the field %field_name is %language.', array('%field_name' => $field_name, '%language' => $langcode)));
+    }
+
+    // Test single-field display language.
+    drupal_static_reset('field_language');
+    $langcode = field_language($entity_type, $entity, $this->field_name, $requested_language);
+    $this->assertTrue(isset($entity->{$this->field_name}[$langcode]) && $langcode != $requested_language, t('The display language for the (single) field %field_name is %language.', array('%field_name' => $field_name, '%language' => $langcode)));
   }
 }
 

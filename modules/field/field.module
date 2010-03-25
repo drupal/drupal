@@ -496,10 +496,8 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
   $output = array();
 
   if ($field = field_info_field($field_name)) {
-    $langcode = field_multilingual_valid_language($langcode, FALSE);
-
     // Determine the langcode that will be used by language fallback.
-    $langcode = current(field_multilingual_available_languages($entity_type, $field, array($langcode)));
+    $langcode = field_language($entity_type, $entity, $field_name, $langcode);
 
     // Push the item as the single value for the field, and defer to
     // field_view_field() to build the render array for the whole field.
@@ -588,7 +586,10 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
 
     // Hook invocations are done through the _field_invoke() functions in
     // 'single field' mode, to reuse the language fallback logic.
-    $options = array('field_name' => $field_name, 'language' => field_multilingual_valid_language($langcode, FALSE));
+    // Determine the actual language to display for the field, given the
+    // languages available in the field data.
+    $display_language = field_language($entity_type, $entity, $field_name, $langcode);
+    $options = array('field_name' => $field_name, 'language' => $display_language);
     $null = NULL;
 
     // Invoke prepare_view steps if needed.
@@ -604,13 +605,12 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
     // Build the renderable array.
     $result = _field_invoke_default('view', $entity_type, $entity, $display, $null, $options);
 
-    // Invoke hook_field_attach_view_alter() to tet other modules alter the
+    // Invoke hook_field_attach_view_alter() to let other modules alter the
     // renderable array, as in a full field_attach_view() execution.
     $context = array(
       'obj_type' => $entity_type,
       'object' => $entity,
       'view_mode' => '_custom',
-      'langcode' => $langcode,
     );
     drupal_alter('field_attach_view', $result, $context);
 
@@ -621,6 +621,27 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
   }
 
   return $output;
+}
+
+/**
+ * Returns the field items in the language they currently would be displayed.
+ *
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
+ *   The entity containing the data to be displayed.
+ * @param $field_name
+ *   The field to be displayed.
+ * @param $langcode
+ *   (optional) The language code $entity->{$field_name} has to be displayed in.
+ *   Defaults to the current language.
+ *
+ * @return
+ *   An array of field items keyed by delta if available, FALSE otherwise.
+ */
+function field_get_items($entity_type, $entity, $field_name, $langcode = NULL) {
+  $langcode = field_language($entity_type, $entity, $field_name, $langcode);
+  return isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : FALSE;
 }
 
 /**

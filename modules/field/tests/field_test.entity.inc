@@ -64,6 +64,19 @@ function field_test_entity_info_alter(&$entity_info) {
 }
 
 /**
+ * Helper function to enable entity translations.
+ */
+function field_test_entity_info_translatable($entity_type = NULL, $translatable = NULL) {
+  drupal_static_reset('field_has_translation_handler');
+  $stored_value = &drupal_static(__FUNCTION__, array());
+  if (isset($entity_type)) {
+    $stored_value[$entity_type] = $translatable;
+    entity_info_cache_clear();
+  }
+  return $stored_value;
+}
+
+/**
  * Creates a new bundle for test_entity entities.
  *
  * @param $bundle

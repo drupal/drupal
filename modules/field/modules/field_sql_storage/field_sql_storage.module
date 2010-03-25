@@ -311,7 +311,7 @@ function field_sql_storage_field_storage_load($entity_type, $entities, $age, $fi
       ->fields('t')
       ->condition('etid', $etid)
       ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
-      ->condition('language', field_multilingual_available_languages($entity_type, $field), 'IN')
+      ->condition('language', field_available_languages($entity_type, $field), 'IN')
       ->orderBy('delta');
 
     if (empty($options['deleted'])) {
@@ -356,7 +356,7 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
     $table_name = _field_sql_storage_tablename($field);
     $revision_name = _field_sql_storage_revision_tablename($field);
 
-    $all_languages = field_multilingual_available_languages($entity_type, $field);
+    $all_languages = field_available_languages($entity_type, $field);
     $field_languages = array_intersect($all_languages, array_keys((array) $entity->$field_name));
 
     // Delete and insert, rather than update, in case a value was added.
