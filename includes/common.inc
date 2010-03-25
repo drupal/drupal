@@ -1173,10 +1173,6 @@ function flood_is_allowed($name, $threshold, $window = 3600, $identifier = NULL)
   return ($number < $threshold);
 }
 
-function check_file($filename) {
-  return is_uploaded_file($filename);
-}
-
 /**
  * @defgroup sanitization Sanitization functions
  * @{
