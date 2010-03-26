@@ -340,7 +340,7 @@ function locale_form_path_admin_form_alter(&$form, &$form_state) {
   $form['language'] = array(
     '#type' => 'select',
     '#title' => t('Language'),
-    '#options' => array('' => t('All languages')) + locale_language_list('name'),
+    '#options' => array(LANGUAGE_NONE => t('All languages')) + locale_language_list('name'),
     '#default_value' => $form['language']['#value'],
     '#weight' => -10,
     '#description' => t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set for <em>All languages</em>.'),
