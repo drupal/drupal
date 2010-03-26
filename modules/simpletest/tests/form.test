@@ -123,7 +123,7 @@ class FormsTestCase extends DrupalWebTestCase {
   /**
    * Test default value handling for checkboxes.
    *
-   * @see _form_test_checkbox().
+   * @see _form_test_checkbox()
    */
   function testCheckboxProcessing() {
     // First, try to submit without the required checkbox.
@@ -153,7 +153,7 @@ class FormsTestCase extends DrupalWebTestCase {
   /**
    * Test handling of disabled elements.
    *
-   * @see _form_test_disabled_elements().
+   * @see _form_test_disabled_elements()
    */
   function testDisabledElements() {
     // Submit the form, and fetch the default values.

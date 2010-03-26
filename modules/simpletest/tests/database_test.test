@@ -2247,7 +2247,7 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
 /**
  * Select alter tests.
  *
- * @see database_test_query_alter().
+ * @see database_test_query_alter()
  */
 class DatabaseAlterTestCase extends DatabaseTestCase {
 
@@ -2331,7 +2331,7 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
 /**
  * Select alter tests, part 2.
  *
- * @see database_test_query_alter().
+ * @see database_test_query_alter()
  */
 class DatabaseAlter2TestCase extends DatabaseTestCase {
 

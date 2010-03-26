@@ -378,7 +378,7 @@ function _form_test_tableselect_js_select_form($form, $form_state, $action) {
  * request parameter "cache" the form can be tested with caching enabled, as
  * it would be the case, if the form would contain some #ajax callbacks.
  *
- * @see form_test_storage_form_submit().
+ * @see form_test_storage_form_submit()
  */
 function form_test_storage_form($form, &$form_state) {
   if ($form_state['rebuild']) {

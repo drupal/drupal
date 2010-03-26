@@ -66,8 +66,10 @@ function image_image_effect_info() {
  *   following items:
  *   - "width": An integer representing the desired width in pixels.
  *   - "height": An integer representing the desired height in pixels.
+ *
  * @return
  *   TRUE on success. FALSE on failure to resize image.
+ *
  * @see image_resize()
  */
 function image_resize_effect(&$image, $data) {
@@ -90,8 +92,10 @@ function image_resize_effect(&$image, $data) {
  *   - "height": An integer representing the desired height in pixels.
  *   - "upscale": A Boolean indicating that the image should be upscalled if
  *     the dimensions are larger than the original image.
+ *
  * @return
  *   TRUE on success. FALSE on failure to scale image.
+ *
  * @see image_scale()
  */
 function image_scale_effect(&$image, $data) {

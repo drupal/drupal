@@ -123,8 +123,7 @@ function comment_entity_info() {
         // of local tasks. Note that the paths use a different placeholder name
         // and thus a different menu loader callback, so that Field UI page
         // callbacks get a comment bundle name from the node type in the URL.
-        // @see comment_node_type_load()
-        // @see comment_menu_alter()
+        // See comment_node_type_load() and comment_menu_alter().
         'path' => 'admin/structure/types/manage/%comment_node_type/comment',
         'bundle argument' => 4,
         'real path' => 'admin/structure/types/manage/' . str_replace('_', '-', $type) . '/comment',
@@ -1660,7 +1659,7 @@ function comment_get_display_ordinal($cid, $node_type) {
   else {
     // For threaded comments, the c.thread column is used for ordering. We can
     // use the vancode for comparison, but must remove the trailing slash.
-    // @see comment_view_multiple().
+    // See comment_view_multiple().
     $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) -1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) -1))');
   }
 
@@ -1697,9 +1696,10 @@ function comment_edit_page($comment) {
 /**
  * Generate the basic commenting form, for appending to a node or display on a separate page.
  *
- * @ingroup forms
  * @see comment_form_validate()
  * @see comment_form_submit()
+ *
+ * @ingroup forms
  */
 function comment_form($form, &$form_state, $comment) {
   global $user;
@@ -2511,7 +2511,7 @@ function comment_menu_alter(&$items) {
   $items['admin/content']['description'] = "Administer content and comments";
 
   // Adjust the Field UI tabs on admin/structure/types/manage/[node-type].
-  // @see comment_entity_info()
+  // See comment_entity_info().
   $items['admin/structure/types/manage/%comment_node_type/comment/fields']['title'] = 'Comment fields';
   $items['admin/structure/types/manage/%comment_node_type/comment/fields']['weight'] = 3;
   $items['admin/structure/types/manage/%comment_node_type/comment/display']['title'] = 'Comment display';

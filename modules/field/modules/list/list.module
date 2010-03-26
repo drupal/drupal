@@ -292,7 +292,7 @@ function list_field_is_empty($item, $field) {
  * The List module does not implement widgets of its own, but reuses the
  * widgets defined in options.module.
  *
- * @see list_options_list().
+ * @see list_options_list()
  */
 function list_field_widget_info_alter(&$info) {
   $widgets = array(

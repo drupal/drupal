@@ -199,7 +199,8 @@ function text_field_validate($entity_type, $entity, $field, $instance, $langcode
  * Where possible, generate the sanitized version of each field early so that
  * it is cached in the field cache. This avoids looking up from the filter cache
  * separately.
- * @see text_field_formatter_view().
+ *
+ * @see text_field_formatter_view()
  */
 function text_field_load($entity_type, $entities, $field, $instances, $langcode, &$items) {
   foreach ($entities as $id => $entity) {

@@ -818,7 +818,7 @@ function drupal_http_request($url, array $options = array()) {
     // Mark that this request failed. This will trigger a check of the web
     // server's ability to make outgoing HTTP requests the next time that
     // requirements checking is performed.
-    // @see system_requirements()
+    // See system_requirements()
     variable_set('drupal_http_request_fails', TRUE);
 
     return $result;
@@ -3758,14 +3758,15 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  *   When TRUE, will exit if a given library's dependencies are missing. When
  *   set to FALSE, will continue to add the libraries, even though one of the
  *   dependencies are missing. Defaults to FALSE.
+ *
  * @return
  *   Will return FALSE if there were any missing library dependencies. TRUE will
  *   be returned if all library dependencies were met.
  *
- * @see drupal_add_library().
- * @see drupal_add_js().
- * @see drupal_add_css().
- * @see drupal_render().
+ * @see drupal_add_library()
+ * @see drupal_add_js()
+ * @see drupal_add_css()
+ * @see drupal_render()
  */
 function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_check = FALSE) {
   // Add defaults to the special attached structures that should be processed differently.
@@ -4779,7 +4780,7 @@ function drupal_pre_render_markup($elements) {
  *   - #show_messages: Suppress drupal_get_message() items. Used by Batch API (optional).
  *
  * @see hook_page_alter()
- * @see element_info('page')
+ * @see element_info()
  */
 function drupal_render_page($page) {
   $main_content_display = &drupal_static('system_main_content_added', FALSE);
@@ -4845,8 +4846,8 @@ function drupal_render_page($page) {
  * improve performance. To use drupal_render() caching, set the element's #cache
  * property to an associative array with one or several of the following keys:
  *    - 'keys': An array of one or more keys that identify the element. If 'keys'
- *       is set, the cache ID is created automatically from these keys.
- *       @see drupal_render_cid_create()
+ *       is set, the cache ID is created automatically from these keys. See
+ *       drupal_render_cid_create().
  *    - 'granularity' (optional): Define the cache granularity using binary
  *       combinations of the cache granularity constants, e.g. DRUPAL_CACHE_PER_USER
  *       to cache for each user separately or

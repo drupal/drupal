@@ -17,7 +17,7 @@
  */
 
 /**
- * @see registry_update().
+ * Does the work for registry_update().
  */
 function _registry_update() {
 

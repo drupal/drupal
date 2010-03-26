@@ -61,6 +61,7 @@
  *   drupal_get_form(), including the unique form constructor function. For
  *   example, the node_edit form requires that a node object is passed in here
  *   when it is called.
+ *
  * @return
  *   The form array.
  *
@@ -191,9 +192,9 @@ function drupal_build_form($form_id, &$form_state) {
     if (!isset($form)) {
       // Record the filepath of the include file containing the original form,
       // so the form builder callbacks can be loaded when the form is being
-      // rebuilt from cache on a different path (such as 'system/ajax').
-      // @see form_get_cache()
-      // menu_get_item() is not available at installation time.
+      // rebuilt from cache on a different path (such as 'system/ajax'). See
+      // form_get_cache(). 
+      // $menu_get_item() is not available at installation time.
       if (!isset($form_state['build_info']['file']) && !defined('MAINTENANCE_MODE')) {
         $item = menu_get_item();
         if (!empty($item['file'])) {
@@ -357,7 +358,7 @@ function form_get_cache($form_build_id, &$form_state) {
         $form_state = $cached->data + $form_state;
 
         // If the original form is contained in an include file, load the file.
-        // @see drupal_build_form()
+        // See drupal_build_form().
         if (!empty($form_state['build_info']['file']) && file_exists($form_state['build_info']['file'])) {
           require_once DRUPAL_ROOT . '/' . $form_state['build_info']['file'];
         }
@@ -553,8 +554,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // builder function to pre-populate the $form array with form elements, which
   // the actual form builder function ($callback) expects. This allows for
   // pre-populating a form with common elements for certain forms, such as
-  // back/next/save buttons in multi-step form wizards.
-  // @see drupal_build_form()
+  // back/next/save buttons in multi-step form wizards. See drupal_build_form().
   if (isset($form_state['wrapper_callback']) && function_exists($form_state['wrapper_callback'])) {
     $form = call_user_func_array($form_state['wrapper_callback'], $args);
     // Put the prepopulated $form into $args.
@@ -1088,7 +1088,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
  *   assume that certain data exists within $form_state['values'], and while not
  *   doing anything with that data that requires it to be valid, PHP errors
  *   would be triggered if the input processing and validation steps were fully
- *   skipped. @see http://drupal.org/node/370537.
+ *   skipped. See http://drupal.org/node/370537.
  *
  * @return
  *   Return value is for internal use only. To get a list of errors, use

@@ -409,8 +409,8 @@ function rdf_theme() {
 function rdf_process(&$variables, $hook) {
   // Handles attributes needed for content not covered by title, content,
   // and field items. Does this by adjusting the variable sent to the template
-  // so that the template doesn't have to worry about it.
-  // @see theme_rdf_template_variable_wrapper()
+  // so that the template doesn't have to worry about it. See 
+  // theme_rdf_template_variable_wrapper().
   if (!empty($variables['rdf_template_variable_attributes_array'])) {
     foreach ($variables['rdf_template_variable_attributes_array'] as $variable_name => $attributes) {
       $context = array(

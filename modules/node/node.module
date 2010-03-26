@@ -379,6 +379,7 @@ function _node_extract_type($node) {
  *
  * @return
  *   An array of node types, keyed by the type.
+ *
  * @see node_type_get_type()
  */
 function node_type_get_types() {
@@ -398,7 +399,7 @@ function node_type_get_types() {
  *   fields used internally and defined in _node_types_build() and
  *   node_type_set_defaults().
  *
- * @see hook_node_info();
+ * @see hook_node_info()
  */
 function node_type_get_type($node) {
   $type = _node_extract_type($node);

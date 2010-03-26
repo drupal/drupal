@@ -47,12 +47,16 @@ define('DRUPAL_OPTIONAL', 1);
 define('DRUPAL_REQUIRED', 2);
 
 /**
- * Return only visible regions. @see system_region_list().
+ * Return only visible regions. 
+ *
+ * @see system_region_list()
  */
 define('REGIONS_VISIBLE', 'visible');
 
 /**
- * Return all visible regions. @see system_region_list().
+ * Return all regions. 
+ *
+ * @see system_region_list()
  */
 define('REGIONS_ALL', 'all');
 
@@ -2168,6 +2172,7 @@ function system_update_files_database(&$files, $type) {
  *
  * @param $type
  *   Either 'module' or 'theme'.
+ *
  * @return
  *   An associative array of module or theme information keyed by name.
  *
@@ -2501,7 +2506,7 @@ function system_region_list($theme_key, $show = REGIONS_ALL) {
       return $list[$theme_key][$show];
     }
     $info = $themes[$theme_key]->info;
-    // If requested, suppress hidden regions. @see block_admin_display_form().
+    // If requested, suppress hidden regions. See block_admin_display_form().
     foreach ($info['regions'] as $name => $label) {
       if ($show == REGIONS_ALL || !isset($info['regions_hidden']) || !in_array($name, $info['regions_hidden'])) {
         $list[$theme_key][$show][$name] = $label;
@@ -2557,15 +2562,17 @@ function _system_settings_form_automatic_defaults($form) {
 /**
  * Add default buttons to a form and set its prefix.
  *
- * @ingroup forms
- * @see system_settings_form_submit()
  * @param $form
  *   An associative array containing the structure of the form.
  * @param $automatic_defaults
  *   Automatically load the saved values for each field from the system variables
  *   (defaults to TRUE).
+ *
  * @return
  *   The form structure.
+ *
+ * @see system_settings_form_submit()
+ * @ingroup forms
  */
 function system_settings_form($form, $automatic_defaults = TRUE) {
   $form['actions']['#type'] = 'container';
@@ -2771,7 +2778,7 @@ function system_cron() {
 
   // Remove temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
   // Use separate placeholders for the status to avoid a bug in some versions
-  // of PHP. See http://drupal.org/node/352956
+  // of PHP. See http://drupal.org/node/352956.
   $result = db_query('SELECT fid FROM {file} WHERE status & :permanent1 <> :permanent2 AND timestamp < :timestamp', array(
     ':permanent1' => FILE_STATUS_PERMANENT,
     ':permanent2' => FILE_STATUS_PERMANENT,
@@ -2853,12 +2860,14 @@ function system_action_info() {
 /**
  * Return a form definition so the Send email action can be configured.
  *
- * @see system_send_email_action_validate()
- * @see system_send_email_action_submit()
  * @param $context
  *   Default values (if we are editing an existing action instance).
+ *
  * @return
  *   Form definition.
+ *
+ * @see system_send_email_action_validate()
+ * @see system_send_email_action_submit()
  */
 function system_send_email_action_form($context) {
   // Set default values for form.

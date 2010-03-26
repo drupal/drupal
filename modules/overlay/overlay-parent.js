@@ -301,10 +301,10 @@ Drupal.overlay.load = function (url) {
       // Get the secondary tabs
       var $secondary = self.$iframeBody.find('ul.secondary');
       var $secondaryLinks = $secondary.find('> li > a');
-  
+
       // Check if clicked on a secondary tab
       var $activeLinkSecondary = $secondaryLinks.filter(function () { return self.getPath(this) == urlPath; });
-  
+
       if ($activeLinkSecondary.length) {
         var active_tab = Drupal.t('(active tab)');
         $secondaryLinks.parent().removeClass('active').find('element-invisible:contains(' + active_tab + ')').appendTo($activeLinkSecondary);
@@ -327,7 +327,7 @@ Drupal.overlay.load = function (url) {
   // While the overlay is loading, we remove the loaded class from the dialog.
   // After the loading is finished, the loaded class is added back. The loaded
   // class is being used to hide the iframe while loading.
-  // @see overlay-parent.css .overlay-loaded #overlay-element
+  // See overlay-parent.css .overlay-loaded #overlay-element.
   self.$dialog.removeClass('overlay-loaded');
   self.$iframe
     .bind('load.overlay-event', function () {
@@ -343,7 +343,7 @@ Drupal.overlay.load = function (url) {
   });
 
   // Get the document object of the iframe window.
-  // @see http://xkr.us/articles/dom/iframe-document/
+  // See http://xkr.us/articles/dom/iframe-document/.
   var iframeDocument = (iframeElement.contentWindow || iframeElement.contentDocument);
   if (iframeDocument.document) {
     iframeDocument = iframeDocument.document;
@@ -431,8 +431,8 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
   // handler interferes with use of the scroll bar in Chrome & Safari.
   // After unbinding from the document we bind a handler to the dialog overlay
   // which returns false to prevent event bubbling.
-  // @see http://dev.jqueryui.com/ticket/4671
-  // @see https://bugs.webkit.org/show_bug.cgi?id=19033
+  // See http://dev.jqueryui.com/ticket/4671.
+  // See https://bugs.webkit.org/show_bug.cgi?id=19033.
   // Do the same for the click handler as prevents default handling of clicks in
   // displaced regions (e.g. opening a link in a new browser tab when CTRL was
   // pressed while clicking).
@@ -626,14 +626,14 @@ Drupal.overlay.innerResize = function (height) {
   if (!height && self.$iframeBody) {
     height = self.$iframeBody.outerHeight() + 25;
   }
-  
+
   // Only resize when height actually is changed.
   if (height && height != self.lastHeight) {
     // Resize the container.
     self.$container.height(height);
     // Keep the dim background grow or shrink with the dialog.
     $.ui.dialog.overlay.resize();
-    
+
     self.lastHeight = height;
   }
 };

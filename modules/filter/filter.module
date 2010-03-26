@@ -1043,7 +1043,7 @@ function filter_dom_serialize($dom_document) {
 function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, $comment_start = '//', $comment_end = '') {
   foreach ($dom_element->childNodes as $node) {
     if (get_class($node) == 'DOMCdataSection') {
-      // @see drupal_get_js().  This code is more or less duplicated there.
+      // See drupal_get_js().  This code is more or less duplicated there.
       $embed_prefix = "\n<!--{$comment_start}--><![CDATA[{$comment_start} ><!--{$comment_end}\n";
       $embed_suffix = "\n{$comment_start}--><!]]>{$comment_end}\n";
       $fragment = $dom_document->createDocumentFragment();

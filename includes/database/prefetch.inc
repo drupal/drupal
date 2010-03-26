@@ -175,9 +175,8 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
     // as soon as possible.
     $this->rowCount = $statement->rowCount();
     $this->data = $statement->fetchAll(PDO::FETCH_ASSOC);
-    // Destroy the statement as soon as possible.
-    // See DatabaseConnection_sqlite::PDOPrepare() for explanation.
-    // @see DatabaseConnection_sqlite::PDOPrepare()
+    // Destroy the statement as soon as possible. See 
+    // DatabaseConnection_sqlite::PDOPrepare() for explanation.
     unset($statement);
 
     $this->resultRowCount = count($this->data);

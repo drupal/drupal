@@ -503,6 +503,7 @@ function hook_exit($destination = NULL) {
  *
  * @param $javascript
  *   An array of all JavaScript being presented on the page.
+ *
  * @see drupal_add_js()
  * @see drupal_get_js()
  * @see drupal_js_defaults()
@@ -622,6 +623,7 @@ function hook_library_alter(&$libraries, $module) {
  *
  * @param $css
  *   An array of all CSS items (files and inline CSS) being requested on the page.
+ *
  * @see drupal_add_css()
  * @see drupal_get_css()
  */
@@ -635,6 +637,7 @@ function hook_css_alter(&$css) {
  *
  * @param $commands
  *   An array of all commands that will be sent to the user.
+ *
  * @see ajax_render()
  */
 function hook_ajax_render_alter($commands) {
@@ -778,7 +781,7 @@ function hook_form_alter(&$form, &$form_state, $form_id) {
  * @param $form_state
  *   A keyed array containing the current state of the form.
  *
- * @see drupal_prepare_form().
+ * @see drupal_prepare_form()
  */
 function hook_form_FORM_ID_alter(&$form, &$form_state) {
   // Modification for the form with the given form ID goes here. For example, if
@@ -2739,7 +2742,7 @@ function hook_actions_delete($aid) {
  * Called by actions_list() to allow modules to alter the return values from
  * implementations of hook_action_info().
  *
- * @see trigger_example_action_info_alter().
+ * @see trigger_example_action_info_alter()
  */
 function hook_action_info_alter(&$actions) {
   $actions['node_unpublish_action']['label'] = t('Unpublish and remove from public view.');

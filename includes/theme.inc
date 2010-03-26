@@ -430,7 +430,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
           }
           foreach ($prefixes as $prefix) {
             // Only use non-hook-specific variable processors for theming hooks
-            // implemented as templates. @see theme().
+            // implemented as templates. See theme().
             if (isset($info['template']) && function_exists($prefix . '_' . $phase)) {
               $info[$phase_key][] = $prefix . '_' . $phase;
             }
@@ -467,7 +467,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
             $cache[$hook][$phase_key] = array();
           }
           // Only use non-hook-specific variable processors for theming hooks
-          // implemented as templates. @see theme().
+          // implemented as templates. See theme().
           if (isset($info['template']) && function_exists($name . '_' . $phase)) {
             $cache[$hook][$phase_key][] = $name . '_' . $phase;
           }
@@ -1083,7 +1083,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   }
 
   // Find templates that implement possible "suggestion" variants of registered
-  // theme hooks and add those as new registered theme hooks. @see
+  // theme hooks and add those as new registered theme hooks. See
   // drupal_find_theme_functions() for more information about suggestions and
   // the use of 'pattern' and 'base hook'.
   $patterns = array_keys($files);
@@ -1788,8 +1788,8 @@ function theme_tablesort_indicator($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - type: Number representing the marker type to display.
- *     @see MARK_NEW, MARK_UPDATED, MARK_READ
+ *   - type: Number representing the marker type to display. See MARK_NEW,
+ *     MARK_UPDATED, MARK_READ.
  *
  * @return
  *   A string containing the marker.
@@ -1957,7 +1957,7 @@ function theme_more_link($variables) {
  * that the final string is safe to include directly in the output by using
  * check_plain() or filter_xss().
  *
- * @see theme_username().
+ * @see theme_username()
  */
 function template_preprocess_username(&$variables) {
   $account = $variables['account'];
@@ -2009,7 +2009,7 @@ function template_preprocess_username(&$variables) {
 /**
  * Process variables for theme_username().
  *
- * @see theme_username().
+ * @see theme_username()
  */
 function template_process_username(&$variables) {
   // Finalize the link_options array for passing to the l() function.

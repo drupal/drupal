@@ -287,6 +287,7 @@ define('MENU_MAX_DEPTH', 9);
  * @param $parts
  *   An array of path parts, for the above example
  *   array('node', '12345', 'edit').
+ *
  * @return
  *   An array which contains the ancestors and placeholders. Placeholders
  *   simply contain as many '%s' as the ancestors.
@@ -341,6 +342,7 @@ function menu_get_ancestors($parts) {
  *   A serialized array.
  * @param @map
  *   An array of potential replacements.
+ *
  * @return
  *   The $data array unserialized and mapped.
  */
@@ -383,6 +385,7 @@ function menu_set_item($path, $router_item) {
  *   node/% item and return that.
  * @param $router_item
  *   Internal use only.
+ *
  * @return
  *   The router item, an associate array corresponding to one row in the
  *   menu_router table. The value of key map holds the loaded objects. The
@@ -492,6 +495,7 @@ function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
  *   A menu router or menu link item
  * @param $map
  *   An array of path arguments (ex: array('node', '5'))
+ *
  * @return
  *   Returns TRUE for success, FALSE if an object cannot be loaded.
  *   Names of object loading functions are placed in $item['load_functions'].
@@ -601,6 +605,7 @@ function _menu_check_access(&$item, $map) {
  * @param $link_translate
  *   TRUE if we are translating a menu link item; FALSE if we are
  *   translating a menu router item.
+ *
  * @return
  *   No return value.
  *   $item['title'] is localized according to $item['title_callback'].
@@ -687,6 +692,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
  * @param $to_arg
  *   Execute $item['to_arg_functions'] or not. Use only if you want to render a
  *   path from the menu table, for example tabs.
+ *
  * @return
  *   Returns the map with objects loaded as defined in the
  *   $item['load_functions']. $item['access'] becomes TRUE if the item is
@@ -761,6 +767,7 @@ function menu_tail_to_arg($arg, $map, $index) {
  *
  * @param $item
  *   A menu link
+ *
  * @return
  *   Returns the map of path arguments with objects loaded as defined in the
  *   $item['load_functions'].
@@ -853,11 +860,12 @@ function menu_get_object($type = 'node', $position = 1, $path = NULL) {
  * Render a menu tree based on the current path.
  *
  * The tree is expanded based on the current path and dynamic paths are also
- * changed according to the defined to_arg functions (for example the 'My account'
- * link is changed from user/% to a link with the current user's uid).
+ * changed according to the defined to_arg functions (for example the 'My 
+ * account' link is changed from user/% to a link with the current user's uid).
  *
  * @param $menu_name
  *   The name of the menu.
+ *
  * @return
  *   The rendered HTML of that menu on the current page.
  */
@@ -881,6 +889,7 @@ function menu_tree($menu_name) {
  *
  * @param $tree
  *   A data structure representing the tree as returned from menu_tree_data.
+ *
  * @return
  *   A structured array to be rendered by drupal_render().
  */
@@ -1317,6 +1326,7 @@ function _menu_tree_check_access(&$tree) {
  *   to the root of the menu tree.
  * @param $depth
  *   The minimum depth of any link in the $links array.
+ *
  * @return
  *   See menu_tree_page_data for a description of the data structure.
  */
@@ -1604,6 +1614,7 @@ function menu_secondary_menu() {
  *   The name of the menu.
  * @param $level
  *   Optional, the depth of the menu to be returned.
+ *
  * @return
  *   An array of links of the specified menu and level.
  */
@@ -1651,6 +1662,7 @@ function menu_navigation_links($menu_name, $level = 0) {
  *
  * @param $level
  *   The level of tasks you ask for. Primary tasks are 0, secondary are 1.
+ *
  * @return
  *   An array containing
  *   - tabs: Local tasks for the requested level:
@@ -2036,6 +2048,7 @@ function menu_set_active_item($path) {
  * @param $new_trail
  *   Menu trail to set, or NULL to use previously-set or calculated trail. If
  *   supplying a trail, use the same format as the return value (see below).
+ *
  * @return
  *   Path to menu root of the current page, as an array of menu link items,
  *   starting with the site's home page. Each link item is an associative array
@@ -2187,6 +2200,7 @@ function menu_get_active_title() {
  *
  * @param $mlid
  *   The mlid of the menu item.
+ *
  * @return
  *   A menu link, with $item['access'] filled and link translated for
  *   rendering.
@@ -2592,13 +2606,14 @@ function _menu_delete_item($item, $force = FALSE) {
  * @param $item
  *   An array representing a menu link item. The only mandatory keys are
  *   link_path and link_title. Possible keys are:
- *   - menu_name   default is navigation
- *   - weight      default is 0
- *   - expanded    whether the item is expanded.
- *   - options     An array of options, @see l for more.
- *   - mlid        Set to an existing value, or 0 or NULL to insert a new link.
- *   - plid        The mlid of the parent.
- *   - router_path The path of the relevant router item.
+ *   - menu_name: Default is navigation
+ *   - weight: Default is 0
+ *   - expanded: Whether the item is expanded.
+ *   - options: An array of options, see l() for more.
+ *   - mlid: Set to an existing value, or 0 or NULL to insert a new link.
+ *   - plid: The mlid of the parent.
+ *   - router_path: The path of the relevant router item.
+ *
  * @return
  *   The mlid of the saved menu link, or FALSE if the menu link could not be
  *   saved.
@@ -2820,6 +2835,7 @@ function _menu_set_expanded_menus() {
  *
  * @param $link_path
  *  The path for we are looking up its router path.
+ *
  * @return
  *  A path from $menu keys or empty if $link_path points to a nonexisting
  *  place.
@@ -2903,6 +2919,7 @@ function menu_link_maintain($module, $op, $link_path, $link_title) {
  *
  * @param $item
  *   An array representing a menu link item.
+ *
  * @return
  *   The relative depth, or zero.
  *
@@ -3313,6 +3330,7 @@ function _menu_router_save($menu, $masks) {
  *   If this is set to TRUE, the function will perform the access checks and
  *   return the site offline status, but not log the user out or display any
  *   messages.
+ *
  * @return
  *   FALSE if the site is not in maintenance mode, the user login page is
  *   displayed, or the user has the 'access site in maintenance mode'

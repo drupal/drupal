@@ -536,7 +536,7 @@ function module_hook($module, $hook) {
  * @return
  *   An array with the names of the modules which are implementing this hook.
  *
- * @see module_implements_write_cache().
+ * @see module_implements_write_cache()
  */
 function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   // Use the advanced drupal_static() pattern, since this is called very often.

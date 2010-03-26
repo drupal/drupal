@@ -752,10 +752,12 @@ function variable_initialize($conf = array()) {
  *   The name of the variable to return.
  * @param $default
  *   The default value to use if this variable has never been set.
+ *
  * @return
  *   The value of the variable.
  *
- * @see variable_del(), variable_set()
+ * @see variable_del()
+ * @see variable_set()
  */
 function variable_get($name, $default = NULL) {
   global $conf;
@@ -772,7 +774,8 @@ function variable_get($name, $default = NULL) {
  *   The value to set. This can be any PHP data type; these functions take care
  *   of serialization as necessary.
  *
- * @see variable_del(), variable_get()
+ * @see variable_del()
+ * @see variable_get()
  */
 function variable_set($name, $value) {
   global $conf;
@@ -790,7 +793,8 @@ function variable_set($name, $value) {
  * @param $name
  *   The name of the variable to undefine.
  *
- * @see variable_get(), variable_set()
+ * @see variable_get()
+ * @see variable_set()
  */
 function variable_del($name) {
   global $conf;
@@ -1438,10 +1442,12 @@ function t($string, array $args = array(), array $options = array()) {
  *
  * @param $text
  *   The text to be checked or processed.
+ *
  * @return
  *   An HTML safe version of $text, or an empty string if $text is not
  *   valid UTF-8.
- * @see drupal_validate_utf8().
+ *
+ * @see drupal_validate_utf8()
  */
 function check_plain($text) {
   // We do not want to use drupal_static() since PHP version will never change
@@ -1455,8 +1461,8 @@ function check_plain($text) {
   // drupal_validate_utf8() here. This avoids the overhead of an additional
   // function call, since check_plain() may be called hundreds of times during
   // a request. For PHP 5.2.5+, this check for valid UTF-8 should be handled
-  // internally by PHP in htmlspecialchars().
-  // @see http://www.php.net/releases/5_2_5.php
+  // internally by PHP in htmlspecialchars(). 
+  // See http://www.php.net/releases/5_2_5.php.
   // @todo remove this when support for either IE6 or PHP < 5.2.5 is dropped.
 
   if ($php525) {
@@ -2539,7 +2545,7 @@ function registry_update() {
  * - http://php.net/manual/en/language.variables.scope.php#language.variables.scope.static
  * - http://php.net/manual/en/language.variables.scope.php#language.variables.scope.references
  * The example below shows the syntax needed to work around both limitations.
- * For benchmarks and more information, @see http://drupal.org/node/619666.
+ * For benchmarks and more information, see http://drupal.org/node/619666.
  *
  * Example:
  * @code

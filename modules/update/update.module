@@ -427,7 +427,7 @@ function update_create_fetch_task($project) {
 /**
  * Wrapper to load the include file and then refresh the release data.
  *
- * @see _update_refresh();
+ * @see _update_refresh()
  */
 function update_refresh() {
   module_load_include('inc', 'update', 'update.fetch');

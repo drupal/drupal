@@ -17,7 +17,7 @@ class FieldTestCase extends DrupalWebTestCase {
    */
   function setUp() {
     // Call parent::setUp().
-    // @see http://www.php.net/manual/en/function.call-user-func-array.php#73105
+    // See http://www.php.net/manual/en/function.call-user-func-array.php#73105.
     $args = func_get_args();
     call_user_func_array(array($this, 'parent::setUp'), $args);
     // Set default storage backend.

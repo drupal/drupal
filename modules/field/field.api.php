@@ -94,26 +94,26 @@ function hook_field_extra_fields_alter(&$info) {
  * can be attached to a fieldable entity. hook_field_info() defines the basic
  * properties of a field type, and a variety of other field hooks are called by
  * the Field Attach API to perform field-type-specific actions.
- * @see hook_field_info().
- * @see hook_field_info_alter().
- * @see hook_field_schema().
- * @see hook_field_load().
- * @see hook_field_validate().
- * @see hook_field_presave().
- * @see hook_field_insert().
- * @see hook_field_update().
- * @see hook_field_delete().
- * @see hook_field_delete_revision().
- * @see hook_field_prepare_view().
- * @see hook_field_is_empty().
+ * @see hook_field_info()
+ * @see hook_field_info_alter()
+ * @see hook_field_schema()
+ * @see hook_field_load()
+ * @see hook_field_validate()
+ * @see hook_field_presave()
+ * @see hook_field_insert()
+ * @see hook_field_update()
+ * @see hook_field_delete()
+ * @see hook_field_delete_revision()
+ * @see hook_field_prepare_view()
+ * @see hook_field_is_empty()
  *
  * The Field Types API also defines two kinds of pluggable handlers: widgets
  * and formatters, which specify how the field appears in edit forms and in
  * displayed entities. Widgets and formatters can be implemented by a field-type
  * module for it's own field types, or by a third-party module to extend the
  * behavior of existing field types.
- * @see hook_field_widget_info().
- * @see hook_field_formatter_info().
+ * @see hook_field_widget_info()
+ * @see hook_field_formatter_info()
  *
  * A third kind of pluggable handlers, storage backends, is defined by the
  * @link field_storage Field Storage API @endlink.
@@ -541,9 +541,9 @@ function hook_field_is_empty($item, $field) {
  * Widgets are Form API elements with additional processing capabilities.
  * Widget hooks are typically called by the Field Attach API during the
  * creation of the field form structure with field_attach_form().
- * @see hook_field_widget_info_alter().
- * @see hook_field_widget_form().
- * @see hook_field_widget_error().
+ * @see hook_field_widget_info_alter()
+ * @see hook_field_widget_form()
+ * @see hook_field_widget_error()
  *
  * @return
  *   An array describing the widget types implemented by the module.
@@ -713,10 +713,10 @@ function hook_field_widget_error($element, $error, $form, &$form_state) {
  * called by the Field Attach API field_attach_prepare_view() and
  * field_attach_view() functions.
  *
- * @see hook_field_formatter_info().
- * @see hook_field_formatter_info_alter().
- * @see hook_field_formatter_view().
- * @see hook_field_formatter_prepare_view().
+ * @see hook_field_formatter_info()
+ * @see hook_field_formatter_info_alter()
+ * @see hook_field_formatter_view()
+ * @see hook_field_formatter_prepare_view()
  *
  * @return
  *   An array describing the formatter types implemented by the module.

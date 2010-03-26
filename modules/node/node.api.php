@@ -690,7 +690,7 @@ function hook_node_validate($node, $form) {
  * When $view_mode is 'rss', modules can also add extra RSS elements and
  * namespaces to $node->rss_elements and $node->rss_namespaces respectively for
  * the RSS item generated for this node.
- * For details on how this is used @see node_feed()
+ * For details on how this is used, see node_feed().
  *
  * @see taxonomy_node_view()
  * @see upload_node_view()

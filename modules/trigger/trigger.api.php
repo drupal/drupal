@@ -20,7 +20,7 @@
  * out which actions the user has associated with your trigger, and then calling
  * actions_do() to fire off the actions.
  *
- * @see hook_action_info().
+ * @see hook_action_info()
  *
  * @return
  *   A nested associative array.
