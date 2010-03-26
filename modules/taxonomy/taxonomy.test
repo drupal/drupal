@@ -374,6 +374,12 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->assertTrue(isset($children[$term2->tid]), t('Child found correctly.'));
     $this->assertTrue(isset($parents[$term1->tid]), t('Parent found correctly.'));
 
+    // Load and save a term, confirming that parents are still set.
+    $term = taxonomy_term_load($term2->tid);
+    taxonomy_term_save($term);
+    $parents = taxonomy_get_parents($term2->tid);
+    $this->assertTrue(isset($parents[$term1->tid]), t('Parent found correctly.'));
+
     // Create a third term and save this as a parent of term2.
     $term3 = $this->createTerm($this->vocabulary);
     $term2->parent = array($term1->tid, $term3->tid);

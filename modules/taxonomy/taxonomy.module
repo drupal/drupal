@@ -472,50 +472,52 @@ function taxonomy_term_save($term) {
 
   field_attach_presave('taxonomy_term', $term);
 
-  if (!empty($term->tid) && $term->name) {
-    $status = drupal_write_record('taxonomy_term_data', $term, 'tid');
-    field_attach_update('taxonomy_term', $term);
-    module_invoke_all('taxonomy_term_update', $term);
-    entity_invoke('update', 'taxonomy_term', $term);
-  }
-  else {
+  if (empty($term->tid)) {
     $status = drupal_write_record('taxonomy_term_data', $term);
     field_attach_insert('taxonomy_term', $term);
     module_invoke_all('taxonomy_term_insert', $term);
     entity_invoke('insert', 'taxonomy_term', $term);
+    if (!isset($term->parent)) {
+      $term->parent = array(0);
+    }
   }
-
-  db_delete('taxonomy_term_hierarchy')
-    ->condition('tid', $term->tid)
-    ->execute();
-
-  if (!isset($term->parent) || empty($term->parent)) {
-    $term->parent = array(0);
+  else {
+    $status = drupal_write_record('taxonomy_term_data', $term, 'tid');
+    field_attach_update('taxonomy_term', $term);
+    module_invoke_all('taxonomy_term_update', $term);
+    entity_invoke('update', 'taxonomy_term', $term);
+    if (isset($term->parent)) {
+      db_delete('taxonomy_term_hierarchy')
+        ->condition('tid', $term->tid)
+        ->execute();
+    }
   }
-  if (!is_array($term->parent)) {
-    $term->parent = array($term->parent);
-  }
-  $query = db_insert('taxonomy_term_hierarchy')
-    ->fields(array('tid', 'parent'));
-  if (is_array($term->parent)) {
-    foreach ($term->parent as $parent) {
-      if (is_array($parent)) {
-        foreach ($parent as $tid) {
+  if (isset($term->parent)) {
+    if (!is_array($term->parent)) {
+      $term->parent = array($term->parent);
+    }
+    $query = db_insert('taxonomy_term_hierarchy')
+      ->fields(array('tid', 'parent'));
+    if (is_array($term->parent)) {
+      foreach ($term->parent as $parent) {
+        if (is_array($parent)) {
+          foreach ($parent as $tid) {
+            $query->values(array(
+              'tid' => $term->tid,
+              'parent' => $tid
+            ));
+          }
+        }
+        else {
           $query->values(array(
             'tid' => $term->tid,
-            'parent' => $tid
+            'parent' => $parent
           ));
         }
       }
-      else {
-        $query->values(array(
-          'tid' => $term->tid,
-          'parent' => $parent
-        ));
-      }
     }
+    $query->execute();
   }
-  $query->execute();
 
   cache_clear_all();
   taxonomy_terms_static_reset();
