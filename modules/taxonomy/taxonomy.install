@@ -195,6 +195,7 @@ function taxonomy_schema() {
     ),
     'indexes' => array(
       'term_node' => array('tid', 'sticky', 'created'),
+      'nid' => array('nid'),
     ),
     'foreign keys' => array(
       'node' => 'nid',
@@ -314,6 +315,7 @@ function taxonomy_update_7004() {
     ),
     'indexes' => array(
       'term_node' => array('tid', 'sticky', 'created'),
+      'nid' => array('nid'),
     ),
     'foreign keys' => array(
       'node' => 'nid',
