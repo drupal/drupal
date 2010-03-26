@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax_forms_test.module,v 1.4 2010/03/13 06:55:50 dries Exp $
+// $Id: ajax_forms_test.module,v 1.5 2010/03/26 18:58:12 dries Exp $
 
 /**
  * @file
@@ -22,6 +22,12 @@ function ajax_forms_test_menu() {
     'title' => 'AJAX forms AJAX commands test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ajax_forms_test_ajax_commands_form'),
+    'access callback' => TRUE,
+  );
+  $items['ajax_validation_test'] = array(
+    'title' => 'AJAX Validation Test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ajax_forms_test_validation_form'),
     'access callback' => TRUE,
   );
   return $items;
@@ -339,4 +345,60 @@ function ajax_forms_test_advanced_commands_restripe_callback($form, $form_state)
   $commands = array();
   $commands[] = ajax_command_restripe('#restripe_table');
   return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+
+
+/**
+ * This form and its related submit and callback functions demonstrate
+ * not validating another form element when a single AJAX element is triggered.
+ *
+ * The "drivertext" element is an AJAX-enabled textfield, free-form.
+ * The "required_field" element is a textfield marked required.
+ *
+ * The correct behavior is that the AJAX-enabled drivertext element should
+ * be able to trigger without causing validation of the "required_field".
+ */
+function ajax_forms_test_validation_form($form, &$form_state) {
+
+  $form['drivertext'] = array(
+    '#title' => t('AJAX-enabled textfield.'),
+    '#description' => t("When this one AJAX-triggers and the spare required field is empty, you should not get an error."),
+    '#type' => 'textfield',
+    '#default_value' => !empty($form_state['values']['drivertext']) ? $form_state['values']['drivertext'] : "",
+    '#ajax' => array(
+      'callback' => 'ajax_forms_test_validation_form_callback',
+      'wrapper' => 'message_area',
+      'method' => 'replace',
+    ),
+    '#suffix' => '<div id="message_area"></div>',
+  );
+
+  $form['spare_required_field'] = array(
+    '#title' => t("Spare Required Field"),
+    '#type' => 'textfield',
+    '#required' => TRUE,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+/**
+ * Submit handler for the validation form.
+ */
+function ajax_forms_test_validation_form_submit($form, $form_state) {
+  drupal_set_message(t("Validation form submitted"));
+}
+
+/**
+ * AJAX callback for the 'drivertext' element of the validation form.
+ */
+function ajax_forms_test_validation_form_callback($form, $form_state) {
+  drupal_set_message("ajax_forms_test_validation_form_callback invoked");
+  drupal_set_message(t("Callback: drivertext=%drivertext, spare_required_field=%spare_required_field", array('%drivertext' => $form_state['values']['drivertext'], '%spare_required_field' => $form_state['values']['spare_required_field'])));
+  return '<div id="message_area">ajax_forms_test_validation_form_callback at ' . date('c') . '</div>';
 }
