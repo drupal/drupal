@@ -1152,18 +1152,12 @@ function theme_get_setting($setting_name, $theme = NULL) {
       'favicon_path'                     =>  '',
       // Use the IANA-registered MIME type for ICO files as default.
       'favicon_mimetype'                 =>  'image/vnd.microsoft.icon',
-      'main_menu'                        =>  1,
-      'secondary_menu'                   =>  1,
-      'toggle_logo'                      =>  1,
-      'toggle_favicon'                   =>  1,
-      'toggle_name'                      =>  1,
-      'toggle_slogan'                    =>  1,
-      'toggle_node_user_picture'         =>  1,
-      'toggle_comment_user_picture'      =>  1,
-      'toggle_comment_user_verification' =>  1,
-      'toggle_main_menu'                 =>  1,
-      'toggle_secondary_menu'            =>  1,
     );
+    // Turn on all default features.
+    $features = _system_default_theme_features();
+    foreach ($features as $feature) {
+      $cache[$theme]['toggle_' . $feature] = 1;
+    }
 
     // Get the values for the theme-specific settings from the .info files of
     // the theme and all its base themes.
@@ -1192,6 +1186,16 @@ function theme_get_setting($setting_name, $theme = NULL) {
     if ($theme) {
       // Get the saved theme-specific settings from the database.
       $cache[$theme] = array_merge($cache[$theme], variable_get('theme_' . $theme . '_settings', array()));
+
+      // If the theme does not support a particular feature, override the global
+      // setting and set the value to NULL.
+      if (!empty($theme_object->info['features'])) {
+        foreach ($features as $feature) {
+          if (!in_array($feature, $theme_object->info['features'])) {
+            $cache[$theme]['toggle_' . $feature] = NULL;
+          }
+        }
+      }
 
       // Generate the path to the logo image.
       if ($cache[$theme]['toggle_logo']) {

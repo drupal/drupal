@@ -2316,17 +2316,7 @@ function _system_rebuild_theme_data() {
         'page_bottom' => 'Page bottom',
       ),
       'description' => '',
-      'features' => array(
-        'comment_user_picture',
-        'comment_user_verification',
-        'favicon',
-        'logo',
-        'name',
-        'node_user_picture',
-        'slogan',
-        'main_menu',
-        'secondary_menu',
-      ),
+      'features' => _system_default_theme_features(),
       'screenshot' => 'screenshot.png',
       'php' => DRUPAL_MINIMUM_PHP,
     );
@@ -2430,6 +2420,23 @@ function system_rebuild_theme_data() {
   system_get_files_database($themes, 'theme');
   system_update_files_database($themes, 'theme');
   return $themes;
+}
+
+/**
+ * Returns an array of default theme features.
+ */
+function _system_default_theme_features() {
+  return array(
+    'logo',
+    'favicon',
+    'name',
+    'slogan',
+    'node_user_picture',
+    'comment_user_picture',
+    'comment_user_verification',
+    'main_menu',
+    'secondary_menu',
+  );
 }
 
 /**
