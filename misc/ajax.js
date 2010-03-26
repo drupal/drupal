@@ -98,7 +98,7 @@ Drupal.ajax = function (base, element, element_settings) {
       type: 'bar',
       message: 'Please wait...'
     },
-    button: {}
+    submit: {}
   };
 
   $.extend(this, defaults, element_settings);
@@ -121,7 +121,7 @@ Drupal.ajax = function (base, element, element_settings) {
   var ajax = this;
   var options = {
     url: ajax.url,
-    data: ajax.button,
+    data: ajax.submit,
     beforeSerialize: function (element_settings, options) {
       return ajax.beforeSerialize(element_settings, options);
     },
@@ -199,10 +199,6 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
 Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
   // Disable the element that received the change.
   $(this.element).addClass('progress-disabled').attr('disabled', true);
-
-  // Server-side code needs to know what element triggered the call, so it can
-  // find the #ajax binding.
-  form_values.push({ name: 'ajax_triggering_element', value: this.formPath });
 
   // Insert progressbar or throbber.
   if (this.progress.type == 'bar') {

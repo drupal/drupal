@@ -385,12 +385,12 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#weight' => -5,
   );
 
-  // Because the output of this field changes depending on the button clicked,
-  // we need to ask FAPI immediately if the remove button was clicked.
-  // It's not good that we call this private function, but
-  // $form_state['clicked_button'] is only available after this #process
-  // callback is finished.
-  if (_form_button_was_clicked($element['remove_button'], $form_state)) {
+  // @todo It is not good to call these private functions. This should be
+  //   refactored so that the file deletion happens during a submit handler,
+  //   and form changes affected by that (such as toggling the upload and remove
+  //   buttons) happens during the 2nd run of this function that is triggered by
+  //   a form rebuild: http://drupal.org/node/736298.
+  if (_form_button_was_clicked($element['remove_button'], $form_state) || _form_element_triggered_scripted_submission($element['remove_button'], $form_state)) {
     // If it's a temporary file we can safely remove it immediately, otherwise
     // it's up to the implementing module to clean up files that are in use.
     if ($element['#file'] && $element['#file']->status == 0) {

@@ -98,62 +98,62 @@ class AJAXCommandsTestCase extends AJAXTestCase {
     $edit = array();
 
     // Tests the 'after' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'after_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'After': Click to put something after the div"))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'after' && $command['data'] == 'This will be placed after', "'after' AJAX command issued with correct data");
 
     // Tests the 'alert' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'alert_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'Alert': Click to alert"))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'alert' && $command['text'] == 'Alert', "'alert' AJAX Command issued with correct text");
 
     // Tests the 'append' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'append_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'Append': Click to append something"))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'append' && $command['data'] == 'Appended text', "'append' AJAX command issued with correct data");
 
     // Tests the 'before' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'before_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'before': Click to put something before the div"))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'before' && $command['data'] == 'Before text', "'before' AJAX command issued with correct data");
 
     // Tests the 'changed' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'changed_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX changed: Click to mark div changed."))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'changed' && $command['selector'] == '#changed_div', "'changed' AJAX command issued with correct selector");
 
     // Tests the 'changed' command using the second argument.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'changed_command_asterisk_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX changed: Click to mark div changed with asterisk."))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'changed' && $command['selector'] == '#changed_div' && $command['asterisk'] == '#changed_div_mark_this', "'changed' AJAX command (with asterisk) issued with correct selector");
 
     // Tests the 'css' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'css_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("Set the the '#box' div to be blue."))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'css' && $command['selector'] == '#css_div' && $command['argument']['background-color'] == 'blue', "'css' AJAX command issued with correct selector");
 
     // Tests the 'data' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'data_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX data command: Issue command."))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'data' && $command['name'] == 'testkey' && $command['value'] == 'testvalue', "'data' AJAX command issued with correct key and value");
 
     // Tests the 'html' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'html_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX html: Replace the HTML in a selector."))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'html' && $command['data'] == 'replacement text', "'html' AJAX command issued with correct data");
 
     // Tests the 'prepend' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'prepend_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'prepend': Click to prepend something"))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'prepend' && $command['data'] == 'prepended text', "'prepend' AJAX command issued with correct data");
 
     // Tests the 'remove' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'remove_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'remove': Click to remove text"))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'remove' && $command['selector'] == '#remove_text', "'remove' AJAX command issued with correct command and selector");
 
     // Tests the 'restripe' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, 'restripe_command_example'));
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'restripe' command"))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'restripe' && $command['selector'] == '#restripe_table', "'restripe' AJAX command issued with correct selector");
   }
@@ -203,3 +203,37 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
     }
   }
 }
+
+
+/**
+ * Miscellaneous AJAX tests using ajax_test module.
+ */
+class AJAXElementValidation extends AJAXTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Miscellaneous AJAX tests',
+      'description' => 'Various tests of AJAX behavior',
+      'group' => 'AJAX',
+    );
+  }
+
+  /**
+   * Try to post an AJAX change to a form that has a validated element.
+   *
+   * The drivertext field is AJAX-enabled. An additional field is not, but
+   * is set to be a required field. In this test the required field is not
+   * filled in, and we want to see if the activation of the "drivertext"
+   * AJAX-enabled field fails due to the required field being empty.
+   */
+  function testAJAXElementValidation() {
+    $web_user = $this->drupalCreateUser();
+    $edit = array('drivertext' => t('some dumb text'));
+
+    // Post with 'drivertext' as the triggering element.
+    $post_result = $this->drupalPostAJAX('ajax_validation_test', $edit, 'drivertext');
+    // Look for a validation failure in the resultant JSON.
+    $this->assertNoText(t('Error message'), t("No error message in resultant JSON"));
+    $this->assertText('ajax_forms_test_validation_form_callback invoked', t('The correct callback was invoked'));
+  }
+}
+

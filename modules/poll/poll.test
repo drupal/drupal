@@ -341,7 +341,7 @@ class PollJSAddChoice extends DrupalWebTestCase {
 
     // Press 'add choice' button through AJAX, and place the expected HTML result
     // as the tested content.
-    $commands = $this->drupalPostAJAX(NULL, $edit, 'poll_more');
+    $commands = $this->drupalPostAJAX(NULL, $edit, array('op' => t('More choices')));
     $this->content = $commands[1]['data'];
 
     $this->assertFieldByName('choice[chid:0][chtext]', $edit['choice[new:0][chtext]'], t('Field !i found', array('!i' => 0)));

@@ -317,8 +317,6 @@ function overlay_preprocess_toolbar(&$variables) {
  * processing, so that it's possible to close the overlay after submitting
  * a form.
  *
- * @see _form_builder_handle_input_element()
- * @see _form_builder_ie_cleanup()
  * @see form_execute_handlers()
  * @see form_builder()
  * @see overlay_form_submit()
@@ -327,17 +325,6 @@ function overlay_preprocess_toolbar(&$variables) {
  */
 function overlay_form_after_build($form, &$form_state) {
   if (overlay_get_mode() == 'child') {
-    // Form API may have already captured submit handlers from the submitted
-    // button before after_build callback is invoked. This may have been done
-    // by _form_builder_handle_input_element(). If so, the list of submit
-    // handlers is stored in the $form_state array, which is something we can
-    // also alter from here, luckily. Rememeber: our goal here is to set
-    // $form_state['redirect'] to FALSE if the API function
-    // overlay_request_dialog_close() has been invoked. That's because we want
-    // to tell the parent window to close the overlay.
-    if (!empty($form_state['submit_handlers']) && !in_array('overlay_form_submit', $form_state['submit_handlers'])) {
-      $form_state['submit_handlers'][] = 'overlay_form_submit';
-    }
     // If this element has submit handlers, then append our own.
     if (isset($form['#submit'])) {
       $form['#submit'][] = 'overlay_form_submit';

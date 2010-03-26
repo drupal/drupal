@@ -1576,11 +1576,18 @@ class DrupalWebTestCase extends DrupalTestCase {
    *     which is likely different than the $path parameter used for retrieving
    *     the initial form. Defaults to 'system/ajax'.
    *   - triggering_element: If the value for the 'path' key is 'system/ajax' or
-   *     another generic AJAX processing path, this needs to be set to the '/'
-   *     separated path to the element within the server's cached $form array.
-   *     The callback for the generic AJAX processing path uses this to find
-   *     the #ajax information for the element, including which specific
-   *     callback to use for processing the request.
+   *     another generic AJAX processing path, this needs to be set to the name
+   *     of the element. If the name doesn't identify the element uniquely, then
+   *     this should instead be an array with a single key/value pair,
+   *     corresponding to the element name and value. The callback for the
+   *     generic AJAX processing path uses this to find the #ajax information
+   *     for the element, including which specific callback to use for
+   *     processing the request.
+   *
+   *   This can also be set to NULL in order to emulate an Internet Explorer
+   *   submission of a form with a single text field, and pressing ENTER in that
+   *   textfield: under these conditions, no button information is added to the
+   *   POST data.
    * @param $options
    *   Options to be forwarded to url().
    * @param $headers
@@ -1622,7 +1629,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
         // We post only if we managed to handle every field in edit and the
         // submit button matches.
-        if (!$edit && $submit_matches) {
+        if (!$edit && ($submit_matches || !isset($submit))) {
           $post_array = $post;
           if ($upload) {
             // TODO: cURL handles file uploads for us, but the implementation
@@ -1643,7 +1650,14 @@ class DrupalWebTestCase extends DrupalTestCase {
               $post[$key] = urlencode($key) . '=' . urlencode($value);
             }
             if ($ajax && isset($submit['triggering_element'])) {
-              $post['ajax_triggering_element'] = 'ajax_triggering_element=' . urlencode($submit['triggering_element']);
+              if (is_array($submit['triggering_element'])) {
+                // Get the first key/value pair in the array.
+                $post['_triggering_element_value'] = '_triggering_element_value=' . urlencode(reset($submit['triggering_element']));
+                $post['_triggering_element_name'] = '_triggering_element_name=' . urlencode(key($submit['triggering_element']));
+              }
+              else {
+                $post['_triggering_element_name'] = '_triggering_element_name=' . urlencode($submit['triggering_element']);
+              }
             }
             $post = implode('&', $post);
           }
@@ -1666,7 +1680,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       foreach ($edit as $name => $value) {
         $this->fail(t('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
       }
-      if (!$ajax) {
+      if (!$ajax && isset($submit)) {
         $this->assertTrue($submit_matches, t('Found the @submit button', array('@submit' => $submit)));
       }
       $this->fail(t('Found the requested form fields at @path', array('@path' => $path)));
@@ -1856,7 +1870,7 @@ class DrupalWebTestCase extends DrupalTestCase {
             break;
           case 'submit':
           case 'image':
-            if ($submit == $value) {
+            if (isset($submit) && $submit == $value) {
               $post[$name] = $value;
               $submit_matches = TRUE;
             }

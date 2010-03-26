@@ -118,6 +118,14 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form-test/clicked-button'] = array(
+    'title' => 'Clicked button test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_clicked_button'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -921,6 +929,84 @@ function form_test_programmatic_form_validate($form, &$form_state) {
  */
 function form_test_programmatic_form_submit($form, &$form_state) {
   $form_state['storage']['programmatic_form_submit'] = $form_state['values']['submitted_field'];
+}
+
+/**
+ * Form builder to test button click detection.
+ */
+function form_test_clicked_button($form, &$form_state) {
+  // A single text field. In IE, when a form has only one non-button input field
+  // and the ENTER key is pressed while that field has focus, the form is
+  // submitted without any information identifying the button responsible for
+  // the submission. In other browsers, the form is submitted as though the
+  // first button were clicked.
+  $form['text'] = array(
+    '#title' => 'Text',
+    '#type' => 'textfield',
+  );
+
+  // Loop through each path argument, addding buttons based on the information
+  // in the argument. For example, if the path is
+  // form-test/clicked-button/s/i/rb, then 3 buttons are added: a 'submit', an
+  // 'image_button', and a 'button' with #access=FALSE. This enables form.test
+  // to test a variety of combinations.
+  $i=0;
+  $args = array_slice(arg(), 2);
+  foreach ($args as $arg) {
+    $name = 'button' . ++$i;
+    // 's', 'b', or 'i' in the argument define the button type wanted.
+    if (strpos($arg, 's') !== FALSE) {
+      $type = 'submit';
+    }
+    elseif (strpos($arg, 'b') !== FALSE) {
+      $type = 'button';
+    }
+    elseif (strpos($arg, 'i') !== FALSE) {
+      $type = 'image_button';
+    }
+    else {
+      $type = NULL;
+    }
+    if (isset($type)) {
+      $form[$name] = array(
+        '#type' => $type,
+        '#name' => $name,
+      );
+      // Image buttons need a #src; the others need a #value.
+      if ($type == 'image_button') {
+        $form[$name]['#src'] = 'misc/druplicon.png';
+      }
+      else {
+        $form[$name]['#value'] = $name;
+      }
+      // 'r' for restricted, so we can test that button click detection code
+      // correctly takes #access security into account.
+      if (strpos($arg, 'r') !== FALSE) {
+        $form[$name]['#access'] = FALSE;
+      }
+    }
+  }
+
+  return $form;
+}
+
+/**
+ * Form validation handler for the form_test_clicked_button() form.
+ */
+function form_test_clicked_button_validate($form, &$form_state) {
+  if (isset($form_state['clicked_button'])) {
+    drupal_set_message(t('The clicked button is %name.', array('%name' => $form_state['clicked_button']['#name'])));
+  }
+  else {
+    drupal_set_message('There is no clicked button.');
+  }
+}
+
+/**
+ * Form submit handler for the form_test_clicked_button() form.
+ */
+function form_test_clicked_button_submit($form, &$form_state) {
+  drupal_set_message('Submit handler for form_test_clicked_button executed.');
 }
 
 

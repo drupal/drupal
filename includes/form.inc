@@ -281,19 +281,21 @@ function form_state_defaults() {
     'cache'=> FALSE,
     'method' => 'post',
     'groups' => array(),
+    'buttons' => array(),
   );
 }
 
 /**
  * Retrieves a form, caches it and processes it again.
  *
- * If your AHAH callback simulates the pressing of a button, then your AHAH
- * callback will need to do the same as what drupal_get_form would do when the
+ * If your AJAX callback simulates the pressing of a button, then your AJAX
+ * callback will need to do the same as what drupal_get_form() would do when the
  * button is pressed: get the form from the cache, run drupal_process_form over
- * it and then if it needs rebuild, run drupal_rebuild_form over it. Then send
+ * it and then if it needs rebuild, run drupal_rebuild_form() over it. Then send
  * back a part of the returned form.
- * $form_state['clicked_button']['#array_parents'] will help you to find which
- * part.
+ * $form_state['triggering_element']['#array_parents'] will help you to find
+ * which part.
+ * @see ajax_form_callback() for an example.
  *
  * @param $form_id
  *   The unique string identifying the desired form. If a function
@@ -403,6 +405,7 @@ function form_state_keys_no_cache() {
     'temporary',
     // Internal properties defined by form processing.
     'buttons',
+    'triggering_element',
     'clicked_button',
     'complete form',
     'groups',
@@ -935,22 +938,35 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // to form_set_error() be suppressed and not result in a form error, so
     // that a button that implements low-risk functionality (such as "Previous"
     // or "Add more") that doesn't require all user input to be valid can still
-    // have its submit handlers triggered. The clicked button's
+    // have its submit handlers triggered. The triggering element's
     // #limit_validation_errors property contains the information for which
     // errors are needed, and all other errors are to be suppressed. The
-    // #limit_validation_errors property is ignored if the button doesn't also
-    // define its own submit handlers, because it's too large a security risk to
-    // have any invalid user input when executing form-level submit handlers.
-    if (isset($form_state['clicked_button']['#limit_validation_errors']) && isset($form_state['clicked_button']['#submit'])) {
-      form_set_error(NULL, '', $form_state['clicked_button']['#limit_validation_errors']);
+    // #limit_validation_errors property is ignored if submit handlers will run,
+    // but the element doesn't have a #submit property, because it's too large a
+    // security risk to have any invalid user input when executing form-level
+    // submit handlers.
+    if (isset($form_state['triggering_element']['#limit_validation_errors']) && ($form_state['triggering_element']['#limit_validation_errors'] !== FALSE) && !($form_state['submitted'] && !isset($form_state['triggering_element']['#submit']))) {
+      form_set_error(NULL, '', $form_state['triggering_element']['#limit_validation_errors']);
     }
+    // If submit handlers won't run (due to the submission having been triggered
+    // by an element whose #executes_submit_callback property isn't TRUE), then
+    // it's safe to suppress all validation errors, and we do so by default,
+    // which is particularly useful during an AJAX submission triggered by a
+    // non-button. An element can override this default by setting the
+    // #limit_validation_errors property. For button element types,
+    // #limit_validation_errors defaults to FALSE (via system_element_info()),
+    // so that full validation is their default behavior.
+    elseif (isset($form_state['triggering_element']) && !isset($form_state['triggering_element']['#limit_validation_errors']) && !$form_state['submitted']) {
+      form_set_error(NULL, '', array());
+    }
+    // As an extra security measure, explicitly turn off error suppression if
+    // one of the above conditions wasn't met. Since this is also done at the
+    // end of this function, doing it here is only to handle the rare edge case
+    // where a validate handler invokes form processing of another form.
     else {
-      // As an extra security measure, explicitly turn off error suppression.
-      // Since this is also done at the end of this function, doing it here is
-      // only to handle the rare edge case where a validate handler invokes form
-      // processing of another form.
       drupal_static_reset('form_set_error:limit_validation_errors');
     }
+
     // Make sure a value is passed when the field is required.
     // A simple call to empty() will not cut it here as some fields, like
     // checkboxes, can return a valid value of '0'. Instead, check the
@@ -1296,22 +1312,61 @@ function form_builder($form_id, $element, &$form_state) {
     $element['#after_build_done'] = TRUE;
   }
 
-  // Now that we've processed everything, we can go back to handle the funky
-  // Internet Explorer button-click scenario.
-  _form_builder_ie_cleanup($element, $form_state);
-
   // If there is a file element, we need to flip a flag so later the
   // form encoding can be set.
   if (isset($element['#type']) && $element['#type'] == 'file') {
     $form_state['has_file_element'] = TRUE;
   }
 
+  // Final tasks for the form element after form_builder() has run for all other
+  // elements.
   if (isset($element['#type']) && $element['#type'] == 'form') {
-    // We are on the top form.
     // If there is a file element, we set the form encoding.
     if (isset($form_state['has_file_element'])) {
       $element['#attributes']['enctype'] = 'multipart/form-data';
     }
+
+    // If a form contains a single textfield, and the ENTER key is pressed
+    // within it, Internet Explorer submits the form with no POST data
+    // identifying any submit button. Other browsers submit POST data as though
+    // the user clicked the first button. Therefore, to be as consistent as we
+    // can be across browsers, if no 'triggering_element' has been identified
+    // yet, default it to the first button.
+    if (!$form_state['programmed'] && !isset($form_state['triggering_element']) && !empty($form_state['buttons'])) {
+      $form_state['triggering_element'] = $form_state['buttons'][0];
+    }
+
+    // If the triggering element specifies "button-level" validation and submit
+    // handlers to run instead of the default form-level ones, then add those to
+    // the form state.
+    foreach (array('validate', 'submit') as $type) {
+      if (isset($form_state['triggering_element']['#' . $type])) {
+        $form_state[$type . '_handlers'] = $form_state['triggering_element']['#' . $type];
+      }
+    }
+
+    // If the triggering element executes submit handlers, then set the form
+    // state key that's needed for those handlers to run.
+    if (!empty($form_state['triggering_element']['#executes_submit_callback'])) {
+      $form_state['submitted'] = TRUE;
+    }
+
+    // Special processing if the triggering element is a button.
+    if (isset($form_state['triggering_element']['#button_type'])) {
+      // Because there are several ways in which the triggering element could
+      // have been determined (including from input variables set by JavaScript
+      // or fallback behavior implemented for IE), and because buttons often
+      // have their #name property not derived from their #parents property, we
+      // can't assume that input processing that's happened up until here has
+      // resulted in $form_state['values'][BUTTON_NAME] being set. But it's
+      // common for forms to have several buttons named 'op' and switch on
+      // $form_state['values']['op'] during submit handler execution.
+      $form_state['values'][$form_state['triggering_element']['#name']] = $form_state['triggering_element']['#value'];
+
+      // @todo Legacy support. Remove in Drupal 8.
+      $form_state['clicked_button'] = $form_state['triggering_element'];
+    }
+
     // Update the copy of the complete form for usage in validation handlers.
     $form_state['complete form'] = $element;
   }
@@ -1408,33 +1463,42 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     }
   }
 
-  // Determine which button (if any) was clicked to submit the form.
-  // We compare the incoming values with the buttons defined in the form,
-  // and flag the one that matches. We have to do some funky tricks to
-  // deal with Internet Explorer's handling of single-button forms, though.
-  if (!empty($form_state['input']) && isset($element['#executes_submit_callback'])) {
-    // First, accumulate a collection of buttons, divided into two bins:
-    // those that execute full submit callbacks and those that only validate.
-    $button_type = $element['#executes_submit_callback'] ? 'submit' : 'button';
-    $form_state['buttons'][$button_type][] = $element;
+  // Determine which element (if any) triggered the submission of the form and
+  // keep track of all the buttons in the form for form_state_values_clean().
+  // @todo We need to add a #access check here, so that someone can't fake the
+  //   click of a button they shouldn't have access to, but first we need to
+  //   fix file.module's managed_file element pipeline to handle the click of
+  //   the remove button in a submit handler instead of in a #process function.
+  //   During the first run of form_builder() after the form is submitted,
+  //   #process functions need to return the expanded element with child
+  //   elements' #access properties matching what they were when the form was
+  //   displayed to the user, since that is what we are processing input for.
+  //   Changes to the form (like toggling the upload/remove button) need to wait
+  //   until form rebuild: http://drupal.org/node/736298.
+  if (!empty($form_state['input'])) {
+    // Detect if the element triggered the submission via AJAX.
+    if (_form_element_triggered_scripted_submission($element, $form_state)) {
+      $form_state['triggering_element'] = $element;
+    }
 
-    if (_form_button_was_clicked($element, $form_state)) {
-      $form_state['submitted'] = $form_state['submitted'] || $element['#executes_submit_callback'];
-
-      // In most cases, we want to use form_set_value() to manipulate
-      // the global variables. In this special case, we want to make sure that
-      // the value of this element is listed in $form_variables under 'op'.
-      $form_state['values'][$element['#name']] = $element['#value'];
-      $form_state['clicked_button'] = $element;
-
-      if (isset($element['#validate'])) {
-        $form_state['validate_handlers'] = $element['#validate'];
+    // If the form was submitted by the browser rather than via AJAX, then it
+    // can only have been triggered by a button, and we need to determine which
+    // button within the constraints of how browsers provide this information.
+    if (isset($element['#button_type'])) {
+      // All buttons in the form need to be tracked for
+      // form_state_values_clean() and for the form_builder() code that handles
+      // a form submission containing no button information in $_POST.
+      // @todo When #access is checked in an outer if statement (see above), it
+      //   won't need to be checked here.
+      if ($form_state['programmed'] || !isset($element['#access']) || $element['#access']) {
+        $form_state['buttons'][] = $element;
       }
-      if (isset($element['#submit'])) {
-        $form_state['submit_handlers'] = $element['#submit'];
+      if (_form_button_was_clicked($element, $form_state)) {
+        $form_state['triggering_element'] = $element;
       }
     }
   }
+
   // Set the element's value in $form_state['values'], but only, if its key
   // does not exist yet (a #value_callback may have already populated it).
   $values = $form_state['values'];
@@ -1447,21 +1511,52 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
 }
 
 /**
- * Helper function to handle the sometimes-convoluted logic of button
- * click detection.
+ * Helper function to handle the convoluted logic of button click detection.
  *
- * In Internet Explorer, if ONLY one submit button is present, AND the
- * enter key is used to submit the form, no form value is sent for it
- * and we'll never detect a match. That special case is handled by
- * _form_builder_ie_cleanup().
+ * This detects button or non-button controls that trigger a form submission via
+ * AJAX or some other scriptable environment. These environments can set the
+ * special input key '_triggering_element_name' to identify the triggering
+ * element. If the name alone doesn't identify the element uniquely, the input
+ * key '_triggering_element_value' may also be set to require a match on element
+ * value. An example where this is needed is if there are several buttons all
+ * named 'op', and only differing in their value.
  */
-function _form_button_was_clicked($form, &$form_state) {
+function _form_element_triggered_scripted_submission($element, &$form_state) {
+  if (!empty($form_state['input']['_triggering_element_name']) && $element['#name'] == $form_state['input']['_triggering_element_name']) {
+    if (empty($form_state['input']['_triggering_element_value']) || $form_state['input']['_triggering_element_value'] == $element['#value']) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Helper function to handle the convoluted logic of button click detection.
+ *
+ * This detects button controls that trigger a form submission by being clicked
+ * and having the click processed by the browser rather than being captured by
+ * JavaScript. Essentially, it detects if the button's name and value are part
+ * of the POST data, but with extra code to deal with the convoluted way in
+ * which browsers submit data for image button clicks.
+ *
+ * This does not detect button clicks processed by AJAX (that is done in
+ * _form_element_triggered_scripted_submission()) and it does not detect form
+ * submissions from Internet Explorer in response to an ENTER key pressed in a
+ * textfield (form_builder() has extra code for that).
+ *
+ * Because this function contains only part of the logic needed to determine
+ * $form_state['triggering_element'], it should not be called from anywhere
+ * other than within the Form API. Form validation and submit handlers needing
+ * to know which button was clicked should get that information from
+ * $form_state['triggering_element'].
+ */
+function _form_button_was_clicked($element, &$form_state) {
   // First detect normal 'vanilla' button clicks. Traditionally, all
   // standard buttons on a form share the same name (usually 'op'),
   // and the specific return value is used to determine which was
   // clicked. This ONLY works as long as $form['#name'] puts the
   // value at the top level of the tree of $_POST data.
-  if (isset($form_state['input'][$form['#name']]) && $form_state['input'][$form['#name']] == $form['#value']) {
+  if (isset($form_state['input'][$element['#name']]) && $form_state['input'][$element['#name']] == $element['#value']) {
     return TRUE;
   }
   // When image buttons are clicked, browsers do NOT pass the form element
@@ -1469,39 +1564,10 @@ function _form_button_was_clicked($form, &$form_state) {
   // coordinates of the click on the button image. This means that image
   // buttons MUST have unique $form['#name'] values, but the details of
   // their $_POST data should be ignored.
-  elseif (!empty($form['#has_garbage_value']) && isset($form['#value']) && $form['#value'] !== '') {
+  elseif (!empty($element['#has_garbage_value']) && isset($element['#value']) && $element['#value'] !== '') {
     return TRUE;
   }
   return FALSE;
-}
-
-/**
- * In IE, if only one submit button is present, AND the enter key is
- * used to submit the form, no form value is sent for it and our normal
- * button detection code will never detect a match. We call this
- * function after all other button-detection is complete to check
- * for the proper conditions, and treat the single button on the form
- * as 'clicked' if they are met.
- */
-function _form_builder_ie_cleanup($form, &$form_state) {
-  // Quick check to make sure we're always looking at the full form
-  // and not a sub-element.
-  if (!empty($form['#type']) && $form['#type'] == 'form') {
-    // If we haven't recognized a submission yet, and there's a single
-    // submit button, we know that we've hit the right conditions. Grab
-    // the first one and treat it as the clicked button.
-    if (empty($form_state['submitted']) && !empty($form_state['buttons']['submit']) && empty($form_state['buttons']['button'])) {
-      $button = $form_state['buttons']['submit'][0];
-
-      // Set up all the $form_state information that would have been
-      // populated had the button been recognized earlier.
-      $form_state['submitted'] = TRUE;
-      $form_state['submit_handlers'] = empty($button['#submit']) ? NULL : $button['#submit'];
-      $form_state['validate_handlers'] = empty($button['#validate']) ? NULL : $button['#validate'];
-      $form_state['values'][$button['#name']] = $button['#value'];
-      $form_state['clicked_button'] = $button;
-    }
-  }
 }
 
 /**
@@ -1527,37 +1593,35 @@ function form_state_values_clean(&$form_state) {
   unset($form_state['values']['form_id'], $form_state['values']['form_token'], $form_state['values']['form_build_id'], $form_state['values']['op']);
 
   // Remove button values.
-  // form_builder() collects all button elements in a form, keyed by button
-  // type. We remove the button value separately for each button element.
-  foreach ($form_state['buttons'] as $button_type => $buttons) {
-    foreach ($buttons as $button) {
-      // Remove this button's value from the submitted form values by finding
-      // the value corresponding to this button.
-      // We iterate over the #parents of this button and move a reference to
-      // each parent in $form_state['values']. For example, if #parents is:
-      //   array('foo', 'bar', 'baz')
-      // then the corresponding $form_state['values'] part will look like this:
-      // array(
-      //   'foo' => array(
-      //     'bar' => array(
-      //       'baz' => 'button_value',
-      //     ),
-      //   ),
-      // )
-      // We start by (re)moving 'baz' to $last_parent, so we are able unset it
-      // at the end of the iteration. Initially, $values will contain a
-      // reference to $form_state['values'], but in the iteration we move the
-      // reference to $form_state['values']['foo'], and finally to
-      // $form_state['values']['foo']['bar'], which is the level where we can
-      // unset 'baz' (that is stored in $last_parent).
-      $parents = $button['#parents'];
-      $values = &$form_state['values'];
-      $last_parent = array_pop($parents);
-      foreach ($parents as $parent) {
-        $values = &$values[$parent];
-      }
-      unset($values[$last_parent]);
+  // form_builder() collects all button elements in a form. We remove the button
+  // value separately for each button element.
+  foreach ($form_state['buttons'] as $button) {
+    // Remove this button's value from the submitted form values by finding
+    // the value corresponding to this button.
+    // We iterate over the #parents of this button and move a reference to
+    // each parent in $form_state['values']. For example, if #parents is:
+    //   array('foo', 'bar', 'baz')
+    // then the corresponding $form_state['values'] part will look like this:
+    // array(
+    //   'foo' => array(
+    //     'bar' => array(
+    //       'baz' => 'button_value',
+    //     ),
+    //   ),
+    // )
+    // We start by (re)moving 'baz' to $last_parent, so we are able unset it
+    // at the end of the iteration. Initially, $values will contain a
+    // reference to $form_state['values'], but in the iteration we move the
+    // reference to $form_state['values']['foo'], and finally to
+    // $form_state['values']['foo']['bar'], which is the level where we can
+    // unset 'baz' (that is stored in $last_parent).
+    $parents = $button['#parents'];
+    $values = &$form_state['values'];
+    $last_parent = array_pop($parents);
+    foreach ($parents as $parent) {
+      $values = &$values[$parent];
     }
+    unset($values[$last_parent]);
   }
 }
 

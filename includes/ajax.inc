@@ -257,28 +257,12 @@ function ajax_get_form() {
  * The Form API #ajax property can be set both for buttons and other input
  * elements.
  *
- * ajax_process_form() defines an additional 'formPath' JavaScript setting
- * that is used by Drupal.ajax.prototype.beforeSubmit() to automatically inject
- * an additional field 'ajax_triggering_element' to the submitted form values,
- * which contains the array #parents of the element in the form structure.
- * This additional field allows ajax_form_callback() to determine which
- * element triggered the action, as non-submit form elements do not
- * provide this information in $form_state['clicked_button'], which can
- * also be used to determine triggering element, but only submit-type
- * form elements.
- *
  * This function is also the canonical example of how to implement
  * #ajax['path']. If processing is required that cannot be accomplished with
  * a callback, re-implement this function and set #ajax['path'] to the
  * enhanced function.
  */
 function ajax_form_callback() {
-  // Find the triggering element, which was set up for us on the client side.
-  if (!empty($_REQUEST['ajax_triggering_element'])) {
-    $triggering_element_path = $_REQUEST['ajax_triggering_element'];
-    // Remove the value for form validation.
-    unset($_REQUEST['ajax_triggering_element']);
-  }
   list($form, $form_state, $form_id, $form_build_id) = ajax_get_form();
 
   // Build, validate and if possible, submit the form.
@@ -288,32 +272,11 @@ function ajax_form_callback() {
   // drupal_process_form() set up.
   $form = drupal_rebuild_form($form_id, $form_state, $form_build_id);
 
-  // $triggering_element_path in a simple form might just be 'myselect', which
-  // would mean we should use the element $form['myselect']. For nested form
-  // elements we need to recurse into the form structure to find the triggering
-  // element, so we can retrieve the #ajax['callback'] from it.
-  if (!empty($triggering_element_path)) {
-    if (!isset($form['#access']) || $form['#access']) {
-      $triggering_element = $form;
-      foreach (explode('/', $triggering_element_path) as $key) {
-        if (!empty($triggering_element[$key]) && (!isset($triggering_element[$key]['#access']) || $triggering_element[$key]['#access'])) {
-          $triggering_element = $triggering_element[$key];
-        }
-        else {
-          // We did not find the $triggering_element or do not have #access,
-          // so break out and do not provide it.
-          $triggering_element = NULL;
-          break;
-        }
-      }
-    }
-  }
-  if (empty($triggering_element)) {
-    $triggering_element = $form_state['clicked_button'];
-  }
-  // Now that we have the element, get a callback if there is one.
-  if (!empty($triggering_element)) {
-    $callback = $triggering_element['#ajax']['callback'];
+  // As part of drupal_process_form(), the element that triggered the form
+  // submission is determined, and in the case of AJAX, it might not be a
+  // button. This lets us route to the appropriate callback.
+  if (!empty($form_state['triggering_element'])) {
+    $callback = $form_state['triggering_element']['#ajax']['callback'];
   }
   if (!empty($callback) && function_exists($callback)) {
     return $callback($form, $form_state);
@@ -499,13 +462,40 @@ function ajax_process_form($element, &$form_state) {
       'speed' => 'none',
       'method' => 'replace',
       'progress' => array('type' => 'throbber'),
-      'formPath' => implode('/', $element['#array_parents']),
     );
 
-    // Process special settings.
+    // Change path to url.
     $settings['url'] = isset($settings['path']) ? url($settings['path']) : url('system/ajax');
     unset($settings['path']);
-    $settings['button'] = isset($element['#executes_submit_callback']) ? array($element['#name'] => $element['#value']) : FALSE;
+
+    // Add special data to $settings['submit'] so that when this element
+    // triggers an AJAX submission, Drupal's form processing can determine which
+    // element triggered it.
+    // @see _form_element_triggered_scripted_submission()
+    if (isset($settings['trigger_as'])) {
+      // An element can add a 'trigger_as' key within #ajax to make the element
+      // submit as though another one (for example, a non-button can use this
+      // to submit the form as though a button were clicked). When using this,
+      // the 'name' key is always required to identify the element to trigger
+      // as. The 'value' key is optional, and only needed when multiple elements
+      // share the same name, which is commonly the case for buttons.
+      $settings['submit']['_triggering_element_name'] = $settings['trigger_as']['name'];
+      if (isset($settings['trigger_as']['value'])) {
+        $settings['submit']['_triggering_element_value'] = $settings['trigger_as']['value'];
+      }
+      unset($settings['trigger_as']);
+    }
+    else {
+      // Most of the time, elements can submit as themselves, in which case the
+      // 'trigger_as' key isn't needed, and the element's name is used.
+      $settings['submit']['_triggering_element_name'] = $element['#name'];
+      // If the element is a (non-image) button, its name may not identify it
+      // uniquely, in which case a match on value is also needed.
+      // @see _form_button_was_clicked()
+      if (isset($element['#button_type']) && empty($element['#has_garbage_value'])) {
+        $settings['submit']['_triggering_element_value'] = $element['#value'];
+      }
+    }
 
     // Convert a simple #ajax['progress'] string into an array.
     if (is_string($settings['progress'])) {
