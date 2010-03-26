@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger_test.module,v 1.6 2010/03/07 07:22:42 webchick Exp $
+// $Id: trigger_test.module,v 1.7 2010/03/26 20:44:10 dries Exp $
 
 /**
  * @file
@@ -131,5 +131,5 @@ function trigger_test_generic_action($context) {
  */
 function trigger_test_generic_any_action($context) {
   // Indicate successful execution by setting a persistent variable.
-  variable_set('trigger_test_generic_any_action', TRUE);
+  variable_set('trigger_test_generic_any_action', variable_get('trigger_test_generic_any_action', 0) + 1);
 }
