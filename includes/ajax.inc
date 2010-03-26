@@ -448,8 +448,6 @@ function ajax_footer() {
  *   drupal_add_js().
  */
 function ajax_process_form($element, &$form_state) {
-  $js_added = &drupal_static(__FUNCTION__, array());
-
   // Nothing to do if there is neither a callback nor a path.
   if (!(isset($element['#ajax']['callback']) || isset($element['#ajax']['path']))) {
     return $element;
@@ -487,9 +485,8 @@ function ajax_process_form($element, &$form_state) {
     }
   }
 
-  // Adding the same JavaScript settings twice will cause a recursion error,
-  // we avoid the problem by checking if the JavaScript has already been added.
-  if (!isset($js_added[$element['#id']]) && isset($element['#ajax']['event'])) {
+  // Attach JavaScript settings to the element.
+  if (isset($element['#ajax']['event'])) {
     $element['#attached']['library'][] = array('system', 'form');
     $element['#attached']['js']['misc/ajax.js'] = array('weight' => JS_LIBRARY + 2);
 
@@ -524,12 +521,11 @@ function ajax_process_form($element, &$form_state) {
       $element['#attached']['js']['misc/progress.js'] = array('cache' => FALSE);
     }
 
-    // @todo This is incompatible with drupal_render() caching, but cannot be
-    //   assigned to #attached, because AJAX callbacks render the form in a way
-    //   so that #attached settings are not taken over.
-    drupal_add_js(array('ajax' => array($element['#id'] => $settings)), 'setting');
+    $element['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array('ajax' => array($element['#id'] => $settings)),
+    );
 
-    $js_added[$element['#id']] = TRUE;
     $form_state['cache'] = TRUE;
   }
   return $element;
