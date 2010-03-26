@@ -1,5 +1,5 @@
 <?php
-// $Id: node_test.module,v 1.9 2009/12/26 16:50:09 dries Exp $
+// $Id: node_test.module,v 1.10 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function node_test_node_view($node, $view_mode) {
 function node_test_node_grants($account, $op) {
   // Give everyone full grants so we don't break other node tests.
   // Our node access tests asserts three realms of access.
-  // @see testGrantAlter()
+  // See testGrantAlter().
   return array(
     'test_article_realm' => array(1),
     'test_page_realm' => array(1),

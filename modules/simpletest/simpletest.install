@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.34 2010/01/15 22:46:59 dries Exp $
+// $Id: simpletest.install,v 1.35 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function simpletest_requirements($phase) {
 
   // SimpleTest currently needs 2 cURL options which are incompatible with
   // having PHP's open_basedir restriction set.
-  // @see http://drupal.org/node/674304.
+  // See http://drupal.org/node/674304.
   $requirements['php_open_basedir'] = array(
     'title' => $t('PHP open_basedir restriction'),
     'value' => $open_basedir ? $t('Enabled') : $t('Disabled'),

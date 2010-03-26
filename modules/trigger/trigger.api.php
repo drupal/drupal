@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.api.php,v 1.5 2009/09/19 11:07:36 dries Exp $
+// $Id: trigger.api.php,v 1.6 2010/03/26 17:14:46 dries Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@
  * out which actions the user has associated with your trigger, and then calling
  * actions_do() to fire off the actions.
  *
- * @see hook_action_info().
+ * @see hook_action_info()
  *
  * @return
  *   A nested associative array.

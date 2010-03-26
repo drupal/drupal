@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.63 2010/02/17 09:08:59 dries Exp $
+// $Id: update.module,v 1.64 2010/03/26 17:14:46 dries Exp $
 
 /**
  * @file
@@ -427,7 +427,7 @@ function update_create_fetch_task($project) {
 /**
  * Wrapper to load the include file and then refresh the release data.
  *
- * @see _update_refresh();
+ * @see _update_refresh()
  */
 function update_refresh() {
   module_load_include('inc', 'update', 'update.fetch');

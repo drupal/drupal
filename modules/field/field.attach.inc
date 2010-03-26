@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.79 2010/03/25 11:46:20 dries Exp $
+// $Id: field.attach.inc,v 1.80 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -390,7 +390,7 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
  * Use _field_invoke() to invoke the field type implementation,
  * hook_field_[op]().
  *
- * @see _field_invoke().
+ * @see _field_invoke()
  */
 function _field_invoke_default($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $options = array()) {
   $options['default'] = TRUE;
@@ -404,7 +404,7 @@ function _field_invoke_default($op, $entity_type, $entity, &$a = NULL, &$b = NUL
  * Use _field_invoke_multiple() to invoke the field type implementation,
  * hook_field_[op]().
  *
- * @see _field_invoke_multiple().
+ * @see _field_invoke_multiple()
  */
 function _field_invoke_multiple_default($op, $entity_type, $entities, &$a = NULL, &$b = NULL, $options = array()) {
   $options['default'] = TRUE;

@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.28 2010/02/26 00:19:55 webchick Exp $
+// $Id: registry.inc,v 1.29 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -17,7 +17,7 @@
  */
 
 /**
- * @see registry_update().
+ * Does the work for registry_update().
  */
 function _registry_update() {
 

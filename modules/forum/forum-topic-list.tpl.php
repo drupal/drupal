@@ -1,5 +1,5 @@
 <?php
-// $Id: forum-topic-list.tpl.php,v 1.8 2009/10/08 07:58:45 webchick Exp $
+// $Id: forum-topic-list.tpl.php,v 1.9 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,8 @@
  *
  * Available variables:
  * - $header: The table header. This is pre-generated with click-sorting
- *   information. If you need to change this, @see template_preprocess_forum_topic_list().
+ *   information. If you need to change this, see 
+ *   template_preprocess_forum_topic_list().
  * - $pager: The pager to display beneath the table.
  * - $topics: An array of topics to be displayed.
  * - $topic_id: Numeric id for the current forum topic.

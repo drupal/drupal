@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.18 2010/03/08 05:21:23 webchick Exp $
+// $Id: filter.api.php,v 1.19 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -208,8 +208,8 @@ function hook_filter_info_alter(&$info) {
  * @param $format
  *   The format object of the format being updated.
  *
- * @see hook_filter_format_update().
- * @see hook_filter_format_delete().
+ * @see hook_filter_format_update()
+ * @see hook_filter_format_delete()
  */
 function hook_filter_format_insert($format) {
   mymodule_cache_rebuild();
@@ -225,8 +225,8 @@ function hook_filter_format_insert($format) {
  * @param $format
  *   The format object of the format being updated.
  *
- * @see hook_filter_format_insert().
- * @see hook_filter_format_delete().
+ * @see hook_filter_format_insert()
+ * @see hook_filter_format_delete()
  */
 function hook_filter_format_update($format) {
   mymodule_cache_rebuild();
@@ -245,8 +245,8 @@ function hook_filter_format_update($format) {
  *   The format object of the site's fallback format, which is always available
  *   to all users.
  *
- * @see hook_filter_format_insert().
- * @see hook_filter_format_update().
+ * @see hook_filter_format_insert()
+ * @see hook_filter_format_update()
  */
 function hook_filter_format_delete($format, $fallback) {
   // Replace the deleted format with the fallback format.

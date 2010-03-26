@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.84 2010/03/25 10:38:45 dries Exp $
+// $Id: database_test.test,v 1.85 2010/03/26 17:14:45 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2247,7 +2247,7 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
 /**
  * Select alter tests.
  *
- * @see database_test_query_alter().
+ * @see database_test_query_alter()
  */
 class DatabaseAlterTestCase extends DatabaseTestCase {
 
@@ -2331,7 +2331,7 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
 /**
  * Select alter tests, part 2.
  *
- * @see database_test_query_alter().
+ * @see database_test_query_alter()
  */
 class DatabaseAlter2TestCase extends DatabaseTestCase {
 

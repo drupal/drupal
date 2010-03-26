@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1248 2010/03/21 21:20:43 dries Exp $
+// $Id: node.module,v 1.1249 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -379,6 +379,7 @@ function _node_extract_type($node) {
  *
  * @return
  *   An array of node types, keyed by the type.
+ *
  * @see node_type_get_type()
  */
 function node_type_get_types() {
@@ -398,7 +399,7 @@ function node_type_get_types() {
  *   fields used internally and defined in _node_types_build() and
  *   node_type_set_defaults().
  *
- * @see hook_node_info();
+ * @see hook_node_info()
  */
 function node_type_get_type($node) {
   $type = _node_extract_type($node);

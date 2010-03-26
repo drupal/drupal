@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.test,v 1.13 2010/01/30 07:59:25 dries Exp $
+// $Id: actions.test,v 1.14 2010/03/26 17:14:45 dries Exp $
 
 class ActionsConfigurationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -97,7 +97,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
     // To prevent this test from failing when xdebug is enabled, the maximum
     // recursion level should be kept low enough to prevent the xdebug
     // infinite recursion protection mechanism from aborting the request.
-    // @see http://drupal.org/node/587634.
+    // See http://drupal.org/node/587634.
     variable_set('actions_max_stack', mt_rand(3, 12));
     $this->triggerActions();
   }

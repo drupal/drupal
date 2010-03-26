@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.9 2010/03/24 07:34:10 dries Exp $
+// $Id: standard.install,v 1.10 2010/03/26 17:14:46 dries Exp $
 
 /**
  * Implements hook_install().
@@ -315,7 +315,7 @@ function standard_install() {
 
   // Create an image field named "Image", enabled for the 'article' content type.
   // Many of the following values will be defaulted, they're included here as an illustrative examples.
-  // @see: http://api.drupal.org/api/function/field_create_field/7
+  // See http://api.drupal.org/api/function/field_create_field/7
 
   $field = array(
     'field_name' => 'field_image',
@@ -337,7 +337,7 @@ function standard_install() {
 
 
   // Many of the following values will be defaulted, they're included here as an illustrative examples.
-  // @see: http://api.drupal.org/api/function/field_create_instance/7
+  // See http://api.drupal.org/api/function/field_create_instance/7
   $instance = array(
     'field_name' => 'field_image',
     'object_type' => 'node',

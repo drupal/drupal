@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.558 2010/03/08 15:40:25 webchick Exp $
+// $Id: forum.module,v 1.559 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -644,7 +644,7 @@ function forum_block_view($delta = '') {
 /**
 * A #pre_render callback. Lists nodes based on the element's #query property.
 *
-* @see forum_block_view().
+* @see forum_block_view()
 *
 * @return
 *   A renderable array.

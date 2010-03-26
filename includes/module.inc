@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.184 2010/03/03 07:38:08 dries Exp $
+// $Id: module.inc,v 1.185 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -536,7 +536,7 @@ function module_hook($module, $hook) {
  * @return
  *   An array with the names of the modules which are implementing this hook.
  *
- * @see module_implements_write_cache().
+ * @see module_implements_write_cache()
  */
 function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   // Use the advanced drupal_static() pattern, since this is called very often.

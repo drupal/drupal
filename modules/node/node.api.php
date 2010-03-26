@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.65 2010/03/18 06:49:17 dries Exp $
+// $Id: node.api.php,v 1.66 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -690,7 +690,7 @@ function hook_node_validate($node, $form) {
  * When $view_mode is 'rss', modules can also add extra RSS elements and
  * namespaces to $node->rss_elements and $node->rss_namespaces respectively for
  * the RSS item generated for this node.
- * For details on how this is used @see node_feed()
+ * For details on how this is used, see node_feed().
  *
  * @see taxonomy_node_view()
  * @see upload_node_view()

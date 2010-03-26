@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.12 2010/02/06 05:49:35 webchick Exp $
+// $Id: stream_wrappers.inc,v 1.13 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -16,8 +16,8 @@
  * delimiter is in general just ":", not "://".  Because of this PHP limitation
  * and for consistency Drupal will only accept URIs of form "scheme://target".
  *
- * @link http://www.faqs.org/rfcs/rfc3986.html
- * @link http://bugs.php.net/bug.php?id=47070
+ * @see http://www.faqs.org/rfcs/rfc3986.html
+ * @see http://bugs.php.net/bug.php?id=47070
  */
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.42 2010/02/27 22:11:11 webchick Exp $
+// $Id: field.info.inc,v 1.43 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -535,7 +535,7 @@ function field_info_fields() {
  *   additional element 'bundles', whose value is an array of all the bundles
  *   this field belongs to.
  *
- * @see field_info_field_by_id().
+ * @see field_info_field_by_id()
  */
 function field_info_field($field_name) {
   $info = _field_info_collate_fields();
@@ -556,7 +556,7 @@ function field_info_field($field_name) {
  *   additional element 'bundles', whose value is an array of all the bundles
  *   this field belongs to.
  *
- * @see field_info_field().
+ * @see field_info_field()
  */
 function field_info_field_by_id($field_id) {
   $info = _field_info_collate_fields();

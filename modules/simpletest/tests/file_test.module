@@ -1,5 +1,5 @@
 <?php
-// $Id: file_test.module,v 1.20 2010/01/29 01:59:32 webchick Exp $
+// $Id: file_test.module,v 1.21 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file
@@ -99,7 +99,8 @@ function _file_test_form_submit(&$form, &$form_state) {
 /**
  * Reset/initialize the history of calls to the file_* hooks.
  *
- * @see the getter/setter functions file_test_get_calls() and file_test_reset().
+ * @see file_test_get_calls() 
+ * @see file_test_reset()
  */
 function file_test_reset() {
   // Keep track of calls to these hooks
@@ -116,7 +117,7 @@ function file_test_reset() {
   );
   variable_set('file_test_results', $results);
 
-  // These hooks will return these values, @see file_test_set_return().
+  // These hooks will return these values, see file_test_set_return().
   $return = array(
     'validate' => array(),
     'download' => NULL,
@@ -132,9 +133,12 @@ function file_test_reset() {
  * @param $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
  *   'references', 'insert', 'update', 'copy', 'move', 'delete'.
+ *
  * @return
  *   Array of the parameters passed to each call.
- * @see _file_test_log_call() and file_test_reset()
+ *
+ * @see _file_test_log_call()
+ * @see file_test_reset()
  */
 function file_test_get_calls($op) {
   $results = variable_get('file_test_results', array());
@@ -161,7 +165,9 @@ function file_test_get_all_calls() {
  *   'references', 'insert', 'update', 'copy', 'move', 'delete'.
  * @param $args
  *   Values passed to hook.
- * @see file_test_get_calls() and file_test_reset()
+ *
+ * @see file_test_get_calls()
+ * @see file_test_reset()
  */
 function _file_test_log_call($op, $args) {
   $results = variable_get('file_test_results', array());
@@ -174,9 +180,12 @@ function _file_test_log_call($op, $args) {
  *
  * @param $op
  *   One of the hook_file_[validate,download,references] operations.
+ *
  * @return
  *   Value set by file_test_set_return().
-* @see file_test_set_return() and file_test_reset().
+ *
+ * @see file_test_set_return()
+ * @see file_test_reset()
  */
 function _file_test_get_return($op) {
   $return = variable_get('file_test_return', array($op => NULL));
@@ -190,7 +199,9 @@ function _file_test_get_return($op) {
  *   One of the hook_file_[validate,download,references] operations.
  * @param $value
  *   Value for the hook to return.
- * @see _file_test_get_return() and file_test_reset().
+ *
+ * @see _file_test_get_return()
+ * @see file_test_reset()
  */
 function file_test_set_return($op, $value) {
   $return = variable_get('file_test_return', array());

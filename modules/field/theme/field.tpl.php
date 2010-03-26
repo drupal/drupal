@@ -1,12 +1,12 @@
 <?php
-// $Id: field.tpl.php,v 1.12 2010/02/12 05:38:10 webchick Exp $
+// $Id: field.tpl.php,v 1.13 2010/03/26 17:14:45 dries Exp $
 
 /**
  * @file field.tpl.php
  * Default template implementation to display the value of a field.
  *
  * This file is not used and is here as a starting point for customization only.
- * @see theme_field().
+ * @see theme_field()
  *
  * Available variables:
  * - $items: An array of field values. Use render() to output them.
