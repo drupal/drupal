@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.288 2010/03/25 11:46:21 dries Exp $
+// $Id: locale.module,v 1.289 2010/03/26 12:37:30 dries Exp $
 
 /**
  * @file
@@ -340,7 +340,7 @@ function locale_form_path_admin_form_alter(&$form, &$form_state) {
   $form['language'] = array(
     '#type' => 'select',
     '#title' => t('Language'),
-    '#options' => array('' => t('All languages')) + locale_language_list('name'),
+    '#options' => array(LANGUAGE_NONE => t('All languages')) + locale_language_list('name'),
     '#default_value' => $form['language']['#value'],
     '#weight' => -10,
     '#description' => t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set for <em>All languages</em>.'),
