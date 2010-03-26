@@ -65,13 +65,14 @@ function openid_help($path, $arg) {
  * Implements hook_user_insert().
  */
 function openid_user_insert(&$edit, $account, $category) {
-  if (isset($_SESSION['openid']['values'])) {
+  if (!empty($edit['openid_claimed_id'])) {
     // The user has registered after trying to log in via OpenID.
     if (variable_get('user_email_verification', TRUE)) {
       drupal_set_message(t('Once you have verified your e-mail address, you may log in via OpenID.'));
     }
-    user_set_authmaps($account, array('authname_openid' => $_SESSION['openid']['values']['response']['openid.claimed_id']));
+    user_set_authmaps($account, array('authname_openid' => $edit['openid_claimed_id']));
     unset($_SESSION['openid']);
+    unset($edit['openid_claimed_id']);
   }
 }
 
@@ -153,28 +154,56 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_FORM_ID_alter().
  *
- * Adds OpenID login to the login forms.
+ * Prefills the login form with values acquired via OpenID.
  */
 function openid_form_user_register_form_alter(&$form, &$form_state) {
-  if (isset($_SESSION['openid']['values'])) {
-    // We were unable to auto-register a new user. Prefill the registration
-    // form with the values we have.
-    $form['account']['name']['#default_value'] = $_SESSION['openid']['values']['name'];
-    $form['account']['mail']['#default_value'] = $_SESSION['openid']['values']['mail'];
+  if (isset($_SESSION['openid']['response'])) {
+    module_load_include('inc', 'openid');
+
+    $response = $_SESSION['openid']['response'];
+
+    // Extract Simple Registration keys from the response.
+    $sreg_values = openid_extract_namespace($response, OPENID_NS_SREG, 'sreg');
+    // Extract Attribute Exchanges keys from the response.
+    $ax_values = openid_extract_namespace($response, OPENID_NS_AX, 'ax');
+
+    if (!empty($sreg_values['nickname'])) {
+      // Use the nickname returned by Simple Registration if available.
+      $form['account']['name']['#default_value'] = $sreg_values['nickname'];
+    }
+    elseif (!empty($ax_values['value.email'])) {
+      // Else, extract the name part of the email address returned by AX if available.
+      list($name, $domain) = explode('@', $ax_values['value.email'], 2);
+      $form['account']['name']['#default_value'] = $name;
+    }
+
+    if (!empty($sreg_values['email'])) {
+      // Use the email returned by Simple Registration if available.
+      $form['account']['mail']['#default_value'] = $sreg_values['email'];
+    }
+    elseif (!empty($ax_values['value.email'])) {
+      // Else, use the email returned by AX if available.
+      $form['account']['mail']['#default_value'] = $ax_values['value.email'];
+    }
 
     // If user_email_verification is off, hide the password field and just fill
     // with random password to avoid confusion.
     if (!variable_get('user_email_verification', TRUE)) {
-      $form['pass']['#type'] = 'hidden';
-      $form['pass']['#value'] = user_password();
+      $form['account']['pass']['#type'] = 'hidden';
+      $form['account']['pass']['#value'] = user_password();
     }
+
+    $form['openid_claimed_id'] = array(
+      '#type' => 'value',
+      '#default_value' => $response['openid.claimed_id'],
+    );
     $form['openid_display'] = array(
       '#type' => 'item',
       '#title' => t('Your OpenID'),
       '#description' => t('This OpenID will be attached to your account after registration.'),
-      '#markup' => check_plain($_SESSION['openid']['values']['response']['openid.claimed_id']),
+      '#markup' => check_plain($response['openid.claimed_id']),
     );
   }
 }
@@ -575,8 +604,6 @@ function openid_association($op_endpoint) {
  * @param $response Response values from the OpenID Provider.
  */
 function openid_authentication($response) {
-  module_load_include('inc', 'openid');
-
   $identity = $response['openid.claimed_id'];
 
   $account = user_external_load($identity);
@@ -594,92 +621,44 @@ function openid_authentication($response) {
       }
     }
     else {
-      drupal_set_message(t('You must validate your email address for this account before logging in via OpenID'));
+      drupal_set_message(t('You must validate your email address for this account before logging in via OpenID.'));
     }
   }
   elseif (variable_get('user_register', 1)) {
     // Register new user.
 
-    // Extract Simple Registration keys from the response.
-    $sreg_values = openid_extract_namespace($response, OPENID_NS_SREG, 'sreg');
-    // Extract Attribute Exchanges keys from the response.
-    $ax_values = openid_extract_namespace($response, OPENID_NS_AX, 'ax');
+    // Save response for use in openid_form_user_register_form_alter().
+    $_SESSION['openid']['response'] = $response;
 
-    $form_state['build_info']['args'] = array();
-    $form_state['redirect'] = NULL;
+    $form_state['values'] = array();
+    $form_state['values']['op'] = t('Create new account');
+    drupal_form_submit('user_register_form', $form_state);
 
-    if (!empty($sreg_values['nickname'])) {
-      // Use the nickname returned by Simple Registration if available.
-      $form_state['values']['name'] = $sreg_values['nickname'];
-    }
-    else if (!empty($ax_values['value.email'])) {
-      // Else, extract the name part of the email address returned by AX if available.
-      list ($name, $domain) = explode('@', $ax_values['value.email'], 2);
-      $form_state['values']['name'] = $name;
-    }
-    else {
-      $form_state['values']['name'] = '';
+    if (!empty($form_state['user'])) {
+      module_invoke_all('openid_response', $response, $form_state['user']);
+      drupal_goto();
     }
 
-    if (!empty($sreg_values['email'])) {
-      // Use the email returned by Simple Registration if available.
-      $form_state['values']['mail'] = $sreg_values['email'];
-    }
-    else if (!empty($ax_values['value.email'])) {
-      // Else, use the email returned by AX if available.
-      $form_state['values']['mail'] = $ax_values['value.email'];
-    }
-    else {
-      $form_state['values']['mail'] = '';
-    }
-
-    $form_state['values']['pass']  = user_password();
-    $form_state['values']['status'] = variable_get('user_register', 1) == 1;
-    $form_state['values']['response'] = $response;
-
+    $messages = drupal_get_messages('error');
     if (empty($form_state['values']['name']) || empty($form_state['values']['mail'])) {
+      // If the OpenID provider did not provide both a user name and an email
+      // address, ask the user to complete the registration manually instead of
+      // showing the error messages about the missing values generated by FAPI.
       drupal_set_message(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'warning');
-      $success = FALSE;
     }
     else {
-      $form = drupal_retrieve_form('user_register_form', $form_state);
-      drupal_prepare_form('user_register_form', $form, $form_state);
-      drupal_validate_form('user_register_form', $form, $form_state);
-      $success = !form_get_errors();
-      if (!$success) {
-        drupal_set_message(t('Account registration using the information provided by your OpenID provider failed due to the reasons listed below. Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'warning');
-        // Append form validation errors below the above warning.
-        $messages = drupal_get_messages('error');
-        foreach ($messages['error'] as $message) {
-          drupal_set_message( $message, 'error');
-        }
+      drupal_set_message(t('Account registration using the information provided by your OpenID provider failed due to the reasons listed below. Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'warning');
+      // Append form validation errors below the above warning.
+      foreach ($messages['error'] as $message) {
+        drupal_set_message( $message, 'error');
       }
     }
-    if (!$success) {
-      // We were unable to register a valid new user, redirect to standard
-      // user/register and prefill with the values we received.
-      $_SESSION['openid']['values'] = $form_state['values'];
-      // We'll want to redirect back to the same place.
-      $destination = drupal_get_destination();
-      unset($_GET['destination']);
-      drupal_goto('user/register', array('query' => $destination));
-    }
-    else {
-      unset($form_state['values']['response']);
-      $account = user_save(drupal_anonymous_user(), $form_state['values']);
-      // Terminate if an error occurred during user_save().
-      if (!$account) {
-        drupal_set_message(t("Error saving user account."), 'error');
-        drupal_goto();
-      }
-      user_set_authmaps($account, array("authname_openid" => $identity));
-      // Load global $user and perform final login tasks.
-      $form_state['uid'] = $account->uid;
-      user_login_submit(array(), $form_state);
-      // Let other modules act on OpenID login
-      module_invoke_all('openid_response', $response, $account);
-    }
-    drupal_redirect_form($form_state);
+
+    // We were unable to register a valid new user. Redirect to the normal
+    // registration page and prefill with the values we received.
+    $destination = drupal_get_destination();
+    unset($_GET['destination']);
+    drupal_goto('user/register', array('query' => $destination));
   }
   else {
     drupal_set_message(t('Only site administrators can create new user accounts.'), 'error');

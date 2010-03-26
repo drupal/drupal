@@ -100,19 +100,14 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
     $this->drupalLogout();
 
-    // Fill out and submit the login form.
-    $edit = array('openid_identifier' => $identity);
-    $this->drupalPost(NULL, $edit, t('Log in'));
-
-    // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
-
-    // Submit form to the OpenID Provider Endpoint.
-    $this->drupalPost(NULL, array(), t('Send'));
+    // Test logging in via the login block on the front page.
+    $this->submitLoginForm($identity);
     $this->assertLink($this->web_user->name, 0, t('User was logged in.'));
 
-    // Test logging in via the user/login page.
     $this->drupalLogout();
+
+    // Test logging in via the user/login page.
+    $edit = array('openid_identifier' => $identity);
     $this->drupalPost('user/login', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
@@ -170,15 +165,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
     $this->assertRaw('The update has been performed.', t('Account was blocked.'));
     $this->drupalLogout();
 
-    // Fill out and submit the login form.
-    $edit = array('openid_identifier' => $identity);
-    $this->drupalPost(NULL, $edit, t('Log in'));
-
-    // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
-
-    // Submit form to the OpenID Provider Endpoint.
-    $this->drupalPost(NULL, array(), t('Send'));
+    $this->submitLoginForm($identity);
     $this->assertRaw(t('The username %name has not been activated or is blocked.', array('%name' => $this->web_user->name)), t('User login was blocked.'));
   }
 
@@ -218,34 +205,62 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
+   * Test OpenID auto-registration with e-mail verification enabled.
+   */
+  function testRegisterUserWithEmailVerification() {
+    variable_set('user_email_verification', TRUE);
+
+    // Tell openid_test.module to respond with these SREG fields.
+    variable_set('openid_test_response', array('openid.sreg.nickname' => 'john', 'openid.sreg.email' => 'john@example.com'));
+
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+    $this->submitLoginForm($identity);
+    $this->assertRaw(t('Once you have verified your e-mail address, you may log in via OpenID.'), t('User was asked to verify e-mail address.'));
+    $this->assertRaw(t('A welcome message with further instructions has been sent to your e-mail address.'), t('A welcome message was sent to the user.'));
+
+    $user = user_load_by_name('john');
+    $this->assertTrue($user, t('User was registered with right username.'));
+    $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
+    $this->assertFalse($user->data, t('No additional user info was saved.'));
+
+    $this->submitLoginForm($identity);
+    $this->assertRaw(t('You must validate your email address for this account before logging in via OpenID.'));
+
+    // Follow the one-time login that was sent in the welcome e-mail.
+    $this->drupalGet(user_pass_reset_url($user));
+    $this->drupalPost(NULL, array(), t('Log in'));
+
+    $this->drupalLogout();
+
+    // Verify that the account was activated.
+    $this->submitLoginForm($identity);
+    $this->assertLink('john', 0, t('User was logged in.'));
+  }
+
+  /**
    * Test OpenID auto-registration with e-mail verification disabled.
    */
   function testRegisterUserWithoutEmailVerification() {
     variable_set('user_email_verification', FALSE);
 
-    // Load the front page to get the user login block.
-    $this->drupalGet('');
-
-    // Use a User-supplied Identity that is the URL of an XRDS document.
-    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
-
     // Tell openid_test.module to respond with these SREG fields.
     variable_set('openid_test_response', array('openid.sreg.nickname' => 'john', 'openid.sreg.email' => 'john@example.com'));
 
-    // Fill out and submit the login form.
-    $edit = array('openid_identifier' => $identity);
-    $this->drupalPost(NULL, $edit, t('Log in'));
-
-    // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
-
-    // Submit form to the OpenID Provider Endpoint.
-    $this->drupalPost(NULL, array(), t('Send'));
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+    $this->submitLoginForm($identity);
     $this->assertLink('john', 0, t('User was logged in.'));
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
+    $this->assertFalse($user->data, t('No additional user info was saved.'));
+
+    $this->drupalLogout();
+
+    $this->submitLoginForm($identity);
+    $this->assertLink('john', 0, t('User was logged in.'));
   }
 
   /**
@@ -253,25 +268,12 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
    * information (a username that is already taken, and no e-mail address).
    */
   function testRegisterUserWithInvalidSreg() {
-    // Load the front page to get the user login block.
-    $this->drupalGet('');
+     // Tell openid_test.module to respond with these SREG fields. 
+     variable_set('openid_test_response', array('openid.sreg.nickname' => $this->web_user->name, 'openid.sreg.email' => 'mail@invalid#'));
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
-
-    // Tell openid_test.module to respond with these SREG fields.
-    variable_set('openid_test_response', array('openid.sreg.nickname' => $this->web_user->name, 'openid.sreg.email' => 'mail@invalid#'));
-
-    // Fill out and submit the login form.
-    $edit = array('openid_identifier' => $identity);
-    $this->drupalPost(NULL, $edit, t('Log in'));
-
-    // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
-
-    // Submit form to the OpenID Provider Endpoint.
-    $this->drupalPost(NULL, array(), t('Send'));
-
+    $this->submitLoginForm($identity);
     $this->assertRaw(t('Account registration using the information provided by your OpenID provider failed due to the reasons listed below. Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process manually.'));
     $this->assertRaw(t('The name %name is already taken.', array('%name' => $this->web_user->name)), t('Form validation error for username was displayed.'));
     $this->assertRaw(t('The e-mail address %mail is not valid.', array('%mail' => 'mail@invalid#')), t('Form validation error for e-mail address was displayed.'));
@@ -283,8 +285,9 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
+    $this->assertFalse($user->data, t('No additional user info was saved.'));
 
-    // Follow the one-time login that was sent in the confirmation e-mail.
+    // Follow the one-time login that was sent in the welcome e-mail.
     $this->drupalGet(user_pass_reset_url($user));
     $this->drupalPost(NULL, array(), t('Log in'));
 
@@ -305,17 +308,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
-
-    // Fill out and submit the login form.
-    $edit = array('openid_identifier' => $identity);
-    $this->drupalPost(NULL, $edit, t('Log in'));
-
-    // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
-
-    // Submit form to the OpenID Provider Endpoint.
-    $this->drupalPost(NULL, array(), t('Send'));
-
+    $this->submitLoginForm($identity);
     $this->assertRaw(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process manually.'));
     $this->assertNoRaw(t('You must enter a username.'), t('Form validation error for username was not displayed.'));
     $this->assertNoRaw(t('You must enter an e-mail address.'), t('Form validation error for e-mail address was not displayed.'));
@@ -327,8 +320,9 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
+    $this->assertFalse($user->data, t('No additional user info was saved.'));
 
-    // Follow the one-time login that was sent in the confirmation e-mail.
+    // Follow the one-time login that was sent in the welcome e-mail.
     $this->drupalGet(user_pass_reset_url($user));
     $this->drupalPost(NULL, array(), t('Log in'));
 
@@ -346,32 +340,35 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
   function testRegisterUserWithAXButNoSREG() {
     variable_set('user_email_verification', FALSE);
 
-    // Load the front page to get the user login block.
-    $this->drupalGet('');
-
-    // Use a User-supplied Identity that is the URL of an XRDS document.
-    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
-
     // Tell openid_test.module to respond with these AX fields.
     variable_set('openid_test_response', array(
       'openid.ns.ext123' => 'http://openid.net/srv/ax/1.0',
       'openid.ext123.value.email' => 'john@example.com',
     ));
 
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+    $this->submitLoginForm($identity);
+    $this->assertLink('john', 0, t('User was logged in.'));
+
+    $user = user_load_by_name('john');
+    $this->assertTrue($user, t('User was registered with right username.'));
+    $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
+  }
+
+  /**
+   * Initiates the login procedure using the specified User-supplied Identity.
+   */
+  function submitLoginForm($identity) {
     // Fill out and submit the login form.
     $edit = array('openid_identifier' => $identity);
-    $this->drupalPost(NULL, $edit, t('Log in'));
+    $this->drupalPost('', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
     $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
 
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
-    $this->assertLink('john', 0, t('User was logged in.'));
-
-    $user = user_load_by_name('john');
-    $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
   }
 }
 
