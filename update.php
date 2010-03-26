@@ -21,10 +21,10 @@ define('DRUPAL_ROOT', getcwd());
  */
 
 /**
- * Global flag to identify update.php run, and so avoid various unwanted
- * operations, such as hook_init() and hook_exit() invokes, css/js preprocessing
- * and translation, and solve some theming issues. This flag is checked on several
- * places in Drupal code (not just update.php).
+ * Global flag indicating that update.php is being run.
+ *
+ * When this flag is set, various operations do not take place, such as invoking
+ * hook_init() and hook_exit(), css/js preprocessing, and translation.
  */
 define('MAINTENANCE_MODE', 'update');
 
@@ -47,7 +47,7 @@ function update_script_selection_form($form, &$form_state) {
     '#collapsible' => TRUE,
   );
 
-  // Ensure system.module's updates appear first
+  // Ensure system.module's updates appear first.
   $form['start']['system'] = array();
 
   $updates = update_get_update_list();
@@ -137,7 +137,8 @@ function update_script_selection_form($form, &$form_state) {
 }
 
 function update_helpful_links() {
-  // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
+  // NOTE: we can't use l() here because the URL would point to
+  // 'update.php?q=admin'.
   $links[] = '<a href="' . base_path() . '">Front page</a>';
   $links[] = '<a href="' . base_path() . '?q=admin">Administration pages</a>';
   return $links;
@@ -148,7 +149,7 @@ function update_results_page() {
   $links = update_helpful_links();
 
   update_task_list();
-  // Report end result
+  // Report end result.
   if (module_exists('dblog')) {
     $log_message = ' All errors have been <a href="' . base_path() . '?q=admin/reports/dblog">logged</a>.';
   }
@@ -174,7 +175,7 @@ function update_results_page() {
 
   $output .= theme('item_list', array('items' => $links));
 
-  // Output a list of queries executed
+  // Output a list of queries executed.
   if (!empty($_SESSION['update_results'])) {
     $output .= '<div id="update-results">';
     $output .= '<h2>The following updates returned messages</h2>';
@@ -397,7 +398,7 @@ if (update_access_allowed()) {
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
-    // update.php ops
+    // update.php ops.
 
     case 'selection':
       if (isset($_GET['token']) && $_GET['token'] == drupal_get_token('update')) {
@@ -419,7 +420,7 @@ if (update_access_allowed()) {
       $output = update_results_page();
       break;
 
-    // Regular batch ops : defer to batch processing API
+    // Regular batch ops : defer to batch processing API.
     default:
       update_task_list('run');
       $output = _batch_page();

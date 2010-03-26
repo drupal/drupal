@@ -155,7 +155,7 @@ $databases = array();
 $db_prefix = '';
 
 /**
- * Access control for update.php script
+ * Access control for update.php script.
  *
  * If you are updating your Drupal installation using the update.php script but
  * are not logged in using either an account with the "Administer software
