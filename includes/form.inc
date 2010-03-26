@@ -2027,13 +2027,15 @@ function theme_radio($variables) {
  */
 function theme_radios($variables) {
   $element = $variables['element'];
-  $class = 'form-radios';
-  if (!empty($element['#attributes']['class'])) {
-    $class .= ' ' . implode(' ', $element['#attributes']['class']);
+  $attributes = array();
+  if (!empty($element['#id'])) {
+    $attributes['id'] = $element['#id'];
   }
-  $element['#children'] = '<div class="' . $class . '">' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
-
-  return $element['#children'];
+  $attributes['class'] = 'form-radios';
+  if (!empty($element['#attributes']['class'])) {
+    $attributes['class'] .= ' ' . implode(' ', $element['#attributes']['class']);
+  }
+  return '<div' . drupal_attributes($attributes) . '>' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
 }
 
 /**
@@ -2272,13 +2274,15 @@ function theme_checkbox($variables) {
  */
 function theme_checkboxes($variables) {
   $element = $variables['element'];
-  $class = 'form-checkboxes';
-  if (!empty($element['#attributes']['class'])) {
-    $class .= ' ' . implode(' ', $element['#attributes']['class']);
+  $attributes = array();
+  if (!empty($element['#id'])) {
+    $attributes['id'] = $element['#id'];
   }
-  $element['#children'] = '<div class="' . $class . '">' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
-
-  return $element['#children'];
+  $attributes['class'] = 'form-checkboxes';
+  if (!empty($element['#attributes']['class'])) {
+    $attributes['class'] .= ' ' . implode(' ', $element['#attributes']['class']);
+  }
+  return '<div' . drupal_attributes($attributes) . '>' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
 }
 
 /**
@@ -2297,7 +2301,6 @@ function form_pre_render_conditional_form_element($element) {
   }
 
   if (isset($element['#title']) || isset($element['#description'])) {
-    unset($element['#id']);
     $element['#theme_wrappers'][] = 'form_element';
   }
   return $element;
@@ -2537,7 +2540,7 @@ function form_process_fieldset(&$element, &$form_state) {
     if (!isset($element['#attributes']['class'])) {
       $element['#attributes']['class'] = array();
     }
-
+    $element['#attributes']['class'][] = 'form-wrapper';
     $element['#attributes']['class'][] = 'collapsible';
     if (!empty($element['#collapsed'])) {
       $element['#attributes']['class'][] = 'collapsed';
