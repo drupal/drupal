@@ -1,4 +1,4 @@
-// $Id: contextual.js,v 1.4 2009/12/14 10:38:19 dries Exp $
+// $Id: contextual.js,v 1.5 2010/03/26 18:59:54 dries Exp $
 (function ($) {
 
 Drupal.contextualLinks = Drupal.contextualLinks || {};
@@ -14,7 +14,7 @@ Drupal.behaviors.contextualLinks = {
       var $links = $wrapper.find('ul.contextual-links');
       var $trigger = $('<a class="contextual-links-trigger" href="#" />').text(Drupal.t('Configure')).click(
         function () {
-          $wrapper.find('ul.contextual-links').stop(true, true).slideToggle(100);
+          $links.stop(true, true).slideToggle(100);
           $wrapper.toggleClass('contextual-links-active');
           return false;
         }
@@ -27,7 +27,7 @@ Drupal.behaviors.contextualLinks = {
       // Hide the contextual links when user rolls out of the .contextual-links-region.
       $region.bind('mouseleave', Drupal.contextualLinks.mouseleave);
       // Prepend the trigger.
-      $links.end().prepend($trigger);
+      $wrapper.prepend($trigger);
     });
   }
 };
@@ -36,7 +36,7 @@ Drupal.behaviors.contextualLinks = {
  * Disables outline for the region contextual links are associated with.
  */
 Drupal.contextualLinks.mouseleave = function () {
-  $(this).closest('.contextual-links-region')
+  $(this)
     .find('.contextual-links-active').removeClass('contextual-links-active')
     .find('ul.contextual-links').hide();
 };
