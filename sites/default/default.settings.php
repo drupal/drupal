@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.42 2010/03/17 13:58:45 dries Exp $
+// $Id: default.settings.php,v 1.43 2010/03/26 22:14:46 dries Exp $
 
 /**
  * @file
@@ -155,7 +155,7 @@ $databases = array();
 $db_prefix = '';
 
 /**
- * Access control for update.php script
+ * Access control for update.php script.
  *
  * If you are updating your Drupal installation using the update.php script but
  * are not logged in using either an account with the "Administer software
