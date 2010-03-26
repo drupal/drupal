@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.73 2010/03/25 11:53:25 dries Exp $
+// $Id: taxonomy.test,v 1.74 2010/03/26 12:15:14 dries Exp $
 
 /**
  * @file
@@ -372,6 +372,12 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $children = taxonomy_get_children($term1->tid);
     $parents = taxonomy_get_parents($term2->tid);
     $this->assertTrue(isset($children[$term2->tid]), t('Child found correctly.'));
+    $this->assertTrue(isset($parents[$term1->tid]), t('Parent found correctly.'));
+
+    // Load and save a term, confirming that parents are still set.
+    $term = taxonomy_term_load($term2->tid);
+    taxonomy_term_save($term);
+    $parents = taxonomy_get_parents($term2->tid);
     $this->assertTrue(isset($parents[$term1->tid]), t('Parent found correctly.'));
 
     // Create a third term and save this as a parent of term2.
