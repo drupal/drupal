@@ -1806,8 +1806,6 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     locale_add_language('it', 'Italian', 'Italiano', LANGUAGE_LTR, '', '', TRUE, FALSE);
 
     // Set "Basic page" content type to use multilingual support.
-    $this->drupalGet('admin/structure/types/manage/page');
-    $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
     $edit = array(
       'language_content_type' => 1,
     );
@@ -1852,6 +1850,16 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 
     $assert = isset($node->body['it']) && !isset($node->body['en']) && $node->body['it'][0]['value'] == $body_value;
     $this->assertTrue($assert, t('Field language correctly changed.'));
+
+    // Enable content language URL detection.
+    language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LOCALE_LANGUAGE_NEGOTIATION_URL => 0));
+
+    // Test multilingual field language fallback logic.
+    $this->drupalGet("it/node/$node->nid");
+    $this->assertRaw($body_value, t('Body correctly displayed using Italian as requested language'));
+
+    $this->drupalGet("node/$node->nid");
+    $this->assertRaw($body_value, t('Body correctly displayed using English as requested language'));
   }
 
   /*
