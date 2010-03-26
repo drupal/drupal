@@ -260,15 +260,17 @@ function _trigger_node($node, $hook, $a3 = NULL, $a4 = NULL) {
   static $objects;
   // Prevent recursion by tracking which operations have already been called.
   static $recursion;
-  if (isset($recursion[$hook])) {
-    return;
-  }
-  $recursion[$hook] = TRUE;
 
   $aids = trigger_get_assigned_actions($hook);
   if (!$aids) {
     return;
   }
+
+  if (isset($recursion[$hook])) {
+    return;
+  }
+  $recursion[$hook] = TRUE;
+
   $context = array(
     'group' => 'node',
     'hook' => $hook,
@@ -291,6 +293,8 @@ function _trigger_node($node, $hook, $a3 = NULL, $a4 = NULL) {
       actions_do($aid, $node, $context, $a3, $a4);
     }
   }
+
+  unset($recursion[$hook]);
 }
 
 /**

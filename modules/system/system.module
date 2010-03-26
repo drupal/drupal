@@ -2097,6 +2097,10 @@ function system_get_files_database(&$files, $type) {
  */
 function system_update_files_database(&$files, $type) {
   $result = db_query("SELECT * FROM {system} WHERE type = :type", array(':type' => $type));
+  
+  // Remember if any module or theme is moved to a new filename so we can
+  // clear the system_list cache (in particular, the 'filepaths' subarray).
+  $filename_changed = FALSE;
 
   // Add all files that need to be deleted to a DatabaseCondition.
   $delete = db_or();
@@ -2127,6 +2131,10 @@ function system_update_files_database(&$files, $type) {
           ->fields($updated_fields)
           ->condition('filename', $old_filename)
           ->execute();
+
+        if (isset($updated_fields['filename'])) {
+          $filename_changed = TRUE;
+        }
       }
 
       // Indicate that the file exists already.
@@ -2135,6 +2143,7 @@ function system_update_files_database(&$files, $type) {
     else {
       // File is not found in file system, so delete record from the system table.
       $delete->condition('filename', $file->filename);
+      $filename_changed = TRUE;
     }
   }
 
@@ -2165,6 +2174,13 @@ function system_update_files_database(&$files, $type) {
     }
   }
   $query->execute();
+
+  // If any module or theme was moved to a new location, we need to reset the
+  // system_list cache or we will continue to load the old copy, look for DB
+  // schema updates in the wrong place, etc.
+  if ($filename_changed) {
+    system_list_reset();
+  }
 }
 
 /**
