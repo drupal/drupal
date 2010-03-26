@@ -1507,6 +1507,7 @@ class UserRoleAdminTestCase extends DrupalWebTestCase {
 
     // Test deleting a role.
     $this->drupalPost("admin/people/permissions/roles/edit/{$role->rid}", NULL, t('Delete role'));
+    $this->drupalPost(NULL, NULL, t('Delete'));
     $this->assertText(t('The role has been deleted.'), t('The role has been deleted'));
     $this->assertNoLinkByHref("admin/people/permissions/roles/edit/{$role->rid}", t('Role edit link removed.'));
     $this->assertFalse(user_role_load_by_name($role_name), t('A deleted role can no longer be loaded.'));

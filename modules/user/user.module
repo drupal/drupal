@@ -1533,7 +1533,15 @@ function user_menu() {
     'access arguments' => array(5),
     'type' => MENU_CALLBACK,
   );
-
+  $items['admin/people/permissions/roles/delete/%user_role'] = array(
+    'title' => 'Delete role',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_admin_role_delete_confirm', 5),
+    'access callback' => 'user_role_edit_access',
+    'access arguments' => array(5),
+    'type' => MENU_CALLBACK,
+    'file' => 'user.admin.inc',
+  );
 
   $items['admin/people/create'] = array(
     'title' => 'Add user',

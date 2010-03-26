@@ -934,6 +934,7 @@ function user_admin_role($form, $form_state, $role) {
   $form['actions']['delete'] = array(
     '#type' => 'submit',
     '#value' => t('Delete role'),
+    '#submit' => array('user_admin_role_delete_submit'),
   );
 
   return $form;
@@ -961,15 +962,14 @@ function user_admin_role_validate($form, &$form_state) {
   }
 }
 
+/**
+ * Form submit handler for the user_admin_role() form.
+ */
 function user_admin_role_submit($form, &$form_state) {
   $role = (object)$form_state['values'];
   if ($form_state['values']['op'] == t('Save role')) {
     user_role_save($role);
     drupal_set_message(t('The role has been renamed.'));
-  }
-  elseif ($form_state['values']['op'] == t('Delete role')) {
-    user_role_delete((int) $form_state['values']['rid']);
-    drupal_set_message(t('The role has been deleted.'));
   }
   elseif ($form_state['values']['op'] == t('Add role')) {
     user_role_save($role);
@@ -977,6 +977,33 @@ function user_admin_role_submit($form, &$form_state) {
   }
   $form_state['redirect'] = 'admin/people/permissions/roles';
   return;
+}
+
+/**
+ * Form submit handler for the user_admin_role() form.
+ */
+function user_admin_role_delete_submit($form, &$form_state) {
+  $form_state['redirect'] = 'admin/people/permissions/roles/delete/' . $form_state['values']['rid'];
+}
+
+/**
+ * Form to confirm role delete operation.
+ */
+function user_admin_role_delete_confirm($form, &$form_state, $role) {
+  $form['rid'] = array(
+    '#type' => 'value',
+    '#value' => $role->rid,
+  );
+  return confirm_form($form, t('Are you sure you want to delete the role %name ?', array('%name' => $role->name)), 'admin/people/permissions/roles', t('This action cannot be undone.'), t('Delete'));
+}
+
+/**
+ * Form submit handler for user_admin_role_delete_confirm().
+ */
+function user_admin_role_delete_confirm_submit($form, &$form_state) {
+  user_role_delete((int) $form_state['values']['rid']);
+  drupal_set_message(t('The role has been deleted.'));
+  $form_state['redirect'] = 'admin/people/permissions/roles';
 }
 
 /**
