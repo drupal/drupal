@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1250 2010/03/27 05:52:50 webchick Exp $
+// $Id: node.module,v 1.1251 2010/03/27 18:41:14 dries Exp $
 
 /**
  * @file
@@ -191,8 +191,6 @@ function node_entity_info() {
       'bundle keys' => array(
         'bundle' => 'type',
       ),
-      // Node.module handles its own caching.
-      // 'cacheable' => FALSE,
       'bundles' => array(),
       'view modes' => array(
         'full' => array(
