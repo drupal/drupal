@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.33 2010/03/26 17:14:45 dries Exp $
+// $Id: overlay-parent.js,v 1.34 2010/03/27 05:47:08 webchick Exp $
 
 (function ($) {
 
@@ -967,7 +967,7 @@ Drupal.overlay.getPath = function (link, ignorePathFromQueryString) {
   if (path.charAt(0) != '/') {
     path = '/' + path;
   }
-  path = path.replace(new RegExp(Drupal.settings.basePath), '');
+  path = path.replace(new RegExp(Drupal.settings.basePath + "(?:index.php)?"), '');
   if (path == '' && !ignorePathFromQueryString) {
     // If the path appears empty, it might mean the path is represented in the
     // query string (clean URLs are not used).
