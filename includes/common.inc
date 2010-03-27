@@ -3374,33 +3374,28 @@ function drupal_region_class($region) {
 }
 
 /**
- * Add a JavaScript file, setting or inline code to the page.
+ * Adds a JavaScript file, setting, or inline code to the page.
  *
  * The behavior of this function depends on the parameters it is called with.
  * Generally, it handles the addition of JavaScript to the page, either as
  * reference to an existing file or as inline code. The following actions can be
  * performed using this function:
- *
- * - Add a file ('file'):
- *   Adds a reference to a JavaScript file to the page.
- *
- * - Add inline JavaScript code ('inline'):
- *   Executes a piece of JavaScript code on the current page by placing the code
- *   directly in the page. This can, for example, be useful to tell the user that
- *   a new message arrived, by opening a pop up, alert box etc. This should only
- *   be used for JavaScript which cannot be placed and executed from a file.
- *   When adding inline code, make sure that you are not relying on $ being jQuery.
- *   Wrap your code in (function ($) { ... })(jQuery); or use jQuery instead of $.
- *
- * - Add external JavaScript ('external'):
- *   Allows the inclusion of external JavaScript files that are not hosted on the
- *   local server. Note that these external JavaScript references do not get
- *   aggregated when preprocessing is on.
- *
- * - Add settings ('setting'):
- *   Adds a setting to Drupal's global storage of JavaScript settings. Per-page
- *   settings are required by some modules to function properly. All settings
- *   will be accessible at Drupal.settings.
+ * - Add a file ('file'): Adds a reference to a JavaScript file to the page.
+ * - Add inline JavaScript code ('inline'): Executes a piece of JavaScript code
+ *   on the current page by placing the code directly in the page (for example,
+ *   to tell the user that a new message arrived, by opening a pop up, alert
+ *   box, etc.). This should only be used for JavaScript that cannot be executed
+ *   from a file. When adding inline code, make sure that you are not relying on
+ *   $() being the jQuery function.  Wrap your code in
+ *   @code (function ($) {... })(jQuery); @endcode
+ *   or use jQuery() instead of $().
+ * - Add external JavaScript ('external'): Allows the inclusion of external
+ *   JavaScript files that are not hosted on the local server. Note that these
+ *   external JavaScript references do not get aggregated when preprocessing is
+ *   on.
+ * - Add settings ('setting'): Adds settings to Drupal's global storage of
+ *   JavaScript settings. Per-page settings are required by some modules to
+ *   function properly. All settings will be accessible at Drupal.settings.
  *
  * Examples:
  * @code
@@ -3423,58 +3418,49 @@ function drupal_region_class($region) {
  *   - 'external': The absolute path to an external JavaScript file that is not
  *     hosted on the local server. These files will not be aggregated if
  *     JavaScript aggregation is enabled.
- *   - 'setting': An array with configuration options as associative array. The
- *       array is directly placed in Drupal.settings. All modules should wrap
- *       their actual configuration settings in another variable to prevent
- *       the pollution of the Drupal.settings namespace.
+ *   - 'setting': An associative array with configuration options. The array is
+ *     directly placed in Drupal.settings. All modules should wrap their actual
+ *     configuration settings in another variable to prevent conflicts in the
+ *     Drupal.settings namespace.
  * @param $options
- *   (optional) A string defining the type of JavaScript that is being added
- *   in the $data parameter ('file'/'setting'/'inline'), or an array which
- *   can have any or all of the following keys. JavaScript settings should
- *   always pass the string 'setting' only.
- *   - type
- *       The type of JavaScript that is to be added to the page. Allowed
- *       values are 'file', 'inline', 'external' or 'setting'. Defaults
- *       to 'file'.
- *   - scope
- *       The location in which you want to place the script. Possible values
- *       are 'header' or 'footer'. If your theme implements different regions,
- *       however, you can also use these. Defaults to 'header'.
- *   - weight
- *       A number defining the order in which the JavaScript is added to the
- *       page. In some cases, the order in which the JavaScript is presented
- *       on the page is very important. jQuery, for example, must be added to
- *       to the page before any jQuery code is run, so jquery.js uses a weight
- *       of JS_LIBRARY - 2, drupal.js uses a weight of JS_LIBRARY - 1, and all
- *       following scripts depending on jQuery and Drupal behaviors are simply
- *       added using the default weight of JS_DEFAULT.
+ *   (optional) A string defining the type of JavaScript that is being added in
+ *   the $data parameter ('file'/'setting'/'inline'/'external'), or an
+ *   associative array. JavaScript settings should always pass the string
+ *   'setting' only. Other types can have the following elements in the array:
+ *   - type: The type of JavaScript that is to be added to the page. Allowed
+ *     values are 'file', 'inline', 'external' or 'setting'. Defaults
+ *     to 'file'.
+ *   - scope: The location in which you want to place the script. Possible
+ *     values are 'header' or 'footer'. If your theme implements different
+ *     regions, you can also use these. Defaults to 'header'.
+ *   - weight: A number defining the order in which the JavaScript is added to
+ *     the page. In some cases, the order in which the JavaScript is presented
+ *     on the page is very important. jQuery, for example, must be added to
+ *     the page before any jQuery code is run, so jquery.js uses a weight of
+ *     JS_LIBRARY - 20, jquery.once.js (a library drupal.js depends on) uses
+ *     a weight of JS_LIBRARY - 19, drupal.js uses a weight of JS_LIBRARY - 1,
+ *     and all following scripts depending on jQuery and Drupal behaviors are
+ *     simply added using the default weight of JS_DEFAULT. Available constants
+ *     are:
+ *     - JS_LIBRARY: Any libraries, settings, or jQuery plugins.
+ *     - JS_DEFAULT: Any module-layer JavaScript.
+ *     - JS_THEME: Any theme-layer JavaScript.
+ *     If you need to invoke a JavaScript file before any other module's
+ *     JavaScript, for example, you would use JS_DEFAULT - 1.
+ *   - defer: If set to TRUE, the defer attribute is set on the &lt;script&gt;
+ *     tag.  Defaults to FALSE.
+ *   - cache: If set to FALSE, the JavaScript file is loaded anew on every page
+ *     call; in other words, it is not cached. Used only when 'type' references
+ *     a JavaScript file. Defaults to TRUE.
+ *   - preprocess: Aggregate the JavaScript if the JavaScript optimization
+ *     setting has been toggled in admin/config/development/performance. Note
+ *     that JavaScript of type 'external' is not aggregated. Defaults to TRUE.
  *
- *       Available constants are:
- *       - JS_LIBRARY: Any libraries, settings, or jQuery plugins.
- *       - JS_DEFAULT: Any module-layer JavaScript.
- *       - JS_THEME: Any theme-layer JavaScript.
- *
- *       If you need to invoke a JavaScript file before any other module's
- *       JavaScript, for example, you would use JS_DEFAULT - 1.
- *       Note that inline JavaScripts are simply appended to the end of the
- *       specified scope (region), so they always come last.
- *   - defer
- *       If set to TRUE, the defer attribute is set on the &lt;script&gt; tag.
- *       Defaults to FALSE.
- *   - cache
- *       If set to FALSE, the JavaScript file is loaded anew on every page
- *       call, that means, it is not cached. Used only when 'type' references
- *       a JavaScript file. Defaults to TRUE.
- *   - preprocess
- *       Aggregate the JavaScript if the JavaScript optimization setting has
- *       been toggled in admin/config/development/performance. Note that
- *       JavaScript of type 'external' is not aggregated. Defaults to TRUE.
- *   - version
- *       If not empty, the version is added as a query string instead of the
- *       incremental query string that changes on cache clearing. Primarily
- *       used for libraries.
  * @return
- *   The constructed array of JavaScript files.
+ *   The current array of JavaScript files, settings, and in-line code,
+ *   including Drupal defaults, anything previously added with calls to
+ *   drupal_add_js(), and this function call's additions.
+ *
  * @see drupal_get_js()
  */
 function drupal_add_js($data = NULL, $options = NULL) {
