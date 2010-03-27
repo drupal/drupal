@@ -1,5 +1,5 @@
 <?php
-// $Id: list.test,v 1.3 2010/02/27 07:52:03 dries Exp $
+// $Id: list.test,v 1.4 2010/03/27 05:52:49 webchick Exp $
 
 /**
  * @file
@@ -34,7 +34,7 @@ class ListFieldTestCase extends FieldTestCase {
 
     $this->instance = array(
       'field_name' => $this->field_name,
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_buttons',
@@ -82,7 +82,7 @@ class ListFieldTestCase extends FieldTestCase {
     $this->field = field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_buttons',
@@ -184,7 +184,7 @@ class ListFieldUITestCase extends FieldTestCase {
     field_create_field($field);
     $instance = array(
       'field_name' => $field_name,
-      'object_type' => 'node',
+      'entity_type' => 'node',
       'bundle' => $this->type,
     );
     field_create_instance($instance);

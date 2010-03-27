@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.12 2010/02/27 07:52:03 dries Exp $
+// $Id: file.test,v 1.13 2010/03/27 05:52:50 webchick Exp $
 
 /**
  * @file
@@ -57,7 +57,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
 
     $instance = array(
       'field_name' => $field['field_name'],
-      'object_type' => 'node',
+      'entity_type' => 'node',
       'label' => $name,
       'bundle' => $type_name,
       'required' => !empty($instance_settings['required']),

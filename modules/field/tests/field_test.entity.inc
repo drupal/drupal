@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.entity.inc,v 1.5 2010/03/25 11:46:20 dries Exp $
+// $Id: field_test.entity.inc,v 1.6 2010/03/27 05:52:49 webchick Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function field_test_entity_info() {
   return array(
     'test_entity' => array(
       'name' => t('Test Entity'),
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'ftid',
         'revision' => 'ftvid',
         'bundle' => 'fttype',
@@ -36,7 +36,7 @@ function field_test_entity_info() {
     // This entity type doesn't get form handling for now...
     'test_cacheable_entity' => array(
       'name' => t('Test Entity, cacheable'),
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'ftid',
         'revision' => 'ftvid',
         'bundle' => 'fttype',

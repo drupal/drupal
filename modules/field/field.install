@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.17 2009/12/04 16:49:46 dries Exp $
+// $Id: field.install,v 1.18 2010/03/27 05:52:49 webchick Exp $
 
 /**
  * @file
@@ -130,7 +130,7 @@ function field_schema() {
         'not null' => TRUE,
         'default' => ''
       ),
-      'object_type'       => array(
+      'entity_type'       => array(
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
@@ -158,7 +158,7 @@ function field_schema() {
     'primary key' => array('id'),
     'indexes' => array(
       // Used by field_delete_instance().
-      'field_name_bundle' => array('field_name', 'object_type', 'bundle'),
+      'field_name_bundle' => array('field_name', 'entity_type', 'bundle'),
       // Used by field_read_instances().
       'deleted' => array('deleted'),
     ),

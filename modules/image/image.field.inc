@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.18 2010/03/06 07:19:57 dries Exp $
+// $Id: image.field.inc,v 1.19 2010/03/27 05:52:50 webchick Exp $
 
 /**
  * @file
@@ -228,8 +228,8 @@ function image_field_prepare_view($entity_type, $entities, $field, $instances, $
 /**
  * Implements hook_field_presave().
  */
-function image_field_presave($obj_type, $object, $field, $instance, $langcode, &$items) {
-  file_field_presave($obj_type, $object, $field, $instance, $langcode, $items);
+function image_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  file_field_presave($entity_type, $entity, $field, $instance, $langcode, $items);
 }
 
 /**

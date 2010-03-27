@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.test,v 1.18 2010/02/27 07:52:03 dries Exp $
+// $Id: field_sql_storage.test,v 1.19 2010/03/27 05:52:49 webchick Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $this->field = field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle'
     );
     $this->instance = field_create_instance($this->instance);
@@ -303,7 +303,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     // Create a decimal 5.2 field and add some data.
     $field = array('field_name' => 'decimal52', 'type' => 'number_decimal', 'settings' => array('precision' => 5, 'scale' => 2));
     $field = field_create_field($field);
-    $instance = array('field_name' => 'decimal52', 'object_type' => 'test_entity', 'bundle' => 'test_bundle');
+    $instance = array('field_name' => 'decimal52', 'entity_type' => 'test_entity', 'bundle' => 'test_bundle');
     $instance = field_create_instance($instance);
     $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
     $entity->decimal52[LANGUAGE_NONE][0]['value'] = '1.235';
@@ -329,7 +329,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $field_name = 'testfield';
     $field = array('field_name' => $field_name, 'type' => 'text');
     $field = field_create_field($field);
-    $instance = array('field_name' => $field_name, 'object_type' => 'test_entity', 'bundle' => 'test_bundle');
+    $instance = array('field_name' => $field_name, 'entity_type' => 'test_entity', 'bundle' => 'test_bundle');
     $instance = field_create_instance($instance);
     $tables = array(_field_sql_storage_tablename($field), _field_sql_storage_revision_tablename($field));
 
@@ -374,7 +374,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
 
     // Retrieve the field and instance with field_info so the storage details are attached.
     $field = field_info_field($this->field['field_name']);
-    $instance = field_info_instance($this->instance['object_type'], $this->instance['field_name'], $this->instance['bundle']);
+    $instance = field_info_instance($this->instance['entity_type'], $this->instance['field_name'], $this->instance['bundle']);
 
     // The storage details are indexed by a storage engine type.
     $this->assertTrue(array_key_exists('sql', $field['storage']['details']), t('The storage type is SQL.'));

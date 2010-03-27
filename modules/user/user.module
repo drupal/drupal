@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1148 2010/03/26 22:24:31 dries Exp $
+// $Id: user.module,v 1.1149 2010/03/27 05:52:50 webchick Exp $
 
 /**
  * @file
@@ -131,7 +131,7 @@ function user_entity_info() {
       'base table' => 'users',
       'uri callback' => 'user_uri',
       'fieldable' => TRUE,
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'uid',
       ),
       'bundles' => array(

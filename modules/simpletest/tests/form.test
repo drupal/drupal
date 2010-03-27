@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.42 2010/03/26 18:58:12 dries Exp $
+// $Id: form.test,v 1.43 2010/03/27 05:52:50 webchick Exp $
 
 /**
  * @file
@@ -946,7 +946,7 @@ class FormsArbitraryRebuildTestCase extends DrupalWebTestCase {
     field_create_field($field);
 
     $instance = array(
-      'object_type' => 'node',
+      'entity_type' => 'node',
       'field_name' => 'test_multiple',
       'bundle' => 'page',
       'label' => 'Test a multiple valued field',

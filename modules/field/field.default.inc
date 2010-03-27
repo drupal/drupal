@@ -1,5 +1,5 @@
 <?php
-// $Id: field.default.inc,v 1.33 2010/02/12 05:38:09 webchick Exp $
+// $Id: field.default.inc,v 1.34 2010/03/27 05:52:49 webchick Exp $
 
 /**
  * @file
@@ -203,7 +203,7 @@ function field_default_view($entity_type, $entity, $field, $instance, $langcode,
           '#field_name' => $field['field_name'],
           '#field_type' => $field['type'],
           '#field_translatable' => $field['translatable'],
-          '#object_type' => $entity_type,
+          '#entity_type' => $entity_type,
           '#bundle' => $bundle,
           '#object' => $entity,
           '#items' => $items,

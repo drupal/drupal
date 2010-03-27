@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.42 2010/02/11 03:29:22 webchick Exp $
+// $Id: forum.install,v 1.43 2010/03/27 05:52:50 webchick Exp $
 
 /**
  * @file
@@ -55,7 +55,7 @@ function forum_enable() {
 
     $instance = array(
       'field_name' => 'taxonomy_' . $vocabulary->machine_name,
-      'object_type' => 'node',
+      'entity_type' => 'node',
       'label' => $vocabulary->name,
       'bundle' => 'forum',
       'widget' => array(

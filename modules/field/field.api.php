@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.68 2010/03/26 17:14:45 dries Exp $
+// $Id: field.api.php,v 1.69 2010/03/27 05:52:49 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -659,7 +659,7 @@ function hook_field_widget_info_alter(&$info) {
  *   The order of this item in the array of subelements (0, 1, 2, etc).
  * @param $element
  *   A form element array containing basic properties for the widget:
- *   - #object_type: The name of the entity the field is attached to.
+ *   - #entity_type: The name of the entity the field is attached to.
  *   - #bundle: The name of the field bundle the field is contained in.
  *   - #field_name: The name of the field.
  *   - #language: The language the field is being edited in.
@@ -1023,7 +1023,7 @@ function hook_field_attach_update($entity_type, $entity) {
  *   values.
  * @param $context
  *   An associative array containing:
- *   - obj_type: The type of $entity; e.g. 'node' or 'user'.
+ *   - entity_type: The type of $entity; e.g. 'node' or 'user'.
  *   - object: The entity with fields to render.
  *   - element: The structured array containing the values ready for rendering.
  */
@@ -1059,7 +1059,7 @@ function hook_field_attach_delete_revision($entity_type, $entity) {
  *   The structured content array tree for all of $entity's fields.
  * @param $context
  *   An associative array containing:
- *   - obj_type: The type of $entity; e.g. 'node' or 'user'.
+ *   - entity_type: The type of $entity; e.g. 'node' or 'user'.
  *   - object: The entity with fields to render.
  *   - view_mode: View mode, e.g. 'full', 'teaser'...
  */
