@@ -301,7 +301,7 @@ function standard_install() {
 
   $instance = array(
     'field_name' => 'taxonomy_' . $vocabulary->machine_name,
-    'object_type' => 'node',
+    'entity_type' => 'node',
     'label' => $vocabulary->name,
     'bundle' => 'article',
     'description' => $vocabulary->help,
@@ -340,7 +340,7 @@ function standard_install() {
   // See http://api.drupal.org/api/function/field_create_instance/7
   $instance = array(
     'field_name' => 'field_image',
-    'object_type' => 'node',
+    'entity_type' => 'node',
     'label' => 'Image',
     'bundle' => 'article',
     'description' => 'Upload an image to go with this article.',

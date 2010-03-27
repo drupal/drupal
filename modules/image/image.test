@@ -543,7 +543,7 @@ class ImageFieldTestCase extends DrupalWebTestCase {
 
     $instance = array(
       'field_name' => $field['field_name'],
-      'object_type' => 'node',
+      'entity_type' => 'node',
       'label' => $name,
       'bundle' => $type_name,
       'required' => !empty($instance_settings['required']),

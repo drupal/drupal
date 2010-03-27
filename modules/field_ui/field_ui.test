@@ -179,7 +179,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     field_create_field($field);
     $instance = array(
       'field_name' => $field_name,
-      'object_type' => 'node',
+      'entity_type' => 'node',
       'bundle' => $this->type,
     );
     field_create_instance($instance);

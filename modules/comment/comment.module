@@ -100,7 +100,7 @@ function comment_entity_info() {
       'uri callback' => 'comment_uri',
       'fieldable' => TRUE,
       'controller class' => 'CommentController',
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'cid',
         'bundle' => 'node_type',
       ),
@@ -343,7 +343,7 @@ function _comment_body_field_instance_create($info) {
   $instance = array(
     'field_name' => 'comment_body',
     'label' => 'Comment',
-    'object_type' => 'comment',
+    'entity_type' => 'comment',
     'bundle' => 'comment_node_' . $info->type,
     'settings' => array('text_processing' => 1),
     'required' => TRUE,

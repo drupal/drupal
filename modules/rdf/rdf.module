@@ -507,7 +507,7 @@ function rdf_preprocess_node(&$variables) {
  */
 function rdf_preprocess_field(&$variables) {
   $element = $variables['element'];
-  $mapping = rdf_mapping_load($element['#object_type'], $element['#bundle']);
+  $mapping = rdf_mapping_load($element['#entity_type'], $element['#bundle']);
   $field_name = $element['#field_name'];
 
   if (!empty($mapping) && !empty($mapping[$field_name])) {

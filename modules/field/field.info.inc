@@ -220,13 +220,13 @@ function _field_info_collate_fields($reset = FALSE) {
     foreach ($definitions['instances'] as $instance) {
       $field = $info['fields'][$instance['field_name']];
       $instance = _field_info_prepare_instance($instance, $field);
-      $info['instances'][$instance['object_type']][$instance['bundle']][$instance['field_name']] = $instance;
+      $info['instances'][$instance['entity_type']][$instance['bundle']][$instance['field_name']] = $instance;
       // Enrich field definitions with the list of bundles where they have
       // instances. NOTE: Deleted fields in $info['field_ids'] are not
       // enriched because all of their instances are deleted, too, and
       // are thus not in $definitions['instances'].
-      $info['fields'][$instance['field_name']]['bundles'][$instance['object_type']][] = $instance['bundle'];
-      $info['field_ids'][$instance['field_id']]['bundles'][$instance['object_type']][] = $instance['bundle'];
+      $info['fields'][$instance['field_name']]['bundles'][$instance['entity_type']][] = $instance['bundle'];
+      $info['field_ids'][$instance['field_id']]['bundles'][$instance['entity_type']][] = $instance['bundle'];
     }
   }
 
@@ -291,7 +291,7 @@ function _field_info_prepare_instance($instance, $field) {
   }
 
   // Fallback to 'full' display settings for unspecified view modes.
-  $entity_info = entity_get_info($instance['object_type']);
+  $entity_info = entity_get_info($instance['entity_type']);
   foreach ($entity_info['view modes'] as $view_mode => $info) {
     if (!isset($instance['display'][$view_mode])) {
       $instance['display'][$view_mode] = $instance['display']['full'];

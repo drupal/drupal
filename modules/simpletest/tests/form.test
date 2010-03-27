@@ -946,7 +946,7 @@ class FormsArbitraryRebuildTestCase extends DrupalWebTestCase {
     field_create_field($field);
 
     $instance = array(
-      'object_type' => 'node',
+      'entity_type' => 'node',
       'field_name' => 'test_multiple',
       'bundle' => 'page',
       'label' => 'Test a multiple valued field',

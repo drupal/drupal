@@ -300,7 +300,7 @@ function field_ui_inactive_instances($entity_type, $bundle_name = NULL) {
     $inactive = array();
     $params = array();
   }
-  $params['object_type'] = $entity_type;
+  $params['entity_type'] = $entity_type;
 
   $active_instances = field_info_instances($entity_type);
   $all_instances = field_read_instances($params, array('include_inactive' => TRUE));

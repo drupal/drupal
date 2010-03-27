@@ -70,7 +70,7 @@ function hook_hook_info() {
  *     uri elements of the entity, e.g. 'path' and 'options'. The actual entity
  *     uri can be constructed by passing these elements to url().
  *   - fieldable: Set to TRUE if you want your entity type to be fieldable.
- *   - object keys: An array describing how the Field API can extract the
+ *   - entity keys: An array describing how the Field API can extract the
  *     information it needs from the objects of the type. Elements:
  *     - id: The name of the property that contains the primary id of the
  *       object. Every object passed to the Field API must have this property
@@ -97,7 +97,7 @@ function hook_hook_info() {
  *     field_attach_load().
  *   - bundles: An array describing all bundles for this object type.
  *     Keys are bundles machine names, as found in the objects' 'bundle'
- *     property (defined in the 'object keys' entry above). Elements:
+ *     property (defined in the 'entity keys' entry above). Elements:
  *     - label: The human-readable name of the bundle.
  *     - admin: An array of information that allows Field UI pages to attach
  *       themselves to the existing administration pages for the bundle.
@@ -131,7 +131,7 @@ function hook_entity_info() {
       'revision table' => 'node_revision',
       'path callback' => 'node_path',
       'fieldable' => TRUE,
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'nid',
         'revision' => 'vid',
         'bundle' => 'type',
@@ -1425,7 +1425,7 @@ function hook_mail($key, &$message, $params) {
     '%username' => format_username($account),
   );
   if ($context['hook'] == 'taxonomy') {
-    $entity = $params['object'];
+    $entity = $params['entity'];
     $vocabulary = taxonomy_vocabulary_load($entity->vid);
     $variables += array(
       '%term_name' => $entity->name,

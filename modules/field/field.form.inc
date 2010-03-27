@@ -50,7 +50,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
       $function = $instance['widget']['module'] . '_field_widget_form';
       if (function_exists($function)) {
         $element = array(
-          '#object_type' => $instance['object_type'],
+          '#entity_type' => $instance['entity_type'],
           '#bundle' => $instance['bundle'],
           '#field_name' => $field_name,
           '#language' => $langcode,
@@ -161,7 +161,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
     for ($delta = 0; $delta <= $max; $delta++) {
       $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
       $element = array(
-        '#object_type' => $instance['object_type'],
+        '#entity_type' => $instance['entity_type'],
         '#bundle' => $instance['bundle'],
         '#field_name' => $field_name,
         '#language' => $langcode,

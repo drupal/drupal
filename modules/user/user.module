@@ -131,7 +131,7 @@ function user_entity_info() {
       'base table' => 'users',
       'uri callback' => 'user_uri',
       'fieldable' => TRUE,
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'uid',
       ),
       'bundles' => array(

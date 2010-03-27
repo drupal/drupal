@@ -78,7 +78,7 @@ class FieldAttachTestCase extends FieldTestCase {
     $this->field_id = $this->field['id'];
     $this->instance = array(
       'field_name' => $this->field_name,
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'label' => $this->randomName() . '_label',
       'description' => $this->randomName() . '_description',
@@ -207,7 +207,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
       foreach ($field_bundles_map[$i] as $bundle) {
         $instance = array(
           'field_name' => $field_names[$i],
-          'object_type' => 'test_entity',
+          'entity_type' => 'test_entity',
           'bundle' => $bundles[$bundle],
           'settings' => array(
             // Configure the instance so that we test hook_field_load()
@@ -278,7 +278,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
       field_create_field($field);
       $instance = array(
         'field_name' => $field['field_name'],
-        'object_type' => 'test_entity',
+        'entity_type' => 'test_entity',
         'bundle' => 'test_bundle',
       );
       field_create_instance($instance);
@@ -319,13 +319,13 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     $field = field_create_field($field);
     $instance = array(
       'field_name' => $field_name,
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
     );
     field_create_instance($instance);
 
     $field = field_info_field($instance['field_name']);
-    $instance = field_info_instance($instance['object_type'], $instance['field_name'], $instance['bundle']);
+    $instance = field_info_instance($instance['entity_type'], $instance['field_name'], $instance['bundle']);
 
     // The storage details are indexed by a storage engine type.
     $this->assertTrue(array_key_exists('drupal_variables', $field['storage']['details']), t('The storage type is Drupal variables.'));
@@ -570,7 +570,7 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
     field_create_field($field);
     $instance = array(
       'field_name' => $field_name,
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => $this->instance['bundle'],
       'label' => $this->randomName() . '_label',
       'description' => $this->randomName() . '_description',
@@ -626,10 +626,10 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
 
     // Create instances of both fields on the second entity type.
     $instance = $this->instance;
-    $instance['object_type'] = 'test_cacheable_entity';
+    $instance['entity_type'] = 'test_cacheable_entity';
     field_create_instance($instance);
     $instance2 = $this->instance2;
-    $instance2['object_type'] = 'test_cacheable_entity';
+    $instance2['entity_type'] = 'test_cacheable_entity';
     field_create_instance($instance2);
 
     // Unconditional count query returns 0.
@@ -990,7 +990,7 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $entity_type = 'test_cacheable_entity';
     $cid = "field:$entity_type:{$entity_init->ftid}";
     $instance = $this->instance;
-    $instance['object_type'] = $entity_type;
+    $instance['entity_type'] = $entity_type;
     field_create_instance($instance);
 
     // Check that no initial cache entry is present.
@@ -1247,7 +1247,7 @@ class FieldInfoTestCase extends FieldTestCase {
     // Create an instance, verify that it shows up
     $instance = array(
       'field_name' => $field['field_name'],
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'label' => $this->randomName(),
       'description' => $this->randomName(),
@@ -1306,7 +1306,7 @@ class FieldInfoTestCase extends FieldTestCase {
     field_create_field($field_definition);
     $instance_definition = array(
       'field_name' => $field_definition['field_name'],
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
     );
     field_create_instance($instance_definition);
@@ -1330,7 +1330,7 @@ class FieldInfoTestCase extends FieldTestCase {
     field_cache_clear();
 
     // Read the instance back.
-    $instance = field_info_instance($instance_definition['object_type'], $instance_definition['field_name'], $instance_definition['bundle']);
+    $instance = field_info_instance($instance_definition['entity_type'], $instance_definition['field_name'], $instance_definition['bundle']);
 
     // Check that all expected instance settings are in place.
     $field_type = field_info_field_types($field_definition['type']);
@@ -1363,7 +1363,7 @@ class FieldInfoTestCase extends FieldTestCase {
     field_create_field($field_definition);
     $instance_definition = array(
       'field_name' => 'field',
-      'object_type' => 'comment',
+      'entity_type' => 'comment',
       'bundle' => 'comment_node_article',
     );
     field_create_instance($instance_definition);
@@ -1415,7 +1415,7 @@ class FieldFormTestCase extends FieldTestCase {
     $this->field_unlimited = array('field_name' => drupal_strtolower($this->randomName()), 'type' => 'test_field', 'cardinality' => FIELD_CARDINALITY_UNLIMITED);
 
     $this->instance = array(
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'label' => $this->randomName() . '_label',
       'description' => $this->randomName() . '_description',
@@ -1711,7 +1711,7 @@ class FieldFormTestCase extends FieldTestCase {
     $field_name_no_access = $field_no_access['field_name'];
     $instance_no_access = array(
       'field_name' => $field_name_no_access,
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'default_value' => array(0 => array('value' => 99)),
     );
@@ -1775,7 +1775,7 @@ class FieldDisplayAPITestCase extends FieldTestCase {
     );
     $this->instance = array(
       'field_name' => $this->field_name,
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'label' => $this->label,
       'display' => array(
@@ -2173,7 +2173,7 @@ class FieldCrudTestCase extends FieldTestCase {
     // Create instances for each.
     $this->instance_definition = array(
       'field_name' => $this->field['field_name'],
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'test_field_widget',
@@ -2271,7 +2271,7 @@ class FieldCrudTestCase extends FieldTestCase {
     // Create a decimal 5.2 field.
     $field = array('field_name' => 'decimal53', 'type' => 'number_decimal', 'cardinality' => 3, 'settings' => array('precision' => 5, 'scale' => 2));
     $field = field_create_field($field);
-    $instance = array('field_name' => 'decimal53', 'object_type' => 'test_entity', 'bundle' => 'test_bundle');
+    $instance = array('field_name' => 'decimal53', 'entity_type' => 'test_entity', 'bundle' => 'test_bundle');
     $instance = field_create_instance($instance);
 
     // Update it to a deciaml 5.3 field.
@@ -2402,7 +2402,7 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     field_create_field($this->field);
     $this->instance_definition = array(
       'field_name' => $this->field['field_name'],
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
     );
   }
@@ -2464,7 +2464,7 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     $field_restricted = array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',
-      'object_types' => array('test_cacheable_entity'),
+      'entity_types' => array('test_cacheable_entity'),
     );
     field_create_field($field_restricted);
 
@@ -2473,7 +2473,7 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     try {
       $instance = $this->instance_definition;
       $instance['field_name'] = $field_restricted['field_name'];
-      $instance['object_type'] = 'test_cacheable_entity';
+      $instance['entity_type'] = 'test_cacheable_entity';
       field_create_instance($instance);
       $this->pass(t('Can create an instance on an entity type allowed by the field.'));
     }
@@ -2620,7 +2620,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
 
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
 
-    $this->obj_type = 'test_entity';
+    $this->entity_type = 'test_entity';
 
     $field = array(
       'field_name' => $this->field_name,
@@ -2633,7 +2633,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
 
     $instance = array(
       'field_name' => $this->field_name,
-      'object_type' => $this->obj_type,
+      'entity_type' => $this->entity_type,
       'bundle' => 'test_bundle',
     );
     field_create_instance($instance);
@@ -2660,7 +2660,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     // Test hook_field_languages() invocation on a translatable field.
     variable_set('field_test_field_available_languages_alter', TRUE);
     $enabled_languages = field_content_languages();
-    $available_languages = field_available_languages($this->obj_type, $this->field);
+    $available_languages = field_available_languages($this->entity_type, $this->field);
     foreach ($available_languages as $delta => $langcode) {
       if ($langcode != 'xx' && $langcode != 'en') {
         $this->assertTrue(in_array($langcode, $enabled_languages), t('%language is an enabled language.', array('%language' => $langcode)));
@@ -2672,7 +2672,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     // Test field_available_languages() behavior for untranslatable fields.
     $this->field['translatable'] = FALSE;
     $this->field_name = $this->field['field_name'] = $this->instance['field_name'] = drupal_strtolower($this->randomName() . '_field_name');
-    $available_languages = field_available_languages($this->obj_type, $this->field);
+    $available_languages = field_available_languages($this->entity_type, $this->field);
     $this->assertTrue(count($available_languages) == 1 && $available_languages[0] === LANGUAGE_NONE, t('For untranslatable fields only LANGUAGE_NONE is available.'));
   }
 
@@ -2687,7 +2687,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     // the result of field_available_languages().
     $values = array();
     $extra_languages = mt_rand(1, 4);
-    $languages = $available_languages = field_available_languages($this->obj_type, $this->field);
+    $languages = $available_languages = field_available_languages($this->entity_type, $this->field);
     for ($i = 0; $i < $extra_languages; ++$i) {
       $languages[] = $this->randomString(2);
     }
@@ -2718,7 +2718,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     $entities = array();
     $entity_type = 'test_entity';
     $entity_count = mt_rand(1, 5);
-    $available_languages = field_available_languages($this->obj_type, $this->field);
+    $available_languages = field_available_languages($this->entity_type, $this->field);
 
     for ($id = 1; $id <= $entity_count; ++$id) {
       $entity = field_test_create_stub_entity($id, $id, $this->instance['bundle']);
@@ -2809,7 +2809,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
 
     $instance = array(
       'field_name' => $field['field_name'],
-      'object_type' => $entity_type,
+      'entity_type' => $entity_type,
       'bundle' => 'test_bundle',
     );
     field_create_instance($instance);
@@ -2938,7 +2938,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
       foreach ($this->fields as $field) {
         $instance = array(
           'field_name' => $field['field_name'],
-          'object_type' => $this->entity_type,
+          'entity_type' => $this->entity_type,
           'bundle' => $bundle,
           'widget' => array(
             'type' => 'test_field_widget',

@@ -55,7 +55,7 @@ function forum_enable() {
 
     $instance = array(
       'field_name' => 'taxonomy_' . $vocabulary->machine_name,
-      'object_type' => 'node',
+      'entity_type' => 'node',
       'label' => $vocabulary->name,
       'bundle' => 'forum',
       'widget' => array(

@@ -186,7 +186,7 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
   list(, , $bundle) = entity_extract_ids($entity_type, $entity);
 
   if ($options['deleted']) {
-    $instances = field_read_instances(array('object_type' => $entity_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
+    $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
   }
   else {
     $instances = field_info_instances($entity_type, $bundle);
@@ -616,7 +616,7 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     foreach ($queried_entities as $entity) {
       list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
       if ($options['deleted']) {
-        $instances = field_read_instances(array('object_type' => $entity_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
+        $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
       }
       else {
         $instances = field_info_instances($entity_type, $bundle);
@@ -1188,7 +1188,7 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode = 'full')
  *     '#title' => the label of the field instance,
  *     '#label_display' => the label display mode,
  *     '#object' => the fieldable entity being displayed,
- *     '#object_type' => the type of the entity being displayed,
+ *     '#entity_type' => the type of the entity being displayed,
  *     '#language' => the language of the field values being displayed,
  *     '#view_mode' => the view mode,
  *     '#field_name' => the name of the field,
@@ -1233,8 +1233,8 @@ function field_attach_view($entity_type, $entity, $view_mode = 'full', $langcode
 
   // Let other modules alter the renderable array.
   $context = array(
-    'obj_type' => $entity_type,
-    'object' => $entity,
+    'entity_type' => $entity_type,
+    'entity' => $entity,
     'view_mode' => $view_mode,
   );
   drupal_alter('field_attach_view', $output, $context);
@@ -1278,8 +1278,8 @@ function field_attach_preprocess($entity_type, $entity, $element, &$variables) {
 
   // Let other modules make changes to the $variables array.
   $context = array(
-    'obj_type' => $entity_type,
-    'object' => $entity,
+    'entity_type' => $entity_type,
+    'entity' => $entity,
     'element' => $element,
   );
   drupal_alter('field_attach_preprocess', $variables, $context);
@@ -1337,7 +1337,7 @@ function field_attach_create_bundle($entity_type, $bundle) {
 function field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
   db_update('field_config_instance')
     ->fields(array('bundle' => $bundle_new))
-    ->condition('object_type', $entity_type)
+    ->condition('entity_type', $entity_type)
     ->condition('bundle', $bundle_old)
     ->execute();
 

@@ -6251,11 +6251,11 @@ function entity_get_info($entity_type = NULL) {
           'load hook' => $name . '_load',
           'bundles' => array(),
           'view modes' => array(),
-          'object keys' => array(),
+          'entity keys' => array(),
           'cacheable' => TRUE,
           'translation' => array(),
         );
-        $entity_info[$name]['object keys'] += array(
+        $entity_info[$name]['entity keys'] += array(
           'revision' => '',
           'bundle' => '',
         );
@@ -6306,11 +6306,11 @@ function entity_info_cache_clear() {
 function entity_extract_ids($entity_type, $entity) {
   $info = entity_get_info($entity_type);
   // Objects being created might not have id/vid yet.
-  $id = isset($entity->{$info['object keys']['id']}) ? $entity->{$info['object keys']['id']} : NULL;
-  $vid = ($info['object keys']['revision'] && isset($entity->{$info['object keys']['revision']})) ? $entity->{$info['object keys']['revision']} : NULL;
+  $id = isset($entity->{$info['entity keys']['id']}) ? $entity->{$info['entity keys']['id']} : NULL;
+  $vid = ($info['entity keys']['revision'] && isset($entity->{$info['entity keys']['revision']})) ? $entity->{$info['entity keys']['revision']} : NULL;
   // If no bundle key provided, then we assume a single bundle, named after the
   // entity type.
-  $bundle = $info['object keys']['bundle'] ? $entity->{$info['object keys']['bundle']} : $entity_type;
+  $bundle = $info['entity keys']['bundle'] ? $entity->{$info['entity keys']['bundle']} : $entity_type;
   $cacheable = $info['cacheable'];
   return array($id, $vid, $bundle, $cacheable);
 }
@@ -6334,12 +6334,12 @@ function entity_extract_ids($entity_type, $entity) {
 function entity_create_stub_entity($entity_type, $ids) {
   $entity = new stdClass();
   $info = entity_get_info($entity_type);
-  $entity->{$info['object keys']['id']} = $ids[0];
-  if (isset($info['object keys']['revision']) && !is_null($ids[1])) {
-    $entity->{$info['object keys']['revision']} = $ids[1];
+  $entity->{$info['entity keys']['id']} = $ids[0];
+  if (isset($info['entity keys']['revision']) && !is_null($ids[1])) {
+    $entity->{$info['entity keys']['revision']} = $ids[1];
   }
-  if ($info['object keys']['bundle']) {
-    $entity->{$info['object keys']['bundle']} = $ids[2];
+  if ($info['entity keys']['bundle']) {
+    $entity->{$info['entity keys']['bundle']} = $ids[2];
   }
   return $entity;
 }

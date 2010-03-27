@@ -23,7 +23,7 @@ function field_test_entity_info() {
   return array(
     'test_entity' => array(
       'name' => t('Test Entity'),
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'ftid',
         'revision' => 'ftvid',
         'bundle' => 'fttype',
@@ -36,7 +36,7 @@ function field_test_entity_info() {
     // This entity type doesn't get form handling for now...
     'test_cacheable_entity' => array(
       'name' => t('Test Entity, cacheable'),
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'ftid',
         'revision' => 'ftvid',
         'bundle' => 'fttype',

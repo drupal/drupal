@@ -89,7 +89,7 @@ function taxonomy_entity_info() {
       'base table' => 'taxonomy_term_data',
       'uri callback' => 'taxonomy_term_uri',
       'fieldable' => TRUE,
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'tid',
         'bundle' => 'vocabulary_machine_name',
       ),
@@ -120,7 +120,7 @@ function taxonomy_entity_info() {
     'label' => t('Taxonomy vocabulary'),
     'controller class' => 'TaxonomyVocabularyController',
     'base table' => 'taxonomy_vocabulary',
-    'object keys' => array(
+    'entity keys' => array(
       'id' => 'vid',
     ),
     'fieldable' => FALSE,

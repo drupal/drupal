@@ -577,7 +577,7 @@ function field_sql_storage_field_storage_query($field_id, $conditions, $options)
       // If querying all revisions and the entity type has revisions, we need
       // to key the results by revision_ids.
       $entity_type = entity_get_info($row->type);
-      $id = ($load_current || empty($entity_type['object keys']['revision'])) ? $row->entity_id : $row->revision_id;
+      $id = ($load_current || empty($entity_type['entity keys']['revision'])) ? $row->entity_id : $row->revision_id;
 
       if (!isset($return[$row->type][$id])) {
         $return[$row->type][$id] = entity_create_stub_entity($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
@@ -623,7 +623,7 @@ function field_sql_storage_field_storage_delete_revision($entity_type, $entity, 
  * This function simply marks for deletion all data associated with the field.
  */
 function field_sql_storage_field_storage_delete_instance($instance) {
-  $etid = _field_sql_storage_etid($instance['object_type']);
+  $etid = _field_sql_storage_etid($instance['entity_type']);
   $field = field_info_field($instance['field_name']);
   $table_name = _field_sql_storage_tablename($field);
   $revision_name = _field_sql_storage_revision_tablename($field);
@@ -645,7 +645,7 @@ function field_sql_storage_field_storage_delete_instance($instance) {
 function field_sql_storage_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
   $etid = _field_sql_storage_etid($entity_type);
   // We need to account for deleted or inactive fields and instances.
-  $instances = field_read_instances(array('object_type' => $entity_type, 'bundle' => $bundle_new), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
+  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle_new), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
   foreach ($instances as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     if ($field['storage']['type'] == 'field_sql_storage') {

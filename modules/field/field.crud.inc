@@ -45,7 +45,7 @@
  * - type (string)
  *     The type of the field, such as 'text' or 'image'. Field types
  *     are defined by modules that implement hook_field_info().
- * - object_types (array)
+ * - entity_types (array)
  *     The array of entity types that can hold instances of this field. If
  *     empty or not specified, the field can have instances in any entity type.
  * - cardinality (integer)
@@ -108,7 +108,7 @@
  *     It is populated automatically by field_create_instance().
  * - field_name (string)
  *     The name of the field attached to the bundle by this instance.
- * - object_type (string)
+ * - entity_type (string)
  *     The name of the entity type the instance is attached to.
  * - bundle (string)
  *     The name of the bundle that the field is attached to.
@@ -262,13 +262,13 @@ function field_create_field($field) {
   // collisions with existing entity properties, but some is better
   // than none.
   foreach (entity_get_info() as $type => $info) {
-    if (in_array($field['field_name'], $info['object keys'])) {
+    if (in_array($field['field_name'], $info['entity keys'])) {
       throw new FieldException(t('Attempt to create field name %name which is reserved by entity type %type.', array('%name' => $field['field_name'], '%type' => $type)));
     }
   }
 
   $field += array(
-    'object_types' => array(),
+    'entity_types' => array(),
     'cardinality' => 1,
     'translatable' => FALSE,
     'locked' => FALSE,
@@ -403,8 +403,8 @@ function field_update_field($field) {
   if ($field['type'] != $prior_field['type']) {
     throw new FieldException("Cannot change an existing field's type.");
   }
-  if ($field['object_types'] != $prior_field['object_types']) {
-    throw new FieldException("Cannot change an existing field's object_types property.");
+  if ($field['entity_types'] != $prior_field['entity_types']) {
+    throw new FieldException("Cannot change an existing field's entity_types property.");
   }
   if ($field['storage']['type'] != $prior_field['storage']['type']) {
     throw new FieldException("Cannot change an existing field's storage type.");
@@ -588,7 +588,7 @@ function field_delete_field($field_name) {
  * Creates an instance of a field, binding it to a bundle.
  *
  * @param $instance
- *   A field instance definition array. The field_name, object_type and
+ *   A field instance definition array. The field_name, entity_type and
  *   bundle properties are required. Other properties, if omitted,
  *   will be given the following default values:
  *   - label: the field name
@@ -620,15 +620,15 @@ function field_create_instance($instance) {
     throw new FieldException(t("Attempt to create an instance of a field @field_name that doesn't exist or is currently inactive.", array('@field_name' => $instance['field_name'])));
   }
   // Check that the required properties exists.
-  if (empty($instance['object_type'])) {
+  if (empty($instance['entity_type'])) {
     throw new FieldException(t('Attempt to create an instance of field @field_name without an object type.', array('@field_name' => $instance['field_name'])));
   }
   if (empty($instance['bundle'])) {
     throw new FieldException(t('Attempt to create an instance of field @field_name without a bundle.', array('@field_name' => $instance['field_name'])));
   }
   // Check that the field can be attached to this entity type.
-  if (!empty($field['object_types']) && !in_array($instance['object_type'], $field['object_types'])) {
-    throw new FieldException(t('Attempt to create an instance of field @field_name on forbidden object type @obj_type.', array('@field_name' => $instance['field_name'], '@obj_type' => $instance['object_type'])));
+  if (!empty($field['entity_types']) && !in_array($instance['entity_type'], $field['entity_types'])) {
+    throw new FieldException(t('Attempt to create an instance of field @field_name on forbidden object type @entity_type.', array('@field_name' => $instance['field_name'], '@entity_type' => $instance['entity_type'])));
   }
 
   // Set the field id.
@@ -647,7 +647,7 @@ function field_create_instance($instance) {
   // Ensure the field instance is unique within the bundle.
   // We only check for instances of active fields, since adding an instance of
   // a disabled field is not supported.
-  $prior_instance = field_read_instance($instance['object_type'], $instance['field_name'], $instance['bundle']);
+  $prior_instance = field_read_instance($instance['entity_type'], $instance['field_name'], $instance['bundle']);
   if (!empty($prior_instance)) {
     $message = t('Attempt to create an instance of field @field_name on bundle @bundle that already has an instance of that field.', array('@field_name' => $instance['field_name'], '@bundle' => $instance['bundle']));
     throw new FieldException($message);
@@ -688,7 +688,7 @@ function field_update_instance($instance) {
 
   // Check that the field instance exists (even if it is inactive, since we
   // want to be able to replace inactive widgets with new ones).
-  $prior_instance = field_read_instance($instance['object_type'], $instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE));
+  $prior_instance = field_read_instance($instance['entity_type'], $instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE));
   if (empty($prior_instance)) {
     throw new FieldException("Attempt to update a field instance that doesn't exist.");
   }
@@ -769,7 +769,7 @@ function _field_write_instance($instance, $update = FALSE) {
   $record = array(
     'field_id' => $instance['field_id'],
     'field_name' => $instance['field_name'],
-    'object_type' => $instance['object_type'],
+    'entity_type' => $instance['entity_type'],
     'bundle' => $instance['bundle'],
     'data' => $data,
     'deleted' => $instance['deleted'],
@@ -810,7 +810,7 @@ function _field_write_instance($instance, $update = FALSE) {
  *   An instance structure, or FALSE.
  */
 function field_read_instance($entity_type, $field_name, $bundle, $include_additional = array()) {
-  $instances = field_read_instances(array('object_type' => $entity_type, 'field_name' => $field_name, 'bundle' => $bundle), $include_additional);
+  $instances = field_read_instances(array('entity_type' => $entity_type, 'field_name' => $field_name, 'bundle' => $bundle), $include_additional);
   return $instances ? current($instances) : FALSE;
 }
 
@@ -858,13 +858,13 @@ function field_read_instances($params = array(), $include_additional = array()) 
   foreach ($results as $record) {
     // Filter out instances on unknown entity types (for instance because the
     // module exposing them was disabled).
-    $entity_info = entity_get_info($record['object_type']);
+    $entity_info = entity_get_info($record['entity_type']);
     if ($include_inactive || $entity_info) {
       $instance = unserialize($record['data']);
       $instance['id'] = $record['id'];
       $instance['field_id'] = $record['field_id'];
       $instance['field_name'] = $record['field_name'];
-      $instance['object_type'] = $record['object_type'];
+      $instance['entity_type'] = $record['entity_type'];
       $instance['bundle'] = $record['bundle'];
       $instance['deleted'] = $record['deleted'];
 
@@ -886,7 +886,7 @@ function field_delete_instance($instance) {
   db_update('field_config_instance')
     ->fields(array('deleted' => 1))
     ->condition('field_name', $instance['field_name'])
-    ->condition('object_type', $instance['object_type'])
+    ->condition('entity_type', $instance['entity_type'])
     ->condition('bundle', $instance['bundle'])
     ->execute();
 

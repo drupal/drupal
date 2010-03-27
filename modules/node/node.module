@@ -183,7 +183,7 @@ function node_entity_info() {
       'revision table' => 'node_revision',
       'uri callback' => 'node_uri',
       'fieldable' => TRUE,
-      'object keys' => array(
+      'entity keys' => array(
         'id' => 'nid',
         'revision' => 'vid',
         'bundle' => 'type',
@@ -563,7 +563,7 @@ function node_configure_fields($type) {
       $field = array(
         'field_name' => 'body',
         'type' => 'text_with_summary',
-        'object_types' => array('node'),
+        'entity_types' => array('node'),
         'translatable' => TRUE,
       );
       $field = field_create_field($field);
@@ -571,7 +571,7 @@ function node_configure_fields($type) {
     if (empty($instance)) {
       $instance = array(
         'field_name' => 'body',
-        'object_type' => 'node',
+        'entity_type' => 'node',
         'bundle' => $type->type,
         'label' => $type->body_label,
         'widget_type' => 'text_textarea_with_summary',

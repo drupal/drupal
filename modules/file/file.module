@@ -915,7 +915,7 @@ function file_get_file_reference_count($file, $field = NULL, $field_type = NULL)
         if (isset($file->file_field_type) && isset($file->file_field_id)) {
           if ($file->file_field_type == $entity_type) {
             $info = entity_get_info($entity_type);
-            $id = $types[$entity_type]['object keys']['id'];
+            $id = $types[$entity_type]['entity keys']['id'];
             foreach ($type_references as $reference) {
               if ($file->file_field_id == $reference->$id) {
                 $reference_count--;

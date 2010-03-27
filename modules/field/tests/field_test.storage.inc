@@ -323,7 +323,7 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
           // If querying all revisions and the entity type has revisions, we need
           // to key the results by revision_ids.
           $entity_type = entity_get_info($row->type);
-          $id = ($load_current || empty($entity_type['object keys']['revision'])) ? $row->entity_id : $row->revision_id;
+          $id = ($load_current || empty($entity_type['entity keys']['revision'])) ? $row->entity_id : $row->revision_id;
 
           if (!isset($return[$row->type][$id])) {
             $return[$row->type][$id] = entity_create_stub_entity($row->type, array($row->entity_id, $row->revision_id, $row->bundle));

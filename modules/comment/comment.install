@@ -55,7 +55,7 @@ function comment_enable() {
     $field = array(
       'field_name' => 'comment_body',
       'type' => 'text_long',
-      'object_types' => array('comment'),
+      'entity_types' => array('comment'),
     );
     field_create_field($field);
   }
@@ -269,7 +269,7 @@ function comment_update_7012() {
   $field = array(
     'field_name' => 'comment_body',
     'type' => 'text_long',
-    'object_types' => array('comment'),
+    'entity_types' => array('comment'),
   );
   field_create_field($field);
 
@@ -277,7 +277,7 @@ function comment_update_7012() {
   $body_instance = array(
     'field_name' => 'comment_body',
     'label' => 'Comment',
-    'object_type' => 'comment',
+    'entity_type' => 'comment',
     'settings' => array('text_processing' => 1),
     // Hide field label by default.
     'display' => array(

@@ -61,7 +61,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // Create an instance of the 'single value' field.
     $instance = array(
       'field_name' => $this->card_1['field_name'],
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_buttons',
@@ -118,7 +118,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // Create an instance of the 'multiple values' field.
     $instance = array(
       'field_name' => $this->card_2['field_name'],
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_buttons',
@@ -205,7 +205,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // Create an instance of the 'single value' field.
     $instance = array(
       'field_name' => $this->card_1['field_name'],
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_select',
@@ -292,7 +292,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // Create an instance of the 'multiple values' field.
     $instance = array(
       'field_name' => $this->card_2['field_name'],
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_select',
@@ -409,7 +409,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // Create an instance of the 'boolean' field.
     $instance = array(
       'field_name' => $this->bool['field_name'],
-      'object_type' => 'test_entity',
+      'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'options_onoff',

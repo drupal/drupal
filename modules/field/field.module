@@ -608,8 +608,8 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
     // Invoke hook_field_attach_view_alter() to let other modules alter the
     // renderable array, as in a full field_attach_view() execution.
     $context = array(
-      'obj_type' => $entity_type,
-      'object' => $entity,
+      'entity_type' => $entity_type,
+      'entity' => $entity,
       'view_mode' => '_custom',
     );
     drupal_alter('field_attach_view', $result, $context);
