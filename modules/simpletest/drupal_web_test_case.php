@@ -1097,9 +1097,10 @@ class DrupalWebTestCase extends DrupalTestCase {
    * is created with the same name as the database prefix.
    *
    * @param ...
-   *   List of modules to enable for the duration of the test.
+   *   List of modules to enable for the duration of the test. This can be
+   *   either a single array or a variable number of string arguments.
    */
-  protected function setUp() {
+  protected function setUp($modules = array()) {
     global $db_prefix, $user, $language, $conf;
 
     // Store necessary current values before switching to prefixed database.
@@ -1159,8 +1160,14 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Install the modules specified by the default profile.
     module_enable($profile_details['dependencies'], FALSE);
 
-    // Install modules needed for this test.
-    if ($modules = func_get_args()) {
+    // Install modules needed for this test. This could have been passed in as
+    // either a single array argument or a variable number of string arguments.
+    // @todo Remove this compatibility layer in Drupal 8, and only accept
+    // $modules as a single array argument.
+    if (!is_array($modules)) {
+      $modules = func_get_args();
+    }
+    if ($modules) {
       module_enable($modules, TRUE);
     }
 

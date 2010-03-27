@@ -15,11 +15,14 @@ class FieldTestCase extends DrupalWebTestCase {
   /**
    * Set the default field storage backend for fields created during tests.
    */
-  function setUp() {
-    // Call parent::setUp().
-    // See http://www.php.net/manual/en/function.call-user-func-array.php#73105.
-    $args = func_get_args();
-    call_user_func_array(array($this, 'parent::setUp'), $args);
+  function setUp($modules = array()) {
+    // Since this is a base class for many test cases, support the same
+    // flexibility that DrupalWebTestCase::setUp() has for the modules to be
+    // passed in as either an array or a variable number of string arguments.
+    if (!is_array($modules)) {
+      $modules = func_get_args();
+    }
+    parent::setUp($modules);
     // Set default storage backend.
     variable_set('field_storage_default', $this->default_storage);
   }
@@ -69,8 +72,17 @@ class FieldTestCase extends DrupalWebTestCase {
 }
 
 class FieldAttachTestCase extends FieldTestCase {
-  function setUp() {
-    parent::setUp('field_test');
+  function setUp($modules = array()) {
+    // Since this is a base class for many test cases, support the same
+    // flexibility that DrupalWebTestCase::setUp() has for the modules to be
+    // passed in as either an array or a variable number of string arguments.
+    if (!is_array($modules)) {
+      $modules = func_get_args();
+    }
+    if (!in_array('field_test', $modules)) {
+      $modules[] = 'field_test';
+    }
+    parent::setUp($modules);
 
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
     $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);
