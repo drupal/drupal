@@ -967,7 +967,7 @@ Drupal.overlay.getPath = function (link, ignorePathFromQueryString) {
   if (path.charAt(0) != '/') {
     path = '/' + path;
   }
-  path = path.replace(new RegExp(Drupal.settings.basePath), '');
+  path = path.replace(new RegExp(Drupal.settings.basePath + "(?:index.php)?"), '');
   if (path == '' && !ignorePathFromQueryString) {
     // If the path appears empty, it might mean the path is represented in the
     // query string (clean URLs are not used).
