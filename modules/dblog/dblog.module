@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.51 2010/02/26 15:25:43 dries Exp $
+// $Id: dblog.module,v 1.52 2010/03/27 14:24:14 dries Exp $
 
 /**
  * @file
@@ -143,4 +143,16 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
     '#description' => t('The maximum number of entries to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
   );
   $form['actions']['#weight'] = 1;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function dblog_theme() {
+  return array(
+    'dblog_message' => array(
+      'variables' => array('event' => NULL, 'link' => FALSE),
+      'file' => 'dblog.admin.inc',
+    ),
+  );
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.35 2010/03/11 21:23:06 dries Exp $
+// $Id: dblog.test,v 1.36 2010/03/27 14:24:14 dries Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -74,9 +74,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->assertTrue($count > $row_limit, t('Dblog row count of @count exceeds row limit of @limit', array('@count' => $count, '@limit' => $row_limit)));
 
     // Run cron job.
-    $this->drupalGet('admin/reports/status/run-cron');
-    $this->assertResponse(200);
-    $this->assertText(t('Cron ran successfully'), t('Cron ran successfully'));
+    $this->cronRun();
     // Verify dblog row count equals row limit plus one because cron adds a record after it runs.
     $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
     $this->assertTrue($count == $row_limit + 1, t('Dblog row count of @count equals row limit of @limit plus one', array('@count' => $count, '@limit' => $row_limit)));
@@ -108,9 +106,9 @@ class DBLogTestCase extends DrupalWebTestCase {
       'ip'          => ip_address(),
       'timestamp'   => REQUEST_TIME,
       );
-    $message = 'Log entry added to test the dblog row limit.';
+    $message = 'Log entry added to test the dblog row limit. Entry #';
     for ($i = 0; $i < $count; $i++) {
-      $log['message'] = $this->randomString();
+      $log['message'] = $message . $i;
       dblog_watchdog($log);
     }
   }
@@ -181,7 +179,7 @@ class DBLogTestCase extends DrupalWebTestCase {
    */
   private function doUser() {
     // Set user variables.
-    $name = $this->randomName(4);
+    $name = $this->randomName();
     $pass = user_password();
     // Add user using form to generate add user event (which is not triggered by drupalCreateUser).
     $edit = array();
@@ -223,11 +221,38 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Default display includes name and email address; if too long then email is replaced by three periods.
     $this->assertLogMessage(t('New user: %name (%email).', array('%name' => $name, '%email' => $user->mail)), t('DBLog event was recorded: [add user]'));
     // Login user.
-    $this->assertLogMessage(t('Session opened for %name', array('%name' => $name)), t('DBLog event was recorded: [login user]'));
+    $this->assertLogMessage(t('Session opened for %name.', array('%name' => $name)), t('DBLog event was recorded: [login user]'));
     // Logout user.
-    $this->assertLogMessage(t('Session closed for %name', array('%name' => $name)), t('DBLog event was recorded: [logout user]'));
+    $this->assertLogMessage(t('Session closed for %name.', array('%name' => $name)), t('DBLog event was recorded: [logout user]'));
     // Delete user.
-    $this->assertLogMessage(t('Deleted user: %name', array('%name' => $name)), t('DBLog event was recorded: [delete user]'));
+    $message = t('Deleted user: %name %email.', array('%name' => $name, '%email' => '<' . $user->mail . '>'));
+    $message_text = truncate_utf8(filter_xss($message, array()), 56, TRUE, TRUE);
+    // Verify full message on details page.
+    $link = FALSE;
+    if ($links = $this->xpath('//a[text()="' . html_entity_decode($message_text) . '"]')) {
+      // Found link with the message text.
+      $links = array_shift($links);
+      foreach ($links->attributes() as $attr => $value) {
+        if ($attr == 'href') {
+          // Extract link to details page.
+          $link = drupal_substr($value, strpos($value, 'admin/reports/event/'));
+          $this->drupalGet($link);
+          // Check for full message text on the details page.
+          $this->assertRaw($message, t('DBLog event details was found: [delete user]'));
+          break;
+        }
+      }
+    }
+    $this->assertTrue($link, t('DBLog event was recorded: [delete user]'));
+    // Visit random URL (to generate page not found event).
+    $not_found_url = $this->randomName(60);
+    $this->drupalGet($not_found_url);
+    $this->assertResponse(404);
+    // View dblog page-not-found report page.
+    $this->drupalGet('admin/reports/page-not-found');
+    $this->assertResponse(200);
+    // Check that full-length url displayed.
+    $this->assertText($not_found_url, t('DBLog event was recorded: [page not found]'));
   }
 
   /**
@@ -537,15 +562,20 @@ class DBLogTestCase extends DrupalWebTestCase {
   /**
    * Assert messages appear on the log overview screen.
    *
+   * This function should be used only for admin/reports/dblog page, because it
+   * check for the message link text truncated to 56 characters. Other dblog
+   * pages have no detail links so contains a full message text.
+   *
    * @param $log_message
    *   The message to check.
    * @param $message
    *   The message to pass to simpletest.
    */
   protected function assertLogMessage($log_message, $message) {
-    // Truncate at 56 characters to compare with dblog's HTML output.
-    // @todo: Check the database instead for the exact error string.
-    $this->assertRaw(truncate_utf8($log_message, 56, TRUE, TRUE), $message);
+    $message_text = truncate_utf8(filter_xss($log_message, array()), 56, TRUE, TRUE);
+    // After filter_xss() HTML entities should be converted to their characters
+    // because assertLink() uses this string in xpath() to query DOM.
+    $this->assertLink(html_entity_decode($message_text), 0, $message);
   }
 }
 
