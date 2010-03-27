@@ -1600,12 +1600,15 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @param $headers
    *   An array containing additional HTTP request headers, each formatted as
    *   "name: value".
-   * @param $form_id
-   *   The optional string identifying the form to be submitted. On some pages
+   * @param $form_html_id
+   *   (optional) HTML ID of the form to be submitted. On some pages
    *   there are many identical forms, so just using the value of the submit
-   *   button is not enough.
+   *   button is not enough. For example: 'trigger-node-presave-assign-form'.
+   *   Note that this is not the Drupal $form_id, but rather the HTML ID of the
+   *   form, which is typically the same thing but with hyphens replacing the
+   *   underscores.
    */
-  protected function drupalPost($path, $edit, $submit, array $options = array(), array $headers = array(), $form_id = NULL) {
+  protected function drupalPost($path, $edit, $submit, array $options = array(), array $headers = array(), $form_html_id = NULL) {
     $submit_matches = FALSE;
     $ajax = is_array($submit);
     if (isset($path)) {
@@ -1615,8 +1618,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       $edit_save = $edit;
       // Let's iterate over all the forms.
       $xpath = "//form";
-      if (!empty($form_id)) {
-        $xpath .= "[@id='" . drupal_html_id($form_id) . "']";
+      if (!empty($form_html_id)) {
+        $xpath .= "[@id='" . $form_html_id . "']";
       }
       $forms = $this->xpath($xpath);
       foreach ($forms as $form) {
