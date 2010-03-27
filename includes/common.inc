@@ -6234,11 +6234,11 @@ function entity_get_info($entity_type = NULL) {
           'fieldable' => FALSE,
           'controller class' => 'DrupalDefaultEntityController',
           'static cache' => TRUE,
+          'field cache' => TRUE,
           'load hook' => $name . '_load',
           'bundles' => array(),
           'view modes' => array(),
           'entity keys' => array(),
-          'cacheable' => TRUE,
           'translation' => array(),
         );
         $entity_info[$name]['entity keys'] += array(
@@ -6287,7 +6287,6 @@ function entity_info_cache_clear() {
  *   0: primary id of the entity
  *   1: revision id of the entity, or NULL if $entity_type is not versioned
  *   2: bundle name of the entity
- *   3: whether $entity_type's fields should be cached (TRUE/FALSE)
  */
 function entity_extract_ids($entity_type, $entity) {
   $info = entity_get_info($entity_type);
@@ -6297,8 +6296,7 @@ function entity_extract_ids($entity_type, $entity) {
   // If no bundle key provided, then we assume a single bundle, named after the
   // entity type.
   $bundle = $info['entity keys']['bundle'] ? $entity->{$info['entity keys']['bundle']} : $entity_type;
-  $cacheable = $info['cacheable'];
-  return array($id, $vid, $bundle, $cacheable);
+  return array($id, $vid, $bundle);
 }
 
 /**

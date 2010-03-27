@@ -191,8 +191,6 @@ function node_entity_info() {
       'bundle keys' => array(
         'bundle' => 'type',
       ),
-      // Node.module handles its own caching.
-      // 'cacheable' => FALSE,
       'bundles' => array(),
       'view modes' => array(
         'full' => array(

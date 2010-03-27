@@ -560,9 +560,9 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
   $options += $default_options;
 
   $info = entity_get_info($entity_type);
-  // Only the most current revision of non-deleted fields for
-  // cacheable fieldable types can be cached.
-  $cache_read = $load_current && $info['cacheable'] && empty($options['deleted']);
+  // Only the most current revision of non-deleted fields for cacheable entity
+  // types can be cached.
+  $cache_read = $load_current && $info['field cache'] && empty($options['deleted']);
   // In addition, do not write to the cache when loading a single field.
   $cache_write = $cache_read && !isset($options['field_id']);
 
@@ -848,7 +848,7 @@ function field_attach_insert($entity_type, $entity) {
   _field_invoke_default('insert', $entity_type, $entity);
   _field_invoke('insert', $entity_type, $entity);
 
-  list($id, $vid, $bundle, $cacheable) = entity_extract_ids($entity_type, $entity);
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
 
   // Let any module insert field data before the storage engine, accumulating
   // saved fields along the way.
@@ -881,7 +881,8 @@ function field_attach_insert($entity_type, $entity) {
   // Let other modules act on inserting the entity.
   module_invoke_all('field_attach_insert', $entity_type, $entity);
 
-  if ($cacheable) {
+  $entity_info = entity_get_info($entity_type);
+  if ($entity_info['field cache']) {
     cache_clear_all("field:$entity_type:$id", 'cache_field');
   }
 }
@@ -897,7 +898,7 @@ function field_attach_insert($entity_type, $entity) {
 function field_attach_update($entity_type, $entity) {
   _field_invoke('update', $entity_type, $entity);
 
-  list($id, $vid, $bundle, $cacheable) = entity_extract_ids($entity_type, $entity);
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
 
   // Let any module update field data before the storage engine, accumulating
   // saved fields along the way.
@@ -934,7 +935,8 @@ function field_attach_update($entity_type, $entity) {
   // Let other modules act on updating the entity.
   module_invoke_all('field_attach_update', $entity_type, $entity);
 
-  if ($cacheable) {
+  $entity_info = entity_get_info($entity_type);
+  if ($entity_info['field cache']) {
     cache_clear_all("field:$entity_type:$id", 'cache_field');
   }
 }
@@ -951,7 +953,7 @@ function field_attach_update($entity_type, $entity) {
 function field_attach_delete($entity_type, $entity) {
   _field_invoke('delete', $entity_type, $entity);
 
-  list($id, $vid, $bundle, $cacheable) = entity_extract_ids($entity_type, $entity);
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
 
   // Collect the storage backends used by the fields in the entities.
   $storages = array();
@@ -970,7 +972,8 @@ function field_attach_delete($entity_type, $entity) {
   // Let other modules act on deleting the entity.
   module_invoke_all('field_attach_delete', $entity_type, $entity);
 
-  if ($cacheable) {
+  $entity_info = entity_get_info($entity_type);
+  if ($entity_info['field cache']) {
     cache_clear_all("field:$entity_type:$id", 'cache_field');
   }
 }
@@ -987,7 +990,7 @@ function field_attach_delete($entity_type, $entity) {
 function field_attach_delete_revision($entity_type, $entity) {
   _field_invoke('delete_revision', $entity_type, $entity);
 
-  list($id, $vid, $bundle, $cacheable) = entity_extract_ids($entity_type, $entity);
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
 
   // Collect the storage backends used by the fields in the entities.
   $storages = array();

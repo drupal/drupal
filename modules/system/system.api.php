@@ -64,6 +64,10 @@ function hook_hook_info() {
  *     entity type's base table.
  *   - static cache: (used by DrupalDefaultEntityController) FALSE to disable
  *     static caching of entities during a page request. Defaults to TRUE.
+ *   - field cache: (used by Field API loading and saving of field data) FALSE
+ *     to disable Field API's persistent cache of field data. Only recommended
+ *     if a higher level persistent cache is available for the entity type.
+ *     Defaults to TRUE.
  *   - load hook: The name of the hook which should be invoked by
  *     DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
  *   - uri callback: A function taking an entity as argument and returning the
@@ -92,9 +96,6 @@ function hook_hook_info() {
  *     standalone objects. Elements:
  *     - bundle: The name of the property that contains the name of the bundle
  *       object.
- *   - cacheable: A boolean indicating whether Field API should cache
- *     loaded fields for each object, reducing the cost of
- *     field_attach_load().
  *   - bundles: An array describing all bundles for this object type.
  *     Keys are bundles machine names, as found in the objects' 'bundle'
  *     property (defined in the 'entity keys' entry above). Elements:
@@ -139,8 +140,6 @@ function hook_entity_info() {
       'bundle keys' => array(
         'bundle' => 'type',
       ),
-      // Node.module handles its own caching.
-      // 'cacheable' => FALSE,
       'bundles' => array(),
       'view modes' => array(
         'full' => array(
