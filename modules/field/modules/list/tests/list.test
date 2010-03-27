@@ -154,18 +154,6 @@ class ListFieldUITestCase extends FieldTestCase {
     $edit = array($element_name => "1|one\n" . $this->randomName(256) . "|two");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
     $this->assertText("each key must be a string at most 255 characters long", t('Form validation failed.'));
-
-    // Test 'List (boolean)' field type.
-    $admin_path = $this->createListFieldAndEdit('list_boolean');
-    // Check that invalid option keys are rejected.
-    $edit = array($element_name => "1|one\n2|two");
-    $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("keys must be either 0 or 1", t('Form validation failed.'));
-
-    //Check that missing option causes failure.
-    $edit = array($element_name => "1|one");
-    $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("two values are required", t('Form validation failed.'));
   }
 
   /**

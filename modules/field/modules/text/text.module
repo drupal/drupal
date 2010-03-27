@@ -122,8 +122,8 @@ function text_field_settings_form($field, $instance, $has_data) {
     '#type' => 'textfield',
     '#title' => t('Maximum length'),
     '#default_value' => $settings['max_length'],
-    '#required' => FALSE,
-    '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
+    '#required' => TRUE,
+    '#description' => t('The maximum length of the field in characters.'),
     '#element_validate' => array('_element_validate_integer_positive'),
     // @todo: If $has_data, add a validate handler that only allows
     // max_length to increase.

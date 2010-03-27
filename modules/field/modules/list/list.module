@@ -120,6 +120,33 @@ function list_field_settings_form($field, $instance, $has_data) {
     '#access' => empty($settings['allowed_values_function']),
   );
 
+  if ($field['type'] == 'list_boolean') {
+    $values = list_extract_allowed_values($settings['allowed_values']);
+    $off_value = array_shift($values);
+    $on_value = array_shift($values);
+    $form['allowed_values'] = array(
+      '#type' => 'markup',
+      '#description' => '',
+      '#input' => TRUE,
+      '#value_callback' => 'list_boolean_allowed_values_callback',
+      '#access' => empty($settings['allowed_values_function']),
+    );
+    $form['allowed_values']['on'] = array(
+      '#type' => 'textfield',
+      '#title' => t('On value'),
+      '#default_value' => $on_value,
+      '#required' => FALSE,
+      '#description' => t('If left empty, "1" will be used.'),
+    );
+    $form['allowed_values']['off'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Off value'),
+      '#default_value' => $off_value,
+      '#required' => FALSE,
+      '#description' => t('If left empty, "0" will be used.'),
+    );
+  }
+
   // Alter the description for allowed values depending on the widget type.
   if ($instance['widget']['type'] == 'options_onoff') {
     $form['allowed_values']['#description'] .= '<p>' . t("For a 'single on/off checkbox' widget, define the 'off' value first, then the 'on' value in the <strong>Allowed values</strong> section. Note that the checkbox will be labeled with the label of the 'on' value.") . '</p>';
@@ -164,15 +191,18 @@ function list_allowed_values_setting_validate($element, &$form_state) {
       form_error($element, t('Allowed values list: keys must be integers.'));
       break;
     }
-    elseif ($field_type == 'list_boolean' && !in_array($key, array('0', '1'))) {
-      form_error($element, t('Allowed values list: keys must be either 0 or 1.'));
-      break;
-    }
   }
+}
 
-  // Check that boolean fields get two values.
-  if ($field_type == 'list_boolean' && count($values) != 2) {
-    form_error($element, t('Allowed values list: two values are required.'));
+/**
+* Form element #value_callback: assembles the allowed values for 'boolean' fields.
+*/
+function list_boolean_allowed_values_callback($element, $edit = FALSE) {
+  if ($edit !== FALSE) {
+    $on = $edit['on'];
+    $off = $edit['off'];
+    $edit = "0|$off\n1|$on";
+    return $edit;
   }
 }
 
