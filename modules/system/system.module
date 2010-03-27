@@ -2961,7 +2961,16 @@ function system_send_email_action($entity, $context) {
 
   $recipient = token_replace($context['recipient'], $context);
 
-  $language = user_preferred_language($account);
+  // If the recipient is a registered user with a language preference, use
+  // the recipient's preferred language. Otherwise, use the system default
+  // language.
+  $recipient_account = user_load_by_mail($recipient);
+  if ($recipient_account) {
+    $language = user_preferred_language($recipient_account);
+  }
+  else {
+    $language = language_default();
+  }
   $params = array('context' => $context);
 
   if (drupal_mail('system', 'action_send_email', $recipient, $language, $params)) {
