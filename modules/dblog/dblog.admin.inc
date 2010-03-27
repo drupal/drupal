@@ -8,6 +8,9 @@
 
 /**
  * Menu callback; displays a listing of log messages.
+ *
+ * Messages are truncated at 56 chars. Full-length message could be viewed at
+ * the message details page.
  */
 function dblog_overview() {
   $filter = dblog_build_filter_query();
@@ -65,7 +68,7 @@ function dblog_overview() {
         $icons[$dblog->severity],
         t($dblog->type),
         format_date($dblog->timestamp, 'short'),
-        l(truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE), 'admin/reports/event/' . $dblog->wid, array('html' => TRUE)),
+        theme('dblog_message', array('event' => $dblog, 'link' => TRUE)),
         theme('username', array('account' => $dblog)),
         $dblog->link,
       ),
@@ -87,8 +90,12 @@ function dblog_overview() {
 }
 
 /**
- * Menu callback; generic function to display a page of the most frequent
- * dblog events of a specified type.
+ * Menu callback; generic function to display a page of the most frequent events.
+ *
+ * Messages are not truncated because events from this page have no detail view.
+ *
+ * @param $type
+ *   type of dblog events to display.
  */
 function dblog_top($type) {
 
@@ -114,7 +121,7 @@ function dblog_top($type) {
 
   $rows = array();
   foreach ($result as $dblog) {
-    $rows[] = array($dblog->count, truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE));
+    $rows[] = array($dblog->count, theme('dblog_message', array('event' => $dblog)));
   }
 
   $build['dblog_top_table']  = array(
@@ -158,7 +165,7 @@ function dblog_event($id) {
       ),
       array(
         array('data' => t('Message'), 'header' => TRUE),
-        _dblog_format_message($dblog),
+        theme('dblog_message', array('event' => $dblog)),
       ),
       array(
         array('data' => t('Severity'), 'header' => TRUE),
@@ -246,20 +253,34 @@ function dblog_filters() {
 /**
  * Formats a log message for display.
  *
- * @param $dblog
- *   An object with at least the message and variables properties
+ * @param $variables
+ *   An associative array containing:
+ *   - event: An object with at least the message and variables properties.
+ *   - link: (optional) Format message as link, event->wid is required.
+ *
+ * @ingroup themeable
  */
-function _dblog_format_message($dblog) {
-  // Legacy messages and user specified text
-  if ($dblog->variables === 'N;') {
-    return $dblog->message;
+function theme_dblog_message($variables) {
+  $output = '';
+  $event = $variables['event'];
+  // Check for required properties.
+  if (isset($event->message) && isset($event->variables)) {
+    // Messages without variables or user specified text.
+    if ($event->variables === 'N;') {
+      $output = $event->message;
+    }
+    // Message to translate with injected variables.
+    else {
+      $output = t($event->message, unserialize($event->variables));
+    }
+    if ($variables['link'] && isset($event->wid)) {
+      // Truncate message to 56 chars.
+      $output = truncate_utf8(filter_xss($output, array()), 56, TRUE, TRUE);
+      $output = l($output, 'admin/reports/event/' . $event->wid, array('html' => TRUE));
+    }
   }
-  // Message to translate with injected variables
-  else {
-    return t($dblog->message, unserialize($dblog->variables));
-  }
+  return $output;
 }
-
 
 /**
  * Return form for dblog administration filters.

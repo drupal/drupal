@@ -144,3 +144,15 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
   );
   $form['actions']['#weight'] = 1;
 }
+
+/**
+ * Implements hook_theme().
+ */
+function dblog_theme() {
+  return array(
+    'dblog_message' => array(
+      'variables' => array('event' => NULL, 'link' => FALSE),
+      'file' => 'dblog.admin.inc',
+    ),
+  );
+}
