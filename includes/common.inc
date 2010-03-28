@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1137 2010/03/27 18:41:13 dries Exp $
+// $Id: common.inc,v 1.1138 2010/03/28 10:46:36 dries Exp $
 
 /**
  * @file
@@ -6247,7 +6247,7 @@ function entity_get_info($entity_type = NULL) {
         );
         // If no bundle key is provided, assume a single bundle, named after
         // the entity type.
-        if (empty($entity_info[$name]['object keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
+        if (empty($entity_info[$name]['entity keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
           $entity_info[$name]['bundles'] = array($name => array('label' => $entity_info[$name]['label']));
         }
       }
