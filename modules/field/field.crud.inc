@@ -764,7 +764,7 @@ function _field_write_instance($instance, $update = FALSE) {
   // not have its own column and is not automatically populated when the
   // instance is read.
   $data = $instance;
-  unset($data['id'], $data['field_id'], $data['field_name'], $data['bundle'], $data['deleted']);
+  unset($data['id'], $data['field_id'], $data['field_name'], $data['entity_type'], $data['bundle'], $data['deleted']);
 
   $record = array(
     'field_id' => $instance['field_id'],
