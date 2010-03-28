@@ -6247,7 +6247,7 @@ function entity_get_info($entity_type = NULL) {
         );
         // If no bundle key is provided, assume a single bundle, named after
         // the entity type.
-        if (empty($entity_info[$name]['object keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
+        if (empty($entity_info[$name]['entity keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
           $entity_info[$name]['bundles'] = array($name => array('label' => $entity_info[$name]['label']));
         }
       }
