@@ -1459,7 +1459,7 @@ abstract class Database {
 
     _db_check_install_needed();
 
-    $database_info = $databases;
+    $database_info = is_array($databases) ? $databases : array();
     foreach ($database_info as $index => $info) {
       foreach ($database_info[$index] as $target => $value) {
         // If there is no "driver" property, then we assume it's an array of
