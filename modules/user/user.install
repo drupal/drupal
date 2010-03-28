@@ -390,8 +390,8 @@ function user_update_7002(&$sandbox) {
     $timezones = system_time_zones();
     // Update this many per page load.
     $count = 10000;
-    $contributed_date_module = db_column_exists('users', 'timezone_name');
-    $contributed_event_module = db_column_exists('users', 'timezone_id');
+    $contributed_date_module = db_field_exists('users', 'timezone_name');
+    $contributed_event_module = db_field_exists('users', 'timezone_id');
 
     $results = db_query_range("SELECT uid FROM {users} ORDER BY uid", $sandbox['user_from'], $count);
     foreach ($results as $account) {
@@ -487,7 +487,7 @@ function user_update_7004(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     // Check that the field hasn't been updated in an aborted run of this
     // update.
-    if (!db_column_exists('users', 'picture_fid')) {
+    if (!db_field_exists('users', 'picture_fid')) {
       // Add a new field for the fid.
       db_add_field('users', 'picture_fid', $picture_field);
     }
@@ -566,7 +566,7 @@ function user_update_7006(&$sandbox) {
   );
   // Check that the field hasn't been updated in an aborted run of this
   // update.
-  if (!db_column_exists('role_permission', 'module')) {
+  if (!db_field_exists('role_permission', 'module')) {
     // Add a new field for the fid.
     db_add_field('role_permission', 'module', $module_field);
   }

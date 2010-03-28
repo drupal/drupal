@@ -2434,11 +2434,11 @@ class DatabaseRegressionTestCase extends DatabaseTestCase {
   }
 
   /**
-   * Test the db_column_exists() function.
+   * Test the db_field_exists() function.
    */
-  function testDBColumnExists() {
-    $this->assertIdentical(TRUE, db_column_exists('node', 'nid'), t('Returns true for existent column.'));
-    $this->assertIdentical(FALSE, db_column_exists('node', 'nosuchcolumn'), t('Returns false for nonexistent column.'));
+  function testDBFieldExists() {
+    $this->assertIdentical(TRUE, db_field_exists('node', 'nid'), t('Returns true for existent column.'));
+    $this->assertIdentical(FALSE, db_field_exists('node', 'nosuchcolumn'), t('Returns false for nonexistent column.'));
   }
 
   /**

@@ -1549,7 +1549,7 @@ function system_update_6050() {
  */
 function system_update_6051() {
 
-  if (!db_column_exists('users', 'signature_format')) {
+  if (!db_field_exists('users', 'signature_format')) {
 
     // Set future text formats to FILTER_FORMAT_DEFAULT to ensure a safe default
     // when incompatible modules insert into the users table. An actual format
@@ -2230,7 +2230,7 @@ function system_update_7036() {
   }
   $insert->execute();
 
-  // Remove obsolete variable 'site_offline_message'. See 
+  // Remove obsolete variable 'site_offline_message'. See
   // update_fix_d7_requirements().
   variable_del('site_offline_message');
 }

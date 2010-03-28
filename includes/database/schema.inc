@@ -252,7 +252,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * @return
    *   TRUE if the given column exists, otherwise FALSE.
    */
-  public function columnExists($table, $column) {
+  public function fieldExists($table, $column) {
     $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
     $condition->condition('column_name', $column);
     $condition->compile($this->connection, $this);

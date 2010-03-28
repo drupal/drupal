@@ -2571,14 +2571,14 @@ function db_table_exists($table) {
  *
  * @param $table
  *   The name of the table in drupal (no prefixing).
- * @param $name
- *   The name of the column.
+ * @param $field
+ *   The name of the field.
  *
  * @return
  *   TRUE if the given column exists, otherwise FALSE.
  */
-function db_column_exists($table, $column) {
-  return Database::getConnection()->schema()->columnExists($table, $column);
+function db_field_exists($table, $field) {
+  return Database::getConnection()->schema()->fieldExists($table, $field);
 }
 
 /**

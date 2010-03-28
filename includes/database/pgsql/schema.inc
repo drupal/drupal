@@ -313,7 +313,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if (!$this->tableExists($table)) {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add field %table.%field: table doesn't exist.", array('%field' => $field, '%table' => $table)));
     }
-    if ($this->columnExists($table, $field)) {
+    if ($this->fieldExists($table, $field)) {
       throw new DatabaseSchemaObjectExistsException(t("Cannot add field %table.%field: field already exists.", array('%field' => $field, '%table' => $table)));
     }
 
@@ -343,7 +343,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   public function dropField($table, $field) {
-    if (!$this->columnExists($table, $field)) {
+    if (!$this->fieldExists($table, $field)) {
       return FALSE;
     }
 
@@ -352,7 +352,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   public function fieldSetDefault($table, $field, $default) {
-    if (!$this->columnExists($table, $field)) {
+    if (!$this->fieldExists($table, $field)) {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot set default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
     }
 
@@ -367,7 +367,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   public function fieldSetNoDefault($table, $field) {
-    if (!$this->columnExists($table, $field)) {
+    if (!$this->fieldExists($table, $field)) {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot remove default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
     }
 
@@ -457,10 +457,10 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   public function changeField($table, $field, $field_new, $spec, $new_keys = array()) {
-    if (!$this->columnExists($table, $field)) {
+    if (!$this->fieldExists($table, $field)) {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot change the definition of field %table.%name: field doesn't exist.", array('%table' => $table, '%name' => $field)));
     }
-    if (($field != $field_new) && $this->columnExists($table, $field_new)) {
+    if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
       throw new DatabaseSchemaObjectExistsException(t("Cannot rename field %table.%name to %name_new: target field already exists.", array('%table' => $table, '%name' => $field, '%name_new' => $field_new)));
     }
 
