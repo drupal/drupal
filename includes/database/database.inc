@@ -1459,27 +1459,27 @@ abstract class Database {
 
     _db_check_install_needed();
 
-    $databaseInfo = $databases;
-    foreach ($databaseInfo as $index => $info) {
-      foreach ($databaseInfo[$index] as $target => $value) {
+    $database_info = $databases;
+    foreach ($database_info as $index => $info) {
+      foreach ($database_info[$index] as $target => $value) {
         // If there is no "driver" property, then we assume it's an array of
         // possible connections for this target. Pick one at random. That allows
         //  us to have, for example, multiple slave servers.
         if (empty($value['driver'])) {
-          $databaseInfo[$index][$target] = $databaseInfo[$index][$target][mt_rand(0, count($databaseInfo[$index][$target]) - 1)];
+          $database_info[$index][$target] = $database_info[$index][$target][mt_rand(0, count($database_info[$index][$target]) - 1)];
         }
       }
     }
 
     if (!is_array(self::$databaseInfo)) {
-      self::$databaseInfo = $databaseInfo;
+      self::$databaseInfo = $database_info;
     }
 
-    // Merge the new $databaseInfo into the existing.
+    // Merge the new $database_info into the existing.
     // array_merge_recursive() cannot be used, as it would make multiple
     // database, user, and password keys in the same database array.
     else {
-      foreach ($databaseInfo as $database_key => $database_values) {
+      foreach ($database_info as $database_key => $database_values) {
         foreach ($database_values as $target => $target_values) {
           self::$databaseInfo[$database_key][$target] = $target_values;
         }
