@@ -1,5 +1,5 @@
 <?php
-// $Id: block.api.php,v 1.9 2009/10/17 05:50:28 webchick Exp $
+// $Id: block.api.php,v 1.10 2010/03/28 11:16:29 dries Exp $
 
 /**
  * @file
@@ -252,7 +252,7 @@ function hook_block_info_alter(&$blocks) {
   foreach ($blocks as $key => $block) {
     // Any module using this alter should inspect the data before changing it,
     // to ensure it is what they expect.
-    if ($block->theme != $theme_key || $block->status != 1) {
+    if (!isset($block->theme) || !isset($block->status) || $block->theme != $theme_key || $block->status != 1) {
       // This block was added by a contrib module, leave it in the list.
       continue;
     }

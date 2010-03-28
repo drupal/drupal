@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.45 2010/03/01 07:39:12 dries Exp $
+// $Id: node.install,v 1.46 2010/03/28 11:16:29 dries Exp $
 
 /**
  * @file
@@ -353,6 +353,34 @@ function node_schema() {
     'primary key' => array('type'),
   );
 
+  $schema['block_node_type'] = array(
+    'description' => 'Sets up display criteria for blocks based on content types',
+    'fields' => array(
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => "The block's origin module, from {block}.module.",
+      ),
+      'delta' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The block's unique delta within module, from {block}.delta.",
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The machine-readable name of this type from {node_type}.type.",
+      ),
+    ),
+    'primary key' => array('module', 'delta', 'type'),
+    'indexes' => array(
+      'type' => array('type'),
+    ),
+  );
+
   return $schema;
 }
 
@@ -607,6 +635,41 @@ function node_update_7009() {
     ->fields(array('language' => LANGUAGE_NONE))
     ->condition('language', '')
     ->execute();
+}
+
+/**
+ * Add the {block_node_type} table.
+ */
+function node_update_7010() {
+  $schema['block_node_type'] = array(
+    'description' => 'Sets up display criteria for blocks based on content types',
+    'fields' => array(
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => "The block's origin module, from {block}.module.",
+      ),
+      'delta' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The block's unique delta within module, from {block}.delta.",
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The machine-readable name of this type from {node_type}.type.",
+      ),
+    ),
+    'primary key' => array('module', 'delta', 'type'),
+    'indexes' => array(
+      'type' => array('type'),
+    ),
+  );
+
+  db_create_table('block_node_type', $schema['block_node_type']);
 }
 
 /**
