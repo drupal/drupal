@@ -1289,7 +1289,7 @@ class NodeBlockFunctionalTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('node');
+    parent::setUp('node', 'block');
 
     // Create users and test node.
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer nodes', 'administer blocks'));
@@ -1379,6 +1379,32 @@ class NodeBlockFunctionalTest extends DrupalWebTestCase {
     $this->assertText($node2->title, t('Node found in block.'));
     $this->assertText($node3->title, t('Node found in block.'));
     $this->assertText($node4->title, t('Node found in block.'));
+
+    // Create the custom block.
+    $custom_block = array();
+    $custom_block['info'] = $this->randomName();
+    $custom_block['title'] = $this->randomName();
+    $custom_block['types[article]'] = TRUE;
+    $custom_block['body[value]'] = $this->randomName(32);
+    $custom_block['regions[garland]'] = 'content';
+    $custom_block['regions[seven]'] = 'content';
+    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
+
+    $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
+    $this->assertTrue($bid, t('Custom block with visibility rule was created.'));
+
+    // Verify visibility rules.
+    $this->drupalGet('');
+    $this->assertNoText($custom_block['title'], t('Block was displayed on the front page.'));
+    $this->drupalGet('node/add/article');
+    $this->assertText($custom_block['title'], t('Block was displayed on the node/add/article page.'));
+    $this->drupalGet('node/' . $node1->nid);
+    $this->assertText($custom_block['title'], t('Block was displayed on the node/N.'));
+
+    // Delete the created custom block & verify that it's been deleted.
+    $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/delete', array(), t('Delete'));
+    $bid = db_query("SELECT 1 FROM {block_node_type} WHERE module = 'block' AND delta = :delta", array(':delta' => $bid))->fetchField();
+    $this->assertFalse($bid, t('Custom block was deleted.'));
   }
 }
 /**

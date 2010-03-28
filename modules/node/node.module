@@ -2190,6 +2190,8 @@ function theme_node_recent_content($variables) {
  * Implements hook_form_FORMID_alter().
  *
  * Adds node-type specific visibility options to add block form.
+ *
+ * @see block_add_block_form()
  */
 function node_form_block_add_block_form_alter(&$form, &$form_state) {
   node_form_block_admin_configure_alter($form, $form_state);
@@ -2199,6 +2201,8 @@ function node_form_block_add_block_form_alter(&$form, &$form_state) {
  * Implements hook_form_FORMID_alter().
  *
  * Adds node-type specific visibility options to block configuration form.
+ *
+ * @see block_admin_configure()
  */
 function node_form_block_admin_configure_alter(&$form, &$form_state) {
   $default_type_options = db_query("SELECT type FROM {block_node_type} WHERE module = :module AND delta = :delta", array(
@@ -2220,13 +2224,15 @@ function node_form_block_admin_configure_alter(&$form, &$form_state) {
     '#options' => node_type_get_names(),
     '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type-specific limitation.'),
   );
-  $form['#submit'][] = 'node_block_admin_configure_submit';
+  $form['#submit'][] = 'node_form_block_admin_configure_submit';
 }
 
 /**
  * Form submit handler for block configuration form.
+ *
+ * @see node_form_block_admin_configure_alter()
  */
-function node_block_admin_configure_submit($form, &$form_state) {
+function node_form_block_admin_configure_submit($form, &$form_state) {
   db_delete('block_node_type')
     ->condition('module', $form_state['values']['module'])
     ->condition('delta', $form_state['values']['delta'])
@@ -2240,6 +2246,96 @@ function node_block_admin_configure_submit($form, &$form_state) {
     ));
   }
   $query->execute();
+}
+
+/**
+ * Implements hook_form_FORMID_alter().
+ *
+ * Adds node specific submit handler to delete custom block form.
+ *
+ * @see block_custom_block_delete()
+ */
+function node_form_block_custom_block_delete_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'node_form_block_custom_block_delete_submit';
+}
+
+/**
+ * Form submit handler for custom block delete form.
+ *
+ * @see node_form_block_custom_block_delete_alter()
+ */
+function node_form_block_custom_block_delete_submit($form, &$form_state) {
+  db_delete('block_node_type')
+    ->condition('module', 'block')
+    ->condition('delta', $form_state['values']['bid'])
+    ->execute();
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ *
+ * Cleanup {block_node_type} table from modules' blocks.
+ */
+function node_modules_uninstalled($modules) {
+  db_delete('block_node_type')
+    ->condition('module', $modules, 'IN')
+    ->execute();
+}
+
+/**
+ * Implements hook_block_info_alter().
+ *
+ * Check the content type specific visibilty settings.
+ * Remove the block if the visibility conditions are not met.
+ */
+function node_block_info_alter(&$blocks) {
+  global $theme_key;
+
+  // Build an array of node types for each block.
+  $block_node_types = array();
+  $result = db_query('SELECT module, delta, type FROM {block_node_type}');
+  foreach ($result as $record) {
+    $block_node_types[$record->module][$record->delta][$record->type] = TRUE;
+  }
+
+  $node = menu_get_object();
+  $node_types = node_type_get_types();
+  if (arg(0) == 'node' && arg(1) == 'add' && arg(2)) {
+    $node_add_arg = strtr(arg(2), '-', '_');
+  }
+  foreach ($blocks as $key => $block) {
+    if (!isset($block->theme) || !isset($block->status) || $block->theme != $theme_key || $block->status != 1) {
+      // This block was added by a contrib module, leave it in the list.
+      continue;
+    }
+
+    // If a block has no node types associated, it is displayed for every type.
+    // For blocks with node types associated, if the node type does not match
+    // the settings from this block, remove it from the block list.
+    if (isset($block_node_types[$block->module][$block->delta])) {
+      if (!empty($node)) {
+        // This is a node or node edit page.
+        if (!isset($block_node_types[$block->module][$block->delta][$node->type])) {
+          // This block should not be displayed for this node type.
+          unset($blocks[$key]);
+          continue;
+        }
+      }
+      elseif (isset($node_add_arg) && isset($node_types[$node_add_arg])) {
+        // This is a node creation page
+        if (!isset($block_node_types[$block->module][$block->delta][$node_add_arg])) {
+          // This block should not be displayed for this node type.
+          unset($blocks[$key]);
+          continue;
+        }
+      }
+      else {
+        // This is not a node page, remove the block.
+        unset($blocks[$key]);
+        continue;
+      }
+    }
+  }
 }
 
 /**

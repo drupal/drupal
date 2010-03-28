@@ -637,7 +637,7 @@ function _block_load_blocks() {
 /**
  * Implements hook_block_info_alter().
  *
- * Check the page, user role, content type and user specific visibilty settings.
+ * Check the page, user role and user specific visibilty settings.
  * Remove the block if the visibility conditions are not met.
  */
 function block_block_info_alter(&$blocks) {
@@ -650,15 +650,8 @@ function block_block_info_alter(&$blocks) {
     $block_roles[$record->module][$record->delta][] = $record->rid;
   }
 
-  // Build an array of node types for each block.
-  $block_node_types = array();
-  $result = db_query('SELECT module, delta, type FROM {block_node_type}');
-  foreach ($result as $record) {
-    $block_node_types[$record->module][$record->delta][] = $record->type;
-  }
-
   foreach ($blocks as $key => $block) {
-    if ($block->theme != $theme_key || $block->status != 1) {
+    if (!isset($block->theme) || !isset($block->status) || $block->theme != $theme_key || $block->status != 1) {
       // This block was added by a contrib module, leave it in the list.
       continue;
     }
@@ -670,34 +663,6 @@ function block_block_info_alter(&$blocks) {
       // No match.
       unset($blocks[$key]);
       continue;
-    }
-
-    // If a block has no node types associated, it is displayed for every type.
-    // For blocks with node types associated, if the node type does not match
-    // the settings from this block, remove it from the block list.
-    if (isset($block_node_types[$block->module][$block->delta])) {
-      $node = menu_get_object();
-      if (!empty($node)) {
-        // This is a node or node edit page.
-        if (!in_array($node->type, $block_node_types[$block->module][$block->delta])) {
-          // This block should not be displayed for this node type.
-          unset($blocks[$key]);
-          continue;
-        }
-      }
-      elseif (arg(0) == 'node' && arg(1) == 'add' && in_array(arg(2), array_keys(node_type_get_types()))) {
-        // This is a node creation page
-        if (!in_array(arg(2), $block_node_types[$block->module][$block->delta])) {
-          // This block should not be displayed for this node type.
-          unset($blocks[$key]);
-          continue;
-        }
-      }
-      else {
-        // This is not a node page, remove the block.
-        unset($blocks[$key]);
-        continue;
-      }
     }
 
     // Use the user's block visibility setting, if necessary.

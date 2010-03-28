@@ -446,6 +446,8 @@ function block_add_block_form_submit($form, &$form_state) {
       'format' => $form_state['values']['format'],
     ))
     ->execute();
+  // Store block delta to allow other modules to work with new block.
+  $form_state['values']['delta'] = $delta;
 
   $query = db_insert('block')->fields(array('visibility', 'pages', 'custom', 'title', 'module', 'theme', 'status', 'weight', 'delta', 'cache'));
   foreach (list_themes() as $key => $theme) {
