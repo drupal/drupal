@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.857 2010/03/28 07:00:30 webchick Exp $
+// $Id: comment.module,v 1.858 2010/03/28 11:08:30 dries Exp $
 
 /**
  * @file
@@ -284,6 +284,21 @@ function comment_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function comment_menu_alter(&$items) {
+  // Add comments to the description for admin/content.
+  $items['admin/content']['description'] = "Administer content and comments";
+
+  // Adjust the Field UI tabs on admin/structure/types/manage/[node-type].
+  // See comment_entity_info().
+  $items['admin/structure/types/manage/%comment_node_type/comment/fields']['title'] = 'Comment fields';
+  $items['admin/structure/types/manage/%comment_node_type/comment/fields']['weight'] = 3;
+  $items['admin/structure/types/manage/%comment_node_type/comment/display']['title'] = 'Comment display';
+  $items['admin/structure/types/manage/%comment_node_type/comment/display']['weight'] = 4;
 }
 
 /**
@@ -2502,21 +2517,6 @@ function comment_ranking() {
       'arguments' => array(':scale' => variable_get('node_cron_comments_scale', 0)),
     ),
   );
-}
-
-/**
- * Implements hook_menu_alter().
- */
-function comment_menu_alter(&$items) {
-  // Add comments to the description for admin/content.
-  $items['admin/content']['description'] = "Administer content and comments";
-
-  // Adjust the Field UI tabs on admin/structure/types/manage/[node-type].
-  // See comment_entity_info().
-  $items['admin/structure/types/manage/%comment_node_type/comment/fields']['title'] = 'Comment fields';
-  $items['admin/structure/types/manage/%comment_node_type/comment/fields']['weight'] = 3;
-  $items['admin/structure/types/manage/%comment_node_type/comment/display']['title'] = 'Comment display';
-  $items['admin/structure/types/manage/%comment_node_type/comment/display']['weight'] = 4;
 }
 
 /**
