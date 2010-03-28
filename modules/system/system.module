@@ -2688,7 +2688,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 
   drupal_set_title($question, PASS_THROUGH);
 
-  $form['#attributes'] = array('class' => array('confirmation'));
+  $form['#attributes']['class'][] = 'confirmation';
   $form['description'] = array('#markup' => $description);
   $form[$name] = array('#type' => 'hidden', '#value' => 1);
 
