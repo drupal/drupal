@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.54 2010/03/27 05:52:49 webchick Exp $
+// $Id: field.crud.inc,v 1.55 2010/03/28 11:54:06 dries Exp $
 
 /**
  * @file
@@ -764,7 +764,7 @@ function _field_write_instance($instance, $update = FALSE) {
   // not have its own column and is not automatically populated when the
   // instance is read.
   $data = $instance;
-  unset($data['id'], $data['field_id'], $data['field_name'], $data['bundle'], $data['deleted']);
+  unset($data['id'], $data['field_id'], $data['field_name'], $data['entity_type'], $data['bundle'], $data['deleted']);
 
   $record = array(
     'field_id' => $instance['field_id'],
