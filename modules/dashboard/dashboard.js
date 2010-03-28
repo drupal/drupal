@@ -1,4 +1,4 @@
-// $Id: dashboard.js,v 1.8 2010/02/21 10:47:25 dries Exp $
+// $Id: dashboard.js,v 1.9 2010/03/28 11:29:27 dries Exp $
 (function ($) {
 
 /**
@@ -44,7 +44,7 @@ Drupal.behaviors.dashboard = {
    * Enter "customize" mode by displaying disabled blocks.
    */
   enterCustomizeMode: function () {
-    $('#dashboard').addClass('customize-mode');
+    $('#dashboard').addClass('customize-mode customize-inactive');
     Drupal.behaviors.dashboard.addPlaceholders();
     // Hide the customize link
     $('#dashboard .customize .action-links').hide();
@@ -56,7 +56,7 @@ Drupal.behaviors.dashboard = {
    * Exit "customize" mode by simply forcing a page refresh.
    */
   exitCustomizeMode: function () {
-    $('#dashboard').removeClass('customize-mode');
+    $('#dashboard').removeClass('customize-mode customize-inactive');
     Drupal.behaviors.dashboard.addPlaceholders();
     location.href = Drupal.settings.dashboard.dashboard;
   },
@@ -75,11 +75,12 @@ Drupal.behaviors.dashboard = {
       cursor: 'move',
       cursorAt: {top:0},
       dropOnEmpty: true,
-      items: '>div.block, div.disabled-block',
-      opacity: 1,
-      helper: 'block-dragging',
+      items: '> div.block, > div.disabled-block',
       placeholder: 'block-placeholder clearfix',
+      tolerance: 'pointer',
       start: Drupal.behaviors.dashboard.start,
+      over: Drupal.behaviors.dashboard.over,
+      sort: Drupal.behaviors.dashboard.sort,
       update: Drupal.behaviors.dashboard.update
     });
   },
@@ -95,11 +96,54 @@ Drupal.behaviors.dashboard = {
    *  An object containing information about the item that is being dragged.
    */
   start: function (event, ui) {
+    $('#dashboard').removeClass('customize-inactive');
     var item = $(ui.item);
 
     // If the block is already in disabled state, don't do anything.
     if (!item.hasClass('disabled-block')) {
       item.css({height: 'auto'});
+    }
+  },
+
+  /**
+   * While dragging, adapt block's width to the width of the region it is moved
+   * into.
+   *
+   * This function is called on the jQuery UI Sortable "over" event.
+   *
+   * @param event
+   *  The event that triggered this callback.
+   * @param ui
+   *  An object containing information about the item that is being dragged.
+   */
+  over: function (event, ui) {
+    var item = $(ui.item);
+
+    // If the block is in disabled state, remove width.
+    if ($(this).closest('#disabled-blocks').length) {
+      item.css('width', '');
+    }
+    else {
+      item.css('width', $(this).width());
+    }
+  },
+
+  /**
+   * While dragging, adapt block's position to stay connected with the position
+   * of the mouse pointer.
+   *
+   * This function is called on the jQuery UI Sortable "sort" event.
+   *
+   * @param event
+   *  The event that triggered this callback.
+   * @param ui
+   *  An object containing information about the item that is being dragged.
+   */
+  sort: function (event, ui) {
+    var item = $(ui.item);
+
+    if (event.pageX > ui.offset.left + item.width()) {
+      item.css('left', event.pageX);
     }
   },
 
@@ -114,6 +158,7 @@ Drupal.behaviors.dashboard = {
    *   An object containing information about the item that was just dropped.
    */
   update: function (event, ui) {
+    $('#dashboard').addClass('customize-inactive');
     var item = $(ui.item);
 
     // If the user dragged a disabled block, load the block contents.

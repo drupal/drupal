@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.23 2010/03/01 13:12:45 dries Exp $
+// $Id: dashboard.module,v 1.24 2010/03/28 11:29:27 dries Exp $
 
 /**
  * Implements hook_help().
@@ -451,7 +451,7 @@ function theme_dashboard_region($variables) {
 function theme_dashboard_disabled_blocks($variables) {
   extract($variables);
   $output = '<div class="canvas-content"><p>' . t('Drag and drop these blocks to the columns below. Changes are automatically saved.') . '</p>';
-  $output .= '<div id="disabled-blocks"><div class="section region disabled-blocks clearfix">';
+  $output .= '<div id="disabled-blocks"><div class="region disabled-blocks clearfix">';
   foreach ($blocks as $block) {
     $output .= theme('dashboard_disabled_block', array('block' => $block));
   }

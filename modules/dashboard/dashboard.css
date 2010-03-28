@@ -1,4 +1,4 @@
-/* $Id: dashboard.css,v 1.11 2010/03/20 14:45:05 dries Exp $ */
+/* $Id: dashboard.css,v 1.12 2010/03/28 11:29:27 dries Exp $ */
 
 #dashboard div.dashboard-region {
   float: left;
@@ -66,7 +66,7 @@
   margin: 5px;
 }
 
-#dashboard #disabled-blocks .section {
+#dashboard #disabled-blocks .region {
   background-color: #E0E0D8;
   border: #ccc 1px solid;
   padding: 10px;
@@ -75,12 +75,6 @@
 
 #dashboard #disabled-blocks {
   padding: 5px 0;
-}
-
-#dashboard div.dragging {
-  background: #0074BD;
-  color: #fff;
-  width: 30%;
 }
 
 #dashboard #disabled-blocks h2 {
@@ -94,7 +88,7 @@
   color: #fff;
 }
 
-#dashboard #disabled-blocks .block:hover {
+#dashboard.customize-inactive #disabled-blocks .block:hover {
   background: #0074BD;
 }
 
@@ -112,12 +106,12 @@
   padding: 0 17px;
 }
 
-#dashboard #disabled-blocks .block:hover h2 {
+#dashboard.customize-inactive #disabled-blocks .block:hover h2 {
   background: #0074BD url(../../misc/draggable.png) no-repeat 0px -39px;
   color: #fff;
 }
 
-#dashboard .dashboard-region .ui-sortable .block:hover h2 {
+#dashboard.customize-inactive .dashboard-region .ui-sortable .block:hover h2 {
   background: #0074BD url(../../misc/draggable.png) no-repeat;
   background-position: 3px -36px;
   color: #fff;
