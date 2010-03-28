@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.71 2010/03/07 23:14:20 webchick Exp $
+// $Id: comment.test,v 1.72 2010/03/28 07:00:30 webchick Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -954,6 +954,10 @@ class CommentApprovalTest extends CommentHelperCase {
 
     // Approve comment.
     $this->drupalLogin($this->admin_user);
+    $this->drupalGet('comment/1/approve');
+    $this->assertResponse(403, t('Forged comment approval was denied.'));
+    $this->drupalGet('comment/1/approve', array('query' => array('token' => 'forged')));
+    $this->assertResponse(403, t('Forged comment approval was denied.'));
     $this->drupalGet('node/' . $this->node->nid);
     $this->clickLink(t('approve'));
     $this->drupalLogout();
