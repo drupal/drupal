@@ -210,7 +210,7 @@ function _system_theme_list() {
  */
 function system_themes_page() {
   // Get current list of themes.
-  $themes =& _system_theme_list();
+  $themes = _system_theme_list();
 
   $theme_default = variable_get('theme_default', 'garland');
   $theme_groups  = array();
