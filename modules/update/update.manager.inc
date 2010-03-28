@@ -685,7 +685,7 @@ function update_manager_archive_extract($file, $directory) {
 function update_manager_archive_verify($project, $archive_file, $directory) {
   $failures = module_invoke_all('verify_update_archive', $project, $archive_file, $directory);
   if (!empty($failures)) {
-    throw new Exception(t('Unable to extract %file', array('%file' => $file)));
+    throw new Exception(t('Unable to extract %file', array('%file' => $archive_file)));
   }
 }
 
