@@ -791,6 +791,8 @@ function taxonomy_form_term_submit($form, &$form_state) {
     case SAVED_UPDATED:
       drupal_set_message(t('Updated term %term.', array('%term' => $term->name)));
       watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->name), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
+      // Clear the page and block caches to avoid stale data.
+      cache_clear_all();
       break;
   }
 

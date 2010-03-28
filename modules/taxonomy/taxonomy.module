@@ -461,10 +461,8 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
  *   Status constant indicating if term was inserted or updated.
  */
 function taxonomy_term_save($term) {
-  if ($term->name) {
-    // Prevent leading and trailing spaces in term names.
-    $term->name = trim($term->name);
-  }
+  // Prevent leading and trailing spaces in term names.
+  $term->name = trim($term->name);
   if (!isset($term->vocabulary_machine_name)) {
     $vocabulary = taxonomy_vocabulary_load($term->vid);
     $term->vocabulary_machine_name = $vocabulary->machine_name;
@@ -498,28 +496,24 @@ function taxonomy_term_save($term) {
     }
     $query = db_insert('taxonomy_term_hierarchy')
       ->fields(array('tid', 'parent'));
-    if (is_array($term->parent)) {
-      foreach ($term->parent as $parent) {
-        if (is_array($parent)) {
-          foreach ($parent as $tid) {
-            $query->values(array(
-              'tid' => $term->tid,
-              'parent' => $tid
-            ));
-          }
-        }
-        else {
+    foreach ($term->parent as $parent) {
+      if (is_array($parent)) {
+        foreach ($parent as $tid) {
           $query->values(array(
             'tid' => $term->tid,
-            'parent' => $parent
+            'parent' => $tid
           ));
         }
+      }
+      else {
+        $query->values(array(
+          'tid' => $term->tid,
+          'parent' => $parent
+        ));
       }
     }
     $query->execute();
   }
-
-  cache_clear_all();
   taxonomy_terms_static_reset();
 
   return $status;

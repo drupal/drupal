@@ -93,6 +93,8 @@ function forum_form_submit($form, &$form_state) {
       break;
     case SAVED_UPDATED:
       drupal_set_message(t('The @type %term has been updated.', array('%term' => $form_state['values']['name'], '@type' => $type)));
+      // Clear the page and block caches to avoid stale data.
+      cache_clear_all();
       break;
   }
   $form_state['redirect'] = 'admin/structure/forum';
