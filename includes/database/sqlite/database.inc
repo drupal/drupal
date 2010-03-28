@@ -18,6 +18,23 @@ include_once DRUPAL_ROOT . '/includes/database/prefetch.inc';
  */
 class DatabaseConnection_sqlite extends DatabaseConnection {
 
+  /**
+   * Whether this database connection supports savepoints.
+   *
+   * Version of sqlite lower then 3.6.8 can't use savepoints.
+   * See http://www.sqlite.org/releaselog/3_6_8.html
+   *
+   * @var bool
+   */
+  protected $savepointSupport = FALSE;
+
+  /**
+   * Whether or not the active transaction (if any) will be rolled back.
+   *
+   * @var boolean
+   */
+  protected $willRollback;
+
   public function __construct(array $connection_options = array()) {
     // We don't need a specific PDOStatement class here, we simulate it below.
     $this->statementClass = NULL;
@@ -33,6 +50,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     ));
 
     $this->exec('PRAGMA encoding="UTF-8"');
+
+    // Detect support for SAVEPOINT.
+    $version = $this->query('SELECT sqlite_version()')->fetchField();
+    $this->savepointSupport = (version_compare($version, '3.6.8') >= 0);
 
     // Create functions needed by SQLite.
     $this->sqliteCreateFunction('if', array($this, 'sqlFunctionIf'));
@@ -188,6 +209,114 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     // because it gets out of scope.
     return (int) $this->query('SELECT value FROM {sequences}')->fetchField();
   }
+
+  public function rollback($savepoint_name = 'drupal_transaction', $type = NULL, $message = NULL, $variables = array(), $severity = NULL, $link = NULL) {
+    if ($this->savepointSupport) {
+      return parent::rollBack($savepoint_name, $type, $message, $variables, $severity, $link);
+    }
+
+    if (!$this->inTransaction()) {
+      throw new DatabaseTransactionNoActiveException();
+    }
+    // A previous rollback to an earlier savepoint may mean that the savepoint
+    // in question has already been rolled back.
+    if (!in_array($savepoint_name, $this->transactionLayers)) {
+      return;
+    }
+
+    // Set the severity to the configured default if not specified.
+    if (!isset($severity)) {
+      $logging = Database::getLoggingCallback();
+      if (is_array($logging)) {
+        $severity = $logging['default_severity'];
+      }
+    }
+
+    // Record in an array to send to the log after transaction rollback.
+    // Messages written directly to a log (with a database back-end) will roll
+    // back during the following transaction rollback. This is an array because
+    // rollback could be requested multiple times during a transaction, and all
+    // such errors ought to be logged.
+    if (isset($message)) {
+      $this->rollbackLogs[] = array(
+        'type' => $type,
+        'message' => $message,
+        'variables' => $variables,
+        'severity' => $severity,
+        'link' => $link,
+      );
+    }
+
+    // We need to find the point we're rolling back to, all other savepoints
+    // before are no longer needed.
+    while ($savepoint = array_pop($this->transactionLayers)) {
+      if ($savepoint == $savepoint_name) {
+        // Mark whole stack of transactions as needed roll back.
+        $this->willRollback = TRUE;
+        // If it is the last the transaction in the stack, then it is not a
+        // savepoint, it is the transaction itself so we will need to roll back
+        // the transaction rather than a savepoint.
+        if (empty($this->transactionLayers)) {
+          break;
+        }
+        return;
+      }
+    }
+    if ($this->supportsTransactions()) {
+      PDO::rollBack();
+    }
+    $this->logRollback();
+  }
+
+  public function pushTransaction($name) {
+    if ($this->savepointSupport) {
+      return parent::pushTransaction($name);
+    }
+    if (!$this->supportsTransactions()) {
+      return;
+    }
+    if (isset($this->transactionLayers[$name])) {
+      throw new DatabaseTransactionNameNonUniqueException($name . " is already in use.");
+    }
+    if (!$this->inTransaction()) {
+      PDO::beginTransaction();
+    }
+    $this->transactionLayers[$name] = $name;
+  }
+
+  public function popTransaction($name) {
+    if ($this->savepointSupport) {
+      return parent::popTransaction($name);
+    }
+    if (!$this->supportsTransactions()) {
+      return;
+    }
+    if (!$this->inTransaction()) {
+      throw new DatabaseTransactionNoActiveException();
+    }
+
+    // Commit everything since SAVEPOINT $name.
+    while($savepoint = array_pop($this->transactionLayers)) {
+      if ($savepoint != $name) continue;
+
+      // If there are no more layers left then we should commit or rollback.
+      if (empty($this->transactionLayers)) {
+        // If there was any rollback() we should roll back whole transaction.
+        if ($this->willRollback) {
+          $this->willRollback = FALSE;
+          PDO::rollBack();
+          $this->logRollback();
+        }
+        elseif (!PDO::commit()) {
+          throw new DatabaseTransactionCommitFailedException();
+        }
+      }
+      else {
+        break;
+      }
+    }
+  }
+
 }
 
 /**
@@ -243,7 +372,7 @@ class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iter
               // in the automatic cast.
               $value = sprintf('%F', $value);
             }
-            
+
             // We will remove this placeholder from the query as PDO throws an
             // exception if the number of placeholders in the query and the
             // arguments does not match.
