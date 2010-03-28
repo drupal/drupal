@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.97 2010/03/25 11:53:25 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.98 2010/03/28 11:39:35 dries Exp $
 
 /**
  * @file
@@ -791,6 +791,8 @@ function taxonomy_form_term_submit($form, &$form_state) {
     case SAVED_UPDATED:
       drupal_set_message(t('Updated term %term.', array('%term' => $term->name)));
       watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->name), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
+      // Clear the page and block caches to avoid stale data.
+      cache_clear_all();
       break;
   }
 

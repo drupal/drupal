@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.30 2010/03/10 17:59:00 webchick Exp $
+// $Id: forum.admin.inc,v 1.31 2010/03/28 11:39:35 dries Exp $
 
 /**
  * @file
@@ -93,6 +93,8 @@ function forum_form_submit($form, &$form_state) {
       break;
     case SAVED_UPDATED:
       drupal_set_message(t('The @type %term has been updated.', array('%term' => $form_state['values']['name'], '@type' => $type)));
+      // Clear the page and block caches to avoid stale data.
+      cache_clear_all();
       break;
   }
   $form_state['redirect'] = 'admin/structure/forum';
