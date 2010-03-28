@@ -71,11 +71,28 @@ function field_ui_menu() {
     if ($info['fieldable']) {
       foreach ($info['bundles'] as $bundle_name => $bundle_info) {
         if (isset($bundle_info['admin'])) {
-          // Extract informations from the bundle description.
+          // Extract path information from the bundle.
           $path = $bundle_info['admin']['path'];
-          $bundle_arg = isset($bundle_info['admin']['bundle argument']) ? $bundle_info['admin']['bundle argument'] : $bundle_name;
-          $access = array_intersect_key($bundle_info['admin'], drupal_map_assoc(array('access callback', 'access arguments')));
+          // Different bundles can appear on the same path (e.g. %node_type and
+          // %comment_node_type). To allow field_ui_menu_load() to extract the
+          // actual bundle object from the translated menu router path
+          // arguments, we need to identify the argument position of the bundle
+          // name string ('bundle argument') and pass that position to the menu
+          // loader. The position needs to be casted into a string; otherwise it
+          // would be replaced with the bundle name string.
+          if (isset($bundle_info['admin']['bundle argument'])) {
+            $bundle_arg = $bundle_info['admin']['bundle argument'];
+            $bundle_pos = (string) $bundle_arg;
+          }
+          else {
+            $bundle_arg = $bundle_name;
+            $bundle_pos = '0';
+          }
+          // This is the position of the %field_ui_menu placeholder in the
+          // items below.
           $field_position = count(explode('/', $path)) + 1;
+
+          $access = array_intersect_key($bundle_info['admin'], drupal_map_assoc(array('access callback', 'access arguments')));
 
           $items["$path/fields"] = array(
             'title' => 'Manage fields',
@@ -86,33 +103,45 @@ function field_ui_menu() {
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
+            'title callback' => 'field_ui_menu_title',
+            'title arguments' => array($field_position),
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_edit_form', $entity_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_field_edit_form', $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/edit"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
+            'title' => 'Edit',
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_edit_form', $entity_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_field_edit_form', $field_position),
             'type' => MENU_DEFAULT_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/field-settings"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
+            'title' => 'Field settings',
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_settings_form', $entity_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_field_settings_form', $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/widget-type"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
+            'title' => 'Widget type',
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_widget_type_form', $entity_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_widget_type_form', $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/delete"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
+            'title' => 'Delete',
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_delete_form', $entity_type, $bundle_arg, $field_position),
+            'page arguments' => array('field_ui_field_delete_form', $field_position),
             'type' => MENU_LOCAL_TASK,
+            'weight' => 10,
             'file' => 'field_ui.admin.inc',
           ) + $access;
 
@@ -143,13 +172,50 @@ function field_ui_menu() {
 }
 
 /**
- * Menu loader; Load a field based on its name.
+ * Menu loader; Load a field instance based on field and bundle name.
+ *
+ * @param $field_name
+ *   The name of the field, as contained in the path.
+ * @param $entity_type
+ *   The name of the entity.
+ * @param $bundle_name
+ *   The name of the bundle, as contained in the path.
+ * @param $bundle_pos
+ *   The position of $bundle_name in $map.
+ * @param $map
+ *   The translated menu router path argument map.
  */
-function field_ui_menu_load($field_name) {
+function field_ui_menu_load($field_name, $entity_type, $bundle_name, $bundle_pos, $map) {
+  // Extract the actual bundle name from the translated argument map.
+  // The menu router path to manage fields of an entity can be shared among
+  // multiple bundles. For example:
+  // - admin/structure/types/manage/%node_type/fields/%field_ui_menu
+  // - admin/structure/types/manage/%comment_node_type/fields/%field_ui_menu
+  // The menu system will automatically load the correct bundle depending on the
+  // actual path arguments, but this menu loader function only receives the node
+  // type string as $bundle_name, which is not the bundle name for comments.
+  // We therefore leverage the dynamically translated $map provided by the menu
+  // system to retrieve the actual bundle and bundle name for the current path.
+  if ($bundle_pos > 0) {
+    $bundle = $map[$bundle_pos];
+    $bundle_name = field_extract_bundle($entity_type, $bundle);
+  }
+  // Check whether the field exists at all.
   if ($field = field_info_field($field_name)) {
-    return $field;
+    // Only return the field if a field instance exists for the given entity
+    // type and bundle.
+    if ($instance = field_info_instance($entity_type, $field_name, $bundle_name)) {
+      return $instance;
+    }
   }
   return FALSE;
+}
+
+/**
+ * Menu title callback.
+ */
+function field_ui_menu_title($instance) {
+  return t($instance['label']);
 }
 
 /**

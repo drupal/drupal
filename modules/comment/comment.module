@@ -287,6 +287,21 @@ function comment_menu() {
 }
 
 /**
+ * Implements hook_menu_alter().
+ */
+function comment_menu_alter(&$items) {
+  // Add comments to the description for admin/content.
+  $items['admin/content']['description'] = "Administer content and comments";
+
+  // Adjust the Field UI tabs on admin/structure/types/manage/[node-type].
+  // See comment_entity_info().
+  $items['admin/structure/types/manage/%comment_node_type/comment/fields']['title'] = 'Comment fields';
+  $items['admin/structure/types/manage/%comment_node_type/comment/fields']['weight'] = 3;
+  $items['admin/structure/types/manage/%comment_node_type/comment/display']['title'] = 'Comment display';
+  $items['admin/structure/types/manage/%comment_node_type/comment/display']['weight'] = 4;
+}
+
+/**
  * Returns a menu title which includes the number of unapproved comments.
  */
 function comment_count_unpublished() {
@@ -2502,21 +2517,6 @@ function comment_ranking() {
       'arguments' => array(':scale' => variable_get('node_cron_comments_scale', 0)),
     ),
   );
-}
-
-/**
- * Implements hook_menu_alter().
- */
-function comment_menu_alter(&$items) {
-  // Add comments to the description for admin/content.
-  $items['admin/content']['description'] = "Administer content and comments";
-
-  // Adjust the Field UI tabs on admin/structure/types/manage/[node-type].
-  // See comment_entity_info().
-  $items['admin/structure/types/manage/%comment_node_type/comment/fields']['title'] = 'Comment fields';
-  $items['admin/structure/types/manage/%comment_node_type/comment/fields']['weight'] = 3;
-  $items['admin/structure/types/manage/%comment_node_type/comment/display']['title'] = 'Comment display';
-  $items['admin/structure/types/manage/%comment_node_type/comment/display']['weight'] = 4;
 }
 
 /**

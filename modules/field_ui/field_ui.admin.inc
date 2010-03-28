@@ -812,15 +812,10 @@ function field_ui_existing_field_options($entity_type, $bundle) {
 /**
  * Menu callback; presents the field settings edit page.
  */
-function field_ui_field_settings_form($form, &$form_state, $entity_type, $bundle, $field) {
-  $bundle = field_extract_bundle($entity_type, $bundle);
-  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
-
-  // When a field is first created, we have to get data from the db.
-  if (!isset($instance['label'])) {
-    $instance = field_read_instance($field['field_name'], $bundle);
-    $field = field_read_field($field['field_name']);
-  }
+function field_ui_field_settings_form($form, &$form_state, $instance) {
+  $bundle = $instance['bundle'];
+  $entity_type = $instance['entity_type'];
+  $field = field_info_field($instance['field_name']);
 
   drupal_set_title($instance['label']);
 
@@ -900,9 +895,10 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
 /**
  * Menu callback; select a widget for the field.
  */
-function field_ui_widget_type_form($form, &$form_state, $entity_type, $bundle, $field) {
-  $bundle = field_extract_bundle($entity_type, $bundle);
-  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
+function field_ui_widget_type_form($form, &$form_state, $instance) {
+  $bundle = $instance['bundle'];
+  $entity_type = $instance['entity_type'];
+  $field = field_info_field($instance['field_name']);
 
   drupal_set_title($instance['label']);
 
@@ -962,9 +958,11 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
 /**
  * Menu callback; present a form for removing a field from a content type.
  */
-function field_ui_field_delete_form($form, &$form_state, $entity_type, $bundle, $field) {
-  $bundle = field_extract_bundle($entity_type, $bundle);
-  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
+function field_ui_field_delete_form($form, &$form_state, $instance) {
+  $bundle = $instance['bundle'];
+  $entity_type = $instance['entity_type'];
+  $field = field_info_field($instance['field_name']);
+
   $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
 
   $form['entity_type'] = array('#type' => 'value', '#value' => $entity_type);
@@ -1020,9 +1018,12 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
 /**
  * Menu callback; presents the field instance edit page.
  */
-function field_ui_field_edit_form($form, &$form_state, $entity_type, $bundle, $field) {
-  $bundle = field_extract_bundle($entity_type, $bundle);
-  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
+function field_ui_field_edit_form($form, &$form_state, $instance) {
+  $bundle = $instance['bundle'];
+  $entity_type = $instance['entity_type'];
+  $field = field_info_field($instance['field_name']);
+
+  drupal_set_title($instance['label']);
 
   $form['#field'] = $field;
 
@@ -1036,9 +1037,6 @@ function field_ui_field_edit_form($form, &$form_state, $entity_type, $bundle, $f
   $field_type = field_info_field_types($field['type']);
   $widget_type = field_info_widget_types($instance['widget']['type']);
   $bundles = field_info_bundles();
-
-  $title = isset($instance['label']) ? $instance['label'] : $instance['field_name'];
-  drupal_set_title(check_plain($title));
 
   // Create a form structure for the instance values.
   $form['instance'] = array(
