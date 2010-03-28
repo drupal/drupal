@@ -991,6 +991,7 @@ function comment_links($comment, $node) {
           'title' => t('approve'),
           'href' => "comment/$comment->cid/approve",
           'html' => TRUE,
+          'query' => array('token' => drupal_get_token("comment/$comment->cid/approve")),
         );
       }
     }

@@ -107,6 +107,9 @@ function comment_reply($node, $pid = NULL) {
  *   A comment identifier.
  */
 function comment_approve($cid) {
+  if (!isset($_GET['token']) || !drupal_valid_token($_GET['token'], "comment/$cid/approve")) {
+    return MENU_ACCESS_DENIED;
+  }
   if ($comment = comment_load($cid)) {
     $comment->status = COMMENT_PUBLISHED;
     comment_save($comment);

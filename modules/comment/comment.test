@@ -954,6 +954,10 @@ class CommentApprovalTest extends CommentHelperCase {
 
     // Approve comment.
     $this->drupalLogin($this->admin_user);
+    $this->drupalGet('comment/1/approve');
+    $this->assertResponse(403, t('Forged comment approval was denied.'));
+    $this->drupalGet('comment/1/approve', array('query' => array('token' => 'forged')));
+    $this->assertResponse(403, t('Forged comment approval was denied.'));
     $this->drupalGet('node/' . $this->node->nid);
     $this->clickLink(t('approve'));
     $this->drupalLogout();
