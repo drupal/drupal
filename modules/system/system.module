@@ -284,12 +284,6 @@ function system_element_info() {
     '#theme' => 'page',
     '#theme_wrappers' => array('html'),
   );
-  $types['list'] = array(
-    '#title' => '',
-    '#list_type' => 'ul',
-    '#attributes' => array(),
-    '#items' => array(),
-  );
   // By default, we don't want AJAX commands being rendered in the context of an
   // HTML page, so we don't provide defaults for #theme or #theme_wrappers.
   // However, modules can set these properties (for example, to provide an HTML
