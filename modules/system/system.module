@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.912 2010/03/28 11:54:27 dries Exp $
+// $Id: system.module,v 1.913 2010/03/29 22:58:34 webchick Exp $
 
 /**
  * @file
@@ -283,12 +283,6 @@ function system_element_info() {
     '#show_messages' => TRUE,
     '#theme' => 'page',
     '#theme_wrappers' => array('html'),
-  );
-  $types['list'] = array(
-    '#title' => '',
-    '#list_type' => 'ul',
-    '#attributes' => array(),
-    '#items' => array(),
   );
   // By default, we don't want AJAX commands being rendered in the context of an
   // HTML page, so we don't provide defaults for #theme or #theme_wrappers.
