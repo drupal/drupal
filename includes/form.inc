@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.445 2010/03/26 18:58:12 dries Exp $
+// $Id: form.inc,v 1.446 2010/03/30 07:05:58 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2722,7 +2722,9 @@ function theme_vertical_tabs($variables) {
   // Add required JavaScript and Stylesheet.
   drupal_add_library('system', 'vertical-tabs');
 
-  return '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
+  $output = '<h2 class="element-invisible">' . t('Vertical Tabs') . '</h2>';
+  $output .= '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
+  return $output;
 }
 
 /**

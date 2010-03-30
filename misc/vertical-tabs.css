@@ -1,4 +1,4 @@
-/* $Id: vertical-tabs.css,v 1.6 2009/05/31 00:51:41 webchick Exp $ */
+/* $Id: vertical-tabs.css,v 1.7 2010/03/30 07:05:58 webchick Exp $ */
 
 div.vertical-tabs {
   margin: 1em 0 1em 15em;
@@ -40,23 +40,25 @@ div.vertical-tabs ul.vertical-tabs-list li a {
   line-height: 1.3em;
   height: 1%;
 }
-div.vertical-tabs ul.vertical-tabs-list li a:focus {
+div.vertical-tabs ul.vertical-tabs-list li a:focus strong,
+div.vertical-tabs ul.vertical-tabs-list li a:active strong,
+div.vertical-tabs ul.vertical-tabs-list li a:hover strong {
+  text-decoration: underline;
+}
+div.vertical-tabs ul.vertical-tabs-list li a:focus,
+div.vertical-tabs ul.vertical-tabs-list li a:active {
   position: relative;
   z-index: 5;
 }
 div.vertical-tabs ul.vertical-tabs-list li a:hover {
-  text-decoration: none;
+  outline: 1px dotted;
 }
 div.vertical-tabs ul.vertical-tabs-list li.selected {
-  background: #fff;
+  background-color: #fff;
   border-right-width: 0;
   position: relative;
 }
-div.vertical-tabs ul.vertical-tabs-list li.selected a:focus {
-  outline: 0;
-}
-div.vertical-tabs ul.vertical-tabs-list li.selected strong,
-div.vertical-tabs ul.vertical-tabs-list li.selected small {
+div.vertical-tabs ul.vertical-tabs-list span.selected strong {
   color: #000;
 }
 div.vertical-tabs ul.vertical-tabs-list .summary {
