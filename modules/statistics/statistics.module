@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.332 2010/03/12 15:56:29 dries Exp $
+// $Id: statistics.module,v 1.333 2010/03/30 07:17:19 webchick Exp $
 
 /**
  * @file
@@ -174,6 +174,7 @@ function statistics_menu() {
     'page arguments' => array('statistics_settings_form'),
     'access arguments' => array('administer statistics'),
     'file' => 'statistics.admin.inc',
+    'weight' => -15,
   );
   $items['user/%user/track/navigation'] = array(
     'title' => 'Track page visits',
