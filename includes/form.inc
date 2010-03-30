@@ -2722,7 +2722,9 @@ function theme_vertical_tabs($variables) {
   // Add required JavaScript and Stylesheet.
   drupal_add_library('system', 'vertical-tabs');
 
-  return '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
+  $output = '<h2 class="element-invisible">' . t('Vertical Tabs') . '</h2>';
+  $output .= '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
+  return $output;
 }
 
 /**
