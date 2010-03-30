@@ -1554,7 +1554,8 @@ function user_menu() {
   $items['admin/config/people'] = array(
    'title' => 'People',
    'description' => 'Configure user accounts.',
-   'position' => 'right',
+   'position' => 'left',
+   'weight' => -20,
    'page callback' => 'system_admin_menu_block_page',
    'access arguments' => array('access administration pages'),
    'file' => 'system.admin.inc',

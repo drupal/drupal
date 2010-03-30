@@ -106,6 +106,7 @@ function locale_menu() {
     'page arguments' => array('locale_languages_overview_form'),
     'access arguments' => array('administer languages'),
     'file' => 'locale.admin.inc',
+    'weight' => -10,
   );
   $items['admin/config/regional/language/overview'] = array(
     'title' => 'List',
@@ -167,6 +168,7 @@ function locale_menu() {
     'page callback' => 'locale_translate_overview_screen',
     'access arguments' => array('translate interface'),
     'file' => 'locale.admin.inc',
+    'weight' => -5,
   );
   $items['admin/config/regional/translate/overview'] = array(
     'title' => 'Overview',

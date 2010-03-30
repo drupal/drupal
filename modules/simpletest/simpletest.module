@@ -36,6 +36,7 @@ function simpletest_menu() {
     'description' => 'Run tests against Drupal core and your active modules. These tests help assure that your site code is working as designed.',
     'access arguments' => array('administer unit tests'),
     'file' => 'simpletest.pages.inc',
+    'weight' => -5,
   );
   $items['admin/config/development/testing/list'] = array(
     'title' => 'List',
