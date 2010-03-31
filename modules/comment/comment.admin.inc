@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.45 2010/03/07 07:15:28 webchick Exp $
+// $Id: comment.admin.inc,v 1.46 2010/03/31 11:49:50 dries Exp $
 
 /**
  * @file
@@ -162,7 +162,6 @@ function comment_admin_overview_submit($form, &$form_state) {
 
   if ($operation == 'delete') {
     comment_delete_multiple($cids);
-    cache_clear_all();
   }
   else {
     foreach ($cids as $cid => $value) {
@@ -179,6 +178,7 @@ function comment_admin_overview_submit($form, &$form_state) {
   }
   drupal_set_message(t('The update has been performed.'));
   $form_state['redirect'] = 'admin/content/comment';
+  cache_clear_all();
 }
 
 /**

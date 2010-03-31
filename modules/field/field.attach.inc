@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.82 2010/03/27 18:41:14 dries Exp $
+// $Id: field.attach.inc,v 1.83 2010/03/31 11:49:51 dries Exp $
 
 /**
  * @file
@@ -882,9 +882,6 @@ function field_attach_insert($entity_type, $entity) {
   module_invoke_all('field_attach_insert', $entity_type, $entity);
 
   $entity_info = entity_get_info($entity_type);
-  if ($entity_info['field cache']) {
-    cache_clear_all("field:$entity_type:$id", 'cache_field');
-  }
 }
 
 /**
