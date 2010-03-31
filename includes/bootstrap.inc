@@ -2673,7 +2673,7 @@ function &drupal_register_shutdown_function($callback = NULL, $parameters = NULL
     $args = func_get_args();
     array_shift($args);
     // Save callback and arguments
-    $callbacks[] = array('callback' => $callback, 'arguments' => $args);
+    $callbacks[] = array('callback' => $callback, 'arguments' => $args, 'cwd' => getcwd());
   }
   return $callbacks;
 }
@@ -2686,6 +2686,7 @@ function _drupal_shutdown_function() {
 
   try {
     while (list($key, $callback) = each($callbacks)) {
+      chdir($callback['cwd']);
       call_user_func_array($callback['callback'], $callback['arguments']);
     }
   }
