@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.35 2010/03/10 20:31:59 webchick Exp $
+// $Id: tabledrag.js,v 1.36 2010/03/31 19:22:00 dries Exp $
 (function ($) {
 
 /**
@@ -640,7 +640,7 @@ Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
       // Use the first row in the table as source, because it's guaranteed to
       // be at the root level. Find the first item, then compare this row
       // against it as a sibling.
-      sourceRow = $('tr.draggable:first').get(0);
+      sourceRow = $(this.table).find('tr.draggable:first').get(0);
       if (sourceRow == this.rowObject.element) {
         sourceRow = $(this.rowObject.group[this.rowObject.group.length - 1]).next('tr.draggable').get(0);
       }
