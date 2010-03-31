@@ -162,7 +162,6 @@ function comment_admin_overview_submit($form, &$form_state) {
 
   if ($operation == 'delete') {
     comment_delete_multiple($cids);
-    cache_clear_all();
   }
   else {
     foreach ($cids as $cid => $value) {
@@ -179,6 +178,7 @@ function comment_admin_overview_submit($form, &$form_state) {
   }
   drupal_set_message(t('The update has been performed.'));
   $form_state['redirect'] = 'admin/content/comment';
+  cache_clear_all();
 }
 
 /**

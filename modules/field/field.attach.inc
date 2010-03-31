@@ -882,9 +882,6 @@ function field_attach_insert($entity_type, $entity) {
   module_invoke_all('field_attach_insert', $entity_type, $entity);
 
   $entity_info = entity_get_info($entity_type);
-  if ($entity_info['field cache']) {
-    cache_clear_all("field:$entity_type:$id", 'cache_field');
-  }
 }
 
 /**

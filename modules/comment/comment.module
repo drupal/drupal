@@ -1418,7 +1418,11 @@ function comment_save($comment) {
     else {
       // Add the comment to database. This next section builds the thread field.
       // Also see the documentation for comment_view().
-      if ($comment->pid == 0) {
+      if (!empty($comment->thread)) {
+        // Allow calling code to set thread itself.
+        $thread == $comment->thread;
+      }
+      elseif ($comment->pid == 0) {
         // This is a comment with no parent comment (depth 0): we start
         // by retrieving the maximum thread level.
         $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid))->fetchField();
@@ -1498,8 +1502,6 @@ function comment_save($comment) {
       entity_invoke('insert', 'comment', $comment);
     }
     _comment_update_node_statistics($comment->nid);
-    // Clear the cache so an anonymous user can see his comment being added.
-    cache_clear_all();
 
     if ($comment->status == COMMENT_PUBLISHED) {
       module_invoke_all('comment_publish', $comment);
@@ -2132,6 +2134,9 @@ function comment_form_submit($form, &$form_state) {
   }
   unset($form_state['rebuild']);
   $form_state['redirect'] = $redirect;
+  // Clear the block and page caches so that anonymous users see the comment
+  // they have posted.
+  cache_clear_all();
 }
 
 /**
@@ -2283,6 +2288,12 @@ function _comment_per_page() {
  * - comment_count: the total number of approved/published comments on this node.
  */
 function _comment_update_node_statistics($nid) {
+  // Allow bulk updates and inserts to temporarily disable the
+  // maintenance of the {node_comment_statistics} table.
+  if (!variable_get('comment_maintain_node_statistics', TRUE)) {
+    return;
+  }
+
   $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid AND status = :status', array(
     ':nid' => $nid,
     ':status' => COMMENT_PUBLISHED,
@@ -2496,6 +2507,7 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
  */
 function comment_save_action($comment) {
   comment_save($comment);
+  cache_clear_all();
   watchdog('action', 'Saved comment %title', array('%title' => $comment->subject));
 }
 
