@@ -1900,6 +1900,48 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
+   * Builds an XPath query.
+   *
+   * Builds an XPath query by replacing placeholders in the query by the value
+   * of the arguments.
+   *
+   * XPath 1.0 (the version supported by libxml2, the underlying XML library
+   * used by PHP) doesn't support any form of quotation. This function
+   * simplifies the building of XPath expression.
+   *
+   * @param $xpath
+   *   An XPath query, possibly with placeholders in the form ':name'.
+   * @param $args
+   *   An array of arguments with keys in the form ':name' matching the
+   *   placeholders in the query. The values may be either strings or numeric
+   *   values.
+   * @return
+   *   An XPath query with arguments replaced.
+   */
+  protected function buildXPathQuery($xpath, array $args = array()) {
+    // Replace placeholders.
+    foreach ($args as $placeholder => $value) {
+      // XPath 1.0 doesn't support a way to escape single or double quotes in a
+      // string literal. We split double quotes out of the string, and encode
+      // them separately.
+      if (is_string($value)) {
+        // Explode the text at the quote characters.
+        $parts = explode('"', $value);
+
+        // Quote the parts.
+        foreach ($parts as &$part) {
+          $part = '"' . $part . '"';
+        }
+
+        // Return the string.
+        $value = count($parts) > 1 ? 'concat(' . implode(', \'"\', ', $parts) . ')' : $parts[0];
+      }
+      $xpath = preg_replace('/' . preg_quote($placeholder) . '\b/', $value, $xpath);
+    }
+    return $xpath;
+  }
+
+  /**
    * Perform an xpath search on the contents of the internal browser. The search
    * is relative to the root element (HTML tag normally) of the page.
    *
@@ -1910,11 +1952,14 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   format and return values see the SimpleXML documentation,
    *   http://us.php.net/manual/function.simplexml-element-xpath.php.
    */
-  protected function xpath($xpath) {
+  protected function xpath($xpath, array $arguments = array()) {
     if ($this->parse()) {
+      $xpath = $this->buildXPathQuery($xpath, $arguments);
       return $this->elements->xpath($xpath);
     }
-    return FALSE;
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -1957,7 +2002,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
-    $links = $this->xpath('//a[text()="' . $label . '"]');
+    $links = $this->xpath('//a[text()=:label]', array(':label' => $label));
     $message = ($message ?  $message : t('Link with label %label found.', array('%label' => $label)));
     return $this->assert(isset($links[$index]), $message, $group);
   }
@@ -1977,7 +2022,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNoLink($label, $message = '', $group = 'Other') {
-    $links = $this->xpath('//a[text()="' . $label . '"]');
+    $links = $this->xpath('//a[text()=:label]', array(':label' => $label));
     $message = ($message ?  $message : t('Link with label %label not found.', array('%label' => $label)));
     return $this->assert(empty($links), $message, $group);
   }
@@ -1998,7 +2043,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertLinkByHref($href, $index = 0, $message = '', $group = 'Other') {
-    $links = $this->xpath('//a[contains(@href, "' . $href . '")]');
+    $links = $this->xpath('//a[contains(@href, :href)]', array(':href' => $href));
     $message = ($message ?  $message : t('Link containing href %href found.', array('%href' => $href)));
     return $this->assert(isset($links[$index]), $message, $group);
   }
@@ -2017,7 +2062,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNoLinkByHref($href, $message = '', $group = 'Other') {
-    $links = $this->xpath('//a[contains(@href, "' . $href . '")]');
+    $links = $this->xpath('//a[contains(@href, :href)]', array(':href' => $href));
     $message = ($message ?  $message : t('No link containing href %href found.', array('%href' => $href)));
     return $this->assert(empty($links), $message, $group);
   }
@@ -2039,7 +2084,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function clickLink($label, $index = 0) {
     $url_before = $this->getUrl();
-    $urls = $this->xpath('//a[text()="' . $label . '"]');
+    $urls = $this->xpath('//a[text()=:label]', array(':label' => $label));
 
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
@@ -2657,7 +2702,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertFieldChecked($id, $message = '') {
-    $elements = $this->xpath('//input[@id="' . $id . '"]');
+    $elements = $this->xpath('//input[@id=:id]', array(':id' => $id));
     return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is checked.', array('@id' => $id)), t('Browser'));
   }
 
@@ -2672,7 +2717,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoFieldChecked($id, $message = '') {
-    $elements = $this->xpath('//input[@id="' . $id . '"]');
+    $elements = $this->xpath('//input[@id=:id]', array(':id' => $id));
     return $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is not checked.', array('@id' => $id)), t('Browser'));
   }
 
@@ -2689,7 +2734,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertOptionSelected($id, $option, $message = '') {
-    $elements = $this->xpath('//select[@id="' . $id . '"]//option[@value="' . $option . '"]');
+    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
     return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : t('Option @option for field @id is selected.', array('@option' => $option, '@id' => $id)), t('Browser'));
   }
 
@@ -2706,7 +2751,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoOptionSelected($id, $option, $message = '') {
-    $elements = $this->xpath('//select[@id="' . $id . '"]//option[@value="' . $option . '"]');
+    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
     return $this->assertTrue(isset($elements[0]) && empty($elements[0]['selected']), $message ? $message : t('Option @option for field @id is not selected.', array('@option' => $option, '@id' => $id)), t('Browser'));
   }
 
@@ -2753,7 +2798,8 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   XPath for specified values.
    */
   protected function constructFieldXpath($attribute, $value) {
-    return '//textarea[@' . $attribute . '="' . $value . '"]|//input[@' . $attribute . '="' . $value . '"]|//select[@' . $attribute . '="' . $value . '"]';
+    $xpath = '//textarea[@' . $attribute . '=:value]|//input[@' . $attribute . '=:value]|//select[@' . $attribute . '=:value]';
+    return $this->buildXPathQuery($xpath, array(':value' => $value));
   }
 
   /**

@@ -238,7 +238,10 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $result = db_query('SELECT * FROM {cache_filter}')->fetchObject();
     $this->assertFalse($result, t('Cache cleared.'));
 
-    $elements = $this->xpath('//select[@name="filters[' . $first_filter . '][weight]"]/following::select[@name="filters[' . $second_filter . '][weight]"]');
+    $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', array(
+      ':first' => 'filters[' . $first_filter . '][weight]',
+      ':second' => 'filters[' . $second_filter . '][weight]',
+    ));
     $this->assertTrue(!empty($elements), t('Order confirmed in admin interface.'));
 
     // Reorder filters.
@@ -249,7 +252,10 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', 1, t('Order saved successfully.'));
     $this->assertFieldByName('filters[' . $first_filter . '][weight]', 2, t('Order saved successfully.'));
 
-    $elements = $this->xpath('//select[@name="filters[' . $second_filter . '][weight]"]/following::select[@name="filters[' . $first_filter . '][weight]"]');
+    $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', array(
+      ':first' => 'filters[' . $second_filter . '][weight]',
+      ':second' => 'filters[' . $first_filter . '][weight]',
+    ));
     $this->assertTrue(!empty($elements), t('Reorder confirmed in admin interface.'));
 
     $result = db_query('SELECT * FROM {filter} WHERE format = :format ORDER BY weight ASC', array(':format' => $filtered));

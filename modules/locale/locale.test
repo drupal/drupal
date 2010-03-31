@@ -1151,7 +1151,7 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     $this->assertText(t('Languages'), t('Language switcher block found.'));
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath("//div[@id=\"block-locale-{$language_type}\"]/div[@class=\"content\"]");
+    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-locale-' . $language_type));
     $links = array(
       'active' => array(),
       'inactive' => array(),
@@ -1270,7 +1270,7 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     // Ensure form was submitted successfully.
     $this->assertText(t('The changes have been saved.'), t('Changes were saved.'));
     // Check if language was changed.
-    $elements = $this->xpath('//input[@id="edit-language-' . $langcode . '"]');
+    $elements = $this->xpath('//input[@id=:id]', array(':id' => 'edit-language-' . $langcode));
     $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), t('Default language successfully updated.'));
 
     $this->drupalLogout();
@@ -1886,17 +1886,18 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 
     // Check if node body is showed.
     $this->drupalGet("node/$node->nid");
-    $body_xpath = '//div[@id="node-' . $node->nid . '"]//div[@property="content:encoded"]/p';
-    $this->assertEqual(current($this->xpath($body_xpath)), $node->body['en'][0]['value'], 'Node body is correctly showed.');
+    $body = $this->xpath('//div[@id=:id]//div[@property="content:encoded"]/p', array(':id' => 'node-' . $node->nid));
+    $this->assertEqual(current($body), $node->body['en'][0]['value'], 'Node body is correctly showed.');
 
     $settings['body[full][type]'] = 'hidden';
     $this->drupalPost('admin/structure/types/manage/page/display', $settings, t('Save'));
-    $select_xpath = '//select[@id="edit-body-full-type"]/option[@selected="selected"]';
+    $select = $this->xpath('//select[@id="edit-body-full-type"]/option[@selected="selected"]');
     // Check if body display is actually "hidden" for the "full" view mode.
-    $this->assertEqual(current($this->xpath($select_xpath)), '<Hidden>', 'Body display is actually "hidden" for the "full" view mode');
+    $this->assertEqual(current($select), '<Hidden>', 'Body display is actually "hidden" for the "full" view mode');
     $this->drupalGet("node/$node->nid");
     // Check if node body is not showed.
-    $this->assertFalse(is_array($this->xpath($body_xpath)), 'Body correctly not showed.');
+    $body = $this->xpath('//div[@id=:id]//div[@property="content:encoded"]/p', array(':id' => 'node-' . $node->nid));
+    $this->assertFalse(is_array($body), 'Body correctly not showed.');
   }
 }
 

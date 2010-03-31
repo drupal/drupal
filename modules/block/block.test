@@ -58,7 +58,7 @@ class BlockTestCase extends DrupalWebTestCase {
     foreach ($themes as $key => $theme) {
       if ($theme->status) {
         foreach ($theme->info['regions_hidden'] as $hidden_region) {
-          $elements = $this->xpath('//select[@id="edit-regions-' . $key . '"]//option[@value="' . $hidden_region . '"]');
+          $elements = $this->xpath('//select[@id=:id]//option[@value=:value]', array(':id' => 'edit-regions-' . $key, ':value' => $hidden_region));
           $this->assertFalse(isset($elements[0]), t('The hidden region @region is not available for @theme.', array('@region' => $hidden_region, '@theme' => $key)));
         }
       }
@@ -220,7 +220,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertNoText(t($block['title']), t('Block no longer appears on page.'));
 
     // Confirm that the regions xpath is not availble
-    $xpath = '//div[@id="block-block-' . $bid . '"]/*';
+    $xpath = $this->buildXPathQuery('//div[@id=:id]/*', array(':id' => 'block-block-' . $bid));
     $this->assertNoFieldByXPath($xpath, FALSE, t('Custom block found in no regions.'));
 
     // For convenience of developers, put the navigation block back.
@@ -252,7 +252,10 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertText(t($block['title']), t('Block successfully being displayed on the page.'));
 
     // Confirm that the custom block was found at the proper region.
-    $xpath = '//div[@class="' . $region['class'] . '"]//div[@id="block-' . $block['module'] . '-' . $block['delta'] . '"]/*';
+    $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', array(
+      ':region-class' => $region['class'],
+      ':block-id' => 'block-' . $block['module'] . '-' . $block['delta'],
+    ));
     $this->assertFieldByXPath($xpath, FALSE, t('Custom block found in %region_name region.', array('%region_name' => $region['name'])));
   }
 }

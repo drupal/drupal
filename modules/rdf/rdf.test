@@ -165,9 +165,15 @@ class RdfMarkupTestCase extends DrupalWebTestCase {
 
     // We only check to make sure that the resource attribute contains '.txt'
     // instead of the full file name because the filename is altered on upload.
-    $file_rel = $this->xpath("//div[contains(@about, 'node/$nid')]//div[contains(@rel, 'rdfs:seeAlso') and contains(@resource, '.txt')]");
+    $file_rel = $this->xpath('//div[contains(@about, :node-uri)]//div[contains(@rel, "rdfs:seeAlso") and contains(@resource, ".txt")]', array(
+      ':node-uri' => 'node/' . $nid,
+    ));
     $this->assertTrue(!empty($file_rel), t('Attribute \'rel\' set on file field. Attribute \'resource\' is also set.'));
-    $image_rel = $this->xpath("//div[contains(@about, 'node/$nid')]//div[contains(@rel, 'rdfs:seeAlso') and contains(@resource, '$image_filename')]//img[contains(@typeof, 'foaf:Image')]");
+    $image_rel = $this->xpath('//div[contains(@about, :node-uri)]//div[contains(@rel, "rdfs:seeAlso") and contains(@resource, :image)]//img[contains(@typeof, "foaf:Image")]', array(
+      ':node-uri' => 'node/' . $nid,
+      ':image' => $image_filename,
+    ));
+
     $this->assertTrue(!empty($image_rel), t('Attribute \'rel\' set on image field. Attribute \'resource\' is also set.'));
   }
 }
@@ -315,11 +321,22 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     // page. These attributes come from the user default bundle definition.
     $account_uri = url('user/' . $user2->uid);
     $person_uri = url('user/' . $user2->uid, array('fragment' => 'me'));
-    $user2_profile_about = $this->xpath("//div[@class='profile' and @typeof='sioc:User' and @about='$account_uri']");
+
+    $user2_profile_about = $this->xpath('//div[@class="profile" and @typeof="sioc:User" and @about=:account-uri]', array(
+      ':account-uri' => $account_uri,
+    ));
     $this->assertTrue(!empty($user2_profile_about), t('RDFa markup found on user profile page'));
-    $user_account_holder = $this->xpath("//meta[contains(@typeof, 'foaf:Person') and @about='$person_uri' and @resource='$account_uri' and contains(@rel, 'foaf:account')]");
+
+    $user_account_holder = $this->xpath('//meta[contains(@typeof, "foaf:Person") and @about=:person-uri and @resource=:account-uri and contains(@rel, "foaf:account")]', array(
+      ':person-uri' => $person_uri,
+      ':account-uri' => $account_uri,
+    ));
     $this->assertTrue(!empty($user_account_holder), t('URI created for account holder and username set on sioc:User.'));
-    $user_username = $this->xpath("//meta[@about='$account_uri' and contains(@property, 'foaf:name') and @content='$username']");
+
+    $user_username = $this->xpath('//meta[@about=:account-uri and contains(@property, "foaf:name") and @content=:username]', array(
+      ':account-uri' => $account_uri,
+      ':username' => $username,
+    ));
     $this->assertTrue(!empty($user_username), t('foaf:name set on username.'));
 
     // User 2 creates node.
@@ -329,7 +346,9 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     // Ensures the default bundle mapping for user is used on the Authored By
     // information on the node.
-    $author_about = $this->xpath("//a[@typeof='sioc:User' and @about='$account_uri' and @property='foaf:name' and contains(@xml:lang, '')]");
+    $author_about = $this->xpath('//a[@typeof="sioc:User" and @about=:account-uri and @property="foaf:name" and contains(@xml:lang, "")]', array(
+      ':account-uri' => $account_uri,
+    ));
     $this->assertTrue(!empty($author_about), t('RDFa markup found on author information on post. xml:lang on username is set to empty string.'));
   }
 
@@ -344,7 +363,10 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     $this->drupalGet('taxonomy/term/' . $term->tid);
     $term_url = url('taxonomy/term/' . $term->tid);
     $term_name = $term->name;
-    $term_rdfa_meta = $this->xpath("//meta[@typeof='skos:Concept' and @about='$term_url' and contains(@property, 'rdfs:label') and contains(@property, 'skos:prefLabel') and @content='$term_name']");
+    $term_rdfa_meta = $this->xpath('//meta[@typeof="skos:Concept" and @about=:term-url and contains(@property, "rdfs:label") and contains(@property, "skos:prefLabel") and @content=:term-name]', array(
+      ':term-url' => $term_url,
+      ':term-name' => $term_name,
+    ));
     $this->assertTrue(!empty($term_rdfa_meta), t('RDFa markup found on term page.'));
   }
 }
@@ -406,19 +428,19 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
     // Tests whether the about property is applied. This is implicit in the
     // success of the following tests, but making it explicit will make
     // debugging easier in case of failure.
-    $tracker_about = $this->xpath("//tr[@about='$url']");
+    $tracker_about = $this->xpath('//tr[@about=:url]', array(':url' => $url));
     $this->assertTrue(!empty($tracker_about), t('About attribute found on table row for @user content.', array('@user'=> $user)));
 
     // Tests whether the title has the correct property attribute.
-    $tracker_title = $this->xpath("//tr[@about='$url']/td[@property='dc:title' and @datatype='']");
+    $tracker_title = $this->xpath('//tr[@about=:url]/td[@property="dc:title" and @datatype=""]', array(':url' => $url));
     $this->assertTrue(!empty($tracker_title), t('Title property attribute found on @user content.', array('@user'=> $user)));
 
     // Tests whether the relationship between the content and user has been set.
-    $tracker_user = $this->xpath("//tr[@about='$url']//td[contains(@rel, 'sioc:has_creator')]//*[contains(@typeof, 'sioc:User') and contains(@property, 'foaf:name')]");
+    $tracker_user = $this->xpath('//tr[@about=:url]//td[contains(@rel, "sioc:has_creator")]//*[contains(@typeof, "sioc:User") and contains(@property, "foaf:name")]', array(':url' => $url));
     $this->assertTrue(!empty($tracker_user), t('Typeof and name property attributes found on @user.', array('@user'=> $user)));
     // There should be an about attribute on logged in users and no about
     // attribute for anonymous users.
-    $tracker_user = $this->xpath("//tr[@about='$url']//td[@rel='sioc:has_creator']/*[@about]");
+    $tracker_user = $this->xpath('//tr[@about=:url]//td[@rel="sioc:has_creator"]/*[@about]', array(':url' => $url));
     if ($node->uid == 0) {
       $this->assertTrue(empty($tracker_user), t('No about attribute is present on @user.', array('@user'=> $user)));
     }
@@ -427,14 +449,14 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
     }
 
     // Tests whether the property has been set for number of comments.
-    $tracker_replies = $this->xpath("//tr[@about='$url']//td[contains(@property, 'sioc:num_replies') and contains(@content, '0') and @datatype='xsd:integer']");
+    $tracker_replies = $this->xpath('//tr[@about=:url]//td[contains(@property, "sioc:num_replies") and contains(@content, "0") and @datatype="xsd:integer"]', array(':url' => $url));
     $this->assertTrue($tracker_replies, t('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
 
     // Tests that the appropriate RDFa markup to annotate the latest activity
     // date has been added to the tracker output before comments have been
     // posted, meaning the latest activity reflects changes to the node itself.
     $isoDate = date('c', $node->changed);
-    $tracker_activity = $this->xpath("//tr[@about='$url']//td[contains(@property, 'dc:modified') and contains(@property, 'sioc:last_activity_date') and contains(@datatype, 'xsd:dateTime') and @content='$isoDate']");
+    $tracker_activity = $this->xpath('//tr[@about=:url]//td[contains(@property, "dc:modified") and contains(@property, "sioc:last_activity_date") and contains(@datatype, "xsd:dateTime") and @content=:date]', array(':url' => $url, ':date' => $isoDate));
     $this->assertTrue(!empty($tracker_activity), t('Latest activity date and changed properties found when there are no comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
 
     // Tests that the appropriate RDFa markup to annotate the latest activity
@@ -443,7 +465,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
     $this->drupalGet('tracker');
 
     // Tests whether the property has been set for number of comments.
-    $tracker_replies = $this->xpath("//tr[@about='$url']//td[contains(@property, 'sioc:num_replies') and contains(@content, '1') and @datatype='xsd:integer']");
+    $tracker_replies = $this->xpath('//tr[@about=:url]//td[contains(@property, "sioc:num_replies") and contains(@content, "1") and @datatype="xsd:integer"]', array(':url' => $url));
     $this->assertTrue($tracker_replies, t('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
 
     // Need to query database directly to obtain last_activity_date because
@@ -453,7 +475,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
       $expected_last_activity_date = $node->changed;
     }
     $isoDate = date('c', $expected_last_activity_date);
-    $tracker_activity = $this->xpath("//tr[@about='$url']//td[@property='sioc:last_activity_date' and @datatype='xsd:dateTime' and @content='$isoDate']");
+    $tracker_activity = $this->xpath('//tr[@about=:url]//td[@property="sioc:last_activity_date" and @datatype="xsd:dateTime" and @content=:date]', array(':url' => $url, ':date' => $isoDate));
     $this->assertTrue(!empty($tracker_activity), t('Latest activity date found when there are comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
   }
 }
