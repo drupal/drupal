@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.22 2010/03/20 14:55:06 dries Exp $
+// $Id: user.api.php,v 1.23 2010/03/31 13:56:59 dries Exp $
 
 /**
  * @file
@@ -177,13 +177,19 @@ function hook_user_operations() {
 }
 
 /**
- * Retrieve a list of all user setting/information categories.
+ * Retrieve a list of user setting or profile information categories.
  *
  * @return
- *   A linear array of associative arrays. These arrays have keys:
+ *   An array of associative arrays. Each inner array has elements:
  *   - "name": The internal name of the category.
  *   - "title": The human-readable, localized name of the category.
  *   - "weight": An integer specifying the category's sort ordering.
+ *   - "access callback": Name of the access callback function to use to
+ *     determine whether the user can edit the category. Defaults to using
+ *     user_edit_access(). See hook_menu() for more information on access
+ *     callbacks.
+ *   - "access arguments": Arguments for the access callback function. Defaults
+ *     to array(1).
  */
 function hook_user_categories() {
   return array(array(
