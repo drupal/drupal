@@ -1,5 +1,5 @@
 <?php
-// $Id: log.inc,v 1.7 2010/01/18 17:10:03 dries Exp $
+// $Id: log.inc,v 1.8 2010/03/31 15:09:21 dries Exp $
 
 /**
  * @file
@@ -154,7 +154,6 @@ class DatabaseLog {
           'type' => isset($stack[$i + 1]['type']) ? $stack[$i + 1]['type'] : NULL,
           'args' => $stack[$i + 1]['args'],
         );
-        return $stack[$i];
       }
     }
   }
