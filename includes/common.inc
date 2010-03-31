@@ -2876,8 +2876,6 @@ function drupal_group_css($css) {
  */
 function drupal_aggregate_css(&$css_groups) {
   $preprocess_css = (variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
-  $directory = file_directory_path('public');
-  $is_writable = is_dir($directory) && is_writable($directory);
 
   // For each group that needs aggregation, aggregate its items.
   foreach ($css_groups as $key => $group) {
@@ -2885,7 +2883,7 @@ function drupal_aggregate_css(&$css_groups) {
       // If a file group can be aggregated into a single file, do so, and set
       // the group's data property to the file path of the aggregate file.
       case 'file':
-        if ($group['preprocess'] && $preprocess_css && $is_writable) {
+        if ($group['preprocess'] && $preprocess_css) {
           // Prefix filename to prevent blocking by firewalls which reject files
           // starting with "ad*".
           $filename = 'css_' . md5(serialize($group['items'])) . '.css';
@@ -3105,15 +3103,16 @@ function drupal_pre_render_styles($elements) {
  * @param $filename
  *   The name of the aggregate CSS file.
  * @return
- *   The name of the CSS file.
+ *   The name of the CSS file, or FALSE if the file could not be saved.
  */
 function drupal_build_css_cache($css, $filename) {
   $data = '';
 
   // Create the css/ within the files folder.
   $csspath = 'public://css';
-  file_prepare_directory($csspath, FILE_CREATE_DIRECTORY);
-  if (!file_exists($csspath . '/' . $filename)) {
+  $uri = $csspath . '/' . $filename;
+
+  if (!file_exists($uri)) {
     // Build aggregate CSS file.
     foreach ($css as $stylesheet) {
       // Only 'file' stylesheets can be aggregated.
@@ -3135,9 +3134,12 @@ function drupal_build_css_cache($css, $filename) {
     $data = implode('', $matches[0]) . $data;
 
     // Create the CSS file.
-    file_unmanaged_save_data($data, $csspath . '/' . $filename, FILE_EXISTS_REPLACE);
+    file_prepare_directory($csspath, FILE_CREATE_DIRECTORY);
+    if (!file_unmanaged_save_data($data, $uri, FILE_EXISTS_REPLACE)) {
+      return FALSE;
+    }
   }
-  return $csspath . '/' . $filename;
+  return $uri;
 }
 
 /**
@@ -3606,8 +3608,6 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   $processed = array();
   $files = array();
   $preprocess_js = (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
-  $directory = file_directory_path('public');
-  $is_writable = is_dir($directory) && is_writable($directory);
 
   // A dummy query-string is added to filenames, to gain control over
   // browser-caching. The string changes on every update or full cache
@@ -3663,7 +3663,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
       case 'file':
         $js_element = $element;
-        if (!$item['preprocess'] || !$is_writable || !$preprocess_js) {
+        if (!$item['preprocess'] || !$preprocess_js) {
           if ($item['defer']) {
             $js_element['#attributes']['defer'] = 'defer';
           }
@@ -3693,15 +3693,20 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   }
 
   // Aggregate any remaining JS files that haven't already been output.
-  if ($is_writable && $preprocess_js && count($files) > 0) {
+  if ($preprocess_js && count($files) > 0) {
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
     foreach ($files as $key => $file_set) {
       $filename = 'js_' . md5(serialize($file_set)) . '.js';
-      $preprocess_file = file_create_url(drupal_build_js_cache($file_set, $filename)) . '?' . $default_query_string;
-      $js_element = $element;
-      $js_element['#attributes']['src'] = $preprocess_file;
-      $processed[$key] = theme('html_tag', array('element' => $js_element));
+      $uri = drupal_build_js_cache($file_set, $filename);
+      // Only include the file if was written successfully. Errors are logged
+      // using watchdog.
+      if ($uri) {
+        $preprocess_file = file_create_url($uri) . '?' . $default_query_string;
+        $js_element = $element;
+        $js_element['#attributes']['src'] = $preprocess_file;
+        $processed[$key] = theme('html_tag', array('element' => $js_element));
+      }
     }
   }
 
@@ -4101,16 +4106,16 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
  * @param $filename
  *   The name of the aggregate JS file.
  * @return
- *   The name of the JS file.
+ *   The name of the JS file, or FALSE if the file could not be saved.
  */
 function drupal_build_js_cache($files, $filename) {
   $contents = '';
 
   // Create the js/ within the files folder.
   $jspath = 'public://js';
-  file_prepare_directory($jspath, FILE_CREATE_DIRECTORY);
+  $uri = $jspath . '/' . $filename;
 
-  if (!file_exists($jspath . '/' . $filename)) {
+  if (!file_exists($uri)) {
     // Build aggregate JS file.
     foreach ($files as $path => $info) {
       if ($info['preprocess']) {
@@ -4120,10 +4125,12 @@ function drupal_build_js_cache($files, $filename) {
     }
 
     // Create the JS file.
-    file_unmanaged_save_data($contents, $jspath . '/' . $filename, FILE_EXISTS_REPLACE);
+    file_prepare_directory($jspath, FILE_CREATE_DIRECTORY);
+    if (!file_unmanaged_save_data($contents, $uri, FILE_EXISTS_REPLACE)) {
+      return FALSE;
+    }
   }
-
-  return $jspath . '/' . $filename;
+  return $uri;
 }
 
 /**
