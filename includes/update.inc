@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.40 2010/03/20 15:06:51 dries Exp $
+// $Id: update.inc,v 1.41 2010/03/31 19:10:39 dries Exp $
 
 /**
  * @file
@@ -36,7 +36,10 @@ function update_check_incompatibility($name, $type = 'module') {
 
   // Store values of expensive functions for future use.
   if (empty($themes) || empty($modules)) {
-    $themes = _system_rebuild_theme_data();
+    // We need to do a full rebuild here to make sure the database reflects any
+    // code changes that were made in the filesystem before the update script
+    // was initiated.
+    $themes = system_rebuild_theme_data();
     $modules = system_rebuild_module_data();
   }
 

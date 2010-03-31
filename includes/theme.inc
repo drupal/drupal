@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.586 2010/03/26 17:14:45 dries Exp $
+// $Id: theme.inc,v 1.587 2010/03/31 19:10:39 dries Exp $
 
 /**
  * @file
@@ -2468,7 +2468,7 @@ function template_preprocess_maintenance_page(&$variables) {
 
   global $theme;
   // Retrieve the theme data to list all available regions.
-  $theme_data = _system_rebuild_theme_data();
+  $theme_data = list_themes();
   $regions = $theme_data[$theme]->info['regions'];
 
   // Get all region content set with drupal_add_region_content().

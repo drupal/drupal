@@ -1,5 +1,5 @@
 <?php
-// $Id: system.updater.inc,v 1.5 2010/01/30 07:59:25 dries Exp $
+// $Id: system.updater.inc,v 1.6 2010/03/31 19:10:39 dries Exp $
 
 /**
  * @file
@@ -135,8 +135,7 @@ class ThemeUpdater extends Updater implements DrupalUpdaterInterface {
   public function postInstall() {
     // Update the system table.
     clearstatcache();
-    drupal_static_reset('_system_rebuild_theme_data');
-    _system_rebuild_theme_data();
+    system_rebuild_theme_data();
 
     // Active the theme
     db_update('system')
