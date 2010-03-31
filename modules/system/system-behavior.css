@@ -43,14 +43,18 @@ html.js fieldset.collapsed {
   border-bottom-width: 0;
   border-left-width: 0;
   border-right-width: 0;
-  margin-bottom: 0;
   height: 1em;
 }
 html.js fieldset.collapsed .fieldset-wrapper {
   display: none;
 }
-html.js fieldset.collapsible .fieldset-legend {
+fieldset.collapsible {
+  position: relative;
+}
+fieldset.collapsible .fieldset-legend {
   display: block;
+}
+html.js fieldset.collapsible .fieldset-legend {
   padding-left: 15px; /* LTR */
   background: url(../../misc/menu-expanded.png) 5px 75% no-repeat; /* LTR */
 }
@@ -58,22 +62,10 @@ html.js fieldset.collapsed .fieldset-legend {
   background-image: url(../../misc/menu-collapsed.png); /* LTR */
   background-position: 5px 50%; /* LTR */
 }
-html.js fieldset.collapsible legend span.summary {
+.fieldset-legend span.summary {
   font-size: 0.9em;
   color: #999;
   margin-left: 0.5em;
-}
-/* IE6: Fix due to '* html' (breaks Konqueror otherwise). */
-* html.js fieldset.collapsed table * {
-  display: inline;
-}
-/* Safari 2: Tables in collapsible fieldsets disappear due to tableheader.js. */
-html.js fieldset.collapsible {
-  position: relative;
-}
-/* Avoid jumping around due to margins collapsing into collapsible fieldset border */
-html.js fieldset.collapsible .fieldset-wrapper {
-  overflow: auto;
 }
 
 /**

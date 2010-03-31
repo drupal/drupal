@@ -36,7 +36,6 @@ fieldset {
 
 /* Prevent fieldsets from shifting when changing collapsed state. */
 html.js fieldset.collapsible {
-  position: relative;
   top: -1em;
 }
 

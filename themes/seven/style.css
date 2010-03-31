@@ -558,16 +558,12 @@ fieldset.collapsed {
 html.js fieldset.collapsed {
   border-width: 1px;
   height: auto;
-  margin-bottom: 10px;
 }
 fieldset fieldset {
   background-color: #fff;
 }
 fieldset fieldset fieldset {
   background-color: #f8f8f8;
-}
-html.js fieldset.collapsible .fieldset-wrapper {
-  overflow: visible;
 }
 
 /**

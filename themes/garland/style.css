@@ -910,7 +910,7 @@ html.js fieldset.collapsed .fieldset-legend {
   background: url(images/menu-collapsed.gif) no-repeat 0% 50%; /* LTR */
 }
 
-html.js fieldset.collapsible legend span.summary {
+.fieldset-legend span.summary {
   color: #898989;
 }
 
