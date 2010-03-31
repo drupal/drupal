@@ -1,5 +1,5 @@
 <?php
-// $Id: options.test,v 1.11 2010/03/27 05:52:49 webchick Exp $
+// $Id: options.test,v 1.12 2010/03/31 20:05:06 dries Exp $
 
 class OptionsWidgetsTestCase extends FieldTestCase {
   public static function getInfo() {
@@ -247,7 +247,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $instance['required'] = TRUE;
     field_update_instance($instance);
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
-    $this->assertFalse($this->xpath('//select[@id="edit-card-1-' . $langcode . '"]//option[@value=""]'), t('A required select list does not have an empty key.'));
+    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', array(':id' => 'edit-card-1-' . $langcode)), t('A required select list does not have an empty key.'));
 
     // We do not have to test that a required select list with one option is
     // auto-selected because the browser does it for us.
@@ -363,7 +363,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $instance['required'] = TRUE;
     field_update_instance($instance);
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
-    $this->assertFalse($this->xpath('//select[@id="edit-card-2-' . $langcode . '"]//option[@value=""]'), t('A required select list does not have an empty key.'));
+    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', array(':id' => 'edit-card-2-' . $langcode)), t('A required select list does not have an empty key.'));
 
     // We do not have to test that a required select list with one option is
     // auto-selected because the browser does it for us.

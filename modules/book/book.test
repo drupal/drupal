@@ -1,5 +1,5 @@
 <?php
-// $Id: book.test,v 1.22 2010/01/09 21:54:00 webchick Exp $
+// $Id: book.test,v 1.23 2010/03/31 20:05:06 dries Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
@@ -129,7 +129,7 @@ class BookTestCase extends DrupalWebTestCase {
     }
 
     // Fetch links in the current breadcrumb.
-    $links = $this->xpath("//div[@class='breadcrumb']/a");
+    $links = $this->xpath('//div[@class="breadcrumb"]/a');
     $got_breadcrumb = array();
     foreach ($links as $link) {
       $got_breadcrumb[] = (string) $link['href'];

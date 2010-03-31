@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.39 2010/03/03 19:46:26 dries Exp $
+// $Id: simpletest.test,v 1.40 2010/03/31 20:05:06 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -281,13 +281,13 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
 }
 
 /**
- * Test internal testing framework URL handling.
+ * Test internal testing framework browser.
  */
-class SimpleTestURLTestCase extends DrupalWebTestCase {
+class SimpleTestBrowserTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'SimpleTest URL handling',
-      'description' => 'Test the URL handling in the testing framework.',
+      'name' => 'SimpleTest browser',
+      'description' => 'Test the internal browser of the testing framework.',
       'group' => 'SimpleTest',
     );
   }
@@ -314,6 +314,28 @@ class SimpleTestURLTestCase extends DrupalWebTestCase {
     $absolute = url($url, array('absolute' => TRUE));
     $this->assertEqual($absolute, $this->url, t('Passed and requested URL are equal.'));
     $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), t('Requested and returned absolute URL are equal.'));
+  }
+
+  /**
+   * Tests XPath escaping.
+   */
+  function testXPathEscaping() {
+    $testpage = <<< EOF
+<html>
+<body>
+<a href="link1">A "weird" link, just to bother the dumb "XPath 1.0"</a>
+<a href="link2">A second "even more weird" link, in memory of George O'Malley</a>
+</body>
+</html>
+EOF;
+    $this->drupalSetContent($testpage);
+
+    // Matches the first link.
+    $urls = $this->xpath('//a[text()=:text]', array(':text' => 'A "weird" link, just to bother the dumb "XPath 1.0"'));
+    $this->assertEqual($urls[0]['href'], 'link1', 'Match with quotes.');
+
+    $urls = $this->xpath('//a[text()=:text]', array(':text' => 'A second "even more weird" link, in memory of George O\'Malley'));
+    $this->assertEqual($urls[0]['href'], 'link2', 'Match with mixed single and double quotes.');
   }
 }
 

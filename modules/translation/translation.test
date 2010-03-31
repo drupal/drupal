@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.test,v 1.24 2010/03/12 14:38:37 dries Exp $
+// $Id: translation.test,v 1.25 2010/03/31 20:05:06 dries Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
@@ -110,7 +110,7 @@ class TranslationTestCase extends DrupalWebTestCase {
         $this->assertRaw(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => $languages[$language_code]->name, '@locale-help' => url('admin/help/locale'))), t('Language has been created.'));
       }
     }
-    elseif ($this->xpath('//input[@type=\'checkbox\' and @name=\'enabled[' . $language_code . ']\' and @checked=\'checked\']')) {
+    elseif ($this->xpath('//input[@type="checkbox" and @name=:name and @checked="checked"]', array(':name' => 'enabled[' . $language_code . ']'))) {
       // It's installed and enabled. No need to do anything.
       $this->assertTrue(true, 'Language [' . $language_code . '] already installed and enabled.');
     }
