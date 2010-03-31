@@ -1,4 +1,4 @@
-/* $Id: fix-ie-rtl.css,v 1.4 2008/03/13 20:02:18 dries Exp $ */
+/* $Id: fix-ie-rtl.css,v 1.5 2010/03/31 20:24:13 dries Exp $ */
 
 body {
   /* Center layout */
@@ -36,7 +36,6 @@ fieldset {
 
 /* Prevent fieldsets from shifting when changing collapsed state. */
 html.js fieldset.collapsible {
-  position: relative;
   top: -1em;
 }
 
