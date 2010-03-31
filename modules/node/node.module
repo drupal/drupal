@@ -1072,14 +1072,13 @@ function node_save($node) {
     module_invoke_all('node_' . $op, $node);
     entity_invoke($op, 'node', $node);
 
-    // Update the node access table for this node.
-    node_access_acquire_grants($node);
+    // Update the node access table for this node. There's no need to delete
+    // existing records if the node is new.
+    $delete = $op == 'insert';
+    node_access_acquire_grants($node, $delete);
 
     // Clear internal properties.
     unset($node->is_new);
-
-    // Clear the page and block caches.
-    cache_clear_all();
 
     // Ignore slave server temporarily to give time for the
     // saved node to be propagated to the slave.
@@ -3062,8 +3061,12 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
  *
  * @param $node
  *   The $node to acquire grants for.
+ *
+ * @param $delete
+ *   Whether to delete existing node access records before inserting new ones.
+ *   Defaults to TRUE.
  */
-function node_access_acquire_grants($node) {
+function node_access_acquire_grants($node, $delete = TRUE) {
   $grants = module_invoke_all('node_access_records', $node);
   // Let modules alter the grants.
   drupal_alter('node_access_records', $grants, $node);
@@ -3081,7 +3084,7 @@ function node_access_acquire_grants($node) {
     $grants = array_shift($grant_by_priority);
   }
 
-  node_access_write_grants($node, $grants);
+  node_access_write_grants($node, $grants, NULL, $delete);
 }
 
 /**
