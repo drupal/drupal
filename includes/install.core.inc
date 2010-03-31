@@ -1472,10 +1472,7 @@ function install_finished(&$install_state) {
   $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => url(''))) : st('<a href="@url">Visit your new site</a>.', array('@url' => url('')))) . '</p>';
 
   // Rebuild the module and theme data, in case any newly-installed modules
-  // need to modify it via hook_system_info_alter(). We need to clear the
-  // theme static cache first, to make sure that the theme data is actually
-  // rebuilt.
-  drupal_static_reset('_system_rebuild_theme_data');
+  // need to modify it via hook_system_info_alter().
   system_rebuild_module_data();
   system_rebuild_theme_data();
 

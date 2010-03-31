@@ -2304,118 +2304,112 @@ function _system_update_bootstrap_status() {
  *   An associative array of themes information.
  */
 function _system_rebuild_theme_data() {
-  $themes_info = &drupal_static(__FUNCTION__, array());
+  // Find themes
+  $themes = drupal_system_listing('/\.info$/', 'themes');
+  // Find theme engines
+  $engines = drupal_system_listing('/\.engine$/', 'themes/engines');
 
-  if (empty($themes_info)) {
-    // Find themes
-    $themes = drupal_system_listing('/\.info$/', 'themes');
-    // Find theme engines
-    $engines = drupal_system_listing('/\.engine$/', 'themes/engines');
+  // Set defaults for theme info.
+  $defaults = array(
+    'regions' => array(
+      'sidebar_first' => 'Left sidebar',
+      'sidebar_second' => 'Right sidebar',
+      'content' => 'Content',
+      'header' => 'Header',
+      'footer' => 'Footer',
+      'highlight' => 'Highlighted content',
+      'help' => 'Help',
+      'page_top' => 'Page top',
+      'page_bottom' => 'Page bottom',
+    ),
+    'description' => '',
+    'features' => _system_default_theme_features(),
+    'screenshot' => 'screenshot.png',
+    'php' => DRUPAL_MINIMUM_PHP,
+  );
 
-    // Set defaults for theme info.
-    $defaults = array(
-      'regions' => array(
-        'sidebar_first' => 'Left sidebar',
-        'sidebar_second' => 'Right sidebar',
-        'content' => 'Content',
-        'header' => 'Header',
-        'footer' => 'Footer',
-        'highlight' => 'Highlighted content',
-        'help' => 'Help',
-        'page_top' => 'Page top',
-        'page_bottom' => 'Page bottom',
-      ),
-      'description' => '',
-      'features' => _system_default_theme_features(),
-      'screenshot' => 'screenshot.png',
-      'php' => DRUPAL_MINIMUM_PHP,
-    );
+  $sub_themes = array();
+  // Read info files for each theme
+  foreach ($themes as $key => $theme) {
+    $themes[$key]->filename = $theme->uri;
+    $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
 
-    $sub_themes = array();
-    // Read info files for each theme
-    foreach ($themes as $key => $theme) {
-      $themes[$key]->filename = $theme->uri;
-      $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
+    // Invoke hook_system_info_alter() to give installed modules a chance to
+    // modify the data in the .info files if necessary.
+    $type = 'theme';
+    drupal_alter('system_info', $themes[$key]->info, $themes[$key], $type);
 
-      // Invoke hook_system_info_alter() to give installed modules a chance to
-      // modify the data in the .info files if necessary.
-      $type = 'theme';
-      drupal_alter('system_info', $themes[$key]->info, $themes[$key], $type);
-
-      if (!empty($themes[$key]->info['base theme'])) {
-        $sub_themes[] = $key;
+    if (!empty($themes[$key]->info['base theme'])) {
+      $sub_themes[] = $key;
+    }
+    if (empty($themes[$key]->info['engine'])) {
+      $filename = dirname($themes[$key]->uri) . '/' . $themes[$key]->name . '.theme';
+      if (file_exists($filename)) {
+        $themes[$key]->owner = $filename;
+        $themes[$key]->prefix = $key;
       }
-      if (empty($themes[$key]->info['engine'])) {
-        $filename = dirname($themes[$key]->uri) . '/' . $themes[$key]->name . '.theme';
-        if (file_exists($filename)) {
-          $themes[$key]->owner = $filename;
-          $themes[$key]->prefix = $key;
-        }
-      }
-      else {
-        $engine = $themes[$key]->info['engine'];
-        if (isset($engines[$engine])) {
-          $themes[$key]->owner = $engines[$engine]->uri;
-          $themes[$key]->prefix = $engines[$engine]->name;
-          $themes[$key]->template = TRUE;
-        }
-      }
-
-      // Give the stylesheets proper path information.
-      $pathed_stylesheets = array();
-      if (isset($themes[$key]->info['stylesheets'])) {
-        foreach ($themes[$key]->info['stylesheets'] as $media => $stylesheets) {
-          foreach ($stylesheets as $stylesheet) {
-            $pathed_stylesheets[$media][$stylesheet] = dirname($themes[$key]->uri) . '/' . $stylesheet;
-          }
-        }
-      }
-      $themes[$key]->info['stylesheets'] = $pathed_stylesheets;
-
-      // Give the scripts proper path information.
-      $scripts = array();
-      if (isset($themes[$key]->info['scripts'])) {
-        foreach ($themes[$key]->info['scripts'] as $script) {
-          $scripts[$script] = dirname($themes[$key]->uri) . '/' . $script;
-        }
-      }
-      $themes[$key]->info['scripts'] = $scripts;
-      // Give the screenshot proper path information.
-      if (!empty($themes[$key]->info['screenshot'])) {
-        $themes[$key]->info['screenshot'] = dirname($themes[$key]->uri) . '/' . $themes[$key]->info['screenshot'];
+    }
+    else {
+      $engine = $themes[$key]->info['engine'];
+      if (isset($engines[$engine])) {
+        $themes[$key]->owner = $engines[$engine]->uri;
+        $themes[$key]->prefix = $engines[$engine]->name;
+        $themes[$key]->template = TRUE;
       }
     }
 
-    // Now that we've established all our master themes, go back and fill in
-    // data for subthemes.
-    foreach ($sub_themes as $key) {
-      $themes[$key]->base_themes = system_find_base_themes($themes, $key);
-      // Don't proceed if there was a problem with the root base theme.
-      if (!current($themes[$key]->base_themes)) {
-        continue;
-      }
-      $base_key = key($themes[$key]->base_themes);
-      foreach (array_keys($themes[$key]->base_themes) as $base_theme) {
-        $themes[$base_theme]->sub_themes[$key] = $themes[$key]->info['name'];
-      }
-      // Copy the 'owner' and 'engine' over if the top level theme uses a
-      // theme engine.
-      if (isset($themes[$base_key]->owner)) {
-        if (isset($themes[$base_key]->info['engine'])) {
-          $themes[$key]->info['engine'] = $themes[$base_key]->info['engine'];
-          $themes[$key]->owner = $themes[$base_key]->owner;
-          $themes[$key]->prefix = $themes[$base_key]->prefix;
-        }
-        else {
-          $themes[$key]->prefix = $key;
+    // Give the stylesheets proper path information.
+    $pathed_stylesheets = array();
+    if (isset($themes[$key]->info['stylesheets'])) {
+      foreach ($themes[$key]->info['stylesheets'] as $media => $stylesheets) {
+        foreach ($stylesheets as $stylesheet) {
+          $pathed_stylesheets[$media][$stylesheet] = dirname($themes[$key]->uri) . '/' . $stylesheet;
         }
       }
     }
+    $themes[$key]->info['stylesheets'] = $pathed_stylesheets;
 
-    $themes_info = $themes;
+    // Give the scripts proper path information.
+    $scripts = array();
+    if (isset($themes[$key]->info['scripts'])) {
+      foreach ($themes[$key]->info['scripts'] as $script) {
+        $scripts[$script] = dirname($themes[$key]->uri) . '/' . $script;
+      }
+    }
+    $themes[$key]->info['scripts'] = $scripts;
+    // Give the screenshot proper path information.
+    if (!empty($themes[$key]->info['screenshot'])) {
+      $themes[$key]->info['screenshot'] = dirname($themes[$key]->uri) . '/' . $themes[$key]->info['screenshot'];
+    }
   }
 
-  return $themes_info;
+  // Now that we've established all our master themes, go back and fill in data
+  // for subthemes.
+  foreach ($sub_themes as $key) {
+    $themes[$key]->base_themes = system_find_base_themes($themes, $key);
+    // Don't proceed if there was a problem with the root base theme.
+    if (!current($themes[$key]->base_themes)) {
+      continue;
+    }
+    $base_key = key($themes[$key]->base_themes);
+    foreach (array_keys($themes[$key]->base_themes) as $base_theme) {
+      $themes[$base_theme]->sub_themes[$key] = $themes[$key]->info['name'];
+    }
+    // Copy the 'owner' and 'engine' over if the top level theme uses a theme
+    // engine.
+    if (isset($themes[$base_key]->owner)) {
+      if (isset($themes[$base_key]->info['engine'])) {
+        $themes[$key]->info['engine'] = $themes[$base_key]->info['engine'];
+        $themes[$key]->owner = $themes[$base_key]->owner;
+        $themes[$key]->prefix = $themes[$base_key]->prefix;
+      }
+      else {
+        $themes[$key]->prefix = $key;
+      }
+    }
+  }
+
+  return $themes;
 }
 
 /**

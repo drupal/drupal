@@ -135,8 +135,7 @@ class ThemeUpdater extends Updater implements DrupalUpdaterInterface {
   public function postInstall() {
     // Update the system table.
     clearstatcache();
-    drupal_static_reset('_system_rebuild_theme_data');
-    _system_rebuild_theme_data();
+    system_rebuild_theme_data();
 
     // Active the theme
     db_update('system')

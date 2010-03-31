@@ -6071,16 +6071,7 @@ function drupal_flush_all_caches() {
   registry_rebuild();
   drupal_clear_css_cache();
   drupal_clear_js_cache();
-
-  // If invoked from update.php, we must not update the theme information in the
-  // database, or this will result in all themes being disabled.
-  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
-    _system_rebuild_theme_data();
-  }
-  else {
-    system_rebuild_theme_data();
-  }
-
+  system_rebuild_theme_data();
   drupal_theme_rebuild();
   menu_rebuild();
   node_types_rebuild();
