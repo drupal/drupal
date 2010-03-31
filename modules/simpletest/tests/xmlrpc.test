@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.test,v 1.15 2009/12/02 00:31:47 dries Exp $
+// $Id: xmlrpc.test,v 1.16 2010/03/31 15:56:53 dries Exp $
 
 /**
  * Perform basic XML-RPC tests that do not require addition callbacks.
@@ -40,6 +40,34 @@ class XMLRPCBasicTestCase extends DrupalWebTestCase {
     }
 
     $this->assertEqual($count, count($minimum), 'system.listMethods returned at least the minimum listing');
+  }
+
+  /**
+   * Ensure that XML-RPC correctly handles invalid messages when parsing.
+   */
+  protected function testInvalidMessageParsing() {
+    $invalid_messages = array(
+      array(
+        'message' => xmlrpc_message(''),
+        'assertion' => t('Empty message correctly rejected during parsing.'),
+      ),
+      array(
+        'message' => xmlrpc_message('<?xml version="1.0" encoding="ISO-8859-1"?>'),
+        'assertion' => t('Empty message with XML declaration correctly rejected during parsing.'),
+      ),
+      array(
+        'message' => xmlrpc_message('<?xml version="1.0"?><params><param><value><string>value</string></value></param></params>'),
+        'assertion' => t('Non-empty message without a valid message type is rejected during parsing.'),
+      ),
+      array(
+        'message' => xmlrpc_message('<methodResponse><params><param><value><string>value</string></value></param></methodResponse>'),
+        'assertion' => t('Non-empty malformed message is rejected during parsing.'),
+      ),
+    );
+
+    foreach ($invalid_messages as $assertion) {
+      $this->assertFalse(xmlrpc_message_parse($assertion['message']), $assertion['assertion']);
+    }
   }
 }
 
