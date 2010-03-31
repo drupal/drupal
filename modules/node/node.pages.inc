@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.119 2010/03/24 07:46:06 dries Exp $
+// $Id: node.pages.inc,v 1.120 2010/03/31 13:55:25 dries Exp $
 
 /**
  * @file
@@ -401,6 +401,8 @@ function node_form_submit($form, &$form_state) {
     // rebuilt and node form redisplayed the same way as in preview.
     drupal_set_message(t('The post could not be saved.'), 'error');
   }
+  // Clear the page and block caches.
+  cache_clear_all();
 }
 
 /**
