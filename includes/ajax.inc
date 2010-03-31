@@ -270,7 +270,7 @@ function ajax_form_callback() {
 
   // This call recreates the form relying solely on the $form_state that
   // drupal_process_form() set up.
-  $form = drupal_rebuild_form($form_id, $form_state, $form_build_id);
+  $form = drupal_rebuild_form($form_id, $form_state, $form);
 
   // As part of drupal_process_form(), the element that triggered the form
   // submission is determined, and in the case of AJAX, it might not be a

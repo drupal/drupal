@@ -306,14 +306,16 @@ function form_state_defaults() {
  *   may be found in node_forms(), search_forms(), and user_forms().
  * @param $form_state
  *   A keyed array containing the current state of the form.
- * @param $form_build_id
- *   If the AHAH callback calling this function only alters part of the form,
- *   then pass in the existing form_build_id so we can re-cache with the same
- *   csid.
+ * @param $old_form
+ *   (optional) A previously built $form. Used to retain the #build_id and
+ *   #action properties in AJAX callbacks and similar partial form rebuilds.
+ *   Should not be passed for regular rebuilds, for which the entire $form
+ *   should be rebuilt freshly.
+ *
  * @return
  *   The newly built form.
  */
-function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
+function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
   // AJAX and other contexts may call drupal_rebuild_form() even when
   // $form_state['rebuild'] isn't set, but _form_builder_handle_input_element()
   // needs to distinguish a rebuild from an initial build in order to process
@@ -323,17 +325,27 @@ function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
 
   $form = drupal_retrieve_form($form_id, $form_state);
 
-  if (!isset($form_build_id)) {
-    // We need a new build_id for the new version of the form.
-    $form_build_id = 'form-' . md5(mt_rand());
+  // If only parts of the form will be returned to the browser (e.g. AJAX or
+  // RIA clients), re-use the old #build_id to not require client-side code to
+  // manually update the hidden 'build_id' input element.
+  // Otherwise, a new #build_id is generated, to not clobber the previous
+  // build's data in the form cache; also allowing the user to go back to an
+  // earlier build, make changes, and re-submit.
+  $form['#build_id'] = isset($old_form['#build_id']) ? $old_form['#build_id'] : 'form-' . md5(mt_rand());
+
+  // #action defaults to request_uri(), but in case of AJAX and other partial
+  // rebuilds, the form is submitted to an alternate URL, and the original
+  // #action needs to be retained.
+  if (isset($old_form['#action'])) {
+    $form['#action'] = $old_form['#action'];
   }
-  $form['#build_id'] = $form_build_id;
+
   drupal_prepare_form($form_id, $form, $form_state);
 
   if (empty($form_state['no_cache'])) {
     // We cache the form structure and the form state so it can be retrieved
     // later for validation.
-    form_set_cache($form_build_id, $form, $form_state);
+    form_set_cache($form['#build_id'], $form, $form_state);
   }
 
   // Clear out all group associations as these might be different when

@@ -239,7 +239,7 @@ function file_ajax_upload() {
 
   // This call recreates the form relying solely on the form_state that the
   // drupal_process_form() set up.
-  $form = drupal_rebuild_form($form_id, $form_state, $form_build_id);
+  $form = drupal_rebuild_form($form_id, $form_state, $form);
 
   // Retrieve the element to be rendered.
   foreach ($form_parents as $parent) {
