@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.915 2010/03/31 19:10:39 dries Exp $
+// $Id: system.module,v 1.916 2010/04/01 14:47:16 dries Exp $
 
 /**
  * @file
@@ -1807,6 +1807,7 @@ function system_init() {
   drupal_add_css(drupal_get_path('module', 'system') . '/system.css', array('weight' => CSS_SYSTEM));
   drupal_add_css(drupal_get_path('module', 'system') . '/system-behavior.css', array('weight' => CSS_SYSTEM));
   drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css', array('weight' => CSS_SYSTEM));
+  drupal_add_css(drupal_get_path('module', 'system') . '/system-messages.css', array('weight' => CSS_SYSTEM));
 
 
   // Ignore slave database servers for this request.

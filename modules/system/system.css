@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.73 2010/01/18 17:29:28 dries Exp $ */
+/* $Id: system.css,v 1.74 2010/04/01 14:47:16 dries Exp $ */
 
 /*
 ** HTML elements
@@ -63,39 +63,6 @@ thead th {
 */
 .breadcrumb {
   padding-bottom: .5em
-}
-.error {
-  color: #e55;
-}
-div.error {
-  border: 1px solid #d77;
-}
-div.error, tr.error {
-  background: #fcc;
-  color: #200;
-  padding: 2px;
-}
-.warning {
-  color: #e09010;
-}
-div.warning {
-  border: 1px solid #f0c020;
-}
-div.warning, table tr.warning {
-  background: #ffd;
-  color: #220;
-  padding: 2px;
-}
-.ok {
-  color: #008000;
-}
-div.ok {
-  border: 1px solid #00aa00;
-}
-div.ok, tr.ok {
-  background: #dfd;
-  color: #020;
-  padding: 2px;
 }
 .item-list .icon {
   color: #555;
