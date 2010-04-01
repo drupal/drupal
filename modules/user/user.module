@@ -2512,6 +2512,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
     $result = db_query('SELECT rid, name FROM {role} ORDER BY weight, name');
   }
 
+  $roles = array();
   foreach ($result as $role) {
     switch ($role->rid) {
       // We only translate the built in role names
