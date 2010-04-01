@@ -1,5 +1,5 @@
 <?php
-// $Id: help.test,v 1.18 2010/01/12 06:09:04 webchick Exp $
+// $Id: help.test,v 1.19 2010/04/01 14:52:21 dries Exp $
 
 class HelpTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -60,7 +60,7 @@ class HelpTestCase extends DrupalWebTestCase {
    *
    * @param integer $response HTTP response code.
    */
-  private function verifyHelp($response = 200) {
+  protected function verifyHelp($response = 200) {
     foreach ($this->modules as $module => $name) {
       // View module help node.
       $this->drupalGet('admin/help/' . $module);
@@ -77,7 +77,7 @@ class HelpTestCase extends DrupalWebTestCase {
    *
    * @return array Enabled modules.
    */
-  private function getModuleList() {
+  protected function getModuleList() {
     $this->modules = array();
     $result = db_query("SELECT name, filename, info FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
     foreach ($result as $module) {
