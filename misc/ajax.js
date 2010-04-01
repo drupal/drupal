@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.13 2010/03/26 18:58:12 dries Exp $
+// $Id: ajax.js,v 1.14 2010/04/01 12:23:41 dries Exp $
 (function ($) {
 
 /**
@@ -423,12 +423,11 @@ Drupal.ajax.prototype.commands = {
   restripe: function (ajax, response, status) {
     // :even and :odd are reversed because jQuery counts from 0 and
     // we count from 1, so we're out of sync.
-    $('tbody tr:not(:hidden)', $(response.selector))
-      .removeClass('even').removeClass('odd')
-      .filter(':even')
-        .addClass('odd').end()
-      .filter(':odd')
-        .addClass('even');
+    // Match immediate children of the parent element to allow nesting.
+    $('> tbody > tr:visible, > tr:visible', $(response.selector))
+      .removeClass('odd even')
+      .filter(':even').addClass('odd').end()
+      .filter(':odd').addClass('even');
   }
 };
 
