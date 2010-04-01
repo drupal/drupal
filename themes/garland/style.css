@@ -254,7 +254,7 @@ span.submitted, .description, .vertical-tab-button .summary {
   padding: .5em 1em;
 }
 
-.messages {
+div.messages {
   margin: .75em 0 .75em;
   padding: .1em .5em .15em;
 }
@@ -1096,7 +1096,7 @@ tr.taxonomy-term-divider-bottom {
 /**
  * Generic elements.
  */
-.messages {
+div.messages {
   background-color: #fff;
   border: 1px solid #b8d3e5;
 }
@@ -1107,13 +1107,24 @@ tr.taxonomy-term-divider-bottom {
 }
 
 div.status {
-  color: #33a333;
+  background-color: #fff;
   border-color: #c7f2c8;
+  color: #33a333;
+}
+
+div.error {
+  border: 1px solid #d77;
 }
 
 div.error, tr.error {
   color: #a30000;
   background-color: #FFCCCC;
+}
+
+div.warning {
+  background-color: #ffd;
+  border: 1px solid #f0c020;
+  color: #220;
 }
 
 .form-item input.error, .form-item textarea.error {
