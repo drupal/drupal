@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1150 2010/03/30 07:17:19 webchick Exp $
+// $Id: user.module,v 1.1151 2010/04/01 12:22:39 dries Exp $
 
 /**
  * @file
@@ -2512,6 +2512,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
     $result = db_query('SELECT rid, name FROM {role} ORDER BY weight, name');
   }
 
+  $roles = array();
   foreach ($result as $role) {
     switch ($role->rid) {
       // We only translate the built in role names
