@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1253 2010/03/31 13:55:25 dries Exp $
+// $Id: node.module,v 1.1254 2010/04/02 13:54:40 dries Exp $
 
 /**
  * @file
@@ -1074,7 +1074,7 @@ function node_save($node) {
 
     // Update the node access table for this node. There's no need to delete
     // existing records if the node is new.
-    $delete = $op == 'insert';
+    $delete = $op == 'update';
     node_access_acquire_grants($node, $delete);
 
     // Clear internal properties.
