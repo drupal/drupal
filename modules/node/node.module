@@ -1074,7 +1074,7 @@ function node_save($node) {
 
     // Update the node access table for this node. There's no need to delete
     // existing records if the node is new.
-    $delete = $op == 'insert';
+    $delete = $op == 'update';
     node_access_acquire_grants($node, $delete);
 
     // Clear internal properties.
