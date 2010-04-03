@@ -1,0 +1,36 @@
+/* $Id */
+
+div.messages {
+  background-color: #dfd;
+  color: #000;
+  margin-bottom: 0.25em;
+  padding: 0.25em 0.5em;
+}
+
+.error {
+  color: #e55;
+}
+
+div.error,
+tr.error {
+  background-color: #fcc;
+}
+
+.warning {
+  color: #e09010;
+}
+
+div.warning,
+tr.warning {
+  background-color: #fcfca7;
+}
+
+.ok {
+  color: #008000;
+}
+
+div.ok,
+tr.ok {
+  background-color: #dfd;
+  color: #020;
+}
