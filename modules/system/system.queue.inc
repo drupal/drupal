@@ -62,7 +62,10 @@ class DrupalQueue {
   public static function get($name) {
     static $queues;
     if (!isset($queues[$name])) {
-      $class = variable_get('queue_module_' . $name, 'System') . 'Queue';
+      $class = variable_get('queue_class_' . $name, NULL);
+      if (!$class) {
+        $class = variable_get('queue_default_class', 'SystemQueue');
+      }
       $queues[$name] = new $class($name);
     }
     return $queues[$name];
