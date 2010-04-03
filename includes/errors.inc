@@ -87,7 +87,8 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
  *
  * @param $exception
  *   The exception object that was thrown.
- * @return An error in the format expected by _drupal_log_error().
+ * @return
+ *   An error in the format expected by _drupal_log_error().
  */
 function _drupal_decode_exception($exception) {
   $message = $exception->getMessage();
@@ -123,6 +124,18 @@ function _drupal_decode_exception($exception) {
     '%line' => $caller['line'],
     'severity_level' => WATCHDOG_ERROR,
   );
+}
+
+/**
+ * Render an error message for an exception without any possibility of a further exception occuring.
+ *
+ * @param $exception
+ *   The exception object that was thrown.
+ * @return
+ *   An error message.
+ */
+function _drupal_render_exception_safe($exception) {
+  return strtr('%type: %message in %function (line %line of %file).', _drupal_decode_exception($exception));
 }
 
 /**
@@ -163,13 +176,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     $number++;
   }
 
-  try {
-    watchdog('php', '%type: %message in %function (line %line of %file).', $error, $error['severity_level']);
-  }
-  catch (Exception $e) {
-    // Ignore any additional watchdog exception, as that probably means
-    // that the database was not initialized correctly.
-  }
+  watchdog('php', '%type: %message in %function (line %line of %file).', $error, $error['severity_level']);
 
   if ($fatal) {
     drupal_add_http_header('Status', '500 Service unavailable (with message)');

@@ -1847,8 +1847,21 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
  */
 function _drupal_exception_handler($exception) {
   require_once DRUPAL_ROOT . '/includes/errors.inc';
-  // Log the message to the watchdog and return an error page to the user.
-  _drupal_log_error(_drupal_decode_exception($exception), TRUE);
+
+  try {
+    // Log the message to the watchdog and return an error page to the user.
+    _drupal_log_error(_drupal_decode_exception($exception), TRUE);
+  }
+  catch (Exception $exception2) {
+    // Another uncaught exception was thrown while handling the first one.
+    // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
+    $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
+    if ($error_level == ERROR_REPORTING_DISPLAY_ALL || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
+      print 'Additional uncaught exception thrown while handling exception.<br /><br />';
+      print '<b>Original</b><br />' . _drupal_render_exception_safe($exception) . '<br /><br />';
+      print '<b>Additional</b><br />' . _drupal_render_exception_safe($exception2) . '<br /><br />';
+    }
+  }
 }
 
 /**
@@ -2690,12 +2703,13 @@ function _drupal_shutdown_function() {
       call_user_func_array($callback['callback'], $callback['arguments']);
     }
   }
-  catch(Exception $exception) {
-    require_once DRUPAL_ROOT . '/includes/errors.inc';
-    // The theme has already been printed so it doesn't make much sense to use
-    // drupal_exception_handler() because that would display the maintenaince
-    // page below the usual page. For now, just print the error for debugging.
-    // @todo: Improve this.
-    print t('%type: %message in %function (line %line of %file).', _drupal_decode_exception($exception));
+  catch (Exception $exception) {
+    // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
+    $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
+    if ($error_level == ERROR_REPORTING_DISPLAY_ALL || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
+      require_once DRUPAL_ROOT . '/includes/errors.inc';
+      print 'Uncaught exception thrown in shutdown function.<br /><br />';
+      print _drupal_render_exception_safe($exception) . '<br /><br />';
+    }
   }
 }
