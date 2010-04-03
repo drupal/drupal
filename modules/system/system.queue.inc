@@ -1,5 +1,5 @@
 <?php
-// $Id: system.queue.inc,v 1.10 2010/01/09 02:51:09 webchick Exp $
+// $Id: system.queue.inc,v 1.11 2010/04/03 04:12:01 webchick Exp $
 
 /**
  * @file
@@ -62,7 +62,10 @@ class DrupalQueue {
   public static function get($name) {
     static $queues;
     if (!isset($queues[$name])) {
-      $class = variable_get('queue_module_' . $name, 'System') . 'Queue';
+      $class = variable_get('queue_class_' . $name, NULL);
+      if (!$class) {
+        $class = variable_get('queue_default_class', 'SystemQueue');
+      }
       $queues[$name] = new $class($name);
     }
     return $queues[$name];
