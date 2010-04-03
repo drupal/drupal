@@ -1,5 +1,5 @@
 <?php
-// $Id: color.test,v 1.2 2009/12/01 22:30:30 dries Exp $
+// $Id: color.test,v 1.3 2010/04/03 08:05:08 webchick Exp $
 
 /**
  * @file
@@ -45,6 +45,18 @@ class ColorTestCase extends DrupalWebTestCase {
     $stylesheet_content = join("\n", file($stylesheets[0]));
     $matched = preg_match('/(.*color: #123456.*)/i', $stylesheet_content, $matches);
     $this->assertTrue($matched == 1, 'Make sure the color we changed is in the color stylesheet.');
+
+    $this->drupalGet('admin/appearance/settings/garland');
+    $this->assertResponse(200);
+    $edit['scheme'] = 'greenbeam';
+    $this->drupalPost('admin/appearance/settings/garland', $edit, t('Save configuration'));
+
+    $this->drupalGet('<front>');
+    $stylesheets = variable_get('color_' . $theme_key . '_stylesheets', array());
+    $stylesheet_content = join("\n", file($stylesheets[0]));
+    $matched = preg_match('/(.*color: #0c7a00.*)/i', $stylesheet_content, $matches);
+    $this->assertTrue($matched == 1, 'Make sure the color we changed is in the color stylesheet.');
+
   }
 
 }
