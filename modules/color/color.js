@@ -3,6 +3,7 @@
 
 Drupal.behaviors.color = {
   attach: function (context, settings) {
+    var i, colors, field_name;
     // This behavior attaches by ID, so is only valid once on a page.
     var form = $('#system-theme-settings .color-form', context).once('color');
     if (form.length == 0) {
@@ -24,11 +25,23 @@ Drupal.behaviors.color = {
     }
 
     // Build a preview.
-    $('#preview').once('color').append('<div id="gradient"></div>');
-    var gradient = $('#preview #gradient');
-    var h = parseInt(gradient.css('height'), 10) / 10;
-    for (i = 0; i < h; ++i) {
-      gradient.append('<div class="gradient-line"></div>');
+    var height = [];
+    var width = [];
+    // Loop through all defined gradients.
+    for (i in settings.gradients) {
+      // Add element to display the gradient.
+      $('#preview').once('color').append('<div id="gradient-' + i + '"></div>');
+      var gradient = $('#preview #gradient-' + i);
+      // Add height of current gradient to the list (divided by 10).
+      height.push(parseInt(gradient.css('height'), 10) / 10);
+      // Add width of current gradient to the list (divided by 10).
+      width.push(parseInt(gradient.css('width'), 10) / 10);
+      // Add rows (or columns for horizontal gradients).
+      // Each gradient line should have a height (or width for horizontal
+      // gradients) of 10px (because we divided the height/width by 10 above).
+      for (j = 0; j < (settings.gradients[i]['direction'] == 'vertical' ? height[i] : width[i]); ++j) {
+        gradient.append('<div class="gradient-line"></div>');
+      }
     }
 
     // Fix preview background in IE6.
@@ -39,13 +52,14 @@ Drupal.behaviors.color = {
       e.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=crop, src='" + image.substring(5, image.length - 2) + "')";
     }
 
-    // Set up colorscheme selector.
+    // Set up colorScheme selector.
     $('#edit-scheme', form).change(function () {
-      var colors = this.options[this.selectedIndex].value;
-      if (colors != '') {
-        colors = colors.split(',');
-        for (i in colors) {
-          callback(inputs[i], colors[i], false, true);
+      var schemes = settings.color.schemes, colorScheme = this.options[this.selectedIndex].value;
+      if (colorScheme != '' && schemes[colorScheme]) {
+        // Get colors of active scheme.
+        colors = schemes[colorScheme];
+        for (field_name in colors) {
+          callback($('#edit-palette-' + field_name), colors[field_name], false, true);
         }
         preview();
       }
@@ -56,29 +70,31 @@ Drupal.behaviors.color = {
      */
     function preview() {
       // Solid background.
-      $('#preview', form).css('backgroundColor', inputs[0].value);
+      $('#preview', form).css('backgroundColor', $('#palette input[name="palette[base]"]', form).val());
 
       // Text preview
-      $('#text', form).css('color', inputs[4].value);
-      $('#text a, #text h2', form).css('color', inputs[1].value);
+      $('#text', form).css('color', $('#palette input[name="palette[text]"]', form).val());
+      $('#text a, #text h2', form).css('color', $('#palette input[name="palette[link]"]', form).val());
 
-      // Set up gradient.
-      var top = farb.unpack(inputs[2].value);
-      var bottom = farb.unpack(inputs[3].value);
-      if (top && bottom) {
-        var delta = [];
-        for (i in top) {
-          delta[i] = (bottom[i] - top[i]) / h;
-        }
-        var accum = top;
-
-        // Render gradient lines.
-        $('#gradient > div', form).each(function () {
-          for (i in accum) {
-            accum[i] += delta[i];
+      // Set up gradients if there are some.
+      var color_start, color_end;
+      for (i in settings.gradients) {
+        color_start = farb.unpack($('#palette input[name="palette[' + settings.gradients[i]['colors'][0] + ']"]', form).val());
+        color_end = farb.unpack($('#palette input[name="palette[' + settings.gradients[i]['colors'][1] + ']"]', form).val());
+        if (color_start && color_end) {
+          var delta = [];
+          for (j in color_start) {
+            delta[j] = (color_end[j] - color_start[j]) / (settings.gradients[i]['vertical'] ? height[i] : width[i]);
           }
-          this.style.backgroundColor = farb.pack(accum);
-        });
+          var accum = color_start;
+          // Render gradient lines.
+          $('#gradient-' + i + ' > div', form).each(function () {
+            for (j in accum) {
+              accum[j] += delta[j];
+            }
+            this.style.backgroundColor = farb.pack(accum);
+          });
+        }
       }
     }
 
@@ -132,7 +148,8 @@ Drupal.behaviors.color = {
     /**
      * Callback for Farbtastic when a new color is chosen.
      */
-    function callback(input, color, propagate, colorscheme) {
+    function callback(input, color, propagate, colorScheme) {
+      var i, j, matched;
       // Set background/foreground colors.
       $(input).css({
         backgroundColor: color,
@@ -140,20 +157,20 @@ Drupal.behaviors.color = {
       });
 
       // Change input value.
-      if (input.value && input.value != color) {
-        input.value = color;
+      if ($(input).val() && $(input).val() != color) {
+        $(input).val(color);
 
         // Update locked values.
         if (propagate) {
-          var i = input.i;
+          i = input.i;
           for (j = i + 1; ; ++j) {
             if (!locks[j - 1] || $(locks[j - 1]).is('.unlocked')) break;
-            var matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
+            matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
             callback(inputs[j], matched, false);
           }
           for (j = i - 1; ; --j) {
             if (!locks[j] || $(locks[j]).is('.unlocked')) break;
-            var matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
+            matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
             callback(inputs[j], matched, false);
           }
 
@@ -161,8 +178,8 @@ Drupal.behaviors.color = {
           preview();
         }
 
-        // Reset colorscheme selector.
-        if (!colorscheme) {
+        // Reset colorScheme selector.
+        if (!colorScheme) {
           resetScheme();
         }
       }

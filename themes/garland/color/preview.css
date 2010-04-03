@@ -6,10 +6,10 @@
   max-width: 100%;
 }
 #preview, #preview #img {
-  width: 596px;
+  width: 600px;
   height: 371px;
 }
-#preview #gradient {
+#preview #gradient-0 {
   position: absolute;
   left: 0;
   right: 0;
@@ -29,7 +29,7 @@
   position: relative;
   z-index: 3;
 }
-#preview #gradient .gradient-line {
+#preview #gradient-0 .gradient-line {
   height: 10px;
   overflow: hidden;
 }

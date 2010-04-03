@@ -45,6 +45,18 @@ class ColorTestCase extends DrupalWebTestCase {
     $stylesheet_content = join("\n", file($stylesheets[0]));
     $matched = preg_match('/(.*color: #123456.*)/i', $stylesheet_content, $matches);
     $this->assertTrue($matched == 1, 'Make sure the color we changed is in the color stylesheet.');
+
+    $this->drupalGet('admin/appearance/settings/garland');
+    $this->assertResponse(200);
+    $edit['scheme'] = 'greenbeam';
+    $this->drupalPost('admin/appearance/settings/garland', $edit, t('Save configuration'));
+
+    $this->drupalGet('<front>');
+    $stylesheets = variable_get('color_' . $theme_key . '_stylesheets', array());
+    $stylesheet_content = join("\n", file($stylesheets[0]));
+    $matched = preg_match('/(.*color: #0c7a00.*)/i', $stylesheet_content, $matches);
+    $this->assertTrue($matched == 1, 'Make sure the color we changed is in the color stylesheet.');
+
   }
 
 }

@@ -128,12 +128,8 @@ function color_get_info($theme) {
  */
 function color_get_palette($theme, $default = FALSE) {
   // Fetch and expand default palette.
-  $fields = array('base', 'link', 'top', 'bottom', 'text');
   $info = color_get_info($theme);
-  $keys = array_keys($info['schemes']);
-  foreach (explode(',', array_shift($keys)) as $k => $scheme) {
-    $palette[$fields[$k]] = $scheme;
-  }
+  $palette = $info['schemes']['default']['colors'];
 
   // Load variable.
   return $default ? $palette : variable_get('color_' . $theme . '_palette', $palette);
@@ -146,18 +142,39 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
   $base = drupal_get_path('module', 'color');
   $info = color_get_info($theme);
 
+  $info['schemes'][''] = array('title' => t('Custom'), 'colors' => array());
+  $color_sets = array();
+  $schemes = array();
+  foreach ($info['schemes'] as $key => $scheme) {
+    $color_sets[$key] = $scheme['title'];
+    $schemes[$key] = $scheme['colors'];
+    $schemes[$key] += $info['schemes']['default']['colors'];
+  }
+
   // See if we're using a predefined scheme.
-  $current = implode(',', variable_get('color_' . $theme . '_palette', array()));
   // Note: we use the original theme when the default scheme is chosen.
-  $current = isset($info['schemes'][$current]) ? $current : ($current == '' ? reset($info['schemes']) : '');
+  $current_scheme = variable_get('color_' . $theme . '_palette', array());
+  foreach ($schemes as $key => $scheme) {
+    if ($current_scheme == $scheme) {
+      $scheme_name = $key;
+      break;
+    }
+  }
+  if (empty($scheme_name)) {
+    if (empty($current_scheme)) {
+      $scheme_name = 'default';
+    }
+    else {
+      $scheme_name = '';
+    }
+  }
 
   // Add scheme selector.
-  $info['schemes'][''] = t('Custom');
   $form['scheme'] = array(
     '#type' => 'select',
     '#title' => t('Color set'),
-    '#options' => $info['schemes'],
-    '#default_value' => $current,
+    '#options' => $color_sets,
+    '#default_value' => $scheme_name,
     '#attached' => array(
       // Add Farbtastic color picker.
       'library' => array(
@@ -172,7 +189,11 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
         $base . '/color.js',
         array(
           'data' => array(
-            'color' => array('reference' => color_get_palette($theme, TRUE)),
+            'color' => array(
+              'reference' => color_get_palette($theme, TRUE),
+              'schemes' => $schemes,
+            ),
+            'gradients' => $info['gradients'],
           ),
           'type' => 'setting',
         ),
@@ -182,21 +203,17 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
 
   // Add palette fields.
   $palette = color_get_palette($theme);
-  $names = array(
-    'base' => t('Base color'),
-    'link' => t('Link color'),
-    'top' => t('Header top'),
-    'bottom' => t('Header bottom'),
-    'text' => t('Text color'),
-  );
+  $names = $info['fields'];
   $form['palette']['#tree'] = TRUE;
   foreach ($palette as $name => $value) {
-    $form['palette'][$name] = array(
-      '#type' => 'textfield',
-      '#title' => $names[$name],
-      '#default_value' => $value,
-      '#size' => 8,
-    );
+    if (isset($names[$name])) {
+      $form['palette'][$name] = array(
+        '#type' => 'textfield',
+        '#title' => $names[$name],
+        '#default_value' => $value,
+        '#size' => 8,
+      );
+    }
   }
   $form['theme'] = array('#type' => 'value', '#value' => $theme);
   $form['info'] = array('#type' => 'value', '#value' => $info);
@@ -251,10 +268,12 @@ function color_scheme_form_submit($form, &$form_state) {
   // Resolve palette.
   $palette = $form_state['values']['palette'];
   if ($form_state['values']['scheme'] != '') {
-    $scheme = explode(',', $form_state['values']['scheme']);
-    foreach ($palette as $k => $color) {
-      $palette[$k] = array_shift($scheme);
+    foreach ($palette as $key => $color) {
+      if (isset($info['schemes'][$form_state['values']['scheme']]['colors'][$key])) {
+        $palette[$key] = $info['schemes'][$form_state['values']['scheme']]['colors'][$key];
+      }
     }
+    $palette += $info['schemes']['default']['colors'];
   }
 
   // Make sure enough memory is available, if PHP's memory limit is compiled in.
@@ -450,7 +469,6 @@ function _color_save_stylesheet($file, $style, &$paths) {
  * Render images that match a given palette.
  */
 function _color_render_images($theme, &$info, &$paths, $palette) {
-
   // Prepare template image.
   $source = $paths['source'] . '/' . $info['base_image'];
   $source = imagecreatefrompng($source);
@@ -466,10 +484,23 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     imagefilledrectangle($target, $fill[0], $fill[1], $fill[0] + $fill[2], $fill[1] + $fill[3], _color_gd($target, $palette[$color]));
   }
 
-  // Render gradient.
-  for ($y = 0; $y < $info['gradient'][3]; ++$y) {
-    $color = _color_blend($target, $palette['top'], $palette['bottom'], $y / ($info['gradient'][3] - 1));
-    imagefilledrectangle($target, $info['gradient'][0], $info['gradient'][1] + $y, $info['gradient'][0] + $info['gradient'][2], $info['gradient'][1] + $y + 1, $color);
+  // Render gradients.
+  foreach ($info['gradients'] as $gradient) {
+    // Get direction of the gradient.
+    if (isset($gradient['direction']) && $gradient['direction'] == 'horizontal') {
+      // Horizontal gradient.
+      for ($x = 0; $x < $gradient['dimension'][2]; $x++) {
+        $color = _color_blend($target, $palette[$gradient['colors'][0]], $palette[$gradient['colors'][1]], $x / ($gradient['dimension'][2] - 1));
+        imagefilledrectangle($target, ($gradient['dimension'][0] + $x), $gradient['dimension'][1], ($gradient['dimension'][0] + $x + 1), ($gradient['dimension'][1] + $gradient['dimension'][3]), $color);
+      }
+    }
+    else {
+      // Vertical gradient.
+      for ($y = 0; $y < $gradient['dimension'][3]; $y++) {
+        $color = _color_blend($target, $palette[$gradient['colors'][0]], $palette[$gradient['colors'][1]], $y / ($gradient['dimension'][3] - 1));
+        imagefilledrectangle($target, $gradient['dimension'][0], $gradient['dimension'][1] + $y, $gradient['dimension'][0] + $gradient['dimension'][2], $gradient['dimension'][1] + $y + 1, $color);
+      }
+    }
   }
 
   // Blend over template.
