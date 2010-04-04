@@ -212,56 +212,11 @@ abstract class DatabaseConnection extends PDO {
   protected $rollbackLogs = array();
 
   /**
-   * The name of the Select class for this connection.
-   *
-   * Normally this and the following class names would be static variables,
-   * but statics in methods are still global and shared by all instances.
-   *
-   * @var string
+   * Index of what driver-specific class to use for various operations.
+   * 
+   * @var array
    */
-  protected $selectClass = NULL;
-
-  /**
-   * The name of the Delete class for this connection.
-   *
-   * @var string
-   */
-  protected $deleteClass = NULL;
-
-  /**
-   * The name of the Truncate class for this connection.
-   *
-   * @var string
-   */
-  protected $truncateClass = NULL;
-
-  /**
-   * The name of the Insert class for this connection.
-   *
-   * @var string
-   */
-  protected $insertClass = NULL;
-
-  /**
-   * The name of the Merge class for this connection.
-   *
-   * @var string
-   */
-  protected $mergeClass = NULL;
-
-  /**
-   * The name of the Update class for this connection.
-   *
-   * @var string
-   */
-  protected $updateClass = NULL;
-
-  /**
-   * The name of the Transaction class for this connection.
-   *
-   * @var string
-   */
-  protected $transactionClass = NULL;
+  protected $driverClasses = array();
 
   /**
    * The name of the Statement class for this connection.
@@ -653,6 +608,24 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
+   * Gets the driver-specific override class if any for the specified class.
+   *
+   * @param string $class
+   *   The class for which we want the potentially driver-specific class.
+   * @return string
+   *   The name of the class that should be used for this driver.
+   */
+  protected function getDriverClass($class) {
+    if (empty($this->driverClasses[$class])) {
+      $this->driverClasses[$class] = $class . '_' . $this->driver();
+      if (!class_exists($this->driverClasses[$class])) {
+        $this->driverClasses[$class] = $class;
+      }
+    }
+    return $this->driverClasses[$class];
+  }
+
+  /**
    * Prepares and returns a SELECT query object with the specified ID.
    *
    * @param $table
@@ -672,17 +645,7 @@ abstract class DatabaseConnection extends PDO {
    * @see SelectQuery
    */
   public function select($table, $alias = NULL, array $options = array()) {
-    if (empty($this->selectClass)) {
-      $this->selectClass = 'SelectQuery_' . $this->driver();
-      if (!class_exists($this->selectClass)) {
-        $this->selectClass = 'SelectQuery';
-      }
-    }
-    $class = $this->selectClass;
-    // new is documented as the highest precedence operator so this will
-    // create a class named $class and pass the arguments into the constructor,
-    // instead of calling a function named $class with the arguments listed and
-    // then creating using the return value as the class name.
+    $class = $this->getDriverClass('SelectQuery');
     return new $class($table, $alias, $this, $options);
   }
 
@@ -698,13 +661,7 @@ abstract class DatabaseConnection extends PDO {
    * @see InsertQuery
    */
   public function insert($table, array $options = array()) {
-    if (empty($this->insertClass)) {
-      $this->insertClass = 'InsertQuery_' . $this->driver();
-      if (!class_exists($this->insertClass)) {
-        $this->insertClass = 'InsertQuery';
-      }
-    }
-    $class = $this->insertClass;
+    $class = $this->getDriverClass('InsertQuery');
     return new $class($this, $table, $options);
   }
 
@@ -720,13 +677,7 @@ abstract class DatabaseConnection extends PDO {
    * @see MergeQuery
    */
   public function merge($table, array $options = array()) {
-    if (empty($this->mergeClass)) {
-      $this->mergeClass = 'MergeQuery_' . $this->driver();
-      if (!class_exists($this->mergeClass)) {
-        $this->mergeClass = 'MergeQuery';
-      }
-    }
-    $class = $this->mergeClass;
+    $class = $this->getDriverClass('MergeQuery');
     return new $class($this, $table, $options);
   }
 
@@ -743,13 +694,7 @@ abstract class DatabaseConnection extends PDO {
    * @see UpdateQuery
    */
   public function update($table, array $options = array()) {
-    if (empty($this->updateClass)) {
-      $this->updateClass = 'UpdateQuery_' . $this->driver();
-      if (!class_exists($this->updateClass)) {
-        $this->updateClass = 'UpdateQuery';
-      }
-    }
-    $class = $this->updateClass;
+    $class = $this->getDriverClass('UpdateQuery');
     return new $class($this, $table, $options);
   }
 
@@ -765,13 +710,7 @@ abstract class DatabaseConnection extends PDO {
    * @see DeleteQuery
    */
   public function delete($table, array $options = array()) {
-    if (empty($this->deleteClass)) {
-      $this->deleteClass = 'DeleteQuery_' . $this->driver();
-      if (!class_exists($this->deleteClass)) {
-        $this->deleteClass = 'DeleteQuery';
-      }
-    }
-    $class = $this->deleteClass;
+    $class = $this->getDriverClass('DeleteQuery');
     return new $class($this, $table, $options);
   }
 
@@ -787,13 +726,7 @@ abstract class DatabaseConnection extends PDO {
    * @see TruncateQuery
    */
   public function truncate($table, array $options = array()) {
-    if (empty($this->truncateClass)) {
-      $this->truncateClass = 'TruncateQuery_' . $this->driver();
-      if (!class_exists($this->truncateClass)) {
-        $this->truncateClass = 'TruncateQuery';
-      }
-    }
-    $class = $this->truncateClass;
+    $class = $this->getDriverClass('TruncateQuery');
     return new $class($this, $table, $options);
   }
 
@@ -807,8 +740,8 @@ abstract class DatabaseConnection extends PDO {
    */
   public function schema() {
     if (empty($this->schema)) {
-      $class_type = 'DatabaseSchema_' . $this->driver();
-      $this->schema = new $class_type($this);
+      $class = $this->getDriverClass('DatabaseSchema');
+      $this->schema = new $class($this);
     }
     return $this->schema;
   }
@@ -882,13 +815,8 @@ abstract class DatabaseConnection extends PDO {
    * @see DatabaseTransaction
    */
   public function startTransaction($name = '') {
-    if (empty($this->transactionClass)) {
-      $this->transactionClass = 'DatabaseTransaction_' . $this->driver();
-      if (!class_exists($this->transactionClass)) {
-        $this->transactionClass = 'DatabaseTransaction';
-      }
-    }
-    return new $this->transactionClass($this, $name);
+    $class = $this->getDriverClass('DatabaseTransaction');
+    return new $class($this, $name);
   }
 
   /**
