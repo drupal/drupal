@@ -159,6 +159,9 @@ function taxonomy_schema() {
     'indexes' => array(
       'list' => array('weight', 'name'),
     ),
+    'unique keys' => array(
+      'machine_name' => array('machine_name'),
+    ),
   );
 
   $schema['taxonomy_index'] = array(
@@ -256,6 +259,7 @@ function taxonomy_update_7002() {
   );
 
   db_add_field('taxonomy_vocabulary', 'machine_name', $field);
+  db_add_unique_key('taxonomy_vocabulary', 'machine_name', array('machine_name'));
 
   foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
     $machine_name = 'vocabulary_' . $vid;
