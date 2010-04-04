@@ -1,5 +1,5 @@
 <?php
-/* $Id: color.install,v 1.6 2010/01/09 23:03:21 webchick Exp $ */
+/* $Id: color.install,v 1.7 2010/04/04 13:18:18 dries Exp $ */
 
 /**
  * @file
@@ -13,27 +13,27 @@ function color_requirements($phase) {
     // Check for the PHP GD library.
     if (function_exists('imagegd2')) {
       $info = gd_info();
-      $requirements['gd'] = array(
+      $requirements['color_gd'] = array(
         'value' => $info['GD Version'],
       );
 
       // Check for PNG support.
       if (function_exists('imagecreatefrompng')) {
-        $requirements['gd']['severity'] = REQUIREMENT_OK;
+        $requirements['color_gd']['severity'] = REQUIREMENT_OK;
       }
       else {
-        $requirements['gd']['severity'] = REQUIREMENT_ERROR;
-        $requirements['gd']['description'] = t('The GD library for PHP is enabled, but was compiled without PNG support. Check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/ref.image.php'));
+        $requirements['color_gd']['severity'] = REQUIREMENT_ERROR;
+        $requirements['color_gd']['description'] = t('The GD library for PHP is enabled, but was compiled without PNG support. Check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/ref.image.php'));
       }
     }
     else {
-      $requirements['gd'] = array(
+      $requirements['color_gd'] = array(
         'value' => t('Not installed'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('The GD library for PHP is missing or outdated. Check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/ref.image.php')),
+        'description' => t('The GD library for PHP is missing or outdated. Check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/book.image.php')),
       );
     }
-    $requirements['gd']['title'] = t('GD library');
+    $requirements['color_gd']['title'] = t('GD library PNG support');
   }
 
   return $requirements;
