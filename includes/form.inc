@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.447 2010/03/31 19:34:56 dries Exp $
+// $Id: form.inc,v 1.448 2010/04/04 13:22:51 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -193,7 +193,7 @@ function drupal_build_form($form_id, &$form_state) {
       // Record the filepath of the include file containing the original form,
       // so the form builder callbacks can be loaded when the form is being
       // rebuilt from cache on a different path (such as 'system/ajax'). See
-      // form_get_cache(). 
+      // form_get_cache().
       // $menu_get_item() is not available at installation time.
       if (!isset($form_state['build_info']['file']) && !defined('MAINTENANCE_MODE')) {
         $item = menu_get_item();
@@ -655,7 +655,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
         // - The form is multistep.
         // In other cases, we only need the information expected by
         // drupal_redirect_form().
-        if ($batch['has_form_submits'] || !empty($form_state['rebuild']) || !empty($form_state['storage'])) {
+        if ($batch['has_form_submits'] || !empty($form_state['rebuild'])) {
           $batch['form_state'] = $form_state;
         }
         else {
