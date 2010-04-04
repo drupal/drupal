@@ -162,7 +162,6 @@ function _registry_parse_files($files) {
  *   (optional) Weight of the module.
  */
 function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
-  static $map = array(T_CLASS => 'class', T_INTERFACE => 'interface');
   // Delete registry entries for this file, so we can insert the new resources.
   db_delete('registry')
     ->condition('filename', $filename)
