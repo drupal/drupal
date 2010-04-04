@@ -181,57 +181,39 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
   );
   $options += $default_options;
 
-  // Iterate through the entity's field instances.
-  $return = array();
+  // Determine the list of instances to iterate on.
   list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+  $instances = _field_invoke_get_instances($entity_type, $bundle, $options);
 
-  if ($options['deleted']) {
-    $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
-  }
-  else {
-    $instances = field_info_instances($entity_type, $bundle);
-  }
-
+  // Iterate through the instances and collect results.
+  $return = array();
   foreach ($instances as $instance) {
     $field_name = $instance['field_name'];
-
-    // When in 'single field' mode, only act on the specified field.
-    if ((!isset($options['field_id']) || $options['field_id'] == $instance['field_id']) && (!isset($options['field_name']) || $options['field_name'] == $field_name)) {
-      $field = field_info_field($field_name);
-      $field_translations = array();
-
-      // Unless a language suggestion is provided we iterate on all the
-      // available languages.
+    $field = field_info_field($field_name);
+    $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
+    if (function_exists($function)) {
+      // Determine the list of languages to iterate on.
       $available_languages = field_available_languages($entity_type, $field);
       $languages = _field_language_suggestion($available_languages, $options['language'], $field_name);
 
-      // Initialize field translations according to the available languages.
       foreach ($languages as $langcode) {
-        $field_translations[$langcode] = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
-      }
-
-      // Invoke the field hook and collect results.
-      $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
-      if (function_exists($function)) {
-        // Iterate over all the field translations.
-        foreach ($field_translations as $langcode => $items) {
-          $result = $function($entity_type, $entity, $field, $instance, $langcode, $items, $a, $b);
-          if (isset($result)) {
-            // For hooks with array results, we merge results together.
-            // For hooks with scalar results, we collect results in an array.
-            if (is_array($result)) {
-              $return = array_merge($return, $result);
-            }
-            else {
-              $return[] = $result;
-            }
+        $items = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
+        $result = $function($entity_type, $entity, $field, $instance, $langcode, $items, $a, $b);
+        if (isset($result)) {
+          // For hooks with array results, we merge results together.
+          // For hooks with scalar results, we collect results in an array.
+          if (is_array($result)) {
+            $return = array_merge($return, $result);
           }
-
-          // Populate $items back in the field values, but avoid replacing missing
-          // fields with an empty array (those are not equivalent on update).
-          if ($items !== array() || isset($entity->{$field_name}[$langcode])) {
-            $entity->{$field_name}[$langcode] = $items;
+          else {
+            $return[] = $result;
           }
+        }
+
+        // Populate $items back in the field values, but avoid replacing missing
+        // fields with an empty array (those are not equivalent on update).
+        if ($items !== array() || isset($entity->{$field_name}[$langcode])) {
+          $entity->{$field_name}[$langcode] = $items;
         }
       }
     }
@@ -309,23 +291,19 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
   // is deleted, so we reference field data via the
   // $entity->$field_name property.
   foreach ($entities as $entity) {
+    // Determine the list of instances to iterate on.
     list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
-    if ($options['deleted']) {
-      $instances = field_read_field(array('bundle' => $bundle, array('include_deleted' => $options['deleted'])));
-    }
-    else {
-      $instances = field_info_instances($entity_type, $bundle);
-    }
+    $instances = _field_invoke_get_instances($entity_type, $bundle, $options);
 
     foreach ($instances as $instance) {
       $field_id = $instance['field_id'];
       $field_name = $instance['field_name'];
-      // When in 'single field' mode, only act on the specified field.
-      if ((empty($options['field_id']) || $options['field_id'] == $field_id) && (empty($options['field_name']) || $options['field_name'] == $field_name)) {
+      $field = field_info_field_by_id($field_id);
+      $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
+      if (function_exists($function)) {
         // Add the field to the list of fields to invoke the hook on.
         if (!isset($fields[$field_id])) {
-          $fields[$field_id] = field_info_field_by_id($field_id);
+          $fields[$field_id] = $field;
         }
         // Group the corresponding instances and entities.
         $grouped_instances[$field_id][$id] = $instance;
@@ -334,7 +312,7 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
         // by hook implementations.
         // Unless a language suggestion is provided we iterate on all the
         // available languages.
-        $available_languages = field_available_languages($entity_type, $fields[$field_id]);
+        $available_languages = field_available_languages($entity_type, $field);
         $languages = _field_language_suggestion($available_languages, $options['language'], $field_name);
         foreach ($languages as $langcode) {
           $grouped_items[$field_id][$langcode][$id] = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
@@ -349,21 +327,19 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
   foreach ($fields as $field_id => $field) {
     $field_name = $field['field_name'];
     $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
-    if (function_exists($function)) {
-      // Iterate over all the field translations.
-      foreach ($grouped_items[$field_id] as $langcode => $items) {
-        $results = $function($entity_type, $grouped_entities[$field_id], $field, $grouped_instances[$field_id], $langcode, $grouped_items[$field_id][$langcode], $a, $b);
-        if (isset($results)) {
-          // Collect results by entity.
-          // For hooks with array results, we merge results together.
-          // For hooks with scalar results, we collect results in an array.
-          foreach ($results as $id => $result) {
-            if (is_array($result)) {
-              $return[$id] = array_merge($return[$id], $result);
-            }
-            else {
-              $return[$id][] = $result;
-            }
+    // Iterate over all the field translations.
+    foreach ($grouped_items[$field_id] as $langcode => $items) {
+      $results = $function($entity_type, $grouped_entities[$field_id], $field, $grouped_instances[$field_id], $langcode, $grouped_items[$field_id][$langcode], $a, $b);
+      if (isset($results)) {
+        // Collect results by entity.
+        // For hooks with array results, we merge results together.
+        // For hooks with scalar results, we collect results in an array.
+        foreach ($results as $id => $result) {
+          if (is_array($result)) {
+            $return[$id] = array_merge($return[$id], $result);
+          }
+          else {
+            $return[$id][] = $result;
           }
         }
       }
@@ -409,6 +385,59 @@ function _field_invoke_default($op, $entity_type, $entity, &$a = NULL, &$b = NUL
 function _field_invoke_multiple_default($op, $entity_type, $entities, &$a = NULL, &$b = NULL, $options = array()) {
   $options['default'] = TRUE;
   return _field_invoke_multiple($op, $entity_type, $entities, $a, $b, $options);
+}
+
+/**
+ * Helper for _field_invoke(): retrieves a list of instances to operate on.
+ *
+ * @param $entity_type
+ *   The entity type.
+ * @param $bundle
+ *   The bundle name.
+ * @param $options
+ *   An associative array of options, as provided to _field_invoke(). Only the
+ *   following keys are considered :
+ *   - deleted
+ *   - field_name
+ *   - field_id
+ *   See _field_invoke() for details.
+ *
+ * @return
+ *   The array of selected instance definitions.
+ */
+function _field_invoke_get_instances($entity_type, $bundle, $options) {
+  if ($options['deleted']) {
+    // Deleted fields are not included in field_info_instances(), and need to
+    // be fetched from the database with field_read_instances().
+    $params = array('entity_type' => $entity_type, 'bundle' => $bundle);
+    if (isset($options['field_id'])) {
+      // Single-field mode by field id: field_read_instances() does the filtering.
+      // Single-field mode by field name is not compatible with the 'deleted'
+      // option.
+      $params['field_id'] = $options['field_id'];
+    }
+    $instances = field_read_instances($params, array('include_deleted' => TRUE));
+  }
+  elseif (isset($options['field_name'])) {
+    // Single-field mode by field name: field_info_instance() does the
+    // filtering.
+    $instances = array(field_info_instance($entity_type, $options['field_name'], $bundle));
+  }
+  else {
+    $instances = field_info_instances($entity_type, $bundle);
+    if (isset($options['field_id'])) {
+      // Single-field mode by field id: we need to loop on each instance to
+      // find the right one.
+      foreach ($instances as $instance) {
+        if ($instance['field_id'] == $options['field_id']) {
+          $instances = array($instance);
+          break;
+        }
+      }
+    }
+  }
+
+  return $instances;
 }
 
 /**
@@ -611,30 +640,25 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
       $function($entity_type, $queried_entities, $age, $skip_fields, $options);
     }
 
+    $instances = array();
+
     // Collect the storage backends used by the remaining fields in the entities.
     $storages = array();
     foreach ($queried_entities as $entity) {
       list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-      if ($options['deleted']) {
-        $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_deleted' => $options['deleted']));
-      }
-      else {
-        $instances = field_info_instances($entity_type, $bundle);
-      }
+      $instances = _field_invoke_get_instances($entity_type, $bundle, $options);
 
       foreach ($instances as $instance) {
-        if (!isset($options['field_id']) || $options['field_id'] == $instance['field_id']) {
-          $field_name = $instance['field_name'];
-          $field_id = $instance['field_id'];
-          // Make sure all fields are present at least as empty arrays.
-          if (!isset($queried_entities[$id]->{$field_name})) {
-            $queried_entities[$id]->{$field_name} = array();
-          }
-          // Collect the storage backend if the field has not been loaded yet.
-          if (!isset($skip_fields[$field_id])) {
-            $field = field_info_field_by_id($field_id);
-            $storages[$field['storage']['type']][$field_id][] = $load_current ? $id : $vid;
-          }
+        $field_name = $instance['field_name'];
+        $field_id = $instance['field_id'];
+        // Make sure all fields are present at least as empty arrays.
+        if (!isset($queried_entities[$id]->{$field_name})) {
+          $queried_entities[$id]->{$field_name} = array();
+        }
+        // Collect the storage backend if the field has not been loaded yet.
+        if (!isset($skip_fields[$field_id])) {
+          $field = field_info_field_by_id($field_id);
+          $storages[$field['storage']['type']][$field_id][] = $load_current ? $id : $vid;
         }
       }
     }
