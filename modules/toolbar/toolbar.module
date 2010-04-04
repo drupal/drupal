@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.35 2010/03/10 14:46:23 dries Exp $
+// $Id: toolbar.module,v 1.36 2010/04/04 17:11:20 dries Exp $
 
 /**
  * @file
@@ -109,7 +109,7 @@ function theme_toolbar_toggle($variables) {
 function _toolbar_is_collapsed() {
   // PHP converts dots into underscores in cookie names to avoid problems with
   // its parser, so we use a converted cookie name.
-  return isset($_COOKIE['Drupal_admin_toolbar_collapsed']) ? $_COOKIE['Drupal_admin_toolbar_collapsed'] : 0;
+  return isset($_COOKIE['Drupal_toolbar_collapsed']) ? $_COOKIE['Drupal_toolbar_collapsed'] : 0;
 }
 
 /**
@@ -142,7 +142,7 @@ function toolbar_pre_render($toolbar) {
  * Add some page classes, so global page theming can adjust to the toolbar.
  */
 function toolbar_preprocess_html(&$vars) {
-  if (isset($vars['page_top']['toolbar']) && user_access('access toolbar')) {
+  if (isset($vars['page']['page_top']['toolbar']) && user_access('access toolbar')) {
     $vars['classes_array'][] = 'toolbar';
     if (!_toolbar_is_collapsed()) {
       $vars['classes_array'][] = 'toolbar-drawer';

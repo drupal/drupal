@@ -1,11 +1,11 @@
-/* $Id: toolbar.css,v 1.19 2010/02/11 08:57:30 dries Exp $ */
+/* $Id: toolbar.css,v 1.20 2010/04/04 17:11:20 dries Exp $ */
 
 body.toolbar {
   padding-top: 2.2em;
 }
 
 body.toolbar-drawer {
-  padding-top: 6.6em;
+  padding-top: 5.3em;
 }
 
 /**
