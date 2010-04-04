@@ -1,4 +1,4 @@
-// $Id: toolbar.js,v 1.15 2010/02/10 10:54:12 dries Exp $
+// $Id: toolbar.js,v 1.16 2010/04/04 20:27:08 dries Exp $
 (function ($) {
 
 Drupal.toolbar = Drupal.toolbar || {};
@@ -49,7 +49,7 @@ Drupal.toolbar.collapse = function() {
     .removeClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').addClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height());
+  $('body').removeClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height());
   $.cookie(
     'Drupal.toolbar.collapsed',
     1,
