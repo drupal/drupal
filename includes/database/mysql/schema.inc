@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.34 2010/03/28 11:45:11 dries Exp $
+// $Id: schema.inc,v 1.35 2010/04/04 07:20:05 dries Exp $
 
 /**
  * @file
@@ -458,6 +458,40 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     $comment = $this->connection->query("SELECT table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
     // Work-around for MySQL 5.0 bug http://bugs.mysql.com/bug.php?id=11379
     return preg_replace('/; InnoDB free:.*$/', '', $comment);
+  }
+
+  public function tableExists($table) {
+    // The information_schema table is very slow to query under MySQL 5.0.
+    // Instead, we try to select from the table in question.  If it fails,
+    // the most likely reason is that it does not exist. That is dramatically
+    // faster than using information_schema.
+    // @link http://bugs.mysql.com/bug.php?id=19588
+    // @todo: This override should be removed once we require a version of MySQL
+    // that has that bug fixed.
+    try {
+      $this->connection->queryRange("SELECT 1 FROM {" . $table . "}", 0, 1);
+      return TRUE;
+    }
+    catch (Exception $e) {
+      return FALSE;
+    }
+  }
+
+  public function fieldExists($table, $column) {
+    // The information_schema table is very slow to query under MySQL 5.0.
+    // Instead, we try to select from the table and field in question. If it
+    // fails, the most likely reason is that it does not exist. That is
+    // dramatically faster than using information_schema.
+    // @link http://bugs.mysql.com/bug.php?id=19588
+    // @todo: This override should be removed once we require a version of MySQL
+    // that has that bug fixed.
+    try {
+      $this->connection->queryRange("SELECT $column FROM {" . $table . "}", 0, 1);
+      return TRUE;
+    }
+    catch (Exception $e) {
+      return FALSE;
+    }
   }
 
 }
