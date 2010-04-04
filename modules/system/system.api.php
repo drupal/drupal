@@ -77,28 +77,27 @@ function hook_hook_info() {
  *   - entity keys: An array describing how the Field API can extract the
  *     information it needs from the objects of the type. Elements:
  *     - id: The name of the property that contains the primary id of the
- *       object. Every object passed to the Field API must have this property
- *       and its value must be numeric.
+ *       entity. Every entity object passed to the Field API must have this
+ *       property and its value must be numeric.
  *     - revision: The name of the property that contains the revision id of
- *       the object. The Field API assumes that all revision ids are unique
- *       across all objects of a type.
- *       This element can be omitted if the objects of this type are not
- *       versionable.
+ *       the entity. The Field API assumes that all revision ids are unique
+ *       across all entities of a type. This entry can be omitted if the
+ *       entities of this type are not versionable.
  *     - bundle: The name of the property that contains the bundle name for the
- *       object. The bundle name defines which set of fields are attached to
- *       the object (e.g. what nodes call "content type").
- *       This element can be omitted if this type has no bundles (all objects
- *       have the same fields).
+ *       entity. The bundle name defines which set of fields are attached to
+ *       the entity (e.g. what nodes call "content type"). This entry can be
+ *       omitted if this entity type exposes a single bundle (all entities have
+ *       the same collection of fields).
  *   - bundle keys: An array describing how the Field API can extract the
  *     information it needs from the bundle objects for this type (e.g
- *     $vocabulary objects for terms; not applicable for nodes).
- *     This element can be omitted if this type's bundles do not exist as
- *     standalone objects. Elements:
+ *     $vocabulary objects for terms; not applicable for nodes). This entry can
+ *     be omitted if this type's bundles do not exist as standalone objects.
+ *     Elements:
  *     - bundle: The name of the property that contains the name of the bundle
  *       object.
- *   - bundles: An array describing all bundles for this object type.
- *     Keys are bundles machine names, as found in the objects' 'bundle'
- *     property (defined in the 'entity keys' entry above). Elements:
+ *   - bundles: An array describing all bundles for this object type. Keys are
+ *     bundles machine names, as found in the objects' 'bundle' property
+ *     (defined in the 'entity keys' entry above). Elements:
  *     - label: The human-readable name of the bundle.
  *     - admin: An array of information that allows Field UI pages to attach
  *       themselves to the existing administration pages for the bundle.

@@ -80,46 +80,53 @@ define('FIELD_STORAGE_INSERT', 'insert');
  * @{
  * Operate on Field API data attached to Drupal entities.
  *
- * Field Attach API functions load, store, generate Form API
- * structures, display, and perform a variety of other functions for
- * field data connected to individual entities.
+ * Field Attach API functions load, store, display, generate Form API
+ * structures, and perform a variety of other functions for field data attached
+ * to individual entities.
  *
- * Field Attach API functions generally take $entity_type and $entity
- * arguments along with additional function-specific arguments.
- * $entity_type is the type of the fieldable entity, such as 'node' or
- * 'user', and $entity is the entity itself. An individual entity's
- * bundle, if any, is read from the entity's bundle key property
- * identified by hook_fieldable_info() for $entity_type.
+ * Field Attach API functions generally take $entity_type and $entity arguments
+ * along with additional function-specific arguments. $entity_type is the type
+ * of the fieldable entity, such as 'node' or 'user', and $entity is the entity
+ * itself.
  *
- * Fieldable types call Field Attach API functions during their own
- * API calls; for example, node_load() calls field_attach_load(). A
- * fieldable type is not required to use all of the Field Attach
- * API functions.
+ * hook_entity_info() is the central place for entity types to define if and
+ * how Field API should operate on their entity objects. Notably, the
+ * 'fieldable' property needs to be set to TRUE.
  *
- * Most Field Attach API functions define a corresponding hook
- * function that allows any module to act on Field Attach operations
- * for any entity after the operation is complete, and access or
- * modify all the field, form, or display data for that entity and
- * operation. For example, field_attach_view() invokes
+ * The Field Attach API uses the concept of bundles: the set of fields for a
+ * given entity is defined on a per-bundle basis. The collection of bundles for
+ * an entity type is defined its hook_entity_info() implementation. For
+ * instance, node_entity_info() exposes each node type as its own bundle. This
+ * means that the set of fields of a node is determined by the node type. The
+ * Field API reads the bundle name for a given entity from a particular
+ * property of the entity object, and hook_entity_info() defines which property
+ * to use. For instance, node_entity_info() specifies:
+ * @code $info['entity keys']['bundle'] = 'type'@endcode
+ * This indicates that for a particular node object, the bundle name can be
+ * found in $node->type. This property can be omitted if the entity type only
+ * exposes a single bundle (all entities of this type have the same collection
+ * of fields). This is the case for the 'user' entity type.
+ *
+ * Most Field Attach API functions define a corresponding hook function that
+ * allows any module to act on Field Attach operations for any entity after the
+ * operation is complete, and access or modify all the field, form, or display
+ * data for that entity and operation. For example, field_attach_view() invokes
  * hook_field_attach_view_alter(). These all-module hooks are distinct from
- * those of the Field Types API, such as hook_field_load(), that are
- * only invoked for the module that defines a specific field type.
+ * those of the Field Types API, such as hook_field_load(), that are only
+ * invoked for the module that defines a specific field type.
  *
- * field_attach_load(), field_attach_insert(), and
- * field_attach_update() also define pre-operation hooks,
- * e.g. hook_field_attach_pre_load(). These hooks run before the
- * corresponding Field Storage API and Field Type API operations.
- * They allow modules to define additional storage locations
- * (e.g. denormalizing, mirroring) for field data on a per-field
- * basis. They also allow modules to take over field storage
- * completely by instructing other implementations of the same hook
- * and the Field Storage API itself not to operate on specified
- * fields.
+ * field_attach_load(), field_attach_insert(), and field_attach_update() also
+ * define pre-operation hooks, e.g. hook_field_attach_pre_load(). These hooks
+ * run before the corresponding Field Storage API and Field Type API
+ * operations. They allow modules to define additional storage locations (e.g.
+ * denormalizing, mirroring) for field data on a per-field basis. They also
+ * allow modules to take over field storage completely by instructing other
+ * implementations of the same hook and the Field Storage API itself not to
+ * operate on specified fields.
  *
- * The pre-operation hooks do not make the Field Storage API
- * irrelevant. The Field Storage API is essentially the "fallback
- * mechanism" for any fields that aren't being intercepted explicitly
- * by pre-operation hooks.
+ * The pre-operation hooks do not make the Field Storage API irrelevant. The
+ * Field Storage API is essentially the "fallback mechanism" for any fields
+ * that aren't being intercepted explicitly by pre-operation hooks.
  */
 
 /**
@@ -516,6 +523,10 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  * ),
  * @endcode
  *
+ * field_attach_load() is automatically called by the default entity controller
+ * class, and thus, in most cases, doesn't need to be explicitly called by the
+ * entity type module.
+ *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
@@ -698,6 +709,10 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
  *
  * Loading different versions of the same entities is not supported, and should
  * be done by separate calls to the function.
+ *
+ * field_attach_load_revision() is automatically called by the default entity
+ * controller class, and thus, in most cases, doesn't need to be explicitly
+ * called by the entity type module.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
