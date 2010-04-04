@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.29 2010/03/26 17:14:45 dries Exp $
+// $Id: registry.inc,v 1.30 2010/04/04 13:44:49 dries Exp $
 
 /**
  * @file
@@ -162,7 +162,6 @@ function _registry_parse_files($files) {
  *   (optional) Weight of the module.
  */
 function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
-  static $map = array(T_CLASS => 'class', T_INTERFACE => 'interface');
   // Delete registry entries for this file, so we can insert the new resources.
   db_delete('registry')
     ->condition('filename', $filename)
