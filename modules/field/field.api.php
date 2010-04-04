@@ -1224,23 +1224,28 @@ function hook_field_storage_details_alter(&$details, $field) {
 /**
  * Load field data for a set of entities.
  *
+ * Modules implementing this hook should load field values and add them to
+ * objects in $entities. Fields with no values should be added as empty
+ * arrays.
+ *
  * @param $entity_type
- *   The entity type of entity, such as 'node' or 'user'.
+ *   The type of entity, such as 'node' or 'user'.
  * @param $entities
- *   The array of entities for which to load data, keyed by entity id.
+ *   The array of entity objects to add fields to, keyed by entity ID.
  * @param $age
- *   FIELD_LOAD_CURRENT to load the most recent revision for all
- *   fields, or FIELD_LOAD_REVISION to load the version indicated by
- *   each entity.
+ *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
+ *   FIELD_LOAD_REVISION to load the version indicated by each entity.
  * @param $fields
  *   An array listing the fields to be loaded. The keys of the array are field
- *   ids, the values of the array are the entity ids (or revision ids,
- *   depending on the $age parameter) to be loaded for each field.
- * @return
- *   Loaded field values are added to $entities. Fields with no values should be
- *   set as an empty array.
+ *   IDs, and the values of the array are the entity IDs (or revision IDs,
+ *   depending on the $age parameter) to add each field to.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *   - 'deleted': If TRUE, deleted fields should be loaded as well as
+ *     non-deleted fields. If unset or FALSE, only non-deleted fields should be
+ *     loaded.
  */
-function hook_field_storage_load($entity_type, $entities, $age, $fields) {
+function hook_field_storage_load($entity_type, $entities, $age, $fields, $options) {
 }
 
 /**
@@ -1346,25 +1351,32 @@ function hook_field_storage_delete_instance($instance) {
  *
  * This lets 3rd party modules override, mirror, shard, or otherwise store a
  * subset of fields in a different way than the current storage engine.
- * Possible use cases include: per-bundle storage, per-combo-field storage...
+ * Possible use cases include per-bundle storage, per-combo-field storage, etc.
+ *
+ * Modules implementing this hook should load field values and add them to
+ * objects in $entities. Fields with no values should be added as empty
+ * arrays. In addition, fields loaded should be added as keys to $skip_fields.
  *
  * @param $entity_type
- *   The type of entity for which to load fields; e.g. 'node' or 'user'.
+ *   The type of entity, such as 'node' or 'user'.
  * @param $entities
- *   An array of entities for which to load fields, keyed by entity id.
+ *   The array of entity objects to add fields to, keyed by entity ID.
  * @param $age
  *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
  *   FIELD_LOAD_REVISION to load the version indicated by each entity.
  * @param $skip_fields
- *   An array keyed by field ids whose data has already been loaded and
- *   therefore should not be loaded again. The values associated to these keys
- *   are not specified.
- * @return
- *   - Loaded field values are added to $entities. Fields with no values should
- *     be set as an empty array.
- *   - Loaded field ids are set as keys in $skip_fields.
+ *   An array keyed by field IDs whose data has already been loaded and
+ *   therefore should not be loaded again. Add a key to this array to indicate
+ *   that your module has already loaded a field.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *   - 'field_id': The field ID that should be loaded. If unset, all fields
+ *     should be loaded.
+ *   - 'deleted': If TRUE, deleted fields should be loaded as well as
+ *     non-deleted fields. If unset or FALSE, only non-deleted fields should be
+ *     loaded.
  */
-function hook_field_storage_pre_load($entity_type, $entities, $age, &$skip_fields) {
+function hook_field_storage_pre_load($entity_type, $entities, $age, &$skip_fields, $options) {
 }
 
 /**

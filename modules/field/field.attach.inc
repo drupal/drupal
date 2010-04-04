@@ -553,15 +553,18 @@ function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcod
 }
 
 /**
- * Load all fields for the most current version of each of a set of
- * entities of a single entity type.
+ * Loads fields for the current revisions of a group of entities.
+ *
+ * Loads all fields for each entity object in a group of a single entity type.
+ * The loaded field values are added directly to the entity objects.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entities
- *   An array of entities for which to load fields, keyed by entity id.
+ *   An array of entities for which to load fields, keyed by entity ID.
  *   Each entity needs to have its 'bundle', 'id' and (if applicable)
- *   'revision' keys filled.
+ *   'revision' keys filled in. The function adds the loaded field data
+ *   directly in the entity objects of the $entities array.
  * @param $age
  *   FIELD_LOAD_CURRENT to load the most recent revision for all
  *   fields, or FIELD_LOAD_REVISION to load the version indicated by
@@ -569,15 +572,13 @@ function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcod
  *   field_attach_load_revision() instead of passing FIELD_LOAD_REVISION.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *  - 'field_id': The field id that should be loaded, instead of
- *    loading all fields, for each entity. Note that returned entities
- *    may contain data for other fields, for example if they are read
- *    from a cache.
- *  - 'deleted': If TRUE, the function will operate on deleted fields
- *    as well as non-deleted fields. If unset or FALSE, only
- *    non-deleted fields are operated on.
- * @return
- *   Loaded field values are added to $entities.
+ *   - 'field_id': The field ID that should be loaded, instead of
+ *     loading all fields, for each entity. Note that returned entities
+ *     may contain data for other fields, for example if they are read
+ *     from a cache.
+ *   - 'deleted': If TRUE, the function will operate on deleted fields
+ *     as well as non-deleted fields. If unset or FALSE, only
+ *     non-deleted fields are operated on.
  */
 function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $options = array()) {
   $load_current = $age == FIELD_LOAD_CURRENT;
@@ -693,27 +694,21 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
 }
 
 /**
- * Load all fields for a previous version of each of a set of
- * entities of a single entity type.
+ * Load all fields for previous versions of a group of entities.
  *
- * Loading different versions of the same entities is not supported,
- * and should be done by separate calls to the function.
+ * Loading different versions of the same entities is not supported, and should
+ * be done by separate calls to the function.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of entities for which to load fields, keyed by entity id.
- *   Each entity needs to have its 'bundle', 'id' and (if applicable)
- *   'revision' keys filled.
+ *   An array of entities for which to load fields, keyed by entity ID. Each
+ *   entity needs to have its 'bundle', 'id' and (if applicable) 'revision'
+ *   keys filled. The function adds the loaded field data directly in the
+ *   entity objects of the $entities array.
  * @param $options
- *   An associative array of additional options, with the following keys:
- *   - 'field_name':  The field name that should be loaded, instead of
- *     loading all fields, for each entity. Note that returned entities
- *     may contain data for other fields, for example if they are read
- *     from a cache.
- * @return
- *   On return, the entities in $entities are modified by having the
- *   appropriate set of fields added.
+ *   An associative array of additional options. See field_attach_load() for
+ *   details.
  */
 function field_attach_load_revision($entity_type, $entities, $options = array()) {
   return field_attach_load($entity_type, $entities, FIELD_LOAD_REVISION, $options);
