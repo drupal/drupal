@@ -49,7 +49,7 @@ Drupal.toolbar.collapse = function() {
     .removeClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').addClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height());
+  $('body').removeClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height());
   $.cookie(
     'Drupal.toolbar.collapsed',
     1,
