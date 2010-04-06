@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.4 2010/01/29 22:40:41 dries Exp $
+// $Id: path.test,v 1.5 2010/04/06 19:49:03 dries Exp $
 
 /**
  * @file
@@ -177,11 +177,10 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
     $this->assertUrlInboundAlter("user/$uid", "user/$uid");
     $this->assertUrlOutboundAlter("user/$uid", "user/$uid");
 
-    // Test that 'forum' is altered to 'community' correctly.
+    // Test that 'forum' is altered to 'community' correctly, both at the root
+    // level and for a specific existing forum.
     $this->assertUrlInboundAlter('community', 'forum');
     $this->assertUrlOutboundAlter('forum', 'community');
-
-    // Add a forum to test url altering.
     $forum_vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE module = 'forum'")->fetchField();
     $tid = db_insert('taxonomy_term_data')
       ->fields(array(
@@ -189,15 +188,8 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
         'vid' => $forum_vid,
       ))
       ->execute();
-
-    // Test that a existing forum URL is altered.
     $this->assertUrlInboundAlter("community/$tid", "forum/$tid");
-    $this->assertUrlOutboundAlter("taxonomy/term/$tid", "community/$tid");
-
-    // Test that a non-existant forum URL is not altered.
-    $tid++;
-    $this->assertUrlInboundAlter("taxonomy/term/$tid", "taxonomy/term/$tid");
-    $this->assertUrlOutboundAlter("taxonomy/term/$tid", "taxonomy/term/$tid");
+    $this->assertUrlOutboundAlter("forum/$tid", "community/$tid");
   }
 
   /**

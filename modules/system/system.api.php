@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.149 2010/04/04 12:48:18 dries Exp $
+// $Id: system.api.php,v 1.150 2010/04/06 19:49:03 dries Exp $
 
 /**
  * @file
@@ -99,6 +99,10 @@ function hook_hook_info() {
  *     bundles machine names, as found in the objects' 'bundle' property
  *     (defined in the 'entity keys' entry above). Elements:
  *     - label: The human-readable name of the bundle.
+ *     - uri callback: Same as the 'uri callback' key documented above for the
+ *       entity type, but for the bundle only. When determining the URI of an
+ *       entity, if a 'uri callback' is defined for both the entity type and
+ *       the bundle, the one for the bundle is used.
  *     - admin: An array of information that allows Field UI pages to attach
  *       themselves to the existing administration pages for the bundle.
  *       Elements:

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.559 2010/03/26 17:14:45 dries Exp $
+// $Id: forum.module,v 1.560 2010/04/06 19:49:03 dries Exp $
 
 /**
  * @file
@@ -216,6 +216,36 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  */
 function forum_init() {
   drupal_add_css(drupal_get_path('module', 'forum') . '/forum.css');
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function forum_entity_info_alter(&$info) {
+  // Take over URI constuction for taxonomy terms that are forums.
+  if ($vid = variable_get('forum_nav_vocabulary', 0)) {
+    // Within hook_entity_info(), we can't invoke entity_load() as that would
+    // cause infinite recursion, so we call taxonomy_vocabulary_get_names()
+    // instead of taxonomy_vocabulary_load(). All we need is the machine name
+    // of $vid, so retrieving and iterating all the vocabulary names is somewhat
+    // inefficient, but entity info is cached across page requests, and an
+    // iteration of all vocabularies once per cache clearing isn't a big deal,
+    // and is done as part of taxonomy_entity_info() anyway.
+    foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocabulary) {
+      if ($vid == $vocabulary->vid) {
+        $info['taxonomy_term']['bundles'][$machine_name]['uri callback'] = 'forum_uri';
+      }
+    }
+  }
+}
+
+/**
+ * Entity URI callback.
+ */
+function forum_uri($forum) {
+  return array(
+    'path' => 'forum/' . $forum->tid,
+  );
 }
 
 /**
@@ -679,18 +709,6 @@ function forum_form($node, $form_state) {
   }
 
   return $form;
-}
-
-/**
- * Implements hook_url_outbound_alter().
- */
-function forum_url_outbound_alter(&$path, &$options, $original_path) {
-  if (preg_match('!^taxonomy/term/(\d+)!', $path, $matches)) {
-    $term = taxonomy_term_load($matches[1]);
-    if ($term && $term->vocabulary_machine_name == 'forums') {
-      $path = 'forum/' . $matches[1];
-    }
-  }
 }
 
 /**
