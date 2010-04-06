@@ -764,6 +764,14 @@ function list_themes($refresh = FALSE) {
  */
 function theme($hook, $variables = array()) {
   static $hooks = NULL;
+
+  // If called before all modules are loaded, we do not necessarily have a full
+  // theme registry to work with, and therefore cannot process the theme
+  // request properly. See also _theme_load_registry().
+  if (!module_load_all(NULL) && !defined('MAINTENANCE_MODE')) {
+    throw new Exception(t('theme() may not be called until all modules are loaded.'));
+  }
+
   if (!isset($hooks)) {
     drupal_theme_initialize();
     $hooks = theme_get_registry();
