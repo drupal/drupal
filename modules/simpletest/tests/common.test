@@ -23,6 +23,12 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
   }
 
   function testDrupalAlter() {
+    // This test depends on Garland, so make sure that it is always the current
+    // active theme.
+    global $theme, $base_theme_info;
+    $theme = 'garland';
+    $base_theme_info = array();
+
     $array = array('foo' => 'bar');
     $entity = new stdClass;
     $entity->foo = 'bar';

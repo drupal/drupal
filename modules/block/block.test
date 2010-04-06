@@ -27,7 +27,6 @@ class BlockTestCase extends DrupalWebTestCase {
       'administer blocks',
       filter_permission_name($full_html_format),
       'access administration pages',
-      'access dashboard',
     ));
     $this->drupalLogin($admin_user);
 

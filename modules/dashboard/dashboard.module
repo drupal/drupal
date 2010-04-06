@@ -29,7 +29,7 @@ function dashboard_menu() {
     'title' => 'Dashboard',
     'description' => 'View and customize your dashboard',
     'page callback' => 'dashboard_admin',
-    'access arguments' => array('access dashboard'),
+    'access arguments' => array('access administration pages'),
     // Make this appear first, so for example, in admin menus, it shows up on
     // the top corner of the window as a convinient "home link".
     'weight' => -100,
@@ -39,7 +39,7 @@ function dashboard_menu() {
     'description' => 'View and customize your dashboard',
     'page callback' => 'dashboard_admin',
     'page arguments' => array(TRUE),
-    'access arguments' => array('access dashboard'),
+    'access arguments' => array('access administration pages'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/dashboard/drawer'] = array(
@@ -68,7 +68,6 @@ function dashboard_menu_alter(&$items) {
   // Make the dashboard the default local task on /admin.
   $items['admin']['title'] = 'Dashboard';
   $items['admin']['page callback'] = 'dashboard_admin';
-  $items['admin']['access arguments'] = array('access dashboard');
   $items['admin/dashboard']['type'] = MENU_DEFAULT_LOCAL_TASK;
   $items['admin/by-task']['type'] = MENU_LOCAL_TASK;
 }
@@ -152,18 +151,6 @@ function dashboard_page_build(&$page) {
       }
     }
   }
-}
-
-/**
- * Implements hook_permission().
- */
-function dashboard_permission() {
-  return array(
-    'access dashboard' => array(
-      'title' => t('View the administrative dashboard'),
-      'description' => t('Note: modifying the dashboard requires the !administer_blocks permission.', array('!administer_blocks' => l(t('Administer blocks'), 'admin/people/permissions', array('fragment' => 'module-block')))),
-    ),
-  );
 }
 
 /**
