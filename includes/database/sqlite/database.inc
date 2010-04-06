@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.29 2010/03/28 06:54:13 dries Exp $
+// $Id: database.inc,v 1.30 2010/04/06 16:54:15 dries Exp $
 
 /**
  * @file
@@ -264,6 +264,14 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     }
     if ($this->supportsTransactions()) {
       PDO::rollBack();
+    }
+    else {
+      // Log unsupported rollback.
+      $this->rollbackLogs[] = array(
+        'type' => 'database',
+        'message' => t('Explicit rollback failed: not supported on active connection.'),
+        'variables' => array(),
+      );
     }
     $this->logRollback();
   }
