@@ -1,5 +1,8 @@
-/* $Id: poll.css,v 1.7 2008/05/15 20:55:58 dries Exp $ */
+/* $Id: poll.css,v 1.8 2010/04/06 15:25:51 dries Exp $ */
 
+.poll {
+  overflow: hidden;
+}
 .poll .bar {
   height: 1em;
   margin: 1px 0;
