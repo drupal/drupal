@@ -1719,7 +1719,7 @@ class ShutdownFunctionsTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test flood control mechanism clean-up.
+   * Test shutdown functions.
    */
   function testShutdownFunctions() {
     $arg1 = $this->randomName();
@@ -1727,5 +1727,42 @@ class ShutdownFunctionsTest extends DrupalWebTestCase {
     $this->drupalGet('system-test/shutdown-functions/' . $arg1 . '/' . $arg2);
     $this->assertText(t('First shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2)));
     $this->assertText(t('Second shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2)));
+  }
+}
+
+/**
+ * Functional tests compact mode.
+ */
+class CompactModeTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Compact mode',
+      'description' => 'Tests compact mode functionality.',
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    $admin_user = $this->drupalCreateUser(array('access administration pages'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Test compact mode.
+   */
+  function testCompactMode() {
+    $this->drupalGet('admin/compact/on');
+    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], t('Compact mode turns on.'));
+    $this->drupalGet('admin/compact/on');
+    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], t('Compact mode remains on after a repeat call.'));
+    $this->drupalGet('');
+    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], t('Compact mode persists on new requests.'));
+
+    $this->drupalGet('admin/compact/off');
+    $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', t('Compact mode turns off.'));
+    $this->drupalGet('admin/compact/off');
+    $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', t('Compact mode remains off after a repeat call.'));
+    $this->drupalGet('');
+    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], t('Compact mode persists on new requests.'));
   }
 }

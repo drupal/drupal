@@ -2703,11 +2703,15 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 }
 
 /**
- * Determine if a user is in compact mode.
+ * Determines if the current user is in compact mode.
+ *
+ * @return
+ *   TRUE when in compact mode, FALSE when in expanded mode.
  */
 function system_admin_compact_mode() {
-  global $user;
-  return (isset($user->admin_compact_mode)) ? $user->admin_compact_mode : variable_get('admin_compact_mode', FALSE);
+  // PHP converts dots into underscores in cookie names to avoid problems with
+  // its parser, so we use a converted cookie name.
+  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : variable_get('admin_compact_mode', FALSE);
 }
 
 /**
@@ -2717,8 +2721,7 @@ function system_admin_compact_mode() {
  *   Valid values are 'on' and 'off'.
  */
 function system_admin_compact_page($mode = 'off') {
-  global $user;
-  user_save($user, array('admin_compact_mode' => ($mode == 'on')));
+  user_cookie_save(array('admin_compact_mode' => ($mode == 'on')), array('admin_compact_mode'));
   drupal_goto();
 }
 
