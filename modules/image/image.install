@@ -1,5 +1,5 @@
 <?php
-// $Id: image.install,v 1.6 2010/04/04 13:18:18 dries Exp $
+// $Id: image.install,v 1.7 2010/04/06 14:55:17 dries Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@ function image_schema() {
       ),
     ),
     'primary key' => array('isid'),
-    'indexes' => array(
+    'unique keys' => array(
       'name' => array('name'),
     ),
   );
