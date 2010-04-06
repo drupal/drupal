@@ -50,7 +50,7 @@ function image_schema() {
       ),
     ),
     'primary key' => array('isid'),
-    'indexes' => array(
+    'unique keys' => array(
       'name' => array('name'),
     ),
   );
