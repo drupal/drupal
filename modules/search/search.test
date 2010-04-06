@@ -610,3 +610,52 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
     $this->assertIdentical(' ', search_simplify($string), t('Search simplify works for ASCII control characters.'));
   }
 }
+
+/**
+ * Test config page.
+ */
+class SearchConfigSettingsForm extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Config settings form',
+      'description' => 'Verify the search config settings form.',
+      'group' => 'Search',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('search');
+
+    // Login as a user that can create and search content.
+    $this->drupalLogin($this->drupalCreateUser(array('search content', 'administer search', 'administer nodes', 'bypass node access')));
+  }
+
+  /**
+   * Verify the search settings form.
+   */
+  function testSearchSettingsPage() {
+    // Add a single piece of content and index it.
+    $node = $this->drupalCreateNode();
+    // Link the node to itself to test that it's only indexed once.
+    $langcode = LANGUAGE_NONE;
+    $body_key = "body[$langcode][0][value]";
+    $edit[$body_key] = l($node->title, 'node/' . $node->nid);
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+
+    node_update_index();
+    search_update_totals();
+
+    // Test that the settings form displays the correct count of items left to index.
+    $this->drupalGet('admin/config/search/settings');
+    $this->assertText(t('There are @count items left to index.', array('@count' => 0)));
+
+    // Test the re-index button.
+    $this->drupalPost('admin/config/search/settings', array(), t('Re-index site'));
+    $this->assertText(t('Are you sure you want to re-index the site'));
+    $this->drupalPost('admin/config/search/settings/reindex', array(), t('Re-index site'));
+    $this->assertText(t('The index will be rebuilt'));
+    $this->drupalGet('admin/config/search/settings');
+    $this->assertText(t('There is 1 item left to index.'));
+  }
+}
+
