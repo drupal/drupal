@@ -896,6 +896,14 @@ abstract class DatabaseConnection extends PDO {
     if ($this->supportsTransactions()) {
       parent::rollBack();
     }
+    else {
+      // Log unsupported rollback.
+      $this->rollbackLogs[] = array(
+        'type' => 'database',
+        'message' => t('Explicit rollback failed: not supported on active connection.'),
+        'variables' => array(),
+      );
+    }
     $this->logRollback();
   }
 
@@ -910,9 +918,6 @@ abstract class DatabaseConnection extends PDO {
     }
 
     $logging_callback = $logging['callback'];
-
-    // Log the failed rollback.
-    call_user_func($logging_callback, 'database', 'Explicit rollback failed: not supported on active connection.', array(), $logging['error_severity']);
 
     // Play back the logged errors to the specified logging callback post-
     // rollback.
