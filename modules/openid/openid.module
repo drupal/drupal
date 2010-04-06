@@ -173,19 +173,21 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       // Use the nickname returned by Simple Registration if available.
       $form['account']['name']['#default_value'] = $sreg_values['nickname'];
     }
-    elseif (!empty($ax_values['value.email'])) {
-      // Else, extract the name part of the email address returned by AX if available.
-      list($name, $domain) = explode('@', $ax_values['value.email'], 2);
-      $form['account']['name']['#default_value'] = $name;
+    elseif ($ax_name_values = openid_extract_ax_values($ax_values, array('name_ao', 'name_son'))) {
+      // Else, use the first nickname returned by AX if available.
+      $form['account']['name']['#default_value'] = current($ax_name_values);
+    }
+    else {
+      $form['account']['name']['#default_value'] = '';
     }
 
     if (!empty($sreg_values['email'])) {
       // Use the email returned by Simple Registration if available.
       $form['account']['mail']['#default_value'] = $sreg_values['email'];
     }
-    elseif (!empty($ax_values['value.email'])) {
-      // Else, use the email returned by AX if available.
-      $form['account']['mail']['#default_value'] = $ax_values['value.email'];
+    elseif ($ax_mail_values = openid_extract_ax_values($ax_values, array('mail_ao', 'mail_son'))) {
+      // Else, use the first nickname returned by AX if available.
+      $form['account']['mail']['#default_value'] = current($ax_mail_values);
     }
 
     // If user_email_verification is off, hide the password field and just fill
@@ -714,8 +716,20 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
   if (in_array(OPENID_NS_AX, $service['types'])) {
     $request['openid.ns.ax'] = OPENID_NS_AX;
     $request['openid.ax.mode'] = 'fetch_request';
-    $request['openid.ax.required'] = 'email';
-    $request['openid.ax.type.email'] = 'http://schema.openid.net/contact/email';
+    $request['openid.ax.required'] = 'mail_ao,name_ao,mail_son,name_son';
+
+    // Implementors disagree on which URIs to use, even for simple
+    // attributes like name and email (*sigh*). We ask for both axschema.org
+    // attributes (which are supposed to be newer), and schema.openid.net ones
+    // (which are supposed to be legacy).
+
+    // Attributes as defined by axschema.org.
+    $request['openid.ax.type.mail_ao'] = 'http://axschema.org/contact/email';
+    $request['openid.ax.type.name_ao'] = 'http://axschema.org/namePerson/friendly';
+
+    // Attributes as defined by schema.openid.net.
+    $request['openid.ax.type.mail_son'] = 'http://schema.openid.net/contact/email';
+    $request['openid.ax.type.name_son'] = 'http://schema.openid.net/namePerson/friendly';
   }
 
   $request = array_merge($request, module_invoke_all('openid', 'request', $request));

@@ -665,3 +665,35 @@ function openid_extract_namespace($response, $extension_namespace, $fallback_pre
 
   return $output;
 }
+
+/**
+ * Extracts values from an OpenID AX Response.
+ *
+ * The values can be returned in two forms:
+ *   - only openid.ax.value.<alias> (for single-valued answers)
+ *   - both openid.ax.count.<alias> and openid.ax.value.<alias>.<count> (for both
+ *     single and multiple-valued answers)
+ *
+ * @param $values
+ *   An array as returned by openid_extract_namespace(..., OPENID_NS_AX).
+ * @param $aliases
+ *   An array of aliases used in the fetch request.
+ * @return
+ *   An array of values.
+ * @see http://openid.net/specs/openid-attribute-exchange-1_0.html#fetch_response
+ */
+function openid_extract_ax_values($values, $aliases) {
+  $output = array();
+  foreach ($aliases as $alias) {
+    if (isset($values['count.' . $alias])) {
+      for ($i = 1; $i <= $values['count.' . $alias]; $i++) {
+        $output[] = $values['value.' . $alias . '.' . $i];
+      }
+    }
+    elseif (isset($values['value.' . $alias])) {
+      $output[] = $values['value.' . $alias];
+    }
+  }
+  return $output;
+}
+
