@@ -686,6 +686,9 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
 
     $tree = taxonomy_get_tree($vocabulary->vid);
     $options = array('<' . t('root') . '>');
+    if (empty($parent)) {
+      $parent = array(0);
+    }
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {
         $options[$term->tid] = str_repeat('-', $term->depth) . $term->name;
