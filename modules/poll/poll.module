@@ -139,10 +139,8 @@ function _poll_menu_access($node, $perm, $inspect_allowvotes) {
  * Implements hook_block_info().
  */
 function poll_block_info() {
-  if (user_access('access content')) {
-    $blocks['recent']['info'] = t('Most recent poll');
-    return $blocks;
-  }
+  $blocks['recent']['info'] = t('Most recent poll');
+  return $blocks;
 }
 
 /**
