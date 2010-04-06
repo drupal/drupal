@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.module,v 1.33 2010/03/27 05:52:50 webchick Exp $
+// $Id: rdf.module,v 1.34 2010/04/06 16:30:20 dries Exp $
 
 /**
  * @file
@@ -456,7 +456,7 @@ function rdf_preprocess_node(&$variables) {
     $element = array(
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => $variables['node_title'],
+        'content' => $variables['title'],
         'about' => $variables['node_url'],
       ),
     );
