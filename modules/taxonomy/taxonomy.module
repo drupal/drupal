@@ -609,7 +609,8 @@ function template_preprocess_taxonomy_term(&$variables) {
   $variables['term'] = $variables['elements']['#term'];
   $term = $variables['term'];
 
-  $variables['term_url']  = url('taxonomy/term/' . $term->tid);
+  $uri = entity_uri('taxonomy_term', $term);
+  $variables['term_url']  = url($uri['path'], $uri['options']);
   $variables['term_name'] = check_plain($term->name);
   $variables['page']      = taxonomy_term_is_page($term);
 
@@ -1207,10 +1208,12 @@ function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance,
     case 'taxonomy_term_reference_link':
       foreach ($items as $delta => $item) {
         $term = $item['taxonomy_term'];
+        $uri = entity_uri('taxonomy_term', $term);
         $element[$delta] = array(
           '#type' => 'link',
           '#title' => $term->name,
-          '#href' => 'taxonomy/term/' . $term->tid,
+          '#href' => $uri['path'],
+          '#options' => $uri['options'],
         );
       }
       break;

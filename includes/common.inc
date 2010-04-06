@@ -6430,11 +6430,42 @@ function entity_prepare_view($entity_type, $entities) {
  *   uri of its own.
  */
 function entity_uri($entity_type, $entity) {
-  $info = entity_get_info($entity_type);
-  if (isset($info['uri callback']) && function_exists($info['uri callback'])) {
-    return $info['uri callback']($entity) + array('options' => array());
+  // This check enables the URI of an entity to be easily overridden from what
+  // the callback for the entity type or bundle would return, and it helps
+  // minimize performance overhead when entity_uri() is called multiple times
+  // for the same entity.
+  if (!isset($entity->uri)) {
+    $info = entity_get_info($entity_type);
+    list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+
+    // A bundle-specific callback takes precedence over the generic one for the
+    // entity type.
+    if (isset($info['bundles'][$bundle]['uri callback'])) {
+      $uri_callback = $info['bundles'][$bundle]['uri callback'];
+    }
+    elseif (isset($info['uri callback'])) {
+      $uri_callback = $info['uri callback'];
+    }
+    else {
+      $uri_callback = NULL;
+    }
+
+    // Invoke the callback to get the URI. If there is no callback, set the
+    // entity's 'uri' property to FALSE to indicate that it is known to not have
+    // a URI.
+    if (isset($uri_callback) && function_exists($uri_callback)) {
+      $entity->uri = $uri_callback($entity);
+      if (!isset($entity->uri['options'])) {
+        $entity->uri['options'] = array();
+      }
+    }
+    else {
+      $entity->uri = FALSE;
+    }
   }
+  return $entity->uri ? $entity->uri : NULL;
 }
+
 /**
  * Invokes entity insert/update hooks.
  *

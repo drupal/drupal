@@ -1340,7 +1340,9 @@ function template_preprocess_node(&$variables) {
 
   $variables['date']      = format_date($node->created);
   $variables['name']      = theme('username', array('account' => $node));
-  $variables['node_url']  = url('node/' . $node->nid);
+
+  $uri = entity_uri('node', $node);
+  $variables['node_url']  = url($uri['path'], $uri['options']);
   $variables['title']     = check_plain($node->title);
   $variables['page']      = node_is_page($node);
 
@@ -1581,8 +1583,9 @@ function node_search_execute($keys = NULL) {
 
     $extra = module_invoke_all('node_search_result', $node);
 
+    $uri = entity_uri('node', $node);
     $results[] = array(
-      'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
+      'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
       'type' => check_plain(node_type_get_name($node)),
       'title' => $node->title,
       'user' => theme('username', array('account' => $node)),
@@ -2500,10 +2503,11 @@ function node_page_default() {
  */
 function node_page_view($node) {
   drupal_set_title($node->title);
+  $uri = entity_uri('node', $node);
   // Set the node path as the canonical URL to prevent duplicate content.
-  drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url('node/' . $node->nid)), TRUE);
+  drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], $uri['options'])), TRUE);
   // Set the non-aliased path as a default shortlink.
-  drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url('node/' . $node->nid, array('alias' => TRUE))), TRUE);
+  drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
   return node_show($node);
 }
 

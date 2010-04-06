@@ -2161,8 +2161,10 @@ function template_preprocess_comment(&$variables) {
   $variables['new']       = !empty($comment->new) ? t('new') : '';
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
   $variables['signature'] = $comment->signature;
-  $variables['title']     = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
-  $variables['permalink'] = l('#', 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
+
+  $uri = entity_uri('comment', $comment);
+  $variables['title']     = l($comment->subject, $uri['path'], $uri['options']);
+  $variables['permalink'] = l('#', $uri['path'], $uri['options']);
 
   // Preprocess fields.
   field_attach_preprocess('comment', $comment, $variables['elements'], $variables);

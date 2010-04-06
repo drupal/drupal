@@ -534,29 +534,31 @@ function rdf_preprocess_field(&$variables) {
  * Implements MODULE_preprocess_HOOK().
  */
 function rdf_preprocess_user_profile(&$variables) {
-  // Adds RDFa markup to the user profile page. Fields displayed in this page
-  // will automatically describe the user.
   $account = $variables['elements']['#account'];
+  $uri = entity_uri('user', $account);
+
+  // Adds RDFa markup to the user profile page. Fields displayed in this page
+  // will automatically describe the user.  
   if (!empty($account->rdf_mapping['rdftype'])) {
     $variables['attributes_array']['typeof'] = $account->rdf_mapping['rdftype'];
-    $variables['attributes_array']['about'] = url('user/' . $account->uid);
+    $variables['attributes_array']['about'] = url($uri['path'], $uri['options']);
   }
   // Adds the relationship between the sioc:User and the foaf:Person who holds
   // the account.
   $account_holder_meta = array(
     '#tag' => 'meta',
     '#attributes' => array(
-      'about' => url('user/' . $account->uid, array('fragment' => 'me')),
+      'about' => url($uri['path'], array_merge($uri['options'], array('fragment' => 'me'))),
       'typeof' => array('foaf:Person'),
       'rel' => array('foaf:account'),
-      'resource' => url('user/' . $account->uid),
+      'resource' => url($uri['path'], $uri['options']),
     ),
   );
   // Adds the markup for username.
   $username_meta = array(
     '#tag' => 'meta',
     '#attributes' => array(
-      'about' => url('user/' . $account->uid),
+      'about' => url($uri['path'], $uri['options']),
       'property' => $account->rdf_mapping['name']['predicates'],
       'content' => $account->name,
     )
@@ -629,7 +631,8 @@ function rdf_preprocess_comment(&$variables) {
     // Adds RDFa markup to the comment container. The about attribute specifies
     // the URI of the resource described within the HTML element, while the
     // typeof attribute indicates its RDF type (e.g. sioc:Post, etc.).
-    $variables['attributes_array']['about'] = url('comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid));
+    $uri = entity_uri('comment', $comment);
+    $variables['attributes_array']['about'] = url($uri['path'], $uri['options']);
     $variables['attributes_array']['typeof'] = $comment->rdf_mapping['rdftype'];
   }
 
