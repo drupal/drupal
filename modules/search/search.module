@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.341 2010/03/30 07:17:19 webchick Exp $
+// $Id: search.module,v 1.342 2010/04/06 16:28:25 dries Exp $
 
 /**
  * @file
@@ -704,8 +704,9 @@ function search_index($sid, $type, $text) {
       // Unset the link to mark it as processed.
       unset($links[$nid]);
     }
-    else {
-      // Insert the existing link and mark the node for reindexing.
+    elseif ($sid != $nid || $type != 'node') {
+      // Insert the existing link and mark the node for reindexing, but don't
+      // reindex if this is a link in a node pointing to itself.
       db_insert('search_node_links')
         ->fields(array(
           'caption' => $caption,
