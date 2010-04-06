@@ -1410,6 +1410,10 @@ function comment_save($comment) {
         ))
         ->condition('cid', $comment->cid)
         ->execute();
+
+      // Update the {node_comment_statistics} table prior to executing hooks.
+       _comment_update_node_statistics($comment->nid);
+
       field_attach_update('comment', $comment);
       // Allow modules to respond to the updating of a comment.
       module_invoke_all('comment_update', $comment);
@@ -1495,14 +1499,15 @@ function comment_save($comment) {
       // saved node to be propagated to the slave.
       db_ignore_slave();
 
+      // Update the {node_comment_statistics} table prior to executing hooks.
+      _comment_update_node_statistics($comment->nid);
+
       field_attach_insert('comment', $comment);
 
       // Tell the other modules a new comment has been submitted.
       module_invoke_all('comment_insert', $comment);
       entity_invoke('insert', 'comment', $comment);
     }
-    _comment_update_node_statistics($comment->nid);
-
     if ($comment->status == COMMENT_PUBLISHED) {
       module_invoke_all('comment_publish', $comment);
     }
