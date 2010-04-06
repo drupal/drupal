@@ -19,9 +19,10 @@
  * field_attach_extra_weight() to retrieve the user-defined weight when
  * inserting the component.
  *
- * @return @todo
- *   An array of 'pseudo-field' components. The keys are the name of the element
- *   as it appears in the form structure. The values are arrays with the
+ * @return
+ *   A nested array of 'pseudo-field' components. Each list is nested within the
+ *   field bundle to which those components apply. The keys are the name of the
+ *   element as it appears in the form structure. The values are arrays with the
  *   following key/value pairs:
  *   - label: The human readable name of the component.
  *   - description: A short description of the component contents.
@@ -34,32 +35,28 @@
 function hook_field_extra_fields() {
   $extra = array();
 
-  if ($type = node_type_get_type($bundle)) {
+  foreach (node_type_get_types() as $bundle) {
     if ($type->has_title) {
-      $extra['title'] = array(
+      $extra['node'][$bundle]['title'] = array(
         'label' => $type->title_label,
         'description' => t('Node module element.'),
         'weight' => -5,
       );
     }
-    if ($bundle == 'poll' && module_exists('poll')) {
-      $extra['title'] = array(
-        'label' => t('Poll title'),
-        'description' => t('Poll module title.'),
-        'weight' => -5,
-      );
-      $extra['choice_wrapper'] = array(
-        'label' => t('Poll choices'),
-        'description' => t('Poll module choices.'),
-        'weight' => -4,
-      );
-      $extra['settings'] = array(
-        'label' => t('Poll settings'),
-        'description' => t('Poll module settings.'),
-        'weight' => -3,
-      );
-    }
   }
+  if (module_exists('poll')) {
+    $extra['node']['poll']['choice_wrapper'] = array(
+      'label' => t('Poll choices'),
+      'description' => t('Poll module choices.'),
+      'weight' => -4,
+    );
+    $extra['node']['poll']['settings'] = array(
+      'label' => t('Poll settings'),
+      'description' => t('Poll module settings.'),
+      'weight' => -3,
+    );
+  }
+
   return $extra;
 }
 
@@ -74,8 +71,10 @@ function hook_field_extra_fields() {
 function hook_field_extra_fields_alter(&$info) {
   // Force node title to always be at the top of the list
   // by default.
-  if (isset($info['title'])) {
-    $info['title']['weight'] = -20;
+  foreach (node_type_get_types() as $bundle) {
+    if (isset($info['node'][$bundle]['title'])) {
+      $info['node'][$bundle]['title']['weight'] = -20;
+    }
   }
 
 }
