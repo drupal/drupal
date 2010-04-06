@@ -1,5 +1,8 @@
 /* $Id$ */
 
+.poll {
+  overflow: hidden;
+}
 .poll .bar {
   height: 1em;
   margin: 1px 0;
