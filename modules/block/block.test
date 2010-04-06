@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.48 2010/03/31 20:05:06 dries Exp $
+// $Id: block.test,v 1.49 2010/04/06 15:01:27 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,6 @@ class BlockTestCase extends DrupalWebTestCase {
       'administer blocks',
       filter_permission_name($full_html_format),
       'access administration pages',
-      'access dashboard',
     ));
     $this->drupalLogin($admin_user);
 
