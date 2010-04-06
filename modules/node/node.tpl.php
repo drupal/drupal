@@ -7,8 +7,8 @@
  *
  * Available variables:
  * - $title: the (sanitized) title of the node.
- * - $content: An array of node items. Use render($content) to print them all, or
- *   print a subset such as render($content['field_example']). Use
+ * - $content: An array of node items. Use render($content) to print them all,
+ *   or print a subset such as render($content['field_example']). Use
  *   hide($content['field_example']) to temporarily suppress the printing of a
  *   given element.
  * - $user_picture: The node author's picture from user-picture.tpl.php.
@@ -20,7 +20,8 @@
  * - $display_submitted: whether submission information should be displayed.
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
- *   preprocess functions. The default values can be one or more of the following:
+ *   preprocess functions. The default values can be one or more of the
+ *   following:
  *   - node: The current template type, i.e., "theming hook".
  *   - node-[type]: The current node type. For example, if the node is a
  *     "Blog entry" it would result in "node-blog". Note that the machine
@@ -29,7 +30,8 @@
  *   - node-preview: Nodes in preview mode.
  *   The following are controlled through the node publishing options.
  *   - node-promoted: Nodes promoted to the front page.
- *   - node-sticky: Nodes ordered above other non-sticky nodes in teaser listings.
+ *   - node-sticky: Nodes ordered above other non-sticky nodes in teaser
+ *     listings.
  *   - node-unpublished: Unpublished nodes visible only to administrators.
  * - $title_prefix (array): An array containing additional output populated by
  *   modules, intended to be displayed in front of the main title tag that
@@ -82,7 +84,7 @@
 
   <?php print render($title_prefix); ?>
   <?php if (!$page): ?>
-    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $node_title; ?></a></h2>
+    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
   <?php endif; ?>
   <?php print render($title_suffix); ?>
 

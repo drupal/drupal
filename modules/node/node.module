@@ -1341,7 +1341,7 @@ function template_preprocess_node(&$variables) {
   $variables['date']      = format_date($node->created);
   $variables['name']      = theme('username', array('account' => $node));
   $variables['node_url']  = url('node/' . $node->nid);
-  $variables['node_title'] = check_plain($node->title);
+  $variables['title']     = check_plain($node->title);
   $variables['page']      = node_is_page($node);
 
   if (!empty($node->in_preview)) {
