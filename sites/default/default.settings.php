@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.43 2010/03/26 22:14:46 dries Exp $
+// $Id: default.settings.php,v 1.44 2010/04/07 15:07:59 dries Exp $
 
 /**
  * @file
@@ -130,6 +130,22 @@
  *     'role'      => 'shared_',
  *     'authmap'   => 'shared_',
  *   );
+ *
+ * You can also use db_prefix as a reference to a schema/database. This maybe
+ * useful if your Drupal installation exists in a schema that is not the default
+ * or you want to access several databases from the same code base at the same 
+ * time.
+ * Example:
+ *
+ *  $db_prefix = array(
+ *    'default' => 'main.',
+ *     'users'      => 'shared.',
+ *     'sessions'  => 'shared.',
+ *     'role'      => 'shared.',
+ *     'authmap'   => 'shared.',
+ *  );
+ *
+ * NOTE: MySQL and SQLite's definition of a schema is a database.
  *
  * Database configuration format:
  *   $databases['default']['default'] = array(

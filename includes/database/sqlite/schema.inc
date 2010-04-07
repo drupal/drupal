@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.15 2010/03/28 11:45:11 dries Exp $
+// $Id: schema.inc,v 1.16 2010/04/07 15:07:59 dries Exp $
 
 /**
  * @file
@@ -13,6 +13,11 @@
  */
 
 class DatabaseSchema_sqlite extends DatabaseSchema {
+
+	/**
+   * Override DatabaseSchema::$defaultSchema
+   */
+  protected $defaultSchema = 'main';
 
   public function tableExists($table) {
     // Don't use {} around sqlite_master table.
@@ -45,14 +50,19 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    */
   protected function createIndexSql($tablename, $schema) {
     $sql = array();
+    $info = $this->getPrefixInfo($tablename);
     if (!empty($schema['unique keys'])) {
       foreach ($schema['unique keys'] as $key => $fields) {
-        $sql[] = 'CREATE UNIQUE INDEX "{' . $tablename . '}_' . $key . '" ON {' . $tablename . '} (' . $this->createKeySql($fields) . "); \n";
+        // Normally we don't escape double quotes (we use single quotes) but
+        // describing the index name like this is faster and is readable.
+        $index = "\"{$info['schema']}\".\"{$info['table']}_$key\"";
+        $sql[] = 'CREATE UNIQUE INDEX ' . $index . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . "); \n";
       }
     }
     if (!empty($schema['indexes'])) {
-      foreach ($schema['indexes'] as $index => $fields) {
-        $sql[] = 'CREATE INDEX "{' . $tablename . '}_' . $index . '" ON {' . $tablename . '} (' . $this->createKeySql($fields) . "); \n";
+      foreach ($schema['indexes'] as $key => $fields) {
+        $index = "\"{$info['schema']}\".\"{$info['table']}_$key\"";
+        $sql[] = 'CREATE INDEX ' . $index . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . "); \n";
       }
     }
     return $sql;
@@ -228,7 +238,13 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     $schema = $this->introspectSchema($table);
 
-    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
+    // SQLite doesn't allow you to rename tables outside of the current
+    // database. So the syntax '...RENAME TO database.table' would fail.
+    // So we must determine the full table name here rather than surrounding
+    // the table with curly braces incase the db_prefix contains a reference
+    // to a database outside of our existsing database.
+    $info = $this->getPrefixInfo($new_name);
+    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $info['table']);
 
     // Drop the indexes, there is no RENAME INDEX command in SQLite.
     if (!empty($schema['unique keys'])) {
@@ -445,7 +461,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('DROP INDEX ' . '{' . $table . '}_' . $name);
+    $this->connection->query('DROP INDEX ' . $this->prefixNonTable($table, $name));
     return TRUE;
   }
 
@@ -469,7 +485,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('DROP INDEX ' . '{' . $table . '}_' . $name);
+    $this->connection->query('DROP INDEX ' . $this->prefixNonTable($table, $name));
     return TRUE;
   }
 

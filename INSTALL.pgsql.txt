@@ -1,4 +1,4 @@
-// $Id: INSTALL.pgsql.txt,v 1.8 2009/07/27 19:42:54 dries Exp $
+// $Id: INSTALL.pgsql.txt,v 1.9 2010/04/07 15:07:58 dries Exp $
 
 CREATE THE PostgreSQL DATABASE
 ------------------------------
@@ -26,3 +26,19 @@ Note that the database must be created with UTF-8 (Unicode) encoding.
      createdb --encoding=UTF8 --owner=username databasename
 
    If there are no errors then the command was successful
+
+3. CREATE A SCHEMA OR SCHEMAS (Optional advanced)
+
+  Drupal will run across different schemas within your database if you so wish.
+  By default, Drupal runs inside the 'public' schema but you can use $db_prefix
+  inside settings.php to define a schema for Drupal to inside of or specify tables
+  that are shared inside of a separate schema. Drupal will not create schemas for
+  you, infact the user that Drupal runs as should not be allowed to. You'll need
+  execute the SQL below as a superuser (such as a postgres user) and replace
+  'drupaluser' with the username that Drupal uses to connect to PostgreSQL with
+  and replace schema_name with a schema name you wish to use such as 'shared':
+
+    CREATE SCHEMA schema_name AUTHORIZATION drupaluser;
+
+  Do this for as many schemas as you need. See default.settings.php for how to
+  set which tables use which schemas.

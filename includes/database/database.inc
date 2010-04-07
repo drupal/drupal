@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.113 2010/04/06 16:54:15 dries Exp $
+// $Id: database.inc,v 1.114 2010/04/07 15:07:59 dries Exp $
 
 /**
  * @file
@@ -381,6 +381,26 @@ abstract class DatabaseConnection extends PDO {
     else {
       return strtr($sql, array('{' => $db_prefix , '}' => ''));
     }
+  }
+
+  /**
+   * Find the prefix for a table.
+   *
+   * This function is for when you want to know the prefix of a table. This
+   * is not used in prefixTables due to performance reasons.
+   */
+  public function tablePrefix($table = 'default') {
+    global $db_prefix;
+    if (is_array($db_prefix)) {
+      if (isset($db_prefix[$table])) {
+        return $db_prefix[$table];
+      }
+      elseif (isset($db_prefix['default'])) {
+        return $db_prefix['default'];
+      }
+      return '';
+    }
+    return $db_prefix;
   }
 
   /**
