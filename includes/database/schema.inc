@@ -150,6 +150,16 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    */
   protected $placeholder = 0;
 
+  /**
+   * Definition of prefixInfo array structure.
+   *
+   * Rather than redefining DatabaseSchema::getPrefixInfo() for each driver,
+   * by defining the defaultSchema variable only MySQL has to re-write the
+   * method.
+   *
+   * @see DatabaseSchema::getPrefixInfo()
+   */
+  protected $defaultSchema = 'public';
 
   public function __construct($connection) {
     $this->connection = $connection;
@@ -157,6 +167,48 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
 
   public function nextPlaceholder() {
     return $this->placeholder++;
+  }
+
+  /**
+   * Get information about the table name and schema from the db_prefix.
+   *
+   * @param
+   *   Name of table to look prefix up for. Defaults to 'default' because thats
+   *   default key for db_prefix.
+   * @return
+   *   A keyed array with information about the schema, table name and prefix.
+   */
+  protected function getPrefixInfo($table = 'default') {
+    $info = array(
+      'schema' => $this->defaultSchema,
+      'prefix' => $this->connection->tablePrefix($table),
+    );
+    // If the prefix contains a period in it, then that means the prefix also
+    // contains a schema reference in which case we will change the schema key
+    // to the value before the period in the prefix. Everything after the dot
+    // will be prefixed onto the front of the table.
+    if ($pos = strpos($info['prefix'], '.') !== FALSE) {
+      // Grab everything before the period.
+      $info['schema'] = substr($info['prefix'], 0, $pos);
+      // Grab everything after the dot, and prefix on to the table.
+      $info['table'] = substr($info['prefix'], ++$pos) . $table;
+    }
+    else {
+      $info['table'] = $info['prefix'] . $table;
+    }
+    return $info;
+  }
+
+  /**
+   * Create names for indexes, primary keys and constraints.
+   *
+   * This prevents using {} around non-table names like indexes and keys.
+   */
+  function prefixNonTable($table) {
+    $args = func_get_args();
+    $info = $this->getPrefixInfo($table);
+    $args[0] = $info['table'];
+    return implode('_', $args);
   }
 
   /**
@@ -175,7 +227,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * to make all the others work. For example see includes/databases/mysql/schema.inc.
    *
    * @param $table_name
-   *   The name of the table to explode.
+   *   The name of the table in question.
    * @param $operator
    *   The operator to apply on the 'table' part of the condition.
    *
@@ -185,18 +237,13 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
   protected function buildTableNameCondition($table_name, $operator = '=') {
     $info = $this->connection->getConnectionOptions();
 
-    // The table name may describe the schema eg. schema.table.
-    if (strpos($table_name, '.')) {
-      list($schema, $table_name) = explode('.', $table_name);
-    }
-    else {
-      $schema = 'public';
-    }
+    // Retrive the table name and schema
+    $table_info = $this->getPrefixInfo($table_name);
 
     $condition = new DatabaseCondition('AND');
     $condition->condition('table_catalog', $info['database']);
-    $condition->condition('table_schema', $schema);
-    $condition->condition('table_name', $table_name, $operator);
+    $condition->condition('table_schema', $table_info['schema']);
+    $condition->condition('table_name', $table_info['table'], $operator);
     return $condition;
   }
 
@@ -210,7 +257,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   TRUE if the given table exists, otherwise FALSE.
    */
   public function tableExists($table) {
-    $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
+    $condition = $this->buildTableNameCondition($table);
     $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
     // concatenation for conditionals like this however, we
@@ -253,7 +300,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   TRUE if the given column exists, otherwise FALSE.
    */
   public function fieldExists($table, $column) {
-    $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
+    $condition = $this->buildTableNameCondition($table);
     $condition->condition('column_name', $column);
     $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string

@@ -24,7 +24,7 @@ class ModuleTestCase extends DrupalWebTestCase {
    *   specified base table. Defaults to TRUE.
    */
   function assertTableCount($base_table, $count = TRUE) {
-    $tables = db_find_tables(Database::getConnection()->prefixTables('{' . $base_table . '}') . '%');
+    $tables = db_find_tables($base_table . '%');
 
     if ($count) {
       return $this->assertTrue($tables, t('Tables matching "@base_table" found.', array('@base_table' => $base_table)));

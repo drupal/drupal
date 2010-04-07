@@ -384,6 +384,26 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
+   * Find the prefix for a table.
+   *
+   * This function is for when you want to know the prefix of a table. This
+   * is not used in prefixTables due to performance reasons.
+   */
+  public function tablePrefix($table = 'default') {
+    global $db_prefix;
+    if (is_array($db_prefix)) {
+      if (isset($db_prefix[$table])) {
+        return $db_prefix[$table];
+      }
+      elseif (isset($db_prefix['default'])) {
+        return $db_prefix['default'];
+      }
+      return '';
+    }
+    return $db_prefix;
+  }
+
+  /**
    * Prepares a query string and returns the prepared statement.
    *
    * This method caches prepared statements, reusing them when

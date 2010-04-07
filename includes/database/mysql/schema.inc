@@ -25,6 +25,26 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   const COMMENT_MAX_COLUMN = 255;
 
   /**
+   * Get information about the table and database name from the db_prefix.
+   *
+   * @return
+   *   A keyed array with information about the database, table name and prefix.
+   */
+  protected function getPrefixInfo($table = 'default') {
+    $info = array('prefix' => $this->connection->tablePrefix($table));
+    if (($pos = strpos($info['prefix'], '.')) !== FALSE) {
+      $info['database'] = substr($info['prefix'], 0, $pos);
+      $info['table'] = substr($info['prefix'], ++$pos) . $table;
+    }
+    else {
+      $db_info = Database::getConnectionInfo();
+      $info['database'] = $db_info['default']['database'];
+      $info['table'] = $info['prefix'] . $table;
+    }
+    return $info;
+  }
+
+  /**
    * Build a condition to match a table name against a standard information_schema.
    *
    * MySQL uses databases like schemas rather than catalogs so when we build
@@ -35,16 +55,11 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   protected function buildTableNameCondition($table_name, $operator = '=') {
     $info = $this->connection->getConnectionOptions();
 
-    if (strpos($table_name, '.')) {
-      list($schema, $table_name) = explode('.', $table_name);
-    }
-    else {
-      $schema = $info['database'];
-    }
+    $table_info = $this->getPrefixInfo($table_name);
 
     $condition = new DatabaseCondition('AND');
-    $condition->condition('table_schema', $schema);
-    $condition->condition('table_name', $table_name, $operator);
+    $condition->condition('table_schema', $table_info['database']);
+    $condition->condition('table_name', $table_info['table'], $operator);
     return $condition;
   }
 
@@ -273,7 +288,8 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       throw new DatabaseSchemaObjectExistsException(t("Cannot rename %table to %table_new: table %table_new already exists.", array('%table' => $table, '%table_new' => $new_name)));
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
+    $info = $this->getPrefixInfo($new_name);
+    return $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO `' . $info['table'] . '`');
   }
 
   public function dropTable($table) {
@@ -446,7 +462,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    * Retrieve a table or column comment.
    */
   public function getComment($table, $column = NULL) {
-    $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
+    $condition = $this->buildTableNameCondition($table);
     if (isset($column)) {
       $condition->condition('column_name', $column);
       $condition->compile($this->connection, $this);

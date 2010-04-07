@@ -95,7 +95,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     }
     if (isset($table['unique keys']) && is_array($table['unique keys'])) {
       foreach ($table['unique keys'] as $key_name => $key) {
-        $sql_keys[] = 'CONSTRAINT {' . $name . '}_' . $key_name . '_key UNIQUE (' . implode(', ', $key) . ')';
+        $sql_keys[] = 'CONSTRAINT ' . $this->prefixNonTable($name, $key_name, 'key') . ' UNIQUE (' . implode(', ', $key) . ')';
       }
     }
 
@@ -297,7 +297,9 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     }
 
     // Now rename the table.
-    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
+    // Ensure the new table name does not include schema syntax.
+    $prefixInfo = $this->getPrefixInfo($new_name);
+    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $prefixInfo['table']);
   }
 
   public function dropTable($table) {
@@ -409,7 +411,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT {' . $table . '}_pkey');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT ' . $this->prefixNonTable($table, 'pkey'));
     return TRUE;
   }
 
@@ -421,8 +423,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       throw new DatabaseSchemaObjectExistsException(t("Cannot add unique key %name to table %table: unique key already exists.", array('%table' => $table, '%name' => $name)));
     }
 
-    $name = '{' . $table . '}_' . $name . '_key';
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $name . '" UNIQUE (' . implode(',', $fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $this->prefixNonTable($table, $name, 'key') . '" UNIQUE (' . implode(',', $fields) . ')');
   }
 
   public function dropUniqueKey($table, $name) {
@@ -430,8 +431,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       return FALSE;
     }
 
-    $name = '{' . $table . '}_' . $name . '_key';
-    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $name . '"');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $this->prefixNonTable($table, $name, 'key') . '"');
     return TRUE;
   }
 
@@ -451,8 +451,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       return FALSE;
     }
 
-    $name = '{' . $table . '}_' . $name . '_idx';
-    $this->connection->query('DROP INDEX ' . $name);
+    $this->connection->query('DROP INDEX ' . $this->prefixNonTable($table, $name, 'idx'));
     return TRUE;
   }
 
@@ -495,7 +494,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   protected function _createIndexSql($table, $name, $fields) {
-    $query = 'CREATE INDEX "{' . $table . '}_' . $name . '_idx" ON {' . $table . '} (';
+    $query = 'CREATE INDEX "' . $this->prefixNonTable($table, $name, 'idx') . '" ON {' . $table . '} (';
     $query .= $this->_createKeySql($fields) . ')';
     return $query;
   }
@@ -520,13 +519,13 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    * Retrieve a table or column comment.
    */
   public function getComment($table, $column = NULL) {
-    $table = $this->connection->prefixTables('{' . $table . '}');
+    $info = $this->getPrefixInfo($table);
     // Don't use {} around pg_class, pg_attribute tables.
     if (isset($column)) {
-      return $this->connection->query('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', array($table, $column))->fetchField();
+      return $this->connection->query('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', array($info['table'], $column))->fetchField();
     }
     else {
-      return $this->connection->query('SELECT obj_description(oid, ?) FROM pg_class WHERE relname = ?', array('pg_class', $table))->fetchField();
+      return $this->connection->query('SELECT obj_description(oid, ?) FROM pg_class WHERE relname = ?', array('pg_class', $info['table']))->fetchField();
     }
   }
 }
