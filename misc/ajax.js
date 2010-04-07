@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.14 2010/04/01 12:23:41 dries Exp $
+// $Id: ajax.js,v 1.15 2010/04/07 17:30:43 dries Exp $
 (function ($) {
 
 /**
@@ -199,6 +199,12 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
 Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
   // Disable the element that received the change.
   $(this.element).addClass('progress-disabled').attr('disabled', true);
+
+  // Prevent duplicate HTML ids in the returned markup.
+  // @see drupal_html_id()
+  $('[id]').each(function () {
+    form_values.push({ name: 'ajax_html_ids[]', value: this.id });
+  });
 
   // Insert progressbar or throbber.
   if (this.progress.type == 'bar') {
