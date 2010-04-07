@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.288 2010/03/12 15:56:29 dries Exp $
+// $Id: profile.module,v 1.289 2010/04/07 13:49:21 dries Exp $
 
 /**
  * @file
@@ -273,8 +273,6 @@ function profile_save_profile(&$edit, $account, $category, $register = FALSE) {
       ))
       ->fields(array('value' => $edit[$field->name]))
       ->execute();
-    // Mark field as handled (prevents saving to user->data).
-    $edit[$field->name] = NULL;
   }
 }
 
