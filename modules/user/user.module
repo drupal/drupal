@@ -239,6 +239,10 @@ class UserController extends DrupalDefaultEntityController {
     foreach ($queried_users as $key => $record) {
       $picture_fids[] = $record->picture;
       $queried_users[$key] = drupal_unpack($record);
+      // As well as unpacking $user->data, also convert the property to an
+      // unserialized array. This ensures we can always safely reserialize it
+      // in user_save().
+      $queried_users[$key]->data = unserialize($record->data);
       $queried_users[$key]->roles = array();
       if ($record->uid) {
         $queried_users[$record->uid]->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
@@ -334,11 +338,8 @@ function user_load_by_name($name) {
  *   TRUE or omit the $account->uid field.
  * @param $edit
  *   An array of fields and values to save. For example array('name'
- *   => 'My name'). Keys that do not belong to columns in the user-related
- *   tables are added to the a serialized array in the 'data' column
- *   and will be loaded in the $user->data array by user_load().
- *   Setting a field to NULL deletes it from the data column, if you are
- *   modifying an existing user account.
+ *   => 'My name'). Key / value pairs added to the $edit['data'] will be
+ *   serialized and saved in the {users.data} column.
  * @param $category
  *   (optional) The category for storing profile information in.
  *
@@ -375,7 +376,7 @@ function user_save($account, $edit = array(), $category = 'account') {
     // Prepopulate $edit['data'] with the current value of $account->data.
     // Modules can add to or remove from this array in hook_user_presave().
     if (!empty($account->data)) {
-      $edit['data'] = !empty($edit['data']) ? array_merge($edit['data'], $account->data) : $account->data;
+      $edit['data'] = !empty($edit['data']) ? array_merge($account->data, $edit['data']) : $account->data;
     }
     user_module_invoke('presave', $edit, $account, $category);
 
@@ -3393,10 +3394,7 @@ function user_register_submit($form, &$form_state) {
   }
   $notify = !empty($form_state['values']['notify']);
 
-  // The unset below is needed to prevent these form values from being saved as
-  // user data.
   form_state_values_clean($form_state);
-  unset($form_state['values']['notify']);
 
   $form_state['values']['pass'] = $pass;
   $form_state['values']['init'] = $form_state['values']['mail'];

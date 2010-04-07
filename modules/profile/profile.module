@@ -273,8 +273,6 @@ function profile_save_profile(&$edit, $account, $category, $register = FALSE) {
       ))
       ->fields(array('value' => $edit[$field->name]))
       ->execute();
-    // Mark field as handled (prevents saving to user->data).
-    $edit[$field->name] = NULL;
   }
 }
 
