@@ -222,10 +222,9 @@ function _openid_select_service(array $services) {
  */
 function _openid_is_xri($identifier) {
   // Strip the xri:// scheme from the identifier if present.
-  if (stripos($identifier, 'xri://') !== FALSE) {
+  if (stripos($identifier, 'xri://') === 0) {
     $identifier = substr($identifier, 6);
   }
-
 
   // Test whether the identifier starts with an XRI global context symbol or (.
   $firstchar = substr($identifier, 0, 1);
