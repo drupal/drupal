@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.33 2010/03/26 18:58:12 dries Exp $
+// $Id: form_test.module,v 1.34 2010/04/07 04:39:59 dries Exp $
 
 /**
  * @file
@@ -543,6 +543,11 @@ function form_label_test_form(&$form_state) {
     '#type' => 'textfield',
     '#title' => t('Textfield test for title after element'),
     '#title_display' => 'after',
+  );
+  $form['form_textfield_test_title_invisible'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Textfield test for invisible title'),
+    '#title_display' => 'invisible',
   );
   // Textfield test for title set not to display
   $form['form_textfield_test_title_no_show'] = array(
