@@ -570,7 +570,7 @@ class ImageFieldTestCase extends DrupalWebTestCase {
    */
   function uploadNodeImage($image, $field_name, $type) {
     $edit = array(
-      'title' => $this->randomString(),
+      'title' => $this->randomName(),
     );
     $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_0]'] = realpath($image->uri);
     $this->drupalPost('node/add/' . $type, $edit, t('Save'));
