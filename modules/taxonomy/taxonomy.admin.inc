@@ -821,7 +821,8 @@ function taxonomy_form_term_submit($form, &$form_state) {
 
   $form_state['values']['tid'] = $term->tid;
   $form_state['tid'] = $term->tid;
-  $form_state['redirect'] = 'admin/structure/taxonomy';
+  // Do not rebuild here. The term is saved by now and the form should clear.
+  $form_state['rebuild'] = FALSE;
 }
 
 /**
