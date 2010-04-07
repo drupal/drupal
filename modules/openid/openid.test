@@ -254,6 +254,11 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
+    $this->assertRaw(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process.'));
+
+    // Submit the form using the default values based on SREG.
+    $this->drupalPost(NULL, array(), t('Create new account'));
+
     $this->assertRaw(t('Once you have verified your e-mail address, you may log in via OpenID.'), t('User was asked to verify e-mail address.'));
     $this->assertRaw(t('A welcome message with further instructions has been sent to your e-mail address.'), t('A welcome message was sent to the user.'));
 
@@ -288,6 +293,10 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
+    $this->assertRaw(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process.'));
+
+    // Submit the form using the default values based on SREG.
+    $this->drupalPost(NULL, array(), t('Create new account'));
     $this->assertLink('john', 0, t('User was logged in.'));
 
     $user = user_load_by_name('john');
@@ -313,8 +322,10 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
+    $this->assertRaw(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process.'));
 
-    $this->assertRaw(t('Account registration using the information provided by your OpenID provider failed due to the reasons listed below. Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process manually.'));
+    // Submit the form using the default values based on SREG.
+    $this->drupalPost(NULL, array(), t('Create new account'));
     $this->assertRaw(t('The name %name is already taken.', array('%name' => $web_user->name)), t('Form validation error for username was displayed.'));
     $this->assertRaw(t('The e-mail address %mail is not valid.', array('%mail' => 'mail@invalid#')), t('Form validation error for e-mail address was displayed.'));
 
@@ -349,9 +360,12 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
-    $this->assertRaw(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process manually.'));
-    $this->assertNoRaw(t('You must enter a username.'), t('Form validation error for username was not displayed.'));
-    $this->assertNoRaw(t('You must enter an e-mail address.'), t('Form validation error for e-mail address was not displayed.'));
+    $this->assertRaw(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process.'));
+
+    // Submit the empty form.
+    $this->drupalPost(NULL, array(), t('Create new account'));
+    $this->assertRaw(t('Username field is required.'), t('Form validation error for username was displayed.'));
+    $this->assertRaw(t('E-mail address field is required.'), t('Form validation error for e-mail address was displayed.'));
 
     // Enter username and e-mail address manually.
     $edit = array('name' => 'john', 'mail' => 'john@example.com');
@@ -391,6 +405,10 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
+    $this->assertRaw(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process.'));
+
+    // Submit the form using the default values based on AX.
+    $this->drupalPost(NULL, array(), t('Create new account'));
     $this->assertLink('john', 0, t('User was logged in.'));
 
     $user = user_load_by_name('john');
