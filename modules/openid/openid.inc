@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.28 2010/04/06 06:53:55 dries Exp $
+// $Id: openid.inc,v 1.29 2010/04/07 07:38:29 dries Exp $
 
 /**
  * @file
@@ -222,10 +222,9 @@ function _openid_select_service(array $services) {
  */
 function _openid_is_xri($identifier) {
   // Strip the xri:// scheme from the identifier if present.
-  if (stripos($identifier, 'xri://') !== FALSE) {
+  if (stripos($identifier, 'xri://') === 0) {
     $identifier = substr($identifier, 6);
   }
-
 
   // Test whether the identifier starts with an XRI global context symbol or (.
   $firstchar = substr($identifier, 0, 1);
