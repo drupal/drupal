@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.api.php,v 1.9 2010/03/07 07:44:18 webchick Exp $
+// $Id: locale.api.php,v 1.10 2010/04/07 05:15:51 dries Exp $
 
 /**
  * @file
@@ -21,6 +21,33 @@ function hook_locale($op = 'groups') {
   switch ($op) {
     case 'groups':
       return array('custom' => t('Custom'));
+  }
+}
+
+/**
+ * Allows modules to act after language initialization has been performed.
+ *
+ * This is primarily needed to provide translation for configuration variables
+ * in the proper bootstrap phase. Variables are user-defined strings and
+ * therefore should not be translated via t(), since the source string can
+ * change without notice and any previous translation would be lost. Moreover,
+ * since variables can be used in the bootstrap phase, we need a bootstrap hook
+ * to provide a translation early enough to avoid misalignments between code
+ * using the original values and code using the translated values. However
+ * modules implementing hook_boot() should be aware that language initialization
+ * did not happen yet and thus they cannot rely on translated variables.
+ */
+function hook_language_init() {
+  global $language, $conf;
+
+  switch ($language->language) {
+    case 'it':
+      $conf['site_name'] = 'Il mio sito Drupal';
+      break;
+
+    case 'fr':
+      $conf['site_name'] = 'Mon site Drupal';
+      break;
   }
 }
 
