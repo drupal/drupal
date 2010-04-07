@@ -375,6 +375,9 @@ function _node_extract_type($node) {
 /**
  * Returns a list of all the available node types.
  *
+ * This list can include types that are queued for addition or deletion.
+ * See _node_types_build() for details.
+ *
  * @return
  *   An array of node types, keyed by the type.
  *
@@ -394,10 +397,8 @@ function node_type_get_types() {
  *   A single node type, as an object, or FALSE if the node type is not found.
  *   The node type is an object containing fields from hook_node_info() return
  *   values, as well as the field 'type' (the machine-readable type) and other
- *   fields used internally and defined in _node_types_build() and
- *   node_type_set_defaults().
- *
- * @see hook_node_info()
+ *   fields used internally and defined in _node_types_build(),
+ *   hook_node_info(), and node_type_set_defaults().
  */
 function node_type_get_type($node) {
   $type = _node_extract_type($node);
@@ -408,15 +409,17 @@ function node_type_get_type($node) {
 /**
  * Returns the node type base of the passed node or node type string.
  *
- * The base indicates which module implement this node type and is used to
- * execute node type specific hooks.
- *
- * @see node_invoke()
+ * The base indicates which module implements this node type and is used to
+ * execute node-type-specific hooks. For types defined in the user interface
+ * and managed by node.module, the base is 'node_content'.
  *
  * @param $node
  *   A node object or string that indicates the node type to return.
+ *
  * @return
  *   The node type base or FALSE if the node type is not found.
+ *
+ * @see node_invoke()
  */
 function node_type_get_base($node) {
   $type = _node_extract_type($node);
@@ -425,7 +428,10 @@ function node_type_get_base($node) {
 }
 
 /**
- * Returns a list of available node names.
+ * Returns a list of available node type names.
+ *
+ * This list can include types that are queued for addition or deletion.
+ * See _node_types_build() for details.
  *
  * @return
  *   An array of node type names, keyed by the type.
@@ -450,9 +456,12 @@ function node_type_get_name($node) {
 }
 
 /**
- * Resets the database cache of node types.
+ * Updates the database cache of node types.
  *
- * All new or non-modified module-defined node types are saved to the database.
+ * All new module-defined node types are saved to the database via a call to
+ * node_type_save(), and obsolete ones are deleted via a call to
+ * node_type_delete(). See _node_types_build() for an explanation of the new 
+ * and obsolete types.
  */
 function node_types_rebuild() {
   // Reset and load updated node types.
@@ -468,11 +477,11 @@ function node_types_rebuild() {
 }
 
 /**
- * Menu argument loader; Load a node type by string.
+ * Menu argument loader: loads a node type by string.
  *
  * @param $name
- *   The machine-readable name of a node type to load; having '_' replaced with
- *   '-'.
+ *   The machine-readable name of a node type to load, where '_' is replaced
+ *   with '-'.
  *
  * @return
  *   A node type object or FALSE if $name does not exist.
@@ -659,9 +668,23 @@ function node_type_update_nodes($old_type, $type) {
 /**
  * Builds and returns the list of available node types.
  *
- * The list of types is built by querying hook_node_info() in all modules, and
- * by comparing this information with the node types in the {node_type} table.
+ * The list of types is built by invoking hook_node_info() on all modules and
+ * comparing this information with the node types in the {node_type} table.
+ * These two information sources are not synchronized during module installation
+ * until node_types_rebuild() is called.
  *
+ * @return
+ *   Associative array with two components:
+ *   - names: Associative array of the names of node types, keyed by the type.
+ *   - types: Associative array of node type objects, keyed by the type.
+ *   Both of these arrays will include new types that have been defined by
+ *   hook_node_info() implementations but not yet saved in the {node_type}
+ *   table. These are indicated in the type object by $type->is_new being set
+ *   to the value 1. These arrays will also include obsolete types: types that
+ *   were previously defined by modules that have now been disabled, or for
+ *   whatever reason are no longer being defined in hook_node_info()
+ *   implementations, but are still in the database. These are indicated in the
+ *   type object by $type->disabled being set to TRUE.
  */
 function _node_types_build() {
   $_node_types = &drupal_static(__FUNCTION__);
