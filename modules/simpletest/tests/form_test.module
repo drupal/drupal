@@ -126,6 +126,18 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  if (module_exists('node')) {
+    $items['form-test/two-instances-of-same-form'] = array(
+      'title' => 'AJAX test with two form instances',
+      'page callback' => 'form_test_two_instances',
+      'access callback' => 'node_access',
+      'access arguments' => array('create', 'page'),
+      'file path' => drupal_get_path('module', 'node'),
+      'file' => 'node.pages.inc',
+      'type' => MENU_CALLBACK,
+    );
+  }
+
   return $items;
 }
 
@@ -1039,4 +1051,21 @@ function form_test_form_user_register_form_alter(&$form, &$form_state) {
 function form_test_user_register_form_rebuild($form, &$form_state) {
   drupal_set_message('Form rebuilt.');
   $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Menu callback that returns two instances of the node form.
+ */
+function form_test_two_instances() {
+  global $user;
+  $node1 = (object) array(
+    'uid' => $user->uid,
+    'name' => (isset($user->name) ? $user->name : ''),
+    'type' => 'page',
+    'language' => LANGUAGE_NONE,
+  );
+  $node2 = clone($node1);
+  $return['node_form_1'] = drupal_get_form('page_node_form', $node1);
+  $return['node_form_2'] = drupal_get_form('page_node_form', $node2);
+  return $return;
 }

@@ -153,7 +153,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
 
   $title = check_plain(t($instance['label']));
   $description = field_filter_xss(t($instance['description']));
-  $wrapper_id = drupal_html_class($field_name) . '-add-more-wrapper';
+  $wrapper_id = drupal_html_id($field_name . '-add-more-wrapper');
   $field_elements = array();
 
   $function = $instance['widget']['module'] . '_field_widget_form';
@@ -241,7 +241,7 @@ function theme_field_multiple_value_form($variables) {
   $output = '';
 
   if ($element['#cardinality'] > 1 || $element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
-    $table_id = $element['#field_name'] . '_values';
+    $table_id = drupal_html_id($element['#field_name'] . '_values');
     $order_class = $element['#field_name'] . '-delta-order';
     $required = !empty($element['#required']) ? '<span class="form-required" title="' . t('This field is required. ') . '">*</span>' : '';
 

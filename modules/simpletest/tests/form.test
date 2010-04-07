@@ -813,35 +813,28 @@ class FormsRebuildTestCase extends DrupalWebTestCase {
     $this->web_user = $this->drupalCreateUser(array('create page content'));
     $this->drupalLogin($this->web_user);
 
-    // Get the form for adding a 'page' node. Save the content in a local
-    // variable, because drupalPostAJAX() will replace $this->content.
+    // Get the form for adding a 'page' node. Submit an "add another item" AJAX
+    // submission and verify it worked by ensuring the updated page has two text
+    // field items in the field for which we just added an item.
     $this->drupalGet('node/add/page');
-    $content = $this->content;
+    preg_match('/jQuery\.extend\(Drupal\.settings, (.*?)\);/', $this->content, $matches);
+    $settings = drupal_json_decode($matches[1]);
+    $button = $this->xpath('//input[@name="field_ajax_test_add_more"]');
+    $button_id = (string) $button[0]['id'];
+    $this->drupalPostAJAX(NULL, array(), array('field_ajax_test_add_more' => t('Add another item')), 'system/ajax', array(), array(), 'page-node-form', $settings['ajax'][$button_id]);
+    $this->assert(count($this->xpath('//div[contains(@class, "field-name-field-ajax-test")]//input[@type="text"]')) == 2, t('AJAX submission succeeded.'));
 
-    // Submit an "add another item" AJAX submission and verify it worked by
-    // ensuring it returned two text fields.
-    $commands = $this->drupalPostAJAX(NULL, array(), array('field_ajax_test_add_more' => t('Add another item')));
-    $fragment = simplexml_load_string('<div>' . $commands[1]['data'] . '</div>');
-    $this->assert(count($fragment->xpath('//input[@type="text"]')) == 2, t('AJAX submission succeeded.'));
-
-    // Submit the form with the non-AJAX "Save" button. Leave the title field
-    // blank to trigger a validation error. Restore $this->content first, as
-    // drupalPost() needs that to contain the form, not the JSON string left by
-    // drupalPostAJAX().
-    // @todo While not necessary for this test, we would be emulating the
-    //   browser better by calling drupalPost() with the AJAX-modified content
-    //   rather than with the original content from the drupalGet(), but that's
-    //   not possible with the current implementation of drupalPostAJAX(). See
-    //   http://drupal.org/node/384992
-    $this->drupalSetContent($content);
+    // Submit the form with the non-AJAX "Save" button, leaving the title field
+    // blank to trigger a validation error, and ensure that a validation error
+    // occurred, because this test is for testing what happens when a form is
+    // re-rendered without being re-built, which is what happens when there's
+    // a validation error.
     $this->drupalPost(NULL, array(), t('Save'));
-
-    // Ensure that a validation error occurred, since this test is for testing
-    // what happens to the form action after a validation error.
     $this->assertText('Title field is required.', t('Non-AJAX submission correctly triggered a validation error.'));
 
     // Ensure that the form's action is correct.
-    $this->assertFieldByXPath('//form[@id="page-node-form" and @action="' . url('node/add/page') . '"]', NULL, t('Re-rendered form contains the correct action value.'));
+    $forms = $this->xpath('//form[contains(@class, "node-page-form")]');
+    $this->assert(count($forms) == 1 && $forms[0]['action'] == url('node/add/page'), t('Re-rendered form contains the correct action value.'));
   }
 }
 

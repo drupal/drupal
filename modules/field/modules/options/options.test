@@ -135,7 +135,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Display form: with no field data, nothing is checked.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
-    $this->assertNoFieldChecked("edit-card-2-$langcode--0");
+    $this->assertNoFieldChecked("edit-card-2-$langcode-0");
     $this->assertNoFieldChecked("edit-card-2-$langcode-1");
     $this->assertNoFieldChecked("edit-card-2-$langcode-2");
     $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', t('Option text was properly filtered.'));
@@ -151,7 +151,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
-    $this->assertFieldChecked("edit-card-2-$langcode--0");
+    $this->assertFieldChecked("edit-card-2-$langcode-0");
     $this->assertNoFieldChecked("edit-card-2-$langcode-1");
     $this->assertFieldChecked("edit-card-2-$langcode-2");
 
@@ -166,7 +166,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
-    $this->assertFieldChecked("edit-card-2-$langcode--0");
+    $this->assertFieldChecked("edit-card-2-$langcode-0");
     $this->assertNoFieldChecked("edit-card-2-$langcode-1");
     $this->assertNoFieldChecked("edit-card-2-$langcode-2");
 

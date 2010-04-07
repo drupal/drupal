@@ -1659,7 +1659,9 @@ class DrupalWebTestCase extends DrupalTestCase {
               // http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
               $post[$key] = urlencode($key) . '=' . urlencode($value);
             }
-            if ($ajax && isset($submit['triggering_element'])) {
+            // For AJAX requests, add '_triggering_element_*' and
+            // 'ajax_html_ids' to the POST data, as ajax.js does.
+            if ($ajax) {
               if (is_array($submit['triggering_element'])) {
                 // Get the first key/value pair in the array.
                 $post['_triggering_element_value'] = '_triggering_element_value=' . urlencode(reset($submit['triggering_element']));
@@ -1667,6 +1669,10 @@ class DrupalWebTestCase extends DrupalTestCase {
               }
               else {
                 $post['_triggering_element_name'] = '_triggering_element_name=' . urlencode($submit['triggering_element']);
+              }
+              foreach ($this->xpath('//*[@id]') as $element) {
+                $id = (string) $element['id'];
+                $post[] = urlencode('ajax_html_ids[]') . '=' . urlencode($id);
               }
             }
             $post = implode('&', $post);
@@ -1698,10 +1704,78 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Execute a POST request on an AJAX path and JSON decode the result.
+   * Execute an AJAX submission.
+   *
+   * This executes a POST as ajax.js does. It uses the returned JSON data, an
+   * array of commands, to update $this->content using equivalent DOM
+   * manipulation as is used by ajax.js. It also returns the array of commands.
+   *
+   * @see ajax.js
    */
-  protected function drupalPostAJAX($path, $edit, $triggering_element, $ajax_path = 'system/ajax', array $options = array(), array $headers = array()) {
-    return drupal_json_decode($this->drupalPost($path, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers));
+  protected function drupalPostAJAX($path, $edit, $triggering_element, $ajax_path = 'system/ajax', array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = array()) {
+    // Get the content of the initial page prior to calling drupalPost(), since
+    // drupalPost() replaces $this->content.
+    if (isset($path)) {
+      $this->drupalGet($path, $options);
+    }
+    $content = $this->content;
+    $return = drupal_json_decode($this->drupalPost(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id));
+
+    // We need $ajax_settings['wrapper'] to perform DOM manipulation.
+    if (!empty($ajax_settings) && !empty($return)) {
+      // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
+      // them.
+      @$dom = DOMDocument::loadHTML($content);
+      foreach ($return as $command) {
+        // @todo ajax.js can process commands other than 'insert' and can
+        //   process commands that include a 'selector', but these are hard to
+        //   emulate with DOMDocument. For now, we only implement 'insert'
+        //   commands that use $ajax_settings['wrapper'].
+        if ($command['command'] == 'insert' && !isset($command['selector'])) {
+          // $dom->getElementById() doesn't work when drupalPostAJAX() is
+          // invoked multiple times for a page, so use XPath instead. This also
+          // sets us up for adding support for $command['selector'], though it
+          // will require transforming a jQuery selector to XPath.
+          $xpath = new DOMXPath($dom);
+          $wrapperNode = $xpath->query('//*[@id="' . $ajax_settings['wrapper'] . '"]')->item(0);
+          if ($wrapperNode) {
+            // ajax.js adds an enclosing DIV to work around a Safari bug.
+            $newDom = DOMDocument::loadHTML('<div>' . $command['data'] . '</div>');
+            $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
+            $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
+            // The "method" is a jQuery DOM manipulation function. Emulate each
+            // one using PHP's DOMNode API.
+            switch ($method) {
+              case 'replaceWith':
+                $wrapperNode->parentNode->replaceChild($newNode, $wrapperNode);
+                break;
+              case 'append':
+                $wrapperNode->appendChild($newNode);
+                break;
+              case 'prepend':
+                // If no firstChild, insertBefore() falls back to appendChild().
+                $wrapperNode->insertBefore($newNode, $wrapperNode->firstChild);
+                break;
+              case 'before':
+                $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode);
+                break;
+              case 'after':
+                // If no nextSibling, insertBefore() falls back to appendChild().
+                $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode->nextSibling);
+                break;
+              case 'html':
+                foreach ($wrapperNode->childNodes as $childNode) {
+                  $wrapperNode->removeChild($childNode);
+                }
+                $wrapperNode->appendChild($newNode);
+                break;
+            }
+          }
+        }
+      }
+      $this->drupalSetContent($dom->saveHTML());
+    }
+    return $return;
   }
 
   /**
@@ -2785,6 +2859,36 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function assertNoField($field, $message = '', $group = 'Other') {
     return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), '', $message, $group);
+  }
+
+  /**
+   * Assert that each HTML ID is used for just a single element.
+   *
+   * @param $message
+   *   Message to display.
+   * @param $group
+   *   The group this message belongs to.
+   * @param $ids_to_skip
+   *   An optional array of ids to skip when checking for duplicates. It is
+   *   always a bug to have duplicate HTML IDs, so this parameter is to enable
+   *   incremental fixing of core code. Whenever a test passes this parameter,
+   *   it should add a "todo" comment above the call to this function explaining
+   *   the legacy bug that the test wishes to ignore and including a link to an
+   *   issue that is working to fix that legacy bug.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertNoDuplicateIds($message = '', $group = 'Other', $ids_to_skip = array()) {
+    $status = TRUE;
+    foreach ($this->xpath('//*[@id]') as $element) {
+      $id = (string) $element['id'];
+      if (isset($seen_ids[$id]) && !in_array($id, $ids_to_skip)) {
+        $this->fail(t('The HTML ID %id is unique.', array('%id' => $id)), $group);
+        $status = FALSE;
+      }
+      $seen_ids[$id] = TRUE;
+    }
+    return $this->assert($status, $message, $group);
   }
 
   /**

@@ -200,6 +200,12 @@ Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
   // Disable the element that received the change.
   $(this.element).addClass('progress-disabled').attr('disabled', true);
 
+  // Prevent duplicate HTML ids in the returned markup.
+  // @see drupal_html_id()
+  $('[id]').each(function () {
+    form_values.push({ name: 'ajax_html_ids[]', value: this.id });
+  });
+
   // Insert progressbar or throbber.
   if (this.progress.type == 'bar') {
     var progressBar = new Drupal.progressBar('ajax-progress-' + this.element.id, eval(this.progress.update_callback), this.progress.method, eval(this.progress.error_callback));

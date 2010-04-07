@@ -748,15 +748,15 @@ class DrupalHTMLIdentifierTestCase extends DrupalUnitTestCase {
     $this->assertIdentical(drupal_html_id('invalid,./:@\\^`{Üidentifier'), 'invalididentifier', t('Strip invalid characters.'));
 
     // Verify Drupal coding standards are enforced.
-    $this->assertIdentical(drupal_html_id('ID NAME_[1]'), 'id-name--1', t('Enforce Drupal coding standards.'));
+    $this->assertIdentical(drupal_html_id('ID NAME_[1]'), 'id-name-1', t('Enforce Drupal coding standards.'));
 
     // Reset the static cache so we can ensure the unique id count is at zero.
     drupal_static_reset('drupal_html_id');
 
     // Clean up IDs with invalid starting characters.
     $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id', t('Test the uniqueness of IDs #1.'));
-    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id-2', t('Test the uniqueness of IDs #2.'));
-    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id-3', t('Test the uniqueness of IDs #3.'));
+    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id--2', t('Test the uniqueness of IDs #2.'));
+    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id--3', t('Test the uniqueness of IDs #3.'));
   }
 }
 
