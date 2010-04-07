@@ -139,7 +139,7 @@ function contact_site_form_submit($form, &$form_state) {
 
   // Save the anonymous user information to a cookie for reuse.
   if (!$user->uid) {
-    user_cookie_save($values);
+    user_cookie_save(array_intersect_key($values, array_flip(array('name', 'mail'))));
   }
 
   // Get the to and from e-mail addresses.
@@ -272,7 +272,7 @@ function contact_personal_form_submit($form, &$form_state) {
 
   // Save the anonymous user information to a cookie for reuse.
   if (!$user->uid) {
-    user_cookie_save($values);
+    user_cookie_save(array_intersect_key($values, array_flip(array('name', 'mail'))));
   }
 
   // Get the to and from e-mail addresses.

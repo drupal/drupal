@@ -2721,7 +2721,7 @@ function system_admin_compact_mode() {
  *   Valid values are 'on' and 'off'.
  */
 function system_admin_compact_page($mode = 'off') {
-  user_cookie_save(array('admin_compact_mode' => ($mode == 'on')), array('admin_compact_mode'));
+  user_cookie_save(array('admin_compact_mode' => ($mode == 'on')));
   drupal_goto();
 }
 

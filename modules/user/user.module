@@ -3494,17 +3494,12 @@ function user_login_destination() {
  * Saves visitor information as a cookie so it can be reused.
  *
  * @param $values
- *   An array of submitted form values with identifying information about the
- *   current user, typically $form_state['values'] from a submit handler.
- * @param $fields
- *   An array of key values from $values to be saved into a cookie.
+ *   An array of key/value pairs to be saved into a cookie.
  */
-function user_cookie_save(array $values, array $fields = array('name', 'mail', 'homepage')) {
-  foreach ($fields as $field) {
-    if (isset($values[$field])) {
-      // Set cookie for 365 days.
-      setrawcookie('Drupal.visitor.' . $field, rawurlencode($values[$field]), REQUEST_TIME + 31536000, '/');
-    }
+function user_cookie_save(array $values) {
+  foreach ($values as $field => $value) {
+    // Set cookie for 365 days.
+    setrawcookie('Drupal.visitor.' . $field, rawurlencode($value), REQUEST_TIME + 31536000, '/');
   }
 }
 
