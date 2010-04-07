@@ -859,10 +859,10 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
 }
 
 /**
- * Call all init or exit hooks without including all modules.
+ * Invoke a bootstrap hook in all bootstrap modules that implement it.
  *
  * @param $hook
- *   The name of the bootstrap hook we wish to invoke.
+ *   The name of the bootstrap hook to invoke.
  */
 function bootstrap_invoke_all($hook) {
   // _drupal_bootstrap_page_cache() already loaded the bootstrap modules, so we
@@ -1163,7 +1163,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
  * Define the critical hooks that force modules to always be loaded.
  */
 function bootstrap_hooks() {
-  return array('boot', 'exit', 'watchdog');
+  return array('boot', 'exit', 'watchdog', 'language_init');
 }
 
 /**
@@ -2086,7 +2086,7 @@ function drupal_language_initialize() {
     }
     // Allow modules to react on language system initialization in multilingual
     // environments.
-    module_invoke_all('language_init', $types);
+    bootstrap_invoke_all('language_init');
   }
 }
 
