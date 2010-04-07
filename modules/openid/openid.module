@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.83 2010/04/07 14:22:34 dries Exp $
+// $Id: openid.module,v 1.84 2010/04/07 16:35:03 dries Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function openid_user_insert(&$edit, $account, $category) {
 function openid_user_login(&$edit, $account) {
   if (isset($_SESSION['openid'])) {
     // The user has logged in via OpenID.
-    user_cookie_save($_SESSION['openid']['user_login_values'], array('openid_identifier'));
+    user_cookie_save(array_intersect_key($_SESSION['openid']['user_login_values'], array_flip(array('openid_identifier'))));
     unset($_SESSION['openid']);
   }
 }
