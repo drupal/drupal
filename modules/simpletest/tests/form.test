@@ -305,6 +305,9 @@ class FormsElementsLabelsTestCase extends DrupalWebTestCase {
     $elements = $this->xpath('//input[@id="edit-form-textfield-test-title-after"]/following-sibling::label[@for="edit-form-textfield-test-title-after" and @class="option"]');
     $this->assertTrue(isset($elements[0]), t("Label after field and label option class correct for text field."));
 
+    $elements = $this->xpath('//input[@id="edit-form-textfield-test-title-invisible"]/following-sibling::label[@for="edit-form-textfield-test-title-invisible" and @class="element-invisible"]');
+    $this->assertTrue(isset($elements[0]), t("Label after field and label class is element-invisible."));
+
     $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-no-show"]');
     $this->assertFalse(isset($elements[0]), t("No label tag when title set not to display."));
   }

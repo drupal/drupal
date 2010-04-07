@@ -2986,6 +2986,9 @@ function theme_file($variables) {
  *   for radio and checkbox #type elements as set in system_element_info().
  *   If the #title is empty but the field is #required, the label will
  *   contain only the required marker.
+ * - invisible: Labels are critical for screen readers to enable them to
+ *   properly navigate through forms but can be visually distracting. This
+ *   property hides the label for everyone except screen readers.
  * - attribute: Set the title attribute on the element to create a tooltip
  *   but output no label element. This is supported only for checkboxes
  *   and radios in form_pre_render_conditional_form_element(). It is used
@@ -3042,6 +3045,7 @@ function theme_form_element($variables) {
       $output .= ' ' . $element['#children'] . "\n";
       break;
 
+    case 'invisible':
     case 'after':
       $output .= ' ' . $element['#children'];
       $output .= ' ' . theme('form_element_label', $variables) . "\n";
@@ -3128,10 +3132,15 @@ function theme_form_element_label($variables) {
   $title = filter_xss_admin($element['#title']);
 
   $attributes = array();
+  // Style the label as class option to display inline with the element.
   if ($element['#title_display'] == 'after') {
-    // Style the label as class option to display inline with the element.
     $attributes['class'] = 'option';
   }
+  // Show label only to screen readers to avoid disruption in visual flows.
+  elseif ($element['#title_display'] == 'invisible') {
+    $attributes['class'] = 'element-invisible';
+  }
+
   if (!empty($element['#id'])) {
     $attributes['for'] = $element['#id'];
   }
