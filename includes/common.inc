@@ -2006,19 +2006,6 @@ function url($path = NULL, array $options = array()) {
   }
 
   global $base_url, $base_secure_url, $base_insecure_url;
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['script'] = &drupal_static(__FUNCTION__);
-  }
-  $script = &$drupal_static_fast['script'];
-
-  if (!isset($script)) {
-    // On some web servers, such as IIS, we can't omit "index.php". So, we
-    // generate "index.php?q=foo" instead of "?q=foo" on anything that is not
-    // Apache.
-    $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === FALSE) ? 'index.php' : '';
-  }
 
   // The base_url might be rewritten from the language rewrite in domain mode.
   if (!isset($options['base_url'])) {
@@ -2075,6 +2062,16 @@ function url($path = NULL, array $options = array()) {
       $query += $options['query'];
     }
     if ($query) {
+      // On some web servers, such as IIS, we can't omit "index.php". So, we
+      // generate "index.php?q=foo" instead of "?q=foo" on anything that is not
+      // Apache. strpos() is fast, so there is no performance benefit to
+      // statically caching its result.
+      // @todo This needs to be re-evaluated with modern web servers. Since we
+      //   do not add $script when there aren't query parameters, we're already
+      //   assuming that index.php is setup as a default document on the web
+      //   server. If that's the case, it should be possible to omit "index.php"
+      //   even when there are query parameters: http://drupal.org/node/437228.
+      $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === FALSE) ? 'index.php' : '';
       return $base . $script . '?' . drupal_http_build_query($query) . $options['fragment'];
     }
     else {
