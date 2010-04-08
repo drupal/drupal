@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.290 2010/03/30 07:17:19 webchick Exp $
+// $Id: locale.module,v 1.291 2010/04/08 18:16:43 dries Exp $
 
 /**
  * @file
@@ -512,10 +512,7 @@ function locale_field_language_fallback(&$display_language, $entity, $langcode) 
  * Implements hook_entity_info_alter().
  */
 function locale_entity_info_alter(&$entity_info) {
-  $enabled = drupal_multilingual();
-  foreach ($entity_info as $type => $info) {
-    $entity_info[$type]['translation']['locale'] = $enabled;
-  }
+  $entity_info['node']['translation']['locale'] = TRUE;
 }
 
 /**
