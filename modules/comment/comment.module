@@ -1424,7 +1424,7 @@ function comment_save($comment) {
       // Also see the documentation for comment_view().
       if (!empty($comment->thread)) {
         // Allow calling code to set thread itself.
-        $thread == $comment->thread;
+        $thread = $comment->thread;
       }
       elseif ($comment->pid == 0) {
         // This is a comment with no parent comment (depth 0): we start
