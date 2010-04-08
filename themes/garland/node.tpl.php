@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.22 2010/04/06 16:30:20 dries Exp $
+// $Id: node.tpl.php,v 1.23 2010/04/08 18:26:42 dries Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
@@ -25,12 +25,6 @@
   </div>
 
   <div class="clearfix">
-    <?php if (!empty($content['links']['terms'])): ?>
-      <div class="meta">
-        <div class="terms"><?php print render($content['links']['terms']); ?></div>
-      </div>
-    <?php endif; ?>
-
     <?php if (!empty($content['links'])): ?>
       <div class="links"><?php print render($content['links']); ?></div>
     <?php endif; ?>

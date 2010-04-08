@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.18 2010/03/03 19:46:26 dries Exp $ */
+/* $Id: style-rtl.css,v 1.19 2010/04/08 18:26:42 dries Exp $ */
 
 html {
   direction: rtl;
@@ -200,12 +200,6 @@ ul.links li, ul.inline li {
   text-align: right;
 }
 
-.node .links ul.links li, .comment .links ul.links li {}
-.terms ul.links li {
-  padding-right: 1em;
-  padding-left: 0;
-}
-
 .user-picture,
 .comment .submitted {
   padding-left: 0;
@@ -215,10 +209,6 @@ ul.links li, ul.inline li {
 }
 
 .new {
-  float: left;
-}
-
-.terms {
   float: left;
 }
 

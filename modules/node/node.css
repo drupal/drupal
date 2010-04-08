@@ -1,4 +1,4 @@
-/* $Id: node.css,v 1.15 2010/03/18 06:50:37 dries Exp $ */
+/* $Id: node.css,v 1.16 2010/04/08 18:26:42 dries Exp $ */
 
 .node-unpublished {
   background-color: #fff4f4;
@@ -23,7 +23,4 @@
 }
 td.revision-current {
   background: #ffc;
-}
-.terms-inline {
-  display: inline;
 }
