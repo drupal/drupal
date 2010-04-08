@@ -371,6 +371,36 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
   }
 }
 
+class RdfCommentAttributesTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'RDF comment mapping',
+      'description' => 'Tests the RDFa markup of comments.',
+      'group' => 'RDF',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('rdf', 'rdf_test', 'comment');
+    // Enable anonymous posting of content.
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'create article content' => TRUE,
+      'access comments' => TRUE,
+      'post comments' => TRUE,
+      'post comments without approval' => TRUE,
+    ));
+  }
+
+  public function testAttributesInTeaser() {
+    $node = $this->drupalCreateNode(array('type' => 'article', 'uid' => 1, 'promote' => 1));
+    CommentHelperCase::postComment($node, $this->randomName(), $this->randomName());
+    $this->drupalGet('');
+    $comment_count_link = $this->xpath('//div[@about=:url]//a[contains(@property, "sioc:num_replies") and @rel=""]', array(':url' => url("node/$node->nid")));
+    $this->assertTrue(!empty($comment_count_link), t('Empty rel attribute found in comment count link.'));
+  }
+
+}
 
 class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
   public static function getInfo() {
