@@ -3,7 +3,7 @@
 
 Drupal.behaviors.color = {
   attach: function (context, settings) {
-    var i, colors, field_name;
+    var i, j, colors, field_name;
     // This behavior attaches by ID, so is only valid once on a page.
     var form = $('#system-theme-settings .color-form', context).once('color');
     if (form.length == 0) {
@@ -149,7 +149,7 @@ Drupal.behaviors.color = {
      * Callback for Farbtastic when a new color is chosen.
      */
     function callback(input, color, propagate, colorScheme) {
-      var i, j, matched;
+      var matched;
       // Set background/foreground colors.
       $(input).css({
         backgroundColor: color,
@@ -183,7 +183,6 @@ Drupal.behaviors.color = {
           resetScheme();
         }
       }
-
     }
 
     /**
