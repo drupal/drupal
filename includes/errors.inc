@@ -1,5 +1,5 @@
 <?php
-// $Id: errors.inc,v 1.3 2010/04/03 03:36:11 webchick Exp $
+// $Id: errors.inc,v 1.4 2010/04/08 18:11:27 dries Exp $
 
 /**
  * @file
@@ -180,6 +180,14 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
   if ($fatal) {
     drupal_add_http_header('Status', '500 Service unavailable (with message)');
+  }
+
+  if (drupal_is_cli()) {
+    if ($fatal) {
+      // When called from CLI, simply output a plain text message.
+      print html_entity_decode(strip_tags(t('%type: %message in %function (line %line of %file).', $error))). "\n";
+      exit;
+    }
   }
 
   if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
