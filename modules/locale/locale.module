@@ -512,10 +512,7 @@ function locale_field_language_fallback(&$display_language, $entity, $langcode) 
  * Implements hook_entity_info_alter().
  */
 function locale_entity_info_alter(&$entity_info) {
-  $enabled = drupal_multilingual();
-  foreach ($entity_info as $type => $info) {
-    $entity_info[$type]['translation']['locale'] = $enabled;
-  }
+  $entity_info['node']['translation']['locale'] = TRUE;
 }
 
 /**
