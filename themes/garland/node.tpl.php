@@ -25,12 +25,6 @@
   </div>
 
   <div class="clearfix">
-    <?php if (!empty($content['links']['terms'])): ?>
-      <div class="meta">
-        <div class="terms"><?php print render($content['links']['terms']); ?></div>
-      </div>
-    <?php endif; ?>
-
     <?php if (!empty($content['links'])): ?>
       <div class="links"><?php print render($content['links']); ?></div>
     <?php endif; ?>
