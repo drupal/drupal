@@ -1,4 +1,4 @@
-// $Id: vertical-tabs.js,v 1.11 2010/03/30 07:05:58 webchick Exp $
+// $Id: vertical-tabs.js,v 1.12 2010/04/09 12:24:53 dries Exp $
 
 (function ($) {
 
@@ -129,7 +129,7 @@ Drupal.verticalTab.prototype = {
    * Updates the tab's summary.
    */
   updateSummary: function () {
-    this.summary.html(this.fieldset.getSummary());
+	  this.summary.html(this.fieldset.drupalGetSummary());
   },
 
   /**

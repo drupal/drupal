@@ -1,4 +1,4 @@
-// $Id: collapse.js,v 1.29 2010/03/31 13:45:31 dries Exp $
+// $Id: collapse.js,v 1.30 2010/04/09 12:24:53 dries Exp $
 (function ($) {
 
 /**
@@ -66,7 +66,7 @@ Drupal.behaviors.collapse = {
       var summary = $('<span class="summary"></span>');
       $fieldset.
         bind('summaryUpdated', function () {
-          var text = $.trim($fieldset.getSummary());
+          var text = $.trim($fieldset.drupalGetSummary());
           summary.html(text ? ' (' + text + ')' : '');
         })
         .trigger('summaryUpdated');

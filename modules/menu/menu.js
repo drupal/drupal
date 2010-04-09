@@ -1,10 +1,10 @@
-// $Id: menu.js,v 1.5 2010/02/14 09:39:45 dries Exp $
+// $Id: menu.js,v 1.6 2010/04/09 12:24:53 dries Exp $
 
 (function ($) {
 
 Drupal.behaviors.menuFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset.menu-link-form', context).setSummary(function (context) {
+    $('fieldset.menu-link-form', context).drupalSetSummary(function (context) {
       if ($('#edit-menu-enabled', context).attr('checked')) {
         return Drupal.checkPlain($('#edit-menu-link-title', context).val());
       }
