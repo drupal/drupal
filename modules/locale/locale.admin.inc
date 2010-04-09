@@ -339,8 +339,6 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
     batch_set($batch);
   }
 
-  module_invoke_all('multilingual_settings_changed');
-
   $form_state['redirect'] = 'admin/config/regional/language';
   return;
 }
