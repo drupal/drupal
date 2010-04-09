@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.admin.inc,v 1.7 2010/03/10 14:23:31 dries Exp $
+// $Id: locale.admin.inc,v 1.8 2010/04/09 06:59:51 dries Exp $
 
 /**
  * @file
@@ -687,7 +687,7 @@ function locale_languages_configure_form_submit($form, &$form_state) {
 /**
  * The URL language provider configuration form.
  */
-function locale_language_providers_url_form() {
+function locale_language_providers_url_form($form, &$form_state) {
   $form = array();
 
   $form['locale_language_negotiation_url_part'] = array(
@@ -701,7 +701,7 @@ function locale_language_providers_url_form() {
     '#description' => t('<em>Path prefix</em>: URLs like http://example.com/de/contact set language to German (de). <em>Domain</em>: URLs like http://de.example.com/contact set the language to German. <strong>Warning: Changing this setting may break incoming URLs. Use with caution on a production site.</strong>'),
   );
 
-  $form['#redirect'] = 'admin/config/regional/language/configure';
+  $form_state['redirect'] = 'admin/config/regional/language/configure';
 
   return system_settings_form($form);
 }
@@ -709,7 +709,7 @@ function locale_language_providers_url_form() {
 /**
  * The URL language provider configuration form.
  */
-function locale_language_providers_session_form() {
+function locale_language_providers_session_form($form, &$form_state) {
   $form = array();
 
   $form['locale_language_negotiation_session_param'] = array(
@@ -719,7 +719,7 @@ function locale_language_providers_session_form() {
     '#description' => t('Name of the request/session parameter used to determine the desired language.'),
   );
 
-  $form['#redirect'] = 'admin/config/regional/language/configure';
+  $form_state['redirect'] = 'admin/config/regional/language/configure';
 
   return system_settings_form($form);
 }
