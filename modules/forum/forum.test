@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.50 2010/03/25 11:53:25 dries Exp $
+// $Id: forum.test,v 1.51 2010/04/09 12:12:30 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -85,6 +85,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Test editing a forum topic that has a comment.
     $this->drupalLogin($this->any_user);
+    $this->drupalGet('forum/' . $this->forum['tid']);
     $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
     $this->assertResponse(200);
   }
