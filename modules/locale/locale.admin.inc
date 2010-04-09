@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.admin.inc,v 1.8 2010/04/09 06:59:51 dries Exp $
+// $Id: locale.admin.inc,v 1.9 2010/04/09 12:14:25 dries Exp $
 
 /**
  * @file
@@ -338,8 +338,6 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
   if ($batch = locale_batch_by_language($langcode, '_locale_batch_language_finished')) {
     batch_set($batch);
   }
-
-  module_invoke_all('multilingual_settings_changed');
 
   $form_state['redirect'] = 'admin/config/regional/language';
   return;

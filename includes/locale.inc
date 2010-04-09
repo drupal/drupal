@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.250 2010/03/10 14:23:31 dries Exp $
+// $Id: locale.inc,v 1.251 2010/04/09 12:14:25 dries Exp $
 
 /**
  * @file
@@ -386,6 +386,8 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
   _locale_invalidate_js($langcode);
 
   watchdog('locale', 'The %language language (%code) has been created.', array('%language' => $name, '%code' => $langcode));
+
+  module_invoke_all('multilingual_settings_changed');
 }
 /**
  * @} End of "locale-api-add"
