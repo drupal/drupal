@@ -132,7 +132,7 @@ function image_update_7000() {
         ),
       ),
       'primary key' => array('isid'),
-      'indexes' => array(
+      'unique keys' => array(
         'name' => array('name'),
       ),
     );
