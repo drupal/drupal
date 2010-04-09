@@ -85,6 +85,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Test editing a forum topic that has a comment.
     $this->drupalLogin($this->any_user);
+    $this->drupalGet('forum/' . $this->forum['tid']);
     $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
     $this->assertResponse(200);
   }
