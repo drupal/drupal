@@ -4,7 +4,7 @@
 
 Drupal.behaviors.menuFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset.menu-link-form', context).setSummary(function (context) {
+    $('fieldset.menu-link-form', context).drupalSetSummary(function (context) {
       if ($('#edit-menu-enabled', context).attr('checked')) {
         return Drupal.checkPlain($('#edit-menu-link-title', context).val());
       }

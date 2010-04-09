@@ -66,7 +66,7 @@ Drupal.behaviors.collapse = {
       var summary = $('<span class="summary"></span>');
       $fieldset.
         bind('summaryUpdated', function () {
-          var text = $.trim($fieldset.getSummary());
+          var text = $.trim($fieldset.drupalGetSummary());
           summary.html(text ? ' (' + text + ')' : '');
         })
         .trigger('summaryUpdated');

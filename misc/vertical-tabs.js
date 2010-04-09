@@ -129,7 +129,7 @@ Drupal.verticalTab.prototype = {
    * Updates the tab's summary.
    */
   updateSummary: function () {
-    this.summary.html(this.fieldset.getSummary());
+	  this.summary.html(this.fieldset.drupalGetSummary());
   },
 
   /**

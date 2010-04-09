@@ -4,7 +4,7 @@
 
 Drupal.behaviors.pathFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset#edit-path', context).setSummary(function (context) {
+    $('fieldset#edit-path', context).drupalSetSummary(function (context) {
       var path = $('#edit-path-alias').val();
 
       return path ?
