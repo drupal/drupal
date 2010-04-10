@@ -438,7 +438,6 @@ function block_custom_block_form($edit = array()) {
     '#description' => t('The content of the block as shown to the user.'),
     '#required' => TRUE,
     '#weight' => -17,
-    '#access' => filter_access(filter_format_load($edit['format'])),
   );
 
   return $form;

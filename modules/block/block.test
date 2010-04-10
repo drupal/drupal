@@ -131,7 +131,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $block_admin = $this->drupalCreateUser(array('administer blocks'));
     $this->drupalLogin($block_admin);
     $this->drupalGet('admin/structure/block/manage/block/' . $bid . '/configure');
-    $this->assertNoText(t('Block body'));
+    $this->assertFieldByXPath("//textarea[@name='body[value]' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), t('Body field contains denied message'));
     $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/configure', array(), t('Save block'));
     $this->assertNoText(t('Ensure that each block description is unique.'));
 

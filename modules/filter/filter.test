@@ -395,7 +395,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
   }
 }
 
-class FilterAccessTestCase extends DrupalWebTestCase {
+class FilterFormatAccessTestCase extends DrupalWebTestCase {
   protected $admin_user;
   protected $web_user;
   protected $allowed_format;
@@ -403,8 +403,8 @@ class FilterAccessTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Filter access functionality',
-      'description' => 'Test the filter access system.',
+      'name' => 'Filter format access',
+      'description' => 'Tests access to text formats.',
       'group' => 'Filter',
     );
   }
@@ -412,8 +412,15 @@ class FilterAccessTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
+    $this->full_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
+
     // Create two text formats and grant a regular user access to one of them.
-    $this->admin_user = $this->drupalCreateUser(array('administer filters'));
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer filters',
+      'create page content',
+      'edit any page content',
+      filter_permission_name($this->full_html_format),
+    ));
     $this->drupalLogin($this->admin_user);
     $formats = array();
     for ($i = 0; $i < 2; $i++) {
@@ -424,7 +431,11 @@ class FilterAccessTestCase extends DrupalWebTestCase {
       $formats[] = filter_format_load($format_id);
     }
     list($this->allowed_format, $this->disallowed_format) = $formats;
-    $this->web_user = $this->drupalCreateUser(array('create page content', filter_permission_name($this->allowed_format)));
+
+    $this->web_user = $this->drupalCreateUser(array(
+      'create page content',
+      filter_permission_name($this->allowed_format),
+    ));
   }
 
   function testFormatPermissions() {
@@ -472,6 +483,61 @@ class FilterAccessTestCase extends DrupalWebTestCase {
     // Check that the fallback format is always allowed.
     $this->assertEqual(filter_get_roles_by_format(filter_format_load(filter_fallback_format())), user_roles(), t('All roles have access to the fallback format.'));
     $this->assertTrue(in_array(filter_fallback_format(), array_keys(filter_get_formats_by_role($rid))), t('The fallback format appears in the list of allowed formats for any role.'));
+  }
+
+  /**
+   * Test editing a page using a disallowed text format.
+   *
+   * Verifies that a regular user is able to edit a page, but is not allowed to
+   * change the fields which use an inaccessible text format.
+   */
+  function testFormatWidgetPermissions() {
+    $langcode = LANGUAGE_NONE;
+    $title_key = "title";
+    $body_value_key = "body[$langcode][0][value]";
+    $body_format_key = "body[$langcode][0][format]";
+
+    // Create node to edit.
+    $this->drupalLogin($this->admin_user);
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit[$body_value_key] = $this->randomName(16);
+    $edit[$body_format_key] = $this->full_html_format->format;
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
+
+    // Try to edit with a less privileged user.
+    $this->moderator = $this->drupalCreateUser(array(
+      'edit any page content',
+      'create page content',
+    ));
+    $this->drupalLogin($this->moderator);
+    $this->drupalGet('node/' . $node->nid);
+    $this->clickLink(t('Edit'));
+
+    // Verify that body field is read-only and contains replacement value.
+    $this->assertFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), t('Text format access denied message found.'));
+
+    // Verify that title can be changed, but preview displays original body.
+    $new_edit = array();
+    $new_edit['title'] = $this->randomName(8);
+    $this->drupalPost(NULL, $new_edit, t('Preview'));
+    $this->assertText($edit[$body_value_key], t('Old body found in preview.'));
+
+    // Save and verify that only the title was changed.
+    $this->drupalPost(NULL, $new_edit, t('Save'));
+    $this->assertNoText($edit['title'], t('Old title not found.'));
+    $this->assertText($new_edit['title'], t('New title found.'));
+    $this->assertText($edit[$body_value_key], t('Old body found.'));
+
+    // Delete the Full HTML text format.
+    filter_format_delete($this->full_html_format);
+    $this->resetFilterCaches();
+
+    // Verify that body field can be edited and a new format can be selected.
+    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->assertNoFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", NULL, t('Text format access denied message not found.'));
+    $this->assertFieldByXPath("//select[@name='$body_format_key']", NULL, t('Text format selector found.'));
   }
 
   /**
