@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.449 2010/04/07 04:39:59 dries Exp $
+// $Id: form.inc,v 1.450 2010/04/10 17:30:15 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -197,8 +197,8 @@ function drupal_build_form($form_id, &$form_state) {
       // $menu_get_item() is not available at installation time.
       if (!isset($form_state['build_info']['file']) && !defined('MAINTENANCE_MODE')) {
         $item = menu_get_item();
-        if (!empty($item['file'])) {
-          $form_state['build_info']['file'] = $item['file'];
+        if (!empty($item['include_file'])) {
+          $form_state['build_info']['file'] = $item['include_file'];
         }
       }
 

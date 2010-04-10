@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.150 2010/04/06 19:49:03 dries Exp $
+// $Id: system.api.php,v 1.151 2010/04/10 17:30:15 dries Exp $
 
 /**
  * @file
@@ -1783,7 +1783,7 @@ function hook_file_download($uri) {
   if (!file_prepare_directory($uri)) {
     $uri = FALSE;
   }
-  $result = db_query("SELECT f.* FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :uri", array('uri' => $uri));
+  $result = db_query("SELECT f.* FROM {file_managed} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :uri", array('uri' => $uri));
   foreach ($result as $file) {
     if (!user_access('view uploaded files')) {
       return -1;
