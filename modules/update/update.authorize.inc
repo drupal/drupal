@@ -154,7 +154,9 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
   }
 
   _update_batch_create_message($context['results']['log'][$project], t('Installed %project_name successfully', array('%project_name' => $project)));
-  $context['results']['tasks'] += $tasks;
+  if (!empty($tasks)) {
+    $context['results']['tasks'] += $tasks;
+  }
 
   // This particular operation is now complete, even though the batch might
   // have other operations to perform.
@@ -206,6 +208,10 @@ function update_authorize_update_batch_finished($success, $results) {
       'type' => 'error',
     );
   }
+  // Since we're doing an update of existing code, always add a task for
+  // running update.php.
+  $results['tasks'][] = t('Your modules have been downloaded and updated.');
+  $results['tasks'][] = t('<a href="@update">Run database updates</a>', array('@update' => base_path() . 'update.php'));
 
   // Set all these values into the SESSION so authorize.php can display them.
   $_SESSION['authorize_results']['success'] = $success;
