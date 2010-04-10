@@ -3522,7 +3522,7 @@ function user_rdf_mapping() {
       'type' => 'user',
       'bundle' => RDF_DEFAULT_BUNDLE,
       'mapping' => array(
-        'rdftype' => array('sioc:User'),
+        'rdftype' => array('sioc:UserAccount'),
         'name' => array(
           'predicates' => array('foaf:name'),
         ),

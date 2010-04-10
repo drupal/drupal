@@ -1421,12 +1421,9 @@ function taxonomy_rdf_mapping() {
         'description'   => array(
           'predicates' => array('skos:definition'),
         ),
-        // The vocabulary this term belongs to. The type 'rev' is used to denote
-        // the fact that the skos:member property domain is skos:Collection and
-        // its range is skos:Concept or skos:Collection.
         'vid'   => array(
-          'predicates' => array('skos:member'),
-          'type' => 'rev',
+          'predicates' => array('skos:inScheme'),
+          'type' => 'rel',
         ),
         'parent'   => array(
           'predicates' => array('skos:broader'),
@@ -1438,9 +1435,9 @@ function taxonomy_rdf_mapping() {
       'type' => 'taxonomy_vocabulary',
       'bundle' => RDF_DEFAULT_BUNDLE,
       'mapping' => array(
-        'rdftype' => array('skos:Collection'),
+        'rdftype' => array('skos:ConceptScheme'),
         'name'   => array(
-          'predicates' => array('rdfs:label'),
+          'predicates' => array('dc:title'),
         ),
         'description'   => array(
           'predicates' => array('rdfs:comment'),

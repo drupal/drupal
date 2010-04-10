@@ -77,7 +77,6 @@ define('RDF_DEFAULT_BUNDLE', '');
  */
 function rdf_rdf_namespaces() {
   return array(
-    'admin'    => 'http://webns.net/mvcb/',
     'content'  => 'http://purl.org/rss/1.0/modules/content/',
     'dc'       => 'http://purl.org/dc/terms/',
     'foaf'     => 'http://xmlns.com/foaf/0.1/',
@@ -85,10 +84,8 @@ function rdf_rdf_namespaces() {
     'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#',
     'rss'      => 'http://purl.org/rss/1.0/',
-    'tags'     => 'http://www.holygoat.co.uk/owl/redwood/0.1/tags/',
     'sioc'     => 'http://rdfs.org/sioc/ns#',
     'sioct'    => 'http://rdfs.org/sioc/types#',
-    'ctag'     => 'http://commontag.org/ns#',
     'skos'     => 'http://www.w3.org/2004/02/skos/core#',
     'xsd'      => 'http://www.w3.org/2001/XMLSchema#',
   );
@@ -439,7 +436,7 @@ function rdf_process(&$variables, $hook) {
 function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup to the node container. The about attribute specifies the
   // URI of the resource described within the HTML element, while the typeof
-  // attribute indicates its RDF type (foaf:Document, or sioc:User, etc.).
+  // attribute indicates its RDF type (foaf:Document, or sioc:Person, etc.).
   $variables['attributes_array']['about'] = empty($variables['node_url']) ? NULL: $variables['node_url'];
   $variables['attributes_array']['typeof'] = empty($variables['node']->rdf_mapping['rdftype']) ? NULL : $variables['node']->rdf_mapping['rdftype'];
 
@@ -549,8 +546,8 @@ function rdf_preprocess_user_profile(&$variables) {
     $variables['attributes_array']['typeof'] = $account->rdf_mapping['rdftype'];
     $variables['attributes_array']['about'] = url($uri['path'], $uri['options']);
   }
-  // Adds the relationship between the sioc:User and the foaf:Person who holds
-  // the account.
+  // Adds the relationship between the sioc:UserAccount and the foaf:Person who
+  // holds the account.
   $account_holder_meta = array(
     '#tag' => 'meta',
     '#attributes' => array(

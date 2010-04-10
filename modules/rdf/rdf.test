@@ -322,7 +322,7 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     $account_uri = url('user/' . $user2->uid);
     $person_uri = url('user/' . $user2->uid, array('fragment' => 'me'));
 
-    $user2_profile_about = $this->xpath('//div[@class="profile" and @typeof="sioc:User" and @about=:account-uri]', array(
+    $user2_profile_about = $this->xpath('//div[@class="profile" and @typeof="sioc:UserAccount" and @about=:account-uri]', array(
       ':account-uri' => $account_uri,
     ));
     $this->assertTrue(!empty($user2_profile_about), t('RDFa markup found on user profile page'));
@@ -331,7 +331,7 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
       ':person-uri' => $person_uri,
       ':account-uri' => $account_uri,
     ));
-    $this->assertTrue(!empty($user_account_holder), t('URI created for account holder and username set on sioc:User.'));
+    $this->assertTrue(!empty($user_account_holder), t('URI created for account holder and username set on sioc:UserAccount.'));
 
     $user_username = $this->xpath('//meta[@about=:account-uri and contains(@property, "foaf:name") and @content=:username]', array(
       ':account-uri' => $account_uri,
@@ -346,7 +346,7 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     // Ensures the default bundle mapping for user is used on the Authored By
     // information on the node.
-    $author_about = $this->xpath('//a[@typeof="sioc:User" and @about=:account-uri and @property="foaf:name" and contains(@xml:lang, "")]', array(
+    $author_about = $this->xpath('//a[@typeof="sioc:UserAccount" and @about=:account-uri and @property="foaf:name" and contains(@xml:lang, "")]', array(
       ':account-uri' => $account_uri,
     ));
     $this->assertTrue(!empty($author_about), t('RDFa markup found on author information on post. xml:lang on username is set to empty string.'));
@@ -466,7 +466,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
     $this->assertTrue(!empty($tracker_title), t('Title property attribute found on @user content.', array('@user'=> $user)));
 
     // Tests whether the relationship between the content and user has been set.
-    $tracker_user = $this->xpath('//tr[@about=:url]//td[contains(@rel, "sioc:has_creator")]//*[contains(@typeof, "sioc:User") and contains(@property, "foaf:name")]', array(':url' => $url));
+    $tracker_user = $this->xpath('//tr[@about=:url]//td[contains(@rel, "sioc:has_creator")]//*[contains(@typeof, "sioc:UserAccount") and contains(@property, "foaf:name")]', array(':url' => $url));
     $this->assertTrue(!empty($tracker_user), t('Typeof and name property attributes found on @user.', array('@user'=> $user)));
     // There should be an about attribute on logged in users and no about
     // attribute for anonymous users.
