@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1154 2010/04/07 16:35:03 dries Exp $
+// $Id: user.module,v 1.1155 2010/04/10 16:37:19 dries Exp $
 
 /**
  * @file
@@ -3522,7 +3522,7 @@ function user_rdf_mapping() {
       'type' => 'user',
       'bundle' => RDF_DEFAULT_BUNDLE,
       'mapping' => array(
-        'rdftype' => array('sioc:User'),
+        'rdftype' => array('sioc:UserAccount'),
         'name' => array(
           'predicates' => array('foaf:name'),
         ),
