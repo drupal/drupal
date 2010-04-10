@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.415 2010/03/28 11:16:29 dries Exp $
+// $Id: block.module,v 1.416 2010/04/10 11:11:46 dries Exp $
 
 /**
  * @file
@@ -438,7 +438,6 @@ function block_custom_block_form($edit = array()) {
     '#description' => t('The content of the block as shown to the user.'),
     '#required' => TRUE,
     '#weight' => -17,
-    '#access' => filter_access(filter_format_load($edit['format'])),
   );
 
   return $form;
