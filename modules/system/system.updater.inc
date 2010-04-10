@@ -1,5 +1,5 @@
 <?php
-// $Id: system.updater.inc,v 1.6 2010/03/31 19:10:39 dries Exp $
+// $Id: system.updater.inc,v 1.7 2010/04/10 09:49:49 dries Exp $
 
 /**
  * @file
@@ -81,10 +81,8 @@ class ModuleUpdater extends Updater implements DrupalUpdaterInterface {
   }
 
   public function postUpdateTasks() {
-    // @todo: If there are schema updates.
-    return array(
-      l(t('Run database updates for !project', array('!project' => $this->title)), 'update.php'),
-    );
+    // We don't want to check for DB updates here, we do that once for all
+    // updated modules on the landing page.
   }
 
 }
