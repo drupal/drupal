@@ -114,7 +114,7 @@ class TriggerContentTestCase extends TriggerWebTestCase {
     $action_id = 'trigger_test_generic_any_action';
     $hash = md5($action_id);
     $edit = array('aid' => $hash);
-    $this->drupalPost('admin/structure/trigger/node', $edit, t('Assign'));
+    $this->drupalPost('admin/structure/trigger/node', $edit, t('Assign'), array(), array(), 'trigger-node-update-assign-form');
 
     $edit = array(
       'operation' => 'unpublish',
@@ -122,7 +122,8 @@ class TriggerContentTestCase extends TriggerWebTestCase {
       'nodes[2]' => TRUE,
     );
     $this->drupalPost('admin/content', $edit, t('Update'));
-    $this->assertTrue(variable_get('trigger_test_generic_any_action', 0) == 2, 'Action was triggered 2 times.');
+    $count = variable_get('trigger_test_generic_any_action', 0);
+    $this->assertTrue($count == 2, t('Action was triggered 2 times. Actual: %count', array('%count' => $count)));
   }
 
   /**
