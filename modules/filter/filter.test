@@ -1003,7 +1003,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     $this->assertEqual($f, '<p>text</p>', t('HTML corrector -- tag closing at the end of input.'));
 
     $f = _filter_htmlcorrector('<p>text<p><p>text');
-    $this->assertEqual($f, '<p>text</p><p /><p>text</p>', t('HTML corrector -- tag closing.'));
+    $this->assertEqual($f, '<p>text</p><p></p><p>text</p>', t('HTML corrector -- tag closing.'));
 
     $f = _filter_htmlcorrector("<ul><li>e1<li>e2");
     $this->assertEqual($f, "<ul><li>e1</li><li>e2</li></ul>", t('HTML corrector -- unclosed list tags.'));
@@ -1021,14 +1021,17 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     $f = _filter_htmlcorrector('<P>test</p>');
     $this->assertEqual($f, '<p>test</p>', t('HTML corrector -- Convert uppercased tags to proper lowercased ones.'));
 
-    $f = _filter_htmlcorrector('test<hr/>');
-    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass thru.'));
-
     $f = _filter_htmlcorrector('test<hr />');
-    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass thru.'));
+    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass through.'));
+
+    $f = _filter_htmlcorrector('test<hr/>');
+    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass through, but ensure there is a single space before the closing slash.'));
+
+    $f = _filter_htmlcorrector('test<hr    />');
+    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass through, but ensure there are not too many spaces before the closing slash.'));
 
     $f = _filter_htmlcorrector('<span class="test" />');
-    $this->assertEqual($f, '<span class="test" />', t('HTML corrector -- Let proper XHTML pass thru.'));
+    $this->assertEqual($f, '<span class="test"></span>', t('HTML corrector -- Convert XHTML that is properly formed but that would not be compatible with typical HTML user agents.'));
 
     $f = _filter_htmlcorrector('test1<br class="test">test2');
     $this->assertEqual($f, 'test1<br class="test" />test2', t('HTML corrector -- Automatically close single tags.'));
@@ -1041,6 +1044,12 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
 
     $f = _filter_htmlcorrector('<img src="http://example.com/test.jpg">test</img>');
     $this->assertEqual($f, '<img src="http://example.com/test.jpg" />test', t('HTML corrector -- Automatically close single tags.'));
+
+    $f = _filter_htmlcorrector('<br></br>');
+    $this->assertEqual($f, '<br />', t("HTML corrector -- Transform empty tags to a single closed tag if the tag's content model is EMPTY."));
+
+    $f = _filter_htmlcorrector('<div></div>');
+    $this->assertEqual($f, '<div></div>', t("HTML corrector -- Do not transform empty tags to a single closed tag if the tag's content model is not EMPTY."));
 
     $f = _filter_htmlcorrector('<p>line1<br/><hr/>line2</p>');
     $this->assertEqual($f, '<p>line1<br /></p><hr />line2', t('HTML corrector -- Move non-inline elements outside of inline containers.'));

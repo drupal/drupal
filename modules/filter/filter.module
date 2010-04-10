@@ -983,7 +983,7 @@ function _filter_tips($format_id, $long = FALSE) {
  */
 function filter_dom_load($text) {
   // Ignore warnings during HTML soup loading.
-  $dom_document = @DOMDocument::loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
+  $dom_document = @DOMDocument::loadHTML('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
 
   return $dom_document;
 }
@@ -1018,7 +1018,7 @@ function filter_dom_serialize($dom_document) {
   foreach ($body_node->childNodes as $child_node) {
     $body_content .= $dom_document->saveXML($child_node);
   }
-  return preg_replace('|<([^>]*)/>|i', '<$1 />', $body_content);
+  return preg_replace('|<([^> ]*)/>|i', '<$1 />', $body_content);
 }
 
 /**
