@@ -1,5 +1,5 @@
 <?php
-// $Id: text.test,v 1.21 2010/03/27 05:52:49 webchick Exp $
+// $Id: text.test,v 1.22 2010/04/10 10:01:15 dries Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
@@ -309,11 +309,11 @@ class TextSummaryTestCase extends DrupalWebTestCase {
     $expected_lb = array(
       "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
       "",
-      "<p />",
-      "<p />",
-      "<p />",
-      "<p />",
-      "<p />",
+      "<p></p>",
+      "<p></p>",
+      "<p></p>",
+      "<p></p>",
+      "<p></p>",
       "<p>\nHi</p>",
       "<p>\nHi</p>",
       "<p>\nHi</p>",
