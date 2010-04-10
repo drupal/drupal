@@ -194,7 +194,7 @@ class FileTestCase extends DrupalWebTestCase {
     $file->status = 0;
     // Write the record directly rather than calling file_save() so we don't
     // invoke the hooks.
-    $this->assertNotIdentical(drupal_write_record('file', $file), FALSE, t('The file was added to the database.'), 'Create test file');
+    $this->assertNotIdentical(drupal_write_record('file_managed', $file), FALSE, t('The file was added to the database.'), 'Create test file');
 
     return $file;
   }
@@ -289,21 +289,21 @@ class FileSpaceUsedTest extends FileTestCase {
 
     // Create records for a couple of users with different sizes.
     $file = array('uid' => 2, 'uri' => 'public://example1.txt', 'filesize' => 50, 'status' => FILE_STATUS_PERMANENT);
-    drupal_write_record('file', $file);
+    drupal_write_record('file_managed', $file);
     $file = array('uid' => 2, 'uri' => 'public://example2.txt', 'filesize' => 20, 'status' => FILE_STATUS_PERMANENT);
-    drupal_write_record('file', $file);
+    drupal_write_record('file_managed', $file);
     $file = array('uid' => 3, 'uri' => 'public://example3.txt', 'filesize' => 100, 'status' => FILE_STATUS_PERMANENT);
-    drupal_write_record('file', $file);
+    drupal_write_record('file_managed', $file);
     $file = array('uid' => 3, 'uri' => 'public://example4.txt', 'filesize' => 200, 'status' => FILE_STATUS_PERMANENT);
-    drupal_write_record('file', $file);
+    drupal_write_record('file_managed', $file);
 
     // Now create some with other statuses. These values were chosen arbitrarily
     // for the sole purpose of testing that bitwise operators were used
     // correctly on the field.
     $file = array('uid' => 2, 'uri' => 'public://example5.txt', 'filesize' => 1, 'status' => 2 | 8);
-    drupal_write_record('file', $file);
+    drupal_write_record('file_managed', $file);
     $file = array('uid' => 3, 'uri' => 'public://example6.txt', 'filesize' => 3, 'status' => 2 | 4);
-    drupal_write_record('file', $file);
+    drupal_write_record('file_managed', $file);
   }
 
   /**
@@ -560,7 +560,7 @@ class FileSaveUploadTest extends FileHookTestCase {
     $this->image = current($this->drupalGetTestFiles('image'));
     $this->assertTrue(is_file($this->image->uri), t("The file we're going to upload exists."));
 
-    $this->maxFidBefore = db_query('SELECT MAX(fid) AS fid FROM {file}')->fetchField();
+    $this->maxFidBefore = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
 
     // Upload with replace to gurantee there's something there.
     $edit = array(
@@ -581,7 +581,7 @@ class FileSaveUploadTest extends FileHookTestCase {
    * Test the file_save_upload() function.
    */
   function testNormal() {
-    $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {file}')->fetchField();
+    $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
     $this->assertTrue($max_fid_after > $this->maxFidBefore, t('A new file was created.'));
     $file1 = file_load($max_fid_after);
     $this->assertTrue($file1, t('Loaded the file.'));
@@ -592,13 +592,13 @@ class FileSaveUploadTest extends FileHookTestCase {
     file_test_reset();
 
     // Upload a second file.
-    $max_fid_before = db_query('SELECT MAX(fid) AS fid FROM {file}')->fetchField();
+    $max_fid_before = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
     $image2 = current($this->drupalGetTestFiles('image'));
     $edit = array('files[file_test_upload]' => drupal_realpath($image2->uri));
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
     $this->assertRaw(t('You WIN!'));
-    $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {file}')->fetchField();
+    $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(array('validate', 'insert'));
@@ -1680,7 +1680,7 @@ class FileSaveTest extends FileHookTestCase {
 
     $this->assertNotNull($saved_file, t("Saving the file should give us back a file object."), 'File');
     $this->assertTrue($saved_file->fid > 0, t("A new file ID is set when saving a new file to the database."), 'File');
-    $loaded_file = db_query('SELECT * FROM {file} f WHERE f.fid = :fid', array(':fid' => $saved_file->fid))->fetch(PDO::FETCH_OBJ);
+    $loaded_file = db_query('SELECT * FROM {file_managed} f WHERE f.fid = :fid', array(':fid' => $saved_file->fid))->fetch(PDO::FETCH_OBJ);
     $this->assertNotNull($loaded_file, t("Record exists in the database."));
     $this->assertEqual($loaded_file->status, $file->status, t("Status was saved correctly."));
     $this->assertEqual($saved_file->filesize, filesize($file->uri), t("File size was set correctly."), 'File');
@@ -1697,7 +1697,7 @@ class FileSaveTest extends FileHookTestCase {
 
     $this->assertEqual($resaved_file->fid, $saved_file->fid, t("The file ID of an existing file is not changed when updating the database."), 'File');
     $this->assertTrue($resaved_file->timestamp >= $saved_file->timestamp, t("Timestamp didn't go backwards."), 'File');
-    $loaded_file = db_query('SELECT * FROM {file} f WHERE f.fid = :fid', array(':fid' => $saved_file->fid))->fetch(PDO::FETCH_OBJ);
+    $loaded_file = db_query('SELECT * FROM {file_managed} f WHERE f.fid = :fid', array(':fid' => $saved_file->fid))->fetch(PDO::FETCH_OBJ);
     $this->assertNotNull($loaded_file, t("Record still exists in the database."), 'File');
     $this->assertEqual($loaded_file->status, $saved_file->status, t("Status was saved correctly."));
   }

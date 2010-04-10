@@ -463,8 +463,8 @@ function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
       // to make alterations just for this request.
       drupal_alter('menu_active_handler', $router_item, $path);
       if ($router_item['access']) {
-        if ($router_item['file']) {
-          require_once DRUPAL_ROOT . '/' . $router_item['file'];
+        if ($router_item['include_file']) {
+          require_once DRUPAL_ROOT . '/' . $router_item['include_file'];
         }
         $page_callback_result = call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
       }
@@ -3271,7 +3271,7 @@ function _menu_router_save($menu, $masks) {
       'description',
       'position',
       'weight',
-      'file',
+      'include_file',
     ));
 
   $num_records = 0;
@@ -3302,7 +3302,7 @@ function _menu_router_save($menu, $masks) {
       'description' => $item['description'],
       'position' => $item['position'],
       'weight' => $item['weight'],
-      'file' => $item['include file'],
+      'include_file' => $item['include file'],
     ));
 
     // Execute in batches to avoid the memory overhead of all of those records

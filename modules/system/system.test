@@ -469,7 +469,7 @@ class CronRunTestCase extends DrupalWebTestCase {
   function testTempFileCleanup() {
     // Temporary file that is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
     $temp_old = file_save_data('');
-    db_update('file')
+    db_update('file_managed')
       ->fields(array(
         'status' => 0,
         'timestamp' => 1,
@@ -480,7 +480,7 @@ class CronRunTestCase extends DrupalWebTestCase {
 
     // Temporary file that is less than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
     $temp_new = file_save_data('');
-    db_update('file')
+    db_update('file_managed')
       ->fields(array('status' => 0))
       ->condition('fid', $temp_new->fid)
       ->execute();
@@ -488,7 +488,7 @@ class CronRunTestCase extends DrupalWebTestCase {
 
     // Permanent file that is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
     $perm_old = file_save_data('');
-    db_update('file')
+    db_update('file_managed')
       ->fields(array('timestamp' => 1))
       ->condition('fid', $temp_old->fid)
       ->execute();

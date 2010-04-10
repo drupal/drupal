@@ -692,7 +692,7 @@ function system_schema() {
     'primary key' => array('type', 'language'),
   );
 
-  $schema['file'] = array(
+  $schema['file_managed'] = array(
     'description' => 'Stores information for uploaded files.',
     'fields' => array(
       'fid' => array(
@@ -983,10 +983,10 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'file' => array(
+      'include_file' => array(
         'description' => 'The file to include for this element, usually the page callback function lives in this file.',
         'type' => 'text',
-        'size' => 'medium'
+        'size' => 'medium',
       ),
     ),
     'indexes' => array(
@@ -2094,7 +2094,7 @@ function system_update_7033() {
 }
 
 /**
- * Migrate the file_downloads setting and create the new {file} table.
+ * Migrate the file_downloads setting and create the new {file_managed} table.
  */
 function system_update_7034() {
   $files_directory = variable_get('file_directory_path', NULL);
@@ -2112,7 +2112,7 @@ function system_update_7034() {
   }
   variable_del('file_downloads');
 
-  $schema['file'] = array(
+  $schema['file_managed'] = array(
     'description' => 'Stores information for uploaded files.',
     'fields' => array(
       'fid' => array(
@@ -2181,11 +2181,11 @@ function system_update_7034() {
     'primary key' => array('fid'),
   );
 
-  db_create_table('file', $schema['file']);
+  db_create_table('file_managed', $schema['file_managed']);
 }
 
 /**
- * Migrate upload module files to the new {file} table.
+ * Migrate upload module files to the new {file_managed} table.
  */
 function system_update_7035() {
   if (!db_table_exists('upload')) {
@@ -2205,7 +2205,7 @@ function system_update_7035() {
   foreach ($result as $file) {
     $file['uri'] = $scheme . str_replace($basename, '', $file['uri']);
     $file['uri'] = file_stream_wrapper_uri_normalize($file['uri']);
-    db_insert('file')->fields($file)->execute();
+    db_insert('file_managed')->fields($file)->execute();
     $fids[] = $file['fid'];
   }
   // TODO: delete the found fids from {files}?
@@ -2388,6 +2388,13 @@ function system_update_7050() {
  */
 function system_update_7051() {
   db_change_field('blocked_ips', 'ip', 'ip', array('description' => 'IP address', 'type' => 'varchar', 'length' => 40, 'not null' => TRUE, 'default' => ''));
+}
+
+/**
+ * Rename file to include_file in {menu_router} table.
+ */
+function system_update_7052() {
+  db_change_field('menu_router', 'file', 'include_file', array('type' => 'text', 'size' => 'medium'));
 }
 
 /**

@@ -201,7 +201,7 @@ function user_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => "Foreign key: {file}.fid of user's picture.",
+        'description' => "Foreign key: {file_managed}.fid of user's picture.",
       ),
       'init' => array(
         'type' => 'varchar',
@@ -473,7 +473,8 @@ function user_update_7003() {
 }
 
 /**
- * Add the user's pictures to the {file} table and make them managed files.
+ * Add the user's pictures to the {file_managed} table and make them managed
+ * files.
  */
 function user_update_7004(&$sandbox) {
 
@@ -481,7 +482,7 @@ function user_update_7004(&$sandbox) {
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,
-    'description' => t("Foreign key: {file}.fid of user's picture."),
+    'description' => t("Foreign key: {file_managed}.fid of user's picture."),
   );
 
   if (!isset($sandbox['progress'])) {
@@ -498,8 +499,8 @@ function user_update_7004(&$sandbox) {
     $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE picture <> ''")->fetchField();
   }
 
-  // As a batch operation move the photos into the {file} table and update the
-  // {users} records.
+  // As a batch operation move the photos into the {file_managed} table and
+  // update the {users} records.
   $limit = 500;
   $result = db_query_range("SELECT uid, picture FROM {users} WHERE picture <> '' AND uid > :uid ORDER BY uid", 0, $limit, array(':uid' => $sandbox['last_user_processed']));
   foreach ($result as $user) {

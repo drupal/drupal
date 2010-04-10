@@ -509,13 +509,13 @@ function file_save(stdClass $file) {
   $file->filesize = filesize($file->uri);
 
   if (empty($file->fid)) {
-    drupal_write_record('file', $file);
+    drupal_write_record('file_managed', $file);
     // Inform modules about the newly added file.
     module_invoke_all('file_insert', $file);
     entity_invoke('insert', 'file', $file);
   }
   else {
-    drupal_write_record('file', $file, 'fid');
+    drupal_write_record('file_managed', $file, 'fid');
     // Inform modules that the file has been updated.
     module_invoke_all('file_update', $file);
     entity_invoke('update', 'file', $file);
@@ -974,7 +974,7 @@ function file_delete(stdClass $file, $force = FALSE) {
   // Make sure the file is deleted before removing its row from the
   // database, so UIs can still find the file in the database.
   if (file_unmanaged_delete($file->uri)) {
-    db_delete('file')->condition('fid', $file->fid)->execute();
+    db_delete('file_managed')->condition('fid', $file->fid)->execute();
     return TRUE;
   }
   return FALSE;
@@ -1069,7 +1069,7 @@ function file_unmanaged_delete_recursive($path) {
  *   An integer containing the number of bytes used.
  */
 function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
-  $query = db_select('file', 'f');
+  $query = db_select('file_managed', 'f');
   // Use separate placeholders for the status to avoid a bug in some versions
   // of PHP. See http://drupal.org/node/352956.
   $query->where('f.status & :status1 = :status2', array(':status1' => $status, ':status2' => $status));
@@ -1083,9 +1083,9 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
 /**
  * Saves a file upload to a new location.
  *
- * The file will be added to the {file} table as a temporary file. Temporary
- * files are periodically cleaned. To make the file a permanent file, assign
- * the status and use file_save() to save the changes.
+ * The file will be added to the {file_managed} table as a temporary file.
+ * Temporary files are periodically cleaned. To make the file a permanent file,
+ * assign the status and use file_save() to save the changes.
  *
  * @param $source
  *   A string specifying the filepath or URI of the uploaded file to save.
@@ -1504,7 +1504,8 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
  * Save a string to the specified destination without invoking file API.
  *
  * This function is identical to file_save_data() except the file will not be
- * saved to the {file} table and none of the file_* hooks will be called.
+ * saved to the {file_managed} table and none of the file_* hooks will be
+ * called.
  *
  * @param $data
  *   A string containing the contents of the file.

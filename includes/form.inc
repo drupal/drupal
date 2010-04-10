@@ -197,8 +197,8 @@ function drupal_build_form($form_id, &$form_state) {
       // $menu_get_item() is not available at installation time.
       if (!isset($form_state['build_info']['file']) && !defined('MAINTENANCE_MODE')) {
         $item = menu_get_item();
-        if (!empty($item['file'])) {
-          $form_state['build_info']['file'] = $item['file'];
+        if (!empty($item['include_file'])) {
+          $form_state['build_info']['file'] = $item['include_file'];
         }
       }
 

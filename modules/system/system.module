@@ -260,7 +260,7 @@ function system_entity_info() {
   return array(
     'file' => array(
       'label' => t('File'),
-      'base table' => 'file',
+      'base table' => 'file_managed',
       'entity keys' => array(
         'id' => 'fid',
       ),
@@ -2782,7 +2782,7 @@ function system_cron() {
   // Remove temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
   // Use separate placeholders for the status to avoid a bug in some versions
   // of PHP. See http://drupal.org/node/352956.
-  $result = db_query('SELECT fid FROM {file} WHERE status & :permanent1 <> :permanent2 AND timestamp < :timestamp', array(
+  $result = db_query('SELECT fid FROM {file_managed} WHERE status & :permanent1 <> :permanent2 AND timestamp < :timestamp', array(
     ':permanent1' => FILE_STATUS_PERMANENT,
     ':permanent2' => FILE_STATUS_PERMANENT,
     ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE

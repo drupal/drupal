@@ -1783,7 +1783,7 @@ function hook_file_download($uri) {
   if (!file_prepare_directory($uri)) {
     $uri = FALSE;
   }
-  $result = db_query("SELECT f.* FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :uri", array('uri' => $uri));
+  $result = db_query("SELECT f.* FROM {file_managed} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :uri", array('uri' => $uri));
   foreach ($result as $file) {
     if (!user_access('view uploaded files')) {
       return -1;
