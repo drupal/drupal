@@ -566,6 +566,8 @@ class DrupalUnitTestCase extends DrupalTestCase {
     $this->originalPrefix = $db_prefix;
     $this->originalFileDirectory = file_directory_path();
 
+    spl_autoload_register('db_autoload');
+
     // Reset all statics so that test is performed with a clean environment.
     drupal_static_reset();
 

@@ -761,7 +761,9 @@ abstract class DatabaseConnection extends PDO {
   public function schema() {
     if (empty($this->schema)) {
       $class = $this->getDriverClass('DatabaseSchema');
-      $this->schema = new $class($this);
+      if (class_exists($class)) {
+        $this->schema = new $class($this);
+      }
     }
     return $this->schema;
   }
@@ -2109,6 +2111,73 @@ class DatabaseStatementEmpty implements Iterator, DatabaseStatementInterface {
   }
 }
 
+/**
+ * Autoload callback for the database system.
+ */
+function db_autoload($class) {
+  static $base_path = '';
+  static $checked = array();
+
+  static $files = array(
+    'query.inc' => array(
+      'QueryPlaceholderInterface',
+      'QueryConditionInterface', 'DatabaseCondition',
+      'Query', 'DeleteQuery', 'InsertQuery', 'UpdateQuery', 'MergeQuery', 'TruncateQuery',
+      'QueryAlterableInterface',
+    ),
+    'select.inc' => array('QueryAlterableInterface', 'SelectQueryInterface', 'SelectQuery', 'SelectQueryExtender'),
+    'database.inc' => array('DatabaseConnection'),
+    'log.inc' => array('DatabaseLog'),
+    'prefetch.inc' => array('DatabaseStatementPrefetch'),
+    'schema.inc' => array('DatabaseSchema'),
+  );
+
+  // If a class doesn't exist, it may get checked a second time
+  // by class_exists().  If so, just bail out now.
+  if (isset($checked[$class])) {
+    return;
+  }
+  $checked[$class] = TRUE;
+
+  if (empty($base_path)) {
+    $base_path = dirname(realpath(__FILE__));
+  }
+
+  // If there is an underscore in the class name, we know it's a
+  // driver-specific file so check for those.  If not, it's a generic.
+  // Note that we use require_once here instead of require because of a
+  // quirk in class_exists().  By default, class_exists() will try to
+  // autoload a class if it's not found.  However, we cannot tell
+  // at this point whether or not the class is going to exist, only
+  // the file that it would be in if it does exist.  That means we may
+  // try to include a file that was already included by another
+  // autoload call, which would break.  Using require_once() neatly
+  // avoids that issue.
+  if (strpos($class, '_') !== FALSE) {
+    list($base, $driver) = explode('_', $class);
+
+    // Drivers have an extra file, and may put their SelectQuery implementation
+    // in the main query file since it's so small.
+    $driver_files = $files;
+    $driver_files['query.inc'][] = 'SelectQuery';
+    $driver_files['install.inc'] = array('DatabaseTasks');
+
+    foreach ($driver_files as $file => $classes) {
+      if (in_array($base, $classes)) {
+        require_once "{$base_path}/{$driver}/{$file}";
+        return;
+      }
+    }
+  }
+  else {
+    foreach ($files as $file => $classes) {
+      if (in_array($class, $classes)) {
+        require_once $base_path . '/' . $file;
+        return;
+      }
+    }
+  }
+}
 
 /**
  * The following utility functions are simply convenience wrappers.

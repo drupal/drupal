@@ -1947,6 +1947,10 @@ function _drupal_bootstrap_database() {
   Database::setLoggingCallback('watchdog', WATCHDOG_NOTICE, WATCHDOG_ERROR);
 
   // Register autoload functions so that we can access classes and interfaces.
+  // The database autoload routine comes first so that we can load the database
+  // system without hitting the database. That is especially important during
+  // the install or upgrade process.
+  spl_autoload_register('db_autoload');
   spl_autoload_register('drupal_autoload_class');
   spl_autoload_register('drupal_autoload_interface');
 }
@@ -2381,7 +2385,6 @@ function drupal_autoload_class($class) {
  */
 function _registry_check_code($type, $name = NULL) {
   static $lookup_cache, $cache_update_needed;
-
   if ($type == 'class' && class_exists($name) || $type == 'interface' && interface_exists($name)) {
     return TRUE;
   }

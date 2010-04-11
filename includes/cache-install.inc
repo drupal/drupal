@@ -41,8 +41,7 @@ class DrupalFakeCache extends DrupalDatabaseCache implements DrupalCacheInterfac
     // subtle bugs, some of which would not be fixed unless the site
     // administrator cleared the cache manually.
     try {
-      if (function_exists('drupal_install_initialize_database')) {
-        drupal_install_initialize_database();
+      if (class_exists('Database')) {
         parent::clear($cid, $wildcard);
       }
     }

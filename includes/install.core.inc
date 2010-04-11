@@ -278,6 +278,7 @@ function install_begin_request(&$install_state) {
     // Initialize the database system. Note that the connection
     // won't be initialized until it is actually requested.
     require_once DRUPAL_ROOT . '/includes/database/database.inc';
+    spl_autoload_register('db_autoload');
 
     // Verify the last completed task in the database, if there is one.
     $task = install_verify_completed_task();
@@ -350,7 +351,6 @@ function install_run_tasks(&$install_state) {
       $install_state['tasks_performed'][] = $task_name;
       $install_state['installation_finished'] = empty($tasks_to_perform);
       if ($install_state['database_tables_exist'] && ($task['run'] == INSTALL_TASK_RUN_IF_NOT_COMPLETED || $install_state['installation_finished'])) {
-        drupal_install_initialize_database();
         variable_set('install_task', $install_state['installation_finished'] ? 'done' : $task_name);
       }
     }
@@ -1325,7 +1325,6 @@ function install_load_profile(&$install_state) {
 function install_bootstrap_full(&$install_state) {
   // Bootstrap newly installed Drupal, while preserving existing messages.
   $messages = isset($_SESSION['messages']) ? $_SESSION['messages'] : '';
-  drupal_install_initialize_database();
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   $_SESSION['messages'] = $messages;

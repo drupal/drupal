@@ -219,20 +219,14 @@ function drupal_detect_baseurl($file = 'install.php') {
 function drupal_detect_database_types() {
   $databases = array();
 
-  // Initialize the database system if it has not been
-  // initialized yet. We do not initialize it earlier to make
-  // requirements check during the installation.
-  require_once DRUPAL_ROOT . '/includes/database/database.inc';
-
   // We define a driver as a directory in /includes/database that in turn
   // contains a database.inc file. That allows us to drop in additional drivers
   // without modifying the installer.
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.
   require_once DRUPAL_ROOT . '/includes/database/database.inc';
+  spl_autoload_register('db_autoload');
   foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
-    include_once "{$file->uri}/install.inc";
-    include_once "{$file->uri}/database.inc";
     $drivers[$file->filename] = $file->uri;
   }
 
@@ -547,28 +541,6 @@ function drupal_verify_profile($install_state) {
 }
 
 /**
- * Manually include all files for the active database.
- *
- * Because we have no registry yet, we need to manually include the
- * necessary database include files.
- */
-function drupal_install_initialize_database() {
-  static $included = FALSE;
-
-  if (!$included) {
-    $connection_info = Database::getConnectionInfo();
-    $driver = $connection_info['default']['driver'];
-    require_once DRUPAL_ROOT . '/includes/database/query.inc';
-    require_once DRUPAL_ROOT . '/includes/database/select.inc';
-    require_once DRUPAL_ROOT . '/includes/database/schema.inc';
-    foreach (glob(DRUPAL_ROOT . '/includes/database/' . $driver . '/*.inc') as $include_file) {
-      require_once $include_file;
-    }
-    $included = TRUE;
-  }
-}
-
-/**
  * Callback to install the system module.
  *
  * Separated from the installation of other modules so core system
@@ -577,7 +549,6 @@ function drupal_install_initialize_database() {
 function drupal_install_system() {
   $system_path = dirname(drupal_get_filename('module', 'system', NULL));
   require_once DRUPAL_ROOT . '/' . $system_path . '/system.install';
-  drupal_install_initialize_database();
   module_invoke('system', 'install');
 
   $system_versions = drupal_get_schema_versions('system');

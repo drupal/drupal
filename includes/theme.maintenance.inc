@@ -39,6 +39,7 @@ function _drupal_maintenance_theme() {
       // Because we are operating in a crippled environment, we need to
       // bootstrap just enough to allow hook invocations to work.
       require_once DRUPAL_ROOT . '/includes/database/database.inc';
+      spl_autoload_register('db_autoload');
       $module_list['system']['filename'] = 'modules/system/system.module';
       module_list(TRUE, FALSE, FALSE, $module_list);
       drupal_load('module', 'system');
