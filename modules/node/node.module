@@ -129,9 +129,6 @@ function node_theme() {
       'render element' => 'elements',
       'template' => 'node',
     ),
-    'node_list' => array(
-      'variables' => array('items' => NULL, 'title' => NULL),
-    ),
     'node_search_admin' => array(
       'render element' => 'form',
     ),
@@ -284,16 +281,7 @@ function node_title_list($result, $title = NULL) {
     $num_rows = TRUE;
   }
 
-  return $num_rows ? theme('node_list', array('items' => $items, 'title' => $title)) : FALSE;
-}
-
-/**
- * Format a listing of links to nodes.
- *
- * @ingroup themeable
- */
-function theme_node_list($variables) {
-  return theme('item_list', $variables);
+  return $num_rows ? theme('item_list__node', array('items' => $items, 'title' => $title)) : FALSE;
 }
 
 /**
