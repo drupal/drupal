@@ -2401,6 +2401,7 @@ function drupal_autoload_class($class) {
  */
 function _registry_check_code($type, $name = NULL) {
   static $lookup_cache, $cache_update_needed;
+
   if ($type == 'class' && class_exists($name) || $type == 'interface' && interface_exists($name)) {
     return TRUE;
   }
