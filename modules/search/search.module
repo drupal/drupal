@@ -868,7 +868,7 @@ function search_get_keys() {
  *   HTML indexing mechanism for searching full text efficiently.
  *
  * If your module needs to provide a more complicated search form, then you need
- * to implement it yourself without hook_search(). In that case, you should
+ * to implement it yourself without hook_search_info(). In that case, you should
  * define it as a local task (tab) under the /search page (e.g. /search/mymodule)
  * so that users can easily find it.
  */
