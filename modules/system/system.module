@@ -1087,7 +1087,7 @@ function system_library() {
   $libraries['jquery-bbq'] = array(
     'title' => 'jQuery BBQ',
     'website' => 'http://benalman.com/projects/jquery-bbq-plugin/',
-    'version' => '1.0.2',
+    'version' => '1.2.1',
     'js' => array(
       'misc/jquery.ba-bbq.js' => array(),
     ),

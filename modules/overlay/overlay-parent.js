@@ -862,13 +862,8 @@ Drupal.overlay.fragmentizeLink = function (link) {
   // Preserve existing query and fragment parameters in the URL.
   var destination = path + link.search + link.hash;
 
-  // Assemble the overlay-ready link.
-  var newLink = $.param.fragment(window.location.href, { overlay: destination });
-  // $.param.fragment() escaped slashes in the overlay part: unescape them.
-  var regexp = new RegExp("[#&]overlay=" + encodeURIComponent(path));
-  newLink = newLink.replace(regexp, decodeURIComponent);
-
-  return newLink;
+  // Assemble and return the overlay-ready link.
+  return $.param.fragment(window.location.href, { overlay: destination });
 };
 
 /**
