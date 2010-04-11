@@ -1358,46 +1358,5 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
 }
 
 /**
- * Returns a new DatabaseCondition, set to "OR" all conditions together.
- *
- * @return DatabaseCondition
- */
-function db_or() {
-  return new DatabaseCondition('OR');
-}
-
-/**
- * Returns a new DatabaseCondition, set to "AND" all conditions together.
- *
- * @return DatabaseCondition
- */
-function db_and() {
-  return new DatabaseCondition('AND');
-}
-
-/**
- * Returns a new DatabaseCondition, set to "XOR" all conditions together.
- *
- * @return DatabaseCondition
- */
-function db_xor() {
-  return new DatabaseCondition('XOR');
-}
-
-/**
- * Returns a new DatabaseCondition, set to the specified conjunction.
- *
- * Internal API function call.  The db_and(), db_or(), and db_xor()
- * functions are preferred.
- *
- * @param $conjunction
- *   The conjunction to use for query conditions (AND, OR or XOR).
- * @return DatabaseCondition
- */
-function db_condition($conjunction) {
-  return new DatabaseCondition($conjunction);
-}
-
-/**
  * @} End of "ingroup database".
  */
