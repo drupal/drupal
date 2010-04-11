@@ -706,6 +706,7 @@ function _form_test_disabled_elements($form, &$form_state) {
       '#type' => $type,
       '#title' => $type,
       '#default_value' => $type,
+      '#test_hijack_value' => 'HIJACK',
       '#disabled' => TRUE,
     );
   }
@@ -721,6 +722,9 @@ function _form_test_disabled_elements($form, &$form_state) {
       ),
       '#multiple' => TRUE,
       '#default_value' => array('test_2' => 'test_2'),
+      // The keys of #test_hijack_value need to match the #name of the control.
+      // @see FormsTestCase::testDisabledElements()
+      '#test_hijack_value' => $type == 'select' ? array('' => 'test_1') : array('test_1' => 'test_1'),
       '#disabled' => TRUE,
     );
   }
@@ -736,6 +740,7 @@ function _form_test_disabled_elements($form, &$form_state) {
       ),
       '#multiple' => FALSE,
       '#default_value' => 'test_2',
+      '#test_hijack_value' => 'test_1',
       '#disabled' => TRUE,
     );
   }
@@ -747,6 +752,7 @@ function _form_test_disabled_elements($form, &$form_state) {
       '#title' => $type . ' (unchecked)',
       '#return_value' => 1,
       '#default_value' => 0,
+      '#test_hijack_value' => 1,
       '#disabled' => TRUE,
     );
     $form[$type . '_checked'] = array(
@@ -754,6 +760,7 @@ function _form_test_disabled_elements($form, &$form_state) {
       '#title' => $type . ' (checked)',
       '#return_value' => 1,
       '#default_value' => 1,
+      '#test_hijack_value' => NULL,
       '#disabled' => TRUE,
     );
   }
@@ -763,6 +770,7 @@ function _form_test_disabled_elements($form, &$form_state) {
     '#type' => 'weight',
     '#title' => 'weight',
     '#default_value' => 10,
+    '#test_hijack_value' => 5,
     '#disabled' => TRUE,
   );
 
@@ -775,6 +783,11 @@ function _form_test_disabled_elements($form, &$form_state) {
       'day' => 19,
       'month' => 11,
       'year' => 1978,
+    ),
+    '#test_hijack_value' => array(
+      'day' => 20,
+      'month' => 12,
+      'year' => 1979,
     ),
   );
 

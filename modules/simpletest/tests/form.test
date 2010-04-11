@@ -156,23 +156,54 @@ class FormsTestCase extends DrupalWebTestCase {
    * @see _form_test_disabled_elements()
    */
   function testDisabledElements() {
-    // Submit the form, and fetch the default values.
-    $this->drupalPost('form-test/disabled-elements', array(), t('Submit'));
-    $returned_values = drupal_json_decode($this->content);
-
-    // Get the default value from the form.
+    // Get the raw form in its original state.
     $form_state = array();
     $form = _form_test_disabled_elements(array(), $form_state);
 
+    // Build a submission that tries to hijack the form by submitting input for
+    // elements that are disabled.
+    $edit = array();
     foreach (element_children($form) as $key) {
-      if (isset($form[$key]['#default_value'])) {
-        $expected_value = $form[$key]['#default_value'];
-
-        if ($key == 'checkboxes_multiple') {
-          // Checkboxes values are not filtered out.
-          $returned_values[$key] = array_filter($returned_values[$key]);
+      if (isset($form[$key]['#test_hijack_value'])) {
+        if (is_array($form[$key]['#test_hijack_value'])) {
+          foreach ($form[$key]['#test_hijack_value'] as $subkey => $value) {
+            $edit[$key . '[' . $subkey . ']'] = $value;
+          }
         }
-        $this->assertIdentical($expected_value, $returned_values[$key], t('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($returned_values[$key], TRUE))));
+        else {
+          $edit[$key] = $form[$key]['#test_hijack_value'];
+        }
+      }
+    }
+
+    // Submit the form with no input, as the browser does for disabled elements,
+    // and fetch the $form_state['values'] that is passed to the submit handler.
+    $this->drupalPost('form-test/disabled-elements', array(), t('Submit'));
+    $returned_values['normal'] = drupal_json_decode($this->content);
+
+    // Do the same with input, as could happen if JavaScript un-disables an
+    // element. drupalPost() emulates a browser by not submitting input for
+    // disabled elements, so we need to un-disable those elements first.
+    $this->drupalGet('form-test/disabled-elements');
+    foreach ($this->xpath('//*[@disabled]') as $element) {
+      unset($element['disabled']);
+    }
+    $this->drupalPost(NULL, $edit, t('Submit'));
+    $returned_values['hijacked'] = drupal_json_decode($this->content);
+
+    // Ensure that the returned values match the form's default values in both
+    // cases.
+    foreach ($returned_values as $type => $values) {
+      foreach (element_children($form) as $key) {
+        if (isset($form[$key]['#default_value'])) {
+          $expected_value = $form[$key]['#default_value'];
+
+          if ($key == 'checkboxes_multiple') {
+            // Checkboxes values are not filtered out.
+            $values[$key] = array_filter($values[$key]);
+          }
+          $this->assertIdentical($expected_value, $values[$key], t('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE))));
+        }
       }
     }
   }

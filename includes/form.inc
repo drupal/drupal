@@ -983,7 +983,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // A simple call to empty() will not cut it here as some fields, like
     // checkboxes, can return a valid value of '0'. Instead, check the
     // length if it's a string, and the item count if it's an array.
-    // An unchecked checkbox has a #value of numeric 0, different than string
+    // An unchecked checkbox has a #value of integer 0, different than string
     // '0', which could be a valid value.
     if (isset($elements['#needs_validation']) && $elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0) || $elements['#value'] === 0)) {
       form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
@@ -1405,15 +1405,45 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     array_unshift($element['#parents'], $name);
   }
 
+  // Setting #disabled to TRUE results in user input being ignored, regardless
+  // of how the element is themed or whether JavaScript is used to change the
+  // control's attributes. However, it's good UI to let the user know that input
+  // is not wanted for the control. HTML supports two attributes for this:
+  // http://www.w3.org/TR/html401/interact/forms.html#h-17.12. If a form wants
+  // to start a control off with one of these attributes for UI purposes only,
+  // but still allow input to be processed if it's sumitted, it can set the
+  // desired attribute in #attributes directly rather than using #disabled.
+  // However, developers should think carefully about the accessibility
+  // implications of doing so: if the form expects input to be enterable under
+  // some condition triggered by JavaScript, how would someone who has
+  // JavaScript disabled trigger that condition? Instead, developers should
+  // consider whether a multi-step form would be more appropriate (#disabled can
+  // be changed from step to step). If one still decides to use JavaScript to
+  // affect when a control is enabled, then it is best for accessibility for the
+  // control to be enabled in the HTML, and disabled by JavaScript on document
+  // ready.
   if (!empty($element['#disabled'])) {
-    $element['#attributes']['disabled'] = 'disabled';
+    if (!empty($element['#allow_focus'])) {
+      $element['#attributes']['readonly'] = 'readonly';
+    }
+    else {
+      $element['#attributes']['disabled'] = 'disabled';
+    }
   }
 
   // Set the element's #value property.
   if (!isset($element['#value']) && !array_key_exists('#value', $element)) {
     $value_callback = !empty($element['#value_callback']) ? $element['#value_callback'] : 'form_type_' . $element['#type'] . '_value';
 
-    if ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access']))) {
+    // With JavaScript or other easy hacking, input can be submitted even for
+    // elements with #access=FALSE or #disabled=TRUE. For security, these must
+    // not be processed. Forms that set #disabled=TRUE on an element do not
+    // expect input for the element, and even forms submitted with
+    // drupal_form_submit() must not be able to get around this. Forms that set
+    // #access=FALSE on an element usually allow access for some users, so forms
+    // submitted with drupal_form_submit() may bypass access restriction and be
+    // treated as high-privelege users instead.
+    if (empty($element['#disabled']) && ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])))) {
       // Get the input for the current element. NULL values in the input need to
       // be explicitly distinguished from missing input. (see below)
       $input = $form_state['input'];
@@ -1698,18 +1728,11 @@ function form_type_image_button_value($form, $input, $form_state) {
  */
 function form_type_checkbox_value($element, $input = FALSE) {
   if ($input !== FALSE) {
-    if (empty($element['#disabled'])) {
-      // Successful (checked) checkboxes are present with a value (possibly '0').
-      // http://www.w3.org/TR/html401/interact/forms.html#successful-controls
-      // For an unchecked checkbox, we return numeric 0, so we can explicitly
-      // test for a value different than string '0'.
-      return isset($input) ? $element['#return_value'] : 0;
-    }
-    else {
-      // Disabled form controls are not submitted by the browser. Ignore any
-      // submitted value and always return default.
-      return $element['#default_value'];
-    }
+    // Successful (checked) checkboxes are present with a value (possibly '0').
+    // http://www.w3.org/TR/html401/interact/forms.html#successful-controls
+    // For an unchecked checkbox, we return integer 0, so we can explicitly
+    // test for a value different than string '0'.
+    return isset($input) ? $element['#return_value'] : 0;
   }
 }
 
@@ -2294,9 +2317,12 @@ function form_process_radios($element) {
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
           '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
-          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
-          '#disabled' => isset($element['#disabled']) ? $element['#disabled'] : NULL,
         );
+        foreach (array('#ajax', '#disabled', '#allow_focus') as $property) {
+          if (isset($element[$property])) {
+            $element[$key][$property] = $element[$property];
+          }
+        }
       }
     }
   }
@@ -2326,7 +2352,7 @@ function theme_checkbox($variables) {
   $checkbox .= 'name="' . $element['#name'] . '" ';
   $checkbox .= 'id="' . $element['#id'] . '" ' ;
   $checkbox .= 'value="' . $element['#return_value'] . '" ';
-  // Unchecked checkbox has #value of numeric 0.
+  // Unchecked checkbox has #value of integer 0.
   if ($element['#value'] !== 0 && $element['#value'] == $element['#return_value']) {
     $checkbox .= 'checked="checked" ';
   }
@@ -2398,9 +2424,12 @@ function form_process_checkboxes($element) {
           '#return_value' => $key,
           '#default_value' => isset($value[$key]) ? $key : NULL,
           '#attributes' => $element['#attributes'],
-          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
-          '#disabled' => isset($element['#disabled']) ? $element['#disabled'] : NULL,
         );
+        foreach (array('#ajax', '#disabled', '#allow_focus') as $property) {
+          if (isset($element[$property])) {
+            $element[$key][$property] = $element[$property];
+          }
+        }
       }
     }
   }
@@ -2550,8 +2579,6 @@ function form_process_tableselect($element) {
             '#return_value' => $key,
             '#default_value' => isset($value[$key]) ? $key : NULL,
             '#attributes' => $element['#attributes'],
-            '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
-            '#disabled' => isset($element['#disabled']) ? $element['#disabled'] : NULL,
           );
         }
         else {
@@ -2566,9 +2593,12 @@ function form_process_tableselect($element) {
             '#attributes' => $element['#attributes'],
             '#parents' => $element['#parents'],
             '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
-            '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
-            '#disabled' => isset($element['#disabled']) ? $element['#disabled'] : NULL,
           );
+        }
+        foreach (array('#ajax', '#disabled', '#allow_focus') as $property) {
+          if (isset($element[$property])) {
+            $element[$key][$property] = $element[$property];
+          }
         }
       }
     }
