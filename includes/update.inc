@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.41 2010/03/31 19:10:39 dries Exp $
+// $Id: update.inc,v 1.42 2010/04/11 17:16:45 dries Exp $
 
 /**
  * @file
@@ -102,9 +102,6 @@ function update_prepare_d7_bootstrap() {
   // Allow the database system to work even if the registry has not been
   // created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
-  drupal_install_initialize_database();
-  spl_autoload_unregister('drupal_autoload_class');
-  spl_autoload_unregister('drupal_autoload_interface');
 
   // The new cache_bootstrap bin is required to bootstrap to
   // DRUPAL_BOOTSTRAP_SESSION, so create it here rather than in

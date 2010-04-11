@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.55 2010/03/17 14:04:38 dries Exp $
+// $Id: theme.maintenance.inc,v 1.56 2010/04/11 17:16:45 dries Exp $
 
 /**
  * @file
@@ -39,6 +39,7 @@ function _drupal_maintenance_theme() {
       // Because we are operating in a crippled environment, we need to
       // bootstrap just enough to allow hook invocations to work.
       require_once DRUPAL_ROOT . '/includes/database/database.inc';
+      spl_autoload_register('db_autoload');
       $module_list['system']['filename'] = 'modules/system/system.module';
       module_list(TRUE, FALSE, FALSE, $module_list);
       drupal_load('module', 'system');

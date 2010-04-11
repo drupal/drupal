@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.208 2010/04/07 17:30:43 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.209 2010/04/11 17:16:45 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -565,6 +565,8 @@ class DrupalUnitTestCase extends DrupalTestCase {
     // Store necessary current values before switching to prefixed database.
     $this->originalPrefix = $db_prefix;
     $this->originalFileDirectory = file_directory_path();
+
+    spl_autoload_register('db_autoload');
 
     // Reset all statics so that test is performed with a clean environment.
     drupal_static_reset();

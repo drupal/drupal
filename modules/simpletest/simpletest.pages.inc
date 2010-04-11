@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.25 2010/02/07 05:36:57 webchick Exp $
+// $Id: simpletest.pages.inc,v 1.26 2010/04/11 17:16:45 dries Exp $
 
 /**
  * @file
@@ -185,7 +185,9 @@ function simpletest_test_form_submit($form, &$form_state) {
   // Get list of tests.
   $tests_list = array();
   foreach ($form_state['values'] as $class_name => $value) {
-    if (class_exists($class_name) && $value === 1) {
+  	// Since class_exists() will likely trigger an autoload lookup,
+  	// we do the fast check first.
+    if ($value === 1 && class_exists($class_name)) {
       $tests_list[] = $class_name;
     }
   }

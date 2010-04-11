@@ -1,5 +1,5 @@
 <?php
-// $Id: cache-install.inc,v 1.7 2009/12/30 08:16:55 dries Exp $
+// $Id: cache-install.inc,v 1.8 2010/04/11 17:16:45 dries Exp $
 
 /**
  * @file
@@ -41,8 +41,7 @@ class DrupalFakeCache extends DrupalDatabaseCache implements DrupalCacheInterfac
     // subtle bugs, some of which would not be fixed unless the site
     // administrator cleared the cache manually.
     try {
-      if (function_exists('drupal_install_initialize_database')) {
-        drupal_install_initialize_database();
+      if (class_exists('Database')) {
         parent::clear($cid, $wildcard);
       }
     }
