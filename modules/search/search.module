@@ -1077,7 +1077,7 @@ function search_excerpt($keys, $text) {
 
   // If we didn't find anything, return the beginning.
   if (count($ranges) == 0) {
-    return truncate_utf8($text, 256) . ' ...';
+    return truncate_utf8($text, 256, TRUE, TRUE);
   }
 
   // Sort the text ranges by starting position.
