@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.372 2010/04/11 18:33:43 dries Exp $
+// $Id: bootstrap.inc,v 1.373 2010/04/11 21:05:13 dries Exp $
 
 /**
  * @file
@@ -2401,6 +2401,7 @@ function drupal_autoload_class($class) {
  */
 function _registry_check_code($type, $name = NULL) {
   static $lookup_cache, $cache_update_needed;
+
   if ($type == 'class' && class_exists($name) || $type == 'interface' && interface_exists($name)) {
     return TRUE;
   }
