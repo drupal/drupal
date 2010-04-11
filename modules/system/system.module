@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.919 2010/04/10 17:30:15 dries Exp $
+// $Id: system.module,v 1.920 2010/04/11 01:07:15 webchick Exp $
 
 /**
  * @file
@@ -1087,7 +1087,7 @@ function system_library() {
   $libraries['jquery-bbq'] = array(
     'title' => 'jQuery BBQ',
     'website' => 'http://benalman.com/projects/jquery-bbq-plugin/',
-    'version' => '1.0.2',
+    'version' => '1.2.1',
     'js' => array(
       'misc/jquery.ba-bbq.js' => array(),
     ),
