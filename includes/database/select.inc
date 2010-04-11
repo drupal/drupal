@@ -501,11 +501,11 @@ class SelectQueryExtender implements SelectQueryInterface {
   }
 
   public function hasAllTags() {
-    return call_user_func_array(array($this->query, 'hasAllTags', func_get_args()));
+    return call_user_func_array(array($this->query, 'hasAllTags'), func_get_args());
   }
 
   public function hasAnyTag() {
-    return call_user_func_array(array($this->query, 'hasAnyTags', func_get_args()));
+    return call_user_func_array(array($this->query, 'hasAnyTags'), func_get_args());
   }
 
   public function addMetaData($key, $object) {

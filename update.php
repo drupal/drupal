@@ -30,7 +30,8 @@ define('MAINTENANCE_MODE', 'update');
 
 function update_selection_page() {
   drupal_set_title('Drupal database update');
-  $output = drupal_render(drupal_get_form('update_script_selection_form'));
+  $elements = drupal_get_form('update_script_selection_form');
+  $output = drupal_render($elements);
 
   update_task_list('select');
 

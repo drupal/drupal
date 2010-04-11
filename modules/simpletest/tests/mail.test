@@ -13,7 +13,7 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
    */
   private static $sent_message;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Mail system',
       'description' => 'Performs tests on the pluggable mailing framework.',

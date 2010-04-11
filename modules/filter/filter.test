@@ -1244,7 +1244,8 @@ alert("test")
     $this->assertEqual($f, '&#039;', t('The @function() function correctly filters single quotes.', $replacements));
 
     // Test that the filter is not fooled by different evasion techniques.
-    $f = $function("\xc2\"");
+    // Ignore PHP 5.3+ invalid multibyte sequence warning.
+    $f = @$function("\xc2\"");
     $this->assertEqual($f, '', t('The @function() function correctly filters invalid UTF-8.', $replacements));
   }
 }

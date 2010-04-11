@@ -745,7 +745,11 @@ function book_children($book_link) {
     }
   }
 
-  return $children ? drupal_render(menu_tree_output($children)) : '';
+  if ($children) {
+    $elements = menu_tree_output($children);
+    return drupal_render($elements);
+  }
+  return '';
 }
 
 /**

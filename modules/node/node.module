@@ -3600,7 +3600,8 @@ function node_unpublish_by_keyword_action_submit($form, $form_state) {
  */
 function node_unpublish_by_keyword_action($node, $context) {
   foreach ($context['keywords'] as $keyword) {
-    if (strpos(drupal_render(node_view(clone $node)), $keyword) !== FALSE || strpos($node->title, $keyword) !== FALSE) {
+    $elements = node_view(clone $node);
+    if (strpos(drupal_render($elements), $keyword) !== FALSE || strpos($node->title, $keyword) !== FALSE) {
       $node->status = NODE_NOT_PUBLISHED;
       watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
       break;

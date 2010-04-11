@@ -246,7 +246,7 @@ class RdfCrudTestCase extends DrupalWebTestCase {
   }
 }
 
-class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
+class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'RDF mapping definition functionality',
@@ -356,8 +356,8 @@ class RdfMappingDefinitionTestCase extends DrupalWebTestCase {
    * Creates a random term and ensures the right RDFa markup is used.
    */
   function testTaxonomyTermRdfaAttributes() {
-    $vocabulary = TaxonomyWebTestCase::createVocabulary();
-    $term = TaxonomyWebTestCase::createTerm($vocabulary);
+    $vocabulary = $this->createVocabulary();
+    $term = $this->createTerm($vocabulary);
 
     // Views the term and checks that the RDFa markup is correct.
     $this->drupalGet('taxonomy/term/' . $term->tid);
@@ -394,7 +394,11 @@ class RdfCommentAttributesTestCase extends DrupalWebTestCase {
 
   public function testAttributesInTeaser() {
     $node = $this->drupalCreateNode(array('type' => 'article', 'uid' => 1, 'promote' => 1));
-    CommentHelperCase::postComment($node, $this->randomName(), $this->randomName());
+    $comment = array(
+      'subject' => $this->randomName(),
+      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $this->randomName(),
+    );
+    $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
     $this->drupalGet('');
     $comment_count_link = $this->xpath('//div[@about=:url]//a[contains(@property, "sioc:num_replies") and @rel=""]', array(':url' => url("node/$node->nid")));
     $this->assertTrue(!empty($comment_count_link), t('Empty rel attribute found in comment count link.'));
@@ -491,7 +495,11 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
 
     // Tests that the appropriate RDFa markup to annotate the latest activity
     // date has been added to the tracker output after a comment is posted.
-    CommentHelperCase::postComment($node, $this->randomName(), $this->randomName());
+    $comment = array(
+      'subject' => $this->randomName(),
+      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $this->randomName(),
+    );
+    $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
     $this->drupalGet('tracker');
 
     // Tests whether the property has been set for number of comments.

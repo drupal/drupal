@@ -1817,6 +1817,21 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
 }
 
 /**
+ * Return the time zone of the current user.
+ */
+function drupal_get_user_timezone() {
+  global $user;
+  if (variable_get('configurable_timezones', 1) && $user->uid && $user->timezone) {
+    return $user->timezone;
+  }
+  else {
+    // Ignore PHP strict notice if time zone has not yet been set in the php.ini
+    // configuration.
+    return variable_get('date_default_timezone', @date_default_timezone_get());
+  }
+}
+
+/**
  * Custom PHP error handler.
  *
  * @param $error_level
@@ -1910,6 +1925,7 @@ function _drupal_bootstrap_page_cache() {
     $cache = drupal_page_get_cache();
     // If there is a cached page, display it.
     if (is_object($cache)) {
+      date_default_timezone_set(drupal_get_user_timezone());
       // If the skipping of the bootstrap hooks is not enforced, call
       // hook_boot.
       if (variable_get('page_cache_invoke_hooks', TRUE)) {

@@ -1765,13 +1765,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   $timezones = &$drupal_static_fast['timezones'];
 
   if (!isset($timezone)) {
-    global $user;
-    if (variable_get('configurable_timezones', 1) && $user->uid && $user->timezone) {
-      $timezone = $user->timezone;
-    }
-    else {
-      $timezone = variable_get('date_default_timezone', 'UTC');
-    }
+    $timezone = date_default_timezone_get();
   }
   // Store DateTimeZone objects in an array rather than repeatedly
   // constructing identical objects over the life of a request.

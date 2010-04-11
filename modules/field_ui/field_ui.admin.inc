@@ -655,6 +655,7 @@ function template_preprocess_field_ui_display_overview_form(&$vars) {
     $row = new stdClass();
     foreach (element_children($element) as $child) {
       if (array_key_exists('label', $element[$child])) {
+        $row->{$child} = new stdClass();
         $row->{$child}->label = drupal_render($element[$child]['label']);
         $row->{$child}->type = drupal_render($element[$child]['type']);
       }

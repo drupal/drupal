@@ -843,7 +843,7 @@ class FormsRebuildTestCase extends DrupalWebTestCase {
  */
 class FormsProgrammaticTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Programmatic form submissions',
       'description' => 'Test the programmatic form submission behavior.',
@@ -908,7 +908,7 @@ class FormsProgrammaticTestCase extends DrupalWebTestCase {
  */
 class FormsClickedButtonTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Form clicked button determination',
       'description' => 'Test the determination of $form_state[\'clicked_button\'].',

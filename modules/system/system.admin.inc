@@ -369,7 +369,7 @@ function system_theme_enable() {
   if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
     $theme = $_REQUEST['theme'];
     // Get current list of themes.
-    $themes =& _system_theme_list();
+    $themes = _system_theme_list();
 
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
@@ -391,7 +391,7 @@ function system_theme_disable() {
   if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
     $theme = $_REQUEST['theme'];
     // Get current list of themes.
-    $themes =& _system_theme_list();
+    $themes = _system_theme_list();
 
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
@@ -419,7 +419,7 @@ function system_theme_default() {
   if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
     $theme = $_REQUEST['theme'];
     // Get current list of themes.
-    $themes =& _system_theme_list();
+    $themes = _system_theme_list();
 
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
@@ -1947,7 +1947,8 @@ function system_date_time_settings() {
       foreach ($formats as $f => $format) {
         $choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
       }
-      $default = variable_get('date_format_' . $type, array_shift(array_keys($formats)));
+      reset($formats);
+      $default = variable_get('date_format_' . $type, key($formats));
 
       // Get date type info for this date type.
       $type_info = system_get_date_types($type);

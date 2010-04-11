@@ -370,6 +370,9 @@ function user_save($account, $edit = array(), $category = 'account') {
     field_attach_presave('user', $edit);
     $edit = (array) $edit;
 
+    if (empty($account)) {
+      $account = new stdClass();
+    }
     if (!isset($account->is_new)) {
       $account->is_new = empty($account->uid);
     }

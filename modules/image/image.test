@@ -248,7 +248,7 @@ class ImageEffectsUnitTest extends ImageToolkitTestCase {
  */
 class ImageAdminStylesUnitTest extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Image styles and effects UI configuration',
       'description' => 'Tests creation, deletion, and editing of image styles and effects at the UI level.',

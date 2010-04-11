@@ -355,8 +355,10 @@ function theme_node_preview($variables) {
 
   $preview_trimmed_version = FALSE;
 
-  $trimmed = drupal_render(node_view(clone $node, 'teaser'));
-  $full = drupal_render(node_view($node, 'full'));
+  $elements = node_view(clone $node, 'teaser');
+  $trimmed = drupal_render($elements);
+  $elements = node_view($node, 'full');
+  $full = drupal_render($elements);
 
   // Do we need to preview trimmed version of post as well as full version?
   if ($trimmed != $full) {

@@ -1102,7 +1102,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   List of modules to enable for the duration of the test. This can be
    *   either a single array or a variable number of string arguments.
    */
-  protected function setUp($modules = array()) {
+  protected function setUp() {
     global $db_prefix, $user, $language, $conf;
 
     // Store necessary current values before switching to prefixed database.
@@ -1166,8 +1166,9 @@ class DrupalWebTestCase extends DrupalTestCase {
     // either a single array argument or a variable number of string arguments.
     // @todo Remove this compatibility layer in Drupal 8, and only accept
     // $modules as a single array argument.
-    if (!is_array($modules)) {
-      $modules = func_get_args();
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
     }
     if ($modules) {
       module_enable($modules, TRUE);
@@ -1203,6 +1204,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     variable_set('install_task', 'done');
     variable_set('clean_url', $clean_url_original);
     variable_set('site_mail', 'simpletest@example.com');
+    variable_set('date_default_timezone', date_default_timezone_get());
     // Set up English language.
     unset($GLOBALS['conf']['language_default']);
     $language = language_default();
@@ -1742,7 +1744,8 @@ class DrupalWebTestCase extends DrupalTestCase {
           $wrapperNode = $xpath->query('//*[@id="' . $ajax_settings['wrapper'] . '"]')->item(0);
           if ($wrapperNode) {
             // ajax.js adds an enclosing DIV to work around a Safari bug.
-            $newDom = DOMDocument::loadHTML('<div>' . $command['data'] . '</div>');
+            $newDom = new DOMDocument();
+            $newDom->loadHTML('<div>' . $command['data'] . '</div>');
             $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
             $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
             // The "method" is a jQuery DOM manipulation function. Emulate each

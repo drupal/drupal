@@ -322,7 +322,8 @@ function forum_node_presave($node) {
   if (_forum_node_check_node_type($node)) {
     // Make sure all fields are set properly:
     $node->icon = !empty($node->icon) ? $node->icon : '';
-    $langcode = array_shift(array_keys($node->taxonomy_forums));
+    reset($node->taxonomy_forums);
+    $langcode = key($node->taxonomy_forums);
     if (!empty($node->taxonomy_forums[$langcode])) {
       $node->forum_tid = $node->taxonomy_forums[$langcode][0]['tid'];
       $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->nid))->fetchField();

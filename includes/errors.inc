@@ -201,7 +201,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     // Display the message if the current error reporting level allows this type
     // of message to be displayed, and unconditionnaly in update.php.
     $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
-    $display_error = $error_level == ERROR_REPORTING_DISPLAY_ALL || ($error_level == ERROR_REPORTING_DISPLAY_SOME && $error['%type'] != 'Notice');
+    $display_error = $error_level == ERROR_REPORTING_DISPLAY_ALL || ($error_level == ERROR_REPORTING_DISPLAY_SOME && $error['%type'] != 'Notice' && $error['%type'] != 'Strict warning');
     if ($display_error || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
       $class = 'error';
 

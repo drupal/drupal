@@ -783,7 +783,8 @@ function locale_translate_seek_screen() {
   // Add CSS.
   drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css', array('preprocess' => FALSE));
 
-  $output = drupal_render(drupal_get_form('locale_translation_filter_form'));
+  $elements = drupal_get_form('locale_translation_filter_form');
+  $output = drupal_render($elements);
   $output .= _locale_translate_seek();
   return $output;
 }
@@ -1023,9 +1024,11 @@ function locale_translate_export_screen() {
   $output = '';
   // Offer translation export if any language is set up.
   if (count($names)) {
-    $output = drupal_render(drupal_get_form('locale_translate_export_po_form', $names));
+    $elements = drupal_get_form('locale_translate_export_po_form', $names);
+    $output = drupal_render($elements);
   }
-  $output .= drupal_render(drupal_get_form('locale_translate_export_pot_form'));
+  $elements = drupal_get_form('locale_translate_export_pot_form');
+  $output .= drupal_render($elements);
   return $output;
 }
 
@@ -1354,6 +1357,7 @@ function locale_date_format_form($form, &$form_state, $langcode) {
       $choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
     }
   }
+  reset($formats);
 
   // Get configured formats for each language.
   $locale_formats = system_date_format_locale($langcode);
@@ -1363,7 +1367,7 @@ function locale_date_format_form($form, &$form_state, $langcode) {
       $default = $locale_formats[$type];
     }
     else {
-      $default = variable_get('date_format_' . $type, array_shift(array_keys($formats)));
+      $default = variable_get('date_format_' . $type, key($formats));
     }
 
     // Show date format select list.

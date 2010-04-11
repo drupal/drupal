@@ -38,6 +38,8 @@ DirectoryIndex index.php index.html index.htm
   php_value mbstring.http_input             pass
   php_value mbstring.http_output            pass
   php_flag mbstring.encoding_translation    off
+  # Report all PHP errors, including compile-time errors.
+  php_value error_reporting                 -1
 </IfModule>
 
 # Requires mod_expires to be enabled.

@@ -2,7 +2,11 @@
 // $Id$
 
 class AJAXTestCase extends DrupalWebTestCase {
-  function setUp($modules = array()) {
+  function setUp() {
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
     parent::setUp(array_unique(array_merge(array('ajax_test', 'ajax_forms_test'), $modules)));
   }
 
@@ -26,7 +30,7 @@ class AJAXTestCase extends DrupalWebTestCase {
  * Tests primary AJAX framework functions.
  */
 class AJAXFrameworkTestCase extends AJAXTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'AJAX framework',
       'description' => 'Performs tests on AJAX framework functions.',
@@ -66,7 +70,7 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
  * Tests AJAX framework commands.
  */
 class AJAXCommandsTestCase extends AJAXTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'AJAX commands',
       'description' => 'Performs tests on AJAX framework commands.',

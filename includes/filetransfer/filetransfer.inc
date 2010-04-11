@@ -24,7 +24,16 @@ abstract class FileTransfer {
     $this->jail = $jail;
   }
 
-  abstract static function factory($jail, $settings);
+  /**
+   * Classes that extend this class must override the factory() static method.
+   *
+   * @param string $jail
+   * @param array $settings
+   * @return object New instance of the appropriate FileTransfer subclass.
+   */
+  static function factory($jail, $settings) {
+    throw new FileTransferException('FileTransfer::factory() static method not overridden by FileTransfer subclass.');
+  }
 
   /**
    * Implementation of the magic __get() method.

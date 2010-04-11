@@ -1204,7 +1204,8 @@ function install_select_locale(&$install_state) {
         }
         else {
           include_once DRUPAL_ROOT . '/includes/form.inc';
-          $output = drupal_render(drupal_get_form('install_select_locale_form', $locales, $profilename));
+          $elements = drupal_get_form('install_select_locale_form', $locales, $profilename);
+          $output = drupal_render($elements);
         }
         return $output;
       }
@@ -1237,7 +1238,8 @@ function install_select_locale(&$install_state) {
       if ($install_state['interactive']) {
         drupal_set_title(st('Choose language'));
         include_once DRUPAL_ROOT . '/includes/form.inc';
-        return drupal_render(drupal_get_form('install_select_locale_form', $locales, $profilename));
+        $elements = drupal_get_form('install_select_locale_form', $locales, $profilename);
+        return drupal_render($elements);
       }
       else {
         throw new Exception(st('Sorry, you must select a language to continue the installation.'));

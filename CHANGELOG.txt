@@ -84,6 +84,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * If your site is being upgraded from Drupal 6 and you do not have the
       contributed date or event modules installed, user time zone settings will
       fallback to the system time zone and will have to be reconfigured by each user.
+    * User-configured time zones now serve as the default time zone for PHP
+      date/time functions.
 - Filter system:
     * Revamped the filter API and text format storage.
     * Added support for default text formats to be assigned on a per-role basis.

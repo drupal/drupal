@@ -3160,7 +3160,7 @@ class DatabaseExtraTypesTestCase extends DrupalWebTestCase {
  * Check the sequences API.
  */
 class DatabaseNextIdCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Sequences API'),
       'description' => t('Test the secondary sequences API.'),
@@ -3187,7 +3187,7 @@ class DatabaseNextIdCase extends DrupalWebTestCase {
  * Tests the empty pseudo-statement class.
  */
 class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Empty statement'),
       'description' => t('Test the empty pseudo-statement class.'),

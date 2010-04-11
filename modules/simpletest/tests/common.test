@@ -323,7 +323,8 @@ class CommonXssUnitTest extends DrupalUnitTestCase {
    * Check that invalid multi-byte sequences are rejected.
    */
   function testInvalidMultiByte() {
-     $text = check_plain("Foo\xC0barbaz");
+     // Ignore PHP 5.3+ invalid multibyte sequence warning.
+     $text = @check_plain("Foo\xC0barbaz");
      $this->assertEqual($text, '', 'check_plain() rejects invalid sequence "Foo\xC0barbaz"');
      $text = check_plain("Fooÿñ");
      $this->assertEqual($text, "Fooÿñ", 'check_plain() accepts valid sequence "Fooÿñ"');
@@ -1774,6 +1775,8 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     $user = user_load($test_user->uid, TRUE);
     $real_language = $language->language;
     $language->language = $user->language;
+    // Simulate a Drupal bootstrap with the logged-in user.
+    date_default_timezone_set(drupal_get_user_timezone());
 
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', t('Test a different language.'));
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London'), 'Monday, 26-Mar-07 01:00:00 BST', t('Test a different time zone.'));
@@ -1786,6 +1789,8 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     // Restore the original user and language, and enable session saving.
     $user = $real_user;
     $language->language = $real_language;
+    // Restore default time zone.
+    date_default_timezone_set(drupal_get_user_timezone());
     drupal_save_session(TRUE);
   }
 }

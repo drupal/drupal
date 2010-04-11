@@ -1743,6 +1743,7 @@ class CompactModeTest extends DrupalWebTestCase {
   }
 
   function setUp() {
+    parent::setUp();
     $admin_user = $this->drupalCreateUser(array('access administration pages'));
     $this->drupalLogin($admin_user);
   }
