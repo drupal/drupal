@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.61 2010/03/26 20:44:10 dries Exp $
+// $Id: trigger.module,v 1.62 2010/04/11 18:33:44 dries Exp $
 
 /**
  * @file
@@ -488,7 +488,8 @@ function trigger_user_login(&$edit, $account, $category) {
  * Implements hook_user_logout().
  */
 function trigger_user_logout($account) {
-  _trigger_user('user_logout', $edit = NULL, $account);
+  $edit = NULL;
+  _trigger_user('user_logout', $edit, $account);
 }
 
 /**
@@ -534,7 +535,8 @@ function trigger_user_delete($account) {
  * Implements hook_user_view().
  */
 function trigger_user_view($account) {
-  _trigger_user('user_view', $edit = NULL, $account, NULL);
+  $edit = NULL;
+  _trigger_user('user_view', $edit, $account, NULL);
 }
 
 /**

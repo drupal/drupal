@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.17 2010/04/07 17:24:55 dries Exp $
+// $Id: image.test,v 1.18 2010/04/11 18:33:44 dries Exp $
 
 /**
  * @file
@@ -248,7 +248,7 @@ class ImageEffectsUnitTest extends ImageToolkitTestCase {
  */
 class ImageAdminStylesUnitTest extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Image styles and effects UI configuration',
       'description' => 'Tests creation, deletion, and editing of image styles and effects at the UI level.',

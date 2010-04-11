@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.35 2010/04/07 17:30:43 dries Exp $
+// $Id: form_test.module,v 1.36 2010/04/11 18:33:44 dries Exp $
 
 /**
  * @file
@@ -508,10 +508,10 @@ function form_test_storage_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'node';
 }
 
- /**
+/**
  * A form for testing form labels and required marks.
  */
-function form_label_test_form(&$form_state) {
+function form_label_test_form() {
   $form['form_checkboxes_test'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Checkboxes test'),

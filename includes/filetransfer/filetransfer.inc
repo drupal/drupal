@@ -1,5 +1,5 @@
 <?php
-// $Id: filetransfer.inc,v 1.8 2010/01/25 10:38:34 dries Exp $
+// $Id: filetransfer.inc,v 1.9 2010/04/11 18:33:43 dries Exp $
 
 /*
  * Base FileTransfer class.
@@ -24,7 +24,16 @@ abstract class FileTransfer {
     $this->jail = $jail;
   }
 
-  abstract static function factory($jail, $settings);
+  /**
+   * Classes that extend this class must override the factory() static method.
+   *
+   * @param string $jail
+   * @param array $settings
+   * @return object New instance of the appropriate FileTransfer subclass.
+   */
+  static function factory($jail, $settings) {
+    throw new FileTransferException('FileTransfer::factory() static method not overridden by FileTransfer subclass.');
+  }
 
   /**
    * Implementation of the magic __get() method.

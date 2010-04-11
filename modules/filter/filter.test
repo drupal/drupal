@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.65 2010/04/10 11:11:46 dries Exp $
+// $Id: filter.test,v 1.66 2010/04/11 18:33:44 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -1244,7 +1244,8 @@ alert("test")
     $this->assertEqual($f, '&#039;', t('The @function() function correctly filters single quotes.', $replacements));
 
     // Test that the filter is not fooled by different evasion techniques.
-    $f = $function("\xc2\"");
+    // Ignore PHP 5.3+ invalid multibyte sequence warning.
+    $f = @$function("\xc2\"");
     $this->assertEqual($f, '', t('The @function() function correctly filters invalid UTF-8.', $replacements));
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.47 2010/03/28 11:08:30 dries Exp $
+// $Id: field_ui.admin.inc,v 1.48 2010/04/11 18:33:43 dries Exp $
 
 /**
  * @file
@@ -655,6 +655,7 @@ function template_preprocess_field_ui_display_overview_form(&$vars) {
     $row = new stdClass();
     foreach (element_children($element) as $child) {
       if (array_key_exists('label', $element[$child])) {
+        $row->{$child} = new stdClass();
         $row->{$child}->label = drupal_render($element[$child]['label']);
         $row->{$child}->type = drupal_render($element[$child]['type']);
       }

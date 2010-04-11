@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.80 2010/04/07 13:49:21 dries Exp $
+// $Id: session.inc,v 1.81 2010/04/11 18:33:43 dries Exp $
 
 /**
  * @file
@@ -209,6 +209,7 @@ function drupal_session_initialize() {
     $user = drupal_anonymous_user();
     session_id(md5(uniqid('', TRUE)));
   }
+  date_default_timezone_set(drupal_get_user_timezone());
 }
 
 /**
@@ -310,6 +311,7 @@ function drupal_session_regenerate() {
       ->condition('sid', $old_session_id)
       ->execute();
   }
+  date_default_timezone_set(drupal_get_user_timezone());
 }
 
 /**

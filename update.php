@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.318 2010/03/26 22:14:46 dries Exp $
+// $Id: update.php,v 1.319 2010/04/11 18:33:43 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -30,7 +30,8 @@ define('MAINTENANCE_MODE', 'update');
 
 function update_selection_page() {
   drupal_set_title('Drupal database update');
-  $output = drupal_render(drupal_get_form('update_script_selection_form'));
+  $elements = drupal_get_form('update_script_selection_form');
+  $output = drupal_render($elements);
 
   update_task_list('select');
 

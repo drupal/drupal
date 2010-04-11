@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.34 2010/02/17 05:24:53 webchick Exp $
+// $Id: select.inc,v 1.35 2010/04/11 18:33:43 dries Exp $
 
 /**
  * @ingroup database
@@ -501,11 +501,11 @@ class SelectQueryExtender implements SelectQueryInterface {
   }
 
   public function hasAllTags() {
-    return call_user_func_array(array($this->query, 'hasAllTags', func_get_args()));
+    return call_user_func_array(array($this->query, 'hasAllTags'), func_get_args());
   }
 
   public function hasAnyTag() {
-    return call_user_func_array(array($this->query, 'hasAnyTags', func_get_args()));
+    return call_user_func_array(array($this->query, 'hasAnyTags'), func_get_args());
   }
 
   public function addMetaData($key, $object) {

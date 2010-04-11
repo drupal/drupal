@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.test,v 1.2 2009/10/16 03:01:54 dries Exp $
+// $Id: mail.test,v 1.3 2010/04/11 18:33:44 dries Exp $
 
 /**
  * Test the Drupal mailing system.
@@ -13,7 +13,7 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
    */
   private static $sent_message;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Mail system',
       'description' => 'Performs tests on the pluggable mailing framework.',

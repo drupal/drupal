@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.121 2010/04/10 17:30:15 dries Exp $
+// $Id: system.test,v 1.122 2010/04/11 18:33:44 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -1743,6 +1743,7 @@ class CompactModeTest extends DrupalWebTestCase {
   }
 
   function setUp() {
+    parent::setUp();
     $admin_user = $this->drupalCreateUser(array('access administration pages'));
     $this->drupalLogin($admin_user);
   }
