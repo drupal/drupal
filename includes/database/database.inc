@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.114 2010/04/07 15:07:59 dries Exp $
+// $Id: database.inc,v 1.115 2010/04/11 01:12:23 webchick Exp $
 
 /**
  * @file
@@ -2451,6 +2451,47 @@ function db_close(array $options = array()) {
  */
 function db_next_id($existing_id = 0) {
   return Database::getConnection()->nextId($existing_id);
+}
+
+/**
+ * Returns a new DatabaseCondition, set to "OR" all conditions together.
+ *
+ * @return DatabaseCondition
+ */
+function db_or() {
+  return new DatabaseCondition('OR');
+}
+
+/**
+ * Returns a new DatabaseCondition, set to "AND" all conditions together.
+ *
+ * @return DatabaseCondition
+ */
+function db_and() {
+  return new DatabaseCondition('AND');
+}
+
+/**
+ * Returns a new DatabaseCondition, set to "XOR" all conditions together.
+ *
+ * @return DatabaseCondition
+ */
+function db_xor() {
+  return new DatabaseCondition('XOR');
+}
+
+/**
+ * Returns a new DatabaseCondition, set to the specified conjunction.
+ *
+ * Internal API function call.  The db_and(), db_or(), and db_xor()
+ * functions are preferred.
+ *
+ * @param $conjunction
+ *   The conjunction to use for query conditions (AND, OR or XOR).
+ * @return DatabaseCondition
+ */
+function db_condition($conjunction) {
+  return new DatabaseCondition($conjunction);
 }
 
 /**
