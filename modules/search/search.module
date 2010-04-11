@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.342 2010/04/06 16:28:25 dries Exp $
+// $Id: search.module,v 1.343 2010/04/11 14:52:13 dries Exp $
 
 /**
  * @file
@@ -1077,7 +1077,7 @@ function search_excerpt($keys, $text) {
 
   // If we didn't find anything, return the beginning.
   if (count($ranges) == 0) {
-    return truncate_utf8($text, 256) . ' ...';
+    return truncate_utf8($text, 256, TRUE, TRUE);
   }
 
   // Sort the text ranges by starting position.
