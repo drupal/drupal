@@ -144,9 +144,6 @@ function node_theme() {
       'variables' => array('node' => NULL),
       'file' => 'node.pages.inc',
     ),
-    'node_log_message' => array(
-      'variables' => array('log' => NULL),
-    ),
     'node_admin_overview' => array(
       'variables' => array('name' => NULL, 'type' => NULL),
     ),
@@ -1403,15 +1400,6 @@ function template_preprocess_node(&$variables) {
   // Clean up name so there are no underscores.
   $variables['theme_hook_suggestions'][] = 'node__' . $node->type;
   $variables['theme_hook_suggestions'][] = 'node__' . $node->nid;
-}
-
-/**
- * Theme a log message.
- *
- * @ingroup themeable
- */
-function theme_node_log_message($variables) {
-  return '<div class="log"><div class="title">' . t('Log') . ':</div>' . $variables['log'] . '</div>';
 }
 
 /**
