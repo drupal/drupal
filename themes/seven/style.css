@@ -293,7 +293,8 @@ ul.primary li a,
 ul.primary li a.active,
 ul.primary li a:active,
 ul.primary li a:visited,
-ul.primary li a:hover {
+ul.primary li a:hover,
+ul.primary li.active a {
   background-color: #a6a7a2;
   color: #000;
   font-weight: bold;
