@@ -1,4 +1,4 @@
-/* $Id: reset.css,v 1.7 2010/03/10 19:31:17 webchick Exp $ */
+/* $Id: reset.css,v 1.8 2010/04/12 17:33:35 webchick Exp $ */
 
 /**
  * Reset CSS styles.
@@ -131,7 +131,6 @@ ul.secondary a.active,
   border: 0;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent;
   line-height: inherit;
 }
 /* Drupal: system-menus.css */

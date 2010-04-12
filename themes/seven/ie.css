@@ -1,4 +1,4 @@
-/* $Id: ie.css,v 1.2 2010/03/07 06:31:48 webchick Exp $ */
+/* $Id: ie.css,v 1.3 2010/04/12 17:33:35 webchick Exp $ */
 
 /* IE7 renders legends in nested fieldsets without a width. */
 fieldset legend {
@@ -9,12 +9,4 @@ fieldset legend {
 fieldset .fieldset-legend {
   left: 0;
   top: 0;
-}
-
-/**
- * Fixes an issue in IE6/IE7 where links in table headers and table row
- * background colors do not appear.
- */
-tr {
-  position: relative;
 }
