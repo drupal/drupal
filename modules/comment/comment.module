@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.863 2010/04/08 19:54:52 dries Exp $
+// $Id: comment.module,v 1.864 2010/04/13 15:13:41 dries Exp $
 
 /**
  * @file
@@ -1597,14 +1597,13 @@ class CommentController extends DrupalDefaultEntityController {
     $query->addField('n', 'type', 'node_type');
     $query->innerJoin('users', 'u', 'base.uid = u.uid');
     $query->addField('u', 'name', 'registered_name');
-    $query->fields('u', array('uid', 'signature', 'picture', 'data'));
+    $query->fields('u', array('uid', 'signature', 'picture'));
     return $query;
   }
 
   protected function attachLoad(&$comments, $revision_id = FALSE) {
     // Setup standard comment properties.
     foreach ($comments as $key => $comment) {
-      $comment = drupal_unpack($comment);
       $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
       $comment->new = node_mark($comment->nid, $comment->changed);
       $comment->node_type = 'comment_node_' . $comment->node_type;

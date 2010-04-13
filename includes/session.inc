@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.81 2010/04/11 18:33:43 dries Exp $
+// $Id: session.inc,v 1.82 2010/04/13 15:13:40 dries Exp $
 
 /**
  * @file
@@ -104,7 +104,6 @@ function _drupal_session_read($sid) {
   // active user.
   if ($user && $user->uid > 0 && $user->status == 1) {
     // This is done to unserialize the data member of $user.
-    $user = drupal_unpack($user);
     $user->data = unserialize($user->data);
 
     // Add roles element to $user.

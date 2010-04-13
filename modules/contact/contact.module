@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.146 2010/03/20 14:55:06 dries Exp $
+// $Id: contact.module,v 1.147 2010/04/13 15:13:41 dries Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function _contact_personal_tab_access(stdClass $account) {
 
   // If the requested user has disabled their contact form, or this preference
   // has not yet been saved, do not allow users to contact them.
-  if (empty($account->contact)) {
+  if (empty($account->data['contact'])) {
     return FALSE;
   }
 
@@ -227,7 +227,7 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
     $form['contact']['contact'] = array(
       '#type' => 'checkbox',
       '#title' => t('Personal contact form'),
-      '#default_value' => !empty($account->contact) ? $account->contact : FALSE,
+      '#default_value' => !empty($account->data['contact']) ? $account->data['contact'] : FALSE,
       '#description' => t('Allow other users to contact you via a <a href="@url">personal contact form</a> which keeps your e-mail address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.', array('@url' => url("user/$account->uid/contact"))),
     );
   }

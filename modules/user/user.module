@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1156 2010/04/11 18:33:44 dries Exp $
+// $Id: user.module,v 1.1157 2010/04/13 15:13:41 dries Exp $
 
 /**
  * @file
@@ -238,10 +238,6 @@ class UserController extends DrupalDefaultEntityController {
     $picture_fids = array();
     foreach ($queried_users as $key => $record) {
       $picture_fids[] = $record->picture;
-      $queried_users[$key] = drupal_unpack($record);
-      // As well as unpacking $user->data, also convert the property to an
-      // unserialized array. This ensures we can always safely reserialize it
-      // in user_save().
       $queried_users[$key]->data = unserialize($record->data);
       $queried_users[$key]->roles = array();
       if ($record->uid) {
