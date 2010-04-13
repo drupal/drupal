@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1261 2010/04/13 15:23:03 dries Exp $
+// $Id: node.module,v 1.1262 2010/04/13 23:16:56 dries Exp $
 
 /**
  * @file
@@ -1094,6 +1094,7 @@ function node_save($node) {
   }
   catch (Exception $e) {
     $transaction->rollback('node', $e->getMessage(), array(), WATCHDOG_ERROR);
+    throw $e;
   }
 }
 
