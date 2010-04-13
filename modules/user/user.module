@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1158 2010/04/13 15:15:07 dries Exp $
+// $Id: user.module,v 1.1159 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -1338,7 +1338,7 @@ function template_preprocess_user_picture(&$variables) {
 }
 
 /**
- * Make a list of users.
+ * Returns HTML for a list of users.
  *
  * @param $variables
  *   An associative array containing:
@@ -3116,7 +3116,11 @@ function user_comment_view($comment) {
 }
 
 /**
- * Theme output of user signature.
+ * Returns HTML for a user signature.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - signature: The user's signature.
  *
  * @ingroup themeable
  */

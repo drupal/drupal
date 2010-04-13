@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.76 2010/02/23 10:32:10 dries Exp $
+// $Id: menu.admin.inc,v 1.77 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,14 @@ function menu_overview_page() {
 }
 
 /**
- * Theme the menu title and description for admin page
+ * Returns HTML for a menu title and description for the menu overview page.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - title: The menu's title.
+ *   - description: The menu's description.
+ *
+ * @ingroup themeable
  */
 function theme_menu_admin_overview($variables) {
   $output = check_plain($variables['title']);
@@ -177,7 +184,11 @@ function menu_overview_form_submit($form, &$form_state) {
 }
 
 /**
- * Theme the menu overview form into a table.
+ * Returns HTML for the menu overview form into a table.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

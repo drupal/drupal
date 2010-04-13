@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.pages.inc,v 1.9 2009/10/13 15:39:41 dries Exp $
+// $Id: filter.pages.inc,v 1.10 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function filter_tips_long() {
 
 
 /**
- * Render HTML for a set of filter tips.
+ * Returns HTML for a set of filter tips.
  *
  * @param $variables
  *   An associative array containing:

@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.23 2010/03/07 07:22:42 webchick Exp $
+// $Id: trigger.admin.inc,v 1.24 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -272,14 +272,11 @@ function trigger_assign_form_submit($form, &$form_state) {
 }
 
 /**
- * Displays actions assigned to this hook in a table.
+ * Returns HTML for the form showing actions assigned to a trigger.
  *
  * @param $variables
  *   An associative array containing:
  *   - element: The fieldset including all assigned actions.
- *
- * @return
- *   The rendered form with the table prepended.
  *
  * @ingroup themeable
  */

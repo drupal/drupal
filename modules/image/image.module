@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.35 2010/03/21 20:36:10 dries Exp $
+// $Id: image.module,v 1.36 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -1010,7 +1010,7 @@ function image_effect_apply($image, $effect) {
 }
 
 /**
- * Return a themed image using a specific image style.
+ * Returns HTML for an image using a specific image style.
  *
  * @param $variables
  *   An associative array containing:
@@ -1025,8 +1025,6 @@ function image_effect_apply($image, $effect) {
  *   - getsize: If set to TRUE, the image's dimension are fetched and added as
  *     width/height attributes.
  *
- * @return
- *   A string containing the image tag.
  * @ingroup themeable
  */
 function theme_image_style($variables) {

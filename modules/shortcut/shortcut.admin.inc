@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.admin.inc,v 1.11 2010/03/08 15:45:26 webchick Exp $
+// $Id: shortcut.admin.inc,v 1.12 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -294,17 +294,14 @@ function shortcut_set_customize_submit($form, &$form_state) {
 }
 
 /**
- * Themes the shortcut set customization form.
+ * Returns HTML for a shortcut set customization form.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: An array representing the form.
+ *   - form: A render element representing the form.
  *
- * @return
- *   A themed HTML string representing the content of the form.
- *
- * @ingroup themeable
  * @see shortcut_set_customize()
+ * @ingroup themeable
  */
 function theme_shortcut_set_customize($variables) {
   $form = $variables['form'];

@@ -1,5 +1,5 @@
 <?php
-// $Id: options.module,v 1.25 2010/02/11 15:42:14 webchick Exp $
+// $Id: options.module,v 1.26 2010/04/13 15:23:02 dries Exp $
 
 /**
  * @file
@@ -366,8 +366,15 @@ function options_field_widget_error($element, $error, $form, &$form_state) {
 }
 
 /**
- *  Theme the label for the empty value for options that are not required.
- *  The default theme will display N/A for a radio list and blank for a select.
+ * Returns HTML for the label for the empty value for options that are not required.
+ *
+ * The default theme will display N/A for a radio list and blank for a select.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - instance: An array representing the widget requesting the options.
+ *
+ * @ingroup themeable
  */
 function theme_options_none($variables) {
   $instance = $variables['instance'];

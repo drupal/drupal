@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.37 2010/03/27 14:24:14 dries Exp $
+// $Id: dblog.admin.inc,v 1.38 2010/04/13 15:23:02 dries Exp $
 
 /**
  * @file
@@ -251,7 +251,7 @@ function dblog_filters() {
 }
 
 /**
- * Formats a log message for display.
+ * Returns HTML for a log message.
  *
  * @param $variables
  *   An associative array containing:

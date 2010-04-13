@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.46 2010/04/07 17:30:43 dries Exp $
+// $Id: field.form.inc,v 1.47 2010/04/13 15:23:02 dries Exp $
 
 /**
  * @file
@@ -231,10 +231,16 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
 }
 
 /**
- * Theme an individual form element.
+ * Returns HTML for an individual form element.
  *
  * Combine multiple values into a table with drag-n-drop reordering.
  * TODO : convert to a template.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render element representing the form element.
+ *
+ * @ingroup themeable
  */
 function theme_field_multiple_value_form($variables) {
   $element = $variables['element'];

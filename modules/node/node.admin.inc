@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.92 2010/03/07 06:49:10 webchick Exp $
+// $Id: node.admin.inc,v 1.93 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -204,7 +204,11 @@ function node_filter_form() {
 }
 
 /**
- * Theme node administration filter selector.
+ * Returns HTML for a node administration filter selector.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

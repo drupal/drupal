@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.82 2010/04/03 08:05:08 webchick Exp $
+// $Id: color.module,v 1.83 2010/04/13 15:23:02 dries Exp $
 
 /**
  * Implements hook_help().
@@ -222,7 +222,11 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
 }
 
 /**
- * Theme the color form.
+ * Returns HTML for a theme's color form.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

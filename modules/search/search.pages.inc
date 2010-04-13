@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.17 2010/03/12 02:29:23 dries Exp $
+// $Id: search.pages.inc,v 1.18 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -47,15 +47,14 @@ function search_view($type = 'node') {
 }
 
 /**
- * Theme the listing of search results
+ * Returns HTML for a listing of search results.
  *
  * @param $variables
  *   An associative array containing:
  *   - title: The subject of the listing.
  *   - content: The content of the listing.
  *
- * @return
- *   A string containing the listing output.
+ * @ingroup themeable
  */
 function theme_search_results_listing($variables) {
   $output = '<h2 class="title">' . $variables['title'] . '</h2><div>' . $variables['content'] . '</div>';

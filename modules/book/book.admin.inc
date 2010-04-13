@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.32 2010/02/25 09:44:51 dries Exp $
+// $Id: book.admin.inc,v 1.33 2010/04/13 15:23:02 dries Exp $
 
 /**
  * @file
@@ -212,10 +212,14 @@ function _book_admin_table_tree($tree, &$form) {
 }
 
 /**
- * Theme function for the book administration page form.
+ * Returns HTML for a book administration form.
  *
- * @ingroup themeable
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
  * @see book_admin_table()
+ * @ingroup themeable
  */
 function theme_book_admin_table($variables) {
   $form = $variables['form'];

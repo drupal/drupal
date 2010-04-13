@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.30 2010/01/30 07:59:26 dries Exp $
+// $Id: update.report.inc,v 1.31 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,11 @@ function update_status() {
 }
 
 /**
- * Theme project status report.
+ * Returns HTML for the project status report.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - data: An array of data about each project's status.
  *
  * @ingroup themeable
  */
@@ -244,7 +248,7 @@ function theme_update_report($variables) {
 }
 
 /**
- * Generate the HTML for the label to display for a project's update status.
+ * Returns HTML for a label to display for a project's update status.
  *
  * @param $variables
  *   An associative array containing:
@@ -273,7 +277,17 @@ function theme_update_status_label($variables) {
 }
 
 /**
- * Theme the version display of a project.
+ * Returns HTML for the version display of a project.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - version: An array of data about the latest released version, containing:
+ *     - version: The version number.
+ *     - release_link: The URL for the release notes.
+ *     - date: The date of the release.
+ *     - download_link: The URL for the downloadable file.
+ *   - tag: The title of the project.
+ *   - class: A string containing extra classes for the wrapping table.
  *
  * @ingroup themeable
  */

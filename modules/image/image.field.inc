@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.19 2010/03/27 05:52:50 webchick Exp $
+// $Id: image.field.inc,v 1.20 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -390,7 +390,13 @@ function image_field_widget_process($element, &$form_state, $form) {
 }
 
 /**
- * Theme the display of the image field widget.
+ * Returns HTML for an image field widget.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render element representing the image field widget.
+ *
+ * @ingroup themeable
  */
 function theme_image_widget($variables) {
   $element = $variables['element'];
@@ -490,7 +496,15 @@ function image_field_formatter_view($entity_type, $entity, $field, $instance, $l
 }
 
 /**
- * Theme function for image field formatters.
+ * Returns HTML for an image field formatter.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - item: An array of image data.
+ *   - image_style: An optional image style.
+ *   - path: An array containing the link 'path' and link 'options'.
+ *
+ * @ingroup themeable
  */
 function theme_image_formatter($variables) {
   $item = $variables['item'];

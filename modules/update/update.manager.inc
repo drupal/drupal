@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.18 2010/03/28 11:40:57 dries Exp $
+// $Id: update.manager.inc,v 1.19 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -256,10 +256,11 @@ function update_manager_update_form($form, $form_state = array(), $context) {
 }
 
 /**
- * Theme the first page in the update manager wizard to select projects.
+ * Returns HTML for the first page in the update manager wizard to select projects.
  *
  * @param $variables
- *   form: The form
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.31 2010/03/28 11:39:35 dries Exp $
+// $Id: forum.admin.inc,v 1.32 2010/04/13 15:23:03 dries Exp $
 
 /**
  * @file
@@ -102,14 +102,15 @@ function forum_form_submit($form, &$form_state) {
 }
 
 /**
- * Theme forum forms.
+ * Returns HTML for a forum form.
  *
  * By default this does not alter the appearance of a form at all,
  * but is provided as a convenience for themers.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: An associative array containing the structure of the form.
+ *   - form: A render element representing the form.
+ *
  * @ingroup themeable
  */
 function theme_forum_form($variables) {
