@@ -97,6 +97,7 @@ function user_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Unique role name.',
+        'translatable' => TRUE,
       ),
       'weight' => array(
         'type' => 'int',

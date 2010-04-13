@@ -2505,12 +2505,16 @@ function user_mail_tokens(&$replacements, $data, $options) {
  *   value.
  */
 function user_roles($membersonly = FALSE, $permission = NULL) {
+  $query = db_select('role', 'r');
+  $query->addTag('translatable');
+  $query->fields('r', array('rid', 'name'));
+  $query->orderBy('weight');
+  $query->orderBy('name');
   if (!empty($permission)) {
-    $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {role_permission} p ON r.rid = p.rid WHERE p.permission = :permission ORDER BY r.weight, r.name", array(':permission' => $permission));
+    $query->innerJoin('role_permission', 'p', 'r.rid = p.rid');
+    $query->condition('p.permission', $permission);
   }
-  else {
-    $result = db_query('SELECT rid, name FROM {role} ORDER BY weight, name');
-  }
+  $result = $query->execute();
 
   $roles = array();
   foreach ($result as $role) {
