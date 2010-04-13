@@ -427,7 +427,7 @@ class NodeCreationTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    // Enable dummy module that implements hook_node_post_save for exceptions.
+    // Enable dummy module that implements hook_node_insert for exceptions.
     parent::setUp('node_test_exception');
 
     $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
@@ -458,20 +458,30 @@ class NodeCreationTestCase extends DrupalWebTestCase {
    */
   function testFailedPageCreation() {
     // Create a node.
-    $edit = array();
-    $langcode = LANGUAGE_NONE;
-    $edit["title"] = 'testing_transaction_exception';
-    $edit["body[$langcode][0][value]"] = $this->randomName(16);
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $edit = array(
+      'uid'      => $this->loggedInUser->uid,
+      'name'     => $this->loggedInUser->name,
+      'type'     => 'page',
+      'language' => LANGUAGE_NONE,
+      'title'    => 'testing_transaction_exception',
+    );
+
+    try {
+      node_save((object) $edit);
+      $this->fail(t('Expected exception has not been thrown.'));
+    }
+    catch (Exception $e) {
+      $this->pass(t('Expected exception has been thrown.'));
+    }
 
     if (Database::getConnection()->supportsTransactions()) {
       // Check that the node does not exist in the database.
-      $node = $this->drupalGetNodeByTitle($edit["title"]);
+      $node = $this->drupalGetNodeByTitle($edit['title']);
       $this->assertFalse($node, t('Transactions supported, and node not found in database.'));
     }
     else {
       // Check that the node exists in the database.
-      $node = $this->drupalGetNodeByTitle($edit["title"]);
+      $node = $this->drupalGetNodeByTitle($edit['title']);
       $this->assertTrue($node, t('Transactions not supported, and node found in database.'));
 
       // Check that the failed rollback was logged.

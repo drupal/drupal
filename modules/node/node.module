@@ -1094,6 +1094,7 @@ function node_save($node) {
   }
   catch (Exception $e) {
     $transaction->rollback('node', $e->getMessage(), array(), WATCHDOG_ERROR);
+    throw $e;
   }
 }
 
