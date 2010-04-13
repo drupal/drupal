@@ -61,7 +61,6 @@ function comment_reply($node, $pid = NULL) {
             drupal_goto("node/$node->nid");
           }
           // Display the parent comment
-          $comment = drupal_unpack($comment);
           $comment->node_type = 'comment_node_' . $node->type;
           field_attach_load('comment', array($comment->cid => $comment));
           $comment->name = $comment->uid ? $comment->registered_name : $comment->name;

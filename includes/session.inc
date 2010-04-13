@@ -104,7 +104,6 @@ function _drupal_session_read($sid) {
   // active user.
   if ($user && $user->uid > 0 && $user->status == 1) {
     // This is done to unserialize the data member of $user.
-    $user = drupal_unpack($user);
     $user->data = unserialize($user->data);
 
     // Add roles element to $user.

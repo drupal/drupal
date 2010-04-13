@@ -495,13 +495,13 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
   $current = REQUEST_TIME;
 
   // Basic validation of arguments.
-  if (isset($account->user_cancel_method) && !empty($timestamp) && !empty($hashed_pass)) {
+  if (isset($account->data['user_cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
     // Validate expiration and hashed password/login.
     if ($timestamp <= $current && $current - $timestamp < $timeout && $account->uid && $timestamp >= $account->login && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
       $edit = array(
-        'user_cancel_notify' => isset($account->user_cancel_notify) ? $account->user_cancel_notify : variable_get('user_mail_status_canceled_notify', FALSE),
+        'user_cancel_notify' => isset($account->data['user_cancel_notify']) ? $account->data['user_cancel_notify'] : variable_get('user_mail_status_canceled_notify', FALSE),
       );
-      user_cancel($edit, $account->uid, $account->user_cancel_method);
+      user_cancel($edit, $account->uid, $account->data['user_cancel_method']);
       // Since user_cancel() is not invoked via Form API, batch processing needs
       // to be invoked manually and should redirect to the front page after
       // completion.

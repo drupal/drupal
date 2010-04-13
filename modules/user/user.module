@@ -238,10 +238,6 @@ class UserController extends DrupalDefaultEntityController {
     $picture_fids = array();
     foreach ($queried_users as $key => $record) {
       $picture_fids[] = $record->picture;
-      $queried_users[$key] = drupal_unpack($record);
-      // As well as unpacking $user->data, also convert the property to an
-      // unserialized array. This ensures we can always safely reserialize it
-      // in user_save().
       $queried_users[$key]->data = unserialize($record->data);
       $queried_users[$key]->roles = array();
       if ($record->uid) {
