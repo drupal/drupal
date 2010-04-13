@@ -28,7 +28,11 @@ function node_add_page() {
 }
 
 /**
- * Display the list of available node types for node creation.
+ * Returns HTML for a list of available node types for node creation.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - content: An array of content types.
  *
  * @ingroup themeable
  */
@@ -340,7 +344,7 @@ function node_preview($node) {
 }
 
 /**
- * Display a node preview for display during node creation and editing.
+ * Returns HTML for a node preview for display during node creation and editing.
  *
  * @param $variables
  *   An associative array containing:

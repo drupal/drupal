@@ -733,7 +733,11 @@ function user_admin_permissions_submit($form, &$form_state) {
 }
 
 /**
- * Theme the administer permissions page.
+ * Returns HTML for the administer permissions page.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
@@ -770,7 +774,7 @@ function theme_user_admin_permissions($variables) {
 }
 
 /**
- * Theme an individual permission description.
+ * Returns HTML for an individual permission description.
  *
  * @param $variables
  *   An associative array containing:
@@ -861,7 +865,11 @@ function user_admin_roles_order_submit($form, &$form_state) {
 }
 
 /**
- * Theme the role order and new role form.
+ * Returns HTML for the role order and new role form.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
@@ -1007,7 +1015,11 @@ function user_admin_role_delete_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Theme user administration filter selector.
+ * Returns HTML for the user administration filter selector.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

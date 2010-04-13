@@ -1372,24 +1372,20 @@ function _menu_tree_data(&$links, $parents, $depth) {
 }
 
 /**
- * Preprocess the rendered tree for theme_menu_tree.
- *
- * @ingroup themeable
+ * Preprocesses the rendered tree for theme_menu_tree().
  */
 function template_preprocess_menu_tree(&$variables) {
   $variables['tree'] = $variables['tree']['#children'];
 }
 
 /**
- * Theme wrapper for the HTML output for a menu sub-tree.
+ * Returns HTML for a wrapper for a menu sub-tree.
  *
  * @param $variables
  *   An associative array containing:
- *   - tree: @todo: document
+ *   - tree: An HTML string containing the tree's items.
  *
- * @return
- *   A themed HTML string.
- *
+ * @see template_preprocess_menu_tree()
  * @ingroup themeable
  */
 function theme_menu_tree($variables) {
@@ -1397,14 +1393,11 @@ function theme_menu_tree($variables) {
 }
 
 /**
- * Generate the HTML output for a menu link and submenu.
+ * Returns HTML for a menu link and submenu.
  *
  * @param $variables
  *   An associative array containing:
  *   - element: Structured array data for a menu link.
- *
- * @return
- *   A themed HTML string.
  *
  * @ingroup themeable
  */
@@ -1420,13 +1413,14 @@ function theme_menu_link(array $variables) {
 }
 
 /**
- * Generate the HTML output for a single local task link.
+ * Returns HTML for a single local task link.
  *
  * @param $variables
  *   An associative array containing:
- *   - #link: A menu link array with 'title', 'href', and 'localized_options'
- *     keys.
- *   - #active: A boolean indicating whether the local task is active.
+ *   - element: A render element containing:
+ *     - #link: A menu link array with 'title', 'href', and 'localized_options'
+ *       keys.
+ *     - #active: A boolean indicating whether the local task is active.
  *
  * @ingroup themeable
  */
@@ -1451,12 +1445,13 @@ function theme_menu_local_task($variables) {
 }
 
 /**
- * Generate the HTML output for a single local action link.
+ * Returns HTML for a single local action link.
  *
  * @param $variables
  *   An associative array containing:
- *   - #link: A menu link array with 'title', 'href', and 'localized_options'
- *     keys.
+ *   - element: A render element containing:
+ *     - #link: A menu link array with 'title', 'href', and 'localized_options'
+ *       keys.
  *
  * @ingroup themeable
  */

@@ -366,13 +366,12 @@ function dashboard_update() {
 }
 
 /**
- * Theme the entire dashboard.
+ * Returns HTML for the entire dashboard.
  *
  * @param $variables
- *   - element: An associative array containing the properties of the dashboard region
- *              element. Properties used: #dashboard_region, #children
- * @return
- *   A string representing the themed dashboard.
+ *   An associative array containing:
+ *   - element: A render element containing the properties of the dashboard
+ *     region element, #dashboard_region and #children.
  *
  * @ingroup themeable
  */
@@ -383,15 +382,11 @@ function theme_dashboard($variables) {
 }
 
 /**
- * Theme the page containing the dashboard.
+ * Returns HTML for the non-customizable part of the dashboard page.
  *
  * @param $variables
  *   An associative array containing:
- *   - elements: An associative array containing the properties of the element.
- *     Properties used: #message
- * @return
- *   A themed HTML string representing the non-customizable part of the
- *   dashboard page.
+ *   - element: A render element containing a #message.
  *
  * @ingroup themeable
  */
@@ -402,13 +397,12 @@ function theme_dashboard_admin($variables) {
 }
 
 /**
- * Theme a generic dashboard region.
+ * Returns HTML for a generic dashboard region.
  *
  * @param $variables
- *   - element: An associative array containing the properties of the dashboard region
- *              element. Properties used: #dashboard_region, #children
- * @return
- *   A string representing the themed dashboard region.
+ *   An associative array containing:
+ *   - element: A render element containing the properties of the dashboard
+ *     region element, #dashboard_region and #children.
  *
  * @ingroup themeable
  */
@@ -425,13 +419,11 @@ function theme_dashboard_region($variables) {
 }
 
 /**
- * Theme a set of disabled blocks, for display in dashboard customization mode.
+ * Returns HTML for a set of disabled blocks, for display in dashboard customization mode.
  *
  * @param $variables
+ *   An associative array containing:
  *   - blocks: An array of block objects from _block_rehash().
- * @return
- *   A string representing the disabled blocks region of the dashboard
- *   customization page.
  *
  * @ingroup themeable
  */
@@ -447,12 +439,11 @@ function theme_dashboard_disabled_blocks($variables) {
 }
 
 /**
- * Theme a disabled block, for display in dashboard customization mode.
+ * Returns HTML for a disabled block, for display in dashboard customization mode.
  *
  * @param $variables
+ *   An associative array containing:
  *   - block: A block object from _block_rehash().
- * @return
- *   A string representing the disabled block.
  *
  * @ingroup themeable
  */

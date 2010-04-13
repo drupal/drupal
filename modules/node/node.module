@@ -1695,7 +1695,11 @@ function node_user_delete($account) {
 }
 
 /**
- * Theme the content ranking part of the search settings admin page.
+ * Returns HTML for the content ranking part of the search settings admin page.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
@@ -2129,10 +2133,12 @@ function node_get_recent($number = 10) {
 }
 
 /**
- * Returns a formatted list of recent nodes.
+ * Returns HTML for a list of recent content.
  *
- * @return
- *   The recent content table HTML.
+ * @param $variables
+ *   An associative array containing:
+ *   - nodes: An array of recent node objects.
+ *
  * @ingroup themeable
  */
 function theme_node_recent_block($variables) {
@@ -2168,10 +2174,12 @@ function theme_node_recent_block($variables) {
 }
 
 /**
- * Returns a formatted recent node to be displayed in the recent content block.
+ * Returns HTML for a recent node to be displayed in the recent content block.
  *
- * @return
- *   The recent content node's HTML.
+ * @param $variables
+ *   An associative array containing:
+ *   - node: A node object.
+ *
  * @ingroup themeable
  */
 function theme_node_recent_content($variables) {

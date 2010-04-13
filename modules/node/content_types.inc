@@ -54,6 +54,17 @@ function node_overview_types() {
   return $build;
 }
 
+/**
+ * Returns HTML for a node type description for the content type admin overview page.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - name: The human-readable name of the content type.
+ *   - type: An object containing the 'type' (machine name) and 'description' of
+ *     the content type.
+ *
+ * @ingroup themeable
+ */
 function theme_node_admin_overview($variables) {
   $name = $variables['name'];
   $type = $variables['type'];

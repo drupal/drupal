@@ -933,15 +933,11 @@ function filter_form_access_denied($element) {
 }
 
 /**
- * Render a text format-enabled form element.
+ * Returns HTML for a text format-enabled form element.
  *
  * @param $variables
  *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #children, #description
- *
- * @return
- *   A string representing the form element.
+ *   - element: A render element containing #children and #description.
  *
  * @ingroup themeable
  */
@@ -1103,7 +1099,7 @@ function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, 
 }
 
 /**
- * Format a link to the more extensive filter tips.
+ * Returns HTML for a link to the more extensive filter tips.
  *
  * @ingroup themeable
  */
@@ -1112,7 +1108,7 @@ function theme_filter_tips_more_info() {
 }
 
 /**
- * Format guidelines for a text format.
+ * Returns HTML for guidelines for a text format.
  *
  * @param $variables
  *   An associative array containing:

@@ -607,7 +607,13 @@ function file_managed_file_save_upload($element) {
 }
 
 /**
- * Theme a managed file element.
+ * Returns HTML for a managed file element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render element representing the file.
+ *
+ * @ingroup themeable
  */
 function theme_file_managed_file($variables) {
   $element = $variables['element'];
@@ -621,11 +627,13 @@ function theme_file_managed_file($variables) {
 }
 
 /**
- * Output a link to a file.
+ * Returns HTML for a link to a file.
  *
  * @param $variables
  *   An associative array containing:
  *   - file: A file object to which the link will be created.
+ *
+ * @ingroup themeable
  */
 function theme_file_link($variables) {
   $file = $variables['file'];
@@ -654,11 +662,13 @@ function theme_file_link($variables) {
 }
 
 /**
- * Return an image with an appropriate icon for the given file.
+ * Returns HTML for an image with an appropriate icon for the given file.
  *
  * @param $variables
  *   An associative array containing:
  *   - file: A file object for which to make an icon.
+ *
+ * @ingroup themeable
  */
 function theme_file_icon($variables) {
   $file = $variables['file'];

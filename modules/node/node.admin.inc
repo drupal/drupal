@@ -204,7 +204,11 @@ function node_filter_form() {
 }
 
 /**
- * Theme node administration filter selector.
+ * Returns HTML for a node administration filter selector.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

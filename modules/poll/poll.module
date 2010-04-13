@@ -779,7 +779,11 @@ function poll_view_results($node, $view_mode, $block = FALSE) {
 
 
 /**
- * Theme the admin poll form for choices.
+ * Returns HTML for an admin poll form for choices.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

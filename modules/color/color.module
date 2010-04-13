@@ -222,7 +222,11 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
 }
 
 /**
- * Theme the color form.
+ * Returns HTML for a theme's color form.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

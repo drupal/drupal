@@ -721,7 +721,7 @@ function rdf_preprocess_image(&$variables) {
 }
 
 /**
- * Wraps a template variable in an HTML element with the desired attributes.
+ * Returns HTML for a template variable wrapped in an HTML element with the desired attributes.
  *
  * This is called by rdf_process() shortly before the theme system renders
  * a template file. It is called once for each template variable for which
@@ -731,6 +731,14 @@ function rdf_preprocess_image(&$variables) {
  * content (via the $content_attributes variable), additional template variables
  * that need containing attributes are routed through this function, allowing
  * the template file to receive properly wrapped variables.
+ *
+ * Tip for themers: if you're already outputting a wrapper element around a
+ * particular template variable in your template file and if you don't want
+ * an extra wrapper element, you can override this function to not wrap that
+ * variable and instead print the following inside your template file:
+ * @code
+ *   drupal_attributes($rdf_template_variable_attributes_array[$variable_name])
+ * @endcode
  *
  * @param $variables
  *   An associative array containing:
@@ -760,20 +768,7 @@ function rdf_preprocess_image(&$variables) {
  *     hook_preprocess_rdf_template_variable_wrapper() and set 'inline'
  *     accordingly.
  *
- * @return
- *   A string containing the wrapped content. The template receives the for its
- *   variable instead of the original content.
- *
- * Tip for themers: if you're already outputting a wrapper element around a
- * particular template variable in your template file and if you don't want
- * an extra wrapper element, you can override this function to not wrap that
- * variable and instead print the following inside your template file:
- * @code
- *   drupal_attributes($rdf_template_variable_attributes_array[$variable_name])
- * @endcode
- *
  * @see rdf_process()
- *
  * @ingroup themeable
  * @ingroup rdf
  */
@@ -787,7 +782,7 @@ function theme_rdf_template_variable_wrapper($variables) {
 }
 
 /**
- * Outputs a series of empty spans for exporting RDF metadata in RDFa.
+ * Returns HTML for a series of empty spans for exporting RDF metadata in RDFa.
  *
  * Sometimes it is useful to export data which is not semantically present in
  * the HTML output. For example, a hierarchy of comments is visible for a human
@@ -801,11 +796,7 @@ function theme_rdf_template_variable_wrapper($variables) {
  *     corresponds to its own set of attributes, and therefore, needs its own
  *     element.
  *
- * @return
- *   A string of HTML containing markup that can be understood by RDFa parsers.
- *
  * @see rdf_process()
- *
  * @ingroup themeable
  * @ingroup rdf
  */

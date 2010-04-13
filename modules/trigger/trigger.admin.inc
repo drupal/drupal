@@ -272,14 +272,11 @@ function trigger_assign_form_submit($form, &$form_state) {
 }
 
 /**
- * Displays actions assigned to this hook in a table.
+ * Returns HTML for the form showing actions assigned to a trigger.
  *
  * @param $variables
  *   An associative array containing:
  *   - element: The fieldset including all assigned actions.
- *
- * @return
- *   The rendered form with the table prepended.
  *
  * @ingroup themeable
  */

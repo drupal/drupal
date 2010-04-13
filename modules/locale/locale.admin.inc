@@ -51,14 +51,11 @@ function locale_languages_overview_form() {
 }
 
 /**
- * Theme the language overview form.
+ * Returns HTML for the language overview form.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: @todo: document
- *
- * @return
- *   A themed HTML string representing the form.
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
@@ -569,7 +566,11 @@ function _locale_languages_configure_form_language_table(&$form, $type) {
 }
 
 /**
- * Theme the language configure form.
+ * Returns HTML for a language configuration form.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
@@ -1278,7 +1279,11 @@ function locale_translate_delete_form_submit($form, &$form_state) {
  */
 
 /**
- * Theme locale date format form.
+ * Returns HTML for a locale date format form.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

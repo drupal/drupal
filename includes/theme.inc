@@ -1329,8 +1329,7 @@ function theme_disable($theme_list) {
  */
 
 /**
- * Return a themed set of status and/or error messages. The messages are grouped
- * by type.
+ * Returns HTML for status and/or error messages, grouped by type.
  *
  * An invisible heading identifies the messages for assistive technology.
  * Sighted users see a colored box. See http://www.w3.org/TR/WCAG-TECHS/H69.html
@@ -1340,9 +1339,6 @@ function theme_disable($theme_list) {
  *   An associative array containing:
  *   - display: (optional) Set to 'status' or 'error' to display only messages
  *     of that type.
- *
- * @return
- *   A string containing the messages.
  */
 function theme_status_messages($variables) {
   $display = $variables['display'];
@@ -1374,11 +1370,11 @@ function theme_status_messages($variables) {
 }
 
 /**
- * Return a themed link.
+ * Returns HTML for a link.
  *
  * All Drupal code that outputs a link should call the l() function. That
- * function performs some initial preprocessing, and then, if necessary,
- * calls theme('link') for rendering the anchor tag.
+ * function performs some initial preprocessing, and then, if necessary, calls
+ * theme('link') for rendering the anchor tag.
  *
  * To optimize performance for sites that don't need custom theming of links,
  * the l() function includes an inline copy of this function, and uses that copy
@@ -1386,11 +1382,8 @@ function theme_status_messages($variables) {
  * or process functions or override this theme implementation.
  *
  * @param $variables
- *   An associative array containing the keys 'text', 'path', and 'options'.
- *   See the l() function for information about these variables.
- *
- * @return
- *   An HTML string containing a link to the given path.
+ *   An associative array containing the keys 'text', 'path', and 'options'. See
+ *   the l() function for information about these variables.
  *
  * @see l()
  */
@@ -1399,28 +1392,29 @@ function theme_link($variables) {
 }
 
 /**
- * Return a themed set of links.
+ * Returns HTML for a set of links.
  *
  * @param $variables
  *   An associative array containing:
  *   - links: A keyed array of links to be themed. The key for each link is used
  *     as its css class. Each link should be itself an array, with the following
  *     keys:
- *      - title: the link text
- *      - href: the link URL. If omitted, the 'title' is shown as a plain text
- *        item in the links list.
- *      - html: (optional) set this to TRUE if 'title' is HTML so it will be
- *        escaped.
+ *     - title: the link text
+ *     - href: the link URL. If omitted, the 'title' is shown as a plain text
+ *       item in the links list.
+ *     - html: (optional) set this to TRUE if 'title' is HTML so it will be
+ *       escaped.
  *     Array items are passed on to the l() function's $options parameter when
  *     creating the link.
  *   - attributes: A keyed array of attributes.
  *   - heading: An optional keyed array or a string for a heading to precede the
  *     links. When using an array the following keys can be used:
- *      - text: the heading text
- *      - level: the heading level (e.g. 'h2', 'h3')
- *      - class: (optional) an array of the CSS classes for the heading
+ *     - text: the heading text
+ *     - level: the heading level (e.g. 'h2', 'h3')
+ *     - class: (optional) an array of the CSS classes for the heading
  *     When using a string it will be used as the text of the heading and the
  *     level will default to 'h2'.
+ *
  *     Headings should be used on navigation menus and any list of links that
  *     consistently appears on multiple pages. To make the heading invisible
  *     use the 'element-invisible' CSS class. Do not use 'display:none', which
@@ -1428,9 +1422,6 @@ function theme_link($variables) {
  *     screen-reader and keyboard only users to navigate to or skip the links.
  *     See http://juicystudio.com/article/screen-readers-display-none.php
  *     and http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
- *
- * @return
- *   A string containing an unordered list of links.
  */
 function theme_links($variables) {
   $links = $variables['links'];
@@ -1509,7 +1500,7 @@ function theme_links($variables) {
 }
 
 /**
- * Return a themed image.
+ * Returns HTML for an image.
  *
  * @param $variables
  *   An associative array containing:
@@ -1521,9 +1512,6 @@ function theme_links($variables) {
  *   - attributes: Associative array of attributes to be placed in the img tag.
  *   - getsize: If set to TRUE, the image's dimension are fetched and added as
  *     width/height attributes.
- *
- * @return
- *   A string containing the image tag.
  */
 function theme_image($variables) {
   $path = $variables['path'];
@@ -1540,14 +1528,11 @@ function theme_image($variables) {
 }
 
 /**
- * Return a themed breadcrumb trail.
+ * Returns HTML for a breadcrumb trail.
  *
  * @param $variables
  *   An associative array containing:
  *   - breadcrumb: An array containing the breadcrumb links.
- *
- * @return
- *   A string containing the breadcrumb output.
  */
 function theme_breadcrumb($variables) {
   $breadcrumb = $variables['breadcrumb'];
@@ -1563,7 +1548,7 @@ function theme_breadcrumb($variables) {
 }
 
 /**
- * Return a themed table.
+ * Returns HTML for a table.
  *
  * @param $variables
  *   An associative array containing:
@@ -1634,9 +1619,6 @@ function theme_breadcrumb($variables) {
  *   - sticky: Use a "sticky" table header.
  *   - empty: The message to display in an extra row if table does not have any
  *     rows.
- *
- * @return
- *   An HTML string representing the table.
  */
 function theme_table($variables) {
   $header = $variables['header'];
@@ -1763,7 +1745,10 @@ function theme_table($variables) {
 }
 
 /**
- * Returns a header cell for tables that have a select all functionality.
+ * Returns attributes for a header cell of tables with select all functionality.
+ *
+ * @return
+ *   An array of attributes.
  */
 function theme_table_select_header_cell() {
   drupal_add_js('misc/tableselect.js');
@@ -1772,14 +1757,11 @@ function theme_table_select_header_cell() {
 }
 
 /**
- * Return a themed sort icon.
+ * Returns HTML for a sort icon.
  *
  * @param $variables
  *   An associative array containing:
- *   - style: Set to either asc or desc. This sets which icon to show.
- *
- * @return
- *   A themed sort icon.
+ *   - style: Set to either 'asc' or 'desc', this determines which icon to show.
  */
 function theme_tablesort_indicator($variables) {
   if ($variables['style'] == "asc") {
@@ -1791,16 +1773,12 @@ function theme_tablesort_indicator($variables) {
 }
 
 /**
- * Return a themed marker, useful for marking new or updated
- * content.
+ * Returns HTML for a marker for new or updated content.
  *
  * @param $variables
  *   An associative array containing:
  *   - type: Number representing the marker type to display. See MARK_NEW,
  *     MARK_UPDATED, MARK_READ.
- *
- * @return
- *   A string containing the marker.
  */
 function theme_mark($variables) {
   $type = $variables['type'];
@@ -1816,7 +1794,7 @@ function theme_mark($variables) {
 }
 
 /**
- * Return a themed list of items.
+ * Returns HTML for a list or nested list of items.
  *
  * @param $variables
  *   An associative array containing:
@@ -1829,9 +1807,6 @@ function theme_mark($variables) {
  *   - title: The title of the list.
  *   - type: The type of list to return (e.g. "ul", "ol").
  *   - attributes: The attributes applied to the list element.
- *
- * @return
- *   A string containing the list output.
  */
 function theme_item_list($variables) {
   $items = $variables['items'];
@@ -1885,14 +1860,18 @@ function theme_item_list($variables) {
 }
 
 /**
- * Returns code that emits the 'more help'-link.
+ * Returns HTML for a "more help" link.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - url: The url for the link.
  */
 function theme_more_help_link($variables) {
   return '<div class="more-help-link">' . t('<a href="@link">More help</a>', array('@link' => check_url($variables['url']))) . '</div>';
 }
 
 /**
- * Return code that emits an feed icon.
+ * Returns HTML for a feed icon.
  *
  * @param $variables
  *   An associative array containing:
@@ -1907,15 +1886,12 @@ function theme_feed_icon($variables) {
 }
 
 /**
- * Generate the output for a generic HTML tag with attributes.
- *
- * This theme function should be used for tags appearing in the HTML HEAD of a
- * document (specified via the #tag property in the passed $element):
+ * Returns HTML for a generic HTML tag with attributes.
  *
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array describing the tag:
- *     - #tag: The tag name to output.  Typical tags added to the HTML HEAD:
+ *     - #tag: The tag name to output. Typical tags added to the HTML HEAD:
  *       - meta: To provide meta information, such as a page refresh.
  *       - link: To refer to stylesheets and other contextual information.
  *       - script: To load JavaScript.
@@ -1947,96 +1923,19 @@ function theme_html_tag($variables) {
 }
 
 /**
- * Returns code that emits the 'more' link used on blocks.
+ * Returns HTML for a "more" link, like those used in blocks.
  *
  * @param $variables
  *   An associative array containing:
- *   - url: The url of the main page
- *   - title: A descriptive verb for the link, like 'Read more'
+ *   - url: The url of the main page.
+ *   - title: A descriptive verb for the link, like 'Read more'.
  */
 function theme_more_link($variables) {
   return '<div class="more-link">' . t('<a href="@link" title="@title">More</a>', array('@link' => check_url($variables['url']), '@title' => $variables['title'])) . '</div>';
 }
 
 /**
- * Preprocess variables for theme_username().
- *
- * Modules that make any changes to variables like 'name' or 'extra' must insure
- * that the final string is safe to include directly in the output by using
- * check_plain() or filter_xss().
- *
- * @see theme_username()
- */
-function template_preprocess_username(&$variables) {
-  $account = $variables['account'];
-
-  $variables['extra'] = '';
-  if (empty($account->uid)) {
-   $variables['uid'] = 0;
-   if (theme_get_setting('toggle_comment_user_verification')) {
-     $variables['extra'] = ' (' . t('not verified') . ')';
-   }
-  }
-  else {
-    $variables['uid'] = (int)$account->uid;
-  }
-
-  // Set the name to a formatted name that is safe for printing and
-  // that won't break tables by being too long. Keep an unshortened,
-  // unsanitized version, in case other preprocess functions want to implement
-  // their own shortening logic or add markup. If they do so, they must ensure
-  // that $variables['name'] is safe for printing.
-  $name = $variables['name_raw'] = format_username($account);
-  if (drupal_strlen($name) > 20) {
-    $name = drupal_substr($name, 0, 15) . '...';
-  }
-  $variables['name'] = check_plain($name);
-
-  $variables['profile_access'] = user_access('access user profiles');
-  $variables['link_attributes'] = array();
-  // Populate link path and attributes if appropriate.
-  if ($variables['uid'] && $variables['profile_access']) {
-    // We are linking to a local user.
-    $variables['link_attributes'] = array('title' => t('View user profile.'));
-    $variables['link_path'] = 'user/' . $variables['uid'];
-  }
-  elseif (!empty($account->homepage)) {
-    // Like the 'class' attribute, the 'rel' attribute can hold a
-    // space-separated set of values, so initialize it as an array to make it
-    // easier for other preprocess functions to append to it.
-    $variables['link_attributes'] = array('rel' => array('nofollow'));
-    $variables['link_path'] = $account->homepage;
-    $variables['homepage'] = $account->homepage;
-  }
-  // We do not want the l() function to check_plain() a second time.
-  $variables['link_options']['html'] = TRUE;
-  // Set a default class.
-  $variables['attributes_array'] = array('class' => array('username'));
-}
-
-/**
- * Process variables for theme_username().
- *
- * @see theme_username()
- */
-function template_process_username(&$variables) {
-  // Finalize the link_options array for passing to the l() function.
-  // This is done in the process phase so that attributes may be added by
-  // modules or the theme during the preprocess phase.
-  if (isset($variables['link_path'])) {
-    // $variables['attributes_array'] contains attributes that should be applied
-    // regardless of whether a link is being rendered or not.
-    // $variables['link_attributes'] contains attributes that should only be
-    // applied if a link is being rendered. Preprocess functions are encouraged
-    // to use the former unless they want to add attributes on the link only.
-    // If a link is being rendered, these need to be merged. Some attributes are
-    // themselves arrays, so the merging needs to be recursive.
-    $variables['link_options']['attributes'] = array_merge_recursive($variables['link_attributes'], $variables['attributes_array']);
-  }
-}
-
-/**
- * Format a username.
+ * Returns HTML for a username, potentially linked to the user's page.
  *
  * @param $variables
  *   An associative array containing:
@@ -2049,10 +1948,6 @@ function template_process_username(&$variables) {
  *     parameter if linking the user's name to the user's page.
  *   - attributes_array: An array of attributes to pass to the
  *     drupal_attributes() function if not linking to the user's page.
- *
- * @return
- *   A themed HTML string containing the user's name, potentially linked to the
- *   user's page.
  *
  * @see template_preprocess_username()
  * @see template_process_username()
@@ -2074,15 +1969,12 @@ function theme_username($variables) {
 }
 
 /**
- * Return a themed progress bar.
+ * Returns HTML for a progress bar.
  *
  * @param $variables
  *   An associative array containing:
  *   - percent: The percentage of the progress.
  *   - message: A string containing information to be displayed.
- *
- * @return
- *   A themed HTML string representing the progress bar.
  */
 function theme_progress_bar($variables) {
   $output = '<div id="progress" class="progress">';
@@ -2095,14 +1987,11 @@ function theme_progress_bar($variables) {
 }
 
 /**
- * Create a standard indentation div. Used for drag and drop tables.
+ * Returns HTML for an indentation div; used for drag and drop tables.
  *
  * @param $variables
  *   An associative array containing:
  *   - size: Optional. The number of indentations to create.
- *
- * @return
- *   A string containing indentations.
  */
 function theme_indentation($variables) {
   $output = '';
@@ -2582,4 +2471,81 @@ function template_preprocess_region(&$variables) {
   $region = drupal_region_class($variables['region']);
   $variables['classes_array'][] = $region;
   $variables['theme_hook_suggestions'][] = 'region__' . $region;
+}
+
+/**
+ * Preprocesses variables for theme_username().
+ *
+ * Modules that make any changes to variables like 'name' or 'extra' must insure
+ * that the final string is safe to include directly in the output by using
+ * check_plain() or filter_xss().
+ *
+ * @see template_process_username()
+ */
+function template_preprocess_username(&$variables) {
+  $account = $variables['account'];
+
+  $variables['extra'] = '';
+  if (empty($account->uid)) {
+   $variables['uid'] = 0;
+   if (theme_get_setting('toggle_comment_user_verification')) {
+     $variables['extra'] = ' (' . t('not verified') . ')';
+   }
+  }
+  else {
+    $variables['uid'] = (int)$account->uid;
+  }
+
+  // Set the name to a formatted name that is safe for printing and
+  // that won't break tables by being too long. Keep an unshortened,
+  // unsanitized version, in case other preprocess functions want to implement
+  // their own shortening logic or add markup. If they do so, they must ensure
+  // that $variables['name'] is safe for printing.
+  $name = $variables['name_raw'] = format_username($account);
+  if (drupal_strlen($name) > 20) {
+    $name = drupal_substr($name, 0, 15) . '...';
+  }
+  $variables['name'] = check_plain($name);
+
+  $variables['profile_access'] = user_access('access user profiles');
+  $variables['link_attributes'] = array();
+  // Populate link path and attributes if appropriate.
+  if ($variables['uid'] && $variables['profile_access']) {
+    // We are linking to a local user.
+    $variables['link_attributes'] = array('title' => t('View user profile.'));
+    $variables['link_path'] = 'user/' . $variables['uid'];
+  }
+  elseif (!empty($account->homepage)) {
+    // Like the 'class' attribute, the 'rel' attribute can hold a
+    // space-separated set of values, so initialize it as an array to make it
+    // easier for other preprocess functions to append to it.
+    $variables['link_attributes'] = array('rel' => array('nofollow'));
+    $variables['link_path'] = $account->homepage;
+    $variables['homepage'] = $account->homepage;
+  }
+  // We do not want the l() function to check_plain() a second time.
+  $variables['link_options']['html'] = TRUE;
+  // Set a default class.
+  $variables['attributes_array'] = array('class' => array('username'));
+}
+
+/**
+ * Processes variables for theme_username().
+ *
+ * @see template_preprocess_username()
+ */
+function template_process_username(&$variables) {
+  // Finalize the link_options array for passing to the l() function.
+  // This is done in the process phase so that attributes may be added by
+  // modules or the theme during the preprocess phase.
+  if (isset($variables['link_path'])) {
+    // $variables['attributes_array'] contains attributes that should be applied
+    // regardless of whether a link is being rendered or not.
+    // $variables['link_attributes'] contains attributes that should only be
+    // applied if a link is being rendered. Preprocess functions are encouraged
+    // to use the former unless they want to add attributes on the link only.
+    // If a link is being rendered, these need to be merged. Some attributes are
+    // themselves arrays, so the merging needs to be recursive.
+    $variables['link_options']['attributes'] = array_merge_recursive($variables['link_attributes'], $variables['attributes_array']);
+  }
 }

@@ -606,14 +606,15 @@ function _update_project_status_sort($a, $b) {
 }
 
 /**
- * Render the HTML to display the last time we checked for update data.
+ * Returns HTML for the last time we checked for update data.
  *
  * In addition to properly formating the given timestamp, this function also
  * provides a "Check manually" link that refreshes the available update and
  * redirects back to the same page.
  *
  * @param $variables
- *   'last': The timestamp when the site last checked for available updates.
+ *   An associative array containing:
+ *   - 'last': The timestamp when the site last checked for available updates.
  *
  * @see theme_update_report()
  * @see theme_update_available_updates_form()

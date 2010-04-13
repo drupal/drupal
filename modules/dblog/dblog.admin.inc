@@ -251,7 +251,7 @@ function dblog_filters() {
 }
 
 /**
- * Formats a log message for display.
+ * Returns HTML for a log message.
  *
  * @param $variables
  *   An associative array containing:

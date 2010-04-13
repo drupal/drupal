@@ -95,7 +95,23 @@ function syslog_theme() {
 }
 
 /**
- * Format a system log entry.
+ * Returns a string for a system log entry.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - entry: An array containing the data about the log entry, containing:
+ *     - timestamp: The date and time of the log entry.
+ *     - type: The type of log entry.
+ *     - ip: The IP address.
+ *     - request_uri: The requested URI.
+ *     - referer: The URL which referred to the request URI.
+ *     - user: The user object associated with the log entry.
+ *     - link: A link accociated with the log entry.
+ *     - variables: A string representing the data to log.
+ *     - message: If variables is not specified, a string for the log message.
+ *
+ * @return
+ *   A string containing a pipe-delimited "|" log message.
  *
  * @ingroup themeable
  */

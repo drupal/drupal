@@ -231,10 +231,16 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
 }
 
 /**
- * Theme an individual form element.
+ * Returns HTML for an individual form element.
  *
  * Combine multiple values into a table with drag-n-drop reordering.
  * TODO : convert to a template.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render element representing the form element.
+ *
+ * @ingroup themeable
  */
 function theme_field_multiple_value_form($variables) {
   $element = $variables['element'];

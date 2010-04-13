@@ -1982,7 +1982,11 @@ function system_date_time_settings() {
 }
 
 /**
- * Theme function for date settings form.
+ * Returns HTML for the date settings form.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
@@ -2270,12 +2274,12 @@ function system_batch_page() {
 }
 
 /**
- * This function formats an administrative block for display.
+ * Returns HTML for an administrative block for display.
  *
  * @param $variables
  *   An associative array containing:
- *   - block: An array containing information about the block. It should
- *     include a 'title', a 'description' and a formatted 'content'.
+ *   - block: An array containing information about the block. It should include
+ *     a 'title', a 'description' and a formatted 'content'.
  *
  * @ingroup themeable
  */
@@ -2315,7 +2319,7 @@ EOT;
 }
 
 /**
- * This function formats the content of an administrative block.
+ * Returns HTML for the content of an administrative block.
  *
  * @param $variables
  *   An associative array containing:
@@ -2350,14 +2354,14 @@ function theme_admin_block_content($variables) {
 }
 
 /**
- * This function formats an administrative page for viewing.
+ * Returns HTML for an administrative page.
  *
  * @param $variables
  *   An associative array containing:
  *   - blocks: An array of blocks to display. Each array should include a
- *     'title', a 'description', a formatted 'content' and a
- *     'position' which will control which container it will be
- *     in. This is usually 'left' or 'right'.
+ *     'title', a 'description', a formatted 'content' and a 'position' which
+ *     will control which container it will be in. This is usually 'left' or
+ *     'right'.
  *
  * @ingroup themeable
  */
@@ -2393,7 +2397,7 @@ function theme_admin_page($variables) {
 }
 
 /**
- * Theme output of the dashboard page.
+ * Returns HTML for the output of the dashboard page.
  *
  * @param $variables
  *   An associative array containing:
@@ -2445,7 +2449,7 @@ function theme_system_admin_by_module($variables) {
 }
 
 /**
- * Theme requirements status report.
+ * Returns HTML for the status report.
  *
  * @param $variables
  *   An associative array containing:
@@ -2486,11 +2490,11 @@ function theme_status_report($variables) {
 }
 
 /**
- * Theme callback for the modules form.
+ * Returns HTML for the modules form.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: An associative array containing the structure of the form.
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
@@ -2533,32 +2537,26 @@ function theme_system_modules_fieldset($variables) {
 }
 
 /**
- * Themes an incompatible message.
- *
- * @ingroup themeable
+ * Returns HTML for a message about incompatible modules.
  *
  * @param $variables
  *   An associative array containing:
  *   - message: The form array representing the currently disabled modules.
  *
- * @return
- *   An HTML string for the message.
+ * @ingroup themeable
  */
 function theme_system_modules_incompatible($variables) {
   return '<div class="incompatible">' . $variables['message'] . '</div>';
 }
 
 /**
- * Themes a table of currently disabled modules.
- *
- * @ingroup themeable
+ * Returns HTML for a table of currently disabled modules.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: The form array representing the currently disabled modules.
+ *   - form: A render element representing the form.
  *
- * @return
- *   An HTML string representing the table.
+ * @ingroup themeable
  */
 function theme_system_modules_uninstall($variables) {
   $form = $variables['form'];
@@ -2591,7 +2589,7 @@ function theme_system_modules_uninstall($variables) {
 }
 
 /**
- * Theme function for the system themes form.
+ * Returns HTML for the Appearance page.
  *
  * @param $variables
  *   An associative array containing:

@@ -568,10 +568,8 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
 }
 
 /**
- * Returns a formatted list of recent comments to be displayed in the comment block.
+ * Returns HTML for a list of recent comments to be displayed in the comment block.
  *
- * @return
- *   The comment list HTML.
  * @ingroup themeable
  */
 function theme_comment_block() {
@@ -2204,7 +2202,7 @@ function template_preprocess_comment(&$variables) {
 }
 
 /**
- * Theme a "you can't post comments" notice.
+ * Returns HTML for a "you can't post comments" notice.
  *
  * @param $variables
  *   An associative array containing:

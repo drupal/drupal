@@ -56,7 +56,11 @@ function filter_admin_overview_submit($form, &$form_state) {
 }
 
 /**
- * Theme the text format administration overview form.
+ * Returns HTML for the text format administration overview form.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
@@ -233,7 +237,11 @@ function filter_admin_format_form($form, &$form_state, $format) {
 }
 
 /**
- * Theme text format filter order form elements as tabledrag.
+ * Returns HTML for a text format's filter order form.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render element representing the form.
  *
  * @ingroup themeable
  */

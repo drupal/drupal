@@ -256,10 +256,11 @@ function update_manager_update_form($form, $form_state = array(), $context) {
 }
 
 /**
- * Theme the first page in the update manager wizard to select projects.
+ * Returns HTML for the first page in the update manager wizard to select projects.
  *
  * @param $variables
- *   form: The form
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */

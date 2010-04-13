@@ -47,15 +47,14 @@ function search_view($type = 'node') {
 }
 
 /**
- * Theme the listing of search results
+ * Returns HTML for a listing of search results.
  *
  * @param $variables
  *   An associative array containing:
  *   - title: The subject of the listing.
  *   - content: The content of the listing.
  *
- * @return
- *   A string containing the listing output.
+ * @ingroup themeable
  */
 function theme_search_results_listing($variables) {
   $output = '<h2 class="title">' . $variables['title'] . '</h2><div>' . $variables['content'] . '</div>';

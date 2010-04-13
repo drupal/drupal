@@ -23,7 +23,7 @@ function filter_tips_long() {
 
 
 /**
- * Render HTML for a set of filter tips.
+ * Returns HTML for a set of filter tips.
  *
  * @param $variables
  *   An associative array containing:

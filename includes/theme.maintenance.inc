@@ -87,7 +87,12 @@ function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine 
 }
 
 /**
- * Return a themed list of maintenance tasks to perform.
+ * Returns HTML for a list of maintenance tasks to perform.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - items: An associative array of maintenance tasks.
+ *   - active: The key for the currently active maintenance task.
  *
  * @ingroup themeable
  */
@@ -120,7 +125,7 @@ function theme_task_list($variables) {
 }
 
 /**
- * Generate a themed installation page.
+ * Returns HTML for the installation page.
  *
  * Note: this function is not themeable.
  *
@@ -180,7 +185,7 @@ function theme_install_page($variables) {
 }
 
 /**
- * Generate a themed update page.
+ * Returns HTML for the update page.
  *
  * Note: this function is not themeable.
  *
@@ -226,10 +231,13 @@ function theme_update_page($variables) {
 }
 
 /**
- * Generate a report of the results from an operation run via authorize.php.
+ * Returns HTML for a report of the results from an operation run via authorize.php.
  *
- * @param array $variables
+ * @param $variables
+ *   An associative array containing:
  *   - messages: An array of result messages.
+ *
+ * @ingroup themeable
  */
 function theme_authorize_report($variables) {
   $messages = $variables['messages'];
@@ -251,11 +259,14 @@ function theme_authorize_report($variables) {
 }
 
 /**
- * Render a single log message from the authorize.php batch operation.
+ * Returns HTML for a single log message from the authorize.php batch operation.
  *
  * @param $variables
+ *   An associative array containing:
  *   - message: The log message.
  *   - success: A boolean indicating failure or success.
+ *
+ * @ingroup themeable
  */
 function theme_authorize_message($variables) {
   $output = '';

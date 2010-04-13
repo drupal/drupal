@@ -91,10 +91,14 @@ function profile_admin_overview_submit($form, &$form_state) {
 }
 
 /**
- * Theme the profile field overview into a drag and drop enabled table.
+ * Returns HTML for the profile field overview form into a drag and drop enabled table.
  *
- * @ingroup themeable
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
  * @see profile_admin_overview()
+ * @ingroup themeable
  */
 function theme_profile_admin_overview($variables) {
   $form = $variables['form'];

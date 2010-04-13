@@ -623,7 +623,7 @@ function image_rotate_form($data) {
 }
 
 /**
- * Display the page containing the list of image styles.
+ * Returns HTML for the page containing the list of image styles.
  *
  * @param $variables
  *   An associative array containing:
@@ -674,11 +674,11 @@ function theme_image_style_list($variables) {
 }
 
 /**
- * Theme callback for listing the effects within a specific image style.
+ * Returns HTML for a listing of the effects within a specific image style.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: An associative array containing the structure of the effects group.
+ *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
@@ -733,7 +733,7 @@ function theme_image_style_effects($variables) {
 }
 
 /**
- * Theme callback for displaying a preview of an image style.
+ * Returns HTML for a preview of an image style.
  *
  * @param $variables
  *   An associative array containing:
@@ -809,11 +809,11 @@ function theme_image_style_preview($variables) {
 }
 
 /**
- * Theme callback for displaying a grid of checkboxes.
+ * Returns HTML for a 3x3 grid of checkboxes for image anchors.
  *
  * @param $variables
  *   An associative array containing:
- *   - element: A Form API element containing radio buttons.
+ *   - element: A render element containing radio buttons.
  *
  * @ingroup themeable
  */
@@ -836,7 +836,7 @@ function theme_image_anchor($variables) {
 }
 
 /**
- * Theme callback for image resize effect summary output.
+ * Returns HTML for a summary of an image resize effect.
  *
  * @param $variables
  *   An associative array containing:
@@ -856,7 +856,7 @@ function theme_image_resize_summary($variables) {
 }
 
 /**
- * Theme callback for image scale effect summary output.
+ * Returns HTML for a summary of an image scale effect.
  *
  * @param $variables
  *   An associative array containing:
@@ -870,7 +870,7 @@ function theme_image_scale_summary($variables) {
 }
 
 /**
- * Theme callback for image crop effect summary output.
+ * Returns HTML for a summary of an image crop effect.
  *
  * @param $variables
  *   An associative array containing:
@@ -883,7 +883,7 @@ function theme_image_crop_summary($variables) {
 }
 
 /**
- * Theme callback for image rotate effect summary output.
+ * Returns HTML for a summary of an image rotate effect.
  *
  * @param $variables
  *   An associative array containing:

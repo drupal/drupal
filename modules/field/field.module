@@ -790,7 +790,7 @@ function template_process_field(&$variables, $hook) {
  */
 
 /**
- * Returns a themed field.
+ * Returns HTML for a field.
  *
  * This is the default theme implementation to display the value of a field.
  * Theme developers who are comfortable with overriding theme functions may do
@@ -830,6 +830,18 @@ function template_process_field(&$variables, $hook) {
  * 5% to the time it takes to display that page. This is a guideline only and
  * the exact performance impact depends on the server configuration and the
  * details of the website.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - label_hidden: A boolean indicating to show or hide the field label.
+ *   - title_attributes: A string containing the attributes for the title.
+ *   - label: The label for the field.
+ *   - content_attributes: A string containing the attaributes for the content's
+ *     div.
+ *   - items: An array of field items.
+ *   - item_attributes: An array of attributes for each item.
+ *   - classes: A string containing the classes for the wrapping div.
+ *   - attributes: A string containing the attributes for the wrapping div.
  *
  * @see template_preprocess_field()
  * @see template_process_field()

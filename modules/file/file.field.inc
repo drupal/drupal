@@ -696,7 +696,13 @@ function file_field_widget_process_multiple($element, &$form_state, $form) {
 }
 
 /**
- * Theme an individual file upload widget.
+ * Returns HTML for an individual file upload widget.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render element representing the widget.
+ *
+ * @ingroup themeable
  */
 function theme_file_widget($variables) {
   $element = $variables['element'];
@@ -715,7 +721,13 @@ function theme_file_widget($variables) {
 }
 
 /**
- * Theme a group of file upload widgets.
+ * Returns HTML for a group of file upload widgets.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render element representing the widgets.
+ *
+ * @ingroup themeable
  */
 function theme_file_widget_multiple($variables) {
   $element = $variables['element'];
@@ -800,7 +812,7 @@ function theme_file_widget_multiple($variables) {
 }
 
 /**
- * Generate help text based on upload validators.
+ * Returns HTML for help text based on file upload validators.
  *
  * @param $variables
  *   An associative array containing:
@@ -809,8 +821,7 @@ function theme_file_widget_multiple($variables) {
  *   - upload_validators: An array of upload validators as used in
  *     $element['#upload_validators'].
  *
- * @return
- *   A string suitable for a file field description.
+ * @ingroup themeable
  */
 function theme_file_upload_help($variables) {
   $description = $variables['description'];
@@ -882,7 +893,13 @@ function file_field_formatter_view($entity_type, $entity, $field, $instance, $la
 }
 
 /**
- * Theme function for the 'table' formatter.
+ * Returns HTML for a file attachments table.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - items: An array of file attachments.
+ *
+ * @ingroup themeable
  */
 function theme_file_formatter_table($variables) {
   $header = array(t('Attachment'), t('Size'));

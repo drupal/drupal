@@ -234,14 +234,12 @@ function aggregator_categorize_items_submit($form, &$form_state) {
 }
 
 /**
- * Theme the page list form for assigning categories.
+ * Returns HTML for the aggregator page list form for assigning categories.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: An associative array containing the structure of the form.
+ *   - form: A render element representing the form.
  *
- * @return
- *   The output HTML.
  * @ingroup themeable
  */
 function theme_aggregator_categorize_items($variables) {
@@ -371,12 +369,14 @@ function aggregator_page_rss() {
 }
 
 /**
- * Theme the RSS output.
+ * Prints the RSS page for a feed.
  *
  * @param $variables
  *   An associative array containing:
  *   - feeds: An array of the feeds to theme.
  *   - category: A common category, if any, for all the feeds.
+ *
+ * @return void
  *
  * @ingroup themeable
  */
@@ -437,11 +437,13 @@ function aggregator_page_opml($cid = NULL) {
 }
 
 /**
- * Theme the OPML feed output.
+ * Prints the OPML page for a feed.
  *
  * @param $variables
  *   An associative array containing:
  *   - feeds: An array of the feeds to theme.
+ *
+ * @return void
  *
  * @ingroup themeable
  */

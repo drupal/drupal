@@ -703,15 +703,13 @@ function aggregator_category_load($cid) {
 }
 
 /**
- * Format an individual feed item for display in the block.
+ * Returns HTML for an individual feed item for display in the block.
  *
  * @param $variables
  *   An associative array containing:
  *   - item: The item to be displayed.
  *   - feed: Not used.
  *
- * @return
- *   The item HTML.
  * @ingroup themeable
  */
 function theme_aggregator_block_item($variables) {

@@ -3138,16 +3138,16 @@ function system_timezone($abbreviation = '', $offset = -1, $is_daylight_saving_t
 }
 
 /**
- * Format the Powered by Drupal text.
+ * Returns HTML for the Powered by Drupal text.
  *
  * @ingroup themeable
  */
-function theme_system_powered_by($variables) {
+function theme_system_powered_by() {
   return '<span>' . t('Powered by <a href="@poweredby">Drupal</a>', array('@poweredby' => 'http://drupal.org')) . '</span>';
 }
 
 /**
- * Display the link to show or hide inline help descriptions.
+ * Returns HTML for a link to show or hide inline help descriptions.
  *
  * @ingroup themeable
  */
@@ -3627,14 +3627,15 @@ function system_archiver_info() {
 }
 
 /**
- * Theme confirmation forms.
+ * Returns HTML for a confirmation form.
  *
  * By default this does not alter the appearance of a form at all,
  * but is provided as a convenience for themers.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: An associative array containing the structure of the form.
+ *   - form: A render element representing the form.
+ *
  * @ingroup themeable
  */
 function theme_confirm_form($variables) {
@@ -3642,14 +3643,15 @@ function theme_confirm_form($variables) {
 }
 
 /**
- * Theme function for the system settings form.
+ * Returns HTML for a system settings form.
  *
  * By default this does not alter the appearance of a form at all,
  * but is provided as a convenience for themers.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: An associative array containing the structure of the form.
+ *   - form: A render element representing the form.
+ *
  * @ingroup themeable
  */
 function theme_system_settings_form($variables) {

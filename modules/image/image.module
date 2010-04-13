@@ -1010,7 +1010,7 @@ function image_effect_apply($image, $effect) {
 }
 
 /**
- * Return a themed image using a specific image style.
+ * Returns HTML for an image using a specific image style.
  *
  * @param $variables
  *   An associative array containing:
@@ -1025,8 +1025,6 @@ function image_effect_apply($image, $effect) {
  *   - getsize: If set to TRUE, the image's dimension are fetched and added as
  *     width/height attributes.
  *
- * @return
- *   A string containing the image tag.
  * @ingroup themeable
  */
 function theme_image_style($variables) {

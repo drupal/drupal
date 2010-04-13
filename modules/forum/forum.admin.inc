@@ -102,14 +102,15 @@ function forum_form_submit($form, &$form_state) {
 }
 
 /**
- * Theme forum forms.
+ * Returns HTML for a forum form.
  *
  * By default this does not alter the appearance of a form at all,
  * but is provided as a convenience for themers.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: An associative array containing the structure of the form.
+ *   - form: A render element representing the form.
+ *
  * @ingroup themeable
  */
 function theme_forum_form($variables) {

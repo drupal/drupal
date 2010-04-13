@@ -52,10 +52,14 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
 }
 
 /**
- * Theme the vocabulary overview as a sortable list of vocabularies.
+ * Returns HTML for the vocabulary overview form as a sortable list of vocabularies.
  *
- * @ingroup themeable
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
  * @see taxonomy_overview_vocabularies()
+ * @ingroup themeable
  */
 function theme_taxonomy_overview_vocabularies($variables) {
   $form = $variables['form'];
@@ -513,10 +517,14 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
 }
 
 /**
- * Theme the terms overview as a sortable list of terms.
+ * Returns HTML for a terms overview form as a sortable list of terms.
  *
- * @ingroup themeable
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
  * @see taxonomy_overview_terms()
+ * @ingroup themeable
  */
 function theme_taxonomy_overview_terms($variables) {
   $form = $variables['form'];
