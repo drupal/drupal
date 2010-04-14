@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.51 2010/04/09 12:12:30 dries Exp $
+// $Id: forum.test,v 1.52 2010/04/14 15:51:21 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -88,6 +88,17 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->drupalGet('forum/' . $this->forum['tid']);
     $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
     $this->assertResponse(200);
+  }
+
+  /**
+   * Forum nodes should not be created without choosing forum from select list.
+   */
+  function testAddOrphanTopic() {
+    $this->drupalLogin($this->admin_user);
+    $this->drupalPost('node/add/forum', array('title' => $this->randomName(10), 'body[' . LANGUAGE_NONE .'][0][value]' => $this->randomName(120)), t('Save'));
+
+    $nid_count = db_query('SELECT COUNT(nid) FROM {node}')->fetchField();
+    $this->assertEqual(0, $nid_count, t('A forum node was not created.'));
   }
 
   /**

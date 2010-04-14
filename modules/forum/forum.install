@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.43 2010/03/27 05:52:50 webchick Exp $
+// $Id: forum.install,v 1.44 2010/04/14 15:51:20 webchick Exp $
 
 /**
  * @file
@@ -58,6 +58,7 @@ function forum_enable() {
       'entity_type' => 'node',
       'label' => $vocabulary->name,
       'bundle' => 'forum',
+      'required' => TRUE,
       'widget' => array(
         'type' => 'options_select',
       ),
