@@ -299,7 +299,13 @@ function forum_node_validate($node, $form) {
     if (!empty($node->taxonomy_forums[$langcode])) {
       // Extract the node's proper topic ID.
       $containers = variable_get('forum_containers', array());
-      foreach ($node->taxonomy_forums[$langcode] as $item) {
+      foreach ($node->taxonomy_forums[$langcode] as $delta => $item) {
+        // If no term was selected (e.g. when no terms exist yet), remove the
+        // item.
+        if (empty($item['tid'])) {
+          unset($node->taxonomy_forums[$langcode][$delta]);
+          continue;
+        }
         $term = taxonomy_term_load($item['tid']);
         $used = db_query_range('SELECT 1 FROM {taxonomy_term_data} WHERE tid = :tid AND vid = :vid',0 , 1, array(
           ':tid' => $term->tid,

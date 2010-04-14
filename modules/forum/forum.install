@@ -58,6 +58,7 @@ function forum_enable() {
       'entity_type' => 'node',
       'label' => $vocabulary->name,
       'bundle' => 'forum',
+      'required' => TRUE,
       'widget' => array(
         'type' => 'options_select',
       ),

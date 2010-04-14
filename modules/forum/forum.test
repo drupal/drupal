@@ -91,6 +91,17 @@ class ForumTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Forum nodes should not be created without choosing forum from select list.
+   */
+  function testAddOrphanTopic() {
+    $this->drupalLogin($this->admin_user);
+    $this->drupalPost('node/add/forum', array('title' => $this->randomName(10), 'body[' . LANGUAGE_NONE .'][0][value]' => $this->randomName(120)), t('Save'));
+
+    $nid_count = db_query('SELECT COUNT(nid) FROM {node}')->fetchField();
+    $this->assertEqual(0, $nid_count, t('A forum node was not created.'));
+  }
+
+  /**
    * Run admin tests on the admin user.
    *
    * @param object $user The logged in user.
