@@ -3,9 +3,9 @@
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
-  protected $own_user;
-  protected $any_user;
-  protected $nid_user;
+  protected $edit_own_topics_user;
+  protected $edit_any_topics_user;
+  protected $web_user;
   protected $container;
   protected $forum;
   protected $root_forum;
@@ -26,9 +26,9 @@ class ForumTestCase extends DrupalWebTestCase {
     parent::setUp('taxonomy', 'comment', 'forum');
     // Create users.
     $this->admin_user = $this->drupalCreateUser(array('administer blocks', 'administer forums', 'administer menu', 'administer taxonomy', 'create forum content')); // 'access administration pages'));
-    $this->own_user = $this->drupalCreateUser(array('create forum content', 'edit own forum content', 'delete own forum content'));
-    $this->any_user = $this->drupalCreateUser(array('create forum content', 'edit any forum content', 'delete any forum content', 'access administration pages'));
-    $this->nid_user = $this->drupalCreateUser(array());
+    $this->edit_any_topics_user = $this->drupalCreateUser(array('create forum content', 'edit any forum content', 'delete any forum content', 'access administration pages'));
+    $this->edit_own_topics_user = $this->drupalCreateUser(array('create forum content', 'edit own forum content', 'delete own forum content'));
+    $this->web_user = $this->drupalCreateUser(array());
   }
 
   /**
@@ -40,29 +40,29 @@ class ForumTestCase extends DrupalWebTestCase {
     // Generate topics to populate the active forum block.
     $this->generateForumTopics($this->forum);
 
-    // Login the nid user to view the forum topics and generate an active forum
-    // topics list.
-    $this->drupalLogin($this->nid_user);
+    // Login an unprivileged user to view the forum topics and generate an
+    // active forum topics list.
+    $this->drupalLogin($this->web_user);
     $this->viewForumTopics($this->nids);
 
-    // Do basic tests for the any forum user.
-    $this->doBasicTests($this->any_user, TRUE);
+    // Log in, and do basic tests for a user with permission to edit any forum
+    // content.
+    $this->doBasicTests($this->edit_any_topics_user, TRUE);
+    // Create a forum node authored by this user.
+    $any_topics_user_node = $this->createForumTopic($this->forum, FALSE);
 
-    // Create another forum node for the any forum user.
-    $node = $this->createForumTopic($this->forum, FALSE);
+    // Log in, and do basic tests for a user with permission to edit only its
+    // own forum content.
+    $this->doBasicTests($this->edit_own_topics_user, FALSE);
+    // Create a forum node authored by this user.
+    $own_topics_user_node = $this->createForumTopic($this->forum, FALSE);
+    // Verify that this user cannot edit forum content authored by another user.
+    $this->verifyForums($this->edit_any_topics_user, $any_topics_user_node, FALSE, 403);
 
-    // Do basic tests for the own forum user.
-    $this->doBasicTests($this->own_user, FALSE);
-
-    // Verify the own forum user only has access to the forum view node.
-    $this->verifyForums($this->any_user, $node, FALSE, 403);
-    // Create another forum node for the own forum user.
-    $node = $this->createForumTopic($this->forum, FALSE);
-
-    // Login the any forum user.
-    $this->drupalLogin($this->any_user);
-    // Verify the any forum user has access to all the forum nodes.
-    $this->verifyForums($this->own_user, $node, TRUE);
+    // Login a user with permission to edit any forum content.
+    $this->drupalLogin($this->edit_any_topics_user);
+    // Verify that this user can edit forum content authored by another user.
+    $this->verifyForums($this->edit_own_topics_user, $own_topics_user_node, TRUE);
 
     // Verify the topic and post counts on the forum page.
     $this->drupalGet('forum');
@@ -84,7 +84,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertResponse(200);
 
     // Test editing a forum topic that has a comment.
-    $this->drupalLogin($this->any_user);
+    $this->drupalLogin($this->edit_any_topics_user);
     $this->drupalGet('forum/' . $this->forum['tid']);
     $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
     $this->assertResponse(200);
@@ -267,9 +267,13 @@ class ForumTestCase extends DrupalWebTestCase {
   /**
    * Create forum topic.
    *
-   * @param array $forum Forum array.
-   * @param boolean $container True if $forum is a container.
-   * @return object Topic node created.
+   * @param array $forum
+   *   Forum array.
+   * @param boolean $container
+   *   True if $forum is a container.
+   *
+   * @return object
+   *   Topic node created.
    */
   function createForumTopic($forum, $container = FALSE) {
     // Generate a random subject/body.
@@ -281,9 +285,10 @@ class ForumTestCase extends DrupalWebTestCase {
       "title" => $title,
       "body[$langcode][0][value]" => $body,
     );
+    $tid = $forum['tid'];
 
     // Create the forum topic, preselecting the forum ID via a URL parameter.
-    $this->drupalPost('node/add/forum/' . $forum['tid'], $edit, t('Save'));
+    $this->drupalPost('node/add/forum/' . $tid, $edit, t('Save'));
 
     $type = t('Forum topic');
     if ($container) {
@@ -292,14 +297,14 @@ class ForumTestCase extends DrupalWebTestCase {
       return;
     }
     else {
-      $this->assertRaw(t('@type %title has been created.', array('%title' => $title, '@type' => $type)), t('Forum topic was created'));
+      $this->assertRaw(t('@type %title has been created.', array('@type' => $type, '%title' => $title)), t('Forum topic was created'));
       $this->assertNoRaw(t('The item %title is a forum container, not a forum.', array('%title' => $forum['name'])), t('No error message was shown'));
     }
 
     // Retrieve node object, ensure that the topic was created and in the proper forum.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
-    $this->assertEqual($node->taxonomy_forums[LANGUAGE_NONE][0]['tid'], $forum['tid'], 'Saved forum topic was in the expected forum');
+    $this->assertEqual($node->taxonomy_forums[LANGUAGE_NONE][0]['tid'], $tid, 'Saved forum topic was in the expected forum');
 
     // View forum topic.
     $this->drupalGet('node/' . $node->nid);
