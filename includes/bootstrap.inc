@@ -352,7 +352,7 @@ function timer_stop($name) {
  *
  * $sites = array(
  *   'devexample.com' => 'example.com',
- *   'localhost/example' => 'example.com',
+ *   'localhost.example' => 'example.com',
  * );
  *
  * The above array will cause Drupal to look for a directory named
