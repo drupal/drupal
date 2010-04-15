@@ -498,7 +498,7 @@ class InsertQuery extends Query {
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
     if (!empty($this->fromQuery)) {
-      return "INSERT $delay INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+      return "INSERT INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
     }
 
     // For simplicity, we will use the $placeholders array to inject
