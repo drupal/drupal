@@ -66,10 +66,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     return $form;
   }
 
-  drupal_add_css('misc/ui/ui.all.css');
-  drupal_add_css('misc/ui/ui.dialog.css');
-  drupal_add_js('misc/ui/ui.core.js', array('weight' => JS_LIBRARY + 5));
-  drupal_add_js('misc/ui/ui.dialog.js', array('weight' => JS_LIBRARY + 6));
+  $form['#attached']['library'][] = array('system', 'ui.dialog');
   $form['#attached']['js'][] = drupal_get_path('module', 'update') . '/update.manager.js';
   $form['#attached']['css'][] = drupal_get_path('module', 'update') . '/update.css';
 
