@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.35 2010/04/11 01:07:15 webchick Exp $
+// $Id: overlay-parent.js,v 1.36 2010/04/15 12:20:21 dries Exp $
 
 (function ($) {
 
@@ -752,7 +752,9 @@ Drupal.overlay.clickHandler = function (event) {
     else if ($target.get(0).hostname != window.location.hostname) {
       // Add a target attribute to the clicked link. This is being picked up by
       // the default action handler.
-      $target.attr('target', '_new');
+      if (!$target.attr('target')) {
+        $target.attr('target', '_new');
+      }
     }
     // Non-admin links should close the overlay and open in the main window.
     // Only handle them if the overlay is open and the clicked link is inside
