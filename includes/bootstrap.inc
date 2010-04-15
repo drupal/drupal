@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.373 2010/04/11 21:05:13 dries Exp $
+// $Id: bootstrap.inc,v 1.374 2010/04/15 12:01:28 dries Exp $
 
 /**
  * @file
@@ -352,7 +352,7 @@ function timer_stop($name) {
  *
  * $sites = array(
  *   'devexample.com' => 'example.com',
- *   'localhost/example' => 'example.com',
+ *   'localhost.example' => 'example.com',
  * );
  *
  * The above array will cause Drupal to look for a directory named

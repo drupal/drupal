@@ -1,5 +1,5 @@
 <?php
-// $Id: example.sites.php,v 1.2 2009/12/08 06:28:50 webchick Exp $
+// $Id: example.sites.php,v 1.3 2010/04/15 12:01:28 dries Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@
  *
  * $sites = array(
  *   'devexample.com' => 'example.com',
- *   'localhost/example' => 'example.com',
+ *   'localhost.example' => 'example.com',
  * );
  *
  * The above array will cause Drupal to look for a directory named
@@ -41,4 +41,4 @@
  * signs to enable.
  */
 # $sites['devexample.com'] = 'example.com';
-# $sites['localhost/example'] = 'example.com';
+# $sites['localhost.example'] = 'example.com';
