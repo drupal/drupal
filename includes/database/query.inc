@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.44 2010/04/11 01:12:23 webchick Exp $
+// $Id: query.inc,v 1.45 2010/04/15 11:51:27 dries Exp $
 
 /**
  * @ingroup database
@@ -498,7 +498,7 @@ class InsertQuery extends Query {
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
     if (!empty($this->fromQuery)) {
-      return "INSERT $delay INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+      return "INSERT INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
     }
 
     // For simplicity, we will use the $placeholders array to inject
