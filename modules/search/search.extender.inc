@@ -1,5 +1,5 @@
 <?php
-// $Id: search.extender.inc,v 1.3 2010/01/13 23:19:54 dries Exp $
+// $Id: search.extender.inc,v 1.4 2010/04/16 13:53:43 dries Exp $
 
 /**
  * @file
@@ -425,7 +425,8 @@ class SearchQuery extends SelectQueryExtender {
       $i = 0;
       $sum = array_sum($this->multiply);
       foreach ($this->multiply as $total) {
-        $this->scoresArguments['total_' . $i] = $sum;
+        $this->scoresArguments[':total_' . $i] = $sum;
+        $i++;
       }
     }
 
