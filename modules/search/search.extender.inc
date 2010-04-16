@@ -425,7 +425,8 @@ class SearchQuery extends SelectQueryExtender {
       $i = 0;
       $sum = array_sum($this->multiply);
       foreach ($this->multiply as $total) {
-        $this->scoresArguments['total_' . $i] = $sum;
+        $this->scoresArguments[':total_' . $i] = $sum;
+        $i++;
       }
     }
 
