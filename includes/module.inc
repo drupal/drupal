@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.185 2010/03/26 17:14:45 dries Exp $
+// $Id: module.inc,v 1.186 2010/04/16 13:39:42 dries Exp $
 
 /**
  * @file
@@ -369,6 +369,8 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       registry_update();
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);
+      // Clear entity cache.
+      entity_info_cache_clear();
 
       // Now install the module if necessary.
       if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {

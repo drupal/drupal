@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.122 2010/04/11 18:33:44 dries Exp $
+// $Id: system.test,v 1.123 2010/04/16 13:39:42 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -156,6 +156,16 @@ class EnableDisableTestCase extends ModuleTestCase {
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+  }
+
+  /**
+   * Tests entity cache after enabling a module with a dependency on an enitity
+   * providing module.
+   */
+  function testEntityCache() {
+    module_enable(array('entity_cache_test'));
+    $info = variable_get('entity_cache_test');
+    $this->assertNotNull($info, t('Entity information must not be NULL'));
   }
 }
 
