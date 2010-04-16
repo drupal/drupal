@@ -1243,16 +1243,20 @@ function comment_node_prepare($node) {
  * Implements hook_node_insert().
  */
 function comment_node_insert($node) {
-  db_insert('node_comment_statistics')
-    ->fields(array(
-      'nid' => $node->nid,
-      'cid' => 0,
-      'last_comment_timestamp' => $node->changed,
-      'last_comment_name' => NULL,
-      'last_comment_uid' => $node->uid,
-      'comment_count' => 0,
-    ))
-    ->execute();
+  // Allow bulk updates and inserts to temporarily disable the
+  // maintenance of the {node_comment_statistics} table.
+  if (variable_get('comment_maintain_node_statistics', TRUE)) {
+    db_insert('node_comment_statistics')
+      ->fields(array(
+        'nid' => $node->nid,
+        'cid' => 0,
+        'last_comment_timestamp' => $node->changed,
+        'last_comment_name' => NULL,
+        'last_comment_uid' => $node->uid,
+        'comment_count' => 0,
+      ))
+      ->execute();
+  }
 }
 
 /**
