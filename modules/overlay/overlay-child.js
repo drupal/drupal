@@ -31,8 +31,8 @@ Drupal.behaviors.overlayChild = {
     // may have decided to tell us the parent window to close the popup dialog.
     if (settings.closeOverlay) {
       parent.Drupal.overlay.bindChild(window, true);
-      // Close the child window from a separate thread because the current
-      // one is busy processing Drupal behaviors.
+      // Use setTimeout to close the child window from a separate thread,
+      // because the current one is busy processing Drupal behaviors.
       setTimeout(function () {
         // We need to store the parent variable locally because it will
         // disappear as soon as we close the iframe.

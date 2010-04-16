@@ -517,7 +517,7 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
       if (!$target.size()) {
         $target = self.$iframeDocument;
       }
-      setTimeout(function () { $target.focus(); }, 10);
+      $target.focus();
       return false;
     }
   });
@@ -528,16 +528,16 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
     if (event.keyCode) {
       if (event.keyCode == $.ui.keyCode.TAB) {
         if (event.shiftKey && event.target == $firstTabbable.get(0)) {
-          setTimeout(function () { $closeButton.focus(); }, 10);
+          $closeButton.focus();
           return false;
         }
         else if (!event.shiftKey && event.target == $lastTabbable.get(0)) {
-          setTimeout(function () { $closeButton.focus(); }, 10);
+          $closeButton.focus();
           return false;
         }
       }
       else if (event.keyCode == $.ui.keyCode.ESCAPE) {
-        setTimeout(function () { self.close(); }, 10);
+        self.close();
         return false;
       }
     }
@@ -548,11 +548,9 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
   // close button of the dialog (default).
   $(document).bind('keydown.overlay-event', function (event) {
     if (event.keyCode && event.keyCode == $.ui.keyCode.TAB) {
-      setTimeout(function () {
-        if (!self.$iframeWindow(':tabbable:not(form):first').focus().size()) {
+      if (!self.$iframeWindow(':tabbable:not(form):first').focus().size()) {
           $closeButton.focus();
-        }
-      }, 10);
+      }
       return false;
     }
   });

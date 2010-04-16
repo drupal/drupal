@@ -157,6 +157,16 @@ class EnableDisableTestCase extends ModuleTestCase {
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
   }
+
+  /**
+   * Tests entity cache after enabling a module with a dependency on an enitity
+   * providing module.
+   */
+  function testEntityCache() {
+    module_enable(array('entity_cache_test'));
+    $info = variable_get('entity_cache_test');
+    $this->assertNotNull($info, t('Entity information must not be NULL'));
+  }
 }
 
 /**
