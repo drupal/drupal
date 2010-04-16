@@ -4,11 +4,11 @@
 
 Drupal.behaviors.commentFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset#edit-comment-settings', context).setSummary(function (context) {
+    $('fieldset#edit-comment-settings', context).drupalSetSummary(function (context) {
       return Drupal.checkPlain($('input:checked', context).next('label').text());
     });
     // Provide the summary for the node type form.
-    $('fieldset#edit-comment', context).setSummary(function(context) {
+    $('fieldset#edit-comment', context).drupalSetSummary(function(context) {
       var vals = [];
 
       // Default comment setting.

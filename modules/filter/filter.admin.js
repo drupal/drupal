@@ -31,7 +31,7 @@ Drupal.behaviors.filterStatus = {
 
       // Attach summary for configurable filters (only for screen-readers).
       if (tab) {
-        tab.fieldset.setSummary(function (tabContext) {
+        tab.fieldset.drupalSetSummary(function (tabContext) {
           return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');
         });
       }

@@ -4,7 +4,7 @@
 
 Drupal.behaviors.bookFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset#edit-book', context).setSummary(function (context) {
+    $('fieldset#edit-book', context).drupalSetSummary(function (context) {
       var val = $('#edit-book-bid').val();
 
       if (val === '0') {
