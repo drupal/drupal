@@ -1,14 +1,14 @@
-// $Id: comment-node-form.js,v 1.4 2009/12/02 15:09:16 dries Exp $
+// $Id: comment-node-form.js,v 1.5 2010/04/16 13:55:06 dries Exp $
 
 (function ($) {
 
 Drupal.behaviors.commentFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset#edit-comment-settings', context).setSummary(function (context) {
+    $('fieldset#edit-comment-settings', context).drupalSetSummary(function (context) {
       return Drupal.checkPlain($('input:checked', context).next('label').text());
     });
     // Provide the summary for the node type form.
-    $('fieldset#edit-comment', context).setSummary(function(context) {
+    $('fieldset#edit-comment', context).drupalSetSummary(function(context) {
       var vals = [];
 
       // Default comment setting.

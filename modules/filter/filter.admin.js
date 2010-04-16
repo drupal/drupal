@@ -1,4 +1,4 @@
-// $Id: filter.admin.js,v 1.3 2010/03/24 10:19:38 dries Exp $
+// $Id: filter.admin.js,v 1.4 2010/04/16 13:55:06 dries Exp $
 (function ($) {
 
 Drupal.behaviors.filterStatus = {
@@ -31,7 +31,7 @@ Drupal.behaviors.filterStatus = {
 
       // Attach summary for configurable filters (only for screen-readers).
       if (tab) {
-        tab.fieldset.setSummary(function (tabContext) {
+        tab.fieldset.drupalSetSummary(function (tabContext) {
           return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');
         });
       }
