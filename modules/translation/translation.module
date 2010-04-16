@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.78 2010/03/24 09:27:14 dries Exp $
+// $Id: translation.module,v 1.79 2010/04/16 13:52:23 dries Exp $
 
 /**
  * @file
@@ -65,6 +65,7 @@ function translation_menu() {
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'theme callback' => '_node_custom_theme',
     'file' => 'translation.pages.inc',
   );
   return $items;
