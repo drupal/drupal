@@ -247,7 +247,7 @@ function standard_install() {
           'predicates' => array('rdfs:seeAlso'),
           'type' => 'rel',
         ),
-        'taxonomy_tags' => array(
+        'field_tags' => array(
           'predicates' => array('dc:subject'),
           'type' => 'rel',
         ),
@@ -284,7 +284,7 @@ function standard_install() {
   taxonomy_vocabulary_save($vocabulary);
 
   $field = array(
-    'field_name' => 'taxonomy_' . $vocabulary->machine_name,
+    'field_name' => 'field_' . $vocabulary->machine_name,
     'type' => 'taxonomy_term_reference',
     // Set cardinality to unlimited for tagging.
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -300,7 +300,7 @@ function standard_install() {
   field_create_field($field);
 
   $instance = array(
-    'field_name' => 'taxonomy_' . $vocabulary->machine_name,
+    'field_name' => 'field_' . $vocabulary->machine_name,
     'entity_type' => 'node',
     'label' => $vocabulary->name,
     'bundle' => 'article',
