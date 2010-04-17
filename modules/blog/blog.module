@@ -79,7 +79,7 @@ function blog_view($node, $view_mode) {
  */
 function blog_node_view($node, $view_mode = 'full') {
   if ($view_mode != 'rss') {
-    if ($node->type == 'blog' && arg(0) != 'blog' || arg(1) != $node->uid) {
+    if ($node->type == 'blog' && (arg(0) != 'blog' || arg(1) != $node->uid)) {
       $links['blog_usernames_blog'] = array(
         'title' => t("!username's blog", array('!username' => format_username($node))),
         'href' => "blog/$node->uid",
