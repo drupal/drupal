@@ -69,7 +69,7 @@ function comment_enable() {
   //   and a comment_field_attach_create_bundle() function should be added to
   //   handle the creation of the comment body field instance.
   foreach (node_type_get_types() as $type => $info) {
-    if (!($info->is_new) && !($info->disabled) && !field_info_instance('comment', 'comment_body', 'comment_node_' . $info->type)) {
+    if (!isset($info->is_new) && !isset($info->disabled) && !field_info_instance('comment', 'comment_body', 'comment_node_' . $info->type)) {
       _comment_body_field_instance_create($info);
     }
   }
