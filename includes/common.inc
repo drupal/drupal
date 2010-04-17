@@ -5291,7 +5291,12 @@ function element_sort($a, $b) {
  * Retrieve the default properties for the defined element type.
  */
 function element_info($type) {
-  $cache = &drupal_static(__FUNCTION__);
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['cache'] = &drupal_static(__FUNCTION__);
+  }
+  $cache = &$drupal_static_fast['cache'];
 
   if (!isset($cache)) {
     $cache = module_invoke_all('element_info');
