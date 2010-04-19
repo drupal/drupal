@@ -1,4 +1,4 @@
-// $Id: user.permissions.js,v 1.1 2009/05/12 08:33:19 dries Exp $
+// $Id: user.permissions.js,v 1.2 2010/04/19 21:17:16 webchick Exp $
 (function ($) {
 
 /**
@@ -16,8 +16,8 @@ Drupal.behaviors.permissions = {
         $(this).addClass('real-checkbox');
         $('<input type="checkbox" class="dummy-checkbox" disabled="disabled" checked="checked" />')
           .attr('title', Drupal.t("This permission is inherited from the authenticated user role."))
-          .hide()
-          .insertAfter(this);
+          .insertAfter(this)
+          .hide();
       });
 
       // Helper function toggles all dummy checkboxes based on the checkboxes'
