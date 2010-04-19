@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.14 2009/10/11 13:43:36 dries Exp $
+// $Id: query.inc,v 1.15 2010/04/19 04:43:05 webchick Exp $
 
 /**
  * @ingroup database
@@ -44,18 +44,16 @@ class InsertQuery_mysql extends InsertQuery {
 
   public function __toString() {
 
-    $delay = $this->queryOptions['delay'] ? 'DELAYED' : '';
-
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
     // If we're selecting from a SelectQuery, finish building the query and
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
-      return "INSERT $delay INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+      return "INSERT INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
     }
 
-    $query = "INSERT $delay INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
+    $query = "INSERT INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
 
     $max_placeholder = 0;
     $values = array();

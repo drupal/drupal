@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.45 2010/04/15 11:51:27 dries Exp $
+// $Id: query.inc,v 1.46 2010/04/19 04:43:05 webchick Exp $
 
 /**
  * @ingroup database
@@ -411,33 +411,6 @@ class InsertQuery extends Query {
    */
   public function useDefaults(array $fields) {
     $this->defaultFields = $fields;
-    return $this;
-  }
-
-  /**
-   * Flag this query as being delay-safe or not.
-   *
-   * If this method is never called, it is assumed that the query must be
-   * executed immediately. If delay is set to TRUE, then the query will be
-   * flagged to run "delayed" or "low priority" on databases that support such
-   * capabilities. In that case, the database will return immediately and the
-   * query will be run at some point in the future. That makes it useful for
-   * logging-style queries.
-   *
-   * If the database does not support delayed INSERT queries, this method
-   * has no effect.
-   *
-   * Note that for a delayed query there is no serial ID returned, as it won't
-   * be created until later when the query runs. It should therefore not be
-   * used if the value of the ID is known.
-   *
-   * @param $delay
-   *   If TRUE, this query is delay-safe and will run delayed on supported databases.
-   * @return InsertQuery
-   *   The called object.
-   */
-  public function delay($delay = TRUE) {
-    $this->delay = $delay;
     return $this;
   }
 
