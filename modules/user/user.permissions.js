@@ -16,8 +16,8 @@ Drupal.behaviors.permissions = {
         $(this).addClass('real-checkbox');
         $('<input type="checkbox" class="dummy-checkbox" disabled="disabled" checked="checked" />')
           .attr('title', Drupal.t("This permission is inherited from the authenticated user role."))
-          .hide()
-          .insertAfter(this);
+          .insertAfter(this)
+          .hide();
       });
 
       // Helper function toggles all dummy checkboxes based on the checkboxes'
