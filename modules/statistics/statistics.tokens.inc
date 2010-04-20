@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.tokens.inc,v 1.3 2009/12/04 16:49:47 dries Exp $
+// $Id: statistics.tokens.inc,v 1.4 2010/04/20 09:48:06 webchick Exp $
 
 /**
  * @file
@@ -10,11 +10,11 @@
  * Implements hook_token_info().
  */
 function statistics_token_info() {
-  $node['views'] = array(
+  $node['total-count'] = array(
     'name' => t("Number of views"),
     'description' => t("The number of visitors who have read the node."),
   );
-  $node['day-views'] = array(
+  $node['day-count'] = array(
     'name' => t("Views today"),
     'description' => t("The number of visitors who have read the node today."),
   );
@@ -40,13 +40,13 @@ function statistics_tokens($type, $tokens, array $data = array(), array $options
     $node = $data['node'];
 
     foreach ($tokens as $name => $original) {
-      if ($name == 'views') {
+      if ($name == 'total-count') {
         $statistics = statistics_get($node->nid);
-        $replacements[$original] = $statistics['totalviews'];
+        $replacements[$original] = $statistics['totalcount'];
       }
-      elseif ($name == 'views-today') {
+      elseif ($name == 'day-count') {
         $statistics = statistics_get($node->nid);
-        $replacements[$original] = $statistics['dayviews'];
+        $replacements[$original] = $statistics['daycount'];
       }
       elseif ($name == 'last-view') {
         $statistics = statistics_get($node->nid);

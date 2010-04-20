@@ -1,5 +1,5 @@
 <?php
-// $Id: user.tokens.inc,v 1.5 2010/03/07 23:18:06 webchick Exp $
+// $Id: user.tokens.inc,v 1.6 2010/04/20 09:48:06 webchick Exp $
 
 /**
  * @file
@@ -63,7 +63,6 @@ function user_token_info() {
  * Implements hook_tokens().
  */
 function user_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  global $user;
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];

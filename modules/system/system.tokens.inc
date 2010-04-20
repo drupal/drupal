@@ -1,5 +1,5 @@
 <?php
-// $Id: system.tokens.inc,v 1.8 2010/01/30 07:59:25 dries Exp $
+// $Id: system.tokens.inc,v 1.9 2010/04/20 09:48:06 webchick Exp $
 
 /**
  * @file
@@ -76,7 +76,7 @@ function system_token_info() {
   );
   $date['since'] = array(
     'name' => t("Time-since"),
-    'description' => t("A data in 'time-since' format. (%date)", array('%date' => format_interval(REQUEST_TIME - 360, 2))),
+    'description' => t("A date in 'time-since' format. (%date)", array('%date' => format_interval(REQUEST_TIME - 360, 2))),
   );
   $date['raw'] = array(
     'name' => t("Raw timestamp"),
@@ -93,10 +93,6 @@ function system_token_info() {
     'name' => t("User ID"),
     'description' => t("The unique ID of the user who owns the file."),
   );
-  $file['nid'] = array(
-    'name' => t("Node ID"),
-    'description' => t("The unique ID of the node the file is attached to."),
-  );
   $file['name'] = array(
     'name' => t("File name"),
     'description' => t("The name of the file on disk."),
@@ -107,7 +103,7 @@ function system_token_info() {
   );
   $file['path'] = array(
     'name' => t("Path"),
-    'description' => t("The location of the file on disk."),
+    'description' => t("The location of the file relative to Drupal root."),
   );
   $file['mime'] = array(
     'name' => t("MIME type"),
@@ -117,18 +113,13 @@ function system_token_info() {
     'name' => t("File size"),
     'description' => t("The size of the file, in kilobytes."),
   );
-  $file['path'] = array(
+  $file['url'] = array(
     'name' => t("URL"),
     'description' => t("The web-accessible URL for the file."),
   );
   $file['timestamp'] = array(
     'name' => t("Timestamp"),
     'description' => t("The date the file was most recently changed."),
-    'type' => 'date',
-  );
-  $file['node'] = array(
-    'name' => t("Node"),
-    'description' => t("The node the file is attached to."),
     'type' => 'date',
   );
   $file['owner'] = array(
@@ -155,6 +146,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
   if (isset($language)) {
     $url_options['language'] = $language;
   }
+  $langcode = (isset($language) ? $language->language : NULL);
   $sanitize = !empty($options['sanitize']);
 
   $replacements = array();
@@ -203,14 +195,9 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
     else {
       $date = $data['date'];
     }
-    $langcode = (isset($language) ? $language->language : NULL);
 
     foreach ($tokens as $name => $original) {
       switch ($name) {
-        case 'raw':
-          $replacements[$original] = filter_xss($date);
-          break;
-
         case 'short':
           $replacements[$original] = format_date($date, 'short', '', NULL, $langcode);
           break;
@@ -225,6 +212,10 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
 
         case 'since':
           $replacements[$original] = format_interval((REQUEST_TIME - $date), 2, $langcode);
+          break;
+
+        case 'raw':
+          $replacements[$original] = filter_xss($date);
           break;
       }
     }
@@ -250,10 +241,6 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           $replacements[$original] = $file->uid;
           break;
 
-        case 'nid':
-          $replacements[$original] = $file->nid;
-          break;
-
         // Essential file data
         case 'name':
           $replacements[$original] = $sanitize ? check_plain($file->filename) : $file->filename;
@@ -264,7 +251,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'path':
-          $replacements[$original] = $sanitize ? filter_xss($file->filepath) : $file->filepath;
+          $replacements[$original] = $sanitize ? filter_xss($file->uri) : $file->uri;
           break;
 
         case 'mime':
@@ -276,39 +263,27 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'url':
-          $replacements[$original] = url(file_create_url($file->filepath), $url_options);
+          $replacements[$original] = url(file_create_url($file->uri), $url_options);
           break;
 
         // These tokens are default variations on the chained tokens handled below.
-        case 'node':
-          if ($nid = $file->nid) {
-            $node = node_load($file->nid);
-            $replacements[$original] = $sanitize ? filter_xss($node->title) : $node->title;
-          }
-          break;
-
         case 'timestamp':
-          $replacements[$original] = format_date($file->timestamp, 'medium', '', NULL, (isset($language) ? $language->language : NULL));
+          $replacements[$original] = format_date($file->timestamp, 'medium', '', NULL, $langcode);
           break;
 
         case 'owner':
           $account = user_load($file->uid);
-          $replacements[$original] = $sanitize ? filter_xss($user->name) : $user->name;
+          $replacements[$original] = $sanitize ? filter_xss($account->name) : $account->name;
           break;
       }
     }
 
-    if ($node_tokens = token_find_with_prefix($tokens, 'node')) {
-      $node = node_load($file->nid);
-      $replacements += token_generate('node', $node_tokens, array('node' => $node), $language, $sanitize);
-    }
-
     if ($date_tokens = token_find_with_prefix($tokens, 'timestamp')) {
-      $replacements += token_generate('date', $date_tokens, array('date' => $file->timestamp), $language, $sanitize);
+      $replacements += token_generate('date', $date_tokens, array('date' => $file->timestamp), $options);
     }
 
     if (($owner_tokens = token_find_with_prefix($tokens, 'owner')) && $account = user_load($file->uid)) {
-      $replacements += token_generate('user', $owner_tokens, array('user' => $account), $language, $sanitize);
+      $replacements += token_generate('user', $owner_tokens, array('user' => $account), $options);
     }
   }
 

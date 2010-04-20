@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.tokens.inc,v 1.4 2010/01/07 20:55:49 dries Exp $
+// $Id: poll.tokens.inc,v 1.5 2010/04/20 09:48:06 webchick Exp $
 
 /**
  * @file
@@ -41,6 +41,14 @@ function poll_token_info() {
  */
 function poll_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $sanitize = !empty($options['sanitize']);
+  if (isset($options['language'])) {
+    $url_options['language'] = $options['language'];
+    $language_code = $options['language']->language;
+  }
+  else {
+    $language_code = NULL;
+  }
+
   $replacements = array();
 
   if ($type == 'node' && !empty($data['node']) && $data['node']->type == 'poll') {
@@ -65,11 +73,17 @@ function poll_tokens($type, $tokens, array $data = array(), array $options = arr
           if (isset($winner)) {
             $replacements[$original] = $sanitize ? filter_xss($winner['chtext']) : $winner['chtext'];
           }
+          else {
+            $replacements[$original] = '';
+          }
           break;
 
         case 'poll-winner-votes':
           if (isset($winner)) {
             $replacements[$original] = $winner['chvotes'];
+          }
+          else {
+            $replacements[$original] = '';
           }
           break;
 
@@ -77,6 +91,9 @@ function poll_tokens($type, $tokens, array $data = array(), array $options = arr
           if (isset($winner)) {
             $percent = ($winner['chvotes'] / $total_votes) * 100;
             $replacements[$original] = number_format($percent, 0);
+          }
+          else {
+            $replacements[$original] = '';
           }
           break;
 
