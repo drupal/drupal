@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.23 2010/01/30 00:08:34 webchick Exp $
+// $Id: contact.install,v 1.24 2010/04/20 07:46:33 webchick Exp $
 
 /**
  * @file
@@ -87,6 +87,18 @@ function contact_uninstall() {
   variable_del('contact_default_status');
   variable_del('contact_threshold_limit');
   variable_del('contact_threshold_window');
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function contact_update_dependencies() {
+  // Contact update 7002 calls the new user_role_grant_permissions() and
+  // therefore needs to run after user_update_7006();
+  $dependencies['contact'][7002] = array(
+    'user' => 7006,
+  );
+  return $dependencies;
 }
 
 /**
