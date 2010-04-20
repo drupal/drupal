@@ -259,16 +259,19 @@ function taxonomy_update_7002() {
   );
 
   db_add_field('taxonomy_vocabulary', 'machine_name', $field);
-  db_add_unique_key('taxonomy_vocabulary', 'machine_name', array('machine_name'));
 
   foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
     $machine_name = 'vocabulary_' . $vid;
     db_update('taxonomy_vocabulary')
-      ->fields(array('machine_name' => 'vocabulary_' . $vid))
+      ->fields(array('machine_name' => $machine_name))
       ->condition('vid', $vid)
       ->execute();
     field_attach_create_bundle('taxonomy_term', $machine_name);
   }
+
+  // The machine_name unique key can only be added after we ensure the
+  // machine_name column contains unique values.
+  db_add_unique_key('taxonomy_vocabulary', 'machine_name', array('machine_name'));
 }
 
 /**
