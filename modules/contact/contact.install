@@ -90,6 +90,18 @@ function contact_uninstall() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function contact_update_dependencies() {
+  // Contact update 7002 calls the new user_role_grant_permissions() and
+  // therefore needs to run after user_update_7006();
+  $dependencies['contact'][7002] = array(
+    'user' => 7006,
+  );
+  return $dependencies;
+}
+
+/**
  * @defgroup updates-6.x-to-7.x Contact updates from 6.x to 7.x
  * @{
  */
