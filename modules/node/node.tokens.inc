@@ -138,14 +138,12 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'body':
-          if (!empty($node->body)) {
-            $replacements[$original] = $sanitize ? $node->body[$node->language][0]['safe'] : $node->body[$node->language][0]['value'];
-          }
-          break;
-
         case 'summary':
           if (!empty($node->body)) {
-            $replacements[$original] = $sanitize ? $node->body[$node->language][0]['safe_summary'] : $node->body[$node->language][0]['summary'];
+            $item = $node->body[$node->language][0];
+            $column = ($name == 'body') ? 'value' : 'summary';
+            $instance = field_info_instance('node', 'body', $node->type);
+            $replacements[$original] = $sanitize ? _text_sanitize($instance, $node->language, $item, $column) : $item[$column];
           }
           break;
 
