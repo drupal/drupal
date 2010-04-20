@@ -1,5 +1,5 @@
 <?php
-// $Id: node_test.module,v 1.10 2010/03/26 17:14:45 dries Exp $
+// $Id: node_test.module,v 1.11 2010/04/20 09:30:21 webchick Exp $
 
 /**
  * @file
@@ -99,4 +99,16 @@ function node_test_node_access_records_alter(&$grants, $node) {
 function node_test_node_grants_alter(&$grants, $account, $op) {
   // Return an empty array of grants to prove that we can alter by reference.
   $grants = array();
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function node_test_node_presave($node) {
+  if ($node->title == 'testing_node_presave') {
+    // Sun, 19 Nov 1978 05:00:00 GMT
+    $node->created = 280299600;
+    // Drupal 1.0 release.
+    $node->changed = 979534800;
+  }
 }
