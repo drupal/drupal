@@ -7,11 +7,12 @@
  */
 
 /**
- * Sets up the theming system for site installs, updates and when the site is
- * in maintenance mode. It also applies when the database is unavailable.
+ * Sets up the theming system for maintenance page.
  *
- * Seven is always used for the initial install and update operations. In
- * other cases, Garland is used, but this can be overridden by setting a
+ * Used for site installs, updates and when the site is in maintenance mode.
+ * It also applies when the database is unavailable or bootstrap was not
+ * complete. Seven is always used for the initial install and update operations.
+ * In other cases, Garland is used, but this can be overridden by setting a
  * "maintenance_theme" key in the $conf variable in settings.php.
  */
 function _drupal_maintenance_theme() {
@@ -35,11 +36,16 @@ function _drupal_maintenance_theme() {
     $custom_theme = (isset($conf['maintenance_theme']) ? $conf['maintenance_theme'] : 'seven');
   }
   else {
-    if (!db_is_active()) {
-      // Because we are operating in a crippled environment, we need to
-      // bootstrap just enough to allow hook invocations to work.
+    // The bootstrap was not complete. So we are operating in a crippled
+    // environment, we need to bootstrap just enough to allow hook invocations
+    // to work. See _drupal_log_error().
+    if (!class_exists('Database', FALSE)) {
       require_once DRUPAL_ROOT . '/includes/database/database.inc';
       spl_autoload_register('db_autoload');
+    }
+
+    // Ensure that system.module is loaded.
+    if (!function_exists('_system_rebuild_theme_data')) {
       $module_list['system']['filename'] = 'modules/system/system.module';
       module_list(TRUE, FALSE, FALSE, $module_list);
       drupal_load('module', 'system');
