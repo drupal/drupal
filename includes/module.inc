@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.186 2010/04/16 13:39:42 dries Exp $
+// $Id: module.inc,v 1.187 2010/04/20 18:50:36 webchick Exp $
 
 /**
  * @file
@@ -505,6 +505,8 @@ function module_disable($module_list, $disable_dependents = TRUE) {
  * the module name in the hook definitions. For example, if the module file is
  * called example.module, then hook_help() as implemented by that module would
  * be defined as example_help().
+ *
+ * See also @link themeable the themeable group page. @endlink
  */
 
 /**
