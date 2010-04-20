@@ -342,36 +342,9 @@ function update_fix_d7_requirements() {
     );
     db_create_table('role_permission', $schema['role_permission']);
 
-    // Add the {semaphore} table in case menu_rebuild() gets called during
-    // an update.
-    $schema['semaphore'] = array(
-      'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as Drupal variables since they must not be cached.',
-      'fields' => array(
-        'name' => array(
-          'description' => 'Primary Key: Unique name.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => ''
-        ),
-        'value' => array(
-          'description' => 'A value for the semaphore.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => ''
-        ),
-        'expire' => array(
-          'description' => 'A Unix timestamp with microseconds indicating when the semaphore should expire.',
-          'type' => 'float',
-          'size' => 'big',
-          'not null' => TRUE
-        ),
-      ),
-      'indexes' => array('value' => array('value')),
-      'primary key' => array('name'),
-    );
-    db_create_table('semaphore', $schema['semaphore']);
+    // Drops and recreates semaphore value index.
+    db_drop_index('semaphore', 'expire');
+    db_add_index('semaphore', 'value', array('value'));
 
     // Add registry tables since these are required during an update.
     $schema['registry'] = array(
