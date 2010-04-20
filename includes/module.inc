@@ -505,6 +505,8 @@ function module_disable($module_list, $disable_dependents = TRUE) {
  * the module name in the hook definitions. For example, if the module file is
  * called example.module, then hook_help() as implemented by that module would
  * be defined as example_help().
+ *
+ * See also @link themeable the themeable group page. @endlink
  */
 
 /**
