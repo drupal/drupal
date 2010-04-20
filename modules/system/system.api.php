@@ -3232,6 +3232,53 @@ function hook_countries_alter(&$countries) {
   // Quebec has seceded from Canada. Add to country list.
   $countries['QC'] = 'Quebec';
 }
+
+/**
+ * Provide information on available file transfer backends.
+ *
+ * File transfer backends are used by modules to transfer files from remote
+ * locations to Drupal sites. For instance, update.module uses a file transfer
+ * backend to download new versions of modules and themes from drupal.org.
+ *
+ * @return
+ *   An associative array of information about the file transfer backend(s).  
+ *   being provided. This array can contain the following keys:
+ *   - title: Title of the backend to be shown to the end user.
+ *   - class: Name of the PHP class which implements this backend.
+ *   - settings_form: An optional callback function that provides additional
+ *     configuration information required by this backend (for instance a port
+ *     number.)
+ *   - weight: Controls what order the backends are presented to the user.
+ *
+ * @see authorize.php
+ * @see FileTransfer
+ */
+function hook_filetransfer_backends() {
+  $backends = array();
+
+  // This is the default, will be available on most systems.
+  if (function_exists('ftp_connect')) {
+    $backends['ftp'] = array(
+      'title' => t('FTP'),
+      'class' => 'FileTransferFTP',
+      'settings_form' => 'system_filetransfer_backend_form_ftp',
+      'weight' => 0,
+    );
+  }
+
+  // SSH2 lib connection is only available if the proper PHP extension is
+  // installed.
+  if (function_exists('ssh2_connect')) {
+    $backends['ssh'] = array(
+      'title' => t('SSH'),
+      'class' => 'FileTransferSSH',
+      'settings_form' => 'system_filetransfer_backend_form_ssh',
+      'weight' => 20,
+    );
+  }
+  return $backends;
+}
+
 /**
  * @} End of "addtogroup hooks".
  */
