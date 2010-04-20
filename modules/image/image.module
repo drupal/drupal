@@ -354,6 +354,47 @@ function image_image_default_styles() {
 }
 
 /**
+ * Implements hook_image_style_save().
+ */
+function image_image_style_save($style) {
+  if (isset($style['old_name']) && $style['old_name'] != $style['name']) {
+    $instances = field_read_instances();
+    // Loop through all fields searching for image fields.
+    foreach ($instances as $instance) {
+      if ($instance['widget']['module'] == 'image') {
+        $instance_changed = FALSE;
+        foreach ($instance['display'] as $view_mode => $display) {
+          // Check if the formatter involves an image style.
+          $matches = array();
+          if (preg_match('/__([a-z0-9_]+)/', $display['type'], $matches)) {
+            // Update display information for any instance using the image
+            // style that was just deleted.
+            if ($style['old_name'] == $matches[1]) {
+              $instance['display'][$view_mode]['type'] = str_replace($style['old_name'], $style['name'], $display['type']);
+              $instance_changed = TRUE;
+            }
+          }
+        }
+        if ($instance['widget']['settings']['preview_image_style'] == $style['old_name']) {
+          $instance['widget']['settings']['preview_image_style'] = $style['name'];
+          $instance_changed = TRUE;
+        }
+        if ($instance_changed) {
+          field_update_instance($instance);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_image_style_delete().
+ */
+function image_image_style_delete($style) {
+  image_image_style_save($style);
+}
+
+/**
  * Clear cached versions of a specific file in all styles.
  *
  * @param $path
@@ -461,6 +502,7 @@ function image_style_load($name = NULL, $isid = NULL, $include = NULL) {
   if (!isset($name) && isset($isid)) {
     foreach ($styles as $name => $database_style) {
       if (isset($database_style['isid']) && $database_style['isid'] == $isid) {
+        $style = $database_style;
         break;
       }
     }
