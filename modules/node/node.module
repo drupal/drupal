@@ -985,14 +985,26 @@ function node_save($node) {
 
   try {
     field_attach_presave('node', $node);
-    // Let modules modify the node before it is saved to the database.
-    module_invoke_all('node_presave', $node);
     global $user;
 
     // Determine if we will be inserting a new node.
     if (!isset($node->is_new)) {
       $node->is_new = empty($node->nid);
     }
+
+    // Set the timestamp fields.
+    if (empty($node->created)) {
+      $node->created = REQUEST_TIME;
+    }
+    // The changed timestamp is always updated for bookkeeping purposes,
+    // for example: revisions, searching, etc.
+    $node->changed = REQUEST_TIME;
+
+    $node->timestamp = REQUEST_TIME;
+    $update_node = TRUE;
+
+    // Let modules modify the node before it is saved to the database.
+    module_invoke_all('node_presave', $node);
 
     if ($node->is_new || !empty($node->revision)) {
       // When inserting either a new node or a new node revision, $node->log
@@ -1024,18 +1036,6 @@ function node_save($node) {
       $node->old_vid = $node->vid;
       unset($node->vid);
     }
-
-    // Set the timestamp fields.
-    if (empty($node->created)) {
-      $node->created = REQUEST_TIME;
-    }
-    // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
-    if (empty($node->changed)) {
-      $node->changed = REQUEST_TIME;
-    }
-
-    $node->timestamp = REQUEST_TIME;
-    $update_node = TRUE;
 
     // Save the node and node revision.
     if ($node->is_new) {
