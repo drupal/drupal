@@ -1490,6 +1490,77 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $generated = token_generate('node', $raw_tokens, array('node' => $node), array('sanitize' => FALSE));
     $this->assertFalse(strcmp($generated['[node:title]'], $node->title), t('Unsanitized token generated properly.'));
   }
+
+  /**
+   * Tests the generation of all system site information tokens.
+   */
+  function testSystemSiteTokenReplacement() {
+    global $language;
+    $url_options = array(
+      'absolute' => TRUE,
+      'language' => $language,
+    );
+
+    // Set a few site variables.
+    variable_set('site_name', '<strong>Drupal<strong>');
+    variable_set('site_slogan', '<blink>Slogan</blink>');
+    variable_set('site_mission', '<em>Mission</em>');
+
+    // Generate and test sanitized tokens.
+    $tests = array();
+    $tests['[site:name]'] = check_plain(variable_get('site_name', 'Drupal'));
+    $tests['[site:slogan]'] = check_plain(variable_get('site_slogan', ''));
+    $tests['[site:mission]'] = filter_xss(variable_get('site_mission', ''));
+    $tests['[site:mail]'] = 'simpletest@example.com';
+    $tests['[site:url]'] = url('<front>', $url_options);
+    $tests['[site:url-brief]'] = preg_replace('!^https?://!', '', url('<front>', $url_options));
+    $tests['[site:login-url]'] = url('user', $url_options);
+
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array(), array('language' => $language));
+      $this->assertFalse(strcmp($output, $expected), t('Sanitized system site information token %token replaced.', array('%token' => $input)));
+    }
+
+    // Generate and test unsanitized tokens.
+    $tests['[site:name]'] = variable_get('site_name', 'Drupal');
+    $tests['[site:slogan]'] = variable_get('site_slogan', '');
+    $tests['[site:mission]'] = variable_get('site_mission', '');
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array(), array('language' => $language, 'sanitize' => FALSE));
+      $this->assertFalse(strcmp($output, $expected), t('Unsanitized system site information token %token replaced.', array('%token' => $input)));
+    }
+  }
+
+  /**
+   * Tests the generation of all system date tokens.
+   */
+  function testSystemDateTokenReplacement() {
+    global $language;
+
+    // Set time to one hour before request.
+    $date = REQUEST_TIME - 3600;
+
+    // Generate and test tokens.
+    $tests = array();
+    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language->language);
+    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language->language);
+    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language->language);
+    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language->language);
+    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language->language);
+    $tests['[date:raw]'] = filter_xss($date);
+
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('date' => $date), array('language' => $language));
+      $this->assertFalse(strcmp($output, $expected), t('Date token %token replaced.', array('%token' => $input)));
+    }
+  }
 }
 
 class InfoFileParserTestCase extends DrupalUnitTestCase {

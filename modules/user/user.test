@@ -1521,3 +1521,67 @@ class UserRoleAdminTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Test user token replacement in strings.
+ */
+class UserTokenReplaceTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'User token replacement',
+      'description' => 'Generates text using placeholders for dummy content to check user token replacement.',
+      'group' => 'User',
+    );
+  }
+
+  /**
+   * Creates a user, then tests the tokens generated from it.
+   */
+  function testUserTokenReplacement() {
+    global $language;
+    $url_options = array(
+      'absolute' => TRUE,
+      'language' => $language,
+    );
+
+    // Create two users and log them in one after another.
+    $user1 = $this->drupalCreateUser(array());
+    $user2 = $this->drupalCreateUser(array());
+    $this->drupalLogin($user1);
+    $this->drupalLogout();
+    $this->drupalLogin($user2);
+
+    $account = user_load($user1->uid);
+    global $user;
+
+    // Generate and test sanitized tokens.
+    $tests = array();
+    $tests['[user:uid]'] = $account->uid;
+    $tests['[user:name]'] = filter_xss($account->name);
+    $tests['[user:mail]'] = check_plain($account->mail);
+    $tests['[user:url]'] = url("user/$account->uid", $url_options);
+    $tests['[user:edit-url]'] = url("user/$account->uid/edit", $url_options);
+    $tests['[user:last-login]'] = format_date($account->login, 'medium', '', NULL, $language->language);
+    $tests['[user:last-login:short]'] = format_date($account->login, 'short', '', NULL, $language->language);
+    $tests['[user:created]'] = format_date($account->created, 'medium', '', NULL, $language->language);
+    $tests['[user:created:short]'] = format_date($account->created, 'short', '', NULL, $language->language);
+    $tests['[current-user:name]'] = check_plain($user->name);
+
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('user' => $account), array('language' => $language));
+      $this->assertFalse(strcmp($output, $expected), t('Sanitized user token %token replaced.', array('%token' => $input)));
+    }
+
+    // Generate and test unsanitized tokens.
+    $tests['[user:name]'] = $account->name;
+    $tests['[user:mail]'] = $account->mail;
+    $tests['[current-user:name]'] = $user->name;
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('user' => $account), array('language' => $language, 'sanitize' => FALSE));
+      $this->assertFalse(strcmp($output, $expected), t('Unsanitized user token %token replaced.', array('%token' => $input)));
+    }
+  }
+}

@@ -568,3 +568,79 @@ class FileFieldPathTestCase extends FileFieldTestCase {
     $this->assertTrue($result, $message);
   }
 }
+
+/**
+ * Test file token replacement in strings.
+ */
+class FileTokenReplaceTestCase extends FileFieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'File token replacement',
+      'description' => 'Generates text using placeholders for dummy content to check file token replacement.',
+      'group' => 'File',
+    );
+  }
+
+  /**
+   * Creates a file, then tests the tokens generated from it.
+   */
+  function testFileTokenReplacement() {
+    global $language;
+    $url_options = array(
+      'absolute' => TRUE,
+      'language' => $language,
+    );
+
+    // Create file field.
+    $type_name = 'article';
+    $field_name = 'field_' . strtolower($this->randomName());
+    $this->createFileField($field_name, $type_name);
+    $field = field_info_field($field_name);
+    $instance = field_info_instance('node', $field_name, $type_name);
+
+    $test_file = $this->getTestFile('text');
+
+    // Create a new node with the uploaded file.
+    $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
+
+    // Load the node and the file.
+    $node = node_load($nid);
+    $file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $file->description = 'File description.';
+
+    // Generate and test sanitized tokens.
+    $tests = array();
+    $tests['[file:fid]'] = $file->fid;
+    $tests['[file:uid]'] = $file->uid;
+    $tests['[file:name]'] = check_plain($file->filename);
+    $tests['[file:description]'] = filter_xss($file->description);
+    $tests['[file:path]'] = filter_xss($file->uri);
+    $tests['[file:mime]'] = filter_xss($file->filemime);
+    $tests['[file:size]'] = format_size($file->filesize);
+    $tests['[file:url]'] = url(file_create_url($file->uri), $url_options);
+    $tests['[file:timestamp]'] = format_date($file->timestamp, 'medium', '', NULL, $language->language);
+    $tests['[file:timestamp:short]'] = format_date($file->timestamp, 'short', '', NULL, $language->language);
+    $tests['[file:owner]'] = $this->admin_user->name;
+    $tests['[file:owner:uid]'] = $this->admin_user->uid;
+
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('file' => $file), array('language' => $language));
+      $this->assertFalse(strcmp($output, $expected), t('Sanitized file token %token replaced.', array('%token' => $input)));
+    }
+
+    // Generate and test unsanitized tokens.
+    $tests['[file:name]'] = $file->filename;
+    $tests['[file:description]'] = $file->description;
+    $tests['[file:path]'] = $file->uri;
+    $tests['[file:mime]'] = $file->filemime;
+    $tests['[file:size]'] = format_size($file->filesize);
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('file' => $file), array('language' => $language, 'sanitize' => FALSE));
+      $this->assertFalse(strcmp($output, $expected), t('Unsanitized file token %token replaced.', array('%token' => $input)));
+    }
+  }
+}

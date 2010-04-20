@@ -129,8 +129,13 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           $replacements[$original] = $node->uid;
           break;
 
-        case 'name':
-          $replacements[$original] = $sanitize ? check_plain($node->name) : $node->name;
+        case 'type':
+          $replacements[$original] = $sanitize ? check_plain($node->type) : $node->type;
+          break;
+
+        case 'type-name':
+          $type_name = node_type_get_name($node);
+          $replacements[$original] = $sanitize ? check_plain($type_name) : $type_name;
           break;
 
         case 'title':
@@ -145,15 +150,6 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
             $instance = field_info_instance('node', 'body', $node->type);
             $replacements[$original] = $sanitize ? _text_sanitize($instance, $node->language, $item, $column) : $item[$column];
           }
-          break;
-
-        case 'type':
-          $replacements[$original] = $sanitize ? check_plain($node->type) : $node->type;
-          break;
-
-        case 'type-name':
-          $type_name = node_type_get_name($node);
-          $replacements[$original] = $sanitize ? check_plain($type_name) : $type_name;
           break;
 
         case 'language':

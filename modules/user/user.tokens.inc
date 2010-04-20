@@ -63,7 +63,6 @@ function user_token_info() {
  * Implements hook_tokens().
  */
 function user_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  global $user;
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
