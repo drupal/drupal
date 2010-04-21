@@ -46,6 +46,12 @@ function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
       '#options'       => syslog_facility_list(),
       '#description'   => t('Depending on the system configuration, Syslog and other logging tools use this code to identify or filter messages from within the entire system log.') . $help,
      );
+    $form['syslog_format'] = array(
+      '#type'          => 'textarea',
+      '#title'         => t('Syslog format'),
+      '#default_value' => variable_get('syslog_format', '!base_url|!timestamp|!type|!ip|!request_uri|!referer|!uid|!link|!message'),
+      '#description'   => t('Specify the format of the syslog entry. Available variables are: <dl><dt><code>!base_url</code></dt><dd>Base URL of the site.</dd><dt><code>!timestamp</code></dt><dd>Unix timestamp of the log entry.</dd><dt><code>!type</code></dt><dd>The category to which this message belongs.</dd><dt><code>!ip</code></dt><dd>IP address of the user triggering the message.</dd><dt><code>!request_uri</code></dt><dd>The requested URI.</dd><dt><code>!referer</code></dt><dd>HTTP Referer if available.</dd><dt><code>!uid</code></dt><dd>User ID.</dd><dt><code>!link</code></dt><dd>A link to associate with the message.</dd><dt><code>!message</code></dt><dd>The message to store in the log.</dd></dl>'),
+    );
     $form['actions']['#weight'] = 1;
   }
 }
@@ -72,6 +78,8 @@ function syslog_facility_list() {
  * Implements hook_watchdog().
  */
 function syslog_watchdog(array $log_entry) {
+  global $base_url;
+
   $log_init = &drupal_static(__FUNCTION__, FALSE);
 
   if (!$log_init) {
@@ -80,54 +88,17 @@ function syslog_watchdog(array $log_entry) {
     openlog('drupal', LOG_NDELAY, variable_get('syslog_facility', $default_facility));
   }
 
-  syslog($log_entry['severity'], theme('syslog_format', array('entry' => $log_entry)));
-}
+  $message = strtr(variable_get('syslog_format', '!base_url|!timestamp|!type|!ip|!request_uri|!referer|!uid|!link|!message'), array(
+    '!base_url'    => $base_url,
+    '!timestamp'   => $log_entry['timestamp'],
+    '!type'        => $log_entry['type'],
+    '!ip'          => $log_entry['ip'],
+    '!request_uri' => $log_entry['request_uri'],
+    '!referer'     => $log_entry['referer'],
+    '!uid'         => $log_entry['user']->uid,
+    '!link'        => strip_tags($log_entry['link']),
+    '!message'     => strip_tags(is_null($log_entry['variables']) ? $log_entry['message'] : strtr($log_entry['message'], $log_entry['variables'])),
+  ));
 
-/**
- * Implements hook_theme().
- */
-function syslog_theme() {
-  return array(
-    'syslog_format' => array(
-      'variables' => array('entry' => NULL),
-    ),
-  );
-}
-
-/**
- * Returns a string for a system log entry.
- *
- * @param $variables
- *   An associative array containing:
- *   - entry: An array containing the data about the log entry, containing:
- *     - timestamp: The date and time of the log entry.
- *     - type: The type of log entry.
- *     - ip: The IP address.
- *     - request_uri: The requested URI.
- *     - referer: The URL which referred to the request URI.
- *     - user: The user object associated with the log entry.
- *     - link: A link accociated with the log entry.
- *     - variables: A string representing the data to log.
- *     - message: If variables is not specified, a string for the log message.
- *
- * @return
- *   A string containing a pipe-delimited "|" log message.
- *
- * @ingroup themeable
- */
-function theme_syslog_format($variables) {
-  $entry = $variables['entry'];
-  global $base_url;
-
-  $message  = $base_url;
-  $message .= '|' . $entry['timestamp'];
-  $message .= '|' . $entry['type'];
-  $message .= '|' . $entry['ip'];
-  $message .= '|' . $entry['request_uri'];
-  $message .= '|' . $entry['referer'];
-  $message .= '|' . $entry['user']->uid;
-  $message .= '|' . strip_tags($entry['link']);
-  $message .= '|' . strip_tags(is_null($entry['variables']) ? $entry['message'] : strtr($entry['message'], $entry['variables']));
-
-  return $message;
+  syslog($log_entry['severity'], $message);
 }
