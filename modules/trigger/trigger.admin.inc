@@ -130,7 +130,7 @@ function trigger_assign_form($form, $form_state, $module, $hook, $label) {
   $functions = array();
   // Restrict the options list to actions that declare support for this hook.
   foreach (actions_list() as $func => $metadata) {
-    if (in_array('any', $metadata['triggers']) || in_array($hook, $metadata['triggers'])) {
+    if (isset($metadata['triggers']) && array_intersect(array($hook, 'any'), $metadata['triggers'])) {
       $functions[] = $func;
     }
   }
