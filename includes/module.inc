@@ -506,6 +506,10 @@ function module_disable($module_list, $disable_dependents = TRUE) {
  * called example.module, then hook_help() as implemented by that module would
  * be defined as example_help().
  *
+ * The example functions included are not part of the Drupal core, they are
+ * just models that you can modify. Only the hooks implemented within modules
+ * are executed when running Drupal.
+ *
  * See also @link themeable the themeable group page. @endlink
  */
 
