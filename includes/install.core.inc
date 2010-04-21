@@ -840,13 +840,14 @@ function install_settings_form($form, &$form_state, &$install_state) {
   drupal_set_title(st('Database configuration'));
 
   $drivers = drupal_detect_database_types();
+  $drivers_keys = array_keys($drivers);
 
   $form['driver'] = array(
     '#type' => 'radios',
     '#title' => st('Database type'),
     '#required' => TRUE,
     '#options' => $drivers,
-    '#default_value' => !empty($database['driver']) ? $database['driver'] : current(array_keys($drivers)),
+    '#default_value' => !empty($database['driver']) ? $database['driver'] : current($drivers_keys),
     '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
   );
   if (count($drivers) == 1) {
@@ -1752,4 +1753,3 @@ function install_configure_form_submit($form, &$form_state) {
   // Record when this install ran.
   variable_set('install_time', $_SERVER['REQUEST_TIME']);
 }
-
