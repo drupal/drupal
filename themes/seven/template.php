@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.15 2010/03/24 09:26:37 dries Exp $
+// $Id: template.php,v 1.16 2010/04/21 06:55:23 webchick Exp $
 
 /**
  * Override or insert variables into the html template.
@@ -69,7 +69,7 @@ function seven_admin_block_content($variables) {
 function seven_tablesort_indicator($variables) {
   $style = $variables['style'];
   $theme_path = drupal_get_path('theme', 'seven');
-  if ($style == "asc") {
+  if ($style == 'asc') {
     return theme('image', array('path' => $theme_path . '/images/arrow-asc.png', 'alt' => t('sort ascending'), 'title' => t('sort ascending')));
   }
   else {
