@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.867 2010/04/16 13:56:45 dries Exp $
+// $Id: comment.module,v 1.868 2010/04/21 06:58:31 webchick Exp $
 
 /**
  * @file
@@ -1905,7 +1905,11 @@ function comment_form($form, &$form_state, $comment) {
   // already previewing the submission. However, if there are form errors,
   // we hide the save button no matter what, so that optional form elements
   // (e.g., captchas) can be updated.
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions')),
+    '#weight' => 100,
+  );
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
