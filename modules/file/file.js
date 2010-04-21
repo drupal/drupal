@@ -1,4 +1,4 @@
-// $Id: file.js,v 1.1 2009/08/29 12:52:32 dries Exp $
+// $Id: file.js,v 1.2 2010/04/21 07:40:37 webchick Exp $
 
 /**
  * @file
@@ -9,16 +9,16 @@
  * prevents separate file fields from accidentally uploading files).
  */
 
-(function($) {
+(function ($) {
 
 /**
  * Attach behaviors to managed file element upload fields.
  */
 Drupal.behaviors.fileValidateAutoAttach = {
-  attach: function(context) {
+  attach: function (context) {
     $('div.form-managed-file input.form-file[accept]', context).bind('change', Drupal.file.validateExtension);
   },
-  detach: function(context) {
+  detach: function (context) {
     $('div.form-managed-file input.form-file[accept]', context).unbind('change', Drupal.file.validateExtension);
   }
 };
@@ -27,11 +27,11 @@ Drupal.behaviors.fileValidateAutoAttach = {
  * Attach behaviors to the file upload and remove buttons.
  */
 Drupal.behaviors.fileButtons = {
-  attach: function(context) {
+  attach: function (context) {
     $('input.form-submit', context).bind('mousedown', Drupal.file.disableFields);
     $('div.form-managed-file input.form-submit', context).bind('mousedown', Drupal.file.progressBar);
   },
-  unattach: function(context) {
+  unattach: function (context) {
     $('input.form-submit', context).unbind('mousedown', Drupal.file.disableFields);
     $('div.form-managed-file input.form-submit', context).unbind('mousedown', Drupal.file.progressBar);
   }
@@ -41,10 +41,10 @@ Drupal.behaviors.fileButtons = {
  * Attach behaviors to links within managed file elements.
  */
 Drupal.behaviors.filePreviewLinks = {
-  attach: function(context) {
+  attach: function (context) {
     $('div.form-managed-file .file a, .file-widget .file a', context).bind('click',Drupal.file.openInNewWindow);
   },
-  detach: function(context){
+  detach: function (context){
     $('div.form-managed-file .file a, .file-widget .file a', context).unbind('click', Drupal.file.openInNewWindow);
   }
 };
@@ -56,7 +56,7 @@ Drupal.file = Drupal.file || {
   /**
    * Client-side file input validation based on the HTML "accept" attribute.
    */
-  validateExtension: function(event) {
+  validateExtension: function (event) {
     // Remove any previous errors.
     $('.file-upload-js-error').remove();
 
@@ -78,7 +78,7 @@ Drupal.file = Drupal.file || {
   /**
    * Prevent file uploads when using buttons not intended to upload.
    */
-  disableFields: function(event){
+  disableFields: function (event){
     var clickedButton = this;
 
     // Only disable upload fields for AJAX buttons.
@@ -101,14 +101,14 @@ Drupal.file = Drupal.file || {
     // excuted before any timeout functions will be called, so this effectively
     // re-enables the file fields after other processing is complete even though
     // it is only a 1 second timeout.
-    setTimeout(function(){
+    setTimeout(function (){
       $disabledFields.attr('disabled', '');
     }, 1000);
   },
   /**
    * Add progress bar support if possible.
    */
-  progressBar: function(event) {
+  progressBar: function (event) {
     var clickedButton = this;
     var $progressId = $(clickedButton).parents('div.form-managed-file').find('input.file-progress');
     if ($progressId.size()) {
@@ -118,19 +118,19 @@ Drupal.file = Drupal.file || {
       $progressId.attr('name', originalName.match(/APC_UPLOAD_PROGRESS|UPLOAD_IDENTIFIER/)[0]);
 
       // Restore the original name after the upload begins.
-      setTimeout(function() {
+      setTimeout(function () {
         $progressId.attr('name', originalName);
       }, 1000);
     }
     // Show the progress bar if the upload takes longer than half a second.
-    setTimeout(function() {
+    setTimeout(function () {
       $(clickedButton).parents('div.form-managed-file').find('div.ajax-progress-bar').slideDown();
     }, 500);
   },
   /**
    * Open links to files within forms in a new window.
    */
-  openInNewWindow: function(event) {
+  openInNewWindow: function (event) {
     $(this).attr('target', '_blank');
     window.open(this.href, 'filePreview', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=500,height=550');
     return false;
