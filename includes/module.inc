@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.187 2010/04/20 18:50:36 webchick Exp $
+// $Id: module.inc,v 1.188 2010/04/21 07:53:45 webchick Exp $
 
 /**
  * @file
@@ -505,6 +505,10 @@ function module_disable($module_list, $disable_dependents = TRUE) {
  * the module name in the hook definitions. For example, if the module file is
  * called example.module, then hook_help() as implemented by that module would
  * be defined as example_help().
+ *
+ * The example functions included are not part of the Drupal core, they are
+ * just models that you can modify. Only the hooks implemented within modules
+ * are executed when running Drupal.
  *
  * See also @link themeable the themeable group page. @endlink
  */
