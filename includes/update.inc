@@ -103,6 +103,35 @@ function update_prepare_d7_bootstrap() {
   // created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
+  // Create the registry tables.
+  if (!db_table_exists('registry')) {
+    $schema['registry'] = array(
+      'fields' => array(
+        'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+        'type'   => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
+        'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+        'module'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+        'weight'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      ),
+      'primary key' => array('name', 'type'),
+      'indexes' => array(
+        'hook' => array('type', 'weight', 'module'),
+      ),
+    );
+    db_create_table('registry', $schema['registry']);
+  }
+  if (!db_table_exists('registry_file')) {
+    $schema['registry_file'] = array(
+      'fields' => array(
+        'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
+        'filectime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+        'filemtime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      ),
+      'primary key' => array('filename'),
+    );
+    db_create_table('registry_file', $schema['registry_file']);
+  }
+
   // The new cache_bootstrap bin is required to bootstrap to
   // DRUPAL_BOOTSTRAP_SESSION, so create it here rather than in
   // update_fix_d7_requirements().
@@ -345,31 +374,6 @@ function update_fix_d7_requirements() {
     // Drops and recreates semaphore value index.
     db_drop_index('semaphore', 'expire');
     db_add_index('semaphore', 'value', array('value'));
-
-    // Add registry tables since these are required during an update.
-    $schema['registry'] = array(
-      'fields' => array(
-        'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-        'type'   => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
-        'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-        'module'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-        'weight'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      ),
-      'primary key' => array('name', 'type'),
-      'indexes' => array(
-        'hook' => array('type', 'weight', 'module'),
-      ),
-    );
-    $schema['registry_file'] = array(
-      'fields' => array(
-        'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
-        'filectime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-        'filemtime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      ),
-      'primary key' => array('filename'),
-    );
-    db_create_table('registry', $schema['registry']);
-    db_create_table('registry_file', $schema['registry_file']);
 
     $schema['date_format_type'] = array(
       'description' => 'Stores configured date format types.',
