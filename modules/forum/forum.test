@@ -137,8 +137,18 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->container = $this->editForumTaxonomy();
     // Create forum container.
     $this->container = $this->createForum('container');
+    // Verify "edit container" link exists and functions correctly.
+    $this->drupalGet('admin/structure/forum');
+    $this->clickLink('edit container');
+    $this->assertRaw('Edit container', t('Followed the link to edit the container'));
     // Create forum inside the forum container.
     $this->forum = $this->createForum('forum', $this->container['tid']);
+    // Verify the "edit forum" link exists and functions correctly.
+    $this->drupalGet('admin/structure/forum');
+    $this->clickLink('edit forum');
+    $this->assertRaw('Edit forum', t('Followed the link to edit the forum'));
+    // Navigate back to forum structure page.
+    $this->drupalGet('admin/structure/forum');
     // Create second forum in container.
     $this->delete_forum = $this->createForum('forum', $this->container['tid']);
     // Save forum overview.
