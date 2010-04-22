@@ -265,13 +265,16 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
    */
   function testAttributesInMarkup1() {
     $node = $this->drupalCreateNode(array('type' => 'blog'));
+    $isoDate = date('c', $node->changed);
+    $url = url('node/' . $node->nid);
     $this->drupalGet('node/' . $node->nid);
 
-    $this->assertRaw('typeof="sioct:Weblog"');
     // Ensure the default bundle mapping for node is used. These attributes come
     // from the node default bundle definition.
-    $this->assertRaw('property="dc:title"');
-    $this->assertRaw('property="dc:date dc:created"');
+    $blog_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
+    $blog_meta = $this->xpath("//div[(@about='$url') and (@typeof='sioct:Weblog')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
+    $this->assertTrue(!empty($blog_title), t('Property dc:title is present in meta tag.'));
+    $this->assertTrue(!empty($blog_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
   }
 
   /**
@@ -281,13 +284,15 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
   function testAttributesInMarkup2() {
     $type = $this->drupalCreateContentType(array('type' => 'test_bundle_hook_install'));
     $node = $this->drupalCreateNode(array('type' => 'test_bundle_hook_install'));
+    $isoDate = date('c', $node->changed);
+    $url = url('node/' . $node->nid);
     $this->drupalGet('node/' . $node->nid);
 
-    $this->assertRaw('typeof="foo:mapping_install1 bar:mapping_install2"');
-    // Ensure the default bundle mapping for node is used. These attributes come
-    // from the node default bundle definition.
-    $this->assertRaw('property="dc:title"');
-    $this->assertRaw('property="dc:date dc:created"');
+    // Ensure the mapping defined in rdf_module.test is used.
+    $test_bundle_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
+    $test_bundle_meta = $this->xpath("//div[(@about='$url') and contains(@typeof, 'foo:mapping_install1') and contains(@typeof, 'bar:mapping_install2')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
+    $this->assertTrue(!empty($test_bundle_title), t('Property dc:title is present in meta tag.'));
+    $this->assertTrue(!empty($test_bundle_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
   }
 
   /**
@@ -297,13 +302,16 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
   function testAttributesInMarkup3() {
     $type = $this->drupalCreateContentType();
     $node = $this->drupalCreateNode(array('type' => $type->type));
+    $isoDate = date('c', $node->changed);
+    $url = url('node/' . $node->nid);
     $this->drupalGet('node/' . $node->nid);
 
-    $this->assertRaw('typeof="sioc:Item foaf:Document"');
     // Ensure the default bundle mapping for node is used. These attributes come
     // from the node default bundle definition.
-    $this->assertRaw('property="dc:title"');
-    $this->assertRaw('property="dc:date dc:created"');
+    $random_bundle_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
+    $random_bundle_meta = $this->xpath("//div[(@about='$url') and contains(@typeof, 'sioc:Item') and contains(@typeof, 'foaf:Document')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
+    $this->assertTrue(!empty($random_bundle_title), t('Property dc:title is present in meta tag.'));
+    $this->assertTrue(!empty($random_bundle_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
   }
 
   /**
