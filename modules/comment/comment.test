@@ -530,11 +530,18 @@ class CommentAnonymous extends CommentHelperCase {
     $this->assertFalse($this->commentExists($anonymous_comment3), t('Anonymous comment with contact info (required) not found.'));
 
     // Post comment with contact info (required).
-    $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), array('mail' => 'tester@simpletest.org'));
+    $author_name = $this->randomName();
+    $author_mail = $this->randomName() . '@example.com';
+    $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), array('name' => $author_name, 'mail' => $author_mail));
     $this->assertTrue($this->commentExists($anonymous_comment3), t('Anonymous comment with contact info (required) found.'));
 
-    // Unpublish comment.
+    // Make sure the user data appears correctly when editing the comment.
     $this->drupalLogin($this->admin_user);
+    $this->drupalGet('comment/' . $anonymous_comment3->id . '/edit');
+    $this->assertRaw($author_name, t("The anonymous user's name is correct when editing the comment."));
+    $this->assertRaw($author_mail, t("The anonymous user's e-mail address is correct when editing the comment."));
+
+    // Unpublish comment.
     $this->performCommentOperation($anonymous_comment3, 'unpublish');
 
     $this->drupalGet('admin/content/comment/approval');

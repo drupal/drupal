@@ -1778,15 +1778,16 @@ function comment_form($form, &$form_state, $comment) {
       '#weight' => -2,
     );
   }
-
-  // Sets the author form elements above the subject.
-  $form['author'] = array(
-    '#weight' => -2,
-  );
+  else {
+    // Sets the author form elements above the subject.
+    $form['author'] = array(
+      '#weight' => -2,
+    );
+  }
 
   // Prepare default values for form elements.
   if ($is_admin) {
-    $author = ($comment->uid && $comment->name ? $comment->name : $comment->registered_name);
+    $author = (!$comment->uid && $comment->name ? $comment->name : $comment->registered_name);
     $status = (isset($comment->status) ? $comment->status : COMMENT_NOT_PUBLISHED);
     $date = (!empty($comment->date) ? $comment->date : format_date($comment->changed, 'custom', 'Y-m-d H:i O'));
   }
@@ -2010,7 +2011,7 @@ function comment_form_validate($form, &$form_state) {
     if ($form_state['values']['date'] && strtotime($form_state['values']['date']) === FALSE) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
-    if ($form_state['values']['name'] && !$account = user_load_by_name($form_state['values']['name'])) {
+    if ($form_state['values']['name'] && !$form_state['values']['is_anonymous'] && !$account = user_load_by_name($form_state['values']['name'])) {
       form_set_error('name', t('You have to specify a valid author.'));
     }
   }
