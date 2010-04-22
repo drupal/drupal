@@ -536,6 +536,11 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $image_path = $this->createSampleImage($style);
     $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
 
+    // Verify that effects attached to a default style do not have an ieid key.
+    foreach ($style['effects'] as $effect) {
+      $this->assertFalse(isset($effect['ieid']), t('The %effect effect does not have an ieid.', array('%effect' => $effect['name'])));
+    }
+
     // Override the default.
     $this->drupalPost($edit_path, array(), t('Override defaults'));
     $this->assertRaw(t('The %style style has been overridden, allowing you to change its settings.', array('%style' => $style_name)), t('Default image style may be overridden.'));
@@ -544,6 +549,11 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $this->drupalPost($edit_path, array('new' => 'image_desaturate'), t('Add'));
     drupal_static_reset('image_styles');
     $style = image_style_load($style_name);
+
+    // Verify that effects attached to the style have an ieid now.
+    foreach ($style['effects'] as $effect) {
+      $this->assertTrue(isset($effect['ieid']), t('The %effect effect has an ieid.', array('%effect' => $effect['name'])));
+    }
 
     // The style should now have 2 effect, the original scale provided by core
     // and the desaturate effect we added in the override.

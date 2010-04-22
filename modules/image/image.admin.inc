@@ -83,31 +83,36 @@ function image_style_form($form, &$form_state, $style) {
   $form['effects'] = array(
     '#theme' => 'image_style_effects',
   );
-  foreach ($style['effects'] as $ieid => $effect) {
-    $form['effects'][$ieid]['#weight'] = isset($form_state['input']['effects']) ? $form_state['input']['effects'][$ieid]['weight'] : NULL;
-    $form['effects'][$ieid]['label'] = array(
+  foreach ($style['effects'] as $key => $effect) {
+    $form['effects'][$key]['#weight'] = isset($form_state['input']['effects']) ? $form_state['input']['effects'][$key]['weight'] : NULL;
+    $form['effects'][$key]['label'] = array(
       '#markup' => $effect['label'],
     );
-    $form['effects'][$ieid]['summary'] = array(
+    $form['effects'][$key]['summary'] = array(
       '#markup' => isset($effect['summary theme']) ? theme($effect['summary theme'], array('data' => $effect['data'])) : '',
     );
-    $form['effects'][$ieid]['weight'] = array(
+    $form['effects'][$key]['weight'] = array(
       '#type' => 'weight',
       '#default_value' => $effect['weight'],
       '#access' => $editable,
     );
-    $form['effects'][$ieid]['configure'] = array(
-      '#type' => 'link',
-      '#title' => t('edit'),
-      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'],
-      '#access' => $editable && isset($effect['form callback']),
-    );
-    $form['effects'][$ieid]['remove'] = array(
-      '#type' => 'link',
-      '#title' => t('delete'),
-      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete',
-      '#access' => $editable,
-    );
+
+    // Only attempt to display these fields for editable styles as the 'ieid'
+    // key is not set for styles defined in code.
+    if ($editable) {
+      $form['effects'][$key]['configure'] = array(
+        '#type' => 'link',
+        '#title' => t('edit'),
+        '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'],
+        '#access' => $editable && isset($effect['form callback']),
+      );
+      $form['effects'][$key]['remove'] = array(
+        '#type' => 'link',
+        '#title' => t('delete'),
+        '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete',
+        '#access' => $editable,
+      );
+    }
   }
 
   // Build the new image effect addition form and add it to the effect list.

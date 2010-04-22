@@ -435,11 +435,10 @@ function image_styles() {
           $style['name'] = $style_name;
           $style['module'] = $module;
           $style['storage'] = IMAGE_STORAGE_DEFAULT;
-          foreach ($style['effects'] as $ieid => $effect) {
+          foreach ($style['effects'] as $key => $effect) {
             $definition = image_effect_definition_load($effect['name']);
             $effect = array_merge($definition, $effect);
-            $effect['ieid'] = $ieid;
-            $style['effects'][$ieid] = $effect;
+            $style['effects'][$key] = $effect;
           }
           $styles[$style_name] = $style;
         }
@@ -834,7 +833,7 @@ function image_default_style_save($style) {
   $effects = array();
   foreach ($style['effects'] as $effect) {
     $effect['isid'] = $style['isid'];
-    image_effect_save($effect);
+    $effect = image_effect_save($effect);
     $effects[$effect['ieid']] = $effect;
   }
   $style['effects'] = $effects;
