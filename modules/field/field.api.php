@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.71 2010/04/06 16:49:12 dries Exp $
+// $Id: field.api.php,v 1.72 2010/04/22 19:06:34 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -1600,12 +1600,12 @@ function hook_field_delete_field($field) {
  * This hook is invoked after the instance record is saved and so it cannot
  * modify the instance itself.
  *
- * TODO: Not implemented.
- *
  * @param $instance
- *   The instance just updated.
+ *   The instance as it is post-update.
+ * @param $prior_$instance
+ *   The instance as it was pre-update.
  */
-function hook_field_update_instance($instance) {
+function hook_field_update_instance($instance, $prior_instance) {
 }
 
 /**

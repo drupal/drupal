@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.55 2010/03/28 11:54:06 dries Exp $
+// $Id: field.crud.inc,v 1.56 2010/04/22 19:06:34 dries Exp $
 
 /**
  * @file
@@ -700,6 +700,8 @@ function field_update_instance($instance) {
 
   // Clear caches.
   field_cache_clear();
+
+  module_invoke_all('field_update_instance', $instance, $prior_instance);
 }
 
 /**
