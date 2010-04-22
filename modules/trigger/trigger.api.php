@@ -12,15 +12,13 @@
  */
 
 /**
- * Declares triggers (events) for users to assign actions to.
+ * Declare triggers (events) for users to assign actions to.
  *
  * This hook is used by the trigger module to create a list of triggers (events)
  * that users can assign actions to. Your module is responsible for detecting
  * that the events have occurred, calling trigger_get_assigned_actions() to find
  * out which actions the user has associated with your trigger, and then calling
  * actions_do() to fire off the actions.
- *
- * @see hook_action_info()
  *
  * @return
  *   A nested associative array.
@@ -38,6 +36,9 @@
  *   For example, the trigger set for the 'node' module has 'node' as the
  *   outermost key and defines triggers for 'node_insert', 'node_update',
  *   'node_delete' etc. that fire when a node is saved, updated, etc.
+ *
+ * @see hook_action_info()
+ * @see hook_trigger_info_alter()
  */
 function hook_trigger_info() {
   return array(
@@ -59,6 +60,18 @@ function hook_trigger_info() {
       ),
     ),
   );
+}
+
+/**
+ * Alter triggers declared by hook_trigger_info().
+ *
+ * @param $triggers
+ *   Array of trigger information returned by hook_trigger_info()
+ *   implementations. Modify this array in place. See hook_trigger_info()
+ *   for information on what this might contain.
+ */
+function hook_trigger_info_alter(&$triggers) {
+  $triggers['node']['node_insert']['label'] = t('When content is saved');
 }
 
 /**
