@@ -98,6 +98,17 @@ class ModuleUnitTest extends DrupalWebTestCase {
     cache_clear_all('module_implements', 'cache_bootstrap');
     $this->drupalGet('');
     $this->assertTrue(cache_get('module_implements', 'cache_bootstrap'), t('The module implements cache is populated after requesting a page.'));
+
+    // Make sure group include files are detected properly even when the file is
+    // already loaded when the cache is rebuilt.
+    // For that activate the module_test which provides the file to load.
+    module_enable(array('module_test'));
+
+    module_load_include('inc', 'module_test', 'module_test.file');
+    $modules = module_implements('test_hook');
+    $static = drupal_static('module_implements');
+    $this->assertTrue(in_array('module_test', $modules), 'Hook found.');
+    $this->assertEqual($static['test_hook']['module_test'], 'file', 'Include file detected.');
   }
 
   /**
