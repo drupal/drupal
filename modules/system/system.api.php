@@ -982,6 +982,32 @@ function hook_mail_alter(&$message) {
 }
 
 /**
+ * Alter the registry of modules implementing a hook.
+ *
+ * This hook is invoked during module_implements(). A module may implement this
+ * hook in order to reorder the implementing modules, which are otherwise
+ * ordered by the module's system weight.
+ *
+ * @param &$implementations
+ *   An array keyed by the module's name. The value of each item corresponds
+ *   to a $group, which is usually FALSE, unless the implementation is in a
+ *   file named $module.$group.inc.
+ * @param $hook
+ *   The name of the module hook being implemented.
+ */
+function hook_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'rdf_mapping') {
+    // Move my_module_rdf_mapping() to the end of the list. module_implements()
+    // iterates through $implementations with a foreach loop which PHP iterates
+    // in the order that the items were added, so to move an item to the end of
+    // the array, we remove it and then add it.
+    $group = $implementations['my_module'];
+    unset($implementations['my_module']);
+    $implementations['my_module'] = $group;
+  }
+}
+
+/**
  * Alter the information parsed from module and theme .info files
  *
  * This hook is invoked in _system_rebuild_module_data() and in

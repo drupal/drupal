@@ -596,6 +596,11 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
         $implementations['#write_cache'] = TRUE;
       }
     }
+    // Allow modules to change the weight of specific implementations but avoid
+    // an infinite loop.
+    if ($hook != 'module_implements_alter') {
+      drupal_alter('module_implements', $implementations[$hook], $hook);
+    }
   }
   else {
     foreach ($implementations[$hook] as $module => $group) {
@@ -748,4 +753,84 @@ function drupal_required_modules() {
   }
 
   return $required;
+}
+
+/**
+ * Hands off alterable variables to type-specific *_alter implementations.
+ *
+ * This dispatch function hands off the passed in variables to type-specific
+ * hook_TYPE_alter() implementations in modules. It ensures a consistent
+ * interface for all altering operations.
+ *
+ * A maximum of 2 alterable arguments is supported. In case more arguments need
+ * to be passed and alterable, modules provide additional variables assigned by
+ * reference in the last $context argument:
+ * @code
+ *   $context = array(
+ *     'alterable' => &$alterable,
+ *     'unalterable' => $unalterable,
+ *     'foo' => 'bar',
+ *   );
+ *   drupal_alter('mymodule_data', $alterable1, $alterable2, $context);
+ * @endcode
+ *
+ * Note that objects are always passed by reference in PHP5. If it is absolutely
+ * required that no implementation alters a passed object in $context, then an
+ * object needs to be cloned:
+ * @code
+ *   $context = array(
+ *     'unalterable_object' => clone $object,
+ *   );
+ *   drupal_alter('mymodule_data', $data, $context);
+ * @endcode
+ *
+ * @param $type
+ *   A string describing the data type of the alterable $data. 'form', 'links',
+ *   'node_content', and so on are several examples.
+ * @param &$data
+ *   The primary data to be altered.
+ * @param &$context1
+ *   (optional) An additional variable that is passed by reference.
+ * @param &$context2
+ *   (optional) An additional variable that is passed by reference. If more
+ *   context needs to be provided to implementations, then this should be an
+ *   keyed array as described above.
+ */
+function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['functions'] = &drupal_static(__FUNCTION__);
+  }
+  $functions = &$drupal_static_fast['functions'];
+
+  // Some alter hooks are invoked many times per page request, so statically
+  // cache the list of functions to call, and on subsequent calls, iterate
+  // through them quickly.
+  if (!isset($functions[$type])) {
+    $functions[$type] = array();
+    $hook = $type . '_alter';
+    foreach (module_implements($hook) as $module) {
+      $functions[$type][] = $module . '_' . $hook;
+    }
+    // Allow the theme to alter variables after the theme system has been
+    // initialized.
+    global $theme, $base_theme_info;
+    if (isset($theme)) {
+      $theme_keys = array();
+      foreach ($base_theme_info as $base) {
+        $theme_keys[] = $base->name;
+      }
+      $theme_keys[] = $theme;
+      foreach ($theme_keys as $theme_key) {
+        $function = $theme_key . '_' . $hook;
+        if (function_exists($function)) {
+          $functions[$type][] = $function;
+        }
+      }
+    }
+  }
+  foreach ($functions[$type] as $function) {
+    $function($data, $context1, $context2);
+  }
 }
