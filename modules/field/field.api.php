@@ -1638,6 +1638,42 @@ function hook_field_read_instance($instance) {
 }
 
 /**
+ * Acts when a field record is being purged.
+ *
+ * In field_purge_field(), after the field configuration has been
+ * removed from the database, the field storage module has had a chance to
+ * run its hook_field_storage_purge_field(), and the field info cache
+ * has been cleared, this hook is invoked on all modules to allow them to
+ * respond to the field being purged.
+ *
+ * @param $field
+ *   The field being purged.
+ */
+function hook_field_purge_field($field) {
+  db_delete('my_module_field_info')
+    ->condition('id', $field['id'])
+    ->execute();
+}
+
+/**
+ * Acts when a field instance is being purged.
+ *
+ * In field_purge_instance(), after the field instance has been
+ * removed from the database, the field storage module has had a chance to
+ * run its hook_field_storage_purge_instance(), and the field info cache
+ * has been cleared, this hook is invoked on all modules to allow them to
+ * respond to the field instance being purged.
+ *
+ * @param $instance
+ *   The instance being purged.
+ */
+function hook_field_purge_field_instance($instance) {
+  db_delete('my_module_field_instance_info')
+    ->condition('id', $instance['id'])
+    ->execute();
+}
+
+/**
  * @} End of "ingroup field_crud"
  */
 
