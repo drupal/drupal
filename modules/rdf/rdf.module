@@ -92,6 +92,32 @@ function rdf_rdf_namespaces() {
 }
 
 /**
+ * Returns an array of RDF namespaces defined via hook_rdf_namespaces().
+ */
+function rdf_get_namespaces() {
+  $rdf_namespaces = module_invoke_all('rdf_namespaces');
+  // module_invoke_all() uses array_merge_recursive() which might return nested
+  // arrays if several modules redefine the same prefix multiple times.
+  // We need to ensure the array of namespaces is flat and only contains
+  // strings as URIs.
+  foreach ($rdf_namespaces as $prefix => $uri) {
+    if (is_array($uri)) {
+      if (count(array_unique($uri)) == 1) {
+        // All namespaces declared for this prefix are the same, merge them all
+        // into a single namespace.
+        $rdf_namespaces[$prefix] = $uri[0];
+      }
+      else {
+        // There are conflicting namespaces for this prefix, do not include it
+        // in order to avoid asserting any inaccurate RDF statement.
+        unset($rdf_namespaces[$prefix]);
+      }
+    }
+  }
+  return $rdf_namespaces;
+}
+
+/**
  * Returns the mapping for attributes of a given type/bundle pair.
  *
  * @param $type

@@ -250,14 +250,17 @@ function drupal_get_breadcrumb() {
 }
 
 /**
- * Return a string containing RDF namespace declarations for use in XML and
+ * Returns a string containing RDF namespace declarations for use in XML and
  * XHTML output.
  */
 function drupal_get_rdf_namespaces() {
-  // Serialize the RDF namespaces used in RDFa annotation.
   $xml_rdf_namespaces = array();
-  foreach (module_invoke_all('rdf_namespaces') as $prefix => $uri) {
-    $xml_rdf_namespaces[] = 'xmlns:' . $prefix . '="' . $uri . '"';
+
+  // Serializes the RDF namespaces in XML namespace syntax.
+  if (function_exists('rdf_get_namespaces')) {
+    foreach (rdf_get_namespaces() as $prefix => $uri) {
+      $xml_rdf_namespaces[] = 'xmlns:' . $prefix . '="' . $uri . '"';
+    }
   }
   return implode("\n  ", $xml_rdf_namespaces);
 }

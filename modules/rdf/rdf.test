@@ -39,7 +39,10 @@ class RdfMappingHookTestCase extends DrupalWebTestCase {
   }
 }
 
-class RdfMarkupTestCase extends DrupalWebTestCase {
+/**
+ * Test RDFa markup generation.
+ */
+class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'RDFa markup',
@@ -55,7 +58,7 @@ class RdfMarkupTestCase extends DrupalWebTestCase {
   /**
    * Test rdf_rdfa_attributes().
    */
-  function testDrupalRdfaAtributes() {
+  function testDrupalRdfaAttributes() {
     // Same value as the one in the HTML tag (no callback function).
     $expected_attributes = array(
       'property' => array('dc:title'),
@@ -523,5 +526,35 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
     $isoDate = date('c', $expected_last_activity_date);
     $tracker_activity = $this->xpath('//tr[@about=:url]//td[@property="sioc:last_activity_date" and @datatype="xsd:dateTime" and @content=:date]', array(':url' => $url, ':date' => $isoDate));
     $this->assertTrue(!empty($tracker_activity), t('Latest activity date found when there are comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
+  }
+}
+
+/**
+ * Tests for RDF namespaces declaration with hook_rdf_namespaces().
+ */
+class RdfGetRdfNamespacesTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'RDF namespaces',
+      'description' => 'Test hook_rdf_namespaces() and ensure only "safe" namespaces are returned.',
+      'group' => 'RDF',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('rdf', 'rdf_test');
+  }
+
+  /**
+   * Test getting RDF namesapces.
+   */
+  function testGetRdfNamespaces() {
+    // Get all RDF namespaces.
+    $ns = rdf_get_namespaces();
+
+    $this->assertEqual($ns['owl'], 'http://www.w3.org/2002/07/owl#', t('A prefix declared once is included.'));
+    $this->assertEqual($ns['foaf'], 'http://xmlns.com/foaf/0.1/', t('The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.'));
+    $this->assertEqual($ns['foaf1'], 'http://xmlns.com/foaf/0.1/', t('Two prefixes can be assigned the same namespace.'));
+    $this->assertTrue(!isset($ns['dc']), t('A prefix with conflicting namespaces is discarded.'));
   }
 }
