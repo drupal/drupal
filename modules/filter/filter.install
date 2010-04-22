@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.35 2010/03/12 14:31:01 dries Exp $
+// $Id: filter.install,v 1.36 2010/04/22 05:44:41 webchick Exp $
 
 /**
  * @file
@@ -220,6 +220,13 @@ function filter_update_7002() {
  * Remove hardcoded numeric deltas from all filters in core.
  */
 function filter_update_7003() {
+  // Duplicates the filter table since core cannot take care of the potential
+  // contributed module filters.
+  db_rename_table('filter', 'd6_upgrade_filter');
+  // Creates the Drupal 7 filter table.
+  $schema = filter_schema();
+  db_create_table('filter', $schema['filter']);
+
   // Get an array of the renamed filter deltas, organized by module.
   $renamed_deltas = array(
     'filter' => array(
@@ -234,33 +241,28 @@ function filter_update_7003() {
     ),
   );
 
-  // The unique key on (filter, module, delta) is not necessary anymore,
-  // as filter_update_7004() will add a primary key on (filter, name).
-  db_drop_unique_key('filter', 'fmd');
-
-  // Rename field 'delta' to 'name'.
-  db_change_field('filter', 'delta', 'name',
-    array(
-      'type' => 'varchar',
-      'length' => 32,
-      'not null' => TRUE,
-      'default' => '',
-      'description' => 'Name of the filter being referenced.',
-    ),
-    array(
-      'indexes' => array(
-        'list' => array('weight', 'module', 'name'),
-      ),
-    )
-  );
-
-  // Loop through each filter and make changes to the core filter table.
+  // Loop through each filter and make changes to the core filter table by
+  // each record from the old to the new table.
   foreach ($renamed_deltas as $module => $deltas) {
-    foreach ($deltas as $old_delta => $new_delta) {
-      db_update('filter')
-        ->fields(array('name' => $new_delta))
+    foreach ($deltas as $old_delta => $new_name) {
+      $query = db_select('d6_upgrade_filter');
+      $query->fields('d6_upgrade_filter', array('format', 'weight'));
+      $query->condition('module', $module);
+      $query->condition('delta', $old_delta);
+      $result = $query->execute();
+      foreach ($result as $record) {
+        db_insert('filter')
+          ->fields(array(
+            'format' => $record->format,
+            'module' => $module,
+            'name' => $new_name,
+            'weight' => $record->weight,
+          ))
+          ->execute();
+      }
+      db_delete('d6_upgrade_filter')
         ->condition('module', $module)
-        ->condition('name', $old_delta)
+        ->condition('delta', $old_delta)
         ->execute();
     }
   }
@@ -268,33 +270,8 @@ function filter_update_7003() {
 
 /**
  * Move filter settings storage into {filter} table.
- *
- * - Remove {filter}.fid.
- * - Add (format, name) as primary key for {filter}.
- * - Add {filter}.status.
- * - Add {filter}.settings.
  */
 function filter_update_7004() {
-  db_drop_field('filter', 'fid');
-  db_add_primary_key('filter', array('format', 'name'));
-  db_add_field('filter', 'status',
-    array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-      'description' => 'Filter enabled status. (1 = enabled, 0 = disabled)',
-    )
-  );
-  db_add_field('filter', 'settings',
-    array(
-      'type' => 'text',
-      'not null' => FALSE,
-      'size' => 'big',
-      'serialize' => TRUE,
-      'description' => 'A serialized array of name value pairs that store the filter settings for the specific format.',
-    )
-  );
-
   // Enable all existing filters ({filter} contained only enabled previously).
   db_update('filter')
     ->fields(array('status' => '1'))
