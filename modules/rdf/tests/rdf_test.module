@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf_test.module,v 1.3 2010/01/14 06:31:45 webchick Exp $
+// $Id: rdf_test.module,v 1.4 2010/04/22 21:41:09 webchick Exp $
 
 /**
  * @file
@@ -52,5 +52,16 @@ function rdf_test_rdf_mapping() {
         'rdftype' => array('sioct:Weblog'),
       ),
     ),
+  );
+}
+
+/**
+ * Implements hook_rdf_namespaces().
+ */
+function rdf_test_rdf_namespaces() {
+  return array(
+    'dc'       => 'http://purl.org/conflicting/namespace',
+    'foaf'     => 'http://xmlns.com/foaf/0.1/',
+    'foaf1'    => 'http://xmlns.com/foaf/0.1/',
   );
 }
