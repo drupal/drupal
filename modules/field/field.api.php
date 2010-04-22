@@ -1674,6 +1674,69 @@ function hook_field_purge_field_instance($instance) {
 }
 
 /**
+ * Remove field storage information when a field record is purged.
+ *
+ * Called from field_purge_field() to allow the field storage module
+ * to remove field information when a field is being purged.
+ *
+ * @param $field
+ *   The field being purged.
+ */
+function hook_field_storage_purge_field($field) {
+  $table_name = _field_sql_storage_tablename($field);
+  $revision_name = _field_sql_storage_revision_tablename($field);
+  db_drop_table($table_name);
+  db_drop_table($revision_name);
+}
+
+/**
+ * Remove field storage information when a field instance is purged.
+ *
+ * Called from field_purge_instance() to allow the field storage module
+ * to remove field instance information when a field instance is being
+ * purged.
+ *
+ * @param $instance
+ *   The instance being purged.
+ */
+function hook_field_storage_purge_field_instance($instance) {
+  db_delete('my_module_field_instance_info')
+    ->condition('id', $instance['id'])
+    ->execute();
+}
+
+/**
+ * Remove field storage information when field data is purged.
+ *
+ * Called from field_purge_data() to allow the field storage
+ * module to delete field data information.
+ *
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The pseudo-entity whose field data to delete.
+ * @param $field
+ *   The (possibly deleted) field whose data is being purged.
+ * @param $instance
+ *   The deleted field instance whose data is being purged.
+ */
+function hook_field_storage_purge($entity_type, $entity, $field, $instance) {
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+  $etid = _field_sql_storage_etid($entity_type);
+
+  $table_name = _field_sql_storage_tablename($field);
+  $revision_name = _field_sql_storage_revision_tablename($field);
+  db_delete($table_name)
+    ->condition('etid', $etid)
+    ->condition('entity_id', $id)
+    ->execute();
+  db_delete($revision_name)
+    ->condition('etid', $etid)
+    ->condition('entity_id', $id)
+    ->execute();
+}
+
+/**
  * @} End of "ingroup field_crud"
  */
 
