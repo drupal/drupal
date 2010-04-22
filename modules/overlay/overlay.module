@@ -223,9 +223,9 @@ function overlay_page_alter(&$page) {
 }
 
 /**
- * Implements hook_block_info_alter().
+ * Implements hook_block_list_alter().
  */
-function overlay_block_info_alter(&$blocks) {
+function overlay_block_list_alter(&$blocks) {
   // If we are limiting rendering to a subset of page regions, hide all blocks
   // which appear in regions not on that list. Note that overlay_page_alter()
   // does a more comprehensive job of preventing unwanted regions from being
@@ -666,7 +666,7 @@ function _overlay_region_list($type) {
  *   and all regions of the page will be rendered.
  *
  * @see overlay_page_alter()
- * @see overlay_block_info_alter()
+ * @see overlay_block_list_alter()
  * @see overlay_set_regions_to_render()
  */
 function overlay_get_regions_to_render() {
@@ -688,7 +688,7 @@ function overlay_get_regions_to_render() {
  *   are not being limited.
  *
  * @see overlay_page_alter()
- * @see overlay_block_info_alter()
+ * @see overlay_block_list_alter()
  * @see overlay_get_regions_to_render()
  */
 function overlay_set_regions_to_render($regions = NULL) {
@@ -716,7 +716,7 @@ function overlay_set_regions_to_render($regions = NULL) {
  */
 function overlay_render_region($region) {
   // Indicate the region that we will be rendering, so that other regions will
-  // be hidden by overlay_page_alter() and overlay_block_info_alter().
+  // be hidden by overlay_page_alter() and overlay_block_list_alter().
   overlay_set_regions_to_render(array($region));
   // Do what is necessary to force drupal_render_page() to only display HTML
   // from the requested region. Specifically, declare that the main page

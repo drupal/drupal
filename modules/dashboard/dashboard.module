@@ -73,13 +73,13 @@ function dashboard_menu_alter(&$items) {
 }
 
 /**
- * Implements hook_block_info_alter().
+ * Implements hook_block_list_alter().
  *
  * Skip rendering dashboard blocks when not on the dashboard page itself. This
  * prevents expensive dashboard blocks from causing performance issues on pages
  * where they will never be displayed.
  */
-function dashboard_block_info_alter(&$blocks) {
+function dashboard_block_list_alter(&$blocks) {
   if (!dashboard_is_visible()) {
     foreach ($blocks as $key => $block) {
       if (in_array($block->region, dashboard_regions())) {

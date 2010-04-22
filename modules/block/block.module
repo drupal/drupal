@@ -317,79 +317,99 @@ function _block_rehash($theme = NULL) {
   global $theme_key;
 
   drupal_theme_initialize();
-
   if (!isset($theme)) {
     // If theme is not specifically set, rehash for the current theme.
     $theme = $theme_key;
   }
-
-  $old_blocks = array();
-  $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $theme));
-  foreach ($result as $old_block) {
-    $old_block = is_object($old_block) ? get_object_vars($old_block) : $old_block;
-    $old_blocks[$old_block['module']][$old_block['delta']] = $old_block;
-  }
-
-  $blocks = array();
-  // Valid region names for the theme.
   $regions = system_region_list($theme);
 
+  // These are the blocks the function will return.
+  $blocks = array();
+  // These are the blocks defined by code and modified by the database.
+  $current_blocks = array();
+  // These are {block}.bid values to be kept.
+  $bids = array();
+  $or = db_or();
+  // Gather the blocks defined by modules.
   foreach (module_implements('block_info') as $module) {
     $module_blocks = module_invoke($module, 'block_info');
-    if ($module_blocks) {
-      foreach ($module_blocks as $delta => $block) {
-        if (empty($old_blocks[$module][$delta])) {
-          // If it's a new block, add identifiers.
-          $block['module'] = $module;
-          $block['delta']  = $delta;
-          $block['theme']  = $theme;
-          if (!isset($block['pages'])) {
-            // {block}.pages is type 'text', so it cannot have a
-            // default value, and not null, so we need to provide
-            // value if the module did not.
-            $block['pages']  = '';
-          }
-          // Add defaults and save it into the database.
-          drupal_write_record('block', $block);
-          // Set region to none if not enabled.
-          $block['region'] = $block['status'] ? $block['region'] : BLOCK_REGION_NONE;
-          // Add to the list of blocks we return.
-          $blocks[] = $block;
-        }
-        else {
-          // If it's an existing block, database settings should overwrite
-          // the code. But aside from 'info' everything that's definable in
-          // code is stored in the database and we do not store 'info', so we
-          // do not need to update the database here.
-          // Add 'info' to this block.
-          $old_blocks[$module][$delta]['info'] = $block['info'];
-          // If the region name does not exist, disable the block and assign it to none.
-          if (!empty($old_blocks[$module][$delta]['region']) && !isset($regions[$old_blocks[$module][$delta]['region']])) {
-            drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $old_blocks[$module][$delta]['info'], '%region' => $old_blocks[$module][$delta]['region'])), 'warning');
-            $old_blocks[$module][$delta]['status'] = 0;
-            $old_blocks[$module][$delta]['region'] = BLOCK_REGION_NONE;
-          }
-          else {
-            $old_blocks[$module][$delta]['region'] = $old_blocks[$module][$delta]['status'] ? $old_blocks[$module][$delta]['region'] : BLOCK_REGION_NONE;
-          }
-          // Add this block to the list of blocks we return.
-          $blocks[] = $old_blocks[$module][$delta];
-          // Remove this block from the list of blocks to be deleted.
-          unset($old_blocks[$module][$delta]);
-        }
-      }
+    foreach ($module_blocks as $delta => $block) {
+      // Compile a condition to retrieve this block from the database.
+      $condition = db_and()
+        ->condition('module', $module)
+        ->condition('delta', $delta);
+      $or->condition($condition);
+      // Add identifiers.
+      $block['module'] = $module;
+      $block['delta']  = $delta;
+      $block['theme']  = $theme;
+      $current_blocks[$module][$delta] = $block;
     }
   }
-
-  // Remove blocks that are no longer defined by the code from the database.
-  foreach ($old_blocks as $module => $old_module_blocks) {
-    foreach ($old_module_blocks as $delta => $block) {
-      db_delete('block')
-        ->condition('module', $module)
-        ->condition('delta', $delta)
-        ->condition('theme', $theme)
-        ->execute();
+  // Save the blocks defined in code for alter context.
+  $code_blocks = $current_blocks;
+  $database_blocks = db_select('block', 'b')
+    ->fields('b')
+    ->condition($or)
+    ->condition('theme', $theme)
+    ->execute();
+  foreach ($database_blocks as $block) {
+    // Preserve info which is not in the database.
+    $block->info = $current_blocks[$block->module][$block->delta]['info'];
+    // Blocks stored in the database override the blocks defined in code.
+    $current_blocks[$block->module][$block->delta] = get_object_vars($block);
+    // Preserve this block.
+    $bids[$block->bid] = $block->bid;
+  }
+  drupal_alter('block_info', $current_blocks, $theme, $code_blocks);
+  foreach ($current_blocks as $module => $module_blocks) {
+    foreach ($module_blocks as $delta => $block) {
+      if (!isset($block['pages'])) {
+        // {block}.pages is type 'text', so it cannot have a
+        // default value, and not null, so we need to provide
+        // value if the module did not.
+        $block['pages']  = '';
+      }
+      // Make sure weight is set.
+      if (!isset($block['weight'])) {
+        $block['weight'] = 0;
+      }
+      if (!empty($block['region']) && $block['region'] != BLOCK_REGION_NONE && !isset($regions[$block['region']])) {
+        drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $block['info'], '%region' => $block['region'])), 'warning');
+        // Disabled modules are moved into the BLOCK_REGION_NONE later so no
+        // need to move the bock to another region.
+        $block['status'] = 0;
+      }
+      // Set region to none if not enabled and make sure status is set.
+      if (empty($block['status'])) {
+        $block['status'] = 0;
+        $block['region'] = BLOCK_REGION_NONE;
+      }
+      // There is no point saving disabled blocks. Still, we need to save them
+      // beecause the 'title' attribute is saved to the {blocks} table.
+      if (isset($block['bid'])) {
+        // If the block has a bid property, it comes from the database and
+        // the record needs to be updated, so set the primary key to 'bid'
+        // before passing to drupal_write_record().
+        $primary_keys = array('bid');
+        // Remove a block from the list of blocks to keep if it became disabled.
+        unset($bids[$block['bid']]);
+      }
+      else {
+        $primary_keys = array();
+      }
+      drupal_write_record('block', $block, $primary_keys);
+      // Add to the list of blocks we return.
+      $blocks[] = $block;
     }
+  }
+  if ($bids) {
+    // Remove disabled that are no longer defined by the code from the
+    // database.
+    db_delete('block')
+      ->condition('bid', $bids, 'NOT IN')
+      ->condition('theme', $theme)
+      ->execute();
   }
   return $blocks;
 }
@@ -624,7 +644,7 @@ function _block_load_blocks() {
 
   $block_info = $result->fetchAllAssoc('bid');
   // Allow modules to modify the block list.
-  drupal_alter('block_info', $block_info);
+  drupal_alter('block_list', $block_info);
 
   $blocks = array();
   foreach ($block_info as $block) {
@@ -634,12 +654,12 @@ function _block_load_blocks() {
 }
 
 /**
- * Implements hook_block_info_alter().
+ * Implements hook_block_list_alter().
  *
  * Check the page, user role and user specific visibilty settings.
  * Remove the block if the visibility conditions are not met.
  */
-function block_block_info_alter(&$blocks) {
+function block_block_list_alter(&$blocks) {
   global $user, $theme_key;
 
   // Build an array of roles for each block.

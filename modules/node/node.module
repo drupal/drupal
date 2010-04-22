@@ -2293,12 +2293,12 @@ function node_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_block_info_alter().
+ * Implements hook_block_list_alter().
  *
  * Check the content type specific visibilty settings.
  * Remove the block if the visibility conditions are not met.
  */
-function node_block_info_alter(&$blocks) {
+function node_block_list_alter(&$blocks) {
   global $theme_key;
 
   // Build an array of node types for each block.

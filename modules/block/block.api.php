@@ -70,6 +70,25 @@ function hook_block_info() {
 }
 
 /**
+ * Change block definition before saving to the database.
+ *
+ * @param $blocks
+ *   A multidimensional array of blocks keyed by the defining module and delta
+ *   the value is a block as seen in hook_block_info(). This hook is fired
+ *   after the blocks are collected from hook_block_info() and the database,
+ *   right before saving back to the database.
+ * @param $theme
+ *   The theme these blocks belong to.
+ * @param $code_blocks
+ *   The blocks as defined in hook_block_info before overwritten by the
+ *   database data.
+ */
+function hook_block_info_alter(&$blocks, $theme, $code_blocks) {
+  // Disable the login block.
+  $blocks['user']['login']['status'] = 0;
+}
+
+/**
  * Configuration form for the block.
  *
  * @param $delta
@@ -240,7 +259,7 @@ function hook_block_view_MODULE_DELTA_alter(&$data, $block) {
  * This example shows how to achieve language specific visibility setting for
  * blocks.
  */
-function hook_block_info_alter(&$blocks) {
+function hook_block_list_alter(&$blocks) {
   global $language, $theme_key;
 
   $result = db_query('SELECT module, delta, language FROM {my_table}');
