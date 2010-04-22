@@ -28,6 +28,7 @@
 #preview #img {
   position: relative;
   z-index: 3;
+  background-image: url(preview.png);
 }
 #preview #gradient-0 .gradient-line {
   height: 10px;
