@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.921 2010/04/13 15:23:03 dries Exp $
+// $Id: system.module,v 1.922 2010/04/22 07:36:50 webchick Exp $
 
 /**
  * @file
@@ -3221,7 +3221,7 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
   }
   $result = drupal_http_request($url);
   if ($result->code != 200) {
-    drupal_set_message(t('HTTP error @errorcode occured when trying to fetch @remote.', array('@errorcode' => $result->code, '@remote' => $url)), 'error');
+    drupal_set_message(t('HTTP error @errorcode occurred when trying to fetch @remote.', array('@errorcode' => $result->code, '@remote' => $url)), 'error');
     return FALSE;
   }
   $local = $managed ? file_save_data($result->data, $path, $replace) : file_unmanaged_save_data($result->data, $path, $replace);
