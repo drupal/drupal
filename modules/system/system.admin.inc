@@ -2414,11 +2414,11 @@ function theme_system_admin_by_module($variables) {
   $flip = array('left' => 'right', 'right' => 'left');
   $position = 'left';
 
-  // Iterate over all modules
+  // Iterate over all modules.
   foreach ($menu_items as $module => $block) {
     list($description, $items) = $block;
 
-    // Output links
+    // Output links.
     if (count($items)) {
       $block = array();
       $block['title'] = $module;
