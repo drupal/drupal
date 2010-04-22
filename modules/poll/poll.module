@@ -840,8 +840,7 @@ function theme_poll_choices($variables) {
  * are left in with a different name for that purpose.
  *
  * @see poll-results.tpl.php
- * @see poll-results-block.tpl.php
- * @see theme_poll_results()
+ * @see poll-results--block.tpl.php
  */
 function template_preprocess_poll_results(&$variables) {
   $variables['links'] = theme('links__poll_results', array('links' => $variables['raw_links']));
@@ -862,7 +861,7 @@ function template_preprocess_poll_results(&$variables) {
  * Inputs: $title, $votes, $total_votes, $voted, $block
  *
  * @see poll-bar.tpl.php
- * @see poll-bar-block.tpl.php
+ * @see poll-bar--block.tpl.php
  * @see theme_poll_bar()
  */
 function template_preprocess_poll_bar(&$variables) {
