@@ -1600,12 +1600,12 @@ function hook_field_delete_field($field) {
  * This hook is invoked after the instance record is saved and so it cannot
  * modify the instance itself.
  *
- * TODO: Not implemented.
- *
  * @param $instance
- *   The instance just updated.
+ *   The instance as it is post-update.
+ * @param $prior_$instance
+ *   The instance as it was pre-update.
  */
-function hook_field_update_instance($instance) {
+function hook_field_update_instance($instance, $prior_instance) {
 }
 
 /**

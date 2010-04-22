@@ -700,6 +700,8 @@ function field_update_instance($instance) {
 
   // Clear caches.
   field_cache_clear();
+
+  module_invoke_all('field_update_instance', $instance, $prior_instance);
 }
 
 /**
