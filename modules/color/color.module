@@ -115,10 +115,17 @@ function _color_page_alter(&$vars) {
  * Retrieve the color.module info for a particular theme.
  */
 function color_get_info($theme) {
+  static $theme_info = array();
+
+  if (isset($theme_info[$theme])) {
+    return $theme_info[$theme];
+  }
+
   $path = drupal_get_path('theme', $theme);
   $file = DRUPAL_ROOT . '/' . $path . '/color/color.inc';
   if ($path && file_exists($file)) {
     include $file;
+    $theme_info[$theme] = $info;
     return $info;
   }
 }
