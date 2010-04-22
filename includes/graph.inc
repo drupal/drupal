@@ -27,7 +27,7 @@
  *   On return you will also have:
  *   @code
  *     $graph[1]['paths'][2] = 1;
- *     $graph[1]['paths'][3] = 2;
+ *     $graph[1]['paths'][3] = 1;
  *     $graph[2]['reverse_paths'][1] = 1;
  *     $graph[3]['reverse_paths'][1] = 1;
  *   @endcode
