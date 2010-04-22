@@ -703,12 +703,16 @@ function block_block_list_alter(&$blocks) {
 
     // Match path if necessary.
     if ($block->pages) {
+      // Convert path to lowercase. This allows comparison of the same path
+      // with different case. Ex: /Page, /page, /PAGE.
+      $pages = drupal_strtolower($block->pages);
       if ($block->visibility < 2) {
-        $path = drupal_get_path_alias($_GET['q']);
-        // Compare with the internal and path alias (if any).
-        $page_match = drupal_match_path($path, $block->pages);
+        // Convert the Drupal path to lowercase
+        $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
+        // Compare the lowercase internal and lowercase path alias (if any).
+        $page_match = drupal_match_path($path, $pages);
         if ($path != $_GET['q']) {
-          $page_match = $page_match || drupal_match_path($_GET['q'], $block->pages);
+          $page_match = $page_match || drupal_match_path($_GET['q'], $pages);
         }
         // When $block->visibility has a value of 0, the block is displayed on
         // all pages except those listed in $block->pages. When set to 1, it

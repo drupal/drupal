@@ -8,6 +8,7 @@
 
 class BlockTestCase extends DrupalWebTestCase {
   protected $regions;
+  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -23,12 +24,12 @@ class BlockTestCase extends DrupalWebTestCase {
     // Create and log in an administrative user having access to the Full HTML
     // text format.
     $full_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
-    $admin_user = $this->drupalCreateUser(array(
+    $this->admin_user = $this->drupalCreateUser(array(
       'administer blocks',
       filter_permission_name($full_html_format),
       'access administration pages',
     ));
-    $this->drupalLogin($admin_user);
+    $this->drupalLogin($this->admin_user);
 
     // Define the existing regions
     $this->regions = array();
@@ -176,6 +177,9 @@ class BlockTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('user');
     $this->assertNoText($title, t('Block was not displayed according to block visibility rules.'));
+
+    $this->drupalGet('USER/' . $this->admin_user->uid);
+    $this->assertNoText($title, t('Block was not displayed according to block visibility rules regardless of path case.'));
 
     // Confirm that the block is not displayed to anonymous users.
     $this->drupalLogout();
