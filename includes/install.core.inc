@@ -1392,7 +1392,7 @@ function install_import_locales(&$install_state) {
  * @return
  *   The form API definition for the site configuration form.
  */
-function install_configure_form($form, &$form_state, &$install_state) {
+function install_configure_form($form, &$form_state, $install_state) {
   if (variable_get('site_name', FALSE) || variable_get('site_mail', FALSE)) {
     // Site already configured: This should never happen, means re-running the
     // installer, possibly by an attacker after the 'install_task' variable got
@@ -1583,7 +1583,7 @@ function install_check_requirements($install_state) {
 /**
  * Forms API array definition for site configuration.
  */
-function _install_configure_form($form, &$form_state, &$install_state) {
+function _install_configure_form($form, &$form_state, $install_state) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
 
   $form['site_information'] = array(
