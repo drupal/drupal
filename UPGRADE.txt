@@ -49,7 +49,10 @@ Let's begin!
 
 4.  If using a custom or contributed theme, switch to Garland.
 
-5.  Disable all custom and contributed modules.
+5.  Disable all custom and contributed modules. This includes any modules that
+    are not listed under 'Core - required' or 'Core - optional' on
+    http://www.example.com/?q=admin/build/modules (replace www.example.com with
+    your installation's domain name and path).
 
 6.  Remove all old files and directories from the Drupal installation directory.
 
