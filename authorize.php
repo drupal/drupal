@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.php,v 1.7 2010/03/06 06:31:23 dries Exp $
+// $Id: authorize.php,v 1.8 2010/04/22 10:16:24 webchick Exp $
 
 /**
  * @file
@@ -158,7 +158,8 @@ if (authorize_access_allowed()) {
     }
     elseif (!$batch = batch_get()) {
       // We have a batch to process, show the filetransfer form.
-      $output = drupal_render(drupal_get_form('authorize_filetransfer_form'));
+      $elements = drupal_get_form('authorize_filetransfer_form');
+      $output = drupal_render($elements);
     }
   }
   // We defer the display of messages until all operations are done.
