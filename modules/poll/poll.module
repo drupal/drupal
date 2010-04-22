@@ -478,17 +478,17 @@ function poll_load($nodes) {
     $poll->allowvotes = FALSE;
     if (user_access('vote on polls') && $poll->active) {
       if ($user->uid) {
-        $result = db_query('SELECT chid FROM {poll_vote} WHERE nid = :nid AND uid = :uid', array(':nid' => $node->nid, ':uid' => $user->uid))->fetchObject();
+        $poll->vote = db_query('SELECT chid FROM {poll_vote} WHERE nid = :nid AND uid = :uid', array(':nid' => $node->nid, ':uid' => $user->uid))->fetchField();
+        if (empty($poll->vote)) {
+          $poll->vote = -1;
+          $poll->allowvotes = TRUE;
+        }
+      }
+      elseif (!empty($_SESSION['poll_vote'][$node->nid])) {
+        $poll->vote = $_SESSION['poll_vote'][$node->nid];
       }
       else {
-        $result = db_query("SELECT chid FROM {poll_vote} WHERE nid = :nid AND hostname = :hostname", array(':nid' => $node->nid, ':hostname' => ip_address()))->fetchObject();
-      }
-      if ($result) {
-        $poll->vote = $result->chid;
-      }
-      else {
-        $poll->vote = -1;
-        $poll->allowvotes = TRUE;
+        $poll->allowvotes = !db_query("SELECT 1 FROM {poll_vote} WHERE nid = :nid AND hostname = :hostname", array(':nid' => $node->nid, ':hostname' => ip_address()))->fetchField();
       }
     }
     foreach ($poll as $key => $value) {
@@ -730,6 +730,16 @@ function poll_vote($form, &$form_state) {
     ->execute();
 
   cache_clear_all();
+
+  if (!$user->uid) {
+    // The vote is recorded so the user gets the result view instead of the
+    // voting form when viewing the poll. Saving a value in $_SESSION has the
+    // convenient side effect of preventing the user from hitting the page
+    // cache. When anonymous voting is allowed, the page cache should only
+    // contain the voting form, not the results.
+    $_SESSION['poll_vote'][$node->nid] = $choice;
+  }
+
   drupal_set_message(t('Your vote was recorded.'));
 
   // Return the user to whatever page they voted from.
@@ -910,6 +920,8 @@ function poll_cancel($form, &$form_state) {
     ->expression('chvotes', 'chvotes - 1')
     ->condition('chid', $node->vote)
     ->execute();
+
+  unset($_SESSION['poll_vote'][$node->nid]);
 
   drupal_set_message(t('Your vote was cancelled.'));
 }
