@@ -3,7 +3,12 @@
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
-
+  // $book_author is a user with permission to author a book.
+  protected $book_author;
+  // $web_user is a user with permission to view a book 
+  // and access the printer-friendly version.
+  protected $web_user;
+  
   public static function getInfo() {
     return array(
       'name' => 'Book functionality',
@@ -14,18 +19,18 @@ class BookTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('book');
-  }
-
-  /**
-   * Test book functionality through node interfaces.
-   */
-  function testBook() {
+    
     // Create users.
-    $book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
-    $web_user = $this->drupalCreateUser(array('access printer-friendly version'));
-
+    $this->book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
+    $this->web_user = $this->drupalCreateUser(array('access printer-friendly version'));
+  }
+  
+  /**
+   * Create a new book with a page hierarchy.
+   */
+  function createBook() {
     // Create new book.
-    $this->drupalLogin($book_author);
+    $this->drupalLogin($this->book_author);
 
     $this->book = $this->createBookNode('new');
     $book = $this->book;
@@ -47,7 +52,19 @@ class BookTestCase extends DrupalWebTestCase {
     $nodes[] = $this->createBookNode($book->nid); // Node 4.
 
     $this->drupalLogout();
-    $this->drupalLogin($web_user);
+    
+    return $nodes;
+  }
+
+  /**
+   * Test book functionality through node interfaces.
+   */
+  function testBook() {
+    // Create new book.
+    $nodes = $this->createBook();
+    $book = $this->book;
+    
+    $this->drupalLogin($this->web_user);
 
     // Check that book pages display along with the correct outlines and
     // previous/next links.
@@ -61,14 +78,14 @@ class BookTestCase extends DrupalWebTestCase {
     $this->drupalLogout();
 
     // Create a second book, and move an existing book page into it.
-    $this->drupalLogin($book_author);
+    $this->drupalLogin($this->book_author);
     $other_book = $this->createBookNode('new');
     $node = $this->createBookNode($book->nid);
     $edit = array('book[bid]' => $other_book->nid);
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
     $this->drupalLogout();
-    $this->drupalLogin($web_user);
+    $this->drupalLogin($this->web_user);
 
     // Check that the nodes in the second book are displayed correctly.
     // First we must set $this->book to the second book, so that the
@@ -193,6 +210,40 @@ class BookTestCase extends DrupalWebTestCase {
     $number++;
 
     return $node;
+  }
+  
+  /**
+   * Tests book export ("printer-friendly version") functionality.
+   */
+  function testBookExport() {
+    // Create a book.
+    $nodes = $this->createBook();
+    
+    // Login as web user and view printer-friendly version.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('node/' . $this->book->nid);
+    $this->clickLink(t('Printer-friendly version'));
+    
+    // Make sure each part of the book is there.
+    foreach ($nodes as $node) {
+      $this->assertText($node->title, t('Node title found in printer friendly version.'));
+      $this->assertRaw(check_markup($node->body[LANGUAGE_NONE][0]['value'], $node->body[LANGUAGE_NONE][0]['format']), t('Node body found in printer friendly version.'));
+    }
+    
+    // Make sure we can't export an unsupported format.
+    $this->drupalGet('book/export/foobar/' . $this->book->nid);
+    $this->assertResponse('404', t('Unsupported export format returned "not found".'));    
+    
+    // Make sure an anonymous user cannot view printer-friendly version.
+    $this->drupalLogout();
+    
+    // Load the book and verify there is no printer-friendly version link.
+    $this->drupalGet('node/' . $this->book->nid);
+    $this->assertNoLink(t('Printer-friendly version'), t('Anonymous user is not shown link to printer-friendly version.'));
+    
+    // Try getting the URL directly, and verify it fails.
+    $this->drupalGet('book/export/html/' . $this->book->nid);
+    $this->assertResponse('403', t('Anonymous user properly forbidden.'));
   }
 }
 
