@@ -217,7 +217,7 @@ function standard_install() {
       'type' => 'article',
       'name' => st('Article'),
       'base' => 'node_content',
-      'description' => st('Use <em>articles</em> for time-specific content like news, press releases or blog posts.'),
+      'description' => st('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
       'custom' => 1,
       'modified' => 1,
       'locked' => 0,
