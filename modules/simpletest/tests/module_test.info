@@ -1,8 +1,9 @@
-; $Id: module_test.info,v 1.1 2009/07/01 08:39:55 dries Exp $
+; $Id: module_test.info,v 1.2 2010/04/22 18:56:31 dries Exp $
 name = "Module test"
 description = "Support module for module system testing."
 package = Testing
 version = VERSION
 core = 7.x
 files[] = module_test.module
+files[] = module_test.file.inc
 hidden = TRUE

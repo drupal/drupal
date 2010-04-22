@@ -1,5 +1,5 @@
 <?php
-// $Id: module_test.module,v 1.5 2010/01/30 07:59:25 dries Exp $
+// $Id: module_test.module,v 1.6 2010/04/22 18:56:31 dries Exp $
 
 /**
  * Implements hook_permission().
@@ -36,4 +36,14 @@ function module_test_system_info_alter(&$info, $file, $type) {
       $info['dependencies'][] = 'php';
     }
   }
+}
+
+/**
+ * Implements hook_hook_info().
+ */
+function module_test_hook_info() {
+  $hooks['test_hook'] = array(
+    'group' => 'file',
+  );
+  return $hooks;
 }

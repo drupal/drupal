@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.188 2010/04/21 07:53:45 webchick Exp $
+// $Id: module.inc,v 1.189 2010/04/22 18:56:31 dries Exp $
 
 /**
  * @file
@@ -589,8 +589,8 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
     $implementations[$hook] = array();
     $list = module_list(FALSE, FALSE, $sort);
     foreach ($list as $module) {
-      $include_file = FALSE;
-      if (module_hook($module, $hook) || (isset($hook_info[$hook]['group']) && $include_file = module_load_include('inc', $module, $module . '.' . $hook_info[$hook]['group']) && module_hook($module, $hook))) {
+      $include_file = isset($hook_info[$hook]['group']) && module_load_include('inc', $module, $module . '.' . $hook_info[$hook]['group']);
+      if (module_hook($module, $hook)) {
         $implementations[$hook][$module] = $include_file ? $hook_info[$hook]['group'] : FALSE;
         // We added something to the cache, so write it when we are done.
         $implementations['#write_cache'] = TRUE;
