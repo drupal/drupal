@@ -1,4 +1,4 @@
-/* $Id: preview.css,v 1.3 2010/04/03 08:05:08 webchick Exp $ */
+/* $Id: preview.css,v 1.4 2010/04/22 05:18:21 webchick Exp $ */
 
 /* Positioning */
 #preview {
@@ -28,6 +28,7 @@
 #preview #img {
   position: relative;
   z-index: 3;
+  background-image: url(preview.png);
 }
 #preview #gradient-0 .gradient-line {
   height: 10px;
