@@ -1,5 +1,5 @@
 <?php
-// $Id: graph.inc,v 1.3 2009/07/28 19:06:15 dries Exp $
+// $Id: graph.inc,v 1.4 2010/04/22 19:21:12 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@
  *   On return you will also have:
  *   @code
  *     $graph[1]['paths'][2] = 1;
- *     $graph[1]['paths'][3] = 2;
+ *     $graph[1]['paths'][3] = 1;
  *     $graph[2]['reverse_paths'][1] = 1;
  *     $graph[3]['reverse_paths'][1] = 1;
  *   @endcode
