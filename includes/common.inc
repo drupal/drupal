@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1147 2010/04/17 12:35:35 dries Exp $
+// $Id: common.inc,v 1.1148 2010/04/22 08:18:56 webchick Exp $
 
 /**
  * @file
@@ -4910,6 +4910,13 @@ function drupal_render_page($page) {
  * using uasort(). Since this is expensive, when passing already sorted
  * elements to drupal_render(), for example from a database query, set
  * $elements['#sorted'] = TRUE to avoid sorting them a second time.
+ * 
+ * drupal_render() flags each element with a '#printed' status to indicate that
+ * the element has been rendered, which allows individual elements of a given
+ * array to be rendered independently and prevents them from being rendered
+ * more than once on subsequent calls to drupal_render() (e.g., as part of a
+ * larger array). If the same array or array element is passed more than once
+ * to drupal_render(), it simply returns a NULL value.
  *
  * @param $elements
  *   The structured array describing the data to be rendered.
