@@ -860,7 +860,7 @@ function menu_get_object($type = 'node', $position = 1, $path = NULL) {
  * Render a menu tree based on the current path.
  *
  * The tree is expanded based on the current path and dynamic paths are also
- * changed according to the defined to_arg functions (for example the 'My 
+ * changed according to the defined to_arg functions (for example the 'My
  * account' link is changed from user/% to a link with the current user's uid).
  *
  * @param $menu_name
@@ -2104,7 +2104,8 @@ function menu_set_active_trail($new_trail = NULL) {
         $found[] = $menu->menu_name;
       }
       // The $menu_names array is ordered, so take the first one that matches.
-      $name = current(array_intersect($menu_names, $found));
+      $found_menu_names = array_intersect($menu_names, $found);
+      $name = current($found_menu_names);
       if ($name !== FALSE) {
         $tree = menu_tree_page_data($name);
         list($key, $curr) = each($tree);
