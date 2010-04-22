@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.589 2010/04/13 15:23:02 dries Exp $
+// $Id: theme.inc,v 1.590 2010/04/22 22:33:29 dries Exp $
 
 /**
  * @file
@@ -1680,7 +1680,16 @@ function theme_table($variables) {
 
   // Add the 'empty' row message if available.
   if (!count($rows) && $empty) {
-    $rows[] = array(array('data' => $empty, 'colspan' => count($header), 'class' => array('empty', 'message')));
+    $header_count = 0;
+    foreach ($header as $header_cell) {
+      if (is_array($header_cell)) {
+        $header_count += isset($header_cell['colspan']) ? $header_cell['colspan'] : 1;
+      }
+      else {
+        $header_count++;
+      }
+    }
+    $rows[] = array(array('data' => $empty, 'colspan' => $header_count, 'class' => array('empty', 'message')));
   }
 
   // Format the table header:

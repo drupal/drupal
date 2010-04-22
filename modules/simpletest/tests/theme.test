@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.test,v 1.14 2010/03/21 04:05:24 webchick Exp $
+// $Id: theme.test,v 1.15 2010/04/22 22:33:29 dries Exp $
 
 /**
  * @file
@@ -110,15 +110,22 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
   }
 
   /**
-   * Tests that the table header is printed even if there are no rows. And that
-   * the empty text is displayed correctly.
+   * Tests that the table header is printed correctly even if there are no rows,
+   * and that the empty text is displayed correctly.
    */
   function testThemeTableWithEmptyMessage() {
-    $header = array(t('Header 1'), t('Header 2'));
+    $header = array(
+      t('Header 1'),
+      array(
+        'data' => t('Header 2'),
+        'colspan' => 2,
+      ),
+    );
     $this->content = theme('table', array('header' => $header, 'rows' => array(), 'empty' => t('No strings available.')));
-    $this->assertRaw('<tr class="odd"><td colspan="2" class="empty message">No strings available.</td>', t('Correct colspan was set on empty message.'));
+    $this->assertRaw('<tr class="odd"><td colspan="3" class="empty message">No strings available.</td>', t('Correct colspan was set on empty message.'));
     $this->assertRaw('<thead><tr><th>Header 1</th>', t('Table header was printed.'));
   }
+
 }
 
 /**
