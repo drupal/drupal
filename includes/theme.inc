@@ -572,12 +572,18 @@ function list_themes($refresh = FALSE) {
     $themes = array();
     // Extract from the database only when it is available.
     // Also check that the site is not in the middle of an install or update.
-    if (!defined('MAINTENANCE_MODE') && db_is_active()) {
-      foreach (system_list('theme') as $theme) {
-        if (file_exists($theme->filename)) {
-          $theme->info = unserialize($theme->info);
-          $themes[] = $theme;
+    if (!defined('MAINTENANCE_MODE')) {
+      try {
+        foreach (system_list('theme') as $theme) {
+          if (file_exists($theme->filename)) {
+            $theme->info = unserialize($theme->info);
+            $themes[] = $theme;
+          }
         }
+      }
+      catch (Exception $e) {
+        // If the database is not available, rebuild the theme data.
+        $themes = _system_rebuild_theme_data();
       }
     }
     else {
@@ -2094,19 +2100,27 @@ function _template_preprocess_default_variables() {
     'title_prefix' => array(),
     'title_suffix' => array(),
     'user' => $user,
-    'db_is_active' => !defined('MAINTENANCE_MODE') && db_is_active(),
+    'db_is_active' => !defined('MAINTENANCE_MODE'),
+    'is_admin' => FALSE,
+    'logged_in' => FALSE,
   );
 
-  // Variables that depend on a database connection.
-  if ($variables['db_is_active']) {
+  // user_access() does not exist when the database is not available because
+  // user.module has not been included.
+  if (function_exists('user_access')) {
     $variables['is_admin'] = user_access('access administration pages');
-    $variables['is_front'] = drupal_is_front_page();
     $variables['logged_in'] = ($user->uid > 0);
   }
-  else {
-    $variables['is_admin'] = FALSE;
+
+  // drupal_is_front_page() might throw an exception.
+  try {
+    $variables['is_front'] = drupal_is_front_page();
+  }
+  catch (Exception $e) {
+    // If the database is not yet available, set default values for these
+    // variables.
     $variables['is_front'] = FALSE;
-    $variables['logged_in'] = FALSE;
+    $variables['db_is_active'] = FALSE;
   }
 
   return $variables;

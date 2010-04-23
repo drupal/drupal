@@ -1687,7 +1687,7 @@ function drupal_is_denied($ip) {
   // won't be denied. However the user asked explicitly not to use the
   // database and also in this case it's quite likely that the user relies
   // on higher performance solutions like a firewall.
-  elseif (function_exists('db_is_active')) {
+  elseif (class_exists('Database', FALSE)) {
     $denied = (bool)db_query("SELECT 1 FROM {blocked_ips} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
   }
   return $denied;

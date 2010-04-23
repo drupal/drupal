@@ -608,7 +608,7 @@ abstract class DatabaseConnection extends PDO {
       // Update the query with the new placeholders.
       // preg_replace is necessary to ensure the replacement does not affect
       // placeholders that start with the same exact text. For example, if the
-      // query contains the placeholders :foo and :foobar, and :foo has an 
+      // query contains the placeholders :foo and :foobar, and :foo has an
       // array of values, using str_replace would affect both placeholders,
       // but using the following preg_replace would only affect :foo because
       // it is followed by a non-word character.
@@ -1367,8 +1367,7 @@ abstract class Database {
       // If necessary, a new connection is opened.
       self::$connections[$key][$target] = self::openConnection($key, $target);
     }
-
-    return isset(self::$connections[$key][$target]) ? self::$connections[$key][$target] : NULL;
+    return self::$connections[$key][$target];
   }
 
   /**
@@ -1501,11 +1500,11 @@ abstract class Database {
       // If the requested database does not exist then it is an unrecoverable
       // error.
       if (!isset(self::$databaseInfo[$key])) {
-        throw new Exception('DB does not exist');
+        throw new DatabaseConnectionNotDefinedException('The specified database connection is not defined: ' . $key);
       }
 
       if (!$driver = self::$databaseInfo[$key][$target]['driver']) {
-        throw new Exception('Drupal is not set up');
+        throw new DatabaseDriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
       }
 
       // We cannot rely on the registry yet, because the registry requires an
@@ -1623,6 +1622,17 @@ class FieldsOverlapException extends Exception {}
  * Exception thrown if an insert query doesn't specify insert or default fields.
  */
 class NoFieldsException extends Exception {}
+
+/**
+ * Exception thrown if an undefined database connection is requested.
+ */
+class DatabaseConnectionNotDefinedException extends Exception {}
+
+/**
+ * Exception thrown if no driver is specified for a database connection.
+ */
+class DatabaseDriverNotSpecifiedException extends Exception {}
+
 
 /**
  * A wrapper class for creating and managing database transactions.
@@ -2417,20 +2427,6 @@ function db_transaction($name = NULL, array $options = array()) {
  */
 function db_set_active($key = 'default') {
   return Database::setActiveConnection($key);
-}
-
-/**
- * Determines if there is an active connection.
- *
- * Note that this method will return FALSE if no connection has been established
- * yet, even if one could be.
- *
- * @return
- *   TRUE if there is at least one database connection established, FALSE
- *   otherwise.
- */
-function db_is_active() {
-  return Database::isActiveConnection();
 }
 
 /**
