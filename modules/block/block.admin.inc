@@ -313,7 +313,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     ':module' => $block->module,
     ':delta' => $block->delta,
   ))->fetchCol();
-  $role_options = db_query('SELECT rid, name FROM {role} ORDER BY name')->fetchAllKeyed();
+  $role_options = array_map('check_plain', user_roles());
   $form['visibility']['role'] = array(
     '#type' => 'fieldset',
     '#title' => t('Roles'),

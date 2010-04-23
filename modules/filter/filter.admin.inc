@@ -28,7 +28,7 @@ function filter_admin_overview($form) {
     }
     else {
       $form['formats'][$id]['name'] = array('#markup' => check_plain($format->name));
-      $roles = filter_get_roles_by_format($format);
+      $roles = array_map('check_plain', filter_get_roles_by_format($format));
       $roles_markup = $roles ? implode(', ', $roles) : t('No roles may use this format');
     }
     $form['formats'][$id]['roles'] = array('#markup' => $roles_markup);
@@ -127,7 +127,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
   $form['roles'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Roles'),
-    '#options' => user_roles(),
+    '#options' => array_map('check_plain', user_roles()),
     '#disabled' => $is_fallback,
   );
   if ($is_fallback) {

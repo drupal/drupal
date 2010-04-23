@@ -975,7 +975,7 @@ function user_account_form(&$form, &$form_state) {
     '#access' => $admin,
   );
 
-  $roles = user_roles(TRUE);
+  $roles = array_map('check_plain', user_roles(TRUE));
   // The disabled checkbox subelement for the 'authenticated user' role
   // must be generated separately and added to the checkboxes element,
   // because of a limitation in Form API not supporting a single disabled
