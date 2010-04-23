@@ -178,10 +178,10 @@ function openid_test_html_openid2() {
  */
 function openid_test_endpoint() {
   switch ($_REQUEST['openid_mode']) {
-    case 'associate';
+    case 'associate':
       _openid_test_endpoint_associate();
       break;
-    case 'checkid_setup';
+    case 'checkid_setup':
       _openid_test_endpoint_authenticate();
       break;
   }

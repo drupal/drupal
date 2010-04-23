@@ -888,7 +888,7 @@ function image_effect_definitions() {
           $effect['name'] = $name;
           $effect['data'] = isset($effect['data']) ? $effect['data'] : array();
           $effects[$name] = $effect;
-        };
+        }
       }
       uasort($effects, '_image_effect_definitions_sort');
       cache_set("image_effects:$langcode", $effects);

@@ -312,7 +312,7 @@ function system_themes_page() {
   );
   if (!empty($theme_groups['disabled'])) {
     $theme_group_titles['disabled'] = format_plural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes');
-  };
+  }
 
   uasort($theme_groups['enabled'], 'system_sort_themes');
   drupal_alter('system_themes_page', $theme_groups);
