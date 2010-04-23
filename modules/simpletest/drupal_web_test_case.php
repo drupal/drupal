@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.210 2010/04/11 18:33:44 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.211 2010/04/23 05:46:01 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -574,6 +574,9 @@ class DrupalUnitTestCase extends DrupalTestCase {
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $db_prefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
     $conf['file_public_path'] = $this->originalFileDirectory . '/' . $db_prefix;
+
+    // Set user agent to be consistent with web test case.
+    $_SERVER['HTTP_USER_AGENT'] = $db_prefix;
 
     // If locale is enabled then t() will try to access the database and
     // subsequently will fail as the database is not accessible.
