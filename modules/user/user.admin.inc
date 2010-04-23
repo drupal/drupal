@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.106 2010/04/13 15:23:03 dries Exp $
+// $Id: user.admin.inc,v 1.107 2010/04/23 05:39:43 webchick Exp $
 
 /**
  * @file
@@ -188,7 +188,7 @@ function user_admin_account() {
   $destination = drupal_get_destination();
 
   $status = array(t('blocked'), t('active'));
-  $roles = user_roles(TRUE);
+  $roles = array_map('check_plain', user_roles(TRUE));
   $accounts = array();
   foreach ($result as $account) {
     $users_roles = array();
@@ -705,7 +705,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
     $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => isset($status[$rid]) ? $status[$rid] : array());
-    $form['role_names'][$rid] = array('#markup' => $name, '#tree' => TRUE);
+    $form['role_names'][$rid] = array('#markup' => check_plain($name), '#tree' => TRUE);
   }
 
   $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));

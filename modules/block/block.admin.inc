@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.76 2010/03/28 11:16:29 dries Exp $
+// $Id: block.admin.inc,v 1.77 2010/04/23 05:39:43 webchick Exp $
 
 /**
  * @file
@@ -313,7 +313,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     ':module' => $block->module,
     ':delta' => $block->delta,
   ))->fetchCol();
-  $role_options = db_query('SELECT rid, name FROM {role} ORDER BY name')->fetchAllKeyed();
+  $role_options = array_map('check_plain', user_roles());
   $form['visibility']['role'] = array(
     '#type' => 'fieldset',
     '#title' => t('Roles'),
