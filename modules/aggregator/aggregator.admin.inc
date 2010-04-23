@@ -488,7 +488,9 @@ function aggregator_admin_form($form, $form_state) {
 }
 
 function aggregator_admin_form_submit($form, &$form_state) {
-  $form_state['values']['aggregator_processors'] = array_filter($form_state['values']['aggregator_processors']);
+  if (isset($form_state['values']['aggregator_processors'])) {
+    $form_state['values']['aggregator_processors'] = array_filter($form_state['values']['aggregator_processors']);
+  }
   system_settings_form_submit($form, $form_state);
 }
 
