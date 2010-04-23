@@ -575,6 +575,9 @@ class DrupalUnitTestCase extends DrupalTestCase {
     $db_prefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
     $conf['file_public_path'] = $this->originalFileDirectory . '/' . $db_prefix;
 
+    // Set user agent to be consistent with web test case.
+    $_SERVER['HTTP_USER_AGENT'] = $db_prefix;
+
     // If locale is enabled then t() will try to access the database and
     // subsequently will fail as the database is not accessible.
     $module_list = module_list();
