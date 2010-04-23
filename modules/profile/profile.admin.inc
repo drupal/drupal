@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.40 2010/04/13 15:23:03 dries Exp $
+// $Id: profile.admin.inc,v 1.41 2010/04/23 04:32:16 webchick Exp $
 
 /**
  * @file
@@ -123,7 +123,7 @@ function theme_profile_admin_overview($variables) {
         // class names won't contain invalid characters.
         $categories[$category] = $category_number;
         $category_field['#attributes']['class'] = array('profile-category', 'profile-category-' . $category_number);
-        $rows[] = array(array('data' => $category, 'colspan' => 7, 'class' => array('category')));
+        $rows[] = array(array('data' => check_plain($category), 'colspan' => 7, 'class' => array('category')));
         $rows[] = array('data' => array(array('data' => '<em>' . t('No fields in this category. If this category remains empty when saved, it will be removed.') . '</em>', 'colspan' => 7)), 'class' => array('category-' . $category_number . '-message', 'category-message', 'category-populated'));
 
         // Make it draggable only if there is more than one field
