@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.38 2010/04/22 21:43:59 webchick Exp $
+// $Id: image.module,v 1.39 2010/04/23 05:48:13 webchick Exp $
 
 /**
  * @file
@@ -888,7 +888,7 @@ function image_effect_definitions() {
           $effect['name'] = $name;
           $effect['data'] = isset($effect['data']) ? $effect['data'] : array();
           $effects[$name] = $effect;
-        };
+        }
       }
       uasort($effects, '_image_effect_definitions_sort');
       cache_set("image_effects:$langcode", $effects);

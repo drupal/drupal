@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.37 2010/02/11 17:44:47 webchick Exp $
+// $Id: number.module,v 1.38 2010/04/23 05:48:13 webchick Exp $
 
 /**
  * @file
@@ -352,7 +352,7 @@ function number_field_widget_validate($element, &$form_state) {
         $message = t('Only numbers and the decimal separator (@separator) allowed in %field.', array('%field' => t($instance['label']), '@separator' => $field['settings']['decimal_separator']));
         break;
 
-      case 'integer';
+      case 'integer':
         $regexp = '@[^-0-9]@';
         $message = t('Only numbers are allowed in %field.', array('%field' => t($instance['label'])));
         break;

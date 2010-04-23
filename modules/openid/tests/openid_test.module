@@ -1,5 +1,5 @@
 <?php
-// $Id: openid_test.module,v 1.13 2010/03/23 21:14:49 dries Exp $
+// $Id: openid_test.module,v 1.14 2010/04/23 05:48:13 webchick Exp $
 
 /**
  * @file
@@ -178,10 +178,10 @@ function openid_test_html_openid2() {
  */
 function openid_test_endpoint() {
   switch ($_REQUEST['openid_mode']) {
-    case 'associate';
+    case 'associate':
       _openid_test_endpoint_associate();
       break;
-    case 'checkid_setup';
+    case 'checkid_setup':
       _openid_test_endpoint_authenticate();
       break;
   }

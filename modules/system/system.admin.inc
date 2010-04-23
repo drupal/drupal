@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.268 2010/04/22 09:54:26 webchick Exp $
+// $Id: system.admin.inc,v 1.269 2010/04/23 05:48:13 webchick Exp $
 
 /**
  * @file
@@ -312,7 +312,7 @@ function system_themes_page() {
   );
   if (!empty($theme_groups['disabled'])) {
     $theme_group_titles['disabled'] = format_plural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes');
-  };
+  }
 
   uasort($theme_groups['enabled'], 'system_sort_themes');
   drupal_alter('system_themes_page', $theme_groups);
