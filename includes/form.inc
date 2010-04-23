@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.452 2010/04/13 15:23:02 dries Exp $
+// $Id: form.inc,v 1.453 2010/04/23 07:50:28 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -459,7 +459,20 @@ function form_state_keys_no_cache() {
  *   Any additional arguments are passed on to the functions called by
  *   drupal_form_submit(), including the unique form constructor function.
  *   For example, the node_edit form requires that a node object be passed
- *   in here when it is called.
+ *   in here when it is called. Arguments that need to be passed by reference
+ *   should not be included here, but rather placed directly in the $form_state
+ *   build info array so that the reference can be preserved. For example, a
+ *   form builder function with the following signature:
+ *   @code
+ *   function mymodule_form($form, &$form_state, &$object) {
+ *   }
+ *   @endcode
+ *   would be called via drupal_form_submit() as follows:
+ *   @code
+ *   $form_state['values'] = $my_form_values;
+ *   $form_state['build_info']['args'] = array(&$object);
+ *   drupal_form_submit('mymodule_form', $form_state);
+ *   @endcode
  * For example:
  * @code
  * // register a new user
