@@ -50,8 +50,8 @@ function image_help($path, $arg) {
       $output .= '<ul><li>' . t('Based on where it will be used: eg. <em>profile-picture</em>') . '</li>';
       $output .= '<li>' . t('Describing its appearance: eg. <em>square-85x85</em>') . '</li></ul>';
       $output .=  t('After you create an image style, you can add effects: crop, scale, resize, rotate, desaturate, and rotate (other contributed modules provide additional effects). For example, by combining effects as crop, scale, and desaturate, you can create square, grayscale thumbnails.') . '<dd>';
-      $output .= '<dt>' . t ('Attaching images to content as fields') . '</dt>';
-      $output .= '<dd>' . t ("Image module also allows you to attach images to content as fields. To add an image field to a <a href='@content-type'>content type</a>, go to the content type's <em>manage fields</em> page, and add a new field of type <em>Image</em>. Attaching images to content this way allows image styles to be applied and maintained, and also allows you more flexibility when theming.", array('@content-type' => url('admin/structure/types'))) . '</dd>';
+      $output .= '<dt>' . t('Attaching images to content as fields') . '</dt>';
+      $output .= '<dd>' . t("Image module also allows you to attach images to content as fields. To add an image field to a <a href='@content-type'>content type</a>, go to the content type's <em>manage fields</em> page, and add a new field of type <em>Image</em>. Attaching images to content this way allows image styles to be applied and maintained, and also allows you more flexibility when theming.", array('@content-type' => url('admin/structure/types'))) . '</dd>';
       $output .= '</dl>';
       return $output;
     case 'admin/config/media/image-styles':
