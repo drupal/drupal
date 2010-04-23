@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Unit tests for the Drupal Form API.
+ * Tests for core image handling API.
  */
 
 /**
