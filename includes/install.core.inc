@@ -406,8 +406,14 @@ function install_run_task($task, &$install_state) {
       // For non-interactive forms, submit the form programmatically with the
       // values taken from the installation state. Throw an exception if any
       // errors were encountered.
-      $form_state = array('values' => !empty($install_state['forms'][$function]) ? $install_state['forms'][$function] : array());
-      drupal_form_submit($function, $form_state, $install_state);
+      $form_state = array(
+        'values' => !empty($install_state['forms'][$function]) ? $install_state['forms'][$function] : array(),
+        // We need to pass $install_state by reference in order for forms to
+        // modify it, since the form API will use it in call_user_func_array(),
+        // which requires that referenced variables be passed explicitly.
+        'build_info' => array('args' => array(&$install_state)),
+      );
+      drupal_form_submit($function, $form_state);
       $errors = form_get_errors();
       if (!empty($errors)) {
         throw new Exception(implode("\n", $errors));
@@ -1392,7 +1398,7 @@ function install_import_locales(&$install_state) {
  * @return
  *   The form API definition for the site configuration form.
  */
-function install_configure_form($form, &$form_state, $install_state) {
+function install_configure_form($form, &$form_state, &$install_state) {
   if (variable_get('site_name', FALSE) || variable_get('site_mail', FALSE)) {
     // Site already configured: This should never happen, means re-running the
     // installer, possibly by an attacker after the 'install_task' variable got
@@ -1583,7 +1589,7 @@ function install_check_requirements($install_state) {
 /**
  * Forms API array definition for site configuration.
  */
-function _install_configure_form($form, &$form_state, $install_state) {
+function _install_configure_form($form, &$form_state, &$install_state) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
 
   $form['site_information'] = array(
