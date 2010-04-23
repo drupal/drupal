@@ -360,7 +360,7 @@ function profile_user_view($account) {
 }
 
 function _profile_form_explanation($field) {
-  $output = $field->explanation;
+  $output = filter_xss_admin($field->explanation);
 
   if ($field->type == 'list') {
     $output .= ' ' . t('Put each item on a separate line or separate them by commas. No HTML allowed.');
