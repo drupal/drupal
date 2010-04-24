@@ -37,7 +37,7 @@ Drupal.behaviors.overlayChild = {
         // We need to store the parent variable locally because it will
         // disappear as soon as we close the iframe.
         var p = parent;
-        p.Drupal.overlay.close(settings.args, settings.statusMessages);
+        p.Drupal.overlay.close();
         if (typeof settings.redirect == 'string') {
           p.Drupal.overlay.redirect(settings.redirect);
         }

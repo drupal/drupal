@@ -39,9 +39,6 @@ Drupal.overlay = Drupal.overlay || {
   isClosing: false,
   isLoading: false,
 
-  onOverlayCloseArgs: null,
-  onOverlayCloseStatusMessages: null,
-
   resizeTimeoutID: null,
   lastHeight: 0,
 
@@ -220,10 +217,8 @@ Drupal.overlay.create = function () {
     self.lastHeight = 0;
 
     if ($.isFunction(self.options.onOverlayClose)) {
-      self.options.onOverlayClose(self.onOverlayCloseArgs, self.onOverlayCloseStatusMessages);
+      self.options.onOverlayClose();
     }
-    self.onOverlayCloseArgs = null;
-    self.onOverlayCloseStatusMessages = null;
   };
 
   // Default jQuery UI Dialog options.
@@ -358,13 +353,8 @@ Drupal.overlay.load = function (url) {
 /**
  * Close the overlay and remove markup related to it from the document.
  */
-Drupal.overlay.close = function (args, statusMessages) {
-  var self = this;
-
-  self.onOverlayCloseArgs = args;
-  self.onOverlayCloseStatusMessages = statusMessages;
-
-  return self.$container.dialog('close');
+Drupal.overlay.close = function () {
+  return this.$container.dialog('close');
 };
 
 /**
