@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.154 2010/04/22 22:36:01 webchick Exp $
+// $Id: system.api.php,v 1.155 2010/04/24 07:17:29 dries Exp $
 
 /**
  * @file
@@ -3283,8 +3283,8 @@ function hook_token_info_alter(&$data) {
  * @see _country_get_predefined_list()
  */
 function hook_countries_alter(&$countries) {
-  // Quebec has seceded from Canada. Add to country list.
-  $countries['QC'] = 'Quebec';
+  // Elbonia is now independent, so add it to the country list.
+  $countries['EB'] = 'Elbonia';
 }
 
 /**
