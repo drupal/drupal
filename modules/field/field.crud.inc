@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.56 2010/04/22 19:06:34 dries Exp $
+// $Id: field.crud.inc,v 1.57 2010/04/24 07:19:09 dries Exp $
 
 /**
  * @file
@@ -1040,7 +1040,7 @@ function field_purge_batch($batch_size) {
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
- *   The pseudo-entity whose field data to delete.
+ *   The pseudo-entity whose field data is being purged.
  * @param $field
  *   The (possibly deleted) field whose data is being purged.
  * @param $instance
