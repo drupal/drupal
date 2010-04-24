@@ -238,7 +238,7 @@ function drupal_get_normal_path($path, $path_language = NULL) {
  * Return a component of the current Drupal path.
  *
  * When viewing a page at the path "admin/structure/types", for example, arg(0)
- * returns "admin", arg(1) returns "content", and arg(2) returns "types".
+ * returns "admin", arg(1) returns "structure", and arg(2) returns "types".
  *
  * Avoid use of this function where possible, as resulting code is hard to read.
  * In menu callback functions, attempt to use named arguments. See the explanation
