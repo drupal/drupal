@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.591 2010/04/23 05:21:19 webchick Exp $
+// $Id: theme.inc,v 1.592 2010/04/24 14:42:35 dries Exp $
 
 /**
  * @file
@@ -2105,9 +2105,8 @@ function _template_preprocess_default_variables() {
     'logged_in' => FALSE,
   );
 
-  // user_access() does not exist when the database is not available because
-  // user.module has not been included.
-  if (function_exists('user_access')) {
+  // The user object has no uid property when the database does not exist.
+  if (isset($user->uid)) {
     $variables['is_admin'] = user_access('access administration pages');
     $variables['logged_in'] = ($user->uid > 0);
   }
