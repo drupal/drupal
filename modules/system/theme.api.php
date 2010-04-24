@@ -93,3 +93,30 @@ function hook_form_system_theme_settings_alter(&$form, &$form_state) {
     '#description'   => t('Show a trail of links from the homepage to the current page.'),
   );
 }
+
+/**
+ * Respond to themes being enabled.
+ *
+ * @param array $theme_list
+ *   Array containing the names of the themes being enabled.
+ *
+ * @see theme_enable()
+ */
+function hook_themes_enabled($theme_list) {
+  foreach ($theme_list as $theme) {
+    block_theme_initialize($theme);
+  }
+}
+
+/**
+ * Respond to themes being disabled.
+ *
+ * @param array $theme_list
+ *   Array containing the names of the themes being disabled.
+ *
+ * @see theme_disable()
+ */
+function hook_themes_disabled($theme_list) {
+ // Clear all update module caches.
+  _update_cache_clear();
+}
