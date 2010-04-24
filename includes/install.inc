@@ -847,6 +847,7 @@ function install_goto($path) {
  * system is possibly not yet available.
  *
  * @see t()
+ * @ingroup sanitization
  */
 function st($string, $args = array()) {
   static $locale_strings = NULL;

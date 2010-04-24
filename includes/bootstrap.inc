@@ -1380,6 +1380,8 @@ function drupal_unpack($obj, $field = 'data') {
  *       belongs to.
  * @return
  *   The translated string.
+ *
+ * @ingroup sanitization
  */
 function t($string, array $args = array(), array $options = array()) {
   global $language;
@@ -1448,6 +1450,7 @@ function t($string, array $args = array(), array $options = array()) {
  *   valid UTF-8.
  *
  * @see drupal_validate_utf8()
+ * @ingroup sanitization
  */
 function check_plain($text) {
   // We do not want to use drupal_static() since PHP version will never change

@@ -1181,6 +1181,9 @@ function flood_is_allowed($name, $threshold, $window = 3600, $identifier = NULL)
  * @defgroup sanitization Sanitization functions
  * @{
  * Functions to sanitize values.
+ *
+ * See http://drupal.org/writing-secure-code for information
+ * on writing secure code.
  */
 
 /**
