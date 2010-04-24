@@ -935,7 +935,8 @@ function search_box($form, &$form_state, $form_id) {
     '#default_value' => '',
     '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
   );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
   $form['#submit'][] = 'search_box_form_submit';
 
   return $form;

@@ -109,7 +109,8 @@ function openid_redirect_form($form, &$form_state, $url, $message) {
       '#value' => $value,
     );
   }
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#prefix' => '<noscript>',
     '#suffix' => '</noscript>',

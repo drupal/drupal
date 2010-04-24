@@ -73,7 +73,7 @@ function openid_user_add() {
     '#type' => 'textfield',
     '#title' => t('OpenID'),
   );
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add an OpenID'));
   return $form;
 }

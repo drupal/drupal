@@ -141,14 +141,15 @@ function image_style_form($form, &$form_state, $style) {
   );
 
   // Show the Override or Submit button for this style.
-  $form['override'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['override'] = array(
     '#type' => 'submit',
     '#value' => t('Override defaults'),
     '#validate' => array(),
     '#submit' => array('image_style_form_override_submit'),
     '#access' => !$editable,
   );
-  $form['submit'] = array(
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update style'),
     '#access' => $editable,
@@ -393,7 +394,7 @@ function image_effect_form($form, &$form_state, $style, $effect) {
     '#value' => isset($_GET['weight']) ? intval($_GET['weight']) : (isset($effect['weight']) ? $effect['weight'] : count($style['effects'])),
   );
 
-  $form['actions'] = array('#tree' => FALSE, '#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#tree' => FALSE, '#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => isset($effect['ieid']) ? t('Update effect') : t('Add effect'),

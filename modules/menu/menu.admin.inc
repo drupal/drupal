@@ -72,7 +72,7 @@ function menu_overview_form($form, &$form_state, $menu) {
   $form['#menu'] =  $menu;
 
   if (element_children($form)) {
-    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+    $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save configuration'),
@@ -339,7 +339,8 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
     '#default_value' => $item['weight'],
     '#description' => t('Optional. In the menu, the heavier links will sink and the lighter links will be positioned nearer the top.'),
   );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
 
   return $form;
 }
@@ -467,12 +468,13 @@ function menu_edit_menu($form, &$form_state, $type, $menu = array()) {
     '#title' => t('Description'),
     '#default_value' => $menu['description'],
   );
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
   // Only custom menus may be deleted.
-  $form['delete'] = array(
+  $form['actions']['delete'] = array(
     '#type' => 'submit',
     '#value' => t('Delete'),
     '#access' => $type == 'edit' && !isset($system_menus[$menu['menu_name']]),

@@ -1906,11 +1906,7 @@ function comment_form($form, &$form_state, $comment) {
   // already previewing the submission. However, if there are form errors,
   // we hide the save button no matter what, so that optional form elements
   // (e.g., captchas) can be updated.
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-    '#weight' => 100,
-  );
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),

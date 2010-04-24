@@ -28,7 +28,8 @@ function taxonomy_overview_vocabularies($form) {
   // Only make this form include a submit button and weight if more than one
   // vocabulary exists.
   if (count($vocabularies) > 1) {
-    $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
   }
   elseif (isset($vocabulary)) {
     unset($form[$vocabulary->vid]['weight']);
@@ -84,7 +85,7 @@ function theme_taxonomy_overview_vocabularies($variables) {
   }
 
   $header = array(t('Vocabulary name'));
-  if (isset($form['submit'])) {
+  if (isset($form['actions'])) {
     $header[] = t('Weight');
     drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
   }
@@ -158,9 +159,10 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
     '#value' => '0',
   );
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
   if (isset($edit['vid'])) {
-    $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
+    $form['actions']['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['vid'] = array('#type' => 'value', '#value' => $edit['vid']);
     $form['module'] = array('#type' => 'value', '#value' => $edit['module']);
   }
@@ -385,11 +387,12 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
   $form['#empty_text'] = t('No terms available. <a href="@link">Add term</a>.', array('@link' => url('admin/structure/taxonomy/' . $vocabulary->machine_name . '/add')));
 
   if ($vocabulary->hierarchy < 2 && count($tree) > 1) {
-    $form['submit'] = array(
+    $form['actions'] = array('#type' => 'actions', '#tree' => FALSE);
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save')
     );
-    $form['reset_alphabetical'] = array(
+    $form['actions']['reset_alphabetical'] = array(
       '#type' => 'submit',
       '#value' => t('Reset to alphabetical')
     );
@@ -728,11 +731,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#value' => $edit['tid'],
   );
 
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-    '#weight' => 100,
-  );
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),

@@ -48,7 +48,8 @@ function user_pass() {
       '#suffix' => '</p>',
     );
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('E-mail new password'));
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('E-mail new password'));
 
   return $form;
 }
@@ -140,7 +141,8 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
         else {
           $form['message'] = array('#markup' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
           $form['help'] = array('#markup' => '<p>' . t('This login can be used only once.') . '</p>');
-          $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
+          $form['actions'] = array('#type' => 'actions');
+          $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
           $form['#action'] = url("user/reset/$uid/$timestamp/$hashed_pass/login");
           return $form;
         }
@@ -251,16 +253,15 @@ function user_profile_form($form, &$form_state, $account, $category = 'account')
   // Attach field widgets.
   field_attach_form('user', $account, $form, $form_state);
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
-    '#weight' => 30,
   );
   if ($category == 'account') {
-    $form['cancel'] = array(
+    $form['actions']['cancel'] = array(
       '#type' => 'submit',
       '#value' => t('Cancel account'),
-      '#weight' => 31,
       '#submit' => array('user_edit_cancel_submit'),
       '#access' => $account->uid > 1 && (($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users')),
     );

@@ -1237,7 +1237,7 @@ function form_builder($form_id, $element, &$form_state) {
   $element['#processed'] = FALSE;
 
   // Use element defaults.
-  if (isset($element['#type']) && ($info = element_info($element['#type']))) {
+  if (isset($element['#type']) && empty($element['#defaults_loaded']) && ($info = element_info($element['#type']))) {
     // Overlay $info onto $element, retaining preexisting keys in $element.
     $element += $info;
     $element['#defaults_loaded'] = TRUE;
@@ -1314,6 +1314,12 @@ function form_builder($form_id, $element, &$form_state) {
     $array_parents = isset($element['#array_parents']) ? $element['#array_parents'] : array();
     $array_parents[] = $key;
     $element[$key]['#array_parents'] = $array_parents;
+
+    // Prior to handling #weight, default element properties need to be applied.
+    if (isset($element[$key]['#type']) && empty($element[$key]['#defaults_loaded']) && ($info = element_info($element[$key]['#type']))) {
+      $element[$key] += $info;
+      $element[$key]['#defaults_loaded'] = TRUE;
+    }
 
     // Assign a decimal placeholder weight to preserve original array order.
     if (!isset($element[$key]['#weight'])) {
@@ -2425,6 +2431,23 @@ function form_process_checkboxes($element) {
       }
     }
   }
+  return $element;
+}
+
+/**
+ * Processes a form actions container element.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   form actions container.
+ * @param $form_state
+ *   The $form_state array for the form this element belongs to.
+ *
+ * @return
+ *   The processed element.
+ */
+function form_process_actions($element, &$form_state) {
+  $element['#attributes']['class'][] = 'form-actions';
   return $element;
 }
 

@@ -73,9 +73,9 @@ function user_filter_form() {
   }
 
   $form['filters']['actions'] = array(
-    '#type' => 'container',
+    '#type' => 'actions',
     '#id' => 'user-admin-buttons',
-    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+    '#attributes' => array('class' => array('container-inline')),
   );
   $form['filters']['actions']['submit'] = array(
     '#type' => 'submit',
@@ -708,7 +708,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
     $form['role_names'][$rid] = array('#markup' => check_plain($name), '#tree' => TRUE);
   }
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 
   $form['#attached']['js'][] = drupal_get_path('module', 'user') . '/user.permissions.js';
@@ -844,7 +844,8 @@ function user_admin_roles($form, $form_state) {
     '#validate' => array('user_admin_role_validate'),
     '#submit' => array('user_admin_role_submit'),
   );
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save order'),
     '#submit' => array('user_admin_roles_order_submit'),
@@ -934,7 +935,7 @@ function user_admin_role($form, $form_state, $role) {
     '#type' => 'value',
     '#value' => $role->weight,
   );
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save role'),

@@ -247,11 +247,7 @@ function node_form($form, &$form_state, $node) {
   );
 
   // Add the buttons.
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-    '#weight' => 100,
-  );
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#access' => variable_get('node_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview'])),

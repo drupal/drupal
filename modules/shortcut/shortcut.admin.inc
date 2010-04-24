@@ -85,7 +85,7 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
       'js' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.js'),
     );
 
-    $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+    $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Change set'),
@@ -193,7 +193,7 @@ function shortcut_set_add_form($form, &$form_state) {
     '#description' => t('The new set is created by copying items from your default shortcut set.'),
   );
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Create new set'),
@@ -269,7 +269,7 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
     'js' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.js'),
   );
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save changes'),
@@ -453,7 +453,7 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
 
   $form['#validate'][] = 'shortcut_link_edit_validate';
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -562,11 +562,7 @@ function shortcut_set_edit_form($form, &$form_state, $shortcut_set) {
     '#required' => TRUE,
     '#weight' => -5,
   );
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-    '#weight' => 100,
-  );
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),

@@ -312,8 +312,8 @@ function dblog_filter_form($form) {
   }
 
   $form['filters']['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+    '#type' => 'actions',
+    '#attributes' => array('class' => array('container-inline')),
   );
   $form['filters']['actions']['submit'] = array(
     '#type' => 'submit',

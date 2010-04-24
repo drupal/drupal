@@ -109,13 +109,14 @@ function aggregator_form_feed($form, &$form_state, stdClass $feed = NULL) {
       '#description' => t('New feed items are automatically filed in the checked categories.'),
     );
   }
-  $form['submit'] = array(
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
-
   if (!empty($feed->fid)) {
-    $form['delete'] = array(
+    $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
     );
@@ -270,7 +271,8 @@ function aggregator_form_opml($form, &$form_state) {
       '#description' => t('New feed items are automatically filed in the checked categories.'),
     );
   }
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Import')
   );
@@ -478,7 +480,7 @@ function aggregator_admin_form($form, $form_state) {
   // Implementing modules will expect an array at $form['modules'].
   $form['modules'] = array();
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
@@ -512,10 +514,10 @@ function aggregator_form_category($form, &$form_state, $edit = array('title' => 
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
   );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
-
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
   if ($edit['cid']) {
-    $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
+    $form['actions']['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['cid'] = array('#type' => 'hidden', '#value' => $edit['cid']);
   }
 

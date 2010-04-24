@@ -104,8 +104,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
 
   $form['actions'] = array(
     '#tree' => FALSE,
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
+    '#type' => 'actions',
   );
   $form['actions']['submit'] = array(
     '#type' => 'submit',
@@ -351,7 +350,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#default_value' => isset($block->custom) ? $block->custom : 0,
   );
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save block'),

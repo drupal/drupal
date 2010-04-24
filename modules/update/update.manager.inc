@@ -230,10 +230,10 @@ function update_manager_update_form($form, $form_state = array(), $context) {
   // If either table has been printed yet, we need a submit button and to
   // validate the checkboxes.
   if (!empty($projects['enabled']) || !empty($projects['disabled'])) {
-    $form['submit'] = array(
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Download these updates'),
-      '#weight' => 10,
     );
     $form['#validate'][] = 'update_manager_update_form_validate';
   }
@@ -245,7 +245,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
       '#type' => 'markup',
       '#markup' => theme('table', array('header' => $headers, 'rows' => $projects['manual'])),
       '#prefix' => $prefix,
-      '#weight' => 20,
+      '#weight' => 120,
     );
   }
 
@@ -365,10 +365,10 @@ function update_manager_update_ready_form($form, &$form_state) {
     '#default_value' => TRUE,
   );
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Continue'),
-    '#weight' => 100,
   );
 
   return $form;
@@ -491,7 +491,8 @@ function update_manager_install_form($form, &$form_state, $context) {
     '#description' => t('For example: %filename from your local computer', array('%filename' => 'name.tar.gz')),
   );
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Install'),
   );

@@ -40,7 +40,8 @@ function profile_admin_overview($form) {
 
   // Display the submit button only when there's more than one field
   if (count($form) > 1) {
-    $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
   }
   else {
     // Disable combo boxes when there isn't a submit button
@@ -105,7 +106,7 @@ function theme_profile_admin_overview($variables) {
 
   drupal_add_css(drupal_get_path('module', 'profile') . '/profile.css');
   // Add javascript if there's more than one field.
-  if (isset($form['submit'])) {
+  if (isset($form['actions'])) {
     drupal_add_js(drupal_get_path('module', 'profile') . '/profile.js');
   }
 
@@ -127,7 +128,7 @@ function theme_profile_admin_overview($variables) {
         $rows[] = array('data' => array(array('data' => '<em>' . t('No fields in this category. If this category remains empty when saved, it will be removed.') . '</em>', 'colspan' => 7)), 'class' => array('category-' . $category_number . '-message', 'category-message', 'category-populated'));
 
         // Make it draggable only if there is more than one field
-        if (isset($form['submit'])) {
+        if (isset($form['actions'])) {
           drupal_add_tabledrag('profile-fields', 'order', 'sibling', 'profile-weight', 'profile-weight-' . $category_number);
           drupal_add_tabledrag('profile-fields', 'match', 'sibling', 'profile-category', 'profile-category-' . $category_number);
         }
@@ -143,7 +144,7 @@ function theme_profile_admin_overview($variables) {
       $row[] = drupal_render($field['title']);
       $row[] = drupal_render($field['name']);
       $row[] = drupal_render($field['type']);
-      if (isset($form['submit'])) {
+      if (isset($form['actions'])) {
         $row[] = drupal_render($field['category']);
         $row[] = drupal_render($field['weight']);
       }
@@ -154,7 +155,7 @@ function theme_profile_admin_overview($variables) {
   }
 
   $header = array(t('Title'), t('Name'), t('Type'));
-  if (isset($form['submit'])) {
+  if (isset($form['actions'])) {
     $header[] = t('Category');
     $header[] = t('Weight');
   }
@@ -286,7 +287,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
     '#default_value' => $edit['register'],
   );
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit',
     '#value' => t('Save field'),
   );

@@ -188,9 +188,9 @@ function node_filter_form() {
   }
 
   $form['filters']['actions'] = array(
-    '#type' => 'container',
+    '#type' => 'actions',
     '#id' => 'node-admin-buttons',
-    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+    '#attributes' => array('class' => array('container-inline')),
   );
   $form['filters']['actions']['submit'] = array('#type' => 'submit', '#value' => (count($session) ? t('Refine') : t('Filter')));
   if (count($session)) {

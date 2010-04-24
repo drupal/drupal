@@ -245,7 +245,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#value' => $type->locked,
   );
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save content type'),

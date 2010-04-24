@@ -199,7 +199,7 @@ function aggregator_categorize_items($items, $feed_source = '') {
       '#multiple' => TRUE
     );
   }
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save categories'));
 
   return $form;

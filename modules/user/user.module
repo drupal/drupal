@@ -1165,7 +1165,8 @@ function user_login_block($form) {
     '#size' => 15,
     '#required' => TRUE,
   );
-  $form['submit'] = array('#type' => 'submit',
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit',
     '#value' => t('Log in'),
   );
   $items = array();
@@ -1829,7 +1830,8 @@ function user_login($form, &$form_state) {
     '#required' => TRUE,
   );
   $form['#validate'] = user_login_default_validators();
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2);
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
 
   return $form;
 }
@@ -3357,10 +3359,10 @@ function user_register_form($form, &$form_state) {
     $form_state['redirect'] = $_GET['q'];
   }
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Create new account'),
-    '#weight' => 30,
   );
 
   // Add the final user registration form submit handler.

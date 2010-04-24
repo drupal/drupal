@@ -122,10 +122,7 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
     '#value' => $path['language']
   );
 
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-  );
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),

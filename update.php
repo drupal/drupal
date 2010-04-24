@@ -129,7 +129,8 @@ function update_script_selection_form($form, &$form_state) {
       '#type' => 'hidden',
       '#default_value' => FALSE,
     );
-    $form['submit'] = array(
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => 'Apply pending updates',
     );

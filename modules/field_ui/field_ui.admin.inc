@@ -274,7 +274,8 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
     $form['#field_rows'][] = $name;
   }
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
   return $form;
 }
 
@@ -624,7 +625,8 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
     }
   }
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
   return $form;
 }
 
@@ -859,7 +861,7 @@ function field_ui_field_settings_form($form, &$form_state, $instance) {
   $form['#entity_type'] = $entity_type;
   $form['#bundle'] = $bundle;
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));
   return $form;
 }
@@ -922,7 +924,8 @@ function field_ui_widget_type_form($form, &$form_state, $instance) {
   );
 
   $form['#instance'] = $instance;
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Continue'));
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Continue'));
 
   $form['#validate'] = array();
   $form['#submit'] = array('field_ui_widget_type_form_submit');
@@ -1160,7 +1163,8 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
     $form['field']['settings'] = $additions;
   }
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save settings'));
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save settings'));
   return $form;
 }
 

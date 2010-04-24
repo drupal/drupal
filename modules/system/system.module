@@ -472,6 +472,11 @@ function system_element_info() {
     '#theme_wrappers' => array('container'),
     '#process' => array('form_process_container'),
   );
+  $types['actions'] = array(
+    '#theme_wrappers' => array('container'),
+    '#process' => array('form_process_actions', 'form_process_container'),
+    '#weight' => 100,
+  );
 
   $types['token'] = array(
     '#input' => TRUE,
@@ -2575,9 +2580,7 @@ function _system_settings_form_automatic_defaults($form) {
  * @ingroup forms
  */
 function system_settings_form($form, $automatic_defaults = TRUE) {
-  $form['actions']['#type'] = 'container';
-  $form['actions']['#attributes']['class'][] = 'form-actions';
-  $form['actions']['#weight'] = 100;
+  $form['actions']['#type'] = 'actions';
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   if ($automatic_defaults) {
@@ -2690,8 +2693,8 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   $form[$name] = array('#type' => 'hidden', '#value' => 1);
 
   $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+    '#type' => 'actions',
+    '#attributes' => array('class' => array('container-inline')),
   );
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
   $form['actions']['cancel'] = array('#markup' => $cancel);
