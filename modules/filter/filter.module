@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.327 2010/04/13 15:23:03 dries Exp $
+// $Id: filter.module,v 1.328 2010/04/24 14:53:59 dries Exp $
 
 /**
  * @file
@@ -668,6 +668,8 @@ function filter_list_format($format_id) {
  *   Boolean whether to cache the filtered output in the {cache_filter} table.
  *   The caller may set this to FALSE when the output is already cached
  *   elsewhere to avoid duplicate cache lookups and storage.
+ *
+ * @ingroup sanitization
  */
 function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) {
   if (empty($format_id)) {

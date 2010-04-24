@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1150 2010/04/22 22:36:01 webchick Exp $
+// $Id: common.inc,v 1.1151 2010/04/24 14:53:59 dries Exp $
 
 /**
  * @file
@@ -1181,6 +1181,9 @@ function flood_is_allowed($name, $threshold, $window = 3600, $identifier = NULL)
  * @defgroup sanitization Sanitization functions
  * @{
  * Functions to sanitize values.
+ *
+ * See http://drupal.org/writing-secure-code for information
+ * on writing secure code.
  */
 
 /**

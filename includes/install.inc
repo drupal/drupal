@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.131 2010/04/11 17:16:45 dries Exp $
+// $Id: install.inc,v 1.132 2010/04/24 14:53:59 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -847,6 +847,7 @@ function install_goto($path) {
  * system is possibly not yet available.
  *
  * @see t()
+ * @ingroup sanitization
  */
 function st($string, $args = array()) {
   static $locale_strings = NULL;
