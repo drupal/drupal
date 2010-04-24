@@ -3283,8 +3283,8 @@ function hook_token_info_alter(&$data) {
  * @see _country_get_predefined_list()
  */
 function hook_countries_alter(&$countries) {
-  // Quebec has seceded from Canada. Add to country list.
-  $countries['QC'] = 'Quebec';
+  // Elbonia is now independent, so add it to the country list.
+  $countries['EB'] = 'Elbonia';
 }
 
 /**
