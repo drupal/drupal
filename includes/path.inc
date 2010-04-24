@@ -362,7 +362,20 @@ function drupal_match_path($path, $patterns) {
   $regexps = &drupal_static(__FUNCTION__);
 
   if (!isset($regexps[$patterns])) {
-    $regexps[$patterns] = '/^(' . preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1' . preg_quote(variable_get('site_frontpage', 'node'), '/') . '\2'), preg_quote($patterns, '/')) . ')$/';
+    // Convert path settings to a regular expression.
+    // Therefore replace newlines with a logical or, /* with asterisks and the <front> with the frontpage.
+    $to_replace = array(
+      '/(\r\n?|\n)/', // newlines
+      '/\\\\\*/',     // asterisks
+      '/(^|\|)\\\\<front\\\\>($|\|)/' // <front>
+    );
+    $replacements = array(
+      '|',
+      '.*',
+      '\1' . preg_quote(variable_get('site_frontpage', 'node'), '/') . '\2'
+    );
+    $patterns_quoted = preg_quote($patterns, '/');
+    $regexps[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
   }
   return (bool)preg_match($regexps[$patterns], $path);
 }
