@@ -1041,7 +1041,7 @@ function user_account_form(&$form, &$form_state) {
     '#type' => 'file',
     '#title' => t('Upload picture'),
     '#size' => 48,
-    '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions pixels and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . variable_get('user_picture_guidelines', ''),
+    '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions pixels and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . filter_xss_admin(variable_get('user_picture_guidelines', '')),
   );
   $form['#validate'][] = 'user_validate_picture';
 }
