@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.122 2010/04/13 15:23:03 dries Exp $
+// $Id: node.pages.inc,v 1.123 2010/04/24 14:49:14 dries Exp $
 
 /**
  * @file
@@ -247,11 +247,7 @@ function node_form($form, &$form_state, $node) {
   );
 
   // Add the buttons.
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-    '#weight' => 100,
-  );
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#access' => variable_get('node_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview'])),

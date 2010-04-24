@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.30 2010/04/11 18:33:44 dries Exp $
+// $Id: openid.inc,v 1.31 2010/04/24 14:49:14 dries Exp $
 
 /**
  * @file
@@ -109,7 +109,8 @@ function openid_redirect_form($form, &$form_state, $url, $message) {
       '#value' => $value,
     );
   }
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#prefix' => '<noscript>',
     '#suffix' => '</noscript>',

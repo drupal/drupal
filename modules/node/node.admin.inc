@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.93 2010/04/13 15:23:03 dries Exp $
+// $Id: node.admin.inc,v 1.94 2010/04/24 14:49:14 dries Exp $
 
 /**
  * @file
@@ -188,9 +188,9 @@ function node_filter_form() {
   }
 
   $form['filters']['actions'] = array(
-    '#type' => 'container',
+    '#type' => 'actions',
     '#id' => 'node-admin-buttons',
-    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+    '#attributes' => array('class' => array('container-inline')),
   );
   $form['filters']['actions']['submit'] = array('#type' => 'submit', '#value' => (count($session) ? t('Refine') : t('Filter')));
   if (count($session)) {

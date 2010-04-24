@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.60 2010/04/23 05:39:43 webchick Exp $
+// $Id: filter.admin.inc,v 1.61 2010/04/24 14:49:13 dries Exp $
 
 /**
  * @file
@@ -36,7 +36,7 @@ function filter_admin_overview($form) {
     $form['formats'][$id]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/config/content/formats/' . $id . '/delete', '#access' => !$form['formats'][$id]['#is_fallback']);
     $form['formats'][$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));
   return $form;
 }
@@ -230,7 +230,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
   if (!empty($format->format)) {
     $form['format'] = array('#type' => 'value', '#value' => $format->format);
   }
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
   return $form;

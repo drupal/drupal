@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.344 2010/04/22 23:59:04 dries Exp $
+// $Id: poll.module,v 1.345 2010/04/24 14:49:14 dries Exp $
 
 /**
  * @file
@@ -894,7 +894,8 @@ function poll_cancel_form($form, &$form_state, $nid) {
   // Store the nid so we can get to it in submit functions.
   $form['#nid'] = $nid;
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel your vote'),
     '#submit' => array('poll_cancel')

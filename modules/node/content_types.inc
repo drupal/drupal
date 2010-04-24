@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.111 2010/04/13 15:23:03 dries Exp $
+// $Id: content_types.inc,v 1.112 2010/04/24 14:49:14 dries Exp $
 
 /**
  * @file
@@ -245,7 +245,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#value' => $type->locked,
   );
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save content type'),

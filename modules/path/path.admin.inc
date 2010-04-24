@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.42 2010/03/03 19:46:25 dries Exp $
+// $Id: path.admin.inc,v 1.43 2010/04/24 14:49:14 dries Exp $
 
 /**
  * @file
@@ -122,10 +122,7 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
     '#value' => $path['language']
   );
 
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-  );
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),

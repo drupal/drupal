@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.319 2010/04/11 18:33:43 dries Exp $
+// $Id: update.php,v 1.320 2010/04/24 14:49:13 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -129,7 +129,8 @@ function update_script_selection_form($form, &$form_state) {
       '#type' => 'hidden',
       '#default_value' => FALSE,
     );
-    $form['submit'] = array(
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => 'Apply pending updates',
     );

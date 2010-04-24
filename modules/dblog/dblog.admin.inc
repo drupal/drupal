@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.38 2010/04/13 15:23:02 dries Exp $
+// $Id: dblog.admin.inc,v 1.39 2010/04/24 14:49:13 dries Exp $
 
 /**
  * @file
@@ -312,8 +312,8 @@ function dblog_filter_form($form) {
   }
 
   $form['filters']['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions', 'container-inline')),
+    '#type' => 'actions',
+    '#attributes' => array('class' => array('container-inline')),
   );
   $form['filters']['actions']['submit'] = array(
     '#type' => 'submit',

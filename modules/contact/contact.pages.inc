@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.42 2010/04/07 16:35:03 dries Exp $
+// $Id: contact.pages.inc,v 1.43 2010/04/24 14:49:13 dries Exp $
 
 /**
  * @file
@@ -101,10 +101,7 @@ function contact_site_form($form, &$form_state) {
     '#title' => t('Send yourself a copy.'),
     '#access' => $user->uid,
   );
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-  );
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Send message'),
@@ -235,10 +232,7 @@ function contact_personal_form($form, &$form_state, $recipient) {
     '#title' => t('Send yourself a copy.'),
     '#access' => $user->uid,
   );
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-  );
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Send message'),

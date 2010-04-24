@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.77 2010/04/23 05:39:43 webchick Exp $
+// $Id: block.admin.inc,v 1.78 2010/04/24 14:49:13 dries Exp $
 
 /**
  * @file
@@ -104,8 +104,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
 
   $form['actions'] = array(
     '#tree' => FALSE,
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
+    '#type' => 'actions',
   );
   $form['actions']['submit'] = array(
     '#type' => 'submit',
@@ -351,7 +350,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#default_value' => isset($block->custom) ? $block->custom : 0,
   );
 
-  $form['actions'] = array('#type' => 'container', '#attributes' => array('class' => array('form-actions')));
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save block'),
