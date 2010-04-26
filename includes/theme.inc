@@ -2105,8 +2105,10 @@ function _template_preprocess_default_variables() {
     'logged_in' => FALSE,
   );
 
-  // The user object has no uid property when the database does not exist.
-  if (isset($user->uid)) {
+  // The user object has no uid property when the database does not exist during
+  // install. The user_access() check deals with issues when in maintenance mode
+  // as uid is set but the user.module has not been included.
+  if (isset($user->uid) && function_exists('user_access')) {
     $variables['is_admin'] = user_access('access administration pages');
     $variables['logged_in'] = ($user->uid > 0);
   }
