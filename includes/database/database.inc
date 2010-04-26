@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.118 2010/04/23 05:21:19 webchick Exp $
+// $Id: database.inc,v 1.119 2010/04/26 14:12:59 dries Exp $
 
 /**
  * @file
@@ -2500,8 +2500,9 @@ function db_close(array $options = array()) {
 /**
  * Retrieves a unique id.
  *
- * Use this function if for some reason you can't use a serial field, normally a
- * serial field with db_last_insert_id is preferred.
+ * Use this function if for some reason you can't use a serial field. Using a
+ * serial field is preferred, and InsertQuery::execute() returns the value of
+ * the last ID inserted.
  *
  * @param $existing_id
  *   After a database import, it might be that the sequences table is behind, so
