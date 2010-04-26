@@ -1,5 +1,5 @@
 <?php
-// $Id: system.queue.inc,v 1.11 2010/04/03 04:12:01 webchick Exp $
+// $Id: system.queue.inc,v 1.12 2010/04/26 13:02:40 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@
  * long you want to have a lease for working on that item. When finished
  * processing, the item needs to be deleted by calling
  * DrupalQueueInterface::deleteItem(). If the consumer dies, the item will be
- * made available again by the DrapalQueueInterface implementation once the
+ * made available again by the DrupalQueueInterface implementation once the
  * lease expires. Another consumer will then be able to receive it when calling
  * DrupalQueueInterface::claimItem().
  *
