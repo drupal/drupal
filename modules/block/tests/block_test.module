@@ -13,6 +13,10 @@ function block_test_block_info() {
   $blocks['test_cache'] = array(
     'info' => t('Test block caching'),
   );
+
+  $blocks['test_html_id'] = array(
+    'info' => t('Test block html id'),
+  );
   return $blocks;
 }
 

@@ -1,7 +1,7 @@
 <?php
 // $Id$
 ?>
-<div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
+<div id="<?php print $block_html_id; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 
   <?php print render($title_prefix); ?>
 <?php if (!empty($block->subject)): ?>
