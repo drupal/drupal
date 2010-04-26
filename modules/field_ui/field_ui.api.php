@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.api.php,v 1.4 2010/01/09 23:15:26 webchick Exp $
+// $Id: field_ui.api.php,v 1.5 2010/04/26 14:40:47 dries Exp $
 
 /**
  * @file
@@ -140,6 +140,43 @@ function hook_field_widget_settings_form($field, $instance) {
  *   The form definition for the formatter settings.
  */
 function hook_field_formatter_settings_form($formatter, $settings, $field, $instance) {
+}
+
+/**
+ * Provide information on view mode tabs for an entity type.
+ *
+ * @param $entity_type
+ *   The type of entity to return tabs for.
+ *
+ * @return
+ *   An array whose keys are internal-use tab names, and whose values are
+ *   arrays of tab information, with the following elements:
+ *   - 'title': Human-readable title of the tab.
+ *   - 'view modes': Array of view modes for this entity type that should
+ *     be displayed on this tab.
+ *
+ * @see field_ui_view_modes_tabs()
+ */
+function hook_field_ui_view_modes_tabs($entity_type) {
+  $modes = array(
+    'basic' => array(
+      'title' => t('Basic'),
+      'view modes' => array('teaser', 'full'),
+    ),
+    'rss' => array(
+      'title' => t('RSS'),
+      'view modes' => array('rss'),
+    ),
+    'print' => array(
+      'title' => t('Print'),
+      'view modes' => array('print'),
+    ),
+    'search' => array(
+      'title' => t('Search'),
+      'view modes' => array('search_index', 'search_result'),
+    ),
+  );
+  return $modes;
 }
 
 /**
