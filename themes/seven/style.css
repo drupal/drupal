@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.51 2010/04/12 17:33:35 webchick Exp $ */
+/* $Id: style.css,v 1.52 2010/04/26 13:33:43 dries Exp $ */
 
 /**
  * Generic elements.
@@ -481,9 +481,14 @@ tr.even, tr.odd {
   border-color: #bebfb9;
   background: #f3f4ee;
 }
-
 tr.odd {
   background: #fff;
+}
+tr.drag {
+  background: #fe7;
+}
+tr.drag-previous {
+  background: #ffb;
 }
 table th {
   font-size: 12px;
