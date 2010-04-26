@@ -1,5 +1,5 @@
 <?php
-// $Id: menu_test.module,v 1.13 2010/01/30 03:38:22 webchick Exp $
+// $Id: menu_test.module,v 1.14 2010/04/26 14:06:23 dries Exp $
 
 /**
  * @file
@@ -171,6 +171,22 @@ function menu_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_NONE,
+  );
+
+  // File inheritance tests. This menu item should inherit the page callback
+  // system_admin_menu_block_page() and therefore render its children as links
+  // on the page.
+  $items['admin/config/development/file-inheritance'] = array(
+    'title' => 'File inheritance',
+    'description' => 'Test file inheritance',
+    'access arguments' => array('access content'),
+  );
+  $items['admin/config/development/file-inheritance/inherit'] = array(
+    'title' => 'Inherit',
+    'description' => 'File inheritance test description',
+    'page callback' => 'menu_test_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_TASK,
   );
 
   return $items;

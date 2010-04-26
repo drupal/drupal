@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.28 2010/01/30 03:38:22 webchick Exp $
+// $Id: menu.test,v 1.29 2010/04/26 14:06:23 dries Exp $
 
 /**
  * @file
@@ -49,6 +49,15 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme/inheritance');
     $this->assertText('Custom theme: seven. Actual theme: seven. Theme callback inheritance is being tested.', t('Theme callback inheritance correctly uses the administrative theme.'));
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
+  }
+
+  /**
+   * Test that 'page callback', 'file' and 'file path' keys are properly
+   * inherited from parent menu paths.
+   */
+  function testFileInheritance() {
+    $this->drupalGet('admin/config/development/file-inheritance');
+    $this->assertText('File inheritance test description', t('File inheritance works.'));
   }
 
   /**
