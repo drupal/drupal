@@ -399,13 +399,14 @@ function hook_cron_queue_info() {
 /**
  * Alter cron queue information before cron runs.
  *
- * Called by drupal_run_cron() to allow modules to alter cron queue settings
+ * Called by drupal_cron_run() to allow modules to alter cron queue settings
  * before any jobs are processesed.
  *
  * @param array $queues
  *   An array of cron queue information.
  *
  *  @see hook_cron_queue_info()
+ *  @see drupal_cron_run()
  */
 function hook_cron_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
@@ -3296,7 +3297,7 @@ function hook_countries_alter(&$countries) {
  * backend to download new versions of modules and themes from drupal.org.
  *
  * @return
- *   An associative array of information about the file transfer backend(s).  
+ *   An associative array of information about the file transfer backend(s).
  *   being provided. This array can contain the following keys:
  *   - title: Title of the backend to be shown to the end user.
  *   - class: Name of the PHP class which implements this backend.
