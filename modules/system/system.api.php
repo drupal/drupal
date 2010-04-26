@@ -87,7 +87,8 @@ function hook_hook_info() {
  *       entity. The bundle name defines which set of fields are attached to
  *       the entity (e.g. what nodes call "content type"). This entry can be
  *       omitted if this entity type exposes a single bundle (all entities have
- *       the same collection of fields).
+ *       the same collection of fields). The name of this single bundle will be
+ *       the same as the entity type.
  *   - bundle keys: An array describing how the Field API can extract the
  *     information it needs from the bundle objects for this type (e.g
  *     $vocabulary objects for terms; not applicable for nodes). This entry can
