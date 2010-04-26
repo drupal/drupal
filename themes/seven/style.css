@@ -481,9 +481,14 @@ tr.even, tr.odd {
   border-color: #bebfb9;
   background: #f3f4ee;
 }
-
 tr.odd {
   background: #fff;
+}
+tr.drag {
+  background: #fe7;
+}
+tr.drag-previous {
+  background: #ffb;
 }
 table th {
   font-size: 12px;
