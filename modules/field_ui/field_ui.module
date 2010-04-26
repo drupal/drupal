@@ -237,7 +237,28 @@ function field_ui_theme() {
 }
 
 /**
- * Group available view modes on tabs on the 'Manage display' page.
+ * Returns information about tab groups for view modes on an entity type.
+ *
+ * On the 'Manage display' page, an administrator can manage the display of
+ * fields for each view mode for an entity type. The view modes are organized
+ * into tabs. This function returns the list of entity types to display on
+ * each tab, as well as the titles of the tabs.
+ *
+ * @param $entity_type
+ *   The type of entity to return tab information for.
+ * @param $tab_selector
+ *   If not NULL, return only information for this particular tab; if NULL,
+ *   return all tab information.
+ *
+ * @return
+ *   Array of information about the tabs to display. The keys are internal-use
+ *   tab names and the values are arrays of tab information, with the following
+ *   elements:
+ *   - 'title': Human-readable title of the tab.
+ *   - 'view modes': Array of view modes for this entity type that should
+ *     be displayed on this tab.
+ *
+ * @see hook_field_ui_view_modes_tabs()
  *
  * @todo Remove this completely and use vertical tabs?
  */
@@ -271,23 +292,6 @@ function field_ui_view_modes_tabs($entity_type, $tab_selector = NULL) {
 
 /**
  * Implements hook_field_ui_view_modes_tabs() on behalf of other core modules.
- *
- * @return
- *   An array describing the view modes defined by the module, grouped by tabs.
- *
- * A module can add its render modes to a tab defined by another module.
- * Expected format:
- * @code
- *   array(
- *     'tab1' => array(
- *       'title' => t('The human-readable title of the tab'),
- *       'view modes' => array('mymodule_mode1', 'mymodule_mode2'),
- *     ),
- *     'tab2' => array(
- *       // ...
- *     ),
- *   );
- * @endcode
  */
 function field_ui_field_ui_view_modes_tabs() {
   $modes = array(
