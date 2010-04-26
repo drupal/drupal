@@ -1,6 +1,6 @@
-// $Id: CHANGELOG.txt,v 1.363 2010/04/26 21:24:54 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.364 2010/04/26 21:27:09 webchick Exp $
 
-Drupal 7.0 alpha 4, 2010-04-26
+Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
 - Database:
     * Fully rewritten database layer utilizing PHP 5's PDO abstraction layer.
