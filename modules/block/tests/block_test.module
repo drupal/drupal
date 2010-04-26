@@ -1,5 +1,5 @@
 <?php
-// $Id: block_test.module,v 1.1 2010/02/28 17:28:38 dries Exp $
+// $Id: block_test.module,v 1.2 2010/04/26 14:10:40 dries Exp $
 
 /**
  * @file
@@ -12,6 +12,10 @@
 function block_test_block_info() {
   $blocks['test_cache'] = array(
     'info' => t('Test block caching'),
+  );
+
+  $blocks['test_html_id'] = array(
+    'info' => t('Test block html id'),
   );
   return $blocks;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.418 2010/04/22 22:08:43 webchick Exp $
+// $Id: block.module,v 1.419 2010/04/26 14:10:40 dries Exp $
 
 /**
  * @file
@@ -872,6 +872,9 @@ function template_preprocess_block(&$variables) {
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->region;
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module;
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module . '__' . $variables['block']->delta;
+
+  // Create a valid HTML ID and make sure it is unique.
+  $variables['block_html_id'] = drupal_html_id('block-' . $variables['block']->module . '-' . $variables['block']->delta);
 }
 
 /**

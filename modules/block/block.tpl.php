@@ -1,5 +1,5 @@
 <?php
-// $Id: block.tpl.php,v 1.9 2010/01/30 07:59:24 dries Exp $
+// $Id: block.tpl.php,v 1.10 2010/04/26 14:10:40 dries Exp $
 
 /**
  * @file
@@ -35,13 +35,14 @@
  * - $is_front: Flags true when presented in the front page.
  * - $logged_in: Flags true when the current user is a logged-in member.
  * - $is_admin: Flags true when the current user is an administrator.
+ * - $block_html_id: A valid HTML ID and guaranteed unique.
  *
  * @see template_preprocess()
  * @see template_preprocess_block()
  * @see template_process()
  */
 ?>
-<div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<div id="<?php print $block_html_id; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
   <?php print render($title_prefix); ?>
 <?php if ($block->subject): ?>
