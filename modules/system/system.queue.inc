@@ -22,7 +22,7 @@
  * long you want to have a lease for working on that item. When finished
  * processing, the item needs to be deleted by calling
  * DrupalQueueInterface::deleteItem(). If the consumer dies, the item will be
- * made available again by the DrapalQueueInterface implementation once the
+ * made available again by the DrupalQueueInterface implementation once the
  * lease expires. Another consumer will then be able to receive it when calling
  * DrupalQueueInterface::claimItem().
  *
