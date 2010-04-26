@@ -1294,13 +1294,20 @@ function comment_update_index() {
 
 /**
  * Implements hook_node_search_result().
+ *
+ * Formats a comment count string and returns it, for display with search
+ * results.
  */
 function comment_node_search_result($node) {
+  // Do not make a string if comments are hidden. 
   if ($node->comment != COMMENT_NODE_HIDDEN) {
     $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
-    return format_plural($comments, '1 comment', '@count comments');
+    // Do not make a string if comments are closed and there are currently
+    // zero comments.
+    if ($node->comment != COMMENT_NODE_CLOSED || $comments > 0) {
+      return format_plural($comments, '1 comment', '@count comments');
+    }
   }
-  return '';
 }
 
 /**
