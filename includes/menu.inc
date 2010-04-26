@@ -3166,11 +3166,14 @@ function _menu_router_build($callbacks) {
           if (!isset($item['page arguments']) && isset($parent['page arguments'])) {
             $item['page arguments'] = $parent['page arguments'];
           }
-          if (!isset($item['file']) && isset($parent['file'])) {
-            $item['file'] = $parent['file'];
-          }
           if (!isset($item['file path']) && isset($parent['file path'])) {
             $item['file path'] = $parent['file path'];
+          }
+          if (!isset($item['file']) && isset($parent['file'])) {
+            $item['file'] = $parent['file'];
+            if (empty($item['file path']) && isset($item['module']) && isset($parent['module']) && $item['module'] != $parent['module']) {
+              $item['file path'] = drupal_get_path('module', $parent['module']);
+            }
           }
         }
         // Same for delivery callbacks.
