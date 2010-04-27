@@ -1319,7 +1319,10 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
       // If the table is a subquery, compile it and integrate it into this query.
       if ($table['table'] instanceof SelectQueryInterface) {
-        $table_string = '(' . (string)$table['table'] . ')';
+        // Run preparation steps on this sub-query before converting to string.
+        $subquery = $table['table'];
+        $subquery->preExecute();
+        $table_string = '(' . (string) $subquery . ')';
       }
       else {
         $table_string = '{' . $this->connection->escapeTable($table['table']) . '}';
