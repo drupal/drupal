@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.270 2010/04/24 14:49:14 dries Exp $
+// $Id: system.admin.inc,v 1.271 2010/04/27 12:59:16 dries Exp $
 
 /**
  * @file
@@ -1240,7 +1240,6 @@ function system_modules_submit($form, &$form_state) {
   registry_rebuild();
   system_rebuild_theme_data();
   drupal_theme_rebuild();
-  cache_clear_all('system_list', 'cache_bootstrap');
   node_types_rebuild();
   menu_rebuild();
   cache_clear_all('schema', 'cache');
