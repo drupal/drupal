@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.157 2010/04/26 14:33:54 dries Exp $
+// $Id: system.api.php,v 1.158 2010/04/27 09:59:00 dries Exp $
 
 /**
  * @file
@@ -405,8 +405,8 @@ function hook_cron_queue_info() {
  * @param array $queues
  *   An array of cron queue information.
  *
- *  @see hook_cron_queue_info()
- *  @see drupal_cron_run()
+ * @see hook_cron_queue_info()
+ * @see drupal_cron_run()
  */
 function hook_cron_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
