@@ -405,8 +405,8 @@ function hook_cron_queue_info() {
  * @param array $queues
  *   An array of cron queue information.
  *
- *  @see hook_cron_queue_info()
- *  @see drupal_cron_run()
+ * @see hook_cron_queue_info()
+ * @see drupal_cron_run()
  */
 function hook_cron_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
