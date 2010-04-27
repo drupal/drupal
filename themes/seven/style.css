@@ -325,27 +325,28 @@ ul.secondary {
   clear: both;
   font-size: 12px;
   text-align: right;
-  padding: 5px 10px 4px;
-  line-height: 20px;
+  padding: 4px 10px 10px;
+  line-height: 18px;
   overflow: hidden;
-  border-bottom: 1px solid #ccc;
-  background: #fff;
+  background-color: #fff;
 }
 ul.secondary li {
   padding-left: 10px;
 }
 ul.secondary li a {
-  color: #05a;
+  background-color: #ddd;
+  color: #000;
 }
 ul.secondary li a,
 ul.secondary li a:hover,
 ul.secondary li.active a,
 ul.secondary li.active a.active {
-  padding: 0 10px;
+  padding: 2px 10px;
   border-radius: 7px;
-  -moz-border-radius: 10px;
+  -moz-border-radius: 7px;
   -webkit-border-radius: 7px;
 }
+ul.secondary li a:hover,
 ul.secondary li.active a,
 ul.secondary li.active a.active {
   color: #fff;
@@ -881,8 +882,7 @@ ol.task-list li.done {
 }
 .overlay ul.secondary {
   background: transparent none;
-  margin: -2.4em 0 0.5em 0;
-  padding: 3px 10px;
+  margin: -2.4em 0 0.3em 0;
 }
 .overlay #content {
   padding: 0;
