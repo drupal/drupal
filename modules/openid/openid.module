@@ -687,6 +687,8 @@ function openid_association_request($public) {
 }
 
 function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $service) {
+  global $base_url;
+
   module_load_include('inc', 'openid');
 
   $request =  array(
@@ -699,10 +701,10 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
   if ($service['version'] == 2) {
     $request['openid.ns'] = OPENID_NS_2_0;
     $request['openid.claimed_id'] = $claimed_id;
-    $request['openid.realm'] = url('', array('absolute' => TRUE));
+    $request['openid.realm'] = $base_url .'/';
   }
   else {
-    $request['openid.trust_root'] = url('', array('absolute' => TRUE));
+    $request['openid.trust_root'] = $base_url .'/';
   }
 
   // Always request Simple Registration. The specification doesn't mandate
