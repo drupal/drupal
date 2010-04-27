@@ -1019,7 +1019,26 @@ function template_preprocess_book_navigation(&$variables) {
 }
 
 /**
- * A recursive helper function for book_toc().
+ * Recursively processes and formats menu items for book_toc().
+ *
+ * This helper function recursively modifies the $toc array for each item in
+ * $tree, ignoring items in the exclude array or at a depth greater than the
+ * limit.  Truncates titles over thirty characters and appends an indentation
+ * string incremented by depth.
+ *
+ * @param $tree
+ *   The data structure of the book's menu tree.  Includes hidden links.
+ * @param $indent
+ *   A string appended to each menu item title. Increments by '--' per depth
+ *   level.
+ * @param $toc
+ *   Reference to the table of contents array. This is modified in place, so the
+ *   function does not have a return value.
+ * @param $exclude
+ *   Optional array of mlid values. Any link whose mlid is in this array will be
+ *   excluded (along with its children).
+ * @param $depth_limit
+ *   Any link deeper than this value will be excluded (along with its children).
  */
 function _book_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
   foreach ($tree as $data) {
