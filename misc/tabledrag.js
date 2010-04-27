@@ -516,7 +516,7 @@ Drupal.tableDrag.prototype.getMouseOffset = function (target, event) {
  *   The y coordinate of the mouse on the page (not the screen).
  */
 Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
-  var rows = this.table.tBodies[0].rows;
+  var rows = $(this.table.tBodies[0].rows).not(':hidden');
   for (var n = 0; n < rows.length; n++) {
     var row = rows[n];
     var indentDiff = 0;
