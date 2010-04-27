@@ -877,21 +877,33 @@ function drupal_http_request($url, array $options = array()) {
 
   fwrite($fp, $request);
 
-  // Fetch response.
+  // Fetch response. Due to PHP bugs like http://bugs.php.net/bug.php?id=43782
+  // and http://bugs.php.net/bug.php?id=46049 we can't rely on feof(), but
+  // instead must invoke stream_get_meta_data() each iteration.
+  $info = stream_get_meta_data($fp);
+  $alive = !$info['eof'] && !$info['timed_out'];
   $response = '';
-  while (!feof($fp)) {
+
+  while ($alive) {
     // Calculate how much time is left of the original timeout value.
     $timeout = $options['timeout'] - timer_read(__FUNCTION__) / 1000;
     if ($timeout <= 0) {
-      $result->code = HTTP_REQUEST_TIMEOUT;
-      $result->error = 'request timed out';
-      return $result;
+      $info['timed_out'] = TRUE;
+      break;
     }
     stream_set_timeout($fp, floor($timeout), floor(1000000 * fmod($timeout, 1)));
-    $response .= fread($fp, 1024);
+    $chunk = fread($fp, 1024);
+    $response .= $chunk;
+    $info = stream_get_meta_data($fp);
+    $alive = !$info['eof'] && !$info['timed_out'] && $chunk;
   }
   fclose($fp);
 
+  if ($info['timed_out']) {
+    $result->code = HTTP_REQUEST_TIMEOUT;
+    $result->error = 'request timed out';
+    return $result;
+  }
   // Parse response headers from the response body.
   list($response, $result->data) = explode("\r\n\r\n", $response, 2);
   $response = preg_split("/\r\n|\n|\r/", $response);
