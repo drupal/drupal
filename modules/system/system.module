@@ -2173,6 +2173,11 @@ function system_update_files_database(&$files, $type) {
     }
   }
   $query->execute();
+
+  // If any module or theme was moved to a new location, we need to reset the
+  // system_list() cache or we will continue to load the old copy, look for
+  // schema updates in the wrong place, etc.
+  system_list_reset();
 }
 
 /**

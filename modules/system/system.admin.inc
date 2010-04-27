@@ -1240,7 +1240,6 @@ function system_modules_submit($form, &$form_state) {
   registry_rebuild();
   system_rebuild_theme_data();
   drupal_theme_rebuild();
-  cache_clear_all('system_list', 'cache_bootstrap');
   node_types_rebuild();
   menu_rebuild();
   cache_clear_all('schema', 'cache');
