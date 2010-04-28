@@ -375,6 +375,20 @@ class FormsElementsLabelsTestCase extends DrupalWebTestCase {
 
     $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-no-show"]');
     $this->assertFalse(isset($elements[0]), t("No label tag when title set not to display."));
+
+    // Check #field_prefix and #field_suffix placement.
+    $elements = $this->xpath('//span[@class="field-prefix"]/following-sibling::div[@id="edit-form-radios-test"]');
+    $this->assertTrue(isset($elements[0]), t("Properly placed the #field_prefix element after the label and before the field."));
+
+    $elements = $this->xpath('//span[@class="field-suffix"]/preceding-sibling::div[@id="edit-form-radios-test"]');
+    $this->assertTrue(isset($elements[0]), t("Properly places the #field_suffix element immediately after the form field."));
+
+    // Check #prefix and #suffix placement.
+    $elements = $this->xpath('//div[@id="form-test-textfield-title-prefix"]/following-sibling::div[contains(@class, \'form-item-form-textfield-test-title\')]');
+    $this->assertTrue(isset($elements[0]), t("Properly places the #prefix element before the form item."));
+
+    $elements = $this->xpath('//div[@id="form-test-textfield-title-suffix"]/preceding-sibling::div[contains(@class, \'form-item-form-textfield-test-title\')]');
+    $this->assertTrue(isset($elements[0]), t("Properly places the #suffix element before the form item."));
   }
 }
 
