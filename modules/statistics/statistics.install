@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.25 2009/12/04 16:49:47 dries Exp $
+// $Id: statistics.install,v 1.26 2010/04/28 05:29:55 webchick Exp $
 
 /**
  * @file
@@ -132,24 +132,6 @@ function statistics_schema() {
 
   return $schema;
 }
-
-/**
- * @defgroup updates-6.x-extra Extra statistics updates for 6.x
- * @{
- */
-
-/**
- * Allow longer referrers.
- */
-function statistics_update_6000() {
-  db_change_field('accesslog', 'url', 'url', array('type' => 'text', 'not null' => FALSE));
-}
-
-/**
- * @} End of "defgroup updates-6.x-extra"
- * The next series of updates should start at 7000.
- */
-
 
 /**
  * @defgroup updates-6.x-to-7.x statistics updates from 6.x to 7.x
