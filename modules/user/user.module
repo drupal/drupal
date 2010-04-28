@@ -273,14 +273,24 @@ class UserController extends DrupalDefaultEntityController {
 }
 
 /**
- * Fetch a user object.
+ * Loads a user object.
+ *
+ * Drupal has a global $user object, which represents the currently-logged-in
+ * user. So to avoid confusion and to avoid clobbering the global $user object,
+ * it is a good idea to assign the result of this function to a different local
+ * variable, generally $account. If you actually do want to act as the user you
+ * are loading, it is essential to call @code session_save_session(FALSE);
+ * @endcode first. See @link http://drupal.org/node/218104 Safely impersonating
+ * another user @endlink for more information.
  *
  * @param $uid
- *   Integer specifying the user id.
+ *   Integer specifying the user ID to load.
  * @param $reset
- *   A boolean indicating that the internal cache should be reset.
+ *   TRUE to reset the internal cache and load from the database; FALSE
+ *   (default) to load from the internal cache, if set.
+ *
  * @return
- *   A fully-loaded $user object upon successful user load or FALSE if user
+ *   A fully-loaded user object upon successful user load, or FALSE if the user
  *   cannot be loaded.
  *
  * @see user_load_multiple()
