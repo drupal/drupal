@@ -1,4 +1,4 @@
-/* $Id: reset.css,v 1.8 2010/04/12 17:33:35 webchick Exp $ */
+/* $Id: reset.css,v 1.9 2010/04/28 20:08:39 dries Exp $ */
 
 /**
  * Reset CSS styles.
@@ -150,7 +150,8 @@ q {
 }
 blockquote:before,
 blockquote:after,
-q:before, q:after {
+q:before,
+q:after {
   content: '';
   content: none;
 }

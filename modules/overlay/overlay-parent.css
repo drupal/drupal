@@ -1,4 +1,4 @@
-/* $Id: overlay-parent.css,v 1.13 2010/03/20 14:45:05 dries Exp $ */
+/* $Id: overlay-parent.css,v 1.14 2010/04/28 20:08:39 dries Exp $ */
 
 /**
  * ui-dialog overlay.
@@ -38,7 +38,8 @@ body.overlay-autofit {
   min-height: 100px;
 }
 
-.overlay.ui-widget-content, .overlay .ui-widget-header {
+.overlay.ui-widget-content,
+.overlay .ui-widget-header {
   background: none;
   border: none;
 }

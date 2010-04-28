@@ -1,4 +1,4 @@
-/* $Id: admin-rtl.css,v 1.6 2009/08/03 03:04:33 webchick Exp $ */
+/* $Id: admin-rtl.css,v 1.7 2010/04/28 20:08:39 dries Exp $ */
 
 div.admin-panel .body {
   padding: 0 8px 2px 4px;
@@ -23,7 +23,8 @@ div.admin .expert-link {
   padding-left: 4px;
 }
 
-table.system-status-report th, table.system-status-report tr.merge-up td {
+table.system-status-report th,
+table.system-status-report tr.merge-up td {
   padding-right: 30px;
 }
 
@@ -38,7 +39,8 @@ table.screenshot {
 .date-container {
   clear: right;
 }
-.date-container .select-container, .date-container .custom-container {
+.date-container .select-container,
+.date-container .custom-container {
   float: right;
 }
 .date-container .custom-container {

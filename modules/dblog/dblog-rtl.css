@@ -1,6 +1,7 @@
-/* $Id: dblog-rtl.css,v 1.5 2009/08/24 03:11:34 webchick Exp $ */
+/* $Id: dblog-rtl.css,v 1.6 2010/04/28 20:08:38 dries Exp $ */
 
-.form-item-type, .form-item-severity {
+.form-item-type,
+.form-item-severity {
   float: right;
   padding-right: 0;
   padding-left: .8em;

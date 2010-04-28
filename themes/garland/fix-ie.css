@@ -1,11 +1,12 @@
-/* $Id: fix-ie.css,v 1.12 2010/03/31 20:24:13 dries Exp $ */
+/* $Id: fix-ie.css,v 1.13 2010/04/28 20:08:39 dries Exp $ */
 
 body {
   /* Center layout */
   text-align: center;
 }
 
-#header-region, #wrapper #container {
+#header-region,
+#wrapper #container {
   /* Reset text alignment */
   text-align: left; /* LTR */
 }
@@ -58,7 +59,8 @@ tr.taxonomy-term-preview {
   filter: alpha(opacity=50);
 }
 
-#attach-hide label, #uploadprogress div.message {
+#attach-hide label,
+#uploadprogress div.message {
   /* Fading elements in IE causes the text to bleed unless they have a background. */
   background-color: #ffffff;
 }

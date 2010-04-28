@@ -1,4 +1,4 @@
-/* $Id: update.css,v 1.6 2009/10/15 21:19:31 webchick Exp $ */
+/* $Id: update.css,v 1.7 2010/04/28 20:08:39 dries Exp $ */
 
 .update .project {
   font-weight: bold;
@@ -52,7 +52,8 @@
   background: #ffe;
 }
 
-.current-version, .new-version {
+.current-version,
+.new-version {
   direction: ltr; /* Note: version numbers should always be LTR. */
 }
 

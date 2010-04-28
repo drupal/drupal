@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.21 2009/08/03 03:04:33 webchick Exp $ */
+/* $Id: admin.css,v 1.22 2010/04/28 20:08:39 dries Exp $ */
 
 /*
 ** Formatting for administration page
@@ -47,7 +47,8 @@ table.package .description {
 table.package .version {
   direction: ltr;
 }
-div.admin-requirements, div.admin-required {
+div.admin-requirements,
+div.admin-required {
   font-size: 0.9em;
   color: #444;
 }
@@ -67,7 +68,8 @@ span.admin-missing {
 table.system-status-report th {
   border-bottom: 1px solid #ccc;
 }
-table.system-status-report th, table.system-status-report tr.merge-up td {
+table.system-status-report th,
+table.system-status-report tr.merge-up td {
   padding-left: 30px; /* LTR */
 }
 table.system-status-report th {
@@ -125,7 +127,8 @@ table.screenshot {
 .date-container .form-item {
   margin-top: 0;
 }
-.date-container .select-container, .date-container .custom-container {
+.date-container .select-container,
+.date-container .custom-container {
   float: left; /* LTR */
 }
 .date-container .custom-container {

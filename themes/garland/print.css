@@ -1,23 +1,35 @@
-/* $Id: print.css,v 1.8 2009/08/03 03:04:34 webchick Exp $ */
+/* $Id: print.css,v 1.9 2010/04/28 20:08:39 dries Exp $ */
 
-body, input, textarea, select {
+body,
+input,
+textarea,
+select {
   color: #000;
   background: none;
   font-family: Verdana, sans-serif;
   font-size: 11pt;
 }
 
-ul.main-menu, ul.secondary-menu,
-#header-region, .sidebar {
+ul.main-menu,
+ul.secondary-menu,
+#header-region,
+.sidebar {
   display: none;
 }
 
-body.two-sidebars, body.sidebar-first, body.sidebar-second, body {
+body.two-sidebars,
+body.sidebar-first,
+body.sidebar-second,
+body {
   width: 640px;
 }
 
-body.sidebar-first #center, body.sidebar-second #center, body.two-sidebars #center,
-body.sidebar-first #squeeze, body.sidebar-second #squeeze, body.two-sidebars #squeeze {
+body.sidebar-first #center,
+body.sidebar-second #center,
+body.two-sidebars #center,
+body.sidebar-first #squeeze,
+body.sidebar-second #squeeze,
+body.two-sidebars #squeeze {
   margin: 0;
 }
 
@@ -42,7 +54,9 @@ body.sidebar-first #squeeze, body.sidebar-second #squeeze, body.two-sidebars #sq
   height: 130px;
 }
 
-#wrapper #container #header h1, #wrapper #container #header h1 a:link, #wrapper #container #header h1 a:visited {
+#wrapper #container #header h1,
+#wrapper #container #header h1 a:link,
+#wrapper #container #header h1 a:visited {
   text-shadow: none;
   color: #000;
 }

@@ -1,4 +1,4 @@
-/* $Id: dashboard.css,v 1.12 2010/03/28 11:29:27 dries Exp $ */
+/* $Id: dashboard.css,v 1.13 2010/04/28 20:08:38 dries Exp $ */
 
 #dashboard div.dashboard-region {
   float: left;
@@ -26,7 +26,8 @@
   float: none;
 }
 
-#dashboard #disabled-blocks .block, #dashboard .block-placeholder {
+#dashboard #disabled-blocks .block,
+#dashboard .block-placeholder {
   background: #e2e1dc;
   padding: 6px 4px 6px 8px;
   margin: 3px 3px 3px 0;
@@ -92,7 +93,8 @@
   background: #0074BD;
 }
 
-#dashboard #disabled-blocks .block .content, #dashboard .ui-sortable-helper .content {
+#dashboard #disabled-blocks .block .content,
+#dashboard .ui-sortable-helper .content {
   display: none;
 }
 

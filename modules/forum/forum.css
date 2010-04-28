@@ -1,10 +1,15 @@
-/* $Id: forum.css,v 1.7 2009/08/22 15:26:04 dries Exp $ */
+/* $Id: forum.css,v 1.8 2010/04/28 20:08:38 dries Exp $ */
 
 #forum .description {
   font-size: 0.9em;
   margin: 0.5em;
 }
-#forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.pager {
+#forum td.created,
+#forum td.posts,
+#forum td.topics,
+#forum td.last-reply,
+#forum td.replies,
+#forum td.pager {
   white-space: nowrap;
 }
 #forum tr td.forum {

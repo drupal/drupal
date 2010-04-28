@@ -1,11 +1,13 @@
-/* $Id: locale.css,v 1.6 2010/01/03 21:01:04 webchick Exp $ */
+/* $Id: locale.css,v 1.7 2010/04/28 20:08:38 dries Exp $ */
 
 .locale-untranslated {
   font-style: normal;
   text-decoration: line-through;
 }
 
-.form-item-language, .form-item-translation, .form-item-group {
+.form-item-language,
+.form-item-translation,
+.form-item-group {
   float: left; /* LTR */
   padding-right: .8em; /* LTR */
   margin: 0.1em;

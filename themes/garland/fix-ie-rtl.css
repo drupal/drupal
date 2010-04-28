@@ -1,4 +1,4 @@
-/* $Id: fix-ie-rtl.css,v 1.5 2010/03/31 20:24:13 dries Exp $ */
+/* $Id: fix-ie-rtl.css,v 1.6 2010/04/28 20:08:39 dries Exp $ */
 
 body {
   /* Center layout */
@@ -10,11 +10,12 @@ body {
   direction: ltr;
 }
 
-#squeeze .left-corner{
+#squeeze .left-corner {
   direction: rtl
 }
 
-#header-region, #wrapper #container {
+#header-region,
+#wrapper #container {
   /* Reset text alignment */
   text-align: right;
 }
@@ -54,7 +55,8 @@ tr.menu-disabled {
   height: 1em;
 }
 
-#attach-hide label, #uploadprogress div.message {
+#attach-hide label,
+#uploadprogress div.message {
   /* Fading elements in IE causes the text to bleed unless they have a background. */
   background-color: #ffffff;
 }

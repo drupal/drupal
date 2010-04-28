@@ -1,4 +1,4 @@
-/* $Id: node.css,v 1.16 2010/04/08 18:26:42 dries Exp $ */
+/* $Id: node.css,v 1.17 2010/04/28 20:08:39 dries Exp $ */
 
 .node-unpublished {
   background-color: #fff4f4;
@@ -7,7 +7,8 @@
   background-color: #ffffea;
 }
 /* Override the default multiselect layout in system-behavior.css. */
-#node-admin-content dl.multiselect dd, dl.multiselect dd .form-item {
+#node-admin-content dl.multiselect dd,
+dl.multiselect dd .form-item {
   width: 20em; /* 6em label + 14em select */
 }
 #node-admin-content dl.multiselect dd .form-item label {

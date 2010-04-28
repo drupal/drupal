@@ -1,4 +1,4 @@
-/* $Id: system-behavior.css,v 1.8 2010/04/11 18:45:47 dries Exp $ */
+/* $Id: system-behavior.css,v 1.9 2010/04/28 20:08:39 dries Exp $ */
 
 /**
  * Autocomplete
@@ -176,12 +176,15 @@ tr .ajax-progress .throbber {
 /**
  * Multiselect form
  */
-dl.multiselect dd, dl.multiselect dd .form-item, dl.multiselect dd select {
+dl.multiselect dd,
+dl.multiselect dd .form-item,
+dl.multiselect dd select {
   font-family: inherit;
   font-size: inherit;
   width: 14em;
 }
-dl.multiselect dt, dl.multiselect dd {
+dl.multiselect dt,
+dl.multiselect dd {
   float: left; /* LTR */
   line-height: 1.75em;
   padding: 0;
@@ -217,7 +220,8 @@ dl.multiselect .form-item {
   width: 0%;
   background-color: #47C965;
 }
-input.password-confirm, input.password-field {
+input.password-confirm,
+input.password-field {
   width: 16em;
   margin-bottom: 0.4em;
 }

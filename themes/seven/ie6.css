@@ -1,4 +1,4 @@
-/* $Id: ie6.css,v 1.5 2010/03/05 15:23:25 dries Exp $ */
+/* $Id: ie6.css,v 1.6 2010/04/28 20:08:39 dries Exp $ */
 
 ul.menu li,
 ul.menu li a,
@@ -8,11 +8,13 @@ ul.links li a,
 #page {
   height: 1%;
 }
-#block-system-main ul.node-type-list li a, #block-system-main ul.admin-list li a {
+#block-system-main ul.node-type-list li a,
+#block-system-main ul.admin-list li a {
   height: 1px;
   position: relative;
   display: block;
 }
-#block-system-main ul.node-type-list li div.description a, #block-system-main ul.admin-list li div.description a {
+#block-system-main ul.node-type-list li div.description a,
+#block-system-main ul.admin-list li div.description a {
   display: inline;
 }

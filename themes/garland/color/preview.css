@@ -1,11 +1,12 @@
-/* $Id: preview.css,v 1.4 2010/04/22 05:18:21 webchick Exp $ */
+/* $Id: preview.css,v 1.5 2010/04/28 20:08:39 dries Exp $ */
 
 /* Positioning */
 #preview {
   overflow: hidden;
   max-width: 100%;
 }
-#preview, #preview #img {
+#preview,
+#preview #img {
   width: 600px;
   height: 371px;
 }
@@ -50,7 +51,8 @@
 #preview p {
   margin: .5em 0;
 }
-#preview a:link, #preview a:visited {
+#preview a:link,
+#preview a:visited {
   text-decoration: none;
   font-weight: normal;
 }
