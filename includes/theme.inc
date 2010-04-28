@@ -621,130 +621,88 @@ function list_themes($refresh = FALSE) {
 }
 
 /**
- * Generate the themed output.
+ * Generates themed output.
  *
- * All requests for theme hooks must go through this function. It examines
- * the request and routes it to the appropriate theme function. The theme
- * registry is checked to determine which implementation to use, which may
- * be a function or a template.
+ * All requests for themed output must go through this function. It examines
+ * the request and routes it to the appropriate theme function or template, by
+ * checking the theme registry.
  *
- * If the implementation is a template, the following functions may be used to
- * modify the $variables array. They are processed in two distinct phases;
- * "preprocess" and "process" functions. The order listed here is the order in
- * which they execute.
+ * The first argument to this function is the name of the theme hook. For
+ * instance, to theme a table, the theme hook name is 'table'. By default, this
+ * theme hook could be implemented by a function called 'theme_table' or a
+ * template file called 'table.tpl.php', but hook_theme() can override the
+ * default function or template name.
  *
- * - template_preprocess(&$variables)
- *   This sets a default set of variables for all template implementations.
+ * If the implementation is a template file, several functions are called
+ * before the template file is invoked, to modify the $variables array. These
+ * fall into the "preprocessing" phase and the "processing" phase, and are
+ * executed (if they exist), in the following order (note that in the following
+ * list, HOOK indicates the theme hook name, MODULE indicates a module name,
+ * THEME indicates a theme name, and ENGINE indicates a theme engine name):
+ * - template_preprocess(&$variables, $hook): Creates a default set of variables
+ *   for all theme hooks.
+ * - template_preprocess_HOOK(&$variables): Should be implemented by
+ *   the module that registers the theme hook, to set up default variables.
+ * - MODULE_preprocess(&$variables, $hook): hook_preprocess() is invoked on all
+ *   implementing modules.
+ * - MODULE_preprocess_HOOK(&$variables): hook_preprocess_HOOK() is invoked on
+ *   all implementing modules, so that modules that didn't define the theme hook
+ *   can alter the variables.
+ * - ENGINE_engine_preprocess(&$variables, $hook): Allows the theme engine to
+ *   set necessary variables for all theme hooks.
+ * - ENGINE_engine_preprocess_HOOK(&$variables): Allows the theme engine to set
+ *   necessary variables for the particular theme hook.
+ * - THEME_preprocess(&$variables, $hook): Allows the theme to set necessary
+ *   variables for all theme hooks.
+ * - THEME_preprocess_HOOK(&$variables): Allows the theme to set necessary
+ *   variables specific to the particular theme hook.
+ * - template_process(&$variables, $hook): Creates a default set of variables
+ *   for all theme hooks.
+ * - template_process_HOOK(&$variables): This is the first processor specific
+ *   to the theme hook; it should be implemented by the module that registers
+ *   it.
+ * - MODULE_process(&$variables, $hook): hook_process() is invoked on all
+ *   implementing modules.
+ * - MODULE_process_HOOK(&$variables): hook_process_HOOK() is invoked on
+ *   on all implementing modules, so that modules that didn't define the theme
+ *   hook can alter the variables.
+ * - ENGINE_engine_process(&$variables, $hook): Allows the theme engine to set
+ *   necessary variables for all theme hooks.
+ * - ENGINE_engine_process_HOOK(&$variables): Allows the theme engine to set
+ *   necessary variables for the particular theme hook.
+ * - ENGINE_process(&$variables, $hook): Allows the theme engine to process the
+ *   variables.
+ * - ENGINE_process_HOOK(&$variables): Allows the theme engine to process the
+ *   variables specific to the theme hook.
+ * - THEME_process(&$variables, $hook):  Allows the theme to process the
+ *   variables.
+ * - THEME_process_HOOK(&$variables):  Allows the theme to process the
+ *   variables specific to the theme hook.
  *
- * - template_preprocess_HOOK(&$variables)
- *   This is the first preprocessor called specific to the hook; it should be
- *   implemented by the module that registers it.
- *
- * - MODULE_preprocess(&$variables)
- *   This will be called for all templates; it should only be used if there
- *   is a real need. It's purpose is similar to template_preprocess().
- *
- * - MODULE_preprocess_HOOK(&$variables)
- *   This is for modules that want to alter or provide extra variables for
- *   theming hooks not registered to itself. For example, if a module named
- *   "foo" wanted to alter the $classes_array variable for the hook "node" a
- *   preprocess function of foo_preprocess_node() can be created to intercept
- *   and alter the variable.
- *
- * - ENGINE_engine_preprocess(&$variables)
- *   This function should only be implemented by theme engines and exists
- *   so that it can set necessary variables for all hooks.
- *
- * - ENGINE_engine_preprocess_HOOK(&$variables)
- *   This is the same as the previous function, but it is called for a single
- *   theming hook.
- *
- * - THEME_preprocess(&$variables)
- *   This is for themes that want to alter or provide extra variables. For
- *   example, if a theme named "foo" wanted to alter the $classes_array variable
- *   for the hook "node" a preprocess function of foo_preprocess_node() can be
- *   created to intercept and alter the variable.
- *
- * - THEME_preprocess_HOOK(&$variables)
- *   The same applies from the previous function, but it is called for a
- *   specific hook.
- *
- * - template_process(&$variables)
- *   This sets a default set of variables for all template implementations.
- *
- * - template_process_HOOK(&$variables)
- *   This is the first processor called specific to the hook; it should be
- *   implemented by the module that registers it.
- *
- * - MODULE_process(&$variables)
- *   This will be called for all templates; it should only be used if there
- *   is a real need. It's purpose is similar to template_process().
- *
- * - MODULE_process_HOOK(&$variables)
- *   This is for modules that want to alter or provide extra variables for
- *   theming hooks not registered to itself. For example, if a module named
- *   "foo" wanted to alter the $classes_array variable for the hook "node" a
- *   process function of foo_process_node() can be created to intercept
- *   and alter the variable.
- *
- * - ENGINE_engine_process(&$variables)
- *   This function should only be implemented by theme engines and exists
- *   so that it can set necessary variables for all hooks.
- *
- * - ENGINE_engine_process_HOOK(&$variables)
- *   This is the same as the previous function, but it is called for a single
- *   theming hook.
- *
- * - ENGINE_process(&$variables)
- *   This is meant to be used by themes that utilize a theme engine. It is
- *   provided so that the processor is not locked into a specific theme.
- *   This makes it easy to share and transport code but theme authors must be
- *   careful to prevent fatal re-declaration errors when using sub-themes that
- *   have their own processor named exactly the same as its base theme. In
- *   the default theme engine (PHPTemplate), sub-themes will load their own
- *   template.php file in addition to the one used for its parent theme. This
- *   increases the risk for these errors. A good practice is to use the engine
- *   name for the base theme and the theme name for the sub-themes to minimize
- *   this possibility.
- *
- * - ENGINE_process_HOOK(&$variables)
- *   The same applies from the previous function, but it is called for a
- *   specific hook.
- *
- * - THEME_process(&$variables)
- *   These functions are based upon the raw theme; they should primarily be
- *   used by themes that do not use an engine or by sub-themes. It serves the
- *   same purpose as ENGINE_process().
- *
- * - THEME_process_HOOK(&$variables)
- *   The same applies from the previous function, but it is called for a
- *   specific hook.
- *
- * If the implementation is a function, only the hook-specific preprocess
+ * If the implementation is a function, only the theme-hook-specific preprocess
  * and process functions (the ones ending in _HOOK) are called from the
- * above list. This is because theme hooks with function implementations
- * need to be fast, and calling the non-hook-specific preprocess and process
- * functions for them would incur a noticeable performance penalty.
+ * list above. This is because theme hooks with function implementations
+ * need to be fast, and calling the non-theme-hook-specific preprocess and
+ * process functions for them would incur a noticeable performance penalty.
  *
  * There are two special variables that these preprocess and process functions
- * can set:
- *   'theme_hook_suggestion' and 'theme_hook_suggestions'. These will be merged
- *   together to form a list of 'suggested' alternate hooks to use, in
- *   reverse order of priority. theme_hook_suggestion will always be a higher
- *   priority than items in theme_hook_suggestions. theme() will use the
- *   highest priority implementation that exists. If none exists, theme() will
- *   use the implementation for the theme hook it was called with. These
- *   suggestions are similar to and are used for similar reasons as calling
- *   theme() with an array as the $hook parameter (see below). The difference
- *   is whether the suggestions are determined by the code that calls theme() or
- *   by a preprocess or process function.
+ * can set: 'theme_hook_suggestion' and 'theme_hook_suggestions'. These will be
+ * merged together to form a list of 'suggested' alternate theme hooks to use,
+ * in reverse order of priority. theme_hook_suggestion will always be a higher
+ * priority than items in theme_hook_suggestions. theme() will use the
+ * highest priority implementation that exists. If none exists, theme() will
+ * use the implementation for the theme hook it was called with. These
+ * suggestions are similar to and are used for similar reasons as calling
+ * theme() with an array as the $hook parameter (see below). The difference
+ * is whether the suggestions are determined by the code that calls theme() or
+ * by a preprocess or process function.
  *
  * @param $hook
  *   The name of the theme hook to call. If the name contains a
  *   double-underscore ('__') and there isn't an implementation for the full
  *   name, the part before the '__' is checked. This allows a fallback to a more
  *   generic implementation. For example, if theme('links__node', ...) is
- *   called, but there is no implementation of that hook, then the 'links'
+ *   called, but there is no implementation of that theme hook, then the 'links'
  *   implementation is used. This process is iterative, so if
  *   theme('links__contextual__node', ...) is called, theme() checks for the
  *   following implementations, and uses the first one that exists:
@@ -753,20 +711,20 @@ function list_themes($refresh = FALSE) {
  *   - links
  *   This allows themes to create specific theme implementations for named
  *   objects and contexts of otherwise generic theme hooks. The $hook parameter
- *   may also be an array, in which case the first hook that has an
+ *   may also be an array, in which case the first theme hook that has an
  *   implementation is used. This allows for the code that calls theme() to
  *   explicitly specify the fallback order in a situation where using the '__'
- *   convention is not desired or insufficient.
- *
+ *   convention is not desired or is insufficient.
  * @param $variables
  *   An associative array of variables to merge with defaults from the theme
  *   registry, pass to preprocess and process functions for modification, and
  *   finally, pass to the function or template implementing the theme hook.
- *   Alternatively, this can be a renderable array, in which case, its properties
- *   are mapped to variables expected by the theme hook implementations.
+ *   Alternatively, this can be a renderable array, in which case, its
+ *   properties are mapped to variables expected by the theme hook
+ *   implementations.
  *
  * @return
- *   An HTML string that generates the themed output.
+ *   An HTML string representing the themed output.
  */
 function theme($hook, $variables = array()) {
   static $hooks = NULL;
