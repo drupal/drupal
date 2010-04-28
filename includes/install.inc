@@ -849,9 +849,13 @@ function install_goto($path) {
  * @see t()
  * @ingroup sanitization
  */
-function st($string, $args = array()) {
+function st($string, array $args = array(), array $options = array()) {
   static $locale_strings = NULL;
   global $install_state;
+
+  if (empty($options['context'])) {
+    $options['context'] = '';
+  }
 
   if (!isset($locale_strings)) {
     $locale_strings = array();
@@ -883,7 +887,7 @@ function st($string, $args = array()) {
       case '!':
     }
   }
-  return strtr((!empty($locale_strings[$string]) ? $locale_strings[$string] : $string), $args);
+  return strtr((!empty($locale_strings[$options['context']][$string]) ? $locale_strings[$options['context']][$string] : $string), $args);
 }
 
 /**
