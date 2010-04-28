@@ -1,5 +1,5 @@
 <?php
-// $Id: block.api.php,v 1.11 2010/04/22 09:12:35 webchick Exp $
+// $Id: block.api.php,v 1.12 2010/04/28 12:36:26 dries Exp $
 
 /**
  * @file
@@ -192,7 +192,7 @@ function hook_block_view($delta = '') {
  *   - delta: The identifier for the block within that module, as defined within
  *     hook_block_info().
  *
- * @see hook_block_view_alter()
+ * @see hook_block_view_MODULE_DELTA_alter()
  * @see hook_block_view()
  */
 function hook_block_view_alter(&$data, $block) {
@@ -212,10 +212,6 @@ function hook_block_view_alter(&$data, $block) {
  *
  * Modules can implement hook_block_view_MODULE_DELTA_alter() to modify a
  * specific block, rather than implementing hook_block_view_alter().
- *
- * Note that this hook fires before hook_block_view_alter(). Therefore, all
- * implementations of hook_block_view_MODULE_DELTA_alter() will run before all
- * implementations of hook_block_view_alter(), regardless of the module order.
  *
  * @param $data
  *   An array of data, as returned from the hook_block_view() implementation of

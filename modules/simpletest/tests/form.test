@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.48 2010/04/11 19:00:27 dries Exp $
+// $Id: form.test,v 1.49 2010/04/28 12:36:26 dries Exp $
 
 /**
  * @file
@@ -206,6 +206,40 @@ class FormsTestCase extends DrupalWebTestCase {
         }
       }
     }
+  }
+}
+
+/**
+ * Test form alter hooks.
+ */
+class FormAlterTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Form alter hooks',
+      'description' => 'Tests hook_form_alter() and hook_form_FORM_ID_alter().',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests execution order of hook_form_alter() and hook_form_FORM_ID_alter().
+   */
+  function testExecutionOrder() {
+    $this->drupalGet('form-test/alter');
+    // Ensure that the order is first by module, then for a given module, the
+    // id-specific one after the generic one.
+    $expected = array(
+      'block_form_form_test_alter_form_alter() executed.',
+      'form_test_form_alter() executed.',
+      'form_test_form_form_test_alter_form_alter() executed.',
+      'system_form_form_test_alter_form_alter() executed.',
+    );
+    $content = preg_replace('/\s+/', ' ', filter_xss($this->content, array()));
+    $this->assert(strpos($content, implode(' ', $expected)) !== FALSE, t('Form alter hooks executed in the expected order.'));
   }
 }
 

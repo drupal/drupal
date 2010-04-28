@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.36 2010/04/27 10:42:58 dries Exp $
+// $Id: select.inc,v 1.37 2010/04/28 12:36:26 dries Exp $
 
 /**
  * @ingroup database
@@ -1069,10 +1069,11 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
     // Modules may alter all queries or only those having a particular tag.
     if (isset($this->alterTags)) {
-      drupal_alter('query', $query);
+      $hooks = array('query');
       foreach ($this->alterTags as $tag => $value) {
-        drupal_alter("query_$tag", $query);
+        $hooks[] = 'query_' . $tag;
       }
+      drupal_alter($hooks, $query);
     }
     return $this->prepared = TRUE;
   }

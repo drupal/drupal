@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.454 2010/04/24 14:49:13 dries Exp $
+// $Id: form.inc,v 1.455 2010/04/28 12:36:26 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -774,11 +774,8 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     }
   }
 
-  // Invoke hook_form_FORM_ID_alter() implementations.
-  drupal_alter('form_' . $form_id, $form, $form_state);
-
-  // Invoke hook_form_alter() implementations.
-  drupal_alter('form', $form, $form_state, $form_id);
+  // Invoke hook_form_alter() and hook_form_FORM_ID_alter() implementations.
+  drupal_alter(array('form', 'form_' . $form_id), $form, $form_state, $form_id);
 }
 
 
