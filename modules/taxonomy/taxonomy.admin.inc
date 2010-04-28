@@ -121,7 +121,7 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
     '#required' => TRUE,
-    '#field_suffix' => ' <small id="edit-name-suffix">&nbsp</small>',
+    '#field_suffix' => ' <small id="edit-name-suffix">&nbsp;</small>',
   );
   $js_settings = array(
     'type' => 'setting',

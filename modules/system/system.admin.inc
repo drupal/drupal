@@ -2017,7 +2017,7 @@ function system_add_date_format_type_form($form, &$form_state) {
     '#title' => t('Date type'),
     '#type' => 'textfield',
     '#required' => TRUE,
-    '#field_suffix' => ' <small id="edit-date-type-suffix">&nbsp</small>',
+    '#field_suffix' => ' <small id="edit-date-type-suffix">&nbsp;</small>',
   );
   $js_settings = array(
     'type' => 'setting',
