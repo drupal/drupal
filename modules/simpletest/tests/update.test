@@ -1,5 +1,5 @@
 <?php
-// $Id: update.test,v 1.1 2010/02/03 18:16:23 webchick Exp $
+// $Id: update.test,v 1.2 2010/04/28 05:28:22 webchick Exp $
 
 /**
  * @file
@@ -83,6 +83,34 @@ class UpdateDependencyMissingTestCase extends DrupalWebTestCase {
     $this->assertTrue($update_graph['update_test_2_update_7000']['allowed'], t("The module's first update function is allowed to run, since it does not have any missing dependencies."));
     $this->assertFalse($update_graph['update_test_2_update_7001']['allowed'], t("The module's second update function is not allowed to run, since it has a direct dependency on a missing update."));
     $this->assertFalse($update_graph['update_test_2_update_7002']['allowed'], t("The module's third update function is not allowed to run, since it has an indirect dependency on a missing update."));
+  }
+}
+
+/**
+ * Tests for the invocation of hook_update_dependencies().
+ */
+class UpdateDependencyHookInvocationTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Update dependency hook invocation',
+      'description' => 'Test that the hook invocation for determining update dependencies works correctly.',
+      'group' => 'Update API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('update_test_1', 'update_test_2');
+    require_once DRUPAL_ROOT . '/includes/update.inc';
+  }
+
+  /**
+   * Test the structure of the array returned by hook_update_dependencies().
+   */
+  function testHookUpdateDependencies() {
+    $update_dependencies = update_retrieve_dependencies();
+    $this->assertTrue($update_dependencies['system'][7000]['update_test_1'] == 7000, t('An update function that has a dependency on two separate modules has the first dependency recorded correctly.'));
+    $this->assertTrue($update_dependencies['system'][7000]['update_test_2'] == 7001, t('An update function that has a dependency on two separate modules has the second dependency recorded correctly.'));
+    $this->assertTrue($update_dependencies['system'][7001]['update_test_1'] == 7002, t('An update function that depends on more than one update from the same module only has the dependency on the higher-numbered update function recorded.'));
   }
 }
 

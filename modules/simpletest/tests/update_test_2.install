@@ -1,5 +1,5 @@
 <?php
-// $Id: update_test_2.install,v 1.1 2010/02/03 18:16:23 webchick Exp $
+// $Id: update_test_2.install,v 1.2 2010/04/28 05:28:22 webchick Exp $
 
 /**
  * @file
@@ -8,11 +8,30 @@
 
 /**
  * Implements hook_update_dependencies().
+ *
+ * @see update_test_1_update_dependencies()
+ * @see update_test_3_update_dependencies()
  */
 function update_test_2_update_dependencies() {
+  // Combined with update_test_3_update_dependencies(), we are declaring here
+  // that these two modules run updates in the following order:
+  // 1. update_test_2_update_7000()
+  // 2. update_test_3_update_7000()
+  // 3. update_test_2_update_7001()
+  // 4. update_test_2_update_7002()
   $dependencies['update_test_2'][7001] = array(
     'update_test_3' => 7000,
   );
+
+  // These are coordinated with the corresponding dependencies declared in
+  // update_test_1_update_dependencies().
+  $dependencies['system'][7000] = array(
+    'update_test_2' => 7001,
+  );
+  $dependencies['system'][7001] = array(
+    'update_test_1' => 7001,
+  );
+
   return $dependencies;
 }
 
