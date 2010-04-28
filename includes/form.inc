@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.455 2010/04/28 12:36:26 dries Exp $
+// $Id: form.inc,v 1.456 2010/04/28 16:11:22 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3042,31 +3042,26 @@ function theme_form_element($variables) {
 
   $output = '<div class="' . implode(' ', $class) . '">' . "\n";
 
-  if (isset($element['#field_prefix'])) {
-    $output .= '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ';
-  }
+  $prefix = isset($element['#field_prefix']) ? '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ' : '';
+  $suffix = isset($element['#field_suffix']) ? ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>' : '';
 
   switch ($element['#title_display']) {
     case 'before':
       $output .= ' ' . theme('form_element_label', $variables);
-      $output .= ' ' . $element['#children'] . "\n";
+      $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
       break;
 
     case 'invisible':
     case 'after':
-      $output .= ' ' . $element['#children'];
+      $output .= ' ' . $prefix . $element['#children'] . $suffix;
       $output .= ' ' . theme('form_element_label', $variables) . "\n";
       break;
 
     case 'none':
     case 'attribute':
       // Output no label and no required marker, only the children.
-      $output .= ' ' . $element['#children'] . "\n";
+      $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
       break;
-  }
-
-  if (isset($element['#field_suffix'])) {
-    $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
   }
 
   if (!empty($element['#description'])) {
