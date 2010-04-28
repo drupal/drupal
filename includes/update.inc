@@ -1100,16 +1100,10 @@ function update_build_dependency_graph($update_functions) {
   }
 
   // Now add any explicit update dependencies declared by modules.
-  $update_dependencies = update_invoke_all('update_dependencies');
+  $update_dependencies = update_retrieve_dependencies();
   foreach ($graph as $function => $data) {
     if (!empty($update_dependencies[$data['module']][$data['number']])) {
       foreach ($update_dependencies[$data['module']][$data['number']] as $module => $number) {
-        // If we have an explicit dependency on more than one update from a
-        // particular module, choose the highest one, since that contains the
-        // actual direct dependency.
-        if (is_array($number)) {
-          $number = max($number);
-        }
         $dependency = $module . '_update_' . $number;
         $graph[$dependency]['edges'][$function] = TRUE;
         $graph[$dependency]['module'] = $module;
@@ -1158,39 +1152,66 @@ function update_already_performed($module, $number) {
 }
 
 /**
- * Invoke an update system hook in all installed modules.
+ * Invoke hook_update_dependencies() in all installed modules.
  *
- * This function is similar to module_invoke_all(), except it does not require
- * that a module be enabled to invoke its hook, only that it be installed. This
- * allows the update system to properly perform updates even on modules that
- * are currently disabled.
- *
- * @param $hook
- *   The name of the hook to invoke.
- * @param ...
- *   Arguments to pass to the hook.
+ * This function is similar to module_invoke_all(), with the main difference
+ * that it does not require that a module be enabled to invoke its hook, only
+ * that it be installed. This allows the update system to properly perform
+ * updates even on modules that are currently disabled.
  *
  * @return
- *   An array of return values of the hook implementations. If modules return
- *   arrays from their implementations, those are merged into one array.
+ *   An array of return values obtained by merging the results of the
+ *   hook_update_dependencies() implementations in all installed modules.
  *
  * @see module_invoke_all()
+ * @see hook_update_dependencies()
  */
-function update_invoke_all() {
-  $args = func_get_args();
-  $hook = $args[0];
-  unset($args[0]);
+function update_retrieve_dependencies() {
   $return = array();
-  $modules = db_query("SELECT name FROM {system} WHERE type = 'module' AND schema_version != :schema", array(':schema' => SCHEMA_UNINSTALLED))->fetchCol();
+  // Get a list of installed modules, arranged so that we invoke their hooks in
+  // the same order that module_invoke_all() does.
+  $modules = db_query("SELECT name FROM {system} WHERE type = 'module' AND schema_version != :schema ORDER BY weight ASC, name ASC", array(':schema' => SCHEMA_UNINSTALLED))->fetchCol();
   foreach ($modules as $module) {
-    $function = $module . '_' . $hook;
+    $function = $module . '_update_dependencies';
     if (function_exists($function)) {
-      $result = call_user_func_array($function, $args);
+      $result = $function();
+      // Each implementation of hook_update_dependencies() returns a
+      // multidimensional, associative array containing some keys that
+      // represent module names (which are strings) and other keys that
+      // represent update function numbers (which are integers). We cannot use
+      // array_merge_recursive() to properly merge these results, since it
+      // treats strings and integers differently. Therefore, we have to
+      // explicitly loop through the expected array structure here and perform
+      // the merge manually.
       if (isset($result) && is_array($result)) {
-        $return = array_merge_recursive($return, $result);
-      }
-      elseif (isset($result)) {
-        $return[] = $result;
+        foreach ($result as $module => $module_data) {
+          foreach ($module_data as $update => $update_data) {
+            foreach ($update_data as $module_dependency => $update_dependency) {
+              // If there are redundant dependencies declared for the same
+              // update function (so that it is declared to depend on more than
+              // one update from a particular module), record the dependency on
+              // the highest numbered update here, since that automatically
+              // implies the previous ones. For example, if one module's
+              // implementation of hook_update_dependencies() required this
+              // ordering:
+              //
+              // system_update_7001 ---> user_update_7000
+              //
+              // but another module's implementation of the hook required this
+              // one:
+              //
+              // system_update_7002 ---> user_update_7000
+              //
+              // we record the second one, since system_update_7001() is always
+              // guaranteed to run before system_update_7002() anyway (within
+              // an individual module, updates are always run in numerical
+              // order).
+              if (!isset($return[$module][$update][$module_dependency]) || $update_dependency > $return[$module][$update][$module_dependency]) {
+                $return[$module][$update][$module_dependency] = $update_dependency;
+              }
+            }
+          }
+        }
       }
     }
   }
