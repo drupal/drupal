@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.55 2010/04/26 14:32:27 dries Exp $
+// $Id: forum.test,v 1.56 2010/04/28 05:54:55 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -268,7 +268,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);
-    $this->assertRaw(t('No forums defined'), 'The forum was not found');
+    $this->assertResponse(404, 'The forum was not found');
   }
 
   /**
