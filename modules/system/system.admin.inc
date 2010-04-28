@@ -192,34 +192,20 @@ function system_settings_overview() {
 }
 
 /**
- * Retrieve the list of themes that are not hidden.
- */
-function _system_theme_list() {
-  // Get current list of themes.
-  $themes = system_rebuild_theme_data();
-
-  // Remove hidden themes from the display list.
-  foreach ($themes as $theme_key => $theme) {
-    if (!empty($theme->info['hidden'])) {
-      unset($themes[$theme_key]);
-    }
-  }
-
-  uasort($themes, 'system_sort_modules_by_info_name');
-  return $themes;
-}
-
-/**
  * Menu callback; displays a listing of all themes.
  */
 function system_themes_page() {
   // Get current list of themes.
-  $themes = _system_theme_list();
+  $themes = list_themes();
+  uasort($themes, 'system_sort_modules_by_info_name');
 
   $theme_default = variable_get('theme_default', 'garland');
   $theme_groups  = array();
 
   foreach ($themes as &$theme) {
+    if (!empty($theme->info['hidden'])) {
+      continue;
+    }
     $admin_theme_options[$theme->name] = $theme->info['name'];
     $theme->is_default = ($theme->name == $theme_default);
 
@@ -373,7 +359,7 @@ function system_theme_enable() {
   if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
     $theme = $_REQUEST['theme'];
     // Get current list of themes.
-    $themes = _system_theme_list();
+    $themes = list_themes();
 
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
@@ -395,7 +381,7 @@ function system_theme_disable() {
   if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
     $theme = $_REQUEST['theme'];
     // Get current list of themes.
-    $themes = _system_theme_list();
+    $themes = list_themes();
 
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
@@ -423,7 +409,7 @@ function system_theme_default() {
   if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
     $theme = $_REQUEST['theme'];
     // Get current list of themes.
-    $themes = _system_theme_list();
+    $themes = list_themes();
 
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
