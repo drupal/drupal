@@ -576,7 +576,7 @@ function theme_comment_block() {
   $items = array();
   $number = variable_get('comment_block_count', 10);
   foreach (comment_get_recent($number) as $comment) {
-    $items[] = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)) . '<br />' . t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->changed)));
+    $items[] = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)) .'<span>'. t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->changed))) .'</span>';
   }
 
   if ($items) {
