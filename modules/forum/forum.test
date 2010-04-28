@@ -268,7 +268,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);
-    $this->assertRaw(t('No forums defined'), 'The forum was not found');
+    $this->assertResponse(404, 'The forum was not found');
   }
 
   /**
