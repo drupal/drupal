@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.69 2010/03/31 20:05:06 dries Exp $
+// $Id: locale.test,v 1.70 2010/04/28 05:12:43 webchick Exp $
 
 /**
  * @file
@@ -958,6 +958,35 @@ EOF;
 }
 
 /**
+ * Tests for the st() function.
+ */
+class LocaleInstallTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'String translation using st()',
+      'description' => 'Tests that st() works like t().',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale');
+
+    // st() lives in install.inc, so ensure that it is loaded for all tests.
+    require_once DRUPAL_ROOT . '/includes/install.inc';
+  }
+
+  /**
+   * Verify that function signatures of t() and st() are equal.
+   */
+  function testFunctionSignatures() {
+    $reflector_t = new ReflectionFunction('t');
+    $reflector_st = new ReflectionFunction('st');
+    $this->assertEqual($reflector_t->getParameters(), $reflector_st->getParameters(), t('Function signatures of t() and st() are equal.'));
+  }
+}
+
+/**
  * Locale uninstall with English UI functional test.
  */
 class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
@@ -1106,7 +1135,7 @@ class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest 
 /**
  * Functional tests for the language switching feature.
  */
-class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
+class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -1280,7 +1309,7 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
 /**
  * Functional test for language handling during user creation.
  */
-class LocalUserCreationTest extends DrupalWebTestCase {
+class LocaleUserCreationTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -1606,7 +1635,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
  *        http://example.cn/admin/config
  *          UI language in Chinese
  */
-class UILanguageNegotiationTest extends DrupalWebTestCase {
+class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'UI language negotiation',
@@ -1904,7 +1933,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 /**
  * Functional tests for localizing date formats.
  */
-class LocalizeDateFormatsFunctionalTest extends DrupalWebTestCase {
+class LocaleDateFormatsFunctionalTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -1969,3 +1998,4 @@ class LocalizeDateFormatsFunctionalTest extends DrupalWebTestCase {
     $this->assertText($french_date, t('French date format appears'));
   }
 }
+
