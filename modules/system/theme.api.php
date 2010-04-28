@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.api.php,v 1.2 2010/04/24 07:11:07 dries Exp $
+// $Id: theme.api.php,v 1.3 2010/04/28 20:00:34 dries Exp $
 
 /**
  * @defgroup themeable Default theme implementations
@@ -92,6 +92,108 @@ function hook_form_system_theme_settings_alter(&$form, &$form_state) {
     '#default_value' => theme_get_setting('toggle_breadcrumb'),
     '#description'   => t('Show a trail of links from the homepage to the current page.'),
   );
+}
+
+/**
+ * Preprocess theme variables.
+ *
+ * This hook allows modules to preprocess theme variables for theme templates.
+ * It is called for all invocations of theme(), to allow modules to add to
+ * or override variables for all theme hooks.
+ *
+ * @param $variables
+ *   The variables array (modify in place).
+ * @param $hook
+ *   The name of the theme hook.
+ */
+function hook_preprocess(&$variables, $hook) {
+ static $hooks;
+
+  // Add contextual links to the variables, if the user has permission.
+
+  if (!user_access('access contextual links')) {
+    return;
+  }
+
+  if (!isset($hooks)) {
+    $hooks = theme_get_registry();
+  }
+
+  // Determine the primary theme function argument.
+  if (isset($hooks[$hook]['variables'])) {
+    $keys = array_keys($hooks[$hook]['variables']);
+    $key = $keys[0];
+  }
+  else {
+    $key = $hooks[$hook]['render element'];
+  }
+
+  if (isset($variables[$key])) {
+    $element = $variables[$key];
+  }
+
+  if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
+    $variables['title_suffix']['contextual_links'] = contextual_links_view($element);
+    if (!empty($variables['title_suffix']['contextual_links'])) {
+      $variables['classes_array'][] = 'contextual-links-region';
+    }
+  }
+}
+
+/**
+ * Preprocess theme variables for a specific theme hook.
+ *
+ * This hook allows modules to preprocess theme variables for a specific theme
+ * hook. It should only be used if a module needs to override or add to the
+ * theme preprocessing for a theme hook it didn't define.
+ *
+ * @param $variables
+ *   The variables array (modify in place).
+ */
+function hook_preprocess_HOOK(&$variables) {
+  // This example is from rdf_preprocess_image(). It adds an RDF attribute
+  // to the image hook's variables.
+  $variables['attributes']['typeof'] = array('foaf:Image');
+}
+
+/**
+ * Process theme variables.
+ *
+ * This hook allows modules to process theme variables for theme templates.
+ * It is called for all invocations of theme(), to allow modules to add to
+ * or override variables for all theme hooks.
+ *
+ * @param $variables
+ *   The variables array (modify in place).
+ * @param $hook
+ *   The name of the theme hook.
+ */
+function hook_process(&$variables, $hook) {
+  // Wraps variables in RDF wrappers.
+  if (!empty($variables['rdf_template_variable_attributes_array'])) {
+    foreach ($variables['rdf_template_variable_attributes_array'] as $variable_name => $attributes) {
+      $context = array(
+        'hook' => $hook,
+        'variable_name' => $variable_name,
+        'variables' => $variables,
+      );
+      $variables[$variable_name] = theme('rdf_template_variable_wrapper', array('content' => $variables[$variable_name], 'attributes' => $attributes, 'context' => $context));
+    }
+  }
+}
+
+/**
+ * Process theme variables for a specific theme hook.
+ *
+ * This hook allows modules to process theme variables for a specific theme
+ * hook. It should only be used if a module needs to override or add to the
+ * theme processing for a theme hook it didn't define.
+ *
+ * @param $variables
+ *   The variables array (modify in place).
+ */
+function hook_process_HOOK(&$variables) {
+  $variables['classes'] .= ' my_added_class';
 }
 
 /**
