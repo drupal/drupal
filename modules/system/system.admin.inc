@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.273 2010/04/28 19:34:46 dries Exp $
+// $Id: system.admin.inc,v 1.274 2010/04/28 19:36:01 dries Exp $
 
 /**
  * @file
@@ -2017,7 +2017,7 @@ function system_add_date_format_type_form($form, &$form_state) {
     '#title' => t('Date type'),
     '#type' => 'textfield',
     '#required' => TRUE,
-    '#field_suffix' => ' <small id="edit-date-type-suffix">&nbsp</small>',
+    '#field_suffix' => ' <small id="edit-date-type-suffix">&nbsp;</small>',
   );
   $js_settings = array(
     'type' => 'setting',

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.102 2010/04/24 14:49:14 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.103 2010/04/28 19:36:01 dries Exp $
 
 /**
  * @file
@@ -121,7 +121,7 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
     '#required' => TRUE,
-    '#field_suffix' => ' <small id="edit-name-suffix">&nbsp</small>',
+    '#field_suffix' => ' <small id="edit-name-suffix">&nbsp;</small>',
   );
   $js_settings = array(
     'type' => 'setting',
