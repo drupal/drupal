@@ -168,7 +168,7 @@
  *   $commands[] = ajax_command_changed('#object-1');
  *   // Menu 'page callback' and #ajax['callback'] functions are supposed to
  *   // return render arrays. If returning an AJAX commands array, it must be
- *   // encapsulated in a render array structure. 
+ *   // encapsulated in a render array structure.
  *   return array('#type' => 'ajax', '#commands' => $commands);
  * @endcode
  *

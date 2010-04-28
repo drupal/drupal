@@ -14,7 +14,7 @@
 
 class DatabaseSchema_sqlite extends DatabaseSchema {
 
-	/**
+  /**
    * Override DatabaseSchema::$defaultSchema
    */
   protected $defaultSchema = 'main';

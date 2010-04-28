@@ -683,7 +683,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
         $languages = language_list();
         if (($mode != LOCALE_IMPORT_KEEP) || empty($languages[$lang]->plurals)) {
           // Since we only need to parse the header if we ought to update the
-          // plural formula, only run this if we don't need to keep existing 
+          // plural formula, only run this if we don't need to keep existing
           // data untouched or if we don't have an existing plural formula.
           $header = _locale_import_parse_header($value['msgstr']);
 

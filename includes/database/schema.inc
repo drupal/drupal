@@ -604,9 +604,9 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     if ($this->tableExists($name)) {
       throw new DatabaseSchemaObjectExistsException(t('Table %name already exists.', array('%name' => $name)));
     }
-  	$statements = $this->createTableSql($name, $table);
+    $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
-    	$this->connection->query($statement);
+      $this->connection->query($statement);
     }
   }
 

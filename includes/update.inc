@@ -223,11 +223,11 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas) {
           ))
           ->fetchField();
           if ($block_exists) {
-          	db_update($table)
-          	  ->fields(array('delta' => $new_delta))
-          	  ->condition('module', $module)
-          	  ->condition('delta', $old_delta)
-          	  ->execute();
+            db_update($table)
+              ->fields(array('delta' => $new_delta))
+              ->condition('module', $module)
+              ->condition('delta', $old_delta)
+              ->execute();
           }
         }
       }

@@ -2,14 +2,14 @@
 
 (function ($) {
   Drupal.color = {
-    callback: function(context, settings, form, farb, height, width) {  
+    callback: function(context, settings, form, farb, height, width) {
       // Solid background.
       $('#preview', form).css('backgroundColor', $('#palette input[name="palette[base]"]', form).val());
-      
+
       // Text preview
       $('#text', form).css('color', $('#palette input[name="palette[text]"]', form).val());
       $('#text a, #text h2', form).css('color', $('#palette input[name="palette[link]"]', form).val());
-      
+
       // Set up gradients if there are some.
       var color_start, color_end;
       for (i in settings.gradients) {
