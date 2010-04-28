@@ -1,6 +1,7 @@
 /* $Id$ */
 
-.form-item-type, .form-item-severity {
+.form-item-type,
+.form-item-severity {
   float: left; /* LTR */
   padding-right: .8em; /* LTR */
   margin: 0.1em;
@@ -31,10 +32,12 @@ tr.dblog-content {
 tr.dblog-content .active {
   background: #cce;
 }
-tr.dblog-page-not-found, tr.dblog-access-denied {
+tr.dblog-page-not-found,
+tr.dblog-access-denied {
   background: #dfd;
 }
-tr.dblog-page-not-found .active, tr.dblog-access-denied .active {
+tr.dblog-page-not-found .active,
+tr.dblog-access-denied .active {
   background: #cec;
 }
 tr.dblog-error {

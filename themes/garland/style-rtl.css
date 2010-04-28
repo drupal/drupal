@@ -11,15 +11,22 @@ body {
   direction: rtl;
 }
 
-ul, .block ul, ol {
+ul,
+.block ul,
+ol {
   padding: 0 1.5em 0 0;
 }
 
-ul.menu, .item-list ul {
+ul.menu,
+.item-list ul {
   margin: 0.35em -0.5em 0 0;
 }
 
-ol li, ul li, ul.menu li, .item-list ul li, li.leaf {
+ol li,
+ul li,
+ul.menu li,
+.item-list ul li,
+li.leaf {
   margin: 0.15em .5em 0.15em 0;
 }
 
@@ -68,7 +75,8 @@ dl dd {
   padding: 0 1.3 0 0;
 }
 
-.form-button, .form-submit {
+.form-button,
+.form-submit {
   margin: 2em 0 1em 0.5em;
 }
 
@@ -181,8 +189,14 @@ h1.with-tabs {
   margin: 0 0 0 2em;
 }
 
-ul.primary li a, ul.primary li.active a, ul.primary li a:hover, ul.primary li a:visited,
-ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.secondary li a:visited {
+ul.primary li a,
+ul.primary li.active a,
+ul.primary li a:hover,
+ul.primary li a:visited,
+ul.secondary li a,
+ul.secondary li.active a,
+ul.secondary li a:hover,
+ul.secondary li a:visited {
   margin: 0 1px 0 0;
 
 }
@@ -196,7 +210,8 @@ ul.links li, ul.inline li {
   padding-right: 0;
 }
 
-.node .links, .comment .links {
+.node .links,
+.comment .links {
   text-align: right;
 }
 
@@ -284,8 +299,14 @@ div.admin .right {
  */
 
 /* Position:relative on these breaks IE7. */
-ul.primary li a, ul.primary li.active a, ul.primary li a:hover, ul.primary li a:visited,
-ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.secondary li a:visited {
+ul.primary li a,
+ul.primary li.active a,
+ul.primary li a:hover,
+ul.primary li a:visited,
+ul.secondary li a,
+ul.secondary li.active a,
+ul.secondary li a:hover,
+ul.secondary li a:visited {
   position: static;
 }
 

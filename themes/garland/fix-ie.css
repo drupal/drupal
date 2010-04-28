@@ -5,7 +5,8 @@ body {
   text-align: center;
 }
 
-#header-region, #wrapper #container {
+#header-region,
+#wrapper #container {
   /* Reset text alignment */
   text-align: left; /* LTR */
 }
@@ -58,7 +59,8 @@ tr.taxonomy-term-preview {
   filter: alpha(opacity=50);
 }
 
-#attach-hide label, #uploadprogress div.message {
+#attach-hide label,
+#uploadprogress div.message {
   /* Fading elements in IE causes the text to bleed unless they have a background. */
   background-color: #ffffff;
 }

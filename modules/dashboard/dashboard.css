@@ -26,7 +26,8 @@
   float: none;
 }
 
-#dashboard #disabled-blocks .block, #dashboard .block-placeholder {
+#dashboard #disabled-blocks .block,
+#dashboard .block-placeholder {
   background: #e2e1dc;
   padding: 6px 4px 6px 8px;
   margin: 3px 3px 3px 0;
@@ -92,7 +93,8 @@
   background: #0074BD;
 }
 
-#dashboard #disabled-blocks .block .content, #dashboard .ui-sortable-helper .content {
+#dashboard #disabled-blocks .block .content,
+#dashboard .ui-sortable-helper .content {
   display: none;
 }
 

@@ -5,7 +5,8 @@
   overflow: hidden;
   max-width: 100%;
 }
-#preview, #preview #img {
+#preview,
+#preview #img {
   width: 600px;
   height: 371px;
 }
@@ -50,7 +51,8 @@
 #preview p {
   margin: .5em 0;
 }
-#preview a:link, #preview a:visited {
+#preview a:link,
+#preview a:visited {
   text-decoration: none;
   font-weight: normal;
 }

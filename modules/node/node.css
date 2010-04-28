@@ -7,7 +7,8 @@
   background-color: #ffffea;
 }
 /* Override the default multiselect layout in system-behavior.css. */
-#node-admin-content dl.multiselect dd, dl.multiselect dd .form-item {
+#node-admin-content dl.multiselect dd,
+dl.multiselect dd .form-item {
   width: 20em; /* 6em label + 14em select */
 }
 #node-admin-content dl.multiselect dd .form-item label {

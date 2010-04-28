@@ -14,7 +14,8 @@
   float: right;
   clear: right;
 }
-.color-form .form-text, .color-form .form-select {
+.color-form .form-text,
+.color-form .form-select {
   float: right;
 }
 .color-form .form-text {
@@ -24,7 +25,9 @@
 #palette .hook {
   float: right;
 }
-#palette .down, #palette .up, #palette .both {
+#palette .down,
+#palette .up,
+#palette .both {
   background: url(images/hook-rtl.png) no-repeat 0 0;
 }
 #palette .up {

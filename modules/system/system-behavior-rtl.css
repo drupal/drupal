@@ -71,14 +71,16 @@ div.indentation {
   padding: 0.42em 0.6em 0.42em 0;
   float: right;
 }
-div.tree-child, div.tree-child-last {
+div.tree-child,
+div.tree-child-last {
   background-position: -65px center;
 }
 
 /**
  * Multiselect form
  */
-dl.multiselect dt, dl.multiselect dd {
+dl.multiselect dt,
+dl.multiselect dd {
   float: right;
   margin: 0 0 0 1em;
 }

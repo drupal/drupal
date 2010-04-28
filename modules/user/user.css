@@ -6,11 +6,13 @@
 #permissions td.permission {
   padding-left: 1.5em; /* LTR */
 }
-#permissions tr.odd .form-item, #permissions tr.even .form-item {
+#permissions tr.odd .form-item,
+#permissions tr.even .form-item {
   white-space: normal;
 }
 /* Override the default multiselect layout in system-behavior.css. */
-#user-filter-form dl.multiselect dd, dl.multiselect dd .form-item {
+#user-filter-form dl.multiselect dd,
+dl.multiselect dd .form-item {
   width: 20em; /* 6em label + 14em select */
 }
 #user-filter-form dl.multiselect dd .form-item label {

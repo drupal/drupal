@@ -20,7 +20,9 @@ ul li.leaf {
   list-style-type: square;
   list-style-image: url(../../misc/menu-leaf.png);
 }
-li.expanded, li.collapsed, li.leaf {
+li.expanded,
+li.collapsed,
+li.leaf {
   padding: 0.2em 0.5em 0 0; /* LTR */
   margin: 0;
 }

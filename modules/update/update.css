@@ -52,7 +52,8 @@
   background: #ffe;
 }
 
-.current-version, .new-version {
+.current-version,
+.new-version {
   direction: ltr; /* Note: version numbers should always be LTR. */
 }
 

@@ -28,7 +28,12 @@ hr {
 legend {
   font-weight: bold;
 }
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: bold;
   margin: 10px 0;
 }
@@ -67,10 +72,13 @@ blockquote {
 address {
   font-style: italic;
 }
-u, ins {
+u,
+ins {
   text-decoration: underline;
 }
-s, strike, del {
+s,
+strike,
+del {
   text-decoration: line-through;
 }
 big {
@@ -92,15 +100,21 @@ sup {
 nobr {
   white-space: nowrap;
 }
-abbr, acronym {
+abbr,
+acronym {
   border-bottom: dotted 1px;
 }
-ul, .block ul, .item-list ul, .item-list ul {
+ul,
+.block ul,
+.item-list ul,
+.item-list ul {
   list-style-type: disc;
   list-style-image: none;
   margin: 0.25em 0 0.25em 1.5em;
 }
-.item-list ul li, li.leaf, ul.menu li {
+.item-list ul li,
+li.leaf,
+ul.menu li {
   list-style-type: disc;
   list-style-image: none;
 }
@@ -111,18 +125,23 @@ ol {
   list-style-type: decimal;
   margin: 0.25em 0 0.25em 2em;
 }
-.item-list ul li.collapsed, ul.menu li.collapsed {
+.item-list ul li.collapsed,
+ul.menu li.collapsed {
   list-style-image:url(../../misc/menu-collapsed.png);
   list-style-type:disc;
 }
-.item-list ul li.expanded, ul.menu li.expanded {
+.item-list ul li.expanded,
+ul.menu li.expanded {
   list-style-image:url(../../misc/menu-expanded.png);
   list-style-type:circle;
 }
-quote, code {
+quote,
+code {
   margin: .5em 0;
 }
-code, pre, kbd {
+code,
+pre,
+kbd {
   font-size: 1.25em;
 }
 
@@ -431,7 +450,8 @@ ul.admin-list li:last-child {
 ul.node-type-list .label {
   font-size: 15px;
 }
-ul.node-type-list li a, ul.admin-list li a {
+ul.node-type-list li a,
+ul.admin-list li a {
   margin-left: -30px;
   padding: 0px 0 4px 30px;
   min-height: 0;
@@ -440,7 +460,8 @@ ul.admin-list.compact li a {
   margin-left: 0;
   padding: 0;
 }
-ul.node-type-list li div.description a, ul.admin-list li div.description a {
+ul.node-type-list li div.description a,
+ul.admin-list li div.description a {
   margin-left: 0px;
   padding: 0px;
   min-height: inherit;
@@ -476,7 +497,8 @@ table.system-status-report tr.warning > * {
 table.system-status-report tr.error > * {
   background-color: #fdd;
 }
-tr.even, tr.odd {
+tr.even,
+tr.odd {
   border-width: 0 1px 0 1px;
   border-style: solid;
   border-color: #bebfb9;
@@ -633,10 +655,12 @@ div.description,
 ul.tips li {
   margin: 0.25em 0 0.25em 1.5em;
 }
-body div.form-type-radio div.description, body div.form-type-checkbox div.description {
+body div.form-type-radio div.description,
+body div.form-type-checkbox div.description {
   margin-left: 1.5em;
 }
-input.form-submit, a.button {
+input.form-submit,
+a.button {
   cursor: pointer;
   padding: 4px 17px;
   margin-bottom: 1em;
@@ -654,7 +678,10 @@ input.form-submit, a.button {
   -moz-border-radius: 20px;
   -webkit-border-radius: 15px;
 }
-a.button:link, a.button:visited, a.button:hover, a.button:active {
+a.button:link,
+a.button:visited,
+a.button:hover,
+a.button:active {
   text-decoration: none;
   color: #5a5a5a;
 }

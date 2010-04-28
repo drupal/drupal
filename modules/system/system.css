@@ -29,7 +29,8 @@ th {
 th.active img {
   display: inline;
 }
-tr.even, tr.odd {
+tr.even,
+tr.odd {
   background-color: #eee;
   border-bottom: 1px solid #ccc;
   padding: 0.1em 0.6em;
@@ -43,7 +44,8 @@ tr.drag-previous {
 td.active {
   background-color: #ddd;
 }
-td.checkbox, th.checkbox {
+td.checkbox,
+th.checkbox {
   text-align: center;
 }
 tbody {
@@ -86,18 +88,25 @@ thead th {
   margin-top: 1em;
   margin-bottom: 1em;
 }
-tr.odd .form-item, tr.even .form-item {
+tr.odd .form-item,
+tr.even .form-item {
   margin-top: 0;
   margin-bottom: 0;
   white-space: nowrap;
 }
-tr.merge-down, tr.merge-down td, tr.merge-down th {
+tr.merge-down,
+tr.merge-down td,
+tr.merge-down th {
   border-bottom-width: 0 !important;
 }
-tr.merge-up, tr.merge-up td, tr.merge-up th {
+tr.merge-up,
+tr.merge-up td,
+tr.merge-up th {
   border-top-width: 0 !important;
 }
-.form-item input.error, .form-item textarea.error, .form-item select.error {
+.form-item input.error,
+.form-item textarea.error,
+.form-item select.error {
   border: 2px solid red;
 }
 .form-item .description {
@@ -111,33 +120,40 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
   display: inline;
   font-weight: normal;
 }
-.form-checkboxes, .form-radios {
+.form-checkboxes,
+.form-radios {
   margin: 1em 0;
 }
-.form-checkboxes .form-item, .form-radios .form-item {
+.form-checkboxes .form-item,
+.form-radios .form-item {
   margin-top: 0.4em;
   margin-bottom: 0.4em;
 }
-.form-type-radio .description, .form-type-checkbox .description {
+.form-type-radio .description,
+.form-type-checkbox .description {
   margin-left: 2.4em;
 }
-input.form-checkbox, input.form-radio {
+input.form-checkbox,
+input.form-radio {
   vertical-align: middle;
 }
-.marker, .form-required {
+.marker,
+.form-required {
   color: #f00;
 }
 .more-help-link {
   text-align: right; /* LTR */
 }
-.more-help-link a, a.module-link {
+.more-help-link a,
+a.module-link {
   padding: 1px 0 1px 20px; /* LTR */
 }
 a.module-link {
   display: block;
   white-space: nowrap;
 }
-.more-help-link a, a.module-link-help {
+.more-help-link a,
+a.module-link-help {
   background: url(../../misc/help.png) 0 50% no-repeat; /* LTR */
 }
 a.module-link-permissions {

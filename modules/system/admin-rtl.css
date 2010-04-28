@@ -23,7 +23,8 @@ div.admin .expert-link {
   padding-left: 4px;
 }
 
-table.system-status-report th, table.system-status-report tr.merge-up td {
+table.system-status-report th,
+table.system-status-report tr.merge-up td {
   padding-right: 30px;
 }
 
@@ -38,7 +39,8 @@ table.screenshot {
 .date-container {
   clear: right;
 }
-.date-container .select-container, .date-container .custom-container {
+.date-container .select-container,
+.date-container .custom-container {
   float: right;
 }
 .date-container .custom-container {

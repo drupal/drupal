@@ -4,7 +4,12 @@
   font-size: 0.9em;
   margin: 0.5em;
 }
-#forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.pager {
+#forum td.created,
+#forum td.posts,
+#forum td.topics,
+#forum td.last-reply,
+#forum td.replies,
+#forum td.pager {
   white-space: nowrap;
 }
 #forum tr td.forum {
