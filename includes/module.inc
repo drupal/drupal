@@ -786,7 +786,12 @@ function drupal_required_modules() {
  *
  * @param $type
  *   A string describing the data type of the alterable $data. 'form', 'links',
- *   'node_content', and so on are several examples.
+ *   'node_content', and so on are several examples. Alternatively can be an
+ *   array, in which case hook_TYPE_alter() is invoked for each value in the
+ *   array, ordered first by module, and then for each module, in the order of
+ *   values in $type. For example, when Form API is using drupal_alter() to
+ *   execute both hook_form_alter() and hook_form_FORM_ID_alter()
+ *   implementations, it passes array('form', 'form_' . $form_id) for $type.
  * @param &$data
  *   The primary data to be altered.
  * @param &$context1
@@ -804,14 +809,69 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
   }
   $functions = &$drupal_static_fast['functions'];
 
+  // Most of the time, $type is passed as a string, so for performance,
+  // normalize it to that. When passed as an array, usually the first item in
+  // the array is a generic type, and additional items in the array are more
+  // specific variants of it, as in the case of array('form', 'form_FORM_ID').
+  if (is_array($type)) {
+    $cid = implode(',', $type);
+    $extra_types = $type;
+    $type = array_shift($extra_types);
+    // Allow if statements in this function to use the faster isset() rather
+    // than !empty() both when $type is passed as a string, or as an array with
+    // one item.
+    if (empty($extra_types)) {
+      unset($extra_types);
+    }
+  }
+  else {
+    $cid = $type;
+  }
+
   // Some alter hooks are invoked many times per page request, so statically
   // cache the list of functions to call, and on subsequent calls, iterate
   // through them quickly.
-  if (!isset($functions[$type])) {
-    $functions[$type] = array();
+  if (!isset($functions[$cid])) {
+    $functions[$cid] = array();
     $hook = $type . '_alter';
-    foreach (module_implements($hook) as $module) {
-      $functions[$type][] = $module . '_' . $hook;
+    $modules = module_implements($hook);
+    if (!isset($extra_types)) {
+      // For the more common case of a single hook, we do not need to call
+      // function_exists(), since module_implements() returns only modules with
+      // implementations.
+      foreach ($modules as $module) {
+        $functions[$cid][] = $module . '_' . $hook;
+      }
+    }
+    else {
+      // For multiple hooks, we need $modules to contain every module that
+      // implements at least one of them.
+      $extra_modules = array();
+      foreach ($extra_types as $extra_type) {
+        $extra_modules = array_merge($extra_modules, module_implements($extra_type . '_alter'));
+      }
+      // If any modules implement one of the extra hooks that do not implement
+      // the primary hook, we need to add them to the $modules array in their
+      // appropriate order.
+      if (array_diff($extra_modules, $modules)) {
+        // Order the modules by the order returned by module_list().
+        $modules = array_intersect(module_list(), array_merge($modules, $extra_modules));
+      }
+      foreach ($modules as $module) {
+        // Since $modules is a merged array, for any given module, we do not
+        // know whether it has any particular implementation, so we need a
+        // function_exists().
+        $function = $module . '_' . $hook;
+        if (function_exists($function)) {
+          $functions[$cid][] = $function;
+        }
+        foreach ($extra_types as $extra_type) {
+          $function = $module . '_' . $extra_type . '_alter';
+          if (function_exists($function)) {
+            $functions[$cid][] = $function;
+          }
+        }
+      }
     }
     // Allow the theme to alter variables after the theme system has been
     // initialized.
@@ -825,12 +885,22 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
       foreach ($theme_keys as $theme_key) {
         $function = $theme_key . '_' . $hook;
         if (function_exists($function)) {
-          $functions[$type][] = $function;
+          $functions[$cid][] = $function;
+        }
+        if (isset($extra_types)) {
+          foreach ($extra_types as $extra_type) {
+            $function = $theme_key . '_' . $extra_type . '_alter';
+            if (function_exists($function)) {
+              $functions[$cid][] = $function;
+            }
+          }
         }
       }
     }
   }
-  foreach ($functions[$type] as $function) {
+
+  foreach ($functions[$cid] as $function) {
     $function($data, $context1, $context2);
   }
 }
+

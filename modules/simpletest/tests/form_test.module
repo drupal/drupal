@@ -10,6 +10,13 @@
  * Implements hook_menu().
  */
 function form_test_menu() {
+  $items['form-test/alter'] = array(
+    'title' => 'Form altering test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_alter_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   $items['form-test/validate'] = array(
     'title' => 'Form validation handlers test',
     'page callback' => 'drupal_get_form',
@@ -139,6 +146,46 @@ function form_test_menu() {
   }
 
   return $items;
+}
+
+/**
+ * Form builder for testing hook_form_alter() and hook_form_FORM_ID_alter().
+ */
+function form_test_alter_form($form, &$form_state) {
+  // Elements can be added as needed for future testing needs, but for now,
+  // we're only testing alter hooks that do not require any elements added by
+  // this function.
+  return $form;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() on behalf of block.module.
+ */
+function block_form_form_test_alter_form_alter(&$form, &$form_state) {
+  drupal_set_message('block_form_form_test_alter_form_alter() executed.');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function form_test_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'form_test_alter_form') {
+    drupal_set_message('form_test_form_alter() executed.');
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function form_test_form_form_test_alter_form_alter(&$form, &$form_state) {
+  drupal_set_message('form_test_form_form_test_alter_form_alter() executed.');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() on behalf of system.module.
+ */
+function system_form_form_test_alter_form_alter(&$form, &$form_state) {
+  drupal_set_message('system_form_form_test_alter_form_alter() executed.');
 }
 
 /**

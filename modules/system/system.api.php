@@ -1241,7 +1241,11 @@ function hook_page_alter(&$page) {
  * altering a node form, the node object retrieved at from $form['#node'].
  *
  * Note that instead of hook_form_alter(), which is called for all forms, you
- * can also use hook_form_FORM_ID_alter() to alter a specific form.
+ * can also use hook_form_FORM_ID_alter() to alter a specific form. For each
+ * module (in system weight order) the general form alter hook implementation
+ * is invoked first, then the form ID specific alter implementation is called.
+ * After all module hook implementations are invoked, the hook_form_alter()
+ * implementations from themes are invoked in the same manner.
  *
  * @param $form
  *   Nested array of form elements that comprise the form.
@@ -1250,6 +1254,8 @@ function hook_page_alter(&$page) {
  * @param $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
+ *
+ * @see hook_form_FORM_ID_alter()
  */
 function hook_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
@@ -1269,15 +1275,12 @@ function hook_form_alter(&$form, &$form_state, $form_id) {
  * rather than implementing hook_form_alter() and checking the form ID, or
  * using long switch statements to alter multiple forms.
  *
- * Note that this hook fires before hook_form_alter(). Therefore all
- * implementations of hook_form_FORM_ID_alter() will run before all implementations
- * of hook_form_alter(), regardless of the module order.
- *
  * @param $form
  *   Nested array of form elements that comprise the form.
  * @param $form_state
  *   A keyed array containing the current state of the form.
  *
+ * @see hook_form_alter()
  * @see drupal_prepare_form()
  */
 function hook_form_FORM_ID_alter(&$form, &$form_state) {
