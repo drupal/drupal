@@ -141,8 +141,12 @@ function system_admin_menu_block_page() {
  * Menu callback; prints a listing of admin tasks for each installed module.
  */
 function system_admin_by_module() {
-
   $module_info = system_get_info('module');
+  foreach ($module_info as $module => $info) {
+    $module_info[$module] = new StdClass();
+    $module_info[$module]->info = $info;
+  }
+  uasort($module_info, 'system_sort_modules_by_info_name');
   $menu_items = array();
   $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
@@ -164,7 +168,7 @@ function system_admin_by_module() {
       // Sort.
       ksort($admin_tasks);
 
-      $menu_items[$info['name']] = array($info['description'], $admin_tasks);
+      $menu_items[$info->info['name']] = array($info->info['description'], $admin_tasks);
     }
   }
   return theme('system_admin_by_module', array('menu_items' => $menu_items));
