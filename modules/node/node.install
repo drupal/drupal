@@ -536,7 +536,7 @@ function node_update_7006(&$context) {
       $query->innerJoin('node', 'n', 'n.vid = nr.vid');
       $query
         ->fields('nr', array('nid', 'vid', 'body', 'teaser', 'format'))
-        ->fields('n', array('type', 'status', 'comment', 'promote', 'sticky'))
+        ->fields('n', array('type', 'status', 'comment', 'promote', 'sticky', 'language'))
         ->condition('nr.vid', $context['last'], '>')
         ->orderBy('nr.vid', 'ASC')
         ->range(0, $batch_size);
@@ -558,20 +558,24 @@ function node_update_7006(&$context) {
             'vid' => $revision->vid,
             'type' => $revision->type,
           );
+          // After node_update_7009() we will always have LANGUAGE_NONE as
+          // language neutral language code, but here we still have empty
+          // strings.
+          $langcode = empty($revision->language) ? LANGUAGE_NONE : $revision->language;
           if (!empty($revision->teaser) && $revision->teaser != text_summary($revision->body)) {
-            $node->body[LANGUAGE_NONE][0]['summary'] = $revision->teaser;
+            $node->body[$langcode][0]['summary'] = $revision->teaser;
           }
           // Do this after text_summary() above.
           $break = '<!--break-->';
           if (substr($revision->body, 0, strlen($break)) == $break) {
             $revision->body = substr($revision->body, strlen($break));
           }
-          $node->body[LANGUAGE_NONE][0]['value'] = $revision->body;
+          $node->body[$langcode][0]['value'] = $revision->body;
           // Explicitly store the current default text format if the revision
           // did not have its own text format. Similar conversions for other
           // core modules are performed in filter_update_7005(), but we do this
           // one here since we are already migrating the data.
-          $node->body[LANGUAGE_NONE][0]['format'] = !empty($revision->format) ? $revision->format : variable_get('filter_default_format', 1);
+          $node->body[$langcode][0]['format'] = !empty($revision->format) ? $revision->format : variable_get('filter_default_format', 1);
           // This is a core update and no contrib modules are enabled yet, so
           // we can assume default field storage for a faster update.
           field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array($body_field_id));
