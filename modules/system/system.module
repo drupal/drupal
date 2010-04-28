@@ -93,9 +93,9 @@ function system_help($path, $arg) {
       $output = '<p>' . t('Set and configure the default theme for your website.  Alternative <a href="@themes">themes</a> are available.', array('@themes' => 'http://drupal.org/project/themes')) . '</p>';
       return $output;
     case 'admin/appearance/settings/' . $arg[3]:
-      $reference = explode('.', $arg[3], 2);
-      $theme = array_pop($reference);
-      return '<p>' . t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used.', array('%template' => $theme)) . '</p>';
+      $theme_list = list_themes();
+      $theme = $theme_list[$arg[3]];
+      return '<p>' . t('These options control the display settings for the %name theme. When your site is displayed using this theme, these settings will be used.', array('%name' => $theme->info['name'])) . '</p>';
     case 'admin/appearance/settings':
       return '<p>' . t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') . '</p>';
     case 'admin/modules':
