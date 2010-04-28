@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1152 2010/04/27 10:24:24 dries Exp $
+// $Id: common.inc,v 1.1153 2010/04/28 20:25:20 dries Exp $
 
 /**
  * @file
@@ -4848,7 +4848,7 @@ function drupal_render_page($page) {
  * using uasort(). Since this is expensive, when passing already sorted
  * elements to drupal_render(), for example from a database query, set
  * $elements['#sorted'] = TRUE to avoid sorting them a second time.
- * 
+ *
  * drupal_render() flags each element with a '#printed' status to indicate that
  * the element has been rendered, which allows individual elements of a given
  * array to be rendered independently and prevents them from being rendered

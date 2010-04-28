@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.378 2010/04/26 21:27:09 webchick Exp $
+// $Id: bootstrap.inc,v 1.379 2010/04/28 20:25:20 dries Exp $
 
 /**
  * @file
@@ -1464,7 +1464,7 @@ function check_plain($text) {
   // drupal_validate_utf8() here. This avoids the overhead of an additional
   // function call, since check_plain() may be called hundreds of times during
   // a request. For PHP 5.2.5+, this check for valid UTF-8 should be handled
-  // internally by PHP in htmlspecialchars(). 
+  // internally by PHP in htmlspecialchars().
   // See http://www.php.net/releases/5_2_5.php.
   // @todo remove this when support for either IE6 or PHP < 5.2.5 is dropped.
 

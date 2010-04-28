@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.34 2010/04/07 15:07:59 dries Exp $
+// $Id: schema.inc,v 1.35 2010/04/28 20:25:21 dries Exp $
 
 /**
  * @file
@@ -604,9 +604,9 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     if ($this->tableExists($name)) {
       throw new DatabaseSchemaObjectExistsException(t('Table %name already exists.', array('%name' => $name)));
     }
-  	$statements = $this->createTableSql($name, $table);
+    $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
-    	$this->connection->query($statement);
+      $this->connection->query($statement);
     }
   }
 

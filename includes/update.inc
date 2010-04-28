@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.45 2010/04/28 05:28:22 webchick Exp $
+// $Id: update.inc,v 1.46 2010/04/28 20:25:20 dries Exp $
 
 /**
  * @file
@@ -223,11 +223,11 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas) {
           ))
           ->fetchField();
           if ($block_exists) {
-          	db_update($table)
-          	  ->fields(array('delta' => $new_delta))
-          	  ->condition('module', $module)
-          	  ->condition('delta', $old_delta)
-          	  ->execute();
+            db_update($table)
+              ->fields(array('delta' => $new_delta))
+              ->condition('module', $module)
+              ->condition('delta', $old_delta)
+              ->execute();
           }
         }
       }

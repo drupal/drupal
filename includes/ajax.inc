@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.29 2010/03/31 19:34:56 dries Exp $
+// $Id: ajax.inc,v 1.30 2010/04/28 20:25:19 dries Exp $
 
 /**
  * @file
@@ -168,7 +168,7 @@
  *   $commands[] = ajax_command_changed('#object-1');
  *   // Menu 'page callback' and #ajax['callback'] functions are supposed to
  *   // return render arrays. If returning an AJAX commands array, it must be
- *   // encapsulated in a render array structure. 
+ *   // encapsulated in a render array structure.
  *   return array('#type' => 'ajax', '#commands' => $commands);
  * @endcode
  *

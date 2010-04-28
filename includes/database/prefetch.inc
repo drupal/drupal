@@ -1,5 +1,5 @@
 <?php
-// $Id: prefetch.inc,v 1.8 2010/03/26 17:14:45 dries Exp $
+// $Id: prefetch.inc,v 1.9 2010/04/28 20:25:20 dries Exp $
 
 /**
  * @file
@@ -175,7 +175,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
     // as soon as possible.
     $this->rowCount = $statement->rowCount();
     $this->data = $statement->fetchAll(PDO::FETCH_ASSOC);
-    // Destroy the statement as soon as possible. See 
+    // Destroy the statement as soon as possible. See
     // DatabaseConnection_sqlite::PDOPrepare() for explanation.
     unset($statement);
 

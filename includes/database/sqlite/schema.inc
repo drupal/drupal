@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.16 2010/04/07 15:07:59 dries Exp $
+// $Id: schema.inc,v 1.17 2010/04/28 20:25:21 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@
 
 class DatabaseSchema_sqlite extends DatabaseSchema {
 
-	/**
+  /**
    * Override DatabaseSchema::$defaultSchema
    */
   protected $defaultSchema = 'main';
