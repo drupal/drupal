@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.test,v 1.15 2010/04/22 22:33:29 dries Exp $
+// $Id: theme.test,v 1.16 2010/04/29 05:22:06 webchick Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ class ThemeUnitTest extends DrupalWebTestCase {
     $suggestions = theme_get_suggestions($args, 'page');
     $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\0 from suggestions'));
   }
-  
+
   /**
   * Preprocess functions for the base hook should run even for suggestion implementations.
   */
@@ -153,5 +153,32 @@ class ThemeItemListUnitTest extends DrupalWebTestCase {
 </ul></div>';
     $output = theme('item_list', array('items' => $items, 'type' => 'ul', 'title' => NULL, 'attributes' => array()));
     $this->assertIdentical($expected, $output, 'Nested list is rendered correctly.');
+  }
+}
+
+/**
+ * Functional test for initialization of the theme system in hook_init().
+ */
+class ThemeHookInitUnitTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Theme initialization in hook_init()',
+      'description' => 'Tests that the theme system can be correctly initialized in hook_init().',
+      'group' => 'Theme',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('theme_test');
+    variable_set('theme_default', 'garland');
+  }
+
+  /**
+   * Test that the theme system can generate output when called by hook_init().
+   */
+  function testThemeInitializationHookInit() {
+    $this->drupalGet('theme-test/hook-init');
+    $this->assertRaw('Themed output generated in hook_init()', t('Themed output generated in hook_init() correctly appears on the page.'));
+    $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page when the theme system is initialized in hook_init()."));
   }
 }

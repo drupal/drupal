@@ -1,5 +1,5 @@
 <?php
-// $Id: theme_test.module,v 1.1 2010/03/21 04:05:24 webchick Exp $
+// $Id: theme_test.module,v 1.2 2010/04/29 05:22:06 webchick Exp $
 
 /**
  * Implements hook_menu().
@@ -12,8 +12,34 @@ function theme_test_menu() {
     'theme callback' => '_theme_custom_theme',
     'type' => MENU_CALLBACK,
   );
-
+  $items['theme-test/hook-init'] = array(
+    'page callback' => 'theme_test_hook_init_page_callback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   return $items;
+}
+
+/**
+ * Implements hook_init().
+ */
+function theme_test_init() {
+  // First, force the theme registry to be rebuilt on this page request. This
+  // allows us to test a full initialization of the theme system in the code
+  // below.
+  drupal_theme_rebuild();
+  // Next, initialize the theme system by storing themed text in a global
+  // variable. We will use this later in theme_test_hook_init_page_callback()
+  // to test that even when the theme system is initialized this early, it is
+  // still capable of returning output and theming the page as a whole.
+  $GLOBALS['theme_test_output'] = theme('more_link', array('url' => url('user'), 'title' => 'Themed output generated in hook_init()'));
+}
+
+/**
+ * Menu callback for testing themed output generated in hook_init().
+ */
+function theme_test_hook_init_page_callback() {
+  return $GLOBALS['theme_test_output'];
 }
 
 /**
