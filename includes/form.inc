@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.456 2010/04/28 16:11:22 dries Exp $
+// $Id: form.inc,v 1.457 2010/04/29 03:34:00 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2649,13 +2649,16 @@ function form_process_fieldset(&$element, &$form_state) {
   // Contains form element summary functionalities.
   $element['#attached']['js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
 
+  // The .form-wrapper class is required for #states to treat fieldsets like
+  // containers.
+  if (!isset($element['#attributes']['class'])) {
+    $element['#attributes']['class'] = array();
+  }
+  $element['#attributes']['class'][] = 'form-wrapper';
+
   // Collapsible fieldsets
   if (!empty($element['#collapsible'])) {
     $element['#attached']['js'][] = 'misc/collapse.js';
-    if (!isset($element['#attributes']['class'])) {
-      $element['#attributes']['class'] = array();
-    }
-    $element['#attributes']['class'][] = 'form-wrapper';
     $element['#attributes']['class'][] = 'collapsible';
     if (!empty($element['#collapsed'])) {
       $element['#attributes']['class'][] = 'collapsed';
