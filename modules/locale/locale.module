@@ -892,6 +892,28 @@ function locale_css_alter(&$css) {
   }
 }
 
+ /**
+ * Implement hook_library_alter().
+ *
+ * Provides the language support for the jQuery UI Date Picker.
+ */
+function locale_library_alter(&$libraries, $module) {
+  global $language;
+  if ($module == 'system' && isset($libraries['system']['ui.datepicker'])) {
+    $datepicker = drupal_get_path('module', 'locale') . '/locale.datepicker.js';
+    $libraries['system']['ui.datepicker']['js'][$datepicker] = array('weight' => JS_THEME);
+    $libraries['system']['ui.datepicker']['js'][] = array(
+      'data' => array(
+        'jqueryuidatepicker' => array(
+          'rtl' => $language->direction == LANGUAGE_RTL,
+          'firstDay' => variable_get('date_first_day', 0),
+        ),
+      ),
+      'type' => 'setting',
+    );
+  }
+}
+
 // ---------------------------------------------------------------------------------
 // Language switcher block
 
