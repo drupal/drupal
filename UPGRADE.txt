@@ -1,4 +1,4 @@
-// $Id: UPGRADE.txt,v 1.20 2010/04/22 08:15:39 webchick Exp $
+// $Id: UPGRADE.txt,v 1.21 2010/04/29 04:49:02 webchick Exp $
 
 UPGRADING
 ---------
@@ -14,12 +14,10 @@ Prior to upgrading, you should ensure that:
 
 Let's begin!
 
-1.  Backup your database and Drupal directory - especially your "sites"
-    directory which contains your configuration file and added modules and
-    themes, any contributed or custom modules in your "modules" directory,
-    and your "files" directory which contains uploaded files. If other files
-    have modifications, such as .htaccess or robots.txt, those should be
-    backed up as well.
+1.  Back up your Drupal database and site root directory. Be especially sure 
+    to back up your "sites" directory which contains your configuration file, 
+    added modules and themes, and your site's uploaded files. If other files 
+    have modifications, such as .htaccess or robots.txt, back those up as well.
 
     Note: for a single site setup, the configuration file is the "settings.php"
     file located at sites/default/settings.php. The default.settings.php file
