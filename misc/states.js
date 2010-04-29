@@ -19,7 +19,7 @@ Drupal.behaviors.states = {
   attach: function (context, settings) {
     for (var selector in settings.states) {
       for (var state in settings.states[selector]) {
-        new states.Dependant({
+        new states.Dependent({
           element: $(selector),
           state: states.State.sanitize(state),
           dependees: settings.states[selector][state]
@@ -39,12 +39,12 @@ Drupal.behaviors.states = {
  *
  * @param args
  *   Object with the following keys (all of which are required):
- *   - element: A jQuery object of the dependant element
- *   - state: A State object describing the state that is dependant
+ *   - element: A jQuery object of the dependent element
+ *   - state: A State object describing the state that is dependent
  *   - dependees: An object with dependency specifications. Lists all elements
  *     that this element depends on.
  */
-states.Dependant = function (args) {
+states.Dependent = function (args) {
   $.extend(this, { values: {}, oldValue: undefined }, args);
 
   for (var selector in this.dependees) {
@@ -57,7 +57,7 @@ states.Dependant = function (args) {
  * specification from the dependency settings. If the object type can't be
  * found in this list, the === operator is used by default.
  */
-states.Dependant.comparisons = {
+states.Dependent.comparisons = {
   'RegExp': function (reference, value) {
     return reference.test(value);
   },
@@ -67,9 +67,9 @@ states.Dependant.comparisons = {
   }
 };
 
-states.Dependant.prototype = {
+states.Dependent.prototype = {
   /**
-   * Initializes one of the elements this dependant depends on.
+   * Initializes one of the elements this dependent depends on.
    *
    * @param selector
    *   The CSS selector describing the dependee.
@@ -111,9 +111,9 @@ states.Dependant.prototype = {
    *   true, undefined or false.
    */
   compare: function (reference, value) {
-    if (reference.constructor.name in states.Dependant.comparisons) {
+    if (reference.constructor.name in states.Dependent.comparisons) {
       // Use a custom compare function for certain reference value types.
-      return states.Dependant.comparisons[reference.constructor.name](reference, value);
+      return states.Dependent.comparisons[reference.constructor.name](reference, value);
     }
     else {
       // Do a plain comparison otherwise.
@@ -228,7 +228,7 @@ states.Trigger.prototype = {
  * This list of states contains functions that are used to monitor the state
  * of an element. Whenever an element depends on the state of another element,
  * one of these trigger functions is added to the dependee so that the
- * dependant element can be updated.
+ * dependent element can be updated.
  */
 states.Trigger.states = {
   // 'empty' describes the state to be monitored
