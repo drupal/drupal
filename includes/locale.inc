@@ -1391,7 +1391,7 @@ function _locale_export_po($language = NULL, $output = NULL) {
   header("Content-Disposition: attachment; filename=$filename");
   header("Content-Type: text/plain; charset=utf-8");
   print $output;
-  exit();
+  drupal_exit();
 }
 
 /**
