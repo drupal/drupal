@@ -1479,11 +1479,6 @@ function install_finished(&$install_state) {
   $output = '<p>' . st('Congratulations, you installed @drupal!', array('@drupal' => drupal_install_profile_distribution_name())) . '</p>';
   $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => url(''))) : st('<a href="@url">Visit your new site</a>.', array('@url' => url('')))) . '</p>';
 
-  // Rebuild the module and theme data, in case any newly-installed modules
-  // need to modify it via hook_system_info_alter().
-  system_rebuild_module_data();
-  system_rebuild_theme_data();
-
   // Flush all caches to ensure that any full bootstraps during the installer
   // do not leave stale cached data, and that any content types or other items
   // registered by the install profile are registered correctly.
