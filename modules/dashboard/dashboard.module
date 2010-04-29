@@ -161,9 +161,10 @@ function dashboard_page_build(&$page) {
 function dashboard_system_info_alter(&$info, $file, $type) {
   if ($type == 'theme') {
     $info['regions'] += dashboard_region_descriptions();
-    if (module_exists('overlay')) {
-      $info['overlay_regions'] = !empty($info['overlay_regions']) ? array_merge($info['overlay_regions'], dashboard_regions()) : dashboard_regions();
-    }
+    // Indicate that these regions are intended to be displayed whenever the
+    // dashboard is displayed in an overlay. This information is provided for
+    // any module that might need to use it, not just the core Overlay module.
+    $info['overlay_regions'] = !empty($info['overlay_regions']) ? array_merge($info['overlay_regions'], dashboard_regions()) : dashboard_regions();
   }
 }
 

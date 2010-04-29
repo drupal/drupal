@@ -153,12 +153,15 @@ function toolbar_preprocess_html(&$vars) {
 /**
  * Implements hook_system_info_alter().
  *
- * If the overlay module is enabled, indicate that the 'page_top' region (in
- * which the toolbar will be displayed) is one of the overlay supplemental
- * regions that should be refreshed whenever its content is updated.
+ * Indicate that the 'page_top' region (in which the toolbar will be displayed)
+ * is an overlay supplemental region that should be refreshed whenever its
+ * content is updated.
+ *
+ * This information is provided for any module that might need to use it, not
+ * just the core Overlay module.
  */
 function toolbar_system_info_alter(&$info, $file, $type) {
-  if (module_exists('overlay') && $type == 'theme') {
+  if ($type == 'theme') {
     $info['overlay_supplemental_regions'][] = 'page_top';
   }
 }
