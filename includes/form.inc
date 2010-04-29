@@ -2649,13 +2649,16 @@ function form_process_fieldset(&$element, &$form_state) {
   // Contains form element summary functionalities.
   $element['#attached']['js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
 
+  // The .form-wrapper class is required for #states to treat fieldsets like
+  // containers.
+  if (!isset($element['#attributes']['class'])) {
+    $element['#attributes']['class'] = array();
+  }
+  $element['#attributes']['class'][] = 'form-wrapper';
+
   // Collapsible fieldsets
   if (!empty($element['#collapsible'])) {
     $element['#attached']['js'][] = 'misc/collapse.js';
-    if (!isset($element['#attributes']['class'])) {
-      $element['#attributes']['class'] = array();
-    }
-    $element['#attributes']['class'][] = 'form-wrapper';
     $element['#attributes']['class'][] = 'collapsible';
     if (!empty($element['#collapsed'])) {
       $element['#attributes']['class'][] = 'collapsed';
