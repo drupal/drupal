@@ -32,6 +32,8 @@
  *     exists, and automatically load it when required.
  *
  * See system_hook_info() for all hook groups defined by Drupal core.
+ *
+ * @see hook_hook_info_alter().
  */
 function hook_hook_info() {
   $hooks['token_info'] = array(
@@ -41,6 +43,21 @@ function hook_hook_info() {
     'group' => 'tokens',
   );
   return $hooks;
+}
+
+/**
+ * Alter information from hook_hook_info().
+ *
+ * @param $hooks
+ *   Information gathered by module_hook_info() from other modules'
+ *   implementations of hook_hook_info(). Alter this array directly.
+ *   See hook_hook_info() for information on what this may contain.
+ */
+function hook_hook_info_alter(&$hooks) {
+  // Our module wants to completely override the core tokens, so make
+  // sure the core token hooks are not found.
+  $hooks['token_info']['group'] = 'mytokens';
+  $hooks['tokens']['group'] = 'mytokens';
 }
 
 /**
