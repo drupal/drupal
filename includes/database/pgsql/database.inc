@@ -90,7 +90,6 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
       }
     }
     catch (PDOException $e) {
-      _db_check_install_needed();
       if ($options['throw_exception']) {
         // Add additional debug information.
         if ($query instanceof DatabaseStatementInterface) {

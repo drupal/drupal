@@ -559,7 +559,6 @@ abstract class DatabaseConnection extends PDO {
       }
     }
     catch (PDOException $e) {
-      _db_check_install_needed();
       if ($options['throw_exception']) {
         // Add additional debug information.
         if ($query instanceof DatabaseStatementInterface) {
@@ -1408,8 +1407,6 @@ abstract class Database {
   final public static function parseConnectionInfo() {
     global $databases;
 
-    _db_check_install_needed();
-
     $database_info = is_array($databases) ? $databases : array();
     foreach ($database_info as $index => $info) {
       foreach ($database_info[$index] as $target => $value) {
@@ -1496,46 +1493,38 @@ abstract class Database {
     if (empty(self::$databaseInfo)) {
       self::parseConnectionInfo();
     }
-    try {
-      // If the requested database does not exist then it is an unrecoverable
-      // error.
-      if (!isset(self::$databaseInfo[$key])) {
-        throw new DatabaseConnectionNotDefinedException('The specified database connection is not defined: ' . $key);
-      }
 
-      if (!$driver = self::$databaseInfo[$key][$target]['driver']) {
-        throw new DatabaseDriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
-      }
-
-      // We cannot rely on the registry yet, because the registry requires an
-      // open database connection.
-      $driver_class = 'DatabaseConnection_' . $driver;
-      require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/database.inc';
-      $new_connection = new $driver_class(self::$databaseInfo[$key][$target]);
-      $new_connection->setTarget($target);
-
-      // If we have any active logging objects for this connection key, we need
-      // to associate them with the connection we just opened.
-      if (!empty(self::$logs[$key])) {
-        $new_connection->setLogger(self::$logs[$key]);
-      }
-
-      // We need to pass around the simpletest database prefix in the request
-      // and we put that in the user_agent header. The header HMAC was already
-      // validated in bootstrap.inc.
-      if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^(simpletest\d+);/", $_SERVER['HTTP_USER_AGENT'], $matches)) {
-        $db_prefix_string = is_array($db_prefix) ? $db_prefix['default'] : $db_prefix;
-        $db_prefix = $db_prefix_string . $matches[1];
-      }
-      return $new_connection;
+    // If the requested database does not exist then it is an unrecoverable
+    // error.
+    if (!isset(self::$databaseInfo[$key])) {
+      throw new DatabaseConnectionNotDefinedException('The specified database connection is not defined: ' . $key);
     }
-    catch (Exception $e) {
-      // It is extremely rare that an exception will be generated here other
-      // than when installing. We therefore intercept it and try the installer,
-      // passing on the exception otherwise.
-      _db_check_install_needed();
-      throw $e;
+
+    if (!$driver = self::$databaseInfo[$key][$target]['driver']) {
+      throw new DatabaseDriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
     }
+
+    // We cannot rely on the registry yet, because the registry requires an
+    // open database connection.
+    $driver_class = 'DatabaseConnection_' . $driver;
+    require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/database.inc';
+    $new_connection = new $driver_class(self::$databaseInfo[$key][$target]);
+    $new_connection->setTarget($target);
+
+    // If we have any active logging objects for this connection key, we need
+    // to associate them with the connection we just opened.
+    if (!empty(self::$logs[$key])) {
+      $new_connection->setLogger(self::$logs[$key]);
+    }
+
+    // We need to pass around the simpletest database prefix in the request
+    // and we put that in the user_agent header. The header HMAC was already
+    // validated in bootstrap.inc.
+    if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^(simpletest\d+);/", $_SERVER['HTTP_USER_AGENT'], $matches)) {
+      $db_prefix_string = is_array($db_prefix) ? $db_prefix['default'] : $db_prefix;
+      $db_prefix = $db_prefix_string . $matches[1];
+    }
+    return $new_connection;
   }
 
   /**
@@ -2900,17 +2889,3 @@ function db_ignore_slave() {
   }
 }
 
-/**
- * Redirects the user to the installation script.
- *
- * This will check if Drupal has not been installed yet (i.e., if no $databases
- * array has been defined in the settings.php file) and we are not already
- * installing. If both are true, the user is redirected to install.php.
- */
-function _db_check_install_needed() {
-  global $databases;
-  if (empty($databases) && !drupal_installation_attempted()) {
-    include_once DRUPAL_ROOT . '/includes/install.inc';
-    install_goto('install.php');
-  }
-}

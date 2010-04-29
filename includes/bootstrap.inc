@@ -1958,6 +1958,15 @@ function _drupal_bootstrap_database() {
     header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
     exit;
   }
+
+  // Redirect the user to the installation script if Drupal has not been
+  // installed yet (i.e., if no $databases array has been defined in the
+  // settings.php file) and we are not already installing.
+  if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
+    include_once DRUPAL_ROOT . '/includes/install.inc';
+    install_goto('install.php');
+  }
+
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
   require_once DRUPAL_ROOT . '/includes/database/database.inc';
