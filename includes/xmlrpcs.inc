@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.38 2010/03/31 15:33:08 dries Exp $
+// $Id: xmlrpcs.inc,v 1.39 2010/04/29 05:35:21 webchick Exp $
 
 /**
  * @file
@@ -60,7 +60,8 @@ function xmlrpc_server($callbacks) {
 
   $data = file_get_contents('php://input');
   if (!$data) {
-    exit('XML-RPC server accepts POST requests only.');
+    print 'XML-RPC server accepts POST requests only.';
+    drupal_exit();
   }
   $xmlrpc_server->message = xmlrpc_message($data);
   if (!xmlrpc_message_parse($xmlrpc_server->message)) {

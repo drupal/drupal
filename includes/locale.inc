@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.252 2010/04/28 20:25:20 dries Exp $
+// $Id: locale.inc,v 1.253 2010/04/29 05:35:21 webchick Exp $
 
 /**
  * @file
@@ -1391,7 +1391,7 @@ function _locale_export_po($language = NULL, $output = NULL) {
   header("Content-Disposition: attachment; filename=$filename");
   header("Content-Type: text/plain; charset=utf-8");
   print $output;
-  exit();
+  drupal_exit();
 }
 
 /**
