@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.36 2010/03/07 08:03:45 webchick Exp $
+// $Id: database.inc,v 1.37 2010/04/29 03:48:16 webchick Exp $
 
 /**
  * @file
@@ -90,7 +90,6 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
       }
     }
     catch (PDOException $e) {
-      _db_check_install_needed();
       if ($options['throw_exception']) {
         // Add additional debug information.
         if ($query instanceof DatabaseStatementInterface) {
