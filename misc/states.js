@@ -247,11 +247,22 @@ states.Trigger.states = {
     }
   },
 
+  // For radio buttons, only return the value if the radio button is selected.
   value: {
     'keyup': function () {
+      // Radio buttons share the same :input[name="key"] selector.
+      if (this.length > 1) {
+        // Initial checked value of radios is undefined, so we return false.
+        return this.filter(':checked').val() || false;
+      }
       return this.val();
     },
     'change': function () {
+      // Radio buttons share the same :input[name="key"] selector.
+      if (this.length > 1) {
+        // Initial checked value of radios is undefined, so we return false.
+        return this.filter(':checked').val() || false;
+      }
       return this.val();
     }
   },
