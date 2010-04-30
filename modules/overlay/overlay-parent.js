@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.39 2010/04/27 10:48:24 dries Exp $
+// $Id: overlay-parent.js,v 1.40 2010/04/30 05:25:19 webchick Exp $
 
 (function ($) {
 
@@ -335,7 +335,7 @@ Drupal.overlay.load = function (url) {
   // class is being used to hide the iframe while loading.
   // See overlay-parent.css .overlay-loaded #overlay-element.
   self.$dialog.removeClass('overlay-loaded');
-  self.$iframe
+  self.$iframe.once('overlay-event-load')
     .bind('load.overlay-event', function () {
       self.isLoading = false;
 
