@@ -1,4 +1,4 @@
-// $Id: filter.js,v 1.1 2010/03/07 23:59:20 webchick Exp $
+// $Id: filter.js,v 1.2 2010/04/30 07:48:07 dries Exp $
 (function ($) {
 
 /**
@@ -12,7 +12,7 @@ Drupal.behaviors.filterGuidelines = {
       .bind('change', function () {
         $(this).parents('.filter-wrapper')
           .find('.filter-guidelines-item').hide()
-          .siblings('#filter-guidelines-' + this.value).show();
+          .siblings('.filter-guidelines-' + this.value).show();
       })
       .change();
   }

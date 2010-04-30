@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.328 2010/04/24 14:53:59 dries Exp $
+// $Id: filter.module,v 1.329 2010/04/30 07:48:07 dries Exp $
 
 /**
  * @file
@@ -1122,7 +1122,9 @@ function theme_filter_guidelines($variables) {
   $format = $variables['format'];
 
   $name = isset($format->name) ? '<label>' . $format->name . ':</label>' : '';
-  return '<div id="filter-guidelines-' . $format->format . '" class="filter-guidelines-item">' . $name . theme('filter_tips', array('tips' => _filter_tips($format->format, FALSE))) . '</div>';
+  $attributes['class'][] = 'filter-guidelines-item';
+  $attributes['class'][] = 'filter-guidelines-' . $format->format;
+  return '<div' . drupal_attributes($attributes) . '>' . $name . theme('filter_tips', array('tips' => _filter_tips($format->format, FALSE))) . '</div>';
 }
 
 /**
