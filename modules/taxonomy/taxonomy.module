@@ -565,7 +565,6 @@ function taxonomy_term_delete($tid) {
   return SAVED_DELETED;
 }
 
-
 /**
  * Generate an array for rendering the given term.
  *
@@ -1018,13 +1017,15 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
   foreach ($tags as $tag) {
     // Extract terms belonging to the vocabulary in question.
     if (is_null($vid) || $tag->vid == $vid) {
+      // Make sure we have a completed loaded taxonomy term.
+      if (isset($tag->name)) {
+        // Commas and quotes in tag names are special cases, so encode 'em.
+        if (strpos($tag->name, ',') !== FALSE || strpos($tag->name, '"') !== FALSE) {
+          $tag->name = '"' . str_replace('"', '""', $tag->name) . '"';
+        }
 
-      // Commas and quotes in tag names are special cases, so encode 'em.
-      if (strpos($tag->name, ',') !== FALSE || strpos($tag->name, '"') !== FALSE) {
-        $tag->name = '"' . str_replace('"', '""', $tag->name) . '"';
+        $typed_tags[] = $tag->name;
       }
-
-      $typed_tags[] = $tag->name;
     }
   }
   return implode(', ', $typed_tags);
@@ -1273,6 +1274,8 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
 
     // Iterate through the fieldable entities again to attach the loaded term data.
     foreach ($entities as $id => $entity) {
+      $rekey = FALSE;
+
       foreach ($items[$id] as $delta => $item) {
         // Check whether the taxonomy term field instance value could be loaded.
         if (isset($terms[$item['tid']])) {
@@ -1282,7 +1285,13 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
         // Otherwise, unset the instance value, since the term does not exist.
         else {
           unset($items[$id][$delta]);
+          $rekey = TRUE;
         }
+      }
+
+      if ($rekey) {
+        // Rekey the items array.
+        $items[$id] = array_values($items[$id]);
       }
     }
   }
