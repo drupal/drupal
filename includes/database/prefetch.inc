@@ -1,5 +1,5 @@
 <?php
-// $Id: prefetch.inc,v 1.9 2010/04/28 20:25:20 dries Exp $
+// $Id: prefetch.inc,v 1.10 2010/04/30 13:47:46 dries Exp $
 
 /**
  * @file
@@ -475,8 +475,8 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
     return $result;
   }
 
-  public function fetchAllAssoc($key, $fetch_style = PDO::FETCH_OBJ) {
-    $this->fetchStyle = $fetch_style;
+  public function fetchAllAssoc($key, $fetch_style = NULL) {
+    $this->fetchStyle = isset($fetch_style) ? $fetch_style : $this->defaultFetchStyle;
     $this->fetchOptions = $this->defaultFetchOptions;
 
     $result = array();
