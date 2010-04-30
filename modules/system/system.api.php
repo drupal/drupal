@@ -3789,6 +3789,66 @@ function hook_token_info_alter(&$data) {
   );
 }
 
+
+/**
+ * Provide information on Updaters (classes that can update Drupal).
+ *
+ * An Updater is a class that knows how to update various parts of the Drupal
+ * file system, for example to update modules that have newer releases, or to
+ * install a new theme.
+ *
+ * @return
+ *   An associative array of information about the updater(s) being provided.
+ *   This array is keyed by a unique identifier for each updater, and the
+ *   values are subarrays that can contain the following keys:
+ *   - class: The name of the PHP class which implements this updater.
+ *   - name: Human-readable name of this updater.
+ *   - weight: Controls what order the Updater classes are consulted to decide
+ *     which one should handle a given task. When an update task is being run,
+ *     the system will loop through all the Updater classes defined in this
+ *     registry in weight order and let each class respond to the task and
+ *     decide if each Updater wants to handle the task. In general, this
+ *     doesn't matter, but if you need to override an existing Updater, make
+ *     sure your Updater has a lighter weight so that it comes first.
+ *
+ * @see drupal_get_updaters()
+ * @see hook_updater_info_alter()
+ */
+function hook_updater_info() {
+  return array(
+    'module' => array(
+      'class' => 'ModuleUpdater',
+      'name' => t('Update modules'),
+      'weight' => 0,
+    ),
+    'theme' => array(
+      'class' => 'ThemeUpdater',
+      'name' => t('Update themes'),
+      'weight' => 0,
+    ),
+  );
+}
+
+/**
+ * Alter the Updater information array.
+ *
+ * An Updater is a class that knows how to update various parts of the Drupal
+ * file system, for example to update modules that have newer releases, or to
+ * install a new theme.
+ *
+ * @param array $updaters
+ *   Associative array of updaters as defined through hook_updater_info().
+ *   Alter this array directly.
+ *
+ * @see drupal_get_updaters()
+ * @see hook_updater_info()
+ */
+function hook_updater_info_alter(&$updaters) {
+  // Adjust weight so that the theme Updater gets a chance to handle a given
+  // update task before module updaters.
+  $updaters['theme']['weight'] = -1;
+}
+
 /**
  * Alter the default country list.
  *
