@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.79 2010/02/13 21:35:08 dries Exp $
+// $Id: INSTALL.txt,v 1.80 2010/04/30 08:09:21 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -266,35 +266,40 @@ INSTALLATION
    customized similar to the above example, to add your site-specific cron key
    and domain name.)
 
-DRUPAL ADMINISTRATION
----------------------
+
+BUILDING AND CUSTOMIZING YOUR SITE
+----------------------------------
 
 A new installation of Drupal defaults to a very basic configuration with only a
-few active modules and minimal user access rights.
+few active modules and minimal user access rights. When extending your site,
+you use "modules" and "themes". A module is a plugin that adds functionallity to
+Drupal, while a theme changes the front-end look and behavior of your site.
 
-Use your administration panel to enable and configure services. For example:
+It is important to install these correctly and not mix them in with the core
+Drupal module and theme set (directories modules and themes at the top level).
+So normally you place them under the following paths:
 
-General Settings       Administer > Site configuration > Site information
-Enable Modules         Administer > Structure > Modules
-Configure Themes       Administer > Structure > Themes
-Set User Permissions   Administer > User management > Permissions
+Modules:
+  sites/all/modules/example_module
 
-For more information on configuration options, read the instructions which
-accompany the different configuration settings and consult the various help
-pages available in the administration panel.
+Themes:
+  sites/all/themes/example_theme
 
-Community-contributed modules and themes are available at http://drupal.org/.
+If you run a multisite installation you will want to do this a bit differently.
+You can read more about that on the multisite part of this file.
 
-CUSTOMIZING YOUR THEME(S)
--------------------------
+Contributed modules can be found at:
+http://drupal.org/project/Modules
 
-Now that your installation is running, you will want to customize the look of
-your site. Several sample themes are included and more can be downloaded from
-drupal.org.
+Contributed themes can be found at:
+http://drupal.org/project/Themes
 
-Simple customization of your theme can be done using only CSS. Further changes
-require understanding the phptemplate engine that is part of Drupal. See
-http://drupal.org/handbook/customization to find out more.
+Later on you might want to write your own code, but remember to NEVER modify the
+core modules and themes in Drupal directories modules and themes. Instead use
+the hooks available in the Drupal API. You can read more about the Drupal API
+and how to develop modules at
+http://drupal.org/developing/modules
+
 
 MULTISITE CONFIGURATION
 -----------------------
