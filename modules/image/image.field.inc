@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.20 2010/04/13 15:23:03 dries Exp $
+// $Id: image.field.inc,v 1.21 2010/04/30 12:53:47 dries Exp $
 
 /**
  * @file
@@ -511,8 +511,11 @@ function theme_image_formatter($variables) {
   $image = array(
     'path' => $item['uri'],
     'alt' => $item['alt'],
-    'title' => $item['title'],
   );
+  // Do not output an empty 'title' attribute.
+  if (drupal_strlen($item['title']) > 0) {
+    $image['title'] = $item['title'];
+  }
 
   if ($variables['image_style']) {
     $image['style_name'] = $variables['image_style'];

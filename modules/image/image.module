@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.40 2010/04/23 07:54:44 webchick Exp $
+// $Id: image.module,v 1.41 2010/04/30 12:53:47 dries Exp $
 
 /**
  * @file
@@ -178,7 +178,7 @@ function image_theme() {
         'style_name' => NULL,
         'path' => NULL,
         'alt' => '',
-        'title' => '',
+        'title' => NULL,
         'attributes' => array(),
         'getsize' => TRUE,
       ),
