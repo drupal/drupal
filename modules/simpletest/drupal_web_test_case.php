@@ -3003,7 +3003,7 @@ function simpletest_verbose($message, $original_file_directory = NULL, $test_cla
   if ($original_file_directory) {
     $file_directory = $original_file_directory;
     $class = $test_class;
-    $verbose = variable_get('simpletest_verbose', FALSE);
+    $verbose = variable_get('simpletest_verbose', TRUE);
     $directory = $file_directory . '/simpletest/verbose';
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     if ($writable && !file_exists($directory . '/.htaccess')) {

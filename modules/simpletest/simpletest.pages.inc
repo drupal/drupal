@@ -276,7 +276,7 @@ function simpletest_result_form($form, &$form_state, $test_id) {
 
     // Set summary information.
     $group_summary['#ok'] = $group_summary['#fail'] + $group_summary['#exception'] == 0;
-    $form['result']['results'][$group]['#collapsed'] = $group_summary['#ok'] && !$group_summary['#debug'];
+    $form['result']['results'][$group]['#collapsed'] = $group_summary['#ok'];
 
     // Store test group (class) as for use in filter.
     $filter[$group_summary['#ok'] ? 'pass' : 'fail'][] = $group;
@@ -444,7 +444,7 @@ function simpletest_settings_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Provide verbose information when running tests'),
     '#description' => t('The verbose data will be printed along with the standard assertions and is useful for debugging. The verbose data will be erased between each test suite run. The verbose data output is very detailed and should only be used when debugging.'),
-    '#default_value' => variable_get('simpletest_verbose', FALSE),
+    '#default_value' => variable_get('simpletest_verbose', TRUE),
   );
 
   $form['httpauth'] = array(
