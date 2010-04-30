@@ -4546,31 +4546,51 @@ function drupal_cron_cleanup() {
 }
 
 /**
- * Return an array of system file objects.
+ * Returns information about system object files (modules, themes, etc.).
+ * 
+ * This function is used to find all or some system object files (module files,
+ * theme files, etc.) that exist on the site. It searches in several locations,
+ * depending on what type of object you are looking for. For instance, if you
+ * are looking for modules and call:
+ * @code
+ * drupal_system_listing("/\.module$/", "modules", 'name', 0);
+ * @endcode
+ * this function will search the site-wide modules directory (i.e., /modules/),
+ * your install profile's directory (i.e.,
+ * /profiles/your_site_profile/modules/), the all-sites directory (i.e.,
+ * /sites/all/modules/), and your site-specific directory (i.e.,
+ * /sites/your_site_dir/modules/), in that order, and return information about
+ * all of the files ending in .module in those directories.
  *
- * Returns an array of file objects of the given type from the site-wide
- * directory (i.e. modules/), the all-sites directory (i.e. sites/all/modules/),
- * the profiles directory (i.e. profiles/your_site_profile/modules/), and the
- * site-specific directory (i.e. sites/your_site_dir/modules/). The returned
- * array will be keyed using the key specified (uri, filename, or name). Using
- * name or filename will cause site-specific files to be prioritized over
- * similar files in the default directories. That is, if a file with the same
- * name appears in both the site-wide directory and site-specific directory,
- * only the site-specific version will be included.
+ * The information is returned in an associative array, which can be keyed on
+ * the file name ($key = 'filename'), the file name without the extension ($key
+ * = 'name'), or the full file stream URI ($key = 'uri'). If you use a key of
+ * 'filename' or 'name', files found later in the search will take precedence
+ * over files found earlier; if you choose a key of 'uri', you will get all
+ * files found.
  *
- * @param $mask
- *   The preg_match() regular expression of the files to find.
- * @param $directory
+ * @param string $mask
+ *   The preg_match() regular expression for the files to find.
+ * @param string $directory
  *   The subdirectory name in which the files are found. For example,
- *   'modules' will search in both modules/ and
- *   sites/somesite/modules/.
- * @param $key
- *   The key to be passed to file_scan_directory().
- * @param $min_depth
- *   Minimum depth of directories to return files from.
+ *   'modules' will search in sub-directories of the top-level /modules
+ *   directory, sub-directories of /sites/all/modules/, etc.
+ * @param string $key
+ *   The key to be used for the associative array returned. Possible values are
+ *   'uri', for the file's URI; 'filename', for the basename of the file; and
+ *   'name' for the name of the file without the extension. If you choose 'name'
+ *   or 'filename', only the highest-precedence file will be returned.
+ * @param int $min_depth
+ *   Minimum depth of directories to return files from, relative to each
+ *   directory searched. For instance, a minimum depth of 2 would find modules
+ *   inside /modules/node/tests, but not modules directly in /modules/node.
  *
- * @return
- *   An array of file objects of the specified type.
+ * @return array
+ *   An associative array of file objects, keyed on the chosen key. Each element
+ *   in the array is an object containing file information, with properties:
+ *   - 'uri': Full URI of the file.
+ *   - 'filename': File name.
+ *   - 'name': Name of file without the extension.
  */
 function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
   $config = conf_path();
