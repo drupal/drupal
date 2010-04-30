@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.77 2010/04/20 09:48:06 webchick Exp $
+// $Id: taxonomy.test,v 1.78 2010/04/30 12:52:10 dries Exp $
 
 /**
  * @file
@@ -422,7 +422,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
   /**
    * Test term creation with a free-tagging vocabulary from the node form.
    */
-  function testNodeTermCreation() {
+  function testNodeTermCreationAndDeletion() {
     // Enable tags in the vocabulary.
     $instance = $this->instance;
     $instance['widget'] = array('type' => 'taxonomy_autocomplete');
@@ -446,6 +446,23 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     foreach ($terms as $term) {
       $this->assertText($term, t('The term was saved and appears on the node page'));
     }
+
+    // Get the created terms.
+    list($term1, $term2, $term3) = taxonomy_get_tree($this->vocabulary->vid);
+
+    // Delete one term.
+    $this->drupalPost('taxonomy/term/' . $term1->tid . '/edit', array(), t('Delete'));
+    $this->drupalPost(NULL, NULL, t('Delete'));
+    $term_names = array($term2->name, $term3->name);
+
+    // Get the node.
+    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $this->drupalGet('node/' . $node->nid);
+
+    foreach ($term_names as $term_name) {
+      $this->assertText($term_name, t('The term %name appears on the node page after one term %deleted was deleted', array('%name' => $term_name, '%deleted' => $term1->name)));
+    }
+    $this->assertNoText($term1->name, t('The deleted term %name does not appear on the node page.', array('%name' => $term1->name)));
   }
 
   /**
