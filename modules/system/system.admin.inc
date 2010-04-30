@@ -1725,15 +1725,18 @@ function system_file_system_settings() {
   // Any visible, writeable wrapper can potentially be used for the files
   // directory, including a remote file system that integrates with a CDN.
   foreach(file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $info) {
-    $options[$scheme] = $info['description'];
+    $options[$scheme] = check_plain($info['description']);
   }
-  $form['file_default_scheme'] = array(
-    '#type' => 'radios',
-    '#title' => t('Default download method'),
-    '#default_value' => 'public',
-    '#options' => $options,
-    '#description' => t('This setting is used as the preferred download method. The use of public files is more efficient, but does not provide any access control.'),
-  );
+
+  if (!empty($options)) {
+    $form['file_default_scheme'] = array(
+      '#type' => 'radios',
+      '#title' => t('Default download method'),
+      '#default_value' => isset($options['public']) ? 'public' : key($options),
+      '#options' => $options,
+      '#description' => t('This setting is used as the preferred download method. The use of public files is more efficient, but does not provide any access control.'),
+    );
+  }
 
   return system_settings_form($form, TRUE);
 }

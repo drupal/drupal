@@ -1517,24 +1517,30 @@ function system_library() {
  * Implements hook_stream_wrappers().
  */
 function system_stream_wrappers() {
-  return array(
+  $wrappers = array(
     'public' => array(
       'name' => t('Public files'),
       'class' => 'DrupalPublicStreamWrapper',
       'description' => t('Public local files served by the webserver.'),
-    ),
-    'private' => array(
-      'name' => t('Private files'),
-      'class' => 'DrupalPrivateStreamWrapper',
-      'description' => t('Private local files served by Drupal.'),
     ),
     'temporary' => array(
       'name' => t('Temporary files'),
       'class' => 'DrupalTemporaryStreamWrapper',
       'description' => t('Temporary local files for upload and previews.'),
       'type' => STREAM_WRAPPERS_HIDDEN,
-    )
+    ),
   );
+
+  // Only register the private file stream wrapper if a file path has been set.
+  if (variable_get('file_private_path', FALSE)) {
+    $wrappers['private'] = array(
+      'name' => t('Private files'),
+      'class' => 'DrupalPrivateStreamWrapper',
+      'description' => t('Private local files served by Drupal.'),
+    );
+  }
+
+  return $wrappers;
 }
 
 /**
@@ -2046,6 +2052,9 @@ function system_admin_menu_block($item) {
  */
 function system_check_directory($form_element) {
   $directory = $form_element['#value'];
+  if (strlen($directory) == 0) {
+    return $form_element;
+  }
 
   if (!is_dir($directory) && !drupal_mkdir($directory, NULL, TRUE)) {
     // If the directory does not exists and cannot be created.
@@ -2058,7 +2067,7 @@ function system_check_directory($form_element) {
     form_set_error($form_element['#parents'][0], t('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory)));
     watchdog('file system', 'The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory), WATCHDOG_ERROR);
   }
-  else {
+  elseif (is_dir($directory)) {
     if ($form_element['#name'] == 'file_public_path') {
       // Create public .htaccess file.
       file_create_htaccess($directory, FALSE);

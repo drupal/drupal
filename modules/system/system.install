@@ -264,8 +264,10 @@ function system_requirements($phase) {
   // Test files directories.
   $directories = array(
     variable_get('file_public_path', conf_path() . '/files'),
-    variable_get('file_private_path', conf_path() . '/private/files'),
-    variable_get('file_temporary_path', conf_path() . '/private/temp'),
+    // By default no private files directory is configured. For private files
+    // to be secure the admin needs to provide a path outside the webroot.
+    variable_get('file_private_path', FALSE),
+    variable_get('file_temporary_path', sys_get_temp_dir()),
   );
   $requirements['file system'] = array(
     'title' => $t('File system'),
@@ -274,6 +276,9 @@ function system_requirements($phase) {
   $error = '';
   // For installer, create the directories if possible.
   foreach ($directories as $directory) {
+    if (!$directory) {
+      continue;
+    }
     if ($phase == 'install') {
       file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     }

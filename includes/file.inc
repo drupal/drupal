@@ -409,7 +409,9 @@ function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS)
  */
 function file_ensure_htaccess() {
   file_create_htaccess('public://', FALSE);
-  file_create_htaccess('private://', TRUE);
+  if (variable_get('file_private_path', FALSE)) {
+    file_create_htaccess('private://', TRUE);
+  }
   file_create_htaccess('temporary://', TRUE);
 }
 
@@ -1586,8 +1588,7 @@ function file_download() {
   $scheme = array_shift($args);
   $target = implode('/', $args);
   $uri = $scheme . '://' . $target;
-
-  if (file_exists($uri)) {
+  if (file_stream_wrapper_valid_scheme($scheme) && file_exists($uri)) {
     // Let other modules provide headers and controls access to the file.
     $headers = module_invoke_all('file_download', $uri);
     if (in_array(-1, $headers)) {
