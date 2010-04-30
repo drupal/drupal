@@ -3359,6 +3359,30 @@ function hook_date_format_types() {
 }
 
 /**
+ * Modify existing date format types.
+ *
+ * Allows other modules to modify existing date types like 'long'. Called
+ * by _system_date_format_types_build(). For instance, A module may use this
+ * hook to apply settings across all date format types, such as locking all
+ * date format types so they appear to be provided by the system.
+ *
+ * @param $types
+ *   An associative array of date format types containing:
+ *   - types:  An array of date format types including configuration settings
+ *     for each type:
+ *     - is_new: Set to FALSE to override previous settings.
+ *     - module: The name of the module that created the date format type.
+ *     - type: The date type name.
+ *     - title: The title of the date type.
+ *     - locked: Specifies that the date type is system-provided.
+ */
+function hook_date_format_types_alter(&$types) {
+  foreach ($types as $type_name => $type) {
+    $types[$type_name]['locked'] = 1;
+  }
+}
+
+/**
  * Defines additional date formats.
  *
  * Next to the 'long', 'medium' and 'short' date types defined in core, any
