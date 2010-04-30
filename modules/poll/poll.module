@@ -297,7 +297,6 @@ function poll_form($node, &$form_state) {
     '#ajax' => array(
       'callback' => 'poll_choice_js',
       'wrapper' => 'poll-choices',
-      'method' => 'replace',
       'effect' => 'fade',
     ),
   );

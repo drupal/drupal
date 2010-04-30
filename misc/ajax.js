@@ -93,7 +93,7 @@ Drupal.ajax = function (base, element, element_settings) {
     selector: '#' + base,
     effect: 'none',
     speed: 'slow',
-    method: 'replace',
+    method: 'replaceWith',
     progress: {
       type: 'bar',
       message: 'Please wait...'

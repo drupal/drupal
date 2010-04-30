@@ -20,11 +20,10 @@
  * forms, it can be used with the #ajax property.
  * The #ajax property can be used to bind events to the AJAX framework. By
  * default, #ajax uses 'system/ajax' as its path for submission and thus calls
- * @link ajax_form_callback ajax_form_callback @endlink and a defined
- * #ajax['callback'] function. However, you may optionally specify a different
- * path to request or a different callback function to invoke, which can return
- * updated HTML or can also return a richer set of
- * @link ajax_commands AJAX framework commands @endlink.
+ * ajax_form_callback() and a defined #ajax['callback'] function.
+ * However, you may optionally specify a different path to request or a
+ * different callback function to invoke, which can return updated HTML or can
+ * also return a richer set of @link ajax_commands AJAX framework commands @endlink.
  *
  * Standard form handling is as follows:
  *   - A form element has a #ajax member.
@@ -124,9 +123,10 @@
  *   selected automatically for the type of form widget being used, and
  *   is only needed if you need to override the default behavior.
  * - #ajax['method']: The jQuery method to use to place the new HTML.
- *   Defaults to 'replace'. May be: 'replace', 'append', 'prepend',
- *   'before', 'after', or 'html'. See the jQuery documentation for more
- *   information on these methods.
+ *   Defaults to 'replaceWith'. May be: 'replaceWith', 'append', 'prepend',
+ *   'before', 'after', or 'html'. See the
+ *   @link http://api.jquery.com/category/manipulation/ jQuery manipulators documentation @endlink
+ *   for more information on these methods.
  * - #ajax['progress']: Choose either a throbber or progress bar that is
  *   displayed while awaiting a response from the callback, and add an optional
  *   message. Possible keys: 'type', 'message', 'url', 'interval'.
@@ -336,13 +336,16 @@ function ajax_deliver($page_callback_result) {
     }
   }
   else {
-    // Like normal page callbacks, simple AJAX callbacks can return html
-    // content, as a string or renderable array, to replace what was previously
-    // there in the wrapper. In this case, in addition to the content, we want
-    // to add the status messages, but inside the new wrapper, so that they get
-    // replaced on subsequent AJAX calls for the same wrapper.
+    // Like normal page callbacks, simple AJAX callbacks can return HTML
+    // content, as a string or render array. This HTML is inserted in some
+    // relationship to #ajax['wrapper'], as determined by which jQuery DOM
+    // manipulation method is used. The method used is specified by
+    // #ajax['method']. The default method is 'replaceWith', which completely
+    // replaces the old wrapper element and its content with the new HTML.
     $html = is_string($page_callback_result) ? $page_callback_result : drupal_render($page_callback_result);
-    $commands[] = ajax_command_replace(NULL, $html);
+    $commands[] = ajax_command_insert(NULL, $html);
+    // Add the status messages inside the new content's wrapper element, so that
+    // on subsequent AJAX requests, it is treated as old content.
     $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
   }
 
@@ -460,9 +463,14 @@ function ajax_process_form($element, &$form_state) {
       'selector' => '#' . $element['#id'],
       'effect' => 'none',
       'speed' => 'none',
-      'method' => 'replace',
+      'method' => 'replaceWith',
       'progress' => array('type' => 'throbber'),
     );
+
+    // @todo Legacy support. Remove in Drupal 8.
+    if ($settings['method'] == 'replace') {
+      $settings['method'] = 'replaceWith';
+    }
 
     // Change path to url.
     $settings['url'] = isset($settings['path']) ? url($settings['path']) : url('system/ajax');
@@ -553,6 +561,37 @@ function ajax_command_alert($text) {
 }
 
 /**
+ * Creates a Drupal AJAX 'insert' command using the method in #ajax['method'].
+ *
+ * This command instructs the client to insert the given HTML using whichever
+ * jQuery DOM manipulation method has been specified in the #ajax['method']
+ * variable of the element that triggered the request.
+ *
+ * This command is implemented by Drupal.ajax.prototype.commands.insert()
+ * defined in misc/ajax.js.
+ *
+ * @param $selector
+ *   A jQuery selector string. If the command is a response to a request from
+ *   an #ajax form element then this value can be NULL.
+ * @param $html
+ *   The data to use with the jQuery method.
+ * @param $settings
+ *   An optional array of settings that will be used for this command only.
+ *
+ * @return
+ *   An array suitable for use with the ajax_render() function.
+ */
+function ajax_command_insert($selector, $html, $settings = NULL) {
+  return array(
+    'command' => 'insert',
+    'method' => NULL,
+    'selector' => $selector,
+    'data' => $html,
+    'settings' => $settings,
+  );
+}
+
+/**
  * Creates a Drupal AJAX 'insert/replaceWith' command.
  *
  * The 'insert/replaceWith' command instructs the client to use jQuery's
@@ -573,7 +612,7 @@ function ajax_command_alert($text) {
  * @return
  *   An array suitable for use with the ajax_render() function.
  *
- * @see http://docs.jquery.com/Manipulation/replaceWith#content
+ * See @link http://docs.jquery.com/Manipulation/replaceWith#content jQuery replaceWith command @endlink
  */
 function ajax_command_replace($selector, $html, $settings = NULL) {
   return array(

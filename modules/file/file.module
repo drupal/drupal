@@ -351,7 +351,6 @@ function file_managed_file_process($element, &$form_state, $form) {
   $ajax_settings = array(
     'path' => 'file/ajax/' . implode('/', $element['#parents']) . '/' . $form['form_build_id']['#value'],
     'wrapper' => $element['#id'] . '-ajax-wrapper',
-    'method' => 'replace',
     'effect' => 'fade',
     'progress' => array(
       'type' => $element['#progress_indicator'],

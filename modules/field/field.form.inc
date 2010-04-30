@@ -215,7 +215,6 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
           '#ajax' => array(
             'callback' => 'field_add_more_js',
             'wrapper' => $wrapper_id,
-            'method' => 'replace',
             'effect' => 'fade',
           ),
           // The field_add_more_submit() and field_add_more_js() handlers will
