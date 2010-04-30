@@ -1792,3 +1792,22 @@ function hook_field_storage_purge($entity_type, $entity, $field, $instance) {
  */
 function hook_field_access($op, $field, $entity_type, $entity, $account) {
 }
+
+/**
+ * Allows a module to object to a field definition update.
+ *
+ * The module should throw a FieldUpdateForbiddenException to indicate
+ * that the update should not proceed.
+ *
+ * @param $field
+ *   The updated field structure that a module is attempting to save.
+ * @param $prior_field
+ *   The currently-saved field structure.
+ * @param $has_data
+ *   TRUE if the field has data in storage currently.
+ */
+function hook_field_update_forbid($field, $prior_field, $has_data) {
+  if ($has_data && $field['columns'] != $prior_field['columns']) {
+    throw new FieldUpdateForbiddenException("field_sql_storage cannot change the schema for an existing field with data.");
+  }
+}
