@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.test,v 1.10 2010/04/30 07:48:07 dries Exp $
+// $Id: ajax.test,v 1.11 2010/04/30 08:07:55 dries Exp $
 
 class AJAXTestCase extends DrupalWebTestCase {
   function setUp() {
@@ -145,6 +145,11 @@ class AJAXCommandsTestCase extends AJAXTestCase {
     $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX html: Replace the HTML in a selector."))));
     $command = $commands[0];
     $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'html' && $command['data'] == 'replacement text', "'html' AJAX command issued with correct data");
+
+    // Tests the 'insert' command.
+    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX insert: Let client insert based on #ajax['method']."))));
+    $command = $commands[0];
+    $this->assertTrue($command['command'] == 'insert' && $command['method'] == NULL && $command['data'] == 'insert replacement text', "'insert' AJAX command issued with correct data");
 
     // Tests the 'prepend' command.
     $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'prepend': Click to prepend something"))));

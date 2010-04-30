@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.345 2010/04/24 14:49:14 dries Exp $
+// $Id: poll.module,v 1.346 2010/04/30 08:07:55 dries Exp $
 
 /**
  * @file
@@ -297,7 +297,6 @@ function poll_form($node, &$form_state) {
     '#ajax' => array(
       'callback' => 'poll_choice_js',
       'wrapper' => 'poll-choices',
-      'method' => 'replace',
       'effect' => 'fade',
     ),
   );

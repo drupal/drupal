@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.15 2010/04/07 17:30:43 dries Exp $
+// $Id: ajax.js,v 1.16 2010/04/30 08:07:54 dries Exp $
 (function ($) {
 
 /**
@@ -93,7 +93,7 @@ Drupal.ajax = function (base, element, element_settings) {
     selector: '#' + base,
     effect: 'none',
     speed: 'slow',
-    method: 'replace',
+    method: 'replaceWith',
     progress: {
       type: 'bar',
       message: 'Please wait...'
