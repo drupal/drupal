@@ -268,9 +268,7 @@ class AJAXMultiFormTestCase extends AJAXTestCase {
       $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == 1, t('Found the correct number of field items on the initial page.'));
       $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, t('Found the "add more" button on the initial page.'));
     }
-    // @todo Legacy bug of duplicate ids for filter-guidelines-FORMAT. See
-    //   http://drupal.org/node/755566.
-    $this->assertNoDuplicateIds(t('Initial page contains unique IDs'), 'Other', array('filter-guidelines-1', 'filter-guidelines-2', 'filter-guidelines-3'));
+    $this->assertNoDuplicateIds(t('Initial page contains unique IDs'), 'Other');
 
     // Submit the "add more" button of each form twice. After each corresponding
     // page update, ensure the same as above. To successfully implement
@@ -286,9 +284,7 @@ class AJAXMultiFormTestCase extends AJAXTestCase {
         $settings = array_merge_recursive($settings, $commands[0]['settings']);
         $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == $i+2, t('Found the correct number of field items after an AJAX submission.'));
         $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, t('Found the "add more" button after an AJAX submission.'));
-        // @todo Legacy bug of duplicate ids for filter-guidelines-FORMAT. See
-        //   http://drupal.org/node/755566.
-        $this->assertNoDuplicateIds(t('Updated page contains unique IDs'), 'Other', array('filter-guidelines-1', 'filter-guidelines-2', 'filter-guidelines-3'));
+        $this->assertNoDuplicateIds(t('Updated page contains unique IDs'), 'Other');
       }
     }
   }

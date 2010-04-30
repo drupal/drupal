@@ -12,7 +12,7 @@ Drupal.behaviors.filterGuidelines = {
       .bind('change', function () {
         $(this).parents('.filter-wrapper')
           .find('.filter-guidelines-item').hide()
-          .siblings('#filter-guidelines-' + this.value).show();
+          .siblings('.filter-guidelines-' + this.value).show();
       })
       .change();
   }

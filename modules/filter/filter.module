@@ -1122,7 +1122,9 @@ function theme_filter_guidelines($variables) {
   $format = $variables['format'];
 
   $name = isset($format->name) ? '<label>' . $format->name . ':</label>' : '';
-  return '<div id="filter-guidelines-' . $format->format . '" class="filter-guidelines-item">' . $name . theme('filter_tips', array('tips' => _filter_tips($format->format, FALSE))) . '</div>';
+  $attributes['class'][] = 'filter-guidelines-item';
+  $attributes['class'][] = 'filter-guidelines-' . $format->format;
+  return '<div' . drupal_attributes($attributes) . '>' . $name . theme('filter_tips', array('tips' => _filter_tips($format->format, FALSE))) . '</div>';
 }
 
 /**
