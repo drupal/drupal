@@ -1,5 +1,5 @@
 <?php
-// $Id: update.api.php,v 1.4 2009/08/22 14:34:23 webchick Exp $
+// $Id: update.api.php,v 1.5 2010/04/30 16:27:02 webchick Exp $
 
 /**
  * @file
@@ -102,6 +102,29 @@ function hook_update_status_alter(&$projects) {
       }
     }
   }
+}
+
+/**
+ * Verify an archive after it has been downloaded and extracted.
+ *
+ * @param string $project
+ *   The short name of the project that has been downloaded.
+ * @param string $archive_file
+ *   The filename of the unextracted archive.
+ * @param string $directory
+ *   The directory that the archive was extracted into.
+ *
+ * @return
+ *   If there is a problem, return any non-null value. If there is no problem,
+ *   don't return anything (null).
+ *
+ * @see update_manager_archive_verify()
+ */
+function hook_verify_update_archive($project, $archive_file, $directory) {
+  if (!file_exists($directory)) {
+    return TRUE;
+  }
+  // Add other checks on the archive integrity here.
 }
 
 /**
