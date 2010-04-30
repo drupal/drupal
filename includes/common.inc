@@ -5390,6 +5390,18 @@ function drupal_common_theme() {
       'variables' => array('links' => NULL, 'attributes' => array('class' => array('links')), 'heading' => array()),
     ),
     'image' => array(
+      // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
+      // allows the alt attribute to be omitted in some cases. Therefore,
+      // default the alt attribute to an empty string, but allow code calling
+      // theme('image') to pass explicit NULL for it to be omitted. Usually,
+      // neither omission nor an empty string satisfies accessibility
+      // requirements, so it is strongly encouraged for code calling
+      // theme('image') to pass a meaningful value for the alt variable.
+      // - http://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
+      // - http://www.w3.org/TR/xhtml1/dtds.html
+      // - http://dev.w3.org/html5/spec/Overview.html#alt
+      // The title attribute is optional in all cases, so it is omitted by
+      // default.
       'variables' => array('path' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array(), 'getsize' => TRUE),
     ),
     'breadcrumb' => array(
