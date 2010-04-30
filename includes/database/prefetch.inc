@@ -475,8 +475,8 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
     return $result;
   }
 
-  public function fetchAllAssoc($key, $fetch_style = PDO::FETCH_OBJ) {
-    $this->fetchStyle = $fetch_style;
+  public function fetchAllAssoc($key, $fetch_style = NULL) {
+    $this->fetchStyle = isset($fetch_style) ? $fetch_style : $this->defaultFetchStyle;
     $this->fetchOptions = $this->defaultFetchOptions;
 
     $result = array();

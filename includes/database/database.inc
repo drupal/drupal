@@ -1916,12 +1916,13 @@ interface DatabaseStatementInterface extends Traversable {
    * @param $fetch
    *   The fetchmode to use. If set to PDO::FETCH_ASSOC, PDO::FETCH_NUM, or
    *   PDO::FETCH_BOTH the returned value with be an array of arrays. For any
-   *   other value it will be an array of objects.
+   *   other value it will be an array of objects. By default, the fetch mode
+   *   set for the query will be used.
    *
    * @return
    *   An associative array.
    */
-  public function fetchAllAssoc($key, $fetch = PDO::FETCH_OBJ);
+  public function fetchAllAssoc($key, $fetch = NULL);
 }
 
 /**
@@ -1987,19 +1988,22 @@ class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInt
     return $this->fetchAll(PDO::FETCH_COLUMN, $index);
   }
 
-  public function fetchAllAssoc($key, $fetch = PDO::FETCH_OBJ) {
+  public function fetchAllAssoc($key, $fetch = NULL) {
     $return = array();
-    $this->setFetchMode($fetch);
-    if (in_array($fetch, array(PDO::FETCH_ASSOC, PDO::FETCH_NUM, PDO::FETCH_BOTH))) {
-      foreach ($this as $record) {
-        $return[$record[$key]] = $record;
+    if (isset($fetch)) {
+      if (is_string($fetch)) {
+        $this->setFetchMode(PDO::FETCH_CLASS, $fetch);
+      }
+      else {
+        $this->setFetchMode($fetch);
       }
     }
-    else {
-      foreach ($this as $record) {
-        $return[$record->$key] = $record;
-      }
+
+    foreach ($this as $record) {
+      $record_key = is_object($record) ? $record->$key : $record[$key];
+      $return[$record_key] = $record;
     }
+
     return $return;
   }
 
@@ -2080,7 +2084,7 @@ class DatabaseStatementEmpty implements Iterator, DatabaseStatementInterface {
     return array();
   }
 
-  public function fetchAllAssoc($key, $fetch = PDO::FETCH_OBJ) {
+  public function fetchAllAssoc($key, $fetch = NULL) {
     return array();
   }
 
