@@ -367,7 +367,7 @@ abstract class DatabaseTasks {
       }
     }
     if (!empty($message)) {
-      $message = '<p>In order for Drupal to work, and to continue with the installation process, you must resolve all issues reported below. For more help with configuring your database server, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what any of this means you should probably contact your hosting provider.</p>' . $message;
+      $message = '<p>In order for Drupal to work, and to continue with the installation process, you must resolve all issues reported below. For more help with configuring your database server, see the <a href="http://drupal.org/getting-started/install">installation handbook</a>. If you are unsure what any of this means you should probably contact your hosting provider.</p>' . $message;
       throw new DatabaseTaskException($message);
     }
   }
@@ -384,7 +384,7 @@ abstract class DatabaseTasks {
       $this->pass('Drupal can CONNECT to the database ok.');
     }
     catch (Exception $e) {
-      $this->fail(st('Failed to connect to your %name database server. %name reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => $e->getMessage(), '%name' => $this->name())));
+      $this->fail(st('Failed to connect to your %name database server. %name reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li></ul>For more help, see the <a href="http://drupal.org/getting-started/install">installation handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => $e->getMessage(), '%name' => $this->name())));
       return FALSE;
     }
     return TRUE;
