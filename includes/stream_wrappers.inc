@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.13 2010/03/26 17:14:45 dries Exp $
+// $Id: stream_wrappers.inc,v 1.14 2010/04/30 01:33:17 webchick Exp $
 
 /**
  * @file
@@ -657,7 +657,7 @@ class DrupalPrivateStreamWrapper extends DrupalLocalStreamWrapper {
    * Implements abstract public function getDirectoryPath()
    */
   public function getDirectoryPath() {
-    return variable_get('file_private_path', conf_path() . '/private/files');
+    return variable_get('file_private_path', '');
   }
 
   /**
@@ -684,7 +684,7 @@ class DrupalTemporaryStreamWrapper extends DrupalLocalStreamWrapper {
    * Implements abstract public function getDirectoryPath()
    */
   public function getDirectoryPath() {
-    return variable_get('file_temporary_path', conf_path() . '/private/temp');
+    return variable_get('file_temporary_path', sys_get_temp_dir());
   }
 
   /**
