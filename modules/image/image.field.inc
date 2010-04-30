@@ -511,8 +511,11 @@ function theme_image_formatter($variables) {
   $image = array(
     'path' => $item['uri'],
     'alt' => $item['alt'],
-    'title' => $item['title'],
   );
+  // Do not output an empty 'title' attribute.
+  if (drupal_strlen($item['title']) > 0) {
+    $image['title'] = $item['title'];
+  }
 
   if ($variables['image_style']) {
     $image['style_name'] = $variables['image_style'];

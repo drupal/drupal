@@ -1484,10 +1484,27 @@ function theme_image($variables) {
   $attributes = $variables['attributes'];
   $getsize = $variables['getsize'];
 
-  if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
-    $attributes = drupal_attributes($attributes);
-    $url = file_create_url($path);
-    return '<img src="' . check_url($url) . '" alt="' . check_plain($alt) . '" title="' . check_plain($title) . '" ' . (isset($image_attributes) ? $image_attributes : '') . $attributes . ' />';
+  if (!$getsize || (is_file($path) && (list($width, $height) = @getimagesize($path)))) {
+    // The src attribute can be omitted, by passing NULL for $path and FALSE for
+    // $getsize.
+    if (isset($path)) {
+      $attributes['src'] = file_create_url($path);
+    }
+    // The alt attribute defaults to an empty string. By passing NULL as value,
+    // it can be omitted.
+    if (isset($alt)) {
+      $attributes['alt'] = $alt;
+    }
+    if (isset($title)) {
+      $attributes['title'] = $title;
+    }
+    if (!isset($attributes['width']) && !empty($width)) {
+      $attributes['width'] = $width;
+    }
+    if (!isset($attributes['height']) && !empty($height)) {
+      $attributes['height'] = $height;
+    }
+    return '<img' . drupal_attributes($attributes) . ' />';
   }
 }
 

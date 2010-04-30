@@ -178,7 +178,7 @@ function image_theme() {
         'style_name' => NULL,
         'path' => NULL,
         'alt' => '',
-        'title' => '',
+        'title' => NULL,
         'attributes' => array(),
         'getsize' => TRUE,
       ),
