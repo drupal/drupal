@@ -335,7 +335,7 @@ Drupal.overlay.load = function (url) {
   // class is being used to hide the iframe while loading.
   // See overlay-parent.css .overlay-loaded #overlay-element.
   self.$dialog.removeClass('overlay-loaded');
-  self.$iframe
+  self.$iframe.once('overlay-event-load')
     .bind('load.overlay-event', function () {
       self.isLoading = false;
 
