@@ -3891,41 +3891,129 @@ function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_ch
 }
 
 /**
- * Adds JavaScript to the element to allow it to have different active states.
+ * Adds JavaScript to change the state of an element based on another element.
+ *
+ * A "state" means a certain property on a DOM element, such as "visible" or
+ * "checked". A state can be applied to an element, depending on the state of
+ * another element on the page. In general, states depend on HTML attributes and
+ * DOM element properties, which change due to user interaction.
+ *
+ * Since states are driven by JavaScript only, it is important to understand
+ * that all states are applied on presentation only, none of the states force
+ * any server-side logic, and that they will not be applied for site visitors
+ * without JavaScript support. All modules implementing states have to make
+ * sure that the intended logic also works without JavaScript being enabled.
+ *
+ * #states is an associative array in the form of:
+ * @code
+ * array(
+ *   STATE1 => CONDITIONS_ARRAY1,
+ *   STATE2 => CONDITIONS_ARRAY2,
+ *   ...
+ * )
+ * @endcode
+ * Each key is the name of a state to apply to the element, such as 'visible'.
+ * Each value is a list of conditions that denote when the state should be
+ * applied.
+ *
+ * Multiple different states may be specified to act on complex conditions:
+ * @code
+ * array(
+ *   'visible' => CONDITIONS,
+ *   'checked' => OTHER_CONDITIONS,
+ * )
+ * @endcode
+ *
+ * Every condition is a key/value pair, whose key is a jQuery selector that
+ * denotes another element on the page, and whose value is an array of
+ * conditions, which must bet met on that element:
+ * @code
+ * array(
+ *   'visible' => array(
+ *     JQUERY_SELECTOR => REMOTE_CONDITIONS,
+ *     JQUERY_SELECTOR => REMOTE_CONDITIONS,
+ *     ...
+ *   ),
+ * )
+ * @endcode
+ * All conditions must be met for the state to be applied.
+ *
+ * Each remote condition is a key/value pair specifying conditions on the other
+ * element that need to be met to apply the state to the element:
+ * @code
+ * array(
+ *   'visible' => array(
+ *     ':input[name="remote_checkbox"]' => array('checked' => TRUE),
+ *   ),
+ * )
+ * @endcode
+ *
+ * For example, to show a textfield only when a checkbox is checked:
+ * @code
+ * $form['toggle_me'] = array(
+ *   '#type' => 'checkbox',
+ *   '#title' => t('Tick this box to type'),
+ * );
+ * $form['settings'] = array(
+ *   '#type' => 'textfield',
+ *   '#states' => array(
+ *     // Only show this field when the 'toggle_me' checkbox is enabled.
+ *     'visible' => array(
+ *       ':input[name="toggle_me"]' => array('checked' => TRUE),
+ *     ),
+ *   ),
+ * );
+ * @endcode
+ *
+ * The following states may be applied to an element:
+ * - enabled
+ * - disabled
+ * - visible
+ * - invisible
+ * - checked
+ * - unchecked
+ * - expanded
+ * - collapsed
+ *
+ * The following states may be used in remote conditions:
+ * - enabled
+ * - disabled
+ * - visible
+ * - invisible
+ * - checked
+ * - unchecked
+ * - value
+ *
+ * The following states exist for both states and remote conditions, but are not
+ * fully implemented and may not change anything on the element:
+ * - required
+ * - optional
+ * - relevant
+ * - irrelevant
+ * - valid
+ * - invalid
+ * - touched
+ * - untouched
+ * - filled
+ * - empty
+ * - readwrite
+ * - readonly
+ *
+ * When referencing select lists and radio buttons in remote conditions, a
+ * 'value' condition must be used:
+ * @code
+ *   '#states' => array(
+ *     // Show the settings if 'bar' has been selected for 'foo'.
+ *     'visible' => array(
+ *       ':input[name="foo"]' => array('value' => 'bar'),
+ *     ),
+ *   ),
+ * @endcode
  *
  * @param $elements
- *   The structured array that may contain an array item named states. This
- *   array describes the different JavaScript states that can be applied to the
- *   element when certain conditions are met. The #states array is first keyed
- *   by one of the following states:
- *   - enabled
- *   - invisible
- *   - invalid
- *   - untouched
- *   - optional
- *   - filled
- *   - unchecked
- *   - irrelevant
- *   - expanded
- *   - readwrite
+ *   A renderable array element having a #states property as described above.
  *
- *   Each of these states is an array containing conditions that must be met in
- *   order for this state to be active. The key to this conditioning array is
- *   a jQuery selector for the element that is checked. The value of the
- *   conditioning array are the states that are checked on the element (empty,
- *   checked, value, collapsed, etc) and the expected value of that condition.
- *
- *   @code
- *   $form['email_canceled']['settings'] = array(
- *     '#type' => 'container',
- *     '#states' => array(
- *       // Hide the settings when the cancel notify checkbox is disabled.
- *       'invisible' => array(
- *         'input[name="email_canceled_toggle"]' => array('checked' => FALSE),
- *       ),
- *     ),
- *   );
- *   @endcode
+ * @see form_example_states_form()
  */
 function drupal_process_states(&$elements) {
   $elements['#attached']['js']['misc/states.js'] = array('weight' => JS_LIBRARY + 1);
