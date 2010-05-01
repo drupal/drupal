@@ -799,6 +799,7 @@ ul.inline li {
 .node .links,
 .comment .links {
   text-align: left; /* LTR */
+  padding-left: 0; /* LTR */
 }
 
 .user-picture,

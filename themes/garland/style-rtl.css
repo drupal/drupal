@@ -213,6 +213,7 @@ ul.links li, ul.inline li {
 .node .links,
 .comment .links {
   text-align: right;
+  padding-right: 0;
 }
 
 .user-picture,
