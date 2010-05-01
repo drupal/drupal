@@ -31,7 +31,7 @@ Drupal.behaviors.fileButtons = {
     $('input.form-submit', context).bind('mousedown', Drupal.file.disableFields);
     $('div.form-managed-file input.form-submit', context).bind('mousedown', Drupal.file.progressBar);
   },
-  unattach: function (context) {
+  detach: function (context) {
     $('input.form-submit', context).unbind('mousedown', Drupal.file.disableFields);
     $('div.form-managed-file input.form-submit', context).unbind('mousedown', Drupal.file.progressBar);
   }
