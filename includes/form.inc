@@ -3029,22 +3029,24 @@ function theme_form_element($variables) {
   // This is also used in the installer, pre-database setup.
   $t = get_t();
 
+  // Add element #id for #type 'item'.
+  if (isset($element['#markup']) && !empty($element['#id'])) {
+    $attributes['id'] = $element['#id'];
+  }
   // Add element's #type and #name as class to aid with JS/CSS selectors.
-  $class = array('form-item');
+  $attributes['class'] = array('form-item');
   if (!empty($element['#type'])) {
-    $class[] = 'form-type-' . strtr($element['#type'], '_', '-');
+    $attributes['class'][] = 'form-type-' . strtr($element['#type'], '_', '-');
   }
   if (!empty($element['#name'])) {
-    $class[] = 'form-item-' . strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
+    $attributes['class'][] = 'form-item-' . strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
   }
+  $output = '<div' . drupal_attributes($attributes) . '>' . "\n";
 
   // If #title is not set, we don't display any label or required marker.
   if (!isset($element['#title'])) {
     $element['#title_display'] = 'none';
   }
-
-  $output = '<div class="' . implode(' ', $class) . '">' . "\n";
-
   $prefix = isset($element['#field_prefix']) ? '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ' : '';
   $suffix = isset($element['#field_suffix']) ? ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>' : '';
 
