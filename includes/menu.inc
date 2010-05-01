@@ -407,9 +407,9 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     $parts = array_slice($original_map, 0, MENU_MAX_PARTS);
     $ancestors = menu_get_ancestors($parts);
 
-    // Since there is no limit to the length of $path, but the cids are
-    // restricted to 255 characters, use md5() to keep it short yet unique.
-    $cid = 'menu_item:' . md5($path);
+    // Since there is no limit to the length of $path, use a hash to keep it
+    // short yet unique.
+    $cid = 'menu_item:' . hash('sha256', $path);
     if ($cached = cache_get($cid, 'cache_menu')) {
       $router_item = $cached->data;
     }
@@ -1238,7 +1238,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL) {
  * Helper function - compute the real cache ID for menu tree data.
  */
 function _menu_tree_cid($menu_name, $data) {
-  return 'links:' . $menu_name . ':tree-data:' . $GLOBALS['language']->language . ':' . md5(serialize($data));
+  return 'links:' . $menu_name . ':tree-data:' . $GLOBALS['language']->language . ':' . hash('sha256', serialize($data));
 }
 
 /**

@@ -98,7 +98,7 @@ function filter_schema() {
   );
 
   $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_filter']['description'] = 'Cache table for the Filter module to store already filtered pieces of text, identified by text format and md5 hash of the text.';
+  $schema['cache_filter']['description'] = 'Cache table for the Filter module to store already filtered pieces of text, identified by text format and hash of the text.';
 
   return $schema;
 }

@@ -419,7 +419,7 @@ function system_install() {
     ->execute();
 
   // Populate the cron key variable.
-  $cron_key = md5(mt_rand());
+  $cron_key = drupal_hash_base64(drupal_random_bytes(55));
   variable_set('cron_key', $cron_key);
 }
 
@@ -1557,7 +1557,7 @@ function system_update_7000() {
  * Generate a cron key and save it in the variables table.
  */
 function system_update_7001() {
-  variable_set('cron_key', md5(mt_rand()));
+  variable_set('cron_key', drupal_hash_base64(drupal_random_bytes(55)));
 }
 
 /**

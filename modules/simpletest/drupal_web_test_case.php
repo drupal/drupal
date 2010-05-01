@@ -1075,7 +1075,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function drupalGetToken($value = '') {
     $private_key = drupal_get_private_key();
-    return md5($this->session_id . $value . $private_key);
+    return drupal_hmac_base64($value, $this->session_id . $private_key);
   }
 
   /*

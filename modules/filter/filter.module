@@ -681,7 +681,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
   $cache = $cache && !empty($format->cache);
   $cache_id = '';
   if ($cache) {
-    $cache_id = $format->format . ':' . $langcode . ':' . md5($text);
+    $cache_id = $format->format . ':' . $langcode . ':' . hash('sha256', $text);
     if ($cached = cache_get($cache_id, 'cache_filter')) {
       return $cached->data;
     }

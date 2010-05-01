@@ -16,8 +16,8 @@
 
 /**
  * The standard log2 number of iterations for password stretching. This should
- * increase by 1 at least every other Drupal version in order to counteract
- * increases in the speed and power of computers available to crack the hashes.
+ * increase by 1 every Drupal version in order to counteract increases in the
+ * speed and power of computers available to crack the hashes.
  */
 define('DRUPAL_HASH_COUNT', 14);
 
@@ -30,6 +30,11 @@ define('DRUPAL_MIN_HASH_COUNT', 7);
  * The maximum allowed log2 number of iterations for password stretching.
  */
 define('DRUPAL_MAX_HASH_COUNT', 30);
+
+/**
+ * The expected (and maximum) number of characters in a hashed password.
+ */
+define('DRUPAL_HASH_LENGTH', 55);
 
 /**
  * Returns a string for mapping an int to the corresponding base 64 character.
@@ -49,7 +54,7 @@ function _password_itoa64() {
  * @return
  *   Encoded string
  */
-function _password_base64_encode($input, $count)  {
+function _password_base64_encode($input, $count) {
   $output = '';
   $i = 0;
   $itoa64 = _password_itoa64();
@@ -93,7 +98,7 @@ function _password_base64_encode($input, $count)  {
  *   A 12 character string containing the iteration count and a random salt.
  */
 function _password_generate_salt($count_log2) {
-  $output = '$P$';
+  $output = '$S$';
   // Minimum log2 iterations is DRUPAL_MIN_HASH_COUNT.
   $count_log2 = max($count_log2, DRUPAL_MIN_HASH_COUNT);
   // Maximum log2 iterations is DRUPAL_MAX_HASH_COUNT.
@@ -113,19 +118,23 @@ function _password_generate_salt($count_log2) {
  * for an attacker to try to break the hash by brute-force computation of the
  * hashes of a large number of plain-text words or strings to find a match.
  *
+ * @param $algo
+ *   The string name of a hashing algorithm usable by hash(), like 'sha256'.
  * @param $password
  *   The plain-text password to hash.
  * @param $setting
- *   An existing hash or the output of _password_generate_salt().
+ *   An existing hash or the output of _password_generate_salt().  Must be
+ *   at least 12 characters (the settings and salt).
  *
  * @return
  *   A string containing the hashed password (and salt) or FALSE on failure.
+ *   The return string will be truncated at DRUPAL_HASH_LENGTH characters max.
  */
-function _password_crypt($password, $setting)  {
+function _password_crypt($algo, $password, $setting) {
   // The first 12 characters of an existing hash are its setting string.
   $setting = substr($setting, 0, 12);
 
-  if (substr($setting, 0, 3) != '$P$') {
+  if ($setting[0] != '$' || $setting[2] != '$') {
     return FALSE;
   }
   $count_log2 = _password_get_count_log2($setting);
@@ -139,22 +148,21 @@ function _password_crypt($password, $setting)  {
     return FALSE;
   }
 
-  // We must use md5() or sha1() here since they are the only cryptographic
-  // primitives always available in PHP 5. To implement our own low-level
-  // cryptographic function in PHP would result in much worse performance and
-  // consequently in lower iteration counts and hashes that are quicker to crack
-  // (by non-PHP code).
-
+  // Convert the base 2 logrithm into an integer.
   $count = 1 << $count_log2;
 
-  $hash = md5($salt . $password, TRUE);
+  // We rely on the hash() function being available in PHP 5.2+.
+  $hash = hash($algo, $salt . $password, TRUE);
   do {
-    $hash = md5($hash . $password, TRUE);
+    $hash = hash($algo, $hash . $password, TRUE);
   } while (--$count);
 
-  $output =  $setting . _password_base64_encode($hash, 16);
+  $len = strlen($hash);
+  $output =  $setting . _password_base64_encode($hash, $len);
   // _password_base64_encode() of a 16 byte MD5 will always be 22 characters.
-  return (strlen($output) == 34) ? $output : FALSE;
+  // _password_base64_encode() of a 64 byte sha512 will always be 86 characters.
+  $expected = 12 + ceil((8 * $len) / 6);
+  return (strlen($output) == $expected) ? substr($output, 0, DRUPAL_HASH_LENGTH) : FALSE;
 }
 
 /**
@@ -182,7 +190,7 @@ function user_hash_password($password, $count_log2 = 0) {
     // Use the standard iteration count.
     $count_log2 = variable_get('password_count_log2', DRUPAL_HASH_COUNT);
   }
-  return _password_crypt($password, _password_generate_salt($count_log2));
+  return _password_crypt('sha512', $password, _password_generate_salt($count_log2));
 }
 
 /**
@@ -201,7 +209,7 @@ function user_hash_password($password, $count_log2 = 0) {
  *   TRUE or FALSE.
  */
 function user_check_password($password, $account) {
-  if (substr($account->pass, 0, 3) == 'U$P') {
+  if (substr($account->pass, 0, 2) == 'U$') {
     // This may be an updated password from user_update_7000(). Such hashes
     // have 'U' added as the first character and need an extra md5().
     $stored_hash = substr($account->pass, 1);
@@ -210,7 +218,23 @@ function user_check_password($password, $account) {
   else {
     $stored_hash = $account->pass;
   }
-  $hash = _password_crypt($password, $stored_hash);
+
+  $type = substr($stored_hash, 0, 3);
+  switch ($type) {
+    case '$S$':
+      // A normal Drupal 7 password using sha512.
+      $hash = _password_crypt('sha512', $password, $stored_hash);
+      break;
+    case '$H$':
+      // phpBB3 uses "$H$" for the same thing as "$P$".
+    case '$P$':
+      // A phpass password generated using md5.  This is an
+      // imported password or from an earlier Drupal version.
+      $hash = _password_crypt('md5', $password, $stored_hash);
+      break;
+    default:
+      return FALSE;
+  }
   return ($hash && $stored_hash == $hash);
 }
 
@@ -234,7 +258,7 @@ function user_check_password($password, $account) {
  */
 function user_needs_new_hash($account) {
   // Check whether this was an updated password.
-  if ((substr($account->pass, 0, 3) != '$P$') || (strlen($account->pass) != 34)) {
+  if ((substr($account->pass, 0, 3) != '$S$') || (strlen($account->pass) != DRUPAL_HASH_LENGTH)) {
     return TRUE;
   }
   // Check whether the iteration count used differs from the standard number.

@@ -197,7 +197,7 @@ function actions_get_all_actions() {
 }
 
 /**
- * Creates an associative array keyed by md5 hashes of function names or IDs.
+ * Creates an associative array keyed by hashes of function names or IDs.
  *
  * Hashes are used to prevent actual function names from going out into HTML
  * forms and coming back.
@@ -207,14 +207,14 @@ function actions_get_all_actions() {
  *   and associative arrays with keys 'label', 'type', etc. as values.
  *   This is usually the output of actions_list() or actions_get_all_actions().
  * @return
- *   An associative array whose keys are md5 hashes of the input array keys, and
+ *   An associative array whose keys are hashes of the input array keys, and
  *   whose corresponding values are associative arrays with components
  *   'callback', 'label', 'type', and 'configurable' from the input array.
  */
 function actions_actions_map($actions) {
   $actions_map = array();
   foreach ($actions as $callback => $array) {
-    $key = md5($callback);
+    $key = drupal_hash_base64($callback);
     $actions_map[$key]['callback']     = isset($array['callback']) ? $array['callback'] : $callback;
     $actions_map[$key]['label']        = $array['label'];
     $actions_map[$key]['type']         = $array['type'];
@@ -224,12 +224,12 @@ function actions_actions_map($actions) {
 }
 
 /**
- * Given an md5 hash of an action array key, returns the key (function or ID).
+ * Given a hash of an action array key, returns the key (function or ID).
  *
  * Faster than actions_actions_map() when you only need the function name or ID.
  *
  * @param $hash
- *   MD5 hash of a function name or action ID array key. The array key
+ *   Hash of a function name or action ID array key. The array key
  *   is a key into the return value of actions_list() (array key is the action
  *   function name) or actions_get_all_actions() (array key is the action ID).
  * @return
@@ -239,13 +239,20 @@ function actions_function_lookup($hash) {
   // Check for a function name match.
   $actions_list = actions_list();
   foreach ($actions_list as $function => $array) {
-    if (md5($function) == $hash) {
+    if (drupal_hash_base64($function) == $hash) {
       return $function;
     }
   }
-
+  $aid = FALSE;
   // Must be a configurable action; check database.
-  return db_query("SELECT aid FROM {actions} WHERE MD5(aid) = :hash AND parameters <> ''", array(':hash' => $hash))->fetchField();
+  $result = db_query("SELECT aid FROM {actions} WHERE parameters <> ''")->fetchAll(PDO::FETCH_ASSOC);
+  foreach ($result as $row) {
+    if (drupal_hash_base64($row['aid']) == $hash) {
+      $aid = $row['aid'];
+      break;
+    }
+  }
+  return $aid;
 }
 
 /**

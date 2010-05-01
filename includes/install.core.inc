@@ -1011,7 +1011,7 @@ function install_settings_form_submit($form, &$form_state) {
     'required' => TRUE,
   );
   $settings['drupal_hash_salt'] = array(
-    'value'    => sha1(drupal_random_bytes(64)),
+    'value'    => drupal_hash_base64(drupal_random_bytes(55)),
     'required' => TRUE,
   );
   drupal_rewrite_settings($settings);

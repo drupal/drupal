@@ -13,10 +13,6 @@
  *  Plain-text passwords in quotes (or with spaces backslash escaped).
  */
 
-function variable_get($x, $default) {
-  return $default;
-}
-
 if (version_compare(PHP_VERSION, "5.2.0", "<")) {
   $version  = PHP_VERSION;
   echo <<<EOF
@@ -86,7 +82,7 @@ while ($param = array_shift($_SERVER['argv'])) {
 define('DRUPAL_ROOT', getcwd());
 
 include_once DRUPAL_ROOT . '/includes/password.inc';
-include_once DRUPAL_ROOT . '/includes/common.inc';
+include_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 
 foreach ($passwords as $password) {
   print("\npassword: $password \t\thash: ". user_hash_password($password) ."\n");

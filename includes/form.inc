@@ -203,7 +203,7 @@ function drupal_build_form($form_id, &$form_state) {
       }
 
       $form = drupal_retrieve_form($form_id, $form_state);
-      $form_build_id = 'form-' . md5(uniqid(mt_rand(), TRUE));
+      $form_build_id = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
       $form['#build_id'] = $form_build_id;
 
       // Fix the form method, if it is 'get' in $form_state, but not in $form.
@@ -331,7 +331,7 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
   // Otherwise, a new #build_id is generated, to not clobber the previous
   // build's data in the form cache; also allowing the user to go back to an
   // earlier build, make changes, and re-submit.
-  $form['#build_id'] = isset($old_form['#build_id']) ? $old_form['#build_id'] : 'form-' . md5(mt_rand());
+  $form['#build_id'] = isset($old_form['#build_id']) ? $old_form['#build_id'] : 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
 
   // #action defaults to request_uri(), but in case of AJAX and other partial
   // rebuilds, the form is submitted to an alternate URL, and the original

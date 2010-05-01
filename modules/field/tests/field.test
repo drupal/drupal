@@ -2715,7 +2715,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
 
     $results = _field_invoke('test_op', $entity_type, $entity);
     foreach ($results as $langcode => $result) {
-      $hash = md5(serialize(array($entity_type, $entity, $this->field_name, $langcode, $values[$langcode])));
+      $hash = hash('sha256', serialize(array($entity_type, $entity, $this->field_name, $langcode, $values[$langcode])));
       // Check whether the parameters passed to _field_invoke() were correctly
       // forwarded to the callback function.
       $this->assertEqual($hash, $result, t('The result for %language is correctly stored.', array('%language' => $langcode)));
@@ -2757,7 +2757,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     $grouped_results = _field_invoke_multiple('test_op_multiple', $entity_type, $entities);
     foreach ($grouped_results as $id => $results) {
       foreach ($results as $langcode => $result) {
-        $hash = md5(serialize(array($entity_type, $entities[$id], $this->field_name, $langcode, $values[$id][$langcode])));
+        $hash = hash('sha256', serialize(array($entity_type, $entities[$id], $this->field_name, $langcode, $values[$id][$langcode])));
         // Check whether the parameters passed to _field_invoke() were correctly
         // forwarded to the callback function.
         $this->assertEqual($hash, $result, t('The result for entity %id/%language is correctly stored.', array('%id' => $id, '%language' => $langcode)));

@@ -2928,7 +2928,7 @@ function system_actions_manage_form_submit($form, &$form_state) {
  * on our elements.
  *
  * @param $action
- *   md5 hash of an action ID or an integer. If it is an md5 hash, we are
+ *   Hash of an action ID or an integer. If it is a hash, we are
  *   creating a new instance. If it is an integer, we are editing an existing
  *   instance.
  * @return
@@ -2953,7 +2953,7 @@ function system_actions_configure($form, &$form_state, $action = NULL) {
     $edit['actions_label'] = $data->label;
     $edit['actions_type'] = $data->type;
     $function = $data->callback;
-    $action = md5($data->callback);
+    $action = drupal_hash_base64($data->callback);
     $params = unserialize($data->parameters);
     if ($params) {
       foreach ($params as $name => $val) {

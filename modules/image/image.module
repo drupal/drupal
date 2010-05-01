@@ -632,19 +632,19 @@ function image_style_generate() {
   $path = implode('/', $args);
 
   $path = $scheme . '://' . $path;
-  $path_md5 = md5($path);
+  $path_hash = drupal_hash_base64($path);
   $destination = image_style_path($style['name'], $path);
 
   // Check that it's a defined style and that access was granted by
   // image_style_url().
-  if (!$style || !cache_get('access:' . $style_name . ':' . $path_md5, 'cache_image')) {
+  if (!$style || !cache_get('access:' . $style_name . ':' . $path_hash, 'cache_image')) {
     drupal_access_denied();
     drupal_exit();
   }
 
   // Don't start generating the image if the derivate already exists or if
   // generation is in progress in another thread.
-  $lock_name = 'image_style_generate:' . $style_name . ':' . $path_md5;
+  $lock_name = 'image_style_generate:' . $style_name . ':' . $path_hash;
   if (!file_exists($destination)) {
     $lock_acquired = lock_acquire($lock_name);
     if (!$lock_acquired) {
@@ -783,7 +783,7 @@ function image_style_url($style_name, $path) {
 
   // Set a cache entry to grant access to this style/image path. This will be
   // checked by image_style_generate().
-  cache_set('access:' . $style_name . ':' . md5($path), 1, 'cache_image', REQUEST_TIME + 600);
+  cache_set('access:' . $style_name . ':' . drupal_hash_base64($path), 1, 'cache_image', REQUEST_TIME + 600);
 
   $scheme = file_uri_scheme($path);
   $target = file_uri_target($path);

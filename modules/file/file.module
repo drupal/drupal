@@ -410,7 +410,7 @@ function file_managed_file_process($element, &$form_state, $form) {
 
   // Add progress bar support to the upload if possible.
   if ($element['#progress_indicator'] == 'bar' && $implementation = file_progress_implementation()) {
-    $upload_progress_key = md5(mt_rand());
+    $upload_progress_key = mt_rand();
 
     if ($implementation == 'uploadprogress') {
       $element['UPLOAD_IDENTIFIER'] = array(

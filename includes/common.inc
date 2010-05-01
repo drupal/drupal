@@ -2895,7 +2895,7 @@ function drupal_aggregate_css(&$css_groups) {
         if ($group['preprocess'] && $preprocess_css) {
           // Prefix filename to prevent blocking by firewalls which reject files
           // starting with "ad*".
-          $filename = 'css_' . md5(serialize($group['items'])) . '.css';
+          $filename = 'css_' . drupal_hash_base64(serialize($group['items'])) . '.css';
           $css_groups[$key]['data'] = drupal_build_css_cache($group['items'], $filename);
         }
         break;
@@ -3767,7 +3767,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
     foreach ($files as $key => $file_set) {
-      $filename = 'js_' . md5(serialize($file_set)) . '.js';
+      $filename = 'js_' . drupal_hash_base64(serialize($file_set)) . '.js';
       $uri = drupal_build_js_cache($file_set, $filename);
       // Only include the file if was written successfully. Errors are logged
       // using watchdog.
@@ -4341,45 +4341,6 @@ function drupal_json_output($var = NULL) {
 }
 
 /**
- * Returns a string of highly randomized bytes (over the full 8-bit range).
- *
- * This function is better than simply calling mt_rand() or any other built-in
- * PHP function because it can return a long string of bytes (compared to < 4
- * bytes normally from mt_rand()) and uses the best available pseudo-random source.
- *
- * @param $count
- *   The number of characters (bytes) to return in the string.
- */
-function drupal_random_bytes($count)  {
-  // $random_state does not use drupal_static as it stores random bytes.
-  static $random_state;
-  // We initialize with the somewhat random PHP process ID on the first call.
-  if (empty($random_state)) {
-    $random_state = getmypid();
-  }
-  $output = '';
-  // /dev/urandom is available on many *nix systems and is considered the best
-  // commonly available pseudo-random source.
-  if ($fh = @fopen('/dev/urandom', 'rb')) {
-    $output = fread($fh, $count);
-    fclose($fh);
-  }
-  // If /dev/urandom is not available or returns no bytes, this loop will
-  // generate a good set of pseudo-random bytes on any system.
-  // Note that it may be important that our $random_state is passed
-  // through md5() prior to being rolled into $output, that the two md5()
-  // invocations are different, and that the extra input into the first one -
-  // the microtime() - is prepended rather than appended. This is to avoid
-  // directly leaking $random_state via the $output stream, which could
-  // allow for trivial prediction of further "random" numbers.
-  while (strlen($output) < $count) {
-    $random_state = md5(microtime() . mt_rand() . $random_state);
-    $output .= md5(mt_rand() . $random_state, TRUE);
-  }
-  return substr($output, 0, $count);
-}
-
-/**
  * Get a salt useful for hardening against SQL injection.
  *
  * @return
@@ -4389,7 +4350,7 @@ function drupal_get_hash_salt() {
   global $drupal_hash_salt, $databases;
   // If the $drupal_hash_salt variable is empty, a hash of the serialized
   // database credentials is used as a fallback salt.
-  return empty($drupal_hash_salt) ? sha1(serialize($databases)) : $drupal_hash_salt;
+  return empty($drupal_hash_salt) ? hash('sha256', serialize($databases)) : $drupal_hash_salt;
 }
 
 /**
@@ -4400,7 +4361,7 @@ function drupal_get_hash_salt() {
  */
 function drupal_get_private_key() {
   if (!($key = variable_get('drupal_private_key', 0))) {
-    $key = md5(drupal_random_bytes(64));
+    $key = drupal_hash_base64(drupal_random_bytes(55));
     variable_set('drupal_private_key', $key);
   }
   return $key;
@@ -4413,10 +4374,7 @@ function drupal_get_private_key() {
  *   An additional value to base the token on.
  */
 function drupal_get_token($value = '') {
-  $private_key = drupal_get_private_key();
-  // A single md5() is vulnerable to length-extension attacks, so use it twice.
-  // @todo:  add md5 and sha1 hmac functions to core.
-  return md5(drupal_get_hash_salt() . md5(session_id() . $value . $private_key));
+  return drupal_hmac_base64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
 }
 
 /**
@@ -5247,7 +5205,7 @@ function drupal_render_cache_set(&$markup, $elements) {
 function drupal_render_cache_by_query($query, $function, $expire = CACHE_TEMPORARY, $granularity = NULL) {
   $cache_keys = array_merge(array($function), drupal_render_cid_parts($granularity));
   $query->preExecute();
-  $cache_keys[] = md5(serialize(array((string) $query, $query->getArguments())));
+  $cache_keys[] = hash('sha256', serialize(array((string) $query, $query->getArguments())));
   return array(
     '#query' => $query,
     '#pre_render' => array($function . '_pre_render'),

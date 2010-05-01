@@ -1259,7 +1259,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
   private function insertSession(array $fields = array()) {
     $fields += array(
       'uid' => 0,
-      'sid' => md5(uniqid(mt_rand(), TRUE)),
+      'sid' => drupal_hash_base64(uniqid(mt_rand(), TRUE)),
       'timestamp' => REQUEST_TIME,
     );
     db_insert('sessions')

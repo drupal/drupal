@@ -155,10 +155,11 @@ function trigger_assign_form($form, $form_state, $module, $hook, $label) {
   foreach ($actions as $aid => $info) {
     // If action is defined unassign it, otherwise offer to delete all orphaned
     // actions.
-    if (actions_function_lookup(md5($aid))) {
+    $hash = drupal_hash_base64($aid, TRUE);
+    if (actions_function_lookup($hash)) {
       $form[$hook]['assigned']['#value'][$aid] = array(
         'label' => $info['label'],
-        'link' => l(t('unassign'), "admin/structure/trigger/unassign/$module/$hook/" . md5($aid)),
+        'link' => l(t('unassign'), "admin/structure/trigger/unassign/$module/$hook/$hash"),
       );
     }
     else {

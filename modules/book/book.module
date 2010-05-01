@@ -1273,7 +1273,7 @@ function book_menu_subtree_data($link) {
       $data['node_links'] = array();
       menu_tree_collect_node_links($data['tree'], $data['node_links']);
       // Compute the real cid for book subtree data.
-      $tree_cid = 'links:' . $item['menu_name'] . ':subtree-data:' . md5(serialize($data));
+      $tree_cid = 'links:' . $item['menu_name'] . ':subtree-data:' . hash('sha256', serialize($data));
       // Cache the data, if it is not already in the cache.
 
       if (!cache_get($tree_cid, 'cache_menu')) {
