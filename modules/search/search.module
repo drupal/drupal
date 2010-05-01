@@ -246,18 +246,43 @@ function search_menu() {
     'file path' => drupal_get_path('module', 'dblog'),
     'file' => 'dblog.admin.inc',
   );
+
+  // Add paths for searching. We add each module search path twice: once without
+  // and once with %menu_tail appended. The reason for this is that we want to
+  // preserve keywords when switching tabs, and also to have search tabs
+  // highlighted properly. The only way to do that within the Drupal menu
+  // system appears to be having two sets of tabs. See discussion on issue
+  // http://drupal.org/node/245103 for details.
+
   drupal_static_reset('search_get_info');
-  $search_hooks = search_get_info();
-  foreach(variable_get('search_active_modules', array('node', 'user')) as $module) {
-    if (isset($search_hooks[$module])) {
-      $items['search/' . $search_hooks[$module]['path'] . '/%menu_tail'] = array(
-        'title' => $search_hooks[$module]['title'],
+  if ($active = variable_get('search_active_modules', array('node', 'user'))) {
+    foreach (array_intersect_key(search_get_info(), array_flip($active)) as $module => $search_info) {
+      $path = 'search/' . $search_info['path'];
+      $items[$path] = array(
+        'title' => $search_info['title'],
         'page callback' => 'search_view',
         'page arguments' => array($module),
         'access callback' => '_search_menu_access',
         'access arguments' => array($module),
+        'type' => $module == 'node' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+        'file' => 'search.pages.inc',
+        'weight' => $module == 'node' ? -10 : 0,
+      );
+      $items["$path/%menu_tail"] = array(
+        'title' => $search_info['title'],
+        'page callback' => 'search_view',
+        'page arguments' => array($module),
+        'access callback' => '_search_menu_access',
+        'access arguments' => array($module),
+        // The default local task points to its parent, but this item points to
+        // where it should so it should not be changed.
         'type' => MENU_LOCAL_TASK,
         'file' => 'search.pages.inc',
+        'weight' => 0,
+        // These tabs are not subtabs.
+        'tab_root' => 'search/node/%',
+        // These tabs need to display at the same level.
+        'tab_parent' => 'search',
       );
     }
   }
