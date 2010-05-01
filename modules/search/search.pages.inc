@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.18 2010/04/13 15:23:03 dries Exp $
+// $Id: search.pages.inc,v 1.19 2010/05/01 01:04:24 webchick Exp $
 
 /**
  * @file
@@ -14,14 +14,14 @@ function search_view($type = 'node') {
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
   if (!isset($_POST['form_id'])) {
-    if ($type == '') {
-      // Note: search/node can not be a default tab because it would take on the
-      // path of its parent (search). It would prevent remembering keywords when
-      // switching tabs. This is why we drupal_goto to it from the parent instead.
-      drupal_goto('search/node');
+    $keys = search_get_keys();
+    if ($_GET['q'] != 'search' && $type == 'node' && !$keys) {
+      // Due to how search_menu() sets up the tabs, path search/node would
+      // display two sets of tabs. So instead, if there are no keywords and
+      // we're on the node tab, just redirect to the bare 'search' path.
+      drupal_goto('search');
     }
 
-    $keys = search_get_keys();
     // Only perform search if there is non-whitespace search term:
     $results = '';
     if (trim($keys)) {
