@@ -1,4 +1,4 @@
-// $Id: file.js,v 1.2 2010/04/21 07:40:37 webchick Exp $
+// $Id: file.js,v 1.3 2010/05/01 21:55:13 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ Drupal.behaviors.fileButtons = {
     $('input.form-submit', context).bind('mousedown', Drupal.file.disableFields);
     $('div.form-managed-file input.form-submit', context).bind('mousedown', Drupal.file.progressBar);
   },
-  unattach: function (context) {
+  detach: function (context) {
     $('input.form-submit', context).unbind('mousedown', Drupal.file.disableFields);
     $('div.form-managed-file input.form-submit', context).unbind('mousedown', Drupal.file.progressBar);
   }
