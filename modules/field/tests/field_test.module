@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.6 2010/03/25 11:46:20 dries Exp $
+// $Id: field_test.module,v 1.7 2010/05/01 08:12:23 dries Exp $
 
 /**
  * @file
@@ -69,7 +69,7 @@ function field_test_menu() {
  * This simulates a field operation callback to be invoked by _field_invoke().
  */
 function field_test_field_test_op($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  return array($langcode => md5(serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items))));
+  return array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items))));
 }
 
 /**
@@ -81,7 +81,7 @@ function field_test_field_test_op($entity_type, $entity, $field, $instance, $lan
 function field_test_field_test_op_multiple($entity_type, $entities, $field, $instances, $langcode, &$items) {
   $result = array();
   foreach ($entities as $id => $entity) {
-    $result[$id] = array($langcode => md5(serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items[$id]))));
+    $result[$id] = array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items[$id]))));
   }
   return $result;
 }

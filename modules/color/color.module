@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.85 2010/04/22 23:25:32 dries Exp $
+// $Id: color.module,v 1.86 2010/05/01 08:12:23 dries Exp $
 
 /**
  * Implements hook_help().
@@ -329,7 +329,7 @@ function color_scheme_form_submit($form, &$form_state) {
   }
 
   // Prepare target locations for generated files.
-  $id = $theme . '-' . substr(md5(serialize($palette) . microtime()), 0, 8);
+  $id = $theme . '-' . substr(hash('sha256', serialize($palette) . microtime()), 0, 8);
   $paths['color'] = 'public://color';
   $paths['target'] = $paths['color'] . '/' . $id;
   foreach ($paths as $path) {

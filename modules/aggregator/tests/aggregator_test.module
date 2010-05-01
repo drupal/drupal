@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator_test.module,v 1.7 2010/03/06 06:31:24 dries Exp $
+// $Id: aggregator_test.module,v 1.8 2010/05/01 08:12:22 dries Exp $
 
 /**
  * Implements hook_menu().
@@ -25,7 +25,7 @@ function aggregator_test_menu() {
  */
 function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   $last_modified = strtotime('Sun, 19 Nov 1978 05:00:00 GMT');
-  $etag = md5($last_modified);
+  $etag = drupal_hash_base64($last_modified);
 
   $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
   $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;

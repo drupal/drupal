@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.57 2010/03/25 11:46:21 dries Exp $
+// $Id: locale.install,v 1.58 2010/05/01 08:12:23 dries Exp $
 
 /**
  * @file
@@ -79,6 +79,13 @@ function locale_update_7001() {
   variable_del('language_negotiation');
 
   return array();
+}
+
+/**
+ * Allow longer javascript file names.
+ */
+function locale_update_7002() {
+  db_change_field('languages', 'javascript', 'javascript', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
 }
 
 /**
@@ -207,7 +214,7 @@ function locale_schema() {
       ),
       'javascript' => array(
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 64,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Location of JavaScript translation file.',

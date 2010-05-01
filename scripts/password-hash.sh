@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-// $Id: password-hash.sh,v 1.6 2009/02/26 07:30:29 webchick Exp $
+// $Id: password-hash.sh,v 1.7 2010/05/01 08:12:23 dries Exp $
 
 /**
  * Drupal hash script - to generate a hash from a plaintext password
@@ -12,10 +12,6 @@
  * @param password1 [password2 [password3 ...]]
  *  Plain-text passwords in quotes (or with spaces backslash escaped).
  */
-
-function variable_get($x, $default) {
-  return $default;
-}
 
 if (version_compare(PHP_VERSION, "5.2.0", "<")) {
   $version  = PHP_VERSION;
@@ -86,7 +82,7 @@ while ($param = array_shift($_SERVER['argv'])) {
 define('DRUPAL_ROOT', getcwd());
 
 include_once DRUPAL_ROOT . '/includes/password.inc';
-include_once DRUPAL_ROOT . '/includes/common.inc';
+include_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 
 foreach ($passwords as $password) {
   print("\npassword: $password \t\thash: ". user_hash_password($password) ."\n");

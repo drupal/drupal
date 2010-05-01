@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.253 2010/04/29 05:35:21 webchick Exp $
+// $Id: locale.inc,v 1.254 2010/05/01 08:12:22 dries Exp $
 
 /**
  * @file
@@ -1680,7 +1680,7 @@ function _locale_rebuild_js($langcode = NULL) {
     }
 
     $data .= "'strings': " . drupal_json_encode($translations) . " };";
-    $data_hash = md5($data);
+    $data_hash = drupal_hash_base64($data);
   }
 
   // Construct the filepath where JS translation files are stored.

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.14 2010/04/29 05:33:43 webchick Exp $
+// $Id: install.core.inc,v 1.15 2010/05/01 08:12:22 dries Exp $
 
 /**
  * @file
@@ -1011,7 +1011,7 @@ function install_settings_form_submit($form, &$form_state) {
     'required' => TRUE,
   );
   $settings['drupal_hash_salt'] = array(
-    'value'    => sha1(drupal_random_bytes(64)),
+    'value'    => drupal_hash_base64(drupal_random_bytes(55)),
     'required' => TRUE,
   );
   drupal_rewrite_settings($settings);

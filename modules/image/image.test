@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.20 2010/04/22 21:43:59 webchick Exp $
+// $Id: image.test,v 1.21 2010/05/01 08:12:23 dries Exp $
 
 /**
  * @file
@@ -190,7 +190,7 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
 
     // Fetch the URL that generates the file while another process appears to
     // be generating the same file (this is signaled using a lock).
-    $lock_name = 'image_style_generate:' . $this->style_name . ':' . md5($original_uri);
+    $lock_name = 'image_style_generate:' . $this->style_name . ':' . drupal_hash_base64($original_uri);
     $this->assertTrue(lock_acquire($lock_name), t('Lock was acquired.'));
     $this->drupalGet($expected_generate_url);
     $this->assertResponse(503, t('Service Unavailable response received.'));

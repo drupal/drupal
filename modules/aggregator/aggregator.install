@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.29 2010/02/26 00:11:58 webchick Exp $
+// $Id: aggregator.install,v 1.30 2010/05/01 08:12:22 dries Exp $
 
 /**
  * @file
@@ -170,10 +170,10 @@ function aggregator_schema() {
       ),
       'hash' => array(
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Calculated md5 hash of the feed data, used for validating cache.',
+        'description' => 'Calculated hash of the feed data, used for validating cache.',
       ),
       'etag' => array(
         'type' => 'varchar',
@@ -275,7 +275,7 @@ function aggregator_schema() {
  * Add hash column to aggregator_feed table.
  */
 function aggregator_update_7000() {
-  db_add_field('aggregator_feed', 'hash', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
+  db_add_field('aggregator_feed', 'hash', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
 }
 
 /**
@@ -297,3 +297,4 @@ function aggregator_update_7002() {
   ));
   db_add_index('aggregator_feed', 'queued', array('queued'));
 }
+

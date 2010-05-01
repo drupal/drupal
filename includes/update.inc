@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.46 2010/04/28 20:25:20 dries Exp $
+// $Id: update.inc,v 1.47 2010/05/01 08:12:22 dries Exp $
 
 /**
  * @file
@@ -294,7 +294,7 @@ function update_fix_d7_requirements() {
   global $update_rewrite_settings, $db_url;
   if (!empty($update_rewrite_settings)) {
     $databases = update_parse_db_url($db_url);
-    $salt = sha1(drupal_random_bytes(64));
+    $salt = drupal_hash_base64(drupal_random_bytes(55));
     file_put_contents(conf_path() . '/settings.php', "\n" . '$databases = ' . var_export($databases, TRUE) . ";\n\$drupal_hash_salt = '$salt';", FILE_APPEND);
   }
   if (drupal_get_installed_schema_version('system') < 7000 && !variable_get('update_d7_requirements', FALSE)) {

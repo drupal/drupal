@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.test,v 1.16 2009/08/24 00:14:21 webchick Exp $
+// $Id: registry.test,v 1.17 2010/05/01 08:12:23 dries Exp $
 
 class RegistryParseFileTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -11,9 +11,10 @@ class RegistryParseFileTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    $this->fileName = 'registry_test_' . md5(rand());
-    $this->className = 'registry_test_class' . md5(rand());
-    $this->interfaceName = 'registry_test_interface' . md5(rand());
+    $chrs = hash('sha256', microtime() . mt_rand());
+    $this->fileName = 'registry_test_' . substr($chrs, 0, 16);
+    $this->className = 'registry_test_class' . substr($chrs, 16, 16);
+    $this->interfaceName = 'registry_test_interface' . substr($chrs, 32, 16);
     parent::setUp();
   }
 
@@ -61,18 +62,19 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
     // Create files with some php to parse - one 'new', one 'existing' so
     // we test all the important code paths in _registry_parse_files.
     foreach ($this->fileTypes as $fileType) {
+      $chrs = hash('sha256', microtime() . mt_rand());
       $this->$fileType = new stdClass();
-      $this->$fileType->fileName = file_directory_path() . '/registry_test_' . md5(rand());
-      $this->$fileType->className = 'registry_test_class' . md5(rand());
-      $this->$fileType->interfaceName = 'registry_test_interface' . md5(rand());
+      $this->$fileType->fileName = file_directory_path() . '/registry_test_' . substr($chrs, 0, 16);
+      $this->$fileType->className = 'registry_test_class' . substr($chrs, 16, 16);
+      $this->$fileType->interfaceName = 'registry_test_interface' . substr($chrs, 32, 16);
       $this->$fileType->contents = $this->getFileContents($fileType);
       file_save_data($this->$fileType->contents, $this->$fileType->fileName);
 
       if ($fileType == 'existing_changed') {
         db_insert('registry_file')
           ->fields(array(
-            'filectime' => rand(1, 1000000),
-            'filemtime' => rand(1, 1000000),
+            'filectime' => mt_rand(1, 1000000),
+            'filemtime' => mt_rand(1, 1000000),
             'filename' => $this->$fileType->fileName,
           ))
           ->execute();
@@ -81,7 +83,7 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
         foreach (array('class', 'interface') as $type) {
           db_insert('registry')
             ->fields(array(
-              'name' => $type . md5(rand()),
+              'name' => $type . hash('sha256', microtime() . mt_rand()),
               'type' => $type,
               'filename' => $this->$fileType->fileName,
             ))
@@ -117,8 +119,8 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
     foreach ($this->fileTypes as $fileType) {
       $files[$this->$fileType->fileName] = array('module' => '', 'weight' => 0);
       if ($fileType == 'existing_changed') {
-        $files[$this->$fileType->fileName]['filectime'] = rand(1, 1000000);
-        $files[$this->$fileType->fileName]['filemtime'] = rand(1, 1000000);
+        $files[$this->$fileType->fileName]['filectime'] = mt_rand(1, 1000000);
+        $files[$this->$fileType->fileName]['filemtime'] = mt_rand(1, 1000000);
       }
     }
     return $files;

@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.82 2010/04/13 15:13:40 dries Exp $
+// $Id: session.inc,v 1.83 2010/05/01 08:12:22 dries Exp $
 
 /**
  * @file
@@ -206,7 +206,10 @@ function drupal_session_initialize() {
     // processes (like drupal_get_token()) needs to know the future
     // session ID in advance.
     $user = drupal_anonymous_user();
-    session_id(md5(uniqid('', TRUE)));
+    // Less random sessions (which are much faster to generate) are used for
+    // anonymous users than are generated in drupal_session_regenerate() when
+    // a user becomes authenticated.
+    session_id(drupal_hash_base64(uniqid(mt_rand(), TRUE)));
   }
   date_default_timezone_set(drupal_get_user_timezone());
 }
@@ -284,7 +287,7 @@ function drupal_session_regenerate() {
   if ($is_https && variable_get('https', FALSE)) {
     $insecure_session_name = substr(session_name(), 1);
     $params = session_get_cookie_params();
-    $session_id = md5(uniqid(mt_rand(), TRUE));
+    $session_id = drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55));
     setcookie($insecure_session_name, $session_id, REQUEST_TIME + $params['lifetime'], $params['path'], $params['domain'], FALSE, $params['httponly']);
     $_COOKIE[$insecure_session_name] = $session_id;
   }

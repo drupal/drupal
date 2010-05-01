@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.212 2010/04/30 19:12:38 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.213 2010/05/01 08:12:23 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1075,7 +1075,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function drupalGetToken($value = '') {
     $private_key = drupal_get_private_key();
-    return md5($this->session_id . $value . $private_key);
+    return drupal_hmac_base64($value, $this->session_id . $private_key);
   }
 
   /*

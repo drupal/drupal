@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.438 2010/04/13 15:23:02 dries Exp $
+// $Id: aggregator.module,v 1.439 2010/05/01 08:12:22 dries Exp $
 
 /**
  * @file
@@ -614,12 +614,12 @@ function aggregator_refresh($feed) {
   list($fetcher, $parser, $processors) = _aggregator_get_variables();
   $success = module_invoke($fetcher, 'aggregator_fetch', $feed);
 
-  // We store the md5 hash of feed data in the database. When refreshing a
+  // We store the hash of feed data in the database. When refreshing a
   // feed we compare stored hash and new hash calculated from downloaded
   // data. If both are equal we say that feed is not updated.
-  $md5 = md5($feed->source_string);
+  $hash = hash('sha256', $feed->source_string);
 
-  if ($success && ($feed->hash != $md5)) {
+  if ($success && ($feed->hash != $hash)) {
     // Parse the feed.
     if (module_invoke($parser, 'aggregator_parse', $feed)) {
       // Update feed with parsed data.
@@ -630,7 +630,7 @@ function aggregator_refresh($feed) {
           'link' => empty($feed->link) ? $feed->url : $feed->link,
           'description' => empty($feed->description) ? '' : $feed->description,
           'image' => empty($feed->image) ? '' : $feed->image,
-          'hash' => $md5,
+          'hash' => $hash,
           'etag' => empty($feed->etag) ? '' : $feed->etag,
           'modified' => empty($feed->modified) ? 0 : $feed->modified,
         ))

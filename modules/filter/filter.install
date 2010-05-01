@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.36 2010/04/22 05:44:41 webchick Exp $
+// $Id: filter.install,v 1.37 2010/05/01 08:12:23 dries Exp $
 
 /**
  * @file
@@ -98,7 +98,7 @@ function filter_schema() {
   );
 
   $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_filter']['description'] = 'Cache table for the Filter module to store already filtered pieces of text, identified by text format and md5 hash of the text.';
+  $schema['cache_filter']['description'] = 'Cache table for the Filter module to store already filtered pieces of text, identified by text format and hash of the text.';
 
   return $schema;
 }

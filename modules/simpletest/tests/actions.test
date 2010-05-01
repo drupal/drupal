@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.test,v 1.14 2010/03/26 17:14:45 dries Exp $
+// $Id: actions.test,v 1.15 2010/05/01 08:12:23 dries Exp $
 
 class ActionsConfigurationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -21,7 +21,7 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
 
     // Make a POST request to admin/config/system/actions/manage.
     $edit = array();
-    $edit['action'] = md5('system_goto_action');
+    $edit['action'] = drupal_hash_base64('system_goto_action');
     $this->drupalPost('admin/config/system/actions/manage', $edit, t('Create'));
 
     // Make a POST request to the individual action configuration page.
@@ -29,7 +29,7 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
     $action_label = $this->randomName();
     $edit['actions_label'] = $action_label;
     $edit['url'] = 'admin';
-    $this->drupalPost('admin/config/system/actions/configure/' . md5('system_goto_action'), $edit, t('Save'));
+    $this->drupalPost('admin/config/system/actions/configure/' . drupal_hash_base64('system_goto_action'), $edit, t('Save'));
 
     // Make sure that the new complex action was saved properly.
     $this->assertText(t('The action has been successfully saved.'), t("Make sure we get a confirmation that we've successfully saved the complex action."));
@@ -87,7 +87,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
     $user = $this->drupalCreateUser(array('administer actions'));
     $this->drupalLogin($user);
 
-    $hash = md5('actions_loop_test_log');
+    $hash = drupal_hash_base64('actions_loop_test_log');
     $edit = array('aid' => $hash);
     $this->drupalPost('admin/structure/trigger/actions_loop_test', $edit, t('Assign'));
 

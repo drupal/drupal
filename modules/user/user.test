@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.89 2010/04/20 09:48:06 webchick Exp $
+// $Id: user.test,v 1.90 2010/05/01 08:12:23 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1259,7 +1259,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
   private function insertSession(array $fields = array()) {
     $fields += array(
       'uid' => 0,
-      'sid' => md5(uniqid(mt_rand(), TRUE)),
+      'sid' => drupal_hash_base64(uniqid(mt_rand(), TRUE)),
       'timestamp' => REQUEST_TIME,
     );
     db_insert('sessions')
