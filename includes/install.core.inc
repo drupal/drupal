@@ -1332,11 +1332,7 @@ function install_load_profile(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_bootstrap_full(&$install_state) {
-  // Bootstrap newly installed Drupal, while preserving existing messages.
-  $messages = isset($_SESSION['messages']) ? $_SESSION['messages'] : '';
-
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-  $_SESSION['messages'] = $messages;
 }
 
 /**
