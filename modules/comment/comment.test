@@ -879,6 +879,11 @@ class CommentApprovalTest extends CommentHelperCase {
     ));
     $this->drupalLogin($this->admin_user);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
+
+    // Test that the comments page loads correctly when there are no comments
+    $this->drupalGet('admin/content/comment');
+    $this->assertText(t('No comments available.'));
+
     $this->drupalLogout();
 
     // Post anonymous comment without contact info.
