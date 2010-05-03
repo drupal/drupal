@@ -218,7 +218,7 @@ function field_sql_storage_field_storage_create_field($field) {
 }
 
 /**
- * Implements hook_field_update_field_forbid().
+ * Implements hook_field_update_forbid().
  *
  * Forbid any field update that changes column definitions if there is
  * any data.
