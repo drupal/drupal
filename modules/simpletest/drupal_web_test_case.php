@@ -1359,15 +1359,20 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Performs a cURL exec with the specified options after calling curlConnect().
+   * Initializes and executes a cURL request.
    *
    * @param $curl_options
-   *   Custom cURL options.
+   *   An associative array of cURL options to set, where the keys are constants
+   *   defined by the cURL library. For a list of valid options, see
+   *   http://www.php.net/manual/function.curl-setopt.php
    * @param $redirect
-   *   FALSE if this is an initial request, TRUE if this request is the result of
-   *   a redirect.
+   *   FALSE if this is an initial request, TRUE if this request is the result
+   *   of a redirect.
+   *
    * @return
-   *   Content returned from the exec.
+   *   The content returned from the call to curl_exec().
+   *
+   * @see curlInitialize()
    */
   protected function curlExec($curl_options, $redirect = FALSE) {
     $this->curlInitialize();
