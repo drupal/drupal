@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.77 2010/04/22 10:12:25 webchick Exp $
+// $Id: comment.test,v 1.78 2010/05/03 07:39:39 webchick Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -879,6 +879,11 @@ class CommentApprovalTest extends CommentHelperCase {
     ));
     $this->drupalLogin($this->admin_user);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
+
+    // Test that the comments page loads correctly when there are no comments
+    $this->drupalGet('admin/content/comment');
+    $this->assertText(t('No comments available.'));
+
     $this->drupalLogout();
 
     // Post anonymous comment without contact info.
