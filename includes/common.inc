@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1159 2010/05/01 08:12:22 dries Exp $
+// $Id: common.inc,v 1.1160 2010/05/04 14:55:22 dries Exp $
 
 /**
  * @file
@@ -4332,8 +4332,8 @@ function drupal_json_decode($var) {
  *   (optional) If set, the variable will be converted to JSON and output.
  */
 function drupal_json_output($var = NULL) {
-  // We are returning JavaScript, so tell the browser.
-  drupal_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
+  // We are returning JSON, so tell the browser.
+  drupal_add_http_header('Content-Type', 'application/json');
 
   if (isset($var)) {
     echo drupal_json_encode($var);
