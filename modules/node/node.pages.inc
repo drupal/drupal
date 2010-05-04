@@ -196,7 +196,13 @@ function node_form($form, &$form_state, $node) {
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
     '#attached' => array(
-      'js' => array(drupal_get_path('module', 'node') . '/node.js'),
+      'js' => array(
+        drupal_get_path('module', 'node') . '/node.js',
+        array(
+          'type' => 'setting',
+          'data' => array('anonymous' => variable_get('anonymous', t('Anonymous'))),
+        ),
+      ),
     ),
     '#weight' => 90,
   );

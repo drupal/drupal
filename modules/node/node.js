@@ -11,7 +11,8 @@ Drupal.behaviors.nodeFieldsetSummaries = {
     });
 
     $('fieldset#edit-author', context).drupalSetSummary(function (context) {
-      var name = $('#edit-name').val(), date = $('#edit-date').val();
+      var name = $('#edit-name').val() || Drupal.settings.anonymous,
+        date = $('#edit-date').val();
       return date ?
         Drupal.t('By @name on @date', { '@name': name, '@date': date }) :
         Drupal.t('By @name', { '@name': name });
