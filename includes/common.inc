@@ -4332,8 +4332,8 @@ function drupal_json_decode($var) {
  *   (optional) If set, the variable will be converted to JSON and output.
  */
 function drupal_json_output($var = NULL) {
-  // We are returning JavaScript, so tell the browser.
-  drupal_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
+  // We are returning JSON, so tell the browser.
+  drupal_add_http_header('Content-Type', 'application/json');
 
   if (isset($var)) {
     echo drupal_json_encode($var);
