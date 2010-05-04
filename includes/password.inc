@@ -1,5 +1,5 @@
 <?php
-// $Id: password.inc,v 1.7 2010/05/01 08:12:22 dries Exp $
+// $Id: password.inc,v 1.8 2010/05/04 15:47:03 dries Exp $
 
 /**
  * @file
@@ -148,7 +148,7 @@ function _password_crypt($algo, $password, $setting) {
     return FALSE;
   }
 
-  // Convert the base 2 logrithm into an integer.
+  // Convert the base 2 logarithm into an integer.
   $count = 1 << $count_log2;
 
   // We rely on the hash() function being available in PHP 5.2+.

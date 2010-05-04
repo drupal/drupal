@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.383 2010/05/01 08:12:22 dries Exp $
+// $Id: bootstrap.inc,v 1.384 2010/05/04 15:47:03 dries Exp $
 
 /**
  * @file
@@ -1715,7 +1715,7 @@ function drupal_random_bytes($count)  {
   if (!isset($random_state)) {
     $random_state = print_r($_SERVER, TRUE);
     if (function_exists('getmypid')) {
-      // further initialize with the somewhat random PHP process ID.
+      // Further initialize with the somewhat random PHP process ID.
       $random_state .= getmypid();
     }
     $bytes = '';
