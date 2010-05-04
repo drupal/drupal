@@ -170,10 +170,12 @@ function _block_compare($a, $b) {
   if ((!empty($a['region']) && !empty($b['region'])) && ($place = ($regions[$a['region']] - $regions[$b['region']]))) {
     return $place;
   }
-  // Sort by weight.
-  $weight = $a['weight'] - $b['weight'];
-  if ($weight) {
-    return $weight;
+  // Sort by weight, unless disabled.
+  if ($a['region'] != BLOCK_REGION_NONE) {
+    $weight = $a['weight'] - $b['weight'];
+    if ($weight) {
+      return $weight;
+    }
   }
   // Sort by title.
   return strcmp($a['info'], $b['info']);
