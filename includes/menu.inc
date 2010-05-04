@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.388 2010/05/01 08:12:22 dries Exp $
+// $Id: menu.inc,v 1.389 2010/05/04 20:29:57 dries Exp $
 
 /**
  * @file
@@ -1438,7 +1438,7 @@ function theme_menu_local_task($variables) {
       $link['title'] = check_plain($link['title']);
     }
     $link['localized_options']['html'] = TRUE;
-    $link_text = t('!local-task-title !active', array('!local-task-title' => $link['title'], '!active' => $active));
+    $link_text = t('!local-task-title!active', array('!local-task-title' => $link['title'], '!active' => $active));
   }
 
   return '<li' . (!empty($variables['element']['#active']) ? ' class="active"' : '') . '>' . l($link_text, $link['href'], $link['localized_options']) . "</li>\n";
