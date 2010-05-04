@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.164 2010/04/30 19:21:52 webchick Exp $
+// $Id: system.api.php,v 1.165 2010/05/04 14:52:02 dries Exp $
 
 /**
  * @file
@@ -554,9 +554,9 @@ function hook_js_alter(&$javascript) {
  *   element of the value.
  * - 'css': Like 'js', an array of CSS elements passed to drupal_add_css().
  * - 'dependencies': An array of libraries that are required for a library. Each
- *   element is an array containing the module and name of the registered
- *   library. Note that all dependencies for each dependent library will be
- *   added when this library is added.
+ *   element is an array listing the module and name of another library. Note
+ *   that all dependencies for each dependent library will also be added when
+ *   this library is added.
  *
  * Registered information for a library should contain re-usable data only.
  * Module- or implementation-specific data and integration logic should be added
@@ -599,7 +599,7 @@ function hook_library() {
     ),
     'dependencies' => array(
       // Require jQuery UI core by System module.
-      array('system' => 'ui'),
+      array('system', 'ui'),
       // Require our other library.
       array('my_module', 'library-1'),
       // Require another library.
