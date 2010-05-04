@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.api.php,v 1.5 2010/04/26 14:40:47 dries Exp $
+// $Id: field_ui.api.php,v 1.6 2010/05/04 16:11:08 dries Exp $
 
 /**
  * @file
@@ -12,11 +12,12 @@
  */
 
 /**
- * Field settings form.
+ * Add settings to a field settings form.
  *
- * The field type module is responsible for not returning form elements that
- * cannot be changed. It may not always be possible to tell in advance, but
- * modules should attempt to inform the user what is going/likely to work.
+ * Invoked from field_ui_field_settings_form() to allow the module defining the
+ * field to add global settings (i.e. settings that do not depend on the bundle
+ * or instance) to the field settings form. If the field already has data, only
+ * include settings that are safe to change.
  *
  * @todo: Only the field type module knows which settings will affect the
  * field's schema, but only the field storage module knows what schema
@@ -30,7 +31,8 @@
  * @param $instance
  *   The instance structure being configured.
  * @param $has_data
- *   Whether the field already has data.
+ *   TRUE if the field already has data, FALSE if not.
+ *
  * @return
  *   The form definition for the field settings.
  */
@@ -48,12 +50,16 @@ function hook_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
- * Instance settings form.
+ * Add settings to an instance field settings form.
+ *
+ * Invoked from field_ui_field_edit_form() to allow the module defining the
+ * field to add settings for a field instance.
  *
  * @param $field
  *   The field structure being configured.
  * @param $instance
  *   The instance structure being configured.
+ *
  * @return
  *   The form definition for the field instance settings.
  */
@@ -86,12 +92,16 @@ function hook_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Widget settings form.
+ * Add settings to a widget settings form.
+ *
+ * Invoked from field_ui_field_edit_form() to allow the module defining the
+ * widget to add settings for a widget instance.
  *
  * @param $field
  *   The field structure being configured.
  * @param $instance
  *   The instance structure being configured.
+ *
  * @return
  *   The form definition for the widget settings.
  */
@@ -119,27 +129,6 @@ function hook_field_widget_settings_form($field, $instance) {
   }
 
   return $form;
-}
-
-/**
- * Formatter settings form.
- *
- * @todo Not implemented yet. The signature below is only prospective, but
- * providing $instance is not enough, since one $instance holds several display
- * settings.
- *
- * @param $formatter
- *   The type of the formatter being configured.
- * @param $settings
- *   The current values of the formatter settings.
- * @param $field
- *   The field structure being configured.
- * @param $instance
- *   The instance structure being configured.
- * @return
- *   The form definition for the formatter settings.
- */
-function hook_field_formatter_settings_form($formatter, $settings, $field, $instance) {
 }
 
 /**
