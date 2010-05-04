@@ -575,7 +575,7 @@ function _drupal_html_to_text_pad($text, $pad, $prefix = '') {
   if (($p = strrpos($text, "\n")) === FALSE) {
     $p = -1;
   }
-  $n = max(0, 79 - (strlen($text) - $p));
+  $n = max(0, 79 - (strlen($text) - $p) - strlen($prefix));
   // Add prefix and padding, and restore linebreak.
-  return $text . $prefix . str_repeat($pad, $n - strlen($prefix)) . "\n";
+  return $text . $prefix . str_repeat($pad, $n) . "\n";
 }
