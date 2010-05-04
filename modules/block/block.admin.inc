@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.78 2010/04/24 14:49:13 dries Exp $
+// $Id: block.admin.inc,v 1.79 2010/05/04 15:29:56 dries Exp $
 
 /**
  * @file
@@ -170,10 +170,12 @@ function _block_compare($a, $b) {
   if ((!empty($a['region']) && !empty($b['region'])) && ($place = ($regions[$a['region']] - $regions[$b['region']]))) {
     return $place;
   }
-  // Sort by weight.
-  $weight = $a['weight'] - $b['weight'];
-  if ($weight) {
-    return $weight;
+  // Sort by weight, unless disabled.
+  if ($a['region'] != BLOCK_REGION_NONE) {
+    $weight = $a['weight'] - $b['weight'];
+    if ($weight) {
+      return $weight;
+    }
   }
   // Sort by title.
   return strcmp($a['info'], $b['info']);
