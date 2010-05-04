@@ -1715,7 +1715,7 @@ function drupal_random_bytes($count)  {
   if (!isset($random_state)) {
     $random_state = print_r($_SERVER, TRUE);
     if (function_exists('getmypid')) {
-      // further initialize with the somewhat random PHP process ID.
+      // Further initialize with the somewhat random PHP process ID.
       $random_state .= getmypid();
     }
     $bytes = '';
