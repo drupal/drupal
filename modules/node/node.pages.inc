@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.123 2010/04/24 14:49:14 dries Exp $
+// $Id: node.pages.inc,v 1.124 2010/05/04 16:03:34 dries Exp $
 
 /**
  * @file
@@ -196,7 +196,13 @@ function node_form($form, &$form_state, $node) {
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
     '#attached' => array(
-      'js' => array(drupal_get_path('module', 'node') . '/node.js'),
+      'js' => array(
+        drupal_get_path('module', 'node') . '/node.js',
+        array(
+          'type' => 'setting',
+          'data' => array('anonymous' => variable_get('anonymous', t('Anonymous'))),
+        ),
+      ),
     ),
     '#weight' => 90,
   );

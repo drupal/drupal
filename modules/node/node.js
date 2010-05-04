@@ -1,4 +1,4 @@
-// $Id: node.js,v 1.5 2010/04/09 12:24:53 dries Exp $
+// $Id: node.js,v 1.6 2010/05/04 16:03:34 dries Exp $
 
 (function ($) {
 
@@ -11,7 +11,8 @@ Drupal.behaviors.nodeFieldsetSummaries = {
     });
 
     $('fieldset#edit-author', context).drupalSetSummary(function (context) {
-      var name = $('#edit-name').val(), date = $('#edit-date').val();
+      var name = $('#edit-name').val() || Drupal.settings.anonymous,
+        date = $('#edit-date').val();
       return date ?
         Drupal.t('By @name on @date', { '@name': name, '@date': date }) :
         Drupal.t('By @name', { '@name': name });
