@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.78 2010/04/24 14:49:14 dries Exp $
+// $Id: menu.admin.inc,v 1.79 2010/05/04 20:31:53 dries Exp $
 
 /**
  * @file
@@ -181,6 +181,7 @@ function menu_overview_form_submit($form, &$form_state) {
     $item['customized'] = 1;
     menu_link_save($item);
   }
+  drupal_set_message(t('Your configuration has been saved.'));
 }
 
 /**
@@ -403,6 +404,9 @@ function menu_edit_item_submit($form, &$form_state) {
   if (!menu_link_save($item)) {
     drupal_set_message(t('There was an error saving the menu link.'), 'error');
   }
+  else {
+    drupal_set_message(t('Your configuration has been saved.'));
+  }
   $form_state['redirect'] = 'admin/structure/menu/manage/' . $item['menu_name'];
 }
 
@@ -605,6 +609,7 @@ function menu_edit_menu_submit($form, &$form_state) {
       menu_link_save($link);
     }
   }
+  drupal_set_message(t('Your configuration has been saved.'));
   $form_state['redirect'] = $path . $menu['menu_name'];
 }
 
