@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.321 2010/04/30 05:20:36 webchick Exp $
+// $Id: update.php,v 1.322 2010/05/04 15:25:42 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -333,6 +333,7 @@ ini_set('display_errors', FALSE);
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 require_once DRUPAL_ROOT . '/includes/update.inc';
 require_once DRUPAL_ROOT . '/includes/common.inc';
+require_once DRUPAL_ROOT . '/includes/file.inc';
 require_once DRUPAL_ROOT . '/includes/entity.inc';
 require_once DRUPAL_ROOT . '/includes/unicode.inc';
 update_prepare_d7_bootstrap();
@@ -346,7 +347,6 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
 if (empty($op) && update_access_allowed()) {
   require_once DRUPAL_ROOT . '/includes/install.inc';
-  require_once DRUPAL_ROOT . '/includes/file.inc';
   require_once DRUPAL_ROOT . '/modules/system/system.install';
 
   // Load module basics.
