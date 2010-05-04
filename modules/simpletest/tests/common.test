@@ -86,6 +86,28 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, t('XSS attack @path was filtered', array('@path' => $path)));
   }
 
+  /*
+   * Tests for active class in l() function.
+   */
+  function testLActiveClass() {
+    $link = l($this->randomName(), $_GET['q']);
+    $this->assertTrue($this->hasClass($link, 'active'), t('Class @class is present on link to the current page', array('@class' => 'active')));
+  }
+
+  /**
+   * Tests for custom class in l() function.
+   */
+  function testLCustomClass() {
+    $class = $this->randomName();
+    $link = l($this->randomName(), $_GET['q'], array('attributes' => array('class' => array($class))));
+    $this->assertTrue($this->hasClass($link, $class), t('Custom class @class is present on link when requested', array('@class' => $class)));
+    $this->assertTrue($this->hasClass($link, 'active'), t('Class @class is present on link to the current page', array('@class' => 'active')));    
+  }
+
+  private function hasClass($link, $class) {
+    return preg_match('|class="([^\"\s]+\s+)*' . $class . '|', $link);
+  }
+  
   /**
    * Test drupal_get_query_parameters().
    */
