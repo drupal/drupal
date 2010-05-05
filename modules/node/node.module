@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1265 2010/05/05 06:55:25 webchick Exp $
+// $Id: node.module,v 1.1266 2010/05/05 06:57:15 webchick Exp $
 
 /**
  * @file
@@ -1258,7 +1258,7 @@ function node_build_content($node, $view_mode = 'full') {
   // to know when a teaser view is different than a full view.
   $links = array();
   if ($view_mode == 'teaser') {
-    $links['node_readmore'] = array(
+    $links['node-readmore'] = array(
       'title' => t('Read more'),
       'href' => 'node/' . $node->nid,
       'attributes' => array('rel' => 'tag', 'title' => strip_tags($node->title))
