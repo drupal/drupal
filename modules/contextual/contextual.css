@@ -63,6 +63,7 @@ div.contextual-links-wrapper ul.contextual-links {
   padding: 0.25em 0;
   position: absolute;
   right: 0;
+  text-align: left;
   top: 19px;
   white-space: nowrap;
   -moz-border-radius: 4px;
