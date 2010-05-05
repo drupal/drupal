@@ -1,0 +1,17 @@
+<?php
+// $Id: blog.install,v 1.1 2010/05/05 15:11:51 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the blog module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function blog_install() {
+  // Ensure the blog node type is available.
+  node_types_rebuild();
+  $types = node_type_get_types();
+  node_add_body_field($types['blog']);
+}

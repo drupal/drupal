@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.49 2010/05/05 06:55:25 webchick Exp $
+// $Id: node.install,v 1.50 2010/05/05 15:11:51 webchick Exp $
 
 /**
  * @file
@@ -491,11 +491,20 @@ function node_update_7006(&$sandbox) {
   if (!isset($sandbox['total'])) {
     // Initial invocation.
 
-    // Re-save node types to create body field instances.
-    foreach ($node_types as $type => $info) {
-      if ($info->has_body) {
-        node_type_save($info);
+    // Get node type info, specifically the body field settings.
+    $result = db_select('node_type', 'node_type')
+      ->fields('node_type')
+      ->execute();
+
+    // Add body field instances for existing node types.
+    foreach ($result as $node_type) {
+      if ($node_type->has_body) {
+        node_add_body_field($node_type->type, $node_type->body_label);
       }
+
+      $sandbox['node_types_info'][$node_type->type] = array(
+        'has_body' => $node_type->has_body,
+      );
     }
 
     // Initialize state for future calls.
@@ -592,9 +601,12 @@ function node_update_7006(&$sandbox) {
       db_drop_field('node_revision', 'teaser');
       db_drop_field('node_revision', 'format');
 
+      // Remove node_type properties related to the former 'body'.
+      db_drop_field('node_type', 'has_body');
+      db_drop_field('node_type', 'body_label');
+
       // We're done.
       $sandbox['#finished'] = 1;
-      return t("!number node body and teaser properties migrated to the 'body' field.", array('!number' => $sandbox['total']));
     }
   }
 }
