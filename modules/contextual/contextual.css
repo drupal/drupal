@@ -1,4 +1,4 @@
-/* $Id: contextual.css,v 1.4 2010/01/20 04:25:13 dries Exp $ */
+/* $Id: contextual.css,v 1.5 2010/05/05 06:38:57 webchick Exp $ */
 
 /**
  * Contextual links regions.
@@ -63,6 +63,7 @@ div.contextual-links-wrapper ul.contextual-links {
   padding: 0.25em 0;
   position: absolute;
   right: 0;
+  text-align: left;
   top: 19px;
   white-space: nowrap;
   -moz-border-radius: 4px;
