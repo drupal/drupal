@@ -1087,39 +1087,33 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     $this->assertRaw('Title', t('Title field was found.'));
     $this->assertRaw('Body', t('Body field was found.'));
 
-    // Rename the title field and remove the body field.
+    // Rename the title field.
     $edit = array(
       'title_label' => 'Foo',
-      'body_label' => '',
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    // Refresh the field information for the rest of the test.
     field_info_cache_clear();
 
-    $this->assertFalse(field_info_instance('node', 'body', 'page'), t('Body field was removed.'));
     $this->drupalGet('node/add/page');
     $this->assertRaw('Foo', t('New title label was displayed.'));
     $this->assertNoRaw('Title', t('Old title label was not displayed.'));
-    $this->assertNoRaw('Full text', t('Body field was not found.'));
 
-    // Add the body field again and change the name, machine name and description.
+    // Change the name, machine name and description.
     $edit = array(
       'name' => 'Bar',
       'type' => 'bar',
       'description' => 'Lorem ipsum.',
-      'body_label' => 'Baz',
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    field_info_cache_clear();
 
-    $instance = field_info_instance('node', 'body', 'bar');
-    $this->assertEqual($instance['label'], 'Baz', t('Body field was added.'));
     $this->drupalGet('node/add');
     $this->assertRaw('Bar', t('New name was displayed.'));
     $this->assertRaw('Lorem ipsum', t('New description was displayed.'));
     $this->clickLink('Bar');
     $this->assertEqual(url('node/add/bar', array('absolute' => TRUE)), $this->getUrl(), t('New machine name was used in URL.'));
     $this->assertRaw('Foo', t('Title field was found.'));
-    $this->assertRaw('Baz', t('Body field was found.'));
+    $this->assertRaw('Body', t('Body field was found.'));
   }
 }
 

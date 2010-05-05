@@ -160,12 +160,6 @@ function node_type_form($form, &$form_state, $type = NULL) {
     $form['submission']['title_label']['#description'] = t('This content type does not have a title field.');
     $form['submission']['title_label']['#required'] = FALSE;
   }
-  $form['submission']['body_label'] = array(
-    '#title' => t('Body field label'),
-    '#type' => 'textfield',
-    '#default_value' => isset($type->body_label) ? $type->body_label : '',
-    '#description' => t('To remove the body field, remove text and leave blank.'),
-  );
   $form['submission']['node_preview'] = array(
     '#type' => 'radios',
     '#title' => t('Preview before submitting'),
@@ -322,12 +316,9 @@ function node_type_form_submit($form, &$form_state) {
   $type->description = $form_state['values']['description'];
   $type->help = $form_state['values']['help'];
   $type->title_label = $form_state['values']['title_label'];
-  $type->body_label = $form_state['values']['body_label'];
-
   // title_label is required in core; has_title will always be true, unless a
   // module alters the title field.
   $type->has_title = ($type->title_label != '');
-  $type->has_body = ($type->body_label != '');
 
   $type->base = !empty($form_state['values']['base']) ? $form_state['values']['base'] : 'node_content';
   $type->custom = $form_state['values']['custom'];
@@ -372,6 +363,7 @@ function node_type_form_submit($form, &$form_state) {
 
   node_types_rebuild();
   menu_rebuild();
+  node_add_body_field($type);
   $t_args = array('%name' => $type->name);
 
   if ($status == SAVED_UPDATED) {

@@ -842,6 +842,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $saved_type = node_type_save($type);
     node_types_rebuild();
     menu_rebuild();
+    node_add_body_field($type);
 
     $this->assertEqual($saved_type, SAVED_NEW, t('Created content type %type.', array('%type' => $type->type)));
 

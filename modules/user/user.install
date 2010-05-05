@@ -483,7 +483,7 @@ function user_update_7004(&$sandbox) {
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,
-    'description' => t("Foreign key: {file_managed}.fid of user's picture."),
+    'description' => "Foreign key: {file_managed}.fid of user's picture.",
   );
 
   if (!isset($sandbox['progress'])) {

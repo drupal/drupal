@@ -7,7 +7,6 @@ Drupal.behaviors.contentTypes = {
     $('fieldset#edit-submission', context).drupalSetSummary(function(context) {
       var vals = [];
       vals.push(Drupal.checkPlain($('#edit-title-label', context).val()) || Drupal.t('Requires a title'));
-      vals.push(Drupal.checkPlain($('#edit-body-label', context).val()) || Drupal.t('No body'));
       return vals.join(', ');
     });
     $('fieldset#edit-workflow', context).drupalSetSummary(function(context) {
