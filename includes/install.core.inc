@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.16 2010/05/03 06:51:41 webchick Exp $
+// $Id: install.core.inc,v 1.17 2010/05/05 15:46:05 dries Exp $
 
 /**
  * @file
@@ -1727,8 +1727,6 @@ function install_configure_form_submit($form, &$form_state) {
     }
   }
 
-  // Turn this off temporarily so that we can pass a password through.
-  variable_set('user_email_verification', FALSE);
   $form_state['old_values'] = $form_state['values'];
   $form_state['values'] = $form_state['values']['account'];
 
@@ -1741,7 +1739,6 @@ function install_configure_form_submit($form, &$form_state) {
   user_login_finalize();
   $form_state['values'] = $form_state['old_values'];
   unset($form_state['old_values']);
-  variable_set('user_email_verification', TRUE);
 
   if (isset($form_state['values']['clean_url'])) {
     variable_set('clean_url', $form_state['values']['clean_url']);
