@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.165 2010/05/04 14:52:02 dries Exp $
+// $Id: system.api.php,v 1.166 2010/05/05 07:02:13 webchick Exp $
 
 /**
  * @file
@@ -1255,7 +1255,7 @@ function hook_page_alter(&$page) {
  * Perform alterations before a form is rendered.
  *
  * One popular use of this hook is to add form elements to the node form. When
- * altering a node form, the node object retrieved at from $form['#node'].
+ * altering a node form, the node object can be accessed at $form['#node'].
  *
  * Note that instead of hook_form_alter(), which is called for all forms, you
  * can also use hook_form_FORM_ID_alter() to alter a specific form. For each
