@@ -496,14 +496,14 @@ function node_update_7005() {
 /**
  * Convert body and teaser from node properties to fields, and migrate status/comment/promote and sticky columns to the {node_revision} table.
  */
-function node_update_7006(&$context) {
-  $context['#finished'] = 0;
+function node_update_7006(&$sandbox) {
+  $sandbox['#finished'] = 0;
 
   // Get node type info for every invocation.
   drupal_static_reset('_node_types_build');
   $node_types = node_type_get_types();
 
-  if (!isset($context['total'])) {
+  if (!isset($sandbox['total'])) {
     // Initial invocation.
 
     // Re-save node types to create body field instances.
@@ -514,12 +514,12 @@ function node_update_7006(&$context) {
     }
 
     // Initialize state for future calls.
-    $context['last'] = 0;
-    $context['count'] = 0;
+    $sandbox['last'] = 0;
+    $sandbox['count'] = 0;
 
     $query = db_select('node', 'n');
     $query->join('node_revision', 'nr', 'n.vid = nr.vid');
-    $context['total'] = $query->countQuery()->execute()->fetchField();
+    $sandbox['total'] = $query->countQuery()->execute()->fetchField();
   }
   else {
     // Subsequent invocations.
@@ -529,7 +529,7 @@ function node_update_7006(&$context) {
     $body_field_id = $body_field['id'];
 
     $found = FALSE;
-    if ($context['total']) {
+    if ($sandbox['total']) {
       // Operate on every revision of every node (whee!), in batches.
       $batch_size = 200;
       $query = db_select('node_revision', 'nr');
@@ -537,7 +537,7 @@ function node_update_7006(&$context) {
       $query
         ->fields('nr', array('nid', 'vid', 'body', 'teaser', 'format'))
         ->fields('n', array('type', 'status', 'comment', 'promote', 'sticky', 'language'))
-        ->condition('nr.vid', $context['last'], '>')
+        ->condition('nr.vid', $sandbox['last'], '>')
         ->orderBy('nr.vid', 'ASC')
         ->range(0, $batch_size);
       $revisions = $query->execute();
@@ -592,11 +592,11 @@ function node_update_7006(&$context) {
           ->condition('vid', $revision->vid)
           ->execute();
 
-        $context['last'] = $revision->vid;
-        $context['count'] += 1;
+        $sandbox['last'] = $revision->vid;
+        $sandbox['count'] += 1;
       }
 
-      $context['#finished'] = min(0.99, $context['count'] / $context['total']);
+      $sandbox['#finished'] = min(0.99, $sandbox['count'] / $sandbox['total']);
     }
 
     if (!$found) {
@@ -608,8 +608,8 @@ function node_update_7006(&$context) {
       db_drop_field('node_revision', 'format');
 
       // We're done.
-      $context['#finished'] = 1;
-      return t("!number node body and teaser properties migrated to the 'body' field.", array('!number' => $context['total']));
+      $sandbox['#finished'] = 1;
+      return t("!number node body and teaser properties migrated to the 'body' field.", array('!number' => $sandbox['total']));
     }
   }
 }
