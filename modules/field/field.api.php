@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.78 2010/05/03 07:37:51 webchick Exp $
+// $Id: field.api.php,v 1.79 2010/05/05 06:32:22 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -382,7 +382,7 @@ function hook_field_prepare_view($entity_type, $entities, $field, $instances, $l
  *     name).
  *   - message: The human readable message to be displayed.
  */
-function hook_field_validate($entity_type, $entity, $field, $instance, $langcode, &$items, &$errors) {
+function hook_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
