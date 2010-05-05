@@ -274,6 +274,14 @@ div.vertical-tabs {
 #user-login-form ul {
   text-align: right;
 }
+#user-login-form .openid-links {
+  padding-left: 0;
+  padding-right: 0.5em;
+}
+#user-login-form .openid-links li.user-link {
+  padding-left: 0;
+  padding-right: 1em;
+}
 
 div.admin .left {
   float: right;

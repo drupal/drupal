@@ -136,7 +136,9 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
   );
 
   $form['openid_links'] = array(
-    '#markup' => theme('item_list', array('items' => $items)),
+    '#theme' => 'item_list',
+    '#items' => $items,
+    '#attributes' => array('class' => array('openid-links')),
     '#weight' => 1,
   );
 
