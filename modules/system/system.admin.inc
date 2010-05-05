@@ -2470,11 +2470,11 @@ function theme_status_report($variables) {
 
       // Output table row(s)
       if (!empty($requirement['description'])) {
-        $output .= '<tr class="' . $class . ' merge-down"><th>' . $requirement['title'] . '</th><td>' . $requirement['value'] . '</td></tr>';
+        $output .= '<tr class="' . $class . ' merge-down"><td>' . $requirement['title'] . '</td><td>' . $requirement['value'] . '</td></tr>';
         $output .= '<tr class="' . $class . ' merge-up"><td colspan="2">' . $requirement['description'] . '</td></tr>';
       }
       else {
-        $output .= '<tr class="' . $class . '"><th>' . $requirement['title'] . '</th><td>' . $requirement['value'] . '</td></tr>';
+        $output .= '<tr class="' . $class . '"><td>' . $requirement['title'] . '</td><td>' . $requirement['value'] . '</td></tr>';
       }
     }
   }
