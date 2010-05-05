@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.56 2010/05/05 16:28:06 dries Exp $ */
+/* $Id: style.css,v 1.57 2010/05/05 16:41:57 dries Exp $ */
 
 /**
  * Generic elements.
@@ -476,40 +476,12 @@ table {
   margin: 0 0 10px;
   border: 1px solid #bebfb9;
 }
-table.system-status-report th,
 table td,
 table th {
   vertical-align: middle;
   padding: 8px 10px;
   border: 0;
   color: #000;
-}
-table.system-status-report th {
-  padding-left: 30px;
-}
-table.system-status-report tr.ok > * {
-  background-color: #dfd;
-}
-table.system-status-report tr.ok.even > * {
-  background-color: #d3f3d3;
-}
-table.system-status-report tr.info > * {
-  background-color: #bdf;
-}
-table.system-status-report tr.info.even > * {
-  background-color: #b1d1f1;
-}
-table.system-status-report tr.warning > * {
-  background-color: #ffd;
-}
-table.system-status-report tr.warning.even > * {
-  background-color: #f2f2d2;
-}
-table.system-status-report tr.error > * {
-  background-color: #fdd;
-}
-table.system-status-report tr.error.even > * {
-  background-color: #ecc;
 }
 tr.even,
 tr.odd {
@@ -537,7 +509,6 @@ table th {
   border-color: #bebfb9;
   padding: 3px 10px;
 }
-
 table th.active {
   background: #bdbeb9;
 }
@@ -561,7 +532,21 @@ table tr.selected td {
   background: #ffc;
   border-color: #eeb;
 }
-
+table.system-status-report tr {
+ border-bottom: 1px solid #bebfb9;
+}
+table.system-status-report tr.ok td {
+  background-color: #dfd;
+}
+table.system-status-report tr.info td {
+  background-color: #bdf;
+}
+table.system-status-report tr.warning td {
+  background-color: #ffd;
+}
+table.system-status-report tr.error td {
+  background-color: #fdd;
+}
 /**
  * Fieldsets.
  *
