@@ -20,14 +20,17 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     // MySQL never supports transactional DDL.
     $this->transactionalDDLSupport = FALSE;
 
-    // Default to TCP connection on port 3306.
-    if (empty($connection_options['port'])) {
-      $connection_options['port'] = 3306;
-    }
-
     $this->connectionOptions = $connection_options;
 
-    $dsn = 'mysql:host=' . $connection_options['host'] . ';port=' . $connection_options['port'] . ';dbname=' . $connection_options['database'];
+    // The DSN should use either a socket or a host/port.
+    if (isset($connection_options['unix_socket'])) {
+      $dsn = 'mysql:unix_socket=' . $connection_options['unix_socket'];
+    }
+    else {
+      // Default to TCP connection on port 3306.
+      $dsn = 'mysql:host=' . $connection_options['host'] . ';port=' . (empty($connection_options['port']) ? 3306 : $connection_options['port']);
+    }
+    $dsn .= ';dbname=' . $connection_options['database'];
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
       // So we don't have to mess around with cursors and unbuffered queries by default.
       PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE,
