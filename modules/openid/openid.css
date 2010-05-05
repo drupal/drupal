@@ -1,10 +1,10 @@
-/* $Id: openid.css,v 1.10 2010/01/30 07:59:25 dries Exp $ */
+/* $Id: openid.css,v 1.11 2010/05/05 16:28:06 dries Exp $ */
 
 #edit-openid-identifier {
   background-image: url("login-bg.png");
-  background-position: 0% 50%;
+  background-position: left 50%; /* LTR */
   background-repeat: no-repeat;
-  padding-left: 20px;
+  padding-left: 20px; /* LTR */
 }
 div.form-item-openid-identifier {
   display: block;
@@ -12,11 +12,6 @@ div.form-item-openid-identifier {
 html.js #user-login-form div.form-item-openid-identifier,
 html.js #user-login div.form-item-openid-identifier {
   display: none;
-}
-html.js #user-login-form li.openid-link,
-html.js #user-login li.openid-link {
-  display : block;
-  list-style: none;
 }
 #user-login-form ul {
   margin-top: 0;
@@ -27,14 +22,26 @@ html.js #user-login li.openid-link {
 #user-login ul li {
   margin: 0;
 }
-#user-login-form li.openid-link,
-#user-login-form li.user-link,
-#user-login li.openid-link,
-#user-login li.user-link {
+#user-login-form .openid-links {
+  padding-bottom: 0;
+}
+#user-login .openid-links {
+  padding-left: 0; /* LTR */
+}
+#user-login-form .openid-links li,
+#user-login .openid-links li {
   display: none;
+  list-style: none;
+}
+html.js #user-login-form li.openid-link,
+html.js #user-login li.openid-link {
+  display: block;
+  margin-left: 0; /* LTR */
 }
 #user-login-form li.openid-link a,
 #user-login li.openid-link a {
-  background: transparent url("login-bg.png") no-repeat 0 2px;
-  padding: 0 20px;
+  background-image: url("login-bg.png");
+  background-position: left top; /* LTR */
+  background-repeat: no-repeat;
+  padding: 0 0 0 1.5em; /* LTR */
 }

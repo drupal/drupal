@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.80 2010/05/01 12:29:00 dries Exp $ */
+/* $Id: style.css,v 1.81 2010/05/05 16:28:06 dries Exp $ */
 
 /**
  * Generic elements
@@ -1054,6 +1054,15 @@ div.vertical-tabs ul.vertical-tabs-list li.selected a strong {
 }
 #user-login-form ul {
   text-align: left; /* LTR */
+}
+#user-login .openid-links {
+  padding: 0;
+}
+#user-login-form .openid-links {
+  padding-left: 0.5em; /* LTR */
+}
+#user-login-form .openid-links li.user-link {
+  padding-left: 1em; /* LTR */
 }
 
 /**

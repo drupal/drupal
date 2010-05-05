@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.85 2010/04/27 10:42:20 dries Exp $
+// $Id: openid.module,v 1.86 2010/05/05 16:28:06 dries Exp $
 
 /**
  * @file
@@ -136,7 +136,9 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
   );
 
   $form['openid_links'] = array(
-    '#markup' => theme('item_list', array('items' => $items)),
+    '#theme' => 'item_list',
+    '#items' => $items,
+    '#attributes' => array('class' => array('openid-links')),
     '#weight' => 1,
   );
 

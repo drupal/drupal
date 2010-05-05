@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.21 2010/05/01 12:29:00 dries Exp $ */
+/* $Id: style-rtl.css,v 1.22 2010/05/05 16:28:06 dries Exp $ */
 
 html {
   direction: rtl;
@@ -273,6 +273,14 @@ div.vertical-tabs {
  */
 #user-login-form ul {
   text-align: right;
+}
+#user-login-form .openid-links {
+  padding-left: 0;
+  padding-right: 0.5em;
+}
+#user-login-form .openid-links li.user-link {
+  padding-left: 0;
+  padding-right: 1em;
 }
 
 div.admin .left {
