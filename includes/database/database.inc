@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.121 2010/04/30 13:47:46 dries Exp $
+// $Id: database.inc,v 1.122 2010/05/05 16:51:30 dries Exp $
 
 /**
  * @file
@@ -776,6 +776,20 @@ abstract class DatabaseConnection extends PDO {
    */
   public function escapeTable($table) {
     return preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
+  }
+
+  /**
+   * Escapes a field name string.
+   *
+   * Force all field names to be strictly alphanumeric-plus-underscore.
+   * For some database drivers, it may also wrap the field name in
+   * database-specific escape characters.
+   *
+   * @return
+   *   The sanitized field name string.
+   */
+  public function escapeField($field) {
+    return preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
   }
 
   /**
@@ -2423,7 +2437,7 @@ function db_set_active($key = 'default') {
 }
 
 /**
- * Restricts a dynamic table, column, or constraint name to safe characters.
+ * Restricts a dynamic table name to safe characters.
  *
  * Only keeps alphanumeric and underscores.
  *
@@ -2435,6 +2449,21 @@ function db_set_active($key = 'default') {
  */
 function db_escape_table($table) {
   return Database::getConnection()->escapeTable($table);
+}
+
+/**
+ * Restricts a dynamic column or constraint name to safe characters.
+ *
+ * Only keeps alphanumeric and underscores.
+ *
+ * @param $field
+ *   The field name to escape.
+ *
+ * @return
+ *   The escaped field name as a string.
+ */
+function db_escape_field($field) {
+  return Database::getConnection()->escapeField($field);
 }
 
 /**

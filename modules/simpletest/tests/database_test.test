@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.88 2010/04/27 10:42:58 dries Exp $
+// $Id: database_test.test,v 1.89 2010/05/05 16:51:30 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1835,7 +1835,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $task_field = $query->addField('t', 'task');
     $query->orderBy($count_field);
     $query->groupBy($task_field);
-    $query->havingCondition('COUNT(task)', 2, '>=');
+    $query->having('COUNT(task) >= 2');
     $result = $query->execute();
 
     $num_records = 0;
