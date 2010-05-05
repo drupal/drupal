@@ -575,6 +575,19 @@ function user_validate_name($name) {
   }
 }
 
+/**
+ * Validates a user's email address.
+ *
+ * Checks that a user's email address exists and follows all standard
+ * validation rules. Returns error messages when the address is invalid.
+ *
+ * @param $mail
+ *   A user's email address.
+ *
+ * @return
+ *   If the address is invalid, a human-readable error message is returned.
+ *   If the address is valid, nothing is returned.
+ */
 function user_validate_mail($mail) {
   $mail = trim($mail);
   if (!$mail) {
