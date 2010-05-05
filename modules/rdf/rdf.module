@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.module,v 1.39 2010/04/22 21:41:09 webchick Exp $
+// $Id: rdf.module,v 1.40 2010/05/05 15:49:04 dries Exp $
 
 /**
  * @file
@@ -502,7 +502,7 @@ function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup annotating the number of comments a node has.
   if (isset($variables['node']->comment_count) && !empty($variables['node']->rdf_mapping['comment_count']['predicates'])) {
     // Annotates the 'x comments' link in teaser view.
-    if (isset($variables['content']['links']['comment']['#links']['comment_comments'])) {
+    if (isset($variables['content']['links']['comment']['#links']['comment-comments'])) {
       $comment_count_attributes['property'] = $variables['node']->rdf_mapping['comment_count']['predicates'];
       $comment_count_attributes['content'] = $variables['node']->comment_count;
       $comment_count_attributes['datatype'] = $variables['node']->rdf_mapping['comment_count']['datatype'];
@@ -512,7 +512,7 @@ function rdf_preprocess_node(&$variables) {
       // we set an empty rel attribute which triggers rule number 5. See
       // http://www.w3.org/TR/rdfa-syntax/#sec_5.5.
       $comment_count_attributes['rel'] = '';
-      $variables['content']['links']['comment']['#links']['comment_comments']['attributes'] += $comment_count_attributes;
+      $variables['content']['links']['comment']['#links']['comment-comments']['attributes'] += $comment_count_attributes;
     }
     // In full node view, the number of comments is not displayed by
     // node.tpl.php so it is expressed in RDFa in the <head> tag.
