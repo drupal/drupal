@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1166 2010/05/05 07:04:17 webchick Exp $
+// $Id: user.module,v 1.1167 2010/05/05 07:10:06 webchick Exp $
 
 /**
  * @file
@@ -187,6 +187,15 @@ function user_field_extra_fields() {
   return $return;
 }
 
+/**
+ * Fetches a user object based on an external authentication source.
+ *
+ * @param string $authname
+ *   The external authentication username.
+ *
+ * @return
+ *   A fully-loaded user object if the user is found or FALSE if not found.
+ */
 function user_external_load($authname) {
   $uid = db_query("SELECT uid FROM {authmap} WHERE authname = :authname", array(':authname' => $authname))->fetchField();
 
