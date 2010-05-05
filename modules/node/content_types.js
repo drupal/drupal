@@ -1,4 +1,4 @@
-// $Id: content_types.js,v 1.9 2010/04/09 12:24:53 dries Exp $
+// $Id: content_types.js,v 1.10 2010/05/05 06:55:25 webchick Exp $
 (function ($) {
 
 Drupal.behaviors.contentTypes = {
@@ -7,7 +7,6 @@ Drupal.behaviors.contentTypes = {
     $('fieldset#edit-submission', context).drupalSetSummary(function(context) {
       var vals = [];
       vals.push(Drupal.checkPlain($('#edit-title-label', context).val()) || Drupal.t('Requires a title'));
-      vals.push(Drupal.checkPlain($('#edit-body-label', context).val()) || Drupal.t('No body'));
       return vals.join(', ');
     });
     $('fieldset#edit-workflow', context).drupalSetSummary(function(context) {

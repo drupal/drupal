@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.13 2010/04/22 09:55:32 webchick Exp $
+// $Id: standard.install,v 1.14 2010/05/05 06:55:25 webchick Exp $
 
 /**
  * Implements hook_install().
@@ -227,6 +227,7 @@ function standard_install() {
   foreach ($types as $type) {
     $type = node_type_set_defaults($type);
     node_type_save($type);
+    node_add_body_field($type);
   }
 
   // Insert default pre-defined RDF mapping into the database.

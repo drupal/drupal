@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.48 2010/05/05 06:29:56 webchick Exp $
+// $Id: node.install,v 1.49 2010/05/05 06:55:25 webchick Exp $
 
 /**
  * @file
@@ -306,21 +306,6 @@ function node_schema() {
         'default' => '',
         'translatable' => TRUE,
       ),
-      'has_body' => array(
-        'description' => 'Boolean indicating whether this type has the body field attached.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'size' => 'tiny',
-      ),
-      'body_label' => array(
-        'description' => 'The label displayed for the body field on the edit form.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'translatable' => TRUE,
-      ),
       'custom' => array(
         'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
         'type' => 'int',
@@ -552,7 +537,7 @@ function node_update_7006(&$sandbox) {
       foreach ($revisions as $revision) {
         $found = TRUE;
 
-        if ($node_types[$revision->type]->has_body) {
+        if ($sandbox['node_types_info'][$revision->type]['has_body']) {
           $node = (object) array(
             'nid' => $revision->nid,
             'vid' => $revision->vid,

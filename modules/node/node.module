@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1264 2010/04/22 09:12:35 webchick Exp $
+// $Id: node.module,v 1.1265 2010/05/05 06:55:25 webchick Exp $
 
 /**
  * @file
@@ -496,8 +496,6 @@ function node_type_save($info) {
     'base' => (string) $type->base,
     'has_title' => (int) $type->has_title,
     'title_label' => (string) $type->title_label,
-    'has_body' => (int) $type->has_body,
-    'body_label' => (string) $type->body_label,
     'description' => (string) $type->description,
     'help' => (string) $type->help,
     'custom' => (int) $type->custom,
@@ -514,7 +512,6 @@ function node_type_save($info) {
     if (!empty($type->old_type) && $type->old_type != $type->type) {
       field_attach_rename_bundle('node', $type->old_type, $type->type);
     }
-    node_configure_fields($type);
     module_invoke_all('node_type_update', $type);
     $status = SAVED_UPDATED;
   }
@@ -525,7 +522,7 @@ function node_type_save($info) {
       ->execute();
 
     field_attach_create_bundle('node', $type->type);
-    node_configure_fields($type);
+
     module_invoke_all('node_type_insert', $type);
     $status = SAVED_NEW;
   }
@@ -537,60 +534,48 @@ function node_type_save($info) {
 }
 
 /**
- * Manage the field(s) for a node type.
+ * Add default body field to a node type.
  *
- * Currently, the node module manages a single Field API field,
- * 'body'.  If $type->has_body is true, this function ensures the
- * 'body' field exists and creates an instance of it for the bundle
- * $type->type (e.g. 'page', 'story', ...).  If $type->has_body is
- * false, this function removes the instance (if it exists) for the
- * 'body' field on $type->type.
+ * @param $type
+ *   The node type name.
+ * @param $label
+ *   The label for the body instance.
  */
-function node_configure_fields($type) {
+function node_add_body_field($type, $label = 'Body') {
    // Add or remove the body field, as needed.
   $field = field_info_field('body');
   $instance = field_info_instance('node', 'body', $type->type);
-  if ($type->has_body) {
-    if (empty($field)) {
-      $field = array(
-        'field_name' => 'body',
-        'type' => 'text_with_summary',
-        'entity_types' => array('node'),
-        'translatable' => TRUE,
-      );
-      $field = field_create_field($field);
-    }
-    if (empty($instance)) {
-      $instance = array(
-        'field_name' => 'body',
-        'entity_type' => 'node',
-        'bundle' => $type->type,
-        'label' => $type->body_label,
-        'widget_type' => 'text_textarea_with_summary',
-        'settings' => array('display_summary' => TRUE),
-
-        // Define default formatters for the teaser and full view.
-        'display' => array(
-          'full' => array(
-            'label' => 'hidden',
-            'type' => 'text_default',
-          ),
-          'teaser' => array(
-            'label' => 'hidden',
-            'type' => 'text_summary_or_trimmed',
-          ),
-        ),
-      );
-      field_create_instance($instance);
-    }
-    else {
-      $instance['label'] = $type->body_label;
-      $instance['settings']['display_summary'] = TRUE;
-      field_update_instance($instance);
-    }
+  if (empty($field)) {
+    $field = array(
+      'field_name' => 'body',
+      'type' => 'text_with_summary',
+      'entity_types' => array('node'),
+      'translatable' => TRUE,
+    );
+    $field = field_create_field($field);
   }
-  elseif (!empty($instance)) {
-    field_delete_instance($instance);
+  if (empty($instance)) {
+    $instance = array(
+      'field_name' => 'body',
+      'entity_type' => 'node',
+      'bundle' => $type->type,
+      'label' => $label,
+      'widget_type' => 'text_textarea_with_summary',
+      'settings' => array('display_summary' => TRUE),
+
+      // Define default formatters for the teaser and full view.
+      'display' => array(
+        'full' => array(
+          'label' => 'hidden',
+          'type' => 'text_default',
+        ),
+        'teaser' => array(
+          'label' => 'hidden',
+          'type' => 'text_summary_or_trimmed',
+        ),
+      ),
+    );
+    field_create_instance($instance);
   }
 }
 
@@ -737,14 +722,13 @@ function node_type_set_defaults($info = array()) {
     $type->base = '';
     $type->description = '';
     $type->help = '';
-    $type->has_title = 1;
-    $type->has_body = 1;
-    $type->title_label = t('Title');
-    $type->body_label = t('Body');
     $type->custom = 0;
     $type->modified = 0;
     $type->locked = 1;
     $type->is_new = 1;
+
+    $type->has_title = 1;
+    $type->title_label = 'Title';
   }
 
   $new_type = clone $type;
@@ -752,12 +736,9 @@ function node_type_set_defaults($info = array()) {
   foreach ($info as $key => $data) {
     $new_type->$key = $data;
   }
-  // If the type has no title or body, set an empty label.
+  // If the type has no title, set an empty label.
   if (!$new_type->has_title) {
     $new_type->title_label = '';
-  }
-  if (!$new_type->has_body) {
-    $new_type->body_label = '';
   }
   $new_type->orig_type = isset($info['type']) ? $info['type'] : '';
 

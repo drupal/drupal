@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.45 2010/04/26 14:32:27 dries Exp $
+// $Id: forum.install,v 1.46 2010/05/05 06:55:25 webchick Exp $
 
 /**
  * @file
@@ -80,6 +80,10 @@ function forum_enable() {
     $term = (object) $edit;
     taxonomy_term_save($term);
   }
+  // Ensure the forum node type is available.
+  node_types_rebuild();
+  $types = node_type_get_types();
+  node_add_body_field($types['forum']);
 }
 
 /**

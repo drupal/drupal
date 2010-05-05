@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.214 2010/05/03 07:18:06 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.215 2010/05/05 06:55:25 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -842,6 +842,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $saved_type = node_type_save($type);
     node_types_rebuild();
     menu_rebuild();
+    node_add_body_field($type);
 
     $this->assertEqual($saved_type, SAVED_NEW, t('Created content type %type.', array('%type' => $type->type)));
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.34 2009/12/04 16:49:45 dries Exp $
+// $Id: book.install,v 1.35 2010/05/05 06:55:25 webchick Exp $
 
 /**
  * @file
@@ -37,6 +37,7 @@ function _book_install_type_create() {
 
   $book_node_type = node_type_set_defaults($book_node_type);
   node_type_save($book_node_type);
+  node_add_body_field($book_node_type);
   // Default to not promoted.
   variable_set('node_options_book', array('status'));
   // Use this default type for adding content to books.

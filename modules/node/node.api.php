@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.66 2010/03/26 17:14:45 dries Exp $
+// $Id: node.api.php,v 1.67 2010/05/05 06:55:25 webchick Exp $
 
 /**
  * @file
@@ -771,10 +771,6 @@ function hook_node_view_alter(&$build) {
  *      field. Optional (defaults to TRUE).
  *   - "title_label": the label for the title field of this content type.
  *      Optional (defaults to 'Title').
- *   - "has_body": boolean indicating whether or not this node type has a body
- *      field. Optional (defaults to TRUE).
- *   - "body_label": the label for the body field of this content type. Optional
- *      (defaults to 'Body').
  *   - "locked": boolean indicating whether the administrator can change the
  *      machine name of this type. FALSE = changeable (not locked),
  *      TRUE = unchangeable (locked). Optional (defaults to TRUE).
@@ -986,17 +982,6 @@ function hook_prepare($node) {
 function hook_form($node, $form_state) {
   $type = node_type_get_type($node);
 
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => check_plain($type->title_label),
-    '#required' => TRUE,
-  );
-  $form['body'] = array(
-    '#type' => 'textarea',
-    '#title' => check_plain($type->body_label),
-    '#rows' => 20,
-    '#required' => TRUE,
-  );
   $form['field1'] = array(
     '#type' => 'textfield',
     '#title' => t('Custom field'),
