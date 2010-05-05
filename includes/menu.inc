@@ -1685,9 +1685,19 @@ function menu_local_tasks($level = 0) {
     $tabs = array();
 
     $router_item = menu_get_item();
+
+    // If this router item points to its parent, start from the parents to
+    // compute tabs and actions.
+    if ($router_item && ($router_item['type'] & MENU_LINKS_TO_PARENT)) {
+      $router_item = menu_get_item($router_item['tab_parent']);
+    }
+
+    // If we failed to fetch a router item or the current user doesn't have
+    // access to it, don't bother computing the tabs.
     if (!$router_item || !$router_item['access']) {
       return $empty;
     }
+
     // Get all tabs and the root page.
     $result = db_select('menu_router', NULL, array('fetch' => PDO::FETCH_ASSOC))
       ->fields('menu_router')
@@ -1710,8 +1720,9 @@ function menu_local_tasks($level = 0) {
       // Store the translated item for later use.
       $tasks[$item['path']] = $item;
     }
+
     // Find all tabs below the current path.
-    $path = ($router_item['type'] == MENU_DEFAULT_LOCAL_TASK ? $router_item['tab_parent'] : $router_item['path']);
+    $path = $router_item['path'];
     // Tab parenting may skip levels, so the number of parts in the path may not
     // equal the depth. Thus we use the $depth counter (offset by 1000 for ksort).
     $depth = 1001;
