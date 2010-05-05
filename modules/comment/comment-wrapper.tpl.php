@@ -1,9 +1,9 @@
 <?php
-// $Id: comment-wrapper.tpl.php,v 1.9 2010/02/23 09:51:21 dries Exp $
+// $Id: comment-wrapper.tpl.php,v 1.10 2010/05/05 06:41:22 webchick Exp $
 
 /**
  * @file
- * Default theme implementation to wrap comments.
+ * Default theme implementation to provide an HTML container for comments.
  *
  * Available variables:
  * - $content: The array of content-related elements for the node. Use
@@ -13,6 +13,12 @@
  *   CSS. It can be manipulated through the variable $classes_array from
  *   preprocess functions. The default value has the following:
  *   - comment-wrapper: The current template type, i.e., "theming hook".
+ * - $title_prefix (array): An array containing additional output populated by
+ *   modules, intended to be displayed in front of the main title tag that
+ *   appears in the template.
+ * - $title_suffix (array): An array containing additional output populated by
+ *   modules, intended to be displayed after the main title tag that appears in
+ *   the template.
  *
  * The following variables are provided for contextual information.
  * - $node: Node object the comments are attached to.
@@ -32,7 +38,9 @@
 ?>
 <div id="comments" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php if ($content['comments'] && $node->type != 'forum'): ?>
+    <?php print render($title_prefix); ?>
     <h2 class="title"><?php print t('Comments'); ?></h2>
+    <?php print render($title_suffix); ?>
   <?php endif; ?>
 
   <?php print render($content['comments']); ?>
