@@ -89,11 +89,20 @@ function openid_redirect_http($url, $message) {
  * Creates a js auto-submit redirect for (for the 2.x protocol)
  */
 function openid_redirect($url, $message) {
-  $output = '<html><head><title>' . t('OpenID redirect') . "</title></head>\n<body>";
+  global $language;
+  
+  $output = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
+  $output .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $language->language . '" lang="' . $language->language . '">' . "\n";
+  $output .= "<head>\n";
+  $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+  $output .= "<title>" . t('OpenID redirect') . "</title>\n";
+  $output .= "</head>\n";
+  $output .= "<body>\n";
   $elements = drupal_get_form('openid_redirect_form', $url, $message);
   $output .= drupal_render($elements);
-  $output .= '<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>';
-  $output .= "</body></html>\n";
+  $output .= '<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>' . "\n";
+  $output .= "</body>\n";
+  $output .= "</html>\n";
   print $output;
 
   drupal_exit();
@@ -112,8 +121,8 @@ function openid_redirect_form($form, &$form_state, $url, $message) {
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#prefix' => '<noscript>',
-    '#suffix' => '</noscript>',
+    '#prefix' => '<noscript><div>',
+    '#suffix' => '</div></noscript>',
     '#value' => t('Send'),
   );
 
