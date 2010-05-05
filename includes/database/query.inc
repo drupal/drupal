@@ -21,10 +21,11 @@ interface QueryConditionInterface {
    *
    * This method can take a variable number of parameters. If called with two
    * parameters, they are taken as $field and $value with $operator having a value
-   * of =.
+   * of IN if $value is an array and = otherwise.
    *
    * @param $field
-   *   The name of the field to check.
+   *   The name of the field to check. If you would like to add a more complex
+   *   condition involving operators or functions, use where().
    * @param $value
    *   The value to test the field against. In most cases, this is a scalar. For more
    *   complex options, it is an array. The meaning of each element in the array is
@@ -1255,7 +1256,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
                 $placeholders[] = $placeholder;
               }
             }
-            $condition_fragments[] = ' (' . $condition['field'] . ' ' . $operator['operator'] . ' ' . $operator['prefix'] . implode($operator['delimiter'], $placeholders) . $operator['postfix'] . ') ';
+            $condition_fragments[] = ' (' . $connection->escapeField($condition['field']) . ' ' . $operator['operator'] . ' ' . $operator['prefix'] . implode($operator['delimiter'], $placeholders) . $operator['postfix'] . ') ';
           }
         }
       }

@@ -1835,7 +1835,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $task_field = $query->addField('t', 'task');
     $query->orderBy($count_field);
     $query->groupBy($task_field);
-    $query->havingCondition('COUNT(task)', 2, '>=');
+    $query->having('COUNT(task) >= 2');
     $result = $query->execute();
 
     $num_records = 0;

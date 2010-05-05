@@ -550,7 +550,7 @@ function openid_association($op_endpoint) {
 
   // Remove Old Associations:
   db_delete('openid_association')
-    ->condition('created + expires_in', REQUEST_TIME, '<')
+    ->where('created + expires_in < :request_time', array(':request_time' => REQUEST_TIME))
     ->execute();
 
   // Check to see if we have an association for this IdP already

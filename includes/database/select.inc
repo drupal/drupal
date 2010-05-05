@@ -445,6 +445,29 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
   public function preExecute(SelectQueryInterface $query = NULL);
 
   /**
+   * Helper function to build most common HAVING conditional clauses.
+   *
+   * This method can take a variable number of parameters. If called with two
+   * parameters, they are taken as $field and $value with $operator having a value
+   * of IN if $value is an array and = otherwise.
+   *
+   * @param $field
+   *   The name of the field to check. If you would like to add a more complex
+   *   condition involving operators or functions, use having().
+   * @param $value
+   *   The value to test the field against. In most cases, this is a scalar. For more
+   *   complex options, it is an array. The meaning of each element in the array is
+   *   dependent on the $operator.
+   * @param $operator
+   *   The comparison operator, such as =, <, or >=. It also accepts more complex
+   *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
+   *   = otherwise.
+   * @return QueryConditionInterface
+   *   The called object.
+   */
+  public function havingCondition($field, $value = NULL, $operator = NULL);
+
+  /**
    * Clone magic method.
    *
    * Select queries have dependent objects that must be deep-cloned.  The
@@ -906,10 +929,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
   /* Implementations of QueryConditionInterface for the WHERE clause. */
 
   public function condition($field, $value = NULL, $operator = NULL) {
-    if (!isset($num_args)) {
-      $num_args = func_num_args();
-    }
-    $this->where->condition($field, $value, $operator, $num_args);
+    $this->where->condition($field, $value, $operator);
     return $this;
   }
 
@@ -942,11 +962,8 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
   /* Implementations of QueryConditionInterface for the HAVING clause. */
 
-  public function havingCondition($field, $value = NULL, $operator = '=') {
-    if (!isset($num_args)) {
-      $num_args = func_num_args();
-    }
-    $this->having->condition($field, $value, $operator, $num_args);
+  public function havingCondition($field, $value = NULL, $operator = NULL) {
+    $this->having->condition($field, $value, $operator);
     return $this;
   }
 
@@ -1296,13 +1313,13 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $fields = array();
     foreach ($this->tables as $alias => $table) {
       if (!empty($table['all_fields'])) {
-        $fields[] = $alias . '.*';
+        $fields[] = $this->connection->escapeTable($alias) . '.*';
       }
     }
     foreach ($this->fields as $alias => $field) {
       // Always use the AS keyword for field aliases, as some
       // databases require it (e.g., PostgreSQL).
-      $fields[] = (isset($field['table']) ? $field['table'] . '.' : '') . $field['field'] . ' AS ' . $field['alias'];
+      $fields[] = (isset($field['table']) ? $this->connection->escapeTable($field['table']) . '.' : '') . $this->connection->escapeField($field['field']) . ' AS ' . $this->connection->escapeField($field['alias']);
     }
     foreach ($this->expressions as $alias => $expression) {
       $fields[] = $expression['expression'] . ' AS ' . $expression['alias'];
@@ -1331,7 +1348,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
       // Don't use the AS keyword for table aliases, as some
       // databases don't support it (e.g., Oracle).
-      $query .=  $table_string . ' ' . $table['alias'];
+      $query .=  $table_string . ' ' . $this->connection->escapeTable($table['alias']);
 
       if (!empty($table['condition'])) {
         $query .= ' ON ' . $table['condition'];
