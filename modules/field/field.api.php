@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.79 2010/05/05 06:32:22 webchick Exp $
+// $Id: field.api.php,v 1.80 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -587,7 +587,7 @@ function hook_field_prepare_translation($entity_type, $entity, $field, $instance
  *   FALSE otherwise.
  */
 function hook_field_is_empty($item, $field) {
-  if (empty($item['value']) && (string)$item['value'] !== '0') {
+  if (empty($item['value']) && (string) $item['value'] !== '0') {
     return TRUE;
   }
   return FALSE;

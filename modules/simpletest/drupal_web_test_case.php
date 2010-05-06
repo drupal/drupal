@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.215 2010/05/05 06:55:25 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.216 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -837,7 +837,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'locked' => 0,
     );
     $type = $forced + $settings + $defaults;
-    $type = (object)$type;
+    $type = (object) $type;
 
     $saved_type = node_type_save($type);
     node_types_rebuild();
@@ -1866,8 +1866,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       $name = (string) $element['name'];
       // This can either be the type of <input> or the name of the tag itself
       // for <select> or <textarea>.
-      $type = isset($element['type']) ? (string)$element['type'] : $element->getName();
-      $value = isset($element['value']) ? (string)$element['value'] : '';
+      $type = isset($element['type']) ? (string) $element['type'] : $element->getName();
+      $value = isset($element['value']) ? (string) $element['value'] : '';
       $done = FALSE;
       if (isset($edit[$name])) {
         switch ($type) {
@@ -1906,7 +1906,7 @@ class DrupalWebTestCase extends DrupalTestCase {
                 $index = 0;
                 $key = preg_replace('/\[\]$/', '', $name);
                 foreach ($options as $option) {
-                  $option_value = (string)$option['value'];
+                  $option_value = (string) $option['value'];
                   if (in_array($option_value, $new_value)) {
                     $post[$key . '[' . $index++ . ']'] = $option_value;
                     $done = TRUE;
@@ -1942,7 +1942,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       if (!isset($post[$name]) && !$done) {
         switch ($type) {
           case 'textarea':
-            $post[$name] = (string)$element;
+            $post[$name] = (string) $element;
             break;
           case 'select':
             $single = empty($element['multiple']);
@@ -1956,10 +1956,10 @@ class DrupalWebTestCase extends DrupalTestCase {
               if ($option['selected'] || ($first && $single)) {
                 $first = FALSE;
                 if ($single) {
-                  $post[$name] = (string)$option['value'];
+                  $post[$name] = (string) $option['value'];
                 }
                 else {
-                  $post[$key . '[' . $index++ . ']'] = (string)$option['value'];
+                  $post[$key . '[' . $index++ . ']'] = (string) $option['value'];
                 }
               }
             }

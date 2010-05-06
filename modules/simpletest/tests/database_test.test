@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.89 2010/05/05 16:51:30 dries Exp $
+// $Id: database_test.test,v 1.90 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -456,7 +456,7 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
     $query->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical($num_records_before + 1, (int)$num_records_after, t('Record inserts correctly.'));
+    $this->assertIdentical($num_records_before + 1, (int) $num_records_after, t('Record inserts correctly.'));
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Yoko'))->fetchField();
     $this->assertIdentical($saved_age, '29', t('Can retrieve after inserting.'));
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.588 2010/04/30 12:52:10 dries Exp $
+// $Id: taxonomy.module,v 1.589 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @file
@@ -432,7 +432,7 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
   foreach ($tree as $term) {
     // Update the changed term with the new parent value before comparison.
     if ($term->tid == $changed_term['tid']) {
-      $term = (object)$changed_term;
+      $term = (object) $changed_term;
       $term->parents = $term->parent;
     }
     // Check this term's parent count.
@@ -614,7 +614,7 @@ function template_preprocess_taxonomy_term(&$variables) {
   $variables['page']      = taxonomy_term_is_page($term);
 
   // Flatten the term object's member fields.
-  $variables = array_merge((array)$term, $variables);
+  $variables = array_merge((array) $term, $variables);
 
   // Helpful $content variable for templates.
   foreach (element_children($variables['elements']) as $key) {

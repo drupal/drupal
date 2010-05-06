@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.test,v 1.8 2010/01/08 06:36:34 webchick Exp $
+// $Id: batch.test,v 1.9 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @file
@@ -352,7 +352,7 @@ class BatchPercentagesUnitTestCase extends DrupalUnitTestCase {
     foreach ($this->testCases as $expected_result => $arguments) {
       // PHP sometimes casts numeric strings that are array keys to integers,
       // cast them back here.
-      $expected_result = (string)$expected_result;
+      $expected_result = (string) $expected_result;
       $total = $arguments['total'];
       $current = $arguments['current'];
       $actual_result = _batch_api_percentage($total, $current);

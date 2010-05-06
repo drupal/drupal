@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.15 2010/04/19 04:43:05 webchick Exp $
+// $Id: query.inc,v 1.16 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @ingroup database
@@ -34,7 +34,7 @@ class InsertQuery_mysql extends InsertQuery {
       $values = $this->fromQuery->getArguments();
     }
 
-    $last_insert_id = $this->connection->query((string)$this, $values, $this->queryOptions);
+    $last_insert_id = $this->connection->query((string) $this, $values, $this->queryOptions);
 
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = array();
@@ -138,7 +138,7 @@ class MergeQuery_mysql extends MergeQuery {
     //
     // @link http ://dev.mysql.com/doc/refman/5.0/en/mysql-affected-rows.html
     $this->queryOptions['return'] = Database::RETURN_AFFECTED;
-    return $this->connection->query((string)$this, $values, $this->queryOptions);
+    return $this->connection->query((string) $this, $values, $this->queryOptions);
   }
 
 

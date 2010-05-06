@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1266 2010/05/05 06:57:15 webchick Exp $
+// $Id: node.module,v 1.1267 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @file
@@ -1341,7 +1341,7 @@ function template_preprocess_node(&$variables) {
   }
 
   // Flatten the node object's member fields.
-  $variables = array_merge((array)$node, $variables);
+  $variables = array_merge((array) $node, $variables);
 
   // Helpful $content variable for templates.
   foreach (element_children($variables['elements']) as $key) {

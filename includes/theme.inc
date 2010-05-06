@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.596 2010/04/30 20:07:03 dries Exp $
+// $Id: theme.inc,v 1.597 2010/05/06 05:59:30 webchick Exp $
 
 /**
  * @file
@@ -2501,7 +2501,7 @@ function template_preprocess_username(&$variables) {
    }
   }
   else {
-    $variables['uid'] = (int)$account->uid;
+    $variables['uid'] = (int) $account->uid;
   }
 
   // Set the name to a formatted name that is safe for printing and

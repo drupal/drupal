@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.277 2010/05/05 16:41:57 dries Exp $
+// $Id: system.admin.inc,v 1.278 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @file
@@ -2466,7 +2466,7 @@ function theme_status_report($variables) {
         REQUIREMENT_WARNING => 'warning',
         REQUIREMENT_ERROR => 'error',
       );
-      $class = $classes[isset($requirement['severity']) ? (int)$requirement['severity'] : 0] . ' ' . $class;
+      $class = $classes[isset($requirement['severity']) ? (int) $requirement['severity'] : 0] . ' ' . $class;
 
       // Output table row(s)
       if (!empty($requirement['description'])) {

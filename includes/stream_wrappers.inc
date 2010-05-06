@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.14 2010/04/30 01:33:17 webchick Exp $
+// $Id: stream_wrappers.inc,v 1.15 2010/05/06 05:59:30 webchick Exp $
 
 /**
  * @file
@@ -336,11 +336,11 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
     $path = $this->getLocalPath();
     $this->handle = ($options & STREAM_REPORT_ERRORS) ? fopen($path, $mode) : @fopen($path, $mode);
 
-    if ((bool)$this->handle && $options & STREAM_USE_PATH) {
+    if ((bool) $this->handle && $options & STREAM_USE_PATH) {
       $opened_url = $path;
     }
 
-    return (bool)$this->handle;
+    return (bool) $this->handle;
   }
 
   /**
@@ -506,7 +506,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    */
   public function mkdir($uri, $mode, $options) {
     $this->uri = $uri;
-    $recursive = (bool)($options & STREAM_MKDIR_RECURSIVE);
+    $recursive = (bool) ($options & STREAM_MKDIR_RECURSIVE);
     if ($recursive) {
       // $this->getLocalPath() fails if $uri has multiple levels of directories
       // that do not yet exist.
@@ -581,7 +581,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
     $this->uri = $uri;
     $this->handle = opendir($this->getLocalPath());
 
-    return (bool)$this->handle;
+    return (bool) $this->handle;
   }
 
   /**

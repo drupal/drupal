@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.25 2010/02/17 22:44:52 webchick Exp $
+// $Id: system_test.module,v 1.26 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * Implements hook_menu().
@@ -115,7 +115,7 @@ function system_test_basic_auth_page() {
 }
 
 function system_test_redirect($code) {
-  $code = (int)$code;
+  $code = (int) $code;
   if ($code != 200) {
     header("Location: " . url('system-test/redirect/200', array('absolute' => TRUE)), TRUE, $code);
     exit;

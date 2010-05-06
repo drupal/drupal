@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.79 2010/04/13 15:23:02 dries Exp $
+// $Id: pager.inc,v 1.80 2010/05/06 05:59:30 webchick Exp $
 
 /**
  * @file
@@ -85,7 +85,7 @@ class PagerDefault extends SelectQueryExtender {
     // We calculate the total of pages as ceil(items / limit).
     $pager_total_items[$this->element] = $this->getCountQuery()->execute()->fetchField();
     $pager_total[$this->element] = ceil($pager_total_items[$this->element] / $this->limit);
-    $pager_page_array[$this->element] = max(0, min((int)$pager_page_array[$this->element], ((int)$pager_total[$this->element]) - 1));
+    $pager_page_array[$this->element] = max(0, min((int) $pager_page_array[$this->element], ((int) $pager_total[$this->element]) - 1));
     $pager_limits[$this->element] = $this->limit;
     $this->range($pager_page_array[$this->element] * $this->limit, $this->limit);
 
@@ -528,6 +528,6 @@ function pager_load_array($value, $element, $old_array) {
     }
   }
   // Update the changed element.
-  $new_array[$element] = (int)$value;
+  $new_array[$element] = (int) $value;
   return $new_array;
 }

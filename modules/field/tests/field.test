@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.28 2010/05/01 08:12:23 dries Exp $
+// $Id: field.test,v 1.29 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @file
@@ -1576,7 +1576,7 @@ class FieldFormTestCase extends FieldTestCase {
       // We'll need three slightly different formats to check the values.
       $values[$delta] = $value;
       $weights[$delta] = $weight;
-      $field_values[$weight]['value'] = (string)$value;
+      $field_values[$weight]['value'] = (string) $value;
       $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
     }
 
@@ -1644,7 +1644,7 @@ class FieldFormTestCase extends FieldTestCase {
       // We'll need three slightly different formats to check the values.
       $values[$delta] = $value;
       $weights[$delta] = $weight;
-      $field_values[$weight]['value'] = (string)$value;
+      $field_values[$weight]['value'] = (string) $value;
       $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
     }
     // Press 'add more' button through AJAX, and place the expected HTML result

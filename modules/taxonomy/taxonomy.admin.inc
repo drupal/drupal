@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.103 2010/04/28 19:36:01 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.104 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @file
@@ -101,7 +101,7 @@ function theme_taxonomy_overview_vocabularies($variables) {
  */
 function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
   if (!is_array($edit)) {
-    $edit = (array)$edit;
+    $edit = (array) $edit;
   }
   $edit += array(
     'name' => '',
@@ -352,7 +352,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
   // Build the actual form.
   foreach ($current_page as $key => $term) {
     // Save the term for the current page so we don't have to load it a second time.
-    $form[$key]['#term'] = (array)$term;
+    $form[$key]['#term'] = (array) $term;
     if (isset($term->parents)) {
       $form[$key]['#term']['parent'] = $term->parent = $term->parents[0];
       unset($form[$key]['#term']['parents'], $term->parents);
@@ -444,7 +444,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
 
   // Build a list of all terms that need to be updated on previous pages.
   $weight = 0;
-  $term = (array)$tree[0];
+  $term = (array) $tree[0];
   while ($term['tid'] != $form['#first_tid']) {
     if ($term['parents'][0] == 0 && $term['weight'] != $weight) {
       $term['parent'] = $term['parents'][0];
@@ -453,7 +453,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
     }
     $weight++;
     $hierarchy = $term['parents'][0] != 0 ? 1 : $hierarchy;
-    $term = (array)$tree[$weight];
+    $term = (array) $tree[$weight];
   }
 
   // Renumber the current page weights and assign any new parents.
@@ -486,7 +486,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
 
   // Build a list of all terms that need to be updated on following pages.
   for ($weight; $weight < count($tree); $weight++) {
-    $term = (array)$tree[$weight];
+    $term = (array) $tree[$weight];
     if ($term['parents'][0] == 0 && $term['weight'] != $weight) {
       $term['parent'] = $term['parents'][0];
       $term['weight'] = $weight;
@@ -497,7 +497,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
 
   // Save all updated terms.
   foreach ($changed_terms as $changed) {
-    $term = (object)$changed;
+    $term = (object) $changed;
     // Update term_hierachy and term_data directly since we don't have a
     // fully populated term object to save.
     db_update('taxonomy_term_hierarchy')
@@ -619,7 +619,7 @@ function theme_taxonomy_overview_terms($variables) {
 function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = NULL) {
   if (!isset($vocabulary) && is_object($edit)) {
     $vocabulary = taxonomy_vocabulary_load($edit->vid);
-    $edit = (array)$edit;
+    $edit = (array) $edit;
   }
   $edit += array(
     'name' => '',
@@ -839,7 +839,7 @@ function taxonomy_form_term_submit_builder($form, &$form_state) {
   $term = (object) $form_state['values'];
   field_attach_submit('taxonomy_term', $term, $form, $form_state);
 
-  $form_state['term'] = (array)$term;
+  $form_state['term'] = (array) $term;
   $form_state['rebuild'] = TRUE;
 
   return $term;

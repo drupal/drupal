@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.384 2010/05/04 15:47:03 dries Exp $
+// $Id: bootstrap.inc,v 1.385 2010/05/06 05:59:30 webchick Exp $
 
 /**
  * @file
@@ -2520,7 +2520,7 @@ function _registry_check_code($type, $name = NULL) {
     if ($lookup_cache[$cache_key]) {
       require DRUPAL_ROOT . '/' . $lookup_cache[$cache_key];
     }
-    return (bool)$lookup_cache[$cache_key];
+    return (bool) $lookup_cache[$cache_key];
   }
 
   // This function may get called when the default database is not active, but

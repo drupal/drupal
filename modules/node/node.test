@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.83 2010/05/05 06:55:25 webchick Exp $
+// $Id: node.test,v 1.84 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -1655,7 +1655,7 @@ class NodeQueryAlter extends DrupalWebTestCase {
     }
     catch (Exception $e) {
       $this->fail($e->getMessage());
-      $this->fail((string)$query);
+      $this->fail((string) $query);
       $this->fail(t('Altered query is malformed'));
     }
   }

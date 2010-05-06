@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.38 2010/04/23 05:48:13 webchick Exp $
+// $Id: number.module,v 1.39 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @file
@@ -214,7 +214,7 @@ function number_field_presave($entity_type, $entity, $field, $instance, $langcod
  * Implements hook_field_is_empty().
  */
 function number_field_is_empty($item, $field) {
-  if (empty($item['value']) && (string)$item['value'] !== '0') {
+  if (empty($item['value']) && (string) $item['value'] !== '0') {
     return TRUE;
   }
   return FALSE;

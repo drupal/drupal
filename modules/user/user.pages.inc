@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.71 2010/05/01 08:12:23 dries Exp $
+// $Id: user.pages.inc,v 1.72 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @file
@@ -278,7 +278,7 @@ function user_profile_form($form, &$form_state, $account, $category = 'account')
  * Validation function for the user account and profile editing form.
  */
 function user_profile_form_validate($form, &$form_state) {
-  $edit = (object)$form_state['values'];
+  $edit = (object) $form_state['values'];
   field_attach_form_validate('user', $edit, $form, $form_state);
 }
 
@@ -291,9 +291,9 @@ function user_profile_form_submit($form, &$form_state) {
   // Remove unneeded values.
   form_state_values_clean($form_state);
 
-  $edit = (object)$form_state['values'];
+  $edit = (object) $form_state['values'];
   field_attach_submit('user', $edit, $form, $form_state);
-  $edit = (array)$edit;
+  $edit = (array) $edit;
 
   user_save($account, $edit, $category);
   $form_state['values']['uid'] = $account->uid;

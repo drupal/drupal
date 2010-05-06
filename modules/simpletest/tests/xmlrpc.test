@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.test,v 1.16 2010/03/31 15:56:53 dries Exp $
+// $Id: xmlrpc.test,v 1.17 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * Perform basic XML-RPC tests that do not require addition callbacks.
@@ -155,7 +155,7 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     for ($y = 2000; $y < 2002; $y++) {
       for ($m = 3; $m < 5; $m++) {
         for ($d = 1; $d < 6; $d++) {
-          $ys = (string)$y;
+          $ys = (string) $y;
           $ms = sprintf('%02d', $m);
           $ds = sprintf('%02d', $d);
           $struct_7[$ys][$ms][$ds]['moe']   = mt_rand(-100, 100);

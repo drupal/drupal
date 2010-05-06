@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.37 2010/05/01 08:12:22 dries Exp $
+// $Id: actions.inc,v 1.38 2010/05/06 05:59:30 webchick Exp $
 
 /**
  * @file
@@ -166,7 +166,7 @@ function actions_list($reset = FALSE) {
   }
 
   // See module_implements() for an explanation of this cast.
-  return (array)$actions;
+  return (array) $actions;
 }
 
 /**

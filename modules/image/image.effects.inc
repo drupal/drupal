@@ -1,5 +1,5 @@
 <?php
-// $Id: image.effects.inc,v 1.4 2010/03/26 17:14:45 dries Exp $
+// $Id: image.effects.inc,v 1.5 2010/05/06 05:59:31 webchick Exp $
 
 /**
  * @file
@@ -232,7 +232,7 @@ function image_rotate_effect(&$image, $data) {
   }
 
   if (!empty($data['random'])) {
-    $degrees = abs((float)$data['degrees']);
+    $degrees = abs((float) $data['degrees']);
     $data['degrees'] = rand(-1 * $degrees, $degrees);
   }
 
