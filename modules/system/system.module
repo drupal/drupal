@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.926 2010/04/30 01:33:17 webchick Exp $
+// $Id: system.module,v 1.927 2010/05/06 15:21:25 dries Exp $
 
 /**
  * @file
@@ -1008,7 +1008,7 @@ function system_menu() {
     'title' => 'Status report',
     'description' => "Get a status report about your site's operation and any detected problems.",
     'page callback' => 'system_status',
-    'weight' => 10,
+    'weight' => -60,
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );

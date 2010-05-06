@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.65 2010/04/13 15:23:03 dries Exp $
+// $Id: update.module,v 1.66 2010/05/06 15:21:25 dries Exp $
 
 /**
  * @file
@@ -159,7 +159,7 @@ function update_menu() {
     'description' => 'Get a status report about available updates for your installed modules and themes.',
     'page callback' => 'update_status',
     'access arguments' => array('administer site configuration'),
-    'weight' => 10,
+    'weight' => -50,
     'file' => 'update.report.inc',
   );
   $items['admin/reports/updates/list'] = array(
