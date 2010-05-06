@@ -1,5 +1,5 @@
 <?php
-// $Id: lock.inc,v 1.3 2010/02/24 19:59:32 dries Exp $
+// $Id: lock.inc,v 1.4 2010/05/06 15:20:18 dries Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@
  *
  * This is a cooperative, advisory lock system. Any long-running operation
  * that could potentially be attempted in parallel by multiple requests should
- * try to acquire a lock before proceeding. By obtainng a lock, one request
+ * try to acquire a lock before proceeding. By obtaining a lock, one request
  * notifies any other requests that a specific operation is in progress which
  * must not be executed in parallel.
  *
