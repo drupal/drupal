@@ -975,7 +975,7 @@ function user_admin_role_validate($form, &$form_state) {
  * Form submit handler for the user_admin_role() form.
  */
 function user_admin_role_submit($form, &$form_state) {
-  $role = (object)$form_state['values'];
+  $role = (object) $form_state['values'];
   if ($form_state['values']['op'] == t('Save role')) {
     user_role_save($role);
     drupal_set_message(t('The role has been renamed.'));

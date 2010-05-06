@@ -2520,7 +2520,7 @@ function _registry_check_code($type, $name = NULL) {
     if ($lookup_cache[$cache_key]) {
       require DRUPAL_ROOT . '/' . $lookup_cache[$cache_key];
     }
-    return (bool)$lookup_cache[$cache_key];
+    return (bool) $lookup_cache[$cache_key];
   }
 
   // This function may get called when the default database is not active, but

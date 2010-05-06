@@ -1400,7 +1400,7 @@ function user_is_anonymous() {
 }
 
 function user_is_logged_in() {
-  return (bool)$GLOBALS['user']->uid;
+  return (bool) $GLOBALS['user']->uid;
 }
 
 function user_register_access() {
@@ -3032,8 +3032,8 @@ function _user_categories() {
 }
 
 function _user_sort($a, $b) {
-  $a = (array)$a + array('weight' => 0, 'title' => '');
-  $b = (array)$b + array('weight' => 0, 'title' => '');
+  $a = (array) $a + array('weight' => 0, 'title' => '');
+  $b = (array) $b + array('weight' => 0, 'title' => '');
   return $a['weight'] < $b['weight'] ? -1 : ($a['weight'] > $b['weight'] ? 1 : ($a['title'] < $b['title'] ? -1 : 1));
 }
 

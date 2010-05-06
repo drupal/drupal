@@ -2466,7 +2466,7 @@ function theme_status_report($variables) {
         REQUIREMENT_WARNING => 'warning',
         REQUIREMENT_ERROR => 'error',
       );
-      $class = $classes[isset($requirement['severity']) ? (int)$requirement['severity'] : 0] . ' ' . $class;
+      $class = $classes[isset($requirement['severity']) ? (int) $requirement['severity'] : 0] . ' ' . $class;
 
       // Output table row(s)
       if (!empty($requirement['description'])) {

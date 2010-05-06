@@ -483,7 +483,7 @@ class MenuTestCase extends DrupalWebTestCase {
     // Load menu link.
     // Use api function so that link is translated for rendering.
     $item = menu_link_load($mlid);
-    $this->assertTrue((bool)$item, 'Standard menu link was loaded');
+    $this->assertTrue((bool) $item, 'Standard menu link was loaded');
     return $item;
   }
 

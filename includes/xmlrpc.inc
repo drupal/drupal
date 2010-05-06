@@ -260,7 +260,7 @@ function xmlrpc_message_tag_close($parser, $tag) {
       // If no type is indicated, the type is string
       // We take special care for empty values
       if (trim($xmlrpc_message->current_tag_contents) != '' || (isset($xmlrpc_message->last_open) && ($xmlrpc_message->last_open == 'value'))) {
-        $value = (string)$xmlrpc_message->current_tag_contents;
+        $value = (string) $xmlrpc_message->current_tag_contents;
         $value_flag = TRUE;
       }
       unset($xmlrpc_message->last_open);

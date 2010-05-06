@@ -574,7 +574,7 @@ function _menu_check_access(&$item, $map) {
   $callback = empty($item['access_callback']) ? 0 : trim($item['access_callback']);
   // Check for a TRUE or FALSE value.
   if (is_numeric($callback)) {
-    $item['access'] = (bool)$callback;
+    $item['access'] = (bool) $callback;
   }
   else {
     $arguments = menu_unserialize($item['access_arguments'], $map);
@@ -978,7 +978,7 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
   // Use $mlid as a flag for whether the data being loaded is for the whole tree.
   $mlid = isset($link['mlid']) ? $link['mlid'] : 0;
   // Generate a cache ID (cid) specific for this $menu_name, $link, $language, and depth.
-  $cid = 'links:' . $menu_name . ':all-cid:' . $mlid . ':' . $GLOBALS['language']->language . ':' . (int)$max_depth;
+  $cid = 'links:' . $menu_name . ':all-cid:' . $mlid . ':' . $GLOBALS['language']->language . ':' . (int) $max_depth;
 
   if (!isset($tree[$cid])) {
     // If the static variable doesn't have the data, check {cache_menu}.
@@ -1090,7 +1090,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL) {
       $max_depth = min($max_depth, MENU_MAX_DEPTH);
     }
     // Generate a cache ID (cid) specific for this page.
-    $cid = 'links:' . $menu_name . ':page-cid:' . $item['href'] . ':' . $GLOBALS['language']->language . ':' . (int)$item['access'] . ':' . (int)$max_depth;
+    $cid = 'links:' . $menu_name . ':page-cid:' . $item['href'] . ':' . $GLOBALS['language']->language . ':' . (int) $item['access'] . ':' . (int) $max_depth;
 
     if (!isset($tree[$cid])) {
       // If the static variable doesn't have the data, check {cache_menu}.
@@ -2141,7 +2141,7 @@ function menu_set_active_trail($new_trail = NULL) {
     // Make sure the current page is in the trail (needed for the page title),
     // but exclude tabs and the front page.
     $last = count($trail) - 1;
-    if ($trail[$last]['href'] != $item['href'] && !(bool)($item['type'] & MENU_IS_LOCAL_TASK) && !drupal_is_front_page()) {
+    if ($trail[$last]['href'] != $item['href'] && !(bool) ($item['type'] & MENU_IS_LOCAL_TASK) && !drupal_is_front_page()) {
       $trail[] = $item;
     }
   }
@@ -2192,7 +2192,7 @@ function menu_get_active_title() {
   $active_trail = menu_get_active_trail();
 
   foreach (array_reverse($active_trail) as $item) {
-    if (!(bool)($item['type'] & MENU_IS_LOCAL_TASK)) {
+    if (!(bool) ($item['type'] & MENU_IS_LOCAL_TASK)) {
       return $item['title'];
     }
   }
@@ -3107,8 +3107,8 @@ function _menu_router_build($callbacks) {
       '_fit' => $fit,
     );
     $item += array(
-      '_visible' => (bool)($item['type'] & MENU_VISIBLE_IN_BREADCRUMB),
-      '_tab' => (bool)($item['type'] & MENU_IS_LOCAL_TASK),
+      '_visible' => (bool) ($item['type'] & MENU_VISIBLE_IN_BREADCRUMB),
+      '_tab' => (bool) ($item['type'] & MENU_IS_LOCAL_TASK),
     );
     if ($move) {
       $new_path = implode('/', $item['_parts']);

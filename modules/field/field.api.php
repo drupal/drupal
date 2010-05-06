@@ -587,7 +587,7 @@ function hook_field_prepare_translation($entity_type, $entity, $field, $instance
  *   FALSE otherwise.
  */
 function hook_field_is_empty($item, $field) {
-  if (empty($item['value']) && (string)$item['value'] !== '0') {
+  if (empty($item['value']) && (string) $item['value'] !== '0') {
     return TRUE;
   }
   return FALSE;

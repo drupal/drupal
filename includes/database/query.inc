@@ -442,7 +442,7 @@ class InsertQuery extends Query {
     // If we're selecting from a SelectQuery, finish building the query and
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
-      $sql = (string)$this;
+      $sql = (string) $this;
       // The SelectQuery may contain arguments, load and pass them through.
       return $this->connection->query($sql, $this->fromQuery->getArguments(), $this->queryOptions);
     }
@@ -453,7 +453,7 @@ class InsertQuery extends Query {
     // we wrap it in a transaction so that it is atomic where possible. On many
     // databases, such as SQLite, this is also a notable performance boost.
     $transaction = $this->connection->startTransaction();
-    $sql = (string)$this;
+    $sql = (string) $this;
     foreach ($this->insertValues as $insert_values) {
       $last_insert_id = $this->connection->query($sql, $insert_values, $this->queryOptions);
     }
@@ -780,7 +780,7 @@ class MergeQuery extends Query {
     }
 
     $select = $select->countQuery();
-    $sql = (string)$select;
+    $sql = (string) $select;
     $arguments = $select->getArguments();
     $num_existing = $this->connection->query($sql, $arguments)->fetchField();
 
@@ -896,7 +896,7 @@ class DeleteQuery extends Query implements QueryConditionInterface {
       $values = $this->condition->arguments();
     }
 
-    return $this->connection->query((string)$this, $values, $this->queryOptions);
+    return $this->connection->query((string) $this, $values, $this->queryOptions);
   }
 
   public function __toString() {
@@ -936,7 +936,7 @@ class TruncateQuery extends Query {
   }
 
   public function execute() {
-    return $this->connection->query((string)$this, array(), $this->queryOptions);
+    return $this->connection->query((string) $this, array(), $this->queryOptions);
   }
 
   public function __toString() {
@@ -1096,7 +1096,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
       $update_values = array_merge($update_values, $this->condition->arguments());
     }
 
-    return $this->connection->query((string)$this, $update_values, $this->queryOptions);
+    return $this->connection->query((string) $this, $update_values, $this->queryOptions);
   }
 
   public function __toString() {
@@ -1218,7 +1218,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
           if ($condition['field'] instanceof QueryConditionInterface) {
             // Compile the sub-condition recursively and add it to the list.
             $condition['field']->compile($connection, $queryPlaceholder);
-            $condition_fragments[] = '(' . (string)$condition['field'] . ')';
+            $condition_fragments[] = '(' . (string) $condition['field'] . ')';
             $arguments += $condition['field']->arguments();
           }
           else {
@@ -1240,7 +1240,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
             $placeholders = array();
             if ($condition['value'] instanceof SelectQueryInterface) {
               $condition['value']->compile($connection, $queryPlaceholder);
-              $placeholders[] = (string)$condition['value'];
+              $placeholders[] = (string) $condition['value'];
               $arguments += $condition['value']->arguments();
             }
             // We assume that if there is a delimiter, then the value is an

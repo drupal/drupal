@@ -422,7 +422,7 @@ function comment_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function comment_block_save($delta = '', $edit = array()) {
-  variable_set('comment_block_count', (int)$edit['comment_block_count']);
+  variable_set('comment_block_count', (int) $edit['comment_block_count']);
 }
 
 /**
@@ -2089,7 +2089,7 @@ function comment_submit($comment) {
       $comment['subject'] = t('(No subject)');
     }
   }
-  return (object)$comment;
+  return (object) $comment;
 }
 
 /**
@@ -2100,7 +2100,7 @@ function comment_form_submit_build_comment($form, &$form_state) {
 
   field_attach_submit('comment', $comment, $form, $form_state);
 
-  $form_state['comment'] = (array)$comment;
+  $form_state['comment'] = (array) $comment;
   $form_state['rebuild'] = TRUE;
   return $comment;
 }
@@ -2363,7 +2363,7 @@ function _comment_update_node_statistics($nid) {
  * 31000, 31001, ...
  */
 function int2vancode($i = 0) {
-  $num = base_convert((int)$i, 10, 36);
+  $num = base_convert((int) $i, 10, 36);
   $length = strlen($num);
 
   return chr($length + ord('0') - 1) . $num;

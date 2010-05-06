@@ -34,7 +34,7 @@ class InsertQuery_mysql extends InsertQuery {
       $values = $this->fromQuery->getArguments();
     }
 
-    $last_insert_id = $this->connection->query((string)$this, $values, $this->queryOptions);
+    $last_insert_id = $this->connection->query((string) $this, $values, $this->queryOptions);
 
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = array();
@@ -138,7 +138,7 @@ class MergeQuery_mysql extends MergeQuery {
     //
     // @link http ://dev.mysql.com/doc/refman/5.0/en/mysql-affected-rows.html
     $this->queryOptions['return'] = Database::RETURN_AFFECTED;
-    return $this->connection->query((string)$this, $values, $this->queryOptions);
+    return $this->connection->query((string) $this, $values, $this->queryOptions);
   }
 
 

@@ -421,7 +421,7 @@ function poll_choice_js($form, $form_state) {
 function poll_node_form_submit(&$form, &$form_state) {
   // Renumber fields
   $form_state['values']['choice'] = array_values($form_state['values']['choice']);
-  $form_state['values']['teaser'] = poll_teaser((object)$form_state['values']);
+  $form_state['values']['teaser'] = poll_teaser((object) $form_state['values']);
 }
 
 /**

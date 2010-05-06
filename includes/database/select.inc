@@ -750,7 +750,7 @@ class SelectQueryExtender implements SelectQueryInterface {
   }
 
   public function __toString() {
-    return (string)$this->query;
+    return (string) $this->query;
   }
 
   public function __clone() {
@@ -1103,7 +1103,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
     }
 
     $args = $this->getArguments();
-    return $this->connection->query((string)$this, $args, $this->queryOptions);
+    return $this->connection->query((string) $this, $args, $this->queryOptions);
   }
 
   public function distinct($distinct = TRUE) {

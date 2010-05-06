@@ -540,7 +540,7 @@ function _book_add_form_elements(&$form, &$form_state, $node) {
     '#title' => t('Book'),
     '#default_value' => $node->book['bid'],
     '#options' => $options,
-    '#access' => (bool)$options,
+    '#access' => (bool) $options,
     '#description' => t('Your page will be a part of the selected book.'),
     '#weight' => -5,
     '#attributes' => array('class' => array('book-title-select')),

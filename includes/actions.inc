@@ -166,7 +166,7 @@ function actions_list($reset = FALSE) {
   }
 
   // See module_implements() for an explanation of this cast.
-  return (array)$actions;
+  return (array) $actions;
 }
 
 /**

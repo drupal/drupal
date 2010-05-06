@@ -81,8 +81,8 @@ function ajax_forms_test_simple_form_select_callback($form, $form_state) {
  */
 function ajax_forms_test_simple_form_checkbox_callback($form, $form_state) {
   $commands = array();
-  $commands[] = ajax_command_html('#ajax_checkbox_value', (int)$form_state['values']['checkbox']);
-  $commands[] = ajax_command_data('#ajax_checkbox_value', 'form_state_value_select', (int)$form_state['values']['checkbox']);
+  $commands[] = ajax_command_html('#ajax_checkbox_value', (int) $form_state['values']['checkbox']);
+  $commands[] = ajax_command_data('#ajax_checkbox_value', 'form_state_value_select', (int) $form_state['values']['checkbox']);
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 

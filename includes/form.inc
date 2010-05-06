@@ -491,7 +491,7 @@ function form_state_keys_no_cache() {
  * $form_state['values']['body'] = 'This is the body text!';
  * $form_state['values']['name'] = 'robo-user';
  * $form_state['values']['op'] = t('Save');
- * drupal_form_submit('story_node_form', $form_state, (object)$node);
+ * drupal_form_submit('story_node_form', $form_state, (object) $node);
  * @endcode
  */
 function drupal_form_submit($form_id, &$form_state) {
@@ -1866,7 +1866,7 @@ function form_type_textfield_value($element, $input = FALSE) {
  */
 function form_type_token_value($element, $input = FALSE) {
   if ($input !== FALSE) {
-    return (string)$input;
+    return (string) $input;
   }
 }
 
@@ -1998,8 +1998,8 @@ function form_select_options($element, $choices = NULL) {
       $options .= form_select_options($element, $choice->option);
     }
     else {
-      $key = (string)$key;
-      if ($value_valid && (!$value_is_array && (string)$element['#value'] === $key || ($value_is_array && in_array($key, $element['#value'])))) {
+      $key = (string) $key;
+      if ($value_valid && (!$value_is_array && (string) $element['#value'] === $key || ($value_is_array && in_array($key, $element['#value'])))) {
         $selected = ' selected="selected"';
       }
       else {

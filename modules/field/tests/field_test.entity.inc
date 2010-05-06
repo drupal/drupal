@@ -255,9 +255,9 @@ function field_test_entity_edit($entity) {
  */
 function field_test_entity_form($form, &$form_state, $entity, $add = FALSE) {
   if (isset($form_state['test_entity'])) {
-    $entity = $form_state['test_entity'] + (array)$entity;
+    $entity = $form_state['test_entity'] + (array) $entity;
   }
-  $entity = (object)$entity;
+  $entity = (object) $entity;
 
   foreach (array('ftid', 'ftvid', 'fttype') as $key) {
     $form[$key] = array(
@@ -325,7 +325,7 @@ function field_test_entity_form_submit_builder($form, &$form_state) {
   $entity->revision = !empty($form_state['values']['revision']);
   field_attach_submit('test_entity', $entity, $form, $form_state);
 
-  $form_state['test_entity'] = (array)$entity;
+  $form_state['test_entity'] = (array) $entity;
   $form_state['rebuild'] = TRUE;
 
   return $entity;

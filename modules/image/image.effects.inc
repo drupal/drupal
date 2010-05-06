@@ -232,7 +232,7 @@ function image_rotate_effect(&$image, $data) {
   }
 
   if (!empty($data['random'])) {
-    $degrees = abs((float)$data['degrees']);
+    $degrees = abs((float) $data['degrees']);
     $data['degrees'] = rand(-1 * $degrees, $degrees);
   }
 
