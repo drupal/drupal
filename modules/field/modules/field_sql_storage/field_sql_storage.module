@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.45 2010/05/03 07:37:51 webchick Exp $
+// $Id: field_sql_storage.module,v 1.46 2010/05/06 15:29:51 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,12 @@ function field_sql_storage_field_storage_info() {
  *   A string containing the generated name for the database table
  */
 function _field_sql_storage_tablename($field) {
-  return "field_data_{$field['field_name']}" . ($field['deleted'] ? "_{$field['id']}" : '');
+  if ($field['deleted']) {
+    return "field_deleted_data_{$field['id']}";
+  }
+  else {
+    return "field_data_{$field['field_name']}";
+  }
 }
 
 /**
@@ -52,7 +57,12 @@ function _field_sql_storage_tablename($field) {
  *   A string containing the generated name for the database table
  */
 function _field_sql_storage_revision_tablename($field) {
-  return "field_revision_{$field['field_name']}" . ($field['deleted'] ? "_{$field['id']}" : '');
+  if ($field['deleted']) {
+    return "field_deleted_revision_{$field['id']}";
+  }
+  else {
+    return "field_revision_{$field['field_name']}";
+  }
 }
 
 /**
