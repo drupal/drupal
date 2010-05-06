@@ -822,20 +822,21 @@ function system_modules($form, $form_state = array()) {
   $files = system_rebuild_module_data();
 
   // Remove hidden modules from display list.
-  foreach ($files as $filename => $file) {
+  $visible_files = $files;
+  foreach ($visible_files as $filename => $file) {
     if (!empty($file->info['hidden']) || !empty($file->info['required'])) {
-      unset($files[$filename]);
+      unset($visible_files[$filename]);
     }
   }
 
-  uasort($files, 'system_sort_modules_by_info_name');
+  uasort($visible_files, 'system_sort_modules_by_info_name');
 
   // If the modules form was submitted, then system_modules_submit() runs first
   // and if there are unfilled required modules, then $form_state['storage'] is
   // filled, triggering a rebuild. In this case we need to display a
   // confirmation form.
   if (!empty($form_state['storage'])) {
-    return system_modules_confirm_form($files, $form_state['storage']);
+    return system_modules_confirm_form($visible_files, $form_state['storage']);
   }
 
   $modules = array();
@@ -845,7 +846,7 @@ function system_modules($form, $form_state = array()) {
   $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
   // Iterate through each of the modules.
-  foreach ($files as $filename => $module) {
+  foreach ($visible_files as $filename => $module) {
     $extra = array();
     $extra['enabled'] = (bool) $module->status;
     // If this module requires other modules, add them to the array.
@@ -854,7 +855,8 @@ function system_modules($form, $form_state = array()) {
         $extra['requires'][$requires] = t('@module (<span class="admin-missing">missing</span>)', array('@module' => drupal_ucfirst($requires)));
         $extra['disabled'] = TRUE;
       }
-      else {
+      // Only display visible modules.
+      elseif (isset($visible_files[$requires])) {
         $requires_name = $files[$requires]->info['name'];
         if ($incompatible_version = drupal_check_incompatibility($v, str_replace(DRUPAL_CORE_COMPATIBILITY . '-', '', $files[$requires]->info['version']))) {
           $extra['requires'][$requires] = t('@module (<span class="admin-missing">incompatible with</span> version @version)', array(
@@ -911,7 +913,7 @@ function system_modules($form, $form_state = array()) {
     // impossible to disable this one.
     foreach ($module->required_by as $required_by => $v) {
       // Hidden modules are unset already.
-      if (isset($files[$required_by])) {
+      if (isset($visible_files[$required_by])) {
         if ($files[$required_by]->status == 1) {
           $extra['required_by'][] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$required_by]->info['name']));
           $extra['disabled'] = TRUE;
