@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.41 2010/04/20 07:47:55 webchick Exp $
+// $Id: taxonomy.install,v 1.42 2010/05/06 06:08:28 webchick Exp $
 
 /**
  * @file
@@ -260,7 +260,10 @@ function taxonomy_update_7002() {
 
   db_add_field('taxonomy_vocabulary', 'machine_name', $field);
 
-  foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
+  // Do a direct query here, rather than calling taxonomy_get_vocabularies(),
+  // in case Taxonomy module is disabled.
+  $vids = db_query('SELECT vid FROM {taxonomy_vocabulary}')->fetchCol();
+  foreach ($vids as $vid) {
     $machine_name = 'vocabulary_' . $vid;
     db_update('taxonomy_vocabulary')
       ->fields(array('machine_name' => $machine_name))
