@@ -159,7 +159,7 @@ function update_menu() {
     'description' => 'Get a status report about available updates for your installed modules and themes.',
     'page callback' => 'update_status',
     'access arguments' => array('administer site configuration'),
-    'weight' => 10,
+    'weight' => -50,
     'file' => 'update.report.inc',
   );
   $items['admin/reports/updates/list'] = array(
