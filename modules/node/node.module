@@ -445,7 +445,7 @@ function node_type_get_name($node) {
  *
  * All new module-defined node types are saved to the database via a call to
  * node_type_save(), and obsolete ones are deleted via a call to
- * node_type_delete(). See _node_types_build() for an explanation of the new 
+ * node_type_delete(). See _node_types_build() for an explanation of the new
  * and obsolete types.
  */
 function node_types_rebuild() {
@@ -611,6 +611,7 @@ function node_type_delete($type) {
   db_delete('node_type')
     ->condition('type', $type)
     ->execute();
+  field_attach_delete_bundle('node', $type);
   module_invoke_all('node_type_delete', $info);
 
   // Clear the node type cache.
