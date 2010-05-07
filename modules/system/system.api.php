@@ -2217,7 +2217,7 @@ function hook_file_validate(&$file) {
  *
  * @see file_save()
  */
-function hook_file_insert(&$file) {
+function hook_file_insert($file) {
 
 }
 
@@ -2231,7 +2231,7 @@ function hook_file_insert(&$file) {
  *
  * @see file_save()
  */
-function hook_file_update(&$file) {
+function hook_file_update($file) {
 
 }
 
