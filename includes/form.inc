@@ -2174,8 +2174,8 @@ function form_process_password_confirm($element) {
  */
 function password_confirm_validate($element, &$element_state) {
   $pass1 = trim($element['pass1']['#value']);
-  if (!empty($pass1)) {
-    $pass2 = trim($element['pass2']['#value']);
+  $pass2 = trim($element['pass2']['#value']);
+  if (!empty($pass1) || !empty($pass2)) {
     if (strcmp($pass1, $pass2)) {
       form_error($element, t('The specified passwords do not match.'));
     }
