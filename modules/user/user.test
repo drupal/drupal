@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.91 2010/05/07 12:55:25 dries Exp $
+// $Id: user.test,v 1.92 2010/05/07 14:48:10 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -55,7 +55,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $edit['pass[pass1]'] = '99999.0';
     $edit['pass[pass2]'] = '99999';
     $this->drupalPost('user/register', $edit, t('Create new account'));
-    $this->assertText(t('The specified passwords do not match.'), t('Type mismatched passwords display an error message.'));
+    $this->assertText(t('The specified passwords do not match.'), t('Typing mismatched passwords displays an error message.'));
 
     // Enter a correct password.
     $edit['pass[pass1]'] = $new_pass = $this->randomName();
@@ -1390,6 +1390,18 @@ class UserEditTestCase extends DrupalWebTestCase {
     variable_set('user_pictures', 1);
     $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
     $this->assertRaw(t('The name %name is already taken.', array('%name' => $edit['name'])));
+
+    // Check that filling out a single password field does not validate.
+    $edit = array();
+    $edit['pass[pass1]'] = '';
+    $edit['pass[pass2]'] = $this->randomName();
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertText(t("The specified passwords do not match."), t('Typing mismatched passwords displays an error message.'));
+
+    $edit['pass[pass1]'] = $this->randomName();
+    $edit['pass[pass2]'] = '';
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertText(t("The specified passwords do not match."), t('Typing mismatched passwords displays an error message.'));
 
     // Test that the error message appears when attempting to change the mail or
     // pass without the current password.
