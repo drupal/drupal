@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.84 2010/05/06 05:59:31 webchick Exp $
+// $Id: node.test,v 1.85 2010/05/07 15:00:56 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -1291,9 +1291,11 @@ class NodeTitleTestCase extends DrupalWebTestCase {
    *  Create one node and test if the node title has the correct value.
    */
   function testNodeTitle() {
-    // Create "Basic page" content with title
+    // Create "Basic page" content with title.
+    // Add the node to the frontpage so we can test if teaser links are clickable.
     $settings = array(
       'title' => $this->randomName(8),
+      'promote' => 1,
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -1309,11 +1311,15 @@ class NodeTitleTestCase extends DrupalWebTestCase {
 
     // Test node title in comment preview.
     $this->assertEqual(current($this->xpath('//div[@id=:id]/h2/a', array(':id' => 'node-' . $node->nid))), $node->title, 'Node preview title is equal to node title.', 'Node');
+
+    // Test node title is clickable on teaser list (/node).
+    $this->drupalGet('node');
+    $this->clickLink($node->title);
   }
 }
 
 /**
- * Test the node_feed() functionality
+ * Test the node_feed() functionality.
  */
 class NodeFeedTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1693,7 +1699,7 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     );
     $node = $this->drupalCreateNode($settings);
 
-    // Load node so that the body and summary fields are structured properly. 
+    // Load node so that the body and summary fields are structured properly.
     $node = node_load($node->nid);
     $instance = field_info_instance('node', 'body', $node->type);
 
