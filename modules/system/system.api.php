@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.166 2010/05/05 07:02:13 webchick Exp $
+// $Id: system.api.php,v 1.167 2010/05/07 12:59:07 dries Exp $
 
 /**
  * @file
@@ -2217,7 +2217,7 @@ function hook_file_validate(&$file) {
  *
  * @see file_save()
  */
-function hook_file_insert(&$file) {
+function hook_file_insert($file) {
 
 }
 
@@ -2231,7 +2231,7 @@ function hook_file_insert(&$file) {
  *
  * @see file_save()
  */
-function hook_file_update(&$file) {
+function hook_file_update($file) {
 
 }
 
