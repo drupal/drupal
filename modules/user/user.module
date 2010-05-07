@@ -849,9 +849,10 @@ function user_search_execute($keys = NULL) {
   // Replace wildcards with MySQL/PostgreSQL wildcards.
   $keys = preg_replace('!\*+!', '%', $keys);
   $query = db_select('users')->extend('PagerDefault');
-  $query->fields('users', array('name', 'uid', 'mail'));
+  $query->fields('users', array('name', 'uid'));
   if (user_access('administer users')) {
     // Administrators can also search in the otherwise private email field.
+    $query->fields('users', array('mail'));
     $query->condition(db_or()->
       condition('name', '%' . db_like($keys) . '%', 'LIKE')->
       condition('mail', '%' . db_like($keys) . '%', 'LIKE'));
@@ -862,8 +863,15 @@ function user_search_execute($keys = NULL) {
   $result = $query
     ->limit(15)
     ->execute();
-  foreach ($result as $account) {
-    $find[] = array('title' => $account->name . ' (' . $account->mail . ')', 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
+  if (user_access('administer users')) {
+    foreach ($result as $account) {
+      $find[] = array('title' => $account->name . ' (' . $account->mail . ')', 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
+    }
+  }
+  else {
+    foreach ($result as $account) {
+      $find[] = array('title' => $account->name, 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
+    }
   }
   return $find;
 }
