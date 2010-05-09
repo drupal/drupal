@@ -2893,10 +2893,7 @@ function drupal_aggregate_css(&$css_groups) {
       // the group's data property to the file path of the aggregate file.
       case 'file':
         if ($group['preprocess'] && $preprocess_css) {
-          // Prefix filename to prevent blocking by firewalls which reject files
-          // starting with "ad*".
-          $filename = 'css_' . drupal_hash_base64(serialize($group['items'])) . '.css';
-          $css_groups[$key]['data'] = drupal_build_css_cache($group['items'], $filename);
+          $css_groups[$key]['data'] = drupal_build_css_cache($group['items']);
         }
         break;
       // Aggregate all inline CSS content into the group's data property.
@@ -3105,23 +3102,39 @@ function drupal_pre_render_styles($elements) {
 }
 
 /**
- * Aggregate and optimize CSS files, putting them in the files directory.
+ * Aggregates and optimizes CSS files into a cache file in the files directory.
+ *
+ * The file name for the CSS cache file is generated from the hash of the
+ * aggregated contents of the files in $css. This forces proxies and browsers
+ * to download new CSS when the CSS changes.
+ *
+ * The cache file name is retrieved on a page load via a lookup variable that
+ * contains an associative array. The array key is the hash of the file names
+ * in $css while the value is the cache file name. The cache file is generated
+ * in two cases. First, if there is no file name value for the key, which will
+ * happen if a new file name has been added to $css or after the lookup
+ * variable is emptied to force a rebuild of the cache.  Second, the cache
+ * file is generated if it is missing on disk. Old cache files are not deleted
+ * immediately when the lookup variable is emptied, but are deleted after a set
+ * period by drupal_delete_file_if_stale(). This ensures that files referenced
+ * by a cached page will still be available.
  *
  * @param $css
  *   An array of CSS files to aggregate and compress into one file.
- * @param $filename
- *   The name of the aggregate CSS file.
+ *
  * @return
- *   The name of the CSS file, or FALSE if the file could not be saved.
+ *   The URI of the CSS cache file, or FALSE if the file could not be saved.
  */
-function drupal_build_css_cache($css, $filename) {
+function drupal_build_css_cache($css) {
   $data = '';
+  $uri = '';
+  $map = variable_get('drupal_css_cache_files', array());
+  $key = hash('sha256', serialize($css));
+  if (isset($map[$key])) {
+    $uri = $map[$key];
+  }
 
-  // Create the css/ within the files folder.
-  $csspath = 'public://css';
-  $uri = $csspath . '/' . $filename;
-
-  if (!file_exists($uri)) {
+  if (empty($uri) || !file_exists($uri)) {
     // Build aggregate CSS file.
     foreach ($css as $stylesheet) {
       // Only 'file' stylesheets can be aggregated.
@@ -3142,11 +3155,20 @@ function drupal_build_css_cache($css, $filename) {
     $data = preg_replace($regexp, '', $data);
     $data = implode('', $matches[0]) . $data;
 
+    // Prefix filename to prevent blocking by firewalls which reject files
+    // starting with "ad*".
+    $filename = 'css_' . drupal_hash_base64($data) . '.css';
+    // Create the css/ within the files folder.
+    $csspath = 'public://css';
+    $uri = $csspath . '/' . $filename;
     // Create the CSS file.
     file_prepare_directory($csspath, FILE_CREATE_DIRECTORY);
-    if (!file_unmanaged_save_data($data, $uri, FILE_EXISTS_REPLACE)) {
+    if (!file_exists($uri) && !file_unmanaged_save_data($data, $uri, FILE_EXISTS_REPLACE)) {
       return FALSE;
     }
+    // Save the updated map.
+    $map[$key] = $uri;
+    variable_set('drupal_css_cache_files', $map);
   }
   return $uri;
 }
@@ -3275,10 +3297,21 @@ function _drupal_load_stylesheet($matches) {
 }
 
 /**
- * Delete all cached CSS files.
+ * Deletes old cached CSS files.
  */
 function drupal_clear_css_cache() {
-  file_scan_directory('public://css', '/.*/', array('callback' => 'file_unmanaged_delete'));
+  variable_del('drupal_css_cache_files');
+  file_scan_directory('public://css', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
+}
+
+/**
+ * Callback to delete files modified more than a set time ago.
+ */
+function drupal_delete_file_if_stale($uri) {
+  // Default stale file threshold is 30 days.
+  if (REQUEST_TIME - filemtime($uri) > variable_get('drupal_stale_file_threshold', 2592000)) {
+    file_unmanaged_delete($uri);
+  }
 }
 
 /**
@@ -3764,11 +3797,8 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
   // Aggregate any remaining JS files that haven't already been output.
   if ($preprocess_js && count($files) > 0) {
-    // Prefix filename to prevent blocking by firewalls which reject files
-    // starting with "ad*".
     foreach ($files as $key => $file_set) {
-      $filename = 'js_' . drupal_hash_base64(serialize($file_set)) . '.js';
-      $uri = drupal_build_js_cache($file_set, $filename);
+      $uri = drupal_build_js_cache($file_set);
       // Only include the file if was written successfully. Errors are logged
       // using watchdog.
       if ($uri) {
@@ -4257,23 +4287,39 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
 }
 
 /**
- * Aggregate JS files, putting them in the files directory.
+ * Aggregates JavaScript files into a cache file in the files directory.
+ *
+ * The file name for the JavaScript cache file is generated from the hash of
+ * the aggregated contents of the files in $files. This forces proxies and
+ * browsers to download new JavaScript when the JavaScript changes.
+ *
+ * The cache file name is retrieved on a page load via a lookup variable that
+ * contains an associative array. The array key is the hash of the names in
+ * $files while the value is the cache file name. The cache file is generated
+ * in two cases. First, if there is no file name value for the key, which will
+ * happen if a new file name has been added to $files or after the lookup
+ * variable is emptied to force a rebuild of the cache.  Second, the cache
+ * file is generated if it is missing on disk. Old cache files are not deleted
+ * immediately when the lookup variable is emptied, but are deleted after a set
+ * period by drupal_delete_file_if_stale(). This ensures that files referenced
+ * by a cached page will still be available.
  *
  * @param $files
- *   An array of JS files to aggregate and compress into one file.
- * @param $filename
- *   The name of the aggregate JS file.
+ *   An array of JavaScript files to aggregate and compress into one file.
+ *
  * @return
- *   The name of the JS file, or FALSE if the file could not be saved.
+ *   The URI of the cache file, or FALSE if the file could not be saved.
  */
-function drupal_build_js_cache($files, $filename) {
+function drupal_build_js_cache($files) {
   $contents = '';
+  $uri = '';
+  $map = variable_get('drupal_js_cache_files', array());
+  $key = hash('sha256', serialize($files));
+  if (isset($map[$key])) {
+    $uri = $map[$key];
+  }
 
-  // Create the js/ within the files folder.
-  $jspath = 'public://js';
-  $uri = $jspath . '/' . $filename;
-
-  if (!file_exists($uri)) {
+  if (empty($uri) || !file_exists($uri)) {
     // Build aggregate JS file.
     foreach ($files as $path => $info) {
       if ($info['preprocess']) {
@@ -4281,22 +4327,30 @@ function drupal_build_js_cache($files, $filename) {
         $contents .= file_get_contents($path) . ';';
       }
     }
-
+    // Prefix filename to prevent blocking by firewalls which reject files
+    // starting with "ad*".
+    $filename = 'js_' . drupal_hash_base64($contents) . '.js';
+    // Create the js/ within the files folder.
+    $jspath = 'public://js';
+    $uri = $jspath . '/' . $filename;
     // Create the JS file.
     file_prepare_directory($jspath, FILE_CREATE_DIRECTORY);
     if (!file_unmanaged_save_data($contents, $uri, FILE_EXISTS_REPLACE)) {
       return FALSE;
     }
+    $map[$key] = $uri;
+    variable_set('drupal_js_cache_files', $map);
   }
   return $uri;
 }
 
 /**
- * Delete all cached JS files.
+ * Deletes old cached JavaScript files and variables.
  */
 function drupal_clear_js_cache() {
-  file_scan_directory('public://js', '/.*/', array('callback' => 'file_unmanaged_delete'));
-  variable_set('javascript_parsed', array());
+  variable_del('javascript_parsed');
+  variable_del('drupal_js_cache_files');
+  file_scan_directory('public://js', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
 }
 
 /**
