@@ -1105,7 +1105,7 @@ function field_purge_instance($instance) {
 function field_purge_field($field) {
   $instances = field_read_instances(array('field_id' => $field['id']), array('include_deleted' => 1));
   if (count($instances) > 0) {
-    throw new FieldException("Attempt to purge a field that still has instances.");
+    throw new FieldException("Attempt to purge a field, @field_name that still has instances.", array('@field_name' => $field['field_name']));
   }
 
   db_delete('field_config')
