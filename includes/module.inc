@@ -375,10 +375,10 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       // Now install the module if necessary.
       if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
         drupal_install_schema($module);
-        // Allow the module to perform install tasks.
-        module_invoke($module, 'install');
         $versions = drupal_get_schema_versions($module);
         drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
+        // Allow the module to perform install tasks.
+        module_invoke($module, 'install');
         // Record the fact that it was installed.
         $modules_installed[] = $module;
         watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
