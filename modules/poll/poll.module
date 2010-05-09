@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.347 2010/05/06 05:59:31 webchick Exp $
+// $Id: poll.module,v 1.348 2010/05/09 13:37:32 dries Exp $
 
 /**
  * @file
@@ -364,8 +364,6 @@ function poll_more_choices_submit($form, &$form_state) {
 }
 
 function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight = 0, $size = 10) {
-  $admin = user_access('administer nodes');
-
   $form = array(
     '#tree' => TRUE,
   );
