@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.27 2010/05/01 08:12:23 dries Exp $
+// $Id: file.module,v 1.28 2010/05/09 19:34:26 dries Exp $
 
 /**
  * @file
@@ -650,10 +650,10 @@ function theme_file_link($variables) {
 
   // Use the description as the link text if available.
   if (empty($file->description)) {
-    $link_text = check_plain($file->filename);
+    $link_text = $file->filename;
   }
   else {
-    $link_text = check_plain($file->description);
+    $link_text = $file->description;
     $options['attributes']['title'] = check_plain($file->filename);
   }
 
