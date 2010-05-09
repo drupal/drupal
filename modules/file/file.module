@@ -650,10 +650,10 @@ function theme_file_link($variables) {
 
   // Use the description as the link text if available.
   if (empty($file->description)) {
-    $link_text = check_plain($file->filename);
+    $link_text = $file->filename;
   }
   else {
-    $link_text = check_plain($file->description);
+    $link_text = $file->description;
     $options['attributes']['title'] = check_plain($file->filename);
   }
 
