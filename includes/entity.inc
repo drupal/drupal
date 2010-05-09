@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.7 2010/03/27 05:52:49 webchick Exp $
+// $Id: entity.inc,v 1.8 2010/05/09 13:27:31 dries Exp $
 
 /**
  * Interface for entity controller classes.
@@ -187,14 +187,6 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
       $entity_revision_fields = drupal_map_assoc(drupal_schema_fields_sql($this->revisionTable));
       // The id field is provided by entity, so remove it.
       unset($entity_revision_fields[$this->idKey]);
-
-      // Change timestamp to revision_timestamp, and revision uid to
-      // revision_uid before adding them to the query.
-      // TODO: This is node specific and has to be moved into NodeController.
-      unset($entity_revision_fields['timestamp']);
-      $query->addField('revision', 'timestamp', 'revision_timestamp');
-      unset($entity_revision_fields['uid']);
-      $query->addField('revision', 'uid', 'revision_uid');
 
       // Remove all fields from the base table that are also fields by the same
       // name in the revision table.
