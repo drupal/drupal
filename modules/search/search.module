@@ -103,12 +103,25 @@ define('PREG_CLASS_PUNCTUATION',
   '\x{ff65}');
 
 /**
- * Matches all CJK characters that are candidates for auto-splitting
- * (Chinese, Japanese, Korean).
- * Contains kana and BMP ideographs.
+ * Matches CJK (Chinese, Japanese, Korean) letter-like characters.
+ *
+ * This list is derived from the "East Asian Scripts" section of
+ * http://www.unicode.org/charts/index.html, as well as a comment on
+ * http://unicode.org/reports/tr11/tr11-11.html listing some character
+ * ranges that are reserved for additional CJK ideographs.
+ *
+ * The character ranges do not include numbers, punctuation, or symbols, since
+ * these are handled separately in search. Note that radicals and strokes are
+ * considered symbols. (See
+ * http://www.unicode.org/Public/UNIDATA/extracted/DerivedGeneralCategory.txt)
+ *
+ * @see search_expand_cjk()
  */
-define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}' .
-'\x{4e00}-\x{9fbb}\x{f900}-\x{fad9}');
+define('PREG_CLASS_CJK', '\x{1100}-\x{11FF}\x{3040}-\x{309F}\x{30A1}-\x{318E}' .
+  '\x{31A0}-\x{31B7}\x{31F0}-\x{31FF}\x{3400}-\x{4DBF}\x{4E00}-\x{9FCF}' .
+  '\x{A000}-\x{A48F}\x{A4D0}-\x{A4FD}\x{A960}-\x{A97F}\x{AC00}-\x{D7FF}' .
+  '\x{F900}-\x{FAFF}\x{FF21}-\x{FF3A}\x{FF41}-\x{FF5A}\x{FF66}-\x{FFDC}' .
+  '\x{20000}-\x{2FFFD}\x{30000}-\x{3FFFD}');
 
 /**
  * Implements hook_help().
@@ -447,28 +460,45 @@ function search_simplify($text) {
 }
 
 /**
- * Basic CJK tokenizer. Simply splits a string into consecutive, overlapping
- * sequences of characters ('minimum_word_size' long).
+ * Splits CJK (Chinese, Japanese, Korean) text into tokens.
+ *
+ * The Search module matches exact words, where a word is defined to be a
+ * sequence of characters delimited by spaces or punctuation. CJK languages are
+ * written in long strings of characters, though, not split up into words. So
+ * in order to allow search matching, we split up CJK text into tokens
+ * consisting of consecutive, overlapping sequences of characters whose length
+ * is equal to the 'minimum_word_size' variable. This tokenizing is only done if
+ * the 'overlap_cjk' variable is TRUE.
+ *
+ * @param $matches
+ *   This function is a callback for preg_replace_callback(), which is called
+ *   from search_simplify(). So, $matches is an array of regular expression
+ *   matches, which means that $matches[0] contains the matched text -- a string
+ *   of CJK characters to tokenize.
+ *
+ * @return
+ *   Tokenized text, starting and ending with a space character.
  */
 function search_expand_cjk($matches) {
   $min = variable_get('minimum_word_size', 3);
   $str = $matches[0];
-  $l = drupal_strlen($str);
-  // Passthrough short words
-  if ($l <= $min) {
+  $length = drupal_strlen($str);
+  // If the text is shorter than the minimum word size, don't tokenize it.
+  if ($length <= $min) {
     return ' ' . $str . ' ';
   }
   $tokens = ' ';
-  // FIFO queue of characters
+  // Build a FIFO queue of characters.
   $chars = array();
-  // Begin loop
-  for ($i = 0; $i < $l; ++$i) {
-    // Grab next character
+  for ($i = 0; $i < $length; $i++) {
+    // Add the next character off the beginning of the string to the queue.
     $current = drupal_substr($str, 0, 1);
     $str = substr($str, strlen($current));
     $chars[] = $current;
     if ($i >= $min - 1) {
+      // Make a token of $min characters, and add it to the token string.
       $tokens .= implode('', $chars) . ' ';
+      // Shift out the first character in the queue.
       array_shift($chars);
     }
   }
