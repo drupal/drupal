@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.57 2010/04/24 07:19:09 dries Exp $
+// $Id: field.crud.inc,v 1.58 2010/05/09 13:29:06 dries Exp $
 
 /**
  * @file
@@ -127,6 +127,8 @@
  *     field_attach_insert(), or field_attach_update().
  * - default_value_function (string)
  *     The name of the function, if any, that will provide a default value.
+ * - default_value (array)
+ *     If default_value_function is not set, then fixed values can be provided.
  * - deleted (integer, read-only)
  *     TRUE if this instance has been deleted, FALSE otherwise.
  *     Deleted instances are ignored by the Field Attach API.
@@ -225,6 +227,8 @@
  *   The $field array with the id property filled in.
  * @throw
  *   FieldException
+ *
+ * See: @link field_structs Field API data structures @endlink.
  */
 function field_create_field($field) {
   // Field name is required.
@@ -613,6 +617,8 @@ function field_delete_field($field_name) {
  *   The $instance array with the id property filled in.
  * @throw
  *   FieldException
+ *
+ * See: @link field_structs Field API data structures @endlink.
  */
 function field_create_instance($instance) {
   $field = field_read_field($instance['field_name']);
