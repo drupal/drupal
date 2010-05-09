@@ -1727,18 +1727,13 @@ function install_configure_form_submit($form, &$form_state) {
     }
   }
 
-  $form_state['old_values'] = $form_state['values'];
-  $form_state['values'] = $form_state['values']['account'];
-
   // We precreated user 1 with placeholder values. Let's save the real values.
   $account = user_load(1);
-  $merge_data = array('init' => $form_state['values']['mail'], 'roles' => array(), 'status' => 1);
-  user_save($account, array_merge($form_state['values'], $merge_data));
+  $merge_data = array('init' => $form_state['values']['account']['mail'], 'roles' => !empty($account->roles) ? $account->roles : array(), 'status' => 1);
+  user_save($account, array_merge($form_state['values']['account'], $merge_data));
   // Load global $user and perform final login tasks.
   $user = user_load(1);
   user_login_finalize();
-  $form_state['values'] = $form_state['old_values'];
-  unset($form_state['old_values']);
 
   if (isset($form_state['values']['clean_url'])) {
     variable_set('clean_url', $form_state['values']['clean_url']);
