@@ -1,4 +1,4 @@
-// $Id: block.js,v 1.15 2010/04/09 12:24:53 dries Exp $
+// $Id: block.js,v 1.16 2010/05/09 13:57:59 dries Exp $
 (function ($) {
 
 /**
@@ -64,8 +64,8 @@ Drupal.behaviors.blockSettingsSummary = {
  */
 Drupal.behaviors.blockDrag = {
   attach: function (context, settings) {
-    // tableDrag is required for this behavior.
-    if (typeof Drupal.tableDrag == 'undefined') {
+    // tableDrag is required and we should be on the blocks admin page.
+    if (typeof Drupal.tableDrag == 'undefined' || typeof Drupal.tableDrag.blocks == 'undefined') {
       return;
     }
 
