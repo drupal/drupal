@@ -3651,4 +3651,16 @@ class NodeController extends DrupalDefaultEntityController {
     $this->hookLoadArguments[] = array_keys($typed_nodes);
     parent::attachLoad($nodes, $revision_id);
   }
+
+  protected function buildQuery($ids, $conditions, $revision_id) {
+    // Ensure that uid is taken from the {node} table,
+    // alias timestamp to revision_timestamp and add revision_uid.
+    $query = parent::buildQuery($ids, $conditions, $revision_id);
+    $fields =& $query->getFields();
+    unset($fields['timestamp']);
+    $query->addField('revision', 'timestamp', 'revision_timestamp');
+    $fields['uid']['table'] = 'base';
+    $query->addField('revision', 'uid', 'revision_uid');
+    return $query;
+  }
 }
