@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.58 2010/05/09 13:29:06 dries Exp $
+// $Id: field.crud.inc,v 1.59 2010/05/09 13:40:48 dries Exp $
 
 /**
  * @file
@@ -1105,7 +1105,7 @@ function field_purge_instance($instance) {
 function field_purge_field($field) {
   $instances = field_read_instances(array('field_id' => $field['id']), array('include_deleted' => 1));
   if (count($instances) > 0) {
-    throw new FieldException("Attempt to purge a field that still has instances.");
+    throw new FieldException("Attempt to purge a field, @field_name that still has instances.", array('@field_name' => $field['field_name']));
   }
 
   db_delete('field_config')
