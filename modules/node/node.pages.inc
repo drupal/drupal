@@ -277,7 +277,6 @@ function node_form($form, &$form_state, $node) {
     );
   }
   $form['#validate'][] = 'node_form_validate';
-  $form['#theme'] = array($node->type . '_node_form', 'node_form');
 
   $form['#builder_function'] = 'node_form_submit_build_node';
   field_attach_form('node', $node, $form, $form_state, $node->language);
