@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.874 2010/05/06 05:59:31 webchick Exp $
+// $Id: comment.module,v 1.875 2010/05/10 20:12:21 webchick Exp $
 
 /**
  * @file
@@ -581,6 +581,9 @@ function theme_comment_block() {
 
   if ($items) {
     return theme('item_list', array('items' => $items));
+  }
+  else {
+    return t('No comments available.');
   }
 }
 
