@@ -416,6 +416,26 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Test Folder creation
+ */
+class SimpleTestFolderTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Testing SimpleTest setUp',
+      'description' => "This test will check SimpleTest's treatment of hook_install during setUp.  Image module is used for test.",
+      'group' => 'SimpleTest',
+    );
+  }
+
+  function testFolderSetup() {
+    if (module_exists('image')) {
+      $path = file_directory_path() . '/styles';
+      $this->assertTrue(file_prepare_directory($path, FALSE), "Directory created.");
+    }
+  }
+}
+
+/**
  * Test required modules for tests.
  */
 class SimpleTestMissingDependentModuleUnitTest extends DrupalUnitTestCase {
