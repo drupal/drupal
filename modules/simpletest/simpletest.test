@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.40 2010/03/31 20:05:06 dries Exp $
+// $Id: simpletest.test,v 1.41 2010/05/10 06:38:23 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -412,6 +412,26 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
     drupal_mail_system('drupal_mail_test', $index)->mail($message);
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test_4'));
     $this->assertEqual(count($captured_emails), 2, t('All e-mails with the same id are returned when filtering by id.'), t('E-mail'));
+  }
+}
+
+/**
+ * Test Folder creation
+ */
+class SimpleTestFolderTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Testing SimpleTest setUp',
+      'description' => "This test will check SimpleTest's treatment of hook_install during setUp.  Image module is used for test.",
+      'group' => 'SimpleTest',
+    );
+  }
+
+  function testFolderSetup() {
+    if (module_exists('image')) {
+      $path = file_directory_path() . '/styles';
+      $this->assertTrue(file_prepare_directory($path, FALSE), "Directory created.");
+    }
   }
 }
 

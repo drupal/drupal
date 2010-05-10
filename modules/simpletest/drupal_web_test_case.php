@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.216 2010/05/06 05:59:31 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.217 2010/05/10 06:38:23 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1159,6 +1159,11 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     $this->preloadRegistry();
 
+    // Set path variables.
+    variable_set('file_public_path', $public_files_directory);
+    variable_set('file_private_path', $private_files_directory);
+    variable_set('file_temporary_path', $temp_files_directory);
+
     // Include the default profile.
     variable_set('install_profile', 'standard');
     $profile_details = install_profile_info('standard', 'en');
@@ -1212,11 +1217,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Set up English language.
     unset($GLOBALS['conf']['language_default']);
     $language = language_default();
-
-    // Set path variables
-    variable_set('file_public_path', $public_files_directory);
-    variable_set('file_private_path', $private_files_directory);
-    variable_set('file_temporary_path', $temp_files_directory);
 
     // Use the test mail class instead of the default mail handler class.
     variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
