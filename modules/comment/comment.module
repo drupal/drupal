@@ -582,6 +582,9 @@ function theme_comment_block() {
   if ($items) {
     return theme('item_list', array('items' => $items));
   }
+  else {
+    return t('No comments available.');
+  }
 }
 
 /**
