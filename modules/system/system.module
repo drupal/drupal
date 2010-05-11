@@ -2932,9 +2932,9 @@ function system_send_email_action_form($context) {
 function system_send_email_action_validate($form, $form_state) {
   $form_values = $form_state['values'];
   // Validate the configuration form.
-  if (!valid_email_address($form_values['recipient']) && $form_values['recipient'] != '%author') {
+  if (!valid_email_address($form_values['recipient']) && strpos($form_values['recipient'], ':mail') === FALSE) {
     // We want the literal %author placeholder to be emphasized in the error message.
-    form_set_error('recipient', t('Enter a valid email address or %author.', array('%author' => '%author')));
+    form_set_error('recipient', t('Enter a valid email address or use a token e-mail address such as %author.', array('%author' => '[node:author:mail]')));
   }
 }
 
