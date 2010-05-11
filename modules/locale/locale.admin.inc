@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.admin.inc,v 1.12 2010/04/24 14:49:14 dries Exp $
+// $Id: locale.admin.inc,v 1.13 2010/05/11 10:49:37 dries Exp $
 
 /**
  * @file
@@ -337,13 +337,23 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
   }
 
   $form_state['redirect'] = 'admin/config/regional/language';
-  return;
 }
 
 /**
  * Validate the language editing form. Reused for custom language addition too.
  */
 function locale_languages_edit_form_validate($form, &$form_state) {
+  // Ensure sane field values for langcode, name, and native.
+  if (!isset($form['langcode_view']) && preg_match('@[^a-zA-Z_-]@', $form_state['values']['langcode'])) {
+    form_set_error('langcode', t('%field may only contain characters a-z, underscores, or hyphens.', array('%field' => $form['langcode']['#title'])));
+  }
+  if ($form_state['values']['name'] != check_plain($form_state['values']['name'])) {
+    form_set_error('name', t('%field cannot contain any markup.', array('%field' => $form['name']['#title'])));
+  }
+  if ($form_state['values']['native'] != check_plain($form_state['values']['native'])) {
+    form_set_error('native', t('%field cannot contain any markup.', array('%field' => $form['native']['#title'])));
+  }
+
   if (!empty($form_state['values']['domain']) && !empty($form_state['values']['prefix'])) {
     form_set_error('prefix', t('Domain and path prefix values should not be set at the same time.'));
   }
