@@ -18,7 +18,7 @@
  *
  * This is a cooperative, advisory lock system. Any long-running operation
  * that could potentially be attempted in parallel by multiple requests should
- * try to acquire a lock before proceeding. By obtaiing a lock, one request
+ * try to acquire a lock before proceeding. By obtaining a lock, one request
  * notifies any other requests that a specific opertation is in progress which
  * must not be executed in parallel.
  *
