@@ -294,8 +294,6 @@ function poll_more_choices_submit($form, &$form_state) {
 }
 
 function _poll_choice_form($delta, $value = '', $votes = 0) {
-  $admin = user_access('administer nodes');
-
   $form = array(
     '#tree' => TRUE,
   );
@@ -308,17 +306,15 @@ function _poll_choice_form($delta, $value = '', $votes = 0) {
     '#default_value' => $value,
     '#parents' => array('choice', $delta, 'chtext'),
   );
-
-  if ($admin) {
-    $form['chvotes'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Votes for choice @n', array('@n' => ($delta + 1))),
-      '#default_value' => $votes,
-      '#size' => 5,
-      '#maxlength' => 7,
-      '#parents' => array('choice', $delta, 'chvotes'),
-    );
-  }
+  $form['chvotes'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Votes for choice @n', array('@n' => ($delta + 1))),
+    '#default_value' => $votes,
+    '#size' => 5,
+    '#maxlength' => 7,
+    '#parents' => array('choice', $delta, 'chvotes'),
+    '#access' => user_access('administer nodes'),
+  );
 
   return $form;
 }
