@@ -1020,6 +1020,10 @@ function _drupal_bootstrap($phase) {
       // Initialize the default database.
       require_once './includes/database.inc';
       db_set_active();
+      // Allow specifying alternate lock implementations in settings.php, like
+      // those using APC or memcached.
+      require_once variable_get('lock_inc', './includes/lock.inc');
+      lock_init();
       break;
 
     case DRUPAL_BOOTSTRAP_ACCESS:
@@ -1060,8 +1064,6 @@ function _drupal_bootstrap($phase) {
         exit;
       }
       // Prepare for non-cached page workflow.
-      require_once variable_get('lock_inc', './includes/lock.inc');
-      lock_init();
       drupal_page_header();
       break;
 
