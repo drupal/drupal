@@ -1972,6 +1972,20 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $job = $query->execute()->fetchField();
     $this->assertEqual($job, 'Songwriter', t('Correct data retrieved.'));
   }
+
+  /**
+   * Confirm we can join on a single table twice with a dynamic alias.
+   */
+  function testJoinTwice() {
+    $query = db_select('test')->fields('test');
+    $alias = $query->join('test', 'test', 'test.job = %alias.job');
+    $query->addField($alias, 'name', 'othername');
+    $query->addField($alias, 'job', 'otherjob');
+    $query->where("$alias.name <> test.name");
+    $crowded_job = $query->execute()->fetch();
+    $this->assertEqual($crowded_job->job, $crowded_job->otherjob, t('Correctly joined same table twice.'));
+    $this->assertNotEqual($crowded_job->name, $crowded_job->othername, t('Correctly joined same table twice.'));
+  }
 }
 
 class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {

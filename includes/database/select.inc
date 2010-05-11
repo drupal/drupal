@@ -232,7 +232,9 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *   this clause should use a named placeholder and the value or values to
    *   insert should be passed in the 4th parameter. For the first table joined
    *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
+   *   table. The token %alias can be used in this string to be replaced with
+   *   the actual alias. This is useful when $alias is modified by the database
+   *   system, for example, when joining the same table more than once.
    * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
    * @return
@@ -253,7 +255,9 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *   this clause should use a named placeholder and the value or values to
    *   insert should be passed in the 4th parameter. For the first table joined
    *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
+   *   table. The token %alias can be used in this string to be replaced with
+   *   the actual alias. This is useful when $alias is modified by the database
+   *   system, for example, when joining the same table more than once.
    * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
    * @return
@@ -274,7 +278,9 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *   this clause should use a named placeholder and the value or values to
    *   insert should be passed in the 4th parameter. For the first table joined
    *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
+   *   table. The token %alias can be used in this string to be replaced with
+   *   the actual alias. This is useful when $alias is modified by the database
+   *   system, for example, when joining the same table more than once.
    * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
    * @return
@@ -295,7 +301,9 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *   this clause should use a named placeholder and the value or values to
    *   insert should be passed in the 4th parameter. For the first table joined
    *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
+   *   table. The token %alias can be used in this string to be replaced with
+   *   the actual alias. This is useful when $alias is modified by the database
+   *   system, for example, when joining the same table more than once.
    * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
    * @return
@@ -324,7 +332,9 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    *   this clause should use a named placeholder and the value or values to
    *   insert should be passed in the 4th parameter. For the first table joined
    *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
+   *   table. The token %alias can be used in this string to be replaced with
+   *   the actual alias. This is useful when $alias is modified by the database
+   *   system, for example, when joining the same table more than once.
    * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
    * @return
@@ -1209,6 +1219,10 @@ class SelectQuery extends Query implements SelectQueryInterface {
       $alias_candidate = $alias . '_' . $count++;
     }
     $alias = $alias_candidate;
+
+    if (is_string($condition)) {
+      $condition = str_replace('%alias', $alias, $condition);
+    }
 
     $this->tables[$alias] = array(
       'join type' => $type,
