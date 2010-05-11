@@ -1202,7 +1202,8 @@ function ip_address() {
       if (!empty($reverse_proxy_addresses) && in_array($ip_address, $reverse_proxy_addresses, TRUE)) {
         // If there are several arguments, we need to check the most
         // recently added one, i.e. the last one.
-        $ip_address = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+        $ip_address_parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $ip_address = array_pop($ip_address_parts);
       }
     }
   }
