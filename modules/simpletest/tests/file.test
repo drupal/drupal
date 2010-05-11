@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.53 2010/04/11 18:33:44 dries Exp $
+// $Id: file.test,v 1.54 2010/05/11 10:56:04 dries Exp $
 
 /**
  *  @file
@@ -2022,7 +2022,6 @@ class FileURLRewritingTest extends FileTestCase {
 
   function setUp() {
     parent::setUp('file_test');
-    variable_set('file_test_hook_file_url_alter', TRUE);
   }
 
   /**
@@ -2031,12 +2030,33 @@ class FileURLRewritingTest extends FileTestCase {
   function testShippedFileURL()  {
     // Test generating an URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
+
+    // Test alteration of file URLs to use a CDN.
+    variable_set('file_test_hook_file_url_alter', 'cdn');
     $filepath = 'misc/jquery.js';
     $url = file_create_url($filepath);
-    $this->assertEqual(FILE_URL_TEST_CDN_1 . '/' . $filepath, $url, t('Correctly generated a URL for a shipped file.'));
+    $this->assertEqual(FILE_URL_TEST_CDN_1 . '/' . $filepath, $url, t('Correctly generated a CDN URL for a shipped file.'));
     $filepath = 'misc/favicon.ico';
     $url = file_create_url($filepath);
-    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $filepath, $url, t('Correctly generated a URL for a shipped file.'));
+    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $filepath, $url, t('Correctly generated a CDN URL for a shipped file.'));
+
+    // Test alteration of file URLs to use root-relative URLs.
+    variable_set('file_test_hook_file_url_alter', 'root-relative');
+    $filepath = 'misc/jquery.js';
+    $url = file_create_url($filepath);
+    $this->assertEqual(base_path() . '/' . $filepath, $url, t('Correctly generated a root-relative URL for a shipped file.'));
+    $filepath = 'misc/favicon.ico';
+    $url = file_create_url($filepath);
+    $this->assertEqual(base_path() . '/' . $filepath, $url, t('Correctly generated a root-relative URL for a shipped file.'));
+
+    // Test alteration of file URLs to use protocol-relative URLs.
+    variable_set('file_test_hook_file_url_alter', 'protocol-relative');
+    $filepath = 'misc/jquery.js';
+    $url = file_create_url($filepath);
+    $this->assertEqual('/' . base_path() . '/' . $filepath, $url, t('Correctly generated a protocol-relative URL for a shipped file.'));
+    $filepath = 'misc/favicon.ico';
+    $url = file_create_url($filepath);
+    $this->assertEqual('/' . base_path() . '/' . $filepath, $url, t('Correctly generated a protocol-relative URL for a shipped file.'));
   }
 
   /**
@@ -2044,9 +2064,24 @@ class FileURLRewritingTest extends FileTestCase {
    */
   function testPublicCreatedFileURL() {
     // Test generating an URL to a created file.
+
+    // Test alteration of file URLs to use a CDN.
+    variable_set('file_test_hook_file_url_alter', 'cdn');
     $file = $this->createFile();
     $url = file_create_url($file->uri);
-    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a URL for a created file.'));
+    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a CDN URL for a created file.'));
+
+    // Test alteration of file URLs to use root-relative URLs.
+    variable_set('file_test_hook_file_url_alter', 'root-relative');
+    $file = $this->createFile();
+    $url = file_create_url($file->uri);
+    $this->assertEqual(base_path() . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a root-relative URL for a created file.'));
+
+    // Test alteration of file URLs to use a protocol-relative URLs.
+    variable_set('file_test_hook_file_url_alter', 'protocol-relative');
+    $file = $this->createFile();
+    $url = file_create_url($file->uri);
+    $this->assertEqual('/' . base_path() . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a protocol-relative URL for a created file.'));
   }
 }
 

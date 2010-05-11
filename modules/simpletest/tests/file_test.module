@@ -1,5 +1,5 @@
 <?php
-// $Id: file_test.module,v 1.21 2010/03/26 17:14:45 dries Exp $
+// $Id: file_test.module,v 1.22 2010/05/11 10:56:04 dries Exp $
 
 /**
  * @file
@@ -286,41 +286,90 @@ function file_test_file_delete($file) {
 function file_test_file_url_alter(&$uri) {
   // Only run this hook when this variable is set. Otherwise, we'd have to add
   // another hidden test module just for this hook.
-  if (!variable_get('file_test_hook_file_url_alter', FALSE)) {
+  $alter_mode = variable_get('file_test_hook_file_url_alter', FALSE);
+  if (!$alter_mode) {
     return;
   }
+  // Test alteration of file URLs to use a CDN.
+  elseif ($alter_mode == 'cdn') {
+    $cdn_extensions = array('css', 'js', 'gif', 'jpg', 'jpeg', 'png');
 
-  $cdn_extensions = array('css', 'js', 'gif', 'jpg', 'jpeg', 'png');
+    // Most CDNs don't support private file transfers without a lot of hassle,
+    // so don't support this in the common case.
+    $schemes = array('public');
 
-  // Most CDNs don't support private file transfers without a lot of hassle,
-  // so don't support this in the common case.
-  $schemes = array('public');
+    $scheme = file_uri_scheme($uri);
 
-  $scheme = file_uri_scheme($uri);
+    // Only serve shipped files and public created files from the CDN.
+    if (!$scheme || in_array($scheme, $schemes)) {
+      // Shipped files.
+      if (!$scheme) {
+        $path = $uri;
+      }
+      // Public created files.
+      else {
+        $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+        $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+      }
 
-  // Only serve shipped files and public created files from the CDN.
-  if (!$scheme || in_array($scheme, $schemes)) {
-    // Shipped files.
-    if (!$scheme) {
-      $path = $uri;
+      // Clean up Windows paths.
+      $path = str_replace('\\', '/', $path);
+
+      // Serve files with one of the CDN extensions from CDN 1, all others from
+      // CDN 2.
+      $pathinfo = pathinfo($path);
+      if (array_key_exists('extension', $pathinfo) && in_array($pathinfo['extension'], $cdn_extensions)) {
+        $uri = FILE_URL_TEST_CDN_1 . '/' . $path;
+      }
+      else {
+        $uri = FILE_URL_TEST_CDN_2 . '/' . $path;
+      }
     }
-    // Public created files.
-    else {
-      $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
-      $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
-    }
+  }
+  // Test alteration of file URLs to use root-relative URLs.
+  elseif ($alter_mode == 'root-relative') {
+    // Only serve shipped files and public created files with root-relative
+    // URLs.
+    $scheme = file_uri_scheme($uri);
+    if (!$scheme || $scheme == 'public') {
+      // Shipped files.
+      if (!$scheme) {
+        $path = $uri;
+      }
+      // Public created files.
+      else {
+        $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+        $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+      }
 
-    // Clean up Windows paths.
-    $path = str_replace('\\', '/', $path);
+      // Clean up Windows paths.
+      $path = str_replace('\\', '/', $path);
 
-    // Serve files with one of the CDN extensions from CDN 1, all others from
-    // CDN 2.
-    $pathinfo = pathinfo($path);
-    if (array_key_exists('extension', $pathinfo) && in_array($pathinfo['extension'], $cdn_extensions)) {
-      $uri = FILE_URL_TEST_CDN_1 . '/' . $path;
+      // Generate a root-relative URL.
+      $uri = base_path() . '/' . $path;
     }
-    else {
-      $uri = FILE_URL_TEST_CDN_2 . '/' . $path;
+  }
+  // Test alteration of file URLs to use protocol-relative URLs.
+  elseif ($alter_mode == 'protocol-relative') {
+    // Only serve shipped files and public created files with protocol-relative
+    // URLs.
+    $scheme = file_uri_scheme($uri);
+    if (!$scheme || $scheme == 'public') {
+      // Shipped files.
+      if (!$scheme) {
+        $path = $uri;
+      }
+      // Public created files.
+      else {
+        $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+        $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+      }
+
+      // Clean up Windows paths.
+      $path = str_replace('\\', '/', $path);
+
+      // Generate a protocol-relative URL.
+      $uri = '/' . base_path() . '/' . $path;
     }
   }
 }
