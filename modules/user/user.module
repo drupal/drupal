@@ -1335,7 +1335,6 @@ function user_login_final_validate($form, &$form_state) {
   global $user;
   if (!$user->uid) {
     form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
-    watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
   }
 }
 
@@ -1367,6 +1366,9 @@ function user_authenticate($form_values = array()) {
     $user = $account;
     user_authenticate_finalize($form_values);
     return $user;
+  }
+  else {
+    watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_values['name']));
   }
 }
 
