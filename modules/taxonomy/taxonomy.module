@@ -14,7 +14,7 @@ function taxonomy_perm() {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function taxonomy_theme() {
   return array(
@@ -412,6 +412,21 @@ function taxonomy_del_term($tid) {
 
 /**
  * Generate a form element for selecting terms from a vocabulary.
+ *
+ * @param $vid
+ *   The vocabulary ID to generate a form element for.
+ * @param $value
+ *   The existing value of the term(s) in this vocabulary to use by default.
+ * @param $help
+ *   Optional help text to use for the form element. If specified, this value
+ *   MUST be properly sanitized and filtered (e.g. with filter_xss_admin() or
+ *   check_plain() if it is user-supplied) to prevent XSS vulnerabilities. If
+ *   omitted, the help text stored with the vocaulary (if any) will be used.
+ * @return
+ *   An array describing a form element to select terms for a vocabulary.
+ *
+ * @see _taxonomy_term_select()
+ * @see filter_xss_admin()
  */
 function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
   $vocabulary = taxonomy_vocabulary_load($vid);
