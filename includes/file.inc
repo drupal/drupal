@@ -343,9 +343,21 @@ function file_create_url($uri) {
   $scheme = file_uri_scheme($uri);
 
   if (!$scheme) {
-    // If this is not a properly formatted stream, then it is a shipped file.
-    // Therefor, return the URI with the base URL prepended.
-    return $GLOBALS['base_url'] . '/' . $uri;
+    // Allow for:
+    // - root-relative URIs (e.g. /foo.jpg in http://example.com/foo.jpg)
+    // - protocol-relative URIs (e.g. //bar.jpg, which is expanded to
+    //   http://example.com/bar.jpg by the browser when viewing a page over
+    //   HTTP and to https://example.com/bar.jpg when viewing a HTTPS page)
+    // Both types of relative URIs are characterized by a leading slash, hence
+    // we can use a single check.
+    if (drupal_substr($uri, 0, 1) == '/') {
+      return $uri;
+    }
+    else {
+      // If this is not a properly formatted stream, then it is a shipped file.
+      // Therefor, return the URI with the base URL prepended.
+      return $GLOBALS['base_url'] . '/' . $uri;
+    }
   }
   elseif ($scheme == 'http' || $scheme == 'https') {
     // Check for http so that we don't have to implement getExternalUrl() for
