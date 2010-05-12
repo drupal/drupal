@@ -589,7 +589,7 @@ function locale_language_negotiation_info() {
     'callbacks' => array('language' => 'locale_language_from_browser'),
     'file' => $file,
     'weight' => -2,
-    'cache' => CACHE_DISABLED,
+    'cache' => 0,
     'name' => t('Browser'),
     'description' => t("Determine the language from the browser's language settings."),
   );

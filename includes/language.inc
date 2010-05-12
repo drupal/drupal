@@ -283,7 +283,7 @@ function language_provider_invoke($provider_id, $provider = NULL) {
 
     // If the language provider has no cache preference or this is satisfied
     // we can execute the callback.
-    $cache = !isset($provider['cache']) || $user->uid || $provider['cache'] == variable_get('cache', CACHE_DISABLED);
+    $cache = !isset($provider['cache']) || $user->uid || $provider['cache'] == variable_get('cache', 0);
     $callback = isset($provider['callbacks']['language']) ? $provider['callbacks']['language'] : FALSE;
     $langcode = $cache && function_exists($callback) ? $callback($languages) : FALSE;
     $results[$provider_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;

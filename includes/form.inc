@@ -651,7 +651,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // We'll clear out the cached copies of the form and its stored data
       // here, as we've finished with them. The in-memory copies are still
       // here, though.
-      if (variable_get('cache', CACHE_DISABLED) == CACHE_DISABLED && !empty($form_state['values']['form_build_id'])) {
+      if (!variable_get('cache', 0) && !empty($form_state['values']['form_build_id'])) {
         cache_clear_all('form_' . $form_state['values']['form_build_id'], 'cache_form');
         cache_clear_all('storage_' . $form_state['values']['form_build_id'], 'cache_form');
       }

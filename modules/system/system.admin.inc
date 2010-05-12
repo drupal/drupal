@@ -1622,12 +1622,12 @@ function system_performance_settings() {
     '#title' => t('Caching'),
   );
 
-  $cache = variable_get('cache', CACHE_DISABLED);
+  $cache = variable_get('cache', 0);
   $form['caching']['cache'] = array(
-    '#type' => 'radios',
-    '#title' => t('Page cache for anonymous users'),
+    '#type' => 'checkbox',
+    '#title' => t('Cache pages for anonymous users'),
     '#default_value' => $cache,
-    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Normal (recommended)')),
+    '#weight' => -2,
   );
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = '<' . t('none') . '>';
@@ -1636,7 +1636,14 @@ function system_performance_settings() {
     '#title' => t('Minimum cache lifetime'),
     '#default_value' => variable_get('cache_lifetime', 0),
     '#options' => $period,
-    '#description' => t('The minimum amount of time that will elapse before the caches are recreated.')
+    '#description' => t('Cached pages will not be re-created until at least this much time has elapsed.')
+  );
+  $form['caching']['page_cache_maximum_age'] = array(
+    '#type' => 'select',
+    '#title' => t('Expiration of cached pages'),
+    '#default_value' => variable_get('page_cache_maximum_age', 0),
+    '#options' => $period,
+    '#description' => t('The maximum time an external cache can use an old version of a page.')
   );
 
   $directory = 'public://';
@@ -1653,7 +1660,7 @@ function system_performance_settings() {
     '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
 
-  $js_hide = $cache == CACHE_DISABLED ? ' class="js-hide"' : '';
+  $js_hide = $cache ? '' : ' class="js-hide"';
   $form['bandwidth_optimization']['page_compression'] = array(
     '#type' => 'checkbox',
     '#title' => t('Compress cached pages.'),

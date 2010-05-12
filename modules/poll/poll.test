@@ -375,7 +375,7 @@ class PollVoteCheckHostname extends PollTestCase {
 
     // Enable page cache to verify that the result page is not saved in the
     // cache when anonymous voting is allowed.
-    variable_set('cache', CACHE_NORMAL);
+    variable_set('cache', 1);
 
     // Create poll.
     $title = $this->randomName();

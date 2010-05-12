@@ -151,7 +151,7 @@ function hook_language_negotiation_info() {
       'types' => array('custom_language_type'),
       'name' => t('Custom language provider'),
       'description' => t('This is a custom language provider.'),
-      'cache' => CACHE_DISABLED,
+      'cache' => 0,
     ),
   );
 }

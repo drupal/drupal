@@ -49,16 +49,6 @@ define('CACHE_PERMANENT', 0);
 define('CACHE_TEMPORARY', -1);
 
 /**
- * Indicates that page caching is disabled.
- */
-define('CACHE_DISABLED', 0);
-
-/**
- * Indicates that page caching is enabled, using "normal" mode.
- */
-define('CACHE_NORMAL', 1);
-
-/**
  * Log message severity -- Emergency: system is unusable.
  *
  * @see watchdog()
@@ -1096,7 +1086,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // do not bother caching the page in a public proxy, because the cached copy
   // will only be served to that particular user due to Vary: Cookie, unless
   // the Vary header has been replaced or unset in hook_boot() (see below).
-  $max_age = !variable_get('page_cache_invoke_hooks', TRUE) && (!isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary'])) ? variable_get('cache_lifetime', 0) : 0;
+  $max_age = !variable_get('page_cache_invoke_hooks', TRUE) && (!isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary'])) ? variable_get('page_cache_maximum_age', 0) : 0;
   $default_headers['Cache-Control'] = 'public, max-age=' . $max_age;
 
   // Entity tag should change if the output changes.
@@ -1982,16 +1972,16 @@ function _drupal_bootstrap_page_cache() {
   }
   // Check for a cache mode force from settings.php.
   if (variable_get('page_cache_without_database')) {
-    $cache_mode = CACHE_NORMAL;
+    $cache_enabled = TRUE;
   }
   else {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
-    $cache_mode = variable_get('cache');
+    $cache_enabled = variable_get('cache');
   }
   drupal_block_denied(ip_address());
   // If there is no session cookie and cache is enabled (or forced), try
   // to serve a cached page.
-  if (!isset($_COOKIE[session_name()]) && $cache_mode == CACHE_NORMAL) {
+  if (!isset($_COOKIE[session_name()]) && $cache_enabled) {
     // Make sure there is a user object because it's timestamp will be
     // checked, hook_boot might check for anonymous user etc.
     $user = drupal_anonymous_user();

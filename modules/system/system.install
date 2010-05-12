@@ -1995,7 +1995,7 @@ function system_update_7032() {
  */
 function system_update_7033() {
   if (variable_get('cache') == 2) {
-    variable_set('cache', CACHE_NORMAL);
+    variable_set('cache', 1);
     return t('Aggressive caching was disabled and replaced with normal caching. Read the page caching section in default.settings.php for more information on how to enable similar functionality.');
   }
 }
