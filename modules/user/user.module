@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1169 2010/05/07 12:55:25 dries Exp $
+// $Id: user.module,v 1.1170 2010/05/12 08:35:39 dries Exp $
 
 /**
  * @file
@@ -607,6 +607,11 @@ function user_validate_mail($mail) {
   }
 }
 
+/**
+ * Validates an image uploaded by a user.
+ *
+ * @see user_account_form()
+ */
 function user_validate_picture(&$form, &$form_state) {
   // If required, validate the uploaded picture.
   $validators = array(
@@ -915,6 +920,11 @@ function user_user_view($account) {
 
 /**
  * Helper function to add default user account fields to user registration and edit form.
+ * 
+ * @see user_account_form_validate()
+ * @see user_validate_current_pass()
+ * @see user_validate_picture()
+ * @see user_validate_email()
  */
 function user_account_form(&$form, &$form_state) {
   global $user;
@@ -1088,6 +1098,8 @@ function user_account_form(&$form, &$form_state) {
 
 /**
  * Form validation handler for the current password on the user_account_form().
+ * 
+ * @see user_account_form()
  */
 function user_validate_current_pass(&$form, &$form_state) {
   global $user;
@@ -1112,6 +1124,8 @@ function user_validate_current_pass(&$form, &$form_state) {
 
 /**
  * Form validation handler for user_account_form().
+ * 
+ * @see user_account_form()
  */
 function user_account_form_validate($form, &$form_state) {
   if ($form['#user_category'] == 'account' || $form['#user_category'] == 'register') {
