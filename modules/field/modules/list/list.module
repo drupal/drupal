@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.31 2010/05/06 05:59:31 webchick Exp $
+// $Id: list.module,v 1.32 2010/05/12 08:55:47 dries Exp $
 
 /**
  * @file
@@ -73,7 +73,6 @@ function list_field_schema($field) {
       $columns = array(
         'value' => array(
           'type' => 'float',
-          'unsigned' => TRUE,
           'not null' => FALSE,
         ),
       );
@@ -82,7 +81,6 @@ function list_field_schema($field) {
       $columns = array(
         'value' => array(
           'type' => 'int',
-          'unsigned' => TRUE,
           'not null' => FALSE,
         ),
       );
