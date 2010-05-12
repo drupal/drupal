@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.58 2010/04/20 08:19:01 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.59 2010/05/12 09:22:24 dries Exp $
 
 /**
  * @file
@@ -144,12 +144,6 @@ function theme_install_page($variables) {
 
   // Delay setting the message variable so it can be processed below.
   $variables['show_messages'] = FALSE;
-  // Variable processors invoked manually since this function and theme_update_page()
-  // are exceptions in how it works within the theme system.
-  template_preprocess($variables, 'install_page');
-  template_preprocess_maintenance_page($variables);
-  template_process($variables, 'install_page');
-  template_process_maintenance_page($variables);
 
   // Special handling of error messages
   $messages = drupal_set_message();
@@ -174,20 +168,7 @@ function theme_install_page($variables) {
     $variables['messages'] .= theme('status_messages', array('display' => 'status'));
   }
 
-  // This was called as a theme hook (not template), so we need to fix
-  // path_to_theme() for the template, to point at the actual theme rather than
-  // system module as owner of the hook. Additionally, figure out the
-  // maintenance page template to use.
-  global $theme_path, $theme_info, $base_theme_info;
-  $theme_path = dirname($theme_info->uri);
-  $base_themes = $base_theme_info;
-  // Make sure a maintenance-page.tpl.php is always found.
-  $base_themes[] = 'modules/system';
-  while (!file_exists($theme_path . '/maintenance-page.tpl.php') && $base_theme = array_shift($base_themes)) {
-    $theme_path = dirname($base_theme->uri);
-  }
-
-  return theme_render_template($theme_path . '/maintenance-page.tpl.php', $variables);
+  return theme('maintenance_page', $variables);
 }
 
 /**
@@ -205,13 +186,6 @@ function theme_update_page($variables) {
   // Set required headers.
   drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
 
-  // Variable processors invoked manually since this function and theme_install_page()
-  // are exceptions in how it works within the theme system.
-  template_preprocess($variables, 'update_page');
-  template_preprocess_maintenance_page($variables);
-  template_process($variables, 'update_page');
-  template_process_maintenance_page($variables);
-
   // Special handling of warning messages.
   $messages = drupal_set_message();
   if (isset($messages['warning'])) {
@@ -220,20 +194,7 @@ function theme_update_page($variables) {
     $variables['messages'] .= theme('status_messages', array('display' => 'warning'));
   }
 
-  // This was called as a theme hook (not template), so we need to fix
-  // path_to_theme() for the template, to point at the actual theme rather than
-  // system module as owner of the hook. Additionally, figure out the
-  // maintenance page template to use.
-  global $theme_path, $theme_info, $base_theme_info;
-  $theme_path = dirname($theme_info->uri);
-  $base_themes = $base_theme_info;
-  // Make sure a maintenance-page.tpl.php is always found.
-  $base_themes[] = 'modules/system';
-  while (!file_exists($theme_path . '/maintenance-page.tpl.php') && $base_theme = array_shift($base_themes)) {
-    $theme_path = dirname($base_theme->uri);
-  }
-
-  return theme_render_template($theme_path . '/maintenance-page.tpl.php', $variables);
+  return theme('maintenance_page', $variables);
 }
 
 /**

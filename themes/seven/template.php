@@ -1,5 +1,17 @@
 <?php
-// $Id: template.php,v 1.16 2010/04/21 06:55:23 webchick Exp $
+// $Id: template.php,v 1.17 2010/05/12 09:22:24 dries Exp $
+
+/**
+ * Override or insert variables into the maintenance page template.
+ */
+function seven_preprocess_maintenance_page(&$vars) {
+  // While markup for normal pages is split into page.tpl.php and html.tpl.php,
+  // the markup for the maintenance page is all in the single
+  // maintenance-page.tpl.php template. So, to have what's done in
+  // seven_preprocess_html() also happen on the maintenance page, it has to be
+  // called here.
+  seven_preprocess_html($vars);
+}
 
 /**
  * Override or insert variables into the html template.
