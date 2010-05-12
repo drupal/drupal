@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.25 2010/02/27 10:54:12 dries Exp $
+// $Id: search.api.php,v 1.26 2010/05/12 15:53:43 dries Exp $
 
 /**
  * @file
@@ -177,16 +177,10 @@ function hook_search_execute($keys = NULL) {
   // Add the ranking expressions.
   _node_rankings($query);
 
-  // Add a count query.
-  $inner_query = clone $query;
-  $count_query = db_select($inner_query->fields('i', array('sid')));
-  $count_query->addExpression('COUNT(*)');
-  $query->setCountQuery($count_query);
+  // Load results.
   $find = $query
     ->limit(10)
     ->execute();
-
-  // Load results.
   $results = array();
   foreach ($find as $item) {
     // Build the node body.

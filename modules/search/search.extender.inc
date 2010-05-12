@@ -1,5 +1,5 @@
 <?php
-// $Id: search.extender.inc,v 1.4 2010/04/16 13:53:43 dries Exp $
+// $Id: search.extender.inc,v 1.5 2010/05/12 15:53:43 dries Exp $
 
 /**
  * @file
@@ -407,6 +407,7 @@ class SearchQuery extends SelectQueryExtender {
       return new DatabaseStatementEmpty();
     }
 
+    // Add conditions to query.
     $this->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type');
     $this->condition($this->conditions);
 
@@ -442,5 +443,36 @@ class SearchQuery extends SelectQueryExtender {
       ->fields('i', array('type', 'sid'));
 
     return $this->query->execute();
+  }
+
+  /**
+   * Build the default count query for SearchQuery.
+   *
+   * Since SearchQuery always uses GROUP BY, we can default to a subquery. Also
+   * adding the same conditions as execute() because countQuery() is called
+   * first.
+   */
+  public function countQuery() {
+    // Clone the inner query.
+    $inner = clone $this->query;
+
+    // Add conditions to query.
+    $inner->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type');
+    $inner->condition($this->conditions);
+
+    // Remove existing fields and expressions, they are not needed for a count
+    // query.
+    $fields =& $inner->getFields();
+    $fields = array();
+    $expressions =& $inner->getExpressions();
+    $expressions = array();
+
+    // Add the sid as the only field and count them as a subquery.
+    $count = db_select($inner->fields('i', array('sid')), NULL, array('target' => 'slave'));
+
+    // Add the COUNT() expression.
+    $count->addExpression('COUNT(*)');
+
+    return $count;
   }
 }
