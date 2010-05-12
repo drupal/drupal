@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.api.php,v 1.10 2010/04/07 05:15:51 dries Exp $
+// $Id: locale.api.php,v 1.11 2010/05/12 08:26:14 dries Exp $
 
 /**
  * @file
@@ -151,7 +151,7 @@ function hook_language_negotiation_info() {
       'types' => array('custom_language_type'),
       'name' => t('Custom language provider'),
       'description' => t('This is a custom language provider.'),
-      'cache' => CACHE_DISABLED,
+      'cache' => 0,
     ),
   );
 }

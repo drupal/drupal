@@ -1,5 +1,5 @@
 <?php
-// $Id: session.test,v 1.27 2010/02/17 08:56:48 dries Exp $
+// $Id: session.test,v 1.28 2010/05/12 08:26:15 dries Exp $
 
 /**
  * @file
@@ -140,7 +140,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertSessionEmpty(TRUE);
 
     // The same behavior is expected when caching is enabled.
-    variable_set('cache', CACHE_NORMAL);
+    variable_set('cache', 1);
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);

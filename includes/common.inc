@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1161 2010/05/09 19:44:25 dries Exp $
+// $Id: common.inc,v 1.1162 2010/05/12 08:26:14 dries Exp $
 
 /**
  * @file
@@ -2431,7 +2431,7 @@ function drupal_page_footer() {
   // Commit the user session, if needed.
   drupal_session_commit();
 
-  if (variable_get('cache', CACHE_DISABLED) != CACHE_DISABLED && ($cache = drupal_page_set_cache())) {
+  if (variable_get('cache', 0) && ($cache = drupal_page_set_cache())) {
     drupal_serve_page_from_cache($cache);
   }
   else {
