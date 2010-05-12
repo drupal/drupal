@@ -73,7 +73,6 @@ function list_field_schema($field) {
       $columns = array(
         'value' => array(
           'type' => 'float',
-          'unsigned' => TRUE,
           'not null' => FALSE,
         ),
       );
@@ -82,7 +81,6 @@ function list_field_schema($field) {
       $columns = array(
         'value' => array(
           'type' => 'int',
-          'unsigned' => TRUE,
           'not null' => FALSE,
         ),
       );
