@@ -509,16 +509,4 @@ class OpenIDUnitTest extends DrupalWebTestCase {
 
     $this->assertEqual(openid_normalize('http://example.com/path#fragment'), 'http://example.com/path', t('openid_normalize() correctly normalized a URL with a fragment.'));
   }
-
-  /**
-   * Test _openid_google_idp_normalize().
-   */
-  function testGoogleIdpNormalize() {
-    // We consider that Gmail will always be Gmail.
-    $this->assertTrue(valid_url(_openid_google_idp_normalize('testuser@gmail.com'), TRUE), t('_openid_google_idp_normalize() correctly normalized a Google Gmail identifier.'));
-    // This is a test domain documented on http://sites.google.com/site/oauthgoog/fedlogininterp/saml-idp.
-    $this->assertTrue(valid_url(_openid_google_idp_normalize('test@lso-test-domain.com'), TRUE), t('_openid_google_idp_normalize() correctly normalized a Google Apps for Domain identifier.'));
-    // We consider that microsoft.com will never be hosted by Google.
-    $this->assertFalse(valid_url(_openid_google_idp_normalize('test@microsoft.com'), TRUE), t("_openid_google_idp_normalize() didn't normalized an identifier for a domain that is not Google-enabled."));
-  }
 }

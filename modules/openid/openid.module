@@ -387,12 +387,10 @@ function openid_openid_discovery_method_info() {
   // The discovery process will stop as soon as one discovery method succeed.
   // We first attempt to discover XRI-based identifiers, then standard XRDS
   // identifiers via Yadis and HTML-based discovery, conforming to the OpenID 2.0
-  // specification. If those fail, we attempt to discover services based on
-  // the Google user discovery scheme.
+  // specification.
   return array(
     'xri' => '_openid_xri_discovery',
     'xrds' => '_openid_xrds_discovery',
-    'google' => '_openid_google_user_discovery',
   );
 }
 
@@ -488,51 +486,15 @@ function _openid_xrds_discovery($claimed_id) {
 }
 
 /**
- * OpenID discovery method: Perform an user discovery using Google Discovery protocol.
- *
- * This transforms a OpenID identifier into an OpenID endpoint.
- *
- * @see http://sites.google.com/site/oauthgoog/fedlogininterp/openiddiscovery#TOC-User-Discovery
- * @see hook_openid_discovery_method_info()
- */
-function _openid_google_user_discovery($claimed_id) {
-  $xrds_url = $claimed_id;
-  $url = @parse_url($xrds_url);
-  if (empty($url['scheme']) || ($url['scheme'] != 'http' && $scheme['scheme'] != 'https') || empty($url['host'])) {
-    return;
-  }
-
-  $response = drupal_http_request('https://www.google.com/accounts/o8/.well-known/host-meta?hd=' . rawurlencode($url['host']));
-  if (isset($response->error) || $response->code != 200) {
-    return;
-  }
-
-  if (preg_match('/Link: <(.*)>/', $response->data, $matches)) {
-    $xrds_url = $matches[1];
-    $services = _openid_xrds_discovery($xrds_url);
-
-    foreach ($services as $i => $service) {
-      if (in_array('http://www.iana.org/assignments/relation/describedby', $service['types']) && $service['service']->children(OPENID_NS_GOOGLE)->URITemplate) {
-        $template = (string)$service['service']->children(OPENID_NS_GOOGLE)->URITemplate;
-        $xrds_url = str_replace('{%uri}', rawurlencode($claimed_id), $template);
-        return _openid_xrds_discovery($xrds_url);
-      }
-    }
-  }
-}
-
-/**
  * Implementation of hook_openid_normalization_method_info().
  *
  * Define standard normalization methods.
  */
 function openid_openid_normalization_method_info() {
-  // We first try to normalize Google Identifiers (user@domain) into their
-  // corresponding XRDS URL. If this fail, we proceed with standard OpenID
-  // normalization by normalizing XRI idenfiers. Finally, normalize the identifier
-  // into a canonical URL.
+  // OpenID Authentication 2.0, section 7.2:
+  // If the User-supplied Identifier looks like an XRI, treat it as such;
+  // otherwise treat it as an HTTP URL.
   return array(
-    'google_idp' => '_openid_google_idp_normalize',
     'xri' => '_openid_xri_normalize',
     'url' => '_openid_url_normalize',
   );

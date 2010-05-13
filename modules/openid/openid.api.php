@@ -71,8 +71,8 @@ function hook_openid_discovery_method_info() {
  * Allow modules to alter discovery methods.
  */
 function hook_openid_discovery_method_info_alter(&$methods) {
-  // Remove Google discovery scheme.
-  unset($methods['google']);
+  // Remove XRI discovery scheme.
+  unset($methods['xri']);
 }
 
 /**
