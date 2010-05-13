@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.api.php,v 1.4 2010/03/02 08:59:54 dries Exp $
+// $Id: openid.api.php,v 1.5 2010/05/13 17:37:24 dries Exp $
 
 /**
  * @file
@@ -71,8 +71,8 @@ function hook_openid_discovery_method_info() {
  * Allow modules to alter discovery methods.
  */
 function hook_openid_discovery_method_info_alter(&$methods) {
-  // Remove Google discovery scheme.
-  unset($methods['google']);
+  // Remove XRI discovery scheme.
+  unset($methods['xri']);
 }
 
 /**
