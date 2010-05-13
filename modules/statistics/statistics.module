@@ -304,12 +304,14 @@ function statistics_get($nid) {
  * Implements hook_block_info().
  */
 function statistics_block_info() {
+  $blocks = array();
+
   if (variable_get('statistics_count_content_views', 0)) {
     $blocks['popular']['info'] = t('Popular content');
     // Too dynamic to cache.
     $blocks['popular']['cache'] = DRUPAL_NO_CACHE;
-    return $blocks;
   }
+  return $blocks;
 }
 
 /**
