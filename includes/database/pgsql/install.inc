@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.6 2010/01/30 07:59:24 dries Exp $
+// $Id: install.inc,v 1.7 2010/05/13 08:23:56 dries Exp $
 
 /**
  * @file
@@ -84,14 +84,6 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
           LANGUAGE \'sql\''
         );
       }
-      db_query('CREATE OR REPLACE FUNCTION "if"(boolean, text, text) RETURNS text AS
-        \'SELECT CASE WHEN $1 THEN $2 ELSE $3 END;\'
-        LANGUAGE \'sql\''
-      );
-      db_query('CREATE OR REPLACE FUNCTION "if"(boolean, integer, integer) RETURNS integer AS
-        \'SELECT CASE WHEN $1 THEN $2 ELSE $3 END;\'
-        LANGUAGE \'sql\''
-      );
 
       db_query('CREATE OR REPLACE FUNCTION "substring_index"(text, text, integer) RETURNS text AS
         \'SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);\'
