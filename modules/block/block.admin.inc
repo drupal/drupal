@@ -442,9 +442,9 @@ function block_add_block_form_validate($form, &$form_state) {
 function block_add_block_form_submit($form, &$form_state) {
   $delta = db_insert('block_custom')
     ->fields(array(
-      'body' => $form_state['values']['body'],
+      'body' => $form_state['values']['body']['value'],
       'info' => $form_state['values']['info'],
-      'format' => $form_state['values']['format'],
+      'format' => $form_state['values']['body']['format'],
     ))
     ->execute();
   // Store block delta to allow other modules to work with new block.
