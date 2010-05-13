@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.333 2010/03/30 07:17:19 webchick Exp $
+// $Id: statistics.module,v 1.334 2010/05/13 08:22:31 dries Exp $
 
 /**
  * @file
@@ -304,12 +304,14 @@ function statistics_get($nid) {
  * Implements hook_block_info().
  */
 function statistics_block_info() {
+  $blocks = array();
+
   if (variable_get('statistics_count_content_views', 0)) {
     $blocks['popular']['info'] = t('Popular content');
     // Too dynamic to cache.
     $blocks['popular']['cache'] = DRUPAL_NO_CACHE;
-    return $blocks;
   }
+  return $blocks;
 }
 
 /**
