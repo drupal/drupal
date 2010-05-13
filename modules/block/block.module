@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.420 2010/04/28 12:36:26 dries Exp $
+// $Id: block.module,v 1.421 2010/05/13 07:53:02 dries Exp $
 
 /**
  * @file
@@ -469,8 +469,9 @@ function block_custom_block_form($edit = array()) {
  * @param $edit
  *   Associative array of fields to save. Array keys:
  *   - info: Block description.
- *   - body: Block contents.
- *   - format: Filter ID of the filter format for the body.
+ *   - body: Associative array of body value and format.  Array keys:
+ *     - value: Block contents.
+ *     - format: Filter ID of the filter format for the body.
  * @param $delta
  *   Block ID of the block to save.
  * @return
@@ -479,9 +480,9 @@ function block_custom_block_form($edit = array()) {
 function block_custom_block_save($edit, $delta) {
   db_update('block_custom')
     ->fields(array(
-      'body' => $edit['body'],
+      'body' => $edit['body']['value'],
       'info' => $edit['info'],
-      'format' => $edit['format'],
+      'format' => $edit['body']['format'],
     ))
     ->condition('bid', $delta)
     ->execute();

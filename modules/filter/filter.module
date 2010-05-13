@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.330 2010/05/01 08:12:23 dries Exp $
+// $Id: filter.module,v 1.331 2010/05/13 07:53:02 dries Exp $
 
 /**
  * @file
@@ -730,29 +730,12 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
  *   the text format id specified in #format or the user's default format by
  *   default, if NULL.
  *
- * Since most modules expect the value of the new 'format' element *next* to the
- * original element, filter_process_format() utilizes an #after_build to move
- * the values of the children of the 'text_format' element so as to let the
- * submitted form values appear as if they were located on the same level.
- * For example, considering the input values:
+ * The resulting value for the element will be an array holding the value and the
+ * format.  For example, the value for the body element will be:
  * @code
- *   $form_state['input']['body']['value'] = 'foo';
- *   $form_state['input']['body']['format'] = 'foo';
+ *   $form_state['values']['body']['value'] = 'foo';
+ *   $form_state['values']['body']['format'] = 'foo';
  * @endcode
- * The #after_build will process them into:
- * @code
- *   $form_state['values']['body'] = 'foo';
- *   $form_state['values']['format'] = 'foo';
- * @endcode
- *
- * If multiple text format-enabled elements are required on the same level of
- * the form structure, modules can set custom #parents on the original element.
- * Alternatively, the #after_build may be unset through a subsequent #process
- * callback. If the default #after_build is not invoked and no custom processing
- * occurs, then the submitted form values will appear like in the
- * $form_state['input'] array above.
- *
- * @see filter_form_after_build()
  *
  * @param $element
  *   The form element to process. Properties used:
@@ -803,9 +786,6 @@ function filter_process_format($element) {
   $path = drupal_get_path('module', 'filter');
   $element['#attached']['js'][] = $path . '/filter.js';
   $element['#attached']['css'][] = $path . '/filter.css';
-
-  // Apply default #after_build behavior.
-  $element['#after_build'][] = 'filter_form_after_build';
 
   // Setup child container for the text format widget.
   $element['format'] = array(
@@ -883,38 +863,6 @@ function filter_process_format($element) {
     }
   }
 
-  return $element;
-}
-
-/**
- * After build callback to move #type 'text_format' values up in $form_state.
- */
-function filter_form_after_build($element, &$form_state) {
-  // For text fields, the additional subkeys map 1:1 to field schema columns.
-  if (isset($element['#columns'])) {
-    return $element;
-  }
-
-  $parents = $element['#parents'];
-  array_pop($parents);
-
-  foreach (element_children($element) as $key) {
-    $current_parents = $parents;
-    switch ($key) {
-      case 'value':
-        form_set_value(array('#parents' => $element['#parents']), $element[$key]['#value'], $form_state);
-        break;
-
-      case 'format':
-        $current_parents[] = $key;
-        form_set_value(array('#parents' => $current_parents), $element['format']['format']['#value'], $form_state);
-        break;
-
-      default:
-        $current_parents[] = $key;
-        form_set_value(array('#parents' => $current_parents), $element[$key]['#value'], $form_state);
-    }
-  }
   return $element;
 }
 

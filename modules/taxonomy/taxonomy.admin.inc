@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.104 2010/05/06 05:59:31 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.105 2010/05/13 07:53:02 dries Exp $
 
 /**
  * @file
@@ -837,6 +837,12 @@ function taxonomy_form_term_submit($form, &$form_state) {
  */
 function taxonomy_form_term_submit_builder($form, &$form_state) {
   $term = (object) $form_state['values'];
+
+  // Convert text_format field into values expected by taxonomy_term_save().
+  $description = $form_state['values']['description'];
+  $term->description = $description['value'];
+  $term->format = $description['format'];
+
   field_attach_submit('taxonomy_term', $term, $form, $form_state);
 
   $form_state['term'] = (array) $term;
