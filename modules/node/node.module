@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1270 2010/05/12 15:53:43 dries Exp $
+// $Id: node.module,v 1.1271 2010/05/14 04:37:53 webchick Exp $
 
 /**
  * @file
@@ -537,7 +537,7 @@ function node_type_save($info) {
  * Add default body field to a node type.
  *
  * @param $type
- *   The node type name.
+ *   A node type object.
  * @param $label
  *   The label for the body instance.
  */
