@@ -1,4 +1,4 @@
-// $Id: dashboard.js,v 1.9 2010/03/28 11:29:27 dries Exp $
+// $Id: dashboard.js,v 1.10 2010/05/14 11:28:19 dries Exp $
 (function ($) {
 
 /**
@@ -172,16 +172,15 @@ Drupal.behaviors.dashboard = {
       // Load the newly enabled block's content.
       $.get(Drupal.settings.dashboard.blockContent + '/' + module + '/' + delta, {},
         function (block) {
-          var blockContent = "";
           if (block) {
-            blockContent = $("div.content", $(block));
+            item.html(block);
           }
 
-          if (!blockContent) {
-            blockContent = $('<div class="content">' + Drupal.settings.dashboard.emptyBlockText + '</div>');
+          if (item.find('div.content').is(':empty')) {
+            item.find('div.content').html(Drupal.settings.dashboard.emptyBlockText);
           }
 
-          $("div.content", item).after(blockContent).remove();
+          Drupal.attachBehaviors(item);
         },
         'html'
       );
