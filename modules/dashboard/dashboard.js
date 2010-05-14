@@ -172,16 +172,15 @@ Drupal.behaviors.dashboard = {
       // Load the newly enabled block's content.
       $.get(Drupal.settings.dashboard.blockContent + '/' + module + '/' + delta, {},
         function (block) {
-          var blockContent = "";
           if (block) {
-            blockContent = $("div.content", $(block));
+            item.html(block);
           }
 
-          if (!blockContent) {
-            blockContent = $('<div class="content">' + Drupal.settings.dashboard.emptyBlockText + '</div>');
+          if (item.find('div.content').is(':empty')) {
+            item.find('div.content').html(Drupal.settings.dashboard.emptyBlockText);
           }
 
-          $("div.content", item).after(blockContent).remove();
+          Drupal.attachBehaviors(item);
         },
         'html'
       );
