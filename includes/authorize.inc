@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.inc,v 1.10 2010/04/23 05:21:19 webchick Exp $
+// $Id: authorize.inc,v 1.11 2010/05/14 04:50:18 webchick Exp $
 
 /**
  * @file
@@ -83,7 +83,7 @@ function authorize_filetransfer_form($form_state) {
     $form['connection_settings']['authorize_filetransfer_default']['#options'][$name] = $backend['title'];
     $form['connection_settings'][$name] = array(
       '#type' => 'fieldset',
-      '#attributes' => array('class' => "filetransfer-$name filetransfer"),
+      '#attributes' => array('class' => array("filetransfer-$name", 'filetransfer')),
       '#title' => t('@backend connection settings', array('@backend' => $backend['title'])),
     );
 

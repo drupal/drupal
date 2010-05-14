@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.21 2010/04/24 14:49:14 dries Exp $
+// $Id: update.manager.inc,v 1.22 2010/05/14 04:50:18 webchick Exp $
 
 /**
  * @file
@@ -635,7 +635,7 @@ function update_manager_install_form_submit($form, &$form_state) {
 function _update_manager_extract_directory() {
   $directory = &drupal_static(__FUNCTION__, '');
   if (empty($directory)) {
-    $directory = DRUPAL_ROOT . '/' . file_directory_path('temporary') . '/update-extraction';
+    $directory = 'temporary://update-extraction';
     if (!file_exists($directory)) {
       mkdir($directory);
     }
@@ -708,8 +708,8 @@ function update_manager_file_get($url) {
   }
 
   // Check the cache and download the file if needed.
-  $local = 'temporary://update-cache/' . basename($parsed_url['path']);
-  $cache_directory = DRUPAL_ROOT . '/' . file_directory_path('temporary') . '/update-cache/';
+  $cache_directory = 'temporary://update-cache';
+  $local = $cache_directory . '/' . basename($parsed_url['path']);
 
   if (!file_exists($cache_directory)) {
     mkdir($cache_directory);
