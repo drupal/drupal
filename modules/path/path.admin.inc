@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.43 2010/04/24 14:49:14 dries Exp $
+// $Id: path.admin.inc,v 1.44 2010/05/14 04:57:59 webchick Exp $
 
 /**
  * @file
@@ -19,14 +19,13 @@ function path_admin_overview($keys = NULL) {
   $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE language <> :language', 0, 1, array(':language' => LANGUAGE_NONE))->fetchField();
   $multilanguage = (module_exists('locale') || $alias_exists);
 
-  $header = array(
-    array('data' => t('Alias'), 'field' => 'alias', 'sort' => 'asc'),
-    array('data' => t('System'), 'field' => 'source'),
-    array('data' => t('Operations'), 'colspan' => '2')
-  );
+  $header = array();
+  $header[] = array('data' => t('Alias'), 'field' => 'alias', 'sort' => 'asc');
+  $header[] = array('data' => t('System'), 'field' => 'source');
   if ($multilanguage) {
-    array_splice($header, 2, 0, array(array('data' => t('Language'), 'field' => 'language')));
+    $header[] = array('data' => t('Language'), 'field' => 'language');
   }
+  $header[] = array('data' => t('Operations'));
 
   $query = db_select('url_alias')->extend('PagerDefault')->extend('TableSort');
   if ($keys) {
@@ -42,22 +41,38 @@ function path_admin_overview($keys = NULL) {
   $rows = array();
   $destination = drupal_get_destination();
   foreach ($result as $data) {
-    $row = array(
+    $row = array();
+    $row['data']['alias'] = l($data->alias, $data->source);
+    $row['data']['source'] = l($data->source, $data->source, array('alias' => TRUE));
+    if ($multilanguage) {
+      $row['data']['language'] = module_invoke('locale', 'language_name', $data->language);
+    }
+
+    $operations = array();
+    $operations['edit'] = array(
+      'title' => t('edit'),
+      'href' => "admin/config/search/path/edit/$data->pid",
+      'query' => $destination,
+    );
+    $operations['delete'] = array(
+      'title' => t('delete'),
+      'href' => "admin/config/search/path/delete/$data->pid",
+      'query' => $destination,
+    );
+    $row['data']['operations'] = array(
       'data' => array(
-        l($data->alias, $data->source),
-        l($data->source, $data->source, array('alias' => TRUE)),
-        l(t('edit'), "admin/config/search/path/edit/$data->pid", array('query' => $destination)),
-        l(t('delete'), "admin/config/search/path/delete/$data->pid", array('query' => $destination)),
+        '#theme' => 'links',
+        '#links' => $operations,
+        '#attributes' => array('class' => array('links', 'inline', 'nowrap')),
       ),
     );
+
     // If the system path maps to a different URL alias, highlight this table
     // row to let the user know of old aliases.
     if ($data->alias != drupal_get_path_alias($data->source, $data->language)) {
       $row['class'] = array('warning');
     }
-    if ($multilanguage) {
-      array_splice($row['data'], 2, 0, module_invoke('locale', 'language_name', $data->language));
-    }
+
     $rows[] = $row;
   }
 
@@ -65,7 +80,7 @@ function path_admin_overview($keys = NULL) {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#empty' => t('No URL aliases available. <a href="@link">Add alias</a>.', array('@link' => url('admin/config/search/path/add'))),
+    '#empty' => t('No URL aliases available. <a href="@link">Add URL alias</a>.', array('@link' => url('admin/config/search/path/add'))),
   );
   $build['path_pager'] = array('#theme' => 'pager');
 
