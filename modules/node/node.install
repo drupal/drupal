@@ -499,7 +499,7 @@ function node_update_7006(&$sandbox) {
     // Add body field instances for existing node types.
     foreach ($result as $node_type) {
       if ($node_type->has_body) {
-        node_add_body_field($node_type->type, $node_type->body_label);
+        node_add_body_field($node_type, $node_type->body_label);
       }
 
       $sandbox['node_types_info'][$node_type->type] = array(

@@ -537,7 +537,7 @@ function node_type_save($info) {
  * Add default body field to a node type.
  *
  * @param $type
- *   The node type name.
+ *   A node type object.
  * @param $label
  *   The label for the body instance.
  */
