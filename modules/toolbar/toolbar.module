@@ -177,12 +177,9 @@ function toolbar_view() {
     '#theme' => 'toolbar',
     '#attached'=> array(
       'js' => array(
-        $module_path . '/toolbar.js',
+        array('data' => 'misc/displace.js', 'weight' => JS_LIBRARY - 1),
         array('data' => 'misc/jquery.cookie.js', 'weight' => JS_LIBRARY + 2),
-        array(
-          'data' => array('tableHeaderOffset' => 'Drupal.toolbar.height'),
-          'type' => 'setting'
-        ),
+        $module_path . '/toolbar.js',
       ),
       'css' => array(
         $module_path . '/toolbar.css',
