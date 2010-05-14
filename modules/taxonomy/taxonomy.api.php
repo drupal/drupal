@@ -95,6 +95,19 @@ function hook_taxonomy_term_load($terms) {
 }
 
 /**
+ * Act on taxonomy terms before they are saved.
+ *
+ * Modules implementing this hook can act on the term object before it is
+ * inserted or updated.
+ *
+ * @param $term
+ *   A term object.
+ */
+function hook_taxonomy_term_presave($term) {
+  $term->foo = 'bar';
+}
+
+/**
  * Act on taxonomy terms when inserted.
  *
  * Modules implementing this hook can act on the term object when saved to

@@ -469,6 +469,7 @@ function taxonomy_term_save($term) {
   }
 
   field_attach_presave('taxonomy_term', $term);
+  module_invoke_all('taxonomy_term_presave', $term);
 
   if (empty($term->tid)) {
     $status = drupal_write_record('taxonomy_term_data', $term);
