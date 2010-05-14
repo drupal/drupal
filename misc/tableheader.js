@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.29 2009/12/18 08:17:26 dries Exp $
+// $Id: tableheader.js,v 1.30 2010/05/14 07:45:53 dries Exp $
 (function ($) {
 
 Drupal.tableHeaderDoScroll = function () {
@@ -42,7 +42,7 @@ Drupal.behaviors.tableHeader = {
     // Track positioning and visibility.
     function tracker(e) {
       // Reset top position of sticky table headers to the current top offset.
-      var topOffset = Drupal.settings.tableHeaderOffset ? eval(Drupal.settings.tableHeaderOffset + '()') : 0;
+      var topOffset = Drupal.displace ? Drupal.displace.getDisplacement('top') : 0;
       $('.sticky-header').css('top', topOffset + 'px');
       // Save positioning data.
       var viewHeight = document.documentElement.scrollHeight || document.body.scrollHeight;

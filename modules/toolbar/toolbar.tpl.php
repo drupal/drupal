@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.tpl.php,v 1.9 2010/02/10 10:54:12 dries Exp $
+// $Id: toolbar.tpl.php,v 1.10 2010/05/14 07:45:54 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@
  * @see template_preprocess_toolbar()
  */
 ?>
-<div id="toolbar" class="<?php print $classes; ?> clearfix">
+<div id="toolbar" class="<?php print $classes; ?> displace-top clearfix">
   <div class="toolbar-menu clearfix">
     <?php print render($toolbar['toolbar_home']); ?>
     <?php print render($toolbar['toolbar_user']); ?>

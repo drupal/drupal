@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.17 2010/04/24 07:14:29 dries Exp $
+// $Id: overlay.module,v 1.18 2010/05/14 07:45:54 dries Exp $
 
 /**
  * @file
@@ -297,16 +297,6 @@ function overlay_preprocess_page(&$variables) {
     array_shift($overlay_breadcrumb);
     $variables['breadcrumb'] = theme('breadcrumb', array('breadcrumb' => $overlay_breadcrumb));
   }
-}
-
-/**
- * Preprocess template variables for toolbar.tpl.php.
- *
- * Adding the 'overlay-displace-top' class to the toolbar pushes the overlay
- * down, so it appears below the toolbar.
- */
-function overlay_preprocess_toolbar(&$variables) {
-  $variables['classes_array'][] = "overlay-displace-top";
 }
 
 /**
