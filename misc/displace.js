@@ -1,10 +1,10 @@
-// $Id: displace.js,v 1.1 2010/05/14 07:45:53 dries Exp $
+// $Id: displace.js,v 1.2 2010/05/14 16:44:37 dries Exp $
 (function ($) {
 
 /**
  * Provides a generic method to position elements fixed to the viewport.
  *
- * Fixed positioning (CSS declaration position:fixed) is done relatively to the
+ * Fixed positioning (CSS declaration position:fixed) is done relative to the
  * viewport. This makes it hard to position multiple fixed positioned element
  * relative to each other (e.g. multiple toolbars should come after each other,
  * not on top of each other).
@@ -14,7 +14,7 @@
  * port add the class "displace-bottom".
  *
  * When a browser doesn't support position:fixed (like IE6) the element gets
- * positioned absolutely by default, but this can be overriden by using the
+ * positioned absolutely by default, but this can be overridden by using the
  * "displace-unsupported" class.
  */
 
@@ -23,16 +23,9 @@
  */
 Drupal.behaviors.displace = {
   attach: function (context, settings) {
-    // Test for position:fixed support as IE6 does not.
-    // http://yura.thinkweb2.com/cft/#IS_POSITION_FIXED_SUPPORTED
-    if (this.supported === undefined) {
-      var el = $('<div style="position:fixed;top:10px"/>').appendTo(document.body);
-      this.supported = el[0].offsetTop === 10;
-      el.remove();
-
-      if (!this.supported) {
-        $(document.documentElement).addClass('displace-unsupported');
-      }
+    // Test for position:fixed support.
+    if (!Drupal.positionFixedSupported()) {
+      $(document.documentElement).addClass('displace-unsupported');
     }
 
     $(document.body).once('displace', function () {

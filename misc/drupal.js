@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.65 2010/03/10 15:14:38 dries Exp $
+// $Id: drupal.js,v 1.66 2010/05/14 16:44:37 dries Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
@@ -297,6 +297,24 @@ Drupal.getSelection = function (element) {
     return { 'start': start, 'end': end };
   }
   return { 'start': element.selectionStart, 'end': element.selectionEnd };
+};
+
+/**
+ * Checks if position:fixed is supported.
+ *
+ * @return
+ *   Boolean indicating whether or not position:fixed is supported.
+ *
+ * @see http://yura.thinkweb2.com/cft/#IS_POSITION_FIXED_SUPPORTED
+ */
+Drupal.positionFixedSupported = function () {
+  if (this._positionFixedSupported === undefined) {
+    var el = $('<div style="position:fixed; top:10px" />').appendTo(document.body);
+    this._positionFixedSupported = el[0].offsetTop === 10;
+    el.remove();
+  }
+
+  return this._positionFixedSupported;
 };
 
 /**
