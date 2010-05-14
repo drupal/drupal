@@ -60,7 +60,8 @@ Drupal.behaviors.collapse = {
       var $fieldset = $(this);
       // Expand fieldset if there are errors inside, or if it contains an
       // element that is targeted by the uri fragment identifier. 
-      if ($('.error, :target', $fieldset).length) {
+      var anchor = location.hash && location.hash != '#' ? ', ' + location.hash : '';
+      if ($('.error' + anchor, $fieldset).length) {
         $fieldset.removeClass('collapsed');
       }
 
