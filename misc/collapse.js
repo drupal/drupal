@@ -58,8 +58,9 @@ Drupal.behaviors.collapse = {
   attach: function (context, settings) {
     $('fieldset.collapsible', context).once('collapse', function () {
       var $fieldset = $(this);
-      // Expand if there are errors inside.
-      if ($('.error', $fieldset).length) {
+      // Expand fieldset if there are errors inside, or if it contains an
+      // element that is targeted by the uri fragment identifier. 
+      if ($('.error, :target', $fieldset).length) {
         $fieldset.removeClass('collapsed');
       }
 
