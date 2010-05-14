@@ -282,14 +282,13 @@ function toolbar_get_menu_tree() {
 /**
  * Generate a links array from a menu tree array.
  *
- * Based on menu_navigation_links(). Adds in path based IDs, icon placeholders
- * and overlay classes for the links.
+ * Based on menu_navigation_links(). Adds path based IDs and icon placeholders
+ * to the links.
  */
 function toolbar_menu_navigation_links($tree) {
   $links = array();
   foreach ($tree as $item) {
     if (!$item['link']['hidden'] && $item['link']['access']) {
-      $class = '';
       // Make sure we have a path specific ID in place, so we can attach icons
       // and behaviors to the items.
       $id = str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['href']);
@@ -298,8 +297,8 @@ function toolbar_menu_navigation_links($tree) {
       $link['href'] = $item['link']['href'];
       // Add icon placeholder.
       $link['title'] = '<span class="icon"></span>' . $item['link']['title'];
-      // Add admin link ID and to-overlay class for the overlay.
-      $link['attributes'] = array('id' => 'toolbar-link-' . $id, 'class' => array('to-overlay'));
+      // Add admin link ID.
+      $link['attributes'] = array('id' => 'toolbar-link-' . $id);
       if (!empty($item['link']['description'])) {
         $link['title'] .= ' <span class="element-invisible">(' . $item['link']['description'] . ')</span>';
         $link['attributes']['title'] = $item['link']['description'];
