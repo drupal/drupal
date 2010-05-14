@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.589 2010/05/06 05:59:31 webchick Exp $
+// $Id: taxonomy.module,v 1.590 2010/05/14 04:41:54 webchick Exp $
 
 /**
  * @file
@@ -469,6 +469,7 @@ function taxonomy_term_save($term) {
   }
 
   field_attach_presave('taxonomy_term', $term);
+  module_invoke_all('taxonomy_term_presave', $term);
 
   if (empty($term->tid)) {
     $status = drupal_write_record('taxonomy_term_data', $term);

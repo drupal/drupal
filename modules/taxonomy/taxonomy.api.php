@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.api.php,v 1.8 2009/12/04 15:54:37 dries Exp $
+// $Id: taxonomy.api.php,v 1.9 2010/05/14 04:41:54 webchick Exp $
 
 /**
  * @file
@@ -92,6 +92,19 @@ function hook_taxonomy_term_load($terms) {
   foreach ($result as $record) {
     $terms[$record->tid]->foo = $record->foo;
   }
+}
+
+/**
+ * Act on taxonomy terms before they are saved.
+ *
+ * Modules implementing this hook can act on the term object before it is
+ * inserted or updated.
+ *
+ * @param $term
+ *   A term object.
+ */
+function hook_taxonomy_term_presave($term) {
+  $term->foo = 'bar';
 }
 
 /**
