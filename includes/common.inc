@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1162 2010/05/12 08:26:14 dries Exp $
+// $Id: common.inc,v 1.1163 2010/05/14 03:38:49 webchick Exp $
 
 /**
  * @file
@@ -3019,7 +3019,7 @@ function drupal_pre_render_styles($elements) {
         // for the aggregate file.
         if (isset($group['data'])) {
           $element = $link_element_defaults;
-          $element['#attributes']['href'] = file_create_url($group['data']) . '?' . $query_string;
+          $element['#attributes']['href'] = file_create_url($group['data']);
           $element['#attributes']['media'] = $group['media'];
           $element['#browsers'] = $group['browsers'];
           $elements[] = $element;
@@ -3802,7 +3802,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
       // Only include the file if was written successfully. Errors are logged
       // using watchdog.
       if ($uri) {
-        $preprocess_file = file_create_url($uri) . '?' . $default_query_string;
+        $preprocess_file = file_create_url($uri);
         $js_element = $element;
         $js_element['#attributes']['src'] = $preprocess_file;
         $processed[$key] = theme('html_tag', array('element' => $js_element));
