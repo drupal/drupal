@@ -240,6 +240,13 @@ abstract class Query implements QueryPlaceholderInterface {
    */
   protected $nextPlaceholder = 0;
 
+  /**
+   * An array of comments that can be prepended to a query.
+   *
+   * @var array
+   */
+  protected $comments = array();
+
   public function __construct(DatabaseConnection $connection, $options) {
     $this->connection = $connection;
     $this->queryOptions = $options;
@@ -262,6 +269,44 @@ abstract class Query implements QueryPlaceholderInterface {
 
   public function nextPlaceholder() {
     return $this->nextPlaceholder++;
+  }
+
+  /**
+   * Adds a comment to the query.
+   *
+   * By adding a comment to a query, you can more easily find it in your
+   * query log or the list of active queries on an sql server. This allows
+   * for easier debugging and allows you to more easily find where a query
+   * with a performance problem is being generated.
+   *
+   * @param $comment
+   *   The comment string to be inserted into the query.
+   * @return Query
+   *   The called object.
+   */
+  public function comment($comment) {
+    $this->comments[] = $comment;
+    return $this;
+  }
+
+  /**
+   * Returns a reference to the comments array for the query.
+   *
+   * Because this method returns by reference, alter hooks may edit the comments
+   * array directly to make their changes. If just adding comments, however, the
+   * use of comment() is preferred.
+   *
+   * Note that this method must be called by reference as well:
+   *
+   * @code
+   * $comments =& $query->getComments();
+   * @endcode
+   *
+   * @return
+   *   A reference to the comments array structure.
+   */
+  public function &getComments() {
+    return $this->comments;
   }
 }
 
@@ -468,11 +513,14 @@ class InsertQuery extends Query {
 
   public function __toString() {
 
+    // Create a comments string to prepend to the query.
+    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
     if (!empty($this->fromQuery)) {
-      return "INSERT INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+      return $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
     }
 
     // For simplicity, we will use the $placeholders array to inject
@@ -482,7 +530,7 @@ class InsertQuery extends Query {
     $placeholders = array_pad($placeholders, count($this->defaultFields), 'default');
     $placeholders = array_pad($placeholders, count($this->insertFields), '?');
 
-    return 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+    return $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
   }
 
   /**
@@ -900,7 +948,11 @@ class DeleteQuery extends Query implements QueryConditionInterface {
   }
 
   public function __toString() {
-    $query = 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '} ';
+
+    // Create a comments string to prepend to the query.
+    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+
+    $query = $comments . 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '} ';
 
     if (count($this->condition)) {
 
@@ -940,7 +992,10 @@ class TruncateQuery extends Query {
   }
 
   public function __toString() {
-    return 'TRUNCATE {' . $this->connection->escapeTable($this->table) . '} ';
+    // Create a comments string to prepend to the query.
+    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+
+    return $comments . 'TRUNCATE {' . $this->connection->escapeTable($this->table) . '} ';
   }
 }
 
@@ -1100,6 +1155,10 @@ class UpdateQuery extends Query implements QueryConditionInterface {
   }
 
   public function __toString() {
+
+    // Create a comments string to prepend to the query.
+    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+
     // Expressions take priority over literal fields, so we process those first
     // and remove any literal fields that conflict.
     $fields = $this->fields;
@@ -1114,7 +1173,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
       $update_fields[] = $field . '=:db_update_placeholder_' . ($max_placeholder++);
     }
 
-    $query = 'UPDATE {' . $this->connection->escapeTable($this->table) . '} SET ' . implode(', ', $update_fields);
+    $query = $comments . 'UPDATE {' . $this->connection->escapeTable($this->table) . '} SET ' . implode(', ', $update_fields);
 
     if (count($this->condition)) {
       $this->condition->compile($this->connection, $this);

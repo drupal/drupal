@@ -43,6 +43,8 @@ class InsertQuery_mysql extends InsertQuery {
   }
 
   public function __toString() {
+    // Create a comments string to prepend to the query.
+    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
@@ -50,10 +52,10 @@ class InsertQuery_mysql extends InsertQuery {
     // If we're selecting from a SelectQuery, finish building the query and
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
-      return "INSERT INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+      return $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
     }
 
-    $query = "INSERT INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
+    $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
 
     $max_placeholder = 0;
     $values = array();
@@ -143,6 +145,8 @@ class MergeQuery_mysql extends MergeQuery {
 
 
   public function __toString() {
+    // Create a comments string to prepend to the query.
+    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
 
     // Set defaults.
     if ($this->updateFields) {
@@ -164,7 +168,7 @@ class MergeQuery_mysql extends MergeQuery {
 
     $insert_fields = $this->insertFields + $this->keyFields;
 
-    $query = "INSERT INTO {" . $this->table . '} (' . implode(', ', array_keys($insert_fields)) . ') VALUES ';
+    $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', array_keys($insert_fields)) . ') VALUES ';
 
     $max_placeholder = 0;
     $values = array();

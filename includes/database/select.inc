@@ -1317,8 +1317,11 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
   public function __toString() {
 
+    // Create a comments string to prepend to the query.
+    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+
     // SELECT
-    $query = 'SELECT ';
+    $query = $comments . 'SELECT ';
     if ($this->distinct) {
       $query .= 'DISTINCT ';
     }
