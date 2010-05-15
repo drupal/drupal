@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.91 2010/05/11 11:01:36 dries Exp $
+// $Id: database_test.test,v 1.92 2010/05/15 07:04:21 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1015,7 +1015,6 @@ class DatabaseDeleteTruncateTestCase extends DatabaseTestCase {
     $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
   }
 
-
   /**
    * Confirm that we can truncate a whole table successfully.
    */
@@ -1272,6 +1271,27 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     }
 
     $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test rudimentary SELECT statement with a COMMENT.
+   */
+  function testSimpleComment() {
+    $query = db_select('test')->comment('Testing query comments');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $result = $query->execute();
+
+    $num_records = 0;
+    foreach ($result as $record) {
+      $num_records++;
+    }
+
+    $query = (string)$query;
+    $expected = "/* Testing query comments */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
+
+    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($query, $expected, t('The flattened query contains the comment string.'));
   }
 
   /**

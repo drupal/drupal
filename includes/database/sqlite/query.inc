@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.9 2009/11/02 00:19:27 webchick Exp $
+// $Id: query.inc,v 1.10 2010/05/15 07:04:21 dries Exp $
 
 /**
  * @file
@@ -33,16 +33,19 @@ class InsertQuery_sqlite extends InsertQuery {
   }
 
   public function __toString() {
+    // Create a comments string to prepend to the query.
+    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+
     // Produce as many generic placeholders as necessary.
     $placeholders = array_fill(0, count($this->insertFields), '?');
 
     // If we're selecting from a SelectQuery, finish building the query and
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
-      return "INSERT INTO {" . $this->table . '} (' . implode(', ', $this->insertFields) . ') ' . $this->fromQuery;
+      return $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $this->insertFields) . ') ' . $this->fromQuery;
     }
 
-    return 'INSERT INTO {' . $this->table . '} (' . implode(', ', $this->insertFields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+    return $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $this->insertFields) . ') VALUES (' . implode(', ', $placeholders) . ')';
   }
 
 }
@@ -143,7 +146,10 @@ class DeleteQuery_sqlite extends DeleteQuery {
  */
 class TruncateQuery_sqlite extends TruncateQuery {
   public function __toString() {
-    return 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '} ';
+    // Create a comments string to prepend to the query.
+    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+
+    return $comments . 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '} ';
   }
 }
 
