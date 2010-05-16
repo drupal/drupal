@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1163 2010/05/14 03:38:49 webchick Exp $
+// $Id: common.inc,v 1.1164 2010/05/16 19:21:45 dries Exp $
 
 /**
  * @file
@@ -4323,8 +4323,8 @@ function drupal_build_js_cache($files) {
     // Build aggregate JS file.
     foreach ($files as $path => $info) {
       if ($info['preprocess']) {
-        // Append a ';' after each JS file to prevent them from running together.
-        $contents .= file_get_contents($path) . ';';
+        // Append a ';' and a newline after each JS file to prevent them from running together.
+        $contents .= file_get_contents($path) . ";\n";
       }
     }
     // Prefix filename to prevent blocking by firewalls which reject files
