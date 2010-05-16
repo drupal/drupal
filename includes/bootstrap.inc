@@ -1989,13 +1989,13 @@ function _drupal_bootstrap_page_cache() {
     $cache = drupal_page_get_cache();
     // If there is a cached page, display it.
     if (is_object($cache)) {
+      header('X-Drupal-Cache: HIT');
       date_default_timezone_set(drupal_get_user_timezone());
       // If the skipping of the bootstrap hooks is not enforced, call
       // hook_boot.
       if (variable_get('page_cache_invoke_hooks', TRUE)) {
         bootstrap_invoke_all('boot');
       }
-      header('X-Drupal-Cache: HIT');
       drupal_serve_page_from_cache($cache);
       // If the skipping of the bootstrap hooks is not enforced, call
       // hook_exit.
@@ -2004,6 +2004,9 @@ function _drupal_bootstrap_page_cache() {
       }
       // We are done.
       exit;
+    }
+    else {
+      header('X-Drupal-Cache: MISS');
     }
   }
 }
@@ -2062,9 +2065,6 @@ function _drupal_bootstrap_variables() {
  */
 function _drupal_bootstrap_page_header() {
   bootstrap_invoke_all('boot');
-  if (!drupal_page_get_cache(TRUE) && drupal_page_is_cacheable()) {
-    header('X-Drupal-Cache: MISS');
-  }
 
   // Prepare for non-cached page workflow.
   require_once DRUPAL_ROOT . '/' . variable_get('lock_inc', 'includes/lock.inc');
