@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.14 2010/05/05 06:55:25 webchick Exp $
+// $Id: standard.install,v 1.15 2010/05/16 10:41:04 dries Exp $
 
 /**
  * Implements hook_install().
@@ -414,6 +414,11 @@ function standard_install() {
   user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
   // Set this as the administrator role.
   variable_set('user_admin_role', $admin_role->rid);
+
+  // Assign user 1 the "administrator" role.
+  db_insert('users_roles')
+    ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
+    ->execute();
 
   // Update the menu router information.
   menu_rebuild();
