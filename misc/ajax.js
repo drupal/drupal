@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.16 2010/04/30 08:07:54 dries Exp $
+// $Id: ajax.js,v 1.17 2010/05/16 19:08:08 dries Exp $
 (function ($) {
 
 /**
@@ -132,7 +132,7 @@ Drupal.ajax = function (base, element, element_settings) {
       // Sanity check for browser support (object expected).
       // When using iFrame uploads, responses must be returned as a string.
       if (typeof response == 'string') {
-        response = $.parseJson(response);
+        response = $.parseJSON(response);
       }
       return ajax.success(response, status);
     },
