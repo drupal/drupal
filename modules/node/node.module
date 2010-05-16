@@ -3290,6 +3290,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 function node_content_form($node, $form_state) {
   // It is impossible to define a content type without implementing hook_form()
   // @todo: remove this requirement.
+  $form = array();
   $type = node_type_get_type($node);
 
   if ($type->has_title) {
