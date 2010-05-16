@@ -914,7 +914,7 @@ function system_modules($form, $form_state = array()) {
     foreach ($module->required_by as $required_by => $v) {
       // Hidden modules are unset already.
       if (isset($visible_files[$required_by])) {
-        if ($files[$required_by]->status == 1) {
+        if ($files[$required_by]->status == 1 && $module->status == 1) {
           $extra['required_by'][] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$required_by]->info['name']));
           $extra['disabled'] = TRUE;
         }
