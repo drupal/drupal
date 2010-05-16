@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.466 2010/05/12 08:26:15 dries Exp $
+// $Id: system.install,v 1.467 2010/05/16 20:08:38 dries Exp $
 
 /**
  * @file
@@ -356,6 +356,62 @@ function system_requirements($phase) {
       );
     }
     $requirements['update access']['title'] = $t('Access to update.php');
+  }
+
+  // Display an error if a newly introduced dependency in a module is not resolved.
+  if ($phase == 'update') {
+    $files = system_rebuild_module_data();
+    foreach ($files as $module => $file) {
+      // Ignore disabled modules.
+      if (!$file->status) {
+        continue;
+      }
+      // Check the module's PHP version.
+      $name = $file->info['name'];
+      $php = $file->info['php'];
+      if (version_compare($php, PHP_VERSION, '>')) {
+        $requirements['php']['description'] .= $t('@name requires at least PHP @version.', array('@name' => $name, '@version' => $php));
+        $requirements['php']['severity'] = REQUIREMENT_ERROR;
+      }
+      // Check the module's required modules.
+      foreach ($file->requires as $requirement) {
+        $required_module = $requirement['name'];
+        // Check if the module exists.
+        if (!isset($files[$required_module])) {
+          $requirements["$module-$required_module"] = array(
+            'title' => $t('Unresolved dependency'),
+            'description' => $t('@name requires this module.', array('@name' => $name)),
+            'value' => t('@required_name (Missing)', array('@required_name' => $required_module)),
+            'severity' => REQUIREMENT_ERROR,
+          );
+          continue;
+        }
+        // Check for an incompatible version.
+        $required_file = $files[$required_module];
+        $required_name = $required_file->info['name'];
+        $version = str_replace(DRUPAL_CORE_COMPATIBILITY . '-', '', $required_file->info['version']);
+        $compatibility = drupal_check_incompatibility($requirement, $version);
+        if ($compatibility) {
+          $compatibility = rtrim(substr($compatibility, 2), ')');
+          $requirements["$module-$required_module"] = array(
+            'title' => $t('Unresolved dependency'),
+            'description' => $t('@name requires this module and version. Currently using @required_name version @version', array('@name' => $name, '@required_name' => $required_name, '@version' => $version)),
+            'value' => t('@required_name (Version @compatibility required)', array('@required_name' => $required_name, '@compatibility' => $compatibility)),
+            'severity' => REQUIREMENT_ERROR,
+          );
+          continue;
+        }
+        // Check for a disabled dependency.
+        if (!$required_file->status) {
+          $requirements["$module-$required_module"] = array(
+            'title' => $t('Unresolved dependency'),
+            'description' => $t('@name requires this module.', array('@name' => $name)),
+            'value' => $t('@required_name (Disabled)', array('@required_name' => $required_name)),
+            'severity' => REQUIREMENT_ERROR,
+          );
+        }
+      }
+    }
   }
 
   // Test Unicode library
