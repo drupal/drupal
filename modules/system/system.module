@@ -384,7 +384,6 @@ function system_element_info() {
   );
   $types['checkboxes'] = array(
     '#input' => TRUE,
-    '#tree' => TRUE,
     '#process' => array('form_process_checkboxes'),
     '#theme_wrappers' => array('checkboxes'),
     '#pre_render' => array('form_pre_render_conditional_form_element'),

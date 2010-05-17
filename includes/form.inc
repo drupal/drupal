@@ -1291,6 +1291,13 @@ function form_builder($form_id, $element, &$form_state) {
   // Recurse through all child elements.
   $count = 0;
   foreach (element_children($element) as $key) {
+    // Prior to checking properties of child elements, their default properties
+    // need to be loaded.
+    if (isset($element[$key]['#type']) && empty($element[$key]['#defaults_loaded']) && ($info = element_info($element[$key]['#type']))) {
+      $element[$key] += $info;
+      $element[$key]['#defaults_loaded'] = TRUE;
+    }
+
     // Don't squash an existing tree value.
     if (!isset($element[$key]['#tree'])) {
       $element[$key]['#tree'] = $element['#tree'];
@@ -1311,12 +1318,6 @@ function form_builder($form_id, $element, &$form_state) {
     $array_parents = isset($element['#array_parents']) ? $element['#array_parents'] : array();
     $array_parents[] = $key;
     $element[$key]['#array_parents'] = $array_parents;
-
-    // Prior to handling #weight, default element properties need to be applied.
-    if (isset($element[$key]['#type']) && empty($element[$key]['#defaults_loaded']) && ($info = element_info($element[$key]['#type']))) {
-      $element[$key] += $info;
-      $element[$key]['#defaults_loaded'] = TRUE;
-    }
 
     // Assign a decimal placeholder weight to preserve original array order.
     if (!isset($element[$key]['#weight'])) {
