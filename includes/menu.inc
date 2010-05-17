@@ -3145,7 +3145,7 @@ function _menu_router_build($callbacks) {
           // previous iteration assigned one already), try to find the menu name
           // of the parent item in the currently stored menu links.
           if (!isset($parent['menu_name'])) {
-            $menu_name = db_query("SELECT menu_name FROM {menu_links} WHERE router_path = :router_path", array(':router_path' => $parent_path))->fetchField();
+            $menu_name = db_query("SELECT menu_name FROM {menu_links} WHERE router_path = :router_path AND module = 'system'", array(':router_path' => $parent_path))->fetchField();
             if ($menu_name) {
               $parent['menu_name'] = $menu_name;
             }
