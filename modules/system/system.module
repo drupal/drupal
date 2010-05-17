@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.929 2010/05/17 08:00:25 dries Exp $
+// $Id: system.module,v 1.930 2010/05/17 21:08:37 dries Exp $
 
 /**
  * @file
@@ -2557,7 +2557,7 @@ function system_system_info_alter(&$info, $file, $type) {
  *   A string that is the region name.
  */
 function system_default_region($theme) {
-  $regions = array_keys(system_region_list($theme));
+  $regions = array_keys(system_region_list($theme, REGIONS_VISIBLE));
   return isset($regions[0]) ? $regions[0] : '';
 }
 
