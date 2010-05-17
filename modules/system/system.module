@@ -217,7 +217,8 @@ function system_permission() {
       'title' => t('Administer themes'),
     ),
     'administer software updates' => array(
-      'title' => t('Run software updates'),
+      'title' => t('Administer software updates'),
+      'restrict access' => TRUE,
     ),
     'administer actions' => array(
       'title' => t('Administer actions'),
