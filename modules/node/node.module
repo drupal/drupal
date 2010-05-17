@@ -3647,7 +3647,7 @@ class NodeController extends DrupalDefaultEntityController {
     parent::attachLoad($nodes, $revision_id);
   }
 
-  protected function buildQuery($ids, $conditions, $revision_id) {
+  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
     // Ensure that uid is taken from the {node} table,
     // alias timestamp to revision_timestamp and add revision_uid.
     $query = parent::buildQuery($ids, $conditions, $revision_id);
