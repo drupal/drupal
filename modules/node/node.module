@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1272 2010/05/16 09:56:20 dries Exp $
+// $Id: node.module,v 1.1273 2010/05/17 07:43:36 dries Exp $
 
 /**
  * @file
@@ -3647,7 +3647,7 @@ class NodeController extends DrupalDefaultEntityController {
     parent::attachLoad($nodes, $revision_id);
   }
 
-  protected function buildQuery($ids, $conditions, $revision_id) {
+  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
     // Ensure that uid is taken from the {node} table,
     // alias timestamp to revision_timestamp and add revision_uid.
     $query = parent::buildQuery($ids, $conditions, $revision_id);
