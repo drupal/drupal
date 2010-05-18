@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.81 2010/05/05 16:28:06 dries Exp $ */
+/* $Id: style.css,v 1.82 2010/05/18 11:56:59 dries Exp $ */
 
 /**
  * Generic elements
@@ -110,7 +110,7 @@ ol {
 
 /* Default to menu leaf bullet for unordered list items. "ul" used here so it can cascade to list items and "li.leaf" to override the system leaf image. */
 ul,
-li.leaf {
+ul li.leaf {
   list-style-image: url(images/menu-leaf.gif);
 }
 
