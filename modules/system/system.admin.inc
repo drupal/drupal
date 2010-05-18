@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.281 2010/05/16 20:08:38 dries Exp $
+// $Id: system.admin.inc,v 1.282 2010/05/18 12:07:39 dries Exp $
 
 /**
  * @file
@@ -10,11 +10,12 @@
  * Menu callback; Provide the administration overview page.
  */
 function system_main_admin_page($arg = NULL) {
-  // If we received an argument, they probably meant some other page.
-  // Let's 404 them since the menu system cannot be told we do not
-  // accept arguments.
+  // Only continue if provided arguments are expected. This function serves
+  // as the callback for the top-level admin/ page, so any unexpected arguments
+  // are likely the result of someone typing in the URL of an administrative
+  // page that doesn't actually exist; for example, admin/some/random/page.
   if (isset($arg) && substr($arg, 0, 3) != 'by-') {
-    return drupal_not_found();
+    return MENU_NOT_FOUND;
   }
 
   // Check for status report errors.
