@@ -1,5 +1,5 @@
 <?php
-// $Id: common_test.module,v 1.10 2010/03/02 08:47:41 dries Exp $
+// $Id: common_test.module,v 1.11 2010/05/18 06:59:46 dries Exp $
 
 /**
  * @file
@@ -28,10 +28,22 @@ function common_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['common-test/drupal_goto/redirect_advanced'] = array(
+    'title' => 'Drupal Goto',
+    'page callback' => 'common_test_drupal_goto_redirect_advanced',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   $items['common-test/drupal_goto/redirect_fail'] = array(
     'title' => 'Drupal Goto Failure',
     'page callback' => 'drupal_goto',
     'page arguments' => array('common-test/drupal_goto/fail'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['common-test/destination'] = array(
+    'title' => 'Drupal Get Destination',
+    'page callback' => 'common_test_destination',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -45,11 +57,17 @@ function common_test_menu() {
 }
 
 /**
- * Check that drupal_goto() exits once called.
+ * Redirect using drupal_goto().
  */
 function common_test_drupal_goto_redirect() {
   drupal_goto('common-test/drupal_goto');
-  print t("Drupal goto failed to stop program");
+}
+
+/**
+ * Redirect using drupal_goto().
+ */
+function common_test_drupal_goto_redirect_advanced() {
+  drupal_goto('common-test/drupal_goto', array('query' => array('foo' => '123')), 301);
 }
 
 /**
@@ -73,6 +91,14 @@ function common_test_drupal_goto_alter(&$path, &$options, &$http_response_code) 
   if ($path == 'common-test/drupal_goto/fail') {
     $path = 'common-test/drupal_goto/redirect';
   }
+}
+
+/**
+ * Print destination query parameter.
+ */
+function common_test_destination() {
+  $destination = drupal_get_destination();
+  print "The destination: " . check_plain($destination['destination']);
 }
 
 /**

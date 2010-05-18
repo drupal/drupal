@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1164 2010/05/16 19:21:45 dries Exp $
+// $Id: common.inc,v 1.1165 2010/05/18 06:59:46 dries Exp $
 
 /**
  * @file
@@ -660,7 +660,7 @@ function drupal_encode_path($path) {
 function drupal_goto($path = '', array $options = array(), $http_response_code = 302) {
   // A destination in $_GET always overrides the function arguments.
   if (isset($_GET['destination'])) {
-    $destination = drupal_parse_url(urldecode($_GET['destination']));
+    $destination = drupal_parse_url($_GET['destination']);
     $path = $destination['path'];
     $options['query'] = $destination['query'];
     $options['fragment'] = $destination['fragment'];
