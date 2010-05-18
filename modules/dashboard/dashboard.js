@@ -8,9 +8,6 @@ Drupal.behaviors.dashboard = {
   attach: function () {
     $('#dashboard').prepend('<div class="customize"><ul class="action-links"><li><a href="#">' + Drupal.t('Customize dashboard') + '</a></li></ul><div class="canvas"></div></div>');
     $('#dashboard .customize .action-links a').click(Drupal.behaviors.dashboard.enterCustomizeMode);
-    if ($('#dashboard .region .block').length == 0) {
-      Drupal.settings.dashboard.launchCustomize = true;
-    }
     Drupal.behaviors.dashboard.addPlaceholders();
     if (Drupal.settings.dashboard.launchCustomize) {
       Drupal.behaviors.dashboard.enterCustomizeMode();

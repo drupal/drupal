@@ -198,6 +198,14 @@ function dashboard_theme() {
  *   Whether to launch in customization mode right away. TRUE or FALSE.
  */
 function dashboard_admin($launch_customize = FALSE) {
+  // Only continue if provided arguments are expected. This function serves
+  // as the callback for the top-level admin/ page, so any unexpected arguments
+  // are likely the result of someone typing in the URL of an administrative
+  // page that doesn't actually exist; for example, admin/some/random/page.
+  if (!is_bool($launch_customize)) {
+    return MENU_NOT_FOUND;
+  }
+
   $js_settings = array(
     'dashboard' => array(
       'drawer' => url('admin/dashboard/drawer'),
