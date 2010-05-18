@@ -51,6 +51,9 @@ define('CACHE_TEMPORARY', -1);
 /**
  * Log message severity -- Emergency: system is unusable.
  *
+ * The WATCHDOG_* constant definitions correspond to the logging severity levels
+ * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
+ *
  * @see watchdog()
  * @see watchdog_severity_levels()
  */
@@ -58,6 +61,9 @@ define('WATCHDOG_EMERGENCY', 0);
 
 /**
  * Log message severity -- Alert: action must be taken immediately.
+ *
+ * The WATCHDOG_* constant definitions correspond to the logging severity levels
+ * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
  *
  * @see watchdog()
  * @see watchdog_severity_levels()
@@ -67,6 +73,9 @@ define('WATCHDOG_ALERT', 1);
 /**
  * Log message severity -- Critical: critical conditions.
  *
+ * The WATCHDOG_* constant definitions correspond to the logging severity levels
+ * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
+ *
  * @see watchdog()
  * @see watchdog_severity_levels()
  */
@@ -74,6 +83,9 @@ define('WATCHDOG_CRITICAL', 2);
 
 /**
  * Log message severity -- Error: error conditions.
+ *
+ * The WATCHDOG_* constant definitions correspond to the logging severity levels
+ * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
  *
  * @see watchdog()
  * @see watchdog_severity_levels()
@@ -83,6 +95,9 @@ define('WATCHDOG_ERROR', 3);
 /**
  * Log message severity -- Warning: warning conditions.
  *
+ * The WATCHDOG_* constant definitions correspond to the logging severity levels
+ * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
+ *
  * @see watchdog()
  * @see watchdog_severity_levels()
  */
@@ -90,6 +105,9 @@ define('WATCHDOG_WARNING', 4);
 
 /**
  * Log message severity -- Notice: normal but significant condition.
+ *
+ * The WATCHDOG_* constant definitions correspond to the logging severity levels
+ * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
  *
  * @see watchdog()
  * @see watchdog_severity_levels()
@@ -99,6 +117,9 @@ define('WATCHDOG_NOTICE', 5);
 /**
  * Log message severity -- Informational: informational messages.
  *
+ * The WATCHDOG_* constant definitions correspond to the logging severity levels
+ * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
+ *
  * @see watchdog()
  * @see watchdog_severity_levels()
  */
@@ -106,6 +127,9 @@ define('WATCHDOG_INFO', 6);
 
 /**
  * Log message severity -- Debug: debug-level messages.
+ *
+ * The WATCHDOG_* constant definitions correspond to the logging severity levels
+ * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
  *
  * @see watchdog()
  * @see watchdog_severity_levels()
