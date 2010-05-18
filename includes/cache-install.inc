@@ -24,7 +24,7 @@ class DrupalFakeCache extends DrupalDatabaseCache implements DrupalCacheInterfac
     return array();
   }
 
-  function set($cid, $data, $expire = CACHE_PERMANENT, array $headers = NULL) {
+  function set($cid, $data, $expire = CACHE_PERMANENT) {
   }
 
   function clear($cid = NULL, $wildcard = FALSE) {

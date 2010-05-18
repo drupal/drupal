@@ -51,7 +51,12 @@ function statistics_help($path, $arg) {
 function statistics_exit() {
   global $user;
 
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+  // When serving cached pages with the 'page_cache_without_database'
+  // configuration, system variables need to be loaded. This is a major
+  // performance decrease for non-database page caches, but with Statistics
+  // module, it is likely to also have 'statistics_enable_access_log' enabled,
+  // in which case we need to bootstrap to the session phase anyway.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
 
   if (variable_get('statistics_count_content_views', 0)) {
     // We are counting content views.
@@ -70,6 +75,7 @@ function statistics_exit() {
     }
   }
   if (variable_get('statistics_enable_access_log', 0)) {
+    drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
     // Log this page access.
     db_insert('accesslog')
       ->fields(array(

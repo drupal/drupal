@@ -653,9 +653,6 @@ function theme_update_last_check($variables) {
 /**
  * Store data in the private update status cache table.
  *
- * Note: this function completely ignores the {cache_update}.headers field
- * since that is meaningless for the kinds of data we're caching.
- *
  * @param $cid
  *   The cache ID to save the data with.
  * @param $data
@@ -671,7 +668,6 @@ function _update_cache_set($cid, $data, $expire) {
   $fields = array(
     'created' => REQUEST_TIME,
     'expire' => $expire,
-    'headers' => NULL,
   );
   if (!is_string($data)) {
     $fields['data'] = serialize($data);

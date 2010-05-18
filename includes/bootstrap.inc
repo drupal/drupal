@@ -1069,14 +1069,14 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // drupal_add_http_headers(). Keys are mixed-case.
   $default_headers = array();
 
-  foreach ($cache->headers as $name => $value) {
+  foreach ($cache->data['headers'] as $name => $value) {
     // In the case of a 304 response, certain headers must be sent, and the
     // remaining may not (see RFC 2616, section 10.3.5). Do not override
     // headers set in hook_boot().
     $name_lower = strtolower($name);
     if (in_array($name_lower, array('content-location', 'expires', 'cache-control', 'vary')) && !isset($hook_boot_headers[$name_lower])) {
       drupal_add_http_header($name, $value);
-      unset($cache->headers[$name]);
+      unset($cache->data['headers'][$name]);
     }
   }
 
@@ -1106,7 +1106,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   }
 
   // Send the remaining headers.
-  foreach ($cache->headers as $name => $value) {
+  foreach ($cache->data['headers'] as $name => $value) {
     drupal_add_http_header($name, $value);
   }
 
@@ -1134,19 +1134,20 @@ function drupal_serve_page_from_cache(stdClass $cache) {
     header('Vary: Accept-Encoding', FALSE);
     // If page_compression is enabled, the cache contains gzipped data.
     if ($return_compressed) {
-      // $cache->data is already gzip'ed, so make sure zlib.output_compression
-      // does not compress it once more.
+      // $cache->data['body'] is already gzip'ed, so make sure
+      // zlib.output_compression does not compress it once more.
       ini_set('zlib.output_compression', '0');
       header('Content-Encoding: gzip');
     }
     else {
       // The client does not support compression, so unzip the data in the
       // cache. Strip the gzip header and run uncompress.
-      $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
+      $cache->data['body'] = gzinflate(substr(substr($cache->data['body'], 10), 0, -8));
     }
   }
 
-  print $cache->data;
+  // Print the page.
+  print $cache->data['body'];
 }
 
 /**
@@ -1639,6 +1640,48 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
 }
 
 /**
+ * Get the title of the current page, for display on the page and in the title bar.
+ *
+ * @return
+ *   The current page's title.
+ */
+function drupal_get_title() {
+  $title = drupal_set_title();
+
+  // During a bootstrap, menu.inc is not included and thus we cannot provide a title.
+  if (!isset($title) && function_exists('menu_get_active_title')) {
+    $title = check_plain(menu_get_active_title());
+  }
+
+  return $title;
+}
+
+/**
+ * Set the title of the current page, for display on the page and in the title bar.
+ *
+ * @param $title
+ *   Optional string value to assign to the page title; or if set to NULL
+ *   (default), leaves the current title unchanged.
+ * @param $output
+ *   Optional flag - normally should be left as CHECK_PLAIN. Only set to
+ *   PASS_THROUGH if you have already removed any possibly dangerous code
+ *   from $title using a function like check_plain() or filter_xss(). With this
+ *   flag the string will be passed through unchanged.
+ *
+ * @return
+ *   The updated title of the current page.
+ */
+function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
+  $stored_title = &drupal_static(__FUNCTION__);
+
+  if (isset($title)) {
+    $stored_title = ($output == PASS_THROUGH) ? $title : check_plain($title);
+  }
+
+  return $stored_title;
+}
+
+/**
  * Check to see if an IP address has been blocked.
  *
  * Blocked IP addresses are stored in the database by default. However for
@@ -1990,6 +2033,9 @@ function _drupal_bootstrap_page_cache() {
     // If there is a cached page, display it.
     if (is_object($cache)) {
       header('X-Drupal-Cache: HIT');
+      // Restore the metadata cached with the page.
+      $_GET['q'] = $cache->data['path'];
+      drupal_set_title($cache->data['title'], PASS_THROUGH);
       date_default_timezone_set(drupal_get_user_timezone());
       // If the skipping of the bootstrap hooks is not enforced, call
       // hook_boot.
@@ -2305,6 +2351,54 @@ function request_path() {
   $path = trim($path, '/');
 
   return $path;
+}
+
+/**
+ * Return a component of the current Drupal path.
+ *
+ * When viewing a page at the path "admin/structure/types", for example, arg(0)
+ * returns "admin", arg(1) returns "structure", and arg(2) returns "types".
+ *
+ * Avoid use of this function where possible, as resulting code is hard to read.
+ * In menu callback functions, attempt to use named arguments. See the explanation
+ * in menu.inc for how to construct callbacks that take arguments. When attempting
+ * to use this function to load an element from the current path, e.g. loading the
+ * node on a node page, please use menu_get_object() instead.
+ *
+ * @param $index
+ *   The index of the component, where each component is separated by a '/'
+ *   (forward-slash), and where the first component has an index of 0 (zero).
+ * @param $path
+ *   A path to break into components. Defaults to the path of the current page.
+ *
+ * @return
+ *   The component specified by $index, or NULL if the specified component was
+ *   not found.
+ */
+function arg($index = NULL, $path = NULL) {
+  // Even though $arguments doesn't need to be resettable for any functional
+  // reasons (the result of explode() does not depend on any run-time
+  // information), it should be resettable anyway in case a module needs to
+  // free up the memory used by it.
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['arguments'] = &drupal_static(__FUNCTION__);
+  }
+  $arguments = &$drupal_static_fast['arguments'];
+
+  if (!isset($path)) {
+    $path = $_GET['q'];
+  }
+  if (!isset($arguments[$path])) {
+    $arguments[$path] = explode('/', $path);
+  }
+  if (!isset($index)) {
+    return $arguments[$path];
+  }
+  if (isset($arguments[$path][$index])) {
+    return $arguments[$path][$index];
+  }
 }
 
 /**
