@@ -1082,7 +1082,7 @@ function _install_select_profile($profiles) {
   if (sizeof($profiles) == 1) {
     $profile = array_pop($profiles);
     // TODO: is this right?
-    require_once $profile->uri;
+    require_once DRUPAL_ROOT . '/' . $profile->uri;
     return $profile->name;
   }
   else {

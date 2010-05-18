@@ -268,7 +268,7 @@ function update_access_allowed() {
   // Calls to user_access() might fail during the Drupal 6 to 7 update process,
   // so we fall back on requiring that the user be logged in as user #1.
   try {
-    require_once drupal_get_path('module', 'user') . '/user.module';
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'user') . '/user.module';
     return user_access('administer software updates');
   }
   catch (Exception $e) {

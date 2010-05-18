@@ -53,8 +53,8 @@ class ModuleUpdater extends Updater implements DrupalUpdaterInterface {
    * Return available database schema updates one a new version is installed.
    */
   public function getSchemaUpdates() {
-    require_once './includes/install.inc';
-    require_once './includes/update.inc';
+    require_once DRUPAL_ROOT . '/includes/install.inc';
+    require_once DRUPAL_ROOT . '/includes/update.inc';
 
     if (_update_get_project_type($project) != 'module') {
       return array();
