@@ -395,6 +395,16 @@ function aggregator_admin_refresh_feed($feed) {
  * @ingroup forms
  */
 function aggregator_admin_form($form, $form_state) {
+  // Global aggregator settings.
+  $form['aggregator_allowed_html_tags'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Allowed HTML tags'),
+    '#size' => 80,
+    '#maxlength' => 255,
+    '#default_value' => variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'),
+    '#description' => t('A space-separated list of HTML tags allowed in the content of feed items. Disallowed tags are stripped from the content.'),
+  );
+
   // Make sure configuration is sane.
   aggregator_sanitize_configuration();
 
