@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.37 2010/04/27 13:19:31 dries Exp $
+// $Id: tabledrag.js,v 1.38 2010/05/18 06:46:45 dries Exp $
 (function ($) {
 
 /**
@@ -998,7 +998,7 @@ Drupal.tableDrag.prototype.row.prototype.findSiblings = function (rowSettings) {
   var siblings = [];
   var directions = ['prev', 'next'];
   var rowIndentation = this.indents;
-  for (var d in directions) {
+  for (var d = 0; d < directions.length; d++) {
     var checkRow = $(this.element)[directions[d]]();
     while (checkRow.length) {
       // Check that the sibling contains a similar target field.
