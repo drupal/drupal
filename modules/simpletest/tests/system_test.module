@@ -43,13 +43,6 @@ function system_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  $items['system-test/destination'] = array(
-    'title' => 'Redirect',
-    'page callback' => 'system_test_destination',
-    'page arguments' => array(2),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
 
   $items['system-test/variable-get'] = array(
     'title' => 'Variable Get',
@@ -141,11 +134,6 @@ function system_test_redirect_noparse() {
 function system_test_redirect_invalid_scheme() {
   header("Location: ftp://localhost/path", TRUE, 301);
   exit;
-}
-
-function system_test_destination() {
-  $destination = drupal_get_destination();
-  return 'The destination: ' . $destination['destination'];
 }
 
 /**
