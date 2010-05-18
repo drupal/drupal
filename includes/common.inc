@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1166 2010/05/18 18:11:13 dries Exp $
+// $Id: common.inc,v 1.1167 2010/05/18 18:26:30 dries Exp $
 
 /**
  * @file
@@ -4518,28 +4518,32 @@ function drupal_page_set_cache() {
   if (drupal_page_is_cacheable()) {
     $cache = (object) array(
       'cid' => $base_root . request_uri(),
-      'data' => ob_get_clean(),
+      'data' => array(
+        'path' => $_GET['q'],
+        'body' => ob_get_clean(),
+        'title' => drupal_get_title(),
+        'headers' => array(),
+      ),
       'expire' => CACHE_TEMPORARY,
       'created' => REQUEST_TIME,
-      'headers' => array(),
     );
 
     // Restore preferred header names based on the lower-case names returned
     // by drupal_get_http_header().
     $header_names = _drupal_set_preferred_header_name();
     foreach (drupal_get_http_header() as $name_lower => $value) {
-      $cache->headers[$header_names[$name_lower]] = $value;
+      $cache->data['headers'][$header_names[$name_lower]] = $value;
       if ($name_lower == 'expires') {
         // Use the actual timestamp from an Expires header if available.
         $cache->expire = strtotime($value);
       }
     }
 
-    if ($cache->data) {
+    if ($cache->data['body']) {
       if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
-        $cache->data = gzencode($cache->data, 9, FORCE_GZIP);
+        $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
-      cache_set($cache->cid, $cache->data, 'cache_page', $cache->expire, $cache->headers);
+      cache_set($cache->cid, $cache->data, 'cache_page', $cache->expire);
     }
     return $cache;
   }

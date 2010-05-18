@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.467 2010/05/16 20:08:38 dries Exp $
+// $Id: system.install,v 1.468 2010/05/18 18:26:30 dries Exp $
 
 /**
  * @file
@@ -633,11 +633,6 @@ function system_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'headers' => array(
-        'description' => 'Any custom HTTP headers to be added to cached data.',
-        'type' => 'text',
-        'not null' => FALSE,
       ),
       'serialized' => array(
         'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
@@ -2379,6 +2374,16 @@ function system_update_7053() {
   db_insert('menu_custom')
     ->fields(array('menu_name' => 'management', 'title' => 'Management', 'description' => "The <em>Management</em> menu contains links for administrative tasks."))
     ->execute();
+}
+
+/**
+ * Remove {cache_*}.headers columns.
+ */
+function system_update_7054() {
+  $cache_tables = array('cache', 'cache_bootstrap', 'cache_filter', 'cache_form', 'cache_menu', 'cache_page', 'cache_path');
+  foreach ($cache_tables as $table) {
+    db_drop_field($table, 'headers');
+  }
 }
 
 /**

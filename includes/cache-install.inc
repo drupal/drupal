@@ -1,5 +1,5 @@
 <?php
-// $Id: cache-install.inc,v 1.8 2010/04/11 17:16:45 dries Exp $
+// $Id: cache-install.inc,v 1.9 2010/05/18 18:26:30 dries Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@ class DrupalFakeCache extends DrupalDatabaseCache implements DrupalCacheInterfac
     return array();
   }
 
-  function set($cid, $data, $expire = CACHE_PERMANENT, array $headers = NULL) {
+  function set($cid, $data, $expire = CACHE_PERMANENT) {
   }
 
   function clear($cid = NULL, $wildcard = FALSE) {

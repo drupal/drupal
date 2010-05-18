@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.47 2010/03/07 07:26:13 webchick Exp $
+// $Id: cache.inc,v 1.48 2010/05/18 18:26:30 dries Exp $
 
 /**
  * Get the cache object for a cache bin.
@@ -133,11 +133,9 @@ function cache_get_multiple(array &$cids, $bin = 'cache') {
  *     general cache wipe.
  *   - A Unix timestamp: Indicates that the item should be kept at least until
  *     the given time, after which it behaves like CACHE_TEMPORARY.
- * @param $headers
- *   A string containing HTTP header information for cached pages.
  */
-function cache_set($cid, $data, $bin = 'cache', $expire = CACHE_PERMANENT, array $headers = NULL) {
-  return _cache_get_object($bin)->set($cid, $data, $expire, $headers);
+function cache_set($cid, $data, $bin = 'cache', $expire = CACHE_PERMANENT) {
+  return _cache_get_object($bin)->set($cid, $data, $expire);
 }
 
 /**
@@ -263,10 +261,8 @@ interface DrupalCacheInterface {
    *     general cache wipe.
    *   - A Unix timestamp: Indicates that the item should be kept at least until
    *     the given time, after which it behaves like CACHE_TEMPORARY.
-   * @param $headers
-   *   A string containing HTTP header information for cached pages.
    */
-  function set($cid, $data, $expire = CACHE_PERMANENT, array $headers = NULL);
+  function set($cid, $data, $expire = CACHE_PERMANENT);
 
 
   /**
@@ -312,7 +308,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     try {
       // Garbage collection necessary when enforcing a minimum cache lifetime.
       $this->garbageCollection($this->bin);
-      $cache = db_query("SELECT data, created, headers, expire, serialized FROM {" . $this->bin . "} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
+      $cache = db_query("SELECT data, created, expire, serialized FROM {" . $this->bin . "} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
       return $this->prepareItem($cache);
     }
     catch (Exception $e) {
@@ -327,7 +323,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
       // Garbage collection necessary when enforcing a minimum cache lifetime.
       $this->garbageCollection($this->bin);
       $query = db_select($this->bin);
-      $query->fields($this->bin, array('cid', 'data', 'created', 'headers', 'expire', 'serialized'));
+      $query->fields($this->bin, array('cid', 'data', 'created', 'expire', 'serialized'));
       $query->condition($this->bin . '.cid', $cids, 'IN');
       $result = $query->execute();
       $cache = array();
@@ -401,19 +397,15 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     if ($cache->serialized) {
       $cache->data = unserialize($cache->data);
     }
-    if (isset($cache->headers)) {
-      $cache->headers = unserialize($cache->headers);
-    }
 
     return $cache;
   }
 
-  function set($cid, $data, $expire = CACHE_PERMANENT, array $headers = NULL) {
+  function set($cid, $data, $expire = CACHE_PERMANENT) {
     $fields = array(
       'serialized' => 0,
       'created' => REQUEST_TIME,
       'expire' => $expire,
-      'headers' => isset($headers) ? serialize($headers) : NULL,
     );
     if (!is_string($data)) {
       $fields['data'] = serialize($data);

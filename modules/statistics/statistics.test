@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.test,v 1.17 2010/04/20 09:48:06 webchick Exp $
+// $Id: statistics.test,v 1.18 2010/05/18 18:26:30 dries Exp $
 
 /**
  * Sets up a base class for the Statistics module.
@@ -30,6 +30,69 @@ class StatisticsTestCase extends DrupalWebTestCase {
         'timestamp' => REQUEST_TIME,
       ))
       ->execute();
+  }
+}
+
+/**
+ * Tests that logging via statistics_exit() works for cached and uncached pages.
+ *
+ * Subclass DrupalWebTestCase rather than StatisticsTestCase, because we want
+ * to test requests from an anonymous user.
+ */
+class StatisticsLoggingTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Statistics logging tests',
+      'description' => 'Tests request logging for cached and uncached pages.',
+      'group' => 'Statistics'
+    );
+  }
+
+  function setUp() {
+    parent::setUp('statistics');
+
+    // Ensure we have a node page to access.
+    $this->node = $this->drupalCreateNode();
+
+    // Enable page caching.
+    variable_set('cache', TRUE);
+
+    // Enable access logging.
+    variable_set('statistics_enable_access_log', 1);
+    variable_set('statistics_count_content_views', 1);
+
+    // Clear the logs.
+    db_truncate('accesslog');
+    db_truncate('node_counter');
+  }
+
+  /**
+   * Verifies request logging for cached and uncached pages.
+   */
+  function testLogging() {
+    $path = 'node/' . $this->node->nid;
+    $expected = array(
+      'title' => $this->node->title,
+      'path' => $path,
+    );
+
+    // Verify logging of an uncached page.
+    $this->drupalGet($path);
+    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', t('Testing an uncached page.'));
+    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
+    $this->assertTrue(is_array($log) && count($log) == 1, t('Page request was logged.'));
+    $this->assertEqual(array_intersect_key($log[0], $expected), $expected);
+    $node_counter = statistics_get($this->node->nid);
+    $this->assertIdentical($node_counter['totalcount'], '1');
+
+    // Verify logging of a cached page.
+    $this->drupalGet($path);
+    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Testing a cached page.'));
+    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
+    $this->assertTrue(is_array($log) && count($log) == 2, t('Page request was logged.'));
+    $this->assertEqual(array_intersect_key($log[1], $expected), $expected);
+    $node_counter = statistics_get($this->node->nid);
+    $this->assertIdentical($node_counter['totalcount'], '2');
   }
 }
 

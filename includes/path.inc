@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.62 2010/04/24 15:11:27 dries Exp $
+// $Id: path.inc,v 1.63 2010/05/18 18:26:30 dries Exp $
 
 /**
  * @file
@@ -232,96 +232,6 @@ function drupal_get_normal_path($path, $path_language = NULL) {
   }
 
   return $path;
-}
-
-/**
- * Return a component of the current Drupal path.
- *
- * When viewing a page at the path "admin/structure/types", for example, arg(0)
- * returns "admin", arg(1) returns "structure", and arg(2) returns "types".
- *
- * Avoid use of this function where possible, as resulting code is hard to read.
- * In menu callback functions, attempt to use named arguments. See the explanation
- * in menu.inc for how to construct callbacks that take arguments. When attempting
- * to use this function to load an element from the current path, e.g. loading the
- * node on a node page, please use menu_get_object() instead.
- *
- * @param $index
- *   The index of the component, where each component is separated by a '/'
- *   (forward-slash), and where the first component has an index of 0 (zero).
- * @param $path
- *   A path to break into components. Defaults to the path of the current page.
- *
- * @return
- *   The component specified by $index, or NULL if the specified component was
- *   not found.
- */
-function arg($index = NULL, $path = NULL) {
-  // Even though $arguments doesn't need to be resettable for any functional
-  // reasons (the result of explode() does not depend on any run-time
-  // information), it should be resettable anyway in case a module needs to
-  // free up the memory used by it.
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['arguments'] = &drupal_static(__FUNCTION__);
-  }
-  $arguments = &$drupal_static_fast['arguments'];
-
-  if (!isset($path)) {
-    $path = $_GET['q'];
-  }
-  if (!isset($arguments[$path])) {
-    $arguments[$path] = explode('/', $path);
-  }
-  if (!isset($index)) {
-    return $arguments[$path];
-  }
-  if (isset($arguments[$path][$index])) {
-    return $arguments[$path][$index];
-  }
-}
-
-/**
- * Get the title of the current page, for display on the page and in the title bar.
- *
- * @return
- *   The current page's title.
- */
-function drupal_get_title() {
-  $title = drupal_set_title();
-
-  // During a bootstrap, menu.inc is not included and thus we cannot provide a title.
-  if (!isset($title) && function_exists('menu_get_active_title')) {
-    $title = check_plain(menu_get_active_title());
-  }
-
-  return $title;
-}
-
-/**
- * Set the title of the current page, for display on the page and in the title bar.
- *
- * @param $title
- *   Optional string value to assign to the page title; or if set to NULL
- *   (default), leaves the current title unchanged.
- * @param $output
- *   Optional flag - normally should be left as CHECK_PLAIN. Only set to
- *   PASS_THROUGH if you have already removed any possibly dangerous code
- *   from $title using a function like check_plain() or filter_xss(). With this
- *   flag the string will be passed through unchanged.
- *
- * @return
- *   The updated title of the current page.
- */
-function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
-  $stored_title = &drupal_static(__FUNCTION__);
-
-  if (isset($title)) {
-    $stored_title = ($output == PASS_THROUGH) ? $title : check_plain($title);
-  }
-
-  return $stored_title;
 }
 
 /**
