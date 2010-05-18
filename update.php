@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.322 2010/05/04 15:25:42 dries Exp $
+// $Id: update.php,v 1.323 2010/05/18 18:11:12 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -268,7 +268,7 @@ function update_access_allowed() {
   // Calls to user_access() might fail during the Drupal 6 to 7 update process,
   // so we fall back on requiring that the user be logged in as user #1.
   try {
-    require_once drupal_get_path('module', 'user') . '/user.module';
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'user') . '/user.module';
     return user_access('administer software updates');
   }
   catch (Exception $e) {

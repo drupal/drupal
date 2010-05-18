@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.18 2010/05/09 14:27:52 dries Exp $
+// $Id: install.core.inc,v 1.19 2010/05/18 18:11:13 dries Exp $
 
 /**
  * @file
@@ -1082,7 +1082,7 @@ function _install_select_profile($profiles) {
   if (sizeof($profiles) == 1) {
     $profile = array_pop($profiles);
     // TODO: is this right?
-    require_once $profile->uri;
+    require_once DRUPAL_ROOT . '/' . $profile->uri;
     return $profile->name;
   }
   else {
