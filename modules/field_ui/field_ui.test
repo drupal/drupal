@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.test,v 1.15 2010/04/07 17:30:43 dries Exp $
+// $Id: field_ui.test,v 1.16 2010/05/18 18:30:49 dries Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ class FieldUITestCase extends DrupalWebTestCase {
    */
   function addExistingField() {
     // Check "Add existing field" appears.
-    $this->drupalGet(('admin/structure/types/manage/page/fields'));
+    $this->drupalGet('admin/structure/types/manage/page/fields');
     $this->assertRaw(t('Add existing field'), t('"Add existing field" was found.'));
 
     // Check that the list of options respects entity type restrictions on
@@ -261,6 +261,41 @@ class FieldUITestCase extends DrupalWebTestCase {
     $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), t('Field instance was deleted.'));
     // Check that the field was deleted too.
     $this->assertNull(field_info_field($this->field_name), t('Field was deleted.'));
+  }
+
+  /**
+   * Test that Field UI respects the 'no_ui' option in hook_field_info().
+   */
+  function testHiddenFields() {
+    $bundle_path = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields/';
+
+    // Check that the field type is not available in the 'add new field' row.
+    $this->drupalGet($bundle_path);
+    $this->assertFalse($this->xpath('//select[@id="edit--add-new-field-type"]//option[@value="hidden_test_field"]'), t("The 'add new field' select respects field types 'no_ui' property."));
+
+    // Create a field and an instance programmatically.
+    $field_name = 'hidden_test_field';
+    field_create_field(array('field_name' => $field_name, 'type' => $field_name));
+    $instance = array(
+      'field_name' => $field_name,
+      'bundle' => $this->type,
+      'entity_type' => 'node',
+      'label' => t('Hidden field'),
+      'widget_type' => 'test_field_widget',
+    );
+    field_create_instance($instance);
+    $this->assertTrue(field_read_instance('node', $field_name, $this->type), t('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
+
+    // Check that the newly added instance appears on the 'Manage Fields'
+    // screen.
+    $this->drupalGet($bundle_path);
+    $this->assertFieldByXPath('//table[@id="field-overview"]//span[@class="label-field"]', $instance['label'], t('Field was created and appears in the overview page.'));
+
+    // Check that the instance does not appear in the 'add existing field' row
+    // on other bundles.
+    $bundle_path = 'admin/structure/types/manage/article/fields/';
+    $this->drupalGet($bundle_path);
+    $this->assertFalse($this->xpath('//select[@id="edit--add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), t("The 'add existing field' select respects field types 'no_ui' property."));
   }
 
   /**

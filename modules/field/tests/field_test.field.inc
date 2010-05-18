@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.field.inc,v 1.9 2010/03/12 19:51:40 dries Exp $
+// $Id: field_test.field.inc,v 1.10 2010/05/18 18:30:49 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function field_test_field_info() {
   return array(
     'test_field' => array(
-      'label' => t('Test Field'),
+      'label' => t('Test field'),
       'description' => t('Dummy field type used for tests.'),
       'settings' => array(
         'test_field_setting' => 'dummy test string',
@@ -23,6 +23,15 @@ function field_test_field_info() {
         'test_instance_setting' => 'dummy test string',
         'test_hook_field_load' => FALSE,
       ),
+      'default_widget' => 'test_field_widget',
+      'default_formatter' => 'field_test_default',
+    ),
+    'hidden_test_field' => array(
+      'no_ui' => TRUE,
+      'label' => t('Hidden from UI test field'),
+      'description' => t('Dummy hidden field type used for tests.'),
+      'settings' => array(),
+      'instance_settings' => array(),
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',
     ),
@@ -139,7 +148,7 @@ function field_test_field_widget_info() {
   return array(
     'test_field_widget' => array(
       'label' => t('Test field'),
-      'field types' => array('test_field'),
+      'field types' => array('test_field', 'hidden_test_field'),
       'settings' => array('test_widget_setting' => 'dummy test string'),
     ),
     'test_field_widget_multiple' => array(

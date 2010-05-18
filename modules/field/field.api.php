@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.80 2010/05/06 05:59:31 webchick Exp $
+// $Id: field.api.php,v 1.81 2010/05/18 18:30:49 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -149,6 +149,10 @@ function hook_field_extra_fields_alter(&$info) {
  *     instance definition. This formatter must be available whenever the field
  *     type is available (i.e. provided by the field type module, or by a module
  *     the field type module depends on).
+ *   - no_ui: (optional) A boolean specifying that users should not be allowed
+ *     to create fields and instances of this field type through the UI. Such
+ *     fields can only be created programmatically with field_create_field()
+ *     and field_create_instance(). Defaults to FALSE.
  *
  * @see hook_field_info_alter()
  */

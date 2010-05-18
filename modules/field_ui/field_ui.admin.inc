@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.49 2010/04/24 14:49:13 dries Exp $
+// $Id: field_ui.admin.inc,v 1.50 2010/05/18 18:30:49 dries Exp $
 
 /**
  * @file
@@ -703,8 +703,9 @@ function field_ui_field_type_options() {
     $field_types = field_info_field_types();
     $field_type_options = array();
     foreach ($field_types as $name => $field_type) {
-      // Skip field types which have no widget types.
-      if (field_ui_widget_type_options($name)) {
+      // Skip field types which have no widget types, or should not be add via
+      // uesr interface.
+      if (field_ui_widget_type_options($name) && empty($field_type['no_ui'])) {
         $options[$name] = $field_type['label'];
       }
     }
@@ -793,10 +794,13 @@ function field_ui_existing_field_options($entity_type, $bundle) {
           // Don't show
           // - locked fields,
           // - fields already in the current bundle,
-          // - field that cannot be added to the entity type.
+          // - fields that cannot be added to the entity type,
+          // - fields that that shoud not be added via user interface.
+
           if (empty($field['locked'])
             && !field_info_instance($entity_type, $field['field_name'], $bundle)
-            && (empty($field['entity_types']) || in_array($entity_type, $field['entity_types']))) {
+            && (empty($field['entity_types']) || in_array($entity_type, $field['entity_types']))
+            && empty($field_types[$field['type']]['no_ui'])) {
             $text = t('@type: @field (@label)', array(
               '@type' => $field_types[$field['type']]['label'],
               '@label' => t($instance['label']), '@field' => $instance['field_name'],
