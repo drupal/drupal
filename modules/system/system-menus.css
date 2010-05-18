@@ -10,7 +10,7 @@ ul.menu li {
 }
 ul li.expanded {
   list-style-type: circle;
-  list-style-image: url(../../misc/menu-expanded.png); 
+  list-style-image: url(../../misc/menu-expanded.png);
 }
 ul li.collapsed {
   list-style-type: disc;

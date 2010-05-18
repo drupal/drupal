@@ -110,7 +110,7 @@ ol {
 
 /* Default to menu leaf bullet for unordered list items. "ul" used here so it can cascade to list items and "li.leaf" to override the system leaf image. */
 ul,
-li.leaf {
+ul li.leaf {
   list-style-image: url(images/menu-leaf.gif);
 }
 
