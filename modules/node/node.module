@@ -1285,9 +1285,13 @@ function node_search($op = 'search', $keys = NULL) {
         $node->body = drupal_render($node->content);
 
         // Fetch comments for snippet.
-        $node->body .= module_invoke('comment', 'nodeapi', $node, 'update index');
+        if (module_exists('comment')) {
+          $node->body .= comment_nodeapi($node, 'update index');
+        }
         // Fetch terms for snippet.
-        $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update index');
+        if (module_exists('taxonomy')) {
+          $node->body .= taxonomy_nodeapi($node, 'update index');
+        }
 
         $extra = node_invoke_nodeapi($node, 'search result');
         $results[] = array(
