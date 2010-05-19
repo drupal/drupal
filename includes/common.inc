@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1167 2010/05/18 18:26:30 dries Exp $
+// $Id: common.inc,v 1.1168 2010/05/19 19:22:24 dries Exp $
 
 /**
  * @file
@@ -5536,9 +5536,6 @@ function drupal_common_theme() {
     ),
     'table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'empty' => ''),
-    ),
-    'table_select_header_cell' => array(
-      'variables' => array(),
     ),
     'tablesort_indicator' => array(
       'variables' => array('style' => NULL),

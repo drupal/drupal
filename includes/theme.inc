@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.597 2010/05/06 05:59:30 webchick Exp $
+// $Id: theme.inc,v 1.598 2010/05/19 19:22:24 dries Exp $
 
 /**
  * @file
@@ -1741,18 +1741,6 @@ function theme_table($variables) {
 
   $output .= "</table>\n";
   return $output;
-}
-
-/**
- * Returns attributes for a header cell of tables with select all functionality.
- *
- * @return
- *   An array of attributes.
- */
-function theme_table_select_header_cell() {
-  drupal_add_js('misc/tableselect.js');
-
-  return array('class' => array('select-all'));
 }
 
 /**
