@@ -7,6 +7,25 @@
  */
 
 /**
+ * @defgroup actions Actions
+ * @{
+ * Functions that perform an action on a certain system object.
+ *
+ * All modules should declare their action functions to be in this group and
+ * each action function should reference its configuration form, validate, and
+ * submit functions using \@see. Conversely, form, validate, and submit
+ * functions should reference the action function using \@see. For examples of
+ * this see comment_unpublish_by_keyword_action(), which has the following in
+ * its doxygen documentation:
+ *
+ * \@ingroup actions
+ * \@see comment_unpublish_by_keyword_action_form().
+ * \@see comment_unpublish_by_keyword_action_submit().
+ *
+ * @} End of "defgroup actions".
+ */
+
+/**
  * Perform a given list of actions by executing their callback functions.
  *
  * Given the IDs of actions to perform, find out what the callbacks
@@ -81,8 +100,13 @@ function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NU
     foreach ($actions as $action_id => $params) {
       if (is_numeric($action_id)) { // Configurable actions need parameters.
         $function = $params['callback'];
-        $context = array_merge($context, $params);
-        $result[$action_id] = $function($object, $context, $a1, $a2);
+        if (function_exists($function)) {
+          $context = array_merge($context, $params);
+          $actions_result[$action_id] = $function($object, $context, $a1, $a2);
+        }
+        else {
+          $actions_result[$action_id] = FALSE;
+        }
       }
       // Singleton action; $action_id is the function name.
       else {
@@ -96,8 +120,13 @@ function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NU
     if (is_numeric($action_ids)) {
       $action = db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = '%s'", $action_ids));
       $function = $action->callback;
-      $context = array_merge($context, unserialize($action->parameters));
-      $result[$action_ids] = $function($object, $context, $a1, $a2);
+      if (function_exists($function)) {
+        $context = array_merge($context, unserialize($action->parameters));
+        $actions_result[$action_ids] = $function($object, $context, $a1, $a2);
+      }
+      else {
+        $actions_result[$action_ids] = FALSE;
+      }
     }
     // Singleton action; $action_ids is the function name.
     else {
