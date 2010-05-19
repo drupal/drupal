@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.931 2010/05/17 21:23:32 dries Exp $
+// $Id: system.module,v 1.932 2010/05/19 19:11:25 dries Exp $
 
 /**
  * @file
@@ -2649,41 +2649,46 @@ function _system_sort_requirements($a, $b) {
 }
 
 /**
- * Output a confirmation form
+ * Generates a form array for a confirmation form.
  *
- * This function returns a complete form for confirming an action. A link is
- * offered to go back to the item that is being changed in case the user changes
- * his/her mind.
+ * This function returns a complete form array for confirming an action. The
+ * form contains a confirm button as well as a cancellation link that allows a
+ * user to abort the action.
  *
- * If the submit handler for this form is invoked, the user successfully
- * confirmed the action. You should never directly inspect $_POST to see if an
- * action was confirmed.
+ * If the submit handler for a form that implements confirm_form() is invoked,
+ * the user successfully confirmed the action. You should never directly
+ * inspect $_POST to see if an action was confirmed.
  *
  * Note - if the parameters $question, $description, $yes, or $no could contain
  * any user input (such as node titles or taxonomy terms), it is the
  * responsibility of the code calling confirm_form() to sanitize them first with
  * a function like check_plain() or filter_xss().
  *
- * @ingroup forms
  * @param $form
- *   Additional elements to inject into the form, for example hidden elements.
+ *   Additional elements to add to the form; for example, hidden elements.
  * @param $question
  *   The question to ask the user (e.g. "Are you sure you want to delete the
- *   block <em>foo</em>?").
+ *   block <em>foo</em>?"). The page title will be set to this value.
  * @param $path
- *   The page to go to if the user denies the action.
- *   Can be either a drupal path, or an array with the keys 'path', 'query', 'fragment'.
+ *   The page to go to if the user cancels the action. This can be either:
+ *   - A string containing a Drupal path.
+ *   - An associative array with a 'path' key. Additional array values are
+ *     passed as the $options parameter to l().
+ *   If the 'destination' query parameter is set in the URL when viewing a
+ *   confirmation form, that value will be used instead of $path.
  * @param $description
- *   Additional text to display (defaults to "This action cannot be undone.").
+ *   Additional text to display. Defaults to t('This action cannot be undone.').
  * @param $yes
- *   A caption for the button which confirms the action (e.g. "Delete",
- *   "Replace", ...).
+ *   A caption for the button that confirms the action (e.g. "Delete",
+ *   "Replace", ...). Defaults to t('Confirm').
  * @param $no
- *   A caption for the link which denies the action (e.g. "Cancel").
+ *   A caption for the link which cancels the action (e.g. "Cancel"). Defaults
+ *   to t('Cancel').
  * @param $name
  *   The internal name used to refer to the confirmation item.
+ *
  * @return
- *   The form.
+ *   The form array.
  */
 function confirm_form($form, $question, $path, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
   $description = isset($description) ? $description : t('This action cannot be undone.');
