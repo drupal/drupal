@@ -189,6 +189,9 @@ function upload_node_form_submit(&$form, &$form_state) {
 
   if (isset($form_state['values']['files'])) {
     foreach ($form_state['values']['files'] as $fid => $file) {
+      // If the node was previewed prior to saving, $form['#node']->files[$fid]
+      // is an array instead of an object. Convert file to object for compatibility. 
+      $form['#node']->files[$fid] = (object) $form['#node']->files[$fid];
       $form_state['values']['files'][$fid]['new'] = !empty($form['#node']->files[$fid]->new);
     }
   }
