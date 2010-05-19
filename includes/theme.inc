@@ -1744,18 +1744,6 @@ function theme_table($variables) {
 }
 
 /**
- * Returns attributes for a header cell of tables with select all functionality.
- *
- * @return
- *   An array of attributes.
- */
-function theme_table_select_header_cell() {
-  drupal_add_js('misc/tableselect.js');
-
-  return array('class' => array('select-all'));
-}
-
-/**
  * Returns HTML for a sort icon.
  *
  * @param $variables

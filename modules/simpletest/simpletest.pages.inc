@@ -71,10 +71,11 @@ function theme_simpletest_test_table($variables) {
 
   drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
   drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js');
+  drupal_add_js('misc/tableselect.js');
 
   // Create header for test selection table.
   $header = array(
-    theme('table_select_header_cell'),
+    array('class' => array('select-all')),
     array('data' => t('Test'), 'class' => array('simpletest_test')),
     array('data' => t('Description'), 'class' => array('simpletest_description')),
   );
