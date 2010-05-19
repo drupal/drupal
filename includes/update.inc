@@ -164,11 +164,6 @@ function update_prepare_d7_bootstrap() {
           'not null' => TRUE,
           'default' => 0,
         ),
-        'headers' => array(
-          'description' => 'Any custom HTTP headers to be added to cached data.',
-          'type' => 'text',
-          'not null' => FALSE,
-        ),
         'serialized' => array(
           'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
           'type' => 'int',

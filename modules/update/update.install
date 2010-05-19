@@ -169,7 +169,7 @@ function update_update_7000() {
 }
 
 /**
- * Remove {cache_update}.headers columns.
+ * Remove {cache_update}.headers column.
  */
 function update_update_7001() {
   db_drop_field('cache_update', 'headers');
