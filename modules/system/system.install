@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.468 2010/05/18 18:26:30 dries Exp $
+// $Id: system.install,v 1.469 2010/05/19 19:14:43 dries Exp $
 
 /**
  * @file
@@ -2380,7 +2380,7 @@ function system_update_7053() {
  * Remove {cache_*}.headers columns.
  */
 function system_update_7054() {
-  $cache_tables = array('cache', 'cache_bootstrap', 'cache_filter', 'cache_form', 'cache_menu', 'cache_page', 'cache_path');
+  $cache_tables = array('cache', 'cache_filter', 'cache_form', 'cache_menu', 'cache_page', 'cache_path');
   foreach ($cache_tables as $table) {
     db_drop_field($table, 'headers');
   }

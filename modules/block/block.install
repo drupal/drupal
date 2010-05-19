@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.40 2010/03/28 11:16:29 dries Exp $
+// $Id: block.install,v 1.41 2010/05/19 19:14:43 dries Exp $
 
 /**
  * @file
@@ -386,4 +386,11 @@ function block_update_7004() {
 
   // Rebuild theme data, so the new 'help' region is identified.
   system_rebuild_theme_data();
+}
+
+/**
+ * Remove {cache_block}.headers column.
+ */
+function block_update_7005() {
+  db_drop_field('cache_block', 'headers');
 }

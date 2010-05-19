@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.47 2010/05/01 08:12:22 dries Exp $
+// $Id: update.inc,v 1.48 2010/05/19 19:14:43 dries Exp $
 
 /**
  * @file
@@ -163,11 +163,6 @@ function update_prepare_d7_bootstrap() {
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,
-        ),
-        'headers' => array(
-          'description' => 'Any custom HTTP headers to be added to cached data.',
-          'type' => 'text',
-          'not null' => FALSE,
         ),
         'serialized' => array(
           'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
