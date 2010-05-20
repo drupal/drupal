@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.27 2010/05/18 06:59:46 dries Exp $
+// $Id: system_test.module,v 1.28 2010/05/20 08:51:24 dries Exp $
 
 /**
  * Implements hook_menu().
@@ -110,7 +110,8 @@ function system_test_basic_auth_page() {
 function system_test_redirect($code) {
   $code = (int) $code;
   if ($code != 200) {
-    header("Location: " . url('system-test/redirect/200', array('absolute' => TRUE)), TRUE, $code);
+    // Header names are case-insensitive.
+    header("locaTION: " . url('system-test/redirect/200', array('absolute' => TRUE)), TRUE, $code);
     exit;
   }
   return '';
