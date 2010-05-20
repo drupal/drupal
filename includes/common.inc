@@ -758,7 +758,9 @@ function drupal_access_denied() {
  *   - error
  *       If an error occurred, the error message. Otherwise not set.
  *   - headers
- *       An array containing the response headers as name/value pairs.
+ *       An array containing the response headers as name/value pairs. HTTP
+ *       header names are case-insensitive (RFC 2616, section 4.2), so for easy
+ *       access the array keys are returned in lower case.
  *   - data
  *       A string containing the response body that was received.
  */
@@ -917,14 +919,15 @@ function drupal_http_request($url, array $options = array()) {
 
   // Parse the response headers.
   while ($line = trim(array_shift($response))) {
-    list($header, $value) = explode(':', $line, 2);
-    if (isset($result->headers[$header]) && $header == 'Set-Cookie') {
+    list($name, $value) = explode(':', $line, 2);
+    $name = strtolower($name);
+    if (isset($result->headers[$name]) && $name == 'set-cookie') {
       // RFC 2109: the Set-Cookie response header comprises the token Set-
       // Cookie:, followed by a comma-separated list of one or more cookies.
-      $result->headers[$header] .= ',' . trim($value);
+      $result->headers[$name] .= ',' . trim($value);
     }
     else {
-      $result->headers[$header] = trim($value);
+      $result->headers[$name] = trim($value);
     }
   }
 
@@ -984,7 +987,7 @@ function drupal_http_request($url, array $options = array()) {
     case 301: // Moved permanently
     case 302: // Moved temporarily
     case 307: // Moved temporarily
-      $location = $result->headers['Location'];
+      $location = $result->headers['location'];
       $options['timeout'] -= timer_read(__FUNCTION__) / 1000;
       if ($options['timeout'] <= 0) {
         $result->code = HTTP_REQUEST_TIMEOUT;

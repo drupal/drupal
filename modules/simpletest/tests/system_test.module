@@ -110,7 +110,8 @@ function system_test_basic_auth_page() {
 function system_test_redirect($code) {
   $code = (int) $code;
   if ($code != 200) {
-    header("Location: " . url('system-test/redirect/200', array('absolute' => TRUE)), TRUE, $code);
+    // Header names are case-insensitive.
+    header("locaTION: " . url('system-test/redirect/200', array('absolute' => TRUE)), TRUE, $code);
     exit;
   }
   return '';

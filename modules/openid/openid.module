@@ -437,14 +437,14 @@ function _openid_xrds_discovery($claimed_id) {
     $result = drupal_http_request($xrds_url, array('headers' => $headers));
 
     if (!isset($result->error)) {
-      if (isset($result->headers['Content-Type']) && preg_match("/application\/xrds\+xml/", $result->headers['Content-Type'])) {
+      if (isset($result->headers['content-type']) && preg_match("/application\/xrds\+xml/", $result->headers['content-type'])) {
         // Parse XML document to find URL
         $services = _openid_xrds_parse($result->data);
       }
       else {
         $xrds_url = NULL;
-        if (isset($result->headers['X-XRDS-Location'])) {
-          $xrds_url = $result->headers['X-XRDS-Location'];
+        if (isset($result->headers['x-xrds-location'])) {
+          $xrds_url = $result->headers['x-xrds-location'];
         }
         else {
           // Look for meta http-equiv link in HTML head

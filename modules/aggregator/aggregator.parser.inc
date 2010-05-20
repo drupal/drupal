@@ -24,7 +24,7 @@ function aggregator_aggregator_parse($feed) {
 
   // Filter the input data.
   if (aggregator_parse_feed($feed->source_string, $feed)) {
-    $modified = empty($feed->http_headers['Last-Modified']) ? 0 : strtotime($feed->http_headers['Last-Modified']);
+    $modified = empty($feed->http_headers['last-modified']) ? 0 : strtotime($feed->http_headers['last-modified']);
 
     // Prepare the channel data.
     foreach ($channel as $key => $value) {
@@ -43,7 +43,7 @@ function aggregator_aggregator_parse($feed) {
       $image = '';
     }
 
-    $etag = empty($feed->http_headers['ETag']) ? '' : $feed->http_headers['ETag'];
+    $etag = empty($feed->http_headers['etag']) ? '' : $feed->http_headers['etag'];
 
     // Add parsed data to the feed object.
     $feed->link = !empty($channel['LINK']) ? $channel['LINK'] : '';
