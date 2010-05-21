@@ -179,6 +179,12 @@ function update_prepare_d7_bootstrap() {
     );
     db_create_table('cache_bootstrap', $cache_bootstrap);
   }
+
+  // Set a valid timezone for 6 -> 7 upgrade process.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
+  if (is_numeric(variable_get('date_default_timezone', 0))) {
+    $GLOBALS['conf']['date_default_timezone'] = 'UTC';
+  }
 }
 
 /**
