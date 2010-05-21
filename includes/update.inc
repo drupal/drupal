@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.48 2010/05/19 19:14:43 dries Exp $
+// $Id: update.inc,v 1.49 2010/05/21 11:43:27 dries Exp $
 
 /**
  * @file
@@ -178,6 +178,12 @@ function update_prepare_d7_bootstrap() {
       'primary key' => array('cid'),
     );
     db_create_table('cache_bootstrap', $cache_bootstrap);
+  }
+
+  // Set a valid timezone for 6 -> 7 upgrade process.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
+  if (is_numeric(variable_get('date_default_timezone', 0))) {
+    $GLOBALS['conf']['date_default_timezone'] = 'UTC';
   }
 }
 
