@@ -6452,7 +6452,7 @@ function entity_extract_ids($entity_type, $entity) {
  *   containing these elements:
  *   0: primary id of the entity
  *   1: revision id of the entity, or NULL if $entity_type is not versioned
- *   2: bundle name of the entity
+ *   2: bundle name of the entity, or NULL if $entity_type has no bundles
  * @return
  *   An entity structure, initialized with the ids provided.
  */
@@ -6460,10 +6460,10 @@ function entity_create_stub_entity($entity_type, $ids) {
   $entity = new stdClass();
   $info = entity_get_info($entity_type);
   $entity->{$info['entity keys']['id']} = $ids[0];
-  if (isset($info['entity keys']['revision']) && !is_null($ids[1])) {
+  if (!empty($info['entity keys']['revision']) && !is_null($ids[1])) {
     $entity->{$info['entity keys']['revision']} = $ids[1];
   }
-  if ($info['entity keys']['bundle']) {
+  if (!empty($info['entity keys']['bundle']) && !is_null($ids[2])) {
     $entity->{$info['entity keys']['bundle']} = $ids[2];
   }
   return $entity;
