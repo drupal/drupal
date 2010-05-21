@@ -99,6 +99,23 @@ function update_prepare_d7_bootstrap() {
   // that occur by creating a static list.
   $GLOBALS['conf']['blocked_ips'] = array();
 
+  // Check that PDO is available and that the correct PDO database driver is
+  // loaded. Bootstrapping to DRUPAL_BOOTSTRAP_DATABASE will result in a fatal
+  // error otherwise.
+  $message = '';
+  // Check that PDO is loaded.
+  if (!extension_loaded('pdo')) {
+    $message = '<h2>PDO is required!</h2><p>Drupal 7 requires PHP ' . DRUPAL_MINIMUM_PHP . ' or higher with the PHP Data Objects (PDO) extension enabled.</p>';
+  }
+  // Check that the correct driver is loaded for the database being updated.
+  elseif (!in_array($databases['default']['default']['driver'], PDO::getAvailableDrivers())) {
+      $message = '<h2>A PDO database driver is required!</h2><p>You need to enable the PDO_' . strtoupper($databases['default']['default']['driver']) . ' database driver for PHP ' . DRUPAL_MINIMUM_PHP . ' or higher so that Drupal 7 can access the database.</p>';
+  }
+  if ($message) {
+    print $message . '<p>See the <a href="http://drupal.org/requirements">system requirements page</a> for more information.</p>';
+    exit();
+  }
+  
   // Allow the database system to work even if the registry has not been
   // created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
