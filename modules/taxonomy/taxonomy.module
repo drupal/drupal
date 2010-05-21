@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.590 2010/05/14 04:41:54 webchick Exp $
+// $Id: taxonomy.module,v 1.591 2010/05/21 20:27:45 dries Exp $
 
 /**
  * @file
@@ -143,9 +143,9 @@ function taxonomy_term_uri($term) {
  */
 function taxonomy_field_extra_fields() {
   $return = array();
-
-  foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocabulary) {
-    $return['taxonomy_term'][$machine_name] = array(
+  $info = entity_get_info('taxonomy_term');
+  foreach (array_keys($info['bundles']) as $bundle) {
+    $return['taxonomy_term'][$bundle] = array(
       'name' => array(
         'label' => t('Name'),
         'description' => t('Term name textfield'),
