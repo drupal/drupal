@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.389 2010/05/18 18:33:30 dries Exp $
+// $Id: bootstrap.inc,v 1.390 2010/05/21 20:19:48 dries Exp $
 
 /**
  * @file
@@ -1192,7 +1192,7 @@ function bootstrap_hooks() {
 function drupal_unpack($obj, $field = 'data') {
   if ($obj->$field && $data = unserialize($obj->$field)) {
     foreach ($data as $key => $value) {
-      if (!isset($obj->$key)) {
+      if (!empty($key) && !isset($obj->$key)) {
         $obj->$key = $value;
       }
     }
