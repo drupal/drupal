@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.283 2010/05/18 18:11:13 dries Exp $
+// $Id: system.admin.inc,v 1.284 2010/05/21 11:37:55 dries Exp $
 
 /**
  * @file
@@ -97,12 +97,15 @@ function system_admin_config_page() {
       }
       $block = $item;
       $block['content'] = '';
-      $block['show'] = TRUE;
       if ($item['block_callback'] && function_exists($item['block_callback'])) {
         $function = $item['block_callback'];
         $block['content'] .= $function();
       }
       $block['content'] .= theme('admin_block_content', array('content' => system_admin_menu_block($item)));
+      if (!empty($block['content'])) {
+        $block['show'] = TRUE;
+      }
+
       // Prepare for sorting as in function _menu_tree_check_access().
       // The weight is offset so it is always positive, with a uniform 5-digits.
       $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
