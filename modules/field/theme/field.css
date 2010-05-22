@@ -1,4 +1,4 @@
-/* $Id: field.css,v 1.8 2009/11/11 08:32:35 dries Exp $ */
+/* $Id: field.css,v 1.9 2010/05/22 20:23:01 dries Exp $ */
 
 /* Field display */
 .field .field-label {
@@ -6,7 +6,7 @@
 }
 .field-label-inline .field-label,
 .field-label-inline .field-items {
-  float:left;
+  float:left; /*LTR*/
 }
 
 /* Form display */

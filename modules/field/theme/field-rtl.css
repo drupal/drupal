@@ -1,4 +1,4 @@
-/* $Id: field-rtl.css,v 1.1 2009/03/30 05:28:41 webchick Exp $ */
+/* $Id: field-rtl.css,v 1.2 2010/05/22 20:23:01 dries Exp $ */
 
 form .field-multiple-table th.field-label {
   padding-right: 0;
@@ -8,4 +8,8 @@ form .field-multiple-table td.field-multiple-drag {
 }
 form .field-multiple-table td.field-multiple-drag a.tabledrag-handle{
   padding-left: .5em;
+}
+.field-label-inline .field-label,
+.field-label-inline .field-items {
+  float: right;
 }
