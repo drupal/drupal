@@ -6,7 +6,7 @@
 }
 .field-label-inline .field-label,
 .field-label-inline .field-items {
-  float:left;
+  float:left; /*LTR*/
 }
 
 /* Form display */
