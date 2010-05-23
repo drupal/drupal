@@ -42,7 +42,7 @@ Drupal.behaviors.tableHeader = {
     // Track positioning and visibility.
     function tracker(e) {
       // Reset top position of sticky table headers to the current top offset.
-      var topOffset = Drupal.displace ? Drupal.displace.getDisplacement('top') : 0;
+      var topOffset = Drupal.settings.tableHeaderOffset ? eval(Drupal.settings.tableHeaderOffset + '()') : 0;
       $('.sticky-header').css('top', topOffset + 'px');
       // Save positioning data.
       var viewHeight = document.documentElement.scrollHeight || document.body.scrollHeight;

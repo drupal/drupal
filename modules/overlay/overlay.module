@@ -300,6 +300,16 @@ function overlay_preprocess_page(&$variables) {
 }
 
 /**
+ * Preprocess template variables for toolbar.tpl.php.
+ *
+ * Adding the 'overlay-displace-top' class to the toolbar pushes the overlay
+ * down, so it appears below the toolbar.
+ */
+function overlay_preprocess_toolbar(&$variables) {
+  $variables['classes_array'][] = "overlay-displace-top";
+}
+
+/**
  * Form after_build callback.
  *
  * After all hook_form_alter() implementations have been processed, we look at

@@ -275,6 +275,26 @@ tr.selected td {
 }
 
 /*
+** To be used with displace.js
+*/
+.displace-top,
+.displace-bottom {
+  position: relative;
+  width: 100%;
+}
+.displace-processed .displace-top,
+.displace-processed .displace-bottom {
+  position: fixed;
+  width: auto;
+  left: 0;
+  right: 0;
+}
+.displace-unsupported .displace-top,
+.displace-unsupported .displace-bottom {
+  position: absolute;
+}
+
+/*
 ** Floating header for tableheader.js
 */
 table.sticky-header {

@@ -300,24 +300,6 @@ Drupal.getSelection = function (element) {
 };
 
 /**
- * Checks if position:fixed is supported.
- *
- * @return
- *   Boolean indicating whether or not position:fixed is supported.
- *
- * @see http://yura.thinkweb2.com/cft/#IS_POSITION_FIXED_SUPPORTED
- */
-Drupal.positionFixedSupported = function () {
-  if (this._positionFixedSupported === undefined) {
-    var el = $('<div style="position:fixed; top:10px" />').appendTo(document.body);
-    this._positionFixedSupported = el[0].offsetTop === 10;
-    el.remove();
-  }
-
-  return this._positionFixedSupported;
-};
-
-/**
  * Build an error message from an AJAX response.
  */
 Drupal.ajaxError = function (xmlhttp, uri) {

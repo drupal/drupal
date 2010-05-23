@@ -22,7 +22,7 @@
  * @see template_preprocess_toolbar()
  */
 ?>
-<div id="toolbar" class="<?php print $classes; ?> displace-top clearfix">
+<div id="toolbar" class="<?php print $classes; ?> clearfix">
   <div class="toolbar-menu clearfix">
     <?php print render($toolbar['toolbar_home']); ?>
     <?php print render($toolbar['toolbar_user']); ?>
