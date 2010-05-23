@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.86 2010/04/04 12:48:18 dries Exp $
+// $Id: field.attach.inc,v 1.87 2010/05/23 07:30:56 dries Exp $
 
 /**
  * @file
@@ -554,6 +554,9 @@ function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcod
   $form['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $form['#pre_render'][] = '_field_extra_weights_pre_render';
   $form['#extra_fields'] = field_extra_fields($entity_type, $bundle);
+
+  // Save the original entity to allow later re-use.
+  $form_state['entity'] = $entity;
 
   // Let other modules make changes to the form.
   // Avoid module_invoke_all() to let parameters be taken by reference.

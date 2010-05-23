@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.48 2010/04/30 08:07:54 dries Exp $
+// $Id: field.form.inc,v 1.49 2010/05/23 07:30:56 dries Exp $
 
 /**
  * @file
@@ -16,18 +16,9 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
     list($id, , ) = entity_extract_ids($entity_type, $entity);
   }
 
+  $addition = array();
   $field_name = $field['field_name'];
   $addition[$field_name] = array();
-
-  // Store field information in $form_state['storage'].
-  $form_state['field'][$field_name][$langcode] = array(
-    'field' => $field,
-    'instance' => $instance,
-    // This entry will be populated at form build time.
-    'array_parents' => array(),
-    // This entry will be populated at form validation time.
-    'errors' => array(),
-  );
 
   // Populate widgets with default values when creating a new entity.
   if (empty($items) && empty($id)) {
@@ -79,6 +70,16 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
   }
 
   if ($elements) {
+    // Store field information in $form_state.
+    $form_state['field'][$field_name][$langcode] = array(
+      'field' => $field,
+      'instance' => $instance,
+      // This entry will be populated at form build time.
+      'array_parents' => array(),
+      // This entry will be populated at form validation time.
+      'errors' => array(),
+    );
+
     // Also aid in theming of field widgets by rendering a classified
     // container.
     $addition[$field_name] = array(
@@ -92,16 +93,6 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
       ),
       '#weight' => $instance['widget']['weight'],
     );
-  }
-  else {
-    // The field is not accessible, or the widget did not return anything. Make
-    // sure the items are available in the submitted form values.
-    foreach ($items as $delta => $item) {
-      $elements[$delta] = array(
-        '#type' => 'value',
-        '#value' => $item,
-      );
-    }
   }
 
   // Populate the 'array_parents' information in $form_state['field'] after

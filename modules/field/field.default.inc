@@ -1,5 +1,5 @@
 <?php
-// $Id: field.default.inc,v 1.34 2010/03/27 05:52:49 webchick Exp $
+// $Id: field.default.inc,v 1.35 2010/05/23 07:30:56 dries Exp $
 
 /**
  * @file
@@ -67,13 +67,23 @@ function field_default_validate($entity_type, $entity, $field, $instance, $langc
 function field_default_submit($entity_type, $entity, $field, $instance, $langcode, &$items, $form, &$form_state) {
   $field_name = $field['field_name'];
 
-  // Reorder items to account for drag-n-drop reordering.
-  if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
-    $items = _field_sort_items($field, $items);
+  if (isset($form_state['values'][$field_name][$langcode])) {
+    // Reorder items to account for drag-n-drop reordering.
+    if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
+      $items = _field_sort_items($field, $items);
+    }
+    // Filter out empty values.
+    $items = _field_filter_items($field, $items);
   }
-
-  // Filter out empty values.
-  $items = _field_filter_items($field, $items);
+  elseif (!empty($entity->revision) && isset($form_state['entity']->{$field_name}[$langcode])) {
+    // To ensure new revisions are created with all field values in all
+    // languages, populate values not included in the form with the ones from
+    // the original object. This covers:
+    // - partial forms including only a subset of the fields,
+    // - fields for which the user has no edit access,
+    // - languages not involved in the form.
+    $items = $form_state['entity']->{$field_name}[$langcode];
+  }
 }
 
 /**

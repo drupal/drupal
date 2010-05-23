@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.entity.inc,v 1.8 2010/05/06 05:59:31 webchick Exp $
+// $Id: field_test.entity.inc,v 1.9 2010/05/23 07:30:56 dries Exp $
 
 /**
  * @file
@@ -164,11 +164,19 @@ function field_test_create_stub_entity($id = 1, $vid = 1, $bundle = 'test_bundle
 function field_test_entity_test_load($ftid, $ftvid = NULL) {
   // Load basic strucure.
   $query = db_select('test_entity', 'fte', array())
-    ->fields('fte')
-    ->condition('ftid', $ftid);
+    ->condition('fte.ftid', $ftid);
+
   if ($ftvid) {
-    $query->condition('ftvid', $ftvid);
+    $query->join('test_entity_revision', 'fter', 'fte.ftid = fter.ftid');
+    $query->addField('fte', 'ftid');
+    $query->addField('fte', 'fttype');
+    $query->addField('fter', 'ftvid');
+    $query->condition('fter.ftvid', $ftvid);
   }
+  else {
+    $query->fields('fte');
+  }
+
   $entities = $query->execute()->fetchAllAssoc('ftid');
 
   // Attach fields.
