@@ -3,7 +3,11 @@
 
 /**
  * @file
- * Base classes for the database layer.
+ * Core systems for the database layer.
+ *
+ * Classes required for basic functioning of the database system should be
+ * placed in this file.  All utility functions should also be placed in this
+ * file only, as they cannot auto-load the way classes can.
  */
 
 /**
