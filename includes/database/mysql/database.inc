@@ -13,6 +13,13 @@
 
 class DatabaseConnection_mysql extends DatabaseConnection {
 
+  /**
+   * Flag to indicate if we have registered the nextID cleanup function.
+   *
+   * @var boolean
+   */
+  protected $shutdownRegistered = FALSE;
+
   public function __construct(array $connection_options = array()) {
     // This driver defaults to transaction support, except if explicitly passed FALSE.
     $this->transactionSupport = !isset($connection_options['transactions']) || ($connection_options['transactions'] !== FALSE);
@@ -75,7 +82,6 @@ class DatabaseConnection_mysql extends DatabaseConnection {
   }
 
   public function nextId($existing_id = 0) {
-    static $shutdown_registered = FALSE;
     $new_id = $this->query('INSERT INTO {sequences} () VALUES ()', array(), array('return' => Database::RETURN_INSERT_ID));
     // This should only happen after an import or similar event.
     if ($existing_id >= $new_id) {
@@ -89,14 +95,14 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       $this->query('INSERT INTO {sequences} (value) VALUES (:value) ON DUPLICATE KEY UPDATE value = value', array(':value' => $existing_id));
       $new_id = $this->query('INSERT INTO {sequences} () VALUES ()', array(), array('return' => Database::RETURN_INSERT_ID));
     }
-    if (!$shutdown_registered) {
-      drupal_register_shutdown_function(array(get_class($this), 'nextIdDelete'));
-      $shutdown_registered = TRUE;
+    if (!$this->shutdownRegistered) {
+      register_shutdown_function(array($this, 'nextIdDelete'));
+      $shutdownRegistered = TRUE;
     }
     return $new_id;
   }
 
-  public static function nextIdDelete() {
+  public function nextIdDelete() {
     // While we want to clean up the table to keep it up from occupying too
     // much storage and memory, we must keep the highest value in the table
     // because InnoDB  uses an in-memory auto-increment counter as long as the
@@ -105,9 +111,9 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     // table based solely on values from the table so deleting all values would
     // be a problem in this case. Also, TRUNCATE resets the auto increment
     // counter.
-    $max_id = db_query('SELECT MAX(value) FROM {sequences}')->fetchField();
+    $max_id = $this->query('SELECT MAX(value) FROM {sequences}')->fetchField();
     // We know we are using MySQL here, so need for the slower db_delete().
-    db_query('DELETE FROM {sequences} WHERE value < :value', array(':value' => $max_id));
+    $this->query('DELETE FROM {sequences} WHERE value < :value', array(':value' => $max_id));
   }
 }
 
