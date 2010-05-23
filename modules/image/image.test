@@ -592,7 +592,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     // Create an image field that uses the new style.
     $field_name = strtolower($this->randomName(10));
     $instance = $this->createImageField($field_name, 'article');
-    $instance['display']['full']['type'] = 'image__' . $style_name;
+    $instance['display']['default']['type'] = 'image__' . $style_name;
     field_update_instance($instance);
 
     // Create a new node with an image attached.
@@ -662,21 +662,21 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
 
     // Test the image linked to file formatter.
     $instance = field_info_instance('node', $field_name, 'article');
-    $instance['display']['full']['type'] = 'image_link_file';
+    $instance['display']['default']['type'] = 'image_link_file';
     field_update_instance($instance);
     $default_output = l(theme('image', $image_info), file_create_url($image_uri), array('html' => TRUE));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, t('Image linked to file formatter displaying correctly on full node view.'));
 
     // Test the image linked to content formatter.
-    $instance['display']['full']['type'] = 'image_link_content';
+    $instance['display']['default']['type'] = 'image_link_content';
     field_update_instance($instance);
     $default_output = l(theme('image', $image_info), 'node/' . $nid, array('html' => TRUE, 'attributes' => array('class' => 'active')));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, t('Image linked to content formatter displaying correctly on full node view.'));
 
     // Test the image style 'thumbnail' formatter.
-    $instance['display']['full']['type'] = 'image__thumbnail';
+    $instance['display']['default']['type'] = 'image__thumbnail';
     field_update_instance($instance);
     // Ensure the derrivative image is generated so we do not have to deal with
     // image style callback paths.

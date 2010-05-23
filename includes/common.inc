@@ -6386,6 +6386,11 @@ function entity_get_info($entity_type = NULL) {
           'revision' => '',
           'bundle' => '',
         );
+        foreach ($entity_info[$name]['view modes'] as $view_mode => $view_mode_info) {
+          $entity_info[$name]['view modes'][$view_mode] += array(
+            'custom settings' => FALSE,
+          );
+        }
         // If no bundle key is provided, assume a single bundle, named after
         // the entity type.
         if (empty($entity_info[$name]['entity keys']['bundle']) && empty($entity_info[$name]['bundles'])) {

@@ -146,6 +146,7 @@ function user_entity_info() {
       'view modes' => array(
         'full' => array(
           'label' => t('User account'),
+          'custom settings' => FALSE,
         ),
       ),
     ),
@@ -167,20 +168,24 @@ function user_uri($user) {
  */
 function user_field_extra_fields() {
   $return['user']['user'] = array(
-    'account' => array(
-      'label' => 'User name and password',
-      'description' => t('User module account form elements'),
-      'weight' => -10,
+    'form' => array(
+      'account' => array(
+        'label' => 'User name and password',
+        'description' => t('User module account form elements'),
+        'weight' => -10,
+      ),
+      'timezone' => array(
+        'label' => 'Timezone',
+        'description' => t('User module timezone form element.'),
+        'weight' => 6,
+      ),
     ),
-    'timezone' => array(
-      'label' => 'Timezone',
-      'description' => t('User module timezone form element.'),
-      'weight' => 6,
-    ),
-    'summary' => array(
-      'label' => 'History',
-      'description' => t('User module history view element.'),
-      'weight' => 5,
+    'display' => array(
+      'summary' => array(
+        'label' => 'History',
+        'description' => t('User module history view element.'),
+        'weight' => 5,
+      ),
     ),
   );
 

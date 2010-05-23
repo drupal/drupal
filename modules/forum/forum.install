@@ -65,6 +65,16 @@ function forum_enable() {
       'widget' => array(
         'type' => 'options_select',
       ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+        'teaser' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+      ),
     );
     field_create_instance($instance);
 

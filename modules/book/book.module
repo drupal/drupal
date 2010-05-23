@@ -240,6 +240,7 @@ function book_entity_info_alter(&$info) {
   $info['node']['view modes'] += array(
     'print' => array(
       'label' => t('Print'),
+      'custom settings' => FALSE,
     ),
   );
 }

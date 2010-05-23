@@ -347,7 +347,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
         'type' => 'options_select',
       ),
       'display' => array(
-        'full' => array(
+        'default' => array(
           'type' => 'taxonomy_term_reference_link',
         ),
       ),
@@ -848,7 +848,12 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
       'label' => $this->randomName() . '_label',
       'widget' => array(
         'type' => 'options_select',
-      )
+      ),
+      'display' => array(
+        'full' => array(
+          'type' => 'taxonomy_term_reference_link',
+        ),
+      ),
     );
     field_create_instance($this->instance);
 
@@ -873,7 +878,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $entity = field_test_entity_test_load($id);
     $entities = array($id => $entity);
     field_attach_prepare_view($entity_type, $entities, 'full');
-    $entity->content = field_attach_view($entity_type, $entity);
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
     $this->assertText($term->name, t('Term name is displayed'));
   }
@@ -921,7 +926,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
         'type' => 'options_select',
       ),
       'display' => array(
-        'full' => array(
+        'default' => array(
           'type' => 'taxonomy_term_reference_link',
         ),
       ),

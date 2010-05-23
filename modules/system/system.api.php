@@ -140,9 +140,21 @@ function hook_hook_info_alter(&$hooks) {
  *     ('full' mode), on the home page or taxonomy listings ('teaser' mode), or
  *     in an RSS feed ('rss' mode). Modules taking part in the display of the
  *     entity (notably the Field API) can adjust their behavior depending on
- *     the requested view mode. Keys of the array are view mode names. Each
- *     view mode is described by an array with the following key/value pairs:
+ *     the requested view mode. An additional 'default' view mode is available
+ *     for all entity types. This view mode is not intended for actual entity
+ *     display, but holds default display settings. For each available view
+ *     mode, administrators can configure whether it should use its own set of
+ *     field display settings, or just replicate the settings of the 'default'
+ *     view mode, thus reducing the amount of display configurations to keep
+ *     track of. Keys of the array are view mode names. Each view mode is
+ *     described by an array with the following key/value pairs:
  *     - label: The human-readable name of the view mode
+ *     - custom settings: A boolean specifying whether the view mode should by
+ *     default use its own custom field display settings. If FALSE, entities
+ *     displayed in this view mode will reuse the 'default' display settings by
+ *     default (e.g. right after the module exposing the view mode is enabled),
+ *     but administrators can later use the Field UI to apply custom display
+ *     settings specific to the view mode.
  */
 function hook_entity_info() {
   $return = array(
@@ -151,7 +163,7 @@ function hook_entity_info() {
       'controller class' => 'NodeController',
       'base table' => 'node',
       'revision table' => 'node_revision',
-      'path callback' => 'node_path',
+      'uri callback' => 'node_uri',
       'fieldable' => TRUE,
       'entity keys' => array(
         'id' => 'nid',
@@ -164,13 +176,16 @@ function hook_entity_info() {
       'bundles' => array(),
       'view modes' => array(
         'full' => array(
-          'label' => t('Full node'),
+          'label' => t('Full content'),
+          'custom settings' => FALSE,
         ),
         'teaser' => array(
           'label' => t('Teaser'),
+          'custom settings' => TRUE,
         ),
         'rss' => array(
           'label' => t('RSS'),
+          'custom settings' => FALSE,
         ),
       ),
     ),
@@ -182,9 +197,11 @@ function hook_entity_info() {
     $return['node']['view modes'] += array(
       'search_index' => array(
         'label' => t('Search index'),
+        'custom settings' => FALSE,
       ),
       'search_result' => array(
         'label' => t('Search result'),
+        'custom settings' => FALSE,
       ),
     );
   }

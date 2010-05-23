@@ -208,16 +208,30 @@ function poll_node_info() {
  */
 function poll_field_extra_fields() {
   $extra['node']['poll'] = array(
-    'choice_wrapper' => array(
-      'label' => t('Poll choices'),
-      'description' => t('Poll module choices.'),
-      'weight' => -4,
+    'form' => array(
+      'choice_wrapper' => array(
+        'label' => t('Poll choices'),
+        'description' => t('Poll choices'),
+        'weight' => -4,
+      ),
+      'settings' => array(
+        'label' => t('Poll settings'),
+        'description' => t('Poll module settings'),
+        'weight' => -3,
+      ),
     ),
-    'settings' => array(
-      'label' => t('Poll settings'),
-      'description' => t('Poll module settings.'),
-      'weight' => -3,
-    ),
+    'display' => array(
+      'poll_view_voting' => array(
+        'label' => t('Poll vote'),
+        'description' => t('Poll vote'),
+        'weight' => 0,
+      ),
+      'poll_view_results' => array(
+        'label' => t('Poll results'),
+        'description' => t('Poll results'),
+        'weight' => 0,
+      ),
+    )
   );
 
   return $extra;
@@ -624,7 +638,7 @@ function poll_block_latest_poll_view($node) {
 /**
  * Implements hook_view().
  */
-function poll_view($node, $view_mode = 'full') {
+function poll_view($node, $view_mode) {
   global $user;
   $output = '';
 

@@ -552,8 +552,9 @@ function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcod
   // Add custom weight handling.
   list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
   $form['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
-  $form['#pre_render'][] = '_field_extra_weights_pre_render';
-  $form['#extra_fields'] = field_extra_fields($entity_type, $bundle);
+  $form['#pre_render'][] = '_field_extra_fields_pre_render';
+  $form['#entity_type'] = $entity_type;
+  $form['#bundle'] = $bundle;
 
   // Save the original entity to allow later re-use.
   $form_state['entity'] = $entity;
@@ -1185,7 +1186,7 @@ function field_attach_query_revisions($field_id, $conditions, $options = array()
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  */
-function field_attach_prepare_view($entity_type, $entities, $view_mode = 'full') {
+function field_attach_prepare_view($entity_type, $entities, $view_mode) {
   // To ensure hooks are only run once per entity, only process items without
   // the _field_view_prepared flag.
   // @todo: resolve this more generally for both entity and field level hooks.
@@ -1250,7 +1251,7 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode = 'full')
  * @return
  *   A renderable array for the field values.
  */
-function field_attach_view($entity_type, $entity, $view_mode = 'full', $langcode = NULL) {
+function field_attach_view($entity_type, $entity, $view_mode, $langcode = NULL) {
   // Determine the actual language to display for each field, given the
   // languages available in the field data.
   $display_language = field_language($entity_type, $entity, NULL, $langcode);
@@ -1262,8 +1263,9 @@ function field_attach_view($entity_type, $entity, $view_mode = 'full', $langcode
 
   // Add custom weight handling.
   list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-  $output['#pre_render'][] = '_field_extra_weights_pre_render';
-  $output['#extra_fields'] = field_extra_fields($entity_type, $bundle);
+  $output['#pre_render'][] = '_field_extra_fields_pre_render';
+  $output['#entity_type'] = $entity_type;
+  $output['#bundle'] = $bundle;
 
   // Include CSS styles.
   $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
@@ -1381,6 +1383,14 @@ function field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
   // Clear the cache.
   field_cache_clear();
 
+  // Update bundle settings.
+  $settings = variable_get('field_bundle_settings', array());
+  if (isset($settings[$entity_type][$bundle_old])) {
+    $settings[$entity_type][$bundle_new] = $settings[$entity_type][$bundle_old];
+    unset($settings[$entity_type][$bundle_old]);
+    variable_set('field_bundle_settings', $settings);
+  }
+
   // Let other modules act on renaming the bundle.
   module_invoke_all('field_attach_rename_bundle', $entity_type, $bundle_old, $bundle_new);
 }
@@ -1409,6 +1419,13 @@ function field_attach_delete_bundle($entity_type, $bundle) {
 
   // Clear the cache.
   field_cache_clear();
+
+  // Clear bundle display settings.
+  $settings = variable_get('field_bundle_settings', array());
+  if (isset($settings[$entity_type][$bundle])) {
+    unset($settings[$entity_type][$bundle]);
+    variable_set('field_bundle_settings', $settings);
+  }
 
   // Let other modules act on deleting the bundle.
   module_invoke_all('field_attach_delete_bundle', $entity_type, $bundle, $instances);

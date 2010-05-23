@@ -16,3 +16,10 @@
   padding-bottom: .5em;
 }
 
+/* Manage display */
+.field-display-overview tr.region-title td {
+  font-weight: bold;
+}
+.field-display-overview tr.region-populated {
+  display: none;
+}

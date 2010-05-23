@@ -310,6 +310,16 @@ function standard_install() {
       'type' => 'taxonomy_autocomplete',
       'weight' => 4,
     ),
+    'display' => array(
+      'default' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+      'teaser' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+    ),
   );
   field_create_instance($instance);
 
@@ -367,34 +377,14 @@ function standard_install() {
     ),
 
     'display' => array(
-      'full' => array(
+      'default' => array(
         'label' => 'hidden',
         'type' => 'image__large',
-        'settings' => array(),
         'weight' => -1,
       ),
       'teaser' => array(
         'label' => 'hidden',
         'type' => 'image_link_content__medium',
-        'settings' => array(),
-        'weight' => -1,
-      ),
-      'rss' => array(
-        'label' => 'hidden',
-        'type' => 'image__large',
-        'settings' => array(),
-        'weight' => -1,
-      ),
-      'search_index' => array(
-        'label' => 'hidden',
-        'type' => 'image__large',
-        'settings' => array(),
-        'weight' => -1,
-      ),
-      'search_results' => array(
-        'label' => 'hidden',
-        'type' => 'image__large',
-        'settings' => array(),
         'weight' => -1,
       ),
     ),

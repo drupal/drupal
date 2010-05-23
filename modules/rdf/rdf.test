@@ -127,18 +127,27 @@ class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
     $langcode = LANGUAGE_NONE;
     $bundle_name = "article";
 
-    // Create file field.
-    $file_field = 'file_test';
-    $edit = array(
-      '_add_new_field[label]' => $file_field,
-      '_add_new_field[field_name]' => $file_field,
-      '_add_new_field[type]' => 'file',
-      '_add_new_field[widget_type]' => 'file_generic',
+    $field_name = 'file_test';
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'file',
     );
-    $this->drupalPost('admin/structure/types/manage/' . $bundle_name . '/fields',  $edit, t('Save'));
+    field_create_field($field);
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => $bundle_name,
+      'display' => array(
+        'teaser' => array(
+          'type' => 'file_default',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+
     // Set the RDF mapping for the new field.
     $rdf_mapping = rdf_mapping_load('node', $bundle_name);
-    $rdf_mapping += array('field_' . $file_field => array('predicates' => array('rdfs:seeAlso'), 'type' => 'rel'));
+    $rdf_mapping += array($field_name => array('predicates' => array('rdfs:seeAlso'), 'type' => 'rel'));
     $rdf_mapping_save = array('mapping' => $rdf_mapping, 'type' => 'node', 'bundle' => $bundle_name);
     rdf_mapping_save($rdf_mapping_save);
 
@@ -152,7 +161,7 @@ class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
 
     // Create an array for drupalPost with the field names as the keys and
     // the uris for the test files as the values.
-    $edit = array("files[field_" . $file_field . "_" . $langcode . "_0]" => drupal_realpath($file->uri),
+    $edit = array("files[" . $field_name . "_" . $langcode . "_0]" => drupal_realpath($file->uri),
                   "files[" . $image_field . "_" . $langcode . "_0]" => drupal_realpath($image->uri));
 
     // Create node and save, then edit node to upload files.

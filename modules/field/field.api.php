@@ -7,55 +7,59 @@
  */
 
 /**
- * Expose "pseudo-field" components on fieldable entities.
+ * Exposes "pseudo-field" components on fieldable entities.
  *
- * Field UI's 'Manage fields' page lets users re-order fields, but also
- * non-field components. For nodes, these include the title, menu settings, and
- * other elements exposed by contributed modules through hook_form() and
+ * Field UI's "Manage fields" and "Manage display" pages let users re-order
+ * fields, but also non-field components. For nodes, these include the title,
+ * poll choices, and other elements exposed by modules through hook_form() or
  * hook_form_alter().
  *
- * Fieldable entities or contributed modules that want to have their components
- * supported should expose them using this hook, and use
- * field_attach_extra_weight() to retrieve the user-defined weight when
- * inserting the component.
+ * Fieldable entities or modules that want to have their components supported
+ * should expose them using this hook. The user-defined settings (weight,
+ * visibility) are automatically applied on rendered forms and displayed
+ * entities in a #pre_render callback added by field_attach_form() and
+ * field_attach_view().
+ *
+ * @see _field_extra_fields_pre_render()
+ * @see hook_field_extra_fields_alter()
  *
  * @return
- *   A nested array of 'pseudo-field' components. Each list is nested within the
- *   field bundle to which those components apply. The keys are the name of the
- *   element as it appears in the form structure. The values are arrays with the
- *   following key/value pairs:
+ *   A nested array of 'pseudo-field' components. Each list is nested within
+ *   the following keys: entity type, bundle name, context (either 'form' or
+ *   'display'). The keys are the name of the elements as appearing in the
+ *   renderable array (either the entity form or the displayed entity). The
+ *   value is an associative array:
  *   - label: The human readable name of the component.
  *   - description: A short description of the component contents.
  *   - weight: The default weight of the element.
- *   - view: (optional) The name of the element as it appears in the rendered
- *     structure, if different from the name in the form.
- *
- * @see hook_field_extra_fields_alter()
  */
 function hook_field_extra_fields() {
-  $extra = array();
-
-  foreach (node_type_get_types() as $bundle) {
-    if ($type->has_title) {
-      $extra['node'][$bundle]['title'] = array(
-        'label' => $type->title_label,
-        'description' => t('Node module element.'),
-        'weight' => -5,
-      );
-    }
-  }
-  if (module_exists('poll')) {
-    $extra['node']['poll']['choice_wrapper'] = array(
-      'label' => t('Poll choices'),
-      'description' => t('Poll module choices.'),
-      'weight' => -4,
-    );
-    $extra['node']['poll']['settings'] = array(
-      'label' => t('Poll settings'),
-      'description' => t('Poll module settings.'),
-      'weight' => -3,
-    );
-  }
+  $extra['node']['poll'] = array(
+    'form' => array(
+      'choice_wrapper' => array(
+        'label' => t('Poll choices'),
+        'description' => t('Poll choices'),
+        'weight' => -4,
+      ),
+      'settings' => array(
+        'label' => t('Poll settings'),
+        'description' => t('Poll module settings'),
+        'weight' => -3,
+      ),
+    ),
+    'display' => array(
+      'poll_view_voting' => array(
+        'label' => t('Poll vote'),
+        'description' => t('Poll vote'),
+        'weight' => 0,
+      ),
+      'poll_view_results' => array(
+        'label' => t('Poll results'),
+        'description' => t('Poll results'),
+        'weight' => 0,
+      ),
+    )
+  );
 
   return $extra;
 }
@@ -1651,6 +1655,91 @@ function hook_field_storage_pre_query($field_name, $conditions, $options, &$skip
   // @todo Needs function body.
 }
 
+/**
+ * Alters the display settings of a field before it gets displayed.
+ *
+ * Note that instead of hook_field_display_alter(), which is called for all
+ * fields on all entity types, hook_field_display_ENTITY_TYPE_alter() may be
+ * used to alter display settings for fields on a specific entity type only.
+ *
+ * This hook is called once per field per displayed entity. If the result of the
+ * hook involves reading from the database, it is highly recommended to
+ * statically cache the information.
+ *
+ * @param $display
+ *   The display settings that will be used to display the field values, as
+ *   found in the 'display' key of $instance definitions.
+ * @param $context
+ *   An associative array containing:
+ *   - entity_type: The entity type; e.g. 'node' or 'user'.
+ *   - field: The field being rendered.
+ *   - instance: The instance being rendered.
+ *   - view_mode: The view mode, e.g. 'full', 'teaser'...
+ *
+ * @see hook_field_display_ENTITY_TYPE_alter()
+ */
+function hook_field_display_alter(&$display, $context) {
+  // Leave field labels out of the search index.
+  // Note: The check against $context['entity_type'] == 'node' could be avoided
+  // by using hook_field_display_node_alter() instead of
+  // hook_field_display_alter(), resulting in less function calls when
+  // rendering non-node entities.
+  if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
+    $display['label'] = 'hidden';
+  }
+}
+
+/**
+ * Alters the display settings of a field on a given entity type before it gets displayed.
+ *
+ * Modules can implement hook_field_display_ENTITY_TYPE_alter() to alter display
+ * settings for fields on a specific entity type, rather than implementing
+ * hook_field_display_alter().
+ *
+ * This hook is called once per field per displayed entity. If the result of the
+ * hook involves reading from the database, it is highly recommended to
+ * statically cache the information.
+ *
+ * @param $display
+ *   The display settings that will be used to display the field values, as
+ *   found in the 'display' key of $instance definitions.
+ * @param $context
+ *   An associative array containing:
+ *   - entity_type: The entity type; e.g. 'node' or 'user'.
+ *   - field: The field being rendered.
+ *   - instance: The instance being rendered.
+ *   - view_mode: The view mode, e.g. 'full', 'teaser'...
+ *
+ * @see hook_field_display_alter()
+ */
+function hook_field_display_ENTITY_TYPE_alter(&$display, $context) {
+  // Leave field labels out of the search index.
+  if ($context['view_mode'] == 'search_index') {
+    $display['label'] = 'hidden';
+  }
+}
+
+/**
+ * Alters the display settings of pseudo-fields before an entity is displayed.
+ *
+ * This hook is called once per displayed entity. If the result of the hook
+ * involves reading from the database, it is highly recommended to statically
+ * cache the information.
+ *
+ * @param $displays
+ *   An array of display settings for the pseudo-fields in the entity, keyed
+ *   by pseudo-field names.
+ * @param $context
+ *   An associative array containing:
+ *   - entity_type: The entity type; e.g. 'node' or 'user'.
+ *   - bundle: The bundle name.
+ *   - view_mode: The view mode, e.g. 'full', 'teaser'...
+ */
+function hook_field_extra_fields_display_alter(&$displays, $context) {
+  if ($context['entity_type'] == 'taxonomy_term' && $context['view_mode'] == 'full') {
+    $displays['description']['visibility'] = FALSE;
+  }
+}
 /**
  * @} End of "ingroup field_storage"
  */

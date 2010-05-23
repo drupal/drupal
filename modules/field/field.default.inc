@@ -132,7 +132,10 @@ function field_default_prepare_view($entity_type, $entities, $field, $instances,
   // Group entities, instances and items by formatter module.
   $modules = array();
   foreach ($instances as $id => $instance) {
-    $display = is_string($display) ? $instance['display'][$display] : $display;
+    if (is_string($display)) {
+      $view_mode = $display;
+      $display = field_get_display($instance, $view_mode);
+    }
     if ($display['type'] !== 'hidden') {
       $module = $display['module'];
       $modules[$module] = $module;
@@ -183,18 +186,13 @@ function field_default_view($entity_type, $entity, $field, $instance, $langcode,
   // Prepare incoming display specifications.
   if (is_string($display)) {
     $view_mode = $display;
-    $display = $instance['display'][$view_mode];
+    $display = field_get_display($instance, $view_mode);
   }
   else {
     $view_mode = '_custom_display';
   }
 
   if ($display['type'] !== 'hidden') {
-    // We never want to index fields labels.
-    if ($view_mode == 'search_index') {
-      $display['label'] = 'hidden';
-    }
-
     // Calling the formatter function through module_invoke() can have a
     // performance impact on pages with many fields and values.
     $function = $display['module'] . '_field_formatter_view';

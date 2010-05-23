@@ -871,8 +871,8 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
       ),
     );
     field_update_instance($this->instance);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity));
-    $entity->content = field_attach_view($entity_type, $entity);
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertRaw($this->instance['label'], "Label is displayed.");
@@ -885,8 +885,8 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $entity = clone($entity_init);
     $this->instance['display']['full']['label'] = 'hidden';
     field_update_instance($this->instance);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity));
-    $entity->content = field_attach_view($entity_type, $entity);
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "Hidden label: label is not displayed.");
@@ -900,8 +900,8 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
       ),
     );
     field_update_instance($this->instance);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity));
-    $entity->content = field_attach_view($entity_type, $entity);
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "Hidden field: label is not displayed.");
@@ -922,8 +922,8 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
       ),
     );
     field_update_instance($this->instance);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity));
-    $entity->content = field_attach_view($entity_type, $entity);
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $output = drupal_render($entity->content);
     $display = $formatter_setting;
     foreach ($values as $delta => $value) {
@@ -945,8 +945,8 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
       ),
     );
     field_update_instance($this->instance);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity));
-    $entity->content = field_attach_view($entity_type, $entity);
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $output = drupal_render($entity->content);
     $this->content = $output;
     foreach ($values as $delta => $value) {
@@ -1332,8 +1332,8 @@ class FieldInfoTestCase extends FieldTestCase {
     $data['settings'] = array();
     $data['widget']['settings'] = 'unavailable_widget';
     $data['widget']['settings'] = array();
-    $data['display']['full']['type'] = 'unavailable_formatter';
-    $data['display']['full']['settings'] = array();
+    $data['display']['default']['type'] = 'unavailable_formatter';
+    $data['display']['default']['settings'] = array();
     db_update('field_config_instance')
       ->fields(array('data' => serialize($data)))
       ->condition('field_name', $instance_definition['field_name'])
@@ -1354,13 +1354,11 @@ class FieldInfoTestCase extends FieldTestCase {
     $widget_type = field_info_widget_types($instance['widget']['type']);
     $this->assertIdentical($instance['widget']['settings'], $widget_type['settings'] , t('All expected widget settings are present.'));
 
-    // Check that the default formatter is used and expected settings are in place.
-    $entity_info = entity_get_info('test_entity');
-    foreach ($entity_info['view modes'] as $view_mode => $info) {
-      $this->assertIdentical($instance['display'][$view_mode]['type'], $field_type['default_formatter'], t('Unavailable formatter replaced with default formatter in view_mode %view_mode', array('%view_mode' => $view_mode)));
-      $formatter_type = field_info_formatter_types($instance['display'][$view_mode]['type']);
-      $this->assertIdentical($instance['display'][$view_mode]['settings'], $formatter_type['settings'] , t('All expected formatter settings are present in view_mode %view_mode', array('%view_mode' => $view_mode)));
-    }
+    // Check that display settings are set for the 'default' mode.
+    $display = $instance['display']['default'];
+    $this->assertIdentical($display['type'], $field_type['default_formatter'], t("Formatter is set for the 'default' view mode"));
+    $formatter_type = field_info_formatter_types($display['type']);
+    $this->assertIdentical($display['settings'], $formatter_type['settings'] , t("Formatter settings are set for the 'default' view mode"));
   }
 
   /**
@@ -1792,7 +1790,13 @@ class FieldDisplayAPITestCase extends FieldTestCase {
       'bundle' => 'test_bundle',
       'label' => $this->label,
       'display' => array(
-        'full' => array(
+        'default' => array(
+          'type' => 'field_test_default',
+          'settings' => array(
+            'test_formatter_setting' => $this->randomName(),
+          ),
+        ),
+        'teaser' => array(
           'type' => 'field_test_default',
           'settings' => array(
             'test_formatter_setting' => $this->randomName(),
@@ -1862,19 +1866,19 @@ class FieldDisplayAPITestCase extends FieldTestCase {
 
     // View mode: check that display settings specified in the instance are
     // used.
-    $output = field_view_field('test_entity', $this->entity, $this->field_name, 'full');
+    $output = field_view_field('test_entity', $this->entity, $this->field_name, 'teaser');
     $this->drupalSetContent(drupal_render($output));
-    $setting = $this->instance['display']['full']['settings']['test_formatter_setting'];
+    $setting = $this->instance['display']['teaser']['settings']['test_formatter_setting'];
     $this->assertText($this->label, t('Label was displayed.'));
     foreach($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
-    // Unknown view mode: check that display settings for 'full' view mode
+    // Unknown view mode: check that display settings for 'default' view mode
     // are used.
     $output = field_view_field('test_entity', $this->entity, $this->field_name, 'unknown_view_mode');
     $this->drupalSetContent(drupal_render($output));
-    $setting = $this->instance['display']['full']['settings']['test_formatter_setting'];
+    $setting = $this->instance['display']['default']['settings']['test_formatter_setting'];
     $this->assertText($this->label, t('Label was displayed.'));
     foreach($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
@@ -1929,17 +1933,17 @@ class FieldDisplayAPITestCase extends FieldTestCase {
 
     // View mode: check that display settings specified in the instance are
     // used.
-    $setting = $this->instance['display']['full']['settings']['test_formatter_setting'];
+    $setting = $this->instance['display']['teaser']['settings']['test_formatter_setting'];
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->field_name}[LANGUAGE_NONE][$delta];
-      $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, 'full');
+      $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, 'teaser');
       $this->drupalSetContent(drupal_render($output));
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
-    // Unknown view mode: check that display settings for 'full' view mode
+    // Unknown view mode: check that display settings for 'default' view mode
     // are used.
-    $setting = $this->instance['display']['full']['settings']['test_formatter_setting'];
+    $setting = $this->instance['display']['default']['settings']['test_formatter_setting'];
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->field_name}[LANGUAGE_NONE][$delta];
       $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, 'unknown_view_mode');
@@ -2446,13 +2450,13 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     $this->assertIdentical($record['data']['label'], $this->instance_definition['field_name'], t('Label defaults to field name.'));
     $this->assertIdentical($record['data']['description'], '', t('Description defaults to empty string.'));
     $this->assertIdentical($record['data']['widget']['type'], $field_type['default_widget'], t('Default widget has been written.'));
-    $this->assertTrue(isset($record['data']['display']['full']), t('Display for "full" view_mode has been written.'));
-    $this->assertIdentical($record['data']['display']['full']['type'], $field_type['default_formatter'], t('Default formatter for "full" view_mode has been written.'));
+    $this->assertTrue(isset($record['data']['display']['default']), t('Display for "full" view_mode has been written.'));
+    $this->assertIdentical($record['data']['display']['default']['type'], $field_type['default_formatter'], t('Default formatter for "full" view_mode has been written.'));
 
     // Check that default settings are set.
     $this->assertIdentical($record['data']['settings'], $field_type['instance_settings'] , t('Default instance settings have been written.'));
     $this->assertIdentical($record['data']['widget']['settings'], $widget_type['settings'] , t('Default widget settings have been written.'));
-    $this->assertIdentical($record['data']['display']['full']['settings'], $formatter_type['settings'], t('Default formatter settings for "full" view_mode have been written.'));
+    $this->assertIdentical($record['data']['display']['default']['settings'], $formatter_type['settings'], t('Default formatter settings for "full" view_mode have been written.'));
 
     // Guarantee that the field/bundle combination is unique.
     try {
@@ -2535,8 +2539,8 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     $instance['settings']['test_instance_setting'] = $this->randomName();
     $instance['widget']['settings']['test_widget_setting'] =$this->randomName();
     $instance['widget']['weight']++;
-    $instance['display']['full']['settings']['test_formatter_setting'] = $this->randomName();
-    $instance['display']['full']['weight']++;
+    $instance['display']['default']['settings']['test_formatter_setting'] = $this->randomName();
+    $instance['display']['default']['weight']++;
     field_update_instance($instance);
 
     $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
@@ -2545,23 +2549,23 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     $this->assertEqual($instance['description'], $instance_new['description'], t('"description" change is saved'));
     $this->assertEqual($instance['widget']['settings']['test_widget_setting'], $instance_new['widget']['settings']['test_widget_setting'], t('Widget setting change is saved'));
     $this->assertEqual($instance['widget']['weight'], $instance_new['widget']['weight'], t('Widget weight change is saved'));
-    $this->assertEqual($instance['display']['full']['settings']['test_formatter_setting'], $instance_new['display']['full']['settings']['test_formatter_setting'], t('Formatter setting change is saved'));
-    $this->assertEqual($instance['display']['full']['weight'], $instance_new['display']['full']['weight'], t('Widget weight change is saved'));
+    $this->assertEqual($instance['display']['default']['settings']['test_formatter_setting'], $instance_new['display']['default']['settings']['test_formatter_setting'], t('Formatter setting change is saved'));
+    $this->assertEqual($instance['display']['default']['weight'], $instance_new['display']['default']['weight'], t('Widget weight change is saved'));
 
     // Check that changing widget and formatter types updates the default settings.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $instance['widget']['type'] = 'test_field_widget_multiple';
-    $instance['display']['full']['type'] = 'field_test_multiple';
+    $instance['display']['default']['type'] = 'field_test_multiple';
     field_update_instance($instance);
 
     $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $this->assertEqual($instance['widget']['type'], $instance_new['widget']['type'] , t('Widget type change is saved.'));
     $settings = field_info_widget_settings($instance_new['widget']['type']);
     $this->assertIdentical($settings, array_intersect_key($instance_new['widget']['settings'], $settings) , t('Widget type change updates default settings.'));
-    $this->assertEqual($instance['display']['full']['type'], $instance_new['display']['full']['type'] , t('Formatter type change is saved.'));
-    $info = field_info_formatter_types($instance_new['display']['full']['type']);
+    $this->assertEqual($instance['display']['default']['type'], $instance_new['display']['default']['type'] , t('Formatter type change is saved.'));
+    $info = field_info_formatter_types($instance_new['display']['default']['type']);
     $settings = $info['settings'];
-    $this->assertIdentical($settings, array_intersect_key($instance_new['display']['full']['settings'], $settings) , t('Changing formatter type updates default settings.'));
+    $this->assertIdentical($settings, array_intersect_key($instance_new['display']['default']['settings'], $settings) , t('Changing formatter type updates default settings.'));
 
     // Check that adding a new view mode is saved and gets default settings.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);

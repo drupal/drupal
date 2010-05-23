@@ -14,9 +14,11 @@ function field_test_entity_info() {
   $test_entity_modes = array(
     'full' => array(
       'label' => t('Full object'),
+      'custom settings' => TRUE,
     ),
     'teaser' => array(
       'label' => t('Teaser'),
+      'custom settings' => TRUE,
     ),
   );
 
