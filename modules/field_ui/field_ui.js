@@ -1,4 +1,4 @@
-// $Id: field_ui.js,v 1.2 2010/01/09 23:23:43 webchick Exp $
+// $Id: field_ui.js,v 1.3 2010/05/23 19:10:23 dries Exp $
 
 (function($) {
 
@@ -79,6 +79,145 @@ jQuery.fn.fieldPopulateOptions = function (options, selected) {
 
     $(this).html(html).attr('disabled', disabled ? 'disabled' : '');
   });
+};
+
+/**
+ * Moves a field in the display settings table from visible to hidden.
+ *
+ * This behavior is dependent on the tableDrag behavior, since it uses the
+ * objects initialized in that behavior to update the row.
+ */
+Drupal.behaviors.fieldManageDisplayDrag = {
+  attach: function (context, settings) {
+    // tableDrag is required for this behavior.
+    if (!$('table.field-display-overview', context).length || typeof Drupal.tableDrag == 'undefined') {
+      return;
+    }
+
+    var defaultFormatters = Drupal.settings.fieldDefaultFormatters;
+    var tableDrag = Drupal.tableDrag['field-display-overview'];
+
+    // Add a handler for when a row is swapped, update empty regions.
+    tableDrag.row.prototype.onSwap = function (swappedRow) {
+      checkEmptyRegions(this.table, this);
+    };
+
+    // Add a handler to update the formatter selector when a row is dropped in
+    // or out of the 'Hidden' section.
+    tableDrag.onDrop = function () {
+      var dragObject = this;
+      var regionRow = $(dragObject.rowObject.element).prevAll('tr.region-message').get(0);
+      var visibility = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
+
+      // Update the 'format' selector if the visibility changed.
+      var $select = $('select.field-formatter-type', dragObject.rowObject.element);
+      var oldVisibility = $select[0].className.replace(/([^ ]+[ ]+)*field-display-([^ ]+)([ ]+[^ ]+)*/, '$2');
+      if (visibility != oldVisibility) {
+        $select.removeClass('field-display-' + oldVisibility).addClass('field-display-' + visibility);
+
+        // Update the selected formatter if coming from an actual drag.
+        if (!$select.data('noUpdate')) {
+          if (visibility == 'visible') {
+            // Restore the formatter back to the previously selected one if
+            // available, or to the default formatter.
+            var value = $select.data('oldFormatter');
+            if (typeof value == 'undefined') {
+              // Extract field name from the name of the select.
+              var fieldName = $select[0].className.match(/\bfield-name-(\S+)\b/)[1].replace('-', '_');
+              // Pseudo-fields do not have an entry in the defaultFormatters
+              // array, we just return to 'visible' for those.
+              value = (fieldName in defaultFormatters) ? defaultFormatters[fieldName] : 'visible';
+            }
+            $select.data('oldFormatter', value);
+          }
+          else {
+            var value = 'hidden';
+          }
+          $select.val(value);
+        }
+        $select.removeData('noUpdate');
+      }
+    };
+
+    // Add the behavior to each formatter select list.
+    $('select.field-formatter-type', context).once('field-formatter-type', function () {
+      // Initialize 'previously selected formatter' as the incoming value.
+      if ($(this).val() != 'hidden') {
+        $(this).data('oldFormatter', $(this).val());
+      }
+
+      // Add change listener.
+      $(this).change(function (event) {
+        var $select = $(this);
+        var value = $select.val();
+
+        // Keep track of the last selected formatter.
+        if (value != 'hidden') {
+          $select.data('oldFormatter', value);
+        }
+
+        var visibility = (value == 'hidden') ? 'hidden' : 'visible';
+        var oldVisibility = $select[0].className.replace(/([^ ]+[ ]+)*field-display-([^ ]+)([ ]+[^ ]+)*/, '$2');
+        if (visibility != oldVisibility) {
+          // Prevent the onDrop handler from overriding the selected option.
+          $select.data('noUpdate', true);
+
+          // Make our new row and select field.
+          var $row = $(this).parents('tr:first');
+          var $table = $(this).parents('table');
+          var tableDrag = Drupal.tableDrag[$table.attr('id')];
+          tableDrag.rowObject = new tableDrag.row($row);
+
+          // Move the row at the bottom of the new section.
+          if (visibility == 'hidden') {
+            $('tr:last', tableDrag.table).after($row);
+          }
+          else {
+            $('tr.region-title-hidden', tableDrag.table).before($row);
+          }
+
+          // Manually update weights and restripe.
+          tableDrag.updateFields($row.get(0));
+          tableDrag.rowObject.changed = true;
+          if (tableDrag.oldRowElement) {
+            $(tableDrag.oldRowElement).removeClass('drag-previous');
+          }
+          tableDrag.oldRowElement = $row.get(0);
+          tableDrag.restripeTable();
+          tableDrag.rowObject.markChanged();
+          tableDrag.oldRowElement = $row;
+          $row.addClass('drag-previous');
+
+          // Modify empty regions with added or removed fields.
+          checkEmptyRegions($table, tableDrag.rowObject);
+        }
+
+        // Remove focus from selectbox.
+        $select.get(0).blur();
+      });
+    });
+
+    var checkEmptyRegions = function ($table, rowObject) {
+      $('tr.region-message', $table).each(function () {
+        // If the dragged row is in this region, but above the message row, swap
+        // it down one space.
+        if ($(this).prev('tr').get(0) == rowObject.element) {
+          // Prevent a recursion problem when using the keyboard to move rows up.
+          if ((rowObject.method != 'keyboard' || rowObject.direction == 'down')) {
+            rowObject.swap('after', this);
+          }
+        }
+        // This region has become empty.
+        if ($(this).next('tr').is(':not(.draggable)') || $(this).next('tr').length == 0) {
+          $(this).removeClass('region-populated').addClass('region-empty');
+        }
+        // This region has become populated.
+        else if ($(this).is('.region-empty')) {
+          $(this).removeClass('region-empty').addClass('region-populated');
+        }
+      });
+    };
+  }
 };
 
 })(jQuery);

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.72 2010/04/13 15:23:02 dries Exp $
+// $Id: field.module,v 1.73 2010/05/23 19:10:23 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -365,75 +365,308 @@ function _field_sort_items_value_helper($a, $b) {
 }
 
 /**
- * Registry of pseudo-field components in a given bundle.
+ * Gets or sets administratively defined bundle settings.
+ *
+ * For each bundle, settings are provided as a nested array with the following
+ * structure:
+ * @code
+ * array(
+ *   'view_modes' => array(
+ *     // One sub-array per view mode for the entity type:
+ *     'full' => array(
+ *       'custom_display' => Whether the view mode uses custom display
+ *         settings or settings of the 'default' mode,
+ *     ),
+ *     'teaser' => ...
+ *   ),
+ *   'extra_fields' => array(
+ *     'form' => array(
+ *       // One sub-array per pseudo-field in displayed entities:
+ *       'extra_field_1' => array(
+ *         'weight' => The weight of the pseudo-field,
+ *       ),
+ *       'extra_field_2' => ...
+ *     ),
+ *     'display' => array(
+ *       // One sub-array per pseudo-field in displayed entities:
+ *       'extra_field_1' => array(
+ *         // One sub-array per view mode for the entity type, including
+ *         // the 'default' mode:
+ *         'default' => array(
+ *           'weight' => The weight of the pseudo-field,
+ *           'visibility' => Whether the pseudo-field is visible or hidden,
+ *         ),
+ *         'full' => ...
+ *       ),
+ *       'extra_field_2' => ...
+ *     ),
+ *   ),
+ * ),
+ * @encode
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $bundle
  *   The bundle name.
+ * @param $settings
+ *   (optional) The settings to store.
+ *
+ * @return
+ *   If no $settings are passed, the current settings are returned.
+ */
+function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
+  $stored_settings = variable_get('field_bundle_settings', array());
+
+  if (isset($settings)) {
+    $stored_settings[$entity_type][$bundle] = $settings;
+    variable_set('field_bundle_settings', $stored_settings);
+    drupal_static_reset('field_view_mode_settings');
+    drupal_static_reset('field_extra_fields');
+  }
+  else {
+    $settings = isset($stored_settings[$entity_type][$bundle]) ? $stored_settings[$entity_type][$bundle] : array();
+    $settings += array(
+      'view_modes' => array(),
+      'extra_fields' => array(),
+    );
+
+    return $settings;
+  }
+}
+
+/**
+ * Returns view mode settings in a given bundle.
+ *
+ * @param $entity_type
+ *   The type of entity; e.g. 'node' or 'user'.
+ * @param $bundle
+ *   The bundle name to return view mode settings for.
+ *
+ * @return
+ *   An array keyed by view mode, with the following key/value pairs:
+ *   - custom_settings: Boolean specifying whether the view mode uses a
+ *     dedicated set of display options (TRUE), or the 'default' options
+ *     (FALSE). Defaults to FALSE.
+ */
+function field_view_mode_settings($entity_type, $bundle) {
+  $cache = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($cache[$entity_type][$bundle])) {
+    $bundle_settings = field_bundle_settings($entity_type, $bundle);
+    $settings = $bundle_settings['view_modes'];
+    // Include view modes for which nothing has been stored yet, but whose
+    // definition in hook_entity_info() specify they should use custom settings
+    // by default.
+    $entity_info = entity_get_info($entity_type);
+    foreach ($entity_info['view modes'] as $view_mode => $view_mode_info) {
+      if (!isset($settings[$view_mode]['custom_settings']) && $view_mode_info['custom settings']) {
+        $settings[$view_mode]['custom_settings'] = TRUE;
+      }
+    }
+    $cache[$entity_type][$bundle] = $settings;
+  }
+
+  return $cache[$entity_type][$bundle];
+}
+
+/**
+ * Returns a list and settings of pseudo-field elements in a given bundle.
+ *
+ * If $context is 'form', an array with the following structure:
+ * @code
+ *   array(
+ *     'name_of_pseudo_field_component' => array(
+ *       'label' => The human readable name of the component,
+ *       'description' => A short description of the component content,
+ *       'weight' => The weight of the component in edit forms,
+ *     ),
+ *     'name_of_other_pseudo_field_component' => array(
+ *       // ...
+ *     ),
+ *   );
+ * @endcode
+ *
+ * If $context is 'display', an array with the following structure:
+ * @code
+ *   array(
+ *     'name_of_pseudo_field_component' => array(
+ *       'label' => The human readable name of the component,
+ *       'description' => A short description of the component content,
+ *       // One entry per view mode, including the 'default' mode:
+ *       'display' => array(
+ *         'default' => array(
+ *           'weight' => The weight of the component in displayed entities in
+ *             this view mode,
+ *           'visibility' => Whether the component is visible or hidden in
+ *             displayed entities in this view mode,
+ *         ),
+ *         'teaser' => array(
+ *           // ...
+ *         ),
+ *       ),
+ *     ),
+ *     'name_of_other_pseudo_field_component' => array(
+ *       // ...
+ *     ),
+ *   );
+ * @endcode
+ *
+ * @param $entity_type
+ *   The type of entity; e.g. 'node' or 'user'.
+ * @param $bundle
+ *   The bundle name.
+ * @param $context
+ *   The context for which the list of pseudo-fields is requested. Either
+ *   'form' or 'display'.
+ *
  * @return
  *   The array of pseudo-field elements in the bundle.
  */
-function field_extra_fields($entity_type, $bundle) {
-  $info = &drupal_static(__FUNCTION__, array());
+function field_extra_fields($entity_type, $bundle, $context) {
+  $extra = &drupal_static(__FUNCTION__);
 
-  if (empty($info)) {
+  if (!isset($extra)) {
     $info = (array) module_invoke_all('field_extra_fields');
     drupal_alter('field_extra_fields', $info);
 
-    // Add saved weights. The array is keyed by entity type, bundle and
-    // element name.
-    $extra_weights = variable_get('field_extra_weights', array());
-    foreach ($extra_weights as $entity_type_name => $bundles) {
-      foreach ($bundles as $bundle_name => $weights) {
-        foreach ($weights as $key => $value) {
-          if (isset($info[$entity_type_name][$bundle_name][$key])) {
-            $info[$entity_type_name][$bundle_name][$key]['weight'] = $value;
+    // Merge in saved settings, and make sure we have settings for all view
+    // modes.
+    foreach ($info as $entity_type_name => $bundles) {
+      $entity_type_info = entity_get_info($entity_type_name);
+      foreach ($bundles as $bundle_name => $extra_fields) {
+        $bundle_settings = field_bundle_settings($entity_type_name, $bundle_name);
+        $extra_fields += array('form' => array(), 'display' => array());
+
+        // Extra fields in forms.
+        $data = $extra_fields['form'];
+        foreach ($data as $name => $field_data) {
+          $settings = isset($bundle_settings['extra_fields']['form'][$name]) ? $bundle_settings['extra_fields']['form'][$name] : array();
+          if (isset($settings['weight'])) {
+            $data[$name]['weight'] = $settings['weight'];
           }
         }
+        $extra[$entity_type_name][$bundle_name]['form'] = $data;
+
+        // Extra fields in displayed entities.
+        $data = $extra_fields['display'];
+        foreach ($data as $name => $field_data) {
+          $settings = isset($bundle_settings['extra_fields']['display'][$name]) ? $bundle_settings['extra_fields']['display'][$name] : array();
+          $view_modes = array_merge(array('default'), array_keys($entity_type_info['view modes']));
+          foreach ($view_modes as $view_mode) {
+            if (isset($settings[$view_mode])) {
+              $data[$name]['display'][$view_mode] = $settings[$view_mode];
+            }
+            else {
+              $data[$name]['display'][$view_mode] = array(
+                'weight' => $field_data['weight'],
+                'visible' => TRUE,
+              );
+            }
+            unset($data[$name]['weight']);
+          }
+        }
+        $extra[$entity_type_name][$bundle_name]['display'] = $data;
       }
     }
   }
 
-  return isset($info[$entity_type][$bundle]) ? $info[$entity_type][$bundle]: array();
+  return isset($extra[$entity_type][$bundle][$context]) ? $extra[$entity_type][$bundle][$context] : array();
+}
+
+
+/**
+ * Returns the display settings to use for an instance in a given view mode.
+ *
+ * @param $instance
+ *   The field instance being displayed.
+ * @param $view_mode
+ *   The view mode.
+ *
+ * @return
+ *   The display settings to be used when displaying the field values.
+ */
+function field_get_display($instance, $view_mode) {
+  // Check whether the view mode uses custom display settings or the 'default'
+  // mode.
+  $view_mode_settings = field_view_mode_settings($instance['entity_type'], $instance['bundle']);
+  $actual_mode = (!empty($view_mode_settings[$view_mode]['custom_settings']) ? $view_mode : 'default');
+  $display = $instance['display'][$actual_mode];
+
+  // Let modules alter the display settings.
+  $context = array(
+    'entity_type' => $instance['entity_type'],
+    'field' => field_info_field($instance['field_name']),
+    'instance' => $instance,
+    'view_mode' => $view_mode,
+  );
+  drupal_alter(array('field_display', 'field_display_' . $instance['entity_type']), $display, $context);
+
+  return $display;
 }
 
 /**
- * Retrieve the user-defined weight for a 'pseudo-field' component.
+ * Returns the display settings to use for pseudo-fields in a given view mode.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $bundle
  *   The bundle name.
- * @param $pseudo_field
- *   The name of the 'pseudo-field'.
+ * @param $view_mode
+ *   The view mode.
+ *
  * @return
- *   The weight for the 'pseudo-field', respecting the user settings stored by
- *   field.module.
+ *   The display settings to be used when viewing the bundle's pseudo-fields.
  */
-function field_extra_field_weight($entity_type, $bundle, $pseudo_field) {
-  $extra = field_extra_fields($entity_type, $bundle);
-  if (isset($extra[$pseudo_field])) {
-    return $extra[$pseudo_field]['weight'];
+function field_extra_fields_get_display($entity_type, $bundle, $view_mode) {
+  // Check whether the view mode uses custom display settings or the 'default'
+  // mode.
+  $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
+  $actual_mode = (!empty($view_mode_settings[$view_mode]['custom_settings'])) ? $view_mode : 'default';
+  $extra_fields = field_extra_fields($entity_type, $bundle, 'display');
+
+  $displays = array();
+  foreach ($extra_fields as $name => $value) {
+    $displays[$name] = $extra_fields[$name]['display'][$actual_mode];
   }
+
+  // Let modules alter the display settings.
+  $context = array(
+    'entity_type' => $entity_type,
+    'bundle' => $bundle,
+    'view_mode' => $view_mode,
+  );
+  drupal_alter('field_extra_fields_display', $displays, $context);
+
+  return $displays;
 }
 
 /**
- * Pre-render callback to adjust weights of non-field elements on entities.
+ * Pre-render callback to adjust weights and visibility of non-field elements.
  */
-function _field_extra_weights_pre_render($elements) {
-  if (isset($elements['#extra_fields'])) {
-    foreach ($elements['#extra_fields'] as $key => $value) {
-      // Some core 'fields' use a different key in node forms and in 'view'
-      // render arrays. Ensure that we are not on a form first.
-      if (!isset($elements['#build_id']) && isset($value['view']) && isset($elements[$value['view']])) {
-        $elements[$value['view']]['#weight'] = $value['weight'];
-      }
-      elseif (isset($elements[$key])) {
-        $elements[$key]['#weight'] = $value['weight'];
+function _field_extra_fields_pre_render($elements) {
+  $entity_type = $elements['#entity_type'];
+  $bundle = $elements['#bundle'];
+
+  if (isset($elements['#type']) && $elements['#type'] == 'form') {
+    $extra_fields = field_extra_fields($entity_type, $bundle, 'form');
+    foreach ($extra_fields as $name => $settings) {
+      if (isset($elements[$name])) {
+        $elements[$name]['#weight'] = $settings['weight'];
       }
     }
   }
+  elseif (isset($elements['#view_mode'])) {
+    $view_mode = $elements['#view_mode'];
+    $extra_fields = field_extra_fields_get_display($entity_type, $bundle, $view_mode);
+    foreach ($extra_fields as $name => $settings) {
+      if (isset($elements[$name])) {
+        $elements[$name]['#weight'] = $settings['weight'];
+        // Visibility: make sure we do not accidentally show a hidden element.
+        $elements[$name]['#access'] = isset($elements[$name]['#access']) ? ($elements[$name]['#access'] && $settings['visible']) : $settings['visible'];
+      }
+    }
+  }
+
   return $elements;
 }
 
@@ -543,7 +776,7 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
  *     display settings specified for this view mode in the $instance
  *     definition for the field in the entity's bundle.
  *     If no display settings are found for the view mode, the settings for
- *     the 'full' view mode will be used.
+ *     the 'default' view mode will be used.
  *   - An array of display settings, as found in the 'display' entry of
  *     $instance definitions. The following key/value pairs are allowed:
  *     - label: (string) Position of the label. The default 'field' theme
@@ -573,15 +806,6 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
     if (is_array($display)) {
       // When using custom display settings, fill in default values.
       $display = _field_info_prepare_instance_display($field, $display);
-    }
-    else {
-      // When using a view mode, make sure we have settings for it, or fall
-      // back to the 'full' view mode.
-      list(, , $bundle) = entity_extract_ids($entity_type, $entity);
-      $instance = field_info_instance($entity_type, $field_name, $bundle);
-      if (!isset($instance['display'][$display])) {
-        $display = 'full';
-      }
     }
 
     // Hook invocations are done through the _field_invoke() functions in

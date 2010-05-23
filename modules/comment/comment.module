@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.875 2010/05/10 20:12:21 webchick Exp $
+// $Id: comment.module,v 1.876 2010/05/23 19:10:22 dries Exp $
 
 /**
  * @file
@@ -108,6 +108,7 @@ function comment_entity_info() {
       'view modes' => array(
         'full' => array(
           'label' => t('Full comment'),
+          'custom settings' => FALSE,
         ),
       ),
       'static cache' => FALSE,
@@ -165,15 +166,17 @@ function comment_field_extra_fields() {
   foreach (node_type_get_types() as $type) {
     if (variable_get('comment_subject_field_' . $type->type, 1) == 1) {
       $return['comment']['comment_node_' . $type->type] = array(
-        'author' => array(
-          'label' => t('Author'),
-          'description' => t('Author textfield'),
-          'weight' => -2,
-        ),
-        'title' => array(
-          'label' => t('Subject'),
-          'description' => t('Subject textfield'),
-          'weight' => -1,
+        'form' => array(
+          'author' => array(
+            'label' => t('Author'),
+            'description' => t('Author textfield'),
+            'weight' => -2,
+          ),
+          'title' => array(
+            'label' => t('Subject'),
+            'description' => t('Subject textfield'),
+            'weight' => -1,
+          ),
         ),
       );
     }
@@ -362,10 +365,11 @@ function _comment_body_field_instance_create($info) {
     'bundle' => 'comment_node_' . $info->type,
     'settings' => array('text_processing' => 1),
     'required' => TRUE,
-    // Hides field label by default.
     'display' => array(
-      'full' => array(
+      'default' => array(
         'label' => 'hidden',
+        'type' => 'text_default',
+        'weight' => 0,
       ),
     ),
   );

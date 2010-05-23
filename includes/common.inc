@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1170 2010/05/21 15:52:19 dries Exp $
+// $Id: common.inc,v 1.1171 2010/05/23 19:10:22 dries Exp $
 
 /**
  * @file
@@ -6386,6 +6386,11 @@ function entity_get_info($entity_type = NULL) {
           'revision' => '',
           'bundle' => '',
         );
+        foreach ($entity_info[$name]['view modes'] as $view_mode => $view_mode_info) {
+          $entity_info[$name]['view modes'][$view_mode] += array(
+            'custom settings' => FALSE,
+          );
+        }
         // If no bundle key is provided, assume a single bundle, named after
         // the entity type.
         if (empty($entity_info[$name]['entity keys']['bundle']) && empty($entity_info[$name]['bundles'])) {

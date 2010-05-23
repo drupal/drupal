@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.66 2010/04/17 12:54:02 dries Exp $
+// $Id: comment.install,v 1.67 2010/05/23 19:10:22 dries Exp $
 
 /**
  * @file
@@ -279,10 +279,12 @@ function comment_update_7012() {
     'label' => 'Comment',
     'entity_type' => 'comment',
     'settings' => array('text_processing' => 1),
-    // Hide field label by default.
+    'required' => TRUE,
     'display' => array(
-      'full' => array(
+      'default' => array(
         'label' => 'hidden',
+        'type' => 'text_default',
+        'weight' => 0,
       ),
     ),
   );

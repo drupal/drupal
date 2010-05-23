@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.46 2010/05/05 06:55:25 webchick Exp $
+// $Id: forum.install,v 1.47 2010/05/23 19:10:23 dries Exp $
 
 /**
  * @file
@@ -64,6 +64,16 @@ function forum_enable() {
       'required' => TRUE,
       'widget' => array(
         'type' => 'options_select',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+        'teaser' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
       ),
     );
     field_create_instance($instance);

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.42 2010/05/06 06:08:28 webchick Exp $
+// $Id: taxonomy.install,v 1.43 2010/05/23 19:10:23 dries Exp $
 
 /**
  * @file
@@ -379,6 +379,16 @@ function taxonomy_update_7004() {
         'description' => $vocabulary->help,
         'widget' => array(
           'type' => $vocabulary->tags ? 'taxonomy_autocomplete' : 'select',
+        ),
+        'display' => array(
+          'default' => array(
+            'type' => 'taxonomy_term_reference_link',
+            'weight' => 10,
+          ),
+          'teaser' => array(
+            'type' => 'taxonomy_term_reference_link',
+            'weight' => 10,
+          ),
         ),
       );
       field_create_instance($instance);

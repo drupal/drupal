@@ -1,5 +1,5 @@
 <?php
-// $Id: text.test,v 1.22 2010/04/10 10:01:15 dries Exp $
+// $Id: text.test,v 1.23 2010/05/23 19:10:23 dries Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
@@ -46,7 +46,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
         'type' => 'text_textfield',
       ),
       'display' => array(
-        'full' => array(
+        'default' => array(
           'type' => 'text_default',
         ),
       ),
@@ -94,7 +94,12 @@ class TextFieldTestCase extends DrupalWebTestCase {
       ),
       'widget' => array(
         'type' => $widget_type,
-      )
+      ),
+      'display' => array(
+        'full' => array(
+          'type' => 'text_default',
+        ),
+      ),
     );
     field_create_instance($this->instance);
     $langcode = LANGUAGE_NONE;
@@ -116,7 +121,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
-    $entity->content = field_attach_view($entity_type, $entity);
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
     $this->assertText($value, 'Filtered tags are not displayed');
   }
@@ -148,7 +153,12 @@ class TextFieldTestCase extends DrupalWebTestCase {
       ),
       'widget' => array(
         'type' => $widget_type,
-      )
+      ),
+      'display' => array(
+        'full' => array(
+          'type' => 'text_default',
+        ),
+      ),
     );
     field_create_instance($this->instance);
     $langcode = LANGUAGE_NONE;
@@ -180,7 +190,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
-    $entity->content = field_attach_view($entity_type, $entity);
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
     $this->assertNoRaw($value, t('HTML tags are not displayed.'));
     $this->assertRaw(check_plain($value), t('Escaped HTML is displayed correctly.'));
@@ -213,7 +223,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
-    $entity->content = field_attach_view($entity_type, $entity);
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
     $this->assertRaw($value, t('Value is displayed unfiltered'));
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.44 2010/03/27 05:52:49 webchick Exp $
+// $Id: field.info.inc,v 1.45 2010/05/23 19:10:23 dries Exp $
 
 /**
  * @file
@@ -290,11 +290,16 @@ function _field_info_prepare_instance($instance, $field) {
     $instance['display'][$view_mode] = _field_info_prepare_instance_display($field, $display);
   }
 
-  // Fallback to 'full' display settings for unspecified view modes.
+  // Fallback to 'hidden' for unspecified view modes.
   $entity_info = entity_get_info($instance['entity_type']);
   foreach ($entity_info['view modes'] as $view_mode => $info) {
     if (!isset($instance['display'][$view_mode])) {
-      $instance['display'][$view_mode] = $instance['display']['full'];
+      $instance['display'][$view_mode] = array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      );
     }
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.591 2010/05/21 20:27:45 dries Exp $
+// $Id: taxonomy.module,v 1.592 2010/05/23 19:10:23 dries Exp $
 
 /**
  * @file
@@ -101,6 +101,7 @@ function taxonomy_entity_info() {
         // @todo View mode for display as a field (when attached to nodes etc).
         'full' => array(
           'label' => t('Taxonomy term page'),
+          'custom settings' => FALSE,
         ),
       ),
     ),
@@ -146,16 +147,25 @@ function taxonomy_field_extra_fields() {
   $info = entity_get_info('taxonomy_term');
   foreach (array_keys($info['bundles']) as $bundle) {
     $return['taxonomy_term'][$bundle] = array(
-      'name' => array(
-        'label' => t('Name'),
-        'description' => t('Term name textfield'),
-        'weight' => -5,
+      'form' => array(
+        'name' => array(
+          'label' => t('Name'),
+          'description' => t('Term name textfield'),
+          'weight' => -5,
+        ),
+        'description' => array(
+          'label' => t('Description'),
+          'description' => t('Term description textarea'),
+          'weight' => 0,
+        ),
       ),
-      'description' => array(
-        'label' => t('Description'),
-        'description' => t('Term description textarea'),
-        'weight' => 0,
-      )
+      'display' => array(
+        'description' => array(
+          'label' => t('Description'),
+          'description' => t('Term description'),
+          'weight' => 0,
+        ),
+      ),
     );
   }
 

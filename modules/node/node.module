@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1273 2010/05/17 07:43:36 dries Exp $
+// $Id: node.module,v 1.1274 2010/05/23 19:10:23 dries Exp $
 
 /**
  * @file
@@ -189,12 +189,15 @@ function node_entity_info() {
       'view modes' => array(
         'full' => array(
           'label' => t('Full content'),
+          'custom settings' => FALSE,
         ),
         'teaser' => array(
           'label' => t('Teaser'),
+          'custom settings' => TRUE,
         ),
         'rss' => array(
           'label' => t('RSS'),
+          'custom settings' => FALSE,
         ),
       ),
     ),
@@ -206,9 +209,11 @@ function node_entity_info() {
     $return['node']['view modes'] += array(
       'search_index' => array(
         'label' => t('Search index'),
+        'custom settings' => FALSE,
       ),
       'search_result' => array(
         'label' => t('Search result'),
+        'custom settings' => FALSE,
       ),
     );
   }
@@ -228,6 +233,16 @@ function node_entity_info() {
   }
 
   return $return;
+}
+
+/**
+ * Implements hook_field_display_ENTITY_TYPE_alter().
+ */
+function node_field_display_node_alter(&$display, $context) {
+  // Hide field labels in search index.
+  if ($context['view_mode'] == 'search_index') {
+    $display['label'] = 'hidden';
+  }
 }
 
 /**
@@ -562,10 +577,8 @@ function node_add_body_field($type, $label = 'Body') {
       'label' => $label,
       'widget_type' => 'text_textarea_with_summary',
       'settings' => array('display_summary' => TRUE),
-
-      // Define default formatters for the teaser and full view.
       'display' => array(
-        'full' => array(
+        'default' => array(
           'label' => 'hidden',
           'type' => 'text_default',
         ),
@@ -588,10 +601,12 @@ function node_field_extra_fields() {
   foreach (node_type_get_types() as $type) {
     if ($type->has_title) {
       $extra['node'][$type->type] = array(
-        'title' => array(
-          'label' => $type->title_label,
-          'description' => t('Node module element.'),
-          'weight' => -5,
+        'form' => array(
+          'title' => array(
+            'label' => $type->title_label,
+            'description' => t('Node module element'),
+            'weight' => -5,
+          ),
         ),
       );
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.entity.inc,v 1.9 2010/05/23 07:30:56 dries Exp $
+// $Id: field_test.entity.inc,v 1.10 2010/05/23 19:10:23 dries Exp $
 
 /**
  * @file
@@ -14,9 +14,11 @@ function field_test_entity_info() {
   $test_entity_modes = array(
     'full' => array(
       'label' => t('Full object'),
+      'custom settings' => TRUE,
     ),
     'teaser' => array(
       'label' => t('Teaser'),
+      'custom settings' => TRUE,
     ),
   );
 
