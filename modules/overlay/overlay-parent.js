@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.41 2010/05/14 07:45:54 dries Exp $
+// $Id: overlay-parent.js,v 1.42 2010/05/23 18:23:32 dries Exp $
 
 (function ($) {
 
@@ -650,9 +650,15 @@ Drupal.overlay.outerResize = function () {
     return;
   }
 
-  var displaceTop = Drupal.displace ? Drupal.displace.getDisplacement('top') : 0;
+  // Consider any region that should be visible above the overlay (such as
+  // an admin toolbar).
+  var $displaceTop = $('.overlay-displace-top');
+  var displaceTopHeight = 0;
+  $displaceTop.each(function () {
+    displaceTopHeight += $(this).height();
+  });
 
-  self.$wrapper.css('top', displaceTop);
+  self.$wrapper.css('top', displaceTopHeight);
 
   // When the overlay has no height yet, make it fit exactly in the window,
   // or the configured height when autoFit is disabled.
@@ -660,7 +666,7 @@ Drupal.overlay.outerResize = function () {
     var titleBarHeight = self.$dialogTitlebar.outerHeight(true);
 
     if (self.options.autoFit || self.options.height == undefined ||!isNan(self.options.height)) {
-      self.lastHeight = parseInt($(window).height() - displaceTop - titleBarHeight - 45);
+      self.lastHeight = parseInt($(window).height() - displaceTopHeight - titleBarHeight - 45);
     }
     else {
       self.lastHeight = self.options.height;
@@ -697,11 +703,11 @@ Drupal.overlay.clickHandler = function (event) {
 
   var $target = $(event.target);
 
-  if (self.isOpen && $target.closest('.displace-top, .displace-bottom').length) {
+  if (self.isOpen && $target.closest('.overlay-displace-top, .overlay-displace-bottom').length) {
     // Click events in displaced regions could potentionally change the size of
     // that region (e.g. the toggle button of the toolbar module). Trigger the
     // resize event to force a recalculation of overlay's size/position.
-    $(window).triggerHandler('resize');
+    $(window).triggerHandler('resize.overlay-event');
   }
 
   // Only continue by left-click or right-click.
@@ -923,7 +929,7 @@ Drupal.overlay.resetActiveClass = function(activePath) {
   var self = this;
   var windowDomain = window.location.protocol + window.location.hostname;
 
-  $('.displace-top, .displace-bottom')
+  $('.overlay-displace-top, .overlay-displace-bottom')
   .find('a[href]')
   // Remove active class from all links in displaced regions.
   .removeClass('active')

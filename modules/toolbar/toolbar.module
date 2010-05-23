@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.39 2010/05/14 16:52:27 dries Exp $
+// $Id: toolbar.module,v 1.40 2010/05/23 18:23:32 dries Exp $
 
 /**
  * @file
@@ -177,9 +177,12 @@ function toolbar_view() {
     '#theme' => 'toolbar',
     '#attached'=> array(
       'js' => array(
-        array('data' => 'misc/displace.js', 'weight' => JS_LIBRARY - 1),
-        array('data' => 'misc/jquery.cookie.js', 'weight' => JS_LIBRARY + 2),
         $module_path . '/toolbar.js',
+        array('data' => 'misc/jquery.cookie.js', 'weight' => JS_LIBRARY + 2),
+        array(
+          'data' => array('tableHeaderOffset' => 'Drupal.toolbar.height'),
+          'type' => 'setting'
+        ),
       ),
       'css' => array(
         $module_path . '/toolbar.css',

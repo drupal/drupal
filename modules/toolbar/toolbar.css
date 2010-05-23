@@ -1,6 +1,12 @@
-/* $Id: toolbar.css,v 1.21 2010/05/14 07:45:54 dries Exp $ */
+/* $Id: toolbar.css,v 1.22 2010/05/23 18:23:32 dries Exp $ */
 
+body.toolbar {
+  padding-top: 2.2em;
+}
 
+body.toolbar-drawer {
+  padding-top: 5.3em;
+}
 
 /**
  * Aggressive resets so we can achieve a consistent look in hostile CSS
@@ -26,8 +32,10 @@
   font: normal 0.9em "Lucida Grande", Verdana, sans-serif;
   background: #666;
   color: #ccc;
-}
-.displace-processed #toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   margin: 0 -20px;
   padding: 0 20px;
   z-index: 600;
@@ -37,14 +45,6 @@
   filter: progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10');
   -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10')";
 }
-.displace-unsupported #toolbar {
-  margin: 0;
-  padding-right: 0;
-  left: -20px;
-  right: 0;
-  width: 100%;
-}
-
 
 #toolbar div.collapsed {
   display: none;
@@ -131,4 +131,19 @@
 #toolbar div.toolbar-drawer {
   position: relative;
   padding: 0 10px;
+}
+
+/**
+ * IE 6 Fix.
+ *
+ * IE 6 shows elements with position:fixed as position:static so we replace
+ * it with position:absolute; toolbar needs it's z-index to stay above overlay.
+ */
+* html #toolbar {
+  position: absolute;
+  margin: 0;
+  padding-right: 0;
+  left: -20px;
+  right: 0;
+  width: 100%;
 }

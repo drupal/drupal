@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.76 2010/05/14 07:45:54 dries Exp $ */
+/* $Id: system.css,v 1.77 2010/05/23 18:23:32 dries Exp $ */
 
 /*
 ** HTML elements
@@ -252,6 +252,26 @@ ul.secondary a.active {
 */
 tr.selected td {
   background: #ffc;
+}
+
+/*
+** To be used with displace.js
+*/
+.displace-top,
+.displace-bottom {
+  position: relative;
+  width: 100%;
+}
+.displace-processed .displace-top,
+.displace-processed .displace-bottom {
+  position: fixed;
+  width: auto;
+  left: 0;
+  right: 0;
+}
+.displace-unsupported .displace-top,
+.displace-unsupported .displace-bottom {
+  position: absolute;
 }
 
 /*
