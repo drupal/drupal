@@ -555,6 +555,9 @@ function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcod
   $form['#pre_render'][] = '_field_extra_weights_pre_render';
   $form['#extra_fields'] = field_extra_fields($entity_type, $bundle);
 
+  // Save the original entity to allow later re-use.
+  $form_state['entity'] = $entity;
+
   // Let other modules make changes to the form.
   // Avoid module_invoke_all() to let parameters be taken by reference.
   foreach (module_implements('field_attach_form') as $module) {
