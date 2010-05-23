@@ -1,9 +1,13 @@
 <?php
-// $Id: database.inc,v 1.122 2010/05/05 16:51:30 dries Exp $
+// $Id: database.inc,v 1.123 2010/05/23 19:14:42 dries Exp $
 
 /**
  * @file
- * Base classes for the database layer.
+ * Core systems for the database layer.
+ *
+ * Classes required for basic functioning of the database system should be
+ * placed in this file.  All utility functions should also be placed in this
+ * file only, as they cannot auto-load the way classes can.
  */
 
 /**
