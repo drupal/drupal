@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.354 2010/05/23 19:10:22 dries Exp $
+// $Id: blog.module,v 1.355 2010/05/24 04:51:18 webchick Exp $
 
 /**
  * @file
@@ -137,6 +137,8 @@ function blog_menu() {
  * Implements hook_menu_local_tasks_alter().
  */
 function blog_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  global $user;
+
   // Add action link to 'node/add/blog' on 'blog' page.
   if ($root_path == 'blog') {
     $item = menu_get_item('node/add/blog');
@@ -146,6 +148,19 @@ function blog_menu_local_tasks_alter(&$data, $router_item, $root_path) {
         '#theme' => 'menu_local_action',
         '#link' => $item,
       );
+    }
+  }
+  // Provide a helper action link to the author on the 'blog/%' page.
+  else if ($root_path == 'blog/%' && $router_item['page_arguments'][0]->uid == $user->uid) {
+    $data['actions']['output']['blog'] = array(
+      '#theme' => 'menu_local_action',
+    );
+    if (user_access('create blog content')) {
+      $data['actions']['output']['blog']['#link']['title'] = t('Post new blog entry.');
+      $data['actions']['output']['blog']['#link']['href'] = 'node/add/blog';
+    }
+    else {
+      $data['actions']['output']['blog']['#link']['title'] = t('You are not allowed to post a new blog entry.');
     }
   }
 }

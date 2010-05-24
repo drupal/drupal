@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.26 2009/12/21 13:47:31 dries Exp $
+// $Id: blog.pages.inc,v 1.27 2010/05/24 04:51:18 webchick Exp $
 
 /**
  * @file
@@ -14,20 +14,7 @@ function blog_page_user($account) {
 
   drupal_set_title($title = t("@name's blog", array('@name' => format_username($account))), PASS_THROUGH);
 
-  $items = array();
-
-  if (($account->uid == $user->uid) && user_access('create blog content')) {
-    $items[] = l(t('Post new blog entry.'), "node/add/blog");
-  }
-  elseif ($account->uid == $user->uid) {
-    $items[] = t('You are not allowed to post a new blog entry.');
-  }
-
-  $build['blog_actions'] = array(
-    '#items' => $items,
-    '#theme' => 'item_list',
-    '#weight' => -1,
-  );
+  $build = array();
 
   $query = db_select('node', 'n')->extend('PagerDefault');
   $nids = $query
