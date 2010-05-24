@@ -1,13 +1,15 @@
-// $Id: dashboard.js,v 1.11 2010/05/18 12:07:39 dries Exp $
+// $Id: dashboard.js,v 1.12 2010/05/24 05:15:42 webchick Exp $
 (function ($) {
 
 /**
  * Implementation of Drupal.behaviors for dashboard.
  */
 Drupal.behaviors.dashboard = {
-  attach: function () {
-    $('#dashboard').prepend('<div class="customize"><ul class="action-links"><li><a href="#">' + Drupal.t('Customize dashboard') + '</a></li></ul><div class="canvas"></div></div>');
-    $('#dashboard .customize .action-links a').click(Drupal.behaviors.dashboard.enterCustomizeMode);
+    attach: function (context, settings) {
+    $('#dashboard', context).once(function () {
+      $(this).prepend('<div class="customize"><ul class="action-links"><li><a href="#">' + Drupal.t('Customize dashboard') + '</a></li></ul><div class="canvas"></div></div>');
+      $('.customize .action-links a', this).click(Drupal.behaviors.dashboard.enterCustomizeMode);
+    });
     Drupal.behaviors.dashboard.addPlaceholders();
     if (Drupal.settings.dashboard.launchCustomize) {
       Drupal.behaviors.dashboard.enterCustomizeMode();
