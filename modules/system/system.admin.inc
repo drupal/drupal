@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.284 2010/05/21 11:37:55 dries Exp $
+// $Id: system.admin.inc,v 1.285 2010/05/26 07:31:47 dries Exp $
 
 /**
  * @file
@@ -1070,7 +1070,7 @@ function system_modules_confirm_form($modules, $storage) {
   $form['validation_modules'] = array('#type' => 'value', '#value' => $modules);
   $form['status']['#tree'] = TRUE;
 
-  foreach ($storage['more_modules'] as $info) {
+  foreach ($storage['more_required'] as $info) {
     $t_argument = array(
       '@module' => $info['name'],
       '@required' => implode(', ', $info['requires']),
@@ -1106,9 +1106,12 @@ function system_modules_confirm_form($modules, $storage) {
  */
 function system_modules_submit($form, &$form_state) {
   include_once DRUPAL_ROOT . '/includes/install.inc';
+
+  // Builds list of modules.
   $modules = array();
   // If we're not coming from the confirmation form, build the list of modules.
   if (empty($form_state['storage'])) {
+    // If we're not coming from the confirmation form, build the module list.
     foreach ($form_state['values']['modules'] as $group_name => $group) {
       foreach ($group as $module => $enabled) {
         $modules[$module] = array('group' => $group_name, 'enabled' => $enabled['enable']);
@@ -1121,114 +1124,108 @@ function system_modules_submit($form, &$form_state) {
     $modules = $form_state['storage']['modules'];
   }
 
-  // Get a list of all modules, it will be used to find which module requires
-  // which.
+  // Collect data for all modules to be able to determine dependencies.
   $files = system_rebuild_module_data();
 
-  // The modules to be enabled.
-  $modules_to_be_enabled = array();
-  // The modules to be disabled.
-  $disable_modules = array();
-  // The modules to be installed.
-  $new_modules = array();
-  // Modules that need to be switched on because other modules require them.
-  $more_modules = array();
+  // Sorts modules by weight.
+  $sort = array();
+  foreach (array_keys($modules) as $module) {
+    $sort[$module] = $files[$module]->sort;
+  }
+  array_multisort($sort, $modules);
+
+  // Makes sure all required modules are set to be enabled.
+  $more_required = array();
   $missing_modules = array();
-
-  // Go through each module, finding out if we should enable, install, or
-  // disable it. Also, we find out if there are modules it requires that are
-  // not enabled.
   foreach ($modules as $name => $module) {
-    // If it's enabled, find out whether to just
-    // enable it, or install it.
     if ($module['enabled']) {
-      if (drupal_get_installed_schema_version($name) == SCHEMA_UNINSTALLED) {
-        $new_modules[$name] = $name;
-      }
-      elseif (!module_exists($name)) {
-        $modules_to_be_enabled[$name] = $name;
-      }
-
-      // If we're not coming from a confirmation form, search for modules the
-      // new ones require and see whether there are any that additionally
-      // need to be switched on.
-      if (empty($form_state['storage'])) {
-        foreach ($form['modules'][$module['group']][$name]['#requires'] as $requires => $v) {
-          if (!isset($files[$requires])) {
-            // The required module is missing, mark this module as disabled.
-            $missing_modules[$requires]['depends'][] = $name;
-            $modules[$name]['enabled'] = FALSE;
+      // Checks that all dependencies are set to be enabled.  Stores the ones
+      // that are not in $dependencies variable so that the user can be alerted
+      // in the confirmation form that more modules need to be enabled.
+      $dependencies = array();
+      foreach (array_keys($files[$name]->requires) as $required) {
+        if (empty($modules[$required]['enabled'])) {
+          if (isset($files[$required])) {
+            $dependencies[] = $files[$required]->info['name'];
+            $modules[$required]['enabled'] = TRUE;
           }
           else {
-            if (!$modules[$requires]['enabled']) {
-              if (!isset($more_modules[$name])) {
-                $more_modules[$name]['name'] = $files[$name]->info['name'];
-              }
-              $more_modules[$name]['requires'][$requires] = $files[$requires]->info['name'];
-            }
-            $modules[$requires] = array('group' => $files[$requires]->info['package'], 'enabled' => TRUE);
+            $missing_modules[$required]['depends'][] = $name;
+            $modules[$name]['enabled'] = FALSE;
           }
         }
       }
-    }
-  }
-  // A second loop is necessary, otherwise the modules set to be enabled in the
-  // previous loop would not be found.
-  foreach ($modules as $name => $module) {
-    if (module_exists($name) && !$module['enabled']) {
-      $disable_modules[$name] = $name;
+
+      // Stores additional modules that need to be enabled in $more_required.
+      if (!empty($dependencies)) {
+        $more_required[$name] = array(
+          'name' => $files[$name]->info['name'],
+          'requires' => $dependencies,
+        );
+      }
     }
   }
 
-  if ($more_modules || $missing_modules) {
-    // If we need to switch on more modules because other modules require
-    // them and they haven't confirmed, don't process the submission yet. Store
-    // the form submission data needed later.
+  // Redirects to confirmation form if more modules need to be enabled.
+  if ((!empty($more_required) || !empty($missing_modules)) && !isset($form_state['values']['confirm'])) {
     $form_state['storage'] = array(
-      'more_modules' => $more_modules,
+      'more_required' => $more_required,
+      'modules' => $modules,
       'missing_modules' => $missing_modules,
-      'modules' => $modules
     );
     $form_state['rebuild'] = TRUE;
     return;
   }
 
-  $old_module_list = module_list();
-
-  // Enable the modules needing enabling.
-  if (!empty($modules_to_be_enabled)) {
-    $sort = array();
-    foreach ($modules_to_be_enabled as $module) {
-      $sort[$module] = $files[$module]->sort;
-    }
-    array_multisort($sort, SORT_DESC, $modules_to_be_enabled);
-    module_enable($modules_to_be_enabled, FALSE);
-  }
-  // Disable the modules that need disabling.
-  if (!empty($disable_modules)) {
-    $sort = array();
-    foreach ($disable_modules as $module) {
-      $sort[$module] = $files[$module]->sort;
-    }
-    array_multisort($sort, SORT_ASC, $disable_modules);
-    module_disable($disable_modules, FALSE);
-  }
-
-  // Install new modules.
-  if (!empty($new_modules)) {
-    $sort = array();
-    foreach ($new_modules as $key => $module) {
-      if (!drupal_check_module($module)) {
-        unset($new_modules[$key]);
+  // Invokes hook_requirements('install').  If failures are detected, makes sure
+  // the dependent modules aren't installed either.
+  foreach ($modules as $name => $module) {
+    // Only invoke hook_requirements() on modules that are going to be installed.
+    if ($module['enabled'] && drupal_get_installed_schema_version($name) == SCHEMA_UNINSTALLED) {
+      if (!drupal_check_module($name)) {
+        $modules[$name]['enabled'] = FALSE;
+        foreach (array_keys($files[$name]->required_by) as $required_by) {
+          $modules[$required_by]['enabled'] = FALSE;
+        }
       }
-      $sort[$module] = $files[$module]->sort;
     }
-    array_multisort($sort, SORT_DESC, $new_modules);
-    module_enable($new_modules, FALSE);
   }
 
-  $current_module_list = module_list(TRUE);
-  if ($old_module_list != $current_module_list) {
+  // Initializes array of actions.
+  $actions = array(
+    'enable' => array(),
+    'disable' => array(),
+    'install' => array(),
+  );
+
+  // Builds arrays of modules that need to be enabled, disabled, and installed.
+  foreach ($modules as $name => $module) {
+    if ($module['enabled']) {
+      if (drupal_get_installed_schema_version($name) == SCHEMA_UNINSTALLED) {
+        $actions['install'][] = $name;
+      }
+      elseif (!module_exists($name)) {
+        $actions['enable'][] = $name;
+      }
+    }
+    elseif (module_exists($name)) {
+      $actions['disable'][] = $name;
+    }
+  }
+
+  // Gets list of modules prior to install process, unsets $form_state['storage']
+  // so we don't get redirected back to the confirmation form.
+  $pre_install_list = module_list();
+  unset($form_state['storage']);
+
+  // Installs, enables, and disables modules.
+  module_enable($actions['enable']);
+  module_disable($actions['disable']);
+  module_enable($actions['install']);
+
+  // Gets module list after install process, displays message if there are changes.
+  $post_install_list = module_list(TRUE);
+  if ($pre_install_list != $post_install_list) {
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
@@ -1248,7 +1245,7 @@ function system_modules_submit($form, &$form_state) {
   // Notify locale module about module changes, so translations can be
   // imported. This might start a batch, and only return to the redirect
   // path after that.
-  module_invoke('locale', 'system_update', $new_modules);
+  module_invoke('locale', 'system_update', $actions['install']);
 
   // Synchronize to catch any actions that were added or removed.
   actions_synchronize();

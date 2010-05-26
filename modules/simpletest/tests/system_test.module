@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.28 2010/05/20 08:51:24 dries Exp $
+// $Id: system_test.module,v 1.29 2010/05/26 07:31:47 dries Exp $
 
 /**
  * Implements hook_menu().
@@ -218,6 +218,9 @@ function system_test_system_info_alter(&$info, $file, $type) {
 
   // Make the system_dependencies_test visible by default.
   if ($file->name == 'system_dependencies_test') {
+    $info['hidden'] = FALSE;
+  }
+  if ($file->name == 'requirements1_test' || $file->name == 'requirements2_test') {
     $info['hidden'] = FALSE;
   }
 }

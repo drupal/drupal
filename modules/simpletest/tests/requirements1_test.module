@@ -1,0 +1,8 @@
+<?php
+// $Id: requirements1_test.module,v 1.1 2010/05/26 07:31:46 dries Exp $
+
+/**
+ * @file
+ * Tests that a module is not installed when it fails
+ * hook_requirements('install').
+ */

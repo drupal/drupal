@@ -1,0 +1,22 @@
+<?php
+// $Id: requirements1_test.install,v 1.1 2010/05/26 07:31:46 dries Exp $
+
+/**
+ * Implements hook_requirements().
+ */
+function requirements1_test_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break at install time.
+  $t = get_t();
+
+  // Always fails requirements.
+  if ('install' == $phase) {
+    $requirements['requirements1_test'] = array(
+      'title' => $t('Requirements 1 Test'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => $t('Requirements 1 Test failed requirements.'),
+    );
+  }
+
+  return $requirements;
+}

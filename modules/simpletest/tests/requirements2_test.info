@@ -1,0 +1,10 @@
+; $Id: requirements2_test.info,v 1.1 2010/05/26 07:31:46 dries Exp $
+name = Requirements 2 Test
+description = "Tests that a module is not installed when the one it depends on fails hook_requirements('install)."
+dependencies[] = requirements1_test
+dependencies[] = comment
+package = Core
+version = VERSION
+core = 7.x
+files[] = requirements2_test.module
+hidden = TRUE
