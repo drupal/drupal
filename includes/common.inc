@@ -262,7 +262,7 @@ function drupal_get_rdf_namespaces() {
       $xml_rdf_namespaces[] = 'xmlns:' . $prefix . '="' . $uri . '"';
     }
   }
-  return implode("\n  ", $xml_rdf_namespaces);
+  return count($xml_rdf_namespaces) ? "\n  " . implode("\n  ", $xml_rdf_namespaces) : '';
 }
 
 /**
