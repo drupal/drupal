@@ -362,7 +362,6 @@ function openid_complete($response = array()) {
  */
 function openid_discovery($claimed_id) {
   module_load_include('inc', 'openid');
-  module_load_include('inc', 'openid', 'xrds');
 
   $methods = module_invoke_all('openid_discovery_method_info');
   drupal_alter('openid_discovery_method_info', $methods);
