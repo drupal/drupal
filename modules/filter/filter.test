@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.66 2010/04/11 18:33:44 dries Exp $
+// $Id: filter.test,v 1.67 2010/05/26 10:54:30 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -989,23 +989,23 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
 
     // Converting URLs.
     $f = _filter_url('http://www.example.com/', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com/" title="http://www.example.com/">http://www.example.com/</a>', t('Converting URLs.'));
+    $this->assertEqual($f, '<a href="http://www.example.com/">http://www.example.com/</a>', t('Converting URLs.'));
 
     $f = _filter_url('http://www.example.com/?a=1&b=2', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com/?a=1&amp;b=2" title="http://www.example.com/?a=1&amp;b=2">http://www.example.com/?a=1&amp;b=2</a>', t('Converting URLs -- ampersands.'));
+    $this->assertEqual($f, '<a href="http://www.example.com/?a=1&amp;b=2">http://www.example.com/?a=1&amp;b=2</a>', t('Converting URLs -- ampersands.'));
 
     $f = _filter_url('ftp://user:pass@ftp.example.com/dir1/dir2', $filter);
-    $this->assertEqual($f, '<a href="ftp://user:pass@ftp.example.com/dir1/dir2" title="ftp://user:pass@ftp.example.com/dir1/dir2">ftp://user:pass@ftp.example.com/dir1/dir2</a>', t('Converting URLs -- FTP scheme.'));
+    $this->assertEqual($f, '<a href="ftp://user:pass@ftp.example.com/dir1/dir2">ftp://user:pass@ftp.example.com/dir1/dir2</a>', t('Converting URLs -- FTP scheme.'));
 
     // Converting domain names.
     $f = _filter_url('www.example.com', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com" title="www.example.com">www.example.com</a>', t('Converting domain names.'));
+    $this->assertEqual($f, '<a href="http://www.example.com">www.example.com</a>', t('Converting domain names.'));
 
     $f = _filter_url('<li>www.example.com</li>', $filter);
-    $this->assertEqual($f, '<li><a href="http://www.example.com" title="www.example.com">www.example.com</a></li>', t('Converting domain names -- domain in a list.'));
+    $this->assertEqual($f, '<li><a href="http://www.example.com">www.example.com</a></li>', t('Converting domain names -- domain in a list.'));
 
     $f = _filter_url('(www.example.com/dir?a=1&b=2#a)', $filter);
-    $this->assertEqual($f, '(<a href="http://www.example.com/dir?a=1&amp;b=2#a" title="www.example.com/dir?a=1&amp;b=2#a">www.example.com/dir?a=1&amp;b=2#a</a>)', t('Converting domain names --  domain in parentheses.'));
+    $this->assertEqual($f, '(<a href="http://www.example.com/dir?a=1&amp;b=2#a">www.example.com/dir?a=1&amp;b=2#a</a>)', t('Converting domain names --  domain in parentheses.'));
 
     // Converting e-mail addresses.
     $f = _filter_url('johndoe@example.com', $filter);
@@ -1049,13 +1049,13 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     // of a sentence, so remove the dot from the link.
     // @todo It can also be used at the end of a filename or a query string.
     $f = _filter_url('www.example.com.', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com" title="www.example.com">www.example.com</a>.', t('Converting URLs -- do not recognize a dot at the end of a domain name (FQDNs).'));
+    $this->assertEqual($f, '<a href="http://www.example.com">www.example.com</a>.', t('Converting URLs -- do not recognize a dot at the end of a domain name (FQDNs).'));
 
     $f = _filter_url('http://www.example.com.', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com" title="http://www.example.com">http://www.example.com</a>.', t('Converting URLs -- do not recognize a dot at the end of an URL (FQDNs).'));
+    $this->assertEqual($f, '<a href="http://www.example.com">http://www.example.com</a>.', t('Converting URLs -- do not recognize a dot at the end of an URL (FQDNs).'));
 
     $f = _filter_url('www.example.com/index.php?a=.', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com/index.php?a=" title="www.example.com/index.php?a=">www.example.com/index.php?a=</a>.', t('Converting URLs -- do forget about a dot at the end of a query string.'));
+    $this->assertEqual($f, '<a href="http://www.example.com/index.php?a=">www.example.com/index.php?a=</a>.', t('Converting URLs -- do forget about a dot at the end of a query string.'));
   }
 
   /**
