@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.89 2010/05/20 08:51:24 dries Exp $
+// $Id: openid.module,v 1.90 2010/05/26 08:39:54 dries Exp $
 
 /**
  * @file
@@ -362,7 +362,6 @@ function openid_complete($response = array()) {
  */
 function openid_discovery($claimed_id) {
   module_load_include('inc', 'openid');
-  module_load_include('inc', 'openid', 'xrds');
 
   $methods = module_invoke_all('openid_discovery_method_info');
   drupal_alter('openid_discovery_method_info', $methods);
