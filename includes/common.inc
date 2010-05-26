@@ -1961,6 +1961,14 @@ function format_username($account) {
  *     dependent URL requires so.
  *   - 'prefix': Only used internally, to modify the path when a language
  *     dependent URL requires so.
+ *   - 'script': The script filename in Drupal's root directory to use when
+ *     clean URLs are disabled, such as 'index.php'. Defaults to an empty
+ *     string, as most modern web servers automatically find 'index.php'. If
+ *     clean URLs are disabled, the value of $path is appended as query
+ *     parameter 'q' to $options['script'] in the returned URL. When deploying
+ *     Drupal on a web server that cannot be configured to automatically find
+ *     index.php, then hook_url_outbound_alter() can be implemented to force
+ *     this value to 'index.php'.
  *
  * @return
  *   A string containing a URL to the given path.
@@ -2076,22 +2084,9 @@ function url($path = NULL, array $options = array()) {
       // parameters.
       $query += $options['query'];
     }
-    if ($query) {
-      // On some web servers, such as IIS, we can't omit "index.php". So, we
-      // generate "index.php?q=foo" instead of "?q=foo" on anything that is not
-      // Apache. strpos() is fast, so there is no performance benefit to
-      // statically caching its result.
-      // @todo This needs to be re-evaluated with modern web servers. Since we
-      //   do not add $script when there aren't query parameters, we're already
-      //   assuming that index.php is setup as a default document on the web
-      //   server. If that's the case, it should be possible to omit "index.php"
-      //   even when there are query parameters: http://drupal.org/node/437228.
-      $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === FALSE) ? 'index.php' : '';
-      return $base . $script . '?' . drupal_http_build_query($query) . $options['fragment'];
-    }
-    else {
-      return $base . $options['fragment'];
-    }
+    $query = $query ? ('?' . drupal_http_build_query($query)) : '';
+    $script = isset($options['script']) ? $options['script'] : '';
+    return $base . $script . $query . $options['fragment'];
   }
 }
 
