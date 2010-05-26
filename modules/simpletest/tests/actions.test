@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.test,v 1.15 2010/05/01 08:12:23 dries Exp $
+// $Id: actions.test,v 1.16 2010/05/26 11:26:49 dries Exp $
 
 class ActionsConfigurationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -81,7 +81,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Set up a loop with 10-50 recursions, and see if it aborts properly.
+   * Set up a loop with 3 - 12 recursions, and see if it aborts properly.
    */
   function testActionLoop() {
     $user = $this->drupalCreateUser(array('administer actions'));
@@ -116,10 +116,9 @@ class ActionLoopTestCase extends DrupalWebTestCase {
     }
     $expected[] = 'Stack overflow: too many calls to actions_do(). Aborting to prevent infinite recursion.';
 
-    $result = db_query("SELECT * FROM {watchdog} WHERE type = 'actions_loop_test' OR type = 'actions' ORDER BY timestamp");
+    $result = db_query("SELECT message FROM {watchdog} WHERE type = 'actions_loop_test' OR type = 'actions' ORDER BY wid");
     $loop_started = FALSE;
     foreach ($result as $row) {
-
       $expected_message = array_shift($expected);
       $this->assertEqual($row->message, $expected_message, t('Expected message %expected, got %message.', array('%expected' => $expected_message, '%message' => $row->message)));
     }
