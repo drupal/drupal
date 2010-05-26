@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.46 2010/05/05 06:55:25 webchick Exp $
+// $Id: user.install,v 1.47 2010/05/26 19:48:45 dries Exp $
 
 /**
  * @file
@@ -144,7 +144,7 @@ function user_schema() {
         'length' => 254,
         'not null' => FALSE,
         'default' => '',
-        'description' => "User's email address.",
+        'description' => "User's e-mail address.",
       ),
       'theme' => array(
         'type' => 'varchar',
@@ -206,10 +206,10 @@ function user_schema() {
       ),
       'init' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 254,
         'not null' => FALSE,
         'default' => '',
-        'description' => 'Email address used for initial account creation.',
+        'description' => 'E-mail address used for initial account creation.',
       ),
       'data' => array(
         'type' => 'text',
@@ -548,11 +548,25 @@ function user_update_7004(&$sandbox) {
 }
 
 /**
- * Change the users table to allow longer email addresses - 254 characters instead of 64.
+ * Changes the users table to allow longer e-mail addresses.
  */
 function user_update_7005(&$sandbox) {
-  $schema = user_schema();
-  db_change_field('users', 'mail', 'mail', $schema['users']['fields']['mail']);
+  $mail_field = array(
+    'type' => 'varchar',
+    'length' => 254,
+    'not null' => FALSE,
+    'default' => '',
+    'description' => "User's e-mail address.",
+  );
+  $init_field = array(
+    'type' => 'varchar',
+    'length' => 254,
+    'not null' => FALSE,
+    'default' => '',
+    'description' => 'E-mail address used for initial account creation.',
+  );
+  db_change_field('users', 'mail', 'mail', $mail_field, array('indexes' => array('mail' => array('mail'))));
+  db_change_field('users', 'init', 'init', $init_field);
 }
 
 /**
