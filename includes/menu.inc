@@ -2307,7 +2307,8 @@ function menu_rebuild() {
     }
   }
   catch (Exception $e) {
-    $transaction->rollback('menu', $e->getMessage(), array(), WATCHDOG_ERROR);
+    $transaction->rollback();
+    watchdog_exception('menu', $exception);
   }
 
   lock_release('menu_rebuild');

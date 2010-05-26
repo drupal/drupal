@@ -1529,7 +1529,8 @@ function comment_save($comment) {
     }
   }
   catch (Exception $e) {
-    $transaction->rollback('comment', $e->getMessage(), array(), WATCHDOG_ERROR);
+    $transaction->rollback('comment');
+    watchdog_exception('comment', $e);
     throw $e;
   }
 

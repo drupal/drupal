@@ -1535,6 +1535,46 @@ function request_uri() {
 }
 
 /**
+ * Log an exception.
+ *
+ * This is a wrapper function for watchdog() which automatically decodes an
+ * exception.
+ *
+ * @param $type
+ *   The category to which this message belongs.
+ * @param $exception
+ *   The exception that is going to be logged.
+ * @param $message
+ *   The message to store in the log. If empty, a text that contains all useful
+ *   information about the passed in exception is used.
+ * @param $variables
+ *   Array of variables to replace in the message on display. Defaults to the
+ *   return value of drupal_decode_exception().
+ * @param $severity
+ *   The severity of the message, as per RFC 3164.
+ * @param $link
+ *   A link to associate with the message.
+ *
+ * @see watchdog()
+ * @see drupal_decode_exception()
+ */
+function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = WATCHDOG_ERROR, $link = NULL) {
+
+   // Use a default value if $message is not set.
+   if (empty($message)) {
+     $message = '%type: %message in %function (line %line of %file).';
+   }
+   // $variables must be an array so that we can add the exception information.
+   if (!is_array($variables)) {
+     $variables = array();
+   }
+
+   require_once DRUPAL_ROOT . '/includes/errors.inc';
+   $variables += _drupal_decode_exception($exception);
+   watchdog($type, $message, $variables, $severity, $link);
+}
+
+/**
  * Log a system message.
  *
  * @param $type
@@ -1556,8 +1596,6 @@ function request_uri() {
  *
  * @see watchdog_severity_levels()
  * @see hook_watchdog()
- * @see DatabaseConnection::rollback()
- * @see DatabaseTransaction::rollback()
  */
 function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
@@ -2104,9 +2142,6 @@ function _drupal_bootstrap_database() {
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
   require_once DRUPAL_ROOT . '/includes/database/database.inc';
-
-  // Set Drupal's watchdog as the logging callback.
-  Database::setLoggingCallback('watchdog', WATCHDOG_NOTICE, WATCHDOG_ERROR);
 
   // Register autoload functions so that we can access classes and interfaces.
   // The database autoload routine comes first so that we can load the database

@@ -490,7 +490,7 @@ class NodeCreationTestCase extends DrupalWebTestCase {
     }
 
     // Check that the rollback error was logged.
-    $records = db_query("SELECT wid FROM {watchdog} WHERE message LIKE 'Test exception for rollback.'")->fetchAll();
+    $records = db_query("SELECT wid FROM {watchdog} WHERE variables LIKE '%Test exception for rollback.%'")->fetchAll();
     $this->assertTrue(count($records) > 0, t('Rollback explanatory error logged to watchdog.'));
   }
 }

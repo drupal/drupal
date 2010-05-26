@@ -1090,7 +1090,8 @@ function node_save($node) {
     db_ignore_slave();
   }
   catch (Exception $e) {
-    $transaction->rollback('node', $e->getMessage(), array(), WATCHDOG_ERROR);
+    $transaction->rollback('node');
+    watchdog_exception('node', $e);
     throw $e;
   }
 }

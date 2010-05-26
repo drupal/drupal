@@ -548,7 +548,8 @@ function user_save($account, $edit = array(), $category = 'account') {
     return $user;
   }
   catch (Exception $e) {
-    $transaction->rollback('user', $e->getMessage(), array(), WATCHDOG_ERROR);
+    $transaction->rollback();
+    watchdog_exception('user', $e);
     throw $e;
   }
 }
