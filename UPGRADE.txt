@@ -14,9 +14,9 @@ Prior to upgrading, you should ensure that:
 
 Let's begin!
 
-1.  Back up your Drupal database and site root directory. Be especially sure 
-    to back up your "sites" directory which contains your configuration file, 
-    added modules and themes, and your site's uploaded files. If other files 
+1.  Back up your Drupal database and site root directory. Be especially sure
+    to back up your "sites" directory which contains your configuration file,
+    added modules and themes, and your site's uploaded files. If other files
     have modifications, such as .htaccess or robots.txt, back those up as well.
 
     Note: for a single site setup, the configuration file is the "settings.php"

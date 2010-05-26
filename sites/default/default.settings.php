@@ -133,7 +133,7 @@
  *
  * You can also use db_prefix as a reference to a schema/database. This maybe
  * useful if your Drupal installation exists in a schema that is not the default
- * or you want to access several databases from the same code base at the same 
+ * or you want to access several databases from the same code base at the same
  * time.
  * Example:
  *

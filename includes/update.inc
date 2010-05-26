@@ -115,7 +115,7 @@ function update_prepare_d7_bootstrap() {
     print $message . '<p>See the <a href="http://drupal.org/requirements">system requirements page</a> for more information.</p>';
     exit();
   }
-  
+
   // Allow the database system to work even if the registry has not been
   // created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
