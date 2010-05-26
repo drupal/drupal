@@ -220,6 +220,9 @@ function system_test_system_info_alter(&$info, $file, $type) {
   if ($file->name == 'system_dependencies_test') {
     $info['hidden'] = FALSE;
   }
+  if ($file->name == 'requirements1_test' || $file->name == 'requirements2_test') {
+    $info['hidden'] = FALSE;
+  }
 }
 
 /**
