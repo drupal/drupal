@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.876 2010/05/23 19:10:22 dries Exp $
+// $Id: comment.module,v 1.877 2010/05/26 07:52:12 dries Exp $
 
 /**
  * @file
@@ -1529,7 +1529,8 @@ function comment_save($comment) {
     }
   }
   catch (Exception $e) {
-    $transaction->rollback('comment', $e->getMessage(), array(), WATCHDOG_ERROR);
+    $transaction->rollback('comment');
+    watchdog_exception('comment', $e);
     throw $e;
   }
 

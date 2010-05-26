@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1171 2010/05/23 19:10:23 dries Exp $
+// $Id: user.module,v 1.1172 2010/05/26 07:52:13 dries Exp $
 
 /**
  * @file
@@ -548,7 +548,8 @@ function user_save($account, $edit = array(), $category = 'account') {
     return $user;
   }
   catch (Exception $e) {
-    $transaction->rollback('user', $e->getMessage(), array(), WATCHDOG_ERROR);
+    $transaction->rollback();
+    watchdog_exception('user', $e);
     throw $e;
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.392 2010/05/17 18:47:25 dries Exp $
+// $Id: menu.inc,v 1.393 2010/05/26 07:52:12 dries Exp $
 
 /**
  * @file
@@ -2307,7 +2307,8 @@ function menu_rebuild() {
     }
   }
   catch (Exception $e) {
-    $transaction->rollback('menu', $e->getMessage(), array(), WATCHDOG_ERROR);
+    $transaction->rollback();
+    watchdog_exception('menu', $exception);
   }
 
   lock_release('menu_rebuild');

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1274 2010/05/23 19:10:23 dries Exp $
+// $Id: node.module,v 1.1275 2010/05/26 07:52:12 dries Exp $
 
 /**
  * @file
@@ -1090,7 +1090,8 @@ function node_save($node) {
     db_ignore_slave();
   }
   catch (Exception $e) {
-    $transaction->rollback('node', $e->getMessage(), array(), WATCHDOG_ERROR);
+    $transaction->rollback('node');
+    watchdog_exception('node', $e);
     throw $e;
   }
 }
