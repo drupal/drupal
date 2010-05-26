@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1171 2010/05/23 19:10:22 dries Exp $
+// $Id: common.inc,v 1.1172 2010/05/26 10:47:20 dries Exp $
 
 /**
  * @file
@@ -262,7 +262,7 @@ function drupal_get_rdf_namespaces() {
       $xml_rdf_namespaces[] = 'xmlns:' . $prefix . '="' . $uri . '"';
     }
   }
-  return implode("\n  ", $xml_rdf_namespaces);
+  return count($xml_rdf_namespaces) ? "\n  " . implode("\n  ", $xml_rdf_namespaces) : '';
 }
 
 /**

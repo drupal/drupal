@@ -1,5 +1,5 @@
 <?php
-// $Id: html.tpl.php,v 1.3 2009/11/16 05:34:24 webchick Exp $
+// $Id: html.tpl.php,v 1.4 2010/05/26 10:47:20 dries Exp $
 
 /**
  * @file
@@ -35,8 +35,7 @@
  */
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language; ?>" version="XHTML+RDFa 1.0" dir="<?php print $language->dir; ?>"
-  <?php print $rdf_namespaces; ?>>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language; ?>" version="XHTML+RDFa 1.0" dir="<?php print $language->dir; ?>"<?php print $rdf_namespaces; ?>>
 
 <head profile="<?php print $grddl_profile; ?>">
   <?php print $head; ?>
