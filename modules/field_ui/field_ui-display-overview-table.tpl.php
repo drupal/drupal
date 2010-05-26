@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui-display-overview-table.tpl.php,v 1.1 2010/05/24 04:46:43 webchick Exp $
+// $Id: field_ui-display-overview-table.tpl.php,v 1.2 2010/05/26 07:49:52 dries Exp $
 
 /**
  * @file
