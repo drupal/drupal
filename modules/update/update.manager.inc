@@ -66,8 +66,6 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     return $form;
   }
 
-  $form['#attached']['library'][] = array('system', 'ui.dialog');
-  $form['#attached']['js'][] = drupal_get_path('module', 'update') . '/update.manager.js';
   $form['#attached']['css'][] = drupal_get_path('module', 'update') . '/update.css';
 
   // This will be a nested array. The first key is the kind of project, which
