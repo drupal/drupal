@@ -1314,7 +1314,7 @@ function _filter_url_parse_full_links($match) {
   $match[2] = decode_entities($match[2]);
   $caption = check_plain(_filter_url_trim($match[2]));
   $match[2] = check_url($match[2]);
-  return $match[1] . '<a href="' . $match[2] . '" title="' . $match[2] . '">' . $caption . '</a>' . $match[5];
+  return $match[1] . '<a href="' . $match[2] . '">' . $caption . '</a>' . $match[5];
 }
 
 /**
@@ -1324,7 +1324,7 @@ function _filter_url_parse_partial_links($match) {
   $match[2] = decode_entities($match[2]);
   $caption = check_plain(_filter_url_trim($match[2]));
   $match[2] = check_plain($match[2]);
-  return $match[1] . '<a href="http://' . $match[2] . '" title="' . $match[2] . '">' . $caption . '</a>' . $match[3];
+  return $match[1] . '<a href="http://' . $match[2] . '">' . $caption . '</a>' . $match[3];
 }
 
 /**
