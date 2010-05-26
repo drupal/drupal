@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1173 2010/05/26 10:52:28 dries Exp $
+// $Id: common.inc,v 1.1174 2010/05/26 19:51:01 dries Exp $
 
 /**
  * @file
@@ -4649,7 +4649,7 @@ function drupal_cron_cleanup() {
 
 /**
  * Returns information about system object files (modules, themes, etc.).
- * 
+ *
  * This function is used to find all or some system object files (module files,
  * theme files, etc.) that exist on the site. It searches in several locations,
  * depending on what type of object you are looking for. For instance, if you

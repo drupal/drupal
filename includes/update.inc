@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.50 2010/05/21 11:53:26 dries Exp $
+// $Id: update.inc,v 1.51 2010/05/26 19:51:01 dries Exp $
 
 /**
  * @file
@@ -115,7 +115,7 @@ function update_prepare_d7_bootstrap() {
     print $message . '<p>See the <a href="http://drupal.org/requirements">system requirements page</a> for more information.</p>';
     exit();
   }
-  
+
   // Allow the database system to work even if the registry has not been
   // created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);

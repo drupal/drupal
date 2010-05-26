@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.44 2010/04/07 15:07:59 dries Exp $
+// $Id: default.settings.php,v 1.45 2010/05/26 19:51:01 dries Exp $
 
 /**
  * @file
@@ -133,7 +133,7 @@
  *
  * You can also use db_prefix as a reference to a schema/database. This maybe
  * useful if your Drupal installation exists in a schema that is not the default
- * or you want to access several databases from the same code base at the same 
+ * or you want to access several databases from the same code base at the same
  * time.
  * Example:
  *

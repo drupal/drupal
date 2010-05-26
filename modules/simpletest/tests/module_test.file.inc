@@ -1,5 +1,5 @@
 <?php
-// $Id: module_test.file.inc,v 1.1 2010/04/22 18:56:53 dries Exp $
+// $Id: module_test.file.inc,v 1.2 2010/05/26 19:51:01 dries Exp $
 
 /**
  * @file
