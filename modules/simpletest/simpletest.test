@@ -292,6 +292,11 @@ class SimpleTestBrowserTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp();
+    variable_set('user_register', USER_REGISTER_VISITORS);
+  }
+
   /**
    * Test DrupalWebTestCase::getAbsoluteUrl().
    */

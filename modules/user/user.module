@@ -17,6 +17,22 @@ define('USERNAME_MAX_LENGTH', 60);
 define('EMAIL_MAX_LENGTH', 254);
 
 /**
+ * Only administrators can create user accounts.
+ */
+define('USER_REGISTER_ADMINISTRATORS_ONLY', 0);
+
+/**
+ * Visitors can create their own accounts.
+ */
+define('USER_REGISTER_VISITORS', 1);
+
+/**
+ * Visitors can create accounts, but they don't become active without
+ * administrative approval.
+ */
+define('USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL', 2);
+
+/**
  * Implement hook_help().
  */
 function user_help($path, $arg) {
@@ -926,7 +942,7 @@ function user_user_view($account) {
 
 /**
  * Helper function to add default user account fields to user registration and edit form.
- * 
+ *
  * @see user_account_form_validate()
  * @see user_validate_current_pass()
  * @see user_validate_picture()
@@ -1021,7 +1037,7 @@ function user_account_form(&$form, &$form_state) {
     $status = isset($account->status) ? $account->status : 1;
   }
   else {
-    $status = $register ? variable_get('user_register', 1) == 1 : $account->status;
+    $status = $register ? variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_VISITORS : $account->status;
   }
   $form['account']['status'] = array(
     '#type' => 'radios',
@@ -1104,7 +1120,7 @@ function user_account_form(&$form, &$form_state) {
 
 /**
  * Form validation handler for the current password on the user_account_form().
- * 
+ *
  * @see user_account_form()
  */
 function user_validate_current_pass(&$form, &$form_state) {
@@ -1130,7 +1146,7 @@ function user_validate_current_pass(&$form, &$form_state) {
 
 /**
  * Form validation handler for user_account_form().
- * 
+ *
  * @see user_account_form()
  */
 function user_account_form_validate($form, &$form_state) {
@@ -1230,7 +1246,7 @@ function user_login_block($form) {
     '#value' => t('Log in'),
   );
   $items = array();
-  if (variable_get('user_register', 1)) {
+  if (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
     $items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
   }
   $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
@@ -1432,7 +1448,7 @@ function user_is_logged_in() {
 }
 
 function user_register_access() {
-  return user_is_anonymous() && variable_get('user_register', 1);
+  return user_is_anonymous() && variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
 }
 
 

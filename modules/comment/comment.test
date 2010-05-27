@@ -481,6 +481,11 @@ class CommentAnonymous extends CommentHelperCase {
     );
   }
 
+  function setUp() {
+    parent::setUp();
+    variable_set('user_register', USER_REGISTER_VISITORS);
+  }
+
   /**
    * Test anonymous comment functionality.
    */

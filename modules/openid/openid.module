@@ -589,7 +589,7 @@ function openid_authentication($response) {
       drupal_set_message(t('You must validate your email address for this account before logging in via OpenID.'));
     }
   }
-  elseif (variable_get('user_register', 1)) {
+  elseif (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
     // Register new user.
 
     // Save response for use in openid_form_user_register_form_alter().

@@ -1306,7 +1306,7 @@ function comment_update_index() {
  * results.
  */
 function comment_node_search_result($node) {
-  // Do not make a string if comments are hidden. 
+  // Do not make a string if comments are hidden.
   if ($node->comment != COMMENT_NODE_HIDDEN) {
     $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
     // Do not make a string if comments are closed and there are currently
@@ -2256,7 +2256,7 @@ function theme_comment_post_forbidden($variables) {
         $destination = array('destination' => "node/$node->nid#comment-form");
       }
 
-      if (variable_get('user_register', 1)) {
+      if (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
         // Users can register themselves.
         return t('<a href="@login">Log in</a> or <a href="@register">register</a> to post comments', array('@login' => url('user/login', array('query' => $destination)), '@register' => url('user/register', array('query' => $destination))));
       }

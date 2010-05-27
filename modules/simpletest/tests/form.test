@@ -1088,6 +1088,7 @@ class FormsArbitraryRebuildTestCase extends DrupalWebTestCase {
       ),
     );
     field_create_instance($instance);
+    variable_set('user_register', USER_REGISTER_VISITORS);
   }
 
   /**

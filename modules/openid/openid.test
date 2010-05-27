@@ -240,6 +240,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 
   function setUp() {
     parent::setUp('openid', 'openid_test');
+    variable_set('user_register', USER_REGISTER_VISITORS);
   }
 
   /**

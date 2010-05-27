@@ -10,7 +10,7 @@ class ProfileTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('profile');
-    variable_set('user_register', 1);
+    variable_set('user_register', USER_REGISTER_VISITORS);
 
     $this->admin_user = $this->drupalCreateUser(array('administer users', 'access user profiles'));
 

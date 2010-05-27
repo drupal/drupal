@@ -15,12 +15,12 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     variable_set('user_email_verification', TRUE);
 
     // Set registration to administrator only.
-    variable_set('user_register', 0);
+    variable_set('user_register', USER_REGISTER_ADMINISTRATORS_ONLY);
     $this->drupalGet('user/register');
     $this->assertResponse(403, t('Registration page is inaccessible when only administrators can create accounts.'));
 
     // Allow registration by site visitors without administrator approval.
-    variable_set('user_register', 1);
+    variable_set('user_register', USER_REGISTER_VISITORS);
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -31,7 +31,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertTrue($new_user->status, t('New account is active after registration.'));
 
     // Allow registration by site visitors, but require administrator approval.
-    variable_set('user_register', 2);
+    variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -46,7 +46,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     variable_set('user_email_verification', FALSE);
 
     // Allow registration by site visitors without administrator approval.
-    variable_set('user_register', 1);
+    variable_set('user_register', USER_REGISTER_VISITORS);
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -67,7 +67,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->drupalLogout();
 
     // Allow registration by site visitors, but require administrator approval.
-    variable_set('user_register', 2);
+    variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -102,7 +102,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
 
   function testRegistrationDefaultValues() {
     // Allow registration by site visitors without administrator approval.
-    variable_set('user_register', 1);
+    variable_set('user_register', USER_REGISTER_VISITORS);
 
     // Don't require e-mail verification.
     variable_set('user_email_verification', FALSE);
@@ -131,7 +131,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($new_user->theme, '', t('Correct theme field.'));
     $this->assertEqual($new_user->signature, '', t('Correct signature field.'));
     $this->assertTrue(($new_user->created > REQUEST_TIME - 20 ), t('Correct creation time.'));
-    $this->assertEqual($new_user->status, variable_get('user_register', 1) == 1 ? 1 : 0, t('Correct status field.'));
+    $this->assertEqual($new_user->status, variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_VISITORS ? 1 : 0, t('Correct status field.'));
     $this->assertEqual($new_user->timezone, variable_get('date_default_timezone'), t('Correct time zone field.'));
     $this->assertEqual($new_user->language, '', t('Correct language field.'));
     $this->assertEqual($new_user->picture, '', t('Correct picture field.'));
@@ -1450,7 +1450,7 @@ class UserEditedOwnAccountTestCase extends DrupalWebTestCase {
   function testUserEditedOwnAccount() {
     // Change account setting 'Who can register accounts?' to Administrators
     // only.
-    variable_set('user_register', 0);
+    variable_set('user_register', USER_REGISTER_ADMINISTRATORS_ONLY);
 
     // Create a new user account and log in.
     $account = $this->drupalCreateUser(array('change own username'));
