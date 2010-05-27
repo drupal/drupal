@@ -1,5 +1,5 @@
 <?php
-// $Id: minimal.install,v 1.4 2010/03/04 21:42:00 dries Exp $
+// $Id: minimal.install,v 1.5 2010/05/27 12:29:39 dries Exp $
 
 /**
  * Implements hook_install().
@@ -65,6 +65,9 @@ function minimal_install() {
     $query->values($record);
   }
   $query->execute();
+
+  // Allow visitor account creation, but with administrative approval.
+  variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
 
   // Enable default permissions for system roles.
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));

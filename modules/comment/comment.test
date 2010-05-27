@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.80 2010/05/06 05:59:31 webchick Exp $
+// $Id: comment.test,v 1.81 2010/05/27 12:29:39 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -479,6 +479,11 @@ class CommentAnonymous extends CommentHelperCase {
       'description' => 'Test anonymous comments.',
       'group' => 'Comment',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+    variable_set('user_register', USER_REGISTER_VISITORS);
   }
 
   /**

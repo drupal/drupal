@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.41 2010/05/10 06:38:23 dries Exp $
+// $Id: simpletest.test,v 1.42 2010/05/27 12:29:39 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -290,6 +290,11 @@ class SimpleTestBrowserTestCase extends DrupalWebTestCase {
       'description' => 'Test the internal browser of the testing framework.',
       'group' => 'SimpleTest',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+    variable_set('user_register', USER_REGISTER_VISITORS);
   }
 
   /**

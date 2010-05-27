@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.test,v 1.23 2010/05/13 17:37:24 dries Exp $
+// $Id: openid.test,v 1.24 2010/05/27 12:29:39 dries Exp $
 
 /**
  * Base class for OpenID tests.
@@ -240,6 +240,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 
   function setUp() {
     parent::setUp('openid', 'openid_test');
+    variable_set('user_register', USER_REGISTER_VISITORS);
   }
 
   /**

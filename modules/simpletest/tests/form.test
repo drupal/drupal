@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.50 2010/04/28 16:11:22 dries Exp $
+// $Id: form.test,v 1.51 2010/05/27 12:29:39 dries Exp $
 
 /**
  * @file
@@ -1088,6 +1088,7 @@ class FormsArbitraryRebuildTestCase extends DrupalWebTestCase {
       ),
     );
     field_create_instance($instance);
+    variable_set('user_register', USER_REGISTER_VISITORS);
   }
 
   /**

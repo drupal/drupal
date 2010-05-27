@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.71 2010/05/23 19:10:23 dries Exp $
+// $Id: locale.test,v 1.72 2010/05/27 12:29:39 dries Exp $
 
 /**
  * @file
@@ -1321,6 +1321,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('locale');
+    variable_set('user_register', USER_REGISTER_VISITORS);
   }
 
   /**

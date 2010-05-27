@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.16 2010/05/23 19:10:23 dries Exp $
+// $Id: standard.install,v 1.17 2010/05/27 12:29:39 dries Exp $
 
 /**
  * Implements hook_install().
@@ -271,6 +271,9 @@ function standard_install() {
   variable_set('user_picture_dimensions', '1024x1024');
   variable_set('user_picture_file_size', '800');
   variable_set('user_picture_style', 'thumbnail');
+
+  // Allow visitor account creation with administrative approval.
+  variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
 
   // Create a default vocabulary named "Tags", enabled for the 'article' content type.
   $description = st('Use tags to group articles on similar topics into categories.');

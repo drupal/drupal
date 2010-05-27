@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.test,v 1.24 2010/03/08 15:46:58 webchick Exp $
+// $Id: profile.test,v 1.25 2010/05/27 12:29:39 dries Exp $
 
 /**
  * A class for common methods for testing profile fields.
@@ -10,7 +10,7 @@ class ProfileTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('profile');
-    variable_set('user_register', 1);
+    variable_set('user_register', USER_REGISTER_VISITORS);
 
     $this->admin_user = $this->drupalCreateUser(array('administer users', 'access user profiles'));
 

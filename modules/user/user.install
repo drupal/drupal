@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.47 2010/05/26 19:48:45 dries Exp $
+// $Id: user.install,v 1.48 2010/05/27 12:29:39 dries Exp $
 
 /**
  * @file
@@ -603,6 +603,16 @@ function user_update_7007() {
   db_add_index('role', 'name_weight', array('name', 'weight'));
 }
 
+/**
+ * If 'user_register' variable was unset in Drupal 6, set it to be the same as
+ * the Drupal 6 default setting.
+ */
+function user_update_7008() {
+  if (!isset($GLOBALS['conf']['user_register'])) {
+    // Set to the Drupal 6 default, "visitors can create accounts".
+    variable_set('user_register', USER_REGISTER_VISITORS);
+  }
+}
 /**
  * @} End of "defgroup user-updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
