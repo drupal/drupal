@@ -23,9 +23,9 @@
 ?>
 <?php if ($search_results) : ?>
   <h2><?php print t('Search results');?></h2>
-  <dl class="search-results <?php print $type; ?>-results">
+  <ol class="search-results <?php print $type; ?>-results">
     <?php print $search_results; ?>
-  </dl>
+  </ol>
   <?php print $pager; ?>
 <?php else : ?>
   <h2><?php print t('Your search yielded no results');?></h2>

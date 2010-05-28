@@ -7,14 +7,20 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+.search-results {
+  list-style: none;
+}
 .search-results p {
   margin-top: 0;
 }
-.search-results dt {
-  font-size: 1.1em;
+.search-results .title {
+  font-size: 1.2em;
 }
-.search-results dd {
+.search-results li {
   margin-bottom: 1em;
+}
+.search-results .search-info-wrap {
+  padding-left: 1em; /* LTR */
 }
 .search-results .search-info {
   font-size: 0.85em;

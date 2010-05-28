@@ -9,3 +9,6 @@
   float: right;
   clear: right;
 }
+.search-results .search-info-wrap {
+  padding-right: 1em; /* LTR */
+}

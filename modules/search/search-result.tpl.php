@@ -46,14 +46,16 @@
  * @see template_preprocess_search_result()
  */
 ?>
-<dt class="title">
-  <a href="<?php print $url; ?>"><?php print $title; ?></a>
-</dt>
-<dd>
-  <?php if ($snippet) : ?>
-    <p class="search-snippet"><?php print $snippet; ?></p>
-  <?php endif; ?>
-  <?php if ($info) : ?>
-  <p class="search-info"><?php print $info; ?></p>
-  <?php endif; ?>
-</dd>
+<li>
+  <h3 class="title">
+    <a href="<?php print $url; ?>"><?php print $title; ?></a>
+  </h3>
+  <div class="search-info-wrap">
+    <?php if ($snippet) : ?>
+      <p class="search-snippet"><?php print $snippet; ?></p>
+    <?php endif; ?>
+    <?php if ($info) : ?>
+    <p class="search-info"><?php print $info; ?></p>
+    <?php endif; ?>
+  </div>
+</li>
