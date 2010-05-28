@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.48 2010/05/27 12:29:39 dries Exp $
+// $Id: user.install,v 1.49 2010/05/28 10:17:52 dries Exp $
 
 /**
  * @file
@@ -565,6 +565,7 @@ function user_update_7005(&$sandbox) {
     'default' => '',
     'description' => 'E-mail address used for initial account creation.',
   );
+  db_drop_index('users', 'mail');
   db_change_field('users', 'mail', 'mail', $mail_field, array('indexes' => array('mail' => array('mail'))));
   db_change_field('users', 'init', 'init', $init_field);
 }
