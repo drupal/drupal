@@ -1250,7 +1250,7 @@ function user_set_authmaps($account, $authmaps) {
     if ($value) {
       db_query("UPDATE {authmap} SET authname = '%s' WHERE uid = %d AND module = '%s'", $value, $account->uid, $module[1]);
       if (!db_affected_rows()) {
-        db_query("INSERT INTO {authmap} (authname, uid, module) VALUES ('%s', %d, '%s')", $value, $account->uid, $module[1]);
+        @db_query("INSERT INTO {authmap} (authname, uid, module) VALUES ('%s', %d, '%s')", $value, $account->uid, $module[1]);
       }
     }
     else {
