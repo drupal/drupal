@@ -949,7 +949,7 @@ function comment_render($node, $cid = 0) {
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
         $links = module_invoke_all('link', 'comment', $comment, 1);
-        drupal_alter('link', $links, $node);
+        drupal_alter('link', $links, $node, $comment);
 
         $output .= theme('comment_view', $comment, $node, $links);
       }
@@ -1744,7 +1744,7 @@ function theme_comment_flat_collapsed($comment, $node) {
  */
 function theme_comment_flat_expanded($comment, $node) {
   $links = module_invoke_all('link', 'comment', $comment, 0);
-  drupal_alter('link', $links, $node);
+  drupal_alter('link', $links, $node, $comment);
   return theme('comment_view', $comment, $node, $links);
 }
 
@@ -1772,7 +1772,7 @@ function theme_comment_thread_collapsed($comment, $node) {
  */
 function theme_comment_thread_expanded($comment, $node) {
   $links = module_invoke_all('link', 'comment', $comment, 0);
-  drupal_alter('link', $links, $node);
+  drupal_alter('link', $links, $node, $comment);
   return theme('comment_view', $comment, $node, $links);
 }
 
