@@ -218,6 +218,40 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
   }
 
   /**
+   * Test deleting a taxonomy that contains terms.
+   */
+  function testTaxonomyVocabularyDeleteWithTerms() {
+    // Delete any existing vocabularies.
+    foreach (taxonomy_get_vocabularies() as $vocabulary) {
+      taxonomy_vocabulary_delete($vocabulary->vid);
+    }
+
+    // Assert that there are no terms left.
+    $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField());
+
+    // Create a new vocabulary and add a few terms to it.
+    $vocabulary = $this->createVocabulary();
+    $terms = array();
+    for ($i = 0; $i < 5; $i++) {
+      $terms[$i] = $this->createTerm($vocabulary);
+    }
+
+    // Set up hierarchy. term 2 is a child of 1 and 4 a child of 1 and 2.
+    $terms[2]->parent = array($terms[1]->tid);
+    taxonomy_term_save($terms[2]);
+    $terms[4]->parent = array($terms[1]->tid, $terms[2]->tid);
+    taxonomy_term_save($terms[4]);
+
+    // Assert that there are now 5 terms.
+    $this->assertEqual(5, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField());
+
+    taxonomy_vocabulary_delete($vocabulary->vid);
+
+    // Assert that there are no terms left.
+    $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField());
+  }
+
+  /**
    * Ensure that the vocabulary static reset works correctly.
    */
   function testTaxonomyVocabularyLoadStaticReset() {

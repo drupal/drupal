@@ -404,13 +404,14 @@ function taxonomy_vocabulary_save($vocabulary) {
 function taxonomy_vocabulary_delete($vid) {
   $vocabulary = (array) taxonomy_vocabulary_load($vid);
 
-  db_delete('taxonomy_vocabulary')
-    ->condition('vid', $vid)
-    ->execute();
-  $result = db_query('SELECT tid FROM {taxonomy_term_data} WHERE vid = :vid', array(':vid' => $vid))->fetchCol();
+  // Only load terms without a parent, child terms will get deleted too.
+  $result = db_query('SELECT t.tid FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} th ON th.tid = t.tid WHERE t.vid = :vid AND th.parent = 0', array(':vid' => $vid))->fetchCol();
   foreach ($result as $tid) {
     taxonomy_term_delete($tid);
   }
+  db_delete('taxonomy_vocabulary')
+    ->condition('vid', $vid)
+    ->execute();
 
   field_attach_delete_bundle('taxonomy_term', $vocabulary['machine_name']);
   module_invoke_all('taxonomy', 'delete', 'vocabulary', $vocabulary);
