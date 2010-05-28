@@ -371,24 +371,42 @@ function system_install() {
   // anonymous user. uid is 1 here for now, but very soon it will be changed
   // to 0.
   db_query("INSERT INTO {users} (name, mail) VALUES('%s', '%s')", '', '');
+
   // We need some placeholders here as name and mail are uniques and data is
   // presumed to be a serialized array. Install will change uid 1 immediately
   // anyways. So we insert the superuser here, the uid is 2 here for now, but
   // very soon it will be changed to 1.
   db_query("INSERT INTO {users} (name, mail, created, data) VALUES('%s', '%s', %d, '%s')", 'placeholder-for-uid-1', 'placeholder-for-uid-1', time(), serialize(array()));
+
   // This sets the above two users uid 0 (anonymous). We avoid an explicit 0
   // otherwise MySQL might insert the next auto_increment value.
   db_query("UPDATE {users} SET uid = uid - uid WHERE name = '%s'", '');
+
   // This sets uid 1 (superuser). We skip uid 2 but that's not a big problem.
   db_query("UPDATE {users} SET uid = 1 WHERE name = '%s'", 'placeholder-for-uid-1');
 
   db_query("INSERT INTO {role} (name) VALUES ('%s')", 'anonymous user');
-  db_query("INSERT INTO {role} (name) VALUES ('%s')", 'authenticated user');
+  $rid_anonymous = db_last_insert_id('role', 'rid');
 
-  db_query("INSERT INTO {permission} (rid, perm, tid) VALUES (%d, '%s', %d)", 1, 'access content', 0);
-  db_query("INSERT INTO {permission} (rid, perm, tid) VALUES (%d, '%s', %d)", 2, 'access comments, access content, post comments, post comments without approval', 0);
+  db_query("INSERT INTO {role} (name) VALUES ('%s')", 'authenticated user');
+  $rid_authenticated = db_last_insert_id('role', 'rid');
+
+  // Sanity check to ensure the anonymous and authenticated role IDs are the 
+  // same as the drupal defined constants. In certain situations, this will 
+  // not be true
+  if ($rid_anonymous != DRUPAL_ANONYMOUS_RID) {
+    db_query("UPDATE {role} SET rid = %d WHERE rid = %d", DRUPAL_ANONYMOUS_RID, $rid_anonymous);
+  }
+
+  if ($rid_authenticated != DRUPAL_AUTHENTICATED_RID) {
+    db_query("UPDATE {role} SET rid = %d WHERE rid = %d", DRUPAL_AUTHENTICATED_RID, $rid_authenticated);
+  }
+
+  db_query("INSERT INTO {permission} (rid, perm, tid) VALUES (%d, '%s', %d)", DRUPAL_ANONYMOUS_RID, 'access content', 0);
+  db_query("INSERT INTO {permission} (rid, perm, tid) VALUES (%d, '%s', %d)", DRUPAL_AUTHENTICATED_RID, 'access comments, access content, post comments, post comments without approval', 0);
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'theme_default', 's:7:"garland";');
+
   db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 1, 'theme', 'garland');
   db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', '0', 'garland', 1, 0, 'left', '', -1);
   db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', '1', 'garland', 1, 0, 'left', '', -1);
@@ -397,31 +415,32 @@ function system_install() {
   db_query("INSERT INTO {node_access} (nid, gid, realm, grant_view, grant_update, grant_delete) VALUES (%d, %d, '%s', %d, %d, %d)", 0, 0, 'all', 1, 0, 0);
 
   // Add input formats.
-  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Filtered HTML', ',1,2,', 1);
+  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Filtered HTML', ',' . DRUPAL_ANONYMOUS_RID . ',' . DRUPAL_AUTHENTICATED_RID . ',', 1);
+  $filtered_html_format = db_last_insert_id('filter_formats', 'format');
   db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Full HTML', '', 1);
+  $full_html_format = db_last_insert_id('filter_formats', 'format');
 
   // Enable filters for each input format.
 
   // Filtered HTML:
   // URL filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 2, 0);
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $filtered_html_format, 'filter', 2, 0);
   // HTML filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 0, 1);
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $filtered_html_format, 'filter', 0, 1);
   // Line break filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 1, 2);
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $filtered_html_format, 'filter', 1, 2);
   // HTML corrector filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 3, 10);
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $filtered_html_format, 'filter', 3, 10);
 
   // Full HTML:
   // URL filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 2, 0);
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $full_html_format, 'filter', 2, 0);
   // Line break filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 1, 1);
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $full_html_format, 'filter', 1, 1);
   // HTML corrector filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 3, 10);
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $full_html_format, 'filter', 3, 10);
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s','%s')", 'filter_html_1', 'i:1;');
-
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'node_options_forum', 'a:1:{i:0;s:6:"status";}');
 }
 
