@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.42 2010/05/23 18:23:32 dries Exp $
+// $Id: overlay-parent.js,v 1.43 2010/05/28 19:11:42 dries Exp $
 
 (function ($) {
 
@@ -862,8 +862,9 @@ Drupal.overlay.fragmentizeLink = function (link) {
   // true to prevent transforming this link into a clean URL while clean URLs
   // may be disabled.
   var path = self.getPath(link, true);
-  // Preserve existing query and fragment parameters in the URL.
-  var destination = path + link.search + link.hash;
+  // Preserve existing query and fragment parameters in the URL, except for
+  // "render=overlay" which is re-added in Drupal.overlay.hashchangeHandler.
+  var destination = path + link.search.replace(/&?render=overlay/, '').replace(/\?$/, '') + link.hash;
 
   // Assemble and return the overlay-ready link.
   return $.param.fragment(window.location.href, { overlay: destination });
@@ -892,7 +893,8 @@ Drupal.overlay.syncChildLocation = function (childLocation) {
     // Set a 'redirect' flag on the new location so the hashchange event handler
     // knows not to change the overlay's content.
     $.data(window.location, newLocation, 'redirect');
-    window.location.href = newLocation;
+    // Using location.replace so we don't create an extra history entry.
+    window.location.replace(newLocation);
   }
 };
 
