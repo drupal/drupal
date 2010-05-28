@@ -1,4 +1,4 @@
-/* $Id: search-rtl.css,v 1.3 2007/11/27 12:09:26 goba Exp $ */
+/* $Id: search-rtl.css,v 1.4 2010/05/28 11:53:57 dries Exp $ */
 
 .search-advanced .criterion {
   float: right;
@@ -8,4 +8,7 @@
 .search-advanced .action {
   float: right;
   clear: right;
+}
+.search-results .search-info-wrap {
+  padding-right: 1em; /* LTR */
 }
