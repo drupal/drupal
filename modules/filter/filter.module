@@ -783,10 +783,10 @@ function _filter_htmlcorrector($text) {
   }
 
   // Properly entify angles.
-  $text = preg_replace('!<([^a-zA-Z/])!', '&lt;\1', $text);
+  $text = preg_replace('@<(?=[^a-zA-Z!/]|$)@', '&lt;', $text);
 
   // Split tags from text.
-  $split = preg_split('/<([^>]+?)>/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+  $split = preg_split('/<(!--.*?--|[^>]+?)>/s', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
   // Note: PHP ensures the array consists of alternating delimiters and literals
   // and begins and ends with a literal (inserting $null as required).
 
@@ -796,37 +796,43 @@ function _filter_htmlcorrector($text) {
   foreach ($split as $value) {
     // Process HTML tags.
     if ($tag) {
-      list($tagname) = explode(' ', strtolower($value), 2);
-      // Closing tag
-      if ($tagname{0} == '/') {
-        $tagname = substr($tagname, 1);
-        // Discard XHTML closing tags for single use tags.
-        if (!isset($single_use[$tagname])) {
-          // See if we possibly have a matching opening tag on the stack.
-          if (in_array($tagname, $stack)) {
-            // Close other tags lingering first.
-            do {
-              $output .= '</'. $stack[0] .'>';
-            } while (array_shift($stack) != $tagname);
-          }
-          // Otherwise, discard it.
-        }
-      }
-      // Opening tag
-      else {
-        // See if we have an identical 'no nesting' tag already open and close it if found.
-        if (count($stack) && ($stack[0] == $tagname) && isset($no_nesting[$stack[0]])) {
-          $output .= '</'. array_shift($stack) .'>';
-        }
-        // Push non-single-use tags onto the stack
-        if (!isset($single_use[$tagname])) {
-          array_unshift($stack, $tagname);
-        }
-        // Add trailing slash to single-use tags as per X(HT)ML.
-        else {
-          $value = rtrim($value, ' /') .' /';
-        }
+      // Passthrough comments.
+      if (substr($value, 0, 3) == '!--') {
         $output .= '<'. $value .'>';
+      }
+      else {
+        list($tagname) = preg_split('/\s/', strtolower($value), 2);
+        // Closing tag
+        if ($tagname{0} == '/') {
+          $tagname = substr($tagname, 1);
+          // Discard XHTML closing tags for single use tags.
+          if (!isset($single_use[$tagname])) {
+            // See if we possibly have a matching opening tag on the stack.
+            if (in_array($tagname, $stack)) {
+              // Close other tags lingering first.
+              do {
+                $output .= '</'. $stack[0] .'>';
+              } while (array_shift($stack) != $tagname);
+            }
+            // Otherwise, discard it.
+          }
+        }
+        // Opening tag
+        else {
+          // See if we have an identical 'no nesting' tag already open and close it if found.
+          if (count($stack) && ($stack[0] == $tagname) && isset($no_nesting[$stack[0]])) {
+            $output .= '</'. array_shift($stack) .'>';
+          }
+          // Push non-single-use tags onto the stack
+          if (!isset($single_use[$tagname])) {
+            array_unshift($stack, $tagname);
+          }
+          // Add trailing slash to single-use tags as per X(HT)ML.
+          else {
+            $value = rtrim($value, ' /') .' /';
+          }
+          $output .= '<'. $value .'>';
+        }
       }
     }
     else {
@@ -891,7 +897,7 @@ function _filter_autop($text) {
   // We don't apply any processing to the contents of these tags to avoid messing
   // up code. We look for matched pairs and allow basic nesting. For example:
   // "processed <pre> ignored <script> ignored </script> ignored </pre> processed"
-  $chunks = preg_split('@(</?(?:pre|script|style|object)[^>]*>)@i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+  $chunks = preg_split('@(<(?:!--.*?--|/?(?:pre|script|style|object)[^>]*)>)@si', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
   // Note: PHP ensures the array consists of alternating delimiters and literals
   // and begins and ends with a literal (inserting NULL as required).
   $ignore = FALSE;
@@ -899,19 +905,25 @@ function _filter_autop($text) {
   $output = '';
   foreach ($chunks as $i => $chunk) {
     if ($i % 2) {
-      // Opening or closing tag?
-      $open = ($chunk[1] != '/');
-      list($tag) = split('[ >]', substr($chunk, 2 - $open), 2);
-      if (!$ignore) {
-        if ($open) {
-          $ignore = TRUE;
-          $ignoretag = $tag;
-        }
+      // Passthrough comments.
+      if (substr($chunk, 1, 3) == '!--') {
+        $output .= $chunk;
       }
-      // Only allow a matching tag to close it.
-      else if (!$open && $ignoretag == $tag) {
-        $ignore = FALSE;
-        $ignoretag = '';
+      else {
+        // Opening or closing tag?
+        $open = ($chunk[1] != '/');
+        list($tag) = split('[ >]', substr($chunk, 2 - $open), 2);
+        if (!$ignore) {
+          if ($open) {
+            $ignore = TRUE;
+            $ignoretag = $tag;
+          }
+        }
+        // Only allow a matching tag to close it.
+        else if (!$open && $ignoretag == $tag) {
+          $ignore = FALSE;
+          $ignoretag = '';
+        }
       }
     }
     else if (!$ignore) {
@@ -997,6 +1009,8 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
     (
     <(?=[^a-zA-Z!/])  # a lone <
     |                 # or
+    <!--.*?-->        # a comment
+    |                 # or
     <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
     |                 # or
     >                 # just a >
@@ -1035,7 +1049,7 @@ function _filter_xss_split($m, $store = FALSE) {
     return '&lt;';
   }
 
-  if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?$%', $string, $matches)) {
+  if (!preg_match('%^(?:<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?|(<!--.*?-->))$%', $string, $matches)) {
     // Seriously malformed
     return '';
   }
@@ -1043,10 +1057,19 @@ function _filter_xss_split($m, $store = FALSE) {
   $slash = trim($matches[1]);
   $elem = &$matches[2];
   $attrlist = &$matches[3];
+  $comment = &$matches[4];
+
+  if ($comment) {
+    $elem = '!--';
+  }
 
   if (!isset($allowed_html[strtolower($elem)])) {
     // Disallowed HTML element
     return '';
+  }
+
+  if ($comment) {
+    return $comment;
   }
 
   if ($slash != '') {
