@@ -919,7 +919,7 @@ function taxonomy_vocabulary_confirm_reset_alphabetical(&$form_state, $vid) {
  * @see taxonomy_vocabulary_confirm_reset_alphabetical()
  */
 function taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, &$form_state) {
-  db_query('UPDATE {term_data} t SET weight = 0 WHERE vid = %d', $form_state['values']['vid']);
+  db_query('UPDATE {term_data} SET weight = 0 WHERE vid = %d', $form_state['values']['vid']);
   drupal_set_message(t('Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/content/taxonomy/'. $form_state['values']['vid'];
