@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.92 2010/05/15 07:04:21 dries Exp $
+// $Id: database_test.test,v 1.93 2010/05/28 10:13:38 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2703,11 +2703,11 @@ class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
  * across multiple kinds of database systems, we test that the
  * database system interprets SQL syntax in an expected fashion.
  */
-class DatabaseAnsiSyntaxTestCase extends DatabaseTestCase {
+class DatabaseBasicSyntaxTestCase extends DatabaseTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'ANSI SQL syntax tests',
-      'description' => 'Test ANSI SQL syntax interpretation.',
+      'name' => 'Basic SQL syntax tests',
+      'description' => 'Test SQL syntax interpretation.',
       'group' => 'Database',
     );
   }
@@ -2717,30 +2717,30 @@ class DatabaseAnsiSyntaxTestCase extends DatabaseTestCase {
   }
 
   /**
-   * Test for ANSI string concatenation.
+   * Test for string concatenation.
    */
   function testBasicConcat() {
-    $result = db_query('SELECT :a1 || :a2 || :a3 || :a4 || :a5', array(
+    $result = db_query('SELECT CONCAT(:a1, CONCAT(:a2, CONCAT(:a3, CONCAT(:a4, :a5))))', array(
       ':a1' => 'This',
       ':a2' => ' ',
       ':a3' => 'is',
       ':a4' => ' a ',
       ':a5' => 'test.',
     ));
-    $this->assertIdentical($result->fetchField(), 'This is a test.', t('Basic ANSI Concat works.'));
+    $this->assertIdentical($result->fetchField(), 'This is a test.', t('Basic CONCAT works.'));
   }
 
   /**
-   * Test for ANSI string concatenation with field values.
+   * Test for string concatenation with field values.
    */
   function testFieldConcat() {
-    $result = db_query('SELECT :a1 || name || :a2 || age || :a3 FROM {test} WHERE age = :age', array(
+    $result = db_query('SELECT CONCAT(:a1, CONCAT(name, CONCAT(:a2, CONCAT(age, :a3)))) FROM {test} WHERE age = :age', array(
       ':a1' => 'The age of ',
       ':a2' => ' is ',
       ':a3' => '.',
       ':age' => 25,
     ));
-    $this->assertIdentical($result->fetchField(), 'The age of John is 25.', t('Field ANSI Concat works.'));
+    $this->assertIdentical($result->fetchField(), 'The age of John is 25.', t('Field CONCAT works.'));
   }
 
   /**
