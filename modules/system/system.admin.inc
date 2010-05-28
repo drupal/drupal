@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.285 2010/05/26 07:31:47 dries Exp $
+// $Id: system.admin.inc,v 1.286 2010/05/28 18:18:50 dries Exp $
 
 /**
  * @file
@@ -200,7 +200,7 @@ function system_settings_overview() {
  */
 function system_themes_page() {
   // Get current list of themes.
-  $themes = list_themes();
+  $themes = system_rebuild_theme_data();
   uasort($themes, 'system_sort_modules_by_info_name');
 
   $theme_default = variable_get('theme_default', 'garland');
