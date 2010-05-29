@@ -1,4 +1,4 @@
-/* $Id: search.css,v 1.4 2010/05/28 11:53:57 dries Exp $ */
+/* $Id: search.css,v 1.5 2010/05/29 07:50:33 dries Exp $ */
 
 .search-form {
   margin-bottom: 1em;
@@ -19,7 +19,7 @@
 .search-results li {
   margin-bottom: 1em;
 }
-.search-results .search-info-wrap {
+.search-results .search-snippet-info {
   padding-left: 1em; /* LTR */
 }
 .search-results .search-info {

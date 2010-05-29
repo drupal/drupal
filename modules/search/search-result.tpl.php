@@ -1,5 +1,5 @@
 <?php
-// $Id: search-result.tpl.php,v 1.5 2010/05/28 11:53:57 dries Exp $
+// $Id: search-result.tpl.php,v 1.6 2010/05/29 07:50:33 dries Exp $
 
 /**
  * @file
@@ -50,12 +50,12 @@
   <h3 class="title">
     <a href="<?php print $url; ?>"><?php print $title; ?></a>
   </h3>
-  <div class="search-info-wrap">
+  <div class="search-snippet-info">
     <?php if ($snippet) : ?>
       <p class="search-snippet"><?php print $snippet; ?></p>
     <?php endif; ?>
     <?php if ($info) : ?>
-    <p class="search-info"><?php print $info; ?></p>
+      <p class="search-info"><?php print $info; ?></p>
     <?php endif; ?>
   </div>
 </li>
