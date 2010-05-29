@@ -56,6 +56,15 @@ function locale_update_7001() {
     // LANGUAGE_NEGOTIATION_PATH_DEFAULT.
     case 1:
       $negotiation = array(LOCALE_LANGUAGE_NEGOTIATION_URL);
+      // In Drupal 6 path prefixes are shown for the default language only when
+      // language negotiation is set to LANGUAGE_NEGOTIATION_PATH, while in
+      // Drupal 7 path prefixes are always shown if not empty. Hence we need to
+      // ensure that the default language has an empty prefix to avoid breaking
+      // the site URLs with a prefix that previously was missing.
+      db_update('languages')
+        ->fields(array('prefix' => ''))
+        ->condition('language', language_default()->language)
+        ->execute();
       break;
 
     // LANGUAGE_NEGOTIATION_PATH.
@@ -70,10 +79,22 @@ function locale_update_7001() {
       break;
   }
 
-  // Save new language negotiation options.
+  // Save the new language negotiation options.
   language_negotiation_set(LANGUAGE_TYPE_INTERFACE, array_flip($negotiation));
   language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LOCALE_LANGUAGE_NEGOTIATION_INTERFACE => 0));
   language_negotiation_set(LANGUAGE_TYPE_URL, array(LOCALE_LANGUAGE_NEGOTIATION_URL => 0));
+
+  // Save admininstration UI settings.
+  $type = LANGUAGE_TYPE_INTERFACE;
+  $provider_weights = array_flip(array_keys(locale_language_negotiation_info()));
+  variable_set("locale_language_providers_weight_$type", $provider_weights);
+
+  // Update language switcher block delta.
+  db_update('block')
+    ->fields(array('delta' => $type))
+    ->condition('module', 'locale')
+    ->condition('delta', 0)
+    ->execute();
 
   // Unset the old language negotiation system variable.
   variable_del('language_negotiation');
@@ -124,7 +145,6 @@ function locale_uninstall() {
 
   foreach (language_types() as $type) {
     variable_del("language_negotiation_$type");
-    variable_del("locale_language_providers_enabled_$type");
     variable_del("locale_language_providers_weight_$type");
   }
 
