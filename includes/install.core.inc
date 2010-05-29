@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.19 2010/05/18 18:11:13 dries Exp $
+// $Id: install.core.inc,v 1.20 2010/05/29 08:02:58 dries Exp $
 
 /**
  * @file
@@ -211,6 +211,17 @@ function install_state_defaults() {
  *   modified with information gleaned from the beginning of the page request.
  */
 function install_begin_request(&$install_state) {
+  // Add any installation parameters passed in via the URL.
+  $install_state['parameters'] += $_GET;
+
+  // Validate certain core settings that are used throughout the installation.
+  if (!empty($install_state['parameters']['profile'])) {
+    $install_state['parameters']['profile'] = preg_replace('/[^a-zA-Z_0-9]/', '', $install_state['parameters']['profile']);
+  }
+  if (!empty($install_state['parameters']['locale'])) {
+    $install_state['parameters']['locale'] = preg_replace('/[^a-zA-Z_0-9\-]/', '', $install_state['parameters']['locale']);
+  }
+
   // Allow command line scripts to override server variables used by Drupal.
   require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
   if (!$install_state['interactive']) {
@@ -299,17 +310,6 @@ function install_begin_request(&$install_state) {
   // Modify the installation state as appropriate.
   $install_state['completed_task'] = $task;
   $install_state['database_tables_exist'] = !empty($task);
-
-  // Add any installation parameters passed in via the URL.
-  $install_state['parameters'] += $_GET;
-
-  // Validate certain core settings that are used throughout the installation.
-  if (!empty($install_state['parameters']['profile'])) {
-    $install_state['parameters']['profile'] = preg_replace('/[^a-zA-Z_0-9]/', '', $install_state['parameters']['profile']);
-  }
-  if (!empty($install_state['parameters']['locale'])) {
-    $install_state['parameters']['locale'] = preg_replace('/[^a-zA-Z_0-9\-]/', '', $install_state['parameters']['locale']);
-  }
 }
 
 /**
