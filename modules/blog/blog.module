@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.355 2010/05/24 04:51:18 webchick Exp $
+// $Id: blog.module,v 1.356 2010/05/29 07:53:44 dries Exp $
 
 /**
  * @file
@@ -241,9 +241,14 @@ function blog_block_view($delta = '') {
       ->execute();
 
     if ($node_title_list = node_title_list($result)) {
-      $block['content'] = $node_title_list;
-      $block['content'] .= theme('more_link', array('url' => url('blog'), 'title' => t('Read the latest blog entries.')));
       $block['subject'] = t('Recent blog posts');
+      $block['content']['blog_list'] = $node_title_list;
+      $block['content']['blog_more'] = array(
+        '#theme' => 'more_link',
+        '#url' => url('blog'),
+        '#title' => t('Read the latest blog entries.'),
+      );
+
       return $block;
     }
   }

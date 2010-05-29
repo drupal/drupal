@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.335 2010/05/18 18:26:30 dries Exp $
+// $Id: statistics.module,v 1.336 2010/05/29 07:53:44 dries Exp $
 
 /**
  * @file
@@ -350,21 +350,24 @@ function statistics_block_view($delta = '') {
 
     $daytop = variable_get('statistics_block_top_day_num', 0);
     if ($daytop && ($result = statistics_title_list('daycount', $daytop)) && ($node_title_list = node_title_list($result, t("Today's:")))) {
-      $content[] = $node_title_list;
+      $content['top_day'] = $node_title_list;
+      $content['top_day']['#suffix'] = '<br />';
     }
 
     $alltimetop = variable_get('statistics_block_top_all_num', 0);
     if ($alltimetop && ($result = statistics_title_list('totalcount', $alltimetop)) && ($node_title_list = node_title_list($result, t('All time:')))) {
-      $content[] = $node_title_list;
+      $content['top_all'] = $node_title_list;
+      $content['top_all']['#suffix'] = '<br />';
     }
 
     $lasttop = variable_get('statistics_block_top_last_num', 0);
     if ($lasttop && ($result = statistics_title_list('timestamp', $lasttop)) && ($node_title_list = node_title_list($result, t('Last viewed:')))) {
-      $content[] = $node_title_list;
+      $content['top_last'] = $node_title_list;
+      $content['top_last']['#suffix'] = '<br />';
     }
 
     if (count($content)) {
-      $block['content'] = implode('<br />', $content);
+      $block['content'] = $content;
       $block['subject'] = t('Popular content');
       return $block;
     }
