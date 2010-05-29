@@ -1268,7 +1268,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     $emailCount = count(variable_get('drupal_test_email_collector', array()));
     if ($emailCount) {
-      $message = format_plural($emailCount, t('!count e-mail was sent during this test.'), t('!count e-mails were sent during this test.'), array('!count' => $emailCount));
+      $message = format_plural($emailCount, '1 e-mail was sent during this test.', '@count e-mails were sent during this test.');
       $this->pass($message, t('E-mail'));
     }
 
