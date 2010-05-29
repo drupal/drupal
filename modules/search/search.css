@@ -19,7 +19,7 @@
 .search-results li {
   margin-bottom: 1em;
 }
-.search-results .search-info-wrap {
+.search-results .search-snippet-info {
   padding-left: 1em; /* LTR */
 }
 .search-results .search-info {
