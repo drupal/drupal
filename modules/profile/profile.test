@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.test,v 1.25 2010/05/27 12:29:39 dries Exp $
+// $Id: profile.test,v 1.26 2010/05/29 11:37:33 dries Exp $
 
 /**
  * A class for common methods for testing profile fields.
@@ -12,7 +12,7 @@ class ProfileTestCase extends DrupalWebTestCase {
     parent::setUp('profile');
     variable_set('user_register', USER_REGISTER_VISITORS);
 
-    $this->admin_user = $this->drupalCreateUser(array('administer users', 'access user profiles'));
+    $this->admin_user = $this->drupalCreateUser(array('administer users', 'access user profiles', 'administer blocks'));
 
     // This is the user whose profile will be edited.
     $this->normal_user = $this->drupalCreateUser();
@@ -364,33 +364,88 @@ class ProfileTestAutocomplete extends ProfileTestCase {
   }
 }
 
-class ProfileBlockTestCase extends DrupalWebTestCase {
+class ProfileBlockTestCase extends ProfileTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Block availability',
-      'description' => 'Check if the author-information block is available.',
+      'description' => 'Check if the Author Information block is available.',
       'group' => 'Profile',
     );
   }
 
   function setUp() {
-    parent::setUp('profile');
+    parent::setUp();
 
-    // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks'));
-    $this->drupalLogin($admin_user);
+    // Login the admin user.
+    $this->drupalLogin($this->admin_user);
+
+    // Create two fields.
+    $category = $this->randomName();
+    $this->field1 = $this->createProfileField('textfield', $category, array('weight' => 0));
+    $this->field2 = $this->createProfileField('textfield', $category, array('weight' => 1));
+
+    // Assign values to those fields.
+    $this->value1 = $this->setProfileField($this->field1);
+    $this->value2 = $this->setProfileField($this->field2);
+
+    // Create a node authored by the normal user.
+    $this->node = $this->drupalCreateNode(array(
+      'uid' => $this->normal_user->uid,
+    ));
   }
 
   function testAuthorInformationBlock() {
-    // Set block title to confirm that the interface is availble.
-    $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array('title' => $this->randomName(8)), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
-
-    // Set the block to a region to confirm block is availble.
+    // Set the block to a region to confirm the block is availble.
     $edit = array();
     $edit['profile_author-information[region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+
+    // Enable field 1.
+    $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array(
+      'profile_block_author_fields[' . $this->field1['form_name'] . ']' => TRUE,
+    ), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+    // Visit the node and confirm that the field is displayed.
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertRaw($this->value1, t('Field 1 is displayed'));
+    $this->assertNoRaw($this->value2, t('Field 2 is not displayed'));
+
+    // Enable only field 2.
+    $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array(
+      'profile_block_author_fields[' . $this->field1['form_name'] . ']' => FALSE,
+      'profile_block_author_fields[' . $this->field2['form_name'] . ']' => TRUE,
+    ), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+    // Visit the node and confirm that the field is displayed.
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertNoRaw($this->value1, t('Field 1 is not displayed'));
+    $this->assertRaw($this->value2, t('Field 2 is displayed'));
+
+    // Enable both fields.
+    $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array(
+      'profile_block_author_fields[' . $this->field1['form_name'] . ']' => TRUE,
+      'profile_block_author_fields[' . $this->field2['form_name'] . ']' => TRUE,
+    ), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+    // Visit the node and confirm that the field is displayed.
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertRaw($this->value1, t('Field 1 is displayed'));
+    $this->assertRaw($this->value2, t('Field 2 is displayed'));
+
+    // Enable the link to the user profile.
+    $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array(
+      'profile_block_author_fields[user_profile]' => TRUE,
+    ), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+    // Visit the node and confirm that the user profile link is displayed.
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->clickLink(t('View full user profile'));
+    $this->assertEqual($this->getUrl(), url('user/' . $this->normal_user->uid, array('absolute' => TRUE)));
   }
 }
 
