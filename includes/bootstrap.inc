@@ -43,7 +43,7 @@ define('CACHE_AGGRESSIVE', 2);
  * @see watchdog()
  * @see watchdog_severity_levels()
  */
-define('WATCHDOG_EMERGENCY', 0);
+define('WATCHDOG_EMERG', 0);
 
 /**
  * Log message severity -- Alert: action must be taken immediately.
