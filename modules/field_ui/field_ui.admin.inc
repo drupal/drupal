@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.51 2010/05/23 19:10:23 dries Exp $
+// $Id: field_ui.admin.inc,v 1.52 2010/05/31 18:15:20 dries Exp $
 
 /**
  * @file
@@ -687,7 +687,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
     }
     $form['modes']['view_modes_custom'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Use custom display settings for the following contexts'),
+      '#title' => t('Use custom display settings for the following view modes'),
       '#options' => $options,
       '#default_value' => $default,
     );
