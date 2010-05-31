@@ -642,14 +642,14 @@ function field_create_instance($instance) {
   }
   // Check that the required properties exists.
   if (empty($instance['entity_type'])) {
-    throw new FieldException(t('Attempt to create an instance of field @field_name without an object type.', array('@field_name' => $instance['field_name'])));
+    throw new FieldException(t('Attempt to create an instance of field @field_name without an entity type.', array('@field_name' => $instance['field_name'])));
   }
   if (empty($instance['bundle'])) {
     throw new FieldException(t('Attempt to create an instance of field @field_name without a bundle.', array('@field_name' => $instance['field_name'])));
   }
   // Check that the field can be attached to this entity type.
   if (!empty($field['entity_types']) && !in_array($instance['entity_type'], $field['entity_types'])) {
-    throw new FieldException(t('Attempt to create an instance of field @field_name on forbidden object type @entity_type.', array('@field_name' => $instance['field_name'], '@entity_type' => $instance['entity_type'])));
+    throw new FieldException(t('Attempt to create an instance of field @field_name on forbidden entity type @entity_type.', array('@field_name' => $instance['field_name'], '@entity_type' => $instance['entity_type'])));
   }
 
   // Set the field id.
