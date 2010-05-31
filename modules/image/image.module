@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.42 2010/05/01 08:12:23 dries Exp $
+// $Id: image.module,v 1.43 2010/05/31 11:42:11 dries Exp $
 
 /**
  * @file
@@ -135,7 +135,7 @@ function image_menu() {
   );
   $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect'] = array(
     'title' => 'Edit image effect',
-    'description' => 'Edit an exiting effect within a style.',
+    'description' => 'Edit an existing effect within a style.',
     'load arguments' => array(5, (string) IMAGE_STORAGE_EDITABLE),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_effect_form', 5, 7),
@@ -145,7 +145,7 @@ function image_menu() {
   );
   $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect/delete'] = array(
     'title' => 'Delete image effect',
-    'description' => 'Delete an exiting effect from a style.',
+    'description' => 'Delete an existing effect from a style.',
     'load arguments' => array(5, (string) IMAGE_STORAGE_EDITABLE),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_effect_delete_form', 5, 7),
