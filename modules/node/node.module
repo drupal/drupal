@@ -3260,14 +3260,14 @@ function _node_access_rebuild_batch_operation(&$context) {
   $limit = 20;
   $nids = db_query_range("SELECT nid FROM {node} WHERE nid > :nid ORDER BY nid ASC", 0, $limit, array(':nid' => $context['sandbox']['current_node']))->fetchCol();
   $nodes = node_load_multiple($nids, array(), TRUE);
-  foreach ($nodes as $node) {
+  foreach ($nodes as $nid => $node) {
     // To preserve database integrity, only acquire grants if the node
     // loads successfully.
     if (!empty($node)) {
       node_access_acquire_grants($node);
     }
     $context['sandbox']['progress']++;
-    $context['sandbox']['current_node'] = $node->nid;
+    $context['sandbox']['current_node'] = $nid;
   }
 
   // Multistep processing : report progress.
