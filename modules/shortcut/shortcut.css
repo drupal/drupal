@@ -1,4 +1,4 @@
-/* $Id: shortcut.css,v 1.7 2010/03/20 14:45:05 dries Exp $ */
+/* $Id: shortcut.css,v 1.8 2010/05/31 08:18:02 dries Exp $ */
 div#toolbar a#edit-shortcuts {
   float: right;
   padding: 5px 10px 5px 5px;
@@ -62,12 +62,14 @@ div.add-or-remove-shortcuts a span.icon {
   margin-left:8px;
 }
 
+div.add-shortcut a:focus span.icon,
 div.add-shortcut a:hover span.icon {
   background-position: 0 -12px;
 }
 div.remove-shortcut a span.icon {
   background-position: -12px 0;
 }
+div.remove-shortcut a:focus span.icon,
 div.remove-shortcut a:hover span.icon {
   background-position: -12px -12px;
 }
@@ -78,6 +80,7 @@ div.add-or-remove-shortcuts a span.text {
   display: none;
 }
 
+div.add-or-remove-shortcuts a:focus span.text,
 div.add-or-remove-shortcuts a:hover span.text {
   font-size: 10px;
   line-height: 12px;
