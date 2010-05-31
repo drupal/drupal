@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.464 2010/05/19 19:22:24 dries Exp $
+// $Id: form.inc,v 1.465 2010/05/31 09:11:32 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3505,7 +3505,7 @@ function &batch_get() {
  * Populates a job queue with the operations of a batch set.
  *
  * Depending on whether the batch is progressive or not, the BatchQueue or
- * BatchStaticQueue handler classes will be used.
+ * BatchMemoryQueue handler classes will be used.
  *
  * @param $batch
  *   The batch array.
