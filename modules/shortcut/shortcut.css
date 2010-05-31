@@ -62,12 +62,14 @@ div.add-or-remove-shortcuts a span.icon {
   margin-left:8px;
 }
 
+div.add-shortcut a:focus span.icon,
 div.add-shortcut a:hover span.icon {
   background-position: 0 -12px;
 }
 div.remove-shortcut a span.icon {
   background-position: -12px 0;
 }
+div.remove-shortcut a:focus span.icon,
 div.remove-shortcut a:hover span.icon {
   background-position: -12px -12px;
 }
@@ -78,6 +80,7 @@ div.add-or-remove-shortcuts a span.text {
   display: none;
 }
 
+div.add-or-remove-shortcuts a:focus span.text,
 div.add-or-remove-shortcuts a:hover span.text {
   font-size: 10px;
   line-height: 12px;
