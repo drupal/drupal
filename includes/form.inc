@@ -3505,7 +3505,7 @@ function &batch_get() {
  * Populates a job queue with the operations of a batch set.
  *
  * Depending on whether the batch is progressive or not, the BatchQueue or
- * BatchStaticQueue handler classes will be used.
+ * BatchMemoryQueue handler classes will be used.
  *
  * @param $batch
  *   The batch array.
