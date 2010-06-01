@@ -2781,6 +2781,7 @@ function system_configure_date_formats_form($form, &$form_state, $dfid = 0) {
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
     ),
+    '#required' => TRUE,
   );
 
   $form['actions'] = array('#type' => 'actions');
