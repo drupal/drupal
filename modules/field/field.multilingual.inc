@@ -1,5 +1,5 @@
 <?php
-// $Id: field.multilingual.inc,v 1.10 2010/03/25 11:46:20 dries Exp $
+// $Id: field.multilingual.inc,v 1.11 2010/06/01 18:29:41 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,11 @@ function field_multilingual_settings_changed() {
  *   An array of valid language codes.
  */
 function field_available_languages($entity_type, $field) {
-  $field_languages = &drupal_static(__FUNCTION__, array());
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['field_languages'] = &drupal_static(__FUNCTION__);
+  }
+  $field_languages = &$drupal_static_fast['field_languages'];
   $field_name = $field['field_name'];
 
   if (!isset($field_languages[$entity_type][$field_name])) {
