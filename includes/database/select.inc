@@ -1407,7 +1407,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
     // Databases that need a different syntax can override this method and
     // do whatever alternate logic they need to.
     if (!empty($this->range)) {
-      $query .= "\nLIMIT " . $this->range['length'] . " OFFSET " . $this->range['start'];
+      $query .= "\nLIMIT " . (int) $this->range['length'] . " OFFSET " . (int) $this->range['start'];
     }
 
     // UNION is a little odd, as the select queries to combine are passed into

@@ -106,7 +106,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
-    return $this->query($query . ' LIMIT ' . $count . ' OFFSET ' . $from, $args, $options);
+    return $this->query($query . ' LIMIT ' . (int) $count . ' OFFSET ' . (int) $from, $args, $options);
   }
 
   public function queryTemporary($query, array $args = array(), array $options = array()) {
