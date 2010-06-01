@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.286 2010/05/28 18:18:50 dries Exp $
+// $Id: system.admin.inc,v 1.287 2010/06/01 05:08:40 dries Exp $
 
 /**
  * @file
@@ -2781,6 +2781,7 @@ function system_configure_date_formats_form($form, &$form_state, $dfid = 0) {
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
     ),
+    '#required' => TRUE,
   );
 
   $form['actions'] = array('#type' => 'actions');
