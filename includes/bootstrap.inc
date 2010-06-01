@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.393 2010/05/26 07:52:12 dries Exp $
+// $Id: bootstrap.inc,v 1.394 2010/06/01 18:26:44 dries Exp $
 
 /**
  * @file
@@ -760,7 +760,11 @@ function variable_initialize($conf = array()) {
 }
 
 /**
- * Return a persistent variable.
+ * Returns a persistent variable.
+ *
+ * Case-sensitivity of the variable_* functions depends on the database
+ * collation used. To avoid problems, always use lower case for persistent
+ * variable names.
  *
  * @param $name
  *   The name of the variable to return.
@@ -780,7 +784,11 @@ function variable_get($name, $default = NULL) {
 }
 
 /**
- * Set a persistent variable.
+ * Sets a persistent variable.
+ *
+ * Case-sensitivity of the variable_* functions depends on the database
+ * collation used. To avoid problems, always use lower case for persistent
+ * variable names.
  *
  * @param $name
  *   The name of the variable to set.
@@ -802,7 +810,11 @@ function variable_set($name, $value) {
 }
 
 /**
- * Unset a persistent variable.
+ * Unsets a persistent variable.
+ *
+ * Case-sensitivity of the variable_* functions depends on the database
+ * collation used. To avoid problems, always use lower case for persistent
+ * variable names.
  *
  * @param $name
  *   The name of the variable to undefine.
