@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.28 2010/05/23 18:01:26 dries Exp $
+// $Id: database.inc,v 1.29 2010/06/01 09:24:09 dries Exp $
 
 /**
  * @file
@@ -59,7 +59,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
-    return $this->query($query . ' LIMIT ' . $from . ', ' . $count, $args, $options);
+    return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }
 
   public function queryTemporary($query, array $args = array(), array $options = array()) {

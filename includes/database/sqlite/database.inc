@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.31 2010/05/26 07:52:12 dries Exp $
+// $Id: database.inc,v 1.32 2010/06/01 09:24:09 dries Exp $
 
 /**
  * @file
@@ -159,7 +159,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
-    return $this->query($query . ' LIMIT ' . $from . ', ' . $count, $args, $options);
+    return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }
 
   public function queryTemporary($query, array $args = array(), array $options = array()) {
