@@ -44,16 +44,16 @@ function _drupal_maintenance_theme() {
       spl_autoload_register('db_autoload');
     }
 
-    // Ensure that system.module is loaded.
-    if (!function_exists('_system_rebuild_theme_data')) {
-      $module_list['system']['filename'] = 'modules/system/system.module';
-      module_list(TRUE, FALSE, FALSE, $module_list);
-      drupal_load('module', 'system');
-    }
-
     // We use the default theme as the maintenance theme. If a default theme
     // isn't specified in the database or in settings.php, we use Garland.
     $custom_theme = variable_get('maintenance_theme', variable_get('theme_default', 'garland'));
+  }
+
+  // Ensure that system.module is loaded.
+  if (!function_exists('_system_rebuild_theme_data')) {
+    $module_list['system']['filename'] = 'modules/system/system.module';
+    module_list(TRUE, FALSE, FALSE, $module_list);
+    drupal_load('module', 'system');
   }
 
   $themes = list_themes();
