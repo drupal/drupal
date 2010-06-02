@@ -119,15 +119,18 @@ function locale_update_7002() {
 function locale_uninstall() {
   // Delete all JavaScript translation files.
   $locale_js_directory = 'public://' . variable_get('locale_js_directory', 'languages');
-  $files = db_query('SELECT language, javascript FROM {languages}');
-  foreach ($files as $file) {
-    if (!empty($file->javascript)) {
-      file_unmanaged_delete($locale_js_directory . '/' . $file->language . '_' . $file->javascript . '.js');
+
+  if (is_dir($locale_js_directory)) {
+    $files = db_query('SELECT language, javascript FROM {languages}');
+    foreach ($files as $file) {
+      if (!empty($file->javascript)) {
+        file_unmanaged_delete($locale_js_directory . '/' . $file->language . '_' . $file->javascript . '.js');
+      }
     }
-  }
-  // Delete the JavaScript translations directory if empty.
-  if (!file_scan_directory($locale_js_directory, '/.*/')) {
-    rmdir($locale_js_directory);
+    // Delete the JavaScript translations directory if empty.
+    if (!file_scan_directory($locale_js_directory, '/.*/')) {
+      rmdir($locale_js_directory);
+    }
   }
 
   // Clear variables.
