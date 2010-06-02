@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.878 2010/05/27 12:29:39 dries Exp $
+// $Id: comment.module,v 1.879 2010/06/02 06:20:11 dries Exp $
 
 /**
  * @file
@@ -1323,25 +1323,19 @@ function comment_node_search_result($node) {
 function comment_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
-      db_update('comment')
-        ->fields(array('status' => 0))
-        ->condition('uid', $account->uid)
-        ->execute();
-      db_update('node_comment_statistics')
-        ->fields(array('last_comment_uid' => 0))
-        ->condition('last_comment_uid', $account->uid)
-        ->execute();
+      $comments = comment_load_multiple(array(), array('uid' => $account->uid));
+      foreach ($comments as $comment) {
+        $comment->status = 0;
+        comment_save($comment);
+      }
       break;
 
     case 'user_cancel_reassign':
-      db_update('comment')
-        ->fields(array('uid' => 0))
-        ->condition('uid', $account->uid)
-        ->execute();
-      db_update('node_comment_statistics')
-        ->fields(array('last_comment_uid' => 0))
-        ->condition('last_comment_uid', $account->uid)
-        ->execute();
+      $comments = comment_load_multiple(array(), array('uid' => $account->uid));
+      foreach ($comments as $comment) {
+        $comment->uid = 0;
+        comment_save($comment);
+      }
       break;
   }
 }
