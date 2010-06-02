@@ -2380,7 +2380,7 @@ function _node_access_rebuild_batch_operation(&$context) {
       node_access_acquire_grants($loaded_node);
     }
     $context['sandbox']['progress']++;
-    $context['sandbox']['current_node'] = $loaded_node->nid;
+    $context['sandbox']['current_node'] = $row['nid'];
   }
 
   // Multistep processing : report progress.
