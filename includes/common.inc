@@ -437,8 +437,8 @@ function drupal_access_denied() {
  *   An integer representing how many times to retry the request in case of a
  *   redirect.
  * @return
- *   An object containing the HTTP request headers, response code, headers,
- *   data and redirect status.
+ *   An object containing the HTTP request headers, response code, protocol,
+ *   status message, headers, data and redirect status.
  */
 function drupal_http_request($url, $headers = array(), $method = 'GET', $data = NULL, $retry = 3) {
   global $db_prefix;
@@ -558,7 +558,10 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   list($split, $result->data) = explode("\r\n\r\n", $response, 2);
   $split = preg_split("/\r\n|\n|\r/", $split);
 
-  list($protocol, $code, $text) = explode(' ', trim(array_shift($split)), 3);
+  list($protocol, $code, $status_message) = explode(' ', trim(array_shift($split)), 3);
+  $result->protocol = $protocol;
+  $result->status_message = $status_message;
+
   $result->headers = array();
 
   // Parse headers.
@@ -604,7 +607,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
       break;
     default:
-      $result->error = $text;
+      $result->error = $status_message;
   }
 
   $result->code = $code;
