@@ -44,17 +44,19 @@ function user_pass() {
 function user_pass_validate($form, &$form_state) {
   $name = trim($form_state['values']['name']);
   
-  // Blocked accounts cannot request a new password,
-  // check provided username and email against access rules.
-  if (drupal_is_denied('user', $name) || drupal_is_denied('mail', $name)) {
-    form_set_error('name', t('%name is not allowed to request a new password.', array('%name' => $name)));
-  }
 
   // Try to load by email.
   $account = user_load(array('mail' => $name, 'status' => 1));
   if (!$account) {
     // No success, try to load by name.
     $account = user_load(array('name' => $name, 'status' => 1));
+  }
+  if ($account) {
+    // Blocked accounts cannot request a new password,
+    // check provided username and email against access rules.
+    if (drupal_is_denied('user', $account->name) || drupal_is_denied('mail', $account->mail)) {
+      form_set_error('name', t('%name is not allowed to request a new password.', array('%name' => $name)));
+    }
   }
   if (isset($account->uid)) {
     form_set_value(array('#parents' => array('account')), $account, $form_state);
