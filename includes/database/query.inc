@@ -1212,7 +1212,15 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
 
   public function condition($field, $value = NULL, $operator = NULL) {
     if (!isset($operator)) {
-      $operator = is_array($value) ? 'IN' : '=';
+      if (is_array($value)) {
+        $operator = 'IN';
+      }
+      elseif (!isset($value)) {
+        $operator = 'IS NULL';
+      }
+      else {
+        $operator = '=';
+      }
     }
     $this->conditions[] = array(
       'field' => $field,
@@ -1237,7 +1245,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
   }
 
   public function isNull($field) {
-    return $this->condition($field, NULL, 'IS NULL');
+    return $this->condition($field);
   }
 
   public function isNotNull($field) {
