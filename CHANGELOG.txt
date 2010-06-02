@@ -1,7 +1,13 @@
 // $Id$
 
-Drupal 6.17-dev, xxxx-xx-xx (development release)
+Drupal 6.17, 2010-06-02
 ----------------------
+- Improved PostgreSQL compatibility
+- Better PHP 5.3 and PHP 4 compatibility
+- Better browser compatibility of CSS and JS aggregation
+- Improved logging for login failures
+- Fixed an incompatibility with some contributed modules and the locking system
+- Fixed a variety of other bugs.
 
 Drupal 6.16, 2010-03-03
 ----------------------
