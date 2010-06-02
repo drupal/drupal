@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.18-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.17, 2010-06-02
 ----------------------
 - Improved PostgreSQL compatibility
